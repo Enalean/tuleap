@@ -416,6 +416,11 @@ div.commitDiffSBS div.SBSTOC
 	word-wrap: break-word;
 }
 
+div.commitDiffSBS div.SBSTOC a
+{
+	text-decoration: none;
+}
+
 div.commitDiffSBS div.SBSTOC ul
 {
 	margin-left: 8px;
@@ -425,6 +430,11 @@ div.commitDiffSBS div.SBSTOC ul
 div.commitDiffSBS div.SBSTOC .listcount
 {
 	list-style-type: none;
+}
+
+div.commitDiffSBS div.SBSTOC .activeItem
+{
+	background-color: #edece6;
 }
 
 div.commitDiffSBS .SBSContent

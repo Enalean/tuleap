@@ -38,10 +38,10 @@
      <div class="SBSTOC">
        <ul>
        <li class="listcount">
-       {t count=$treediff->Count() 1=$treediff->Count() plural="%1 files changed:"}%1 file changed:{/t}</li>
+       {t count=$treediff->Count() 1=$treediff->Count() plural="%1 files changed:"}%1 file changed:{/t} <a href="#" class="showAll">(show all)</a></li>
        {foreach from=$treediff item=filediff}
        <li>
-       <a href="#{$filediff->GetFromHash()}_{$filediff->GetToHash()}">
+       <a href="#{$filediff->GetFromHash()}_{$filediff->GetToHash()}" class="SBSTOCItem">
        {if $filediff->GetStatus() == 'A'}
          {if $filediff->GetToFile()}{$filediff->GetToFile()}{else}{$filediff->GetToHash()}{/if} {t}(new){/t}
        {elseif $filediff->GetStatus() == 'D'}

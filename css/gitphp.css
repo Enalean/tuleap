@@ -131,6 +131,14 @@ table.diffTable td {
 	width: 50%;
 }
 
+/*
+ * side-by-side commitdiff
+ */
+div.commitDiffSBS div.SBSTOC .showAll
+{
+	display: none;
+}
+
 
 /*
  * Geshi styles
