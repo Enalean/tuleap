@@ -351,6 +351,38 @@ class GitPHP_FileDiff
 	}
 
 	/**
+	 * GetFromBlob
+	 *
+	 * Gets the from file blob
+	 *
+	 * @access public
+	 * @return mixed blob object
+	 */
+	public function GetFromBlob()
+	{
+		if (empty($this->fromHash))
+			return null;
+
+		return $this->project->GetBlob($this->fromHash);
+	}
+
+	/**
+	 * GetToBlob
+	 *
+	 * Gets the to file blob
+	 *
+	 * @access public
+	 * @return mixed blob object
+	 */
+	public function GetToBlob()
+	{
+		if (empty($this->toHash))
+			return null;
+
+		return $this->project->GetBlob($this->toHash);
+	}
+
+	/**
 	 * GetStatus
 	 *
 	 * Gets the status of the change
@@ -556,7 +588,7 @@ class GitPHP_FileDiff
 		$toName = null;
 
 		if ((empty($this->status)) || ($this->status == 'D') || ($this->status == 'M')) {
-			$fromBlob = $this->project->GetBlob($this->fromHash);
+			$fromBlob = $this->GetFromBlob();
 			$fromTmpFile = 'gitphp_' . $pid . '_from';
 			$tmpdir->AddFile($fromTmpFile, $fromBlob->GetData());
 
@@ -571,7 +603,7 @@ class GitPHP_FileDiff
 		}
 
 		if ((empty($this->status)) || ($this->status == 'A') || ($this->status == 'M')) {
-			$toBlob = $this->project->GetBlob($this->toHash);
+			$toBlob = $this->GetToBlob();
 			$toTmpFile = 'gitphp_' . $pid . '_to';
 			$tmpdir->AddFile($toTmpFile, $toBlob->GetData());
 
