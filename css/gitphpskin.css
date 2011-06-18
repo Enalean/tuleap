@@ -422,6 +422,11 @@ div.commitDiffSBS div.SBSTOC ul
 	padding-left: 8px;
 }
 
+div.commitDiffSBS div.SBSTOC .listcount
+{
+	list-style-type: none;
+}
+
 div.commitDiffSBS .SBSContent
 {
 	float: right;
