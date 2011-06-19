@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GitPHP 0.2.1\n"
+"Project-Id-Version: GitPHP 0.2.3\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2010-12-02 22:09-0600\n"
+"POT-Creation-Date: 2011-06-18 21:03-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -110,10 +110,14 @@ msgid "plain"
 msgstr ""
 
 # Used as a link to a side-by-side version of a diff
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
 msgid "side by side"
 msgstr ""
 
 # Used as a link to a unified version of a diff
+#: templates/blobdiff.tpl
+#: templates/commitdiff.tpl
 msgid "unified"
 msgstr ""
 
@@ -147,7 +151,7 @@ msgstr ""
 #: templates/log.tpl
 #: templates/history.tpl
 #: templates/shortloglist.tpl
-#: include/controller/Controller_Commitdiff.class.php:79
+#: include/controller/Controller_Commitdiff.class.php:85
 msgid "commitdiff"
 msgstr ""
 
@@ -169,6 +173,7 @@ msgstr ""
 # Comes before a list of files
 # %1: the number of files
 #: templates/commit.tpl
+#: templates/commitdiff.tpl
 msgid "%1 file changed:"
 msgid_plural "%1 files changed:"
 msgstr[0] ""
@@ -288,7 +293,7 @@ msgstr ""
 
 # Link back to the list of projects
 #: templates/header.tpl
-#: include/controller/ControllerBase.class.php:250
+#: include/controller/ControllerBase.class.php:257
 #: include/controller/Controller_ProjectList.class.php:94
 msgid "projects"
 msgstr ""
@@ -428,8 +433,8 @@ msgstr ""
 #: include/controller/Controller_Tag.class.php:34
 #: include/controller/Controller_Tags.class.php:34
 #: include/controller/Controller_Project.class.php:33
-#: include/controller/Controller_Commitdiff.class.php:34
-#: include/controller/Controller_Blobdiff.class.php:34
+#: include/controller/Controller_Commitdiff.class.php:36
+#: include/controller/Controller_Blobdiff.class.php:36
 #: include/controller/Controller_History.class.php:34
 #: include/controller/Controller_Heads.class.php:34
 #: include/controller/Controller_Search.class.php:47
@@ -443,7 +448,7 @@ msgid "rss"
 msgstr ""
 
 # Used as link to and title for a diff of a single file
-#: include/controller/Controller_Blobdiff.class.php:79
+#: include/controller/Controller_Blobdiff.class.php:81
 msgid "blobdiff"
 msgstr ""
 
@@ -514,28 +519,28 @@ msgstr ""
 # Error message when user specifies a path for a project root or project, but the path given isn't a directory
 # %1$s: the path the user specified
 #: include/git/ProjectListDirectory.class.php:47
-#: include/git/Project.class.php:230
+#: include/git/Project.class.php:221
 #, php-format
 msgid "%1$s is not a directory"
 msgstr ""
 
 # Error message when a path specified in the config is not a git repository
 # %1$s: the specified path
-#: include/git/Project.class.php:234
+#: include/git/Project.class.php:225
 #, php-format
 msgid "%1$s is not a git repository"
 msgstr ""
 
 # Error message when a path specified is using '..' to break out of the project root (a hack attempt)
 # %1$s: The specified path
-#: include/git/Project.class.php:238
+#: include/git/Project.class.php:229
 #, php-format
 msgid "%1$s is attempting directory traversal"
 msgstr ""
 
 # Error message when a path specified is outside of the project root
 # %1$s: The specified path
-#: include/git/Project.class.php:244
+#: include/git/Project.class.php:235
 #, php-format
 msgid "%1$s is outside of the projectroot"
 msgstr ""
@@ -773,4 +778,11 @@ msgstr ""
 msgid ""
 "Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
 "\" config value."
+msgstr ""
+
+# Link displayed in commitdiff view, when the user has filtered
+# the display to a single file using the list of changed files.
+# This will go back to showing all files in the commitdiff
+#: templates/commitdiff.tpl
+msgid "(show all)"
 msgstr ""
