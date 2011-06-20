@@ -102,8 +102,8 @@ class PluginControler {
      * Wrapper
      * @param String $msg
      */
-    public function addInfo($msg) {
-        $GLOBALS['Response']->addFeedback('info', $msg);
+    public function addInfo($msg, $purify = CODENDI_PURIFIER_CONVERT_HTML) {
+        $GLOBALS['Response']->addFeedback('info', $msg, $purify);
     }
 
     /**

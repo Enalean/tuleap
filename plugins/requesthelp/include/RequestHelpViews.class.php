@@ -61,7 +61,7 @@ class RequestHelpViews extends PluginView {
             $params        = $data['params'];
             $this->displayForm($params);
         } else {
-            $c->addInfo($GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_ticket_submission_success'));
+            $c->addInfo($GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_ticket_submission_success'), CODENDI_PURIFIER_LIGHT);
             $c->redirect('/my/');
         }
     }

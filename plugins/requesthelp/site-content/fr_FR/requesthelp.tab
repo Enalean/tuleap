@@ -12,7 +12,7 @@ plugin_requesthelp	Critical	Critique
 plugin_requesthelp	requesthelp_mail_subject	[Nouvelle requête][$1] $2
 plugin_requesthelp	requesthelp_Failure_mail_subject	Problème de ticket Remedy
 plugin_requesthelp	requesthelp_mail_failed	Echec d'envoi du mail de notification
-plugin_requesthelp	requesthelp_ticket_submission_success	Un ticket Remedy a été soumis pour vous, vous allez etre notifié par mail dans un instant.
+plugin_requesthelp	requesthelp_ticket_submission_success	<b>Un ticket Remedy a été soumis pour vous, vous allez etre notifié par mail dans un instant.</b>
 plugin_requesthelp	requesthelp_ticket_submission_fail	Erreur de soumission du ticket
 plugin_requesthelp	requesthelp_invalid_params	Champ(s) invalide(s) : $1. Veuillez vérifier la/les valeure(s) de ce(s) champ(s)
 plugin_requesthelp	requesthelp_invalid_cc	Ces personnes/adresses mail "$1" ne sont pas valides

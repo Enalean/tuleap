@@ -12,7 +12,7 @@ plugin_requesthelp	Critical	Critical
 plugin_requesthelp	requesthelp_mail_subject	[New request][$1] $2
 plugin_requesthelp	requesthelp_Failure_mail_subject	Remedy ticket Problem
 plugin_requesthelp	requesthelp_mail_failed	Send notification mail has failed
-plugin_requesthelp	requesthelp_ticket_submission_success	A Remedy ticket has been submitted for you, you'll be notified by mail soon.
+plugin_requesthelp	requesthelp_ticket_submission_success	<b>A Remedy ticket has been submitted for you, you'll be notified by mail soon.</b>
 plugin_requesthelp	requesthelp_ticket_submission_fail	Ticket submission failed
 plugin_requesthelp	requesthelp_invalid_params	Invalid fields : $1. Please verify values of the above listed field(s)
 plugin_requesthelp	requesthelp_invalid_cc	Those persons/mail addresses "$1" are not valid
