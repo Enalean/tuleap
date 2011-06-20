@@ -72,19 +72,11 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     if ($bodyFormat) {
         $mail = new Codendi_Mail();
         $mail->setBodyHtml($mailMessage);
-        $pattern = '/([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])'.'(([a-z0-9-])*([a-z0-9]))+'.'(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)/i';
-        preg_match ($pattern, $GLOBALS['sys_noreply'], $matches);
-        if (!empty($matches)) {
-            $noReply = $matches[0];
-        } else {
-            $noReply = $GLOBALS['sys_noreply'];
-        }
     } else {
         $mail = new Mail();
         $mail->setBody($mailMessage);
-        $noReply = $GLOBALS['sys_noreply'];
     }
-    $mail->setFrom($noReply);
+    $mail->setFrom($GLOBALS['sys_noreply']);
 
     $validSubject = new Valid_String('mail_subject');
     if($request->valid($validSubject)) {
@@ -108,7 +100,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
             if ($i % 25 == 0) {
                 //spawn sendmail for 25 addresses at a time
                 $mail->setBcc($tolist);
-                $mail->setTo($noReply);
+                $mail->setTo($GLOBALS['sys_noreply']);
                 if ($mail->send()) {
                     print "<br>".$Language->getText('admin_massmail_execute','sending').": ".$tolist;
                 } else {
@@ -123,7 +115,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         //send the last of the messages.
         if (strlen($tolist) > 0) {
             $mail->setBcc($tolist);
-            $mail->setTo($noReply);
+            $mail->setTo($GLOBALS['sys_noreply']);
             if ($mail->send()) {
                 print "<br><br>".$Language->getText('admin_massmail_execute','sending').": ".$tolist."<br><br>";
             } else {

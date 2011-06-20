@@ -79,6 +79,23 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
+     * Remove extra < > if any
+     *
+     * @param String $mail
+     *
+     * @return String
+     */
+    function _cleanupMailFormat($mail) {
+        $pattern = '/<(.*)>/';
+        preg_match ($pattern, $mail, $matches);
+        if (!empty($matches)) {
+            return $matches[1];
+        } else {
+            return $mail;
+        }
+    }
+
+    /**
      * Check if given mail/user_name is valid (Ie. Active or Restricted) user.
      *
      * @param list of emails/user_name $mailList
@@ -120,6 +137,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     function setFrom($email) {
+        $email = $this->_cleanupMailFormat($email);
         $this->mail->setFrom($email);
     }
 
@@ -137,6 +155,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @param Boolean $raw
      */
     function setTo($to, $raw=false) {
+        $to = $this->_cleanupMailFormat($to);
         if(!$raw) {
             $to = $this->_validateRecipientMail($to);
             if (!empty($to)) {
