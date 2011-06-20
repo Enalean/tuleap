@@ -38,18 +38,28 @@ class GitoliteDriverTest extends UnitTestCase {
         $this->assertTrue($driver->init($prj, 'testrepo'));
         
         // Check file content
-        $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/gitolite.conf'));
-        $gitoliteConf = file($this->_fixDir.'/gitolite-admin/conf/gitolite.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf'));
+        $gitoliteConf = file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         // Check repository def
         $repo1found = false;
         for ($i = 0; $i < count($gitoliteConf); $i++) {
             if ($gitoliteConf[$i] == 'repo project1/testrepo') {
                 $repo1found = true;
+                // Check default permissions
                 $this->assertEqual($gitoliteConf[++$i], "\tRW = @project1_project_members");
             }
         }
-        
         $this->assertTrue($repo1found);
+        
+        // Last: check that corresponding project conf exists in main file conf
+        $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/gitolite.conf'));
+        $gitoliteConf = file_get_contents($this->_fixDir.'/gitolite-admin/conf/gitolite.conf');
+        $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
+        
+        // Cleanup
+        unlink($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf');
+        rmdir($this->_fixDir.'/gitolite-admin/conf/projects');
+        unlink($this->_fixDir.'/gitolite-admin/conf/gitolite.conf');
     }
 }
 

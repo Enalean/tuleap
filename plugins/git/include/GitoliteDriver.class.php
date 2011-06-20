@@ -23,15 +23,24 @@ require_once 'common/project/Project.class.php';
 
 class Git_GitoliteDriver {
     protected $adminPath;
-    
+
     public function __construct($adminPath) {
         $this->adminPath = $adminPath;
     }
-    
+
     public function init($project, $repoPath) {
+        $prjConfDir = $this->adminPath.'/conf/projects';
+        if (!is_dir($prjConfDir)) {
+            mkdir($prjConfDir);
+        }
         $conf = 'repo '.$project->getUnixName().'/'.$repoPath.PHP_EOL;
         $conf .= "\tRW = @".$project->getUnixName().'_project_members'.PHP_EOL;
-        return file_put_contents($this->adminPath.'/conf/gitolite.conf', $conf);
+
+        if (file_put_contents($prjConfDir.'/'.$project->getUnixName().'.conf', $conf)) {
+            $conf = 'include "projects/'.$project->getUnixName().'.conf"'.PHP_EOL;
+            return file_put_contents($this->adminPath.'/conf/gitolite.conf', $conf);
+        }
+        return false;
     }
 }
 
