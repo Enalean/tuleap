@@ -46,5 +46,13 @@ class Codendi_MailTest extends UnitTestCase {
         $retArray = array(array('real_name' => $user1->getRealName(), 'email' => $user1->getEmail()));
         $this->assertEqual($recipients, $retArray);
     }
+
+    function testCleanupMailFormat() {
+        $mail = new Codendi_MailTestVersion();
+        $this->assertEqual('john.doe@example.com', $mail->_cleanupMailFormat('"Codendi" <john.doe@example.com>'));
+        $this->assertEqual('"Codendi" john.doe@example.com', $mail->_cleanupMailFormat('"Codendi" john.doe@example.com'));
+        $this->assertEqual('"Codendi" <john.doe@example.com', $mail->_cleanupMailFormat('"Codendi" <john.doe@example.com'));
+        $this->assertEqual('"Codendi" john.doe@example.com>', $mail->_cleanupMailFormat('"Codendi" john.doe@example.com>'));
+    }
 }
 ?>

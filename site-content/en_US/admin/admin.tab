@@ -213,9 +213,11 @@ admin_lastlogins	recent	Most Recent Logins
 # Script: SF/www/admin/massmail_execute.php
 #
 admin_massmail_execute	post_recvd	Received Post. Making Query	
-admin_massmail_execute	mailing	Query Complete. Beginning mailings to $1 distinct email addresses
+admin_massmail_execute	mailing	Beginning mailings to $1 distinct email addresses
 admin_massmail_execute	sending	sending to
 admin_massmail_execute	done	Done!
+admin_massmail_execute	no_user_mail	The added user $1 have no mail address.
+admin_massmail_execute	no_user	No user corresponding to entry $1.
 #
 #-----------------------------------------------
 # Script: SF/www/admin/massmail.php
@@ -223,6 +225,7 @@ admin_massmail_execute	done	Done!
 admin_massmail	title	Administrative Mass Mail Engine
 admin_massmail	header	Mail Engine for $1 Subscribers
 admin_massmail	warning	Be <span class="highlight"><B>VERY</B></span> careful with this form, because submitting it WILL send email to lots of users.
+admin_massmail	to_preview	Send preview to
 admin_massmail	to_additional	Send only to users subscribed to "Additional Community Mailings"
 admin_massmail	to_update	Send only to users that agreed to receive "Site Updates"
 admin_massmail	to_devel	Send only to project developers 
