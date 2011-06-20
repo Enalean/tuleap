@@ -20,6 +20,7 @@
  */
 
 require_once 'common/project/Project.class.php';
+require_once 'common/user/User.class.php';
 
 class Git_GitoliteDriver {
     protected $adminPath;
@@ -72,6 +73,21 @@ class Git_GitoliteDriver {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function initUserKeys($user) {
+        $keydir = $this->adminPath.'/keydir';
+        if (!is_dir($keydir)) {
+            mkdir($keydir);
+        }
+        $keys = explode("\n", $user->getAuthorizedKeys());
+        for ($i = 0; $i < count($keys); $i++) {
+            $fileName = $user->getUserName().'@'.$i.'.pub';
+            file_put_contents($keydir.'/'.$fileName, $keys[$i]);
+        }
     }
 
     protected function gitAdd($file) {
