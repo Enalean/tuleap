@@ -31,12 +31,12 @@ class GitoliteDriverTest extends UnitTestCase {
 
     function testCreateRepository() {
         $driver = new Git_GitoliteDriver($this->_fixDir.'/gitolite-admin');
-        
+
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
-        
+
         $this->assertTrue($driver->init($prj, 'testrepo'));
-        
+
         // Check file content
         $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf'));
         $gitoliteConf = file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -50,12 +50,12 @@ class GitoliteDriverTest extends UnitTestCase {
             }
         }
         $this->assertTrue($repo1found);
-        
+
         // Last: check that corresponding project conf exists in main file conf
         $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/gitolite.conf'));
         $gitoliteConf = file_get_contents($this->_fixDir.'/gitolite-admin/conf/gitolite.conf');
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
-        
+
         // Cleanup
         unlink($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf');
         rmdir($this->_fixDir.'/gitolite-admin/conf/projects');

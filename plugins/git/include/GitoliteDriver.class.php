@@ -26,6 +26,7 @@ class Git_GitoliteDriver {
 
     public function __construct($adminPath) {
         $this->adminPath = $adminPath;
+        $this->confFilePath = $adminPath.'/conf/gitolite.conf';
     }
 
     public function init($project, $repoPath) {
@@ -37,10 +38,27 @@ class Git_GitoliteDriver {
         $conf .= "\tRW = @".$project->getUnixName().'_project_members'.PHP_EOL;
 
         if (file_put_contents($prjConfDir.'/'.$project->getUnixName().'.conf', $conf)) {
-            $conf = 'include "projects/'.$project->getUnixName().'.conf"'.PHP_EOL;
-            return file_put_contents($this->adminPath.'/conf/gitolite.conf', $conf);
+            return $this->updateMainConfIncludes($project);
         }
         return false;
+    }
+
+    public function updateMainConfIncludes($project) {
+        if (is_file($this->confFilePath)) {
+            $conf = file_get_contents($this->confFilePath);
+        } else {
+            $conf = '';
+        }
+        if (strpos($conf, 'include "projects/'.$project->getUnixName().'.conf"') === false) {
+            $newConf = '';
+            $dir = new DirectoryIterator($this->adminPath.'/conf/projects');
+            foreach ($dir as $file) {
+                if (!$file->isDot()) {
+                    $newConf .= 'include "projects/'.basename($file->getFilename()).'"'.PHP_EOL;
+                }
+            }
+            return file_put_contents($this->confFilePath, $newConf);
+        }
     }
 }
 
