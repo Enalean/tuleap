@@ -50,6 +50,10 @@ class Git_GitoliteDriver {
             $conf = '';
         }
         if (strpos($conf, 'include "projects/'.$project->getUnixName().'.conf"') === false) {
+            $backend = Backend::instance();
+            if ($conf) {
+                $backend->removeBlock($this->confFilePath);
+            }
             $newConf = '';
             $dir = new DirectoryIterator($this->adminPath.'/conf/projects');
             foreach ($dir as $file) {
@@ -57,7 +61,7 @@ class Git_GitoliteDriver {
                     $newConf .= 'include "projects/'.basename($file->getFilename()).'"'.PHP_EOL;
                 }
             }
-            return file_put_contents($this->confFilePath, $newConf);
+            return $backend->addBlock($this->confFilePath, $newConf);
         }
     }
 }
