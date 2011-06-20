@@ -37,8 +37,13 @@ class Git_GitoliteDriver {
         $conf = 'repo '.$project->getUnixName().'/'.$repoPath.PHP_EOL;
         $conf .= "\tRW = @".$project->getUnixName().'_project_members'.PHP_EOL;
 
-        if (file_put_contents($prjConfDir.'/'.$project->getUnixName().'.conf', $conf)) {
-            return $this->updateMainConfIncludes($project);
+        $confFile = $prjConfDir.'/'.$project->getUnixName().'.conf';
+        if (file_put_contents($confFile, $conf)) {
+            if ($this->gitAdd($confFile)) {
+                if ($this->updateMainConfIncludes($project)) {
+                    return $this->gitCommit('New repo: '.$project->getUnixName().'/'.$repoPath);
+                }
+            }
         }
         return false;
     }
@@ -61,7 +66,29 @@ class Git_GitoliteDriver {
                     $newConf .= 'include "projects/'.basename($file->getFilename()).'"'.PHP_EOL;
                 }
             }
-            return $backend->addBlock($this->confFilePath, $newConf);
+            if ($backend->addBlock($this->confFilePath, $newConf)) {
+                return $this->gitAdd($this->confFilePath);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    protected function gitAdd($file) {
+        exec('git add '.escapeshellarg($file), $output, $retVal);
+        if ($retVal == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected function gitCommit($message) {
+        exec('git commit -m '.escapeshellarg($message).' 2>&1 >/dev/null', $output, $retVal);
+        if ($retVal == 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

@@ -26,9 +26,21 @@ Mock::generate('Project');
 class GitoliteDriverTest extends UnitTestCase {
 
     function setUp() {
+        $this->cwd = getcwd();
         $this->_fixDir = dirname(__FILE__).'/_fixtures';
+        $this->_glAdmDir = $this->_fixDir.'/gitolite-admin';
+        mkdir($this->_glAdmDir);
+        mkdir($this->_glAdmDir.'/conf');
+        touch($this->_glAdmDir.'/conf/gitolite.conf');
+        chdir($this->_glAdmDir);
+        system('git init -q && git add conf/gitolite.conf && git commit -m "init" 2>&1 >/dev/null');
     }
 
+    function tearDown() {
+        chdir($this->cwd);
+        system('rm -rf '.$this->_glAdmDir);
+    }
+    
     function testCreateRepository() {
         $driver = new Git_GitoliteDriver($this->_fixDir.'/gitolite-admin');
 
@@ -36,6 +48,10 @@ class GitoliteDriverTest extends UnitTestCase {
         $prj->setReturnValue('getUnixName', 'project1');
 
         $this->assertTrue($driver->init($prj, 'testrepo'));
+
+        exec('git status --porcelain', $output, $ret_val);
+        $this->assertEqual($output, array());
+        $this->assertEqual($ret_val, 0);
 
         // Check file content
         $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf'));
@@ -51,15 +67,10 @@ class GitoliteDriverTest extends UnitTestCase {
         }
         $this->assertTrue($repo1found);
 
-        // Last: check that corresponding project conf exists in main file conf
+        // Check that corresponding project conf exists in main file conf
         $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/gitolite.conf'));
         $gitoliteConf = file_get_contents($this->_fixDir.'/gitolite-admin/conf/gitolite.conf');
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
-
-        // Cleanup
-        unlink($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf');
-        rmdir($this->_fixDir.'/gitolite-admin/conf/projects');
-        unlink($this->_fixDir.'/gitolite-admin/conf/gitolite.conf');
     }
 
     function testGitoliteConfUpdate() {
@@ -77,11 +88,6 @@ class GitoliteDriverTest extends UnitTestCase {
         // Original content still here
         $this->assertWantedPattern('#^@test = coin$#m', $gitoliteConf);
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
-
-        // Cleanup
-        unlink($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf');
-        rmdir($this->_fixDir.'/gitolite-admin/conf/projects');
-        unlink($this->_fixDir.'/gitolite-admin/conf/gitolite.conf');
     }
 }
 
