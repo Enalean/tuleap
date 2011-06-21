@@ -283,6 +283,7 @@ class RequestHelpActions extends PluginAction {
             if ($ticketId && $this->insertTicketInCodexDB($params, $ticketId)) {
                 $this->sendMail($params);
                 $c->addData(array('status' => true));
+                $c->addInfo($GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_ticket_submission_success'), CODENDI_PURIFIER_LIGHT);
             } else {
                 $c->addData(array('status' => false, 'params' => $params));
                 $c->addError($GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_ticket_submission_fail'));
