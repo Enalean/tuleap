@@ -65,6 +65,7 @@ class RequestHelpDBDriver {
      * @param String $item        Type of the request
      * @param String $severity    Ticket severity
      * @param String $cc          People in CC
+     * @param String $submitter   Ticket submitter
      *
      * @return String Remedy ticket id
      */
@@ -101,7 +102,7 @@ class RequestHelpDBDriver {
                    sysdate,
                    'NEW',
                    '".$submitter."',
-                   '".$cc."',
+                   '".$this->escapeString($cc)."',
                    RIF_REQUEST_SEQ.NEXTVAL
                    )";*/
             $sql = "BEGIN
@@ -113,7 +114,7 @@ class RequestHelpDBDriver {
                             '".$this->escapeString($summary)."',
                             '".$this->escapeString($description)."',
                             '".$severity."',
-                            '".$cc."',
+                            '".$this->escapeString($cc)."',
                             '".$submitter."',
                             :OUT
                         );
@@ -127,7 +128,7 @@ class RequestHelpDBDriver {
                     $stid = @oci_parse($this->dbh, $sql);
                     if ($stid) {
                         $inserted = false;
-                        while(!$inserted) {
+                        while (!$inserted) {
                             if (@oci_execute($stid)) {
                                 $row = @oci_fetch_array($stid, OCI_ASSOC);
                                 if ($row && $row['REQUEST_STATUS'] != 'NEW') {

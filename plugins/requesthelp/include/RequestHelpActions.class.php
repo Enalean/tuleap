@@ -185,7 +185,6 @@ class RequestHelpActions extends PluginAction {
      * Send mail to recipient after ticket submission
      *
      * @param Array $params    collection of data used to build the mail
-     * @param Int   $recepient flag used to make out the recepient
      *
      * @return void
      */
