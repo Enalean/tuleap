@@ -65,17 +65,17 @@ class RequestHelpDBDriver {
      * @param String $item        Type of the request
      * @param String $severity    Ticket severity
      * @param String $cc          People in CC
-     * @param String $submitter   Ticket submitter
+     * @param String $requester   Ticket requester
      *
      * @return String Remedy ticket id
      */
-    public function createTicket($summary, $description, $item, $severity, $cc, $submitter) {
+    public function createTicket($summary, $description, $item, $severity, $cc, $requester) {
         $pluginManager = PluginManager::instance();
         $p = $pluginManager->getPluginByName('requesthelp');
         $category  = $p->getProperty('remedy_category');
         $type      = $p->getProperty('remedy_type');
 
-        if ($submitter && $category && $type) {
+        if ($requester && $category && $type) {
             // This is the old way of using RIF table use it in case the procedure wont work
             /*$sql = "INSERT INTO RIF_REQUEST
                    (
@@ -95,13 +95,13 @@ class RequestHelpDBDriver {
                    '".$category."',
                    '".$type."',
                    '".$item."',
-                   '".$submitter."',
+                   '".$requester."',
                    '".$this->escapeString($summary)."',
                    '".$this->escapeString($description)."',
                    '".$severity."',
                    sysdate,
                    'NEW',
-                   '".$submitter."',
+                   '".$requester."',
                    '".$this->escapeString($cc)."',
                    RIF_REQUEST_SEQ.NEXTVAL
                    )";*/
@@ -110,12 +110,12 @@ class RequestHelpDBDriver {
                             '".$category."',
                             '".$type."',
                             '".$item."',
-                            '".$submitter."',
+                            '".$requester."',
                             '".$this->escapeString($summary)."',
                             '".$this->escapeString($description)."',
                             '".$severity."',
                             '".$this->escapeString($cc)."',
-                            '".$submitter."',
+                            '".$requester."',
                             :OUT
                         );
                     END;";
