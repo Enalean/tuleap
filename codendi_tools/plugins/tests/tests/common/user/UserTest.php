@@ -25,13 +25,6 @@ Mock::generate('DataAccessResult');
  * Tests the class User
  */
 class UserTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function UserTest($name = 'User test') {
-        $this->UnitTestCase($name);
-    }
 
     function testStatus() {
         $u1 =& new UserTestVersion($this);
@@ -230,6 +223,28 @@ class UserTest extends UnitTestCase {
         $this->assertFalse($projectmember->isMember(1));
         $this->assertFalse($projectmember->isMember(1, 'A'));
     }
-    
+
+    function testGetAuthorizedKeysSplited() {
+        $k1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtfKHvNobjjB+cYGue/c/SXUL9HtaylfQJWnLiV3AuqnbrWm6l9WGnv6+44/6e38Jwk0ywuvCdM5xi9gtWPN9Cw2S8qLbhVrqH9DAhwVR3LRYwr8jMm6enqUEh8pjHuIpcqkTJQJ9pY5D/GCqeOsO3tVF2M+RJuX9ZyT7c1FysnHJtiy70W/100LdwJJWYCZNqgh5y02ThiDcbRIPwB8B/vD9n5AIZiyiuHnQQp4PLi4+NzCne3C/kOMpI5UVxHlgoJmtx0jr1RpvdfX4cTzCSud0J1F+6g7MWg3YLRp2IZyp88CdZBoUYeW0MNbYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
+        $k2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA00qxJHrLEbrVTEtvC9c7xaeNIV81vxns7T89tGmyocFlPeD2N+uUQ8J90bcv7+aQDo229EWWI7oV6uGqsFXAuWSHHSvl7Am+2/lzVwSkvrVYAKl26Kz505a+W9xMbMKn8B+LFuOg3sjUKeVuz0WiUuKnHhhJUEBW+mJtuHrow49+6mOuL5v+M+0FlwGthagQt1zjWvo6g8GC4x97Wt3FVu8cfQJVu7S5KBXiz2VjRAwKTovt+M4+PlqO00vWbaaviFirwJPXjHoGVKONa/ahrXYiTICSgWUR6CjlqHs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
+        $ssh = $k1.'###'.$k2;
+        $user = new User(array('language_id'     => 'en_US',
+                               'authorized_keys' => $ssh));
+        $this->assertEqual($user->getAuthorizedKeys(), $ssh);
+        $res = $user->getAuthorizedKeys(true);
+        $this->assertEqual($res[0], $k1);
+        $this->assertEqual($res[1], $k2);
+    }
+
+    function testGetAuthorizedKeysSplitedWithEmptyKey() {
+        $k1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtfKHvNobjjB+cYGue/c/SXUL9HtaylfQJWnLiV3AuqnbrWm6l9WGnv6+44/6e38Jwk0ywuvCdM5xi9gtWPN9Cw2S8qLbhVrqH9DAhwVR3LRYwr8jMm6enqUEh8pjHuIpcqkTJQJ9pY5D/GCqeOsO3tVF2M+RJuX9ZyT7c1FysnHJtiy70W/100LdwJJWYCZNqgh5y02ThiDcbRIPwB8B/vD9n5AIZiyiuHnQQp4PLi4+NzCne3C/kOMpI5UVxHlgoJmtx0jr1RpvdfX4cTzCSud0J1F+6g7MWg3YLRp2IZyp88CdZBoUYeW0MNbYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
+        $k2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA00qxJHrLEbrVTEtvC9c7xaeNIV81vxns7T89tGmyocFlPeD2N+uUQ8J90bcv7+aQDo229EWWI7oV6uGqsFXAuWSHHSvl7Am+2/lzVwSkvrVYAKl26Kz505a+W9xMbMKn8B+LFuOg3sjUKeVuz0WiUuKnHhhJUEBW+mJtuHrow49+6mOuL5v+M+0FlwGthagQt1zjWvo6g8GC4x97Wt3FVu8cfQJVu7S5KBXiz2VjRAwKTovt+M4+PlqO00vWbaaviFirwJPXjHoGVKONa/ahrXYiTICSgWUR6CjlqHs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
+        $user = new User(array('language_id'     => 'en_US',
+                               'authorized_keys' => $k1.'######'.$k2));
+        $res = $user->getAuthorizedKeys(true);
+        $this->assertEqual($res[0], $k1);
+        $this->assertFalse(isset($res[1]));
+        $this->assertEqual($res[2], $k2);
+    }
 }
 ?>

@@ -570,8 +570,12 @@ class User {
     /**
      * @return string authorized keys of the user
      */
-    function getAuthorizedKeys() {
-        return $this->authorized_keys;
+    function getAuthorizedKeys($split=false) {
+        if ($split) {
+            return array_filter(explode('###', $this->authorized_keys));
+        } else {
+            return $this->authorized_keys;
+        }
     }
     /**
      * @return string resume of the user
