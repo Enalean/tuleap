@@ -23,15 +23,20 @@ require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
 
 class Git_GitoliteDriver {
+    protected $oldCwd;
+    protected $confFilePath;
     protected $adminPath;
 
     public function __construct($adminPath) {
         $this->adminPath = $adminPath;
         $this->confFilePath = $adminPath.'/conf/gitolite.conf';
+        $this->oldCwd = getcwd();
+        chdir($this->adminPath);
     }
 
     public function push() {
         $this->gitPush();
+        chdir($this->oldCwd);
     }
 
     public function init($project, $repoPath) {
@@ -154,7 +159,7 @@ class Git_GitoliteDriver {
     }
     
     protected function gitPush() {
-        exec('git push origin master 2>&1 >/dev/null', $output, $retVal);
+        exec('git push origin master', $output, $retVal);
         if ($retVal == 0) {
             return true;
         } else {
