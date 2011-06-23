@@ -414,6 +414,8 @@ div.commitDiffSBS div.SBSTOC
 	float: left;
 	width: 19%;
 	word-wrap: break-word;
+	background-color: #ffffff;
+	border-bottom: 1px solid #edece6;
 }
 
 div.commitDiffSBS div.SBSTOC a
