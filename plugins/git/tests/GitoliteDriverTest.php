@@ -41,7 +41,13 @@ class GitoliteDriverTest extends UnitTestCase {
         chdir($this->cwd);
         system('rm -rf '.$this->_glAdmDir);
     }
-/*
+
+    function assertEmptyGitStatus() {
+        exec('git status --porcelain', $output, $ret_val);
+        $this->assertEqual($output, array());
+        $this->assertEqual($ret_val, 0);
+    }
+
     function testCreateRepository() {
         $driver = new Git_GitoliteDriver($this->_fixDir.'/gitolite-admin');
 
@@ -50,9 +56,7 @@ class GitoliteDriverTest extends UnitTestCase {
 
         $this->assertTrue($driver->init($prj, 'testrepo'));
 
-        exec('git status --porcelain', $output, $ret_val);
-        $this->assertEqual($output, array());
-        $this->assertEqual($ret_val, 0);
+        $this->assertEmptyGitStatus();
 
         // Check file content
         $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf'));
@@ -90,7 +94,7 @@ class GitoliteDriverTest extends UnitTestCase {
         $this->assertWantedPattern('#^@test = coin$#m', $gitoliteConf);
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
-*/
+
     function testAddUserKey() {
         $key = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtfKHvNobjjB+cYGue/c/SXUL9HtaylfQJWnLiV3AuqnbrWm6l9WGnv6+44/6e38Jwk0ywuvCdM5xi9gtWPN9Cw2S8qLbhVrqH9DAhwVR3LRYwr8jMm6enqUEh8pjHuIpcqkTJQJ9pY5D/GCqeOsO3tVF2M+RJuX9ZyT7c1FysnHJtiy70W/100LdwJJWYCZNqgh5y02ThiDcbRIPwB8B/vD9n5AIZiyiuHnQQp4PLi4+NzCne3C/kOMpI5UVxHlgoJmtx0jr1RpvdfX4cTzCSud0J1F+6g7MWg3YLRp2IZyp88CdZBoUYeW0MNbYZi1ju3FeZu6EKKltZ0uftOfj6w== codendiadm@dev';
         $user = new MockUser($this);
@@ -102,6 +106,8 @@ class GitoliteDriverTest extends UnitTestCase {
 
         $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $key);
+
+        $this->assertEmptyGitStatus();
     }
 
     function testaddUserWithSeveralKeys() {
@@ -118,6 +124,8 @@ class GitoliteDriverTest extends UnitTestCase {
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $key1);
         $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'));
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@1.pub'), $key2);
+
+        $this->assertEmptyGitStatus();
     }
 
     function testRemoveUserKey() {
@@ -126,9 +134,11 @@ class GitoliteDriverTest extends UnitTestCase {
 
         // Now back with only one
         $this->testAddUserKey();
-        
+
         // Ensure second key was deleted
         $this->assertFalse(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'), "Second key should be deleted");
+
+        $this->assertEmptyGitStatus();
     }
 }
 

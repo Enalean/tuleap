@@ -79,22 +79,28 @@ class Git_GitoliteDriver {
      * @param User $user
      */
     public function initUserKeys($user) {
+        // First remove existing keys
+        $this->removeUserExistingKeys($user);
+
+        // Create path if need
         $keydir = $this->adminPath.'/keydir';
         if (!is_dir($keydir)) {
             mkdir($keydir);
         }
-        // First remove existing keys
-        $this->removeUserExistingKeys($user);
-        
+
+        // Dump keys
         $keys = explode("\n", $user->getAuthorizedKeys());
         $i    = 0;
         foreach ($keys as $key) {
             if ($key) {
-                $fileName = $user->getUserName().'@'.$i.'.pub';
-                file_put_contents($keydir.'/'.$fileName, $key);
+                $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
+                file_put_contents($filePath, $key);
+                $this->gitAdd($filePath);
                 $i++;
             }
         }
+
+        $this->gitCommit('Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys');
     }
 
     /**
@@ -104,17 +110,29 @@ class Git_GitoliteDriver {
      */
     protected function removeUserExistingKeys($user) {
         $keydir = $this->adminPath.'/keydir';
-        $dir = new DirectoryIterator($keydir);
-        foreach ($dir as $file) {
-            $userbase = $user->getUserName().'@';
-            if (preg_match('/^'.$userbase.'[0-9]+.pub$/', $file)) {
-                unlink($file->getPathname());
+        if (is_dir($keydir)) {
+            $dir = new DirectoryIterator($keydir);
+            foreach ($dir as $file) {
+                $userbase = $user->getUserName().'@';
+                if (preg_match('/^'.$userbase.'[0-9]+.pub$/', $file)) {
+                    unlink($file->getPathname());
+                    $this->gitRm($file->getPathname());
+                }
             }
         }
     }
 
     protected function gitAdd($file) {
         exec('git add '.escapeshellarg($file), $output, $retVal);
+        if ($retVal == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected function gitRm($file) {
+        exec('git rm '.escapeshellarg($file), $output, $retVal);
         if ($retVal == 0) {
             return true;
         } else {
