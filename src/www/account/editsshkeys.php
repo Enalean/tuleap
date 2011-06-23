@@ -15,25 +15,27 @@ session_require(array('isloggedin'=>1));
 // ###### checks for valid register from form post
 
 function register_valid()	{
-    $request =& HTTPRequest::instance();
+    $request = HTTPRequest::instance();
 
-	if (!$request->isPost()
+    if (!$request->isPost()
         || !$request->exist('Submit')
         || !$request->existAndNonEmpty('form_authorized_keys')) {
-		return 0;
-	}
-    $user = UserManager::instance()->getCurrentUser();
+        return false;
+    }
 
-	$form_authorized_keys = trim($request->get('form_authorized_keys'));
-	$form_authorized_keys = ereg_replace("(\r\n)|(\n)","###", $form_authorized_keys);
+    $um   = UserManager::instance();
+    $user = $um->getCurrentUser();
 
-	// if we got this far, it must be good
-	db_query("UPDATE user SET authorized_keys='".db_es($form_authorized_keys)."' WHERE user_id=" . $user->getId());
-    
+    $form_authorized_keys = trim($request->get('form_authorized_keys'));
+    $form_authorized_keys = ereg_replace("(\r\n)|(\n)","###", $form_authorized_keys);
+    $user->setAuthorizedKeys($form_authorized_keys);
+
+    $um->updateDb($user);
+
     $em = EventManager::instance();
     $em->processEvent(Event::EDIT_SSH_KEYS, array('user_id' => $user->getId()));
-    
-	return 1;
+
+    return true;
 }
 
 // ###### first check for valid login, if so, congratulate

@@ -31,7 +31,7 @@ class GitPlugin extends Plugin {
 
 
     public function __construct($id) {
-        $this->Plugin($id);
+        parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('cssfile', 'cssFile', false);
@@ -49,6 +49,8 @@ class GitPlugin extends Plugin {
         $this->_addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
 
         $this->_addHook('project_admin_remove_user', 'projectRemoveUserFromNotification', false);
+        
+        $this->_addHook(Event::EDIT_SSH_KEYS, 'edit_ssh_keys', false);
     }
 
     public function getPluginInfo() {
@@ -188,6 +190,22 @@ class GitPlugin extends Plugin {
 
     }
 
+    /**
+     * Called by hook when SSH keys of users are modified.
+     *
+     * @param array $params
+     */
+    public function edit_ssh_keys($params) {
+        $user = UserManager::instance()->getUserById($params['user_id']);
+        if ($user) {
+            include_once 'GitoliteDriver.class.php';
+            if (is_dir('/home/codendiadm/gitolite-admin')) {
+                $gitolite = new Git_GitoliteDriver('/home/codendiadm/gitolite-admin');
+                $gitolite->initUserKeys($user);
+                $gitolite->push();
+            }
+        }
+    }
 }
 
 ?>
