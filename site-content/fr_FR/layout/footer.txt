@@ -1,4 +1,4 @@
-<div id="footer">
+<div class="footer">
 Propulsé par Tuleap&trade; version <?php echo $version; ?>. Copyright &copy; 2011 Enalean.
 &nbsp;/&nbsp;
 <a href="/tos/tos.php">[tos]</a> - <a href="/tos/privacy.php">[privacy]</a>
