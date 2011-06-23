@@ -241,8 +241,10 @@ class FileFinder
         if (defined("INCLUDE_PATH"))
             $path = INCLUDE_PATH;
         else {
-            $path = @get_cfg_var('include_path'); // FIXME: report warning
-            if (empty($path)) $path = @ini_get('include_path');
+            // Tuleap: never trust /etc/php.ini, always rely on environment.
+            // $path = @get_cfg_var('include_path'); // FIXME: report warning
+            // if (empty($path)) $path = @ini_get('include_path');
+            $path = @ini_get('include_path');
         }
         if (empty($path))
             $path = '.';
