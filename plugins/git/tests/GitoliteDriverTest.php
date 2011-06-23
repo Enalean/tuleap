@@ -115,7 +115,7 @@ class GitoliteDriverTest extends UnitTestCase {
         $key2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA00qxJHrLEbrVTEtvC9c7xaeNIV81vxns7T89tGmyocFlPeD2N+uUQ8J90bcv7+aQDo229EWWI7oV6uGqsFXAuWSHHSvl7Am+2/lzVwSkvrVYAKl26Kz505a+W9xMbMKn8B+LFuOg3sjUKeVuz0WiUuKnHhhJUEBW+mJtuHrow49+6mOuL5v+M+0FlwGthagQt1zjWvo6g8GC4x97Wt3FVu8cfQJVu7S5KBXiz2VjRAwKTovt+M4+PlqO00vWbaaviFirwJPXjHoGVKONa/ahrXYiTICSgWUR6CjlqHs15cMSFOfkmDimu9KJiaOvfMNDPDGW/HeNUYB7HqYZIRcznQ== marcel@shanon.net';
         $user = new MockUser($this);
         $user->setReturnValue('getUserName', 'john_do');
-        $user->setReturnValue('getAuthorizedKeys', $key1."\n\n".$key2);
+        $user->setReturnValue('getAuthorizedKeys', $key1."######".$key2);
 
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
         $driver->initUserKeys($user);

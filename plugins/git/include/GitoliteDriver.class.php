@@ -30,6 +30,10 @@ class Git_GitoliteDriver {
         $this->confFilePath = $adminPath.'/conf/gitolite.conf';
     }
 
+    public function push() {
+        $this->gitPush();
+    }
+
     public function init($project, $repoPath) {
         $prjConfDir = $this->adminPath.'/conf/projects';
         if (!is_dir($prjConfDir)) {
@@ -89,7 +93,7 @@ class Git_GitoliteDriver {
         }
 
         // Dump keys
-        $keys = explode("\n", $user->getAuthorizedKeys());
+        $keys = explode('###', $user->getAuthorizedKeys());
         $i    = 0;
         foreach ($keys as $key) {
             if ($key) {
@@ -142,6 +146,15 @@ class Git_GitoliteDriver {
 
     protected function gitCommit($message) {
         exec('git commit -m '.escapeshellarg($message).' 2>&1 >/dev/null', $output, $retVal);
+        if ($retVal == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    protected function gitPush() {
+        exec('git push origin master 2>&1 >/dev/null', $output, $retVal);
         if ($retVal == 0) {
             return true;
         } else {
