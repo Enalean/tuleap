@@ -84,9 +84,13 @@ class Git_GitoliteDriver {
             mkdir($keydir);
         }
         $keys = explode("\n", $user->getAuthorizedKeys());
-        for ($i = 0; $i < count($keys); $i++) {
-            $fileName = $user->getUserName().'@'.$i.'.pub';
-            file_put_contents($keydir.'/'.$fileName, $keys[$i]);
+        $i    = 0;
+        foreach ($keys as $key) {
+            if ($key) {
+                $fileName = $user->getUserName().'@'.$i.'.pub';
+                file_put_contents($keydir.'/'.$fileName, $key);
+                $i++;
+            }
         }
     }
 
