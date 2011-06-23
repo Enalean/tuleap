@@ -83,6 +83,9 @@ class Git_GitoliteDriver {
         if (!is_dir($keydir)) {
             mkdir($keydir);
         }
+        // First remove existing keys
+        $this->removeUserExistingKeys($user);
+        
         $keys = explode("\n", $user->getAuthorizedKeys());
         $i    = 0;
         foreach ($keys as $key) {
@@ -90,6 +93,22 @@ class Git_GitoliteDriver {
                 $fileName = $user->getUserName().'@'.$i.'.pub';
                 file_put_contents($keydir.'/'.$fileName, $key);
                 $i++;
+            }
+        }
+    }
+
+    /**
+     * Remove all pub SSH keys previously associated to a user
+     *
+     * @param User $user
+     */
+    protected function removeUserExistingKeys($user) {
+        $keydir = $this->adminPath.'/keydir';
+        $dir = new DirectoryIterator($keydir);
+        foreach ($dir as $file) {
+            $userbase = $user->getUserName().'@';
+            if (preg_match('/^'.$userbase.'[0-9]+.pub$/', $file)) {
+                unlink($file->getPathname());
             }
         }
     }

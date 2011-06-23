@@ -119,6 +119,17 @@ class GitoliteDriverTest extends UnitTestCase {
         $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'));
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@1.pub'), $key2);
     }
+
+    function testRemoveUserKey() {
+        // run previous test to have several keys
+        $this->testaddUserWithSeveralKeys();
+
+        // Now back with only one
+        $this->testAddUserKey();
+        
+        // Ensure second key was deleted
+        $this->assertFalse(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'), "Second key should be deleted");
+    }
 }
 
 ?>
