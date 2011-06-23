@@ -7,7 +7,7 @@
 // 
 
 require_once('pre.php');    // Initial db and session library, opens session
-$HTML->header(array(title=>"Privacy Policy"));
+$HTML->header(array('title' => "Privacy Policy"));
 
 include($Language->getContent('tos/privacy'));
 

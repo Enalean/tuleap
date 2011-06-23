@@ -1,8 +1,5 @@
-<!--
-//
-// Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-// This file is licensed under the GNU General Public License version 2. See the file COPYING.
-//
--->
-<!-- This Copyright statement below MUST NOT be MODIFIED and MUST ALWAYS APPEAR IN THE FOOTER -->
-<div id="footer">Tuleap&trade; version <?php echo $version; ?>. Copyright 1999-2000 &copy; The SourceForge Crew. Copyright &copy; 2001-2010 Xerox Corporation. Copyright &copy; 2004-2011 STMicroelectronics. Copyright &copy; 2011 Enalean.</div>
+<div class="footer">
+Powered by Tuleap&trade; version <?php echo $version; ?>. Copyright &copy; 2011 Enalean.
+&nbsp;/&nbsp;
+<a href="/tos/tos.php">[tos]</a> - <a href="/tos/privacy.php">[privacy]</a>
+</div>
