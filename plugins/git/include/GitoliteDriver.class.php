@@ -98,15 +98,12 @@ class Git_GitoliteDriver {
         }
 
         // Dump keys
-        $keys = explode('###', $user->getAuthorizedKeys());
         $i    = 0;
-        foreach ($keys as $key) {
-            if ($key) {
-                $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
-                file_put_contents($filePath, $key);
-                $this->gitAdd($filePath);
-                $i++;
-            }
+        foreach ($user->getAuthorizedKeys(true) as $key) {
+            $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
+            file_put_contents($filePath, $key);
+            $this->gitAdd($filePath);
+            $i++;
         }
 
         $this->gitCommit('Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys');
