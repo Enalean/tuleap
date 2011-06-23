@@ -25,8 +25,12 @@ class ReleaseVersionComparator {
         foreach ($paths as $path) {
             $versionPath = $path.'/VERSION';            
             $curVersion  = $this->getCurrentVersion($versionPath);
-            $prevVersion = $this->getPreviousVersion($versionPath);
-            $this->displayOneLine($path, $curVersion, $prevVersion, $iRpms, $verbose);
+            try {
+                $prevVersion = $this->getPreviousVersion($versionPath);
+                $this->displayOneLine($path, $curVersion, $prevVersion, $iRpms, $verbose);
+            } catch(Exception $e) {
+                echo "Impossible to get previous $versionPath. It's normal if it's new in this release. Otherwise, please check\n";
+            }
         }
     }
 

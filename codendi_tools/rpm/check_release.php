@@ -20,7 +20,7 @@ foreach ($spec as $line) {
 $rootdir = realpath(dirname(__FILE__).'/../..');
 chdir($rootdir);
 
-$svnServer = 'https://codex.cro.st.com/svnroot/codex-cc';
+$svnServer = 'https://tuleap.net/svnroot/tuleap';
 $tagBase   = '/contrib/st/intg/Codendi-ST-4.0/tags';
 
 // Get last tag
