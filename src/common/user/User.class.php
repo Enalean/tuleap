@@ -257,7 +257,7 @@ class User {
      * For each group_id (the user is part of) one array from the user_group table
      */
     protected $_group_data;
-    protected function getUserGroupData() {
+    public function getUserGroupData() {
         if (!is_array($this->_group_data)) {
             $this->_group_data = array();
             if ($this->user_id) {
