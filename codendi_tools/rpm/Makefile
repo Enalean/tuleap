@@ -34,20 +34,33 @@ THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSIO
 
 PKG_NAME=codendi_st
 
-rpmprep:
-	mkdir -p $(RPM_TMP)
-	cd $(RPM_TMP) && mkdir -p BUILD RPMS SOURCES SPECS SRPMS TMP
-	echo "%_topdir $(RPM_TMP)" > ~/.rpmmacros
-	echo '%_tmppath %{_topdir}/TMP' >> ~/.rpmmacros
-	echo '%_buildroot %{_tmppath}/%{name}-root' >> ~/.rpmmacros
-	echo '%_sysconfdir /etc' >> ~/.rpmmacros
-	#echo '%dist -zata' >> ~/.rpmmacros
+all: codendi custom_codendi codendi-all-deps
 
-tarball:
-	cd $(BASE_DIR) && find . -type f -or -type l  | grep -v '/.svn/' | egrep -v '^\./plugins/tests' | egrep -v '^\./plugins/maillog' | cpio -pdumB --quiet $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
-	cd $(RPM_TMP)/SOURCES && tar czf $(PKG_NAME)-$(version).tar.gz $(PKG_NAME)-$(version)
+rpmprep: $(RPM_TMP) ~/.rpmmacros
 
-codendi: rpmprep tarball
+~/.rpmmacros:
+	@echo "Creating ~/.rpmmacros"
+	@echo "%_topdir $(RPM_TMP)" > ~/.rpmmacros
+	@echo '%_tmppath %{_topdir}/TMP' >> ~/.rpmmacros
+	@echo '%_buildroot %{_tmppath}/%{name}-root' >> ~/.rpmmacros
+	@echo '%_sysconfdir /etc' >> ~/.rpmmacros
+	@#echo '%dist -zata' >> ~/.rpmmacros
+
+$(RPM_TMP):
+	@[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP
+
+tarball: rpmprep $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz:
+	@echo "Building $@"
+	@#cd $(BASE_DIR) && find . -type f -or -type l  | grep -v '/.svn/' | egrep -v '^\./plugins/tests' | egrep -v '^\./plugins/maillog' | cpio -pdumB --quiet $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
+	@#cd $(RPM_TMP)/SOURCES && tar czf $(PKG_NAME)-$(version).tar.gz $(PKG_NAME)-$(version)
+	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
+	cd $(RPM_TMP)/SOURCES && find $(PKG_NAME)-$(version)/ -type f -or -type l | grep -v '/.svn/' | egrep -v '^\./plugins/tests' | egrep -v '^\./plugins/maillog' | cpio -o -H ustar --quiet | gzip > $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+
+codendi: tarball $(RPM_TMP)/RPMS/noarch/codendi_st-$(version)-1.noarch.rpm
+
+$(RPM_TMP)/RPMS/noarch/codendi_st-$(version)-1.noarch.rpm: codendi.spec
 	cat codendi.spec |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@CORE_MAILMAN_VERSION@@/$(CORE_MAILMAN_VERSION)/g' |\
@@ -108,12 +121,11 @@ core_rpms:
 
 clean:
 	-rm -Rf $(RPM_TMP)/*
+	@[ ! -d $(RPM_TMP) ] || rmdir $(RPM_TMP)
 	-rm -Rf ~/.rpmmacros
 	-rm -f /tmp/docbook-cug-*
 	-rm -f /tmp/log_xml2html_*
 	-rm -f /tmp/log_xml2pdf_*
-
-all: clean codendi custom_codendi codendi-all-deps
 
 dist:
 	mkdir -p $(RPM_TMP)/yum
