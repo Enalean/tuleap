@@ -33,6 +33,9 @@ class Git_GitoliteMembershipPgm {
                 $project = $pm->getProject($groupId);
                 if ($project) {
                     $groups[] = $project->getUnixName().'_project_members';
+                    if ($user->isMember($groupId, 'A')) {
+                        $groups[] = $project->getUnixName().'_project_admin';
+                    }
                 }
             }
         }

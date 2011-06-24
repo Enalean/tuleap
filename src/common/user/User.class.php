@@ -259,16 +259,25 @@ class User {
     protected $_group_data;
     public function getUserGroupData() {
         if (!is_array($this->_group_data)) {
-            $this->_group_data = array();
             if ($this->user_id) {
-                foreach($this->getUserGroupDao()->searchByUserId($this->user_id) as $row) {
-                    $this->_group_data[$row['group_id']] = $row;
-                }
+                $this->setUserGroupData($this->getUserGroupDao()->searchByUserId($this->user_id));
             }
         }
         return $this->_group_data;
     }
-    
+
+    /**
+     * Set in cache the dataset of dynamic user group
+     *
+     * @param array $data
+     */
+    public function setUserGroupData($data) {
+        $this->_group_data = array();
+        foreach ($data as $row) {
+            $this->_group_data[$row['group_id']] = $row;
+        }
+    }
+
     /**
      * is this user member of group $group_id ??
      */

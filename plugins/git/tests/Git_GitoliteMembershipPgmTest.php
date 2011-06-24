@@ -24,7 +24,6 @@ require_once dirname(__FILE__).'/../include/Git_GitoliteMembershipPgm.class.php'
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('UserManager');
-Mock::generate('User');
 
 class Git_GitoliteMembershipPgmTest extends UnitTestCase {
 
@@ -37,8 +36,8 @@ class Git_GitoliteMembershipPgmTest extends UnitTestCase {
     function testUserIsProjectMember() {
         $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager'));
 
-        $user = new MockUser($this);
-        $user->setReturnValue('getUserGroupData', array(101 => array('admin_flags' => '')));
+        $user = new User(array('user_id' => 202, 'language_id' => 'en_US'));
+        $user->setUserGroupData(array(array('group_id' => 101, 'admin_flags' => '')));
         $um = new MockUserManager($this);
         $um->expectOnce('getUserByUserName', array('john_do'));
         $um->setReturnValue('getUserByUserName', $user);
@@ -52,6 +51,26 @@ class Git_GitoliteMembershipPgmTest extends UnitTestCase {
         $mbPgm->setReturnValue('getProjectManager', $pm);
 
         $this->assertEqual($mbPgm->getGroups('john_do'), array('gpig_project_members'));
+    }
+
+    function testUserIsProjectAdmin() {
+        $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager'));
+
+        $user = new User(array('user_id' => 202, 'language_id' => 'en_US'));
+        $user->setUserGroupData(array(array('group_id' => 101, 'admin_flags' => 'A')));
+        $um = new MockUserManager($this);
+        $um->expectOnce('getUserByUserName', array('john_do'));
+        $um->setReturnValue('getUserByUserName', $user);
+        $mbPgm->setReturnValue('getUserManager', $um);
+
+        $project = new MockProject($this);
+        $project->setReturnValue('getUnixName', 'gpig');
+        $pm = new MockProjectManager($this);
+        $pm->expectOnce('getProject', array(101));
+        $pm->setReturnValue('getProject', $project);
+        $mbPgm->setReturnValue('getProjectManager', $pm);
+
+        $this->assertEqual($mbPgm->getGroups('john_do'), array('gpig_project_members', 'gpig_project_admin'));
     }
 }
 ?>
