@@ -24,7 +24,7 @@ fi
 CMDDIR=$BASEDIR/programmer_guide/cmd
 
 # Check arguments
-while	((1))	# look for options
+while	true	# look for options
 do	case	"$1" in
 	\-v*)	VERBOSE=1;;
 	\-f*)	FORCE=1;;
