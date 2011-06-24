@@ -130,7 +130,7 @@ if [ -z "$DESTDIR" ]; then
 fi
 
 
-if [ $HELP == 1 ]
+if [ $HELP -eq 1 ]
 then
     $ECHO "Usage: generate_cli_package.sh [-f] [-v] [-h]";
     $ECHO "  -f : force to generate the package without checking file dates";
@@ -151,16 +151,16 @@ if [ $FORCE != 1 ]
 then
     # check if need some update with CLI source code (and nusoap symbolic link too)
     COUNT=`$FIND $BASESRCDIR -newer $DESTDIR/$archivename.zip | $WC -l`
-    if [ $COUNT == 0 ]
+    if [ $COUNT -eq 0 ]
     then
         # No changes in the CLI source code
-        if [ $VERBOSE == 1 ]
+        if [ $VERBOSE -eq 1 ]
         then
             $ECHO "No changes in the CLI source code";
         fi
     else 
         EXIST_CHANGE=1;
-        if [ $VERBOSE == 1 ]
+        if [ $VERBOSE -eq 1 ]
         then
             $ECHO "Changes found in the CLI source code";
         fi
@@ -171,15 +171,15 @@ if [ $FORCE != 1 ]
 then
     # check if need some update with CLI documentation
     COUNT=`$FIND $BASEDOCDIR/cli/xml -newer $DESTDIR/$archivename.zip | $WC -l`
-    if [ $COUNT == 0 ]
+    if [ $COUNT -eq 0 ]
     then
         # No changes in the CLI documentation
-        if [ $VERBOSE == 1 ]
+        if [ $VERBOSE -eq 1 ]
         then
             $ECHO "No changes in the CLI documentation";
         fi
     else 
-        if [ $VERBOSE == 1 ]
+        if [ $VERBOSE -eq 1 ]
         then
             $ECHO "Changes found in the documentation";
             $ECHO "Generating documentation";
@@ -191,7 +191,7 @@ then
     fi
 else
     # force the documentation generation
-    if [ $VERBOSE == 1 ]
+    if [ $VERBOSE -eq 1 ]
     then
         $ECHO "Generating documentation";
         $TOP_SCRIPT_DIR/generate_cli_doc.sh -v -f
@@ -206,7 +206,7 @@ then
     if [ $FORCE != 1 ]
     then
         # No changes in the archive
-        if [ $VERBOSE == 1 ]
+        if [ $VERBOSE -eq 1 ]
         then
             $ECHO "No changes found in the files that compose the archive. Zip generation not necessary. Use -f to enforce the generation."
         fi
@@ -238,7 +238,7 @@ substitute "$TMPDIR/cli/codendi.php" '%wsdl_domain%' "$wsdl_domain"
 $MV cli $archivename
 
 # zip the CLI package
-if [ $VERBOSE == 1 ]
+if [ $VERBOSE -eq 1 ]
 then
     $ZIP -r "${archivename}_new.zip" $archivename
 else

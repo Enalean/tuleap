@@ -41,7 +41,7 @@ do	case	"$1" in
 	shift # next argument
 done
 
-if [ $HELP == 1 ]
+if [ $HELP -eq 1 ]
 then
     echo "Usage: generate_programmer_doc.sh [-f] [-v] [-h]";
     echo "  -f : force to generate the documentation without checking file dates";
@@ -61,10 +61,10 @@ if [ $FORCE != 1 ]
 then
     # check if some need some update
     COUNT=`find $BASEDIR/programmer_guide/xml -newer $BASEDIR/programmer_guide/pdf/en_US/Codendi_Programmer_Guide.pdf | wc -l`
-    if [ $COUNT == 0 ]
+    if [ $COUNT -eq 0 ]
     then
         # No changes in the documentation
-        if [ $VERBOSE == 1 ]
+        if [ $VERBOSE -eq 1 ]
         then
             echo "No changes in the documentation"
         fi
@@ -83,7 +83,7 @@ then
 	cat /tmp/log_xml2html_$$
     exit 1
 fi
-if [ $VERBOSE == 1 ]
+if [ $VERBOSE -eq 1 ]
 then
     cat /tmp/log_xml2html_$$
 fi
@@ -104,7 +104,7 @@ then
     export PATH=${OLD_PATH}
     exit 1
 fi
-if [ $VERBOSE == 1 ]
+if [ $VERBOSE -eq 1 ]
 then
     cat /tmp/log_xml2pdf_$$
 fi
