@@ -4,6 +4,14 @@ endif
 
 BASE_DIR=$(shell cd ../..; pwd)
 
+ifeq (,$(shell echo "$$DOCBOOK_TOOLS_DIR"))
+DOCBOOK_TOOLS_DIR=$(BASE_DIR)/docbook
+else
+DOCBOOK_TOOLS_DIR=$(shell echo $$DOCBOOK_TOOLS_DIR)
+endif
+
+DOCBOOKTARBALL=https://tuleap.net/file/pub/tuleap/tools/docbook/docbook.tbz2
+
 version=$(shell LANG=C cat $(BASE_DIR)/VERSION)
 
 CORE_MAILMAN_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/CORE_MAILMAN_VERSION)
@@ -34,7 +42,7 @@ THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSIO
 
 PKG_NAME=codendi_st
 
-all: codendi custom_codendi codendi-all-deps
+all: build-depends codendi custom_codendi codendi-all-deps
 
 rpmprep: $(RPM_TMP) ~/.rpmmacros
 
@@ -100,7 +108,7 @@ custom_codendi: tarball
 		> $(RPM_TMP)/SPECS/codendi-customization.spec
 	cp *_ParametersLocal.dtd $(RPM_TMP)/SOURCES/
 	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/organization_logo.png
-	rpmbuild -bb $(RPM_TMP)/SPECS/codendi-customization.spec
+	export DOCBOOK_TOOLS_DIR=$(DOCBOOK_TOOLS_DIR); rpmbuild -bb $(RPM_TMP)/SPECS/codendi-customization.spec
 
 codendi-all-deps: codendi-all-deps.spec
 	cat $< |\
@@ -131,3 +139,18 @@ dist:
 	mkdir -p $(RPM_TMP)/yum
 	cp -ar $(RPM_TMP)/RPMS/* $(RPM_TMP)/yum
 	createrepo $(RPM_TMP)/yum
+
+build-depends: /usr/bin/rpmbuild /usr/bin/createrepo /usr/bin/zip $(DOCBOOK_TOOLS_DIR)
+
+/usr/bin/rpmbuild:
+	yum -y install rpm-build
+	
+/usr/bin/createrepo:
+	yum -y install createrepo
+
+/usr/bin/zip:
+	yum -y install zip
+
+$(DOCBOOK_TOOLS_DIR):
+	@echo "Using DOCBOOK_TOOLS_DIR=$@"
+	@[ ! -d $@ ] && echo "DOCBOOK_TOOLS_DIR is missing, I suggest you take tarball from $(DOCBOOKTARBALL)" ; exit 1
