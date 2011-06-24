@@ -217,6 +217,7 @@ fi
 # Use the tar command to make a complex copy :
 # we copy the file contained in cli, documentation/cli/pdf, documentation/cli/html into $TMPDIR,
 # excluding the files .svn (subversion admin files) and *_old (old pdf documentation)
+[ -d $TMPDIR ] || mkdir $TMPDIR
 (cd $CODENDI_DIR; $TAR --exclude '.svn' --exclude "*_old.*" -h -cf - cli/ documentation/cli/pdf documentation/cli/html) | (cd $TMPDIR; $TAR xf -)
 cd $TMPDIR
 # We reorganize the files to fit the archive organization we want
