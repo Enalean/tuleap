@@ -27,6 +27,7 @@ require_once('common/system_event/SystemEventManager.class.php');
 require_once('GitBackend.class.php');
 require_once('GitRepository.class.php');
 require_once('GitDao.class.php');
+require_once('GitoliteDriver.class.php');
 
 /**
  * GitActions
@@ -74,8 +75,8 @@ class GitActions extends PluginActions {
         $c->addInfo( $this->getText('actions_delete_backup').' : '.PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir') );
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
     }
-       
-	public function createReference( $projectId, $repositoryName) {
+
+    public function createReference( $projectId, $repositoryName) {
         $c              = $this->getController();
         $projectId      = intval( $projectId );
         if ( empty($repositoryName) ) {
@@ -88,16 +89,22 @@ class GitActions extends PluginActions {
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
         }
-        $this->systemEventManager->createEvent(
+
+        $project = ProjectManager::instance()->getProject($projectId);
+
+        $gitolite = new Git_GitoliteDriver('/home/codendiadm/gitolite-admin');
+        $gitolite->init($project, $repositoryName);
+        $gitolite->push();
+        /*$this->systemEventManager->createEvent(
             'GIT_REPO_CREATE',
             $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryName.SystemEvent::PARAMETER_SEPARATOR.$this->user->getId(),
             SystemEvent::PRIORITY_MEDIUM
         );
-        $c->addInfo( $this->getText('actions_create_repo_process') );
+        $c->addInfo( $this->getText('actions_create_repo_process') );*/
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
         return;
     }
-    
+
     public function cloneRepository( $projectId, $forkName, $parentId) {
         
         $c         = $this->getController();
