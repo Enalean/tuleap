@@ -28,7 +28,7 @@ CMDDIR=$BASEDIR/user_guide/cmd
 
 
 # Check arguments
-while	((1))	# look for options
+while	true	# look for options
 do	case	"$1" in
 	\-v*)	VERBOSE=1;;
 	\-f*)	FORCE=1;;
@@ -46,7 +46,7 @@ do	case	"$1" in
 	shift # next argument
 done
 
-if [ $HELP == 1 ]
+if [ $HELP -eq 1 ]
 then
     echo "Usage: generate_doc.sh [-f] [-v] [-h]";
     echo "  -f : force to generate the documentation without checking file dates";
@@ -62,7 +62,7 @@ fi
 if [ -z $LANGUAGES ]
 then
     LANGUAGES=$ALL_LANGUAGES
-    if [ $VERBOSE == 1 ]
+    if [ $VERBOSE -eq 1 ]
     then
         echo "Generating documentation in all available languages ($LANGUAGES)";    
     fi    
@@ -74,7 +74,7 @@ else
 	echo "Failed!";
 	exit 2;
     fi
-    if [ $VERBOSE == 1 ]
+    if [ $VERBOSE -eq 1 ]
     then
         echo "Generating only $LANGUAGES documentation"
     fi    
@@ -93,10 +93,10 @@ do
     then
         # check if some need some update
         COUNT=`find $BASEDIR/user_guide/xml -newer $BASEDIR/user_guide/pdf/$lang/Codendi_User_Guide.pdf | wc -l`
-        if [ $COUNT == 0 ]
+        if [ $COUNT -eq 0 ]
         then
             # No changes in the documentation
-            if [ $VERBOSE == 1 ]
+            if [ $VERBOSE -eq 1 ]
             then
                 echo "No changes in the documentation"
             fi
@@ -115,7 +115,7 @@ do
             cat /tmp/log_xml2html_$$
         exit 1
     fi
-    if [ $VERBOSE == 1 ]
+    if [ $VERBOSE -eq 1 ]
     then
         cat /tmp/log_xml2html_$$
     fi
@@ -136,7 +136,7 @@ do
         export PATH=${OLD_PATH}
         exit 1
     fi
-    if [ $VERBOSE == 1 ]
+    if [ $VERBOSE -eq 1 ]
     then
         cat /tmp/log_xml2pdf_$$
     fi
