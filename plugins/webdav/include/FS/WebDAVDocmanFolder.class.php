@@ -256,6 +256,40 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
         return Docman_PermissionsManager::instance($this->getProject()->getGroupId());
     }
 
+    /**
+     * Create a new docman folder
+     *
+     * @param String $name Name of the folder to create
+     *
+     * @return void
+     */
+    function createDirectory($name) {
+        // TODO : Manage permissions
+        $item['item_type']         = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
+        $item['user_id']           = $this->getUser()->getId();
+        $item['group_id']          = $this->getProject()->getGroupId();
+        $item['parent_id']         = $this->getItem()->getId();
+        $item['title']             = $name;
+        $itemFactory = $this->getDocmanItemFactory();
+        $itemFactory->create($item, 'beginning');
+    }
+
+    /**
+     * Rename a new docman folder
+     *
+     * @param String $name New name of the folder
+     *
+     * @return void
+     */
+    function setName($name) {
+        // TODO : Manage permissions
+        // TODO : Manage particular cases (duplicate name, non existant folder, etc)
+        $row          = $this->getItem()->toRow();
+        $row['title'] = $name;
+        $itemFactory  = $this->getDocmanItemFactory();
+        $itemFactory->update($row);
+    }
+
 }
 
 ?>
