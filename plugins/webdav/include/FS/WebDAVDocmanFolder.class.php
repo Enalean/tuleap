@@ -275,7 +275,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     }
 
     /**
-     * Rename a new docman folder
+     * Rename a docman folder
      *
      * @param String $name New name of the folder
      *
