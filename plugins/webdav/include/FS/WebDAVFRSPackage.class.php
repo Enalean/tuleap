@@ -330,7 +330,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     function setName($name) {
 
         $utils = $this->getUtils();
-        if ($utils->getPackageFactory()->userCanUpdate($this->getProject()->getGroupId(), $this->getPackageId())) {
+        if ($this->userCanWrite()) {
             if (!$utils->getPackageFactory()->isPackageNameExist($name, $this->getProject()->getGroupId())) {
                 $this->getPackage()->setName(htmlspecialchars($name));
                 $utils->getPackageFactory()->update($this->getPackage());
