@@ -369,7 +369,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     function setName($name) {
 
         $utils = $this->getUtils();
-        if ($utils->getReleaseFactory()->userCanUpdate($this->getProject()->getGroupId(), $this->getReleaseId())) {
+        if ($this->userCanWrite()) {
             if (!$utils->getReleaseFactory()->isReleaseNameExist($name, $this->getPackage()->getPackageID())) {
                 $this->getRelease()->setName(htmlspecialchars($name));
                 $utils->getReleaseFactory()->update($this->getRelease()->toArray());
