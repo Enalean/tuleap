@@ -1,4 +1,8 @@
-Version 4.0.19 - Not released yet
+Version 4.0.19.1 - Tuesday, 28th June 2011
+	== Bug fix ==
+	* Fix regression in .SVNAccessFile management: special group '@members' is no longer discarded.
+
+Version 4.0.19 - Not released.
 	== New features ==
 	* Improve themability of HomePage
 		* New css selectors for each homepage elements and for news
