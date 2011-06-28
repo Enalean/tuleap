@@ -264,14 +264,19 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return void
      */
     function createDirectory($name) {
-        // TODO : Manage permissions
-        $item['item_type']         = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
-        $item['user_id']           = $this->getUser()->getId();
-        $item['group_id']          = $this->getProject()->getGroupId();
-        $item['parent_id']         = $this->getItem()->getId();
-        $item['title']             = $name;
-        $itemFactory = $this->getDocmanItemFactory();
-        $itemFactory->create($item, 'beginning');
+        $docmanPermissionManager = $this->getDocmanPermissionsManager();
+        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+            $item['item_type']         = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
+            $item['user_id']           = $this->getUser()->getId();
+            $item['group_id']          = $this->getProject()->getGroupId();
+            $item['parent_id']         = $this->getItem()->getId();
+            $item['title']             = $name;
+            $itemFactory               = $this->getDocmanItemFactory();
+            $itemFactory->create($item, 'beginning');
+        } else {
+            // TODO : i18n
+            throw new Sabre_DAV_Exception_Forbidden('permission denied to create folder');
+        }
     }
 
     /**
@@ -282,12 +287,17 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return void
      */
     function setName($name) {
-        // TODO : Manage permissions
-        // TODO : Manage particular cases (duplicate name, non existant folder, etc)
-        $row          = $this->getItem()->toRow();
-        $row['title'] = $name;
-        $itemFactory  = $this->getDocmanItemFactory();
-        $itemFactory->update($row);
+        $docmanPermissionManager = $this->getDocmanPermissionsManager();
+        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+            // TODO : Manage particular cases (duplicate name, non existant folder, etc)
+            $row          = $this->getItem()->toRow();
+            $row['title'] = $name;
+            $itemFactory  = $this->getDocmanItemFactory();
+            $itemFactory->update($row);
+        } else {
+            // TODO : i18n
+            throw new Sabre_DAV_Exception_Forbidden('permission denied to rename folder');
+        }
     }
 
 }
