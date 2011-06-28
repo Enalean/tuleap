@@ -24,7 +24,7 @@ require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
 Mock::generate('Project');
 Mock::generate('User');
 
-class GitoliteDriverTest extends UnitTestCase {
+class Git_GitoliteDriverTest extends UnitTestCase {
 
     function setUp() {
         $this->cwd = getcwd();
