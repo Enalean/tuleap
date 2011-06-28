@@ -17,7 +17,7 @@ $request = HTTPRequest::instance();
 
 if ($request->isPost()
     && $request->exist('Submit')
-    && $request->existAndNonEmpty('form_authorized_keys')) {
+    && $request->exist('form_authorized_keys')) {
 
     $form_authorized_keys = trim($request->get('form_authorized_keys'));
     $form_authorized_keys = ereg_replace("(\r\n)|(\n)","###", $form_authorized_keys);
