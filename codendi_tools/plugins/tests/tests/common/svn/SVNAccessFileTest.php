@@ -80,6 +80,27 @@ class SVNAccessFileTest extends UnitTestCase {
         $this->assertFalse($saf->isValidUGroupLine($project, '@uGroup2 = rw'));
     }
 
+    function testIsValidUGroupLineMembers() {
+        $ugroups = array(1, 2);
+        $ugdao = new MockUGroupDao();
+        $ugdao->setReturnValue('searchByGroupId',$ugroups);
+
+        $ugroup1 = new MockUGroup();
+        $ugroup1->setReturnValue('getMembers',array(1));
+        $ugroup1->setReturnValue('getName',"uGroup1");
+        $ugroup2 = new MockUGroup();
+        $ugroup2->setReturnValue('getMembers',array(2));
+        $ugroup2->setReturnValue('getName',"uGroup2");
+
+        $project = new MockProject();
+
+        $saf = new SVNAccessFileTestVersion();
+        $saf->setReturnValueAt(0, '_getUGroupFromRow', $ugroup1);
+        $saf->setReturnValueAt(1, '_getUGroupFromRow', $ugroup2);
+        $saf->setReturnValue('_getUGroupDao', $ugdao);
+        $this->assertTrue($saf->isValidUGroupLine($project, '@members = rw'));
+    }
+
     function testIsValidUGroupLine() {
         $ugroups = array(1, 2);
         $ugdao = new MockUGroupDao();

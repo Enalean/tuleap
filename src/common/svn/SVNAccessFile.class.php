@@ -40,26 +40,30 @@ class SVNAccessFile {
         preg_match('/^@([a-zA-Z0-9\-_]+)[ ]*=/', $line, $matches);
         if (!empty($matches)) {
             $match = $matches[1];
-            $ugroupDao = $this->_getUGroupDao();
-            $dar = $ugroupDao->searchByGroupId($project->getId());
-            foreach ($dar as $row) {
-                $ugroup = $this->_getUGroupFromRow($row);
-                if ($ugroup->getName() == $match) {
-                    $members = $ugroup->getMembers();
-                    if (empty($members)) {
-                        if ($verbose) {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('svn_admin_access_control', 'ugroup_empty', $match));
+            if ($match == 'members') {
+                return true;
+            } else {
+                $ugroupDao = $this->_getUGroupDao();
+                $dar = $ugroupDao->searchByGroupId($project->getId());
+                foreach ($dar as $row) {
+                    $ugroup = $this->_getUGroupFromRow($row);
+                    if ($ugroup->getName() == $match) {
+                        $members = $ugroup->getMembers();
+                        if (empty($members)) {
+                            if ($verbose) {
+                                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('svn_admin_access_control', 'ugroup_empty', $match));
+                            }
+                            return false;
+                        } else {
+                            return true;
                         }
-                        return false;
-                    } else {
-                        return true;
                     }
                 }
+                if ($verbose) {
+                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('svn_admin_access_control', 'no_ugroup', $match));
+                }
+                return false;
             }
-            if ($verbose) {
-                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('svn_admin_access_control', 'no_ugroup', $match));
-            }
-            return false;
         }
         if ($verbose) {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('svn_admin_access_control', 'invalid_line', $line));
