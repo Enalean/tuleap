@@ -37,7 +37,7 @@ class Git_GitoliteMembershipPgmTest extends UnitTestCase {
     function testUserIsProjectMember() {
         $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager'));
 
-        $user = new User(array('user_id' => 202, 'language_id' => 'en_US'));
+        $user = new User(array('user_id' => 202, 'language_id' => 'en_US', 'status' => 'A'));
         $user->setUserGroupData(array(array('group_id' => 101, 'admin_flags' => '')));
         $um = new MockUserManager($this);
         $um->expectOnce('getUserByUserName', array('john_do'));
@@ -51,13 +51,13 @@ class Git_GitoliteMembershipPgmTest extends UnitTestCase {
         $pm->setReturnValue('getProject', $project);
         $mbPgm->setReturnValue('getProjectManager', $pm);
 
-        $this->assertEqual($mbPgm->getGroups('john_do'), array('gpig_project_members'));
+        $this->assertEqual($mbPgm->getGroups('john_do'), array('site_active', 'gpig_project_members'));
     }
 
     function testUserIsProjectAdmin() {
         $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager'));
 
-        $user = new User(array('user_id' => 202, 'language_id' => 'en_US'));
+        $user = new User(array('user_id' => 202, 'language_id' => 'en_US', 'status' => 'A'));
         $user->setUserGroupData(array(array('group_id' => 101, 'admin_flags' => 'A')));
         $um = new MockUserManager($this);
         $um->expectOnce('getUserByUserName', array('john_do'));
@@ -71,13 +71,13 @@ class Git_GitoliteMembershipPgmTest extends UnitTestCase {
         $pm->setReturnValue('getProject', $project);
         $mbPgm->setReturnValue('getProjectManager', $pm);
 
-        $this->assertEqual($mbPgm->getGroups('john_do'), array('gpig_project_members', 'gpig_project_admin'));
+        $this->assertEqual($mbPgm->getGroups('john_do'), array('site_active','gpig_project_members', 'gpig_project_admin'));
     }
 
     function testUserIsMemberOfAStaticUgroup() {
         $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager', 'getUGroupManager'));
 
-        $user = new User(array('user_id' => 202, 'language_id' => 'en_US'));
+        $user = new User(array('user_id' => 202, 'language_id' => 'en_US', 'status' => 'A'));
         $user->setUserGroupData(array());
         $um = new MockUserManager($this);
         $um->expectOnce('getUserByUserName', array('john_do'));
@@ -92,7 +92,49 @@ class Git_GitoliteMembershipPgmTest extends UnitTestCase {
         $ugm->setReturnValue('getByUserId', array(array('ugroup_id' => 304)));
         $mbPgm->setReturnValue('getUGroupManager', $ugm);
 
-        $this->assertEqual($mbPgm->getGroups('john_do'), array('ug_304'));
+        $this->assertEqual($mbPgm->getGroups('john_do'), array('site_active', 'ug_304'));
+    }
+
+    function testUserIsRestricted() {
+        $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager', 'getUGroupManager'));
+
+        $user = new User(array('user_id' => 202, 'language_id' => 'en_US', 'status' => 'R'));
+        $user->setUserGroupData(array());
+        $um = new MockUserManager($this);
+        $um->expectOnce('getUserByUserName', array('john_do'));
+        $um->setReturnValue('getUserByUserName', $user);
+        $mbPgm->setReturnValue('getUserManager', $um);
+
+        $pm = new MockProjectManager($this);
+        $pm->expectNever('getProject');
+        $mbPgm->setReturnValue('getProjectManager', $pm);
+
+        $ugm = new MockUGroupManager($this);
+        $ugm->setReturnValue('getByUserId', array());
+        $mbPgm->setReturnValue('getUGroupManager', $ugm);
+
+        $this->assertEqual($mbPgm->getGroups('john_do'), array('site_restricted'));
+    }
+    
+    function testUserIsNeitherRestrictedNorActive() {
+        $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager', 'getUGroupManager'));
+
+        $user = new User(array('user_id' => 202, 'language_id' => 'en_US', 'status' => 'S'));
+        $user->setUserGroupData(array());
+        $um = new MockUserManager($this);
+        $um->expectOnce('getUserByUserName', array('john_do'));
+        $um->setReturnValue('getUserByUserName', $user);
+        $mbPgm->setReturnValue('getUserManager', $um);
+
+        $pm = new MockProjectManager($this);
+        $pm->expectNever('getProject');
+        $mbPgm->setReturnValue('getProjectManager', $pm);
+
+        $ugm = new MockUGroupManager($this);
+        $ugm->expectNever('getByUserId');
+        $mbPgm->setReturnValue('getUGroupManager', $ugm);
+
+        $this->assertEqual($mbPgm->getGroups('john_do'), array());
     }
 }
 ?>

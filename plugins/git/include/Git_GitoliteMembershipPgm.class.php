@@ -28,7 +28,17 @@ class Git_GitoliteMembershipPgm {
     public function getGroups($sshUserName) {
         $groups = array();
         $user = $this->getUserManager()->getUserByUserName($sshUserName);
-        if ($user) {
+        if ($user && ($user->isActive() || $user->isRestricted())) {
+            // Special groups depending of status
+            switch ($user->getStatus()) {
+                case User::STATUS_RESTRICTED:
+                    $groups[] = 'site_restricted';
+                    break;
+                case User::STATUS_ACTIVE:
+                    $groups[] = 'site_active';
+                    break;
+            }
+
             // Dynamic groups
             $pm = $this->getProjectManager();
             foreach ($user->getUserGroupData() as $groupId => $row) {
