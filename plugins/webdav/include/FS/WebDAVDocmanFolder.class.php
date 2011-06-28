@@ -274,8 +274,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             $itemFactory               = $this->getDocmanItemFactory();
             $itemFactory->create($item, 'beginning');
         } else {
-            // TODO : i18n
-            throw new Sabre_DAV_Exception_Forbidden('permission denied to create folder');
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_create'));
         }
     }
 
@@ -289,14 +288,13 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     function setName($name) {
         $docmanPermissionManager = $this->getDocmanPermissionsManager();
         if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            // TODO : Manage particular cases (duplicate name, non existant folder, etc)
             $row          = $this->getItem()->toRow();
             $row['title'] = $name;
+            $row['id']    = $this->getItem()->getId();
             $itemFactory  = $this->getDocmanItemFactory();
             $itemFactory->update($row);
         } else {
-            // TODO : i18n
-            throw new Sabre_DAV_Exception_Forbidden('permission denied to rename folder');
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_rename'));
         }
     }
 

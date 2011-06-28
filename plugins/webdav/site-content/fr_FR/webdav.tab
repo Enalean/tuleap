@@ -45,6 +45,8 @@ plugin_webdav_common	hidden	 (cache)
 plugin_webdav_common	files	Fichiers
 plugin_webdav_common	link	Lien
 plugin_webdav_common	empty	Vide
+plugin_webdav_common	folder_denied_create	Vous n'avez pas le droit de créer un dossier.
+plugin_webdav_common	folder_denied_rename	Vous n'avez pas le droit de renommer ce dossier.
 plugin_webdav	descriptor_description	Serveur WebDAV pour la gestion du service de livraison de fichier et du service de documentation.
 plugin_webdav	descriptor_name	WebDAV.
 plugin_webdav_html	name	Nom
