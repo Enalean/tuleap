@@ -11,6 +11,9 @@ require_once('defs.constants.php');
 
 function git_project_descr($projectroot,$project,$trim = FALSE)
 {
+    if (!is_file($projectroot . $project . "/description")) {
+        return '';
+    }
 	$desc = file_get_contents($projectroot . $project . "/description");
 	if ($trim && (strlen($desc) > GITPHP_TRIM_LENGTH))
 		$desc = substr($desc,0, GITPHP_TRIM_LENGTH) . "...";
