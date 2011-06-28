@@ -32,6 +32,11 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      */
     protected $dao;
 
+    /**
+     * Constructor
+     * 
+     * @param Git_GitoliteDriver $driver
+     */
     public function __construct($driver) {
         $this->driver = $driver;
     }
@@ -48,6 +53,13 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         $id = $this->getDao()->save($repository);
     }
 
+    /**
+     * Verify if the repository as already some content within
+     *
+     * @see    plugins/git/include/Git_Backend_Interface::isInitialized()
+     * @param  GitRepository $repository
+     * @return Boolean
+     */
     public function isInitialized($repository) {
         $masterExists = $this->driver->masterExists($this->getGitRootPath().'/'.$repository->getPath());
         if ($masterExists) {
@@ -61,15 +73,19 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     /**
      * Return URL to access the respository for remote git commands
      *
-     * @param GitRepository $repository
-     *
+     * @param  GitRepository $repository
      * @return String
      */
     public function getAccessUrl($repository) {
         $serverName  = $_SERVER['SERVER_NAME'];
         return  'gitolite@'.$serverName.':'.$repository->getProject()->getUnixName().'/'.$repository->getName().'.git';
     }
-    
+
+    /**
+     * Return the base root of all git repositories
+     *
+     * @return String
+     */
     public function getGitRootPath() {
         return '/usr/com/gitolite/repositories/';
     }

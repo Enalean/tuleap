@@ -29,16 +29,27 @@ interface Git_Backend_Interface {
     public function createReference($repository);
 
     /**
-     * Is there anything into the repository yet?
-     * 
-     * @param $respository
-     * 
+     * Verify if the repository as already some content within
+     *
+     * @see    plugins/git/include/Git_Backend_Interface::isInitialized()
+     * @param  GitRepository $repository
      * @return Boolean
      */
     public function isInitialized($respository);
-    
+
+    /**
+     * Return URL to access the respository for remote git commands
+     *
+     * @param  GitRepository $repository
+     * @return String
+     */
     public function getAccessUrl($repository);
-    
+
+    /**
+     * Return the base root of all git repositories
+     *
+     * @return String
+     */
     public function getGitRootPath();
 }
 ?>

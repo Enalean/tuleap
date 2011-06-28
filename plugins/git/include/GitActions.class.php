@@ -27,7 +27,7 @@ require_once('common/system_event/SystemEventManager.class.php');
 require_once('GitBackend.class.php');
 require_once('GitRepository.class.php');
 require_once('GitDao.class.php');
-require_once('GitoliteDriver.class.php');
+require_once('Git_GitoliteDriver.class.php');
 require_once('Git_Backend_Gitolite.class.php');
 
 

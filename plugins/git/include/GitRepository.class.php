@@ -386,10 +386,15 @@ class GitRepository implements DVCSRepository {
         return $this->path;
     }
 
+    /**
+     * Return path on the filesystem where the repositories are stored.
+     *
+     * @return String
+     */
     public function getGitRootPath() {
         return $this->getBackend()->getGitRootPath();
     }
-    
+
     public function getAccess() {
         return $this->access;
     }
