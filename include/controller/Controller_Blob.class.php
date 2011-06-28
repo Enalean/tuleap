@@ -115,7 +115,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			$this->preserveWhitespace = true;
 
 			// XXX: Nasty hack to cache headers
-			if (!$this->tpl->is_cached('blobheaders.tpl', $this->GetFullCacheKey())) {
+			if (!$this->tpl->isCached('blobheaders.tpl', $this->GetFullCacheKey())) {
 				if (isset($this->params['file']))
 					$saveas = $this->params['file'];
 				else

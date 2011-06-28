@@ -1,4 +1,4 @@
-{config_load file=test.conf section="setup"}
+{config_load file="test.conf" section="setup"}
 {include file="header.tpl" title=foo}
 
 <PRE>
@@ -24,7 +24,8 @@ variable modifier example of {ldelim}$Name|upper{rdelim}
 
 An example of a section loop:
 
-{section name=outer loop=$FirstName}
+{section name=outer 
+loop=$FirstName}
 {if $smarty.section.outer.index is odd by 2}
 	{$smarty.section.outer.rownum} . {$FirstName[outer]} {$LastName[outer]}
 {else}

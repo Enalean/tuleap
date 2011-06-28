@@ -79,6 +79,7 @@ abstract class GitPHP_ControllerBase
 	{
 		require_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('smarty_prefix', 'lib/smarty/libs/')) . 'Smarty.class.php');
 		$this->tpl = new Smarty;
+		$this->tpl->error_reporting = E_ALL & ~E_NOTICE;
 		$this->tpl->plugins_dir[] = GITPHP_INCLUDEDIR . 'smartyplugins';
 
 		if (GitPHP_Config::GetInstance()->GetValue('cache', false)) {
@@ -328,8 +329,8 @@ abstract class GitPHP_ControllerBase
 		if ((GitPHP_Config::GetInstance()->GetValue('cache', false) == true) && (GitPHP_Config::GetInstance()->GetValue('cacheexpire', true) === true))
 			$this->CacheExpire();
 
-		if (!$this->tpl->is_cached($this->GetTemplate(), $this->GetFullCacheKey())) {
-			$this->tpl->clear_all_assign();
+		if (!$this->tpl->isCached($this->GetTemplate(), $this->GetFullCacheKey())) {
+			$this->tpl->clearAllAssign();
 			$this->LoadCommonData();
 			$this->LoadData();
 		}
@@ -352,7 +353,7 @@ abstract class GitPHP_ControllerBase
 	public function CacheExpire($expireAll = false)
 	{
 		if ($expireAll) {
-			$this->tpl->clear_all_cache();
+			$this->tpl->clearAllCache();
 			return;
 		}
 
@@ -365,8 +366,8 @@ abstract class GitPHP_ControllerBase
 
 		$age = $this->project->GetAge();
 
-		$this->tpl->clear_cache(null, $this->GetCacheKeyPrefix(), null, $age);
-		$this->tpl->clear_cache('projectlist.tpl', $this->GetCacheKeyPrefix(false), null, $age);
+		$this->tpl->clearCache(null, $this->GetCacheKeyPrefix(), null, $age);
+		$this->tpl->clearCache('projectlist.tpl', $this->GetCacheKeyPrefix(false), null, $age);
 	}
 
 }

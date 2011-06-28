@@ -1,8 +1,9 @@
 <?php
 /**
  * Smarty plugin
+ *
  * @package Smarty
- * @subpackage plugins
+ * @subpackage PluginsFilter
  */
 
 /**
@@ -22,10 +23,11 @@
  * @author   Monte Ohrt <monte at ohrt dot com>
  * @author Contributions from Lars Noschinski <lars@usenet.noschinski.de>
  * @version  1.3
- * @param string
- * @param Smarty
+ * @param string $source input string
+ * @param object &$smarty Smarty object
+ * @return string filtered output
  */
-function smarty_outputfilter_trimwhitespace($source, &$smarty)
+function smarty_outputfilter_trimwhitespace($source, $smarty)
 {
     // Pull out the script blocks
     preg_match_all("!<script[^>]*?>.*?</script>!is", $source, $match);
