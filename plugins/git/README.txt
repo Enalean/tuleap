@@ -11,3 +11,7 @@ Reference: http://sitaramc.github.com/gitolite/doc/1-INSTALL.html#_package_metho
 * cp $HOME/.ssh/id_rsa_gitolite.pub /var/tmp/codendi_cache
 * su - gitolite
 * gl-setup /var/tmp/codendi_cache/id_rsa_gitolite.pub
+
+Deploy Gitolite Membership Program
+/usr/bin/install -g codendiadm -o codendiadm -m 06755 /usr/share/codendi/plugins/git/bin/gl-membership.pl /usr/lib/codendi/bin
++ edit ~/gitolite.rc
