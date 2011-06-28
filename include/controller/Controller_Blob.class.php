@@ -147,7 +147,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 			}
 			$out = $this->tpl->fetch('blobheaders.tpl', $this->GetFullCacheKey());
 
-			$this->headers = unserialize($out);
+			$this->headers = unserialize(trim($out));
 		}
 
 	}
