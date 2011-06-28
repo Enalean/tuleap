@@ -35,7 +35,7 @@ class Git_GitoliteMembershipPgmTest extends UnitTestCase {
     }
 
     function testUserIsProjectMember() {
-        $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager'));
+        $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager', 'getUGroupManager'));
 
         $user = new User(array('user_id' => 202, 'language_id' => 'en_US', 'status' => 'A'));
         $user->setUserGroupData(array(array('group_id' => 101, 'admin_flags' => '')));
@@ -51,11 +51,15 @@ class Git_GitoliteMembershipPgmTest extends UnitTestCase {
         $pm->setReturnValue('getProject', $project);
         $mbPgm->setReturnValue('getProjectManager', $pm);
 
+        $ugm = new MockUGroupManager($this);
+        $ugm->setReturnValue('getByUserId', array());
+        $mbPgm->setReturnValue('getUGroupManager', $ugm);
+
         $this->assertEqual($mbPgm->getGroups('john_do'), array('site_active', 'gpig_project_members'));
     }
 
     function testUserIsProjectAdmin() {
-        $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager'));
+        $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager', 'getUGroupManager'));
 
         $user = new User(array('user_id' => 202, 'language_id' => 'en_US', 'status' => 'A'));
         $user->setUserGroupData(array(array('group_id' => 101, 'admin_flags' => 'A')));
@@ -70,6 +74,10 @@ class Git_GitoliteMembershipPgmTest extends UnitTestCase {
         $pm->expectOnce('getProject', array(101));
         $pm->setReturnValue('getProject', $project);
         $mbPgm->setReturnValue('getProjectManager', $pm);
+
+        $ugm = new MockUGroupManager($this);
+        $ugm->setReturnValue('getByUserId', array());
+        $mbPgm->setReturnValue('getUGroupManager', $ugm);
 
         $this->assertEqual($mbPgm->getGroups('john_do'), array('site_active','gpig_project_members', 'gpig_project_admin'));
     }
