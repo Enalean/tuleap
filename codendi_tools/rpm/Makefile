@@ -42,7 +42,7 @@ THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSIO
 
 PKG_NAME=codendi_st
 
-all: build-depends codendi custom_codendi codendi-all-deps
+all: clean build-depends codendi custom_codendi codendi-all-deps
 
 rpmprep: $(RPM_TMP) ~/.rpmmacros
 
