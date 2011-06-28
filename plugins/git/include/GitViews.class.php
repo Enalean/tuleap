@@ -65,11 +65,12 @@ class GitViews extends PluginViews {
     <h3><?php echo $this->getText('help_reference_title'); ?></h3>
     <p>
                        <?php
-                       $repoName = 'REPO_NAME';
-                       if ( !empty($params['repo_name']) ) {
-                           $repoName = $params['repo_name'];
+                       if (isset($params['repository'])) {
+                           $access = $params['repository']->getAccessURL();
+                       } else {
+                           $access = 'user@'.$_SERVER['SERVER_NAME'].':/path/to/repo.git';
                        }
-                       echo '<ul>'.$this->getText('help_init_reference', array($this->_getRepositoryUrl($repoName)) ).'</ul>';
+                       echo '<ul>'.$this->getText('help_init_reference', array($access)).'</ul>';
                        ?>
     </p>
     </div>
@@ -155,7 +156,7 @@ class GitViews extends PluginViews {
             echo '<br />';
             if ( !$initialized ) {
                 echo '<div class="feedback_warning">'.$this->getText('help_init_reference_msg').'</div>';
-                $this->help('init', array('repo_name'=>$repoName));
+                $this->help('init', array('repository'=>$repository));
             }
             $this->_getBreadCrumb();
             
@@ -213,7 +214,7 @@ class GitViews extends PluginViews {
     }
     ?>
     <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
-            ?>: <input id="plugin_git_clone_field" type="text" value="git clone <?php echo $this->_getRepositoryUrl($repoName); ?>" />
+            ?>: <input id="plugin_git_clone_field" type="text" value="git clone <?php echo $repository->getAccessURL(); ?>" />
     </p>
 </form>
         <?php
@@ -359,8 +360,13 @@ class GitViews extends PluginViews {
         }
     }
 
+    /**
+     * Configure gitphp output
+     * 
+     * @param GitRepository $repository
+     */
     public function getView($repository) {
-        require_once('../../../src/common/include/Codendi_HTMLPurifier.class.php');        
+        include_once 'common/include/Codendi_HTMLPurifier.class.php';
         if ( empty($_REQUEST['a']) )  {
             $_REQUEST['a'] = 'summary';
         }
@@ -371,8 +377,8 @@ class GitViews extends PluginViews {
         $_REQUEST['repo_name']     = $repository->getName();
         $_GET['p']                 = $_REQUEST['repo_name'].'.git';
         $_REQUEST['repo_path']     = $repository->getPath();
-	$_REQUEST['project_dir']   = $repository->getProject()->getUnixName();
-        $_REQUEST['git_root_path'] = GitBackend::GIT_ROOT_PATH;
+        $_REQUEST['project_dir']   = $repository->getProject()->getUnixName();
+        $_REQUEST['git_root_path'] = $repository->getGitRootPath();
         $_REQUEST['action']        = 'view';
         if ( empty($_REQUEST['noheader']) ) {
             //echo '<hr>';

@@ -48,6 +48,32 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         $id = $this->getDao()->save($repository);
     }
 
+    public function isInitialized($repository) {
+        $masterExists = $this->driver->masterExists($this->getGitRootPath().'/'.$repository->getPath());
+        if ($masterExists) {
+            $this->getDao()->initialize($repository->getId());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Return URL to access the respository for remote git commands
+     *
+     * @param GitRepository $repository
+     *
+     * @return String
+     */
+    public function getAccessUrl($repository) {
+        $serverName  = $_SERVER['SERVER_NAME'];
+        return  'gitolite@'.$serverName.':'.$repository->getProject()->getUnixName().'/'.$repository->getName().'.git';
+    }
+    
+    public function getGitRootPath() {
+        return '/usr/com/gitolite/repositories/';
+    }
+
     /**
      * Wrapper for GitDao
      * 

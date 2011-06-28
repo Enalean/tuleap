@@ -138,6 +138,19 @@ class GitRepository implements DVCSRepository {
 
     /**
      * Define Backend used by repo
+     *
+     * @param $backend
+     */
+    public function setBackendType($backendType) {
+        $this->backendType = $backendType;
+    }
+
+    protected function getBackendType() {
+        return $this->backendType;
+    }
+    
+    /**
+     * Define Backend used by repo
      * 
      * @param $backend
      */
@@ -147,11 +160,18 @@ class GitRepository implements DVCSRepository {
 
     /**
      * Allow to mock in UT
-     * @return GitBackend
+     *
+     * @return Git_Backend_Interface
      */
     public function getBackend() {
         if ( empty($this->backend) ) {
-            $this->backend = Backend::instance('Git','GitBackend');
+            switch ($this->getBackendType()) {
+                case GitDao::BACKEND_GITOLITE:
+                    $this->backend = new Git_Backend_Gitolite(new Git_GitoliteDriver('/home/codendiadm/gitolite-admin'));
+                    break;
+                default:
+                    $this->backend = Backend::instance('Git','GitBackend');
+            }
         }
         return $this->backend;
     }
@@ -366,6 +386,10 @@ class GitRepository implements DVCSRepository {
         return $this->path;
     }
 
+    public function getGitRootPath() {
+        return $this->getBackend()->getGitRootPath();
+    }
+    
     public function getAccess() {
         return $this->access;
     }
@@ -414,6 +438,10 @@ class GitRepository implements DVCSRepository {
 
     public function getNotifiedMails() {
         return $this->notifiedMails;
+    }
+
+    public function getAccessURL() {
+        return $this->getBackend()->getAccessURL($this);
     }
 
     /**

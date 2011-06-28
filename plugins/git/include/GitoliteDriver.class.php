@@ -34,6 +34,13 @@ class Git_GitoliteDriver {
         chdir($this->adminPath);
     }
 
+    public function masterExists($repoPath) {
+        if (file_exists($repoPath.'/refs/heads/master')) {
+            return true;
+        }
+        return false;
+    }
+
     public function push() {
         $this->gitPush();
         chdir($this->oldCwd);

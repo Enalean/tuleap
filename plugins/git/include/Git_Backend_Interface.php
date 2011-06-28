@@ -27,5 +27,18 @@ interface Git_Backend_Interface {
      * @param GitRepository $repository
      */
     public function createReference($repository);
+
+    /**
+     * Is there anything into the repository yet?
+     * 
+     * @param $respository
+     * 
+     * @return Boolean
+     */
+    public function isInitialized($respository);
+    
+    public function getAccessUrl($repository);
+    
+    public function getGitRootPath();
 }
 ?>
