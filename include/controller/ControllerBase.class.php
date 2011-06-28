@@ -177,6 +177,10 @@ abstract class GitPHP_ControllerBase
 		if (!empty($subCacheKey))
 			$cacheKey .= '|' . $subCacheKey;
 
+		if (strlen($cacheKey) > 100) {
+			$cacheKey = sha1($cacheKey);
+		}
+
 		return $cacheKey;
 	}
 
