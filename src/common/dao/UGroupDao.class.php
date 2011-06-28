@@ -50,7 +50,22 @@ class UGroupDao extends DataAccessObject {
                 WHERE user_id = '.$this->da->escapeInt($userId);
         return $this->retrieve($sql);
     }
-    
+
+    /**
+     * Return all UGroups the user belongs to (cross projects)
+     *
+     * @param Integrer $userId Id of user
+     * 
+     * @return DataAccessResult
+     */
+    function searchByUserId($userId) {
+        $sql = 'SELECT ug.*'.
+               ' FROM ugroup_user ug_u'.
+               '  JOIN ugroup ug USING (ugroup_id)'.
+               ' WHERE ug_u.user_id = '.$this->da->quoteSmart($userId);
+        return $this->retrieve($sql);
+    }
+
     /**
     * Checks UGroup  validity by GroupId 
     *

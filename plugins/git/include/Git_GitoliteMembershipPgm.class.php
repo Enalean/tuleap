@@ -20,6 +20,7 @@
  */
 
 require_once 'common/project/ProjectManager.class.php';
+require_once 'common/project/UGroupManager.class.php';
 require_once 'common/user/UserManager.class.php';
 
 class Git_GitoliteMembershipPgm {
@@ -28,6 +29,7 @@ class Git_GitoliteMembershipPgm {
         $groups = array();
         $user = $this->getUserManager()->getUserByUserName($sshUserName);
         if ($user) {
+            // Dynamic groups
             $pm = $this->getProjectManager();
             foreach ($user->getUserGroupData() as $groupId => $row) {
                 $project = $pm->getProject($groupId);
@@ -38,26 +40,41 @@ class Git_GitoliteMembershipPgm {
                     }
                 }
             }
+
+            // Static groups
+            $ugm = $this->getUGroupManager();
+            foreach ($ugm->getByUserId($user) as $row) {
+                $groups[] = 'ug_'.$row['ugroup_id'];
+            }
         }
         return $groups;
     }
-    
+
     /**
      * Wrapper for UserManager
-     * 
+     *
      * @return UserManager
      */
     protected function getUserManager() {
         return UserManager::instance();
     }
-    
+
     /**
      * Wrapper for ProjectManager
-     * 
+     *
      * @return ProjectManager
      */
     protected function getProjectManager() {
         return ProjectManager::instance();
+    }
+
+    /**
+     * Wrapper for ProjectManager
+     *
+     * @return UGroupManager
+     */
+    protected function getUGroupManager() {
+        return new UGroupManager();
     }
 }
 ?>

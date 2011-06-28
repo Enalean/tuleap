@@ -24,6 +24,7 @@ require_once dirname(__FILE__).'/../include/Git_GitoliteMembershipPgm.class.php'
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('UserManager');
+Mock::generate('UGroupManager');
 
 class Git_GitoliteMembershipPgmTest extends UnitTestCase {
 
@@ -71,6 +72,27 @@ class Git_GitoliteMembershipPgmTest extends UnitTestCase {
         $mbPgm->setReturnValue('getProjectManager', $pm);
 
         $this->assertEqual($mbPgm->getGroups('john_do'), array('gpig_project_members', 'gpig_project_admin'));
+    }
+
+    function testUserIsMemberOfAStaticUgroup() {
+        $mbPgm = $this->getPartialMock('Git_GitoliteMembershipPgm', array('getUserManager', 'getProjectManager', 'getUGroupManager'));
+
+        $user = new User(array('user_id' => 202, 'language_id' => 'en_US'));
+        $user->setUserGroupData(array());
+        $um = new MockUserManager($this);
+        $um->expectOnce('getUserByUserName', array('john_do'));
+        $um->setReturnValue('getUserByUserName', $user);
+        $mbPgm->setReturnValue('getUserManager', $um);
+
+        $pm = new MockProjectManager($this);
+        $pm->expectNever('getProject');
+        $mbPgm->setReturnValue('getProjectManager', $pm);
+
+        $ugm = new MockUGroupManager($this);
+        $ugm->setReturnValue('getByUserId', array(array('ugroup_id' => 304)));
+        $mbPgm->setReturnValue('getUGroupManager', $ugm);
+
+        $this->assertEqual($mbPgm->getGroups('john_do'), array('ug_304'));
     }
 }
 ?>
