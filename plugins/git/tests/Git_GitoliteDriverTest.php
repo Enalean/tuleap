@@ -78,6 +78,40 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
 
+    function testCreateTwoRepository() {
+        $driver = new Git_GitoliteDriver($this->_fixDir.'/gitolite-admin');
+
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', 'project1');
+
+        $this->assertTrue($driver->init($prj, 'testrepo'));
+
+        $this->assertTrue($driver->init($prj, 'totoz'));
+
+        $this->assertEmptyGitStatus();
+
+        // Check file content
+        $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf'));
+        $gitoliteConf = file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        // Check repository def
+        $repo1found = false;
+        $repo2found = false;
+        for ($i = 0; $i < count($gitoliteConf); $i++) {
+            if ($gitoliteConf[$i] == 'repo project1/testrepo') {
+                $repo1found = true;
+                // Check default permissions
+                $this->assertEqual($gitoliteConf[++$i], "\tRW = @project1_project_members");
+            }
+            if ($gitoliteConf[$i] == 'repo project1/totoz') {
+                $repo2found = true;
+                // Check default permissions
+                $this->assertEqual($gitoliteConf[++$i], "\tRW = @project1_project_members");
+            }
+        }
+        $this->assertTrue($repo1found);
+        $this->assertTrue($repo2found);
+    }
+
     function testGitoliteConfUpdate() {
         // Test base: one gitolite conf + 1 project file
         file_put_contents($this->_fixDir.'/gitolite-admin/conf/gitolite.conf', '@test = coin'.PHP_EOL);

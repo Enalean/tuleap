@@ -51,11 +51,12 @@ class Git_GitoliteDriver {
         if (!is_dir($prjConfDir)) {
             mkdir($prjConfDir);
         }
-        $conf = 'repo '.$project->getUnixName().'/'.$repoPath.PHP_EOL;
+        $conf = PHP_EOL;
+        $conf .= 'repo '.$project->getUnixName().'/'.$repoPath.PHP_EOL;
         $conf .= "\tRW = @".$project->getUnixName().'_project_members'.PHP_EOL;
 
         $confFile = $prjConfDir.'/'.$project->getUnixName().'.conf';
-        if (file_put_contents($confFile, $conf)) {
+        if (file_put_contents($confFile, $conf, FILE_APPEND)) {
             if ($this->gitAdd($confFile)) {
                 if ($this->updateMainConfIncludes($project)) {
                     return $this->gitCommit('New repo: '.$project->getUnixName().'/'.$repoPath);
