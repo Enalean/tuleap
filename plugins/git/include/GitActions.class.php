@@ -28,6 +28,8 @@ require_once('GitBackend.class.php');
 require_once('GitRepository.class.php');
 require_once('GitDao.class.php');
 require_once('GitoliteDriver.class.php');
+require_once('Git_Backend_Gitolite.class.php');
+
 
 /**
  * GitActions
@@ -92,9 +94,16 @@ class GitActions extends PluginActions {
 
         $project = ProjectManager::instance()->getProject($projectId);
 
-        $gitolite = new Git_GitoliteDriver('/home/codendiadm/gitolite-admin');
-        $gitolite->init($project, $repositoryName);
-        $gitolite->push();
+        $backend = new Git_Backend_Gitolite(new Git_GitoliteDriver('/home/codendiadm/gitolite-admin'));
+
+        $repository = new GitRepository();
+        $repository->setDescription('-- Default description --');
+        $repository->setCreator(UserManager::instance()->getCurrentUser());
+        $repository->setProject($project);
+        $repository->setName($repositoryName);
+        $repository->setBackend($backend);
+        $repository->create();
+        
         /*$this->systemEventManager->createEvent(
             'GIT_REPO_CREATE',
             $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryName.SystemEvent::PARAMETER_SEPARATOR.$this->user->getId(),

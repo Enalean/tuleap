@@ -137,6 +137,15 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
+     * Define Backend used by repo
+     * 
+     * @param $backend
+     */
+    public function setBackend($backend) {
+        $this->backend = $backend;
+    }
+
+    /**
      * Allow to mock in UT
      * @return GitBackend
      */

@@ -15,3 +15,9 @@ Reference: http://sitaramc.github.com/gitolite/doc/1-INSTALL.html#_package_metho
 Deploy Gitolite Membership Program
 /usr/bin/install -g codendiadm -o codendiadm -m 06755 /usr/share/codendi/plugins/git/bin/gl-membership.pl /usr/lib/codendi/bin
 + edit ~/gitolite.rc
+-> gl-membership
+-> umask to 0007
+
+# Add codendiadm as a member of "gitolite" group
+groups codendiadm
+usermod -a -G gitolite codendiadm

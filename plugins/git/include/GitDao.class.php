@@ -41,9 +41,13 @@ class GitDao extends DataAccessObject {
     const REPOSITORY_IS_INITIALIZED   = 'repository_is_initialized';
     const REPOSITORY_ACCESS           = 'repository_access';
     const REPOSITORY_MAIL_PREFIX      = 'repository_events_mailing_prefix';
+    const REPOSITORY_BACKEND_TYPE     = 'repository_backend_type';
 
     const REPO_NAME_MAX_LENGTH = 40;
     const REPO_DESC_MAX_LENGTH = 255;
+
+    const BACKEND_GITSHELL = 'gitshell';
+    const BACKEND_GITOLITE = 'gitolite';
 
     public function __construct() {
         parent::__construct( CodendiDataAccess::instance() );
@@ -111,6 +115,7 @@ class GitDao extends DataAccessObject {
         $creationUserId = $this->da->escapeInt($creationUserId);
         $access         = $this->da->quoteSmart($access);
         $mailPrefix     = $this->da->quoteSmart($mailPrefix);
+
         $insert         = false;
         if ( $this->exists($id) ) {            
             $query = 'UPDATE '.$this->getTable().
@@ -120,28 +125,35 @@ class GitDao extends DataAccessObject {
                             self::REPOSITORY_MAIL_PREFIX.'='.$mailPrefix.' '.
                      'WHERE '.self::REPOSITORY_ID.'='.$id;
         } else {
+            if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+                $backendType = self::BACKEND_GITOLITE;
+            } else {
+                $backendType = self::BACKEND_GITSHELL;
+            }
             $insert       = true;
             $creationDate = date('Y-m-d H:i:s');
             $query = 'INSERT INTO '.$this->getTable().'('.self::REPOSITORY_NAME.','.
-                                                         self::REPOSITORY_PATH.','.                                                         
+                                                         self::REPOSITORY_PATH.','.
                                                          self::REPOSITORY_PARENT.','.
                                                          self::REPOSITORY_DESCRIPTION.','.
                                                          self::FK_PROJECT_ID.','.
                                                          self::REPOSITORY_CREATION_DATE.','.
                                                          self::REPOSITORY_CREATION_USER_ID.','.
                                                          self::REPOSITORY_IS_INITIALIZED.','.
-                                                         self::REPOSITORY_ACCESS.
+                                                         self::REPOSITORY_ACCESS.','.
+                                                         self::REPOSITORY_BACKEND_TYPE.
                                                     ') values ('.
                                                         "".$name.",".
-                                                        "".$path.",".                                                    
+                                                        "".$path.",".
                                                         "".$parentId.",".
                                                         "".$description.",".
                                                         $projectId.",".
                                                         "'".$creationDate."',".
                                                         $creationUserId.",".
                                                         $isInitialized.','.
-                                                        $access.
-                                                        ')';           
+                                                        $access.','.
+                                                        $this->da->quoteSmart($backendType).
+                                                        ')';
         }
         
         if ( $this->update($query) === false ) {
