@@ -308,22 +308,24 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             $item['title']     = $name;
             $itemFactory       = $this->getDocmanItemFactory();
             $id                = $itemFactory->create($item, 'beginning');
-            $newItem           = $itemFactory->getItemFromDb($id);
-            $versionFactory    = $this->getUtils()->getVersionFactory();
-            $nextNb            = $versionFactory->getNextVersionNumber($newItem);
-            if($nextNb === false) {
-                $number       = 1;
-                $_changelog   = 'Initial version';
-            } else {
-                $number       = $nextNb;
-                $_changelog   = '';
-            }
-            $fs             = $this->getUtils()->getFileStorage();
-            $path           = $fs->store(stream_get_contents($data), $this->getProject()->getGroupId(), $newItem->getId(), $number);
-            $_filename      = $name;
-            $_filesize      = filesize($path);
-            $_filetype      = mime_content_type($path);
-            $vArray         = array('item_id'   => $newItem->getId(),
+            if ($id) {
+                $newItem           = $itemFactory->getItemFromDb($id);
+                $versionFactory    = $this->getUtils()->getVersionFactory();
+                $nextNb            = $versionFactory->getNextVersionNumber($newItem);
+                if($nextNb === false) {
+                    $number       = 1;
+                    $_changelog   = 'Initial version';
+                } else {
+                    $number       = $nextNb;
+                    $_changelog   = '';
+                }
+                $fs             = $this->getUtils()->getFileStorage();
+                $path = $fs->store(stream_get_contents($data), $this->getProject()->getGroupId(), $newItem->getId(), $number);
+                if ($path) {
+                    $_filename      = $name;
+                    $_filesize      = filesize($path);
+                    $_filetype      = mime_content_type($path);
+                    $vArray         = array('item_id'   => $newItem->getId(),
                                     'number'    => $number,
                                     'user_id'   => $this->getUser()->getId(),
                                     'label'     => '',
@@ -333,11 +335,15 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                                     'filetype'  => $_filetype, 
                                     'path'      => $path,
                                     'date'      => '');
-            $vId            = $versionFactory->create($vArray);
-            $vArray['id']   = $vId;
-            $vArray['date'] = time();
-            $newVersion = new Docman_Version($vArray);
-            $newItem->setCurrentVersion($newVersion);
+                    if (!$versionFactory->create($vArray)) {
+                        throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
+                    }
+                } else {
+                    throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));
+                }
+            } else {
+                throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
+            }
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_create'));
         }
