@@ -202,9 +202,41 @@ class WebDAVUtils {
     function getIncomingFileSize($name) {
         return file_utils_get_size($GLOBALS['ftp_incoming_dir'].'/'.$name);
     }
-    
+
     function getIncomingFileMd5Sum($file) {
         return PHP_BigFile::getMd5Sum($file);
+    }
+
+    /**
+     * Returns an instance of PermissionsManager
+     *
+     * @param Project $project Used project
+     *
+     * @return Docman_PermissionsManager
+     */
+    function getDocmanPermissionsManager($project) {
+        return Docman_PermissionsManager::instance($project->getGroupId());
+    }
+
+    /**
+     * Returns a new instance of VersionFactory
+     *
+     * @return Docman_VersionFactory
+     */
+    function getVersionFactory() {
+        return new Docman_VersionFactory();
+    }
+
+    /**
+     * Returns a new instance of FileStorage
+     *
+     * @return Docman_FileStorage
+     */
+    function getFileStorage() {
+        $pluginManager = PluginManager::instance();
+        $p             = $pluginManager->getPluginByName('docman');
+        $info          = $p->getPluginInfo();
+        return new Docman_FileStorage($info->getPropertyValueForName('docman_root'));
     }
 
 }
