@@ -22,14 +22,7 @@ class Docman_View_Download extends Docman_View_View {
         }
         if ($version) {
             if (file_exists($version->getPath())) {
-                $event_manager =& EventManager::instance();
-                $event_manager->processEvent('plugin_docman_event_access', array(
-                    'group_id' => $params['group_id'],
-                    'item'     => &$params['item'],
-                    'version'  => $version->getNumber(),
-                    'user'     => &$params['user']
-                ));
-                $version_factory->callVersionEvents($params['item'], $params['user'], $version, &$this->_controller);
+                $version_factory->callVersionEvents($params['item'], $params['user'], $version, $params['group_id'], &$this->_controller);
                 header('Expires: Mon, 26 Nov 1962 00:00:00 GMT');  // IE & HTTPS
                 header('Pragma: private');                         // IE & HTTPS
                 header('Cache-control: private, must-revalidate'); // IE & HTTPS

@@ -41,7 +41,6 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
 
         if (file_exists($version->getPath())) {
             if ($this->getSize() <= $this->getMaxFileSize()) {
-                $this->logDownload($version);
                 $this->download($version);
             } else {
                 throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
@@ -117,23 +116,6 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     }
 
     /**
-     * Log the download
-     *
-     * @param Docman_Version $version
-     *
-     * @return void
-     */
-    function logDownload($version) {
-        $logger = new Docman_Log();
-        $params = array('group_id' => $this->getProject()->getGroupId(),
-                        'item'     => $this->getItem(),
-                        'version'  => $version->getNumber(),
-                        'user'     => $this->getUser(),
-                        'event'    => 'plugin_docman_event_access');
-        $logger->log($params['event'], $params);
-    }
-
-    /**
      * Downloads the file
      *
      * @param Docman_Version $version
@@ -141,8 +123,9 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * @return void
      */
     function download($version) {
+        $group_id = $this->getProject()->getGroupId();
         $versionFactory = new Docman_VersionFactory();
-        $versionFactory->callVersionEvents($this->getItem(), $this->getUser(), $version);
+        $versionFactory->callVersionEvents($this->getItem(), $this->getUser(), $version, $group_id);
         // Download the file
         parent::download($version->getFiletype(), $version->getFilesize(), $version->getFilesize(), $version->getPath());
     }

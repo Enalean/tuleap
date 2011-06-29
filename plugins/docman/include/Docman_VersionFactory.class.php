@@ -266,11 +266,19 @@ class Docman_VersionFactory {
      * @param  Docman_Item    $item
      * @param  User           $user
      * @param  Docman_Version $version
+     * @param  Integer $group_id
      *
      * @return void
      */
-    function callVersionEvents($item, $user, $version, $docmanControler = null) {
+    function callVersionEvents($item, $user, $version, $group_id, $docmanControler = null) {
         $em = $this->_getEventManager();
+        $logger = new Docman_Log();
+        $params = array('group_id' => $group_id,
+                        'item'     => $item,
+                        'version'  => $version->getNumber(),
+                        'user'     => $user,
+                        'event'    => 'plugin_docman_event_access');
+        $logger->log($params['event'], $params);
         $em->processEvent('plugin_docman_file_before_download', array(
                                              'item'            => $item,
                                              'user'            => $user,
