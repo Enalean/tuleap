@@ -269,7 +269,7 @@ class Docman_VersionFactory {
      *
      * @return void
      */
-    function versionWatermark($item, $user, $version, $docmanControler = null) {
+    function callVersionEvents($item, $user, $version, $docmanControler = null) {
         $em = $this->_getEventManager();
         $em->processEvent('plugin_docman_file_before_download', array(
                                              'item'            => $item,

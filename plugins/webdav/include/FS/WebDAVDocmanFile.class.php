@@ -141,17 +141,10 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * @return void
      */
     function download($version) {
-        // Wait for watermarking
-        $em =& EventManager::instance();
-        $em->processEvent('plugin_docman_file_before_download', array(
-                                             'item'            => $this->getItem(),
-                                             'user'            => $this->getUser(),
-                                             'version'         => $version,
-                                             'docmanControler' => null
-        ));
-
+        $versionFactory = new Docman_VersionFactory();
+        $versionFactory->callVersionEvents($this->getItem(), $this->getUser(), $version);
         // Download the file
-        parent::download($version->getFiletype(), $version->getFilesize(), $version->getPath());
+        parent::download($version->getFiletype(), $version->getFilesize(), $version->getFilesize(), $version->getPath());
     }
 
 }
