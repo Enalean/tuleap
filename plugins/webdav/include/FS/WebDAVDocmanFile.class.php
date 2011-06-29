@@ -127,7 +127,51 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
         $versionFactory = new Docman_VersionFactory();
         $versionFactory->callVersionEvents($this->getItem(), $this->getUser(), $version, $group_id);
         // Download the file
-        parent::download($version->getFiletype(), $version->getFilesize(), $version->getFilesize(), $version->getPath());
+        parent::download($version->getFiletype(), $version->getFilesize(), $version->getPath());
+    }
+
+    /**
+     * Create a new version of the file
+     *
+     * @param $data
+     *
+     * @return void
+     */
+    function put($data) {
+        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
+        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+            $versionFactory = $this->getUtils()->getVersionFactory();
+            $nextNb         = $versionFactory->getNextVersionNumber($this->getItem());
+            if($nextNb === false) {
+                $number       = 1;
+                $_changelog   = 'Initial version';
+            } else {
+                $number       = $nextNb;
+                $_changelog   = '';
+            }
+            $fs             = $this->getUtils()->getFileStorage();
+            $path           = $fs->store(stream_get_contents($data), $this->getProject()->getGroupId(), $this->getItem()->getId(), $number);
+            $_filename      = $this->getName();
+            $_filesize      = filesize($path);
+            $_filetype      = mime_content_type($path);
+            $vArray         = array('item_id'   => $this->getItem()->getId(),
+                                    'number'    => $number,
+                                    'user_id'   => $this->getUser()->getId(),
+                                    'label'     => '',
+                                    'changelog' => $_changelog,
+                                    'filename'  => $_filename,
+                                    'filesize'  => $_filesize,
+                                    'filetype'  => $_filetype, 
+                                    'path'      => $path,
+                                    'date'      => '');
+            $vId            = $versionFactory->create($vArray);
+            $vArray['id']   = $vId;
+            $vArray['date'] = time();
+            $newVersion     = new Docman_Version($vArray);
+            $this->getItem()->setCurrentVersion($newVersion);
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_new_version'));
+        }
     }
 
 }
