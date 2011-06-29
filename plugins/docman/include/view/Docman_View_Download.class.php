@@ -14,8 +14,8 @@ require_once('Docman_View_DocmanError.class.php');
 class Docman_View_Download extends Docman_View_View {
     
     /* protected */ function _content($params) {
+        $version_factory =& $this->_getVersionFactory($params);
         if (isset($params['version_number'])) {
-            $version_factory =& $this->_getVersionFactory($params);
             $version =& $version_factory->getSpecificVersion($params['item'], $params['version_number']);
         } else {
             $version =& $params['item']->getCurrentVersion();
@@ -29,12 +29,7 @@ class Docman_View_Download extends Docman_View_View {
                     'version'  => $version->getNumber(),
                     'user'     => &$params['user']
                 ));
-                $event_manager->processEvent('plugin_docman_file_before_download', array(
-                                             'item'      => $params['item'],
-                                             'user'      => $params['user'],
-                                             'version'   => $version,
-                                             'docmanControler' => &$this->_controller
-                                            ));
+                $version_factory->versionWatermark($params['item'], $params['user'], $version, &$this->_controller);
                 header('Expires: Mon, 26 Nov 1962 00:00:00 GMT');  // IE & HTTPS
                 header('Pragma: private');                         // IE & HTTPS
                 header('Cache-control: private, must-revalidate'); // IE & HTTPS

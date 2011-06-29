@@ -260,6 +260,25 @@ class Docman_VersionFactory {
         return false;
     }
 
+    /**
+     * Version watermarking 
+     *
+     * @param  Docman_Item    $item
+     * @param  User           $user
+     * @param  Docman_Version $version
+     *
+     * @return void
+     */
+    function versionWatermark($item, $user, $version, $docmanControler = null) {
+        $em = $this->_getEventManager();
+        $em->processEvent('plugin_docman_file_before_download', array(
+                                             'item'            => $item,
+                                             'user'            => $user,
+                                             'version'         => $version,
+                                             'docmanControler' => $docmanControler
+        ));
+    }
+
 }
 
 ?>
