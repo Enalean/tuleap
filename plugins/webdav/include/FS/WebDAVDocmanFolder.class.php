@@ -262,7 +262,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             $item['user_id']           = $this->getUser()->getId();
             $item['group_id']          = $this->getProject()->getGroupId();
             $item['parent_id']         = $this->getItem()->getId();
-            $item['title']             = $name;
+            $item['title']             = htmlspecialchars($name);
             $itemFactory               = $this->getDocmanItemFactory();
             $itemFactory->create($item, 'beginning');
         } else {
@@ -273,6 +273,11 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     /**
      * Rename a docman folder
      *
+     * Even if rename is forbidden some silly WebDAV clients (ie : Micro$oft's one)
+     * will bypass that and try to delete the original directory
+     * then upload another one with the same content and a new name
+     * Which is very different from just renaming the directory
+     *
      * @param String $name New name of the folder
      *
      * @return void
@@ -281,7 +286,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
         if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
             $row          = $this->getItem()->toRow();
-            $row['title'] = $name;
+            $row['title'] = htmlspecialchars($name);
             $row['id']    = $this->getItem()->getId();
             $itemFactory  = $this->getDocmanItemFactory();
             $itemFactory->update($row);
@@ -305,7 +310,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             $item['user_id']   = $this->getUser()->getId();
             $item['group_id']  = $this->getProject()->getGroupId();
             $item['parent_id'] = $this->getItem()->getId();
-            $item['title']     = $name;
+            $item['title']     = htmlspecialchars($name);
             $itemFactory       = $this->getDocmanItemFactory();
             $id                = $itemFactory->create($item, 'beginning');
             if ($id) {
@@ -322,7 +327,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                 $fs             = $this->getUtils()->getFileStorage();
                 $path = $fs->store(stream_get_contents($data), $this->getProject()->getGroupId(), $newItem->getId(), $number);
                 if ($path) {
-                    $_filename      = $name;
+                    $_filename      = htmlspecialchars($name);
                     $_filesize      = filesize($path);
                     $_filetype      = mime_content_type($path);
                     $vArray         = array('item_id'   => $newItem->getId(),

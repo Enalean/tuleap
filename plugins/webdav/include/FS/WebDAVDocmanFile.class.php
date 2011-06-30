@@ -200,6 +200,30 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
         }
     }
 
+    /**
+     * Rename an embedded file
+     * We don't allow renaming files
+     *
+     * Even if rename is forbidden some silly WebDAV clients (ie : Micro$oft's one)
+     * will bypass that and try to delete the original file
+     * then upload another one with the same content and a new name
+     * Which is very different from just renaming the file
+     *
+     * @param String $name New name of the document
+     *
+     * @return void
+     */
+    function setName($name) {
+    switch (get_class($this->getItem())) {
+            case 'Docman_File':
+                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
+                break;
+            case 'Docman_EmbeddedFile':
+                parent::setName($name);
+                break;
+        }
+    }
+
 }
 
 ?>
