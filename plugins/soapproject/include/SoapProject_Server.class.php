@@ -41,14 +41,15 @@ class SoapProject_Server {
      *
      * Projects are automatically accepted
      *
-     * @param String $requesterLogin Login of the user on behalf of who you create the project
-     * @param String $shortName      Unix name of the project
-     * @param String $realName       Full name of the project
-     * @param String $privacy        Either 'public' or 'private'
+     * @param String  $requesterLogin Login of the user on behalf of who you create the project
+     * @param String  $shortName      Unix name of the project
+     * @param String  $realName       Full name of the project
+     * @param String  $privacy        Either 'public' or 'private'
+     * @param Integer $templateId     Id of template project
      *
      * @return Integer The ID of newly created project
      */
-    public function addProject($requesterLogin, $shortName, $realName, $privacy="public") {
+    public function addProject($requesterLogin, $shortName, $realName, $privacy="public", $templateId=100) {
         /*
          $data['project']['form_unix_name']
          $data['project']['form_full_name']
@@ -66,7 +67,7 @@ class SoapProject_Server {
 
         $data = array();
 
-        $user = UserManager::instance()->getUserByUserName($requesterLogin);
+        $user = UserManager::instance()->findUser($requesterLogin);
         if (!$user) {
             throw new SoapFault('3100', 'Invalid requester name');
         }
@@ -91,11 +92,16 @@ class SoapProject_Server {
             $data['project']['is_public'] = false;
         }
 
-
+        $template = ProjectManager::instance()->getProject($templateId);
+        if ($template && !$template->isError()) {
+            $data['project']['built_from_template'] = $template->getID();
+        } else {
+            throw new SoapFault('3000', 'Invalid template id');
+        }
+        
         $data['project']['form_license'] = 'xrx';
         $data['project']['form_license_other'] = '';
         $data['project']['form_short_description'] = '';
-        $data['project']['built_from_template'] = 100;
         $data['project']['is_test'] = false;
 
         $data['project']['services'] = array();
@@ -135,14 +141,11 @@ class SoapProject_Server {
      * @return Boolean
      */
     public function addProjectMember($groupId, $userLogin) {
-        $user = UserManager::instance()->getUserByUserName($userLogin);
-        if (!$user) {
-            throw new SoapFault('3100', "Invalid user name");
-        }
-        if (!$user->isMember($groupId)) {
+        $project = ProjectManager::instance()->getProject($groupId);
+        if ($project && !$project->isError()) {
             return $this->feedbackToSoapFault(account_add_user_to_group($groupId, $userLogin));
         } else {
-            return true;
+            throw new SoapFault('3000', "Invalid project id");
         }
     }
 
