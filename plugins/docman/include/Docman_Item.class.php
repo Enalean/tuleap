@@ -358,6 +358,28 @@ class Docman_Item {
     function &getPathTitle() {
         return $this->pathTitle;
     }
+
+    /**
+     * Mark the file as deleted
+     *
+     * @return void
+     */
+    function delete() {
+        // Delete Lock if any
+        $lF = new Docman_LockFactory();
+        if($lF->itemIsLocked($this)) {
+            $lF->unlock($this);
+        }
+
+        $this->setDeleteDate(time());
+        $dIF = new Docman_ItemFactory();
+        $dIF->delCutPreferenceForAllUsers($this->getId());
+        $dIF->delCopyPreferenceForAllUsers($this->getId());
+        $dao = new Docman_ItemDao(CodendiDataAccess::instance());
+        $dao->updateFromRow($this->toRow());
+        $dao->storeDeletedItem($this->getId());
+    }
+
 }
 
 ?>

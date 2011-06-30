@@ -141,19 +141,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
                 'user'     => &$params['user'])
             );
 
-            // Delete Lock if any
-            $lF = $this->_getLockFactory();
-            if($lF->itemIsLocked($item)) {
-                $lF->unlock($item);
-            }
-
-            $item->setDeleteDate($this->deleteDate);
-            $dIF =& $this->_getItemFactory();
-            $dIF->delCutPreferenceForAllUsers($item->getId());
-            $dIF->delCopyPreferenceForAllUsers($item->getId());
-            $dao = $this->_getItemDao();
-            $dao->updateFromRow($item->toRow());
-            $dao->storeDeletedItem($item->getId());
+            $item->delete();
             return true;
         } else {
             $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
