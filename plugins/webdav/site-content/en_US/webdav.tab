@@ -47,6 +47,7 @@ plugin_webdav_common	link	Link
 plugin_webdav_common	empty	Empty
 plugin_webdav_common	folder_denied_create	Permission denied to create folder.
 plugin_webdav_common	folder_denied_rename	Permission denied to rename folder.
+plugin_webdav_common	file_denied_new_version	Permission denied to create a version.
 plugin_webdav	descriptor_description	WebDAV server for file release and documents.
 plugin_webdav	descriptor_name	WebDAV.
 plugin_webdav_html	name	Name
