@@ -354,6 +354,26 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
         }
     }
 
+     /**
+     * Deletes a docman folder and its content
+     *
+     * @return void
+     */
+    function delete() {
+        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
+        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+            $allChildrens = $this->getChildren();
+            // Mark all childrens as deleted
+            foreach($allChildrens as $child) {
+                $child->delete();
+                //TODO Manage versions deletion for Docman files
+            }
+            $this->getItem()->delete();
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
+        }
+    }
+
 }
 
 ?>
