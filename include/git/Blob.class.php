@@ -259,7 +259,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 
 		$magicdb = GitPHP_Config::GetInstance()->GetValue('magicdb', null);
 		if (empty($magicdb)) {
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			if (GitPHP_Util::IsWindows()) {
 				$magicdb = 'C:\\wamp\\php\\extras\\magic';
 			} else {
 				$magicdb = '/usr/share/misc/magic';
@@ -290,7 +290,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	 */
 	private function FileMime_File()
 	{
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		if (GitPHP_Util::IsWindows()) {
 			return '';
 		}
 

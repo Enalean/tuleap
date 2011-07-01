@@ -41,4 +41,32 @@ class GitPHP_Util
 		return $path;
 	}
 
+	/**
+	 * IsWindows
+	 *
+	 * Tests if this is running on windows
+	 *
+	 * @access public
+	 * @static
+	 * @return bool true if on windows
+	 */
+	public static function IsWindows()
+	{
+		return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
+	}
+
+	/**
+	 * Is64Bit
+	 *
+	 * Tests if this is a 64 bit machine
+	 *
+	 * @access public
+	 * @static
+	 * @return bool true if on 64 bit
+	 */
+	public function Is64Bit()
+	{
+		return (strpos(php_uname('m'), '64') !== false);
+	}
+
 }

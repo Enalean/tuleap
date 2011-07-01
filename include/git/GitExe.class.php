@@ -250,11 +250,10 @@ class GitPHP_GitExe
 	 */
 	public static function DefaultBinary()
 	{
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+		if (GitPHP_Util::IsWindows()) {
 			// windows
 
-			$arch = php_uname('m');
-			if (strpos($arch, '64') !== false) {
+			if (GitPHP_Util::Is64Bit()) {
 				// match x86_64 and x64 (64 bit)
 				// C:\Program Files (x86)\Git\bin\git.exe
 				return 'C:\\Progra~2\\Git\\bin\\git.exe';

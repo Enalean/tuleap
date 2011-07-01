@@ -107,7 +107,7 @@ class GitPHP_TmpDir
 
 		if (empty($tmpdir)) {
 			// ultimate default - should never get this far
-			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			if (GitPHP_Util::IsWindows()) {
 				$tmpdir = 'C:\\Windows\\Temp';
 			} else {
 				$tmpdir = '/tmp';
