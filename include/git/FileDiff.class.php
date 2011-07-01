@@ -617,7 +617,7 @@ class GitPHP_FileDiff
 			}
 		}
 
-		$this->diffData = GitPHP_DiffExe::Diff((empty($fromTmpFile) ? null : ($tmpdir->GetDir() . $fromTmpFile)), $fromName, (empty($toTmpFile) ? null : ($tmpdir->GetDir() . $toTmpFile)), $toName);
+		$this->diffData = GitPHP_DiffExe::Diff((empty($fromTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $fromTmpFile)), $fromName, (empty($toTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $toTmpFile)), $toName);
 
 		if (!empty($fromTmpFile)) {
 			$tmpdir->RemoveFile($fromTmpFile);
