@@ -239,6 +239,18 @@ class WebDAVUtils {
         return new Docman_FileStorage($info->getPropertyValueForName('docman_root'));
     }
 
+    /**
+     * Tells if write acces is enabled or not for the WebDAV plugin
+     *
+     * @return Boolean
+     */
+    function isWriteEnabled() {
+        $pluginManager = PluginManager::instance();
+        $p             = $pluginManager->getPluginByName('webdav');
+        $info          = $p->getPluginInfo();
+        return $info->getPropertyValueForName('write_access_enabled');
+    }
+
 }
 
 ?>

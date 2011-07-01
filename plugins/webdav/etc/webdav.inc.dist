@@ -13,4 +13,7 @@ $webdav_base_uri = "/webdav/";
 $webdav_host = "sys_default_domain";
 // TODO: Add support for more than one hostname (one for HTTP, one for HTTPS).
 
+// Used to enable/disable write access from WebDAV
+$write_access_enabled = false;
+
 ?>

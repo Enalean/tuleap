@@ -255,7 +255,7 @@ class WebDAVFRS extends Sabre_DAV_Directory {
      */
     function createDirectory($name) {
 
-        if ($this->userCanWrite()) {
+        if ($this->getUtils()->isWriteEnabled() && $this->userCanWrite()) {
             $utils = $this->getUtils();
             if (!$utils->getPackageFactory()->isPackageNameExist($name, $this->getGroupId())) {
                 $packageData['name'] = htmlspecialchars($name);

@@ -257,7 +257,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      */
     function createDirectory($name) {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
             $item['item_type']         = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
             $item['user_id']           = $this->getUser()->getId();
             $item['group_id']          = $this->getProject()->getGroupId();
@@ -284,7 +284,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      */
     function setName($name) {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
             $row          = $this->getItem()->toRow();
             $row['title'] = htmlspecialchars($name);
             $row['id']    = $this->getItem()->getId();
@@ -305,7 +305,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      */
     function createFile($name, $data = null) {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
             $item['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
             $item['user_id']   = $this->getUser()->getId();
             $item['group_id']  = $this->getProject()->getGroupId();
@@ -381,7 +381,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      */
     function delete() {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
             $item = $this->getItem();
             $this->deleteDirectoryContent($item);
             $item->delete();

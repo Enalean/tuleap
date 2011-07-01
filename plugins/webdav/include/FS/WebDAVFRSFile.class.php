@@ -130,10 +130,10 @@ class WebDAVFRSFile extends Sabre_DAV_File {
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_File#getContentType()
      */
     function getContentType() {
-
-        $mime = MIME::instance();
-        return $mime->type($this->getFileLocation());
-
+        if (file_exists($this->getFileLocation())) {
+            $mime = MIME::instance();
+            return $mime->type($this->getFileLocation());
+        }
     }
 
     /**
@@ -292,7 +292,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
      */
     function delete() {
 
-        if ($this->userCanWrite()) {
+        if ($this->getUtils()->isWriteEnabled() && $this->userCanWrite()) {
             $utils = $this->getUtils();
             $result = $utils->getFileFactory()->delete_file($this->getProject()->getGroupId(), $this->getFileId());
             if ($result == 0) {
