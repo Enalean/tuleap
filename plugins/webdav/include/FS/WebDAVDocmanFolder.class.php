@@ -354,7 +354,27 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
         }
     }
 
-     /**
+    function deleteDirectoryContent($item) {
+        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
+        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+            $itemFactory  = $this->getDocmanItemFactory();
+            $allChildrens = $itemFactory->getChildrenFromParent($item);
+            foreach($allChildrens as $child) {
+                if (get_class($child) == 'Docman_File' || get_class($child) == 'Docman_EmbeddedFile') {
+                    $docmanFile = $this->getWebDAVDocmanFile($child);
+                    $docmanFile->delete();
+                }
+                else if(get_class($child)=='Docman_Folder') {
+                    $this->deleteDirectoryContent($child);
+                    $child->delete();
+                }
+            }
+        } else {
+            throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
+        }
+    }
+
+    /**
      * Deletes a docman folder and its content
      *
      * @return void
@@ -362,18 +382,13 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     function delete() {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
         if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            $allChildrens = $this->getChildren();
-            // Mark all childrens as deleted
-            foreach($allChildrens as $child) {
-                $child->delete();
-                //TODO Manage versions deletion for Docman files
-            }
-            $this->getItem()->delete();
+            $item = $this->getItem();
+            $this->deleteDirectoryContent($item);
+            $item->delete();
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
     }
-
 }
 
 ?>
