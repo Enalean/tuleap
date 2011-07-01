@@ -84,12 +84,29 @@ class WebDAVFRSFileTest extends UnitTestCase {
     }
 
     /**
+     * Testing delete when write access is disabled
+     */
+    function testDeleteWriteDisabled() {
+        $webDAVFile = new WebDAVFRSFileTestVersion($this);
+        $webDAVFile->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', false);
+        $webDAVFile->setReturnValue('getUtils', $utils);
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+
+        $webDAVFile->delete();
+    }
+
+    /**
      * Testing delete when user is not admin
      */
     function testDeleteFailWithUserNotAdmin() {
 
         $webDAVFile = new WebDAVFRSFileTestVersion($this);
         $webDAVFile->setReturnValue('userCanWrite', false);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
+        $webDAVFile->setReturnValue('getUtils', $utils);
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFile->delete();
@@ -106,6 +123,7 @@ class WebDAVFRSFileTest extends UnitTestCase {
         $frsff = new MockFRSFileFactory();
         $frsff->setReturnValue('delete_file', 0);
         $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
         $utils->setReturnValue('getFileFactory', $frsff);
         $project = new MockProject();
         $webDAVFile->setReturnValue('getProject', $project);
@@ -127,6 +145,7 @@ class WebDAVFRSFileTest extends UnitTestCase {
         $frsff = new MockFRSFileFactory();
         $frsff->setReturnValue('delete_file', 1);
         $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
         $utils->setReturnValue('getFileFactory', $frsff);
         $project = new MockProject();
         $webDAVFile->setReturnValue('getProject', $project);
