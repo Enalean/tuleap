@@ -25,18 +25,23 @@ class GitPHP_Util
 	 * @access public
 	 * @static
 	 * @param string $path path to add slash to
-	 * @param $backslash true to also check for backslash (windows paths)
+	 * @param $filesystem true if this is a filesystem path (to also check for backslash for windows paths)
 	 * @return string $path with a trailing slash
 	 */
-	public static function AddSlash($path, $backslash = true)
+	public static function AddSlash($path, $filesystem = true)
 	{
 		if (empty($path))
 			return $path;
 
 		$end = substr($path, -1);
 
-		if (!(( ($end == '/') || ($end == ':')) || ($backslash && (strtoupper(substr(PHP_OS, 0, 3))) && ($end == '\\'))))
-			$path .= '/';
+		if (!(( ($end == '/') || ($end == ':')) || ($filesystem && GitPHP_Util::IsWindows() && ($end == '\\')))) {
+			if (GitPHP_Util::IsWindows() && $filesystem) {
+				$path .= '\\';
+			} else {
+				$path .= '/';
+			}
+		}
 
 		return $path;
 	}
