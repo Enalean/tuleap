@@ -139,7 +139,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      */
     function put($data) {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
             $versionFactory = $this->getUtils()->getVersionFactory();
             $nextNb         = $versionFactory->getNextVersionNumber($this->getItem());
             if($nextNb === false) {
@@ -191,7 +191,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
             if ($versions = $version_factory->getAllVersionForItem($this->getItem())) {
                 if (count($versions)) {
                     foreach ($versions as $version) {
-                        return $version_factory->deleteSpecificVersion($this->getItem(), $version->getNumber());
+                        $version_factory->deleteSpecificVersion($this->getItem(), $version->getNumber());
                     }
                 }
             }
@@ -214,7 +214,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * @return void
      */
     function setName($name) {
-    switch (get_class($this->getItem())) {
+        switch (get_class($this->getItem())) {
             case 'Docman_File':
                 throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
                 break;
