@@ -81,7 +81,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
         list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
         $destination = $this->getNodeForPath($destinationDir);
         // Check that write access is enabled for WebDAV
-        if (!$this->getUtils()->isWriteEnabled()) {
+        if ($this->getUtils()->isWriteEnabled()) {
             // Check that the source is a docman item & the destination is a docman folder
             if ($destination instanceof WebDAVDocmanFolder
                 && ($source instanceof WebDAVDocmanFolder || $source instanceof WebDAVDocmanDocument)) {
