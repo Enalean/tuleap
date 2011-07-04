@@ -137,22 +137,32 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
         list($sourceDir, $sourceName) = Sabre_DAV_URLUtil::splitPath($sourcePath);
         list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
 
-        if ($sourceDir === $destinationDir) {
+        $source = $this->getNodeForPath($sourcePath);
+        $itemFactory = $this->getUtils()->getDocmanItemFactory();
+        $destination = $this->getNodeForPath($destinationDir);
+
+        if ($destination instanceof WebDAVDocmanFolder
+            && ($source instanceof WebDAVDocmanFolder || $source instanceof WebDAVDocmanDocument)) {
+            $sourceItem = $source->getItem();
+            $destinationItem = $destination->getItem();
+            $user = $source->getUser();
+            $ordering = 'beginning';
+            if ($sourceItem->getGroupId() == $destinationItem->getGroupId()) {
+                $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($source->getProject());
+                if ($docmanPermissionManager->userCanAccess($user, $sourceItem->getId())
+                    && $docmanPermissionManager->userCanWrite($user, $destinationItem->getId())) {
+                    $itemFactory->setNewParent($sourceItem->getId(), $destinationItem->getId(), $ordering);
+                }
+            }
+        } else if ($sourceDir === $destinationDir) {
+            //don't rename a docman file (Only FRS)
             $renameable = $this->getNodeForPath($sourcePath);
             $renameable->setName($destinationName);
         } else {
             throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'move_error'));
-            /*$source = $this->getNodeForPath($sourcePath);
-            $destination = $this->getNodeForPath($destinationDir);
-
-            if ($this->canBeMoved($source, $destination)) {
-                $source->move($destination);
-            } else {
-                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'move_error'));
-            }*/
         }
 
-    }
+}
 
     /**
      * Returns an instance of WebDAVUtils

@@ -31,6 +31,8 @@ Mock::generate('WebDAVFRSRelease');
 require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSRelease.class.php');
 require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSPackage.class.php');
 require_once(dirname(__FILE__).'/../include/WebDAVTree.class.php');
+require_once(dirname(__FILE__).'/../include/WebDAVUtils.class.php');
+Mock::generate('WebDAVUtils');
 
 /**
  * This is the unit test of WebDAVTree
@@ -44,7 +46,7 @@ class TestTree extends WebDAVTree {
         return new MockWebDAVFRSFile();
     }
 }
-Mock::generatePartial('TestTree', 'TestTreeTestVersion', array('canBeMoved', 'getNodeForPath'));
+Mock::generatePartial('TestTree', 'TestTreeTestVersion', array('canBeMoved', 'getNodeForPath', 'getUtils'));
 
 class TestFile extends WebDAVFRSFile {
     function __construct() {
@@ -194,6 +196,8 @@ class WebDAVTreeTest extends UnitTestCase {
         $tree->setReturnValue('canBeMoved', true);
         $tree->setReturnValue('getNodeForPath', $node);
         //$node = $tree->getNodeForPath('path');
+        $utils = new MockWebDAVUtils();
+        $tree->setReturnValue('getUtils', $utils);
 
         //$node->expectOnce('setName');
         //$node->expectNever('move');
@@ -206,7 +210,9 @@ class WebDAVTreeTest extends UnitTestCase {
         $tree = new TestTreeTestVersion($this);
         $tree->setReturnValue('canBeMoved', false);
         //$node = $tree->getNodeForPath('path');
-
+        $utils = new MockWebDAVUtils();
+        $tree->setReturnValue('getUtils', $utils);
+        
         //$node->expectNever('setName');
         //$node->expectNever('move');
         $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
@@ -220,6 +226,8 @@ class WebDAVTreeTest extends UnitTestCase {
         $tree->setReturnValue('canBeMoved', true);
         $tree->setReturnValue('getNodeForPath', $node);
         //$node = $tree->getNodeForPath('path');
+        $utils = new MockWebDAVUtils();
+        $tree->setReturnValue('getUtils', $utils);
 
         //$node->expectNever('setName');
         //$node->expectOnce('move');
