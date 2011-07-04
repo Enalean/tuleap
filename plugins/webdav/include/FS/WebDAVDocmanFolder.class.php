@@ -58,7 +58,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     function getChildList() {
         $children = array();
         // hey ! for docman never add something in WebDAVUtils, docman may be not present ;)
-        $docmanItemFactory = $this->getDocmanItemFactory();
+        $docmanItemFactory = $this->getUtils()->getDocmanItemFactory();
         $nodes = $docmanItemFactory->getChildrenFromParent($this->getItem());
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
 
@@ -240,15 +240,6 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     }
 
     /**
-     * Returns a new instance of ItemFactory
-     *
-     * @return Docman_ItemFactory
-     */
-    function getDocmanItemFactory() {
-        return new Docman_ItemFactory();
-    }
-
-    /**
      * Create a new docman folder
      *
      * @param String $name Name of the folder to create
@@ -263,7 +254,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             $item['group_id']          = $this->getProject()->getGroupId();
             $item['parent_id']         = $this->getItem()->getId();
             $item['title']             = htmlspecialchars($name);
-            $itemFactory               = $this->getDocmanItemFactory();
+            $itemFactory               = $this->getUtils()->getDocmanItemFactory();
             $itemFactory->create($item, 'beginning');
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_create'));
@@ -288,7 +279,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             $row          = $this->getItem()->toRow();
             $row['title'] = htmlspecialchars($name);
             $row['id']    = $this->getItem()->getId();
-            $itemFactory  = $this->getDocmanItemFactory();
+            $itemFactory  = $this->getUtils()->getDocmanItemFactory();
             $itemFactory->update($row);
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_rename'));
@@ -311,7 +302,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             $item['group_id']  = $this->getProject()->getGroupId();
             $item['parent_id'] = $this->getItem()->getId();
             $item['title']     = htmlspecialchars($name);
-            $itemFactory       = $this->getDocmanItemFactory();
+            $itemFactory       = $this->getUtils()->getDocmanItemFactory();
             $id                = $itemFactory->create($item, 'beginning');
             if ($id) {
                 $newItem           = $itemFactory->getItemFromDb($id);
@@ -357,7 +348,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     function deleteDirectoryContent($item) {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
         if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            $itemFactory  = $this->getDocmanItemFactory();
+            $itemFactory  = $this->getUtils()->getDocmanItemFactory();
             $allChildrens = $itemFactory->getChildrenFromParent($item);
             foreach($allChildrens as $child) {
                 if (get_class($child) == 'Docman_File' || get_class($child) == 'Docman_EmbeddedFile') {

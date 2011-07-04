@@ -205,7 +205,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
             $row          = $this->getItem()->toRow();
             $row['title'] = htmlspecialchars($name);
             $row['id']    = $this->getItem()->getId();
-            $itemFactory  = $this->getDocmanItemFactory();
+            $itemFactory  = $this->getUtils()->getDocmanItemFactory();
             $itemFactory->update($row);
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));

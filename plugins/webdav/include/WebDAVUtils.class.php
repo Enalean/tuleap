@@ -219,6 +219,15 @@ class WebDAVUtils {
     }
 
     /**
+     * Returns a new instance of ItemFactory
+     *
+     * @return Docman_ItemFactory
+     */
+    function getDocmanItemFactory() {
+        return new Docman_ItemFactory();
+    }
+
+    /**
      * Returns a new instance of VersionFactory
      *
      * @return Docman_VersionFactory
@@ -228,15 +237,24 @@ class WebDAVUtils {
     }
 
     /**
+     * Returns the file system root of docman
+     *
+     * @return String
+     */
+    function getDocmanRoot() {
+        $pluginManager = PluginManager::instance();
+        $p             = $pluginManager->getPluginByName('docman');
+        $info          = $p->getPluginInfo();
+        return $info->getPropertyValueForName('docman_root');
+    }
+
+    /**
      * Returns a new instance of FileStorage
      *
      * @return Docman_FileStorage
      */
     function getFileStorage() {
-        $pluginManager = PluginManager::instance();
-        $p             = $pluginManager->getPluginByName('docman');
-        $info          = $p->getPluginInfo();
-        return new Docman_FileStorage($info->getPropertyValueForName('docman_root'));
+        return new Docman_FileStorage($this->getDocmanRoot());
     }
 
     /**

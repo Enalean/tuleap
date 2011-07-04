@@ -187,7 +187,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
             // Mark the file as deleted
             $this->getItem()->delete();
             // Delete all its versions
-            $version_factory = new Docman_VersionFactory();
+            $version_factory = $this->getUtils()->getVersionFactory();
             if ($versions = $version_factory->getAllVersionForItem($this->getItem())) {
                 if (count($versions)) {
                     foreach ($versions as $version) {

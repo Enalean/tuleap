@@ -65,20 +65,60 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
     }
 
     /**
-     * We don't allow copying
+     * Copy a docman item
+     * We don't allow copying docman items from a project to another
+     * We don't allow copying FRS items
      *
      * @param String $sourcePath
      * @param String $destinationPath
      *
      * @return void
-     *
-     * @see lib/Sabre/DAV/Sabre_DAV_Tree#copy($sourcePath, $destinationPath)
      */
     public function copy($sourcePath, $destinationPath) {
-
-        // This feature may be implemented in the future (mybe not).
-        throw new Sabre_DAV_Exception_NotImplemented($GLOBALS['Language']->getText('plugin_webdav_common', 'copy'));
-
+        $dataRoot = $this->getUtils()->getDocmanRoot();
+        $itemFactory = $this->getUtils()->getDocmanItemFactory();
+        $source = $this->getNodeForPath($sourcePath);
+        list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
+        $destination = $this->getNodeForPath($destinationDir);
+        // Check that write access is enabled for WebDAV
+        if (!$this->getUtils()->isWriteEnabled()) {
+            // Check that the source is a docman item & the destination is a docman folder
+            if ($destination instanceof WebDAVDocmanFolder
+                && ($source instanceof WebDAVDocmanFolder || $source instanceof WebDAVDocmanDocument)) {
+                // Check that the items are in the same project
+                $sourceItem = $source->getItem();
+                $destinationItem = $destination->getItem();
+                if ($sourceItem->getGroupId() == $destinationItem->getGroupId()) {
+                    // Check user permissions
+                    $user = $source->getUser();
+                    $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($source->getProject());
+                    if ($docmanPermissionManager->userCanAccess($user, $sourceItem->getId())
+                        && $docmanPermissionManager->userCanWrite($user, $destinationItem->getId())) {
+                        $itemFactory->cloneItems($sourceItem->getGroupId(),
+                                                 $destinationItem->getGroupId(),
+                                                 $user,
+                                                 array(),
+                                                 true,
+                                                 $dataRoot,
+                                                 $sourceItem->getId(),
+                                                 $destinationItem->getId(),
+                                                 1);
+                    } else {
+                        // TODO : i18n
+                        throw new Sabre_DAV_Exception_Forbidden('Permission error');
+                    }
+                } else {
+                    // TODO : i18n
+                    throw new Sabre_DAV_Exception_Forbidden('Not the same project');
+                }
+            } else {
+                // TODO : i18n
+                throw new Sabre_DAV_Exception_Forbidden('Bad source or destination');
+            }
+        } else {
+            // TODO : i18n
+            throw new Sabre_DAV_Exception_MethodNotAllowed('Write not enabled');
+        }
     }
 
     /**
@@ -112,6 +152,15 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
             }*/
         }
 
+    }
+
+    /**
+     * Returns an instance of WebDAVUtils
+     *
+     * @return WebDAVUtils
+     */
+    function getUtils() {
+        return WebDAVUtils::getInstance();
     }
 
 }
