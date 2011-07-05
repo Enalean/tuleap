@@ -75,13 +75,11 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      * @return void
      */
     public function copy($sourcePath, $destinationPath) {
-        $dataRoot = $this->getUtils()->getDocmanRoot();
-        $itemFactory = $this->getUtils()->getDocmanItemFactory();
-        $source = $this->getNodeForPath($sourcePath);
-        list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
-        $destination = $this->getNodeForPath($destinationDir);
         // Check that write access is enabled for WebDAV
         if ($this->getUtils()->isWriteEnabled()) {
+            list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
+            $destination = $this->getNodeForPath($destinationDir);
+            $source = $this->getNodeForPath($sourcePath);
             // Check that the source is a docman item & the destination is a docman folder
             if ($destination instanceof WebDAVDocmanFolder
                 && ($source instanceof WebDAVDocmanFolder || $source instanceof WebDAVDocmanDocument)) {
@@ -94,6 +92,8 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
                     $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($source->getProject());
                     if ($docmanPermissionManager->userCanAccess($user, $sourceItem->getId())
                         && $docmanPermissionManager->userCanWrite($user, $destinationItem->getId())) {
+                        $dataRoot = $this->getUtils()->getDocmanRoot();
+                        $itemFactory = $this->getUtils()->getDocmanItemFactory();
                         $itemFactory->cloneItems($sourceItem->getGroupId(),
                                                  $destinationItem->getGroupId(),
                                                  $user,
