@@ -211,8 +211,9 @@ class WebDAVTreeTest extends UnitTestCase {
         $tree->setReturnValue('canBeMoved', false);
         //$node = $tree->getNodeForPath('path');
         $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
         $tree->setReturnValue('getUtils', $utils);
-        
+
         //$node->expectNever('setName');
         //$node->expectNever('move');
         $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
@@ -227,6 +228,7 @@ class WebDAVTreeTest extends UnitTestCase {
         $tree->setReturnValue('getNodeForPath', $node);
         //$node = $tree->getNodeForPath('path');
         $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
         $tree->setReturnValue('getUtils', $utils);
 
         //$node->expectNever('setName');
