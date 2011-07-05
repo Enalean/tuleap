@@ -152,21 +152,25 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
             $fs   = $this->getUtils()->getFileStorage();
             $path = $fs->store(stream_get_contents($data), $this->getProject()->getGroupId(), $this->getItem()->getId(), $number);
             if ($path) {
-                $_filename = $this->getName();
                 $_filesize = filesize($path);
-                $_filetype = mime_content_type($path);
-                $vArray    = array('item_id'   => $this->getItem()->getId(),
-                                   'number'    => $number,
-                                   'user_id'   => $this->getUser()->getId(),
-                                   'label'     => '',
-                                   'changelog' => $_changelog,
-                                   'filename'  => $_filename,
-                                   'filesize'  => $_filesize,
-                                   'filetype'  => $_filetype, 
-                                   'path'      => $path,
-                                   'date'      => '');
-                if (!$versionFactory->create($vArray)) {
-                    throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
+                if ($_filesize <= $this->getMaxFileSize()) {
+                    $_filename = $this->getName();
+                    $_filetype = mime_content_type($path);
+                    $vArray    = array('item_id'   => $this->getItem()->getId(),
+                                       'number'    => $number,
+                                       'user_id'   => $this->getUser()->getId(),
+                                       'label'     => '',
+                                       'changelog' => $_changelog,
+                                       'filename'  => $_filename,
+                                       'filesize'  => $_filesize,
+                                       'filetype'  => $_filetype, 
+                                       'path'      => $path,
+                                       'date'      => '');
+                    if (!$versionFactory->create($vArray)) {
+                        throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
+                    }
+                } else {
+                    throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
                 }
             } else {
                 throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));

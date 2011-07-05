@@ -173,6 +173,33 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $webDAVDocmanFile->put($data);
     }
 
+    function testPutBigFile() {
+        $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
+        $item = new MockDocman_Item();
+        $webDAVDocmanFile->setReturnValue('getItem', $item);
+        $project = new MockProject();
+        $webDAVDocmanFile->setReturnValue('getProject', $project);
+        $user = new MockUser();
+        $webDAVDocmanFile->setReturnValue('getUser', $user);
+        $utils = new MockWebDAVUtils();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $vf = new MockDocman_VersionFactory();
+        $vf->setReturnValue('create', null);
+        $utils->setReturnValue('getVersionFactory', $vf);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $fs = new MockDocman_FileStorage();
+        $fs->setReturnValue('store', dirname(__FILE__).'/_fixtures/');
+        $utils->setReturnValue('getFileStorage', $fs);
+        $webDAVDocmanFile->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFile->setReturnValue('getMaxFileSize', 4095);
+
+        $this->expectException('Sabre_DAV_Exception');
+        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $webDAVDocmanFile->put($data);
+    }
+
     function testPutFailToCreate() {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
         $item = new MockDocman_Item();
@@ -193,6 +220,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $fs->setReturnValue('store', dirname(__FILE__).'/_fixtures/');
         $utils->setReturnValue('getFileStorage', $fs);
         $webDAVDocmanFile->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFile->setReturnValue('getMaxFileSize', 4096);
 
         $this->expectException('Sabre_DAV_Exception');
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
@@ -219,6 +247,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $fs->setReturnValue('store', dirname(__FILE__).'/_fixtures/');
         $utils->setReturnValue('getFileStorage', $fs);
         $webDAVDocmanFile->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFile->setReturnValue('getMaxFileSize', 4096);
 
         $this->assertNoErrors();
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');

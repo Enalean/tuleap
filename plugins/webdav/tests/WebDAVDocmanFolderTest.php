@@ -43,7 +43,7 @@ require_once (dirname(__FILE__).'/../include/FS/WebDAVDocmanFolder.class.php');
 Mock::generatePartial(
     'WebDAVDocmanFolder',
     'WebDAVDocmanFolderTestVersion',
-array('getDocmanItemFactory', 'getDocmanPermissionsManager', 'getUtils', 'getItem', 'getUser', 'getProject')
+array('getDocmanItemFactory', 'getDocmanPermissionsManager', 'getUtils', 'getItem', 'getUser', 'getProject', 'getMaxFileSize')
 );
 Mock::generatePartial(
     'WebDAVDocmanFolder',
@@ -500,6 +500,38 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $webDAVDocmanFolder->createFile('name', $data);
     }
 
+    function testCreateFileBigFile() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $item = new MockDocman_Item();
+        $dif = new MockDocman_ItemFactory();
+        $dif->setReturnValue('getItemFromDb', $item);
+        $dif->setReturnValue('create', 1);
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $user = new MockUser();
+        $webDAVDocmanFolder->setReturnValue('getUser', $user);
+        $project = new MockProject();
+        $webDAVDocmanFolder->setReturnValue('getProject', $project);
+        $dpm->expectOnce('userCanWrite');
+        $vf = new MockDocman_VersionFactory();
+        $vf->setReturnValue('create', true);
+        $utils->setReturnValue('getVersionFactory', $vf);
+        $fs = new MockDocman_FileStorage();
+        $fs->setReturnValue('store', dirname(__FILE__).'/_fixtures/');
+        $utils->setReturnValue('getFileStorage', $fs);
+        $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 4095);
+
+        $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
+        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $webDAVDocmanFolder->createFile('name', $data);
+    }
+
     function testCreateFileFailToCreate() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
         $dpm = new MockDocman_PermissionsManager();
@@ -525,6 +557,7 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $fs = new MockDocman_FileStorage();
         $fs->setReturnValue('store', dirname(__FILE__).'/_fixtures/');
         $utils->setReturnValue('getFileStorage', $fs);
+        $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 4096);
 
         $this->expectException('Sabre_DAV_Exception');
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
@@ -556,6 +589,7 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $fs = new MockDocman_FileStorage();
         $fs->setReturnValue('store', dirname(__FILE__).'/_fixtures/');
         $utils->setReturnValue('getFileStorage', $fs);
+        $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 4096);
 
         $this->assertNoErrors();
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');

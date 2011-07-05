@@ -33,6 +33,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     private $user;
     private $project;
     private $item;
+    private static $maxFileSize;
 
     /**
      * Constructor of the class
@@ -47,6 +48,26 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
         $this->user = $user;
         $this->project = $project;
         $this->item = $item;
+    }
+
+    /**
+     * Returns the max file size
+     *
+     * @return Integer
+     */
+    function getMaxFileSize() {
+        return self::$maxFileSize;
+    }
+
+    /**
+     * Sets the max file size
+     *
+     * @param Integer $maxFileSize
+     *
+     * @return void
+     */
+    function setMaxFileSize($maxFileSize) {
+        self::$maxFileSize = $maxFileSize;
     }
 
     /**
@@ -318,21 +339,25 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                 $fs             = $this->getUtils()->getFileStorage();
                 $path = $fs->store(stream_get_contents($data), $this->getProject()->getGroupId(), $newItem->getId(), $number);
                 if ($path) {
-                    $_filename      = htmlspecialchars($name);
-                    $_filesize      = filesize($path);
-                    $_filetype      = mime_content_type($path);
-                    $vArray         = array('item_id'   => $newItem->getId(),
-                                    'number'    => $number,
-                                    'user_id'   => $this->getUser()->getId(),
-                                    'label'     => '',
-                                    'changelog' => $_changelog,
-                                    'filename'  => $_filename,
-                                    'filesize'  => $_filesize,
-                                    'filetype'  => $_filetype, 
-                                    'path'      => $path,
-                                    'date'      => '');
-                    if (!$versionFactory->create($vArray)) {
-                        throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
+                    $_filesize = filesize($path);
+                    if ($_filesize <= $this->getMaxFileSize()) {
+                        $_filename      = htmlspecialchars($name);
+                        $_filetype      = mime_content_type($path);
+                        $vArray         = array('item_id'   => $newItem->getId(),
+                                        'number'    => $number,
+                                        'user_id'   => $this->getUser()->getId(),
+                                        'label'     => '',
+                                        'changelog' => $_changelog,
+                                        'filename'  => $_filename,
+                                        'filesize'  => $_filesize,
+                                        'filetype'  => $_filetype, 
+                                        'path'      => $path,
+                                        'date'      => '');
+                        if (!$versionFactory->create($vArray)) {
+                            throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
+                        }
+                    } else {
+                        throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
                     }
                 } else {
                     throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));
