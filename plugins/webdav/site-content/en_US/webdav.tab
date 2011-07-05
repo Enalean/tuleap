@@ -39,6 +39,12 @@ plugin_webdav_common	file_denied_put	Permission denied to put into this file.
 plugin_webdav_common	service_not_available	This service is not existant/activated for this project.
 plugin_webdav_common	docman_item_not_available	This item is not available.
 plugin_webdav_common	docman_item_duplicated	This item have a duplicated name.
+plugin_webdav_common	docman_item_denied_move	Permission denied to move item.
+plugin_webdav_common	docman_item_denied_copy	Permission denied to copy item.
+plugin_webdav_common	write_access_disabled	Write access is disabled for WebDAV. Please contact the system administrator.
+plugin_webdav_common	docman_item_projects_copy	Permission denied to copy item to another project.
+plugin_webdav_common	docman_item_projects_move	Permission denied to move item to another project.
+plugin_webdav_common	docman_bad_item	Bad source or destination.
 plugin_webdav_common	authentication_required	Authentication required.
 plugin_webdav_common	wrong_input	Verify your input.
 plugin_webdav_common	hidden	 (hidden)

@@ -197,6 +197,7 @@ class WebDAVTreeTest extends UnitTestCase {
         $tree->setReturnValue('getNodeForPath', $node);
         //$node = $tree->getNodeForPath('path');
         $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
         $tree->setReturnValue('getUtils', $utils);
 
         //$node->expectOnce('setName');
