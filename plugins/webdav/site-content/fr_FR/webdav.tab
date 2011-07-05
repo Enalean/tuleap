@@ -1,4 +1,4 @@
-﻿plugin_webdav_download	access_not_authorized	Vous n'avez pas les droits d'acces sur ce fichier. Veuillez contacter un administrateur du projet.
+plugin_webdav_download	access_not_authorized	Vous n'avez pas les droits d'acces sur ce fichier. Veuillez contacter un administrateur du projet.
 plugin_webdav_download	file_not_available	Erreur interne: le fichier n'est pas disponible. Veuillez contacter l'administrateur du site.
 plugin_webdav_download	dont_belong	Le fichier n'appartient pas a la version ou le paquet donnes.
 plugin_webdav_download	error_file_size	La taille du fichier depasse la limite autorisee.
