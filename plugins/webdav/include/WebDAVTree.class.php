@@ -138,7 +138,9 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
         $destination = $this->getNodeForPath($destinationDir);
         // Check that write access is enabled for WebDAV
         if ($this->getUtils()->isWriteEnabled()) {
-            if ($destination instanceof WebDAVDocmanFolder
+            if ($sourceDir === $destinationDir) {
+                $source->setName($destinationName);
+            } else if ($destination instanceof WebDAVDocmanFolder
                 && ($source instanceof WebDAVDocmanFolder || $source instanceof WebDAVDocmanDocument)) {
                 $sourceItem = $source->getItem();
                 $destinationItem = $destination->getItem();
@@ -155,10 +157,6 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
                 } else {
                     throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_projects_move'));
                 }
-            } else if ($sourceDir === $destinationDir) {
-                //don't rename a docman file (Only FRS)
-                $renameable = $this->getNodeForPath($sourcePath);
-                $renameable->setName($destinationName);
             } else {
                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'move_error'));
             }
