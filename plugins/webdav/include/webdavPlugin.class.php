@@ -89,7 +89,7 @@ class WebDAVPlugin extends Plugin {
             WebDAVDocmanFile::setMaxFileSize($params['maxFileSize']);
             WebDAVDocmanFolder::setMaxFileSize($params['maxFileSize']);
             $docman = new WebDAVDocmanFolder($params['user'] , $params['project'], $root);
-            $params['children']['Documents'] = $docman;
+            $params['children'][$docman->getName()] = $docman;
         }
     }
 

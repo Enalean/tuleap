@@ -306,7 +306,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
         $item = new Docman_File();
         $webDAVDocmanFile->setReturnValue('getItem', $item);
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
         $webDAVDocmanFile->setName('newName');
     }
 

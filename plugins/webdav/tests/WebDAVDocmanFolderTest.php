@@ -43,7 +43,14 @@ require_once (dirname(__FILE__).'/../include/FS/WebDAVDocmanFolder.class.php');
 Mock::generatePartial(
     'WebDAVDocmanFolder',
     'WebDAVDocmanFolderTestVersion',
-array('getDocmanItemFactory', 'getDocmanPermissionsManager', 'getUtils', 'getItem', 'getUser', 'getProject', 'getMaxFileSize')
+array('getDocmanItemFactory',
+      'getDocmanPermissionsManager',
+      'getUtils',
+      'getItem',
+      'getUser',
+      'getProject',
+      'getMaxFileSize',
+      'isDocmanRoot')
 );
 Mock::generatePartial(
     'WebDAVDocmanFolder',
@@ -380,7 +387,18 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $utils->setReturnValue('isWriteEnabled', false);
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $webDAVDocmanFolder->setName('newName');
+    }
+
+    function testSetNameDocmanRoot() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', false);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFolder->setReturnValue('isDocmanRoot', true);
+
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
         $webDAVDocmanFolder->setName('newName');
     }
 
@@ -392,11 +410,12 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $utils->setReturnValue('isWriteEnabled', true);
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFolder->setReturnValue('isDocmanRoot', false);
         $item = new MockDocman_Item();
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
         $dpm->expectOnce('userCanWrite');
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
         $webDAVDocmanFolder->setName('newName');
     }
 
@@ -410,6 +429,7 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $dif = new MockDocman_ItemFactory();
         $utils->setReturnValue('getDocmanItemFactory', $dif);
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFolder->setReturnValue('isDocmanRoot', false);
         $item = new MockDocman_Item();
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
         $dpm->expectOnce('userCanWrite');

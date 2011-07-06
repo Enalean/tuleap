@@ -172,7 +172,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @see plugins/webdav/include/lib/Sabre/DAV/Sabre_DAV_INode::getName()
      */
     function getName() {
-        if (!$this->getItem()->getParentId()) {
+        if ($this->isDocmanRoot()) {
             // case of the root
             return 'Documents';
         }
@@ -225,6 +225,15 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      */
     function getUtils() {
         return WebDAVUtils::getInstance();
+    }
+
+    /**
+     * Tell if the folder is docman root
+     *
+     * @return Boolean
+     */
+    function isDocmanRoot() {
+        return !$this->getItem()->getParentId();
     }
 
     /**
@@ -296,14 +305,14 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      */
     function setName($name) {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+        if ($this->getUtils()->isWriteEnabled() && !$this->isDocmanRoot() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
             $row          = $this->getItem()->toRow();
             $row['title'] = htmlspecialchars($name);
             $row['id']    = $this->getItem()->getId();
             $itemFactory  = $this->getUtils()->getDocmanItemFactory();
             $itemFactory->update($row);
         } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_rename'));
+            throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_rename'));
         }
     }
 
@@ -397,7 +406,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      */
     function delete() {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+        if ($this->getUtils()->isWriteEnabled() && !$this->isDocmanRoot() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
             $item = $this->getItem();
             $this->deleteDirectoryContent($item);
             $item->delete();

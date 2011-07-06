@@ -95,7 +95,7 @@ class WebDAVDocmanDocumentTest extends UnitTestCase {
         $utils->setReturnValue('isWriteEnabled', false);
         $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
         $webDAVDocmanDocument->setName('newName');
     }
 
@@ -111,7 +111,7 @@ class WebDAVDocmanDocumentTest extends UnitTestCase {
         $webDAVDocmanDocument->setReturnValue('getItem', $item);
         $dpm->expectOnce('userCanWrite');
 
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
         $webDAVDocmanDocument->setName('newName');
     }
 

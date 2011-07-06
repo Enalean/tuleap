@@ -220,7 +220,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     function setName($name) {
         switch (get_class($this->getItem())) {
             case 'Docman_File':
-                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
+                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
                 break;
             case 'Docman_EmbeddedFile':
                 parent::setName($name);
