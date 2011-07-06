@@ -26,6 +26,8 @@ plugin_git	admin_reference_creation_title	Reference creation
 plugin_git	admin_reference_creation_input_name	Name
 plugin_git	admin_reference_creation_textarea_name	Description
 plugin_git	admin_reference_creation_submit	Create
+plugin_git	admin_reference_creation_input_type	Enable fine grain permissions on repository <em>(EXPERIMENTAL)</em>.
+plugin_git	admin_reference_creation_lab_feature	This is an experimental feature. If any doubts, don't use it!
 
 
 plugin_git	admin_fork_creation_title	Fork

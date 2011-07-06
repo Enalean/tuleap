@@ -27,6 +27,8 @@ plugin_git	admin_reference_creation_title	Création d'une référence
 plugin_git	admin_reference_creation_input_name	Nom
 plugin_git	admin_reference_creation_submit	Créer
 plugin_git	admin_reference_creation_textarea_name	Description
+plugin_git	admin_reference_creation_input_type	Activer la gestion fine des permissions <em>(EXPÉRIMENTAL)</em>.
+plugin_git	admin_reference_creation_lab_feature	Cette fonctionnalité est expérimentale. En cas de doute, ne l'activez pas!
 
 plugin_git	admin_fork_creation_title	Création d'un fork
 plugin_git	admin_fork_creation_input_name	Nom du fork

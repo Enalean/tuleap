@@ -1314,3 +1314,10 @@ ul.ServiceMenu li.current {
     margin: 0;
 }
 /* }}} */
+
+/* {{{ Admin delegation */
+.lab_feature {
+    background:   no-repeat url('../images/ic/flask.png') 4px 2px;
+    padding-left: 20px;
+}
+/* }}} */

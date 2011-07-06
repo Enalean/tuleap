@@ -78,7 +78,7 @@ class GitActions extends PluginActions {
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
     }
 
-    public function createReference( $projectId, $repositoryName) {
+    public function createReference( $projectId, $repositoryName, $backendType) {
         $c              = $this->getController();
         $projectId      = intval( $projectId );
         if ( empty($repositoryName) ) {
@@ -94,22 +94,23 @@ class GitActions extends PluginActions {
 
         $project = ProjectManager::instance()->getProject($projectId);
 
-        $backend = new Git_Backend_Gitolite(new Git_GitoliteDriver('/home/codendiadm/gitolite-admin'));
+        if ($backendType == GitDao::BACKEND_GITOLITE) {
+            $backend = new Git_Backend_Gitolite(new Git_GitoliteDriver('/home/codendiadm/gitolite-admin'));
 
-        $repository = new GitRepository();
-        $repository->setDescription('-- Default description --');
-        $repository->setCreator(UserManager::instance()->getCurrentUser());
-        $repository->setProject($project);
-        $repository->setName($repositoryName);
-        $repository->setBackend($backend);
-        $repository->create();
-        
-        /*$this->systemEventManager->createEvent(
-            'GIT_REPO_CREATE',
-            $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryName.SystemEvent::PARAMETER_SEPARATOR.$this->user->getId(),
-            SystemEvent::PRIORITY_MEDIUM
-        );
-        $c->addInfo( $this->getText('actions_create_repo_process') );*/
+            $repository = new GitRepository();
+            $repository->setDescription('-- Default description --');
+            $repository->setCreator(UserManager::instance()->getCurrentUser());
+            $repository->setProject($project);
+            $repository->setName($repositoryName);
+            $repository->setBackend($backend);
+            $repository->create();
+        } else {
+            $this->systemEventManager->createEvent('GIT_REPO_CREATE',
+                $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryName.SystemEvent::PARAMETER_SEPARATOR.$this->user->getId(),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+            $c->addInfo( $this->getText('actions_create_repo_process') );
+        }
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
         return;
     }
