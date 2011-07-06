@@ -493,7 +493,7 @@ if [ "$1" -eq "1" ]; then
         echo /usr/bin/git-shell >> /etc/shells
     fi
 fi
-if [ ! -d "%{APP_HOME_DIR}/gitolite-admin" ]; then
+if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     # deploy gitolite.rc
     %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.rc.dist /usr/com/gitolite/.gitolite.rc
 
@@ -515,6 +515,7 @@ if [ ! -d "%{APP_HOME_DIR}/gitolite-admin" ]; then
     su -c 'git config --global user.name "%{APP_USER}"' - %{APP_USER}
     su -c 'git config --global user.email %{APP_USER}@localhost' - %{APP_USER}
     su -c 'cd %{APP_DATA_DIR}/gitolite; git clone gitolite@gl-adm:gitolite-admin admin' - %{APP_USER}
+    %{__chmod} 750 %{APP_DATA_DIR}/gitolite/admin
 
     # uncomment gl-membership
     # Cannot be done before Tuleap setup. Otherwise previous clone command fails because gl-membership
