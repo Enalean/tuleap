@@ -507,6 +507,9 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     %{__cp} "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm.pub" /tmp/
     su -c 'git config --global user.name "gitolite"' - gitolite
     su -c 'git config --global user.email gitolite@localhost' - gitolite
+    %{__install} -d -g gitolite -o gitolite -m 00700 /usr/com/gitolite/.gitolite
+    %{__install} -d -g gitolite -o gitolite -m 00700 /usr/com/gitolite/.gitolite/conf
+    %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.conf.dist /usr/com/gitolite/.gitolite/conf/gitolite.conf
     su -c 'gl-setup /tmp/id_rsa_gl-adm.pub' - gitolite
 
     # checkout
