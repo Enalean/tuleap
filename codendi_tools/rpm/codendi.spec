@@ -2,8 +2,9 @@
 %define PKG_NAME @@PKG_NAME@@
 %define APP_NAME codendi
 %define APP_USER codendiadm
+%define APP_HOME_DIR /home/%{APP_USER}
 %define APP_DIR %{_datadir}/%{APP_NAME}
-%define APP_LIB_DIR %{_libdir}/%{APP_NAME}
+%define APP_LIB_DIR /usr/lib/%{APP_NAME}
 %define APP_LIBBIN_DIR %{APP_LIB_DIR}/bin
 %define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
 %define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
@@ -368,6 +369,9 @@ done
 
 # plugin git
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitroot
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/repositories
+touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__ln_s} var/lib/%{APP_NAME}/gitroot $RPM_BUILD_ROOT
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/templates_c
@@ -487,6 +491,39 @@ if [ "$1" -eq "1" ]; then
     # During install
     if ! %{__grep} /usr/bin/git-shell /etc/shells &> /dev/null; then
         echo /usr/bin/git-shell >> /etc/shells
+    fi
+fi
+if [ ! -d "%{APP_HOME_DIR}/gitolite-admin" ]; then
+    # deploy gitolite.rc
+    %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite.rc.dist /usr/com/gitolite/.gitolite.rc
+
+    # generate codendiadm ssh key for gitolite
+    %{__install} -d "%{APP_HOME_DIR}/.ssh/" -g %{APP_USER} -o %{APP_USER} -m 00700
+    ssh-keygen -q -t rsa -N "" -C "Tuleap / gitolite admin key" -f "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm"
+    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm"
+    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm.pub"
+
+    # deploy codendiadm ssh key for gitolite
+    %{__cp} "%{APP_HOME_DIR}/.ssh/id_rsa_gl-adm.pub" /tmp/
+    su -c 'git config --global user.name "gitolite"' - gitolite
+    su -c 'git config --global user.email gitolite@localhost' - gitolite
+    su -c 'gl-setup /tmp/id_rsa_gl-adm.pub' - gitolite
+
+    # checkout
+    %{__cat} "%{APP_DIR}/plugins/git/etc/ssh.config.dist" >> "%{APP_HOME_DIR}/.ssh/config"
+    %{__chown}  %{APP_USER}:%{APP_USER}  "%{APP_HOME_DIR}/.ssh/config"
+    su -c 'git config --global user.name "%{APP_USER}"' - %{APP_USER}
+    su -c 'git config --global user.email %{APP_USER}@localhost' - %{APP_USER}
+    su -c 'cd %{APP_DATA_DIR}/gitolite; git clone gitolite@gl-adm:gitolite-admin admin' - %{APP_USER}
+
+    # uncomment gl-membership
+    # Cannot be done before Tuleap setup. Otherwise previous clone command fails because gl-membership
+    # doesn't have DB access .
+    perl -pi -e 's/^# \$GL_GET_MEMBERSHIPS_PGM/\$GL_GET_MEMBERSHIPS_PGM/' /usr/com/gitolite/.gitolite.rc
+
+    # add codendiadm to gitolite group
+    if ! groups codendiadm | grep -q gitolite 2> /dev/null ; then
+	usermod -a -G gitolite codendiadm
     fi
 fi
 
@@ -651,6 +688,9 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/git
 %dir %{APP_DATA_DIR}/gitroot
+%dir %{APP_DATA_DIR}/gitolite
+%attr(00770,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/repositories
+%attr(00660,gitolite,gitolite)  %{APP_DATA_DIR}/gitolite/projects.list
 %attr(-,root,root) /gitroot
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
