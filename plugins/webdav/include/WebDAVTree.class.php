@@ -104,13 +104,13 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
                                                  $destinationItem->getId(),
                                                  1);
                     } else {
-                        throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_denied_copy'));
+                        throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_denied_copy'));
                     }
                 } else {
-                    throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_projects_copy'));
+                    throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_projects_copy'));
                 }
             } else {
-                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_bad_item'));
+                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_bad_item'));
             }
         } else {
             throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
@@ -152,10 +152,10 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
                         && $docmanPermissionManager->userCanWrite($user, $destinationItem->getId())) {
                         $itemFactory->setNewParent($sourceItem->getId(), $destinationItem->getId(), $ordering);
                     } else {
-                        throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_denied_move'));
+                        throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_denied_move'));
                     }
                 } else {
-                    throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_projects_move'));
+                    throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_projects_move'));
                 }
             } else {
                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'move_error'));
