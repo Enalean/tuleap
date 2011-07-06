@@ -122,7 +122,7 @@ Summary: Git plugin for Codendi
 Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, git, geshi, php-Smarty
+Requires: %{name} >= %{version}, git, geshi, php-Smarty, gitolite
 Provides: codendi-plugin-git = %{version}
 %description plugin-git
 Integration of git distributed software configuration management tool together
@@ -372,7 +372,7 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/templates_c
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
-
+%{__install} plugins/git/bin/gl-membership.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 
 ##
 ## On package install
@@ -653,6 +653,7 @@ fi
 %dir %{APP_DATA_DIR}/gitroot
 %attr(-,root,root) /gitroot
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/smarty
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gl-membership.pl
 
 %files plugin-svntodimensions
 %defattr(-,%{APP_USER},%{APP_USER},-)
