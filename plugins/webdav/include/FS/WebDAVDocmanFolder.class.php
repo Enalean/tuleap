@@ -327,52 +327,53 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     function createFile($name, $data = null) {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
         if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            $item['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
-            $item['user_id']   = $this->getUser()->getId();
-            $item['group_id']  = $this->getProject()->getGroupId();
-            $item['parent_id'] = $this->getItem()->getId();
-            $item['title']     = htmlspecialchars($name);
-            $itemFactory       = $this->getUtils()->getDocmanItemFactory();
-            $id                = $itemFactory->create($item, 'beginning');
-            if ($id) {
-                $newItem           = $itemFactory->getItemFromDb($id);
-                $versionFactory    = $this->getUtils()->getVersionFactory();
-                $nextNb            = $versionFactory->getNextVersionNumber($newItem);
-                if($nextNb === false) {
-                    $number       = 1;
-                    $_changelog   = 'Initial version';
-                } else {
-                    $number       = $nextNb;
-                    $_changelog   = '';
-                }
-                $fs             = $this->getUtils()->getFileStorage();
-                $path = $fs->store(stream_get_contents($data), $this->getProject()->getGroupId(), $newItem->getId(), $number);
-                if ($path) {
-                    $_filesize = filesize($path);
-                    if ($_filesize <= $this->getMaxFileSize()) {
+            $content = stream_get_contents($data);
+            if (strlen($content) <= $this->getMaxFileSize()) {
+                $item['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
+                $item['user_id']   = $this->getUser()->getId();
+                $item['group_id']  = $this->getProject()->getGroupId();
+                $item['parent_id'] = $this->getItem()->getId();
+                $item['title']     = htmlspecialchars($name);
+                $itemFactory       = $this->getUtils()->getDocmanItemFactory();
+                $id                = $itemFactory->create($item, 'beginning');
+                if ($id) {
+                    $newItem           = $itemFactory->getItemFromDb($id);
+                    $versionFactory    = $this->getUtils()->getVersionFactory();
+                    $nextNb            = $versionFactory->getNextVersionNumber($newItem);
+                    if($nextNb === false) {
+                        $number       = 1;
+                        $_changelog   = 'Initial version';
+                    } else {
+                        $number       = $nextNb;
+                        $_changelog   = '';
+                    }
+                    $fs   = $this->getUtils()->getFileStorage();
+                    $path = $fs->store($content, $this->getProject()->getGroupId(), $newItem->getId(), $number);
+                    if ($path) {
+                        $_filesize      = filesize($path);
                         $_filename      = htmlspecialchars($name);
                         $_filetype      = mime_content_type($path);
                         $vArray         = array('item_id'   => $newItem->getId(),
-                                        'number'    => $number,
-                                        'user_id'   => $this->getUser()->getId(),
-                                        'label'     => '',
-                                        'changelog' => $_changelog,
-                                        'filename'  => $_filename,
-                                        'filesize'  => $_filesize,
-                                        'filetype'  => $_filetype, 
-                                        'path'      => $path,
-                                        'date'      => '');
+                                                'number'    => $number,
+                                                'user_id'   => $this->getUser()->getId(),
+                                                'label'     => '',
+                                                'changelog' => $_changelog,
+                                                'filename'  => $_filename,
+                                                'filesize'  => $_filesize,
+                                                'filetype'  => $_filetype, 
+                                                'path'      => $path,
+                                                'date'      => '');
                         if (!$versionFactory->create($vArray)) {
-                            throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
+                            throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
                         }
                     } else {
-                        throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
+                        throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));
                     }
                 } else {
-                    throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));
+                    throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
                 }
             } else {
-                throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
+                throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_create'));

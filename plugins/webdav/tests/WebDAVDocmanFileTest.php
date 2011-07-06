@@ -168,7 +168,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $utils->setReturnValue('getFileStorage', $fs);
         $webDAVDocmanFile->setReturnValue('getUtils', $utils);
 
-        $this->expectException('Sabre_DAV_Exception');
+        $this->expectException('WebDAVExceptionServerError');
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
         $webDAVDocmanFile->put($data);
     }
@@ -195,7 +195,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $webDAVDocmanFile->setReturnValue('getUtils', $utils);
         $webDAVDocmanFile->setReturnValue('getMaxFileSize', 4095);
 
-        $this->expectException('Sabre_DAV_Exception');
+        $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
         $webDAVDocmanFile->put($data);
     }
@@ -222,7 +222,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $webDAVDocmanFile->setReturnValue('getUtils', $utils);
         $webDAVDocmanFile->setReturnValue('getMaxFileSize', 4096);
 
-        $this->expectException('Sabre_DAV_Exception');
+        $this->expectException('WebDAVExceptionServerError');
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
         $webDAVDocmanFile->put($data);
     }

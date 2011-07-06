@@ -29,6 +29,7 @@ class Sabre_DAV_Exception_Conflict extends Sabre_DAV_Exception {}
 class Sabre_DAV_Exception_Forbidden extends Sabre_DAV_Exception {}
 class Sabre_DAV_Exception_MethodNotAllowed extends Sabre_DAV_Exception {}
 class Sabre_DAV_Exception_BadRequest extends Sabre_DAV_Exception {}
+class WebDAVExceptionServerError extends Sabre_DAV_Exception {}
 
 class Sabre_DAV_File {}
 class Sabre_DAV_Directory {}

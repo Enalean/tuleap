@@ -107,6 +107,7 @@ class WebDAVPlugin extends Plugin {
         // Include the SabreDAV library
         $SabreDAVPath = $this->getPluginInfo()->getPropertyValueForName('sabredav_path');
         require_once ($SabreDAVPath.'/lib/Sabre.autoload.php');
+        require_once ('exception/WebDAVExceptionServerError.class.php');
 
         // Creating the Root directory from WebDAV file system
         $maxFileSize = $this->getPluginInfo()->getPropertyValueForName('max_file_size');
