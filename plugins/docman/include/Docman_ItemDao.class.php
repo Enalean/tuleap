@@ -641,6 +641,19 @@ class Docman_ItemDao extends DataAccessObject {
         return $id;
     }
 
+    function searchParentIdForItemId($item_id) {
+        $sql = sprintf('SELECT parent_id FROM plugin_docman_item WHERE item_id = %s ',
+            $this->da->quoteSmart($item_id)
+        );
+        $dar = $this->retrieve($sql);
+        $id = false;
+        if ($dar && $dar->valid()) {
+            $row = $dar->current();
+            $id = $row['parent_id'];
+        }
+        return $id;
+    }
+
     /**
      * Search for subfolders in the given item array.
      *

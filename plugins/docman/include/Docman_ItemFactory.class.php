@@ -763,7 +763,30 @@ class Docman_ItemFactory {
         $dao =& $this->_getItemDao();
         return $item && $this->isMoveable($item) && $dao->setNewParent($item_id, $new_parent_id, $ordering);
     }
-    
+
+    /**
+     * Recursive method that browse parents subtree 
+     * and check ,for each level, if a given item ($itemSource_id) is in parents.
+     * 
+     * @param Integer item_id Id of current item we want to check.
+     * @param Integer itemSource_id Id of source item.
+     * @return boolean
+     */
+    function isSubItem($item_id, $itemSource_id) {
+        $item =& $this->getItemFromDb($item_id);
+        $dao = $this->_getItemDao();
+        $parentId = $dao->searchParentIdForItemId($item_id);
+
+        if($parentId && !$this->isRoot($item)) {
+            if ($parentId != $itemSource_id) {
+                 $this->isSubItem($parentId, $itemSource_id);
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
     * Walk through a item hierarchy and for each subitem apply callback method
     * in parameter.
