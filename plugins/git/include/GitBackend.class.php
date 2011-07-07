@@ -20,6 +20,7 @@
 require_once('common/backend/Backend.class.php');
 require_once('GitDao.class.php');
 require_once('GitDriver.class.php');
+require_once('Git_Backend_Interface.php');
 require_once('GitRepository.class.php');
 require_once('exceptions/GitBackendException.class.php');
 
@@ -28,7 +29,7 @@ require_once('exceptions/GitBackendException.class.php');
  *
  * @author Guillaume Storchi
  */
-class GitBackend extends Backend {
+class GitBackend extends Backend implements Git_Backend_Interface {
     
     private $driver;    
     private $packagesFile;
@@ -304,6 +305,18 @@ class GitBackend extends Backend {
      */
     public function isNameAvailable($newName) {
         return ! $this->fileExists(self::GIT_ROOT_PATH.'/'.$newName);
+    }
+    
+	/**
+     * Return URL to access the respository for remote git commands
+     *
+     * @param  GitRepository $repository
+     * @return String
+     */
+    public function getAccessUrl($repository) {
+        $serverName  = $_SERVER['SERVER_NAME'];
+        $user = UserManager::instance()->getCurrentUser();
+        return  $user->getUserName() .'@'. $serverName .':/gitroot/'. $repository->getProject()->getUnixName().'/'.$repository->getName().'.git';
     }
 }
 

@@ -161,18 +161,7 @@ class GitViews extends PluginViews {
             $this->_getBreadCrumb();
             
             // Access type
-            $accessType = '<span class="plugin_git_repo_privacy" title=';
-            switch ($access) {
-            case GitRepository::PRIVATE_ACCESS:
-                $accessType .= '"'.$this->getText('view_repo_access_private').'">';
-                $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
-                break;
-            case GitRepository::PUBLIC_ACCESS:
-                $accessType .= '"'.$this->getText('view_repo_access_public').'">';
-                $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
-                break;
-            }
-            $accessType .= '</span>';
+            $accessType = $this->fetchAccessType($access, $repository->getBackend() instanceof Git_Backend_Gitolite);
 
             // Actions
             $repoActions = '<ul id="plugin_git_repository_actions">';
@@ -614,25 +603,8 @@ class GitViews extends PluginViews {
             }
 
             // Access type
-            $accessType = '<span class="plugin_git_repo_privacy" title=';
-
-            if ($data[$childId][GitDao::REPOSITORY_BACKEND_TYPE] == GitDao::BACKEND_GITOLITE) {
-                //$accessType .= '"'.$this->getText('view_repo_access_custom').'">';
-                $accessType .= '"custom">';
-                $accessType .= '<img src="'.$this->getController()->plugin->getThemePath().'/images/perms.png" />';
-            } else {
-                switch ($access) {
-                    case GitRepository::PRIVATE_ACCESS:
-                        $accessType .= '"'.$this->getText('view_repo_access_private').'">';
-                        $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
-                        break;
-                    case GitRepository::PUBLIC_ACCESS:
-                        $accessType .= '"'.$this->getText('view_repo_access_public').'">';
-                        $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
-                        break;
-                }
-            }
-            $accessType .= '</span>';
+            $accessType = $this->fetchAccessType($access, $data[$childId][GitDao::REPOSITORY_BACKEND_TYPE] == GitDao::BACKEND_GITOLITE);
+            
             echo '<li>'.$accessType.' '.$this->_getRepositoryPageUrl($repoId, $repoName);
             if ($isInit == 0) {
                 echo ' ('.$this->getText('view_repo_not_initialized').') ';
@@ -645,6 +617,35 @@ class GitViews extends PluginViews {
                 echo '</ul>';
             }
         }
+    }
+    
+    /**
+     * Fetch the html code to display the icon of a repository (depends on type of project)
+     *
+     * @param $access
+     * @param $backend_type
+     */
+    protected function fetchAccessType($access, $backendIsGitolite) {
+        $accessType = '<span class="plugin_git_repo_privacy" title=';
+
+        if ($backendIsGitolite) {
+            //$accessType .= '"'.$this->getText('view_repo_access_custom').'">';
+            $accessType .= '"custom">';
+            $accessType .= '<img src="'.$this->getController()->plugin->getThemePath().'/images/perms.png" />';
+        } else {
+            switch ($access) {
+                case GitRepository::PRIVATE_ACCESS:
+                    $accessType .= '"'.$this->getText('view_repo_access_private').'">';
+                    $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
+                    break;
+                case GitRepository::PUBLIC_ACCESS:
+                    $accessType .= '"'.$this->getText('view_repo_access_public').'">';
+                    $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
+                    break;
+            }
+        }
+        $accessType .= '</span>';
+        return $accessType;
     }
 }
 
