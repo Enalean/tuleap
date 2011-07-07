@@ -116,6 +116,14 @@ class Docman_VersionFactory {
      * @return Boolean
      */
     function deleteSpecificVersion($item, $number) {
+         // The event must be processed before the version is deleted
+        $version = $this->getSpecificVersion($item, $number) ;
+        $value = $number;
+        if ($version->getLabel() != '') {
+            $value = $number.' ('.$version->getLabel().')';
+        }
+        $user  = $this->_getUserManager()->getCurrentUser();
+        $this->callDeleteVersionEvent($item->getGroupId(), $item, $value, $user);
         $dao = $this->_getVersionDao();
         return $dao->deleteSpecificVersion($item->getId(), $number);
        
@@ -287,6 +295,15 @@ class Docman_VersionFactory {
         ));
     }
 
+    function callDeleteVersionEvent($groupId, $item, $value, $user) {
+        $logger = new Docman_Log();
+        $params = array('group_id' => $groupId,
+                        'item'       => $item,
+                        'old_value'  => $value,
+                        'user'       => $user,
+                        'event'   => 'plugin_docman_event_del_version');
+        $logger->log($params['event'], $params);
+    }
 }
 
 ?>
