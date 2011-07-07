@@ -151,6 +151,8 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
                     if ($docmanPermissionManager->userCanAccess($user, $sourceItem->getId())
                         && $docmanPermissionManager->userCanWrite($user, $destinationItem->getId())) {
                         $itemFactory->setNewParent($sourceItem->getId(), $destinationItem->getId(), $ordering);
+                        $event = 'plugin_docman_event_move';
+                        $itemFactory->callItemEvent($sourceItem->getGroupId(), $destinationItem, $sourceItem, $user, $event);
                     } else {
                         throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_denied_move'));
                     }

@@ -689,13 +689,13 @@ class Docman_ItemFactory {
         $dao->massUpdate($srcItemId, $mdLabel, $itemIdArray);
     }
 
-    function callAddEvent($groupId, $parent, $newItem, $user) {
+    function callItemEvent($groupId, $parent, $newItem, $user, $event) {
         $logger = new Docman_Log();
         $params = array('group_id' => $groupId,
-                         'parent'  => $parent,
-                         'item'    => $newItem,
-                         'user'    => $user,
-                         'event'   => 'plugin_docman_event_add');
+                        'parent'  => $parent,
+                        'item'    => $newItem,
+                        'user'    => $user,
+                        'event'   => $event);
         $logger->log($params['event'], $params);
     }
 
@@ -708,7 +708,8 @@ class Docman_ItemFactory {
             $parent   = $this->getItemFromDb($row['parent_id']);
             $um = $this->_getUserManager();
             $user = $um->getUserById($row['user_id']);
-            $this->callAddEvent($row['group_id'], $parent, $newItem, $user);
+            $event = 'plugin_docman_event_add';
+            $this->callItemEvent($row['group_id'], $parent, $newItem, $user, $event);
         }
         return $id;
     }

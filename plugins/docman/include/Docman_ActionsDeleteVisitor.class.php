@@ -133,13 +133,9 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
        if ($this->docman->userCanWrite($item->getId())) {
 
             // The event must be processed before the item is deleted
-            $em =& $this->_getEventManager();
-            $em->processEvent('plugin_docman_event_del', array(
-                'group_id' => $item->getGroupId(),
-                'item'     => &$item,
-                'parent'   => &$params['parent'],
-                'user'     => &$params['user'])
-            );
+            $item_factory = $this->_getItemFactory();
+            $event = 'plugin_docman_event_del';
+            $item_factory->callItemEvent($item->getGroupId(), &$params['parent'], &$item, &$params['user'], $event);
 
             $item->delete();
             return true;
