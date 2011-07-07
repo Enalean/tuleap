@@ -152,7 +152,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
             $fs   = $this->getUtils()->getFileStorage();
             $path = $fs->store(stream_get_contents($data), $this->getProject()->getGroupId(), $this->getItem()->getId(), $number);
             if ($path) {
-                $_filesize = filesize($path);
+                $_filesize = PHP_BigFile::getSize($path);
                 if ($_filesize <= $this->getMaxFileSize()) {
                     $_filename = $this->getName();
                     $_filetype = mime_content_type($path);

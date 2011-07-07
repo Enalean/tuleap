@@ -350,7 +350,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                     $fs   = $this->getUtils()->getFileStorage();
                     $path = $fs->store($content, $this->getProject()->getGroupId(), $newItem->getId(), $number);
                     if ($path) {
-                        $_filesize      = filesize($path);
+                        $_filesize      = PHP_BigFile::getSize($path);
                         $_filename      = htmlspecialchars($name);
                         $_filetype      = mime_content_type($path);
                         $vArray         = array('item_id'   => $newItem->getId(),
