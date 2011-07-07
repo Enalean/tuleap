@@ -774,8 +774,7 @@ class Docman_ItemFactory {
      */
     function isSubItem($item_id, $itemSource_id) {
         $item =& $this->getItemFromDb($item_id);
-        $dao = $this->_getItemDao();
-        $parentId = $dao->searchParentIdForItemId($item_id);
+        $parentId = $item->getParentId();
 
         if($parentId && !$this->isRoot($item)) {
             if ($parentId != $itemSource_id) {
