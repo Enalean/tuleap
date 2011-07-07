@@ -161,7 +161,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     function download($fileType, $fileSize, $path) {
         header('Content-Description: File Transfer');
         header('Content-Type: '. $fileType);
-        header('Content-Disposition: attachment; filename="'. basename($path) .'"');
+        header('Content-Disposition: attachment; filename="'.$this->getName().'"');
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
