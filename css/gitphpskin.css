@@ -325,6 +325,14 @@ a.list:hover {
 	color: #880000; 
 }
 
+span.commit_title {
+	font-weight: bold;
+}
+
+span.merge_title {
+	color: #777777;
+}
+
 span.newfile {
 	color: #008000;
 }
