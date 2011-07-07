@@ -418,6 +418,7 @@ class GitViews extends PluginViews {
      * CREATE REF FORM
      */
     protected function _createForm() {
+        $user = UserManager::instance()->getCurrentUser();
         ?>
 <h3><?php echo $this->getText('admin_reference_creation_title');
         ?><a href="#" onclick="$('help_create').toggle();$('help_init').toggle()"> [?]</a></h3>
@@ -430,10 +431,12 @@ class GitViews extends PluginViews {
 
     <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>">
 
-    <div class="lab_feature" title="<?= $this->getText('admin_reference_creation_lab_feature'); ?>">
-    <input id="repo_type" name="repo_type" type="checkbox" value="enable"/>
-    <label for="repo_type"><?= $this->getText('admin_reference_creation_input_type'); ?></label>
+    <?php if ($user->useLabFeatures()) : ?>
+    <div class="lab_features" title="<?= $this->getText('admin_reference_creation_lab_feature'); ?>">
+      <input id="repo_type" name="repo_type" type="checkbox" value="enable"/>
+      <label for="repo_type"><?= $this->getText('admin_reference_creation_input_type'); ?></label>
     </div>
+    <?php endif; ?>
 </form>
 </p>
         <?php

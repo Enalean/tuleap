@@ -149,5 +149,16 @@ class Event {
     const USER_RENAME = 'user_rename';
     
     const COMPUTE_MD5SUM = 'compute_md5sum';
+    
+    /**
+     * List of lab features
+     * 
+     * Parameters:
+     *   'lab_features' => array of lab features
+     * 
+     * Expected results
+     *   array of array('title' => ..., 'description' => ..., 'cssclass' => ...)
+     */
+    const LAB_FEATURES_DEFINITION_LIST = 'lab_features_definition_list';
 }
 ?>

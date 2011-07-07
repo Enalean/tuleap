@@ -150,6 +150,8 @@ class Git extends PluginController {
             return;
         }
 
+        $user = UserManager::instance()->getCurrentUser();
+
         $this->_informAboutPendingEvents($repoId);
 
         switch ($this->action) {
@@ -165,7 +167,7 @@ class Git extends PluginController {
            
             #ADD REF
             case 'add':
-                if ($this->request->existAndNonEmpty('repo_type')) {
+                if ($user->useLabFeatures() && $this->request->existAndNonEmpty('repo_type')) {
                     $backendType = GitDao::BACKEND_GITOLITE;
                 } else {
                     $backendType = GitDao::BACKEND_GITSHELL;

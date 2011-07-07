@@ -89,6 +89,8 @@ user_set_preference("user_csv_dateformat", $user_csv_dateformat);
 if($username_display !== null) {
     user_set_preference("username_display", $username_display);
 }
+$user = UserManager::instance()->getCurrentUser();
+$user->setLabFeatures($request->existAndNonEmpty('form_lab_features'));
 
 
 //plugins specific preferences

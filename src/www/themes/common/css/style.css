@@ -1316,8 +1316,23 @@ ul.ServiceMenu li.current {
 /* }}} */
 
 /* {{{ Admin delegation */
-.lab_feature {
+#account_preferences_lab_features legend,
+.lab_features {
     background:   no-repeat url('../images/ic/flask.png') 4px 2px;
     padding-left: 20px;
+}
+
+#account_preferences_lab_features ul {
+    margin-left:0;
+    padding-left:0;
+    list-style-type:none;
+}
+
+#account_preferences_lab_features tr {
+    vertical-align: top;
+}
+.account_preferences_lab_feature_title {
+    font-weight: bold;
+    margin-top: 0;
 }
 /* }}} */

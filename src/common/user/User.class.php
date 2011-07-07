@@ -64,8 +64,11 @@ class User {
      */
     const STATUS_VALIDATED_RESTRICTED = 'W';
     
+    /**
+     * Name of the preference for lab features
+     */
+    const PREF_NAME_LAB_FEATURE = 'use_lab_features';
     
-
     /**
      * the id of the user
      * = 0 if anonymous
@@ -1072,6 +1075,25 @@ class User {
          return array(self::STATUS_ACTIVE, self::STATUS_RESTRICTED, self::STATUS_SUSPENDED, self::STATUS_DELETED);
      }
 
+     /**
+      * Lab features mode
+      *
+      * @return Boolean true if the user want lab features
+      */
+     public function useLabFeatures() {
+         return $this->getPreference(self::PREF_NAME_LAB_FEATURE);
+     }
+
+     /**
+      * (de)Activate lab features mode
+      *
+      * @param Boolean $toggle true if user wants to enable lab features
+      *
+      * @return void
+      */
+     public function setLabFeatures($toggle) {
+         $this->setPreference(self::PREF_NAME_LAB_FEATURE, $toggle ? 1 : 0);
+     }
 }
 
 ?>

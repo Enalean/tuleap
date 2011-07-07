@@ -51,6 +51,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('project_admin_remove_user', 'projectRemoveUserFromNotification', false);
         
         $this->_addHook(Event::EDIT_SSH_KEYS, 'edit_ssh_keys', false);
+        $this->_addHook(Event::LAB_FEATURES_DEFINITION_LIST, 'lab_features_definition_list', false);
     }
 
     public function getPluginInfo() {
@@ -205,6 +206,14 @@ class GitPlugin extends Plugin {
                 $gitolite->push();
             }
         }
+    }
+    
+    public function lab_features_definition_list($params) {
+        $params['lab_features'][] = array(
+            'title'       => $GLOBALS['Language']->getText('plugin_git', 'gitolite_lab_feature_title'),
+            'description' => $GLOBALS['Language']->getText('plugin_git', 'gitolite_lab_feature_description')/*,
+            'image'       => $this->getThemePath().'/images',*/
+        );
     }
 }
 

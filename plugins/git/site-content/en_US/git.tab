@@ -128,3 +128,6 @@ plugin_git	feedback_event_create	There is an event in queue for a repository cre
 plugin_git	feedback_event_fork	There is an event in queue for a repository fork ($1), it will be processed in one minute or two. Please be patient!
 plugin_git	feedback_event_delete	There is an event in queue for a repository deletion, it will be processed in one minute or two. Please be patient!
 plugin_git	feedback_event_access	There is an event in queue for a repository permissions change, it will be processed in one minute or two. Please be patient!
+
+plugin_git	gitolite_lab_feature_title	Fine grain permissions on git repositories
+plugin_git	gitolite_lab_feature_description	Allow to set specifics, distincts, permissions for Read or Write operations.

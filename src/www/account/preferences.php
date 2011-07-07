@@ -1,15 +1,16 @@
 <?php
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('common/event/EventManager.class.php');
 require_once('www/my/my_utils.php');
 
 session_require(array('isloggedin'=>'1'));
 
-
-$em =& EventManager::instance();
+$em = EventManager::instance();
 
 my_header(array('title'=>$Language->getText('account_options', 'preferences')));
+
+$user = UserManager::instance()->getCurrentUser();
 
 $res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
 $row_user = db_fetch_array($res_user);
@@ -24,25 +25,53 @@ echo '<h3>'. $Language->getText('account_options', 'preferences') .'</h3>';
         <td>
             <fieldset>
                 <legend><?php echo $Language->getText('account_preferences', 'email_settings'); ?></legend>
-<INPUT type="checkbox" name="form_mail_site" value="1" 
-<?php 
-if ($row_user['mail_siteupdates']) print " checked"; 
-echo '>'.$Language->getText('account_register', 'siteupdate');
-?>
+<p>
+  <INPUT type="checkbox" name="form_mail_site" value="1" <?= $user->getMailSiteUpdates() ? 'checked="checked"' : '' ?> />
+  <?= $Language->getText('account_register', 'siteupdate'); ?>
+</p>
 
-<P><INPUT type="checkbox"  name="form_mail_va" value="1" 
-<?php
-if ($row_user['mail_va']) print " checked";
-echo '>'.$Language->getText('account_register', 'communitymail');
-?>
+<p>
+  <INPUT type="checkbox" name="form_mail_va" value="1"   <?= $user->getMailVA() ? 'checked="checked"' : '' ?> />
+  <?= $Language->getText('account_register', 'communitymail'); ?>
+</p>
+
             </fieldset>
             <fieldset>
                 <legend><?php echo $Language->getText('account_preferences', 'session'); ?></legend>
-<P><INPUT type="checkbox"  name="form_sticky_login" value="1" 
-<?php
-if ($row_user['sticky_login']) print " checked";
-echo '>'.$Language->getText('account_options', 'remember_me', $GLOBALS['sys_name']);
-?>
+<p>
+  <input type="checkbox"  name="form_sticky_login" value="1" <?= $user->getStickyLogin() ? 'checked="checked"' : '' ?> />
+  <?= $Language->getText('account_options', 'remember_me', $GLOBALS['sys_name']) ?>
+</p>
+            </fieldset>
+            <fieldset id="account_preferences_lab_features">
+              <legend><?= $Language->getText('account_preferences', 'lab_features_title',  array($GLOBALS['sys_name']))?></legend>
+              <p><?= $Language->getText('account_preferences', 'lab_features_description', array($GLOBALS['sys_name'])) ?></p>
+              <p>
+                <input type="checkbox" name="form_lab_features" id="form_lab_features" value="1" <?= $user->useLabFeatures() ? 'checked="checked"' : '' ?> />
+                <label for="form_lab_features"><?= $Language->getText('account_preferences', 'lab_features_cblabel', $GLOBALS['sys_name']) ?></label>
+              </p>
+              <?php 
+                  $labs = array();
+                  $em->processEvent(Event::LAB_FEATURES_DEFINITION_LIST, array('lab_features' => &$labs));
+                  if ($labs) {
+                      echo '<table>';
+                      foreach ($labs as $lab) {
+                          if (isset($lab['image'])) {
+                              $image = '<img src="'. $lab['image'] .'" width="150" height="92" />';
+                          } else {
+                              $image = $GLOBALS['HTML']->getImage('lab_features_default.png');
+                          }
+                          echo '<tr>';
+                          echo '<td>'. $image. '</td>';
+                          echo '<td>';
+                          echo '<p class="account_preferences_lab_feature_title">'. $lab['title'] .'</p>';
+                          echo '<p class="account_preferences_lab_feature_description">'. $lab['description'] .'</p>';
+                          echo '</td>';
+                          echo '</tr>';
+                      }
+                      echo '</table>';
+                  }
+              ?>
             </fieldset>
         </td>
         <td>
