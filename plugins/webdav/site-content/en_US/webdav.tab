@@ -44,6 +44,7 @@ plugin_webdav_common	docman_item_denied_copy	Permission denied to copy item.
 plugin_webdav_common	write_access_disabled	Write access is disabled for WebDAV. Please contact the system administrator.
 plugin_webdav_common	docman_item_projects_copy	Permission denied to copy item to another project.
 plugin_webdav_common	docman_item_projects_move	Permission denied to move item to another project.
+plugin_webdav_common	error_subitems_not_moved_no_w	Cannot move this item because it contains items you are not allowed to modify (no 'Write' access, you may even not be able to read them). Please contact your document manager administrator.
 plugin_webdav_common	docman_bad_item	Bad source or destination.
 plugin_webdav_common	authentication_required	Authentication required.
 plugin_webdav_common	wrong_input	Verify your input.
