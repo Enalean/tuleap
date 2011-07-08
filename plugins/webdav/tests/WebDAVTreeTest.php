@@ -121,6 +121,20 @@ class TestFolder extends WebDAVDocmanFolder {
     }
 }
 
+class TestDocmanFile extends WebDAVDocmanFile {
+    function __construct() {
+        
+    }
+
+    function setItem($item) {
+        $this->item = $item;
+    }
+
+    function getItem() {
+        return $this->item;
+    }
+}
+
 class WebDAVTreeTest extends UnitTestCase {
 
     /**
@@ -455,7 +469,105 @@ class WebDAVTreeTest extends UnitTestCase {
         $dif->expectNever('callItemEvent');
 
         $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
-        $this->assertNoErrors();
+        $tree->move('source', 'destination/item');
+    }
+
+    function testMoveDocmanNoWriteEnabled() {
+        $tree = new TestTreeTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', false);
+        $tree->setReturnValue('getUtils', $utils);
+
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $tree->move('source', 'destination/item');
+    }
+
+    function testMoveDocmanNotTheSameProject() {
+        $tree = new TestTreeTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
+        $tree->setReturnValue('getUtils', $utils);
+        $destination = new TestFolder();
+        $tree->setReturnValue('getNodeForPath', $destination, array('destination'));
+        $source = new TestFolder();
+        $tree->setReturnValue('getNodeForPath', $source, array('source'));
+        $sourceItem = new MockDocman_Item();
+        $sourceItem->setReturnValue('getGroupId', 1);
+        $source->setItem($sourceItem);
+        $destinationItem = new MockDocman_Item();
+        $destinationItem->setReturnValue('getGroupId', 11);
+        $destination->setItem($destinationItem);
+
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $tree->move('source', 'destination/item');
+    }
+
+    function testMoveDocmanNoReadOnSource() {
+        $tree = new TestTreeTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
+        $tree->setReturnValue('getUtils', $utils);
+        $destination = new TestFolder();
+        $tree->setReturnValue('getNodeForPath', $destination, array('destination'));
+        $source = new TestFolder();
+        $tree->setReturnValue('getNodeForPath', $source, array('source'));
+        $sourceItem = new MockDocman_Item();
+        $sourceItem->setReturnValue('getGroupId', 1);
+        $source->setItem($sourceItem);
+        $destinationItem = new MockDocman_Item();
+        $destinationItem->setReturnValue('getGroupId', 1);
+        $destination->setItem($destinationItem);
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanAccess', false);
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $dpm->expectNever('currentUserCanWriteSubItems');
+
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $tree->move('source', 'destination/item');
+    }
+
+    function testMoveDocmanNoWriteOnDestination() {
+        $tree = new TestTreeTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
+        $tree->setReturnValue('getUtils', $utils);
+        $destination = new TestFolder();
+        $tree->setReturnValue('getNodeForPath', $destination, array('destination'));
+        $source = new TestFolder();
+        $tree->setReturnValue('getNodeForPath', $source, array('source'));
+        $sourceItem = new MockDocman_Item();
+        $sourceItem->setReturnValue('getGroupId', 1);
+        $source->setItem($sourceItem);
+        $destinationItem = new MockDocman_Item();
+        $destinationItem->setReturnValue('getGroupId', 1);
+        $destination->setItem($destinationItem);
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanAccess', true);
+        $dpm->setReturnValue('userCanWrite', false);
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $dpm->expectNever('currentUserCanWriteSubItems');
+
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $tree->move('source', 'destination/item');
+    }
+
+    function testMoveDocmanWrongDestinationItemType() {
+        $tree = new TestTreeTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
+        $tree->setReturnValue('getUtils', $utils);
+        $destination = new TestDocmanFile();
+        $tree->setReturnValue('getNodeForPath', $destination, array('destination'));
+        $source = new TestFolder();
+        $tree->setReturnValue('getNodeForPath', $source, array('source'));
+        $sourceItem = new MockDocman_Item();
+        $source->setItem($sourceItem);
+        $destinationItem = new MockDocman_Item();
+        $destination->setItem($destinationItem);
+        $dpm = new MockDocman_PermissionsManager();
+
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
         $tree->move('source', 'destination/item');
     }
 }

@@ -428,6 +428,34 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $webDAVDocmanFolder->delete();
     }
 
+    function testDeleteDirectoryNoPermissions() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', false);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
+
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $item = new MockDocman_Item();
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $webDAVDocmanFolder->delete();
+    }
+
+    function testDeleteDirectoryNoWriteEnabled() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', false);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $webDAVDocmanFolder->delete();
+    }
+
     function testSetNameNoWriteEnabled() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
         $utils = new MockWebDAVUtils();
