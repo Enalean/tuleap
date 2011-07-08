@@ -32,8 +32,8 @@ class requesthelpPlugin extends Plugin {
      *
      * @return void
      */
-    function requesthelpPlugin($id) {
-        $this->Plugin($id);
+    function __construct($id) {
+        parent::__construct($id);
         if (extension_loaded('oci8')) {
             $this->_addHook('cssfile', 'cssFile', false);
             $this->_addHook('site_help', 'redirectToPlugin', false);
