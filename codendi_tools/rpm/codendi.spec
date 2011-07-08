@@ -170,7 +170,7 @@ Release: 1%{?dist}
 Requires: %{name} >= %{version}, php-pecl-oci8 = 1.4.5
 Provides: codendi-plugin-requesthelp = %{version}
 %description plugin-requesthelp
-Plugin to insert Remedy tickets using Codex
+Plugin to insert Remedy tickets using Codex (used for ST only)
 
 #
 ## Themes

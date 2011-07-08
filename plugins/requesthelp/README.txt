@@ -1,5 +1,6 @@
 Request_Help Plugin
 ======================
 
-This is the Remedy integration plugin for Codendi. It provides:
-- Automatic ticket insertion in RIF table.
+This plugin permit the submission of Remedy tickets from Codex, using a database access.
+
+This plugin is usable only for Codex instance deployed inside STMicroelectronics intranet
