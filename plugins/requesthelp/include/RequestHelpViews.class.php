@@ -81,23 +81,26 @@ class RequestHelpViews extends PluginView {
             $summary     = '';
             $description =  '';
             if (is_array($params)) {
-                if (isset($params['type'])) {
+                $valid = new Valid_UInt();
+                if (isset($params['type']) && $valid->validate($params['type'])) {
                     $type = $params['type'];
                 }
-                if (isset($params['severity'])) {
+                if (isset($params['severity']) && $valid->validate($params['severity'])) {
                     $severity = $params['severity'];
                 }
-                if (isset($params['summary'])) {
+                $valid = new Valid_String();
+                if (isset($params['summary']) && $valid->validate($params['summary'])) {
                     $summary = $params['summary'];
                 }
-                if (isset($params['description'])) {
+                $valid = new Valid_Text();
+                if (isset($params['description']) && $valid->validate($params['description'])) {
                     $description = $params['description'];
                 }
             }
             $p = PluginManager::instance()->getPluginByName('requesthelp');
              echo '<fieldset>
              <legend><b>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_explain_label').'</b></legend>
-             <form name="request" class="cssform" action="'.$p->getPluginPath().'/" method="post" enctype="multipart/form-data">
+             <form name="request" class="requesthelp_cssform" action="'.$p->getPluginPath().'/" method="post" enctype="multipart/form-data">
                  <table>
                      <tr>';
             echo '<td><label>Type:</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
@@ -135,7 +138,7 @@ class RequestHelpViews extends PluginView {
                      </tr>';
             echo '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'summary').':</label>&nbsp;<span class="highlight"><big>*</big></b></span></td>
                      <td colspan="3"><input type="text" name="request_summary" value="'.$summary.'" /></td></tr>';
-            echo '<tr><td><label><span class="totop">Description:</span></label>&nbsp;<span class="highlight"><span class="totop"><big>*</big></b></span></span></td><td  colspan="3"><textarea name="request_description">'.$description.'</textarea></td></tr>
+            echo '<tr><td><label><span class="requesthelp_totop">Description:</span></label>&nbsp;<span class="highlight"><span class="requesthelp_totop"><big>*</big></b></span></span></td><td  colspan="3"><textarea name="request_description">'.$description.'</textarea></td></tr>
             <tr><td></td><td colspan="3"><i><b><u>Note</u>: </b>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_cc_note').'</i></td></tr>
             <tr><td><label>CC :</label></td><td  colspan="3"><input id="requesthelp_cc" type="text" name="cc" /></td></tr>
             <tr><td><input name="action" type="hidden" value="submit_ticket" /></td><td><input name="submit" type="submit" value="Submit" /></td></tr>

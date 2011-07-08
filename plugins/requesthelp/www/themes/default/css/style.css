@@ -1,39 +1,39 @@
-.cssform {
+.requesthelp_cssform {
     width: 900px;
 }
 
-.cssform label {
+.requesthelp_cssform label {
     font-weight: bold;
     text-align: left;
     position: relative;
 }
 
-.cssform input [type="select"] {
+.requesthelp_cssform input [type="select"] {
     text-align: left;
     position: relative;
 }
 
-.cssform input[type="text"] {
+.requesthelp_cssform input[type="text"] {
     /*width of text boxes. IE6 does not understand this attribute*/
     width: 600px;
     position: relative;
 }
 
-.cssform textarea {
+.requesthelp_cssform textarea {
     width: 600px;
     height: 100px;
 }
 
-.totop {
+.requesthelp_totop {
     position: relative;
     top: -45px;
 }
 
-.cssform fieldset {
+.requesthelp_cssform fieldset {
     background: rgb(222, 222, 222);
 }
 
-.cssform legend {
+.requesthelp_cssform legend {
     position: absolute;
     top: -8px;
 }
