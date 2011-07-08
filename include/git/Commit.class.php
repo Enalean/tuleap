@@ -195,17 +195,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	private $treeReferenced = false;
 
-
-	/**
-	 * mergeCommit *tpr*
-	 *
-	 * Stores whether the commit is a Merge
-	 *
-	 * @access private
-	 */
-	private $mergeCommit = false;
-
-
 	/**
 	 * __construct
 	 *
@@ -536,7 +525,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->dataRead)
 			$this->ReadData();
 
-		return $this->mergeCommit;
+		return count($this->parents) > 1;
 	}
 
 	/**
@@ -608,9 +597,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 					if (empty($this->title) && (strlen($trimmed) > 0))
 						$this->title = $trimmed;
 					if (!empty($this->title)) {
-						if (substr($this->title,0,6) == "Merge ")
-							$this->mergeCommit = true;
-
 						if ((strlen($trimmed) > 0) || ($i < (count($lines)-1)))
 							$this->comment[] = $trimmed;
 					}
@@ -1011,7 +997,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if (!$this->treeReferenced)
 			$this->ReferenceTree();
 
-		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead', 'parentsReferenced', 'treeReferenced', 'mergeCommit');
+		$properties = array('dataRead', 'parents', 'tree', 'author', 'authorEpoch', 'authorTimezone', 'committer', 'committerEpoch', 'committerTimezone', 'title', 'comment', 'readTree', 'blobPaths', 'treePaths', 'hashPathsRead', 'parentsReferenced', 'treeReferenced');
 		return array_merge($properties, parent::__sleep());
 	}
 
