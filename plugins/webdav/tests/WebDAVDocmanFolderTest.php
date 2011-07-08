@@ -45,6 +45,7 @@ Mock::generatePartial(
     'WebDAVDocmanFolderTestVersion',
 array('getDocmanItemFactory',
       'getDocmanPermissionsManager',
+      'deleteDirectoryContent',
       'getUtils',
       'getItem',
       'getUser',
@@ -379,6 +380,52 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
 
         $this->assertNoErrors();
         $webDAVDocmanFolder->createDirectory('name');
+    }
+
+    function testDeleteDirectorySuccess() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
+        
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $item = new MockDocman_Item();
+        $item->setReturnValue('getGroupId', 101);
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $dpm->setReturnValue('currentUserCanWriteSubItems', true);
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $itemParent = new MockDocman_Item();
+        $dif->setReturnValue('getItemFromDb', $itemParent);
+
+        $item->expectOnce('delete');
+        $dif->expectOnce('callItemEvent', array(101, $itemParent, $item, $webDAVDocmanFolder->getUser(), 'plugin_docman_event_del'));
+
+        $this->assertNoErrors();
+        $webDAVDocmanFolder->delete();
+    }
+
+    function testDeleteDirectoryNoWriteOnSubItems() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
+
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $item = new MockDocman_Item();
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $dpm->setReturnValue('currentUserCanWriteSubItems', false);
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+
+        $item->expectNever('delete');
+        $dif->expectNever('callItemEvent');
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $webDAVDocmanFolder->delete();
     }
 
     function testSetNameNoWriteEnabled() {

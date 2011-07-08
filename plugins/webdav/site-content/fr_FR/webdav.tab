@@ -45,6 +45,7 @@ plugin_webdav_common	write_access_disabled	L'accés en ecriture à WebDAV est d�
 plugin_webdav_common	docman_item_projects_copy	Vous n'avez pas le droit de copier cet item dans un autre projet.
 plugin_webdav_common	docman_item_projects_move	Vous n'avez pas le droit de déplacer cet item dans un autre projet.
 plugin_webdav_common	error_subitems_not_moved_no_w	Impossible de déplacer cet élément car il contient des items que vous ne pouvez pas modifier (pas d'accès 'Rédacteur', il se peut que vous ne puissiez pas non plus les lire). Merci de contacter votre administrateur de gestionnaire de documents
+plugin_webdav_common	error_subitems_not_deleted_no_w	Impossible de supprimer cet élément car il contient des items que vous ne pouvez pas modifier (pas d'accès 'Rédacteur', il se peut que vous ne puissiez pas non plus les lire). Merci de contacter votre administrateur de gestionnaire de documents
 plugin_webdav_common	docman_bad_item	Mauvaise source ou destination.
 plugin_webdav_common	authentication_required	Authentification requise.
 plugin_webdav_common	wrong_input	Verifiez votre entree.
