@@ -161,22 +161,31 @@ class GitPHP_Pack
 		 * get the start/end indices to search
 		 * from the fanout table
 		 */
-		list($cur, $after) = $this->ReadFanout($index, $binaryHash, 0);
+		list($low, $high) = $this->ReadFanout($index, $binaryHash, 0);
 
-		$n = $after - $cur;
-		if ($n == 0) {
+		if ($low == $high) {
 			return false;
 		}
 
 		/*
-		 * find the index of the hash in the sha/offset listing
+		 * binary serach for the index of the hash in the sha/offset listing
 		 * between cur and after from the fanout
 		 */
-		fseek($index, 4*256 + 24*$cur);
-		for ($i = 0; $i < $n; $i++) {
+		while ($low <= $high) {
+			$mid = ($low + $high) >> 1;
+			fseek($index, 4*256 + 24*$low);
+
 			$off = GitPHP_Pack::fuint32($index);
-			$name = fread($index, 20);
-			if ($name == $binaryHash) {
+			$binName = fread($index, 20);
+			$name = bin2hex($binName);
+
+			$cmp = strcmp($hash, $name);
+			
+			if ($cmp < 0) {
+				$high = $mid - 1;
+			} else if ($cmp > 0) {
+				$low = $mid + 1;
+			} else {
 				return $off;
 			}
 		}
@@ -210,8 +219,8 @@ class GitPHP_Pack
 		 * get the start/end indices to search
 		 * from the fanout table
 		 */
-		list($cur, $after) = $this->ReadFanout($index, $binaryHash, 8);
-		if ($cur == $after) {
+		list($low, $high) = $this->ReadFanout($index, $binaryHash, 8);
+		if ($low == $high) {
 			return false;
 		}
 
@@ -222,24 +231,36 @@ class GitPHP_Pack
 		$objectCount = GitPHP_Pack::fuint32($index);
 
 		/*
-		 * find the index of the hash in the sha listing
+		 * binary search for the index of the hash in the sha listing
 		 * between cur and after from the fanout
 		 */
-		fseek($index, 8 + 4*256 + 20 * $cur);
-		for ($i = $cur; $i < $after; $i++) {
-			$name = fread($index, 20);
-			if ($name == $binaryHash) {
+		$objIndex = false;
+		while ($low <= $high) {
+			$mid = ($low + $high) >> 1;
+			fseek($index, 8 + 4*256 + 20*$mid);
+
+			$binName = fread($index, 20);
+			$name = bin2hex($binName);
+
+			$cmp = strcmp($hash, $name);
+
+			if ($cmp < 0) {
+				$high = $mid - 1;
+			} else if ($cmp > 0) {
+				$low = $mid + 1;
+			} else {
+				$objIndex = $mid;
 				break;
 			}
 		}
-		if ($i == $after) {
+		if ($objIndex === false) {
 			return false;
 		}
 
 		/*
 		 * get the offset from the same index in the offset table
 		 */
-		fseek($index, 8 + 4*256 + 24*$objectCount + 4*$i);
+		fseek($index, 8 + 4*256 + 24*$objectCount + 4*$objIndex);
 		$offset = GitPHP_Pack::fuint32($index);
 		if ($offset & 0x80000000) {
 			throw new Exception('64-bit offsets not implemented');
@@ -269,15 +290,15 @@ class GitPHP_Pack
 		 * (first level fan-out)
 		 */
 		if ($binaryHash{0} == "\x00") {
-			$cur = 0;
+			$low = 0;
 			fseek($index, $offset);
-			$after = GitPHP_Pack::fuint32($index);
+			$high = GitPHP_Pack::fuint32($index);
 		} else {
 			fseek($index, $offset + (ord($binaryHash{0}) - 1) * 4);
-			$cur = GitPHP_Pack::fuint32($index);
-			$after = GitPHP_Pack::fuint32($index);
+			$low = GitPHP_Pack::fuint32($index);
+			$high = GitPHP_Pack::fuint32($index);
 		}
-		return array($cur, $after);
+		return array($low, $high);
 	}
 
 	/**
