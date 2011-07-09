@@ -14,6 +14,7 @@ require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
 
 /**
  * Project class
@@ -187,6 +188,24 @@ class GitPHP_Project
 	 * @access protected
 	 */
 	protected $commitCache = array();
+
+	/**
+	 * packs
+	 *
+	 * Stores the list of packs
+	 *
+	 * @access protected
+	 */
+	protected $packs = array();
+
+	/**
+	 * packsRead
+	 *
+	 * Stores whether packs have been read
+	 *
+	 * @access protected
+	 */
+	protected $packsRead = false;
 
 	/**
 	 * __construct
@@ -1219,6 +1238,78 @@ class GitPHP_Project
 		}
 
 		unset($exe);
+	}
+
+	/**
+	 * GetObject
+	 *
+	 * Gets the raw content of an object
+	 *
+	 * @access public
+	 * @param string $hash object hash
+	 * @return string object data
+	 */
+	public function GetObject($hash, &$type = 0)
+	{
+		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+			return false;
+		}
+
+		// first check if it's unpacked
+		$path = $this->GetPath() . '/objects/' . substr($hash, 0, 2) . '/' . substr($hash, 2);
+		if (file_exists($path)) {
+			list($header, $data) = explode("\0", gzuncompress(file_get_contents($path)), 2);
+			sscanf($header, "%s %d", $typestr, $size);
+			switch ($typestr) {
+				case 'commit':
+					$type = GitPHP_Pack::OBJ_COMMIT;
+					break;
+				case 'tree':
+					$type = GitPHP_Pack::OBJ_TREE;
+					break;
+				case 'blob':
+					$type = GitPHP_Pack::OBJ_BLOB;
+					break;
+				case 'tag':
+					$type = GitPHP_Pack::OBJ_TAG;
+					break;
+			}
+			return $data;
+		}
+
+		if (!$this->packsRead) {
+			$this->ReadPacks();
+		}
+
+		// then try packs
+		foreach ($this->packs as $pack) {
+			$data = $pack->GetObject($hash, $type);
+			if ($data !== false) {
+				return $data;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * ReadPacks
+	 *
+	 * Read the list of packs in the repository
+	 *
+	 * @access private
+	 */
+	private function ReadPacks()
+	{
+		$dh = opendir($this->GetPath() . '/objects/pack');
+		if ($dh !== false) {
+			while (($file = readdir($dh)) !== false) {
+				if (preg_match('/^pack-([0-9A-Fa-f]{40})\.idx$/', $file, $regs)) {
+					$this->packs[] = new GitPHP_Pack($this, $regs[1]);
+				}
+			}
+		}
+		$this->packsRead = true;
 	}
 
 }
