@@ -543,16 +543,6 @@ class GitPHP_Commit extends GitPHP_GitObject
 		if ($tok != $this->hash)
 			return;
 
-		/* Read all parents */
-		$tok = strtok(' ');
-		while ($tok !== false) {
-			try {
-				$this->parents[] = $this->GetProject()->GetCommit($tok);
-			} catch (Exception $e) {
-			}
-			$tok = strtok(' ');
-		}
-
 		foreach ($lines as $i => $line) {
 			if (preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Tree */
@@ -562,6 +552,12 @@ class GitPHP_Commit extends GitPHP_GitObject
 						$tree->SetCommit($this);
 						$this->tree = $tree;
 					}
+				} catch (Exception $e) {
+				}
+			} else if (preg_match('/^parent ([0-9a-fA-F]{40})$/', $line, $regs)) {
+				/* Parent */
+				try {
+					$this->parents[] = $this->GetProject()->GetCommit($regs[1]);
 				} catch (Exception $e) {
 				}
 			} else if (preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
@@ -576,7 +572,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 				$this->committerTimezone = $regs[3];
 			} else {
 				/* commit comment */
-				if (!(preg_match('/^[0-9a-fA-F]{40}/', $line) || preg_match('/^parent [0-9a-fA-F]{40}/', $line))) {
+				if (!preg_match('/^[0-9a-fA-F]{40}/', $line)) {
 					$trimmed = trim($line);
 					if (empty($this->title) && (strlen($trimmed) > 0))
 						$this->title = $trimmed;
