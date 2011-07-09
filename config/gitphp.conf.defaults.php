@@ -140,6 +140,17 @@ $gitphp_conf['javascript'] = true;
  */
 
 /*
+ * compat
+ * Set this to true to turn on compatibility mode.  This will cause
+ * GitPHP to rely more on the git executable for loading data,
+ * which will bypass some of the limitations of PHP at the expense
+ * of performance.
+ * Turn this on if you are experiencing issues viewing data for
+ * your projects.
+ */
+$gitphp_conf['compat'] = false;
+
+/*
  * compressformat
  * Indicates what kind of compression will be done on the
  * snapshot archive.  Recognized settings are:
