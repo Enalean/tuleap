@@ -523,25 +523,41 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$this->dataRead = true;
 
-		/* get data from git_rev_list */
-		$exe = new GitPHP_GitExe($this->GetProject());
-		$args = array();
-		$args[] = '--header';
-		$args[] = '--parents';
-		$args[] = '--max-count=1';
-		$args[] = $this->hash;
-		$ret = $exe->Execute(GIT_REV_LIST, $args);
-		unset($exe);
+		$lines = null;
 
-		$lines = explode("\n", $ret);
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
 
-		if (!isset($lines[0]))
-			return;
+			/* get data from git_rev_list */
+			$exe = new GitPHP_GitExe($this->GetProject());
+			$args = array();
+			$args[] = '--header';
+			$args[] = '--parents';
+			$args[] = '--max-count=1';
+			$args[] = $this->hash;
+			$ret = $exe->Execute(GIT_REV_LIST, $args);
+			unset($exe);
 
-		/* In case we returned something unexpected */
-		$tok = strtok($lines[0], ' ');
-		if ($tok != $this->hash)
-			return;
+			$lines = explode("\n", $ret);
+
+			if (!isset($lines[0]))
+				return;
+
+			/* In case we returned something unexpected */
+			$tok = strtok($lines[0], ' ');
+			if ($tok != $this->hash)
+				return;
+
+			array_shift($lines);
+
+		} else {
+			
+			$data = $this->GetProject()->GetObject($this->hash);
+			if (empty($data))
+				return;
+
+			$lines = explode("\n", $data);
+
+		}
 
 		foreach ($lines as $i => $line) {
 			if (preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
@@ -572,14 +588,12 @@ class GitPHP_Commit extends GitPHP_GitObject
 				$this->committerTimezone = $regs[3];
 			} else {
 				/* commit comment */
-				if (!preg_match('/^[0-9a-fA-F]{40}/', $line)) {
-					$trimmed = trim($line);
-					if (empty($this->title) && (strlen($trimmed) > 0))
-						$this->title = $trimmed;
-					if (!empty($this->title)) {
-						if ((strlen($trimmed) > 0) || ($i < (count($lines)-1)))
-							$this->comment[] = $trimmed;
-					}
+				$trimmed = trim($line);
+				if (empty($this->title) && (strlen($trimmed) > 0))
+					$this->title = $trimmed;
+				if (!empty($this->title)) {
+					if ((strlen($trimmed) > 0) || ($i < (count($lines)-1)))
+						$this->comment[] = $trimmed;
 				}
 			}
 		}
