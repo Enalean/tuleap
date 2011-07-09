@@ -47,7 +47,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	 *
 	 * @access protected
 	 */
-	protected $size;
+	protected $size = null;
 
 	/**
 	 * history
@@ -198,7 +198,14 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	 */
 	public function GetSize()
 	{
-		return $this->size;
+		if ($this->size !== null) {
+			return $this->size;
+		}
+
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		return strlen($this->data);
 	}
 
 	/**
