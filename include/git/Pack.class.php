@@ -173,7 +173,7 @@ class GitPHP_Pack
 		 */
 		while ($low <= $high) {
 			$mid = ($low + $high) >> 1;
-			fseek($index, 4*256 + 24*$low);
+			fseek($index, 4*256 + 24*$mid);
 
 			$off = GitPHP_Pack::fuint32($index);
 			$binName = fread($index, 20);
