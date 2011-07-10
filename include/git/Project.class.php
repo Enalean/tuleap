@@ -583,11 +583,49 @@ class GitPHP_Project
 	{
 		$this->readHeadRef = true;
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadHeadCommitGit();
+		} else {
+			$this->ReadHeadCommitRaw();
+		}
+	}
+
+	/**
+	 * ReadHeadCommitGit
+	 *
+	 * Read head commit using git executable
+	 *
+	 * @access private
+	 */
+	private function ReadHeadCommitGit()
+	{
 		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--verify';
 		$args[] = 'HEAD';
 		$this->head = trim($exe->Execute(GIT_REV_PARSE, $args));
+	}
+
+	/**
+	 * ReadHeadCommitRaw
+	 *
+	 * Read head commit using raw git head pointer
+	 *
+	 * @access private
+	 */
+	private function ReadHeadCommitRaw()
+	{
+		$head = trim(file_get_contents($this->GetPath() . '/HEAD'));
+		if (preg_match('/^([0-9A-Fa-f]{40})$/', $head, $regs)) {
+			/* Detached HEAD */
+			$this->head = $regs[1];
+		} else if (preg_match('/^ref: (.+)$/', $head, $regs)) {
+			/* standard pointer to head */
+			$headCommit = $this->GetCommit($regs[1]);
+			if ($headCommit) {
+				$this->head = $headCommit->GetHash();
+			}
+		}
 	}
 
 	/**
