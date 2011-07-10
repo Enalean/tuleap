@@ -621,9 +621,11 @@ class GitPHP_Project
 			$this->head = $regs[1];
 		} else if (preg_match('/^ref: (.+)$/', $head, $regs)) {
 			/* standard pointer to head */
-			$headCommit = $this->GetCommit($regs[1]);
-			if ($headCommit) {
-				$this->head = $headCommit->GetHash();
+			if (!$this->readRefs)
+				$this->ReadRefList();
+
+			if (isset($this->heads[$regs[1]])) {
+				$this->head = $this->heads[$regs[1]]->GetHash();
 			}
 		}
 	}
@@ -1015,6 +1017,9 @@ class GitPHP_Project
 		if (empty($tag))
 			return null;
 
+		if (!$this->readRefs)
+			$this->ReadRefList();
+
 		$key = 'refs/tags/' . $tag;
 
 		if (!isset($this->tags[$key])) {
@@ -1099,6 +1104,9 @@ class GitPHP_Project
 	{
 		if (empty($head))
 			return null;
+
+		if (!$this->readRefs)
+			$this->ReadRefList();
 
 		$key = 'refs/heads/' . $head;
 
