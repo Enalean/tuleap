@@ -1134,6 +1134,24 @@ class GitPHP_Project
 		if (!$this->readRefs)
 			$this->ReadRefList();
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			return $this->GetHeadsGit($count);
+		} else {
+			return $this->GetHeadsRaw($count);
+		}
+	}
+
+	/**
+	 * GetHeadsGit
+	 *
+	 * Gets the list of sorted heads using the git executable
+	 *
+	 * @access private
+	 * @param integer $count number of tags to load
+	 * @return array array of heads
+	 */
+	private function GetHeadsGit($count = 0)
+	{
 		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--sort=-committerdate';
@@ -1156,6 +1174,26 @@ class GitPHP_Project
 			}
 		}
 
+		return $heads;
+	}
+
+	/**
+	 * GetHeadsRaw
+	 *
+	 * Gets the list of sorted heads using raw git objects
+	 *
+	 * @access private
+	 * @param integer $count number of tags to load
+	 * @return array array of heads
+	 */
+	private function GetHeadsRaw($count = 0)
+	{
+		$heads = $this->heads;
+		usort($heads, array('GitPHP_Head', 'CompareAge'));
+
+		if (($count > 0) && (count($heads) > $count)) {
+			$heads = array_slice($heads, 0, $count);
+		}
 		return $heads;
 	}
 
