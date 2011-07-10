@@ -322,6 +322,24 @@ class GitPHP_Tag extends GitPHP_Ref
 	{
 		$this->dataRead = true;
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadDataGit();
+		} else {
+			$this->ReadDataRaw();
+		}
+
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+	}
+
+	/**
+	 * ReadDataGit
+	 *
+	 * Reads the tag data using the git executable
+	 *
+	 * @access private
+	 */
+	private function ReadDataGit()
+	{
 		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '-t';
@@ -406,8 +424,84 @@ class GitPHP_Tag extends GitPHP_Ref
 				}
 				break;
 		}
+	}
 
-		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+	/**
+	 * ReadDataRaw
+	 *
+	 * Reads the tag data using the raw git object
+	 *
+	 * @access private
+	 */
+	private function ReadDataRaw()
+	{
+		$data = $this->GetProject()->GetObject($this->GetHash(), $type);
+		
+		if ($type == GitPHP_Pack::OBJ_COMMIT) {
+			/* light tag */
+			$this->object = $this->GetProject()->GetCommit($this->GetHash());
+			$this->commit = $this->object;
+			$this->type = 'commit';
+			GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+			return;
+		}
+
+		$lines = explode("\n", $data);
+
+		if (!isset($lines[0]))
+			return;
+
+		$objectHash = null;
+
+		$readInitialData = false;
+		foreach ($lines as $i => $line) {
+			if (!$readInitialData) {
+				if (preg_match('/^object ([0-9a-fA-F]{40})$/', $line, $regs)) {
+					$objectHash = $regs[1];
+					continue;
+				} else if (preg_match('/^type (.+)$/', $line, $regs)) {
+					$this->type = $regs[1];
+					continue;
+				} else if (preg_match('/^tag (.+)$/', $line, $regs)) {
+					continue;
+				} else if (preg_match('/^tagger (.*) ([0-9]+) (.*)$/', $line, $regs)) {
+					$this->tagger = $regs[1];
+					$this->taggerEpoch = $regs[2];
+					$this->taggerTimezone = $regs[3];
+					continue;
+				}
+			}
+
+			$trimmed = trim($line);
+
+			if ((strlen($trimmed) > 0) || ($readInitialData === true)) {
+				$this->comment[] = $line;
+			}
+			$readInitialData = true;
+		}
+
+		switch ($this->type) {
+			case 'commit':
+				try {
+					$this->object = $this->GetProject()->GetCommit($objectHash);
+					$this->commit = $this->object;
+				} catch (Exception $e) {
+				}
+				break;
+			case 'tag':
+				$objectData = $this->GetProject()->GetObject($objectHash);
+				$lines = explode("\n", $objectData);
+				foreach ($lines as $i => $line) {
+					if (preg_match('/^tag (.+)$/', $line, $regs)) {
+						$name = trim($regs[1]);
+						$this->object = $this->GetProject()->GetTag($name);
+						if ($this->object) {
+							$this->object->SetHash($objectHash);
+						}
+					}
+				}
+				break;
+		}
 	}
 
 	/**
