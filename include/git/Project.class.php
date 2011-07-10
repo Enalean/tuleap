@@ -798,10 +798,26 @@ class GitPHP_Project
 	 *
 	 * @access protected
 	 */
-	public function ReadRefList()
+	protected function ReadRefList()
 	{
 		$this->readRefs = true;
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadRefListGit();
+		} else {
+			$this->ReadRefListRaw();
+		}
+	}
+
+	/**
+	 * ReadRefListGit
+	 *
+	 * Reads the list of refs for this project using the git executable
+	 *
+	 * @access private
+	 */
+	private function ReadRefListGit()
+	{
 		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--heads';
@@ -833,6 +849,117 @@ class GitPHP_Project
 				}
 			}
 		}
+	}
+
+	/**
+	 * ReadRefListRaw
+	 *
+	 * Reads the list of refs for this project using the raw git files
+	 *
+	 * @access private
+	 */
+	private function ReadRefListRaw()
+	{
+		$pathlen = strlen($this->GetPath()) + 1;
+
+		// read loose heads
+		$heads = $this->ListDir($this->GetPath() . '/refs/heads');
+		for ($i = 0; $i < count($heads); $i++) {
+			$key = trim(substr($heads[$i], $pathlen), "/\\");
+
+			if (isset($this->heads[$key])) {
+				continue;
+			}
+
+			$hash = trim(file_get_contents($heads[$i]));
+			if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+				$head = substr($key, strlen('refs/heads/'));
+				$this->heads[$key] = new GitPHP_Head($this, $head, $hash);
+			}
+		}
+
+		// read loose tags
+		$tags = $this->ListDir($this->GetPath() . '/refs/tags');
+		for ($i = 0; $i < count($tags); $i++) {
+			$key = trim(substr($tags[$i], $pathlen), "/\\");
+
+			if (isset($this->tags[$key])) {
+				continue;
+			}
+
+			$hash = trim(file_get_contents($tags[$i]));
+			if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+				$tag = substr($key, strlen('refs/tags/'));
+				$this->tags[$key] = $this->LoadTag($tag, $hash);
+			}
+		}
+
+		// check packed refs
+		if (file_exists($this->GetPath() . '/packed-refs')) {
+			$packedRefs = explode("\n", file_get_contents($this->GetPath() . '/packed-refs'));
+
+			$lastRef = null;
+			foreach ($packedRefs as $ref) {
+
+				if (preg_match('/^\^([0-9A-Fa-f]{40})$/', $ref, $regs)) {
+					// dereference of previous ref
+					if (($lastRef != null) && ($lastRef instanceof GitPHP_Tag)) {
+						$derefCommit = $this->GetCommit($regs[1]);
+						if ($derefCommit) {
+							$lastRef->SetCommit($derefCommit);
+						}
+					}
+				}
+
+				$lastRef = null;
+
+				if (preg_match('/^([0-9A-Fa-f]{40}) refs\/(tags|heads)\/(.+)$/', $ref, $regs)) {
+					// standard tag/head
+					$key = 'refs/' . $regs[2] . '/' . $regs[3];
+					if ($regs[2] == 'tags') {
+						if (!isset($this->tags[$key])) {
+							$lastRef = $this->LoadTag($regs[3], $regs[1]);
+							$this->tags[$key] = $lastRef;
+						}
+					} else if ($regs[2] == 'heads') {
+						if (!isset($this->heads[$key])) {
+							$this->heads[$key] = new GitPHP_Head($this, $regs[3], $regs[1]);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * ListDir
+	 *
+	 * Recurses into a directory and lists files inside
+	 *
+	 * @access private
+	 * @param string $dir directory
+	 * @return array array of filenames
+	 */
+	private function ListDir($dir)
+	{
+		$files = array();
+		if ($dh = opendir($dir)) {
+			while (($file = readdir($dh)) !== false) {
+				if (($file == '.') || ($file == '..')) {
+					continue;
+				}
+				$fullFile = $dir . '/' . $file;
+				if (is_dir($fullFile)) {
+					$subFiles = $this->ListDir($fullFile);
+					if (count($subFiles) > 0) {
+						$files = array_merge($files, $subFiles);
+					}
+				} else {
+					$files[] = $fullFile;
+				}
+			}
+		}
+		return $files;
 	}
 
 	/**
