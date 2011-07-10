@@ -1540,6 +1540,22 @@ class GitPHP_Project
 	{
 		$this->epochRead = true;
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadEpochGit();
+		} else {
+			$this->ReadEpochRaw();
+		}
+	}
+
+	/**
+	 * ReadEpochGit
+	 *
+	 * Reads this project's epoch using git executable
+	 *
+	 * @access private
+	 */
+	private function ReadEpochGit()
+	{
 		$exe = new GitPHP_GitExe($this);
 
 		$args = array();
@@ -1555,6 +1571,32 @@ class GitPHP_Project
 		}
 
 		unset($exe);
+	}
+
+	/**
+	 * ReadEpochRaw
+	 *
+	 * Reads this project's epoch using raw objects
+	 *
+	 * @access private
+	 */
+	private function ReadEpochRaw()
+	{
+		if (!$this->readRefs)
+			$this->ReadRefList();
+
+		$epoch = 0;
+		foreach ($this->heads as $head) {
+			$commit = $head->GetCommit();
+			if ($commit) {
+				if ($commit->GetCommitterEpoch() > $epoch) {
+					$epoch = $commit->GetCommitterEpoch();
+				}
+			}
+		}
+		if ($epoch > 0) {
+			$this->epoch = $epoch;
+		}
 	}
 
 	/**
