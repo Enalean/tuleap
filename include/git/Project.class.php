@@ -44,13 +44,13 @@ class GitPHP_Project
 	protected $owner = "";
 
 	/**
-	 * readOwner
+	 * ownerRead
 	 *
 	 * Stores whether the file owner has been read
 	 *
 	 * @access protected
 	 */
-	protected $readOwner = false;
+	protected $ownerRead = false;
 
 	/**
 	 * description
@@ -268,30 +268,98 @@ class GitPHP_Project
 	 */
 	public function GetOwner()
 	{
-		if (empty($this->owner) && !$this->readOwner) {
-
-			$exe = new GitPHP_GitExe($this);
-			$args = array();
-			$args[] = 'gitweb.owner';
-			$this->owner = $exe->Execute(GIT_CONFIG, $args);
-			unset($exe);
-			
-			if (empty($this->owner) && function_exists('posix_getpwuid')) {
-				$uid = fileowner($this->GetPath());
-				if ($uid !== false) {
-					$data = posix_getpwuid($uid);
-					if (isset($data['gecos']) && !empty($data['gecos'])) {
-						$this->owner = $data['gecos'];
-					} elseif (isset($data['name']) && !empty($data['name'])) {
-						$this->owner = $data['name'];
-					}
-				}
-			}
-
-			$this->readOwner = true;
+		if (empty($this->owner) && !$this->ownerRead) {
+			$this->ReadOwner();
 		}
 	
 		return $this->owner;
+	}
+
+	/**
+	 * ReadOwner
+	 *
+	 * Reads the project owner
+	 *
+	 * @access protected
+	 */
+	protected function ReadOwner()
+	{
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadOwnerGit();
+		} else {
+			$this->ReadOwnerRaw();
+		}
+
+		if (empty($this->owner) && function_exists('posix_getpwuid')) {
+			$uid = fileowner($this->GetPath());
+			if ($uid !== false) {
+				$data = posix_getpwuid($uid);
+				if (isset($data['gecos']) && !empty($data['gecos'])) {
+					$this->owner = $data['gecos'];
+				} elseif (isset($data['name']) && !empty($data['name'])) {
+					$this->owner = $data['name'];
+				}
+			}
+		}
+
+		$this->ownerRead = true;
+	}
+
+	/**
+	 * ReadOwnerGit
+	 *
+	 * Reads the project owner using the git executable
+	 *
+	 * @access private
+	 */
+	private function ReadOwnerGit()
+	{
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = 'gitweb.owner';
+		$this->owner = $exe->Execute(GIT_CONFIG, $args);
+		unset($exe);
+	}
+
+	/**
+	 * ReadOwnerRaw
+	 *
+	 * Reads the project owner using the raw config file
+	 *
+	 * @access private
+	 */
+	private function ReadOwnerRaw()
+	{
+		// not worth writing a full config parser right now
+
+		if (!file_exists($this->GetPath() . '/config'))
+			return;
+
+		$configData = explode("\n", file_get_contents($this->GetPath() . '/config'));
+
+		$gitwebSection = false;
+		foreach ($configData as $configLine) {
+			$trimmed = trim($configLine);
+			if (empty($trimmed)) {
+				continue;
+			}
+
+			if (preg_match('/^\[(.+)\]$/', $trimmed, $regs)) {
+				// section header
+				$gitwebSection = ($regs[1] == 'gitweb');
+			} else if ($gitwebSection) {
+				$eq = strpos($trimmed, '=');
+				if ($eq === false) {
+					continue;
+				}
+
+				$key = trim(substr($trimmed, 0, $eq));
+				if ($key == 'owner') {
+					$this->owner = trim(substr($trimmed, $eq+1));
+					break;
+				}
+			}
+		}
 	}
 
 	/**
