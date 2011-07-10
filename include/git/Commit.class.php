@@ -1014,4 +1014,22 @@ class GitPHP_Commit extends GitPHP_GitObject
 		return $key;
 	}
 
+	/**
+	 * CompareAge
+	 *
+	 * Compares two commits by age
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first commit
+	 * @param mixed $b second commit
+	 * @return integer comparison result
+	 */
+	public static function CompareAge($a, $b)
+	{
+		if ($a->GetAge() === $b->GetAge())
+			return 0;
+		return ($a->GetAge() < $b->GetAge() ? -1 : 1);
+	}
+
 }

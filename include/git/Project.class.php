@@ -1122,13 +1122,13 @@ class GitPHP_Project
 	 *
 	 * Gets log entries as an array of hashes
 	 *
-	 * @access public
+	 * @access private
 	 * @param string $hash hash to start the log at
 	 * @param integer $count number of entries to get
 	 * @param integer $skip number of entries to skip
 	 * @return array array of hashes
 	 */
-	public function GetLogHash($hash, $count = 50, $skip = 0)
+	private function GetLogHash($hash, $count = 50, $skip = 0)
 	{
 		return $this->RevList($hash, $count, $skip);
 	}
@@ -1146,11 +1146,85 @@ class GitPHP_Project
 	 */
 	public function GetLog($hash, $count = 50, $skip = 0)
 	{
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			return $this->GetLogGit($hash, $count, $skip);
+		} else {
+			return $this->GetLogRaw($hash, $count, $skip);
+		}
+	}
+
+	/**
+	 * GetLogGit
+	 *
+	 * Gets log entries using git exe
+	 *
+	 * @access private
+	 * @param string $hash hash to start the log at
+	 * @param integer $count number of entries to get
+	 * @param integer $skip number of entries to skip
+	 * @return array array of commit objects
+	 */
+	private function GetLogGit($hash, $count = 50, $skip = 0)
+	{
 		$log = $this->GetLogHash($hash, $count, $skip);
 		$len = count($log);
 		for ($i = 0; $i < $len; ++$i) {
 			$log[$i] = $this->GetCommit($log[$i]);
 		}
+		return $log;
+	}
+
+	/**
+	 * GetLogRaw
+	 *
+	 * Gets log entries using raw git objects
+	 * Based on history walking code from glip
+	 *
+	 * @access private
+	 */
+	private function GetLogRaw($hash, $count = 50, $skip = 0)
+	{
+		$total = $count + $skip;
+
+		$inc = array();
+		$num = 0;
+		$queue = array($this->GetCommit($hash));
+		while (($commit = array_shift($queue)) !== null) {
+			$parents = $commit->GetParents();
+			foreach ($parents as $parent) {
+				if (!isset($inc[$parent->GetHash()])) {
+					$inc[$parent->GetHash()] = 1;
+					$queue[] = $parent;
+					$num++;
+				} else {
+					$inc[$parent->GetHash()]++;
+				}
+			}
+			if ($num >= $total)
+				break;
+		}
+
+		$queue = array($this->GetCommit($hash));
+		$log = array();
+		$num = 0;
+		while (($commit = array_pop($queue)) !== null) {
+			array_push($log, $commit);
+			$num++;
+			if ($num == $total) {
+				break;
+			}
+			$parents = $commit->GetParents();
+			foreach ($parents as $parent) {
+				if (--$inc[$parent->GetHash()] == 0) {
+					$queue[] = $parent;
+				}
+			}
+		}
+
+		if ($skip > 0) {
+			$log = array_slice($log, $skip, $count);
+		}
+		usort($log, array('GitPHP_Commit', 'CompareAge'));
 		return $log;
 	}
 

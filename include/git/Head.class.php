@@ -79,9 +79,7 @@ class GitPHP_Head extends GitPHP_Ref
 	{
 		$aObj = $a->GetCommit();
 		$bObj = $b->GetCommit();
-		if ($aObj->GetAge() === $bObj->GetAge())
-			return 0;
-		return ($aObj->GetAge() < $bObj->GetAge() ? -1 : 1);
+		return GitPHP_Commit::CompareAge($aObj, $bObj);
 	}
 
 }
