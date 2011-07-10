@@ -1215,8 +1215,10 @@ class GitPHP_Project
 			}
 			$parents = $commit->GetParents();
 			foreach ($parents as $parent) {
-				if (--$inc[$parent->GetHash()] == 0) {
-					$queue[] = $parent;
+				if (isset($inc[$parent->GetHash()])) {
+					if (--$inc[$parent->GetHash()] == 0) {
+						$queue[] = $parent;
+					}
 				}
 			}
 		}
