@@ -1046,6 +1046,24 @@ class GitPHP_Project
 		if (!$this->readRefs)
 			$this->ReadRefList();
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			return $this->GetTagsGit($count);
+		} else {
+			return $this->GetTagsRaw($count);
+		}
+	}
+
+	/**
+	 * GetTagsGit
+	 *
+	 * Gets list of tags for this project by age descending using git executable
+	 *
+	 * @access private
+	 * @param integer $count number of tags to load
+	 * @return array array of tags
+	 */
+	private function GetTagsGit($count = 0)
+	{
 		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--sort=-creatordate';
@@ -1066,6 +1084,27 @@ class GitPHP_Project
 			if (isset($this->tags[$ref])) {
 				$tags[] = $this->tags[$ref];
 			}
+		}
+
+		return $tags;
+	}
+
+	/**
+	 * GetTagsRaw
+	 *
+	 * Gets list of tags for this project by age descending using raw git objects
+	 *
+	 * @access private
+	 * @param integer $count number of tags to load
+	 * @return array array of tags
+	 */
+	private function GetTagsRaw($count = 0)
+	{
+		$tags = $this->tags;
+		usort($tags, array('GitPHP_Tag', 'CompareCreationEpoch'));
+
+		if (($count > 0) && (count($tags) > $count)) {
+			$tags = array_slice($tags, 0, $count);
 		}
 
 		return $tags;

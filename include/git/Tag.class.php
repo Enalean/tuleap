@@ -674,6 +674,25 @@ class GitPHP_Tag extends GitPHP_Ref
 		return $key;
 	}
 
+	/**
+	 * GetCreationEpoch
+	 *
+	 * Gets tag's creation epoch
+	 * (tagger epoch, or committer epoch for light tags)
+	 *
+	 * @access public
+	 * @return string creation epoch
+	 */
+	public function GetCreationEpoch()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		if ($this->LightTag())
+			return $this->GetCommit()->GetCommitterEpoch();
+		else
+			return $this->taggerEpoch;
+	}
 
 	/**
 	 * CompareAge
@@ -701,6 +720,29 @@ class GitPHP_Tag extends GitPHP_Ref
 			return -1;
 
 		return strcmp($a->GetName(), $b->GetName());
+	}
+
+	/**
+	 * CompareCreationEpoch
+	 *
+	 * Compares to tags by creation epoch
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first tag
+	 * @param mixed $b second tag
+	 * @return integer comparison result
+	 */
+	public static function CompareCreationEpoch($a, $b)
+	{
+		$aEpoch = $a->GetCreationEpoch();
+		$bEpoch = $b->GetCreationEpoch();
+
+		if ($aEpoch == $bEpoch) {
+			return 0;
+		}
+
+		return ($aEpoch < $bEpoch ? 1 : -1);
 	}
 
 }
