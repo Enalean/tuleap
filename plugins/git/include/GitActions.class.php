@@ -311,7 +311,6 @@ class GitActions extends PluginActions {
      * @return <type>
      */
     public function save( $projectId, $repoId, $repoAccess, $repoDescription ) {
-        
         $c = $this->getController();
         if ( empty($repoId) ) {
             $c->addError( $this->getText('actions_params_error') );
@@ -327,13 +326,19 @@ class GitActions extends PluginActions {
         $repository->setId($repoId);
         try {
             $repository->load();
-            if ( !empty($repoAccess) && $repository->getAccess() != $repoAccess) {
-                $this->systemEventManager->createEvent(
-                                              'GIT_REPO_ACCESS',
-                                               $repoId.SystemEvent::PARAMETER_SEPARATOR.$repoAccess,
-                                               SystemEvent::PRIORITY_HIGH
-                                            );
-                $c->addInfo( $this->getText('actions_repo_access') );
+            if ( !empty($repoAccess) ) {
+                if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+                    $repository->getBackend()->savePermissions($repository, $repoAccess);
+                } else {
+                    if ($repository->getAccess() != $repoAccess) {
+                        $this->systemEventManager->createEvent(
+                                                      'GIT_REPO_ACCESS',
+                                                       $repoId.SystemEvent::PARAMETER_SEPARATOR.$repoAccess,
+                                                       SystemEvent::PRIORITY_HIGH
+                                                    );
+                        $c->addInfo( $this->getText('actions_repo_access') );
+                    }
+                }
             }
             if ( !empty($repoDescription) ) {
                 $repository->setDescription($repoDescription);

@@ -302,22 +302,22 @@ class GitViews extends PluginViews {
     protected function _accessControlGitolite($repository) {
         echo '<table>';
         echo '<thead><tr>';
-        echo '<td>'. 'R' .'</td>';
-        echo '<td>'. 'W' .'</td>';
-        echo '<td>'. 'W+' .'</td>';
+        echo '<td>'. $this->getText('perm_R') .'</td>';
+        echo '<td>'. $this->getText('perm_W') .'</td>';
+        echo '<td>'. $this->getText('perm_W+') .'</td>';
         echo '</tr></thead>';
         echo '<tbody><tr>';
         // R
         echo '<td>';
-        echo permission_fetch_selection_field('PLUGIN_GIT_READ', $repository->getId(), $this->groupId);
+        echo permission_fetch_selection_field('PLUGIN_GIT_READ', $repository->getId(), $this->groupId, 'repo_access[read]');
         echo '</td>';
         // W
         echo '<td>';
-        echo permission_fetch_selection_field('PLUGIN_GIT_WRITE', $repository->getId(), $this->groupId);
+        echo permission_fetch_selection_field('PLUGIN_GIT_WRITE', $repository->getId(), $this->groupId, 'repo_access[write]');
         echo '</td>';
         // W+
         echo '<td>';
-        echo permission_fetch_selection_field('PLUGIN_GIT_WPLUS', $repository->getId(), $this->groupId);
+        echo permission_fetch_selection_field('PLUGIN_GIT_WPLUS', $repository->getId(), $this->groupId, 'repo_access[wplus]');
         echo '</td>';
         
         echo '</tr></tbody>';

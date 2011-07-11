@@ -204,7 +204,7 @@ class Git extends PluginController {
                     }
                     $valid = new Valid_String('repo_access');
                     $valid->required();
-                    if($this->request->valid($valid)) {
+                    if($this->request->valid($valid) || is_array($this->request->get('repo_access'))) {
                         $repoAccess = $this->request->get('repo_access');
                     }
                     $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc) );

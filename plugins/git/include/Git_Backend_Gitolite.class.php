@@ -110,6 +110,53 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     public function isNameAvailable($newName) {
         return ! file_exists($this->getGitRootPath() .'/'. $newName);
     }
+    
+    /**
+     * Save the permissions of the repository
+     *
+     * @param GitRepository $repository
+     * @param array         $perms
+     *
+     * @return bool true if success, false otherwise
+     */
+    public function savePermissions($repository, $perms) {
+        $msgs = array();
+        $ok   = false;
+        if (isset($perms['read']) && is_array($perms['read'])) {
+            $success = permission_process_selection_form($repository->getProjectId(), 'PLUGIN_GIT_READ', $repository->getId(), $perms['read']);
+        }
+        $msgs[] = $success[1];
+        if ($success[0]) {
+            if (isset($perms['write']) && is_array($perms['write'])) {
+                $success = permission_process_selection_form($repository->getProjectId(), 'PLUGIN_GIT_WRITE', $repository->getId(), $perms['write']);
+            }
+            $msgs[] = $success[1];
+            if ($success[0]) {
+                if (isset($perms['wplus']) && is_array($perms['wplus'])) {
+                    $success = permission_process_selection_form($repository->getProjectId(), 'PLUGIN_GIT_WPLUS', $repository->getId(), $perms['wplus']);
+                }
+                $msgs[] = $success[1];
+                $ok = $success[0];
+            }
+        }
+        foreach ($msgs as $msg) {
+            $GLOBALS['Response']->addFeedback($ok ? 'info' : 'error', $msg);
+        }
+        return $ok;
+    }
+    
+    
+    /**
+     * Save the repository
+     *
+     * @param GitRepository $repository
+     *
+     * @return bool
+     */
+    public function save($repository) {
+        //TODO: change teh description in the driver (see gitshell driver)
+        return $this->getDao()->save($repository);
+    }
 }
 
 ?>

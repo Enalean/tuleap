@@ -52,6 +52,13 @@ class GitPlugin extends Plugin {
         
         $this->_addHook(Event::EDIT_SSH_KEYS, 'edit_ssh_keys', false);
         $this->_addHook(Event::LAB_FEATURES_DEFINITION_LIST, 'lab_features_definition_list', false);
+        
+        $this->_addHook('permission_get_name',               'permission_get_name',               false);
+        $this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
+        $this->_addHook('permission_get_object_name',        'permission_get_object_name',        false);
+        $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
+        $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
+        $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
     }
 
     public function getPluginInfo() {
@@ -211,9 +218,95 @@ class GitPlugin extends Plugin {
     public function lab_features_definition_list($params) {
         $params['lab_features'][] = array(
             'title'       => $GLOBALS['Language']->getText('plugin_git', 'gitolite_lab_feature_title'),
-            'description' => $GLOBALS['Language']->getText('plugin_git', 'gitolite_lab_feature_description')/*,
-            'image'       => $this->getThemePath().'/images',*/
+            'description' => $GLOBALS['Language']->getText('plugin_git', 'gitolite_lab_feature_description'),
+            'image'       => $this->getPluginPath().'/lab_feature.png',
         );
+    }
+    
+    function permission_get_name($params) {
+        if (!$params['name']) {
+            switch($params['permission_type']) {
+                case 'PLUGIN_GIT_READ':
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_read');
+                    break;
+                case 'PLUGIN_GIT_WRITE':
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_write');
+                    break;
+                case 'PLUGIN_GIT_WPLUS':
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_wplus');
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    function permission_get_object_type($params) {
+        if (!$params['object_type']) {
+            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                $params['object_type'] = 'git_repository';
+            }
+        }
+    }
+    function permission_get_object_name($params) {
+        if (!$params['object_name']) {
+            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                $repository = new GitRepository();
+                $repository->setId($params['object_id']);
+                try {
+                    $repository->load();
+                    $params['object_name'] = $repository->getName();
+                } catch (Exception $e) {
+                    // do nothing
+                }
+            }
+        }
+    }
+    function permission_get_object_fullname($params) {
+        if (!$params['object_fullname']) {
+            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                $repository = new GitRepository();
+                $repository->setId($params['object_id']);
+                try {
+                    $repository->load();
+                    $params['object_name'] = 'git repository '. $repository->getName();
+                } catch (Exception $e) {
+                    // do nothing
+                }
+            }
+        }
+    }
+    function permissions_for_ugroup($params) {
+        if (!$params['results']) {
+            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                $repository = new GitRepository();
+                $repository->setId($params['object_id']);
+                try {
+                    $repository->load();
+                    $params['results']  = $repository->getName();
+                } catch (Exception $e) {
+                    // do nothing
+                }
+            }
+        }
+    }
+    var $_cached_permission_user_allowed_to_change;
+    function permission_user_allowed_to_change($params) {
+        if (!$params['allowed']) {
+            if (!$this->_cached_permission_user_allowed_to_change) {
+                if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                    $repository = new GitRepository();
+                    $repository->setId($params['object_id']);
+                    try {
+                        $repository->load();
+                        //Only project admin can update perms
+                        $this->_cached_permission_user_allowed_to_change = UserManager::instance()->getCurrentUser()->isMember($repository->getProjectId(), 'A');
+                    } catch (Exception $e) {
+                        // do nothing
+                    }
+                }
+            }
+            $params['allowed'] = $this->_cached_permission_user_allowed_to_change;
+        }
     }
 }
 

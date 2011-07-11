@@ -131,3 +131,10 @@ plugin_git	feedback_event_access	There is an event in queue for a repository per
 
 plugin_git	gitolite_lab_feature_title	Fine grain permissions on git repositories
 plugin_git	gitolite_lab_feature_description	Allow to set specifics, distincts, permissions for Read or Write operations.
+
+plugin_git	perm_R	Read
+plugin_git	perm_W	Write
+plugin_git	perm_W+	Write & Rewind
+
+project_admin_utils	perm_granted_for_git_repository	Permission granted for git repository $1
+

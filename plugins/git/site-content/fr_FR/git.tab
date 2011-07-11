@@ -129,3 +129,10 @@ plugin_git	feedback_event_access	Un événement est en attente pour le changemen
 
 plugin_git	gitolite_lab_feature_title	Permissions fines sur les dépots Git
 plugin_git	gitolite_lab_feature_description	Permet de positionner des permissions distinctes en lecture ou écriture sur chaque dépot
+
+plugin_git	perm_R	Lecture
+plugin_git	perm_W	Ecriture
+plugin_git	perm_W+	Ecriture et Rewind
+
+
+project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1

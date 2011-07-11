@@ -58,5 +58,14 @@ interface Git_Backend_Interface {
      * @return bool
      */
     public function isNameAvailable($newName);
+    
+    /**
+     * Save the repository
+     *
+     * @param GitRepository $repository
+     *
+     * @return bool
+     */
+    public function save($repository);
 }
 ?>
