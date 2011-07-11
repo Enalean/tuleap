@@ -1335,4 +1335,10 @@ ul.ServiceMenu li.current {
     font-weight: bold;
     margin-top: 0;
 }
+#account_preferences_lab_features td img {
+    -moz-box-shadow: 0 0 8px 0px #888;
+    -webkit-box-shadow: 0 0  8px 0px #888;
+    box-shadow: 0 0  8px 0px #888;
+    margin-right: 1em;
+}
 /* }}} */
