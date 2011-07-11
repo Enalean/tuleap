@@ -96,6 +96,17 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     }
 
     /**
+     * Returns a unique identifier of the file
+     *
+     * @return String
+     */
+    function getETag() {
+        $item = $this->getItem();
+        $version = $item->getCurrentVersion();
+        return '"'.$this->getUtils()->getIncomingFileMd5Sum($version->getPath()).'"';
+    }
+
+    /**
      * Returns the max file size
      *
      * @return Integer
