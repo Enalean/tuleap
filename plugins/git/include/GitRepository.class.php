@@ -516,14 +516,6 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
-     * Verify if given name is not already reserved on filesystem
-     */
-    public function isNameAvailable($newName) {
-        $newName = strtolower($newName);
-        return $this->getBackend()->isNameAvailable($newName);
-    }
-
-    /**
      * Verify if the notfication is alreadyu enabled for the given mail
      * 
      * @param String $mail

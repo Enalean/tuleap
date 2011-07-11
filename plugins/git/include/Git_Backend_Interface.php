@@ -51,5 +51,12 @@ interface Git_Backend_Interface {
      * @return String
      */
     public function getGitRootPath();
+
+    /**
+     * Verify if given name is not already reserved on filesystem
+     *
+     * @return bool
+     */
+    public function isNameAvailable($newName);
 }
 ?>

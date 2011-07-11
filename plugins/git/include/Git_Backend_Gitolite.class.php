@@ -87,7 +87,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @return String
      */
     public function getGitRootPath() {
-        return '/usr/com/gitolite/repositories/';
+        return $GLOBALS['sys_data_dir'] .'/gitolite/repositories/';
     }
 
     /**
@@ -100,6 +100,15 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             $this->dao = new GitDao();
         }
         return $this->dao;
+    }
+
+    /**
+     * Verify if given name is not already reserved on filesystem
+     *
+     * @return bool
+     */
+    public function isNameAvailable($newName) {
+        return ! file_exists($this->getGitRootPath() .'/'. $newName);
     }
 }
 

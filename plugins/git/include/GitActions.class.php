@@ -409,8 +409,9 @@ class GitActions extends PluginActions {
     }
 
     public static function isNameAvailable($newName, &$error) {
-        $r = new GitRepository();
-        if (! $r->isNameAvailable($newName)) {
+        $b1 = new Git_Backend_Gitolite(new Git_GitoliteDriver('/home/codendiadm/gitolite-admin'));
+        $b2 = Backend::instance('Git','GitBackend');
+        if (!$b1->isNameAvailable($newName) && !$b2->isNameAvailable($newName)) {
             $error = $GLOBALS['Language']->getText('plugin_git', 'actions_name_not_available');
             return false;
         }
