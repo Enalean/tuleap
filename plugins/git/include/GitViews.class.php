@@ -472,14 +472,14 @@ class GitViews extends PluginViews {
     <label for="repo_name"><?= $this->getText('admin_reference_creation_input_name'); ?></label>
     <input id="repo_name" name="repo_name" class="" type="text" value=""/>
 
-    <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>">
-
     <?php if ($user->useLabFeatures()) : ?>
     <div class="lab_features" title="<?= $this->getText('admin_reference_creation_lab_feature'); ?>">
       <input id="repo_type" name="repo_type" type="checkbox" value="enable"/>
       <label for="repo_type"><?= $this->getText('admin_reference_creation_input_type'); ?></label>
     </div>
     <?php endif; ?>
+
+    <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>">
 </form>
 </p>
         <?php
