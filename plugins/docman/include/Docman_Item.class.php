@@ -373,6 +373,13 @@ class Docman_Item {
 
         $this->setDeleteDate(time());
         $dIF = new Docman_ItemFactory();
+        // The event must be processed before the item is deleted
+        $um =& UserManager::instance();
+        $user =& $um->getCurrentUser();
+        $itemParent = $dIF->getItemFromDb($this->getParentId());
+        $event = 'plugin_docman_event_del';
+        $dIF->callItemEvent($this->getGroupId(), $itemParent, $this, $user, $event);
+
         $dIF->delCutPreferenceForAllUsers($this->getId());
         $dIF->delCopyPreferenceForAllUsers($this->getId());
         $dao = new Docman_ItemDao(CodendiDataAccess::instance());
