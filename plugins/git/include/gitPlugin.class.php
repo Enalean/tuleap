@@ -227,13 +227,13 @@ class GitPlugin extends Plugin {
         if (!$params['name']) {
             switch($params['permission_type']) {
                 case 'PLUGIN_GIT_READ':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_read');
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_R');
                     break;
                 case 'PLUGIN_GIT_WRITE':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_write');
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_W');
                     break;
                 case 'PLUGIN_GIT_WPLUS':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_wplus');
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_W+');
                     break;
                 default:
                     break;
