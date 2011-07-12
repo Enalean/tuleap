@@ -388,20 +388,15 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $dpm->setReturnValue('userCanWrite', true);
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
-        
-        $dif = new MockDocman_ItemFactory();
-        $utils->setReturnValue('getDocmanItemFactory', $dif);
+
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
         $item = new MockDocman_Item();
         $item->setReturnValue('getGroupId', 101);
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
         $dpm->setReturnValue('currentUserCanWriteSubItems', true);
         $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
-        $itemParent = new MockDocman_Item();
-        $dif->setReturnValue('getItemFromDb', $itemParent);
 
         $item->expectOnce('delete');
-        $dif->expectOnce('callItemEvent', array(101, $itemParent, $item, $webDAVDocmanFolder->getUser(), 'plugin_docman_event_del'));
 
         $this->assertNoErrors();
         $webDAVDocmanFolder->delete();
@@ -435,8 +430,6 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
 
-        $dif = new MockDocman_ItemFactory();
-        $utils->setReturnValue('getDocmanItemFactory', $dif);
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
         $item = new MockDocman_Item();
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
