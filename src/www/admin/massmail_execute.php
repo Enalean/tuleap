@@ -100,7 +100,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
             if ($i % 25 == 0) {
                 //spawn sendmail for 25 addresses at a time
                 $mail->setBcc($tolist, true);
-                $mail->setTo($GLOBALS['sys_noreply']);
+                $mail->setTo($GLOBALS['sys_noreply'], true);
                 if ($mail->send()) {
                     print "<br>".$Language->getText('admin_massmail_execute','sending').": ".$tolist;
                 } else {
@@ -115,7 +115,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         //send the last of the messages.
         if (strlen($tolist) > 0) {
             $mail->setBcc($tolist, true);
-            $mail->setTo($GLOBALS['sys_noreply']);
+            $mail->setTo($GLOBALS['sys_noreply'], true);
             if ($mail->send()) {
                 print "<br><br>".$Language->getText('admin_massmail_execute','sending').": ".$tolist."<br><br>";
             } else {
