@@ -289,6 +289,9 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $dpm->setReturnValue('userCanWrite', true);
         $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $utils->setReturnValue('isWriteEnabled', true);
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $dif->expectOnce('callItemEvent');
         $vf = new MockDocman_VersionFactory();
         $v1 = new MockDocman_Version();
         $v2 = new MockDocman_Version();
