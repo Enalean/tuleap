@@ -413,9 +413,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                 $subItemsWritable = $docmanPermissionManager->currentUserCanWriteSubItems($item->getId());
                 if($subItemsWritable) {
                     $this->deleteDirectoryContent($item);
-
                     $item->delete();
-                    $this->getUtils()->notifyOnDelete($item->getGroupId());
                 } else {
                     throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'error_subitems_not_deleted_no_w'));
                 }
