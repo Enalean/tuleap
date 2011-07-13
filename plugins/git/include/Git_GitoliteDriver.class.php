@@ -171,6 +171,41 @@ class Git_GitoliteDriver {
             return false;
         }
     }
+    
+    /**
+     * Fetch the gitolite readable conf for permissions on a repository
+     *
+     * @return string
+     */
+    public function fetchPermissions($repo, $readers, $writers, $rewinders) {
+        $s = '';
+        
+        array_walk($readers, array($this, 'parseUGroups'));
+        array_walk($writers, array($this, 'parseUGroups'));
+        array_walk($rewinders, array($this, 'parseUGroups'));
+        
+        //Name of the repo
+        $s .= 'repo '. $repo . PHP_EOL;
+        
+        // Readers
+        $s .= ' R   = '. implode(' ', $readers);
+        $s .= PHP_EOL;
+        
+        // Writers
+        $s .= ' RW  = '. implode(' ', $writers);
+        $s .= PHP_EOL;
+        
+        // Rewinders
+        $s .= ' RW+ = '. implode(' ', $rewinders);
+        $s .= PHP_EOL;
+        
+        $s .= PHP_EOL;
+        return $s;
+    }
+    
+    protected function parseUGroups(&$ug) {
+        $ug = '@ug_'. $ug;
+    }
 }
 
 ?>
