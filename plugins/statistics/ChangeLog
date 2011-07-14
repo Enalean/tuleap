@@ -1,3 +1,7 @@
+Version 0.6
+	== Bug fix ==
+	* Display a nice error message instead of default jpgraph one when no data are available.
+
 Version 0.5 (Codendi_ST 4.0.17) 
 	
 	What Changed?
