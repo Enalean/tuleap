@@ -139,6 +139,8 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
                 $ok = $success[0];
             }
         }
+        $this->driver->dumpProjectRepoConf($repository->getProject());
+        $this->driver->push();
         foreach ($msgs as $msg) {
             $GLOBALS['Response']->addFeedback($ok ? 'info' : 'error', $msg);
         }
