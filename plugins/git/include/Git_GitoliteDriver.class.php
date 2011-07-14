@@ -173,9 +173,9 @@ class Git_GitoliteDriver {
         $this->project = $project;
         $s = '';
         
-        array_walk($readers, array($this, 'ugroupId2GitoliteFormat'));
-        array_walk($writers, array($this, 'ugroupId2GitoliteFormat'));
-        array_walk($rewinders, array($this, 'ugroupId2GitoliteFormat'));
+        $readers   = array_filter(array_map(array($this, 'ugroupId2GitoliteFormat'), $readers));
+        $writers   = array_filter(array_map(array($this, 'ugroupId2GitoliteFormat'), $writers));
+        $rewinders = array_filter(array_map(array($this, 'ugroupId2GitoliteFormat'), $rewinders));
         
         //Name of the repo
         $s .= 'repo '. $this->project->getUnixName(). '/' . $repo . PHP_EOL;
@@ -207,23 +207,23 @@ class Git_GitoliteDriver {
      *
      * @param String $ug UGroupId
      */
-    protected function ugroupId2GitoliteFormat(&$ug) {
+    protected function ugroupId2GitoliteFormat($ug) {
         if ($ug > 100) {
-            $ug = '@ug_'. $ug;
+            return '@ug_'. $ug;
         } else {
             switch ($ug) {
                 case $GLOBALS['UGROUP_REGISTERED']:
-                    $ug = '@site_active';
+                    return '@site_active';
                     break;
                 case $GLOBALS['UGROUP_PROJECT_MEMBERS'];
-                    $ug = '@'.$this->project->getUnixName().'_project_members';
+                    return '@'.$this->project->getUnixName().'_project_members';
                     break;
                 case $GLOBALS['UGROUP_PROJECT_ADMIN']:
-                    $ug = '@'.$this->project->getUnixName().'_project_admin';
+                    return '@'.$this->project->getUnixName().'_project_admin';
                     break;
             }
-            
         }
+        return false;
     }
 
     /**

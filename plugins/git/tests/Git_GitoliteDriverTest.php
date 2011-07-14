@@ -150,59 +150,56 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $ug_4 = 160;
         $ug_5 = 170;
         $ug_6 = 180;
+        $ug_n = 100;
 
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/empty.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array(), array(), array()),
-            '/perms/empty.conf'
+            $driver->fetchPermissions($prj, 'gpig', array(), array(), array())
         );
-        
+
+        $this->assertIdentical(
+            file_get_contents($this->_fixDir .'/perms/empty.conf'),
+            $driver->fetchPermissions($prj, 'gpig', array($ug_n), array($ug_n), array($ug_n))
+        );
+
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/one-reader.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array($ug_1), array(), array()),
-            '/perms/one-reader.conf'
+            $driver->fetchPermissions($prj, 'gpig', array($ug_1), array(), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/one-writer.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array(), array($ug_1), array()),
-            '/perms/one-writer.conf'
+            $driver->fetchPermissions($prj, 'gpig', array(), array($ug_1), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/one-rewinder.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array(), array(), array($ug_1)),
-            '/perms/one-rewinder.conf'
+            $driver->fetchPermissions($prj, 'gpig', array(), array(), array($ug_1))
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/two-readers.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array($ug_1, $ug_2), array(), array()),
-            '/perms/two-readers.conf'
+            $driver->fetchPermissions($prj, 'gpig', array($ug_1, $ug_2), array(), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/two-writers.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array(), array($ug_1, $ug_2), array()),
-            '/perms/two-writers.conf'
+            $driver->fetchPermissions($prj, 'gpig', array(), array($ug_1, $ug_2), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/two-rewinders.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array(), array(), array($ug_1, $ug_2)),
-            '/perms/two-rewinders.conf'
+            $driver->fetchPermissions($prj, 'gpig', array(), array(), array($ug_1, $ug_2))
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/full.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array($ug_1, $ug_2), array($ug_3, $ug_4), array($ug_5, $ug_6)),
-            '/perms/full.conf'
+            $driver->fetchPermissions($prj, 'gpig', array($ug_1, $ug_2), array($ug_3, $ug_4), array($ug_5, $ug_6))
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/default.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array('2'), array('3'), array()),
-            '/perms/default.conf'
+            $driver->fetchPermissions($prj, 'gpig', array('2'), array('3'), array())
         );
     }
 
