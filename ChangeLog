@@ -1,3 +1,7 @@
+Version 4.0.20 - Not released yet
+	== Plugins ==
+	New plugin "Request Help" to link Tuleap with BMC Remedy ticketing system (works only for STMicroeletronics).
+
 Version 4.0.19.1 - Tuesday, 28th June 2011
 	== Bug fix ==
 	* Fix regression in .SVNAccessFile management: special group '@members' is no longer discarded.
