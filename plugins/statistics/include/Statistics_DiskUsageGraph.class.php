@@ -48,50 +48,53 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         }
 
         $servicesList = $this->_dum->getProjectServices();
-        
+
         $data = $this->_dum->getWeeklyEvolutionServiceData($services, $groupBy, $startDate, $endDate);
-        $lineplots = array();
-        $dates = array();
-        foreach ($data as $service => $values) {
-            $ydata = array();
-            foreach ($values as $date => $size) {
-                $dates[] = $date;
-                $ydata[] = $size;
+        if (is_array($data)) {
+            $lineplots = array();
+            $dates = array();
+            foreach ($data as $service => $values) {
+                $ydata = array();
+                foreach ($values as $date => $size) {
+                    $dates[] = $date;
+                    $ydata[] = $size;
+                }
+                $lineplot = new LinePlot($ydata);
+
+                $color = $this->_dum->getServiceColor($service);
+                $lineplot->SetColor($color);
+                $lineplot->SetFillColor($color.':1.5');
+                $lineplot->SetLegend($servicesList[$service]);
+
+                //$lineplot->value->show();
+                $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
+                $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
+                if ($accumulative) {
+                    //$lineplots[] = $lineplot;
+                    // Reverse order
+                    array_unshift($lineplots, $lineplot);
+                } else {
+                    $graph->Add($lineplot);
+                }
             }
-            $lineplot = new LinePlot($ydata);
 
-            $color = $this->_dum->getServiceColor($service);
-            $lineplot->SetColor($color);
-            $lineplot->SetFillColor($color.':1.5');
-            $lineplot->SetLegend($servicesList[$service]);
-
-            //$lineplot->value->show();
-            $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
-            $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
             if ($accumulative) {
-                //$lineplots[] = $lineplot;
-                // Reverse order
-                array_unshift($lineplots, $lineplot);
-            } else {
-                $graph->Add($lineplot);
+                $accLineplot = new AccLinePlot($lineplots);
+                $graph->Add($accLineplot);
             }
-        }
+            $graph->legend->SetReverse();
+            $graph->xaxis->title->Set($groupBy."s");
+            $graph->xaxis->SetTitleMargin(35);
+            $graph->xaxis->SetTickLabels($dates);
 
-        if ($accumulative) {
-            $accLineplot = new AccLinePlot($lineplots);
-            $graph->Add($accLineplot);
+            $graph->Stroke();
+        } else {
+            $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
         }
-        $graph->legend->SetReverse();
-        $graph->xaxis->title->Set($groupBy."s");
-        $graph->xaxis->SetTitleMargin(35);
-        $graph->xaxis->SetTickLabels($dates);
-        
-        
-        $graph->Stroke();
     }
-    
-     /**
-     * 
+
+    /**
+     *
      * @param int $userId
      * @param unknown_type $groupBy
      * @param unknown_type $startDate
@@ -111,30 +114,34 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         }
 
         $data = $this->_dum->getWeeklyEvolutionUserData($userId, $groupBy, $startDate, $endDate);
-        $dates = array();
-        $ydata = array();
-        foreach ($data as $xdate => $values) {
-             $dates[] = $xdate;
-            $ydata[] = (float)$values;
-        }
-               
-        $lineplot = new BarPlot($ydata);
-        $lineplot->SetColor('blue');
-      
-        $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
-        $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
-        $graph->Add($lineplot);
+        if (is_array($data) && count($data) > 1) {
+            $dates = array();
+            $ydata = array();
+            foreach ($data as $xdate => $values) {
+                $dates[] = $xdate;
+                $ydata[] = (float)$values;
+            }
 
-        $graph->xaxis->title->Set($groupBy."s");
-        $graph->xaxis->SetTitleMargin(35);
-        $graph->xaxis->SetTickLabels($dates);
-        
-        
-        $graph->Stroke();
+            $lineplot = new BarPlot($ydata);
+            $lineplot->SetColor('blue');
+
+            $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
+            $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
+            $graph->Add($lineplot);
+
+            $graph->xaxis->title->Set($groupBy."s");
+            $graph->xaxis->SetTitleMargin(35);
+            $graph->xaxis->SetTickLabels($dates);
+
+
+            $graph->Stroke();
+        } else {
+            $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
+        }
     }
-   
-     /**
-     * 
+     
+    /**
+     *
      * @param Integer $groupId
      * @param Array   $services
      * @param String  $groupBy
@@ -143,7 +150,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
      * @param Boolean $absolute Is y-axis relative to data set or absolute (starting from 0)
      */
     function displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, $absolute=true, $accumulative = true, $siteAdminView = true){
-       $graph = new Chart(750,450,"auto");
+        $graph = new Chart(750,450,"auto");
         $graph->SetScale("textint");
         $graph->title->Set("Project by service growth over the time");
 
@@ -157,50 +164,59 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         $servicesList = $this->_dum->getProjectServices($siteAdminView);
 
         $data = $this->_dum->getWeeklyEvolutionProjectData($services, $groupId, $groupBy, $startDate, $endDate);
-        $lineplots = array();
-        $dates = array();
-        foreach ($servicesList as $service => $serviceName) {
-            if (array_key_exists($service, $data)) {
-                $values = $data[$service];
-                $ydata = array();
-                foreach ($values as $date => $size) {
-                    $dates[] = $date;
-                    $ydata[] = $size;
-                }
-                $lineplot = new LinePlot($ydata);
+        if (is_array($data) && count($data)) {
+            $lineplots = array();
+            $dates = array();
+            $lineAdded = false;
+            foreach ($servicesList as $service => $serviceName) {
+                if (array_key_exists($service, $data) && is_array($data[$service]) && count($data[$service]) > 1) {
+                    $values = $data[$service];
+                    $ydata = array();
+                    foreach ($values as $date => $size) {
+                        $dates[] = $date;
+                        $ydata[] = $size;
+                    }
+                    $lineplot = new LinePlot($ydata);
 
-                $color = $this->_dum->getServiceColor($service);
-                $lineplot->SetColor($color);
-                $lineplot->SetFillColor($color.':1.5');
-                $lineplot->SetLegend($serviceName);
+                    $color = $this->_dum->getServiceColor($service);
+                    $lineplot->SetColor($color);
+                    $lineplot->SetFillColor($color.':1.5');
+                    $lineplot->SetLegend($serviceName);
 
-                //$lineplot->value->show();
-                $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
-                $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
-                if ($accumulative) {
-                    //$lineplots[] = $lineplot;
-                    // Reverse order
-                    array_unshift($lineplots, $lineplot);
-                } else {
-                    $graph->Add($lineplot);
+                    //$lineplot->value->show();
+                    $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
+                    $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
+                    if ($accumulative) {
+                        //$lineplots[] = $lineplot;
+                        // Reverse order
+                        $lineAdded = true;
+                        array_unshift($lineplots, $lineplot);
+                    } else {
+                        $lineAdded = true;
+                        $graph->Add($lineplot);
+                    }
                 }
             }
-        }
 
-        if ($accumulative) {
-            $accLineplot = new AccLinePlot($lineplots);
-            $graph->Add($accLineplot);
+            if ($accumulative && count($lineplots)) {
+                $accLineplot = new AccLinePlot($lineplots);
+                $graph->Add($accLineplot);
+            }
+            if ($lineAdded) {
+            $graph->legend->SetReverse();
+            $graph->xaxis->title->Set($groupBy."s");
+            $graph->xaxis->SetTitleMargin(35);
+            $graph->xaxis->SetTickLabels($dates);
+            $graph->Stroke();
+            } else {
+                $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
+            }
+        } else {
+            $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
         }
-        $graph->legend->SetReverse();
-        $graph->xaxis->title->Set($groupBy."s");
-        $graph->xaxis->SetTitleMargin(35);
-        $graph->xaxis->SetTickLabels($dates);
-        
-        
-        $graph->Stroke();
     }
- 
-   /**
+
+    /**
      *
      * @param Integer $groupId
      * @param String  $groupBy
@@ -222,28 +238,32 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
         }
 
         $data = $this->_dum->getWeeklyEvolutionProjectTotalSize($groupId, $groupBy, $startDate, $endDate);
-        $dates = array();
-        $ydata = array();
-        foreach ($data as $xdate => $values) {
-            $dates[] = $xdate;
-            $ydata[] = (float)$values;
+        if (is_array($data) && count($data) > 1) {
+            $dates = array();
+            $ydata = array();
+            foreach ($data as $xdate => $values) {
+                $dates[] = $xdate;
+                $ydata[] = (float)$values;
+            }
+
+            $lineplot = new LinePlot($ydata);
+
+            $color = '#6BA132';
+            $lineplot->SetColor($color);
+            $lineplot->SetFillColor($color.':1.5');
+
+            $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
+            $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
+            $graph->Add($lineplot);
+
+            $graph->xaxis->title->Set("Weeks");
+            $graph->xaxis->SetTitleMargin(35);
+            $graph->xaxis->SetTickLabels($dates);
+
+            $graph->Stroke();
+        } else {
+            $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
         }
-
-        $lineplot = new LinePlot($ydata);
-
-        $color = '#6BA132';
-        $lineplot->SetColor($color);
-        $lineplot->SetFillColor($color.':1.5');
-
-        $lineplot->value->SetFont($graph->getFont(), FS_NORMAL, 8);
-        $lineplot->value->setFormatCallback(array($this, 'sizeReadable'));
-        $graph->Add($lineplot);
-
-        $graph->xaxis->title->Set("Weeks");
-        $graph->xaxis->SetTitleMargin(35);
-        $graph->xaxis->SetTickLabels($dates);
-
-        $graph->Stroke();
     }
 
     /**
@@ -264,6 +284,36 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput {
 
         //graph display
         $graph->stroke();
+    }
+
+    function displayError($msg) {
+        //ttf from jpgraph
+        $ttf = new TTF();
+        $ttf->SetUserFont(
+            'dejavu-lgc/DejaVuLGCSans.ttf',
+            'dejavu-lgc/DejaVuLGCSans-Bold.ttf',
+            'dejavu-lgc/DejaVuLGCSans-Oblique.ttf',
+            'dejavu-lgc/DejaVuLGCSans-BoldOblique.ttf'
+        );
+        //Calculate the baseline
+        // @see http://www.php.net/manual/fr/function.imagettfbbox.php#75333
+        //this should be above baseline
+        $test2="H";
+        //some of these additional letters should go below it
+        $test3="Hjgqp";
+        //get the dimension for these two:
+        $box2 = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test2);
+        $box3 = imageTTFBbox(10,0,$ttf->File(FF_USERFONT),$test3);
+        $baseline = abs((abs($box2[5]) + abs($box2[1])) - (abs($box3[5]) + abs($box3[1])));
+        $bbox = imageTTFBbox(10, 0, $ttf->File(FF_USERFONT), $msg);
+        if ($im = @imagecreate($bbox[2] - $bbox[6], $bbox[3] - $bbox[5])) {
+            $background_color = imagecolorallocate($im, 255, 255, 255);
+            $text_color       = imagecolorallocate($im, 64, 64, 64);
+            imagettftext($im, 10, 0, 0, $bbox[3] - $bbox[5] - $baseline, $text_color, $ttf->File(FF_USERFONT), $msg);
+            header("Content-type: image/png");
+            imagepng($im);
+            imagedestroy($im);
+        }
     }
 
 }

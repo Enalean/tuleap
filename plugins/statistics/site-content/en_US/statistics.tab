@@ -16,6 +16,9 @@ plugin_statistics	widget_title_projectstatistics	Project statistics
 plugin_statistics	widget_desc_projectstatistics	Show project disk statistics
 plugin_statistics	widget_total_project_size	Total project size:
 
+plugin_statistics	period_error	You made a mistake in selecting period. Please try again!
+plugin_statistics	no_data_error	No data to display
+
 plugin_statistics_admin_page	show_statistics	Disk usage
 plugin_statistics_admin_page	disk_usage_period_months	Disk usage for the $1 last months
 plugin_statistics_admin_page	disk_usage_period_year	Disk usage for the last year

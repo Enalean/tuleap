@@ -17,6 +17,9 @@ plugin_statistics	widget_title_projectstatistics	Statistiques du projet
 plugin_statistics	widget_desc_projectstatistics	Affiche les statistiques disque du projet
 plugin_statistics	widget_total_project_size	Taille totale du Projet:
 
+plugin_statistics	period_error	Vous avez fait une erreur en selectionnant la période. veuillez réessayer!
+plugin_statistics	no_data_error	Il n'y a pas de données a afficher
+
 plugin_statistics_admin_page	show_statistics	Utilisation disque
 plugin_statistics_admin_page	disk_usage_period_months	Utilisation du disque pour les $1 derniers mois
 plugin_statistics_admin_page	disk_usage_period_year	Utilisation du disque pour la dernière année

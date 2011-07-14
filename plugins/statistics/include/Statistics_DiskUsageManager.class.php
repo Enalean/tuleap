@@ -379,7 +379,7 @@ class Statistics_DiskUsageManager {
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerProjectForPeriod($groupId, $groupBy, $startDate, $endDate);
-        if ($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError() && $dar->rowCount()) {
             foreach ($dar as $row) {
                 $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
             }
@@ -393,7 +393,7 @@ class Statistics_DiskUsageManager {
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerUserForPeriod($userId, $groupBy, $startDate, $endDate);
-        if ($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError() && $dar->rowCount()) {
             foreach ($dar as $row) {
                 $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
             }
@@ -407,7 +407,7 @@ class Statistics_DiskUsageManager {
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate, $groupId);
-        if ($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError() && $dar->rowCount()) {
             $dates = $this->getRangeDates($dar, $groupBy);
             foreach ($dar as $row) {
                 if (!isset($res[$row['service']])) {
