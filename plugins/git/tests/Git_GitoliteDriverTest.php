@@ -176,59 +176,92 @@ class Git_GitoliteDriverTest extends UnitTestCase {
 
         $this->assertEmptyGitStatus();
     }
-    /**/
+
     function testFetchPermissions() {
-        
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        
+
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', 'project1');
+
         $ug_1 = 130;
         $ug_2 = 140;
         $ug_3 = 150;
         $ug_4 = 160;
         $ug_5 = 170;
         $ug_6 = 180;
-        
+
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/empty.conf'),
-            $driver->fetchPermissions('gpig', array(), array(), array())
+            $driver->fetchPermissions($prj, 'gpig', array(), array(), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/one-reader.conf'),
-            $driver->fetchPermissions('gpig', array($ug_1), array(), array())
+            $driver->fetchPermissions($prj, 'gpig', array($ug_1), array(), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/one-writer.conf'),
-            $driver->fetchPermissions('gpig', array(), array($ug_1), array())
+            $driver->fetchPermissions($prj, 'gpig', array(), array($ug_1), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/one-rewinder.conf'),
-            $driver->fetchPermissions('gpig', array(), array(), array($ug_1))
+            $driver->fetchPermissions($prj, 'gpig', array(), array(), array($ug_1))
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/two-readers.conf'),
-            $driver->fetchPermissions('gpig', array($ug_1, $ug_2), array(), array())
+            $driver->fetchPermissions($prj, 'gpig', array($ug_1, $ug_2), array(), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/two-writers.conf'),
-            $driver->fetchPermissions('gpig', array(), array($ug_1, $ug_2), array())
+            $driver->fetchPermissions($prj, 'gpig', array(), array($ug_1, $ug_2), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/two-rewinders.conf'),
-            $driver->fetchPermissions('gpig', array(), array(), array($ug_1, $ug_2))
+            $driver->fetchPermissions($prj, 'gpig', array(), array(), array($ug_1, $ug_2))
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/full.conf'),
-            $driver->fetchPermissions('gpig', array($ug_1, $ug_2), array($ug_3, $ug_4), array($ug_5, $ug_6))
+            $driver->fetchPermissions($prj, 'gpig', array($ug_1, $ug_2), array($ug_3, $ug_4), array($ug_5, $ug_6))
         );
-        /**/
+        
+        $this->assertIdentical(
+            file_get_contents($this->_fixDir .'/perms/default.conf'),
+            $driver->fetchPermissions($prj, 'gpig', array('2'), array('3'), array())
+        );
     }
+
+    /**
+     * The project has 2 repositories nb 4 & 5.
+     * 4 has defaults
+     * 5 has pimped perms
+     * 
+     */
+    /*function dumpProjectRepoPermissions() {
+        $pm = MockPermissionsManager();
+        // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
+        $pm->setReturnValue('getAuthorizedUgroups', array(array('ugroup_id' => '2')), array(4, 'PLUGIN_GIT_READ'));
+        $pm->setReturnValue('getAuthorizedUgroups', array(array('ugroup_id' => '3')), array(4, 'PLUGIN_GIT_WRITE'));
+        $pm->setReturnValue('getAuthorizedUgroups', false, array(4, 'PLUGIN_GIT_WPLUS'));
+
+        // Repo 5 (test_pimped): R = project_members | W = project_admin | W+ = user groups 101
+        $pm->setReturnValue('getAuthorizedUgroups', array(array('ugroup_id' => '2')), array(4, 'PLUGIN_GIT_READ'));
+        $pm->setReturnValue('getAuthorizedUgroups', array(array('ugroup_id' => '3')), array(4, 'PLUGIN_GIT_WRITE'));
+        $pm->setReturnValue('getAuthorizedUgroups', false, array(4, 'PLUGIN_GIT_WPLUS'));
+
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', 'project1');
+
+        $driver = new Git_GitoliteDriver($this->_glAdmDir);
+        $driver->dumpProjectRepoConf($prj);
+        
+        $this->assertIdentical(file_get_contents($this->_glAdmDir.'/conf/projects/project1.conf'), file_get_contents($this->_fixDir .'/perms/project1-full.conf'));
+    }*/
 }
 
 ?>

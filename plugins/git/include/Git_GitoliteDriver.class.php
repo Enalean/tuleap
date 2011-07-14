@@ -27,6 +27,12 @@ class Git_GitoliteDriver {
     protected $confFilePath;
     protected $adminPath;
 
+    /**
+     * The project on which driver applies
+     * @var Project
+     */
+    protected $project;
+
     public function __construct($adminPath) {
         $this->adminPath = $adminPath;
         $this->confFilePath = $adminPath.'/conf/gitolite.conf';
@@ -177,12 +183,13 @@ class Git_GitoliteDriver {
      *
      * @return string
      */
-    public function fetchPermissions($repo, $readers, $writers, $rewinders) {
+    public function fetchPermissions($project, $repo, $readers, $writers, $rewinders) {
+        $this->project = $project;
         $s = '';
         
-        array_walk($readers, array($this, 'parseUGroups'));
-        array_walk($writers, array($this, 'parseUGroups'));
-        array_walk($rewinders, array($this, 'parseUGroups'));
+        array_walk($readers, array($this, 'ugroupId2GitoliteFormat'));
+        array_walk($writers, array($this, 'ugroupId2GitoliteFormat'));
+        array_walk($rewinders, array($this, 'ugroupId2GitoliteFormat'));
         
         //Name of the repo
         $s .= 'repo '. $repo . PHP_EOL;
@@ -202,9 +209,33 @@ class Git_GitoliteDriver {
         $s .= PHP_EOL;
         return $s;
     }
+
+    /**
+     * Convert given ugroup id to a format managed by Git_GitoliteMembershipPgmTest
+     *
+     * @param String $ug UGroupId
+     */
+    protected function ugroupId2GitoliteFormat(&$ug) {
+        if ($ug > 100) {
+            $ug = '@ug_'. $ug;
+        } else {
+            switch ($ug) {
+                case $GLOBALS['UGROUP_REGISTERED']:
+                    $ug = '@site_active';
+                    break;
+                case $GLOBALS['UGROUP_PROJECT_MEMBERS'];
+                    $ug = '@'.$this->project->getUnixName().'_project_members';
+                    break;
+                case $GLOBALS['UGROUP_PROJECT_ADMIN']:
+                    $ug = '@'.$this->project->getUnixName().'_project_admin';
+                    break;
+            }
+            
+        }
+    }
     
-    protected function parseUGroups(&$ug) {
-        $ug = '@ug_'. $ug;
+    public function dumpProjectRepoConf() {
+        
     }
 }
 
