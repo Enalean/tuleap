@@ -221,6 +221,16 @@ Provides: codendi-plugin-webdav = %{version}
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
 
+%package plugin-requesthelp
+Summary: Insert Remedy tickets using Codex
+Group: Development/Tools
+Version: @@PLUGIN_REQUESTHELP_VERSION@@
+Release: 1%{?dist}
+Requires: %{name} >= %{version}, php-pecl-oci8 = 1.4.5
+Provides: codendi-plugin-requesthelp = %{version}
+%description plugin-requesthelp
+Plugin to insert Remedy tickets using Codex (used for ST only)
+
 #
 ## Themes
 #
@@ -690,6 +700,10 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/webdav
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/webdav
+
+%files plugin-requesthelp
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/requesthelp
 
 #
 # Themes

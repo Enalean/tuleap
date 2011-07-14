@@ -6,6 +6,10 @@
 //
 
 require_once('pre.php');
+
+$em = EventManager::instance();
+$em->processEvent('site_help', null);
+
 $title = $Language->getText('include_layout','Help');
 site_header(array('title' => $title));
 
