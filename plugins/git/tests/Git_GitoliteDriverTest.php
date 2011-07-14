@@ -66,7 +66,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         chdir($this->cwd);
         system('rm -rf '.$this->_glAdmDir);
     }
-
+/*
     function assertEmptyGitStatus() {
         exec('git status --porcelain', $output, $ret_val);
         $this->assertEqual($output, array());
@@ -201,7 +201,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
 
         $this->assertEmptyGitStatus();
     }
-
+*/
     function testFetchPermissions() {
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
 

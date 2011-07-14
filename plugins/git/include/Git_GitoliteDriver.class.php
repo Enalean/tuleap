@@ -201,16 +201,22 @@ class Git_GitoliteDriver {
         $s .= 'repo '. $this->project->getUnixName(). '/' . $repo . PHP_EOL;
         
         // Readers
-        $s .= ' R   = '. implode(' ', $readers);
-        $s .= PHP_EOL;
+        if (count($readers) > 0) {
+            $s .= ' R   = '. implode(' ', $readers);
+            $s .= PHP_EOL;
+        }
         
         // Writers
-        $s .= ' RW  = '. implode(' ', $writers);
-        $s .= PHP_EOL;
+        if (count($writers)) {
+            $s .= ' RW  = '. implode(' ', $writers);
+            $s .= PHP_EOL;
+        }
         
         // Rewinders
-        $s .= ' RW+ = '. implode(' ', $rewinders);
-        $s .= PHP_EOL;
+        if (count($rewinders)) {
+            $s .= ' RW+ = '. implode(' ', $rewinders);
+            $s .= PHP_EOL;
+        }
         
         $s .= PHP_EOL;
         return $s;
@@ -262,7 +268,11 @@ class Git_GitoliteDriver {
             $confFile = $this->getProjectPermissionConfFile($project);
             $written = file_put_contents($confFile, $perms);
             if ($written && strlen($perms) == $written) {
-                return true;
+                if ($this->gitAdd($confFile)) {
+                    if ($this->updateMainConfIncludes($project)) {
+                        return $this->gitCommit('Update: '.$project->getUnixName());
+                    }
+                }
             }
         }
     }
