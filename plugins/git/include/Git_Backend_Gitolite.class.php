@@ -48,9 +48,9 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @param GitRepository $repository
      */
     public function createReference($repository) {
-        $this->driver->init($repository->getProject(), $repository->getName());
-        $this->driver->push();
         $id = $this->getDao()->save($repository);
+        $this->driver->dumpProjectRepoConf($repository->getProject());
+        $this->driver->push();
     }
 
     /**

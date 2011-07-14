@@ -58,26 +58,6 @@ class Git_GitoliteDriver {
         chdir($this->oldCwd);
     }
 
-    public function init($project, $repoPath) {
-        $prjConfDir = $this->adminPath.'/conf/projects';
-        if (!is_dir($prjConfDir)) {
-            mkdir($prjConfDir);
-        }
-        $conf = PHP_EOL;
-        $conf .= 'repo '.$project->getUnixName().'/'.$repoPath.PHP_EOL;
-        $conf .= "\tRW = @".$project->getUnixName().'_project_members'.PHP_EOL;
-
-        $confFile = $prjConfDir.'/'.$project->getUnixName().'.conf';
-        if (file_put_contents($confFile, $conf, FILE_APPEND)) {
-            if ($this->gitAdd($confFile)) {
-                if ($this->updateMainConfIncludes($project)) {
-                    return $this->gitCommit('New repo: '.$project->getUnixName().'/'.$repoPath);
-                }
-            }
-        }
-        return false;
-    }
-
     public function updateMainConfIncludes($project) {
         if (is_file($this->confFilePath)) {
             $conf = file_get_contents($this->confFilePath);

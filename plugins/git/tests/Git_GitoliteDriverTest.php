@@ -66,75 +66,11 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         chdir($this->cwd);
         system('rm -rf '.$this->_glAdmDir);
     }
-/*
+
     function assertEmptyGitStatus() {
         exec('git status --porcelain', $output, $ret_val);
         $this->assertEqual($output, array());
         $this->assertEqual($ret_val, 0);
-    }
-
-    function testCreateRepository() {
-        $driver = new Git_GitoliteDriver($this->_fixDir.'/gitolite-admin');
-
-        $prj = new MockProject($this);
-        $prj->setReturnValue('getUnixName', 'project1');
-
-        $this->assertTrue($driver->init($prj, 'testrepo'));
-
-        $this->assertEmptyGitStatus();
-
-        // Check file content
-        $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf'));
-        $gitoliteConf = file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        // Check repository def
-        $repo1found = false;
-        for ($i = 0; $i < count($gitoliteConf); $i++) {
-            if ($gitoliteConf[$i] == 'repo project1/testrepo') {
-                $repo1found = true;
-                // Check default permissions
-                $this->assertEqual($gitoliteConf[++$i], "\tRW = @project1_project_members");
-            }
-        }
-        $this->assertTrue($repo1found);
-
-        // Check that corresponding project conf exists in main file conf
-        $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/gitolite.conf'));
-        $gitoliteConf = file_get_contents($this->_fixDir.'/gitolite-admin/conf/gitolite.conf');
-        $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
-    }
-
-    function testCreateTwoRepository() {
-        $driver = new Git_GitoliteDriver($this->_fixDir.'/gitolite-admin');
-
-        $prj = new MockProject($this);
-        $prj->setReturnValue('getUnixName', 'project1');
-
-        $this->assertTrue($driver->init($prj, 'testrepo'));
-
-        $this->assertTrue($driver->init($prj, 'totoz'));
-
-        $this->assertEmptyGitStatus();
-
-        // Check file content
-        $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf'));
-        $gitoliteConf = file($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        // Check repository def
-        $repo1found = false;
-        $repo2found = false;
-        for ($i = 0; $i < count($gitoliteConf); $i++) {
-            if ($gitoliteConf[$i] == 'repo project1/testrepo') {
-                $repo1found = true;
-                // Check default permissions
-                $this->assertEqual($gitoliteConf[++$i], "\tRW = @project1_project_members");
-            }
-            if ($gitoliteConf[$i] == 'repo project1/totoz') {
-                $repo2found = true;
-                // Check default permissions
-                $this->assertEqual($gitoliteConf[++$i], "\tRW = @project1_project_members");
-            }
-        }
-        $this->assertTrue($repo1found);
-        $this->assertTrue($repo2found);
     }
 
     function testGitoliteConfUpdate() {
@@ -201,7 +137,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
 
         $this->assertEmptyGitStatus();
     }
-*/
+
     function testFetchPermissions() {
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
 
@@ -305,10 +241,18 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $pm->setReturnValue('getAuthorizedUgroups', $this->arrayToDar(array('ugroup_id' => '125')), array(5, 'PLUGIN_GIT_WPLUS'));
         $driver->setReturnValue('getPermissionsManager', $pm);
 
-        
         $driver->dumpProjectRepoConf($prj);
-        
+
+        // Check every thing was commited
+        $this->assertEmptyGitStatus();
+
+        // Ensure file is correct
         $this->assertIdentical(file_get_contents($this->_glAdmDir.'/conf/projects/project1.conf'), file_get_contents($this->_fixDir .'/perms/project1-full.conf'));
+
+        // Check that corresponding project conf exists in main file conf
+        $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/gitolite.conf'));
+        $gitoliteConf = file_get_contents($this->_fixDir.'/gitolite-admin/conf/gitolite.conf');
+        $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
 }
 
