@@ -1,4 +1,7 @@
 Version 4.0.20 - Not released yet
+	== Bug fix ==
+	* Mass mail no longer mandate 'noreply' to be valid Tuleap user before to send mail.
+
 	== Plugins ==
 	New plugin "Request Help" to link Tuleap with BMC Remedy ticketing system (works only for STMicroeletronics).
 
