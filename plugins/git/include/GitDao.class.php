@@ -222,6 +222,16 @@ class GitDao extends DataAccessObject {
         }
         return $list;
     }
+    
+    public function getAllGitoliteRespositories($projectId) {
+        $projectId = $this->da->escapeInt($projectId);
+        $query = 'SELECT * FROM '.$this->getTable().
+                ' WHERE '.self::FK_PROJECT_ID.'='.$projectId.
+                '   AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
+                '   AND '.self::REPOSITORY_BACKEND_TYPE.'='.self::BACKEND_GITOLITE;
+        return $this->retrieve($query);
+    }
+    
     /**
      * This function initialize a GitRepository object with its database value
      * @param GitRepository $repository

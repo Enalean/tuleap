@@ -21,6 +21,8 @@
 
 require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
+require_once 'common/permission/PermissionsManager.class.php';
+require_once 'GitDao.class.php';
 
 class Git_GitoliteDriver {
     protected $oldCwd;
@@ -34,12 +36,16 @@ class Git_GitoliteDriver {
     protected $project;
 
     public function __construct($adminPath) {
+        $this->setAdminPath($adminPath);
+    }
+
+    public function setAdminPath($adminPath) {
         $this->adminPath = $adminPath;
         $this->confFilePath = $adminPath.'/conf/gitolite.conf';
         $this->oldCwd = getcwd();
         chdir($this->adminPath);
     }
-
+    
     public function masterExists($repoPath) {
         if (file_exists($repoPath.'/refs/heads/master')) {
             return true;
@@ -192,7 +198,7 @@ class Git_GitoliteDriver {
         array_walk($rewinders, array($this, 'ugroupId2GitoliteFormat'));
         
         //Name of the repo
-        $s .= 'repo '. $repo . PHP_EOL;
+        $s .= 'repo '. $this->project->getUnixName(). '/' . $repo . PHP_EOL;
         
         // Readers
         $s .= ' R   = '. implode(' ', $readers);
@@ -233,9 +239,70 @@ class Git_GitoliteDriver {
             
         }
     }
+
+    /**
+     * Save on filesystem all permission configuration for a project
+     *
+     * @param Project $project
+     */
+    public function dumpProjectRepoConf($project) {
+        $dar = $this->getDao()->getAllGitoliteRespositories($project->getId());
+        if ($dar && !$dar->isError()) {
+            // Get perms
+            $perms = '';
+            $pm    = $this->getPermissionsManager();
+            foreach ($dar as $row) {
+                $readers   = $this->getAuthorizedUgroupsId($row['repository_id'], Git::PERM_READ);
+                $writers   = $this->getAuthorizedUgroupsId($row['repository_id'], Git::PERM_WRITE);
+                $rewinders = $this->getAuthorizedUgroupsId($row['repository_id'], Git::PERM_WPLUS);
+                $perms    .= $this->fetchPermissions($project, $row[GitDao::REPOSITORY_NAME], $readers, $writers, $rewinders);
+            }
+
+            // Save into file
+            $confFile = $this->getProjectPermissionConfFile($project);
+            $written = file_put_contents($confFile, $perms);
+            if ($written && strlen($perms) == $written) {
+                return true;
+            }
+        }
+    }
+
+    protected function getAuthorizedUgroupsId($id, $perm) {
+        $ug  = array();
+        $pm  = $this->getPermissionsManager();
+        $dar = $pm->getAuthorizedUgroups($id, $perm);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $ug[] = $row['ugroup_id'];
+            }
+        }
+        return $ug;
+    }
     
-    public function dumpProjectRepoConf() {
-        
+    protected function getProjectPermissionConfFile($project) {
+        $prjConfDir = $this->adminPath.'/conf/projects';
+        if (!is_dir($prjConfDir)) {
+            mkdir($prjConfDir);
+        }
+        return $prjConfDir.'/'.$project->getUnixName().'.conf';
+    }
+    
+    /**
+     * Wrapper for PermissionsManager
+     *
+     * @return PermissionsManager
+     */
+    protected function getPermissionsManager() {
+        return PermissionsManager::instance();
+    }
+
+    /**
+     * Wrapper for GitDao
+     *
+     * @return GitDao
+     */
+    protected function getDao() {
+        return new GitDao();
     }
 }
 

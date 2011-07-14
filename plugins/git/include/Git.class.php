@@ -28,7 +28,10 @@ require_once('GitRepository.class.php');
  * @author Guillaume Storchi
  */
 class Git extends PluginController {
-    
+    const PERM_READ  = 'PLUGIN_GIT_READ';
+    const PERM_WRITE = 'PLUGIN_GIT_WRITE';
+    const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
+
     public function __construct(GitPlugin $plugin) {
         
         $matches = array();
