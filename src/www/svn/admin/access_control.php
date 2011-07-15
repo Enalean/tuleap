@@ -21,7 +21,10 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vAccessFile->setErrorMessage($Language->getText('svn_admin_access_control','upd_fail'));
     if($request->valid($vAccessFile)) {
         $saf = new SVNAccessFile();
-        $form_accessfile = $saf->validateUGroupLines($project, $request->get('form_accessfile'), true);
+        // For the moment we change nothing to user's configuration until
+        // [groups] section added by user is taken into consideration
+        //$form_accessfile = $saf->validateUGroupLines($project, $request->get('form_accessfile'), true);
+        $form_accessfile = $request->get('form_accessfile');
         //store the custom access file in db
         $sql = "UPDATE groups
                 SET svn_accessfile = '". db_es($form_accessfile) ."'

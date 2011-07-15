@@ -255,7 +255,10 @@ class BackendSVN extends Backend {
             $saf = new SVNAccessFile();
             while ($line = array_shift($svnaccess_array)) {
                 if ($configlines) {
-                    $custom_perms .= $saf->validateUGroupLine($project, $line, null, $ugroup_name, $ugroup_old_name);
+                    // For the moment we change nothing to user's configuration until
+                    // [groups] section added by user is taken into consideration
+                    // $custom_perms .= $saf->validateUGroupLine($project, $line, null, $ugroup_name, $ugroup_old_name);
+                    $custom_perms .= $line;
                 }
                 if (strcmp($line, $default_block_end) == 0) { 
                     $configlines=1;
