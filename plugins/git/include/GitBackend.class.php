@@ -306,8 +306,8 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     public function isNameAvailable($newName) {
         return ! $this->fileExists(self::GIT_ROOT_PATH.'/'.$newName);
     }
-    
-	/**
+
+    /**
      * Return URL to access the respository for remote git commands
      *
      * @param  GitRepository $repository
@@ -317,6 +317,29 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $serverName  = $_SERVER['SERVER_NAME'];
         $user = UserManager::instance()->getCurrentUser();
         return  $user->getUserName() .'@'. $serverName .':/gitroot/'. $repository->getProject()->getUnixName().'/'.$repository->getName().'.git';
+    }
+
+    /**
+     * Test is user can read the content of this repository and metadata
+     *
+     * @param User          $user       The user to test
+     * @param GitRepository $repository The repository to test
+     *
+     * @return Boolean
+     */
+    public function userCanRead($user, $repository) {
+        if ($repository->isPrivate() && $user->isMember($repository->getProjectId())) {
+            return true;
+        }
+        if ($repository->isPublic()) {
+            if ($user->isRestricted() && $user->isMember($repository->getProjectId())) {
+                return true;
+            }
+            if (!$user->isAnonymous()) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

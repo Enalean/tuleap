@@ -58,7 +58,7 @@ interface Git_Backend_Interface {
      * @return bool
      */
     public function isNameAvailable($newName);
-    
+
     /**
      * Save the repository
      *
@@ -67,5 +67,15 @@ interface Git_Backend_Interface {
      * @return bool
      */
     public function save($repository);
+
+    /**
+     * Test is user can read the content of this repository and metadata
+     *
+     * @param User          $user       The user to test
+     * @param GitRepository $repository The repository to test
+     *
+     * @return Boolean
+     */
+    public function userCanRead($user, $repository);
 }
 ?>

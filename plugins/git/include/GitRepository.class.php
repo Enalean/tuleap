@@ -574,6 +574,29 @@ class GitRepository implements DVCSRepository {
         }
         return $mailsToDelete;
     }
+
+    /**
+     * Test is user can read the content of this repository and metadata
+     *
+     * @param User $user The user to test
+     *
+     * @return Boolean
+     */
+    public function userCanRead($user) {
+        return $this->getBackend()->userCanRead($user, $this);
+    }
+
+
+    /**
+     * Test if user can modify repository configuration
+     *
+     * @param User $user The user to test
+     *
+     * @return Boolean
+     */
+    public function userCanAdmin($user) {
+        return $user->isMember($this->getProjectId(), 'A');
+    }
 }
 
 ?>

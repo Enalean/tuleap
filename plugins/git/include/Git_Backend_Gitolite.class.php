@@ -146,8 +146,22 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         }
         return $ok;
     }
-    
-    
+
+    /**
+     * Test is user can read the content of this repository and metadata
+     *
+     * @param User          $user       The user to test
+     * @param GitRepository $repository The repository to test
+     *
+     * @return Boolean
+     */
+    public function userCanRead($user, $repository) {
+        return $user->hasPermission(Git::PERM_READ, $repository->getId(), $repository->getProjectId())
+               || $user->hasPermission(Git::PERM_WRITE, $repository->getId(), $repository->getProjectId())
+               || $user->hasPermission(Git::PERM_WPLUS, $repository->getId(), $repository->getProjectId());
+        
+    }
+
     /**
      * Save the repository
      *

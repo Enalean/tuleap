@@ -636,6 +636,7 @@ class GitViews extends PluginViews {
     }
 
     protected function _makeRepositoryTree(&$flatTree, $currentId, $data) {
+        $user = UserManager::instance()->getCurrentUser();
         foreach ( $flatTree[$currentId] as $childId ) {
             $repoId   = $data[$childId][GitDao::REPOSITORY_ID];
             $repoName = $data[$childId][GitDao::REPOSITORY_NAME];
@@ -645,11 +646,16 @@ class GitViews extends PluginViews {
             $access   = $data[$childId][GitDao::REPOSITORY_ACCESS];
             //needs to be checked on filesystem (GitDao::getRepositoryList do not check)
             //TODO move this code to GitBackend and write a new getRepositoryList function ?
+            //TODO find a better way to do that to avoid the ton of SQL requests!
+            $r = new GitRepository();
+            $r->setId($repoId);
+            $r->load();
             if ( $isInit == 0 ) {
-                $r = new GitRepository();
-                $r->setId($repoId);
-                $r->load();
                 $isInit = $r->isInitialized();
+            }
+
+            if (!$r->userCanRead($user)) {
+                continue;
             }
             //we do not want to display deleted repository
             if ( $delDate != '0000-00-00 00:00:00' ) {

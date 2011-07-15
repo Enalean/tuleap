@@ -137,23 +137,23 @@ class Git extends PluginController {
             $repoId = 0;
         }
 
+        $user = UserManager::instance()->getCurrentUser();
+
         //public access
-        if ($repoId !== 0 && $this->nonMember ) {
+        if ($repoId !== 0) {
             $repo = new GitRepository();
             $repo->setId($repoId);
-            if ( $repo->exists() && $repo->isPublic() ) {
+            if ($repo->exists() && $repo->userCanRead($user)) {
                 $this->addPermittedAction('view');
             }
         } 
 
         //check permissions
-        if (  !empty($this->action) && !$this->isAPermittedAction($this->action) ) {
-            $this->addError( $this->getText('controller_action_permission_denied') );
+        if (!empty($this->action) && !$this->isAPermittedAction($this->action)) {
+            $this->addError($this->getText('controller_action_permission_denied'));
             $this->redirect('/plugins/git/?group_id='.$this->groupId);
             return;
         }
-
-        $user = UserManager::instance()->getCurrentUser();
 
         $this->_informAboutPendingEvents($repoId);
 
@@ -344,6 +344,34 @@ class Git extends PluginController {
             }
         }
     }
+    
+    /**
+     * This function is useful to control action execution in the controller, this kind of action is a logical view not a method of PluginAction class
+     * One should use this to filter the 'action' parameter in the HTTP request (add, clone, del, help etc...)
+     * @param String $actionName
+     * @return boolean
+     */
+    /*public function isAPermittedAction($actionName) {
+        switch ($actionName) {
+            array('index',
+        }
+                                            'view' ,
+                                            'edit',
+                                            'clone',
+                                            'add',
+                                            'del',
+                                            'create',
+                                            'confirm_deletion',
+                                            'save',
+                                            'repo_management',
+                                            'mail_prefix',
+                                            'add_mail',
+                                            'remove_mail',
+                                            'fork',
+                                            'set_private',
+                                            'confirm_private');
+        return in_array($actionName, $this->permittedActions);
+    }*/
 }
 
 ?>
