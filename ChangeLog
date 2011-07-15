@@ -1,6 +1,7 @@
 Version 4.0.19.2 - Wednesday, 15th July 2011
 	== Bug fix ==
-	Disable automatic management of ugroups in .SVNAccessFile because of regression with user defined groups.
+	* Disable automatic management of ugroups in .SVNAccessFile because of regression with user defined groups.
+	* Massmail no longer attempt to verify if 'noreply' is a valid Tuleap address.
 
 Version 4.0.19.1 - Tuesday, 28th June 2011
 	== Bug fix ==
