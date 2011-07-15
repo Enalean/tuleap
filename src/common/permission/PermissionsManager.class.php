@@ -56,6 +56,8 @@ class PermissionsManager {
     /**
     * Returns if one of the user's ugroups has permission to access the object
     * 
+    * WARNING: THIS METHOD DOESN'T TAKE 'DEFAULT' PERMISSIONS !
+    * 
     * @access public
     * 
     * @param  int     $object_id       The id of the object

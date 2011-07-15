@@ -1094,6 +1094,21 @@ class User {
      public function setLabFeatures($toggle) {
          $this->setPreference(self::PREF_NAME_LAB_FEATURE, $toggle ? 1 : 0);
      }
+      
+     /**
+      * Return true if user can do "$permissionType" on "$objectId"
+      *
+      * Note: this method is not useable in trackerV2 because it doesn't use "instances" parameter of getUgroups.
+      *
+      * @param String  $permissionType Permission nature
+      * @param String  $objectId       Object to test
+      * @param Integer $groupId        Project the object belongs to
+      *
+      * @return Boolean
+      */
+     public function hasPermission($permissionType, $objectId, $groupId) {
+         return permission_is_authorized($permissionType, $objectId, $this->getId(), $groupId);
+     }
 }
 
 ?>
