@@ -744,6 +744,24 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$this->hashPathsRead = true;
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadHashPathsGit();
+		} else {
+			$this->ReadHashPathsRaw($this->GetTree());
+		}
+
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+	}
+
+	/**
+	 * ReadHashPathsGit
+	 *
+	 * Reads hash to path mappings using git exe
+	 *
+	 * @access private
+	 */
+	private function ReadHashPathsGit()
+	{
 		$exe = new GitPHP_GitExe($this->GetProject());
 
 		$args = array();
@@ -766,8 +784,35 @@ class GitPHP_Commit extends GitPHP_GitObject
 				}
 			}
 		}
+	}
 
-		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+	/**
+	 * ReadHashPathsRaw
+	 *
+	 * Reads hash to path mappings using raw objects
+	 *
+	 * @access private
+	 */
+	private function ReadHashPathsRaw($tree)
+	{
+		if (!$tree) {
+			return;
+		}
+
+		$contents = $tree->GetContents();
+
+		foreach ($contents as $obj) {
+			if ($obj instanceof GitPHP_Blob) {
+				$hash = $obj->GetHash();
+				$path = $obj->GetPath();
+				$this->blobPaths[trim($path)] = $hash;
+			} else if ($obj instanceof GitPHP_Tree) {
+				$hash = $obj->GetHash();
+				$path = $obj->GetPath();
+				$this->treePaths[trim($path)] = $hash;
+				$this->ReadHashPathsRaw($obj);
+			}
+		}
 	}
 
 	/**
