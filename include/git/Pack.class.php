@@ -46,6 +46,24 @@ class GitPHP_Pack
 	protected $hash;
 
 	/**
+	 * offsetCache
+	 *
+	 * Caches object offsets
+	 *
+	 * @access protected
+	 */
+	protected $offsetCache = array();
+
+	/**
+	 * indexModified
+	 *
+	 * Stores the index file last modified time
+	 *
+	 * @access protected
+	 */
+	protected $indexModified = 0;
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -118,9 +136,20 @@ class GitPHP_Pack
 			return false;
 		}
 
+		$indexFile = $this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
+		$mTime = filemtime($indexFile);
+		if ($mTime > $this->indexModified) {
+			$this->offsetCache = array();
+			$this->indexModified = $mTime;
+		}
+
+		if (isset($this->offsetCache[$hash])) {
+			return $this->offsetCache[$hash];
+		}
+
 		$offset = false;
 
-		$index = fopen($this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx', 'rb');
+		$index = fopen($indexFile, 'rb');
 		flock($index, LOCK_SH);
 
 		$magic = fread($index, 4);
@@ -134,6 +163,7 @@ class GitPHP_Pack
 		}
 		flock($index, LOCK_UN);
 		fclose($index);
+		$this->offsetCache[$hash] = $offset;
 		return $offset;
 	}
 
@@ -178,6 +208,8 @@ class GitPHP_Pack
 			$off = GitPHP_Pack::fuint32($index);
 			$binName = fread($index, 20);
 			$name = bin2hex($binName);
+
+			$this->offsetCache[$name] = $off;
 
 			$cmp = strcmp($hash, $name);
 			
