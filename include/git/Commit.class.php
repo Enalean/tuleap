@@ -559,8 +559,10 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		}
 
+		$header = true;
+
 		foreach ($lines as $i => $line) {
-			if (preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
+			if ($header && preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Tree */
 				try {
 					$tree = $this->GetProject()->GetTree($regs[1]);
@@ -570,24 +572,25 @@ class GitPHP_Commit extends GitPHP_GitObject
 					}
 				} catch (Exception $e) {
 				}
-			} else if (preg_match('/^parent ([0-9a-fA-F]{40})$/', $line, $regs)) {
+			} else if ($header && preg_match('/^parent ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Parent */
 				try {
 					$this->parents[] = $this->GetProject()->GetCommit($regs[1]);
 				} catch (Exception $e) {
 				}
-			} else if (preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
+			} else if ($header && preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
 				/* author data */
 				$this->author = $regs[1];
 				$this->authorEpoch = $regs[2];
 				$this->authorTimezone = $regs[3];
-			} else if (preg_match('/^committer (.*) ([0-9]+) (.*)$/', $line, $regs)) {
+			} else if ($header && preg_match('/^committer (.*) ([0-9]+) (.*)$/', $line, $regs)) {
 				/* committer data */
 				$this->committer = $regs[1];
 				$this->committerEpoch = $regs[2];
 				$this->committerTimezone = $regs[3];
 			} else {
 				/* commit comment */
+				$header = false;
 				$trimmed = trim($line);
 				if (empty($this->title) && (strlen($trimmed) > 0))
 					$this->title = $trimmed;
