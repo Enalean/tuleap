@@ -398,15 +398,12 @@ class GitPHP_Project
 	 */
 	public function GetSlug()
 	{
-		$from = array(
-			'/',
-			'.git'
-		);
-		$to = array(
-			'-',
-			''
-		);
-		return str_replace($from, $to, $this->project);
+		$project = $this->project;
+
+		if (substr($project, -4) == '.git')
+			$project = substr($project, 0, -4);
+		
+		return GitPHP_Util::MakeSlug($project);
 	}
 
 	/**
