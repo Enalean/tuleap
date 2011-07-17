@@ -226,6 +226,10 @@ class GitPHP_Archive
 
 		$fname = $this->GetProject()->GetSlug();
 
+		if (!empty($this->path)) {
+			$fname .= '-' . GitPHP_Util::MakeSlug($this->path);
+		}
+
 		$fname .= '.' . $this->GetExtension();
 
 		return $fname;
@@ -284,7 +288,12 @@ class GitPHP_Archive
 			return $this->prefix;
 		}
 
-		return $this->GetProject()->GetSlug() . '/';
+		$pfx = $this->GetProject()->GetSlug() . '/';
+
+		if (!empty($this->path))
+			$pfx .= $this->path . '/';
+
+		return $pfx;
 	}
 
 	/**
