@@ -170,6 +170,14 @@ class GitPHP_Tag extends GitPHP_Ref
 				$this->DereferenceCommit();
 		}
 
+		if (!$this->commit) {
+			if ($this->object instanceof GitPHP_Commit) {
+				$this->commit = $this->object;
+			} else if ($this->object instanceof GitPHP_Tag) {
+				$this->commit = $this->object->GetCommit();
+			}
+		}
+
 		return $this->commit;
 	}
 
@@ -322,6 +330,24 @@ class GitPHP_Tag extends GitPHP_Ref
 	{
 		$this->dataRead = true;
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadDataGit();
+		} else {
+			$this->ReadDataRaw();
+		}
+
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+	}
+
+	/**
+	 * ReadDataGit
+	 *
+	 * Reads the tag data using the git executable
+	 *
+	 * @access private
+	 */
+	private function ReadDataGit()
+	{
 		$exe = new GitPHP_GitExe($this->GetProject());
 		$args = array();
 		$args[] = '-t';
@@ -406,8 +432,84 @@ class GitPHP_Tag extends GitPHP_Ref
 				}
 				break;
 		}
+	}
 
-		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+	/**
+	 * ReadDataRaw
+	 *
+	 * Reads the tag data using the raw git object
+	 *
+	 * @access private
+	 */
+	private function ReadDataRaw()
+	{
+		$data = $this->GetProject()->GetObject($this->GetHash(), $type);
+		
+		if ($type == GitPHP_Pack::OBJ_COMMIT) {
+			/* light tag */
+			$this->object = $this->GetProject()->GetCommit($this->GetHash());
+			$this->commit = $this->object;
+			$this->type = 'commit';
+			GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+			return;
+		}
+
+		$lines = explode("\n", $data);
+
+		if (!isset($lines[0]))
+			return;
+
+		$objectHash = null;
+
+		$readInitialData = false;
+		foreach ($lines as $i => $line) {
+			if (!$readInitialData) {
+				if (preg_match('/^object ([0-9a-fA-F]{40})$/', $line, $regs)) {
+					$objectHash = $regs[1];
+					continue;
+				} else if (preg_match('/^type (.+)$/', $line, $regs)) {
+					$this->type = $regs[1];
+					continue;
+				} else if (preg_match('/^tag (.+)$/', $line, $regs)) {
+					continue;
+				} else if (preg_match('/^tagger (.*) ([0-9]+) (.*)$/', $line, $regs)) {
+					$this->tagger = $regs[1];
+					$this->taggerEpoch = $regs[2];
+					$this->taggerTimezone = $regs[3];
+					continue;
+				}
+			}
+
+			$trimmed = trim($line);
+
+			if ((strlen($trimmed) > 0) || ($readInitialData === true)) {
+				$this->comment[] = $line;
+			}
+			$readInitialData = true;
+		}
+
+		switch ($this->type) {
+			case 'commit':
+				try {
+					$this->object = $this->GetProject()->GetCommit($objectHash);
+					$this->commit = $this->object;
+				} catch (Exception $e) {
+				}
+				break;
+			case 'tag':
+				$objectData = $this->GetProject()->GetObject($objectHash);
+				$lines = explode("\n", $objectData);
+				foreach ($lines as $i => $line) {
+					if (preg_match('/^tag (.+)$/', $line, $regs)) {
+						$name = trim($regs[1]);
+						$this->object = $this->GetProject()->GetTag($name);
+						if ($this->object) {
+							$this->object->SetHash($objectHash);
+						}
+					}
+				}
+				break;
+		}
 	}
 
 	/**
@@ -580,6 +682,25 @@ class GitPHP_Tag extends GitPHP_Ref
 		return $key;
 	}
 
+	/**
+	 * GetCreationEpoch
+	 *
+	 * Gets tag's creation epoch
+	 * (tagger epoch, or committer epoch for light tags)
+	 *
+	 * @access public
+	 * @return string creation epoch
+	 */
+	public function GetCreationEpoch()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		if ($this->LightTag())
+			return $this->GetCommit()->GetCommitterEpoch();
+		else
+			return $this->taggerEpoch;
+	}
 
 	/**
 	 * CompareAge
@@ -597,9 +718,7 @@ class GitPHP_Tag extends GitPHP_Ref
 		$aObj = $a->GetObject();
 		$bObj = $b->GetObject();
 		if (($aObj instanceof GitPHP_Commit) && ($bObj instanceof GitPHP_Commit)) {
-			if ($aObj->GetAge() === $bObj->GetAge())
-				return 0;
-			return ($aObj->GetAge() < $bObj->GetAge() ? -1 : 1);
+			return GitPHP_Commit::CompareAge($aObj, $bObj);
 		}
 
 		if ($aObj instanceof GitPHP_Commit)
@@ -609,6 +728,29 @@ class GitPHP_Tag extends GitPHP_Ref
 			return -1;
 
 		return strcmp($a->GetName(), $b->GetName());
+	}
+
+	/**
+	 * CompareCreationEpoch
+	 *
+	 * Compares to tags by creation epoch
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first tag
+	 * @param mixed $b second tag
+	 * @return integer comparison result
+	 */
+	public static function CompareCreationEpoch($a, $b)
+	{
+		$aEpoch = $a->GetCreationEpoch();
+		$bEpoch = $b->GetCreationEpoch();
+
+		if ($aEpoch == $bEpoch) {
+			return 0;
+		}
+
+		return ($aEpoch < $bEpoch ? 1 : -1);
 	}
 
 }

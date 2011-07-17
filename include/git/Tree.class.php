@@ -114,6 +114,24 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 	{
 		$this->contentsRead = true;
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadContentsGit();
+		} else {
+			$this->ReadContentsRaw();
+		}
+
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+	}
+
+	/**
+	 * ReadContentsGit
+	 *
+	 * Reads the tree contents using the git executable
+	 *
+	 * @access private
+	 */
+	private function ReadContentsGit()
+	{
 		$exe = new GitPHP_GitExe($this->GetProject());
 
 		$args = array();
@@ -157,7 +175,58 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			}
 		}
 
-		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+	}
+
+	/**
+	 * ReadContentsRaw
+	 *
+	 * Reads the tree contents using the raw git object
+	 *
+	 * @access private
+	 */
+	private function ReadContentsRaw()
+	{
+		$treeData = $this->GetProject()->GetObject($this->hash);
+
+		$start = 0;
+		$len = strlen($treeData);
+		while ($start < $len) {
+			$pos = strpos($treeData, "\0", $start);
+
+			list($mode, $path) = explode(' ', substr($treeData, $start, $pos-$start), 2);
+			$mode = str_pad($mode, 6, '0', STR_PAD_LEFT);
+			$hash = bin2hex(substr($treeData, $pos+1, 20));
+			$start = $pos + 21;
+
+			$octmode = octdec($mode);
+
+			if ($octmode == 57344) {
+				// submodules not currently supported
+				continue;
+			}
+
+			if (!empty($this->path))
+				$path = $this->path . '/' . $path;
+
+			$obj = null;
+			if ($octmode & 0x4000) {
+				// tree
+				$obj = $this->GetProject()->GetTree($hash);
+			} else {
+				// blob
+				$obj = $this->GetProject()->GetBlob($hash);
+			}
+
+			if (!$obj) {
+				continue;
+			}
+
+			$obj->SetMode($mode);
+			$obj->SetPath($path);
+			if ($this->commit)
+				$obj->SetCommit($this->commit);
+			$this->contents[] = $obj;
+		}
 	}
 
 	/**

@@ -539,38 +539,46 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$this->dataRead = true;
 
-		/* get data from git_rev_list */
-		$exe = new GitPHP_GitExe($this->GetProject());
-		$args = array();
-		$args[] = '--header';
-		$args[] = '--parents';
-		$args[] = '--max-count=1';
-		$args[] = $this->hash;
-		$ret = $exe->Execute(GIT_REV_LIST, $args);
-		unset($exe);
+		$lines = null;
 
-		$lines = explode("\n", $ret);
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
 
-		if (!isset($lines[0]))
-			return;
+			/* get data from git_rev_list */
+			$exe = new GitPHP_GitExe($this->GetProject());
+			$args = array();
+			$args[] = '--header';
+			$args[] = '--parents';
+			$args[] = '--max-count=1';
+			$args[] = $this->hash;
+			$ret = $exe->Execute(GIT_REV_LIST, $args);
+			unset($exe);
 
-		/* In case we returned something unexpected */
-		$tok = strtok($lines[0], ' ');
-		if ($tok != $this->hash)
-			return;
+			$lines = explode("\n", $ret);
 
-		/* Read all parents */
-		$tok = strtok(' ');
-		while ($tok !== false) {
-			try {
-				$this->parents[] = $this->GetProject()->GetCommit($tok);
-			} catch (Exception $e) {
-			}
-			$tok = strtok(' ');
+			if (!isset($lines[0]))
+				return;
+
+			/* In case we returned something unexpected */
+			$tok = strtok($lines[0], ' ');
+			if ($tok != $this->hash)
+				return;
+
+			array_shift($lines);
+
+		} else {
+			
+			$data = $this->GetProject()->GetObject($this->hash);
+			if (empty($data))
+				return;
+
+			$lines = explode("\n", $data);
+
 		}
 
+		$header = true;
+
 		foreach ($lines as $i => $line) {
-			if (preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
+			if ($header && preg_match('/^tree ([0-9a-fA-F]{40})$/', $line, $regs)) {
 				/* Tree */
 				try {
 					$tree = $this->GetProject()->GetTree($regs[1]);
@@ -580,26 +588,31 @@ class GitPHP_Commit extends GitPHP_GitObject
 					}
 				} catch (Exception $e) {
 				}
-			} else if (preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
+			} else if ($header && preg_match('/^parent ([0-9a-fA-F]{40})$/', $line, $regs)) {
+				/* Parent */
+				try {
+					$this->parents[] = $this->GetProject()->GetCommit($regs[1]);
+				} catch (Exception $e) {
+				}
+			} else if ($header && preg_match('/^author (.*) ([0-9]+) (.*)$/', $line, $regs)) {
 				/* author data */
 				$this->author = $regs[1];
 				$this->authorEpoch = $regs[2];
 				$this->authorTimezone = $regs[3];
-			} else if (preg_match('/^committer (.*) ([0-9]+) (.*)$/', $line, $regs)) {
+			} else if ($header && preg_match('/^committer (.*) ([0-9]+) (.*)$/', $line, $regs)) {
 				/* committer data */
 				$this->committer = $regs[1];
 				$this->committerEpoch = $regs[2];
 				$this->committerTimezone = $regs[3];
 			} else {
 				/* commit comment */
-				if (!(preg_match('/^[0-9a-fA-F]{40}/', $line) || preg_match('/^parent [0-9a-fA-F]{40}/', $line))) {
-					$trimmed = trim($line);
-					if (empty($this->title) && (strlen($trimmed) > 0))
-						$this->title = $trimmed;
-					if (!empty($this->title)) {
-						if ((strlen($trimmed) > 0) || ($i < (count($lines)-1)))
-							$this->comment[] = $trimmed;
-					}
+				$header = false;
+				$trimmed = trim($line);
+				if (empty($this->title) && (strlen($trimmed) > 0))
+					$this->title = $trimmed;
+				if (!empty($this->title)) {
+					if ((strlen($trimmed) > 0) || ($i < (count($lines)-1)))
+						$this->comment[] = $trimmed;
 				}
 			}
 		}
@@ -750,6 +763,24 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$this->hashPathsRead = true;
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadHashPathsGit();
+		} else {
+			$this->ReadHashPathsRaw($this->GetTree());
+		}
+
+		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+	}
+
+	/**
+	 * ReadHashPathsGit
+	 *
+	 * Reads hash to path mappings using git exe
+	 *
+	 * @access private
+	 */
+	private function ReadHashPathsGit()
+	{
 		$exe = new GitPHP_GitExe($this->GetProject());
 
 		$args = array();
@@ -772,8 +803,35 @@ class GitPHP_Commit extends GitPHP_GitObject
 				}
 			}
 		}
+	}
 
-		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+	/**
+	 * ReadHashPathsRaw
+	 *
+	 * Reads hash to path mappings using raw objects
+	 *
+	 * @access private
+	 */
+	private function ReadHashPathsRaw($tree)
+	{
+		if (!$tree) {
+			return;
+		}
+
+		$contents = $tree->GetContents();
+
+		foreach ($contents as $obj) {
+			if ($obj instanceof GitPHP_Blob) {
+				$hash = $obj->GetHash();
+				$path = $obj->GetPath();
+				$this->blobPaths[trim($path)] = $hash;
+			} else if ($obj instanceof GitPHP_Tree) {
+				$hash = $obj->GetHash();
+				$path = $obj->GetPath();
+				$this->treePaths[trim($path)] = $hash;
+				$this->ReadHashPathsRaw($obj);
+			}
+		}
 	}
 
 	/**
@@ -1018,6 +1076,24 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$key .= 'commit|' . $this->hash;
 
 		return $key;
+	}
+
+	/**
+	 * CompareAge
+	 *
+	 * Compares two commits by age
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first commit
+	 * @param mixed $b second commit
+	 * @return integer comparison result
+	 */
+	public static function CompareAge($a, $b)
+	{
+		if ($a->GetAge() === $b->GetAge())
+			return 0;
+		return ($a->GetAge() < $b->GetAge() ? -1 : 1);
 	}
 
 }

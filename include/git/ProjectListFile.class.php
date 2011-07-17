@@ -63,7 +63,7 @@ class GitPHP_ProjectListFile extends GitPHP_ProjectListBase
 			if (preg_match('/^([^\s]+)(\s.+)?$/', $line, $regs)) {
 				if (is_file($projectRoot . $regs[1] . '/HEAD')) {
 					try {
-						$projObj = new GitPHP_Project($regs[1]);
+						$projObj = new GitPHP_Project($projectRoot, $regs[1]);
 						if (isset($regs[2]) && !empty($regs[2])) {
 							$projOwner = trim($regs[2]);
 							if (!empty($projOwner)) {

@@ -140,6 +140,31 @@ $gitphp_conf['javascript'] = true;
  */
 
 /*
+ * compat
+ * Set this to true to turn on compatibility mode.  This will cause
+ * GitPHP to rely more on the git executable for loading data,
+ * which will bypass some of the limitations of PHP at the expense
+ * of performance.
+ * Turn this on if you are experiencing issues viewing data for
+ * your projects.
+ */
+$gitphp_conf['compat'] = false;
+
+/**
+ * largeskip
+ * When GitPHP is reading through the history for pages of the shortlog/log
+ * beyond the first, it needs to read from the tip but skip a number of commits
+ * for the previous pages.  The more commits it needs to skip, the longer it takes.
+ * Calling the git executable is faster when skipping a large number of commits,
+ * ie reading a log page significantly beyond the first.  This determines
+ * the threshold at which GitPHP will fall back to using the git exe for the log.
+ * Currently each log page shows 100 commits, so this would be calculated at
+ * page number * 100.  So for example at the default of 200, pages 0-2 would be
+ * loaded natively and pages 3+ would fall back on the git exe.
+ */
+$gitphp_conf['largeskip'] = 200;
+
+/*
  * compressformat
  * Indicates what kind of compression will be done on the
  * snapshot archive.  Recognized settings are:

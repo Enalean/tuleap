@@ -656,9 +656,8 @@ class GitPHP_FileDiff
 
 		$exe = new GitPHP_GitExe($this->project);
 
-		$rawBlob = $exe->Execute(GIT_CAT_FILE,
-			array("blob", $this->fromHash));
-		$blob  = explode("\n", $rawBlob);
+		$fromBlob = $this->GetFromBlob();
+		$blob = $fromBlob->GetData(true);
 
 		$diffLines = explode("\n", $exe->Execute(GIT_DIFF,
 			array("-U0", $this->fromHash,

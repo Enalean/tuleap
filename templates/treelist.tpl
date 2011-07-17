@@ -34,7 +34,7 @@
       <td class="link">
         <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tree&amp;h={$treeitem->GetHash()}&amp;hb={$commit->GetHash()}&amp;f={$treeitem->GetPath()}">{t}tree{/t}</a>
 	 | 
-	<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=snapshot&amp;h={$commit->GetHash()}&amp;f={$treeitem->GetPath()}" class="snapshotTip">{t}snapshot{/t}</a>
+	<a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=snapshot&amp;h={$treeitem->GetHash()}&amp;f={$treeitem->GetPath()}" class="snapshotTip">{t}snapshot{/t}</a>
       </td>
     {/if}
   </tr>

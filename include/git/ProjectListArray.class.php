@@ -52,21 +52,23 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
+		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
+
 		foreach ($this->projectConfig as $proj => $projData) {
 			try {
 				if (is_string($projData)) {
 					// Just flat array of project paths
-					$projObj = new GitPHP_Project($projData);
+					$projObj = new GitPHP_Project($projectRoot, $projData);
 					$this->projects[$projData] = $projObj;
 				} else if (is_array($projData)) {
 					if (is_string($proj) && !empty($proj)) {
 						// Project key pointing to data array
-						$projObj = new GitPHP_Project($proj);
+						$projObj = new GitPHP_Project($projectRoot, $proj);
 						$this->projects[$proj] = $projObj;
 						$this->ApplyProjectSettings($proj, $projData);
 					} else if (isset($projData['project'])) {
 						// List of data arrays with projects inside
-						$projObj = new GitPHP_Project($projData['project']);
+						$projObj = new GitPHP_Project($projectRoot, $projData['project']);
 						$this->projects[$projData['project']] = $projObj;
 						$this->ApplyProjectSettings(null, $projData);
 					}

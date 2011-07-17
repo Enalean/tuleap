@@ -14,6 +14,7 @@ require_once(GITPHP_GITOBJECTDIR . 'GitExe.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
 
 /**
  * Project class
@@ -23,6 +24,15 @@ require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
  */
 class GitPHP_Project
 {
+
+	/**
+	 * projectRoot
+	 *
+	 * Stores the project root internally
+	 *
+	 * @access protected
+	 */
+	protected $projectRoot;
 
 	/**
 	 * project
@@ -43,13 +53,13 @@ class GitPHP_Project
 	protected $owner = "";
 
 	/**
-	 * readOwner
+	 * ownerRead
 	 *
 	 * Stores whether the file owner has been read
 	 *
 	 * @access protected
 	 */
-	protected $readOwner = false;
+	protected $ownerRead = false;
 
 	/**
 	 * description
@@ -189,15 +199,36 @@ class GitPHP_Project
 	protected $commitCache = array();
 
 	/**
+	 * packs
+	 *
+	 * Stores the list of packs
+	 *
+	 * @access protected
+	 */
+	protected $packs = array();
+
+	/**
+	 * packsRead
+	 *
+	 * Stores whether packs have been read
+	 *
+	 * @access protected
+	 */
+	protected $packsRead = false;
+
+	/**
 	 * __construct
 	 *
 	 * Class constructor
 	 *
 	 * @access public
+	 * @param string $projectRoot project root
+	 * @param string $project project
 	 * @throws Exception if project is invalid or outside of projectroot
 	 */
-	public function __construct($project)
+	public function __construct($projectRoot, $project)
 	{
+		$this->projectRoot = GitPHP_Util::AddSlash($projectRoot);
 		$this->SetProject($project);
 	}
 
@@ -211,10 +242,8 @@ class GitPHP_Project
 	 */
 	private function SetProject($project)
 	{
-		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
-
-		$realProjectRoot = realpath($projectRoot);
-		$path = $projectRoot . $project;
+		$realProjectRoot = realpath($this->projectRoot);
+		$path = $this->projectRoot . $project;
 		$fullPath = realpath($path);
 
 		if (!is_dir($fullPath)) {
@@ -249,30 +278,98 @@ class GitPHP_Project
 	 */
 	public function GetOwner()
 	{
-		if (empty($this->owner) && !$this->readOwner) {
-
-			$exe = new GitPHP_GitExe($this);
-			$args = array();
-			$args[] = 'gitweb.owner';
-			$this->owner = $exe->Execute(GIT_CONFIG, $args);
-			unset($exe);
-			
-			if (empty($this->owner) && function_exists('posix_getpwuid')) {
-				$uid = fileowner($this->GetPath());
-				if ($uid !== false) {
-					$data = posix_getpwuid($uid);
-					if (isset($data['gecos']) && !empty($data['gecos'])) {
-						$this->owner = $data['gecos'];
-					} elseif (isset($data['name']) && !empty($data['name'])) {
-						$this->owner = $data['name'];
-					}
-				}
-			}
-
-			$this->readOwner = true;
+		if (empty($this->owner) && !$this->ownerRead) {
+			$this->ReadOwner();
 		}
 	
 		return $this->owner;
+	}
+
+	/**
+	 * ReadOwner
+	 *
+	 * Reads the project owner
+	 *
+	 * @access protected
+	 */
+	protected function ReadOwner()
+	{
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadOwnerGit();
+		} else {
+			$this->ReadOwnerRaw();
+		}
+
+		if (empty($this->owner) && function_exists('posix_getpwuid')) {
+			$uid = fileowner($this->GetPath());
+			if ($uid !== false) {
+				$data = posix_getpwuid($uid);
+				if (isset($data['gecos']) && !empty($data['gecos'])) {
+					$this->owner = $data['gecos'];
+				} elseif (isset($data['name']) && !empty($data['name'])) {
+					$this->owner = $data['name'];
+				}
+			}
+		}
+
+		$this->ownerRead = true;
+	}
+
+	/**
+	 * ReadOwnerGit
+	 *
+	 * Reads the project owner using the git executable
+	 *
+	 * @access private
+	 */
+	private function ReadOwnerGit()
+	{
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = 'gitweb.owner';
+		$this->owner = $exe->Execute(GIT_CONFIG, $args);
+		unset($exe);
+	}
+
+	/**
+	 * ReadOwnerRaw
+	 *
+	 * Reads the project owner using the raw config file
+	 *
+	 * @access private
+	 */
+	private function ReadOwnerRaw()
+	{
+		// not worth writing a full config parser right now
+
+		if (!file_exists($this->GetPath() . '/config'))
+			return;
+
+		$configData = explode("\n", file_get_contents($this->GetPath() . '/config'));
+
+		$gitwebSection = false;
+		foreach ($configData as $configLine) {
+			$trimmed = trim($configLine);
+			if (empty($trimmed)) {
+				continue;
+			}
+
+			if (preg_match('/^\[(.+)\]$/', $trimmed, $regs)) {
+				// section header
+				$gitwebSection = ($regs[1] == 'gitweb');
+			} else if ($gitwebSection) {
+				$eq = strpos($trimmed, '=');
+				if ($eq === false) {
+					continue;
+				}
+
+				$key = trim(substr($trimmed, 0, $eq));
+				if ($key == 'owner') {
+					$this->owner = trim(substr($trimmed, $eq+1));
+					break;
+				}
+			}
+		}
 	}
 
 	/**
@@ -302,6 +399,19 @@ class GitPHP_Project
 	}
 
 	/**
+	 * GetProjectRoot
+	 *
+	 * Gets the project root
+	 *
+	 * @access public
+	 * @return string the project root
+	 */
+	public function GetProjectRoot()
+	{
+		return $this->projectRoot;
+	}
+
+	/**
 	 * GetSlug
 	 *
 	 * Gets the project as a filename/url friendly slug
@@ -311,15 +421,12 @@ class GitPHP_Project
 	 */
 	public function GetSlug()
 	{
-		$from = array(
-			'/',
-			'.git'
-		);
-		$to = array(
-			'-',
-			''
-		);
-		return str_replace($from, $to, $this->project);
+		$project = $this->project;
+
+		if (substr($project, -4) == '.git')
+			$project = substr($project, 0, -4);
+		
+		return GitPHP_Util::MakeSlug($project);
 	}
 
 	/**
@@ -332,9 +439,7 @@ class GitPHP_Project
 	 */
 	public function GetPath()
 	{
-		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
-
-		return $projectRoot . $this->project;
+		return $this->projectRoot . $this->project;
 	}
 
 	/**
@@ -564,11 +669,51 @@ class GitPHP_Project
 	{
 		$this->readHeadRef = true;
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadHeadCommitGit();
+		} else {
+			$this->ReadHeadCommitRaw();
+		}
+	}
+
+	/**
+	 * ReadHeadCommitGit
+	 *
+	 * Read head commit using git executable
+	 *
+	 * @access private
+	 */
+	private function ReadHeadCommitGit()
+	{
 		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--verify';
 		$args[] = 'HEAD';
 		$this->head = trim($exe->Execute(GIT_REV_PARSE, $args));
+	}
+
+	/**
+	 * ReadHeadCommitRaw
+	 *
+	 * Read head commit using raw git head pointer
+	 *
+	 * @access private
+	 */
+	private function ReadHeadCommitRaw()
+	{
+		$head = trim(file_get_contents($this->GetPath() . '/HEAD'));
+		if (preg_match('/^([0-9A-Fa-f]{40})$/', $head, $regs)) {
+			/* Detached HEAD */
+			$this->head = $regs[1];
+		} else if (preg_match('/^ref: (.+)$/', $head, $regs)) {
+			/* standard pointer to head */
+			if (!$this->readRefs)
+				$this->ReadRefList();
+
+			if (isset($this->heads[$regs[1]])) {
+				$this->head = $this->heads[$regs[1]]->GetHash();
+			}
+		}
 	}
 
 	/**
@@ -741,10 +886,26 @@ class GitPHP_Project
 	 *
 	 * @access protected
 	 */
-	public function ReadRefList()
+	protected function ReadRefList()
 	{
 		$this->readRefs = true;
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadRefListGit();
+		} else {
+			$this->ReadRefListRaw();
+		}
+	}
+
+	/**
+	 * ReadRefListGit
+	 *
+	 * Reads the list of refs for this project using the git executable
+	 *
+	 * @access private
+	 */
+	private function ReadRefListGit()
+	{
 		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--heads';
@@ -779,6 +940,117 @@ class GitPHP_Project
 	}
 
 	/**
+	 * ReadRefListRaw
+	 *
+	 * Reads the list of refs for this project using the raw git files
+	 *
+	 * @access private
+	 */
+	private function ReadRefListRaw()
+	{
+		$pathlen = strlen($this->GetPath()) + 1;
+
+		// read loose heads
+		$heads = $this->ListDir($this->GetPath() . '/refs/heads');
+		for ($i = 0; $i < count($heads); $i++) {
+			$key = trim(substr($heads[$i], $pathlen), "/\\");
+
+			if (isset($this->heads[$key])) {
+				continue;
+			}
+
+			$hash = trim(file_get_contents($heads[$i]));
+			if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+				$head = substr($key, strlen('refs/heads/'));
+				$this->heads[$key] = new GitPHP_Head($this, $head, $hash);
+			}
+		}
+
+		// read loose tags
+		$tags = $this->ListDir($this->GetPath() . '/refs/tags');
+		for ($i = 0; $i < count($tags); $i++) {
+			$key = trim(substr($tags[$i], $pathlen), "/\\");
+
+			if (isset($this->tags[$key])) {
+				continue;
+			}
+
+			$hash = trim(file_get_contents($tags[$i]));
+			if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+				$tag = substr($key, strlen('refs/tags/'));
+				$this->tags[$key] = $this->LoadTag($tag, $hash);
+			}
+		}
+
+		// check packed refs
+		if (file_exists($this->GetPath() . '/packed-refs')) {
+			$packedRefs = explode("\n", file_get_contents($this->GetPath() . '/packed-refs'));
+
+			$lastRef = null;
+			foreach ($packedRefs as $ref) {
+
+				if (preg_match('/^\^([0-9A-Fa-f]{40})$/', $ref, $regs)) {
+					// dereference of previous ref
+					if (($lastRef != null) && ($lastRef instanceof GitPHP_Tag)) {
+						$derefCommit = $this->GetCommit($regs[1]);
+						if ($derefCommit) {
+							$lastRef->SetCommit($derefCommit);
+						}
+					}
+				}
+
+				$lastRef = null;
+
+				if (preg_match('/^([0-9A-Fa-f]{40}) refs\/(tags|heads)\/(.+)$/', $ref, $regs)) {
+					// standard tag/head
+					$key = 'refs/' . $regs[2] . '/' . $regs[3];
+					if ($regs[2] == 'tags') {
+						if (!isset($this->tags[$key])) {
+							$lastRef = $this->LoadTag($regs[3], $regs[1]);
+							$this->tags[$key] = $lastRef;
+						}
+					} else if ($regs[2] == 'heads') {
+						if (!isset($this->heads[$key])) {
+							$this->heads[$key] = new GitPHP_Head($this, $regs[3], $regs[1]);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * ListDir
+	 *
+	 * Recurses into a directory and lists files inside
+	 *
+	 * @access private
+	 * @param string $dir directory
+	 * @return array array of filenames
+	 */
+	private function ListDir($dir)
+	{
+		$files = array();
+		if ($dh = opendir($dir)) {
+			while (($file = readdir($dh)) !== false) {
+				if (($file == '.') || ($file == '..')) {
+					continue;
+				}
+				$fullFile = $dir . '/' . $file;
+				if (is_dir($fullFile)) {
+					$subFiles = $this->ListDir($fullFile);
+					if (count($subFiles) > 0) {
+						$files = array_merge($files, $subFiles);
+					}
+				} else {
+					$files[] = $fullFile;
+				}
+			}
+		}
+		return $files;
+	}
+
+	/**
 	 * GetTags
 	 *
 	 * Gets list of tags for this project by age descending
@@ -792,6 +1064,24 @@ class GitPHP_Project
 		if (!$this->readRefs)
 			$this->ReadRefList();
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			return $this->GetTagsGit($count);
+		} else {
+			return $this->GetTagsRaw($count);
+		}
+	}
+
+	/**
+	 * GetTagsGit
+	 *
+	 * Gets list of tags for this project by age descending using git executable
+	 *
+	 * @access private
+	 * @param integer $count number of tags to load
+	 * @return array array of tags
+	 */
+	private function GetTagsGit($count = 0)
+	{
 		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--sort=-creatordate';
@@ -818,6 +1108,27 @@ class GitPHP_Project
 	}
 
 	/**
+	 * GetTagsRaw
+	 *
+	 * Gets list of tags for this project by age descending using raw git objects
+	 *
+	 * @access private
+	 * @param integer $count number of tags to load
+	 * @return array array of tags
+	 */
+	private function GetTagsRaw($count = 0)
+	{
+		$tags = $this->tags;
+		usort($tags, array('GitPHP_Tag', 'CompareCreationEpoch'));
+
+		if (($count > 0) && (count($tags) > $count)) {
+			$tags = array_slice($tags, 0, $count);
+		}
+
+		return $tags;
+	}
+
+	/**
 	 * GetTag
 	 *
 	 * Gets a single tag
@@ -830,6 +1141,9 @@ class GitPHP_Project
 	{
 		if (empty($tag))
 			return null;
+
+		if (!$this->readRefs)
+			$this->ReadRefList();
 
 		$key = 'refs/tags/' . $tag;
 
@@ -877,6 +1191,24 @@ class GitPHP_Project
 		if (!$this->readRefs)
 			$this->ReadRefList();
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			return $this->GetHeadsGit($count);
+		} else {
+			return $this->GetHeadsRaw($count);
+		}
+	}
+
+	/**
+	 * GetHeadsGit
+	 *
+	 * Gets the list of sorted heads using the git executable
+	 *
+	 * @access private
+	 * @param integer $count number of tags to load
+	 * @return array array of heads
+	 */
+	private function GetHeadsGit($count = 0)
+	{
 		$exe = new GitPHP_GitExe($this);
 		$args = array();
 		$args[] = '--sort=-committerdate';
@@ -903,6 +1235,26 @@ class GitPHP_Project
 	}
 
 	/**
+	 * GetHeadsRaw
+	 *
+	 * Gets the list of sorted heads using raw git objects
+	 *
+	 * @access private
+	 * @param integer $count number of tags to load
+	 * @return array array of heads
+	 */
+	private function GetHeadsRaw($count = 0)
+	{
+		$heads = $this->heads;
+		usort($heads, array('GitPHP_Head', 'CompareAge'));
+
+		if (($count > 0) && (count($heads) > $count)) {
+			$heads = array_slice($heads, 0, $count);
+		}
+		return $heads;
+	}
+
+	/**
 	 * GetHead
 	 *
 	 * Gets a single head
@@ -915,6 +1267,9 @@ class GitPHP_Project
 	{
 		if (empty($head))
 			return null;
+
+		if (!$this->readRefs)
+			$this->ReadRefList();
 
 		$key = 'refs/heads/' . $head;
 
@@ -930,13 +1285,13 @@ class GitPHP_Project
 	 *
 	 * Gets log entries as an array of hashes
 	 *
-	 * @access public
+	 * @access private
 	 * @param string $hash hash to start the log at
 	 * @param integer $count number of entries to get
 	 * @param integer $skip number of entries to skip
 	 * @return array array of hashes
 	 */
-	public function GetLogHash($hash, $count = 50, $skip = 0)
+	private function GetLogHash($hash, $count = 50, $skip = 0)
 	{
 		return $this->RevList($hash, $count, $skip);
 	}
@@ -954,11 +1309,87 @@ class GitPHP_Project
 	 */
 	public function GetLog($hash, $count = 50, $skip = 0)
 	{
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false) || ($skip > GitPHP_Config::GetInstance()->GetValue('largeskip', 200)) ) {
+			return $this->GetLogGit($hash, $count, $skip);
+		} else {
+			return $this->GetLogRaw($hash, $count, $skip);
+		}
+	}
+
+	/**
+	 * GetLogGit
+	 *
+	 * Gets log entries using git exe
+	 *
+	 * @access private
+	 * @param string $hash hash to start the log at
+	 * @param integer $count number of entries to get
+	 * @param integer $skip number of entries to skip
+	 * @return array array of commit objects
+	 */
+	private function GetLogGit($hash, $count = 50, $skip = 0)
+	{
 		$log = $this->GetLogHash($hash, $count, $skip);
 		$len = count($log);
 		for ($i = 0; $i < $len; ++$i) {
 			$log[$i] = $this->GetCommit($log[$i]);
 		}
+		return $log;
+	}
+
+	/**
+	 * GetLogRaw
+	 *
+	 * Gets log entries using raw git objects
+	 * Based on history walking code from glip
+	 *
+	 * @access private
+	 */
+	private function GetLogRaw($hash, $count = 50, $skip = 0)
+	{
+		$total = $count + $skip;
+
+		$inc = array();
+		$num = 0;
+		$queue = array($this->GetCommit($hash));
+		while (($commit = array_shift($queue)) !== null) {
+			$parents = $commit->GetParents();
+			foreach ($parents as $parent) {
+				if (!isset($inc[$parent->GetHash()])) {
+					$inc[$parent->GetHash()] = 1;
+					$queue[] = $parent;
+					$num++;
+				} else {
+					$inc[$parent->GetHash()]++;
+				}
+			}
+			if ($num >= $total)
+				break;
+		}
+
+		$queue = array($this->GetCommit($hash));
+		$log = array();
+		$num = 0;
+		while (($commit = array_pop($queue)) !== null) {
+			array_push($log, $commit);
+			$num++;
+			if ($num == $total) {
+				break;
+			}
+			$parents = $commit->GetParents();
+			foreach ($parents as $parent) {
+				if (isset($inc[$parent->GetHash()])) {
+					if (--$inc[$parent->GetHash()] == 0) {
+						$queue[] = $parent;
+					}
+				}
+			}
+		}
+
+		if ($skip > 0) {
+			$log = array_slice($log, $skip, $count);
+		}
+		usort($log, array('GitPHP_Commit', 'CompareAge'));
 		return $log;
 	}
 
@@ -1204,6 +1635,22 @@ class GitPHP_Project
 	{
 		$this->epochRead = true;
 
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadEpochGit();
+		} else {
+			$this->ReadEpochRaw();
+		}
+	}
+
+	/**
+	 * ReadEpochGit
+	 *
+	 * Reads this project's epoch using git executable
+	 *
+	 * @access private
+	 */
+	private function ReadEpochGit()
+	{
 		$exe = new GitPHP_GitExe($this);
 
 		$args = array();
@@ -1219,6 +1666,104 @@ class GitPHP_Project
 		}
 
 		unset($exe);
+	}
+
+	/**
+	 * ReadEpochRaw
+	 *
+	 * Reads this project's epoch using raw objects
+	 *
+	 * @access private
+	 */
+	private function ReadEpochRaw()
+	{
+		if (!$this->readRefs)
+			$this->ReadRefList();
+
+		$epoch = 0;
+		foreach ($this->heads as $head) {
+			$commit = $head->GetCommit();
+			if ($commit) {
+				if ($commit->GetCommitterEpoch() > $epoch) {
+					$epoch = $commit->GetCommitterEpoch();
+				}
+			}
+		}
+		if ($epoch > 0) {
+			$this->epoch = $epoch;
+		}
+	}
+
+	/**
+	 * GetObject
+	 *
+	 * Gets the raw content of an object
+	 *
+	 * @access public
+	 * @param string $hash object hash
+	 * @return string object data
+	 */
+	public function GetObject($hash, &$type = 0)
+	{
+		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+			return false;
+		}
+
+		// first check if it's unpacked
+		$path = $this->GetPath() . '/objects/' . substr($hash, 0, 2) . '/' . substr($hash, 2);
+		if (file_exists($path)) {
+			list($header, $data) = explode("\0", gzuncompress(file_get_contents($path)), 2);
+			sscanf($header, "%s %d", $typestr, $size);
+			switch ($typestr) {
+				case 'commit':
+					$type = GitPHP_Pack::OBJ_COMMIT;
+					break;
+				case 'tree':
+					$type = GitPHP_Pack::OBJ_TREE;
+					break;
+				case 'blob':
+					$type = GitPHP_Pack::OBJ_BLOB;
+					break;
+				case 'tag':
+					$type = GitPHP_Pack::OBJ_TAG;
+					break;
+			}
+			return $data;
+		}
+
+		if (!$this->packsRead) {
+			$this->ReadPacks();
+		}
+
+		// then try packs
+		foreach ($this->packs as $pack) {
+			$data = $pack->GetObject($hash, $type);
+			if ($data !== false) {
+				return $data;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * ReadPacks
+	 *
+	 * Read the list of packs in the repository
+	 *
+	 * @access private
+	 */
+	private function ReadPacks()
+	{
+		$dh = opendir($this->GetPath() . '/objects/pack');
+		if ($dh !== false) {
+			while (($file = readdir($dh)) !== false) {
+				if (preg_match('/^pack-([0-9A-Fa-f]{40})\.idx$/', $file, $regs)) {
+					$this->packs[] = new GitPHP_Pack($this, $regs[1]);
+				}
+			}
+		}
+		$this->packsRead = true;
 	}
 
 }

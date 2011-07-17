@@ -47,7 +47,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	 *
 	 * @access protected
 	 */
-	protected $size;
+	protected $size = null;
 
 	/**
 	 * history
@@ -132,13 +132,17 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	{
 		$this->dataRead = true;
 
-		$exe = new GitPHP_GitExe($this->GetProject());
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$exe = new GitPHP_GitExe($this->GetProject());
 
-		$args = array();
-		$args[] = 'blob';
-		$args[] = $this->hash;
+			$args = array();
+			$args[] = 'blob';
+			$args[] = $this->hash;
 
-		$this->data = $exe->Execute(GIT_CAT_FILE, $args);
+			$this->data = $exe->Execute(GIT_CAT_FILE, $args);
+		} else {
+			$this->data = $this->GetProject()->GetObject($this->hash);
+		}
 
 		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
 	}
@@ -194,7 +198,14 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	 */
 	public function GetSize()
 	{
-		return $this->size;
+		if ($this->size !== null) {
+			return $this->size;
+		}
+
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		return strlen($this->data);
 	}
 
 	/**
