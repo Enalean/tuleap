@@ -26,6 +26,15 @@ class GitPHP_Project
 {
 
 	/**
+	 * projectRoot
+	 *
+	 * Stores the project root internally
+	 *
+	 * @access protected
+	 */
+	protected $projectRoot;
+
+	/**
 	 * project
 	 *
 	 * Stores the project internally
@@ -213,10 +222,13 @@ class GitPHP_Project
 	 * Class constructor
 	 *
 	 * @access public
+	 * @param string $projectRoot project root
+	 * @param string $project project
 	 * @throws Exception if project is invalid or outside of projectroot
 	 */
-	public function __construct($project)
+	public function __construct($projectRoot, $project)
 	{
+		$this->projectRoot = GitPHP_Util::AddSlash($projectRoot);
 		$this->SetProject($project);
 	}
 
@@ -230,10 +242,8 @@ class GitPHP_Project
 	 */
 	private function SetProject($project)
 	{
-		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
-
-		$realProjectRoot = realpath($projectRoot);
-		$path = $projectRoot . $project;
+		$realProjectRoot = realpath($this->projectRoot);
+		$path = $this->projectRoot . $project;
 		$fullPath = realpath($path);
 
 		if (!is_dir($fullPath)) {
@@ -389,6 +399,19 @@ class GitPHP_Project
 	}
 
 	/**
+	 * GetProjectRoot
+	 *
+	 * Gets the project root
+	 *
+	 * @access public
+	 * @return string the project root
+	 */
+	public function GetProjectRoot()
+	{
+		return $this->projectRoot;
+	}
+
+	/**
 	 * GetSlug
 	 *
 	 * Gets the project as a filename/url friendly slug
@@ -416,9 +439,7 @@ class GitPHP_Project
 	 */
 	public function GetPath()
 	{
-		$projectRoot = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('projectroot'));
-
-		return $projectRoot . $this->project;
+		return $this->projectRoot . $this->project;
 	}
 
 	/**
