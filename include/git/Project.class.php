@@ -1309,7 +1309,7 @@ class GitPHP_Project
 	 */
 	public function GetLog($hash, $count = 50, $skip = 0)
 	{
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false) || ($skip > 200)) {
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false) || ($skip > GitPHP_Config::GetInstance()->GetValue('largeskip', 200)) ) {
 			return $this->GetLogGit($hash, $count, $skip);
 		} else {
 			return $this->GetLogRaw($hash, $count, $skip);
