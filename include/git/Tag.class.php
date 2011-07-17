@@ -170,6 +170,14 @@ class GitPHP_Tag extends GitPHP_Ref
 				$this->DereferenceCommit();
 		}
 
+		if (!$this->commit) {
+			if ($this->object instanceof GitPHP_Commit) {
+				$this->commit = $this->object;
+			} else if ($this->object instanceof GitPHP_Tag) {
+				$this->commit = $this->object->GetCommit();
+			}
+		}
+
 		return $this->commit;
 	}
 
