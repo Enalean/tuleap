@@ -69,7 +69,7 @@ class GitPHP_Util
 	 * @static
 	 * @return bool true if on 64 bit
 	 */
-	public function Is64Bit()
+	public static function Is64Bit()
 	{
 		return (strpos(php_uname('m'), '64') !== false);
 	}
