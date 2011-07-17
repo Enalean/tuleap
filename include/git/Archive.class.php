@@ -378,9 +378,6 @@ class GitPHP_Archive
 		$args[] = '--prefix=' . $this->GetPrefix();
 		$args[] = $this->gitObject->GetHash();
 
-		if (!empty($this->path))
-			$args[] = $this->path;
-
 		$data = $exe->Execute(GIT_ARCHIVE, $args);
 		unset($exe);
 
