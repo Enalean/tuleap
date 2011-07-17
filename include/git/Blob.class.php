@@ -266,7 +266,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 			}
 		}
 
-		$finfo = finfo_open(FILEINFO_MIME, $magicdb);
+		$finfo = @finfo_open(FILEINFO_MIME, $magicdb);
 		if ($finfo) {
 			$mime = finfo_buffer($finfo, $this->data, FILEINFO_MIME);
 			if ($mime && strpos($mime, '/')) {
