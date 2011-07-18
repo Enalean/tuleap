@@ -224,12 +224,14 @@ class GitDao extends DataAccessObject {
     }
     
     public function getAllGitoliteRespositories($projectId) {
-        $projectId = $this->da->escapeInt($projectId);
-        $query = 'SELECT * FROM '.$this->getTable().
-                ' WHERE '.self::FK_PROJECT_ID.'='.$projectId.
-                '   AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
-                '   AND '.self::REPOSITORY_BACKEND_TYPE.'='.self::BACKEND_GITOLITE;
-        return $this->retrieve($query);
+        $projectId     = $this->da->escapeInt($projectId);
+        $type_gitolite = $this->da->quoteSmart(self::BACKEND_GITOLITE);
+        
+        $sql = "SELECT * FROM $this->tableName
+                WHERE ". self::FK_PROJECT_ID ." = $projectId
+                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                  AND ". self::REPOSITORY_BACKEND_TYPE ." = $type_gitolite";
+        return $this->retrieve($sql);
     }
     
     /**
