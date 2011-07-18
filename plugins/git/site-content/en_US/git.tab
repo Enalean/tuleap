@@ -63,6 +63,9 @@ plugin_git	backend_gitroot_mkdir_error	Error while creating root for Git reposit
 plugin_git	backend_projectroot_mkdir_error	Error while creating project root for Git repository (Contact the site admin)
 plugin_git	backend_projectroot_chgrp_error	Error while setting project root permissions (Contact the site admin)
 
+plugin_git	disable_delete_gitolite	It's not yet possible to delete "Gitolite" based repositories
+plugin_git	disable_fork_gitolite	It's not yet possible to fork "Gitolite" based repositories
+
 plugin_git	actions_params_error	Empty required parameter(s)
 plugin_git	actions_delete_process	Repository will be removed in a few seconds
 plugin_git	actions_input_format_error	Repository name is not well formatted only alphanumeric and - _ characters are allowed, max lenght is

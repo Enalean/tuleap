@@ -63,6 +63,9 @@ plugin_git	backend_gitroot_mkdir_error	Erreur à la création du répertoire rac
 plugin_git	backend_projectroot_mkdir_error	Erreur à la création du répertoire racine des dépôts Git du projet (Contactez l'administrateur)
 plugin_git	backend_projectroot_chgrp_error	Erreur aux changement des permissions du répertoire racine des dépôts Git du projet (Contactez l'administrateur)
 
+plugin_git	disable_delete_gitolite	La suppression d'un dépôt de type "Gitolite" n'est pas encore possible
+plugin_git	disable_fork_gitolite	Le fork d'un dépôt de type "Gitolite" n'est pas encore possible
+
 plugin_git	actions_params_error	Paramètre requis manquants
 plugin_git	actions_delete_process	Le dépôt va être supprimé dans quelques secondes
 plugin_git	actions_input_format_error	 Le nom du dépôt doit uniquement contenir des caractères alpha numériques et - _ , la longueur maximale est de

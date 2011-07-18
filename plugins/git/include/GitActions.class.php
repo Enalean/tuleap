@@ -61,8 +61,16 @@ class GitActions extends PluginActions {
             $c->addError( $this->getText('actions_params_error') );            
             return false;
         }       
-        $repository   = new GitRepository();
+        $repository = new GitRepository();
         $repository->setId( $repositoryId );
+        $repository->load();
+
+        // Disable possibility to delete gitolite repositories
+        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+            $c->addError( $this->getText('disable_delete_gitolite') );
+            $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
+        }
+
         if ( $repository->hasChild() ) {
             $c->addError( $this->getText('backend_delete_haschild_error') );
             $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
@@ -133,6 +141,13 @@ class GitActions extends PluginActions {
         $parentRepo->setId($parentId);
         try {
             $parentRepo->load();
+
+            // Disable possibility to delete gitolite repositories
+            if ($parentRepo->getBackend() instanceof Git_Backend_Gitolite) {
+                $c->addError( $this->getText('disable_fork_gitolite') );
+                $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
+            }
+
             if ( !$parentRepo->isInitialized() ) {
                 $c->addError( $this->getText('repo_not_initialized') );
                 $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
