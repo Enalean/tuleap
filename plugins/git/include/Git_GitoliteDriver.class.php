@@ -181,7 +181,7 @@ class Git_GitoliteDriver {
         $s .= 'repo '. $this->project->getUnixName(). '/' . $repo . PHP_EOL;
         
         // Readers
-        if (count($readers) > 0) {
+        if (count($readers)) {
             $s .= ' R   = '. implode(' ', $readers);
             $s .= PHP_EOL;
         }
