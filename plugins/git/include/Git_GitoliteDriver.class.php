@@ -23,6 +23,7 @@ require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
 require_once 'GitDao.class.php';
+require_once 'Git_PostReceiveMailManager.class.php';
 
 class Git_GitoliteDriver {
     protected $oldCwd;
@@ -181,7 +182,7 @@ class Git_GitoliteDriver {
      *
      * @return string
      */
-    public function fetchPermissions($project, $repo, $readers, $writers, $rewinders) {
+    public function fetchPermissions($project, $readers, $writers, $rewinders) {
         $s = '';
         
         array_walk($readers,   array($this, 'ugroupId2GitoliteFormat'), $project);
@@ -191,9 +192,6 @@ class Git_GitoliteDriver {
         $readers   = array_filter($readers);
         $writers   = array_filter($writers);
         $rewinders = array_filter($rewinders);
-        
-        //Name of the repo
-        $s .= 'repo '. $project->getUnixName(). '/' . $repo . PHP_EOL;
         
         // Readers
         if (count($readers)) {
@@ -213,8 +211,28 @@ class Git_GitoliteDriver {
             $s .= PHP_EOL;
         }
         
-        $s .= PHP_EOL;
         return $s;
+    }
+
+    /**
+     * Returns post-receive-email hook config in gitolite format
+     *
+     * @param Project $project
+     * @param GitRepository $repository
+     */
+    public function fetchMailHookConfig($project, $repository) {
+        $conf  = '';
+        $conf .= ' config hooks.showrev = "'. $repository->getPostReceiveShowRev(). '"';
+        $conf .= PHP_EOL;
+        if ($repository->getNotifiedMails() && count($repository->getNotifiedMails()) > 0) {
+            $conf .= ' config hooks.mailinglist = "'. implode(', ', $repository->getNotifiedMails()). '"';
+            $conf .= PHP_EOL;
+        }
+        if ($repository->getMailPrefix() != GitRepository::DEFAULT_MAIL_PREFIX) {
+            $conf .= ' config hooks.emailprefix = "'. $repository->getMailPrefix() .'"';
+            $conf .= PHP_EOL;
+        }
+        return $conf;
     }
 
     /**
@@ -253,18 +271,34 @@ class Git_GitoliteDriver {
         $dar = $this->getDao()->getAllGitoliteRespositories($project->getId());
         if ($dar && !$dar->isError()) {
             // Get perms
-            $perms = '';
-            $pm    = $this->getPermissionsManager();
+            $perms    = '';
+            $pm       = $this->getPermissionsManager();
+            $notifMgr = $this->getPostReceiveMailManager();
             foreach ($dar as $row) {
-                $readers   = $this->getAuthorizedUgroupsId($row['repository_id'], Git::PERM_READ);
-                $writers   = $this->getAuthorizedUgroupsId($row['repository_id'], Git::PERM_WRITE);
-                $rewinders = $this->getAuthorizedUgroupsId($row['repository_id'], Git::PERM_WPLUS);
-                $perms    .= $this->fetchPermissions($project, $row[GitDao::REPOSITORY_NAME], $readers, $writers, $rewinders);
+                // Name of the repo
+                $perms .= 'repo '. $project->getUnixName(). '/' . $row[GitDao::REPOSITORY_NAME] . PHP_EOL;
+
+                $repository = new GitRepository();
+                $repository->setId($row[GitDao::REPOSITORY_ID]);
+                $repository->setName($row[GitDao::REPOSITORY_NAME]);
+                $repository->setProject($project);
+                $repository->setNotifiedMails($notifMgr->getNotificationMailsByRepositoryId($row[GitDao::REPOSITORY_ID]));
+
+                // Hook config
+                $perms .= $this->fetchMailHookConfig($project, $repository);
+
+                // Perms
+                $readers   = $this->getAuthorizedUgroupsId($row[GitDao::REPOSITORY_ID], Git::PERM_READ);
+                $writers   = $this->getAuthorizedUgroupsId($row[GitDao::REPOSITORY_ID], Git::PERM_WRITE);
+                $rewinders = $this->getAuthorizedUgroupsId($row[GitDao::REPOSITORY_ID], Git::PERM_WPLUS);
+                $perms    .= $this->fetchPermissions($project, $readers, $writers, $rewinders);
+
+                $perms .= PHP_EOL;
             }
 
             // Save into file
             $confFile = $this->getProjectPermissionConfFile($project);
-            $written = file_put_contents($confFile, $perms);
+            $written  = file_put_contents($confFile, $perms);
             if ($written && strlen($perms) == $written) {
                 if ($this->gitAdd($confFile)) {
                     if ($this->updateMainConfIncludes($project)) {
@@ -311,6 +345,15 @@ class Git_GitoliteDriver {
      */
     protected function getDao() {
         return new GitDao();
+    }
+
+    /**
+     * Wrapper for Git_PostReceiveMailManager
+     *
+     * @return Git_PostReceiveMailManager
+     */
+    protected function getPostReceiveMailManager() {
+        return new Git_PostReceiveMailManager();
     }
 }
 

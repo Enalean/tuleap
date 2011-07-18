@@ -326,7 +326,7 @@ class GitDao extends DataAccessObject {
         $repository->setAccess($result[self::REPOSITORY_ACCESS]);
         $repository->setMailPrefix($result[self::REPOSITORY_MAIL_PREFIX]);
         $repository->setBackendType($result[self::REPOSITORY_BACKEND_TYPE]);
-        $repository->setNotifiedMails();
+        $repository->loadNotifiedMails();
     }
 }
 

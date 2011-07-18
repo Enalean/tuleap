@@ -27,6 +27,7 @@ Mock::generate('User');
 Mock::generate('GitDao');
 Mock::generate('PermissionsManager');
 Mock::generate('DataAccessResult');
+Mock::generate('Git_PostReceiveMailManager');
 
 class Git_GitoliteDriverTest extends UnitTestCase {
 
@@ -60,11 +61,14 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         touch($this->_glAdmDir.'/conf/gitolite.conf');
         chdir($this->_glAdmDir);
         system('git init -q && git add conf/gitolite.conf && git commit -m "init" 2>&1 >/dev/null');
+        $this->httpsHost = $GLOBALS['sys_https_host'];
+        $GLOBALS['sys_https_host'] = 'localhost';
     }
 
     function tearDown() {
         chdir($this->cwd);
         system('rm -rf '.$this->_glAdmDir);
+        $GLOBALS['sys_https_host'] = $this->httpsHost;
     }
 
     function assertEmptyGitStatus() {
@@ -152,54 +156,93 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $ug_6 = 180;
         $ug_n = 100;
 
-        $this->assertIdentical(
-            file_get_contents($this->_fixDir .'/perms/empty.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array(), array(), array())
+        $this->assertIdentical('',
+            $driver->fetchPermissions($prj, array(), array(), array())
         );
 
-        $this->assertIdentical(
-            file_get_contents($this->_fixDir .'/perms/empty.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array($ug_n), array($ug_n), array($ug_n))
+        $this->assertIdentical('',
+            $driver->fetchPermissions($prj, array($ug_n), array($ug_n), array($ug_n))
         );
 
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/one-reader.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array($ug_1), array(), array())
+            $driver->fetchPermissions($prj, array($ug_1), array(), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/one-writer.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array(), array($ug_1), array())
+            $driver->fetchPermissions($prj, array(), array($ug_1), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/one-rewinder.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array(), array(), array($ug_1))
+            $driver->fetchPermissions($prj, array(), array(), array($ug_1))
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/two-readers.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array($ug_1, $ug_2), array(), array())
+            $driver->fetchPermissions($prj, array($ug_1, $ug_2), array(), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/two-writers.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array(), array($ug_1, $ug_2), array())
+            $driver->fetchPermissions($prj, array(), array($ug_1, $ug_2), array())
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/two-rewinders.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array(), array(), array($ug_1, $ug_2))
+            $driver->fetchPermissions($prj, array(), array(), array($ug_1, $ug_2))
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/full.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array($ug_1, $ug_2), array($ug_3, $ug_4), array($ug_5, $ug_6))
+            $driver->fetchPermissions($prj, array($ug_1, $ug_2), array($ug_3, $ug_4), array($ug_5, $ug_6))
         );
         
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/perms/default.conf'),
-            $driver->fetchPermissions($prj, 'gpig', array('2'), array('3'), array())
+            $driver->fetchPermissions($prj, array('2'), array('3'), array())
+        );
+    }
+
+    function testGetMailHookConfig() {
+        $driver = new Git_GitoliteDriver($this->_glAdmDir);
+        
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', 'project1');
+        $prj->setReturnValue('getId', 101);
+
+        // ShowRev
+        $repo = new GitRepository();
+        $repo->setId(5);
+        $repo->setProject($prj);
+        $repo->setName('test_default');
+        $this->assertIdentical(
+            file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev.txt'),
+            $driver->fetchMailHookConfig($prj, $repo)
+        );
+
+        // ShowRev + Mail
+        $repo = new GitRepository();
+        $repo->setId(5);
+        $repo->setProject($prj);
+        $repo->setName('test_default');
+        $repo->setNotifiedMails(array('john.doe@enalean.com', 'mme.michue@enalean.com'));
+        $this->assertIdentical(
+            file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail.txt'),
+            $driver->fetchMailHookConfig($prj, $repo)
+        );
+
+        // ShowRev + Mailprefix
+        $repo = new GitRepository();
+        $repo->setId(5);
+        $repo->setProject($prj);
+        $repo->setName('test_default');
+        $repo->setNotifiedMails(array('john.doe@enalean.com', 'mme.michue@enalean.com'));
+        $repo->setMailPrefix('[\_o<] ');
+        $this->assertIdentical(
+            file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail-prefix.txt'),
+            $driver->fetchMailHookConfig($prj, $repo)
         );
     }
 
@@ -210,7 +253,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
      * 
      */
     function testDumpProjectRepoPermissions() {
-        $driver = $this->getPartialMock('Git_GitoliteDriver', array('getPermissionsManager', 'getDao'));
+        $driver = $this->getPartialMock('Git_GitoliteDriver', array('getPermissionsManager', 'getDao', 'getPostReceiveMailManager'));
         $driver->setAdminPath($this->_glAdmDir);
 
         $prj = new MockProject($this);
@@ -237,6 +280,12 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $pm->setReturnValue('getAuthorizedUgroups', $this->arrayToDar(array('ugroup_id' => '4')), array(5, 'PLUGIN_GIT_WRITE'));
         $pm->setReturnValue('getAuthorizedUgroups', $this->arrayToDar(array('ugroup_id' => '125')), array(5, 'PLUGIN_GIT_WPLUS'));
         $driver->setReturnValue('getPermissionsManager', $pm);
+
+        // Notified emails
+        $notifMgr = new MockGit_PostReceiveMailManager();
+        $notifMgr->setReturnValue('getNotificationMailsByRepositoryId', array('john.doe@enalean.com', 'mme.michue@enalean.com'), array(4));
+        $notifMgr->setReturnValue('getNotificationMailsByRepositoryId', array(), array(5));
+        $driver->setReturnValue('getPostReceiveMailManager', $notifMgr);
 
         $driver->dumpProjectRepoConf($prj);
 

@@ -62,7 +62,7 @@ class Git_PostReceiveMailManager {
      */
     function removeMailByRepository($repository, $mail = null) {
         if ($this->dao->removeNotification($repository->getId(), $mail)) {
-            $repository->setNotifiedMails();
+            $repository->loadNotifiedMails();
             return $repository->getBackend()->changeRepositoryMailingList($repository);
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification'));

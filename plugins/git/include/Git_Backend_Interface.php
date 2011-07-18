@@ -77,7 +77,14 @@ interface Git_Backend_Interface {
      * @return Boolean
      */
     public function userCanRead($user, $repository);
-    
+
+    /**
+     * Update list of people notified by post-receive-email hook
+     *
+     * @param GitRepository $repository
+     */
+    public function changeRepositoryMailingList($repository);
+
     /**
      * Get the regexp pattern to use for name repository validation
      *

@@ -141,7 +141,7 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
 
         $prm->dao->setReturnValue('removeNotification', True);
 
-        $repo->expectOnce('setNotifiedMails');
+        $repo->expectOnce('loadNotifiedMails');
         $backend->expectOnce('changeRepositoryMailingList');
 
         $prm->removeMailByRepository($repo, "codendiadm@codendi.org");

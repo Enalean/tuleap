@@ -38,6 +38,8 @@ class GitRepository implements DVCSRepository {
     const PRIVATE_ACCESS       = 'private';
     const PUBLIC_ACCESS        = 'public';
     
+    const DEFAULT_MAIL_PREFIX = '[SCM]';
+    
     private $id;
     private $parentId;
     private $name;
@@ -76,7 +78,7 @@ class GitRepository implements DVCSRepository {
         $this->deletionDate   = '';
         $this->isInitialized  = 0;
         $this->access         = 'private';
-        $this->mailPrefix     = '[SCM]';
+        $this->mailPrefix     = self::DEFAULT_MAIL_PREFIX;
         $this->notifiedMails = array();
 
         $this->hooks       = array();
@@ -424,6 +426,27 @@ class GitRepository implements DVCSRepository {
         return false;
     }
 
+    /**
+     * Returns hooks.showrev string to be used in git confi
+     *
+     * @return String
+     */
+    public function getPostReceiveShowRev() {
+        $url = 'https://'.$GLOBALS['sys_https_host'].
+            '/plugins/git/index.php/'.$this->getProjectId().
+            '/view/'.$this->getId().
+            '/?p='.$this->getName().'&a=commitdiff&h=%%H';
+
+        $format = 'format:URL:    '.$url.'%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
+
+        $showrev = "t=%s; ".
+            "git show ".
+            "--name-status ".
+            "--pretty='".$format."' ".
+            "\$t";
+        return $showrev;
+    }
+
     public function getMailPrefix() {
         return $this->mailPrefix;
     }
@@ -436,11 +459,15 @@ class GitRepository implements DVCSRepository {
         $this->getBackend()->changeRepositoryMailPrefix($this);
     }
 
-    public function setNotifiedMails() {
+    public function loadNotifiedMails() {
         $postRecMailManager = $this->getPostReceiveMailManager();
         $this->notifiedMails = $postRecMailManager->getNotificationMailsByRepositoryId($this->getId());
     }
 
+    public function setNotifiedMails($mails) {
+        $this->notifiedMails = $mails;
+    }
+    
     public function getNotifiedMails() {
         return $this->notifiedMails;
     }

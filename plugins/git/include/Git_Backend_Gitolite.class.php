@@ -173,7 +173,17 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         //TODO: change teh description in the driver (see gitshell driver)
         return $this->getDao()->save($repository);
     }
-    
+
+    /**
+     * Update list of people notified by post-receive-email hook
+     *
+     * @param GitRepository $repository
+     */
+    public function changeRepositoryMailingList($repository) {
+        $this->driver->dumpProjectRepoConf($repository->getProject());
+        $this->driver->push();
+    }
+
     /**
      * Get the regexp pattern to use for name repository validation
      *
