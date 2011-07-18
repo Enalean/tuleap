@@ -344,34 +344,6 @@ class Git extends PluginController {
             }
         }
     }
-    
-    /**
-     * This function is useful to control action execution in the controller, this kind of action is a logical view not a method of PluginAction class
-     * One should use this to filter the 'action' parameter in the HTTP request (add, clone, del, help etc...)
-     * @param String $actionName
-     * @return boolean
-     */
-    /*public function isAPermittedAction($actionName) {
-        switch ($actionName) {
-            array('index',
-        }
-                                            'view' ,
-                                            'edit',
-                                            'clone',
-                                            'add',
-                                            'del',
-                                            'create',
-                                            'confirm_deletion',
-                                            'save',
-                                            'repo_management',
-                                            'mail_prefix',
-                                            'add_mail',
-                                            'remove_mail',
-                                            'fork',
-                                            'set_private',
-                                            'confirm_private');
-        return in_array($actionName, $this->permittedActions);
-    }*/
 }
 
 ?>
