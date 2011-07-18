@@ -127,7 +127,7 @@ class Git extends PluginController {
         $valid = new Valid_String('repo_name');
         $valid->required();
         if($this->request->valid($valid)) {
-            $repositoryName = $this->request->get('repo_name');
+            $repositoryName = trim($this->request->get('repo_name'));
         }
         $valid = new Valid_UInt('repo_id');
         $valid->required();

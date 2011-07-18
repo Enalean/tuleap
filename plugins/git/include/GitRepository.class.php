@@ -608,7 +608,9 @@ class GitRepository implements DVCSRepository {
     public function isNameValid($name) {
         $len = strlen($name);
         return 1 <= $len && $len < GitDao::REPO_NAME_MAX_LENGTH &&
-               !preg_match('`[^'. $this->getBackend()->getAllowedCharsInNamePattern() .']`', $name);
+               !preg_match('`[^'. $this->getBackend()->getAllowedCharsInNamePattern() .']`', $name) &&
+               !preg_match('`(?:^|/)\.`', $name) && //do not allow dot at the begining of a world
+               !preg_match('`\.\.`', $name); //do not allow double dots (prevent path collisions)
     }
 }
 

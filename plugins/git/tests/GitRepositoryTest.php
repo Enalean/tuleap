@@ -28,23 +28,33 @@ class GitRepositoryTest extends UnitTestCase {
 
     public function test_isNameValid() {
         $gitolite = new MockGit_Backend_Gitolite();
-        $gitolite->setReturnValue('getAllowedCharsInNamePattern', 'a-zA-Z0-9/_-');
+        $gitolite->setReturnValue('getAllowedCharsInNamePattern', 'a-zA-Z0-9/_.-');
         
         $gitshell = new MockGitBackend();
-        $gitshell->setReturnValue('getAllowedCharsInNamePattern', 'a-zA-Z0-9_-');
+        $gitshell->setReturnValue('getAllowedCharsInNamePattern', 'a-zA-Z0-9_.-');
         
         $repo = new GitRepository();
         
         $repo->setBackend($gitolite);
         $this->assertFalse($repo->isNameValid(''));
         $this->assertTrue($repo->isNameValid('jambon'));
+        $this->assertTrue($repo->isNameValid('jambon.beurre'));
+        $this->assertTrue($repo->isNameValid('jambon-beurre'));
+        $this->assertTrue($repo->isNameValid('jambon_beurre'));
         $this->assertTrue($repo->isNameValid('jambon/beurre'));
+        $this->assertFalse($repo->isNameValid('jambon/.beurre'));
+        $this->assertFalse($repo->isNameValid('jambon..beurre'));
         $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
         
         $repo->setBackend($gitshell);
         $this->assertFalse($repo->isNameValid(''));
         $this->assertTrue($repo->isNameValid('jambon'));
+        $this->assertTrue($repo->isNameValid('jambon.beurre'));
+        $this->assertTrue($repo->isNameValid('jambon-beurre'));
+        $this->assertTrue($repo->isNameValid('jambon_beurre'));
         $this->assertFalse($repo->isNameValid('jambon/beurre'));
+        $this->assertFalse($repo->isNameValid('jambon/.beurre'));
+        $this->assertFalse($repo->isNameValid('jambon..beurre'));
         $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
     }
 

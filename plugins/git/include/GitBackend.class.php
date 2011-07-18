@@ -349,7 +349,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      */
     public function getAllowedCharsInNamePattern() {
         //alphanums, underscores and dash
-        return 'a-zA-Z0-9_-';
+        return 'a-zA-Z0-9_.-';
     }
 }
 

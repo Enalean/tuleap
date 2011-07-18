@@ -181,7 +181,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      */
     public function getAllowedCharsInNamePattern() {
         //alphanums, underscores, slashes and dash
-        return 'a-zA-Z0-9/_-';
+        return 'a-zA-Z0-9/_.-';
     }
 }
 
