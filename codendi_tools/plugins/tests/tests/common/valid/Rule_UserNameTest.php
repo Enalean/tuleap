@@ -87,6 +87,8 @@ class Rule_UserNameTest extends UnitTestCase {
         $this->assertTrue($r->isReservedName("imadmin-bot"));
         $this->assertTrue($r->isReservedName("apache"));
         $this->assertTrue($r->isReservedName("nscd"));
+        $this->assertTrue($r->isReservedName("git"));
+        $this->assertTrue($r->isReservedName("gitolite"));
 
         $this->assertTrue($r->isReservedName("ROOT"));
         $this->assertTrue($r->isReservedName("WWW"));
