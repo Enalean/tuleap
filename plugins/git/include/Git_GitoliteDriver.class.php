@@ -29,12 +29,6 @@ class Git_GitoliteDriver {
     protected $confFilePath;
     protected $adminPath;
 
-    /**
-     * The project on which driver applies
-     * @var Project
-     */
-    protected $project;
-
     public function __construct($adminPath) {
         $this->setAdminPath($adminPath);
     }
@@ -170,15 +164,18 @@ class Git_GitoliteDriver {
      * @return string
      */
     public function fetchPermissions($project, $repo, $readers, $writers, $rewinders) {
-        $this->project = $project;
         $s = '';
         
-        $readers   = array_filter(array_map(array($this, 'ugroupId2GitoliteFormat'), $readers));
-        $writers   = array_filter(array_map(array($this, 'ugroupId2GitoliteFormat'), $writers));
-        $rewinders = array_filter(array_map(array($this, 'ugroupId2GitoliteFormat'), $rewinders));
+        array_walk($readers,   array($this, 'ugroupId2GitoliteFormat'), $project);
+        array_walk($writers,   array($this, 'ugroupId2GitoliteFormat'), $project);
+        array_walk($rewinders, array($this, 'ugroupId2GitoliteFormat'), $project);
+        
+        $readers   = array_filter($readers);
+        $writers   = array_filter($writers);
+        $rewinders = array_filter($rewinders);
         
         //Name of the repo
-        $s .= 'repo '. $this->project->getUnixName(). '/' . $repo . PHP_EOL;
+        $s .= 'repo '. $project->getUnixName(). '/' . $repo . PHP_EOL;
         
         // Readers
         if (count($readers)) {
@@ -207,19 +204,22 @@ class Git_GitoliteDriver {
      *
      * @param String $ug UGroupId
      */
-    protected function ugroupId2GitoliteFormat($ug) {
+    protected function ugroupId2GitoliteFormat(&$ug, $key, $project) {
         if ($ug > 100) {
-            return '@ug_'. $ug;
+            $ug = '@ug_'. $ug;
         } else {
             switch ($ug) {
                 case $GLOBALS['UGROUP_REGISTERED']:
-                    return '@site_active';
+                    $ug = '@site_active';
                     break;
                 case $GLOBALS['UGROUP_PROJECT_MEMBERS'];
-                    return '@'.$this->project->getUnixName().'_project_members';
+                    $ug = '@'.$project->getUnixName().'_project_members';
                     break;
                 case $GLOBALS['UGROUP_PROJECT_ADMIN']:
-                    return '@'.$this->project->getUnixName().'_project_admin';
+                    $ug = '@'.$project->getUnixName().'_project_admin';
+                    break;
+                default:
+                    $ug = null;
                     break;
             }
         }
