@@ -207,8 +207,8 @@ class GitPlugin extends Plugin {
         $user = UserManager::instance()->getUserById($params['user_id']);
         if ($user) {
             include_once 'GitoliteDriver.class.php';
-            if (is_dir('/home/codendiadm/gitolite-admin')) {
-                $gitolite = new Git_GitoliteDriver('/home/codendiadm/gitolite-admin');
+            $gitolite = new Git_GitoliteDriver();
+            if (is_dir($gitolite->getAdminPath())) {
                 $gitolite->initUserKeys($user);
                 $gitolite->push();
             }

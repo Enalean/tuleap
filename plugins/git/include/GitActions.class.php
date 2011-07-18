@@ -103,7 +103,7 @@ class GitActions extends PluginActions {
         $project = ProjectManager::instance()->getProject($projectId);
 
         if ($backendType == GitDao::BACKEND_GITOLITE) {
-            $backend = new Git_Backend_Gitolite(new Git_GitoliteDriver('/home/codendiadm/gitolite-admin'));
+            $backend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
 
             $repository = new GitRepository();
             $repository->setDescription('-- Default description --');
@@ -429,7 +429,7 @@ class GitActions extends PluginActions {
     }
 
     public static function isNameAvailable($newName, &$error) {
-        $b1 = new Git_Backend_Gitolite(new Git_GitoliteDriver('/home/codendiadm/gitolite-admin'));
+        $b1 = new Git_Backend_Gitolite(new Git_GitoliteDriver());
         $b2 = Backend::instance('Git','GitBackend');
         if (!$b1->isNameAvailable($newName) && !$b2->isNameAvailable($newName)) {
             $error = $GLOBALS['Language']->getText('plugin_git', 'actions_name_not_available');

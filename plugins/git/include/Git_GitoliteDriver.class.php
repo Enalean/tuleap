@@ -29,8 +29,26 @@ class Git_GitoliteDriver {
     protected $confFilePath;
     protected $adminPath;
 
-    public function __construct($adminPath) {
+    /**
+     * Constructor
+     *
+     * @param string $adminPath The path to admin folder of gitolite. 
+     *                          Default is $sys_data_dir . "/gitolite/admin"
+     */
+    public function __construct($adminPath = null) {
+        if (!$adminPath) {
+            $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
+        }
         $this->setAdminPath($adminPath);
+    }
+    
+    /**
+     * Getter for $adminPath
+     *
+     * @return string
+     */
+    public function getAdminPath() { 
+        return $this->adminPath; 
     }
 
     public function setAdminPath($adminPath) {

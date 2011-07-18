@@ -167,7 +167,7 @@ class GitRepository implements DVCSRepository {
         if ( empty($this->backend) ) {
             switch ($this->getBackendType()) {
                 case GitDao::BACKEND_GITOLITE:
-                    $this->backend = new Git_Backend_Gitolite(new Git_GitoliteDriver('/home/codendiadm/gitolite-admin'));
+                    $this->backend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
                     break;
                 default:
                     $this->backend = Backend::instance('Git','GitBackend');
