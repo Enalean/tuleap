@@ -169,7 +169,7 @@ class GitViews extends PluginViews {
                 $repoActions .= '<li>'.$this->linkTo($this->getText('admin_repo_management'), '/plugins/git/?action=repo_management&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_admin"').'</li>';
             }
 
-            if ($initialized && $this->getController()->isAPermittedAction('clone')) {
+            if ($initialized && $this->getController()->isAPermittedAction('clone') && !($repository->getBackend() instanceof Git_Backend_Gitolite)) {
                 $repoActions .= '<li>'.$this->linkTo($this->getText('admin_fork_creation_title'), '/plugins/git/?action=fork&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_fork"').'</li>';
             }
             $repoActions .= '</ul>';
@@ -233,7 +233,7 @@ class GitViews extends PluginViews {
         <input type="hidden" id="action" name="action" value="edit" />
         <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
         <?php
-        if ( $this->getController()->isAPermittedAction('del') && !$repository->hasChild() ) {
+        if ( $this->getController()->isAPermittedAction('del') && !$repository->hasChild() && !($repository->getBackend() instanceof Git_Backend_Gitolite)) {
             echo '<div id="plugin_git_confirm_deletion"><input type="submit" name="confirm_deletion" value="'. $this->getText('admin_deletion_submit') .'" /></div>';
         }
         if ( $this->getController()->isAPermittedAction('save') ) {
