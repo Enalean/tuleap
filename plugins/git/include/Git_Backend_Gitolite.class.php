@@ -173,6 +173,16 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         //TODO: change teh description in the driver (see gitshell driver)
         return $this->getDao()->save($repository);
     }
+    
+    /**
+     * Get the regexp pattern to use for name repository validation
+     *
+     * @return string
+     */
+    public function getAllowedCharsInNamePattern() {
+        //alphanums, underscores, slashes and dash
+        return 'a-zA-Z0-9/_-';
+    }
 }
 
 ?>

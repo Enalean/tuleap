@@ -597,6 +597,19 @@ class GitRepository implements DVCSRepository {
     public function userCanAdmin($user) {
         return $user->isMember($this->getProjectId(), 'A');
     }
+    
+    /**
+     * Validate the name for a repository
+     *
+     * @param string $name The name to validate
+     *
+     * @return bool true if valid, false otherwise
+     */
+    public function isNameValid($name) {
+        $len = strlen($name);
+        return 1 <= $len && $len < GitDao::REPO_NAME_MAX_LENGTH &&
+               !preg_match('`[^'. $this->getBackend()->getAllowedCharsInNamePattern() .']`', $name);
+    }
 }
 
 ?>

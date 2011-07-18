@@ -77,5 +77,12 @@ interface Git_Backend_Interface {
      * @return Boolean
      */
     public function userCanRead($user, $repository);
+    
+    /**
+     * Get the regexp pattern to use for name repository validation
+     *
+     * @return string eg: 'a-zA-Z0-9_-'
+     */
+    public function getAllowedCharsInNamePattern();
 }
 ?>

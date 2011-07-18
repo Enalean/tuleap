@@ -43,8 +43,7 @@ class GitDao extends DataAccessObject {
     const REPOSITORY_MAIL_PREFIX      = 'repository_events_mailing_prefix';
     const REPOSITORY_BACKEND_TYPE     = 'repository_backend_type';
 
-    const REPO_NAME_MAX_LENGTH = 40;
-    const REPO_DESC_MAX_LENGTH = 255;
+    const REPO_NAME_MAX_LENGTH = 255;
 
     const BACKEND_GITSHELL = 'gitshell';
     const BACKEND_GITOLITE = 'gitolite';
@@ -329,15 +328,6 @@ class GitDao extends DataAccessObject {
         $repository->setBackendType($result[self::REPOSITORY_BACKEND_TYPE]);
         $repository->setNotifiedMails();
     }
-
-    public static function checkName($name) {
-        $matches = array();
-        if ( strlen($name) > self::REPO_NAME_MAX_LENGTH ||
-             preg_match_all('/[a-zA-Z0-9_\-]/', $name, $matches) != strlen($name) ) {
-            return false;
-        }
-        return true;
-    }   
 }
 
 ?>

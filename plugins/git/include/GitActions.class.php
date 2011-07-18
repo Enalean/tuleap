@@ -87,14 +87,24 @@ class GitActions extends PluginActions {
     }
 
     public function createReference( $projectId, $repositoryName, $backendType) {
-        $c              = $this->getController();
-        $projectId      = intval( $projectId );
+        $c         = $this->getController();
+        $projectId = intval( $projectId );
+        
         if ( empty($repositoryName) ) {
             $c->addError($this->getText('actions_params_error'));
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
         }
-        if ( GitDao::checkName($repositoryName) === false ) {
+        
+        $repository = new GitRepository();
+        if ($backendType == GitDao::BACKEND_GITOLITE) {
+            $backend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
+        } else {
+            $backend = Backend::instance('Git','GitBackend');
+        }
+        $repository->setBackend($backend);
+
+        if ( $repository->isNameValid($repositoryName) === false ) {
             $c->addError( $this->getText('actions_input_format_error').' '.GitDao::REPO_NAME_MAX_LENGTH);
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
@@ -103,9 +113,6 @@ class GitActions extends PluginActions {
         $project = ProjectManager::instance()->getProject($projectId);
 
         if ($backendType == GitDao::BACKEND_GITOLITE) {
-            $backend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
-
-            $repository = new GitRepository();
             $repository->setDescription('-- Default description --');
             $repository->setCreator(UserManager::instance()->getCurrentUser());
             $repository->setProject($project);
@@ -132,20 +139,21 @@ class GitActions extends PluginActions {
             $c->addError($this->getText('actions_params_error'));            
             return false;
         }
-        if ( GitDao::checkName($forkName) === false ) {
-            $c->addError( $this->getText('actions_input_format_error').' '.GitDao::REPO_NAME_MAX_LENGTH );
-            $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
-            return false;
-        }
         $parentRepo = new GitRepository();
         $parentRepo->setId($parentId);
         try {
             $parentRepo->load();
-
+            
             // Disable possibility to delete gitolite repositories
             if ($parentRepo->getBackend() instanceof Git_Backend_Gitolite) {
                 $c->addError( $this->getText('disable_fork_gitolite') );
                 $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
+            }
+
+            if ($parentRepo->isNameValid($forkName) === false) {
+                $c->addError( $this->getText('actions_input_format_error').' '.GitDao::REPO_NAME_MAX_LENGTH );
+                $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
+                return false;
             }
 
             if ( !$parentRepo->isInitialized() ) {

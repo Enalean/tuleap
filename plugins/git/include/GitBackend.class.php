@@ -341,6 +341,16 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         }
         return false;
     }
+    
+    /**
+     * Get the regexp pattern to use for name repository validation
+     *
+     * @return string
+     */
+    public function getAllowedCharsInNamePattern() {
+        //alphanums, underscores and dash
+        return 'a-zA-Z0-9_-';
+    }
 }
 
 ?>
