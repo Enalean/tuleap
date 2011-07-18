@@ -208,10 +208,12 @@ class GitDao extends DataAccessObject {
         if ( empty($projectId) ) {
             return false;
         }
-        $query = 'SELECT * FROM '.$this->getTable().
-                ' WHERE '.self::FK_PROJECT_ID.'='.$projectId.
-                            ' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
-        $rs    = $this->retrieve($query);
+        $sql = "SELECT * FROM $this->tableName
+                WHERE ". self::FK_PROJECT_ID ." = $projectId
+                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                  ORDER BY ". self::REPOSITORY_NAME;
+                  
+        $rs = $this->retrieve($sql);
         if ( empty($rs) || $rs->rowCount() == 0 ) {
             return false;
         }
