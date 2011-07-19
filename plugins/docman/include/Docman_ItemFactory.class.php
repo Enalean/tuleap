@@ -704,11 +704,11 @@ class Docman_ItemFactory {
         $id = $dao->createFromRow($row);
         if ($id) {
             $this->setNewParent($id, $row['parent_id'], $ordering);
-            $newItem = $this->getItemFromDb($id);
+            $newItem  = $this->getItemFromDb($id);
             $parent   = $this->getItemFromDb($row['parent_id']);
-            $um = $this->_getUserManager();
-            $user = $um->getUserById($row['user_id']);
-            $event = 'plugin_docman_event_add';
+            $um       = $this->_getUserManager();
+            $user     = $um->getUserById($row['user_id']);
+            $event    = 'plugin_docman_event_add';
             $this->callItemEvent($row['group_id'], $parent, $newItem, $user, $event);
         }
         return $id;
@@ -774,7 +774,7 @@ class Docman_ItemFactory {
      * @return boolean
      */
     function isSubItem($item_id, $itemSource_id) {
-        $item =& $this->getItemFromDb($item_id);
+        $item = $this->getItemFromDb($item_id);
         $parentId = $item->getParentId();
 
         if($parentId && !$this->isRoot($item)) {
