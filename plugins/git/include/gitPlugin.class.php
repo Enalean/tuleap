@@ -151,10 +151,18 @@ class GitPlugin extends Plugin {
      * @param array $params
      */
     function plugin_statistics_disk_usage_collect_project($params) {
-        $row  = $params['project_row'];
-        $root = '/var/lib/codendi/gitroot';
-        $path = $root.'/'.strtolower($row['unix_group_name']);
-        $params['DiskUsageManager']->storeForGroup($row['group_id'], 'plugin_git', $path);
+        $row = $params['project_row'];
+        $sum = 0;
+
+        // Git-Shell backend
+        $path = $GLOBALS['sys_data_dir'].'/gitroot/'.strtolower($row['unix_group_name']);
+        $sum += $params['DiskUsageManager']->getDirSize($path);
+
+        // Gitolite backend
+        $path = $GLOBALS['sys_data_dir'].'/gitolite/repositories/'.strtolower($row['unix_group_name']);
+        $sum += $params['DiskUsageManager']->getDirSize($path);
+
+        $params['DiskUsageManager']->_getDao()->addGroup($row['group_id'], 'plugin_git', $sum, $_SERVER['REQUEST_TIME']);
     }
 
     /**
