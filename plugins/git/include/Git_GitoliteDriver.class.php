@@ -283,6 +283,7 @@ class Git_GitoliteDriver {
                 $repository->setName($row[GitDao::REPOSITORY_NAME]);
                 $repository->setProject($project);
                 $repository->setNotifiedMails($notifMgr->getNotificationMailsByRepositoryId($row[GitDao::REPOSITORY_ID]));
+                $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
 
                 // Hook config
                 $perms .= $this->fetchMailHookConfig($project, $repository);

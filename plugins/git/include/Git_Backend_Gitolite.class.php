@@ -181,7 +181,18 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      */
     public function changeRepositoryMailingList($repository) {
         $this->driver->dumpProjectRepoConf($repository->getProject());
-        $this->driver->push();
+        return $this->driver->push();
+    }
+
+        /**
+     * Change post-receive-email hook mail prefix
+     *
+     * @param GitRepository $repository
+     * 
+     * @return Boolean
+     */
+    public function changeRepositoryMailPrefix($repository) {
+        return $this->changeRepositoryMailingList($repository);
     }
 
     /**

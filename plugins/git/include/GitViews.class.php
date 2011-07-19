@@ -501,7 +501,7 @@ class GitViews extends PluginViews {
         <tr>
             <td class="plugin_git_first_col" ><label for="mail_prefix_label"><?php echo $this->getText('mail_prefix');
         ?></label></td>
-            <td><input name="mail_prefix" class="plugin_git_mail_prefix" type="text" value="<?php echo $mailPrefix; ?>" /></td>
+            <td><input name="mail_prefix" class="plugin_git_mail_prefix" type="text" value="<?= $this->HTMLPurifier->purify($mailPrefix, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId); ?>" /></td>
         </tr>
         <tr>
             <td colspan="2"><input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>

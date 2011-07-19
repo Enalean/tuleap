@@ -82,8 +82,19 @@ interface Git_Backend_Interface {
      * Update list of people notified by post-receive-email hook
      *
      * @param GitRepository $repository
+     * 
+     * @return Boolean
      */
     public function changeRepositoryMailingList($repository);
+
+    /**
+     * Change post-receive-email hook mail prefix
+     *
+     * @param GitRepository $repository
+     * 
+     * @return Boolean
+     */
+    public function changeRepositoryMailPrefix($repository);
 
     /**
      * Get the regexp pattern to use for name repository validation

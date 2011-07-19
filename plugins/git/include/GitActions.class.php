@@ -225,6 +225,7 @@ class GitActions extends PluginActions {
         }
         $repository = $this->_loadRepository($projectId, $repositoryId);
         $repository->setMailPrefix($mailPrefix);
+        $repository->save();
         $repository->changeMailPrefix();
         $c->addInfo($this->getText('mail_prefix_updated'));
         $this->addData(array('repository'=>$repository));

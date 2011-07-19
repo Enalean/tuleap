@@ -217,7 +217,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
             file_get_contents($this->_fixDir .'/perms/default.conf'),
             $driver->fetchPermissions($prj, array('2'), array('3'), array())
         );
-    }*/
+    }
 
     function testGetMailHookConfig() {
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
@@ -271,14 +271,14 @@ class Git_GitoliteDriverTest extends UnitTestCase {
             $driver->fetchMailHookConfig($prj, $repo)
         );
     }
-
+*/
     /**
      * The project has 2 repositories nb 4 & 5.
      * 4 has defaults
      * 5 has pimped perms
      * 
      */
-    /*function testDumpProjectRepoPermissions() {
+    function testDumpProjectRepoPermissions() {
         $driver = $this->getPartialMock('Git_GitoliteDriver', array('getPermissionsManager', 'getDao', 'getPostReceiveMailManager'));
         $driver->setAdminPath($this->_glAdmDir);
 
@@ -289,8 +289,8 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         // List all repo
         $dao = new MockGitDao();
         $dao->expectOnce('getAllGitoliteRespositories', array(404));
-        $dao->setReturnValue('getAllGitoliteRespositories', $this->arrayToDar(array('repository_id' => 4, 'repository_name' => 'test_default'),
-                                                                              array('repository_id' => 5, 'repository_name' => 'test_pimped')
+        $dao->setReturnValue('getAllGitoliteRespositories', $this->arrayToDar(array('repository_id' => 4, 'repository_name' => 'test_default', 'repository_events_mailing_prefix' => "[SCM]"),
+                                                                              array('repository_id' => 5, 'repository_name' => 'test_pimped', 'repository_events_mailing_prefix' => "[KOIN] ")
                                                             )
         );
         $driver->setReturnValue('getDao', $dao);
@@ -325,7 +325,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/gitolite.conf'));
         $gitoliteConf = file_get_contents($this->_fixDir.'/gitolite-admin/conf/gitolite.conf');
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
-    }*/
+    }
 }
 
 ?>
