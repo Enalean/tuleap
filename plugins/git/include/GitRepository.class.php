@@ -559,12 +559,12 @@ class GitRepository implements DVCSRepository {
      * @return Boolean
      */
     public function notificationAddMail($mail) {
-            $this->notifiedMails[] = $mail;
-            $postRecMailManager = $this->getPostReceiveMailManager();
-            if ($postRecMailManager->addMail($this->getId(), $mail)) {
-                return $this->getBackend()->changeRepositoryMailingList($this);
-            }
-            return false;
+        $this->notifiedMails[] = $mail;
+        $postRecMailManager = $this->getPostReceiveMailManager();
+        if ($postRecMailManager->addMail($this->getId(), $mail)) {
+            return $this->getBackend()->changeRepositoryMailingList($this);
+        }
+        return false;
     }
 
     /**

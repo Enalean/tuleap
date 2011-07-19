@@ -20,6 +20,7 @@
  */
 
 require_once 'Git_Backend_Interface.php';
+require_once 'Git.class.php';
 
 class Git_Backend_Gitolite implements Git_Backend_Interface {
     /**

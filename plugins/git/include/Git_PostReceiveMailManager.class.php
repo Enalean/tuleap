@@ -79,7 +79,6 @@ class Git_PostReceiveMailManager {
      * @return void
      */
     function removeMailByProjectPrivateRepository($groupId, $user) {
-
         if (!$user->isMember($groupId)) {
             $gitDao = $this->_getGitDao();
             $repositoryList = $gitDao->getProjectRepositoryList($groupId);
@@ -89,7 +88,7 @@ class Git_PostReceiveMailManager {
                     $repository   = $this->_getGitRepository();
                     $repository->setId($row['repository_id']);
                     $repository->load();
-                    if ($repository->isPrivate()) {
+                    if (!$repository->userCanRead($user)) {
                         if (!$this->removeMailByRepository($repository, $user->getEmail())) {
                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'dao_error_remove_notification'));
                         }

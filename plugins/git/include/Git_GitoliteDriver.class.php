@@ -67,8 +67,9 @@ class Git_GitoliteDriver {
     }
 
     public function push() {
-        $this->gitPush();
+        $res = $this->gitPush();
         chdir($this->oldCwd);
+        return $res;
     }
 
     public function updateMainConfIncludes($project) {
