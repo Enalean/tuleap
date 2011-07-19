@@ -290,7 +290,7 @@ class WebDAVFRSFile extends Sabre_DAV_File {
      */
     function delete() {
 
-        if ($this->getUtils()->isWriteEnabled() && $this->userCanWrite()) {
+        if ($this->userCanWrite()) {
             $utils = $this->getUtils();
             $result = $utils->getFileFactory()->delete_file($this->getProject()->getGroupId(), $this->getFileId());
             if ($result == 0) {

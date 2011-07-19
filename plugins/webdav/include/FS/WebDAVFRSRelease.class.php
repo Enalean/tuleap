@@ -345,7 +345,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      */
     function delete() {
 
-        if ($this->getUtils()->isWriteEnabled() && $this->userCanWrite()) {
+        if ($this->userCanWrite()) {
             $utils = $this->getUtils();
             $result = $utils->getReleaseFactory()->delete_release($this->getProject()->getGroupId(), $this->getReleaseId());
             if ($result == 0) {
@@ -369,7 +369,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     function setName($name) {
 
         $utils = $this->getUtils();
-        if ($this->getUtils()->isWriteEnabled() && $this->userCanWrite()) {
+        if ($this->userCanWrite()) {
             if (!$utils->getReleaseFactory()->isReleaseNameExist($name, $this->getPackage()->getPackageID())) {
                 $this->getRelease()->setName(htmlspecialchars($name));
                 $utils->getReleaseFactory()->update($this->getRelease()->toArray());
@@ -392,7 +392,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     function move($destination) {
 
         $utils = $this->getUtils();
-        if ($this->getUtils()->isWriteEnabled() && $utils->getReleaseFactory()->userCanUpdate($this->getProject()->getGroupId(), $this->getReleaseId()) && $destination->userCanWrite()) {
+        if ($utils->getReleaseFactory()->userCanUpdate($this->getProject()->getGroupId(), $this->getReleaseId()) && $destination->userCanWrite()) {
             if (!$utils->getReleaseFactory()->isReleaseNameExist($this->getName(), $destination->getPackageId())) {
                 // We don't allow moving an active release under a hidden package.
                 if (!$destination->getPackage()->isHidden() || $this->getRelease()->isHidden()) {
@@ -422,7 +422,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
      */
     function createFile($name, $data = null) {
 
-        if ($this->getUtils()->isWriteEnabled() && $this->userCanWrite()) {
+        if ($this->userCanWrite()) {
             $utils = $this->getUtils();
 
             // Create file in the staging area

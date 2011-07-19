@@ -138,7 +138,7 @@ class WebDAVUtils {
     function userCanWrite($user, $groupId) {
 
         // R2 refers to File release admin
-        return ($user->isSuperUser() || $user->isMember($groupId, 'R2'));
+        return $this->isWriteEnabled() && ($user->isSuperUser() || $user->isMember($groupId, 'R2'));
 
     }
 

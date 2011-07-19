@@ -119,7 +119,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
 
         $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
         $webDAVFRS->setReturnValue('getUtils', $utils);
         $webDAVFRS->getChild($WebDAVPackage->getPackageId());
     }
@@ -141,7 +140,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
         $webDAVFRS->setReturnValue('getUtils', $utils);
         $webDAVFRS->getChild($WebDAVPackage->getPackageId());
     }
@@ -161,7 +159,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $webDAVFRS->setReturnValue('getWebDAVPackage', $WebDAVPackage);
 
         $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
         $webDAVFRS->setReturnValue('getUtils', $utils);
         $this->assertEqual($webDAVFRS->getChild($WebDAVPackage->getPackageId()), $WebDAVPackage);
     }
@@ -176,9 +173,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -195,9 +189,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -214,9 +205,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -233,9 +221,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -252,9 +237,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -271,9 +253,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -290,9 +269,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -309,28 +285,10 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVFRS->userCanRead(), true);
-    }
-
-    /**
-     * Testing creation of package when write is disabled
-     */
-    function testCreateDirectoryWriteDisabled() {
-        $webDAVFRS = new WebDAVFRSTestVersion($this);
-
-        $webDAVFRS->setReturnValue('userCanWrite', true);
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', false);
-        $webDAVFRS->setReturnValue('getUtils', $utils);
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
-
-        $webDAVFRS->createDirectory('pkg');
     }
 
     /**
@@ -340,9 +298,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $webDAVFRS = new WebDAVFRSTestVersion($this);
 
         $webDAVFRS->setReturnValue('userCanWrite', false);
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRS->createDirectory('pkg');
@@ -358,7 +313,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $frspf = new MockFRSPackageFactory();
         $frspf->setReturnValue('isPackageNameExist', true);
         $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
         $utils->setReturnValue('getPackageFactory', $frspf);
         $webDAVFRS->setReturnValue('getUtils', $utils);
         $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
@@ -376,7 +330,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $frspf = new MockFRSPackageFactory();
         $frspf->setReturnValue('isPackageNameExist', false);
         $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', true);
         $utils->setReturnValue('getPackageFactory', $frspf);
         $pm = new MockPermissionsManager();
         $utils->setReturnValue('getPermissionsManager', $pm);

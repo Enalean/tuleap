@@ -228,18 +228,18 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
 
         echo "<table>
         <tr><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'name')."</th><th>Type</th>";
-        if ($class == 'WebDAVFRS' && $node->getUtils()->isWriteEnabled() && $node->userCanWrite()) {
+        if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
             echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'rename')."</th>";
         }
         if ($class == 'WebDAVFRSPackage') {
             echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'last_modified')."</th>";
-            if ($node->getUtils()->isWriteEnabled() && $node->userCanWrite()) {
+            if ($node->userCanWrite()) {
                 echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'rename')."</th>";/*<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'move')."</th>";*/
             }
         }
         if ($class == 'WebDAVFRSRelease') {
             echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'size')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'last_modified')."</th>";
-            if ($node->getUtils()->isWriteEnabled() && $node->userCanWrite()) {
+            if ($node->userCanWrite()) {
                 echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th>";/*<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'move')."</th>";*/
             }
         }
@@ -293,13 +293,13 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
 
             echo str_replace("%", "%25", "<tr><td><a href=\"{$fullPath}\">{$name}</a></td>");
             echo "<td>{$type}</td>";
-            if ($class == 'WebDAVFRS' && $node->getUtils()->isWriteEnabled() && $node->userCanWrite()) {
+            if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
                 $this->deleteForm($file);
                 $this->renameForm($file);
             }
             if ($class == 'WebDAVFRSPackage') {
                 echo "<td>{$lastmodified}</td>";
-                if ($node->getUtils()->isWriteEnabled() && $node->userCanWrite()) {
+                if ($node->userCanWrite()) {
                     $this->deleteForm($file);
                     $this->renameForm($file);
                     $destinations = $this->getReleaseDestinations($file);
@@ -309,7 +309,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
             if ($class == 'WebDAVFRSRelease') {
                 echo "<td>{$size}</td>";
                 echo "<td>{$lastmodified}</td>";
-                if ($node->getUtils()->isWriteEnabled() && $node->userCanWrite()) {
+                if ($node->userCanWrite()) {
                     $this->deleteForm($file);
                     $destinations = $this->getFileDestinations($file);
                     //$this->moveForm($file, $destinations);
@@ -332,15 +332,15 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         <tr><td>";
 
         if ($this->enablePost) {
-            if ($class == 'WebDAVFRS' && $node->getUtils()->isWriteEnabled() && $node->userCanWrite()) {
+            if ($class == 'WebDAVFRS' && $node->userCanWrite()) {
                 echo '<h4>'.$GLOBALS["Language"]->getText("plugin_webdav_html", "create_package").' :</h4>';
                 $this->mkcolForm();
             }
-            if ($class == 'WebDAVFRSPackage' && $node->getUtils()->isWriteEnabled() && $node->userCanWrite()) {
+            if ($class == 'WebDAVFRSPackage' && $node->userCanWrite()) {
                 echo '<h4>'.$GLOBALS["Language"]->getText("plugin_webdav_html", "create_release").' :</h4>';
                 $this->mkcolForm();
             }
-            if ($class == 'WebDAVFRSRelease' && $node->getUtils()->isWriteEnabled() && $node->userCanWrite()) {
+            if ($class == 'WebDAVFRSRelease' && $node->userCanWrite()) {
                 echo '<h4>'.$GLOBALS["Language"]->getText("plugin_webdav_html", "upload_file").' :</h4>
                 <form method="post" action="" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="put" />

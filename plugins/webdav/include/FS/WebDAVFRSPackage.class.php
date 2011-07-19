@@ -301,7 +301,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      */
     function delete() {
 
-        if ($this->getUtils()->isWriteEnabled() && $this->userCanWrite()) {
+        if ($this->userCanWrite()) {
             // don't delete a package if it is not empty
             $releases = $this->getReleaseList($this->getPackage());
             $numReleases = count($releases);
@@ -330,7 +330,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     function setName($name) {
 
         $utils = $this->getUtils();
-        if ($this->getUtils()->isWriteEnabled() && $this->userCanWrite()) {
+        if ($this->userCanWrite()) {
             if (!$utils->getPackageFactory()->isPackageNameExist($name, $this->getProject()->getGroupId())) {
                 $this->getPackage()->setName(htmlspecialchars($name));
                 $utils->getPackageFactory()->update($this->getPackage());
@@ -379,7 +379,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
      */
     function createDirectory($name) {
 
-        if ($this->getUtils()->isWriteEnabled() && $this->userCanWrite()) {
+        if ($this->userCanWrite()) {
             $utils = $this->getUtils();
             if (!$utils->getReleaseFactory()->isReleaseNameExist($name, $this->getPackageId())) {
                 $releaseData['name'] = htmlspecialchars($name);
