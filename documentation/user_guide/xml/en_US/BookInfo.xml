@@ -5,7 +5,11 @@
 //
 -->
   <bookinfo>
-    
+
+    <copyright>
+      <year>2011</year>
+      <holder>Enalean SAS</holder>
+    </copyright>
 
     <copyright>
       <year>2000</year>
@@ -641,6 +645,13 @@
         <authorinitials>&SYS_PRODUCT_NAME; team</authorinitials>
         <revremark>CodeX to Codendi
         </revremark>
+      </revision>
+      
+      <revision>
+        <revnumber>4.0.20</revnumber>
+        <date>19-July-2011</date>
+        <authorinitials>&SYS_PRODUCT_NAME; team</authorinitials>
+        <revremark>Update Git documentation (new gitolite repositories)</revremark>
       </revision>
     </revhistory>
   </bookinfo>

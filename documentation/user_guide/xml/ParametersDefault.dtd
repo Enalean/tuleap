@@ -15,18 +15,18 @@ do not modify this file. Use the
 /etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd file 
 instead and redefine your entities there. If this file doesn't exist create it.-->
 
-<!ENTITY SYS_PRODUCT_NAME "Codendi">
-<!ENTITY SYS_DEFAULT_DOMAIN "codendi.example.com">
-<!ENTITY SYS_CVS_HOST "cvs.codendi.example.com">
-<!ENTITY SYS_SVN_HOST "svn.codendi.example.com">
-<!ENTITY SYS_DOWNLOAD_HOST "download.codendi.example.com">
-<!ENTITY SYS_SHELL_HOST "shell.codendi.example.com">
-<!ENTITY SYS_LISTS_HOST "lists.codendi.example.com">
+<!ENTITY SYS_PRODUCT_NAME "Tuleap">
+<!ENTITY SYS_DEFAULT_DOMAIN "tuleap.net">
+<!ENTITY SYS_CVS_HOST "tuleap.net">
+<!ENTITY SYS_SVN_HOST "tuleap.net">
+<!ENTITY SYS_DOWNLOAD_HOST "tuleap.net">
+<!ENTITY SYS_SHELL_HOST "tuleap.net">
+<!ENTITY SYS_LISTS_HOST "lists.tuleap.net">
 <!ENTITY SYS_DATA_DIR "/var/lib/codendi">
-<!ENTITY FTPINCOMING_DIR "/home/ftp/incoming">
-<!ENTITY FTPFILES_DIR "/home/ftp/codendi">
+<!ENTITY FTPINCOMING_DIR "/var/lib/codendi/ftp/incoming">
+<!ENTITY FTPFILES_DIR "/var/lib/codendi/ftp/codendi">
 <!ENTITY SYS_ORG_NAME "Example Company">
 <!ENTITY SYS_LONG_ORG_NAME "Example Corporation">
-<!ENTITY SYS_EMAIL_ADMIN  "codendi-admin@codendi.example.com">
-<!ENTITY SYS_EMAIL_CONTACT "codendi-contact@codendi.example.com">
+<!ENTITY SYS_EMAIL_ADMIN  "admin@tuleap.net">
+<!ENTITY SYS_EMAIL_CONTACT "contact@tuleap.net">
 <!ENTITY SYS_UPDATE_SITE "http://codendi.example.com/downloads/eclipse">

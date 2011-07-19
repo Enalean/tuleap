@@ -6,104 +6,143 @@
 //
 -->
 <chapter id="VersionControlWithGit">
-  
-  <title>Contr&ocirc;le de version avec Git</title>
+  <title>Contrôle de version avec Git</title>
 
-  <para>Ce chapitre n'est pas un tutoriel Git. Il a pour objectif d'expliquer comment utiliser les fonctionnalit&eacute;es propos&eacute;es par &SYS_PRODUCT_NAME;
-  Si vous n'&ecirc;tes pas familier avec Git nous vous conseillons de vous r&eacute;f&eacute;rer &agrave; la documentation (voir <xref linkend="GitReferences" />).</para>
+  <para>Ce chapitre n'est pas un tutoriel Git. Il a pour objectif d'expliquer comment utiliser les fonctionnalitées proposées par &SYS_PRODUCT_NAME;
+  Si vous n'êtes pas familier avec Git nous vous conseillons de vous référer à la documentation (voir <xref linkend="GitReferences" />).</para>
 
-  <section id="Git:CodendiSupport">
-    <title>Support de Git dans Codendi</title>
+  <para>
+    Le support de Git a été développé pour supporter plusieurs
+    dépôts par projet. Ceci est en accord avec la philosophie des systèmes de gestion de version distribués qui permet de mettre en place des
+    workflow distribuant le développement de fonctionnalitées sur plusieurs dépôts.
+  </para>
 
-    <section id="GitPluginConfiguration">
-        <title>Configuration du plugin</title>
-        <para>
-            La page d'aministration des plugins permet de configurer le plugin git et notamment de modifier le r&eacute;pertoire de sauvegarde des d&eacute;p&ocirc;ts.
-        </para>
-    </section>
+  <para>L'accès à Git (à la fois pour les opérations de lecture et d'écriture) nécessite une clef SSH valide et configurée dans vos préférences utilisateur. Se référer à <xref linkend="AccountMaintenance" /> pour les détails.
+  </para>
 
-    <para>
-    Le support de Git est impl&eacute;ment&eacute; sous forme de plugin sur la plateforme Codendi. Il a &eacute;t&eacute; d&eacute;velopp&eacute; pour supporter plusieurs
-    d&eacute;p&ocirc;ts par projet. Ceci est en accord avec la philosophie des syst&egrave;mes de gestion de version distribu&eacute;s qui permet de mettre en place des
-    workflow distribuant le d&eacute;veloppement de fonctionnalit&eacute;es sur plusieurs d&eacute;p&ocirc;ts.
-    </para>
-    <title>Les types de d&eacute;p&ocirc;t</title>
-    <para>
-    Deux types de d&eacute;p&ocirc;t sont distingu&eacute;s:
-    </para>
+  <para>Deux types de dépôt sont distingués:
     <itemizedlist mark="bullet">
-        <listitem>
-          <para>R&eacute;f&eacute;rence : C'est consid&eacute;r&eacute; comme un sous projet ou un module ind&eacute;pendant d'un projet aui peut &ecirc;tre fork&eacute;.</para>
-       </listitem>
-        <listitem>
-          <para>Fork (clone) : C'est le r&eacute;sultat de la commande 'git clone', permettant ainsi de r&eacute;partir les d&eacute;veloppements de fonctionnalit&eacute;s sur le(s) &eacute;quipe(s).</para>
-        </listitem>
+        <listitem><para>Référence : considéré comme un sous projet ou un module indépendant d'un projet aui peut être forké.</para></listitem>
+        <listitem><para>Fork (clone) : le résultat de la commande 'git clone', permettant ainsi de répartir les développements de fonctionnalités sur le(s) équipe(s).</para></listitem>
     </itemizedlist>
+  </para>
 
-    <section id="GitRepositoryReference">
-     <title>R&eacute;f&eacute;rence</title>
-          <section id="GitReferenceCreation">
-            <para>Une r&eacute;f&eacute;rence peut-&ecirc;tre cr&eacute;&eacute;e. Seul un administrateur projet peut cr&eacute;er une r&eacute;f&eacute;rence depuis la page d'accueil du service. Le nommage des r&eacute;f&eacute;rences.</para>
-          </section>          
-          <section id="GitReferenceInitialization">
-              <para>Une r&eacute;f&eacute;rence doit &ecirc;tre initialis&eacute;e
-                  <itemizedlist mark="bullet">
-                      <listitem>cd mysources</listitem>
-                      <listitem>git init</listitem>
-                      <listitem>git add .</listitem>
-                      <listitem>git commit -m 'initial commit'</listitem>
-                      <listitem>git push USER@SERVER:/var/lib/codendi/gitroot/PROJECT_SHORT_NAME/REPO_NAME.git master</listitem>
-                   </itemizedlist>
-              </para>
-          </section>
-      </section>
+  <section id="GitRepositoryReference">
+    <title>Référence</title>
 
-     <section id="GitRepositoryFork">
-         <title>Fork</title>
-         <para> Tout d&eacute;p&ocirc;t peut &ecirc;tre fork&eacute; par un membre du projet.</para>
-     </section>
+    <para>Une référence peut-être créée. Seul un administrateur projet peut créer une référence depuis la page d'accueil du service. Le nommage des références.</para>
 
-     <section id="GitRepositorySettings">
-         <title>Param&egrave;tres du d&eacute;p&ocirc;t (seulement pour les administrateurs projet)</title>
-         <para>L'acc&egrave;s peut &ecirc;tre modifi&eacute; : privé (acc&egrave;s aux seuls membres du projet), public (acc&egrave;s &agrave; tout uitlisateur enregistr&eacute; sur la platforme).</para>
-     </section>
-
-     <section id="GitRepositoryDeletion">
-         <title>Suppression d'un d&eacute;p&ocirc;t (seulement pour les administrateurs projet))</title>
-         <para>
-             Un d&eacute;p&ocirc;t peut &ecirc;tre supprim&eacute;, une archive compress&eacute;e sera cr&eacute;&eacute;e sous le nom {PROJECT_SHORT_NAME}_{REPOSITORY_NAME}_{DEL_TIMESTAMP}.tar.bz2
-             et d&eacute;plac&eacute; dans le r&eacute;pertoire de sauvegarde (see <xref linkend="GitPluginConfiguration" />).
-             Se r&eacute;f&eacute;rer &agrave; la section <xref linkend="GitRepositoryImport" /> pour l'import des d&eacute;p&ocirc;ts.
-         </para>
-     </section>
-
-     <section id="GitRepositoryImport">
-         <title>Import de d&eacute;p&ocirc;t</title>
-         <para>Il n'existe pas de proc&eacute;dure automatique pour importer un d&eacute;p&ocirc;t, se r&eacute;f&eacute;rer &agrave; la documentation de l'administrateur
-         <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/administration_guide/html/Codendi_Administration_Guide.html#HowTo_Import_Git">ici</ulink>.
-         </para>
-     </section>
-
-   </section>
-
-    <section id="GitReferences">
-      <title>Les r&eacute;f&eacute;rences Git</title>
-
+    <para>Une référence doit être initialisée
       <itemizedlist mark="bullet">
-	<listitem>
-	  <para>Site officiel de git <ulink
-	  url="http://git-scm.com/">http://git-scm.com/</ulink>
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>Le livre : Pro Git
-	  <ulink
-	  url="http://progit.org/book/ch1-1.html">http://progit.org/book/ch1-1.html</ulink>.</para>
-	</listitem>
+        <listitem><para>cd mysources</para></listitem>
+        <listitem><para>git init</para></listitem>
+        <listitem><para>git add .</para></listitem>
+        <listitem><para>git commit -m 'initial commit'</para></listitem>
+        <listitem><para>git push USER@SERVER:/gitroot/PROJECT_SHORT_NAME/REPO_NAME.git master</para></listitem>
       </itemizedlist>
+    </para>
+  </section>
 
+  <section id="GitRepositoryFork">
+    <title>Fork</title>
+    <para>Tout dépôt peut être forké par un membre du projet.</para>
+  </section>
+
+  <section id="GitRepositorySettings">
+    <title>Paramètres du dépôt</title>
+
+    <para>L'administrateur de projet a la possibilité de modifier la configuration du dépôt. En particulier:
+      <itemizedlist mark="bullet">
+        <listitem><para>la description textuelle du dépôt,</para></listitem>
+        <listitem><para>les permissions,</para></listitem>
+        <listitem><para>et la notification suite à un "push"</para></listitem>
+      </itemizedlist>
+    </para>
+
+    <section id="GitRepositorySettingsAccessControlGitShell">
+      <title>Permissions simples</title>
+      <para>Le contrôle d'accès par défaut est basé sur la notion de dépôt public/privés. Un dépôt public est accessible par tous les utilisateurs ayant un compte valide sur la platforme.
+        Les dépôt privés, eux, ne sont accessibles que par les membres de projet.</para>
+      <para>Dans tous les cas de figure, les membres de projet ont toujours un accès complet à tous les dépôt (en lecture et en écriture).</para>
+      <para>Si la fonctionnalité "d'utilisateur restreint" est activée, seule la création de dépôts privés est possible.</para>
+      <para>Il est possible d'avoir des permissions à grain fin. Se référer à <xref linkend="GitRepositoryGitolite" />.</para>
     </section>
-  </chapter>
+
+    <section id="GitRepositorySettingsEmail">
+      <title>Notification par courriel</title>
+      <para>Il est souvent conseillé de tenir informée toute l'équipe lorque quelqu'un "pousse" (push) des nouvelles choses dans un dépôt.
+        Vous pouvez configurer celui ci pour qu'il envoi automatiquement un courriel à une liste de personne (ou, mieux, à une liste de diffusion).</para>
+      <para>Le contenu du message dépend du contenu du push mais vous pouvez configurer:
+        <itemizedlist mark="bullet">
+          <listitem><para>le préfix du sujet</para></listitem>
+          <listitem><para>la liste des destinataires</para></listitem>
+        </itemizedlist>
+      </para>
+      <para>Lorsque vous ajoutez un destinataire, l'autocompletion est faite à sur les noms d'utilisateurs de la platforme. Vous pouvez néanmoins forcer n'importe quelle autre adresse (comme celle d'une liste de diffusion)</para>
+      <para>Dès la liste configurée, tous les push suivant enverons un message contenant :
+        <itemizedlist mark="bullet">
+          <listitem><para>la liste des commits contenus dans le push,</para></listitem>
+          <listitem><para>les fichiers modifiés (+diffstats),</para></listitem>
+          <listitem><para>pour chaque commit, un lien vers diff dans l'interface gitweb de &SYS_PRODUCT_NAME;,</para></listitem>
+          <listitem><para>pour chaque référence (dans un message de commit par exemple), l'automagic link correspondant.</para></listitem>
+        </itemizedlist>
+        L'extraction des références croisées ne sera pas fait si la fonctionnalité de notification par mail n'est pas activée.
+      </para>
+    </section>
+  </section>
+
+  <section id="GitRepositoryGitolite">
+    <title>Permissions fines</title>
+    <para>Á partir de la version 4.0.20, l'administrateur de projet peu créer des dépôt permettant de définir des permissions plus fines.</para>
+    
+    <para>Pour activer cette fonctionnalité, l'administrateur de projet doit, au préalable, activer le mode "&SYS_PRODUCT_NAME; Lab" dans ses préférences utilisateur (via la Page Personnelle).
+      Ainsi fait, une case à cocher apparait dans l'interface de création de dépôt. Cette case permet de créer un dépôt "permissions à grain fin".</para>
+    
+    <para>Ce nouveau type de dépôt permet de :
+      <itemizedlist mark="bullet">
+        <listitem><para>Définir une arborescence de dépots. Par exemple "platform/x86".</para></listitem>
+        <listitem><para>D'associer des groupes d'utilisateurs aux différentes capacités: Lecture, Écriture, Rewind.</para></listitem>
+      </itemizedlist>
+    </para>
+
+    <para>Dans l'interface de gestion d'un dépôt, l'administrateur de projet peut associer un ou plusieurs groupes à
+      <itemizedlist mark="bullet">
+        <listitem><para>Lecture: accèder au dépôt en lecture seule</para></listitem>
+        <listitem><para>Écriture: pousser (push) de nouvelles révisions, des branches, des tags (mais aussi les supprimer).</para></listitem>
+        <listitem><para>Rewind: dépasser les barrières de protection de git et jouer avec l'historique du dépôt. Il est fortement déconseillé d'activer cette possibilité si vous ne comprenez par parfaitement ce que vous faites. Cette capacité permet de corompre définitivement l'historique d'un dépôt.</para></listitem>
+      </itemizedlist>
+    </para>
+
+    <para>Le fork et la suppression d'un dépot "permissions fine" sera disponible ulterieurement.</para>
+  </section>
+
+  <section id="GitRepositoryDeletion">
+    <title>Suppression d'un dépôt</title>
+    <para>
+      Un dépôt peut être supprimé, une archive compressée sera créée sous le nom {PROJECT_SHORT_NAME}_{REPOSITORY_NAME}_{DEL_TIMESTAMP}.tar.bz2
+      et déplacé dans le répertoire de sauvegarde.
+      Se référer à la section <xref linkend="GitRepositoryImport" /> pour l'import des dépôts.
+    </para>
+  </section>
+
+  <section id="GitRepositoryImport">
+    <title>Import de dépôt</title>
+    <para>Il n'existe pas de procédure automatique pour importer un dépôt, se référer à la documentation de l'administrateur.
+    </para>
+  </section>
+
+  <section id="GitReferences">
+    <title>Les références Git</title>
+    <itemizedlist mark="bullet">
+      <listitem><para>Site officiel de git <ulink url="http://git-scm.com/">http://git-scm.com/</ulink></para></listitem>
+      <listitem><para>Le livre : Pro Git <ulink url="http://progit.org/book/ch1-1.html">http://progit.org/book/ch1-1.html</ulink>.</para></listitem>
+    </itemizedlist>
+  </section>
+
+</chapter>
+
+
+
 <!--
 Local Variables:
 sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")

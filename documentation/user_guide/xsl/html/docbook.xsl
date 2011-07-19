@@ -18,20 +18,6 @@
 
 <!-- ==================================================================== -->
 
-<xsl:template name="user.footer.navigation">
-  <xsl:param name="node" select="."/>
-  <br/><div align="center"><font size="-1"><i>
-  Copyright &#169; Xerox Corporation, Codendi 2001-2009. All Rights Reserved</i></font>
-  </div>
-</xsl:template>
-
-<xsl:template name="user.header.navigation">
-  <xsl:param name="node" select="."/>
-  <div align="center"><font size="-1"><i>
-  Copyright &#169; Xerox Corporation, Codendi, 2001-2009. All Rights Reserved</i></font>
-  </div><br/>
-</xsl:template>
-
 <!-- ==================================================================== -->
 
 </xsl:stylesheet>

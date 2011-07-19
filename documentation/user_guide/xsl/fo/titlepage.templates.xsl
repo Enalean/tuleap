@@ -340,7 +340,7 @@
                                  height="auto"
                                  content-height="auto"
                                  width="auto"
-                                 src="url(../../icons/codendi.png)" />
+                                 src="url(../../icons/logo.png)" />
           </fo:block>
 
   <xsl:choose>

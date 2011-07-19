@@ -11,7 +11,7 @@
 <xsl:template name="book.titlepage.recto">
   <!-- CX-SBT: Add the logo + Version/Date -->
   <div align="center">
-    <img src="../../icons/codendi.png"/><br/><br/>
+    <p><img src="../../icons/logo.png"/></p>
   <xsl:choose>
     <xsl:when test="bookinfo/title">
       <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/title"/>
@@ -29,11 +29,10 @@
       <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="subtitle"/>
     </xsl:when>
   </xsl:choose>
-  <br/><br/>
-  <p>Version <xsl:call-template name="get.last.version.revision"/>
-  <br/><font size="-2"><xsl:call-template name="get.last.date.revision"/></font>
-  </p>
-  <hr/></div>
+
+  <p>Version <xsl:call-template name="get.last.version.revision"/></p>
+  <p style="font-size: small"><xsl:call-template name="get.last.date.revision"/></p>
+  </div>
 
 <!--  <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/revhistory"/> -->
 <!-- <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/authorgroup"/> -->

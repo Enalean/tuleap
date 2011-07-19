@@ -74,13 +74,11 @@ an entity cannot be redefined. Hence this particular order  -->
   &ChapterVersionControlWithSubversion;
   &ChapterVersionControlWithGit;
   &ChapterDocumentManagerPlugin;
-  &ChapterTestManagerPlugin;
   &ChapterContinuousIntegrationWithHudson;
   &ChapterWiki;
   &ChapterCommunicationServices;
   &ChapterSurveyManager;
   &ChapterProjectWebSite;
   &ChapterOtherServices;
-  &ChapterDocumentManager;
 
 </book>
