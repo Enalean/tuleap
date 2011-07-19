@@ -31,6 +31,39 @@ Mock::generate('Git_PostReceiveMailManager');
 
 class Git_GitoliteDriverTest extends UnitTestCase {
 
+    function __construct() {
+        $this->_fixDir = dirname(__FILE__).'/_fixtures';
+
+        $this->_glAdmDirRef = $this->_fixDir.'/gitolite-admin-ref';
+        mkdir($this->_glAdmDirRef);
+        mkdir($this->_glAdmDirRef.'/conf');
+        touch($this->_glAdmDirRef.'/conf/gitolite.conf');
+        $cwd = getcwd();
+        chdir($this->_glAdmDirRef);
+        system('git init -q && git add conf/gitolite.conf && git commit -m "init" 2>&1 >/dev/null');
+        chdir($cwd);
+    }
+
+    function __destruct() {
+        system('rm -rf '.$this->_glAdmDirRef);
+    }
+
+    function setUp() {
+        $this->cwd = getcwd();
+        $this->_glAdmDir = $this->_fixDir.'/gitolite-admin';
+
+        system('cp -r '. $this->_glAdmDirRef .' '. $this->_glAdmDir);
+
+        $this->httpsHost = $GLOBALS['sys_https_host'];
+        $GLOBALS['sys_https_host'] = 'localhost';
+    }
+
+    function tearDown() {
+        chdir($this->cwd);
+        system('rm -rf '.$this->_glAdmDir);
+        $GLOBALS['sys_https_host'] = $this->httpsHost;
+    }
+
     function getPartialMock($className, $methods) {
         $partialName = $className.'Partial'.uniqid();
         Mock::generatePartial($className, $partialName, $methods);
@@ -50,25 +83,6 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $dar->setReturnValue('rowCount', $rowCount);
         $dar->setReturnValue('isError', false);
         return $dar;
-    }
-
-    function setUp() {
-        $this->cwd = getcwd();
-        $this->_fixDir = dirname(__FILE__).'/_fixtures';
-        $this->_glAdmDir = $this->_fixDir.'/gitolite-admin';
-        mkdir($this->_glAdmDir);
-        mkdir($this->_glAdmDir.'/conf');
-        touch($this->_glAdmDir.'/conf/gitolite.conf');
-        chdir($this->_glAdmDir);
-        system('git init -q && git add conf/gitolite.conf && git commit -m "init" 2>&1 >/dev/null');
-        $this->httpsHost = $GLOBALS['sys_https_host'];
-        $GLOBALS['sys_https_host'] = 'localhost';
-    }
-
-    function tearDown() {
-        chdir($this->cwd);
-        system('rm -rf '.$this->_glAdmDir);
-        $GLOBALS['sys_https_host'] = $this->httpsHost;
     }
 
     function assertEmptyGitStatus() {

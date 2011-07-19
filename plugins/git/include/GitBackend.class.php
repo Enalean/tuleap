@@ -220,21 +220,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      */
     public function setUpMailingHook($repository) {
         $path = $this->getGitRootPath().$repository->getPath();
-
-        $url = 'https://'.$GLOBALS['sys_https_host'].
-            '/plugins/git/index.php/'.$repository->getProjectId().
-            '/view/'.$repository->getId().
-            '/?p='.basename($path).'&a=commitdiff&h=%%H';
-
-        $format = 'format:URL:    '.$url.'%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
-
-        $showrev = "t=%s; ".
-            "git show ".
-            "--name-status ".
-            "--pretty='".$format."' ".
-            "\$t";
-
-        $this->getDriver()->setConfig($path, 'hooks.showrev', $showrev);
+        $this->getDriver()->setConfig($path, 'hooks.showrev', $repository->getPostReceiveShowRev());
     }
 
 

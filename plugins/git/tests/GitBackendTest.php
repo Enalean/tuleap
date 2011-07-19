@@ -85,10 +85,14 @@ class GitBackendTest extends UnitTestCase {
     public function testAddMailingShowRev() {        
         $GLOBALS['sys_https_host'] = 'codendi.org';
 
-        $repo = new MockGitRepository($this);
-        $repo->setReturnValue('getPath', 'prj/repo.git');
-        $repo->setReturnValue('getProjectId', 1750);
-        $repo->setReturnValue('getId', 290);
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getId', 1750);
+
+        $repo = new GitRepository();
+        $repo->setPath('prj/repo.git');
+        $repo->setName('repo');
+        $repo->setProject($prj);
+        $repo->setId(290);
 
         $driver = new MockGitDriver($this);
         $driver->expectOnce('setConfig', array('/var/lib/codendi/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=repo.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
@@ -114,7 +118,9 @@ class GitBackendTest extends UnitTestCase {
         // Use real git object because we need to store values (id)
         $repo = new GitRepository();
         $repo->setPath('prj/repo.git');
+        $repo->setName('repo');
         $repo->setProject($prj);
+        $repo->setId(290);
 
         $dao = new MockGitDao($this);
         $dao->expectOnce('save');

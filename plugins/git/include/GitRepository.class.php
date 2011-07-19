@@ -435,7 +435,7 @@ class GitRepository implements DVCSRepository {
         $url = 'https://'.$GLOBALS['sys_https_host'].
             '/plugins/git/index.php/'.$this->getProjectId().
             '/view/'.$this->getId().
-            '/?p='.$this->getName().'&a=commitdiff&h=%%H';
+            '/?p='.$this->getName().'.git&a=commitdiff&h=%%H';
 
         $format = 'format:URL:    '.$url.'%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
 
