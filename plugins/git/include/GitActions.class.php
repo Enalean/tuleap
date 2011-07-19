@@ -105,7 +105,7 @@ class GitActions extends PluginActions {
         $repository->setBackend($backend);
 
         if ( $repository->isNameValid($repositoryName) === false ) {
-            $c->addError( $this->getText('actions_input_format_error').' '.GitDao::REPO_NAME_MAX_LENGTH);
+            $c->addError( $this->getText('actions_input_format_error', array($repository->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
         }
@@ -151,7 +151,7 @@ class GitActions extends PluginActions {
             }
 
             if ($parentRepo->isNameValid($forkName) === false) {
-                $c->addError( $this->getText('actions_input_format_error').' '.GitDao::REPO_NAME_MAX_LENGTH );
+                $c->addError( $this->getText('actions_input_format_error', array($parentRepo->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
                 $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
                 return false;
             }

@@ -68,7 +68,7 @@ plugin_git	disable_fork_gitolite	It's not yet possible to fork "Gitolite" based 
 
 plugin_git	actions_params_error	Empty required parameter(s)
 plugin_git	actions_delete_process	Repository will be removed in a few seconds
-plugin_git	actions_input_format_error	Repository name is not well formatted only alphanumeric and - _ characters are allowed, max lenght is
+plugin_git	actions_input_format_error	Repository name is not well formatted. Allowed characters: $1 and max length is $2.
 plugin_git	actions_create_repo_process	Repository will be created in a few seconds
 
 plugin_git	actions_repo_not_found	The repository does not exist
