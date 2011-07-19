@@ -90,7 +90,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertEqual($output, array());
         $this->assertEqual($ret_val, 0);
     }
-/*
+
     function testGitoliteConfUpdate() {
         // Test base: one gitolite conf + 1 project file
         file_put_contents($this->_fixDir.'/gitolite-admin/conf/gitolite.conf', '@test = coin'.PHP_EOL);
@@ -265,13 +265,13 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $repo->setProject($prj);
         $repo->setName('test_default');
         $repo->setNotifiedMails(array('john.doe@enalean.com', 'mme.michue@enalean.com'));
-        $repo->setMailPrefix('"[\_o<]" \t');
+        $repo->setMailPrefix('["\_o<"] \t');
         $this->assertIdentical(
             file_get_contents($this->_fixDir .'/gitolite-mail-config/mailhook-rev-mail-prefix-quote.txt'),
             $driver->fetchMailHookConfig($prj, $repo)
         );
     }
-*/
+
     /**
      * The project has 2 repositories nb 4 & 5.
      * 4 has defaults
