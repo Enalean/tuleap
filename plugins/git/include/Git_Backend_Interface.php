@@ -102,5 +102,15 @@ interface Git_Backend_Interface {
      * @return string eg: 'a-zA-Z0-9_-'
      */
     public function getAllowedCharsInNamePattern();
+
+    /**
+     * Rename a project
+     *
+     * @param Project $project The project to rename
+     * @param string  $newName The new name of the project
+     *
+     * @return true if success, false otherwise
+     */
+    public function renameProject(Project $project, $newName);
 }
 ?>

@@ -23,6 +23,8 @@ require_once dirname(__FILE__).'/../include/Git.class.php';
 require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
 
 Mock::generate('Project');
+Mock::generatePartial('Git_GitoliteDriver', 'Git_GitoliteDriver_TestVersion', array('gitPush'));
+Mock::generatePartial('Project', 'Project_DriverTestVersion', array('getUnixName'));
 Mock::generate('User');
 Mock::generate('GitDao');
 Mock::generate('PermissionsManager');
@@ -31,25 +33,13 @@ Mock::generate('Git_PostReceiveMailManager');
 
 class Git_GitoliteDriverTest extends UnitTestCase {
 
-    function __construct() {
+    function setUp() {
+        $this->cwd = getcwd();
+        
         $this->_fixDir = dirname(__FILE__).'/_fixtures';
 
         $this->_glAdmDirRef = $this->_fixDir.'/gitolite-admin-ref';
-        mkdir($this->_glAdmDirRef);
-        mkdir($this->_glAdmDirRef.'/conf');
-        touch($this->_glAdmDirRef.'/conf/gitolite.conf');
-        $cwd = getcwd();
-        chdir($this->_glAdmDirRef);
-        system('git init -q && git add conf/gitolite.conf && git commit -m "init" 2>&1 >/dev/null');
-        chdir($cwd);
-    }
-
-    function __destruct() {
-        system('rm -rf '.$this->_glAdmDirRef);
-    }
-
-    function setUp() {
-        $this->cwd = getcwd();
+        
         $this->_glAdmDir = $this->_fixDir.'/gitolite-admin';
 
         system('cp -r '. $this->_glAdmDirRef .' '. $this->_glAdmDir);
@@ -94,7 +84,6 @@ class Git_GitoliteDriverTest extends UnitTestCase {
     function testGitoliteConfUpdate() {
         // Test base: one gitolite conf + 1 project file
         file_put_contents($this->_fixDir.'/gitolite-admin/conf/gitolite.conf', '@test = coin'.PHP_EOL);
-        mkdir($this->_fixDir.'/gitolite-admin/conf/projects');
         touch($this->_fixDir.'/gitolite-admin/conf/projects/project1.conf');
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
@@ -325,6 +314,32 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertTrue(is_file($this->_fixDir.'/gitolite-admin/conf/gitolite.conf'));
         $gitoliteConf = file_get_contents($this->_fixDir.'/gitolite-admin/conf/gitolite.conf');
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
+    }
+    /**/
+    
+    function test_renameProject() {
+        $driver = new Git_GitoliteDriver_TestVersion();
+        $driver->expectOnce('gitPush');
+        $driver->setReturnValue('gitPush', true);
+        $driver->setAdminPath($this->_glAdmDir);
+        
+        $project = new Project_DriverTestVersion();
+        $project->setReturnValue('getUnixName', 'legacy');
+        
+        $this->assertTrue(is_file($this->_glAdmDir.'/conf/projects/legacy.conf'));
+        $this->assertFalse(is_file($this->_glAdmDir.'/conf/projects/newone.conf'));
+        
+        $this->assertTrue($driver->renameProject($project, 'newone'));
+        
+        clearstatcache(true, $this->_glAdmDir.'/conf/projects/legacy.conf');
+        $this->assertFalse(is_file($this->_glAdmDir.'/conf/projects/legacy.conf'));
+        $this->assertTrue(is_file($this->_glAdmDir.'/conf/projects/newone.conf'));
+        $this->assertIdentical(
+            file_get_contents($this->_fixDir.'/perms/newone.conf'),
+            file_get_contents($this->_glAdmDir.'/conf/projects/newone.conf')
+        );
+        $this->assertNoPattern('`\ninclude "projects/legacy.conf"\n`', file_get_contents($this->_glAdmDir.'/conf/gitolite.conf'));
+        $this->assertPattern('`\ninclude "projects/newone.conf"\n`', file_get_contents($this->_glAdmDir.'/conf/gitolite.conf'));
     }
 }
 

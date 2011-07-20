@@ -64,6 +64,8 @@ class GitRepository implements DVCSRepository {
     private $parent;    
     private $loaded;    
     private $dao;
+    
+    protected $backendType;
 
     public function __construct() {
 
@@ -537,7 +539,11 @@ class GitRepository implements DVCSRepository {
     public function renameProject(Project $project, $newName) {
         $newName = strtolower($newName);
         if ($this->getBackend()->renameProject($project, $newName)) {
-            return $this->getDao()->renameProject($project, $newName);
+            unset($this->backend);
+            $this->setBackendType(GitDao::BACKEND_GITOLITE);
+            if ($this->getBackend()->renameProject($project, $newName)) {
+                return $this->getDao()->renameProject($project, $newName);
+            }
         }
         return false;
     }

@@ -51,6 +51,15 @@ class Git_GitoliteDriver {
     public function getAdminPath() { 
         return $this->adminPath; 
     }
+    
+    /**
+     * Get repositories path
+     *
+     * @return string
+     */
+    public function getRepositoriesPath() { 
+        return realpath($this->adminPath .'/../repositories'); 
+    }
 
     public function setAdminPath($adminPath) {
         $this->adminPath = $adminPath;
@@ -142,6 +151,15 @@ class Git_GitoliteDriver {
         }
     }
 
+    protected function gitMv($from, $to) {
+        exec('git mv '.escapeshellarg($from) .' '. escapeshellarg($to), $output, $retVal);
+        if ($retVal == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     protected function gitAdd($file) {
         exec('git add '.escapeshellarg($file), $output, $retVal);
         if ($retVal == 0) {
@@ -170,7 +188,7 @@ class Git_GitoliteDriver {
     }
     
     protected function gitPush() {
-        exec('git push origin master', $output, $retVal);
+        exec('su -c "git push origin master 2>&1" codendiadm', $output, $retVal);
         if ($retVal == 0) {
             return true;
         } else {
@@ -356,6 +374,41 @@ class Git_GitoliteDriver {
      */
     protected function getPostReceiveMailManager() {
         return new Git_PostReceiveMailManager();
+    }
+    
+    /**
+     * Rename a project
+     *
+     * @param Project $project The project to rename
+     * @param string  $newName The new name of the project
+     *
+     * @return true if success, false otherwise
+     */
+    public function renameProject(Project $project, $newName) {
+        $ok = true;
+        $oldName = $project->getUnixName();
+        if (is_file($this->adminPath.'/conf/projects/'. $oldName .'.conf')) {
+            $ok = $this->gitMv(
+                $this->adminPath.'/conf/projects/'. $oldName .'.conf',
+                $this->adminPath.'/conf/projects/'. $newName .'.conf'
+            );
+            if ($ok) {
+                //conf/projects/newone.conf
+                $orig = file_get_contents($this->adminPath.'/conf/projects/'. $newName .'.conf');
+                $dest = preg_replace('`(^|\n)repo '. preg_quote($oldName) .'/`', '$1repo '. $newName .'/', $orig);
+                $dest = str_replace('@'. $oldName .'_project_', '@'. $newName .'_project_', $dest);
+                file_put_contents($this->adminPath.'/conf/projects/'. $newName .'.conf', $dest);
+                
+                //conf/gitolite.conf
+                $orig = file_get_contents($this->confFilePath);
+                $dest = str_replace('include "projects/'. $oldName .'.conf"', 'include "projects/'. $newName .'.conf"', $orig);
+                file_put_contents($this->confFilePath, $dest);
+                
+                //commit
+                $ok = $this->gitcommit('Rename project '. $oldName .' to '. $newName) && $this->gitPush();
+            }
+        }
+        return $ok;
     }
 }
 

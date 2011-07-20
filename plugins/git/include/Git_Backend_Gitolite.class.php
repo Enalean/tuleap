@@ -205,6 +205,25 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         //alphanums, underscores, slashes and dash
         return 'a-zA-Z0-9/_.-';
     }
+    
+    /**
+     * Rename a project
+     *
+     * @param Project $project The project to rename
+     * @param string  $newName The new name of the project
+     *
+     * @return true if success, false otherwise
+     */
+    public function renameProject(Project $project, $newName) {
+        if (is_dir($this->driver->getRepositoriesPath() .'/'. $project->getUnixName())) {
+            $ok = rename(
+                $this->driver->getRepositoriesPath() .'/'. $project->getUnixName(), 
+                $this->driver->getRepositoriesPath() .'/'. $newName
+            );
+            return $ok && $this->driver->renameProject($project, $newName);
+        }
+        return true;
+    }
 }
 
 ?>
