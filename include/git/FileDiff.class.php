@@ -779,7 +779,7 @@ class GitPHP_FileDiff
 		$isBinary = false;
 		$fromName = '/dev/null';
 		$toName = '/dev/null';
-		if (($this->status == 'M') || ($this->status == 'D')) {
+		if (empty($this->status) || ($this->status == 'M') || ($this->status == 'D')) {
 			$fromBlob = $this->GetFromBlob();
 			$isBinary = $isBinary || $fromBlob->IsBinary();
 			$fromData = $fromBlob->GetData(false);
@@ -792,7 +792,7 @@ class GitPHP_FileDiff
 				$fromName .= $this->fromHash;
 			}
 		}
-		if (($this->status == 'M') || ($this->status == 'A')) {
+		if (empty($this->status) || ($this->status == 'M') || ($this->status == 'A')) {
 			$toBlob = $this->GetToBlob();
 			$isBinary = $isBinary || $toBlob->IsBinary();
 			$toData = $toBlob->GetData(false);
