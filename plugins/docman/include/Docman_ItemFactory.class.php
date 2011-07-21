@@ -1154,6 +1154,35 @@ class Docman_ItemFactory {
     }
 
     /**
+     * Mark item as deleted
+     *
+     * @param Docman_Item $item 
+     *
+     * @return void
+     */
+    function delete($item) {
+        // Delete Lock if any
+        $lF = new Docman_LockFactory();
+        if($lF->itemIsLocked($item)) {
+            $lF->unlock($item);
+        }
+
+        $item->setDeleteDate(time());
+        // The event must be processed before the item is deleted
+        $um         = UserManager::instance();
+        $user       = $um->getCurrentUser();
+        $itemParent = $this->getItemFromDb($item->getParentId());
+        $event      = 'plugin_docman_event_del';
+        $this->callItemEvent($item->getGroupId(), $itemParent, $item, $user, $event);
+
+        $this->delCutPreferenceForAllUsers($item->getId());
+        $this->delCopyPreferenceForAllUsers($item->getId());
+        $dao = new Docman_ItemDao(CodendiDataAccess::instance());
+        $dao->updateFromRow($item->toRow());
+        $dao->storeDeletedItem($item->getId());
+    }
+
+    /**
      * List pending items
      *
      * @param Integer $groupId

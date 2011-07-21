@@ -80,10 +80,13 @@ class WebDAVDocmanDocumentTest extends UnitTestCase {
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $utils->setReturnValue('isWriteEnabled', true);
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
         $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
         $item = new MockDocman_Item();
         $webDAVDocmanDocument->setReturnValue('getItem', $item);
         $dpm->expectOnce('userCanWrite');
+        $dif->expectOnce('delete');
 
         $this->assertNoErrors();
         $webDAVDocmanDocument->delete();

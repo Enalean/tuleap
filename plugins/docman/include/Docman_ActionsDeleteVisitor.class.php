@@ -132,7 +132,8 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     function _deleteItem($item, $params) {
        if ($this->docman->userCanWrite($item->getId())) {
 
-            $item->delete();
+            $dIF = $this->_getItemFactory();
+            $dIF->delete($item);
             return true;
         } else {
             $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));

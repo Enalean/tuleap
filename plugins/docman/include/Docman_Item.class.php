@@ -359,34 +359,6 @@ class Docman_Item {
         return $this->pathTitle;
     }
 
-    /**
-     * Mark the file as deleted
-     *
-     * @return void
-     */
-    function delete() {
-        // Delete Lock if any
-        $lF = new Docman_LockFactory();
-        if($lF->itemIsLocked($this)) {
-            $lF->unlock($this);
-        }
-
-        $this->setDeleteDate(time());
-        $dIF = new Docman_ItemFactory();
-        // The event must be processed before the item is deleted
-        $um         = UserManager::instance();
-        $user       = $um->getCurrentUser();
-        $itemParent = $dIF->getItemFromDb($this->getParentId());
-        $event      = 'plugin_docman_event_del';
-        $dIF->callItemEvent($this->getGroupId(), $itemParent, $this, $user, $event);
-
-        $dIF->delCutPreferenceForAllUsers($this->getId());
-        $dIF->delCopyPreferenceForAllUsers($this->getId());
-        $dao = new Docman_ItemDao(CodendiDataAccess::instance());
-        $dao->updateFromRow($this->toRow());
-        $dao->storeDeletedItem($this->getId());
-    }
-
 }
 
 ?>

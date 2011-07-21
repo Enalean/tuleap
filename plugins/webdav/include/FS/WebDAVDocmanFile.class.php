@@ -200,13 +200,15 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
         if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
             // Mark the file as deleted
-            $this->getItem()->delete();
+            $item = $this->getItem();
+            $itemFactory = $this->getUtils()->getDocmanItemFactory();
+            $itemFactory->delete($item);
             // Delete all its versions
-            $version_factory = $this->getUtils()->getVersionFactory();
-            if ($versions = $version_factory->getAllVersionForItem($this->getItem())) {
+            $versionFactory = $this->getUtils()->getVersionFactory();
+            if ($versions = $versionFactory->getAllVersionForItem($this->getItem())) {
                 if (count($versions)) {
                     foreach ($versions as $version) {
-                        $version_factory->deleteSpecificVersion($this->getItem(), $version->getNumber());
+                        $versionFactory->deleteSpecificVersion($this->getItem(), $version->getNumber());
                     }
                 }
             }

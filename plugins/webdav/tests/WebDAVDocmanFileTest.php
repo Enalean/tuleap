@@ -271,11 +271,13 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $utils = new MockWebDAVUtils();
         $dpm = new MockDocman_PermissionsManager();
         $dpm->setReturnValue('userCanWrite', false);
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
         $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $utils->setReturnValue('isWriteEnabled', true);
         $webDAVDocmanFile->setReturnValue('getUtils', $utils);
 
-        $item->expectNever('delete');
+        $dif->expectNever('delete');
         $this->expectException('Sabre_DAV_Exception_Forbidden');
         $webDAVDocmanFile->delete();
     }
@@ -289,6 +291,8 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $dpm->setReturnValue('userCanWrite', true);
         $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $utils->setReturnValue('isWriteEnabled', true);
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
         $vf = new MockDocman_VersionFactory();
         $v1 = new MockDocman_Version();
         $v2 = new MockDocman_Version();
@@ -297,7 +301,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $webDAVDocmanFile->setReturnValue('getUtils', $utils);
 
         $vf->expectCallCount('deleteSpecificVersion', 2);
-        $item->expectOnce('delete');
+        $dif->expectOnce('delete');
         $this->assertNoErrors();
         $webDAVDocmanFile->delete();
     }

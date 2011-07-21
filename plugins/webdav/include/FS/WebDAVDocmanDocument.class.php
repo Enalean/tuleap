@@ -181,7 +181,9 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     function delete() {
         $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
         if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            $this->getItem()->delete();
+            $item = $this->getItem();
+            $itemFactory = $this->getUtils()->getDocmanItemFactory();
+            $itemFactory->delete($item);
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
