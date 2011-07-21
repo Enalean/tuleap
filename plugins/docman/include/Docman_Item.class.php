@@ -359,6 +359,15 @@ class Docman_Item {
         return $this->pathTitle;
     }
 
+    function fireEvent($event, $user, $parent=null) {
+        $logger = new Docman_Log();
+        $params = array('group_id' => $this->getGroupId(),
+                        'parent'   => $parent,
+                        'item'     => $this,
+                        'user'     => $user,
+                        'event'    => $event);
+        $logger->log($params['event'], $params);
+    }
 }
 
 ?>

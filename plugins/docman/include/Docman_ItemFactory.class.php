@@ -689,16 +689,6 @@ class Docman_ItemFactory {
         $dao->massUpdate($srcItemId, $mdLabel, $itemIdArray);
     }
 
-    function callItemEvent($groupId, $parent, $newItem, $user, $event) {
-        $logger = new Docman_Log();
-        $params = array('group_id' => $groupId,
-                        'parent'  => $parent,
-                        'item'    => $newItem,
-                        'user'    => $user,
-                        'event'   => $event);
-        $logger->log($params['event'], $params);
-    }
-
     function create($row, $ordering) {
         $dao =& $this->_getItemDao();
         $id = $dao->createFromRow($row);
@@ -709,7 +699,7 @@ class Docman_ItemFactory {
             $um       = $this->_getUserManager();
             $user     = $um->getUserById($row['user_id']);
             $event    = 'plugin_docman_event_add';
-            $this->callItemEvent($row['group_id'], $parent, $newItem, $user, $event);
+            $newItem->fireEvent($event, $user, $parent);
         }
         return $id;
     }
@@ -1173,7 +1163,7 @@ class Docman_ItemFactory {
         $user       = $um->getCurrentUser();
         $itemParent = $this->getItemFromDb($item->getParentId());
         $event      = 'plugin_docman_event_del';
-        $this->callItemEvent($item->getGroupId(), $itemParent, $item, $user, $event);
+        $item->fireEvent($event, $user, $itemParent);
 
         $this->delCutPreferenceForAllUsers($item->getId());
         $this->delCopyPreferenceForAllUsers($item->getId());

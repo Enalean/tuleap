@@ -436,7 +436,7 @@ class WebDAVTreeTest extends UnitTestCase {
         $utils->setReturnValue('getDocmanItemFactory', $dif);
 
         $dif->expectOnce('setNewParent', array(128, 256, 'beginning'));
-        $dif->expectOnce('callItemEvent', array(1, $destinationItem, $sourceItem, $source->getUser(), 'plugin_docman_event_move'));
+        $sourceItem->expectOnce('fireEvent', array('plugin_docman_event_move', $source->getUser(), $destinationItem));
 
         $this->assertNoErrors();
         $tree->move('source', 'destination/item');
@@ -466,7 +466,7 @@ class WebDAVTreeTest extends UnitTestCase {
         $utils->setReturnValue('getDocmanItemFactory', $dif);
 
         $dif->expectNever('setNewParent');
-        $dif->expectNever('callItemEvent');
+        $sourceItem->expectNever('fireEvent');
 
         $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
         $tree->move('source', 'destination/item');

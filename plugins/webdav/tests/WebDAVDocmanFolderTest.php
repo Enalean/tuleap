@@ -422,7 +422,7 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
 
         $dif->expectNever('delete');
-        $dif->expectNever('callItemEvent');
+        $item->expectNever('fireEvent');
         $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
         $webDAVDocmanFolder->delete();
     }

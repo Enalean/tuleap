@@ -154,7 +154,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
                             if($subItemsWritable) {
                                 $itemFactory->setNewParent($sourceItem->getId(), $destinationItem->getId(), $ordering);
                                 $event = 'plugin_docman_event_move';
-                                $itemFactory->callItemEvent($sourceItem->getGroupId(), $destinationItem, $sourceItem, $user, $event);
+                                $sourceItem->fireEvent($event, $user, $destinationItem);
                             } else {
                                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'error_subitems_not_moved_no_w'));
                             }
