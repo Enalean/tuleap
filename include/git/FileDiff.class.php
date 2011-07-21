@@ -776,10 +776,13 @@ class GitPHP_FileDiff
 
 		$fromData = '';
 		$toData = '';
+		$isBinary = false;
 		$fromName = '/dev/null';
 		$toName = '/dev/null';
 		if (($this->status == 'M') || ($this->status == 'D')) {
-			$fromData = $this->GetFromBlob()->GetData(false);
+			$fromBlob = $this->GetFromBlob();
+			$isBinary = $isBinary || $fromBlob->IsBinary();
+			$fromData = $fromBlob->GetData(false);
 			$fromName = 'a/';
 			if (!empty($file)) {
 				$fromName .= $file;
@@ -790,7 +793,9 @@ class GitPHP_FileDiff
 			}
 		}
 		if (($this->status == 'M') || ($this->status == 'A')) {
-			$toData = $this->GetToBlob()->GetData(false);
+			$toBlob = $this->GetToBlob();
+			$isBinary = $isBinary || $toBlob->IsBinary();
+			$toData = $toBlob->GetData(false);
 			$toName = 'b/';
 			if (!empty($file)) {
 				$toName .= $file;
@@ -801,10 +806,14 @@ class GitPHP_FileDiff
 			}
 		}
 		$output = '';
-		if ($header) {
-			$output = '--- ' . $fromName . "\n" . '+++ ' . $toName . "\n";
+		if ($isBinary) {
+			$output = sprintf(__('Binary files %1$s and %2$s differ'), $fromName, $toName) . "\n";
+		} else {
+			if ($header) {
+				$output = '--- ' . $fromName . "\n" . '+++ ' . $toName . "\n";
+			}
+			$output .= xdiff_string_diff($fromData, $toData, $context);
 		}
-		$output .= xdiff_string_diff($fromData, $toData, $context);
 		return $output;
 	}
 

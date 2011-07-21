@@ -222,6 +222,26 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	}
 
 	/**
+	 * IsBinary
+	 *
+	 * Tests if this blob is a binary file
+	 *
+	 * @access public
+	 * @return boolean true if binary file
+	 */
+	public function IsBinary()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		$data = $this->data;
+		if (strlen($this->data) > 8000)
+			$data = substr($data, 0, 8000);
+
+		return strpos($data, chr(0)) !== false;
+	}
+
+	/**
 	 * FileMime
 	 *
 	 * Get the file mimetype
