@@ -573,58 +573,66 @@ class GitPHP_FileDiff
 			return;
 		}
 
-		$tmpdir = GitPHP_TmpDir::GetInstance();
+		if (function_exists('xdiff_string_diff')) {
 
-		$pid = 0;
-		if (function_exists('posix_getpid'))
-			$pid = posix_getpid();
-		else
-			$pid = rand();
+			$this->diffData = $this->GetXDiff(3, true, $file);
 
-		$fromTmpFile = null;
-		$toTmpFile = null;
+		} else {
 
-		$fromName = null;
-		$toName = null;
+			$tmpdir = GitPHP_TmpDir::GetInstance();
 
-		if ((empty($this->status)) || ($this->status == 'D') || ($this->status == 'M')) {
-			$fromBlob = $this->GetFromBlob();
-			$fromTmpFile = 'gitphp_' . $pid . '_from';
-			$tmpdir->AddFile($fromTmpFile, $fromBlob->GetData());
+			$pid = 0;
+			if (function_exists('posix_getpid'))
+				$pid = posix_getpid();
+			else
+				$pid = rand();
 
-			$fromName = 'a/';
-			if (!empty($file)) {
-				$fromName .= $file;
-			} else if (!empty($this->fromFile)) {
-				$fromName .= $this->fromFile;
-			} else {
-				$fromName .= $this->fromHash;
+			$fromTmpFile = null;
+			$toTmpFile = null;
+
+			$fromName = null;
+			$toName = null;
+
+			if ((empty($this->status)) || ($this->status == 'D') || ($this->status == 'M')) {
+				$fromBlob = $this->GetFromBlob();
+				$fromTmpFile = 'gitphp_' . $pid . '_from';
+				$tmpdir->AddFile($fromTmpFile, $fromBlob->GetData());
+
+				$fromName = 'a/';
+				if (!empty($file)) {
+					$fromName .= $file;
+				} else if (!empty($this->fromFile)) {
+					$fromName .= $this->fromFile;
+				} else {
+					$fromName .= $this->fromHash;
+				}
 			}
-		}
 
-		if ((empty($this->status)) || ($this->status == 'A') || ($this->status == 'M')) {
-			$toBlob = $this->GetToBlob();
-			$toTmpFile = 'gitphp_' . $pid . '_to';
-			$tmpdir->AddFile($toTmpFile, $toBlob->GetData());
+			if ((empty($this->status)) || ($this->status == 'A') || ($this->status == 'M')) {
+				$toBlob = $this->GetToBlob();
+				$toTmpFile = 'gitphp_' . $pid . '_to';
+				$tmpdir->AddFile($toTmpFile, $toBlob->GetData());
 
-			$toName = 'b/';
-			if (!empty($file)) {
-				$toName .= $file;
-			} else if (!empty($this->toFile)) {
-				$toName .= $this->toFile;
-			} else {
-				$toName .= $this->toHash;
+				$toName = 'b/';
+				if (!empty($file)) {
+					$toName .= $file;
+				} else if (!empty($this->toFile)) {
+					$toName .= $this->toFile;
+				} else {
+					$toName .= $this->toHash;
+				}
 			}
-		}
 
-		$this->diffData = GitPHP_DiffExe::Diff((empty($fromTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $fromTmpFile)), $fromName, (empty($toTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $toTmpFile)), $toName);
+			$this->diffData = GitPHP_DiffExe::Diff((empty($fromTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $fromTmpFile)), $fromName, (empty($toTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $toTmpFile)), $toName);
 
-		if (!empty($fromTmpFile)) {
-			$tmpdir->RemoveFile($fromTmpFile);
-		}
+			if (!empty($fromTmpFile)) {
+				$tmpdir->RemoveFile($fromTmpFile);
+			}
 
-		if (!empty($toTmpFile)) {
-			$tmpdir->RemoveFile($toTmpFile);
+			if (!empty($toTmpFile)) {
+				$tmpdir->RemoveFile($toTmpFile);
+			}
+
 		}
 
 		if ($explode)
@@ -659,9 +667,14 @@ class GitPHP_FileDiff
 		$fromBlob = $this->GetFromBlob();
 		$blob = $fromBlob->GetData(true);
 
-		$diffLines = explode("\n", $exe->Execute(GIT_DIFF,
-			array("-U0", $this->fromHash,
-				$this->toHash)));
+		$diffLines = '';
+		if (function_exists('xdiff_string_diff')) {
+			$diffLines = explode("\n", $this->GetXDiff(0, false));
+		} else {
+			$diffLines = explode("\n", $exe->Execute(GIT_DIFF,
+				array("-U0", $this->fromHash,
+					$this->toHash)));
+		}
 
 		unset($exe);
 
@@ -742,6 +755,56 @@ class GitPHP_FileDiff
 		}
 
 		$this->diffDataSplit = $output;
+		return $output;
+	}
+
+	/**
+	 * GetXDiff
+	 *
+	 * Get diff using xdiff
+	 *
+	 * @access private
+	 * @param int $context number of context lines
+	 * @param boolean $header true to include standard diff header
+	 * @param string $file override the file name
+	 * @return string diff content
+	 */
+	private function GetXDiff($context = 3, $header = true, $file = null)
+	{
+		if (!function_exists('xdiff_string_diff'))
+			return '';
+
+		$fromData = '';
+		$toData = '';
+		$fromName = '/dev/null';
+		$toName = '/dev/null';
+		if (($this->status == 'M') || ($this->status == 'D')) {
+			$fromData = $this->GetFromBlob()->GetData(false);
+			$fromName = 'a/';
+			if (!empty($file)) {
+				$fromName .= $file;
+			} else if (!empty($this->fromFile)) {
+				$fromName .= $this->fromFile;
+			} else {
+				$fromName .= $this->fromHash;
+			}
+		}
+		if (($this->status == 'M') || ($this->status == 'A')) {
+			$toData = $this->GetToBlob()->GetData(false);
+			$toName = 'b/';
+			if (!empty($file)) {
+				$toName .= $file;
+			} else if (!empty($this->toFile)) {
+				$toName .= $this->toFile;
+			} else {
+				$toName .= $this->toHash;
+			}
+		}
+		$output = '';
+		if ($header) {
+			$output = '--- ' . $fromName . "\n" . '+++ ' . $toName . "\n";
+		}
+		$output .= xdiff_string_diff($fromData, $toData, $context);
 		return $output;
 	}
 
