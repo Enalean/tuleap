@@ -157,10 +157,10 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @return Boolean
      */
     public function userCanRead($user, $repository) {
-        return $user->hasPermission(Git::PERM_READ, $repository->getId(), $repository->getProjectId())
+        return $user->isMember($repository->getProjectId(), 'A')
+               || $user->hasPermission(Git::PERM_READ, $repository->getId(), $repository->getProjectId())
                || $user->hasPermission(Git::PERM_WRITE, $repository->getId(), $repository->getProjectId())
                || $user->hasPermission(Git::PERM_WPLUS, $repository->getId(), $repository->getProjectId());
-        
     }
 
     /**

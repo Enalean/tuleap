@@ -627,9 +627,7 @@ class GitViews extends PluginViews {
                 $parentChildrenAssoc[$parentId][] = $repoData[GitDao::REPOSITORY_ID];
             }
             else {
-                if ( !isset($parentChildrenAssoc[0][$repoId]) ) {
-                    $parentChildrenAssoc[0][] = $repoId;
-                }
+                $parentChildrenAssoc[0][] = $repoId;
             }
         }
         $this->_makeRepositoryTree($parentChildrenAssoc, 0, $data);
