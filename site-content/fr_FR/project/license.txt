@@ -3,6 +3,11 @@
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
 //
+if (isset($GLOBALS['sys_exchange_policy_url'])) {
+    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
+} else {
+    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
+}
 ?>
 <P>Le site <?php print $GLOBALS['sys_name']; ?> a été créé pour
 promouvoir le développement et la gestion de projet en mode
@@ -12,7 +17,7 @@ la recherche de composants logiciels réutilisables.
 
 <p>Pour rendre les choses plus faciles, <?php print
 $GLOBALS['sys_org_name']; ?> a mis en place la <a
-href="/plugins/docman/?group_id=1"
+href="<?php echo $exchangePolicyUrl ?>"
 target="side_window"> Politique d'échange générale</a> des logiciels
 qui définit les conditions générales sous lesquels vous pouvez
 réutiliser des composants logiciels au sein de <?php print
@@ -27,7 +32,7 @@ une autre.
 
 <P>Choisir votre propre politique d'échange est une décision
 importante. Veuillez donc vous assurer d'avoir bien lu la <a
-href="/plugins/docman/?group_id=1"
+href="<?php echo $exchangePolicyUrl ?>"
 target="side_window">Politique d'échange générale de <?php echo
 $GLOBALS['sys_name']; ?> </a> avant de prendre une décision pour votre
 projet.

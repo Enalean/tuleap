@@ -23,6 +23,12 @@ if ($Language->hasText('homepage', 'introduction')) {
     echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
     return;
 }
+
+if (isset($GLOBALS['sys_exchange_policy_url'])) {
+    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
+} else {
+    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
+}
 ?>
 
 <div class="slogan">Collaborative Software Development at <?= $GLOBALS['sys_org_name']?></div>
@@ -37,7 +43,7 @@ and developers grow. <A href="/plugins/docman/?group_id=1">[&nbsp;More on <?= $G
 
 <BR>In order to get the most out of <?= $GLOBALS['sys_name']?>, you should
 <A href="/account/register.php">register as a site user</A>. It's easy and fast and it allows you to participate fully in all we have to offer.
-Also make sure you read the <b><A href="/plugins/docman/?group_id=1"><?= $GLOBALS['sys_org_name']?> Code Exchange Policy</a></b> before using this site.
+Also make sure you read the <b><A href="<?php echo $exchangePolicyUrl ?>"><?= $GLOBALS['sys_org_name']?> Code Exchange Policy</a></b> before using this site.
 
 <P><u><B>Set Up Your Own Project</B></u><BR>After you <A href="/account/register.php">register as a site user</A>, you can <A HREF="/account/login.php">login</A> and <A HREF="/project/register.php">register your project</A>.
 It only takes a couple of minutes to get a fully working environment to share your code.

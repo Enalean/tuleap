@@ -23,6 +23,12 @@ if ($Language->hasText('homepage', 'introduction')) {
     echo stripcslashes($Language->getText('homepage', 'introduction', array($GLOBALS['sys_org_name'], $GLOBALS['sys_name'])));
     return;
 }
+
+if (isset($GLOBALS['sys_exchange_policy_url'])) {
+    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
+} else {
+    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
+}
 ?>
 
 <div class="slogan">Développement Logiciel Collaboratif chez <?= $GLOBALS['sys_org_name']?></div>
@@ -37,7 +43,7 @@ tout en privilégiant la relation avec leur communauté d'utilisateurs ou de dé
 <P><u><B>Participation au site</B></u>
 <BR>Pour profiter pleinement de <?= $GLOBALS['sys_name']?>, nous vous recommandons de <A href="/account/register.php">créer un compte utilisateur</a>.
 C'est facile, rapide et cela vous permettra de participer au mieux.
-Assurez-vous aussi d'avoir lu la  <b><A href="/plugins/docman/?group_id=1">Politique d'échange de code de <?= $GLOBALS['sys_org_name']?></a></b> avant d'utiliser les services du site.
+Assurez-vous aussi d'avoir lu la  <b><A href="<?php echo $exchangePolicyUrl ?>">Politique d'échange de code de <?= $GLOBALS['sys_org_name']?></a></b> avant d'utiliser les services du site.
 
 <P><u><B>Créer votre propre projet</B></u>
 <BR>Après avoir <A href="/account/register.php">créé votre compte utilisateur</A>,

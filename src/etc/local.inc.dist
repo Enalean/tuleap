@@ -382,5 +382,8 @@ $sys_use_project_registration = 1;
 //Zend Framework path
 $zend_path = "/usr/share/zend";
 
+//Exchange policy URL
+$sys_exchange_policy_url = "/plugins/docman/?group_id=1";
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

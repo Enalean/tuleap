@@ -4,6 +4,13 @@
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
 // 
 -->
+<?php
+if (isset($GLOBALS['sys_exchange_policy_url'])) {
+    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
+} else {
+    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
+}
+?>
 
 <h2>A propos du site <?php print $GLOBALS['sys_name']; ?> </h2>
 
@@ -21,9 +28,9 @@ réutiliser, de les adapter et d'améliorer leur productivité en
 capitalisant sur les connaissances de <?php print
 $GLOBALS['sys_org_name']; ?>.</p>
 
-<p>Pour une approche cohérente et bénéfique de la réutilisation de composants logiciels, l'équipe <?php print $GLOBALS['sys_name']; ?> a mis en place une <b><A href="/plugins/docman/?group_id=1">Politique d'échange de code de <?php print
+<p>Pour une approche cohérente et bénéfique de la réutilisation de composants logiciels, l'équipe <?php print $GLOBALS['sys_name']; ?> a mis en place une <b><A href="<?php echo $exchangePolicyUrl ?>">Politique d'échange de code de <?php print
 $GLOBALS['sys_org_name']; ?></a></b>. Elle définit les règles internes de partage et de réutilisation et constitue la pierre angulaire de l'édifice. Prenez le temps de <A
-href="/plugins/docman/?group_id=1">la lire</a>. <P>
+href="<?php echo $exchangePolicyUrl ?>">la lire</a>. <P>
 
 <p>Nous vous remercions pour votre soutien !</P>
 
