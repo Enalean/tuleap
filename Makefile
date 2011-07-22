@@ -1,5 +1,7 @@
 PKG_NAME=tuleap
 BUILDHOST=
+RSYNCOPTIONS=--delete
+RSYNCOPTIONS=
 
 fullbuild:
 	@echo "choose on target of all, dependancies, gettestfromff, synctobuildhost"
@@ -14,10 +16,11 @@ gettestfromff:
 	svn copy svn://scm.fusionforge.org/svnroot/fusionforge/trunk/tests .
 
 synctobuildhost:
-	[ -z "$(BUILDHOST)" ] || rsync -a ./ root@$(BUILDHOST):/root/tuleap/
+	[ -z "$(BUILDHOST)" ] || rsync -a $(RSYNCOPTIONS) ./ root@$(BUILDHOST):/root/tuleap/
 
 remotebuild: synctobuildhost
 	[ -z "$(BUILDHOST)" ] || ssh root@$(BUILDHOST) "cd /root/tuleap/ ; yum -y install make ; make all dist"
 
 remotebuilddeps: synctobuildhost
-	[ -z "$(BUILDHOST)" ] || ssh root@$(BUILDHOST) "cd /root/tuleap/ ; make dependancies"
+	[ -z "$(BUILDHOST)" ] || ssh root@$(BUILDHOST) "chown -R root.root /root/tuleap/rpm"
+	[ -z "$(BUILDHOST)" ] || ssh root@$(BUILDHOST) "cd /root/tuleap/ ; yum -y install which ; make dependancies"
