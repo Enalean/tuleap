@@ -416,6 +416,7 @@ project_admin_utils	perm_reset_for_folder	Réinitialisation des permissions pour
 project_admin_utils	perm_reset_for_docgroup	Réinitialisation des permissions pour le groupe de documents $1
 project_admin_utils	perm_reset_for_wiki	Réinitialisation des permissions pour le wiki $1
 project_admin_utils	perm_reset_for_wikipage	Réinitialisation des permissions pour la page wiki $1
+project_admin_utils	perm_reset_for_wikiattachment	Réinitialisation des permissions pour le fichier joint wiki $1
 project_admin_utils	perm_reset_for_object	Réinitialisation des permissions pour l'objet $1
 project_admin_utils	perm_granted_for_field	Permission accordée pour le champ $1
 project_admin_utils	perm_granted_for_tracker	Permission accordée pour l'outil de suivi $1
@@ -426,6 +427,7 @@ project_admin_utils	perm_granted_for_folder	Permission accordée pour le dossier
 project_admin_utils	perm_granted_for_docgroup	Permission accordée pour le groupe de documents  $1
 project_admin_utils	perm_granted_for_wiki	Permission accordée pour le wiki $1
 project_admin_utils	perm_granted_for_wikipage	Permission accordée pour la page wiki $1
+project_admin_utils	perm_granted_for_wikiattachment	Permission accordée pour le fichier joint wiki $1
 project_admin_utils	perm_granted_for_object	Permission accordée pour l'objet $1 
 project_admin_utils	menu_config	Configuration&nbsp;: 
 project_admin_utils	menu_permissions	Permissions&nbsp;: 
