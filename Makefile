@@ -23,4 +23,4 @@ remotebuild: synctobuildhost
 
 remotebuilddeps: synctobuildhost
 	[ -z "$(BUILDHOST)" ] || ssh root@$(BUILDHOST) "chown -R root.root /root/tuleap/rpm"
-	[ -z "$(BUILDHOST)" ] || ssh root@$(BUILDHOST) "cd /root/tuleap/ ; yum -y install which ; make dependancies"
+	[ -z "$(BUILDHOST)" ] || ssh root@$(BUILDHOST) "cd /root/tuleap/ ; make dependancies"
