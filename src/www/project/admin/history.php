@@ -30,7 +30,7 @@ if ( !$offset || $offset < 0 ) {
 }
 $limit  = 50;
 
-if (isset($_REQUEST['SUBMIT'])) {
+if (isset($_REQUEST['EXPORT'])) {
     export_grouphistory($group_id);
     exit;
 }
@@ -41,11 +41,6 @@ echo $Language->getText('project_admin_history','proj_change_log_msg');
 
 //for pagination
 echo show_grouphistory($group_id, $offset, $limit);
-
-echo '<BR><FORM METHOD="POST" NAME="project_history_export_form">
-    <TABLE align="left"><TR><TD>
-    <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$GLOBALS['Language']->getText('project_stats_source_code_access','logs_export').'">
-    </TD></TR></TABLE></FORM><BR><P>';
 
 project_admin_footer(array());
 ?>

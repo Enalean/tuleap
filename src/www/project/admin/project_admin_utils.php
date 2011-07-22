@@ -139,7 +139,31 @@ function show_grouphistory ($group_id, $offset, $limit) {
 	if ($res['numrows'] > 0) {
 	
 		echo '
-		<H3>'.$Language->getText('project_admin_utils','g_change_history').'</H3>
+		<H3>'.$Language->getText('project_admin_utils','g_change_history').'</H3>';
+        //TODO : Add a title to indicate the search
+        // TODO : Keep values of the last submitted form
+        echo '<FORM METHOD="POST" NAME="project_history_form">
+        <TABLE>';
+        // TODO : i18n
+        echo '<TH>Event</TH><TH>Value</TH><TH>Start date</TH><TH>End date</TH><TH>By</TH>
+        <TR><TD>';
+        // TODO : use html_build_multiple_select_box() with a db result set instead of an array
+        echo html_build_multiple_select_box_from_array(array(array('value' => '1', 'text' => 'one'),
+                                                             array('value' => '2', 'text' => 'two')),
+                                                       'events[]',
+                                                       array());
+        echo '</TD><TD><INPUT TYPE="TEXT" NAME="VALUE"></TD>
+        <TD>';
+        echo html_field_date('start', '', false, 10, 10, 'date_form', false);
+        echo '</TD>
+        <TD>';
+        echo html_field_date('end', '', false, 10, 10, 'date_form', false);
+        echo '</TD>
+        <TD><INPUT TYPE="TEXT" NAME="BY" ID="BY "CLASS="BY"></TD>
+        </TR>';
+
+        echo '<TR><TD><INPUT TYPE="SUBMIT" NAME="FILTER"></TD></TR>
+        </TABLE>
 		<P>';
 		$title_arr=array();
 		$title_arr[]=$Language->getText('project_admin_utils','event');
@@ -214,11 +238,15 @@ function show_grouphistory ($group_id, $offset, $limit) {
             echo ($offset+$i-3).'/'.$res['numrows'];
             echo '</div>';
         
-	} else {
-		echo '  
-		<H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';
-	}       
-}       
+    } else {
+        echo '
+        <H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';
+    }
+    // TODO : Custom value for the button
+    echo '<BR><TABLE align="left"><TR><TD>
+          <INPUT TYPE="SUBMIT" NAME="EXPORT" VALUE="'.$GLOBALS['Language']->getText('project_stats_source_code_access','logs_export').'">
+          </TD></TR></TABLE></FORM><BR><P>';
+}
 
 /**
  * Export project history to a csv file
