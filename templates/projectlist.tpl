@@ -134,3 +134,8 @@ git source code archive
 
 {/block}
 
+{block name=footer}
+  <a href="{$SCRIPT_NAME}?a=opml" class="rss_logo">{t}OPML{/t}</a>
+  <a href="{$SCRIPT_NAME}?a=project_index" class="rss_logo">{t}TXT{/t}</a>
+{/block}
+

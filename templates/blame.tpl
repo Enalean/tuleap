@@ -5,7 +5,7 @@
  *
  * Copyright (C) 2010 Christopher Han <xiphux@gmail.com>
  *}
-{extends file='main.tpl'}
+{extends file='projectbase.tpl'}
 
 {block name=main}
 
