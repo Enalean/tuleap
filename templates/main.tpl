@@ -36,21 +36,16 @@
     </style>
     {/if}
     {if $javascript}
+    {block name=javascript}
     <script src="js/ext/require.js"></script>
     {include file='jsconst.tpl'}
     <script type="text/javascript">
     require({ldelim}
     	baseUrl: 'js',
 	paths: {ldelim}
-	{if $extrascripts}
-	  {if file_exists("js/$extrascripts.min.js")}
-	  	{$extrascripts}: "{$extrascripts}.min",
-	  {/if}
-	{else}
 	  {if file_exists('js/common.min.js')}
 	  	common: "common.min",
 	  {/if}
-	{/if}
 	{if $googlejs}
 		jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
 	{else}
@@ -59,13 +54,10 @@
 	{rdelim},
 	priority: ['jquery']
     {rdelim}, [
-    	{if $extrascripts}
-	  '{$extrascripts}'
-	{else}
 	  'common'
-	{/if}
       ]);
     </script>
+    {/block}
     {/if}
   </head>
   <body>

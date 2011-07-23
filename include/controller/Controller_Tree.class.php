@@ -141,8 +141,6 @@ class GitPHP_Controller_Tree extends GitPHP_ControllerBase
 			$tree->SetPath($this->params['file']);
 		}
 		$this->tpl->assign('tree', $tree);
-
-		$this->tpl->assign('extrascripts', 'tree');
 	}
 
 }

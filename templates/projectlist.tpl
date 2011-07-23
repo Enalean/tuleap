@@ -7,6 +7,29 @@
  *}
 {extends file='main.tpl'}
 
+{block name=javascript}
+    <script src="js/ext/require.js"></script>
+    {include file='jsconst.tpl'}
+    <script type="text/javascript">
+    require({ldelim}
+    	baseUrl: 'js',
+	paths: {ldelim}
+	  {if file_exists("js/projectlist.min.js")}
+	  	projectlist: "projectlist.min",
+	  {/if}
+	{if $googlejs}
+		jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min'
+	{else}
+		jquery: 'ext/jquery-1.4.2.min'
+	{/if}
+	{rdelim},
+	priority: ['jquery']
+    {rdelim}, [
+	  'projectlist'
+      ]);
+    </script>
+{/block}
+
 {block name=main}
 
 <div class="index_header">
