@@ -7,6 +7,14 @@
  *}
 {extends file='projectbase.tpl'}
 
+{block name=css}
+{if $geshicss}
+  <style type="text/css">
+  {$geshicss}
+  </style>
+{/if}
+{/block}
+
 {block name=javascript}
     <script src="js/ext/require.js"></script>
     {include file='jsconst.tpl'}

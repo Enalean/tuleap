@@ -165,7 +165,7 @@ class GitPHP_Controller_Blame extends GitPHP_ControllerBase
 							$this->tpl->assign('geshihead', $geshihead);
 							$this->tpl->assign('geshibody', $geshibody);
 							$this->tpl->assign('geshifoot', $geshifoot);
-							$this->tpl->assign('extracss', $geshi->get_stylesheet());
+							$this->tpl->assign('geshicss', $geshi->get_stylesheet());
 							$this->tpl->assign('geshi', true);
 						}
 					}

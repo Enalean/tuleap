@@ -32,11 +32,8 @@
     <link rel="stylesheet" href="css/{$stylesheet}.css" type="text/css" />
     {/if}
     <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
-    {if $extracss}
-    <style type="text/css">
-    {$extracss}
-    </style>
-    {/if}
+    {block name=css}
+    {/block}
     {if $javascript}
     {block name=javascript}
     <script src="js/ext/require.js"></script>

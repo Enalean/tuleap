@@ -211,7 +211,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 						$geshi->enable_line_numbers(GESHI_NORMAL_LINE_NUMBERS);
 						$geshi->set_overall_id('blobData');
 						$this->tpl->assign('geshiout', $geshi->parse_code());
-						$this->tpl->assign('extracss', $geshi->get_stylesheet());
+						$this->tpl->assign('geshicss', $geshi->get_stylesheet());
 						$this->tpl->assign('geshi', true);
 						return;
 					}
