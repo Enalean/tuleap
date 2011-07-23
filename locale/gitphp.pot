@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GitPHP 0.2.3\n"
+"Project-Id-Version: GitPHP 0.2.4\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2011-06-18 21:03-0500\n"
+"POT-Creation-Date: 2011-07-22 23:42-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -300,7 +300,7 @@ msgstr ""
 
 # Used as a search type, to search the contents of files in the project
 #: templates/header.tpl
-#: include/git/Blob.class.php:174
+#: include/git/Blob.class.php:178
 msgid "file"
 msgstr ""
 
@@ -502,45 +502,45 @@ msgid "No matches for \"%1$s\""
 msgstr ""
 
 # A type of filesystem object stored in a project
-#: include/git/Blob.class.php:162
+#: include/git/Blob.class.php:166
 msgid "directory"
 msgstr ""
 
 # A type of filesystem object stored in a project
-#: include/git/Blob.class.php:168
+#: include/git/Blob.class.php:172
 msgid "symlink"
 msgstr ""
 
 # Used when an object is stored in a project but git doesn't know what type it is
-#: include/git/Blob.class.php:181
+#: include/git/Blob.class.php:185
 msgid "unknown"
 msgstr ""
 
 # Error message when user specifies a path for a project root or project, but the path given isn't a directory
 # %1$s: the path the user specified
 #: include/git/ProjectListDirectory.class.php:47
-#: include/git/Project.class.php:221
+#: include/git/Project.class.php:250
 #, php-format
 msgid "%1$s is not a directory"
 msgstr ""
 
 # Error message when a path specified in the config is not a git repository
 # %1$s: the specified path
-#: include/git/Project.class.php:225
+#: include/git/Project.class.php:254
 #, php-format
 msgid "%1$s is not a git repository"
 msgstr ""
 
 # Error message when a path specified is using '..' to break out of the project root (a hack attempt)
 # %1$s: The specified path
-#: include/git/Project.class.php:229
+#: include/git/Project.class.php:258
 #, php-format
 msgid "%1$s is attempting directory traversal"
 msgstr ""
 
 # Error message when a path specified is outside of the project root
 # %1$s: The specified path
-#: include/git/Project.class.php:235
+#: include/git/Project.class.php:264
 #, php-format
 msgid "%1$s is outside of the projectroot"
 msgstr ""
@@ -587,7 +587,7 @@ msgstr ""
 
 # Error message when a hash specified in a URL isn't a valid git hash
 # %1$s: the hash entered
-#: include/git/GitObject.class.php:107
+#: include/git/Pack.class.php:80 include/git/GitObject.class.php:107
 #, php-format
 msgid "Invalid hash %1$s"
 msgstr ""
@@ -773,7 +773,7 @@ msgstr ""
 # Error message displayed when the diff executable isn't found or doesn't work
 # %1$s: the diff executable the system is trying to run
 # %2$s: the config value the user needs to set to specify the correct path
-#: index.php:135
+#: index.php:136
 #, php-format
 msgid ""
 "Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
@@ -785,4 +785,12 @@ msgstr ""
 # This will go back to showing all files in the commitdiff
 #: templates/commitdiff.tpl
 msgid "(show all)"
+msgstr ""
+
+# Message displayed when diffing two binary files.
+# %1$s: the filename of the first file
+# %2$s: the filename of the second file
+#: include/git/FileDiff.class.php:810
+#, php-format
+msgid "Binary files %1$s and %2$s differ"
 msgstr ""
