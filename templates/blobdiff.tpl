@@ -5,7 +5,9 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-{include file='header.tpl'}
+{extends file='main.tpl'}
+
+{block name=main}
 
  <div class="page_nav">
    {include file='nav.tpl' treecommit=$commit}
@@ -37,5 +39,4 @@
    {/if}
  </div>
 
- {include file='footer.tpl'}
-
+{/block}

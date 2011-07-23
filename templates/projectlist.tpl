@@ -5,7 +5,9 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-{include file='header.tpl'}
+{extends file='main.tpl'}
+
+{block name=main}
 
 <div class="index_header">
 {if file_exists('templates/hometext.tpl') }
@@ -107,5 +109,5 @@ git source code archive
 
 </table>
 
-{include file='footer.tpl'}
+{/block}
 
