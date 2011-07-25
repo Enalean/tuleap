@@ -188,7 +188,7 @@ class Git_GitoliteDriver {
     }
     
     protected function gitPush() {
-        exec('su -c "git push origin master 2>&1" codendiadm', $output, $retVal);
+        exec('git push origin master 2>&1', $output, $retVal);
         if ($retVal == 0) {
             return true;
         } else {
@@ -378,15 +378,18 @@ class Git_GitoliteDriver {
     
     /**
      * Rename a project
+     * 
+     * This method is intended to be called by a "codendiadm" owned process while general
+     * rename process is owned by "root" (system-event) so there is dedicated script
+     * (see bin/gl-rename-project.php) and more details in Git_Backend_Gitolite::glRenameProject.
      *
-     * @param Project $project The project to rename
-     * @param string  $newName The new name of the project
+     * @param String $oldName The old name of the project
+     * @param String $newName The new name of the project
      *
      * @return true if success, false otherwise
      */
-    public function renameProject(Project $project, $newName) {
+    public function renameProject($oldName, $newName) {
         $ok = true;
-        $oldName = $project->getUnixName();
         if (is_file($this->adminPath.'/conf/projects/'. $oldName .'.conf')) {
             $ok = $this->gitMv(
                 $this->adminPath.'/conf/projects/'. $oldName .'.conf',
@@ -398,14 +401,16 @@ class Git_GitoliteDriver {
                 $dest = preg_replace('`(^|\n)repo '. preg_quote($oldName) .'/`', '$1repo '. $newName .'/', $orig);
                 $dest = str_replace('@'. $oldName .'_project_', '@'. $newName .'_project_', $dest);
                 file_put_contents($this->adminPath.'/conf/projects/'. $newName .'.conf', $dest);
+                $this->gitAdd($this->adminPath. '/conf/projects/'. $newName .'.conf');
                 
                 //conf/gitolite.conf
                 $orig = file_get_contents($this->confFilePath);
                 $dest = str_replace('include "projects/'. $oldName .'.conf"', 'include "projects/'. $newName .'.conf"', $orig);
                 file_put_contents($this->confFilePath, $dest);
+                $this->gitAdd($this->confFilePath);
                 
                 //commit
-                $ok = $this->gitcommit('Rename project '. $oldName .' to '. $newName) && $this->gitPush();
+                $ok = $this->gitCommit('Rename project '. $oldName .' to '. $newName) && $this->gitPush();
             }
         }
         return $ok;

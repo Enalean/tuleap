@@ -22,9 +22,10 @@
 require_once dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php';
 require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
 require_once 'common/project/Project.class.php';
+require_once 'common/backend/Backend.class.php';
 
-Mock::generate('Git_GitoliteDriver');
-Mock::generatePartial('Project', 'Project_BackendTestVersion', array('getUnixName'));
+Mock::Generate('Backend');
+Mock::Generate('Git_GitoliteDriver');
 
 class Git_Backend_GitoliteTest extends UnitTestCase {
     
@@ -41,19 +42,30 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         @rmdir($this->fixtureRenamePath);
     }
     
-    public function test_renameProject() {
-        $project = new Project_BackendTestVersion();
+    function getPartialMock($className, $methods) {
+        $partialName = $className.'Partial'.uniqid();
+        Mock::generatePartial($className, $partialName, $methods);
+        return new $partialName($this);
+    }
+    
+    public function testRenameProjectOk() {
+        $project = $this->getPartialMock('Project', array('getUnixName'));
         $project->setReturnValue('getUnixName', 'legacy');
+        
+        $backend = $this->getPartialMock('Git_Backend_Gitolite', array('glRenameProject', 'getBackend'));
         
         $driver = new MockGit_GitoliteDriver();
         $driver->setReturnValue('getRepositoriesPath', $this->fixtureRenamePath);
-        $driver->expectOnce('renameProject', array($project, 'newone'));
-        $driver->setReturnValue('renameProject', true);
+        $backend->setDriver($driver);
+        
+        $bck = new MockBackend();
+        $bck->expectNever('log');
+        $backend->setReturnValue('getBackend', $bck);
         
         $this->assertTrue(is_dir($this->fixtureRenamePath .'/legacy'));
         $this->assertFalse(is_dir($this->fixtureRenamePath .'/newone'));
         
-        $backend = new Git_Backend_Gitolite($driver);
+        $backend->expectOnce('glRenameProject', array('legacy', 'newone'));
         $this->assertTrue($backend->renameProject($project, 'newone'));
         
         clearstatcache(true, $this->fixtureRenamePath .'/legacy');

@@ -185,11 +185,11 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         return $this->driver->push();
     }
 
-        /**
+    /**
      * Change post-receive-email hook mail prefix
      *
      * @param GitRepository $repository
-     * 
+     *
      * @return Boolean
      */
     public function changeRepositoryMailPrefix($repository) {
@@ -216,13 +216,72 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      */
     public function renameProject(Project $project, $newName) {
         if (is_dir($this->driver->getRepositoriesPath() .'/'. $project->getUnixName())) {
+            $backend = $this->getBackend();
             $ok = rename(
                 $this->driver->getRepositoriesPath() .'/'. $project->getUnixName(), 
                 $this->driver->getRepositoriesPath() .'/'. $newName
             );
-            return $ok && $this->driver->renameProject($project, $newName);
+            if ($ok) {
+                try {
+                    $this->glRenameProject($project->getUnixName(), $newName);
+                } catch (Exception $e) {
+                    $backend->log($e->getMessage(), Backend::LOG_ERROR);
+                    return false;
+                }
+            } else {
+                $backend->log("Rename: Unable to rename gitolite top directory", Backend::LOG_ERROR);
+            }
         }
         return true;
+    }
+
+    /**
+     * Trigger rename of gitolite repositories in configuration files
+     * 
+     * All the rename process is owned by 'root' user but gitolite modification has to be
+     * modified as 'codendiadm' because the config is localy edited and then pushed in 'gitolite'
+     * user repo. In order to make this work, the ~/.ssh/config is modified (otherwise git would
+     * not use a custom ssh key to access the repo).
+     * To make a long story short: we need to execute the following code as codendiadm (so 'su' is used)
+     * and as the new name of the project is already updated in the db we need to pass the old name (instead
+     * of the project Id).
+     *
+     * @param String $oldName The old name of the project
+     * @param String $newName The new name of the project
+     * @throws Exception
+     * 
+     * @return Boolean
+     */
+    protected function glRenameProject($oldName, $newName) {
+        $retVal = 0;
+        $output = array();
+        $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-rename-project.php '.escapeshellarg($oldName).' '.escapeshellarg($newName);
+        $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
+        exec($cmd, $output, $retVal);
+        if ($retVal == 0) {
+            return true;
+        } else {
+            throw new Exception('Rename: Unable to propagate rename to gitolite conf (error code: '.$retVal.'): '.implode('%%%', $output));
+            return false;
+        }
+    }
+    
+    /**
+     * Set $driver
+     *
+     * @param Git_GitoliteDriver $driver The driver
+     */
+    public function setDriver($driver) {
+        $this->driver = $driver;
+    }
+    
+    /**
+     * Wrapper for Backend object
+     *
+     * @return Backend
+     */
+    protected function getBackend() {
+        return Backend::instance();
     }
 }
 
