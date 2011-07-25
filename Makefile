@@ -54,4 +54,8 @@ mockbuild:
 	#[ -z "$(BUILDHOST)" ] || ssh builder@$(BUILDHOST) "mock --debug -r centos-5-x86_64 init"
 	@echo "Mock Build, be patient"
 	[ -z "$(BUILDHOST)" ] || ssh builder@$(BUILDHOST) "cd rpm/SRPMS ; mock -r centos-5-x86_64 *.src.rpm"
+	@echo "Create repo"
+	[ -z "$(BUILDHOST)" ] || ssh builder@$(BUILDHOST) "cd  /var/lib/mock/centos-5-x86_64/result/ ; createrepo ."
+	@echo "Get result"
+	[ -z "$(BUILDHOST)" ] || rsync -a builder@$(BUILDHOST):/var/lib/mock/centos-5-x86_64/result/ yum/
 
