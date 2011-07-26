@@ -70,7 +70,7 @@ class Docman_ReportHtml {
         $current = $this->report->getId();
 
         $html = '';
-        $html .= '<form name="plugin_docman_select_report" action="'. $this->defaultUrl .'" method="get" style="display: inline;" id="plugin_docman_select_report_id" >';
+        $html .= '<form name="plugin_docman_select_report" action="'. $this->defaultUrl .'" method="get" style="display: inline; float:right;" id="plugin_docman_select_report_id" >';
         $html .= '<select name="report_id" id="plugin_docman_select_saved_report">';
 
         // Project wide report
@@ -282,15 +282,18 @@ class Docman_ReportHtml {
      */
     function toHtml($params) {
         $html = '';
-
+        
+        $html .= $this->getReportSelector($params['item']);
+        
         $toggleIc = '<img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="docman_toggle_filters" >';
         $toggle   = '<a href="#" title="'.$GLOBALS['Language']->getText('plugin_docman', 'report_toggle_tooltip').'">'.$toggleIc.'</a>';
         $title    = $GLOBALS['Language']->getText('plugin_docman', 'filters');
        
+        
+        $html .= '<form name="plugin_docman_filters" method="get" action="?" id="plugin_docman_report_form" >';
         $html .= "<div id=\"docman_filters_title\">\n";
         $html .= $toggle;
         $html .= ' '.$title;
-        $html .= ' '.$this->getReportSelector($params['item']);
         $html .= "</div>\n";
 
 
@@ -301,7 +304,6 @@ class Docman_ReportHtml {
 
 
         $html .= '<div style="float: left;">';
-        $html .= '<form name="plugin_docman_filters" method="get" action="?" id="plugin_docman_report_form" >';
         $html .= '<input type="hidden" name="group_id" value="'.$this->report->getGroupId().'" />';
         $html .= '<input type="hidden" name="id" value="'.$params['item']->getId().'" />';
         $html .= '<input type="hidden" name="action" value="search" />';
@@ -315,7 +317,6 @@ class Docman_ReportHtml {
         $html .= '&nbsp;';
         $html .= '<input id="docman_report_submit" name="clear_filters" type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'report_clear_filters') .'">';
 
-        $html .= '</form>';
         $html .= "</div> <!-- left -->\n";
 
 
@@ -330,6 +331,7 @@ class Docman_ReportHtml {
         $html .= '<div style="clear: both;"></div>';
 
         $html .= "</div> <!-- docman_filters_fieldset -->\n";
+        $html .= '</form>';
 
 
         $html .= "\n<!-- filter list -->\n";
