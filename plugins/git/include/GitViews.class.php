@@ -22,6 +22,8 @@
 require_once('mvc/PluginViews.class.php');
 require_once('GitDao.class.php');
 require_once('GitBackend.class.php');
+require_once('www/project/admin/permissions.php');
+
 /**
  * GitViews
  */
