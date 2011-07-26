@@ -123,7 +123,7 @@ class Docman_VersionFactory {
             $value = $number.' ('.$version->getLabel().')';
         }
         $user  = $this->_getUserManager()->getCurrentUser();
-        $this->callDeleteVersionEvent($item->getGroupId(), $item, $value, $user);
+        $version->fireDeleteEvent($item, $value, $user);
         $dao = $this->_getVersionDao();
         return $dao->deleteSpecificVersion($item->getId(), $number);
        
@@ -266,16 +266,6 @@ class Docman_VersionFactory {
             return true;
         }
         return false;
-    }
-
-    function callDeleteVersionEvent($groupId, $item, $value, $user) {
-        $logger = new Docman_Log();
-        $params = array('group_id' => $groupId,
-                        'item'       => $item,
-                        'old_value'  => $value,
-                        'user'       => $user,
-                        'event'   => 'plugin_docman_event_del_version');
-        $logger->log($params['event'], $params);
     }
 }
 

@@ -161,8 +161,8 @@ class Docman_Version {
      * Generally invoked before file download, this method will log a version
      * access event and would launch watermarking process.
      *
-     * @param  Docman_Item    $item
-     * @param  User           $user
+     * @param Docman_Item    $item
+     * @param User           $user
      *
      * @return void
      */
@@ -181,6 +181,25 @@ class Docman_Version {
                                              'version'         => $this,
                                              'docmanControler' => $docmanControler
         ));
+    }
+
+    /**
+     * Logging a version deletion event
+     *
+     * @param Docman_Item    $item
+     * @param String         $value
+     * @param User           $user
+     *
+     * @return void
+     */
+    function fireDeleteEvent($item, $value, $user) {
+        $logger = new Docman_Log();
+        $params = array('group_id' => $item->getGroupId(),
+                        'item'       => $item,
+                        'old_value'  => $value,
+                        'user'       => $user,
+                        'event'   => 'plugin_docman_event_del_version');
+        $logger->log($params['event'], $params);
     }
 }
 
