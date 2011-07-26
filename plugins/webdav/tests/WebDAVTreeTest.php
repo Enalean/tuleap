@@ -287,12 +287,15 @@ class WebDAVTreeTest extends UnitTestCase {
         $tree->copy('source', 'destination/item');
     }
 
+    /**
+     * Fail when destination is not a docman folder
+     */
     function testCopyWrongDestination() {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
         $tree->setReturnValue('getUtils', $utils);
-        $destination = new TestFolder();
+        $destination = new TestRelease();
         $tree->setReturnValue('getNodeForPath', $destination, array('destination'));
         $source = new TestFolder();
         $tree->setReturnValue('getNodeForPath', $source, array('destination'));
@@ -301,6 +304,9 @@ class WebDAVTreeTest extends UnitTestCase {
         $tree->copy('source', 'destination/item');
     }
 
+    /**
+     * Fail when source is not a docman folder
+     */
     function testCopyWrongSource() {
         $tree = new TestTreeTestVersion();
         $utils = new MockWebDAVUtils();

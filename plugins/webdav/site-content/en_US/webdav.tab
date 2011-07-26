@@ -8,21 +8,21 @@ plugin_webdav_upload	delete_file_fail	Could not replace the existing file into t
 plugin_webdav_upload	create_file_fail	Could not create the file into the filesystem.
 plugin_webdav_upload	write_file_fail	Could not write into the file.
 plugin_webdav_upload	close_file_fail	Error while closing the file.
-plugin_webdav_common	plugin_not_available	WebDAV plugin not avilable for this project.
+plugin_webdav_common	plugin_not_available	WebDAV plugin not available for this project.
 plugin_webdav_common	plugin_not_active	WebDAV plugin is not activated.
 plugin_webdav_common	copy	Copy is not implemented.
 plugin_webdav_common	move_error	Move action not authorised.
-plugin_webdav_common	project_not_available	Project not avilable.
+plugin_webdav_common	project_not_available	Project not available.
 plugin_webdav_common	project_access_not_authorized	You are not authorized to access this Project. Please contact a Project Administrator.
 plugin_webdav_common	project_have_no_frs	The file release is not activated for this project.
-plugin_webdav_common	package_not_available	Package not avilable.
+plugin_webdav_common	package_not_available	Package not available.
 plugin_webdav_common	package_access_not_authorized	You are not authorized to access this Package. Please contact a Project Administrator.
 plugin_webdav_common	package_name_exist	Package name already exist.
 plugin_webdav_common	package_denied_create	Permission denied to create package.
 plugin_webdav_common	package_not_empty	Package not empty.
 plugin_webdav_common	package_denied_delete	Permission denied to delete package.
 plugin_webdav_common	package_denied_rename	Permission denied to rename package.
-plugin_webdav_common	release_not_available	Release not avilable.
+plugin_webdav_common	release_not_available	Release not available.
 plugin_webdav_common	release_access_not_authorized	You are not authorized to access this Release. Please contact a Project Administrator.
 plugin_webdav_common	release_name_exist	Release name already exist.
 plugin_webdav_common	release_denied_create	Permission denied to create release.
