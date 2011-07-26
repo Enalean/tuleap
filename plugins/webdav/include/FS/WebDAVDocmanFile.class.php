@@ -134,9 +134,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * @return void
      */
     function download($version) {
-        $group_id = $this->getProject()->getGroupId();
-        $versionFactory = new Docman_VersionFactory();
-        $versionFactory->callVersionEvents($this->getItem(), $this->getUser(), $version, $group_id);
+        $version->preDownload($this->getItem(), $this->getUser());
         // Download the file
         parent::download($version->getFiletype(), $version->getFilesize(), $version->getPath());
     }

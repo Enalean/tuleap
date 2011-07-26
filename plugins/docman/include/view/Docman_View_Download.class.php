@@ -22,7 +22,7 @@ class Docman_View_Download extends Docman_View_View {
         }
         if ($version) {
             if (file_exists($version->getPath())) {
-                $version_factory->callVersionEvents($params['item'], $params['user'], $version, $params['group_id'], &$this->_controller);
+                $version->preDownload($params['item'], $params['user'], &$this->_controller);
                 header('Expires: Mon, 26 Nov 1962 00:00:00 GMT');  // IE & HTTPS
                 header('Pragma: private');                         // IE & HTTPS
                 header('Cache-control: private, must-revalidate'); // IE & HTTPS
