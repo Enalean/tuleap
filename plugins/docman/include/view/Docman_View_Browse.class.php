@@ -42,19 +42,19 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
 
         $html .= '<td align="right">';
         $html .= '<form action="'. $params['default_url'] .'" method="POST">';
-        $html .= '<select name="selected_view" onchange="this.form.submit()" style="font-family:monospace;">';
-        $html .= '<option value="-1">'. $GLOBALS['Language']->getText('plugin_docman', 'browse_viewas') .'</option>';
         $actual = Docman_View_Browse::getViewForCurrentUser($params['group_id']);
         $views  = Docman_View_Browse::getDefaultViews();
         foreach($views as $val => $view) {
-            $html .= '<option value="'. $val .'">'. ($actual == $val ? '&gt;&nbsp;' : '&nbsp;&nbsp;');
-            $html .= $GLOBALS['Language']->getText('plugin_docman', 'view_'.$view);
-            $html .= '</option>';
+            $html .= '<input type="image" 
+            				 name="selected_view['. $val .']" 
+            				 src="'. $this->_controller->plugin->getThemePath() .'/images/ic/view-'. $view .'.png" 
+            				 title="'. $GLOBALS['Language']->getText('plugin_docman', 'browse_viewas') .' '. $GLOBALS['Language']->getText('plugin_docman', 'view_'. $view) .'"
+            				 alt="'. $GLOBALS['Language']->getText('plugin_docman', 'view_'. $view) .'"
+            				 /> ';
+            //($actual == $val ? '&gt;&nbsp;' : '&nbsp;&nbsp;');
         }
-        $html .= '</select>';
         $html .= '<input type="hidden" name="action" value="change_view" />';
         $html .= '<input type="hidden" name="id" value="'. $params['item']->getId() .'" />';
-        $html .= '<noscript><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></noscript>';
         $html .= '</form>';
         $html .= '</td>';
 
@@ -150,7 +150,8 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
     function getDefaultViews() { 
         return array('Tree'   => 'Tree',
                      'Icons'  => 'Icons',
-                     'Table'  => 'Table');
+                     'Table'  => 'Table',
+        );
     }
 }
 
