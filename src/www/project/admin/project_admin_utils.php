@@ -154,10 +154,10 @@ function show_grouphistory ($group_id, $offset, $limit) {
                                                        array());
         echo '</TD><TD><INPUT TYPE="TEXT" NAME="VALUE"></TD>
         <TD>';
-        echo html_field_date('start', '', false, 10, 10, 'date_form', false);
+        echo html_field_date('start', '', false, 10, 10, 'project_history_form', false);
         echo '</TD>
         <TD>';
-        echo html_field_date('end', '', false, 10, 10, 'date_form', false);
+        echo html_field_date('end', '', false, 10, 10, 'project_history_form', false);
         echo '</TD>
         <TD><INPUT TYPE="TEXT" NAME="BY" ID="BY" CLASS="BY"></TD>
         </TR>';
@@ -244,9 +244,8 @@ function show_grouphistory ($group_id, $offset, $limit) {
     }
     // TODO : Custom value for the button
     echo '<BR><TABLE align="left"><TR><TD>
-          <INPUT TYPE="SUBMIT" NAME="EXPORT" VALUE="'.$GLOBALS['Language']->getText('project_stats_source_code_access','logs_export').'">
+          <INPUT TYPE="SUBMIT" NAME="EXPORT" VALUE="'.$GLOBALS['Language']->getText('project_stats_source_code_access', 'logs_export').'">
           </TD></TR></TABLE></FORM><BR><P>';
-    $GLOBALS['HTML']->includeCalendarScripts();
     $js = "new UserAutoCompleter('BY', '".util_get_dir_image_theme()."', true);";
     $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 }

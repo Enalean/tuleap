@@ -9,7 +9,7 @@
 require_once('pre.php');    
 require_once('www/project/admin/project_admin_utils.php');
 require_once('www/project/export/project_export_utils.php');
-
+$GLOBALS['HTML']->includeCalendarScripts();
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 
