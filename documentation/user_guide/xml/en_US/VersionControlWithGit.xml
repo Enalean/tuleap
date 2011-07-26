@@ -25,8 +25,8 @@
   <para>
     Two types of repositories are available:
     <itemizedlist mark="bullet">
-      <listitem><para>Reference: It is considered as a independant subproject or project module which can be forked</para></listitem>
-      <listitem><para>Fork (clone): It is the result of the 'git clone' command to seperate features works among developement team(s). Could be used as a shared developper's repository</para></listitem>
+      <listitem><para>Reference: it is considered as a independant subproject or project module which can be forked</para></listitem>
+      <listitem><para>Fork (clone): it is the result of the 'git clone' command to seperate features works among developement team(s). Could be used as a shared developper's repository</para></listitem>
     </itemizedlist>
   </para>
   
@@ -53,7 +53,7 @@
 
   <section id="GitRepositorySettings">
     <title>Repository settings</title>
-    <para>As a project admin you are allowed to modify the configuration of any project repositories. This includes:
+    <para>As a project admin, you are allowed to modify the configuration of any project repositories. This includes:
       <itemizedlist mark="bullet">
         <listitem><para>textual description of the repository,</para></listitem>
         <listitem><para>access control,</para></listitem>
@@ -74,7 +74,7 @@
       <title>Email notification</title>
       <para>It's often a good idea to notify the whole team when someone pushes some new content into a repository.
         You can configure your repository to send an email a list of addresses (or even better a mailing list) upon pushes.</para>
-      <para>The content of the mail will depend of the push but you can modify:
+      <para>The content of the mail will depend on the push but you can modify:
         <itemizedlist mark="bullet">
           <listitem><para>the email subject prefix</para></listitem>
           <listitem><para>the list of recipients</para></listitem>

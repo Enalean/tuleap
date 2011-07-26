@@ -14,7 +14,7 @@
   <para>
     Le support de Git a été développé pour supporter plusieurs
     dépôts par projet. Ceci est en accord avec la philosophie des systèmes de gestion de version distribués qui permet de mettre en place des
-    workflow distribuant le développement de fonctionnalitées sur plusieurs dépôts.
+    workflow distribuant le développement de fonctionnalités sur plusieurs dépôts.
   </para>
 
   <para>L'accès à Git (à la fois pour les opérations de lecture et d'écriture) nécessite une clef SSH valide et configurée dans vos préférences utilisateur. Se référer à <xref linkend="AccountMaintenance" /> pour les détails.
@@ -22,7 +22,7 @@
 
   <para>Deux types de dépôt sont distingués:
     <itemizedlist mark="bullet">
-        <listitem><para>Référence : considéré comme un sous projet ou un module indépendant d'un projet aui peut être forké.</para></listitem>
+        <listitem><para>Référence : considérée comme un sous projet ou un module indépendant d'un projet qui peut être forké.</para></listitem>
         <listitem><para>Fork (clone) : le résultat de la commande 'git clone', permettant ainsi de répartir les développements de fonctionnalités sur le(s) équipe(s).</para></listitem>
     </itemizedlist>
   </para>
@@ -61,9 +61,9 @@
 
     <section id="GitRepositorySettingsAccessControlGitShell">
       <title>Permissions simples</title>
-      <para>Le contrôle d'accès par défaut est basé sur la notion de dépôt public/privés. Un dépôt public est accessible par tous les utilisateurs ayant un compte valide sur la platforme.
-        Les dépôt privés, eux, ne sont accessibles que par les membres de projet.</para>
-      <para>Dans tous les cas de figure, les membres de projet ont toujours un accès complet à tous les dépôt (en lecture et en écriture).</para>
+      <para>Le contrôle d'accès par défaut est basé sur la notion de dépôt public/privés. Un dépôt public est accessible par tous les utilisateurs ayant un compte valide sur la plateforme.
+        Les dépôts privés, eux, ne sont accessibles que par les membres de projet.</para>
+      <para>Dans tous les cas de figure, les membres de projet ont toujours un accès complet à tous les dépôts (en lecture et en écriture).</para>
       <para>Si la fonctionnalité "d'utilisateur restreint" est activée, seule la création de dépôts privés est possible.</para>
       <para>Il est possible d'avoir des permissions à grain fin. Se référer à <xref linkend="GitRepositoryGitolite" />.</para>
     </section>
@@ -71,15 +71,15 @@
     <section id="GitRepositorySettingsEmail">
       <title>Notification par courriel</title>
       <para>Il est souvent conseillé de tenir informée toute l'équipe lorque quelqu'un "pousse" (push) des nouvelles choses dans un dépôt.
-        Vous pouvez configurer celui ci pour qu'il envoi automatiquement un courriel à une liste de personne (ou, mieux, à une liste de diffusion).</para>
+        Vous pouvez configurer celui ci pour qu'il envoie automatiquement un courriel à une liste de personnes (ou, mieux, à une liste de diffusion).</para>
       <para>Le contenu du message dépend du contenu du push mais vous pouvez configurer:
         <itemizedlist mark="bullet">
-          <listitem><para>le préfix du sujet</para></listitem>
+          <listitem><para>le préfixe du sujet</para></listitem>
           <listitem><para>la liste des destinataires</para></listitem>
         </itemizedlist>
       </para>
-      <para>Lorsque vous ajoutez un destinataire, l'autocompletion est faite à sur les noms d'utilisateurs de la platforme. Vous pouvez néanmoins forcer n'importe quelle autre adresse (comme celle d'une liste de diffusion)</para>
-      <para>Dès la liste configurée, tous les push suivant enverons un message contenant :
+      <para>Lorsque vous ajoutez un destinataire, l'autocompletion est faite sur les noms d'utilisateurs de la plateforme. Vous pouvez néanmoins forcer n'importe quelle autre adresse (comme celle d'une liste de diffusion)</para>
+      <para>Dès la liste configurée, tous les push suivant enverrons un message contenant :
         <itemizedlist mark="bullet">
           <listitem><para>la liste des commits contenus dans le push,</para></listitem>
           <listitem><para>les fichiers modifiés (+diffstats),</para></listitem>
@@ -93,7 +93,7 @@
 
   <section id="GitRepositoryGitolite">
     <title>Permissions fines</title>
-    <para>Á partir de la version 4.0.20, l'administrateur de projet peu créer des dépôt permettant de définir des permissions plus fines.</para>
+    <para>Á partir de la version 4.0.20, l'administrateur de projet peut créer des dépôts permettant de définir des permissions plus fines.</para>
     
     <para>Pour activer cette fonctionnalité, l'administrateur de projet doit, au préalable, activer le mode "&SYS_PRODUCT_NAME; Lab" dans ses préférences utilisateur (via la Page Personnelle).
       Ainsi fait, une case à cocher apparait dans l'interface de création de dépôt. Cette case permet de créer un dépôt "permissions à grain fin".</para>
@@ -109,18 +109,18 @@
       <itemizedlist mark="bullet">
         <listitem><para>Lecture: accèder au dépôt en lecture seule</para></listitem>
         <listitem><para>Écriture: pousser (push) de nouvelles révisions, des branches, des tags (mais aussi les supprimer).</para></listitem>
-        <listitem><para>Rewind: dépasser les barrières de protection de git et jouer avec l'historique du dépôt. Il est fortement déconseillé d'activer cette possibilité si vous ne comprenez par parfaitement ce que vous faites. Cette capacité permet de corompre définitivement l'historique d'un dépôt.</para></listitem>
+        <listitem><para>Rewind: dépasser les barrières de protection de git et jouer avec l'historique du dépôt. Il est fortement déconseillé d'activer cette possibilité si vous ne comprenez par parfaitement ce que vous faites. Cette capacité permet de corrompre définitivement l'historique d'un dépôt.</para></listitem>
       </itemizedlist>
     </para>
 
-    <para>Le fork et la suppression d'un dépot "permissions fine" sera disponible ulterieurement.</para>
+    <para>Le fork et la suppression d'un dépot "permissions fine" sera disponible ultérieurement.</para>
   </section>
 
   <section id="GitRepositoryDeletion">
     <title>Suppression d'un dépôt</title>
     <para>
       Un dépôt peut être supprimé, une archive compressée sera créée sous le nom {PROJECT_SHORT_NAME}_{REPOSITORY_NAME}_{DEL_TIMESTAMP}.tar.bz2
-      et déplacé dans le répertoire de sauvegarde.
+      et déplacée dans le répertoire de sauvegarde.
       Se référer à la section <xref linkend="GitRepositoryImport" /> pour l'import des dépôts.
     </para>
   </section>
