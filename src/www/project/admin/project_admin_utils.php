@@ -137,16 +137,19 @@ function show_grouphistory ($group_id, $offset, $limit) {
 	$hp =& Codendi_HTMLPurifier::instance();
 
 	if ($res['numrows'] > 0) {
-	
-		echo '
-		<H3>'.$Language->getText('project_admin_utils','g_change_history').'</H3>';
-        //TODO : Add a title to indicate the search
+
+        echo '
+        <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>
+        <SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title"><img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="toggle_form_icon"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
         // TODO : Keep values of the last submitted form
         echo '<FORM METHOD="POST" NAME="project_history_form">
-        <TABLE>';
-        // TODO : i18n
-        echo '<TH>Event</TH><TH>Value</TH><TH>Start date</TH><TH>End date</TH><TH>By</TH>
-        <TR><TD>';
+              <TABLE ID="project_history_search">';
+        echo '<TH style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
+              <TH style="text-align:left">'.$Language->getText('project_admin_utils','val').'</TH>
+              <TH style="text-align:left">'.$Language->getText('project_export_task_export', 'start_date').'</TH>
+              <TH style="text-align:left">'.$Language->getText('project_export_task_export', 'end_date').'</TH>
+              <TH style="text-align:left">'.$Language->getText('global','by').'</TH>
+              <TR VALIGN="TOP"><TD>';
 
         echo '<script>
 function SelectSubEvent(){
@@ -263,17 +266,17 @@ function addOption(selectbox, value )
          </select>';
 
         echo '</TD><TD><INPUT TYPE="TEXT" NAME="VALUE"></TD>
-        <TD>';
+              <TD>';
         echo html_field_date('start', '', false, 10, 10, 'project_history_form', false);
         echo '</TD>
-        <TD>';
+              <TD>';
         echo html_field_date('end', '', false, 10, 10, 'project_history_form', false);
         echo '</TD>
-        <TD><INPUT TYPE="TEXT" NAME="BY" ID="BY" CLASS="BY"></TD>
-        </TR>';
+              <TD><INPUT TYPE="TEXT" NAME="BY" ID="BY" CLASS="BY"></TD>
+              </TR>';
 
         echo '<TR><TD><INPUT TYPE="SUBMIT" NAME="FILTER"></TD></TR>
-        </TABLE>
+              </TABLE>
 		<P>';
 		$title_arr=array();
 		$title_arr[]=$Language->getText('project_admin_utils','event');
@@ -349,14 +352,14 @@ function addOption(selectbox, value )
             echo '</div>';
         
     } else {
-        echo '
-        <H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';
+        echo '<H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';
     }
-    // TODO : Custom value for the button
     echo '<BR><TABLE align="left"><TR><TD>
-          <INPUT TYPE="SUBMIT" NAME="EXPORT" VALUE="'.$GLOBALS['Language']->getText('project_stats_source_code_access', 'logs_export').'">
+          <INPUT TYPE="SUBMIT" NAME="EXPORT" VALUE="'.$GLOBALS['Language']->getText('project_admin_utils', 'export_history').'">
           </TD></TR></TABLE></FORM><BR><P>';
-    $js = "new UserAutoCompleter('BY', '".util_get_dir_image_theme()."', true);";
+    $js = "new UserAutoCompleter('BY', '".util_get_dir_image_theme()."', true);
+           new ProjectHistory();";
+    $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
     $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 }
 

@@ -439,6 +439,9 @@ project_admin_utils	menu_permissions	Permissions:
 project_admin_utils	menu_data	Data: 
 project_admin_utils	group_type	Changed Project Type
 project_admin_utils	action	Action
+project_admin_utils	export_history	Export project history
+project_admin_utils	toggle_search	Toggle search
+project_admin_utils	history_search_title	Search within project history
 #... end of values
 #
 #-----------------------------------------------

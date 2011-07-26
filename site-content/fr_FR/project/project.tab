@@ -435,7 +435,9 @@ project_admin_utils	menu_data	Données&nbsp;:
 project_admin_utils	group_type	Type de projet modifié
 project_admin_utils	action	Action
 project_admin_utils	search_user	Chercher par nom d'utilisateur :
-
+project_admin_utils	export_history	Exporter l'historique du projet
+project_admin_utils	toggle_search	Basculer l'affichage de la recherche
+project_admin_utils	history_search_title	Chercher dans l'historique du projet
 #... end of values
 #
 #-----------------------------------------------
