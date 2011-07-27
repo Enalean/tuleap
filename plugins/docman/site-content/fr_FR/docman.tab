@@ -182,7 +182,7 @@ plugin_docman	admin_view_instructions	Selectionnez la vue par défaut pour le pa
 
 plugin_docman	breadcrumbs_location	Chemin :
 
-plugin_docman	browse_viewas	-- Vue:
+plugin_docman	browse_viewas	Vue:
 plugin_docman	browse_customreports	-- Rapports personnalisés :
 
 plugin_docman	clone_file_label	Copier du modèle

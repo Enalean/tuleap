@@ -42,6 +42,8 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
 
         $html .= '<td align="right">';
         $html .= '<form action="'. $params['default_url'] .'" method="POST">';
+        $html .= '<span id="docman_browse_viewas">';
+        $html .= $GLOBALS['Language']->getText('plugin_docman', 'browse_viewas') .' ';
         $actual = Docman_View_Browse::getViewForCurrentUser($params['group_id']);
         $views  = Docman_View_Browse::getDefaultViews();
         foreach($views as $val => $view) {
@@ -53,6 +55,7 @@ require_once(dirname(__FILE__).'/../Docman_ReportHtml.class.php');
             				 /> ';
             //($actual == $val ? '&gt;&nbsp;' : '&nbsp;&nbsp;');
         }
+        $html .= '</span>';
         $html .= '<input type="hidden" name="action" value="change_view" />';
         $html .= '<input type="hidden" name="id" value="'. $params['item']->getId() .'" />';
         $html .= '</form>';

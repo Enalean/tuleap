@@ -462,3 +462,10 @@ a img {
   clear: both; /* be careful with this */
 }
 
+#docman_browse_viewas {
+	color: #c0c0c0;
+}
+#docman_browse_viewas input {
+	vertical-align: middle;
+}
+}
