@@ -1,3 +1,6 @@
+	== New Features ==
+	* Improve rpm packaging: Tuleap needs customized packages (like jpgraph or mailman). Those packages were suffixed with .codendi which was not compatible with default yum package distribution. Custom packages are now known as "package-tuleap".
+
 Version 4.0.18 - (Not released yet)
         == New Features ==
         backlog #124820: Add history for membership delegation
