@@ -454,7 +454,9 @@ class GitPHP_Project
 	public function GetDescription($trim = 0)
 	{
 		if (!$this->readDescription) {
-			$this->description = file_get_contents($this->GetPath() . '/description');
+			if (file_exists($this->GetPath() . '/description')) {
+				$this->description = file_get_contents($this->GetPath() . '/description');
+			}
 		}
 		
 		if (($trim > 0) && (strlen($this->description) > $trim)) {
