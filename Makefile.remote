@@ -55,7 +55,7 @@ remotebuilddepssrc: synctobuildhost
 # If you need to define specific mirrors just create a centos-5-x86_64.cfg replacement file
 remotemockprepare: checkbuildhost
 	@echo "Setup builder user"
-	ssh root@$(BUILDHOST) "yum -y install mock ; useradd -g mock builder ; cp -r ~/.ssh ~builder ; chown -R builder.mock ~builder/.ssh"
+	ssh root@$(BUILDHOST) "yum -y install mock ; useradd -g mock builder ; cp -r /root/.ssh /home/builder/ ; chown -R builder.mock /home/builder"
 	@echo "Mock Config"
 	[ ! -f centos-5-x86_64.cfg ] || scp centos-5-x86_64.cfg root@$(BUILDHOST):/etc/mock/ 
 	
