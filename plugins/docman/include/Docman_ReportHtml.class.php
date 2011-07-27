@@ -293,7 +293,7 @@ class Docman_ReportHtml {
         $html .= '<form name="plugin_docman_filters" method="get" action="?" id="plugin_docman_report_form" >';
         $html .= "<div id=\"docman_filters_title\">\n";
         $html .= $toggle;
-        $html .= ' '.$title;
+        $html .= ' '.$title.' ';
         $html .= "</div>\n";
 
 

@@ -487,15 +487,9 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             if ($('plugin_docman_report_form')) {
                 var global_txt = $('docman_filters_fieldset').down('input[name=global_txt]');
                 if (global_txt) {
-                    this._globalSearchBox = {
-                        element:            global_txt,
-                        parent_when_shown:  new Element('span'),
-                        parent_when_hidden: new Element('span').update('&nbsp;')
-                    }
-                    
-                    //add parent containers
-                    $('docman_filters_title').appendChild(this._globalSearchBox.parent_when_hidden);
-                    $(global_txt).insert({before: this._globalSearchBox.parent_when_shown});
+                    this._globalSearchBox = global_txt.cloneNode(true);
+                    console.log(this._globalSearchBox);
+                    $('docman_filters_title').appendChild(this._globalSearchBox);
                 }
             }
 
@@ -518,16 +512,16 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         $('docman_filters_fieldset').show();
         $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_plus.png', 'toggle_minus.png');
         if (this._globalSearchBox) {
-            this._globalSearchBox.element.remove();
-            this._globalSearchBox.parent_when_shown.appendChild(this._globalSearchBox.element);
+            this._globalSearchBox.disabled = true;
+            this._globalSearchBox.readonly = true;
         }
     },
     hideReport: function() {
         $('docman_filters_fieldset').hide();
         $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_minus.png', 'toggle_plus.png');
         if (this._globalSearchBox) {
-            this._globalSearchBox.element.remove();
-            this._globalSearchBox.parent_when_hidden.appendChild(this._globalSearchBox.element);
+            this._globalSearchBox.disabled = false;
+            this._globalSearchBox.readonly = false;
         }
     },
     reportSelectSavedReport: function(event) {
