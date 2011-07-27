@@ -4,6 +4,9 @@ help:
 	@echo "Choose one target"
 	@echo "	Available targets are: `grep '^[^	]*:' Makefile | grep -v %| cut -d: -f1 | xargs echo`"
 
+build:
+	make all dist
+
 dependanciessrc: 
 	@echo "Create dependancies SRPMS"
 	make -C rpm/SPECS srpms
