@@ -45,6 +45,7 @@ Mock::generatePartial(
     'WebDAVDocmanFolderTestVersion',
 array('getDocmanItemFactory',
       'getDocmanPermissionsManager',
+      'cloneItemPermissions',
       'deleteDirectoryContent',
       'getUtils',
       'getItem',
