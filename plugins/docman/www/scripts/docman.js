@@ -477,6 +477,8 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     _globalSearchBox: undefined,
     initTableReport: function() {
         if($('docman_filters_fieldset')) {
+            var url = location.href.parseQuery();
+            
             // Setup event observe
             var icon = $('docman_toggle_filters');
             icon.observe('click', this.toggleReport.bindAsEventListener(this));
@@ -484,22 +486,29 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             $('plugin_docman_report_add_filter').observe('change',   this.reportSelectAddFilter);
             $('plugin_docman_report_save').observe('change',         this.reportSelectSave.bindAsEventListener(this));
 
+            var collapse_report_per_default = true;
             if ($('plugin_docman_report_form')) {
                 var global_txt = $('docman_filters_fieldset').down('input[name=global_txt]');
                 if (global_txt) {
                     this._globalSearchBox = {
-                            submit: $('docman_report_submit').cloneNode(true),
-                            cloned: global_txt.cloneNode(true),
-                            origin: global_txt
-                    }
-                    this._globalSearchBox.submit.id = '';
-                    $('docman_filters_title').appendChild(this._globalSearchBox.cloned);                    
-                    $('docman_filters_title').appendChild(this._globalSearchBox.submit);
+                            cloned: {
+                                text:   global_txt.cloneNode(true),
+                                button: $('docman_report_submit').cloneNode(true)
+                            },
+                            origin: {
+                                text:   global_txt,
+                                button: $('docman_report_submit')
+                            }
+                    };
+                    this._globalSearchBox.cloned.button.id = '';
+                    this._globalSearchBox.cloned.button.name = 'global_' + $('docman_report_submit').name;
+                    $('docman_filters_title').appendChild(this._globalSearchBox.cloned.text);                    
+                    $('docman_filters_title').appendChild(this._globalSearchBox.cloned.button);
+                    
+                    collapse_report_per_default = typeof url[this._globalSearchBox.cloned.button.name] !== 'undefined';
                 }
             }
-
-            var url = location.href.parseQuery();
-            if(url['del_filter'] || url['add_filter']) {
+            if (!collapse_report_per_default && (url['del_filter'] || url['add_filter'])) {
                 this.showReport();
             } else {
                 this.hideReport();
@@ -517,22 +526,24 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         $('docman_filters_fieldset').show();
         $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_plus.png', 'toggle_minus.png');
         if (this._globalSearchBox) {
-            this._globalSearchBox.submit.disabled = true;
-            this._globalSearchBox.cloned.disabled = true;
-            this._globalSearchBox.cloned.readonly = true;
-            this._globalSearchBox.origin.disabled = false;
-            this._globalSearchBox.origin.readonly = false;
+            this._globalSearchBox.cloned.button.disabled = true;
+            this._globalSearchBox.cloned.text.disabled   = true;
+            this._globalSearchBox.cloned.text.readonly   = true;
+            this._globalSearchBox.origin.button.disabled = false;
+            this._globalSearchBox.origin.text.disabled   = false;
+            this._globalSearchBox.origin.text.readonly   = false;
         }
     },
     hideReport: function() {
         $('docman_filters_fieldset').hide();
         $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_minus.png', 'toggle_plus.png');
         if (this._globalSearchBox) {
-            this._globalSearchBox.submit.disabled = false;
-            this._globalSearchBox.cloned.disabled = false;
-            this._globalSearchBox.cloned.readonly = false;
-            this._globalSearchBox.origin.disabled = true;
-            this._globalSearchBox.origin.readonly = true;
+            this._globalSearchBox.cloned.button.disabled = false;
+            this._globalSearchBox.cloned.text.disabled   = false;
+            this._globalSearchBox.cloned.text.readonly   = false;
+            this._globalSearchBox.origin.button.disabled = true;
+            this._globalSearchBox.origin.text.disabled   = true;
+            this._globalSearchBox.origin.text.readonly   = true;
         }
     },
     reportSelectSavedReport: function(event) {
