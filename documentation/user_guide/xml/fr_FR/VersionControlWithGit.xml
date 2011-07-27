@@ -20,7 +20,7 @@
   <para>L'accès à Git (à la fois pour les opérations de lecture et d'écriture) nécessite une clef SSH valide et configurée dans vos préférences utilisateur. Se référer à <xref linkend="AccountMaintenance" /> pour les détails.
   </para>
 
-  <para>Deux types de dépôt sont distingués:
+  <para>Deux types de dépôt se distinguent:
     <itemizedlist mark="bullet">
         <listitem><para>Référence : considérée comme un sous projet ou un module indépendant d'un projet qui peut être forké.</para></listitem>
         <listitem><para>Fork (clone) : le résultat de la commande 'git clone', permettant ainsi de répartir les développements de fonctionnalités sur le(s) équipe(s).</para></listitem>
@@ -86,7 +86,7 @@
           <listitem><para>pour chaque commit, un lien vers diff dans l'interface gitweb de &SYS_PRODUCT_NAME;,</para></listitem>
           <listitem><para>pour chaque référence (dans un message de commit par exemple), l'automagic link correspondant.</para></listitem>
         </itemizedlist>
-        L'extraction des références croisées ne sera pas fait si la fonctionnalité de notification par mail n'est pas activée.
+        L'extraction des références croisées ne sera pas faite si la fonctionnalité de notification par mail n'est pas activée.
       </para>
     </section>
   </section>
@@ -100,20 +100,20 @@
     
     <para>Ce nouveau type de dépôt permet de :
       <itemizedlist mark="bullet">
-        <listitem><para>Définir une arborescence de dépots. Par exemple "platform/x86".</para></listitem>
+        <listitem><para>Définir une arborescence de dépôts. Par exemple "platform/x86".</para></listitem>
         <listitem><para>D'associer des groupes d'utilisateurs aux différentes capacités: Lecture, Écriture, Rewind.</para></listitem>
       </itemizedlist>
     </para>
 
     <para>Dans l'interface de gestion d'un dépôt, l'administrateur de projet peut associer un ou plusieurs groupes à
       <itemizedlist mark="bullet">
-        <listitem><para>Lecture: accèder au dépôt en lecture seule</para></listitem>
+        <listitem><para>Lecture: accéder au dépôt en lecture seule</para></listitem>
         <listitem><para>Écriture: pousser (push) de nouvelles révisions, des branches, des tags (mais aussi les supprimer).</para></listitem>
         <listitem><para>Rewind: dépasser les barrières de protection de git et jouer avec l'historique du dépôt. Il est fortement déconseillé d'activer cette possibilité si vous ne comprenez par parfaitement ce que vous faites. Cette capacité permet de corrompre définitivement l'historique d'un dépôt.</para></listitem>
       </itemizedlist>
     </para>
 
-    <para>Le fork et la suppression d'un dépot "permissions fine" sera disponible ultérieurement.</para>
+    <para>Le fork et la suppression d'un dépôt "permissions fine" seront disponibles ultérieurement.</para>
   </section>
 
   <section id="GitRepositoryDeletion">
