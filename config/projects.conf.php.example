@@ -15,7 +15,7 @@
  * git_projects
  * List of projects
  *
- * There are three ways to list projects:
+ * There are several ways to list projects:
  *
  * 1. Array of projects
  */
@@ -37,7 +37,16 @@
 //$git_projects = '/git/projectlist.txt';
 
 /*
- * 3. Leave commented to read all projects in the project root
+ * 3. Path to scm-manager repositories.xml file
+ * Points to the repository config file used by the scm-manager
+ * program.  In order for this to work, the projectroot for GitPHP
+ * must be the same as the git repository directory configured
+ * in scm-manager
+ */
+//$git_projects = '~/.scm/config/repositories.xml';
+
+/*
+ * 4. Leave commented to read all projects in the project root
  */
 
 
