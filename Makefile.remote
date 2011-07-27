@@ -3,7 +3,7 @@
 # you can get the code using gettestfromff target
 # Alternatly you can use any buildhost that has the following requirement
 # - you can ssh root without passwd
-# - you need at least make and rpm-build packages installed
+# - you need at least the following packages : make,rpm-build,createrepo
 # - runs centos 5 x86_64 (though should be easy to use any mock target)
 # Goal is to be able to build tuleap like other package
 # then this makefile should be much simpler
