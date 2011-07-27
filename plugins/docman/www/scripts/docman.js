@@ -487,9 +487,14 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
             if ($('plugin_docman_report_form')) {
                 var global_txt = $('docman_filters_fieldset').down('input[name=global_txt]');
                 if (global_txt) {
-                    this._globalSearchBox = global_txt.cloneNode(true);
-                    console.log(this._globalSearchBox);
-                    $('docman_filters_title').appendChild(this._globalSearchBox);
+                    this._globalSearchBox = {
+                            submit: $('docman_report_submit').cloneNode(true),
+                            cloned: global_txt.cloneNode(true),
+                            origin: global_txt
+                    }
+                    this._globalSearchBox.submit.id = '';
+                    $('docman_filters_title').appendChild(this._globalSearchBox.cloned);                    
+                    $('docman_filters_title').appendChild(this._globalSearchBox.submit);
                 }
             }
 
@@ -512,16 +517,22 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
         $('docman_filters_fieldset').show();
         $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_plus.png', 'toggle_minus.png');
         if (this._globalSearchBox) {
-            this._globalSearchBox.disabled = true;
-            this._globalSearchBox.readonly = true;
+            this._globalSearchBox.submit.disabled = true;
+            this._globalSearchBox.cloned.disabled = true;
+            this._globalSearchBox.cloned.readonly = true;
+            this._globalSearchBox.origin.disabled = false;
+            this._globalSearchBox.origin.readonly = false;
         }
     },
     hideReport: function() {
         $('docman_filters_fieldset').hide();
         $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_minus.png', 'toggle_plus.png');
         if (this._globalSearchBox) {
-            this._globalSearchBox.disabled = false;
-            this._globalSearchBox.readonly = false;
+            this._globalSearchBox.submit.disabled = false;
+            this._globalSearchBox.cloned.disabled = false;
+            this._globalSearchBox.cloned.readonly = false;
+            this._globalSearchBox.origin.disabled = true;
+            this._globalSearchBox.origin.readonly = true;
         }
     },
     reportSelectSavedReport: function(event) {
