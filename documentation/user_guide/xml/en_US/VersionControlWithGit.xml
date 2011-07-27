@@ -35,7 +35,7 @@
 
     <para>A reference can be created by project admin from the Git service home page, a reference name can be like reference-project_1.</para>
 
-    <para>A reference must be initialized
+    <para>A reference must be initialized. Note that a reference cannot be empty. If it is the case, you can for instance create a README file.
       <itemizedlist mark="bullet">
         <listitem><para>cd mysources</para></listitem>
         <listitem><para>git init</para></listitem>

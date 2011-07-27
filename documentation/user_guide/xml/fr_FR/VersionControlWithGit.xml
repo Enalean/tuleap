@@ -32,7 +32,7 @@
 
     <para>Une référence peut-être créée. Seul un administrateur projet peut créer une référence depuis la page d'accueil du service. Le nommage des références.</para>
 
-    <para>Une référence doit être initialisée
+    <para>Une référence doit être initialisée. Notez cependant qu'une référence ne peut être vide. Si tel est le cas, rajoutez un fichier README par exemple.
       <itemizedlist mark="bullet">
         <listitem><para>cd mysources</para></listitem>
         <listitem><para>git init</para></listitem>
