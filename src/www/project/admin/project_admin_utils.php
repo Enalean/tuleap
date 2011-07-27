@@ -142,7 +142,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>
         <SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title"><img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="toggle_form_icon"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
         // TODO : Keep values of the last submitted form
-        echo '<FORM METHOD="POST" NAME="project_history_form">
+        echo '<FORM METHOD="POST" id="project_history_form" NAME="project_history_form">
               <TABLE ID="project_history_search">';
         echo '<TH style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
               <TH style="text-align:left">'.$Language->getText('project_admin_utils','val').'</TH>
@@ -151,107 +151,9 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
               <TH style="text-align:left">'.$Language->getText('global','by').'</TH>
               <TR VALIGN="TOP"><TD>';
 
-        echo '<script>
-function SelectSubEvent(){
-removeAllOptions(document.project_history_form.SubEvent);
-addOption(document.project_history_form.SubEvent, "Any", "Any", "");
 
-//Permission section
-if(document.project_history_form.events.value == "Permissions"){
-addOption(document.project_history_form.SubEvent,"perm_reset_for_field");
-addOption(document.project_history_form.SubEvent,"perm_reset_for_tracker");  
-addOption(document.project_history_form.SubEvent,"perm_reset_for_package"); 
-addOption(document.project_history_form.SubEvent,"perm_reset_for_release");  
-addOption(document.project_history_form.SubEvent,"perm_reset_for_document"); 
-addOption(document.project_history_form.SubEvent,"perm_reset_for_folder");   
-addOption(document.project_history_form.SubEvent,"perm_reset_for_docgroup"); 
-addOption(document.project_history_form.SubEvent,"perm_reset_for_wiki"); 
-addOption(document.project_history_form.SubEvent,"perm_reset_for_wikipage"); 
-addOption(document.project_history_form.SubEvent,"perm_reset_for_wikiattachment");   
-addOption(document.project_history_form.SubEvent,"perm_reset_for_object");
-addOption(document.project_history_form.SubEvent,"perm_granted_for_field");
-addOption(document.project_history_form.SubEvent,"perm_granted_for_tracker");  
-addOption(document.project_history_form.SubEvent,"perm_granted_for_package"); 
-addOption(document.project_history_form.SubEvent,"perm_granted_for_release");  
-addOption(document.project_history_form.SubEvent,"perm_granted_for_document"); 
-addOption(document.project_history_form.SubEvent,"perm_granted_for_folder");   
-addOption(document.project_history_form.SubEvent,"perm_granted_for_docgroup"); 
-addOption(document.project_history_form.SubEvent,"perm_granted_for_wiki"); 
-addOption(document.project_history_form.SubEvent,"perm_granted_for_wikipage"); 
-addOption(document.project_history_form.SubEvent,"perm_granted_for_wikiattachment");
-addOption(document.project_history_form.SubEvent,"perm_granted_for_object", "");
-}
-
-//Project section
-if(document.project_history_form.events.value == "Project"){
-addOption(document.project_history_form.SubEvent,"rename_done");
-addOption(document.project_history_form.SubEvent,"rename_with_error");
-addOption(document.project_history_form.SubEvent,"approved");
-addOption(document.project_history_form.SubEvent,"deleted");
-addOption(document.project_history_form.SubEvent,"rename_request");
-addOption(document.project_history_form.SubEvent,"status");
-addOption(document.project_history_form.SubEvent,"is_public");
-addOption(document.project_history_form.SubEvent,"group_type");
-addOption(document.project_history_form.SubEvent,"http_domain");
-addOption(document.project_history_form.SubEvent,"unix_box");
-addOption(document.project_history_form.SubEvent,"changed_public_info");
-addOption(document.project_history_form.SubEvent,"changed_trove");
-addOption(document.project_history_form.SubEvent,"membership_request_updated");
-addOption(document.project_history_form.SubEvent,"import");
-addOption(document.project_history_form.SubEvent,"mass_change");
-}
-
-//User group section
-if(document.project_history_form.events.value == "User Group"){
-addOption(document.project_history_form.SubEvent,"upd_ug");
-addOption(document.project_history_form.SubEvent,"del_ug");
-addOption(document.project_history_form.SubEvent,"changed_member_perm", "");
-}
-
-//Users section
-if(document.project_history_form.events.value == "Users"){
-addOption(document.project_history_form.SubEvent,"changed_personal_email_notif");
-addOption(document.project_history_form.SubEvent,"added_user");
-addOption(document.project_history_form.SubEvent,"removed_user");
-}
-
-//Uncatogorised items section
-
-if(document.project_history_form.events.value == "Others"){
-addOption(document.project_history_form.SubEvent,"changed_bts_form_message");
-addOption(document.project_history_form.SubEvent,"changed_bts_allow_anon");
-addOption(document.project_history_form.SubEvent,"changed_patch_mgr_settings");
-addOption(document.project_history_form.SubEvent,"changed_task_mgr_other_settings");
-addOption(document.project_history_form.SubEvent,"changed_sr_settings");
-}
-
-}
-
-function removeAllOptions(selectbox)
-{
-    var i;
-    for(i=selectbox.options.length-1;i>=0;i--)
-    {
-        //selectbox.options.remove(i);
-        selectbox.remove(i);
-    }
-}
-
-
-function addOption(selectbox, value )
-{
-    var optn = document.createElement("option");
-    
-    //Need to find how to use the value as index in the tab file
-    //optn.text = <?php echo $GLOBALS["Language"]->getText("project_admin_utils", $value);?>;
-    optn.text = value;
-    optn.value = value;
-
-    selectbox.options.add(optn);
-}
-        </script>';
         //Event select Box
-        echo '<select name="events" onChange="SelectSubEvent();">
+        echo '<select name="events" id="events">
               <Option value="Any"';
         if ($event == "Any") {
             echo 'selected';
@@ -285,8 +187,7 @@ function addOption(selectbox, value )
               </select>&nbsp';
 
         //SubEvent select Box
-        // TODO: Fill this depending on previous submit too
-         echo '<select id="SubEvent" name="SubEvent">
+         echo '<select id="SubEvent" name="SubEvent" multiple>
          <Option value="Any">Any</Option>
          </select>';
 
