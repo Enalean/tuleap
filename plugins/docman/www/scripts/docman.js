@@ -516,7 +516,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     },
     showReport: function() {
         $('docman_filters_fieldset').show();
-        $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_minus.png', 'toggle_plus.png');
+        $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_plus.png', 'toggle_minus.png');
         if (this._globalSearchBox) {
             this._globalSearchBox.element.remove();
             this._globalSearchBox.parent_when_shown.appendChild(this._globalSearchBox.element);
@@ -524,7 +524,7 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     },
     hideReport: function() {
         $('docman_filters_fieldset').hide();
-        $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_plus.png', 'toggle_minus.png');
+        $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_minus.png', 'toggle_plus.png');
         if (this._globalSearchBox) {
             this._globalSearchBox.element.remove();
             this._globalSearchBox.parent_when_hidden.appendChild(this._globalSearchBox.element);
