@@ -24,13 +24,60 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
+$validEvents = new Valid_WhiteList('events' ,array('Permissions',
+                                                   'Project',
+                                                   'Users',
+                                                   'User Group',
+                                                   'Others'));
+$event = $request->getValidated('events', $validEvents, null);
+
+// TODO: don't forget to verifiy this after it changes
+$validSubEvents = new Valid_String('SubEvent');
+if($request->valid($validSubEvents)) {
+    $subEvents = $request->get('SubEvent');
+} else {
+    $subEvents = null;
+}
+
+$validValue = new Valid_String('value');
+if($request->valid($validValue)) {
+    $value = $request->get('value');
+} else {
+    $value = null;
+}
+
+$vStartDate = new Valid('start');
+$vStartDate->addRule(new Rule_Date());
+$vStartDate->required();
+if ($request->valid($vStartDate)) {
+    $startDate = $request->get('start');
+} else {
+    $startDate = null;
+}
+
+$vEndDate = new Valid('end');
+$vEndDate->addRule(new Rule_Date());
+$vEndDate->required();
+if ($request->valid($vStartDate)) {
+    $endDate = $request->get('end');
+} else {
+    $endDate = null;
+}
+
+$validBy = new Valid_String('by');
+if($request->valid($validBy)) {
+    $by = $request->get('by');
+} else {
+    $by = null;
+}
+
 $offset = $request->getValidated('offset', 'uint', 0);
 if ( !$offset || $offset < 0 ) {
     $offset = 0;
 }
 $limit  = 50;
 
-if (isset($_REQUEST['EXPORT'])) {
+if (isset($_REQUEST['export'])) {
     export_grouphistory($group_id);
     exit;
 }
@@ -40,7 +87,7 @@ project_admin_header(array('title'=>$Language->getText('project_admin_history','
 echo $Language->getText('project_admin_history','proj_change_log_msg');
 
 //for pagination
-echo show_grouphistory($group_id, $offset, $limit);
+echo show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by);
 
 project_admin_footer(array());
 ?>

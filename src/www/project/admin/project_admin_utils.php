@@ -125,7 +125,7 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
  * @param Intager $limit
  * 
 */
-function show_grouphistory ($group_id, $offset, $limit) {
+function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvents = null, $value = null, $startDate = null, $endDate = null, $by = null) {
 	/*      
 		show the group_history rows that are relevant to 
 		this group_id
@@ -251,31 +251,56 @@ function addOption(selectbox, value )
 }
         </script>';
         //Event select Box
-        echo '<select name="events" onChange="SelectSubEvent();" >
-        <Option value="Any">Any</Option>
-        <Option value="Permissions">Permissions</Option>
-        <Option value="Project">Project</Option>
-        <Option value="Users">Users</Option>
-        <Option value="User Group">User Group</Option>
-        <Option value="Others">Others</Option>
-        </select>&nbsp';
-        
+        echo '<select name="events" onChange="SelectSubEvent();">
+              <Option value="Any"';
+        if ($event == "Any") {
+            echo 'selected';
+        }
+        echo '>Any</Option>
+              <Option value="Permissions"';
+        if ($event == "Permissions") {
+            echo 'selected';
+        }
+        echo '>Permissions</Option>
+              <Option value="Project"';
+        if ($event == "Project") {
+            echo 'selected';
+        }
+        echo '>Project</Option>
+              <Option value="Users"';
+        if ($event == "Users") {
+            echo 'selected';
+        }
+        echo '>Users</Option>
+              <Option value="User Group"';
+        if ($event == "User Group") {
+            echo 'selected';
+        }
+        echo '>User Group</Option>
+              <Option value="Others"';
+        if ($event == "Others") {
+            echo 'selected';
+        }
+        echo '>Others</Option>
+              </select>&nbsp';
+
         //SubEvent select Box
+        // TODO: Fill this depending on previous submit too
          echo '<select id="SubEvent" name="SubEvent">
          <Option value="Any">Any</Option>
          </select>';
 
-        echo '</TD><TD><INPUT TYPE="TEXT" NAME="VALUE"></TD>
+        echo '</TD><TD><INPUT TYPE="TEXT" NAME="value" VALUE="'.$value.'"></TD>
               <TD>';
-        echo html_field_date('start', '', false, 10, 10, 'project_history_form', false);
+        echo html_field_date('start', $startDate, false, 10, 10, 'project_history_form', false);
         echo '</TD>
               <TD>';
-        echo html_field_date('end', '', false, 10, 10, 'project_history_form', false);
+        echo html_field_date('end', $endDate, false, 10, 10, 'project_history_form', false);
         echo '</TD>
-              <TD><INPUT TYPE="TEXT" NAME="BY" ID="BY" CLASS="BY"></TD>
+              <TD><INPUT TYPE="TEXT" NAME="by" ID="by" CLASS="by" VALUE="'.$by.'"></TD>
               </TR>';
 
-        echo '<TR><TD><INPUT TYPE="SUBMIT" NAME="FILTER"></TD></TR>
+        echo '<TR><TD><INPUT TYPE="SUBMIT" NAME="filter"></TD></TR>
               </TABLE>
 		<P>';
 		$title_arr=array();
@@ -355,9 +380,9 @@ function addOption(selectbox, value )
         echo '<H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';
     }
     echo '<BR><TABLE align="left"><TR><TD>
-          <INPUT TYPE="SUBMIT" NAME="EXPORT" VALUE="'.$GLOBALS['Language']->getText('project_admin_utils', 'export_history').'">
+          <INPUT TYPE="SUBMIT" NAME="export" VALUE="'.$GLOBALS['Language']->getText('project_admin_utils', 'export_history').'">
           </TD></TR></TABLE></FORM><BR><P>';
-    $js = "new UserAutoCompleter('BY', '".util_get_dir_image_theme()."', true);
+    $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
            new ProjectHistory();";
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
     $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
