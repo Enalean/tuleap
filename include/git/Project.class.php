@@ -457,6 +457,7 @@ class GitPHP_Project
 			if (file_exists($this->GetPath() . '/description')) {
 				$this->description = file_get_contents($this->GetPath() . '/description');
 			}
+			$this->readDescription = true;
 		}
 		
 		if (($trim > 0) && (strlen($this->description) > $trim)) {
