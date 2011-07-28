@@ -66,7 +66,7 @@ class GitPHP_ProjectListArrayLegacy extends GitPHP_ProjectListBase
 							$projObj->SetCategory($cat);
 						$this->projects[$ppath] = $projObj;
 					} catch (Exception $e) {
-						GitPHP_Log::GetInstance()->Log($e->message);
+						GitPHP_Log::GetInstance()->Log($e->getMessage());
 					}
 				}
 			}
