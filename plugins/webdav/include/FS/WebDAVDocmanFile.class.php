@@ -41,7 +41,11 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
 
         if (file_exists($version->getPath())) {
             if ($this->getSize() <= $this->getMaxFileSize()) {
-                $this->download($version);
+                try {
+                    $this->download($version);
+                } catch (Exception $e) {
+                    throw new Sabre_DAV_Exception_FileNotFound($e->getMessage());
+                }
             } else {
                 throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
