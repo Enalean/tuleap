@@ -67,10 +67,15 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 
 		foreach ($xml->repositories->repository as $repository) {
 
-			if ($repository->type != 'git')
+			if ($repository->type != 'git') {
+				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $repository->name));
 				continue;
-			if ($repository->public != 'true')
+			}
+
+			if ($repository->public != 'true') {
+				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not public', $repository->name));
 				continue;
+			}
 
 			$projName = trim($repository->name);
 			if (empty($projName))
@@ -89,7 +94,10 @@ class GitPHP_ProjectListScmManager extends GitPHP_ProjectListBase
 					}
 					$this->projects[$projName] = $projObj;
 				} catch (Exception $e) {
+					GitPHP_Log::GetInstance()->Log($e->message);
 				}
+			} else {
+				GitPHP_Log::GetInstance()->Log(sprintf('%1$s is not a git project', $projName));
 			}
 		}
 	}

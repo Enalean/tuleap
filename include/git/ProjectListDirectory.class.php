@@ -76,12 +76,15 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		if (!is_dir($dir))
 			return;
 
+		GitPHP_Log::GetInstance()->Log(sprintf('Searching directory %1$s', $dir));
+
 		if ($dh = opendir($dir)) {
 			$trimlen = strlen($this->projectDir) + 1;
 			while (($file = readdir($dh)) !== false) {
 				$fullPath = $dir . '/' . $file;
 				if ((strpos($file, '.') !== 0) && is_dir($fullPath)) {
 					if (is_file($fullPath . '/HEAD')) {
+						GitPHP_Log::GetInstance()->Log(sprintf('Found project %1$s', $fullPath));
 						$projectPath = substr($fullPath, $trimlen);
 						try {
 							$proj = new GitPHP_Project($this->projectDir, $projectPath);
@@ -90,10 +93,13 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 								$this->projects[$projectPath] = $proj;
 							}
 						} catch (Exception $e) {
+							GitPHP_Log::GetInstance()->Log($e->message);
 						}
 					} else {
 						$this->RecurseDir($fullPath);
 					}
+				} else {
+					GitPHP_Log::GetInstance()->Log(sprintf('Skipping %1$s', $fullPath));
 				}
 			}
 			closedir($dh);

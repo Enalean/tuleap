@@ -74,6 +74,7 @@ class GitPHP_ProjectListArray extends GitPHP_ProjectListBase
 					}
 				}
 			} catch (Exception $e) {
+				GitPHP_Log::GetInstance()->Log($e->message);
 			}
 		}
 	}
