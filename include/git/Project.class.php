@@ -25,6 +25,8 @@ require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
 class GitPHP_Project
 {
 
+/* internal variables {{{1*/
+
 	/**
 	 * projectRoot
 	 *
@@ -43,6 +45,8 @@ class GitPHP_Project
 	 */
 	protected $project;
 
+/* owner internal variables {{{2*/
+
 	/**
 	 * owner
 	 *
@@ -60,6 +64,10 @@ class GitPHP_Project
 	 * @access protected
 	 */
 	protected $ownerRead = false;
+
+/*}}}2*/
+
+/* description internal variables {{{2*/
 
 	/**
 	 * description
@@ -80,6 +88,8 @@ class GitPHP_Project
 	 */
 	protected $readDescription = false;
 
+/*}}}2*/
+
 	/**
 	 * category
 	 *
@@ -88,6 +98,8 @@ class GitPHP_Project
 	 * @access protected
 	 */
 	protected $category = '';
+
+/* epoch internal variables {{{2*/
 
 	/**
 	 * epoch
@@ -107,6 +119,10 @@ class GitPHP_Project
 	 */
 	protected $epochRead = false;
 
+/*}}}2*/
+
+/* HEAD internal variables {{{2*/
+
 	/**
 	 * head
 	 *
@@ -124,6 +140,10 @@ class GitPHP_Project
 	 * @access protected
 	 */
 	protected $readHeadRef = false;
+
+/*}}}*/
+
+/* ref internal variables {{{2*/
 
 	/**
 	 * tags
@@ -152,6 +172,10 @@ class GitPHP_Project
 	 */
 	protected $readRefs = false;
 
+/*}}}2*/
+
+/* url internal variables {{{2*/
+
 	/**
 	 * cloneUrl
 	 *
@@ -169,6 +193,10 @@ class GitPHP_Project
 	 * @access protected
 	 */
 	protected $pushUrl = null;
+
+/*}}}2*/
+
+/* bugtracker internal variables {{{2*/
 
 	/**
 	 * bugUrl
@@ -188,6 +216,8 @@ class GitPHP_Project
 	 */
 	protected $bugPattern = null;
 
+/*}}}2*/
+
 	/**
 	 * commitCache
 	 *
@@ -197,6 +227,8 @@ class GitPHP_Project
 	 * @access protected
 	 */
 	protected $commitCache = array();
+
+/* packfile internal variables {{{2*/
 
 	/**
 	 * packs
@@ -216,6 +248,12 @@ class GitPHP_Project
 	 */
 	protected $packsRead = false;
 
+/*}}}2*/
+
+/*}}}1*/
+
+/* class methods {{{1*/
+
 	/**
 	 * __construct
 	 *
@@ -230,6 +268,25 @@ class GitPHP_Project
 	{
 		$this->projectRoot = GitPHP_Util::AddSlash($projectRoot);
 		$this->SetProject($project);
+	}
+
+/*}}}1*/
+
+/* accessors {{{1*/
+
+/* project accessors {{{2*/
+
+	/**
+	 * GetProject
+	 *
+	 * Gets the project
+	 *
+	 * @access public
+	 * @return string the project
+	 */
+	public function GetProject()
+	{
+		return $this->project;
 	}
 
 	/**
@@ -267,6 +324,41 @@ class GitPHP_Project
 		$this->project = $project;
 
 	}
+
+/*}}}2*/
+
+	/**
+	 * GetSlug
+	 *
+	 * Gets the project as a filename/url friendly slug
+	 *
+	 * @access public
+	 * @return string the slug
+	 */
+	public function GetSlug()
+	{
+		$project = $this->project;
+
+		if (substr($project, -4) == '.git')
+			$project = substr($project, 0, -4);
+		
+		return GitPHP_Util::MakeSlug($project);
+	}
+
+	/**
+	 * GetPath
+	 *
+	 * Gets the full project path
+	 *
+	 * @access public
+	 * @return string project path
+	 */
+	public function GetPath()
+	{
+		return $this->projectRoot . $this->project;
+	}
+
+/* owner accessors {{{2 */
 
 	/**
 	 * GetOwner
@@ -385,18 +477,9 @@ class GitPHP_Project
 		$this->owner = $owner;
 	}
 
-	/**
-	 * GetProject
-	 *
-	 * Gets the project
-	 *
-	 * @access public
-	 * @return string the project
-	 */
-	public function GetProject()
-	{
-		return $this->project;
-	}
+/*}}}2*/
+
+/* projectroot accessors {{{2*/
 
 	/**
 	 * GetProjectRoot
@@ -411,36 +494,9 @@ class GitPHP_Project
 		return $this->projectRoot;
 	}
 
-	/**
-	 * GetSlug
-	 *
-	 * Gets the project as a filename/url friendly slug
-	 *
-	 * @access public
-	 * @return string the slug
-	 */
-	public function GetSlug()
-	{
-		$project = $this->project;
+/*}}}2*/
 
-		if (substr($project, -4) == '.git')
-			$project = substr($project, 0, -4);
-		
-		return GitPHP_Util::MakeSlug($project);
-	}
-
-	/**
-	 * GetPath
-	 *
-	 * Gets the full project path
-	 *
-	 * @access public
-	 * @return string project path
-	 */
-	public function GetPath()
-	{
-		return $this->projectRoot . $this->project;
-	}
+/* description accessors {{{2*/
 
 	/**
 	 * GetDescription
@@ -481,6 +537,8 @@ class GitPHP_Project
 		$this->readDescription = true;
 	}
 
+/*}}}2*/
+
 	/**
 	 * GetDaemonEnabled
 	 *
@@ -493,6 +551,8 @@ class GitPHP_Project
 	{
 		return file_exists($this->GetPath() . '/git-daemon-export-ok');
 	}
+
+/* category accessors {{{2*/
 
 	/**
 	 * GetCategory
@@ -519,6 +579,10 @@ class GitPHP_Project
 	{
 		$this->category = $category;
 	}
+
+/*}}}2*/
+
+/* clone url accessors {{{2*/
 
 	/**
 	 * GetCloneUrl
@@ -553,6 +617,10 @@ class GitPHP_Project
 		$this->cloneUrl = $cUrl;
 	}
 
+/*}}}2*/
+
+/* push url accessors {{{2*/
+
 	/**
 	 * GetPushUrl
 	 *
@@ -585,6 +653,10 @@ class GitPHP_Project
 	{
 		$this->pushUrl = $pUrl;
 	}
+
+/*}}}2*/
+
+/* bugtracker accessors {{{2*/
 
 	/**
 	 * GetBugUrl
@@ -643,6 +715,10 @@ class GitPHP_Project
 	{
 		$this->bugPattern = $bPat;
 	}
+
+/*}}}2*/
+
+/* HEAD accessors {{{2*/
 
 	/**
 	 * GetHeadCommit
@@ -719,6 +795,123 @@ class GitPHP_Project
 		}
 	}
 
+/*}}}2*/
+
+/* epoch accessors {{{2*/
+
+	/**
+	 * GetEpoch
+	 *
+	 * Gets this project's epoch
+	 * (time of last change)
+	 *
+	 * @access public
+	 * @return integer timestamp
+	 */
+	public function GetEpoch()
+	{
+		if (!$this->epochRead)
+			$this->ReadEpoch();
+
+		return $this->epoch;
+	}
+
+	/**
+	 * GetAge
+	 *
+	 * Gets this project's age
+	 * (time since most recent change)
+	 *
+	 * @access public
+	 * @return integer age
+	 */
+	public function GetAge()
+	{
+		if (!$this->epochRead)
+			$this->ReadEpoch();
+
+		return time() - $this->epoch;
+	}
+
+	/**
+	 * ReadEpoch
+	 *
+	 * Reads this project's epoch
+	 * (timestamp of most recent change)
+	 *
+	 * @access private
+	 */
+	private function ReadEpoch()
+	{
+		$this->epochRead = true;
+
+		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+			$this->ReadEpochGit();
+		} else {
+			$this->ReadEpochRaw();
+		}
+	}
+
+	/**
+	 * ReadEpochGit
+	 *
+	 * Reads this project's epoch using git executable
+	 *
+	 * @access private
+	 */
+	private function ReadEpochGit()
+	{
+		$exe = new GitPHP_GitExe($this);
+
+		$args = array();
+		$args[] = '--format="%(committer)"';
+		$args[] = '--sort=-committerdate';
+		$args[] = '--count=1';
+		$args[] = 'refs/heads';
+
+		$epochstr = trim($exe->Execute(GIT_FOR_EACH_REF, $args));
+
+		if (preg_match('/ (\d+) [-+][01]\d\d\d$/', $epochstr, $regs)) {
+			$this->epoch = $regs[1];
+		}
+
+		unset($exe);
+	}
+
+	/**
+	 * ReadEpochRaw
+	 *
+	 * Reads this project's epoch using raw objects
+	 *
+	 * @access private
+	 */
+	private function ReadEpochRaw()
+	{
+		if (!$this->readRefs)
+			$this->ReadRefList();
+
+		$epoch = 0;
+		foreach ($this->heads as $head) {
+			$commit = $head->GetCommit();
+			if ($commit) {
+				if ($commit->GetCommitterEpoch() > $epoch) {
+					$epoch = $commit->GetCommitterEpoch();
+				}
+			}
+		}
+		if ($epoch > 0) {
+			$this->epoch = $epoch;
+		}
+	}
+
+/*}}}2*/
+
+/*}}}1*/
+
+/* data loading methods {{{1*/
+
+/* commit loading methods {{{2*/
+
 	/**
 	 * GetCommit
 	 *
@@ -777,87 +970,9 @@ class GitPHP_Project
 		return null;
 	}
 
-	/**
-	 * CompareProject
-	 *
-	 * Compares two projects by project name
-	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first project
-	 * @param mixed $b second project
-	 * @return integer comparison result
-	 */
-	public static function CompareProject($a, $b)
-	{
-		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
-		if ($catCmp !== 0)
-			return $catCmp;
+/*}}}2*/
 
-		return strcmp($a->GetProject(), $b->GetProject());
-	}
-
-	/**
-	 * CompareDescription
-	 *
-	 * Compares two projects by description
-	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first project
-	 * @param mixed $b second project
-	 * @return integer comparison result
-	 */
-	public static function CompareDescription($a, $b)
-	{
-		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
-		if ($catCmp !== 0)
-			return $catCmp;
-
-		return strcmp($a->GetDescription(), $b->GetDescription());
-	}
-
-	/**
-	 * CompareOwner
-	 *
-	 * Compares two projects by owner
-	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first project
-	 * @param mixed $b second project
-	 * @return integer comparison result
-	 */
-	public static function CompareOwner($a, $b)
-	{
-		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
-		if ($catCmp !== 0)
-			return $catCmp;
-
-		return strcmp($a->GetOwner(), $b->GetOwner());
-	}
-
-	/**
-	 * CompareAge
-	 *
-	 * Compares two projects by age
-	 *
-	 * @access public
-	 * @static
-	 * @param mixed $a first project
-	 * @param mixed $b second project
-	 * @return integer comparison result
-	 */
-	public static function CompareAge($a, $b)
-	{
-		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
-		if ($catCmp !== 0)
-			return $catCmp;
-
-		if ($a->GetAge() === $b->GetAge())
-			return 0;
-		return ($a->GetAge() < $b->GetAge() ? -1 : 1);
-	}
+/* ref loading methods {{{2*/
 
 	/**
 	 * GetRefs
@@ -1053,6 +1168,10 @@ class GitPHP_Project
 		return $files;
 	}
 
+/*}}}2*/
+
+/* tag loading methods {{{2*/
+
 	/**
 	 * GetTags
 	 *
@@ -1180,6 +1299,10 @@ class GitPHP_Project
 		}
 	}
 
+/*}}}2*/
+
+/* head loading methods {{{2*/
+
 	/**
 	 * GetHeads
 	 *
@@ -1282,6 +1405,10 @@ class GitPHP_Project
 
 		return $this->heads[$key];
 	}
+
+/*}}}2*/
+
+/* log methods {{{2*/
 
 	/**
 	 * GetLogHash
@@ -1396,6 +1523,10 @@ class GitPHP_Project
 		return $log;
 	}
 
+/*}}}2*/
+
+/* blob loading methods {{{2*/
+
 	/**
 	 * GetBlob
 	 *
@@ -1417,6 +1548,10 @@ class GitPHP_Project
 		return new GitPHP_Blob($this, $hash);
 	}
 
+/*}}}2*/
+
+/* tree loading methods {{{2*/
+
 	/**
 	 * GetTree
 	 *
@@ -1437,6 +1572,88 @@ class GitPHP_Project
 
 		return new GitPHP_Tree($this, $hash);
 	}
+
+/*}}}2*/
+
+/* raw object loading methods {{{2*/
+
+	/**
+	 * GetObject
+	 *
+	 * Gets the raw content of an object
+	 *
+	 * @access public
+	 * @param string $hash object hash
+	 * @return string object data
+	 */
+	public function GetObject($hash, &$type = 0)
+	{
+		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+			return false;
+		}
+
+		// first check if it's unpacked
+		$path = $this->GetPath() . '/objects/' . substr($hash, 0, 2) . '/' . substr($hash, 2);
+		if (file_exists($path)) {
+			list($header, $data) = explode("\0", gzuncompress(file_get_contents($path)), 2);
+			sscanf($header, "%s %d", $typestr, $size);
+			switch ($typestr) {
+				case 'commit':
+					$type = GitPHP_Pack::OBJ_COMMIT;
+					break;
+				case 'tree':
+					$type = GitPHP_Pack::OBJ_TREE;
+					break;
+				case 'blob':
+					$type = GitPHP_Pack::OBJ_BLOB;
+					break;
+				case 'tag':
+					$type = GitPHP_Pack::OBJ_TAG;
+					break;
+			}
+			return $data;
+		}
+
+		if (!$this->packsRead) {
+			$this->ReadPacks();
+		}
+
+		// then try packs
+		foreach ($this->packs as $pack) {
+			$data = $pack->GetObject($hash, $type);
+			if ($data !== false) {
+				return $data;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * ReadPacks
+	 *
+	 * Read the list of packs in the repository
+	 *
+	 * @access private
+	 */
+	private function ReadPacks()
+	{
+		$dh = opendir($this->GetPath() . '/objects/pack');
+		if ($dh !== false) {
+			while (($file = readdir($dh)) !== false) {
+				if (preg_match('/^pack-([0-9A-Fa-f]{40})\.idx$/', $file, $regs)) {
+					$this->packs[] = new GitPHP_Pack($this, $regs[1]);
+				}
+			}
+		}
+		$this->packsRead = true;
+	}
+
+/*}}}2*/
+
+/*}}}1*/
+
+/* search methods {{{1*/
 
 	/**
 	 * SearchCommit
@@ -1543,6 +1760,10 @@ class GitPHP_Project
 		return $ret;
 	}
 
+/*}}}1*/
+
+/* private utilities {{{1*/
+
 	/**
 	 * RevList
 	 *
@@ -1592,181 +1813,92 @@ class GitPHP_Project
 		return $revlist;
 	}
 
+/*}}}1*/
+
+/* static utilities {{{1*/
+
 	/**
-	 * GetEpoch
+	 * CompareProject
 	 *
-	 * Gets this project's epoch
-	 * (time of last change)
+	 * Compares two projects by project name
 	 *
 	 * @access public
-	 * @return integer timestamp
+	 * @static
+	 * @param mixed $a first project
+	 * @param mixed $b second project
+	 * @return integer comparison result
 	 */
-	public function GetEpoch()
+	public static function CompareProject($a, $b)
 	{
-		if (!$this->epochRead)
-			$this->ReadEpoch();
+		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		if ($catCmp !== 0)
+			return $catCmp;
 
-		return $this->epoch;
+		return strcmp($a->GetProject(), $b->GetProject());
 	}
 
 	/**
-	 * GetAge
+	 * CompareDescription
 	 *
-	 * Gets this project's age
-	 * (time since most recent change)
+	 * Compares two projects by description
 	 *
 	 * @access public
-	 * @return integer age
+	 * @static
+	 * @param mixed $a first project
+	 * @param mixed $b second project
+	 * @return integer comparison result
 	 */
-	public function GetAge()
+	public static function CompareDescription($a, $b)
 	{
-		if (!$this->epochRead)
-			$this->ReadEpoch();
+		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		if ($catCmp !== 0)
+			return $catCmp;
 
-		return time() - $this->epoch;
+		return strcmp($a->GetDescription(), $b->GetDescription());
 	}
 
 	/**
-	 * ReadEpoch
+	 * CompareOwner
 	 *
-	 * Reads this project's epoch
-	 * (timestamp of most recent change)
-	 *
-	 * @access private
-	 */
-	private function ReadEpoch()
-	{
-		$this->epochRead = true;
-
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
-			$this->ReadEpochGit();
-		} else {
-			$this->ReadEpochRaw();
-		}
-	}
-
-	/**
-	 * ReadEpochGit
-	 *
-	 * Reads this project's epoch using git executable
-	 *
-	 * @access private
-	 */
-	private function ReadEpochGit()
-	{
-		$exe = new GitPHP_GitExe($this);
-
-		$args = array();
-		$args[] = '--format="%(committer)"';
-		$args[] = '--sort=-committerdate';
-		$args[] = '--count=1';
-		$args[] = 'refs/heads';
-
-		$epochstr = trim($exe->Execute(GIT_FOR_EACH_REF, $args));
-
-		if (preg_match('/ (\d+) [-+][01]\d\d\d$/', $epochstr, $regs)) {
-			$this->epoch = $regs[1];
-		}
-
-		unset($exe);
-	}
-
-	/**
-	 * ReadEpochRaw
-	 *
-	 * Reads this project's epoch using raw objects
-	 *
-	 * @access private
-	 */
-	private function ReadEpochRaw()
-	{
-		if (!$this->readRefs)
-			$this->ReadRefList();
-
-		$epoch = 0;
-		foreach ($this->heads as $head) {
-			$commit = $head->GetCommit();
-			if ($commit) {
-				if ($commit->GetCommitterEpoch() > $epoch) {
-					$epoch = $commit->GetCommitterEpoch();
-				}
-			}
-		}
-		if ($epoch > 0) {
-			$this->epoch = $epoch;
-		}
-	}
-
-	/**
-	 * GetObject
-	 *
-	 * Gets the raw content of an object
+	 * Compares two projects by owner
 	 *
 	 * @access public
-	 * @param string $hash object hash
-	 * @return string object data
+	 * @static
+	 * @param mixed $a first project
+	 * @param mixed $b second project
+	 * @return integer comparison result
 	 */
-	public function GetObject($hash, &$type = 0)
+	public static function CompareOwner($a, $b)
 	{
-		if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
-			return false;
-		}
+		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		if ($catCmp !== 0)
+			return $catCmp;
 
-		// first check if it's unpacked
-		$path = $this->GetPath() . '/objects/' . substr($hash, 0, 2) . '/' . substr($hash, 2);
-		if (file_exists($path)) {
-			list($header, $data) = explode("\0", gzuncompress(file_get_contents($path)), 2);
-			sscanf($header, "%s %d", $typestr, $size);
-			switch ($typestr) {
-				case 'commit':
-					$type = GitPHP_Pack::OBJ_COMMIT;
-					break;
-				case 'tree':
-					$type = GitPHP_Pack::OBJ_TREE;
-					break;
-				case 'blob':
-					$type = GitPHP_Pack::OBJ_BLOB;
-					break;
-				case 'tag':
-					$type = GitPHP_Pack::OBJ_TAG;
-					break;
-			}
-			return $data;
-		}
-
-		if (!$this->packsRead) {
-			$this->ReadPacks();
-		}
-
-		// then try packs
-		foreach ($this->packs as $pack) {
-			$data = $pack->GetObject($hash, $type);
-			if ($data !== false) {
-				return $data;
-			}
-		}
-
-		return false;
+		return strcmp($a->GetOwner(), $b->GetOwner());
 	}
 
 	/**
-	 * ReadPacks
+	 * CompareAge
 	 *
-	 * Read the list of packs in the repository
+	 * Compares two projects by age
 	 *
-	 * @access private
+	 * @access public
+	 * @static
+	 * @param mixed $a first project
+	 * @param mixed $b second project
+	 * @return integer comparison result
 	 */
-	private function ReadPacks()
+	public static function CompareAge($a, $b)
 	{
-		$dh = opendir($this->GetPath() . '/objects/pack');
-		if ($dh !== false) {
-			while (($file = readdir($dh)) !== false) {
-				if (preg_match('/^pack-([0-9A-Fa-f]{40})\.idx$/', $file, $regs)) {
-					$this->packs[] = new GitPHP_Pack($this, $regs[1]);
-				}
-			}
-		}
-		$this->packsRead = true;
+		$catCmp = strcmp($a->GetCategory(), $b->GetCategory());
+		if ($catCmp !== 0)
+			return $catCmp;
+
+		if ($a->GetAge() === $b->GetAge())
+			return 0;
+		return ($a->GetAge() < $b->GetAge() ? -1 : 1);
 	}
+
+/*}}}1*/
 
 }
