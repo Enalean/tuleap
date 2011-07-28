@@ -87,6 +87,12 @@
  *	     setting in the config for this project.  This can also be
  *	     an empty string to override the global bug url to say that
  *	     only this project has no bug url.
+ *
+ * 'compat': whether this project runs in compatibility mode.  (true/false)
+ *	     This overrides the compat setting in the config for this project.
+ *	     Compatibility mode relies more on the git executable for loading
+ *	     data, at the expense of performance.  Use if you are having
+ *	     trouble loading data for this project.
  */
 //$git_projects_settings['php/gitphp.git'] = array(
 //	'category' => 'PHP',
@@ -95,10 +101,12 @@
 //	'cloneurl' => 'http://git.xiphux.com/php/gitphp.git',
 //	'pushurl' => '',
 //	'bugpattern' => '/#([0-9]+)/',
-//	'bugurl' => 'http://mantis.xiphux.com/view.php?id=${1}'
+//	'bugurl' => 'http://mantis.xiphux.com/view.php?id=${1}',
+//	'compat' => false
 //);
 //$git_projects_settings['gentoo.git'] = array(
-//	'description' => 'Gentoo portage overlay'
+//	'description' => 'Gentoo portage overlay',
+//	'compat' => true
 //);
 //$git_projects_settings['core/fbx.git'] = array(
 //	'description' => 'FBX music player',

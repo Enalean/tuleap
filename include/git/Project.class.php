@@ -250,6 +250,16 @@ class GitPHP_Project
 
 /*}}}2*/
 
+	/**
+	 * compat
+	 *
+	 * Stores whether this project is running
+	 * in compatibility mode
+	 *
+	 * @access protected
+	 */
+	protected $compat = null;
+
 /*}}}1*/
 
 /* class methods {{{1*/
@@ -386,7 +396,7 @@ class GitPHP_Project
 	 */
 	protected function ReadOwner()
 	{
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+		if ($this->GetCompat()) {
 			$this->ReadOwnerGit();
 		} else {
 			$this->ReadOwnerRaw();
@@ -748,7 +758,7 @@ class GitPHP_Project
 	{
 		$this->readHeadRef = true;
 
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+		if ($this->GetCompat()) {
 			$this->ReadHeadCommitGit();
 		} else {
 			$this->ReadHeadCommitRaw();
@@ -845,7 +855,7 @@ class GitPHP_Project
 	{
 		$this->epochRead = true;
 
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+		if ($this->GetCompat()) {
 			$this->ReadEpochGit();
 		} else {
 			$this->ReadEpochRaw();
@@ -902,6 +912,40 @@ class GitPHP_Project
 		if ($epoch > 0) {
 			$this->epoch = $epoch;
 		}
+	}
+
+/*}}}2*/
+
+/* compatibility accessors {{{2*/
+
+	/**
+	 * GetCompat
+	 *
+	 * Gets whether this project is running in compatibility mode
+	 *
+	 * @access public
+	 * @return boolean true if compatibilty mode
+	 */
+	public function GetCompat()
+	{
+		if ($this->compat !== null) {
+			return $this->compat;
+		}
+
+		return GitPHP_Config::GetInstance()->GetValue('compat', false);
+	}
+
+	/**
+	 * SetCompat
+	 *
+	 * Sets whether this project is running in compatibility mode
+	 *
+	 * @access public
+	 * @param boolean true if compatibility mode
+	 */
+	public function SetCompat($compat)
+	{
+		$this->compat = $compat;
 	}
 
 /*}}}2*/
@@ -1008,7 +1052,7 @@ class GitPHP_Project
 	{
 		$this->readRefs = true;
 
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+		if ($this->GetCompat()) {
 			$this->ReadRefListGit();
 		} else {
 			$this->ReadRefListRaw();
@@ -1186,7 +1230,7 @@ class GitPHP_Project
 		if (!$this->readRefs)
 			$this->ReadRefList();
 
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+		if ($this->GetCompat()) {
 			return $this->GetTagsGit($count);
 		} else {
 			return $this->GetTagsRaw($count);
@@ -1317,7 +1361,7 @@ class GitPHP_Project
 		if (!$this->readRefs)
 			$this->ReadRefList();
 
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+		if ($this->GetCompat()) {
 			return $this->GetHeadsGit($count);
 		} else {
 			return $this->GetHeadsRaw($count);
@@ -1439,7 +1483,7 @@ class GitPHP_Project
 	 */
 	public function GetLog($hash, $count = 50, $skip = 0)
 	{
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false) || ($skip > GitPHP_Config::GetInstance()->GetValue('largeskip', 200)) ) {
+		if ($this->GetCompat() || ($skip > GitPHP_Config::GetInstance()->GetValue('largeskip', 200)) ) {
 			return $this->GetLogGit($hash, $count, $skip);
 		} else {
 			return $this->GetLogRaw($hash, $count, $skip);

@@ -541,7 +541,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		$lines = null;
 
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+		if ($this->GetProject()->GetCompat()) {
 
 			/* get data from git_rev_list */
 			$exe = new GitPHP_GitExe($this->GetProject());
@@ -763,7 +763,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 	{
 		$this->hashPathsRead = true;
 
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+		if ($this->GetProject()->GetCompat()) {
 			$this->ReadHashPathsGit();
 		} else {
 			$this->ReadHashPathsRaw($this->GetTree());

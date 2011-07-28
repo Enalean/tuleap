@@ -132,7 +132,7 @@ class GitPHP_Blob extends GitPHP_FilesystemObject
 	{
 		$this->dataRead = true;
 
-		if (GitPHP_Config::GetInstance()->GetValue('compat', false)) {
+		if ($this->GetProject()->GetCompat()) {
 			$exe = new GitPHP_GitExe($this->GetProject());
 
 			$args = array();
