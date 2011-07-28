@@ -135,7 +135,55 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 	$res = group_get_history($offset, $limit, $group_id );	
 	
 	$hp =& Codendi_HTMLPurifier::instance();
-
+	
+    $subEvents = array('perm_reset_for_field'           =>'perm_reset_for_field',
+                       'perm_reset_for_tracker'         =>'perm_reset_for_tracker',
+                       'perm_reset_for_package'         =>'perm_reset_for_package',
+                       'perm_reset_for_release'         =>'perm_reset_for_release',
+                       'perm_reset_for_document'        =>'perm_reset_for_document',
+                       'perm_reset_for_folder'          =>'perm_reset_for_folder',
+                       'perm_reset_for_docgroup'        =>'perm_reset_for_docgroup',
+                       'perm_reset_for_wiki'            =>'perm_reset_for_wiki', 
+                       'perm_reset_for_wikipage'        =>'perm_reset_for_wikipage',
+                       'perm_reset_for_wikiattachment'  =>'perm_reset_for_wikiattachment',   
+                       'perm_reset_for_object'          =>'perm_reset_for_object',
+                       'perm_granted_for_field'         =>'perm_granted_for_field',
+                       'perm_granted_for_tracker'       =>'perm_granted_for_tracker',  
+                       'perm_granted_for_package'       =>'perm_granted_for_package',
+                       'perm_granted_for_release'       =>'perm_granted_for_release', 
+                       'perm_granted_for_document'      =>'perm_granted_for_document',
+                       'perm_granted_for_folder'        =>'perm_granted_for_folder',
+                       'perm_granted_for_docgroup'      =>'perm_granted_for_docgroup',
+                       'perm_granted_for_wiki'          =>'perm_granted_for_wiki',
+                       'perm_granted_for_wikipage'      =>'perm_granted_for_wikipage',
+                       'perm_granted_for_wikiattachment'=>'perm_granted_for_wikiattachment',
+                       'perm_granted_for_object'        =>'perm_granted_for_object',
+                       'rename_done'                    =>'rename_done',
+                       'rename_with_error'              =>'rename_with_error',
+                       'approved'                       =>'approved',
+                       'deleted'                        =>'deleted',
+                       'rename_request'                 =>'rename_request',
+                       'is_public'                      =>'is_public',
+                       'group_type'                     =>'group_type',
+                       'unix_box'                       =>'unix_box',
+                       'changed_public_info'            =>'changed_public_info',
+                       'changed_trove'                  =>'changed_trove',
+                       'membership_request_updated'     =>'membership_request_updated',
+                       'import'                         =>'import',
+                       'mass_change'                    =>'mass_change',
+                       'upd_ug'                         =>'upd_ug',
+                       'del_ug'                         =>'del_ug',
+                       'changed_member_perm'            =>'changed_member_perm',
+                       'changed_personal_email_notif'   =>'changed_personal_email_notif',
+                       'added_user'                     =>'added_user',
+                       'removed_user'                   =>'removed_user',
+                       'changed_bts_form_message'       =>'changed_bts_allow_anon',
+                       'changed_bts_allow_anon'         =>'changed_bts_allow_anon',
+                       'changed_patch_mgr_settings'     =>'changed_task_mgr_other_settings',
+                       'changed_task_mgr_other_settings'=>'changed_task_mgr_other_settings',
+                       'changed_sr_settings'            =>'changed_sr_settings',
+                       'choose_event'                   =>'choose_event');
+	
 	if ($res['numrows'] > 0) {
 
         echo '
@@ -153,7 +201,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 
 
         //Event select Box
-        echo '<select name="events" id="events">
+        echo '<select name="events_box" id="events_box">
               <Option value="Any"';
         if ($event == "Any") {
             echo 'selected';
@@ -187,8 +235,8 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
               </select>&nbsp';
 
         //SubEvent select Box
-         echo '<select id="SubEvent" name="SubEvent" multiple>
-         <Option value="Any">Any</Option>
+         echo '<select id="sub_events_box" name="sub_events_box" multiple>
+         <Option value="choose_event">'.$GLOBALS['Language']->getText('project_admin_utils', 'choose_event').'</Option>
          </select>';
 
         echo '</TD><TD><INPUT TYPE="TEXT" NAME="value" VALUE="'.$value.'"></TD>
@@ -283,9 +331,10 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
     echo '<BR><TABLE align="left"><TR><TD>
           <INPUT TYPE="SUBMIT" NAME="export" VALUE="'.$GLOBALS['Language']->getText('project_admin_utils', 'export_history').'">
           </TD></TR></TABLE></FORM><BR><P>';
-    $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
-           new ProjectHistory();";
-    $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
+    $translatedEvents = phpArrayToJsArray($subEvents);
+        $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
+           new ProjectHistory(".$translatedEvents.");";
+     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
     $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 }
 
@@ -378,5 +427,32 @@ function project_admin_display_bullet_user($user_id, $action, $url = null) {
     echo '<a href="'. $url .'">';
     echo '<img alt="'. $action .'" src="'. util_get_dir_image_theme() . $icon .'" />';
     echo '</a>';
+}
+
+/**
+ * Convert a php array to JS
+ */
+function phpArrayToJsArray($array) {
+    if (is_array($array)) {
+        if (count($array)) {
+            $output = '{';
+            reset($array);
+            $comma = '';
+            do {
+                if(list($key, $value) = each($array)) {
+                    $output .= $comma . $key .': '. phpArrayToJsArray($GLOBALS["Language"]->getText("project_admin_utils", $value));
+                    $comma = ', ';
+                }
+            } while($key);
+            $output .= '}';
+        } else {
+            $output = '{}';
+        }
+    } else if (is_bool($array)) {
+        $output = $array?'true':'false';
+    } else {
+        $output = "'". addslashes($array) ."'";
+    }
+    return $output;
 }
 ?>
