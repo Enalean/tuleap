@@ -31,9 +31,14 @@ if(!defined('CODENDI_DB_NOT_NULL')) define('CODENDI_DB_NOT_NULL', 1);
  */
 class DataAccess {
     /**
-    * @access protected
-    * $db stores a database resource
-    */
+     * Max number of reconnect attempt when client loose connexion to server
+     */
+    const MAX_RECO = 5;
+
+    /**
+     * @access protected
+     * $db stores a database resource
+     */
     var $db;
     
     /**
@@ -41,24 +46,50 @@ class DataAccess {
      */
     public $db_name;
     
+    protected $host;
+    protected $user;
+    protected $pass;
+    protected $opt;
+
     /**
-    * Constucts a new DataAccess object
-    * @param $host string hostname for dbserver
-    * @param $user string dbserver user
-    * @param $pass string dbserver user password
-    * @param $db string database name
-    */
-    function DataAccess($host,$user,$pass,$db,$opt=0) {
-        $this->store = array();
-        $this->db = $this->connect($host, $user, $pass, $opt);
+     * Number of reconnect attempt when client loose connexion to server
+     * @var Integer
+     */
+    protected $nbReco = 0;
+
+    /**
+     * Constucts a new DataAccess object
+     * 
+     * @param $host string hostname for dbserver
+     * @param $user string dbserver user
+     * @param $pass string dbserver user password
+     * @param $db   string database name
+     */
+    function DataAccess($host, $user, $pass, $db, $opt=0) {
+        $this->host    = $host;
+        $this->user    = $user;
+        $this->pass    = $pass;
+        $this->opt     = $opt;
+        $this->db_name = $db;
+        $this->store   = array();
+        $this->reconnect();
+    }
+    
+    /**
+     * Connect to Mysql server
+     *
+     * @throws DataAccessException
+     */
+    protected function reconnect() {
+        $this->db = $this->connect($this->host, $this->user, $this->pass, $this->opt);
         if ($this->db) {
+            $this->nbReco = 0;
             mysql_query("SET NAMES 'utf8'", $this->db);
-            if (!mysql_select_db($db,$this->db)) {
-                trigger_error(mysql_error(), E_USER_ERROR);
+            if (!mysql_select_db($this->db_name, $this->db)) {
+                throw new DataAccessException('Unable to select the database ('. mysql_error($this->db) .' - '. mysql_errno() .'). Please contact your administrator.');
             }
-            $this->db_name = $db;
         } else {
-            throw new DataAccessException('Unable to access the database. Please contact your administrator.');
+            throw new DataAccessException('Unable to access the database ('. mysql_error($this->db) .' - '. mysql_errno() .'). Please contact your administrator.');
         }
     }
     
@@ -69,13 +100,26 @@ class DataAccess {
     var $store;
     
     /**
-    * Fetches a query resources and stores it in a local member
-    * @param $sql string the database query to run
-    * @return object DataAccessResult
-    */
-    function &fetch($sql) {
+     * Fetches a query resources and stores it in a local member
+     * @param $sql string the database query to run
+     * @return object DataAccessResult
+     */
+    function fetch($sql) {
         $time = microtime(1);
-        $res = mysql_query($sql,$this->db);
+        $res  = mysql_query($sql,$this->db);
+
+        // If connexion was lost during last query, re-execute it
+        // 2006 correspond to "MySQL server has gone away"
+        if (mysql_errno($this->db) == 2006) {
+            if ($this->nbReco < self::MAX_RECO) {
+                $this->nbReco++;
+                $this->reconnect();
+                return $this->fetch($sql);
+            } else {
+                throw new DataAccessException('Unable to access the database ('. mysql_error($this->db) .' - '. mysql_errno() .'). Please contact your administrator.');
+            }
+        }
+
         if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE']) {
             $GLOBALS['DEBUG_DAO_QUERY_COUNT']++;
             $GLOBALS['QUERIES'][]=$sql;
@@ -84,8 +128,7 @@ class DataAccess {
             }
             $GLOBALS['DBSTORE'][md5($sql)]['trace'][$GLOBALS['DBSTORE'][md5($sql)]['nb']++] = array(debug_backtrace(), $time, microtime(1));
         }
-        $dar = new DataAccessResult($this, $res);
-        return $dar;
+        return new DataAccessResult($this, $res);
     }
 
     /**
