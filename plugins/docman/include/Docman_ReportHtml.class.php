@@ -70,7 +70,7 @@ class Docman_ReportHtml {
         $current = $this->report->getId();
 
         $html = '';
-        $html .= '<form name="plugin_docman_select_report" action="'. $this->defaultUrl .'" method="get" style="display: inline;" id="plugin_docman_select_report_id" >';
+        $html .= '<form name="plugin_docman_select_report" action="'. $this->defaultUrl .'" method="get" style="display: inline; float:right;" id="plugin_docman_select_report_id" >';
         $html .= '<select name="report_id" id="plugin_docman_select_saved_report">';
 
         // Project wide report
@@ -282,15 +282,33 @@ class Docman_ReportHtml {
      */
     function toHtml($params) {
         $html = '';
-
+        
+        $html .= $this->getReportSelector($params['item']);
+        
         $toggleIc = '<img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="docman_toggle_filters" >';
         $toggle   = '<a href="#" title="'.$GLOBALS['Language']->getText('plugin_docman', 'report_toggle_tooltip').'">'.$toggleIc.'</a>';
         $title    = $GLOBALS['Language']->getText('plugin_docman', 'filters');
        
+        $hidden_fields = '';
+        $hidden_fields .= '<input type="hidden" name="group_id" value="'.$this->report->getGroupId().'" />';
+        $hidden_fields .= '<input type="hidden" name="id" value="'.$params['item']->getId().'" />';
+        $hidden_fields .= '<input type="hidden" name="action" value="search" />';
+        
+        $global_txt = $this->hp->purify($params['docman']->request->get('global_txt'));
+        
         $html .= "<div id=\"docman_filters_title\">\n";
+        $html .= '<form method="get" action="?" id="plugin_docman_report_form_global">';
         $html .= $toggle;
-        $html .= ' '.$title;
-        $html .= ' '.$this->getReportSelector($params['item']);
+        $html .= ' '.$title.' ';
+        $html .= $hidden_fields;
+        $html .= '<input type="text" 
+        				 class="text_field" 
+        				 title="'. $GLOBALS['Language']->getText('plugin_docman', 'filters_global_txt') .'" 
+        				 value="'. $global_txt .'" 
+        				 name="global_txt" 
+        				 />';
+        $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_apply') .'" name="global_filtersubmit" />';
+        $html .= '</form>';
         $html .= "</div>\n";
 
 
@@ -302,9 +320,7 @@ class Docman_ReportHtml {
 
         $html .= '<div style="float: left;">';
         $html .= '<form name="plugin_docman_filters" method="get" action="?" id="plugin_docman_report_form" >';
-        $html .= '<input type="hidden" name="group_id" value="'.$this->report->getGroupId().'" />';
-        $html .= '<input type="hidden" name="id" value="'.$params['item']->getId().'" />';
-        $html .= '<input type="hidden" name="action" value="search" />';
+        $html .= $hidden_fields;
 
         $displayedFilters = array();
         $html .= $this->getSelectedFilters($params, $displayedFilters);

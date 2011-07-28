@@ -476,33 +476,40 @@ Object.extend(com.xerox.codendi.Docman.prototype, {
     //{{{----------------------------- Table report
     initTableReport: function() {
         if($('docman_filters_fieldset')) {
+            
             // Setup event observe
             var icon = $('docman_toggle_filters');
-            icon.observe('click', this.toggleReport);
+            icon.observe('click', this.toggleReport.bindAsEventListener(this));
             $('plugin_docman_select_saved_report').observe('change', this.reportSelectSavedReport);
             $('plugin_docman_report_add_filter').observe('change',   this.reportSelectAddFilter);
             $('plugin_docman_report_save').observe('change',         this.reportSelectSave.bindAsEventListener(this));
 
-            var url = location.href.parseQuery();
-            if(url['del_filter'] || url['add_filter']) {
-                icon.src = icon.src.replace('toggle_plus.png', 'toggle_minus.png');
-                Element.show('docman_filters_fieldset');
+            var btn_name              = $('plugin_docman_report_form_global').down('input[type=submit]').name;
+            var url                   = location.href.parseQuery();
+            var global_search_is_used = typeof url[btn_name] !== 'undefined'
+            if (!global_search_is_used && (url['del_filter'] || url['add_filter'])) {
+                this.showReport();
             } else {
-                icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
-                Element.hide('docman_filters_fieldset');
+                this.hideReport();
             }
         }
     },
     toggleReport: function() {
-        // Toggle display
-        Element.toggle('docman_filters_fieldset');
-        // Change +/- image
-        var icon = $('docman_toggle_filters');
-        if (icon.src.indexOf('toggle_plus.png') != -1) {
-            icon.src = icon.src.replace('toggle_plus.png', 'toggle_minus.png');
-        } else {
-            icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
-        }
+    	if ($('docman_filters_fieldset').visible()) {
+    		this.hideReport();
+    	} else {
+    		this.showReport();
+    	}
+    },
+    showReport: function() {
+        $('docman_filters_fieldset').show();
+        $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_plus.png', 'toggle_minus.png');
+        $('plugin_docman_report_form_global').select('input').each(function (elem) { elem.disabled = true; elem.readonly = true; });
+    },
+    hideReport: function() {
+        $('docman_filters_fieldset').hide();
+        $('docman_toggle_filters').src = $('docman_toggle_filters').src.replace('toggle_minus.png', 'toggle_plus.png');
+        $('plugin_docman_report_form_global').select('input').each(function (elem) { elem.disabled = false; elem.readonly = false; });
     },
     reportSelectSavedReport: function(event) {
         var form = $('plugin_docman_select_report_id');

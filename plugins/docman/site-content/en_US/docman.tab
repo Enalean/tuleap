@@ -182,7 +182,7 @@ plugin_docman	admin_view_instructions	Please select the default view for browsin
 
 plugin_docman	breadcrumbs_location	Location:
 
-plugin_docman	browse_viewas	-- View as:
+plugin_docman	browse_viewas	View as:
 plugin_docman	browse_customreports	-- Custom reports:
 
 plugin_docman	clone_file_label	Copy from template

@@ -1174,17 +1174,19 @@ class Docman_Actions extends Actions {
             if(is_numeric($request->get('selected_view'))) {
                 $this->_controler->setReportId($request->get('selected_view'));
                 $this->_controler->forceView('Table');
-            }
-            elseif(Docman_View_Browse::isViewAllowed($request->get('selected_view'))) {
-            $item_factory =& $this->_getItemFactory();
-            $folder = $item_factory->getItemFromDb($request->get('id'));
-            if ($folder) {
-                user_set_preference(
-                    PLUGIN_DOCMAN_VIEW_PREF .'_'. $folder->getGroupId(),
-                    $request->get('selected_view')
-                );
-                $this->_controler->forceView($request->get('selected_view'));
-            }
+            } else if (is_array($request->get('selected_view')) && count($request->get('selected_view'))) {
+                list($selected_view,) = each($request->get('selected_view'));
+                if (Docman_View_Browse::isViewAllowed($selected_view)) {
+                    $item_factory =& $this->_getItemFactory();
+                    $folder = $item_factory->getItemFromDb($request->get('id'));
+                    if ($folder) {
+                        user_set_preference(
+                            PLUGIN_DOCMAN_VIEW_PREF .'_'. $folder->getGroupId(),
+                            $selected_view
+                        );
+                        $this->_controler->forceView($selected_view);
+                    }
+                }
             }
         }
     }
