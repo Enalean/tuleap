@@ -36,6 +36,15 @@ class GitPHP_Log
 	protected $enabled = false;
 
 	/**
+	 * benchmark
+	 *
+	 * Stores whether benchmarking is enabled
+	 *
+	 * @access protected
+	 */
+	protected $benchmark = false;
+
+	/**
 	 * startTime
 	 *
 	 * Stores the starting instant
@@ -94,6 +103,7 @@ class GitPHP_Log
 		$this->startMem = memory_get_usage();
 
 		$this->enabled = GitPHP_Config::GetInstance()->GetValue('debug', false);
+		$this->benchmark = GitPHP_Config::GetInstance()->GetValue('benchmark', false);
 	}
 
 	/**
@@ -136,8 +146,12 @@ class GitPHP_Log
 			return;
 
 		$entry = array();
-		$entry['time'] = microtime(true);
-		$entry['mem'] = memory_get_usage();
+		
+		if ($this->benchmark) {
+			$entry['time'] = microtime(true);
+			$entry['mem'] = memory_get_usage();
+		}
+
 		$entry['msg'] = $message;
 		$this->entries[] = $entry;
 	}
@@ -169,6 +183,32 @@ class GitPHP_Log
 	}
 
 	/**
+	 * GetBenchmark
+	 *
+	 * Gets whether benchmarking is enabled
+	 *
+	 * @access public
+	 * @return boolean true if benchmarking is enabled
+	 */
+	public function GetBenchmark()
+	{
+		return $this->benchmark;
+	}
+
+	/**
+	 * SetBenchmark
+	 *
+	 * Sets whether benchmarking is enabled
+	 *
+	 * @access public
+	 * @param boolean $bench true if benchmarking is enabled
+	 */
+	public function SetBenchmark($bench)
+	{
+		$this->benchmark = $bench;
+	}
+
+	/**
 	 * GetEntries
 	 *
 	 * Calculates times and gets log entries
@@ -181,21 +221,31 @@ class GitPHP_Log
 		$data = array();
 	
 		if ($this->enabled) {
-			$endTime = microtime(true);
-			$endMem = memory_get_usage();
 
-			$lastTime = $this->startTime;
-			$lastMem = $this->startMem;
+			if ($this->benchmark) {
+				$endTime = microtime(true);
+				$endMem = memory_get_usage();
 
-			$data[] = '[' . $this->startTime . '] [' . $this->startMem . ' bytes] Start';
+				$lastTime = $this->startTime;
+				$lastMem = $this->startMem;
 
-			foreach ($this->entries as $entry) {
-				$data[] = '[' . $entry['time'] . '] [' . ($entry['time'] - $this->startTime) . ' sec since start] [' . ($entry['time'] - $lastTime) . ' sec since last] [' . $entry['mem'] . ' bytes] [' . ($entry['mem'] - $this->startMem) . ' bytes since start] [' . ($entry['mem'] - $lastMem) . ' bytes since last] ' . $entry['msg'];
-				$lastTime = $entry['time'];
-				$lastMem = $entry['mem'];
+				$data[] = 'DEBUG: [' . $this->startTime . '] [' . $this->startMem . ' bytes] Start';
+
 			}
 
-			$data[] = '[' . $endTime . '] [' . ($endTime - $this->startTime) . ' sec since start] [' . ($endTime - $lastTime) . ' sec since last] [' . $endMem . ' bytes] [' . ($endMem - $this->startMem) . ' bytes since start] [' . ($endMem - $lastMem) . ' bytes since last] End';
+			foreach ($this->entries as $entry) {
+				if ($this->benchmark) {
+					$data[] = 'DEBUG: [' . $entry['time'] . '] [' . ($entry['time'] - $this->startTime) . ' sec since start] [' . ($entry['time'] - $lastTime) . ' sec since last] [' . $entry['mem'] . ' bytes] [' . ($entry['mem'] - $this->startMem) . ' bytes since start] [' . ($entry['mem'] - $lastMem) . ' bytes since last] ' . $entry['msg'];
+					$lastTime = $entry['time'];
+					$lastMem = $entry['mem'];
+				} else {
+					$data[] = 'DEBUG: ' . $entry['msg'];
+				}
+			}
+
+			if ($this->benchmark) {
+				$data[] = '[' . $endTime . '] [' . ($endTime - $this->startTime) . ' sec since start] [' . ($endTime - $lastTime) . ' sec since last] [' . $endMem . ' bytes] [' . ($endMem - $this->startMem) . ' bytes since start] [' . ($endMem - $lastMem) . ' bytes since last] End';
+			}
 		}
 
 		return $data;

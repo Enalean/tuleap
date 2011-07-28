@@ -394,10 +394,17 @@ $gitphp_conf['geshiroot'] = 'lib/geshi/';
 
 /*
  * debug
- * Turns on extra warning messages and benchmarking.
+ * Turns on extra warning messages
  * Not recommended for production systems, as it will give
- * way more benchmarking info than you care about, and
+ * way more info about what's happening than you care about, and
  * will screw up non-html output (rss, opml, snapshots, etc)
  */
 $gitphp_conf['debug'] = false;
+
+/*
+ * benchmark
+ * Turns on extra timestamp and memory benchmarking info
+ * when debug mode is turned on.  Generates lots of output.
+ */
+$gitphp_conf['benchmark'] = false;
 
