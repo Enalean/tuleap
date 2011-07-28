@@ -26,6 +26,8 @@ define('GITPHP_CONTROLLERDIR', GITPHP_INCLUDEDIR . 'controller/');
 define('GITPHP_CACHEDIR', GITPHP_INCLUDEDIR . 'cache/');
 define('GITPHP_LOCALEDIR', GITPHP_BASEDIR . 'locale/');
 
+define('GITPHP_CACHE', GITPHP_BASEDIR . 'cache/');
+
 include_once(GITPHP_INCLUDEDIR . 'version.php');
 
 require_once(GITPHP_INCLUDEDIR . 'Util.class.php');
