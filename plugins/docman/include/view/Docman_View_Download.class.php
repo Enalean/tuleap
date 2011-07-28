@@ -22,7 +22,12 @@ class Docman_View_Download extends Docman_View_View {
         }
         if ($version) {
             if (file_exists($version->getPath())) {
+                try {
                 $version->preDownload($params['item'], $params['user'], $this->_controller);
+                } catch (Exception $e) {
+                    $this->_controller->feedback->log('error', 'The file cannot be found.');
+                    $GLOBALS['Response']->redirect($this->_controller->getDefaultUrl());
+                }
                 header('Expires: Mon, 26 Nov 1962 00:00:00 GMT');  // IE & HTTPS
                 header('Pragma: private');                         // IE & HTTPS
                 header('Cache-control: private, must-revalidate'); // IE & HTTPS
