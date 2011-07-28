@@ -14,11 +14,13 @@ $HTML->header(array('title'=>$Language->getText('homepage', 'title')));
 
 echo '<div id="homepage">';
 
-echo '<div id="homepage_speech">';
+$display_homepage_boxes = !isset($GLOBALS['sys_display_homepage_boxes']) || (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1);
+
+echo '<div id="homepage_speech" '. ($display_homepage_boxes ? '' : 'style="width:100%;"') .'>';
 include ($Language->getContent('homepage/homepage', null, null, '.php'));
 echo '</div>';
 
-if (!isset($GLOBALS['sys_display_homepage_boxes']) || (isset($GLOBALS['sys_display_homepage_boxes']) && $GLOBALS['sys_display_homepage_boxes'] == 1)) {
+if ($display_homepage_boxes) {
     echo '<div id="homepage_boxes">';
     show_features_boxes();
     echo '</div>';
