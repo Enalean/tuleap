@@ -24,17 +24,20 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-$validEvents = new Valid_WhiteList('events' ,array('Permissions',
+// TODO: Add feedback when form values are not correct
+$validEvents = new Valid_WhiteList('events_box' ,array('Permissions',
                                                    'Project',
                                                    'Users',
                                                    'User Group',
                                                    'Others'));
-$event = $request->getValidated('events', $validEvents, null);
+$event = $request->getValidated('events_box', $validEvents, null);
 
-// TODO: don't forget to verifiy this after it changes
-$validSubEvents = new Valid_String('SubEvent');
-if($request->valid($validSubEvents)) {
-    $subEvents = $request->get('SubEvent');
+$validSubEvents = new Valid_String('sub_events_box');
+if($request->validArray($validSubEvents)) {
+    $subEventsArray = $request->get('sub_events_box');
+    foreach ($subEventsArray as $element) {
+        $subEvents[$element] = true;
+    }
 } else {
     $subEvents = null;
 }

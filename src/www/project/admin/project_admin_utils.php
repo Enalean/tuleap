@@ -125,7 +125,7 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
  * @param Intager $limit
  * 
 */
-function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvents = null, $value = null, $startDate = null, $endDate = null, $by = null) {
+function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
 	/*      
 		show the group_history rows that are relevant to 
 		this group_id
@@ -190,7 +190,6 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>';
         //TBM
         //echo'<SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title"><img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="toggle_form_icon"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
-        // TODO : Keep values of the last submitted form
         echo '<FORM METHOD="POST" id="project_history_form" NAME="project_history_form">';
         //TBM        
         /*echo '<TABLE ID="project_history_search">';
@@ -238,7 +237,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
               </select>&nbsp';*/
 
         //SubEvent select Box
-         /*echo '<select id="sub_events_box" name="sub_events_box" multiple>
+         /*echo '<select id="sub_events_box" name="sub_events_box[]" multiple>
          <Option value="choose_event">'.$GLOBALS['Language']->getText('project_admin_utils', 'choose_event').'</Option>
          </select>';
 
@@ -336,8 +335,9 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
           </TD></TR></TABLE></FORM><BR><P>';
         //TBM
         /*$translatedEvents = phpArrayToJsArray($subEvents);
+    $translatedSelectedEvents = phpArrayToJsArray($subEventsBox);
         $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
-           new ProjectHistory(".$translatedEvents.");";
+           new ProjectHistory(".$translatedEvents.", ".$translatedSelectedEvents.");";
      $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
      $GLOBALS['Response']->includeFooterJavascriptSnippet($js);*/
 }
