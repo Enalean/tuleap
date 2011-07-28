@@ -87,7 +87,7 @@ class UserDao extends DataAccessObject {
     }
     
     public function searchSSHKeys() {
-        $sql = "SELECT user_name, authorized_keys 
+        $sql = "SELECT user_name, user_id, authorized_keys 
                 FROM user 
                 WHERE unix_status = 'A' 
                   AND (status= 'A' OR status='R') 

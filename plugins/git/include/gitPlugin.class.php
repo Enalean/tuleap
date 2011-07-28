@@ -51,6 +51,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('project_admin_remove_user', 'projectRemoveUserFromNotification', false);
         
         $this->_addHook(Event::EDIT_SSH_KEYS, 'edit_ssh_keys', false);
+        $this->_addHook(Event::DUMP_SSH_KEYS, 'dump_ssh_keys', false);
         $this->_addHook(Event::LAB_FEATURES_DEFINITION_LIST, 'lab_features_definition_list', false);
         
         $this->_addHook('permission_get_name',               'permission_get_name',               false);
@@ -214,12 +215,33 @@ class GitPlugin extends Plugin {
     public function edit_ssh_keys($params) {
         $user = UserManager::instance()->getUserById($params['user_id']);
         if ($user) {
-            include_once 'GitoliteDriver.class.php';
             $gitolite = new Git_GitoliteDriver();
             if (is_dir($gitolite->getAdminPath())) {
                 $gitolite->initUserKeys($user);
                 $gitolite->push();
             }
+        }
+    }
+
+    /**
+     * Called by backend to ensure that all ssh keys are in gitolite conf
+     * 
+     * As we are root we use a dedicated script to be run as codendiadm.
+     * @see Git_Backend_Gitolite::glRenameProject
+     *
+     * @param array $params
+     */
+    public function dump_ssh_keys($params) {
+        $retVal = 0;
+        $output = array();
+        $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
+        $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
+        exec($cmd, $output, $retVal);
+        if ($retVal == 0) {
+            return true;
+        } else {
+            throw new Exception('Rename: Unable to dump ssh keys (error code: '.$retVal.'): '.implode('%%%', $output));
+            return false;
         }
     }
     

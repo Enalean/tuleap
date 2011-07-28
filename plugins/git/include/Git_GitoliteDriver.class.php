@@ -106,13 +106,46 @@ class Git_GitoliteDriver {
         }
         return true;
     }
+    
+    /**
+     * Dump ssh keys into gitolite conf
+     */
+    public function dumpSSHKeys() {
+        if (is_dir($this->getAdminPath())) {
+            $userdao = new UserDao(CodendiDataAccess::instance());
+            foreach ($userdao->searchSSHKeys() as $row) {
+                $this->initUserKeys($row['user_name'], $row['user_id'], $row['authorized_keys']);
+            }
+            return $this->push();
+        }
+        return false;
+    }
 
     /**
-     * @param User $user
+     * @param mixed  $user            The user (object User) or its username (string)
+     * @param int    $user_id         The id of the user. Optionnal, if not given, will be retrieved in the db
+     * @param string $authorized_keys The keys. Optionnal, if not given, will be retrieved in the db
      */
-    public function initUserKeys($user) {
+    public function initUserKeys($user, $user_id = null, $authorized_keys = null) {
+        if (is_string($user)) {
+            $username = $user;
+            if (is_null($user_id) || is_null($authorized_keys)) {
+                if ($user = UserManager::instance()->getUserByUserName($username)) {
+                    $user_id         = $user->getId();
+                    $authorized_keys = $user->getAuthorizedKeys();
+                } else {
+                    throw new Exception('Error: user '. $username .' does not exist');
+                }
+            }
+            $authorized_keys = User::splitAuthorizedKeys($authorized_keys);
+        } else {
+            $username        = $user->getUserName();
+            $user_id         = $user->getId();
+            $authorized_keys = $user->getAuthorizedKeys(true);
+        }
+        
         // First remove existing keys
-        $this->removeUserExistingKeys($user);
+        $this->removeUserExistingKeys($username);
 
         // Create path if need
         $keydir = $this->adminPath.'/keydir';
@@ -122,14 +155,14 @@ class Git_GitoliteDriver {
 
         // Dump keys
         $i    = 0;
-        foreach ($user->getAuthorizedKeys(true) as $key) {
-            $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
+        foreach ($authorized_keys as $key) {
+            $filePath = $keydir.'/'.$username.'@'.$i.'.pub';
             file_put_contents($filePath, $key);
             $this->gitAdd($filePath);
             $i++;
         }
 
-        $this->gitCommit('Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys');
+        $this->gitCommit('Update '.$username.' (Id: '.$user_id.') SSH keys');
     }
 
     /**
@@ -137,12 +170,12 @@ class Git_GitoliteDriver {
      *
      * @param User $user
      */
-    protected function removeUserExistingKeys($user) {
+    protected function removeUserExistingKeys($user_name) {
         $keydir = $this->adminPath.'/keydir';
         if (is_dir($keydir)) {
             $dir = new DirectoryIterator($keydir);
             foreach ($dir as $file) {
-                $userbase = $user->getUserName().'@';
+                $userbase = $user_name.'@';
                 if (preg_match('/^'.$userbase.'[0-9]+.pub$/', $file)) {
                     unlink($file->getPathname());
                     $this->gitRm($file->getPathname());

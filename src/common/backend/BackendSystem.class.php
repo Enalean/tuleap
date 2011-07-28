@@ -346,6 +346,7 @@ class BackendSystem extends Backend {
         foreach($userdao->searchSSHKeys() as $row) {
             $this->writeSSHKeys($row['user_name'], $row['authorized_keys']);
         }
+        EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, null);
         return true;
     }
     

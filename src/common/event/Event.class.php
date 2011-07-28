@@ -39,6 +39,15 @@ class Event {
     const EDIT_SSH_KEYS = 'edit_ssh_keys';
 
     /**
+     * Dump all ssh keys.
+     * 
+     * No parameters
+     * No expected results
+     */
+
+    const DUMP_SSH_KEYS = 'dump_ssh_keys';
+
+    /**
      * The user has just changed his email address.
      * 
      * Parameters:
