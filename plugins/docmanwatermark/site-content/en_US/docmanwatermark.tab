@@ -58,3 +58,4 @@ plugin_docmanwatermark	action_watermarking_disable_error	Unable to disable water
 plugin_docmanwatermark	action_watermarking_enabled	Watermarking re-enabled
 plugin_docmanwatermark	action_watermarking_enable_error	Unable to re-enable watermarking
 plugin_docmanwatermark	error_watermarking_encrypted_pdf	PDF document download request Failed!<br>Watermarking is enabled for the requested PDF File while it is encrypted.<br>Watermarking should be disabled for this document, Otherwise, it still be not accessible.<br> A Document Manager can disable watermarking for this document <a href="$1">here</a>
+plugin_docmanwatermark	error_no_controller_found	No controller found.

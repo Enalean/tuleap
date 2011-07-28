@@ -90,9 +90,13 @@ class DocmanWatermarkPlugin extends Plugin {
 
             // Here is the case when pdf doc is encrypted. We cancel download and redirect to error page.
             if(strpos($e->getMessage(), "Encrypted") !== FALSE){
-                $watermarkingDetailsUrl = $params['docmanControler']->getDefaultUrl().'&action=details&id='.$params['item']->getId().'&section=watermarking';
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'error_watermarking_encrypted_pdf', array($watermarkingDetailsUrl)), CODENDI_PURIFIER_DISABLED);
-                $GLOBALS['Response']->redirect($params['docmanControler']->getDefaultUrl());
+                if (!is_a($params['docmanControler'], 'Docman_Controller')) {
+                    throw new Exception($GLOBALS['Language']->getText('plugin_docmanwatermark', 'error_no_controller_found'));
+                } else {
+                    $watermarkingDetailsUrl = $params['docmanControler']->getDefaultUrl().'&action=details&id='.$params['item']->getId().'&section=watermarking';
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'error_watermarking_encrypted_pdf', array($watermarkingDetailsUrl)), CODENDI_PURIFIER_DISABLED);
+                    $GLOBALS['Response']->redirect($params['docmanControler']->getDefaultUrl());
+                }
             }
             exit(0);
         }
