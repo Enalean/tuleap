@@ -294,7 +294,7 @@ class Docman_ReportHtml {
         $hidden_fields .= '<input type="hidden" name="id" value="'.$params['item']->getId().'" />';
         $hidden_fields .= '<input type="hidden" name="action" value="search" />';
         
-        $global_txt = $this->hp->purify(HTTPRequest::instance()->get('global_txt'));
+        $global_txt = $this->hp->purify($params['docman']->request->get('global_txt'));
         
         $html .= "<div id=\"docman_filters_title\">\n";
         $html .= '<form method="get" action="?" id="plugin_docman_report_form_global">';
