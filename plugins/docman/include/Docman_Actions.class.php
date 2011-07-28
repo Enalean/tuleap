@@ -388,6 +388,12 @@ class Docman_Actions extends Actions {
                         $pm = $this->_getPermissionsManagerInstance();
                         $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
                     }
+                    $this->event_manager->processEvent('plugin_docman_event_add', array(
+                         'group_id' => $request->get('group_id'),
+                         'parent'   => $parent,
+                         'item'     => $new_item,
+                         'user'     => $user)
+                    );
                     // Log change owner
                     if ($owner != $userId) {
                         $this->_raiseMetadataChangeEvent($user, $new_item, $request->get('group_id'), null, $item['owner'], 'owner');

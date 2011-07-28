@@ -286,7 +286,13 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             $item['title']             = htmlspecialchars($name);
             $itemFactory               = $this->getUtils()->getDocmanItemFactory();
             $id                        = $itemFactory->create($item, 'beginning');
-            $this->cloneItemPermissions($item['parent_id'], $id);
+            if ($id) {
+                $newItem  = $itemFactory->getItemFromDb($id);
+                $parent   = $itemFactory->getItemFromDb($item['parent_id']);
+                $event    = 'plugin_docman_event_add';
+                $newItem->fireEvent($event, $this->getUser(), $parent);
+                $this->cloneItemPermissions($item['parent_id'], $id);
+            }
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_create'));
         }
@@ -352,6 +358,9 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                 $id                = $itemFactory->create($item, 'beginning');
                 if ($id) {
                     $newItem           = $itemFactory->getItemFromDb($id);
+                    $parent           = $itemFactory->getItemFromDb($item['parent_id']);
+                    $event    = 'plugin_docman_event_add';
+                    $newItem->fireEvent($event, $this->getUser(), $parent);
                     $versionFactory    = $this->getUtils()->getVersionFactory();
                     $nextNb            = $versionFactory->getNextVersionNumber($newItem);
                     if($nextNb === false) {

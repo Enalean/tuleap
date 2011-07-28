@@ -694,12 +694,6 @@ class Docman_ItemFactory {
         $id = $dao->createFromRow($row);
         if ($id) {
             $this->setNewParent($id, $row['parent_id'], $ordering);
-            $newItem  = $this->getItemFromDb($id);
-            $parent   = $this->getItemFromDb($row['parent_id']);
-            $um       = $this->_getUserManager();
-            $user     = $um->getUserById($row['user_id']);
-            $event    = 'plugin_docman_event_add';
-            $newItem->fireEvent($event, $user, $parent);
         }
         return $id;
     }
