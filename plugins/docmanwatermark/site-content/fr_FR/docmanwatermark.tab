@@ -58,4 +58,3 @@ plugin_docmanwatermark	action_watermarking_disable_error	Impossible de désactiv
 plugin_docmanwatermark	action_watermarking_enabled	Filigrane ré-activé
 plugin_docmanwatermark	action_watermarking_enable_error	Impossible de réactiver le filigrane
 plugin_docmanwatermark	error_watermarking_encrypted_pdf	Impossible de télécharger le document PDF!<br>Filigrane activé pour ce document alors qu'il est crypté.<br>Le filigrane doit être désactivé pour ce document, sinon, il restera inaccessible.<br>Un Gestionnaire de document peut désactiver le filigrane pour ce document <a href="$1">ici</a>
-plugin_docmanwatermark	error_no_controller_found	Aucun contrôleur existant.
