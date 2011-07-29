@@ -61,7 +61,7 @@ if ($request->valid($vStartDate)) {
 $vEndDate = new Valid('end');
 $vEndDate->addRule(new Rule_Date());
 $vEndDate->required();
-if ($request->valid($vStartDate)) {
+if ($request->valid($vEndDate)) {
     $endDate = $request->get('end');
 } else {
     $endDate = null;
