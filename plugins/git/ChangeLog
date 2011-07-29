@@ -1,5 +1,5 @@
-Version 1.11 (Not released yet)
-	* TODO: add reference to backlog
+Version 1.11 (Tuleap 4.0.20 - Not released yet)
+	* backlog #22 : Gitolite integration
 
 Version 1.10 (Tuleap 4.0.19)
 	* Rewrite management of cross references extraction to improve performances
