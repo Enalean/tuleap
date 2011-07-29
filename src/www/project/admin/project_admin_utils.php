@@ -234,10 +234,10 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
             echo 'selected';
         }
         echo '>Others</Option>
-              </select>&nbsp';*/
+              </select>';*/
 
         //SubEvent select Box
-         /*echo '<select id="sub_events_box" name="sub_events_box[]" multiple>
+         /*echo '</TD><TD><select id="sub_events_box" name="sub_events_box[]" multiple>
          <Option value="choose_event">'.$GLOBALS['Language']->getText('project_admin_utils', 'choose_event').'</Option>
          </select>';
 
