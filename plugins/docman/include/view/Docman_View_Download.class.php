@@ -24,7 +24,7 @@ class Docman_View_Download extends Docman_View_View {
             if (file_exists($version->getPath())) {
                 try {
                 $version->preDownload($params['item'], $params['user'], $this->_controller);
-                } catch (EncryptedPdfException $e) {
+                } catch (DocmanWatermark_EncryptedPdfException $e) {
                     $GLOBALS['Response']->addFeedback('error',$e->getMessage(), CODENDI_PURIFIER_DISABLED);
                     $GLOBALS['Response']->redirect($this->_controller->getDefaultUrl());
                 }

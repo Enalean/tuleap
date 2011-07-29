@@ -43,7 +43,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
             if ($this->getSize() <= $this->getMaxFileSize()) {
                 try {
                     $this->download($version);
-                } catch (EncryptedPdfException $e) {
+                } catch (DocmanWatermark_EncryptedPdfException $e) {
                     throw new Sabre_DAV_Exception_FileNotFound($e->getMessage());
                 }
             } else {
