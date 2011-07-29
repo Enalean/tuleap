@@ -185,19 +185,20 @@ class Docman_Version {
      * Logging a version deletion event
      *
      * @param Docman_Item    $item
-     * @param String         $value
      * @param User           $user
      *
      * @return void
      */
-    function fireDeleteEvent($item, $value, $user) {
-        $logger = new Docman_Log();
-        $params = array('group_id' => $item->getGroupId(),
+    function fireDeleteEvent($item, $user) {
+        $value = $this->getNumber();
+        if ($this->getLabel() != '') {
+            $value .= ' ('.$this->getLabel().')';
+        }
+        $params = array('group_id'   => $item->getGroupId(),
                         'item'       => $item,
                         'old_value'  => $value,
-                        'user'       => $user,
-                        'event'   => 'plugin_docman_event_del_version');
-        $logger->log($params['event'], $params);
+                        'user'       => $user);
+        EventManager::instance()->processEvent('plugin_docman_event_del_version', $params);
     }
 }
 

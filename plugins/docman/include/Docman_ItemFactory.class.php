@@ -1145,6 +1145,12 @@ class Docman_ItemFactory {
      * @return void
      */
     function delete($item) {
+        // The event must be processed before the item is deleted
+        $um         = UserManager::instance();
+        $user       = $um->getCurrentUser();
+        $itemParent = $this->getItemFromDb($item->getParentId());
+        $item->fireEvent('plugin_docman_event_del', $user, $itemParent);
+        
         // Delete Lock if any
         $lF = new Docman_LockFactory();
         if($lF->itemIsLocked($item)) {
@@ -1152,16 +1158,9 @@ class Docman_ItemFactory {
         }
 
         $item->setDeleteDate(time());
-        // The event must be processed before the item is deleted
-        $um         = UserManager::instance();
-        $user       = $um->getCurrentUser();
-        $itemParent = $this->getItemFromDb($item->getParentId());
-        $event      = 'plugin_docman_event_del';
-        $item->fireEvent($event, $user, $itemParent);
-
         $this->delCutPreferenceForAllUsers($item->getId());
         $this->delCopyPreferenceForAllUsers($item->getId());
-        $dao = new Docman_ItemDao(CodendiDataAccess::instance());
+        $dao = $this->_getItemDao();
         $dao->updateFromRow($item->toRow());
         $dao->storeDeletedItem($item->getId());
     }
