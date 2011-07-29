@@ -42,7 +42,7 @@ var ProjectHistory = Class.create({
     },
     SelectSubEvent: function(selected_sub_events) {
         this.removeAllOptions($('sub_events_box'));
-        this.addOption('choose_event');
+        this.addOption('choose_event', false, true);
         //Try to use a loop instead
         //Permission section
         if ($('events_box').value == 'Permissions') {
@@ -117,13 +117,18 @@ var ProjectHistory = Class.create({
             selectbox.remove(i);
         }
     },
-    addOption: function(value, selected) {
+    addOption: function(value, selected, disabled) {
         var optn = Builder.node('option', {'value' : value}, this.sub_events_array[value]);
         $('sub_events_box').appendChild(optn);
         if (selected) {
             optn.selected = true;
         } else {
             optn.selected = false;
+        }
+        if (disabled) {
+            optn.disabled = true;
+        } else {
+            optn.disabled = false;
         }
     }
 });

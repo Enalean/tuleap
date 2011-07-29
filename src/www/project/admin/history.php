@@ -24,7 +24,6 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-// TODO: Add feedback when form values are not correct
 $validEvents = new Valid_WhiteList('events_box' ,array('Permissions',
                                                    'Project',
                                                    'Users',
@@ -52,18 +51,28 @@ if($request->valid($validValue)) {
 $vStartDate = new Valid('start');
 $vStartDate->addRule(new Rule_Date());
 $vStartDate->required();
+$startDate = $request->get('start');
 if ($request->valid($vStartDate)) {
     $startDate = $request->get('start');
-} else {
+} elseif (!empty($startDate)) {
+    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_start_date'));
     $startDate = null;
 }
 
 $vEndDate = new Valid('end');
 $vEndDate->addRule(new Rule_Date());
 $vEndDate->required();
+$endDate = $request->get('end');
 if ($request->valid($vEndDate)) {
     $endDate = $request->get('end');
-} else {
+} elseif (!empty($endDate)) {
+    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_end_date'));
+    $endDate = null;
+}
+
+if ($startDate && $endDate && (strtotime($startDate) >= strtotime($endDate))) {
+    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_dates'));
+    $startDate = null;
     $endDate = null;
 }
 
