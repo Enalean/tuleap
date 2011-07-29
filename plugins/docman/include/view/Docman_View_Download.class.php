@@ -25,8 +25,7 @@ class Docman_View_Download extends Docman_View_View {
                 try {
                 $version->preDownload($params['item'], $params['user'], $this->_controller);
                 } catch (EncryptedPdfException $e) {
-                    $watermarkingDetailsUrl = $this->_controller->getDefaultUrl().'&action=details&id='.$params['item']->getId().'&section=watermarking';
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'error_watermarking_encrypted_pdf', array($watermarkingDetailsUrl)), CODENDI_PURIFIER_DISABLED);
+                    $GLOBALS['Response']->addFeedback('error',$e->getMessage(), CODENDI_PURIFIER_DISABLED);
                     $GLOBALS['Response']->redirect($this->_controller->getDefaultUrl());
                 }
                 header('Expires: Mon, 26 Nov 1962 00:00:00 GMT');  // IE & HTTPS

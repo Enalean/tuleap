@@ -91,7 +91,8 @@ class DocmanWatermarkPlugin extends Plugin {
 
             // Here is the case when pdf doc is encrypted. We cancel download and redirect to error page.
             if(strpos($e->getMessage(), "Encrypted") !== FALSE){
-                throw new EncryptedPdfException($GLOBALS['Language']->getText('plugin_docmanwatermark', 'error_no_controller_found'));
+                $watermarkingDetailsUrl = '/plugins/docman/?group_id='.$params['item']->getGroupId().'&action=details&id='.$params['item']->getId().'&section=watermarking';
+                throw new EncryptedPdfException($GLOBALS['Language']->getText('plugin_docmanwatermark', 'error_watermarking_encrypted_pdf', array($watermarkingDetailsUrl)));
             }
             exit(0);
         }
