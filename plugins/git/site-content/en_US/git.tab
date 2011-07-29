@@ -26,6 +26,8 @@ plugin_git	admin_reference_creation_title	Reference creation
 plugin_git	admin_reference_creation_input_name	Name
 plugin_git	admin_reference_creation_textarea_name	Description
 plugin_git	admin_reference_creation_submit	Create
+plugin_git	admin_reference_creation_input_type	Enable fine grain permissions on this repository <em>(EXPERIMENTAL)</em>.
+plugin_git	admin_reference_creation_lab_feature	This is an experimental feature. If any doubts, don't use it!
 
 
 plugin_git	admin_fork_creation_title	Fork
@@ -61,9 +63,12 @@ plugin_git	backend_gitroot_mkdir_error	Error while creating root for Git reposit
 plugin_git	backend_projectroot_mkdir_error	Error while creating project root for Git repository (Contact the site admin)
 plugin_git	backend_projectroot_chgrp_error	Error while setting project root permissions (Contact the site admin)
 
+plugin_git	disable_delete_gitolite	It's not yet possible to delete "Gitolite" based repositories
+plugin_git	disable_fork_gitolite	It's not yet possible to fork "Gitolite" based repositories
+
 plugin_git	actions_params_error	Empty required parameter(s)
 plugin_git	actions_delete_process	Repository will be removed in a few seconds
-plugin_git	actions_input_format_error	Repository name is not well formatted only alphanumeric and - _ characters are allowed, max lenght is
+plugin_git	actions_input_format_error	Repository name is not well formatted. Allowed characters: $1 and max length is $2.
 plugin_git	actions_create_repo_process	Repository will be created in a few seconds
 
 plugin_git	actions_repo_not_found	The repository does not exist
@@ -126,3 +131,13 @@ plugin_git	feedback_event_create	There is an event in queue for a repository cre
 plugin_git	feedback_event_fork	There is an event in queue for a repository fork ($1), it will be processed in one minute or two. Please be patient!
 plugin_git	feedback_event_delete	There is an event in queue for a repository deletion, it will be processed in one minute or two. Please be patient!
 plugin_git	feedback_event_access	There is an event in queue for a repository permissions change, it will be processed in one minute or two. Please be patient!
+
+plugin_git	gitolite_lab_feature_title	Fine grain permissions on git repositories
+plugin_git	gitolite_lab_feature_description	Allow to set specifics, distincts, permissions for Read or Write operations.
+
+plugin_git	perm_R	Read
+plugin_git	perm_W	Write
+plugin_git	perm_W+	Write & Rewind
+
+project_admin_utils	perm_granted_for_git_repository	Permission granted for git repository $1
+

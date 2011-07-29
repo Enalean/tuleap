@@ -22,6 +22,8 @@
 require_once('mvc/PluginViews.class.php');
 require_once('GitDao.class.php');
 require_once('GitBackend.class.php');
+require_once('www/project/admin/permissions.php');
+
 /**
  * GitViews
  */
@@ -65,11 +67,12 @@ class GitViews extends PluginViews {
     <h3><?php echo $this->getText('help_reference_title'); ?></h3>
     <p>
                        <?php
-                       $repoName = 'REPO_NAME';
-                       if ( !empty($params['repo_name']) ) {
-                           $repoName = $params['repo_name'];
+                       if (isset($params['repository'])) {
+                           $access = $params['repository']->getAccessURL();
+                       } else {
+                           $access = 'user@'.$_SERVER['SERVER_NAME'].':/path/to/repo.git';
                        }
-                       echo '<ul>'.$this->getText('help_init_reference', array($this->_getRepositoryUrl($repoName)) ).'</ul>';
+                       echo '<ul>'.$this->getText('help_init_reference', array($access)).'</ul>';
                        ?>
     </p>
     </div>
@@ -155,23 +158,12 @@ class GitViews extends PluginViews {
             echo '<br />';
             if ( !$initialized ) {
                 echo '<div class="feedback_warning">'.$this->getText('help_init_reference_msg').'</div>';
-                $this->help('init', array('repo_name'=>$repoName));
+                $this->help('init', array('repository'=>$repository));
             }
             $this->_getBreadCrumb();
             
             // Access type
-            $accessType = '<span class="plugin_git_repo_privacy" title=';
-            switch ($access) {
-            case GitRepository::PRIVATE_ACCESS:
-                $accessType .= '"'.$this->getText('view_repo_access_private').'">';
-                $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
-                break;
-            case GitRepository::PUBLIC_ACCESS:
-                $accessType .= '"'.$this->getText('view_repo_access_public').'">';
-                $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
-                break;
-            }
-            $accessType .= '</span>';
+            $accessType = $this->fetchAccessType($access, $repository->getBackend() instanceof Git_Backend_Gitolite);
 
             // Actions
             $repoActions = '<ul id="plugin_git_repository_actions">';
@@ -179,7 +171,7 @@ class GitViews extends PluginViews {
                 $repoActions .= '<li>'.$this->linkTo($this->getText('admin_repo_management'), '/plugins/git/?action=repo_management&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_admin"').'</li>';
             }
 
-            if ($initialized && $this->getController()->isAPermittedAction('clone')) {
+            if ($initialized && $this->getController()->isAPermittedAction('clone') && !($repository->getBackend() instanceof Git_Backend_Gitolite)) {
                 $repoActions .= '<li>'.$this->linkTo($this->getText('admin_fork_creation_title'), '/plugins/git/?action=fork&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_fork"').'</li>';
             }
             $repoActions .= '</ul>';
@@ -213,7 +205,7 @@ class GitViews extends PluginViews {
     }
     ?>
     <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
-            ?>: <input id="plugin_git_clone_field" type="text" value="git clone <?php echo $this->_getRepositoryUrl($repoName); ?>" />
+            ?>: <input id="plugin_git_clone_field" type="text" value="git clone <?php echo $repository->getAccessURL(); ?>" />
     </p>
 </form>
         <?php
@@ -232,7 +224,6 @@ class GitViews extends PluginViews {
         $repoId       = $repository->getId();
         $repoName     = $repository->getName();
         $initialized  = $repository->isInitialized();
-        $access       = $repository->getAccess();
         $description  = $repository->getDescription();
         $this->repoId = $repository->getId();
         $mailPrefix   = $repository->getMailPrefix();
@@ -244,34 +235,29 @@ class GitViews extends PluginViews {
         <input type="hidden" id="action" name="action" value="edit" />
         <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
         <?php
-        if ( $this->getController()->isAPermittedAction('del') && !$repository->hasChild() ) {
+        if ( $this->getController()->isAPermittedAction('del') && !$repository->hasChild() && !($repository->getBackend() instanceof Git_Backend_Gitolite)) {
             echo '<div id="plugin_git_confirm_deletion"><input type="submit" name="confirm_deletion" value="'. $this->getText('admin_deletion_submit') .'" /></div>';
         }
-        if ( $this->getController()->isAPermittedAction('save') ) :
-        ?>
-        <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
-        <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
-        <p id="plugin_git_description"><?php echo $this->getText('view_repo_description');
-            ?>: <textarea class="text" id="repo_desc" name="repo_desc"><?php echo $this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId);
-        ?></textarea>
-        </p>
-        <?php
-        $public  = '';
-        $private = '';
-        $checked = 'checked="checked"';
-        if ( $access == GitRepository::PRIVATE_ACCESS ) {
-            $private = $checked;
-            ?> <input type="hidden" id="action" name="action" value="edit" /> <?php
-        } else if ( $access == GitRepository::PUBLIC_ACCESS ) {
-            $public  = $checked;
-            ?> <input type="hidden" id="action" name="action" value="confirm_private" /> <?php
+        if ( $this->getController()->isAPermittedAction('save') ) {
+            echo '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->groupId .'">';
+            echo '<input type="hidden" id="repo_id" name="repo_id" value="'. $repository->getId() .'" />';
+            
+            echo '<p id="plugin_git_description">';
+            echo $this->getText('view_repo_description') .': ';
+            echo '<textarea class="text" id="repo_desc" name="repo_desc">';
+            echo $this->HTMLPurifier->purify($repository->getDescription(), CODENDI_PURIFIER_CONVERT_HTML, $this->groupId);
+            echo '</textarea>';
+            echo '</p>';
+            
+            if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+                $this->_accessControlGitolite($repository);
+            } else {
+                $this->_accessControl($repository);
+            }
+            
+            echo '<p><input type="submit" name="save" value="'. $this->getText('admin_save_submit') .'" /></p>';
+            echo '</form>';
         }
-        ?>
-        <p id="plugin_git_access"><?php echo $this->getText('view_repo_access');?>: <span><input type="radio" name="repo_access" value="private" <?php echo $private?>/><?php echo $this->getText('view_repo_access_private'); ?><input type="radio" name="repo_access" value="public"  <?php echo $public?>/>Public</span></p>
-        <p><input type="submit" name="save" value="<?php echo $this->getText('admin_save_submit');?>" /></p>
-        </form>
-        <?php
-        endif;
         // form to update notification mail prefix
         $this->_mailPrefixForm($mailPrefix);
         // form to add email addresses (mailing list) or a user to notify
@@ -279,7 +265,67 @@ class GitViews extends PluginViews {
         // show the list of mails to notify
         $this->_listOfMails();
     }
-
+    
+    /**
+     * Display access control management for gitshell backend
+     *
+     * @param GitRepository $repository The repository
+     * 
+     * @return void
+     */
+    protected function _accessControl($repository) {
+        $public  = '';
+        $private = '';
+        $checked = 'checked="checked"';
+        if ( $repository->getAccess() == GitRepository::PRIVATE_ACCESS ) {
+            $private = $checked;
+            echo '<input type="hidden" id="action" name="action" value="edit" />';
+        } else if ( $repository->getAccess() == GitRepository::PUBLIC_ACCESS ) {
+            $public  = $checked;
+            echo '<input type="hidden" id="action" name="action" value="confirm_private" />';
+        }
+        echo '<p id="plugin_git_access">';
+        echo $this->getText('view_repo_access');
+        echo ': <span><input type="radio" name="repo_access" value="private" '. $private .'/> ';
+        echo $this->getText('view_repo_access_private');
+        echo '<input type="radio" name="repo_access" value="public" '. $public .'/> Public';
+        echo '</span>';
+        echo '</p>';
+        
+    }
+    
+    /**
+     * Display access control management for gitolite backend
+     *
+     * @param GitRepository $repository The repository
+     * 
+     * @return void
+     */
+    protected function _accessControlGitolite($repository) {
+        echo '<table>';
+        echo '<thead><tr>';
+        echo '<td>'. $this->getText('perm_R') .'</td>';
+        echo '<td>'. $this->getText('perm_W') .'</td>';
+        echo '<td>'. $this->getText('perm_W+') .'</td>';
+        echo '</tr></thead>';
+        echo '<tbody><tr>';
+        // R
+        echo '<td>';
+        echo permission_fetch_selection_field('PLUGIN_GIT_READ', $repository->getId(), $this->groupId, 'repo_access[read]');
+        echo '</td>';
+        // W
+        echo '<td>';
+        echo permission_fetch_selection_field('PLUGIN_GIT_WRITE', $repository->getId(), $this->groupId, 'repo_access[write]');
+        echo '</td>';
+        // W+
+        echo '<td>';
+        echo permission_fetch_selection_field('PLUGIN_GIT_WPLUS', $repository->getId(), $this->groupId, 'repo_access[wplus]');
+        echo '</td>';
+        
+        echo '</tr></tbody>';
+        echo '</table>';
+    }
+    
     /**
      * FORK VIEW
      */
@@ -359,8 +405,13 @@ class GitViews extends PluginViews {
         }
     }
 
+    /**
+     * Configure gitphp output
+     * 
+     * @param GitRepository $repository
+     */
     public function getView($repository) {
-        require_once('../../../src/common/include/Codendi_HTMLPurifier.class.php');        
+        include_once 'common/include/Codendi_HTMLPurifier.class.php';
         if ( empty($_REQUEST['a']) )  {
             $_REQUEST['a'] = 'summary';
         }
@@ -371,8 +422,8 @@ class GitViews extends PluginViews {
         $_REQUEST['repo_name']     = $repository->getName();
         $_GET['p']                 = $_REQUEST['repo_name'].'.git';
         $_REQUEST['repo_path']     = $repository->getPath();
-	$_REQUEST['project_dir']   = $repository->getProject()->getUnixName();
-        $_REQUEST['git_root_path'] = GitBackend::GIT_ROOT_PATH;
+        $_REQUEST['project_dir']   = $repository->getProject()->getUnixName();
+        $_REQUEST['git_root_path'] = $repository->getGitRootPath();
         $_REQUEST['action']        = 'view';
         if ( empty($_REQUEST['noheader']) ) {
             //echo '<hr>';
@@ -412,20 +463,27 @@ class GitViews extends PluginViews {
      * CREATE REF FORM
      */
     protected function _createForm() {
+        $user = UserManager::instance()->getCurrentUser();
         ?>
 <h3><?php echo $this->getText('admin_reference_creation_title');
         ?><a href="#" onclick="$('help_create').toggle();$('help_init').toggle()"> [?]</a></h3>
+<p>
 <form id="addRepository" action="/plugins/git/?group_id=<?php echo $this->groupId ?>" method="POST">
     <input type="hidden" id="action" name="action" value="add" />
-    <table>
-        <tr>
-            <td><label for="repo_name"><?php echo $this->getText('admin_reference_creation_input_name');
-        ?></label></td>
-            <td><input id="repo_name" name="repo_name" class="" type="text" value=""/></td>
-            <td rowspan="2"><input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>"></td>
-        </tr>
-    </table>    
+    
+    <label for="repo_name"><?= $this->getText('admin_reference_creation_input_name'); ?></label>
+    <input id="repo_name" name="repo_name" class="" type="text" value=""/>
+
+    <?php if ($user->useLabFeatures()) : ?>
+    <div class="lab_features" title="<?= $this->getText('admin_reference_creation_lab_feature'); ?>">
+      <input id="repo_type" name="repo_type" type="checkbox" value="enable"/>
+      <label for="repo_type"><?= $this->getText('admin_reference_creation_input_type'); ?></label>
+    </div>
+    <?php endif; ?>
+
+    <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>">
 </form>
+</p>
         <?php
         $this->help('create', array('display'=>'none')) ;
         $this->help('init', array('display'=>'none')) ;
@@ -445,7 +503,7 @@ class GitViews extends PluginViews {
         <tr>
             <td class="plugin_git_first_col" ><label for="mail_prefix_label"><?php echo $this->getText('mail_prefix');
         ?></label></td>
-            <td><input name="mail_prefix" class="plugin_git_mail_prefix" type="text" value="<?php echo $mailPrefix; ?>" /></td>
+            <td><input name="mail_prefix" class="plugin_git_mail_prefix" type="text" value="<?= $this->HTMLPurifier->purify($mailPrefix, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId); ?>" /></td>
         </tr>
         <tr>
             <td colspan="2"><input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="<?php echo $this->getText('mail_prefix_submit')?>"></td>
@@ -571,15 +629,14 @@ class GitViews extends PluginViews {
                 $parentChildrenAssoc[$parentId][] = $repoData[GitDao::REPOSITORY_ID];
             }
             else {
-                if ( !isset($parentChildrenAssoc[0][$repoId]) ) {
-                    $parentChildrenAssoc[0][] = $repoId;
-                }
+                $parentChildrenAssoc[0][] = $repoId;
             }
         }
         $this->_makeRepositoryTree($parentChildrenAssoc, 0, $data);
     }
 
     protected function _makeRepositoryTree(&$flatTree, $currentId, $data) {
+        $user = UserManager::instance()->getCurrentUser();
         foreach ( $flatTree[$currentId] as $childId ) {
             $repoId   = $data[$childId][GitDao::REPOSITORY_ID];
             $repoName = $data[$childId][GitDao::REPOSITORY_NAME];
@@ -589,11 +646,16 @@ class GitViews extends PluginViews {
             $access   = $data[$childId][GitDao::REPOSITORY_ACCESS];
             //needs to be checked on filesystem (GitDao::getRepositoryList do not check)
             //TODO move this code to GitBackend and write a new getRepositoryList function ?
+            //TODO find a better way to do that to avoid the ton of SQL requests!
+            $r = new GitRepository();
+            $r->setId($repoId);
+            $r->load();
             if ( $isInit == 0 ) {
-                $r = new GitRepository();
-                $r->setId($repoId);
-                $r->load();
                 $isInit = $r->isInitialized();
+            }
+
+            if (!$r->userCanRead($user)) {
+                continue;
             }
             //we do not want to display deleted repository
             if ( $delDate != '0000-00-00 00:00:00' ) {
@@ -601,18 +663,8 @@ class GitViews extends PluginViews {
             }
 
             // Access type
-            $accessType = '<span class="plugin_git_repo_privacy" title=';
-            switch ($access) {
-                case GitRepository::PRIVATE_ACCESS:
-                    $accessType .= '"'.$this->getText('view_repo_access_private').'">';
-                    $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
-                    break;
-                case GitRepository::PUBLIC_ACCESS:
-                    $accessType .= '"'.$this->getText('view_repo_access_public').'">';
-                    $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
-                    break;
-            }
-            $accessType .= '</span>';
+            $accessType = $this->fetchAccessType($access, $data[$childId][GitDao::REPOSITORY_BACKEND_TYPE] == GitDao::BACKEND_GITOLITE);
+            
             echo '<li>'.$accessType.' '.$this->_getRepositoryPageUrl($repoId, $repoName);
             if ($isInit == 0) {
                 echo ' ('.$this->getText('view_repo_not_initialized').') ';
@@ -625,6 +677,35 @@ class GitViews extends PluginViews {
                 echo '</ul>';
             }
         }
+    }
+    
+    /**
+     * Fetch the html code to display the icon of a repository (depends on type of project)
+     *
+     * @param $access
+     * @param $backend_type
+     */
+    protected function fetchAccessType($access, $backendIsGitolite) {
+        $accessType = '<span class="plugin_git_repo_privacy" title=';
+
+        if ($backendIsGitolite) {
+            //$accessType .= '"'.$this->getText('view_repo_access_custom').'">';
+            $accessType .= '"custom">';
+            $accessType .= '<img src="'.$this->getController()->plugin->getThemePath().'/images/perms.png" />';
+        } else {
+            switch ($access) {
+                case GitRepository::PRIVATE_ACCESS:
+                    $accessType .= '"'.$this->getText('view_repo_access_private').'">';
+                    $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
+                    break;
+                case GitRepository::PUBLIC_ACCESS:
+                    $accessType .= '"'.$this->getText('view_repo_access_public').'">';
+                    $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
+                    break;
+            }
+        }
+        $accessType .= '</span>';
+        return $accessType;
     }
 }
 

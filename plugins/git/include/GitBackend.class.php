@@ -20,6 +20,7 @@
 require_once('common/backend/Backend.class.php');
 require_once('GitDao.class.php');
 require_once('GitDriver.class.php');
+require_once('Git_Backend_Interface.php');
 require_once('GitRepository.class.php');
 require_once('exceptions/GitBackendException.class.php');
 
@@ -28,7 +29,7 @@ require_once('exceptions/GitBackendException.class.php');
  *
  * @author Guillaume Storchi
  */
-class GitBackend extends Backend {
+class GitBackend extends Backend implements Git_Backend_Interface {
     
     private $driver;    
     private $packagesFile;
@@ -219,21 +220,7 @@ class GitBackend extends Backend {
      */
     public function setUpMailingHook($repository) {
         $path = $this->getGitRootPath().$repository->getPath();
-
-        $url = 'https://'.$GLOBALS['sys_https_host'].
-            '/plugins/git/index.php/'.$repository->getProjectId().
-            '/view/'.$repository->getId().
-            '/?p='.basename($path).'&a=commitdiff&h=%%H';
-
-        $format = 'format:URL:    '.$url.'%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
-
-        $showrev = "t=%s; ".
-            "git show ".
-            "--name-status ".
-            "--pretty='".$format."' ".
-            "\$t";
-
-        $this->getDriver()->setConfig($path, 'hooks.showrev', $showrev);
+        $this->getDriver()->setConfig($path, 'hooks.showrev', $repository->getPostReceiveShowRev());
     }
 
 
@@ -304,6 +291,51 @@ class GitBackend extends Backend {
      */
     public function isNameAvailable($newName) {
         return ! $this->fileExists(self::GIT_ROOT_PATH.'/'.$newName);
+    }
+
+    /**
+     * Return URL to access the respository for remote git commands
+     *
+     * @param  GitRepository $repository
+     * @return String
+     */
+    public function getAccessUrl($repository) {
+        $serverName  = $_SERVER['SERVER_NAME'];
+        $user = UserManager::instance()->getCurrentUser();
+        return  $user->getUserName() .'@'. $serverName .':/gitroot/'. $repository->getProject()->getUnixName().'/'.$repository->getName().'.git';
+    }
+
+    /**
+     * Test is user can read the content of this repository and metadata
+     *
+     * @param User          $user       The user to test
+     * @param GitRepository $repository The repository to test
+     *
+     * @return Boolean
+     */
+    public function userCanRead($user, $repository) {
+        if ($repository->isPrivate() && $user->isMember($repository->getProjectId())) {
+            return true;
+        }
+        if ($repository->isPublic()) {
+            if ($user->isRestricted() && $user->isMember($repository->getProjectId())) {
+                return true;
+            }
+            if (!$user->isAnonymous()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Get the regexp pattern to use for name repository validation
+     *
+     * @return string
+     */
+    public function getAllowedCharsInNamePattern() {
+        //alphanums, underscores and dash
+        return 'a-zA-Z0-9_.-';
     }
 }
 

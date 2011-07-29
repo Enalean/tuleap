@@ -29,30 +29,34 @@ class PermissionsManager {
     /**
      * @var PermissionsDao
      */
-    var $permission_dao;
+    var $_permission_dao;
     var $_permissions;
     var $_ugroups_for_user;
     
+    private static $_permissionmanager_instance;
+    
     function PermissionsManager($permission_dao) {
-        $this->_permission_dao   =& $permission_dao;
+        $this->_permission_dao   = $permission_dao;
         $this->_permissions      = array();
         $this->_ugroups_for_user = array();
     }
-    
+
     /**
-    * The manager is a singleton
-    */
-    function & instance() {
-        static $_permissionmanager_instance;
-        if (!$_permissionmanager_instance) {
-            $dao =& new PermissionsDAO(CodendiDataAccess::instance());
-            $_permissionmanager_instance = new PermissionsManager($dao);
+     * The manager is a singleton
+     *
+     * @return PermissionsManager
+     */
+    public static function instance() {
+        if (!self::$_permissionmanager_instance) {
+            self::$_permissionmanager_instance = new PermissionsManager(new PermissionsDAO(CodendiDataAccess::instance()));
         }
-        return $_permissionmanager_instance;
+        return self::$_permissionmanager_instance;
     }
-    
+
     /**
     * Returns if one of the user's ugroups has permission to access the object
+    * 
+    * WARNING: THIS METHOD DOESN'T TAKE 'DEFAULT' PERMISSIONS !
     * 
     * @access public
     * 

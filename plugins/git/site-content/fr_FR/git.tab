@@ -27,6 +27,8 @@ plugin_git	admin_reference_creation_title	Création d'une référence
 plugin_git	admin_reference_creation_input_name	Nom
 plugin_git	admin_reference_creation_submit	Créer
 plugin_git	admin_reference_creation_textarea_name	Description
+plugin_git	admin_reference_creation_input_type	Activer la gestion fine des permissions sur ce dépôt <em>(EXPÉRIMENTAL)</em>.
+plugin_git	admin_reference_creation_lab_feature	Cette fonctionnalité est expérimentale. En cas de doute, ne l'activez pas!
 
 plugin_git	admin_fork_creation_title	Création d'un fork
 plugin_git	admin_fork_creation_input_name	Nom du fork
@@ -61,9 +63,12 @@ plugin_git	backend_gitroot_mkdir_error	Erreur à la création du répertoire rac
 plugin_git	backend_projectroot_mkdir_error	Erreur à la création du répertoire racine des dépôts Git du projet (Contactez l'administrateur)
 plugin_git	backend_projectroot_chgrp_error	Erreur aux changement des permissions du répertoire racine des dépôts Git du projet (Contactez l'administrateur)
 
+plugin_git	disable_delete_gitolite	La suppression d'un dépôt de type "Gitolite" n'est pas encore possible
+plugin_git	disable_fork_gitolite	Le fork d'un dépôt de type "Gitolite" n'est pas encore possible
+
 plugin_git	actions_params_error	Paramètre requis manquants
 plugin_git	actions_delete_process	Le dépôt va être supprimé dans quelques secondes
-plugin_git	actions_input_format_error	 Le nom du dépôt doit uniquement contenir des caractères alpha numériques et - _ , la longueur maximale est de
+plugin_git	actions_input_format_error	 Le nom du dépôt n'est pas correct. Caractères autorisés : $1, la longueur maximale est de $2 caractères.
 plugin_git	actions_create_repo_process	Le dépôt va être crée dans quelques secondes
 plugin_git	actions_repo_not_found	Le dépôt n'existe pas
 plugin_git	actions_repo_access	Les droits d'accès au dépôt vont être modifiés dans quelques secondes
@@ -79,6 +84,7 @@ plugin_git	view_repo_initialized	Initialisé
 plugin_git	view_repo_not_initialized	Non initialisé
 plugin_git	view_repo_clone_url	Clone url
 plugin_git	view_repo_access	Accès
+plugin_git	view_repo_access_public	Public
 plugin_git	view_repo_access_private	Privé
 
 plugin_git	repo_not_initialized	Le dépôt n'est pas initialisé
@@ -123,3 +129,13 @@ plugin_git	feedback_event_create	Un événement est en attente pour la création
 plugin_git	feedback_event_fork	Un événement est en attente pour le fork ($1) d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_delete	Un événement est en attente pour la suppréssion d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_access	Un événement est en attente pour le changement de permissions d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
+
+plugin_git	gitolite_lab_feature_title	Permissions fines sur les dépots Git
+plugin_git	gitolite_lab_feature_description	Permet de positionner des permissions distinctes en lecture ou écriture sur chaque dépot
+
+plugin_git	perm_R	Lecture
+plugin_git	perm_W	Ecriture
+plugin_git	perm_W+	Ecriture et Rewind
+
+
+project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1

@@ -28,7 +28,10 @@ require_once('GitRepository.class.php');
  * @author Guillaume Storchi
  */
 class Git extends PluginController {
-    
+    const PERM_READ  = 'PLUGIN_GIT_READ';
+    const PERM_WRITE = 'PLUGIN_GIT_WRITE';
+    const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
+
     public function __construct(GitPlugin $plugin) {
         
         $matches = array();
@@ -124,7 +127,7 @@ class Git extends PluginController {
         $valid = new Valid_String('repo_name');
         $valid->required();
         if($this->request->valid($valid)) {
-            $repositoryName = $this->request->get('repo_name');
+            $repositoryName = trim($this->request->get('repo_name'));
         }
         $valid = new Valid_UInt('repo_id');
         $valid->required();
@@ -134,18 +137,20 @@ class Git extends PluginController {
             $repoId = 0;
         }
 
+        $user = UserManager::instance()->getCurrentUser();
+
         //public access
-        if ($repoId !== 0 && $this->nonMember ) {
+        if ($repoId !== 0) {
             $repo = new GitRepository();
             $repo->setId($repoId);
-            if ( $repo->exists() && $repo->isPublic() ) {
+            if ($repo->exists() && $repo->userCanRead($user)) {
                 $this->addPermittedAction('view');
             }
         } 
 
         //check permissions
-        if (  !empty($this->action) && !$this->isAPermittedAction($this->action) ) {
-            $this->addError( $this->getText('controller_action_permission_denied') );
+        if (!empty($this->action) && !$this->isAPermittedAction($this->action)) {
+            $this->addError($this->getText('controller_action_permission_denied'));
             $this->redirect('/plugins/git/?group_id='.$this->groupId);
             return;
         }
@@ -165,7 +170,12 @@ class Git extends PluginController {
            
             #ADD REF
             case 'add':
-                $this->addAction('createReference', array($this->groupId, $repositoryName) );
+                if ($user->useLabFeatures() && $this->request->existAndNonEmpty('repo_type')) {
+                    $backendType = GitDao::BACKEND_GITOLITE;
+                } else {
+                    $backendType = GitDao::BACKEND_GITSHELL;
+                }
+                $this->addAction('createReference', array($this->groupId, $repositoryName, $backendType) );
                 $this->addView('index');
                 break;
              #DELETE a repository
@@ -197,7 +207,7 @@ class Git extends PluginController {
                     }
                     $valid = new Valid_String('repo_access');
                     $valid->required();
-                    if($this->request->valid($valid)) {
+                    if($this->request->valid($valid) || is_array($this->request->get('repo_access'))) {
                         $repoAccess = $this->request->get('repo_access');
                     }
                     $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc) );

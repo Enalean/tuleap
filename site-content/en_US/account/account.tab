@@ -68,6 +68,10 @@ account_preferences	import_export	Import/export
 account_preferences	csv_dateformat	CSV Date format
 account_preferences	month_day_year	month/day/year
 account_preferences	day_month_year	day/month/year
+account_preferences	lab_features_title	$1 Lab
+account_preferences	lab_features_description	$1 experimental features in preview mode for bleeding edge users. Only use it if you know what you are doing. The lab features are listed below.
+account_preferences	lab_features_cblabel	Enable $1 Lab
+
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php

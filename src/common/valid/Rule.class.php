@@ -381,6 +381,7 @@ extends Rule {
              '|(root)|(bin)|(daemon)|(adm)|(lp)|(sync)|(shutdown)|(halt)|(mail)'.
              '|(uucp)|(operator)|(games)|(mysql)|(httpd)|(nobody)|(dummy)|(debian)'.
              '|(munin)|(mailman)|(ftpadmin)|(codendiadm)|(imadmin-bot)|(apache)|(nscd)'.
+             '|(git)|(gitolite)'.
              ')$/i', $val) != 0) {
             $this->error = $GLOBALS['Language']->getText('include_account','reserved');
             return true;

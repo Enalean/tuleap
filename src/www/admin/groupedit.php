@@ -24,13 +24,14 @@ $em = EventManager::instance();
 
 $Rename=$request->get('Rename');
 if ($Rename) {
-    $new_name =$request->get('new_name');
+    $new_name = $request->get('new_name');
     if (isset($new_name) && $group_id) {
         if (SystemEventManager::instance()->canRenameProject($group)) {
             $rule = new Rule_ProjectName();
             if (!$rule->isValid($new_name)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_groupedit','invalid_short_name'));
                 $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
+                $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='.$group_id);
             } else {
                 $em->processEvent(Event::PROJECT_RENAME, array('group_id' => $group_id,
                                                            'new_name' => $new_name));
@@ -38,10 +39,11 @@ if ($Rename) {
                 group_add_history('rename_request', $group->getUnixName(false).' :: '.$new_name, $group_id);
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_groupedit','rename_project_msg', array($group->getUnixName(false), $new_name )));
                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_groupedit','rename_project_warn'));
-                
+                $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='.$group_id);
             }
-        }else {
+        } else {
             $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_groupedit', 'rename_project_already_queued'), CODENDI_PURIFIER_DISABLED);
+            $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id='.$group_id);
         }
     }
 }        

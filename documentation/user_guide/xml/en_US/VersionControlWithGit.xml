@@ -14,93 +14,136 @@
   warmly advise you to first read some of the documents listed in the
   references section (see <xref linkend="GitReferences" />).</para>
 
-  <section id="Git:CodendiSupport">
-    <title>Git support overview in Codendi</title>
-
-    <section id="GitPluginConfiguration">
-        <title>Git Plugin Configuration</title>
-        <para>
-            On plugin administration page, once the plugin is installed and available. One can change the git backup directory.
-        </para>
-    </section>
-
-    <para>
-    Git support is installed as a plugin in the Codendi platform. It has been designed to support multiple repositories for a given project.
+  <para>
+    Git support has been designed to support multiple repositories for a given project.
     This is consistent with the Distributed Version Control System philosophy which allows to delegate project features to be developped in separated repositories.
-    </para>
-    <title>Repository types</title>
-    <para>
+  </para>
+
+  <para>Git access (for both read and write operations) requires SSH a valid key to be configured in user account preference. See <xref linkend="AccountMaintenance" /> for details.
+  </para>
+
+  <para>
     Two types of repositories are available:
-    </para>
     <itemizedlist mark="bullet">
-        <listitem>
-          <para>Reference : It is considered as a independant subproject or project module which can be forked</para>
-       </listitem>
-        <listitem>
-          <para>Fork (clone) : It is the result of the 'git clone' command to seperate features works among developement team(s). Could be used as a shared developper's repository</para>
-        </listitem>
+      <listitem><para>Reference: it is considered as a independant subproject or project module which can be forked</para></listitem>
+      <listitem><para>Fork (clone): it is the result of the 'git clone' command to seperate features works among developement team(s). Could be used as a shared developper's repository</para></listitem>
     </itemizedlist>
+  </para>
+  
+  <section id="GitRepositoryReference">
+    <title>Reference</title>
 
-    <section id="GitRepositoryReference">
-     <title>Reference</title>
-          <section id="GitReferenceCreation">
-            <para>A reference can be created by project admin from the Git service home page, a reference name can be like reference-project_1.</para>
-          </section>          
-          <section id="GitReferenceInitialization">
-              <para>A reference must be initialized
-                  <itemizedlist mark="bullet">
-                      <listitem>cd mysources</listitem>
-                      <listitem>git init</listitem>
-                      <listitem>git add .</listitem>
-                      <listitem>git commit -m 'initial commit'</listitem>
-                      <listitem>git push USER@SERVER:/var/lib/codendi/gitroot/PROJECT_SHORT_NAME/REPO_NAME.git master</listitem>
-                   </itemizedlist>
-              </para>
-          </section>
-      </section>
+    <para>A reference can be created by project admin from the Git service home page, a reference name can be like reference-project_1.</para>
 
-     <section id="GitRepositoryFork">
-         <title>Forking</title>
-         <para>Any repository can be forked by any project members. It inherits access from its parent.</para>
-     </section>
-
-     <section id="GitRepositorySettings">
-         <title>Repository settings (project admin only)</title>
-         <para>Several settings are displayed and some can be modified only by project admin.</para>
-         <para>Access can be changed public (everyone can read/write), private (only project members can read/write).</para>
-     </section>
-
-     <section id="GitRepositoryDeletion">
-         <title>Repository deletion (project admin only)</title>
-         <para>
-             A repository can be deleted, this will create a backup named after {PROJECT_SHORT_NAME}_{REPOSITORY_NAME}_{DEL_TIMESTAMP}.tar.bz2 
-             and move it into Git Plugin backup directory (see <xref linkend="GitPluginConfiguration" />).
-             See import repository section <xref linkend="GitRepositoryImport" /> for backup reactivation.
-         </para>
-     </section>
-
-     <section id="GitRepositoryImport">
-         <title>Importing an existing Git Repository</title>
-         <para>There is no automatic procedure to perform repository import. Read administration guide related section <ulink url="http://&SYS_DEFAULT_DOMAIN;/documentation/administration_guide/html/Codendi_Administration_Guide.html#HowTo_Import_Git">here</ulink>.</para>
-     </section>
-
-   </section>
-
-    <section id="GitReferences">
-      <title>Git References</title>      
-
+    <para>A reference must be initialized. Note that a reference cannot be empty. If it is the case, you can for instance create a README file.
       <itemizedlist mark="bullet">
-	<listitem>
-	  <para>The Official Git Web Site. See <ulink url="http://git-scm.com/">http://git-scm.com/</ulink>
-	  </para>
-	</listitem>
-	<listitem>
-	  <para>Pro Git book <ulink  url="http://progit.org/book/ch1-1.html">http://progit.org/book/ch1-1.html</ulink>.</para>
-	</listitem>
+        <listitem><para>cd mysources</para></listitem>
+        <listitem><para>git init</para></listitem>
+        <listitem><para>git add .</para></listitem>
+        <listitem><para>git commit -m 'initial commit'</para></listitem>
+        <listitem><para>git push USER@SERVER:/gitroot/PROJECT_SHORT_NAME/REPO_NAME.git master</para></listitem>
       </itemizedlist>
+    </para>
+  </section>
 
+  <section id="GitRepositoryFork">
+    <title>Forking</title>
+    <para>Any repository can be forked by any project members. It inherits access from its parent.</para>
+  </section>
+
+  <section id="GitRepositorySettings">
+    <title>Repository settings</title>
+    <para>As a project admin, you are allowed to modify the configuration of any project repositories. This includes:
+      <itemizedlist mark="bullet">
+        <listitem><para>textual description of the repository,</para></listitem>
+        <listitem><para>access control,</para></listitem>
+        <listitem><para>and "Email notification on push"</para></listitem>
+      </itemizedlist>
+    </para>
+
+    <section id="GitRepositorySettingsAccessControlGitShell">
+      <title>Simple access control</title>
+      <para>Default access control is based on public/private access. A public repository is accessible by all users with a valid account on the platform.
+        Private repositories are only accessible by project members.</para>
+      <para>In any case, all project members have full access to all the repositories for both read and write operations.</para>
+      <para>If "Restricted Users" feature is enabled, it's only possible to create "Private" repositories.</para>
+      <para>For fine grain permissions repositories, see the dedicated <xref linkend="GitRepositoryGitolite" />.</para>
     </section>
-  </chapter>
+
+    <section id="GitRepositorySettingsEmail">
+      <title>Email notification</title>
+      <para>It's often a good idea to notify the whole team when someone pushes some new content into a repository.
+        You can configure your repository to send an email a list of addresses (or even better a mailing list) upon pushes.</para>
+      <para>The content of the mail will depend on the push but you can modify:
+        <itemizedlist mark="bullet">
+          <listitem><para>the email subject prefix</para></listitem>
+          <listitem><para>the list of recipients</para></listitem>
+        </itemizedlist>
+      </para>
+      <para>When you add a new recipient, the autocompletion is done with the list of valid users. You are not mandated to use them, you can force any address, like a mailing list one.</para>
+      <para>Once configured, any subsequent push will send an email to the selected addresses.
+        Emails will contain:
+        <itemizedlist mark="bullet">
+          <listitem><para>the list of commit pushed in the repository,</para></listitem>
+          <listitem><para>the modified files (+diffstats)</para></listitem>
+          <listitem><para>for each commit, the link to the diff in &SYS_PRODUCT_NAME; gitweb interface</para></listitem>
+          <listitem><para>for each reference (in commit description for instance), the corresponding automagic link</para></listitem>
+        </itemizedlist>
+        Please note that cross-reference extraction will not work if email notification is not configured.
+      </para>
+    </section>
+  </section>
+
+  <section id="GitRepositoryGitolite">
+    <title>Fine grain access control</title>
+    <para>Starting release 4.0.20, project admins can create repositories allowing to define fine grain permissions.</para>
+    
+    <para>In order to activate this feature, one project admin should activate "&SYS_PRODUCT_NAME; Lab" in her preferences pages (My personal page).
+      Then a check box appears in Git reference creation page to turn on this feature.</para>
+    
+    <para>There are two improvements with those new repositories:
+      <itemizedlist mark="bullet">
+        <listitem><para>directories tree are allowed, so you can name your repo "platform/x86" for instance,</para></listitem>
+        <listitem><para>you can associate different user groups to the three capabilities: READ, WRITE, REWIND.</para></listitem>
+      </itemizedlist>
+    </para>
+
+    <para>As a project admin, in "Git repository management" screen, project admins can select the User Groups allowed to:
+      <itemizedlist mark="bullet">
+        <listitem><para>READ: access the repository</para></listitem>
+        <listitem><para>WRITE: push content into the repository (commits, new branches, deletion of branches, etc)</para></listitem>
+        <listitem><para>REWIND: go behind git barriers and play with repo history. This is highly un-advised to activate it if you don't know exactly what you are doing, you can erase your whole repository. You are warned!</para></listitem>
+      </itemizedlist>
+    </para>
+
+    <para>The "fine grain permissions repositories" are technically based on different technology (aka. Gitolite) than "standard repositories" (aka Gitshell).
+      It's neither yet possible to delete nor fork those repositories. Those features will be developed in a further release.
+    </para>
+  </section>
+
+  <section id="GitRepositoryDeletion">
+    <title>Repository deletion</title>
+    <para>
+      A repository can be deleted, this will create a backup named after {PROJECT_SHORT_NAME}_{REPOSITORY_NAME}_{DEL_TIMESTAMP}.tar.bz2 
+      and move it into Git Plugin backup directory defined in plugin configuration.
+      See import repository section <xref linkend="GitRepositoryImport" /> for backup reactivation.
+    </para>
+  </section>
+
+  <section id="GitRepositoryImport">
+    <title>Importing an existing Git Repository</title>
+    <para>There is no automatic procedure to perform repository import. Read administration guide related section.</para>
+  </section>
+
+  <section id="GitReferences">
+    <title>Git References</title>
+    <itemizedlist mark="bullet">
+      <listitem><para>The Official Git Web Site. See <ulink url="http://git-scm.com/">http://git-scm.com/</ulink></para></listitem>
+      <listitem><para>Pro Git book <ulink  url="http://progit.org/book/ch1-1.html">http://progit.org/book/ch1-1.html</ulink>.</para></listitem>
+    </itemizedlist>
+  </section>
+
+</chapter>
 <!--
 Local Variables:
 sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")

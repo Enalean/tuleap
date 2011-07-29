@@ -41,9 +41,12 @@ class GitDao extends DataAccessObject {
     const REPOSITORY_IS_INITIALIZED   = 'repository_is_initialized';
     const REPOSITORY_ACCESS           = 'repository_access';
     const REPOSITORY_MAIL_PREFIX      = 'repository_events_mailing_prefix';
+    const REPOSITORY_BACKEND_TYPE     = 'repository_backend_type';
 
-    const REPO_NAME_MAX_LENGTH = 40;
-    const REPO_DESC_MAX_LENGTH = 255;
+    const REPO_NAME_MAX_LENGTH = 255;
+
+    const BACKEND_GITSHELL = 'gitshell';
+    const BACKEND_GITOLITE = 'gitolite';
 
     public function __construct() {
         parent::__construct( CodendiDataAccess::instance() );
@@ -111,6 +114,7 @@ class GitDao extends DataAccessObject {
         $creationUserId = $this->da->escapeInt($creationUserId);
         $access         = $this->da->quoteSmart($access);
         $mailPrefix     = $this->da->quoteSmart($mailPrefix);
+
         $insert         = false;
         if ( $this->exists($id) ) {            
             $query = 'UPDATE '.$this->getTable().
@@ -120,28 +124,35 @@ class GitDao extends DataAccessObject {
                             self::REPOSITORY_MAIL_PREFIX.'='.$mailPrefix.' '.
                      'WHERE '.self::REPOSITORY_ID.'='.$id;
         } else {
+            if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+                $backendType = self::BACKEND_GITOLITE;
+            } else {
+                $backendType = self::BACKEND_GITSHELL;
+            }
             $insert       = true;
             $creationDate = date('Y-m-d H:i:s');
             $query = 'INSERT INTO '.$this->getTable().'('.self::REPOSITORY_NAME.','.
-                                                         self::REPOSITORY_PATH.','.                                                         
+                                                         self::REPOSITORY_PATH.','.
                                                          self::REPOSITORY_PARENT.','.
                                                          self::REPOSITORY_DESCRIPTION.','.
                                                          self::FK_PROJECT_ID.','.
                                                          self::REPOSITORY_CREATION_DATE.','.
                                                          self::REPOSITORY_CREATION_USER_ID.','.
                                                          self::REPOSITORY_IS_INITIALIZED.','.
-                                                         self::REPOSITORY_ACCESS.
+                                                         self::REPOSITORY_ACCESS.','.
+                                                         self::REPOSITORY_BACKEND_TYPE.
                                                     ') values ('.
                                                         "".$name.",".
-                                                        "".$path.",".                                                    
+                                                        "".$path.",".
                                                         "".$parentId.",".
                                                         "".$description.",".
                                                         $projectId.",".
                                                         "'".$creationDate."',".
                                                         $creationUserId.",".
                                                         $isInitialized.','.
-                                                        $access.
-                                                        ')';           
+                                                        $access.','.
+                                                        $this->da->quoteSmart($backendType).
+                                                        ')';
         }
         
         if ( $this->update($query) === false ) {
@@ -196,10 +207,12 @@ class GitDao extends DataAccessObject {
         if ( empty($projectId) ) {
             return false;
         }
-        $query = 'SELECT * FROM '.$this->getTable().
-                ' WHERE '.self::FK_PROJECT_ID.'='.$projectId.
-                            ' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
-        $rs    = $this->retrieve($query);
+        $sql = "SELECT * FROM $this->tableName
+                WHERE ". self::FK_PROJECT_ID ." = $projectId
+                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                  ORDER BY ". self::REPOSITORY_NAME;
+                  
+        $rs = $this->retrieve($sql);
         if ( empty($rs) || $rs->rowCount() == 0 ) {
             return false;
         }
@@ -210,6 +223,18 @@ class GitDao extends DataAccessObject {
         }
         return $list;
     }
+    
+    public function getAllGitoliteRespositories($projectId) {
+        $projectId     = $this->da->escapeInt($projectId);
+        $type_gitolite = $this->da->quoteSmart(self::BACKEND_GITOLITE);
+        
+        $sql = "SELECT * FROM $this->tableName
+                WHERE ". self::FK_PROJECT_ID ." = $projectId
+                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                  AND ". self::REPOSITORY_BACKEND_TYPE ." = $type_gitolite";
+        return $this->retrieve($sql);
+    }
+    
     /**
      * This function initialize a GitRepository object with its database value
      * @param GitRepository $repository
@@ -300,17 +325,9 @@ class GitDao extends DataAccessObject {
         $repository->setDeletionDate($result[self::REPOSITORY_DELETION_DATE]);
         $repository->setAccess($result[self::REPOSITORY_ACCESS]);
         $repository->setMailPrefix($result[self::REPOSITORY_MAIL_PREFIX]);
-        $repository->setNotifiedMails();
+        $repository->setBackendType($result[self::REPOSITORY_BACKEND_TYPE]);
+        $repository->loadNotifiedMails();
     }
-
-    public static function checkName($name) {
-        $matches = array();
-        if ( strlen($name) > self::REPO_NAME_MAX_LENGTH ||
-             preg_match_all('/[a-zA-Z0-9_\-]/', $name, $matches) != strlen($name) ) {
-            return false;
-        }
-        return true;
-    }   
 }
 
 ?>

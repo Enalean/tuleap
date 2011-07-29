@@ -6,18 +6,13 @@
 //
 -->
   <bookinfo>
- <!--   <authorgroup>
-//      <author>
-//        <firstname>Laurent</firstname>
-//
-//        <surname>Julliard</surname>
-//
-//        <affiliation>
-//          <orgname>Xerox/XGS/BPS - &SYS_PRODUCT_NAME; Team, Laurent.Julliard@crt.xerox.com</orgname>
-//        </affiliation>
-//      </author>
-//    </authorgroup>
--->
+
+    <copyright>
+      <year>2011</year>
+
+      <holder>Enalean SAS.</holder>
+    </copyright>
+
     <copyright>
       <year>2000</year>
       <year>2001</year>
@@ -146,6 +141,14 @@
         <date>12-August-2008</date>
         <authorinitials>Equipe &SYS_PRODUCT_NAME;</authorinitials>
         <revremark>CodeX vers Codendi
+        </revremark>
+      </revision>
+
+      <revision>
+        <revnumber>4.0.20</revnumber>
+        <date>19-Juillet-2011</date>
+        <authorinitials>Equipe &SYS_PRODUCT_NAME;</authorinitials>
+        <revremark>Ajout Git
         </revremark>
       </revision>
 

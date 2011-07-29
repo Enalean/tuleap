@@ -64,8 +64,11 @@ class User {
      */
     const STATUS_VALIDATED_RESTRICTED = 'W';
     
+    /**
+     * Name of the preference for lab features
+     */
+    const PREF_NAME_LAB_FEATURE = 'use_lab_features';
     
-
     /**
      * the id of the user
      * = 0 if anonymous
@@ -257,18 +260,27 @@ class User {
      * For each group_id (the user is part of) one array from the user_group table
      */
     protected $_group_data;
-    protected function getUserGroupData() {
+    public function getUserGroupData() {
         if (!is_array($this->_group_data)) {
-            $this->_group_data = array();
             if ($this->user_id) {
-                foreach($this->getUserGroupDao()->searchByUserId($this->user_id) as $row) {
-                    $this->_group_data[$row['group_id']] = $row;
-                }
+                $this->setUserGroupData($this->getUserGroupDao()->searchByUserId($this->user_id));
             }
         }
         return $this->_group_data;
     }
-    
+
+    /**
+     * Set in cache the dataset of dynamic user group
+     *
+     * @param array $data
+     */
+    public function setUserGroupData($data) {
+        $this->_group_data = array();
+        foreach ($data as $row) {
+            $this->_group_data[$row['group_id']] = $row;
+        }
+    }
+
     /**
      * is this user member of group $group_id ??
      */
@@ -570,9 +582,14 @@ class User {
     /**
      * @return string authorized keys of the user
      */
-    function getAuthorizedKeys() {
-        return $this->authorized_keys;
+    function getAuthorizedKeys($split=false) {
+        if ($split) {
+            return array_filter(explode('###', $this->authorized_keys));
+        } else {
+            return $this->authorized_keys;
+        }
     }
+    
     /**
      * @return string resume of the user
      */
@@ -1059,6 +1076,40 @@ class User {
          return array(self::STATUS_ACTIVE, self::STATUS_RESTRICTED, self::STATUS_SUSPENDED, self::STATUS_DELETED);
      }
 
+     /**
+      * Lab features mode
+      *
+      * @return Boolean true if the user want lab features
+      */
+     public function useLabFeatures() {
+         return $this->getPreference(self::PREF_NAME_LAB_FEATURE);
+     }
+
+     /**
+      * (de)Activate lab features mode
+      *
+      * @param Boolean $toggle true if user wants to enable lab features
+      *
+      * @return void
+      */
+     public function setLabFeatures($toggle) {
+         $this->setPreference(self::PREF_NAME_LAB_FEATURE, $toggle ? 1 : 0);
+     }
+      
+     /**
+      * Return true if user can do "$permissionType" on "$objectId"
+      *
+      * Note: this method is not useable in trackerV2 because it doesn't use "instances" parameter of getUgroups.
+      *
+      * @param String  $permissionType Permission nature
+      * @param String  $objectId       Object to test
+      * @param Integer $groupId        Project the object belongs to
+      *
+      * @return Boolean
+      */
+     public function hasPermission($permissionType, $objectId, $groupId) {
+         return permission_is_authorized($permissionType, $objectId, $this->getId(), $groupId);
+     }
 }
 
 ?>

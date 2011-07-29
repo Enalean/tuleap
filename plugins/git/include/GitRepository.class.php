@@ -38,6 +38,8 @@ class GitRepository implements DVCSRepository {
     const PRIVATE_ACCESS       = 'private';
     const PUBLIC_ACCESS        = 'public';
     
+    const DEFAULT_MAIL_PREFIX = '[SCM]';
+    
     private $id;
     private $parentId;
     private $name;
@@ -62,6 +64,8 @@ class GitRepository implements DVCSRepository {
     private $parent;    
     private $loaded;    
     private $dao;
+    
+    protected $backendType;
 
     public function __construct() {
 
@@ -76,7 +80,7 @@ class GitRepository implements DVCSRepository {
         $this->deletionDate   = '';
         $this->isInitialized  = 0;
         $this->access         = 'private';
-        $this->mailPrefix     = '[SCM]';
+        $this->mailPrefix     = self::DEFAULT_MAIL_PREFIX;
         $this->notifiedMails = array();
 
         $this->hooks       = array();
@@ -137,12 +141,41 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
+     * Define Backend used by repo
+     *
+     * @param $backend
+     */
+    public function setBackendType($backendType) {
+        $this->backendType = $backendType;
+    }
+
+    protected function getBackendType() {
+        return $this->backendType;
+    }
+    
+    /**
+     * Define Backend used by repo
+     * 
+     * @param $backend
+     */
+    public function setBackend($backend) {
+        $this->backend = $backend;
+    }
+
+    /**
      * Allow to mock in UT
-     * @return GitBackend
+     *
+     * @return Git_Backend_Interface
      */
     public function getBackend() {
         if ( empty($this->backend) ) {
-            $this->backend = Backend::instance('Git','GitBackend');
+            switch ($this->getBackendType()) {
+                case GitDao::BACKEND_GITOLITE:
+                    $this->backend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
+                    break;
+                default:
+                    $this->backend = Backend::instance('Git','GitBackend');
+            }
         }
         return $this->backend;
     }
@@ -357,6 +390,15 @@ class GitRepository implements DVCSRepository {
         return $this->path;
     }
 
+    /**
+     * Return path on the filesystem where the repositories are stored.
+     *
+     * @return String
+     */
+    public function getGitRootPath() {
+        return $this->getBackend()->getGitRootPath();
+    }
+
     public function getAccess() {
         return $this->access;
     }
@@ -386,6 +428,27 @@ class GitRepository implements DVCSRepository {
         return false;
     }
 
+    /**
+     * Returns hooks.showrev string to be used in git confi
+     *
+     * @return String
+     */
+    public function getPostReceiveShowRev() {
+        $url = 'https://'.$GLOBALS['sys_https_host'].
+            '/plugins/git/index.php/'.$this->getProjectId().
+            '/view/'.$this->getId().
+            '/?p='.$this->getName().'.git&a=commitdiff&h=%%H';
+
+        $format = 'format:URL:    '.$url.'%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b';
+
+        $showrev = "t=%s; ".
+            "git show ".
+            "--name-status ".
+            "--pretty='".$format."' ".
+            "\$t";
+        return $showrev;
+    }
+
     public function getMailPrefix() {
         return $this->mailPrefix;
     }
@@ -398,13 +461,21 @@ class GitRepository implements DVCSRepository {
         $this->getBackend()->changeRepositoryMailPrefix($this);
     }
 
-    public function setNotifiedMails() {
+    public function loadNotifiedMails() {
         $postRecMailManager = $this->getPostReceiveMailManager();
         $this->notifiedMails = $postRecMailManager->getNotificationMailsByRepositoryId($this->getId());
     }
 
+    public function setNotifiedMails($mails) {
+        $this->notifiedMails = $mails;
+    }
+    
     public function getNotifiedMails() {
         return $this->notifiedMails;
+    }
+
+    public function getAccessURL() {
+        return $this->getBackend()->getAccessURL($this);
     }
 
     /**
@@ -468,17 +539,13 @@ class GitRepository implements DVCSRepository {
     public function renameProject(Project $project, $newName) {
         $newName = strtolower($newName);
         if ($this->getBackend()->renameProject($project, $newName)) {
-            return $this->getDao()->renameProject($project, $newName);
+            unset($this->backend);
+            $this->setBackendType(GitDao::BACKEND_GITOLITE);
+            if ($this->getBackend()->renameProject($project, $newName)) {
+                return $this->getDao()->renameProject($project, $newName);
+            }
         }
         return false;
-    }
-
-    /**
-     * Verify if given name is not already reserved on filesystem
-     */
-    public function isNameAvailable($newName) {
-        $newName = strtolower($newName);
-        return $this->getBackend()->isNameAvailable($newName);
     }
 
     /**
@@ -498,12 +565,12 @@ class GitRepository implements DVCSRepository {
      * @return Boolean
      */
     public function notificationAddMail($mail) {
-            $this->notifiedMails[] = $mail;
-            $postRecMailManager = $this->getPostReceiveMailManager();
-            if ($postRecMailManager->addMail($this->getId(), $mail)) {
-                return $this->getBackend()->changeRepositoryMailingList($this);
-            }
-            return false;
+        $this->notifiedMails[] = $mail;
+        $postRecMailManager = $this->getPostReceiveMailManager();
+        if ($postRecMailManager->addMail($this->getId(), $mail)) {
+            return $this->getBackend()->changeRepositoryMailingList($this);
+        }
+        return false;
     }
 
     /**
@@ -539,6 +606,44 @@ class GitRepository implements DVCSRepository {
             }
         }
         return $mailsToDelete;
+    }
+
+    /**
+     * Test is user can read the content of this repository and metadata
+     *
+     * @param User $user The user to test
+     *
+     * @return Boolean
+     */
+    public function userCanRead($user) {
+        return $this->getBackend()->userCanRead($user, $this);
+    }
+
+
+    /**
+     * Test if user can modify repository configuration
+     *
+     * @param User $user The user to test
+     *
+     * @return Boolean
+     */
+    public function userCanAdmin($user) {
+        return $user->isMember($this->getProjectId(), 'A');
+    }
+    
+    /**
+     * Validate the name for a repository
+     *
+     * @param string $name The name to validate
+     *
+     * @return bool true if valid, false otherwise
+     */
+    public function isNameValid($name) {
+        $len = strlen($name);
+        return 1 <= $len && $len < GitDao::REPO_NAME_MAX_LENGTH &&
+               !preg_match('`[^'. $this->getBackend()->getAllowedCharsInNamePattern() .']`', $name) &&
+               !preg_match('`(?:^|/)\.`', $name) && //do not allow dot at the begining of a world
+               !preg_match('`\.\.`', $name); //do not allow double dots (prevent path collisions)
     }
 }
 

@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_is_initialized` tinyint(4) NOT NULL default '0',
   `repository_access` varchar(255) NOT NULL default 'private',
   `repository_events_mailing_prefix` varchar(64) DEFAULT '[SCM]',
+  `repository_backend_type` varchar(16) DEFAULT 'gitshell',
   PRIMARY KEY  (`repository_id`),
   KEY `project_id` (`project_id`)
 );
@@ -42,4 +43,16 @@ VALUES (30, 'git', 'plugin_git:reference_commit_desc_key', '/plugins/git/index.p
 
 INSERT INTO reference_group (reference_id, group_id, is_active)
 SELECT 30, group_id, 1 FROM groups WHERE group_id;
+
+INSERT INTO permissions_values (permission_type, ugroup_id, is_default) 
+VALUES ('PLUGIN_GIT_READ', 2, 1),
+       ('PLUGIN_GIT_READ', 3, 0),
+       ('PLUGIN_GIT_READ', 4, 0),
+       ('PLUGIN_GIT_WRITE', 2, 0),
+       ('PLUGIN_GIT_WRITE', 3, 1),
+       ('PLUGIN_GIT_WRITE', 4, 0),
+       ('PLUGIN_GIT_WPLUS', 2, 0),
+       ('PLUGIN_GIT_WPLUS', 3, 0),
+       ('PLUGIN_GIT_WPLUS', 4, 0);
+       
 

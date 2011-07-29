@@ -31,7 +31,7 @@ class GitPlugin extends Plugin {
 
 
     public function __construct($id) {
-        $this->Plugin($id);
+        parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
         $this->_addHook('cssfile', 'cssFile', false);
@@ -49,6 +49,17 @@ class GitPlugin extends Plugin {
         $this->_addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
 
         $this->_addHook('project_admin_remove_user', 'projectRemoveUserFromNotification', false);
+        
+        $this->_addHook(Event::EDIT_SSH_KEYS, 'edit_ssh_keys', false);
+        $this->_addHook(Event::DUMP_SSH_KEYS, 'dump_ssh_keys', false);
+        $this->_addHook(Event::LAB_FEATURES_DEFINITION_LIST, 'lab_features_definition_list', false);
+        
+        $this->_addHook('permission_get_name',               'permission_get_name',               false);
+        $this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
+        $this->_addHook('permission_get_object_name',        'permission_get_object_name',        false);
+        $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
+        $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
+        $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
     }
 
     public function getPluginInfo() {
@@ -141,10 +152,18 @@ class GitPlugin extends Plugin {
      * @param array $params
      */
     function plugin_statistics_disk_usage_collect_project($params) {
-        $row  = $params['project_row'];
-        $root = '/var/lib/codendi/gitroot';
-        $path = $root.'/'.strtolower($row['unix_group_name']);
-        $params['DiskUsageManager']->storeForGroup($row['group_id'], 'plugin_git', $path);
+        $row = $params['project_row'];
+        $sum = 0;
+
+        // Git-Shell backend
+        $path = $GLOBALS['sys_data_dir'].'/gitroot/'.strtolower($row['unix_group_name']);
+        $sum += $params['DiskUsageManager']->getDirSize($path);
+
+        // Gitolite backend
+        $path = $GLOBALS['sys_data_dir'].'/gitolite/repositories/'.strtolower($row['unix_group_name']);
+        $sum += $params['DiskUsageManager']->getDirSize($path);
+
+        $params['DiskUsageManager']->_getDao()->addGroup($row['group_id'], 'plugin_git', $sum, $_SERVER['REQUEST_TIME']);
     }
 
     /**
@@ -188,6 +207,137 @@ class GitPlugin extends Plugin {
 
     }
 
+    /**
+     * Called by hook when SSH keys of users are modified.
+     *
+     * @param array $params
+     */
+    public function edit_ssh_keys($params) {
+        $user = UserManager::instance()->getUserById($params['user_id']);
+        if ($user) {
+            $gitolite = new Git_GitoliteDriver();
+            if (is_dir($gitolite->getAdminPath())) {
+                $gitolite->initUserKeys($user);
+                $gitolite->push();
+            }
+        }
+    }
+
+    /**
+     * Called by backend to ensure that all ssh keys are in gitolite conf
+     * 
+     * As we are root we use a dedicated script to be run as codendiadm.
+     * @see Git_Backend_Gitolite::glRenameProject
+     *
+     * @param array $params
+     */
+    public function dump_ssh_keys($params) {
+        $retVal = 0;
+        $output = array();
+        $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
+        $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
+        exec($cmd, $output, $retVal);
+        if ($retVal == 0) {
+            return true;
+        } else {
+            throw new Exception('Rename: Unable to dump ssh keys (error code: '.$retVal.'): '.implode('%%%', $output));
+            return false;
+        }
+    }
+    
+    public function lab_features_definition_list($params) {
+        $params['lab_features'][] = array(
+            'title'       => $GLOBALS['Language']->getText('plugin_git', 'gitolite_lab_feature_title'),
+            'description' => $GLOBALS['Language']->getText('plugin_git', 'gitolite_lab_feature_description'),
+            'image'       => $this->getPluginPath().'/lab_feature.png',
+        );
+    }
+    
+    function permission_get_name($params) {
+        if (!$params['name']) {
+            switch($params['permission_type']) {
+                case 'PLUGIN_GIT_READ':
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_R');
+                    break;
+                case 'PLUGIN_GIT_WRITE':
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_W');
+                    break;
+                case 'PLUGIN_GIT_WPLUS':
+                    $params['name'] = $GLOBALS['Language']->getText('plugin_git', 'perm_W+');
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    function permission_get_object_type($params) {
+        if (!$params['object_type']) {
+            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                $params['object_type'] = 'git_repository';
+            }
+        }
+    }
+    function permission_get_object_name($params) {
+        if (!$params['object_name']) {
+            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                $repository = new GitRepository();
+                $repository->setId($params['object_id']);
+                try {
+                    $repository->load();
+                    $params['object_name'] = $repository->getName();
+                } catch (Exception $e) {
+                    // do nothing
+                }
+            }
+        }
+    }
+    function permission_get_object_fullname($params) {
+        if (!$params['object_fullname']) {
+            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                $repository = new GitRepository();
+                $repository->setId($params['object_id']);
+                try {
+                    $repository->load();
+                    $params['object_name'] = 'git repository '. $repository->getName();
+                } catch (Exception $e) {
+                    // do nothing
+                }
+            }
+        }
+    }
+    function permissions_for_ugroup($params) {
+        if (!$params['results']) {
+            if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                $repository = new GitRepository();
+                $repository->setId($params['object_id']);
+                try {
+                    $repository->load();
+                    $params['results']  = $repository->getName();
+                } catch (Exception $e) {
+                    // do nothing
+                }
+            }
+        }
+    }
+    var $_cached_permission_user_allowed_to_change;
+    function permission_user_allowed_to_change($params) {
+        if (!$params['allowed']) {
+            if (!$this->_cached_permission_user_allowed_to_change) {
+                if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                    $repository = new GitRepository();
+                    $repository->setId($params['object_id']);
+                    try {
+                        $repository->load();
+                        //Only project admin can update perms
+                        $this->_cached_permission_user_allowed_to_change = UserManager::instance()->getCurrentUser()->isMember($repository->getProjectId(), 'A');
+                    } catch (Exception $e) {
+                        // do nothing
+                    }
+                }
+            }
+            $params['allowed'] = $this->_cached_permission_user_allowed_to_change;
+        }
+    }
 }
 
 ?>

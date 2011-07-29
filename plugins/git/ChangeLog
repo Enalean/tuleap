@@ -1,4 +1,7 @@
-Version 1.10 (Not released yet)
+Version 1.11 (Not released yet)
+	* TODO: add reference to backlog
+
+Version 1.10 (Tuleap 4.0.19)
 	* Rewrite management of cross references extraction to improve performances
 
 Version 1.9 (Codendi_ST 4.0.17)

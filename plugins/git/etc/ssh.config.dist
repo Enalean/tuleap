@@ -1,0 +1,6 @@
+Host gl-adm
+	Hostname localhost
+	IdentityFile /home/codendiadm/.ssh/id_rsa_gl-adm
+	# No verification of server fingerprint (block rpm install)
+	NoHostAuthenticationForLocalhost yes
+

@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# An example hook script for the "post-receive" event.
+#
+# The "post-receive" script is run after receive-pack has accepted a pack
+# and the repository has been updated.  It is passed arguments in through
+# stdin in the form
+#  <oldrev> <newrev> <refname>
+# For example:
+#  aa453216d1b3e49e7f6f98441fa56946ddcd6a20 68f7abf4e6f922807889f52bc043ecd31b79f814 refs/heads/master
+
+#
+# This is a specific version of the hook dedicated to gitolite meant to be installed
+# in /usr/share/gitolite/hooks/common to be deployed on repositories creation and/or
+# update
+# See https://github.com/sitaramc/gitolite/blob/pu/doc/hook-propagation.mkd
+
+#. /usr/share/git-core/contrib/hooks/post-receive-email
+# !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)
+. /usr/share/codendi/plugins/git/hooks/post-receive 2>/dev/null
+# END OF NEEDED CODENDI BLOCK

@@ -27,6 +27,9 @@ require_once('common/system_event/SystemEventManager.class.php');
 require_once('GitBackend.class.php');
 require_once('GitRepository.class.php');
 require_once('GitDao.class.php');
+require_once('Git_GitoliteDriver.class.php');
+require_once('Git_Backend_Gitolite.class.php');
+
 
 /**
  * GitActions
@@ -58,8 +61,16 @@ class GitActions extends PluginActions {
             $c->addError( $this->getText('actions_params_error') );            
             return false;
         }       
-        $repository   = new GitRepository();
+        $repository = new GitRepository();
         $repository->setId( $repositoryId );
+        $repository->load();
+
+        // Disable possibility to delete gitolite repositories
+        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+            $c->addError( $this->getText('disable_delete_gitolite') );
+            $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
+        }
+
         if ( $repository->hasChild() ) {
             $c->addError( $this->getText('backend_delete_haschild_error') );
             $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
@@ -74,30 +85,51 @@ class GitActions extends PluginActions {
         $c->addInfo( $this->getText('actions_delete_backup').' : '.PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir') );
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
     }
-       
-	public function createReference( $projectId, $repositoryName) {
-        $c              = $this->getController();
-        $projectId      = intval( $projectId );
+
+    public function createReference( $projectId, $repositoryName, $backendType) {
+        $c         = $this->getController();
+        $projectId = intval( $projectId );
+        
         if ( empty($repositoryName) ) {
             $c->addError($this->getText('actions_params_error'));
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
         }
-        if ( GitDao::checkName($repositoryName) === false ) {
-            $c->addError( $this->getText('actions_input_format_error').' '.GitDao::REPO_NAME_MAX_LENGTH);
+        
+        $repository = new GitRepository();
+        if ($backendType == GitDao::BACKEND_GITOLITE) {
+            $backend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
+        } else {
+            $backend = Backend::instance('Git','GitBackend');
+        }
+        $repository->setBackend($backend);
+
+        if ( $repository->isNameValid($repositoryName) === false ) {
+            $c->addError( $this->getText('actions_input_format_error', array($repository->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
         }
-        $this->systemEventManager->createEvent(
-            'GIT_REPO_CREATE',
-            $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryName.SystemEvent::PARAMETER_SEPARATOR.$this->user->getId(),
-            SystemEvent::PRIORITY_MEDIUM
-        );
-        $c->addInfo( $this->getText('actions_create_repo_process') );
+
+        $project = ProjectManager::instance()->getProject($projectId);
+
+        if ($backendType == GitDao::BACKEND_GITOLITE) {
+            $repository->setDescription('-- Default description --');
+            $repository->setCreator(UserManager::instance()->getCurrentUser());
+            $repository->setProject($project);
+            $repository->setName($repositoryName);
+            $repository->setBackend($backend);
+            $repository->create();
+        } else {
+            $this->systemEventManager->createEvent('GIT_REPO_CREATE',
+                $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryName.SystemEvent::PARAMETER_SEPARATOR.$this->user->getId(),
+                SystemEvent::PRIORITY_MEDIUM
+            );
+            $c->addInfo( $this->getText('actions_create_repo_process') );
+        }
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
         return;
     }
-    
+
     public function cloneRepository( $projectId, $forkName, $parentId) {
         
         $c         = $this->getController();
@@ -107,15 +139,23 @@ class GitActions extends PluginActions {
             $c->addError($this->getText('actions_params_error'));            
             return false;
         }
-        if ( GitDao::checkName($forkName) === false ) {
-            $c->addError( $this->getText('actions_input_format_error').' '.GitDao::REPO_NAME_MAX_LENGTH );
-            $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
-            return false;
-        }
         $parentRepo = new GitRepository();
         $parentRepo->setId($parentId);
         try {
             $parentRepo->load();
+            
+            // Disable possibility to delete gitolite repositories
+            if ($parentRepo->getBackend() instanceof Git_Backend_Gitolite) {
+                $c->addError( $this->getText('disable_fork_gitolite') );
+                $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
+            }
+
+            if ($parentRepo->isNameValid($forkName) === false) {
+                $c->addError( $this->getText('actions_input_format_error', array($parentRepo->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
+                $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
+                return false;
+            }
+
             if ( !$parentRepo->isInitialized() ) {
                 $c->addError( $this->getText('repo_not_initialized') );
                 $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
@@ -185,6 +225,7 @@ class GitActions extends PluginActions {
         }
         $repository = $this->_loadRepository($projectId, $repositoryId);
         $repository->setMailPrefix($mailPrefix);
+        $repository->save();
         $repository->changeMailPrefix();
         $c->addInfo($this->getText('mail_prefix_updated'));
         $this->addData(array('repository'=>$repository));
@@ -294,7 +335,6 @@ class GitActions extends PluginActions {
      * @return <type>
      */
     public function save( $projectId, $repoId, $repoAccess, $repoDescription ) {
-        
         $c = $this->getController();
         if ( empty($repoId) ) {
             $c->addError( $this->getText('actions_params_error') );
@@ -310,13 +350,19 @@ class GitActions extends PluginActions {
         $repository->setId($repoId);
         try {
             $repository->load();
-            if ( !empty($repoAccess) && $repository->getAccess() != $repoAccess) {
-                $this->systemEventManager->createEvent(
-                                              'GIT_REPO_ACCESS',
-                                               $repoId.SystemEvent::PARAMETER_SEPARATOR.$repoAccess,
-                                               SystemEvent::PRIORITY_HIGH
-                                            );
-                $c->addInfo( $this->getText('actions_repo_access') );
+            if ( !empty($repoAccess) ) {
+                if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+                    $repository->getBackend()->savePermissions($repository, $repoAccess);
+                } else {
+                    if ($repository->getAccess() != $repoAccess) {
+                        $this->systemEventManager->createEvent(
+                                                      'GIT_REPO_ACCESS',
+                                                       $repoId.SystemEvent::PARAMETER_SEPARATOR.$repoAccess,
+                                                       SystemEvent::PRIORITY_HIGH
+                                                    );
+                        $c->addInfo( $this->getText('actions_repo_access') );
+                    }
+                }
             }
             if ( !empty($repoDescription) ) {
                 $repository->setDescription($repoDescription);
@@ -392,8 +438,9 @@ class GitActions extends PluginActions {
     }
 
     public static function isNameAvailable($newName, &$error) {
-        $r = new GitRepository();
-        if (! $r->isNameAvailable($newName)) {
+        $b1 = new Git_Backend_Gitolite(new Git_GitoliteDriver());
+        $b2 = Backend::instance('Git','GitBackend');
+        if (!$b1->isNameAvailable($newName) && !$b2->isNameAvailable($newName)) {
             $error = $GLOBALS['Language']->getText('plugin_git', 'actions_name_not_available');
             return false;
         }

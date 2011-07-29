@@ -595,7 +595,7 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
     return $html;
 }
 
-function permission_fetch_selection_field($permission_type, $object_id, $group_id) {
+function permission_fetch_selection_field($permission_type, $object_id, $group_id, $htmlname = 'ugroups') {
     $html = '';
     // Get ugroups already defined for this permission_type
     $res_ugroups=permission_db_authorized_ugroups($permission_type, $object_id);
@@ -627,7 +627,7 @@ function permission_fetch_selection_field($permission_type, $object_id, $group_i
             'text' => $name
         );
     }
-    $html .= html_build_multiple_select_box($array,"ugroups[]",($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, true, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false);
+    $html .= html_build_multiple_select_box($array, $htmlname."[]", ($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, true, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false);
     return $html;
 }
 

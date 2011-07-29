@@ -39,6 +39,15 @@ class Event {
     const EDIT_SSH_KEYS = 'edit_ssh_keys';
 
     /**
+     * Dump all ssh keys.
+     * 
+     * No parameters
+     * No expected results
+     */
+
+    const DUMP_SSH_KEYS = 'dump_ssh_keys';
+
+    /**
      * The user has just changed his email address.
      * 
      * Parameters:
@@ -149,5 +158,16 @@ class Event {
     const USER_RENAME = 'user_rename';
     
     const COMPUTE_MD5SUM = 'compute_md5sum';
+    
+    /**
+     * List of lab features
+     * 
+     * Parameters:
+     *   'lab_features' => array of lab features
+     * 
+     * Expected results
+     *   array of array('title' => ..., 'description' => ..., 'cssclass' => ...)
+     */
+    const LAB_FEATURES_DEFINITION_LIST = 'lab_features_definition_list';
 }
 ?>

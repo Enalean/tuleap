@@ -95,6 +95,8 @@ class Rule_ProjectNameTest extends UnitTestCase {
         $this->assertTrue($r->isReservedName("monitor"));
         $this->assertTrue($r->isReservedName("mirrors"));
         $this->assertTrue($r->isReservedName("mirror"));
+        $this->assertTrue($r->isReservedName("git"));
+        $this->assertTrue($r->isReservedName("gitolite"));
     }
 
     function testReservedNamesUpperCase() {
