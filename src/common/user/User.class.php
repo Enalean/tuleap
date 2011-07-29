@@ -584,19 +584,12 @@ class User {
      */
     function getAuthorizedKeys($split=false) {
         if ($split) {
-            return self::splitAuthorizedKeys($this->authorized_keys);
+            return array_filter(explode('###', $this->authorized_keys));
         } else {
             return $this->authorized_keys;
         }
     }
     
-    /**
-     * @param string $keys separated by ###
-     * @return array
-     */
-    public static function splitAuthorizedKeys($keys) {
-        return array_filter(explode('###', $keys));
-    }
     /**
      * @return string resume of the user
      */
