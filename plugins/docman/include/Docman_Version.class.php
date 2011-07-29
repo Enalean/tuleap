@@ -168,14 +168,12 @@ class Docman_Version {
      */
     function preDownload($item, $user) {
         $em = EventManager::instance();
-        $logger = new Docman_Log();
-        $params = array('group_id' => $item->getGroupId(),
-                        'item'     => $item,
-                        'version'  => $this->getNumber(),
-                        'user'     => $user,
-                        'event'    => 'plugin_docman_event_access');
-        $logger->log($params['event'], $params);
-        
+        $em->processEvent('plugin_docman_event_access', array(
+                    'group_id' => $item->getGroupId(),
+                    'item'     => $item,
+                    'version'  => $this->getNumber(),
+                    'user'     => $user
+                ));
         $em->processEvent('plugin_docman_file_before_download', array(
                                              'item'            => $item,
                                              'user'            => $user,
