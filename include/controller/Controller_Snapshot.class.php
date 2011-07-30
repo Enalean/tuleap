@@ -177,12 +177,11 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 
 		$cache = GitPHP_Config::GetInstance()->GetValue('cache', false);
 		$cachehandle = false;
-		$cachedir = GITPHP_BASEDIR . 'cache/';
 		$cachedfilepath = '';
-		if ($cache && is_dir($cachedir)) {
+		if ($cache && is_dir(GITPHP_CACHE)) {
 			$key = ($this->archive->GetObject() ? $this->archive->GetObject()->GetHash() : '') . '|' . (isset($this->params['path']) ? $this->params['path'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '');
 			$cachefile = sha1($key) . '-' . $this->archive->GetFilename();
-			$cachedfilepath = $cachedir . $cachefile;
+			$cachedfilepath = GITPHP_CACHE . $cachefile;
 
 			if (file_exists($cachedfilepath)) {
 				// read cached file
