@@ -185,14 +185,21 @@ class GitPHP_Cache
 	 * @access public
 	 * @param string $key cache key
 	 * @param mixed $value value
+	 * @param int $lifetime override the lifetime for this data
 	 */
-	public function Set($key = null, $value = null)
+	public function Set($key = null, $value = null, $lifetime = null)
 	{
 		if (empty($key) || empty($value))
 			return;
 
 		if (!$this->enabled)
 			return;
+
+		$oldLifetime = null;
+		if ($lifetime !== null) {
+			$oldLifetime = $this->tpl->cache_lifetime;
+			$this->tpl->cache_lifetime = $lifetime;
+		}
 
 		$this->Delete($key);
 		$this->tpl->clear_all_assign();
@@ -201,6 +208,10 @@ class GitPHP_Cache
 		// Force it into smarty's cache
 		$tmp = $this->tpl->fetch(GitPHP_Cache::Template, $key);
 		unset($tmp);
+
+		if ($lifetime !== null) {
+			$this->tpl->cache_lifetime = $oldLifetime;
+		}
 	}
 
 	/**
