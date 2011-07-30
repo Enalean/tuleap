@@ -175,14 +175,51 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	{
 		$this->LoadData();
 
-		$format = $this->archive->GetFormat();
+		$cache = GitPHP_Config::GetInstance()->GetValue('cache', false);
+		$cachehandle = false;
+		$cachedir = GITPHP_BASEDIR . 'cache/';
+		$cachedfilepath = '';
+		if ($cache && is_dir($cachedir)) {
+			$key = ($this->archive->GetObject() ? $this->archive->GetObject()->GetHash() : '') . '|' . (isset($this->params['path']) ? $this->params['path'] : '') . '|' . (isset($this->params['prefix']) ? $this->params['prefix'] : '');
+			$cachefile = sha1($key) . '-' . $this->archive->GetFilename();
+			$cachedfilepath = $cachedir . $cachefile;
+
+			if (file_exists($cachedfilepath)) {
+				// read cached file
+				$cachehandle = fopen($cachedfilepath, 'rb');
+				if ($cachehandle) {
+					while (!feof($cachehandle)) {
+						print fread($cachehandle, 1048576);
+						flush();
+					}
+					fclose($cachehandle);
+					return;
+				}
+			}
+		}
 
 		if ($this->archive->Open()) {
+
+			if ($cache && !empty($cachedfilepath)) {
+				// write cached file too
+				$cachehandle = fopen($cachedfilepath, 'wb');
+			}
+
 			while (($data = $this->archive->Read()) !== false) {
+
 				print $data;
 				flush();
+
+				if ($cache && $cachehandle) {
+					fwrite($cachehandle, $data);
+				}
+
 			}
 			$this->archive->Close();
+
+			if ($cachehandle) {
+				fclose($cachehandle);
+			}
 		}
 	}
 
