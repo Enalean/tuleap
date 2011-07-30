@@ -97,12 +97,7 @@ class GitPHP_GitExe
 	 */
 	public function Execute($command, $args)
 	{
-		$gitDir = '';
-		if ($this->project) {
-			$gitDir = '--git-dir=' . $this->project->GetPath();
-		}
-		
-		$fullCommand = $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
+		$fullCommand = $this->CreateCommand($command, $args);
 
 		GitPHP_Log::GetInstance()->Log('Begin executing "' . $fullCommand . '"');
 
@@ -112,6 +107,27 @@ class GitPHP_GitExe
 			"\nwith result: " . $ret);
 
 		return $ret;
+	}
+
+	/**
+	 * BuildCommand
+	 *
+	 * Creates a command
+	 *
+	 * @access protected
+	 *
+	 * @param string $command the command to execute
+	 * @param array $args arguments
+	 * @return string result of command
+	 */
+	protected function CreateCommand($command, $args)
+	{
+		$gitDir = '';
+		if ($this->project) {
+			$gitDir = '--git-dir=' . $this->project->GetPath();
+		}
+		
+		return $this->binary . ' ' . $gitDir . ' ' . $command . ' ' . implode(' ', $args);
 	}
 
 	/**
