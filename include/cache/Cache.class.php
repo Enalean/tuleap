@@ -280,7 +280,9 @@ class GitPHP_Cache
 		if ($this->tpl)
 			return;
 
+		require_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('smarty_prefix', 'lib/smarty/libs/')) . 'Smarty.class.php');
 		$this->tpl = new Smarty;
+		$this->tpl->plugins_dir[] = GITPHP_INCLUDEDIR . 'smartyplugins';
 
 		$this->tpl->caching = 2;
 

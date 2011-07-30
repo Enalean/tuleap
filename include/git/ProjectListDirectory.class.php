@@ -61,28 +61,17 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 */
 	protected function PopulateProjects()
 	{
-		$stat = stat(GITPHP_CACHE.'ProjectList.dat');
-		if ($stat !== FALSE) {
-			$cache_life = '180';  //caching time, in seconds
-			$filemtime = max($stat['mtime'], $stat['ctime']);
-			
-			if  (time() - $filemtime >= $cache_life) {
-				GitPHP_Log::GetInstance()->Log('ProjectListDirCache: expired, reloading...');
-			} else {
-
-				$data = file_get_contents(GITPHP_CACHE.'ProjectList.dat');
-				$projects = unserialize($data);
-				if (count($projects) > 0) {
-					GitPHP_Log::GetInstance()->Log('loaded '.count($projects).' projects from cache');
-					$this->projects = $projects;
-					return;
-				}
-
-			}
+		$key = 'projectdir|' . $this->projectDir . '|projectlist|directory';
+		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
+		if ($cached && (count($cached) > 0)) {
+			GitPHP_Log::GetInstance()->Log('Loaded ' . count($cached) . ' projects from cache');
+			$this->projects = $cached;
+			return;
 		}
 
 		$this->RecurseDir($this->projectDir);
-		$this->CacheSaveProjectList();
+
+		GitPHP_Cache::GetObjectCacheInstance()->Set($key, $this->projects, GitPHP_Config::GetInstance()->GetValue('cachelifetime', 3600));
 	}
 
 	/**
@@ -127,11 +116,4 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		}
 	}
 
-	/** Save and restore project list to prevent parsing directories
-	 */
-	private function CacheSaveProjectList()
-	{
-		$data = serialize($this->projects);
-		return (file_put_contents(GITPHP_CACHE.'ProjectList.dat',$data) > 0);
-	}
 }
