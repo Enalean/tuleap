@@ -336,7 +336,7 @@ class GitPHP_Tag extends GitPHP_Ref
 			$this->ReadDataRaw();
 		}
 
-		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -359,7 +359,7 @@ class GitPHP_Tag extends GitPHP_Ref
 			$this->object = $this->GetProject()->GetCommit($this->GetHash());
 			$this->commit = $this->object;
 			$this->type = 'commit';
-			GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+			GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 			return;
 		}
 
@@ -450,7 +450,7 @@ class GitPHP_Tag extends GitPHP_Ref
 			$this->object = $this->GetProject()->GetCommit($this->GetHash());
 			$this->commit = $this->object;
 			$this->type = 'commit';
-			GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+			GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 			return;
 		}
 
@@ -538,7 +538,7 @@ class GitPHP_Tag extends GitPHP_Ref
 			}
 		}
 
-		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**

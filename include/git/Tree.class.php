@@ -120,7 +120,7 @@ class GitPHP_Tree extends GitPHP_FilesystemObject
 			$this->ReadContentsRaw();
 		}
 
-		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**

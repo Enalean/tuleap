@@ -617,7 +617,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			}
 		}
 
-		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -708,7 +708,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			}
 		}
 
-		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**
@@ -769,7 +769,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			$this->ReadHashPathsRaw($this->GetTree());
 		}
 
-		GitPHP_Cache::GetInstance()->Set($this->GetCacheKey(), $this);
+		GitPHP_Cache::GetObjectCacheInstance()->Set($this->GetCacheKey(), $this);
 	}
 
 	/**

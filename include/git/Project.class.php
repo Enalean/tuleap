@@ -991,7 +991,7 @@ class GitPHP_Project
 
 			if (!isset($this->commitCache[$hash])) {
 				$cacheKey = 'project|' . $this->project . '|commit|' . $hash;
-				$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
+				$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
 				if ($cached)
 					$this->commitCache[$hash] = $cached;
 				else
@@ -1335,7 +1335,7 @@ class GitPHP_Project
 			return;
 
 		$cacheKey = 'project|' . $this->project . '|tag|' . $tag;
-		$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
+		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
 		if ($cached) {
 			return $cached;
 		} else {
@@ -1585,7 +1585,7 @@ class GitPHP_Project
 			return null;
 
 		$cacheKey = 'project|' . $this->project . '|blob|' . $hash;
-		$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
+		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
 		if ($cached)
 			return $cached;
 
@@ -1610,7 +1610,7 @@ class GitPHP_Project
 			return null;
 
 		$cacheKey = 'project|' . $this->project . '|tree|' . $hash;
-		$cached = GitPHP_Cache::GetInstance()->Get($cacheKey);
+		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($cacheKey);
 		if ($cached)
 			return $cached;
 
