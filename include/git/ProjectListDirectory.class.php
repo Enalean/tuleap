@@ -64,14 +64,22 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 		$key = 'projectdir|' . $this->projectDir . '|projectlist|directory';
 		$cached = GitPHP_Cache::GetObjectCacheInstance()->Get($key);
 		if ($cached && (count($cached) > 0)) {
-			GitPHP_Log::GetInstance()->Log('Loaded ' . count($cached) . ' projects from cache');
-			$this->projects = $cached;
+			foreach ($cached as $proj) {
+				$this->AddProject($proj);
+			}
+			GitPHP_Log::GetInstance()->Log('Loaded ' . count($this->projects) . ' projects from cache');
 			return;
 		}
 
 		$this->RecurseDir($this->projectDir);
 
-		GitPHP_Cache::GetObjectCacheInstance()->Set($key, $this->projects, GitPHP_Config::GetInstance()->GetValue('cachelifetime', 3600));
+		if (count($this->projects) > 0) {
+			$projects = array();
+			foreach ($this->projects as $proj) {
+				$projects[] = $proj->GetProject();;
+			}
+			GitPHP_Cache::GetObjectCacheInstance()->Set($key, $projects, GitPHP_Config::GetInstance()->GetValue('cachelifetime', 3600));
+		}
 	}
 
 	/**
@@ -96,15 +104,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 					if (is_file($fullPath . '/HEAD')) {
 						GitPHP_Log::GetInstance()->Log(sprintf('Found project %1$s', $fullPath));
 						$projectPath = substr($fullPath, $trimlen);
-						try {
-							$proj = new GitPHP_Project($this->projectDir, $projectPath);
-							$proj->SetCategory(trim(substr($dir, strlen($this->projectDir)), '/'));
-							if ((!GitPHP_Config::GetInstance()->GetValue('exportedonly', false)) || $proj->GetDaemonEnabled()) {
-								$this->projects[$projectPath] = $proj;
-							}
-						} catch (Exception $e) {
-							GitPHP_Log::GetInstance()->Log($e->getMessage());
-						}
+						$this->AddProject($projectPath);
 					} else {
 						$this->RecurseDir($fullPath);
 					}
@@ -113,6 +113,29 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 				}
 			}
 			closedir($dh);
+		}
+	}
+
+	/**
+	 * AddProject
+	 *
+	 * Add project to collection
+	 *
+	 * @access private
+	 */
+	private function AddProject($projectPath)
+	{
+		try {
+			$proj = new GitPHP_Project($this->projectDir, $projectPath);
+			$category = trim(dirname($projectPath));
+			if (!(empty($category) || (strpos($category, '.') === 0))) {
+				$proj->SetCategory($category);
+			}
+			if ((!GitPHP_Config::GetInstance()->GetValue('exportedonly', false)) || $proj->GetDaemonEnabled()) {
+				$this->projects[$projectPath] = $proj;
+			}
+		} catch (Exception $e) {
+			GitPHP_Log::GetInstance()->Log($e->getMessage());
 		}
 	}
 
