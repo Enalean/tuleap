@@ -38,10 +38,18 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	public function __construct()
 	{
-		parent::__construct();
+		if (isset($_GET['p'])) {
+			$this->project = GitPHP_ProjectList::GetInstance()->GetProject(str_replace(chr(0), '', $_GET['p']));
+			if (!$this->project) {
+				throw new GitPHP_MessageException(sprintf(__('Invalid project %1$s'), $_GET['p']), true);
+			}
+		}
+
 		if (!$this->project) {
 			throw new GitPHP_MessageException(__('Project is required'), true);
 		}
+
+		$this->ReadQuery();
 	}
 
 	/**
@@ -54,7 +62,6 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	 */
 	protected function GetTemplate()
 	{
-		return 'snapshot.tpl';
 	}
 
 	/**
@@ -118,10 +125,24 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 	{
 		$this->archive = new GitPHP_Archive($this->project, null, $this->params['format'], (isset($this->params['path']) ? $this->params['path'] : ''), (isset($this->params['prefix']) ? $this->params['prefix'] : ''));
 
-		$headers = $this->archive->GetHeaders();
-		
-		if (count($headers) > 0)
-			$this->headers = array_merge($this->headers, $headers);
+		switch ($this->archive->GetFormat()) {
+			case GITPHP_COMPRESS_TAR:
+				$this->headers[] = 'Content-Type: application/x-tar';
+				break;
+			case GITPHP_COMPRESS_BZ2:
+				$this->headers[] = 'Content-Type: application/x-bzip2';
+				break;
+			case GITPHP_COMPRESS_GZ:
+				$this->headers[] = 'Content-Type: application/x-gzip';
+				break;
+			case GITPHP_COMPRESS_ZIP:
+				$this->headers[] = 'Content-Type: application/x-zip';
+				break;
+			default:
+				throw new Exception('Unknown compression type');
+		}
+
+		$this->headers[] = 'Content-Disposition: attachment; filename=' . $this->archive->GetFilename();
 	}
 
 	/**
@@ -141,8 +162,28 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 			$commit = $this->project->GetCommit($this->params['hash']);
 
 		$this->archive->SetObject($commit);
+	}
 
-		$this->tpl->assign('archive', $this->archive->GetData());
+	/**
+	 * Render
+	 *
+	 * Render this controller
+	 *
+	 * @access public
+	 */
+	public function Render()
+	{
+		$this->LoadData();
+
+		$format = $this->archive->GetFormat();
+
+		if ($this->archive->Open()) {
+			while (($data = $this->archive->Read()) !== false) {
+				print $data;
+				flush();
+			}
+			$this->archive->Close();
+		}
 	}
 
 }

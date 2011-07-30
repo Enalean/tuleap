@@ -110,6 +110,22 @@ class GitPHP_GitExe
 	}
 
 	/**
+	 * Open
+	 *
+	 * Opens a resource to a command
+	 *
+	 * @param string $command the command to execute
+	 * @param array $args arguments
+	 * @return resource process handle
+	 */
+	public function Open($command, $args, $mode = 'r')
+	{
+		$fullCommand = $this->CreateCommand($command, $args);
+
+		return popen($fullCommand, $mode);
+	}
+
+	/**
 	 * BuildCommand
 	 *
 	 * Creates a command

@@ -81,6 +81,24 @@ class GitPHP_Archive
 	protected $prefix = '';
 
 	/**
+	 * handle
+	 *
+	 * Stores the process handle
+	 *
+	 * @access protected
+	 */
+	protected $handle = false;
+
+	/**
+	 * tempfile
+	 *
+	 * Stores the temp file name
+	 *
+	 * @access protected
+	 */
+	protected $tempfile = '';
+
+	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -319,54 +337,22 @@ class GitPHP_Archive
 	}
 
 	/**
-	 * GetHeaders
+	 * Open
 	 *
-	 * Gets the headers to send to the browser for this file
-	 *
-	 * @access public
-	 * @return array header strings
-	 */
-	public function GetHeaders()
-	{
-		$headers = array();
-
-		switch ($this->format) {
-			case GITPHP_COMPRESS_TAR:
-				$headers[] = 'Content-Type: application/x-tar';
-				break;
-			case GITPHP_COMPRESS_BZ2:
-				$headers[] = 'Content-Type: application/x-bzip2';
-				break;
-			case GITPHP_COMPRESS_GZ:
-				$headers[] = 'Content-Type: application/x-gzip';
-				break;
-			case GITPHP_COMPRESS_ZIP:
-				$headers[] = 'Content-Type: application/x-zip';
-				break;
-			default:
-				throw new Exception('Unknown compression type');
-		}
-
-		if (count($headers) > 0) {
-			$headers[] = 'Content-Disposition: attachment; filename=' . $this->GetFilename();
-		}
-
-		return $headers;
-	}
-
-	/**
-	 * GetData
-	 *
-	 * Gets the archive data
+	 * Opens a descriptor for reading archive data
 	 *
 	 * @access public
-	 * @return string archive data
+	 * @return boolean true on success
 	 */
-	public function GetData()
+	public function Open()
 	{
 		if (!$this->gitObject)
 		{
 			throw new Exception('Invalid object for archive');
+		}
+
+		if ($this->handle) {
+			return true;
 		}
 
 		$exe = new GitPHP_GitExe($this->GetProject());
@@ -387,16 +373,93 @@ class GitPHP_Archive
 		$args[] = '--prefix=' . $this->GetPrefix();
 		$args[] = $this->gitObject->GetHash();
 
-		$data = $exe->Execute(GIT_ARCHIVE, $args);
+		$this->handle = $exe->Open(GIT_ARCHIVE, $args);
 		unset($exe);
 
-		switch ($this->format) {
-			case GITPHP_COMPRESS_BZ2:
-				$data = bzcompress($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', 4));
-				break;
-			case GITPHP_COMPRESS_GZ:
-				$data = gzencode($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', -1));
-				break;
+		if ($this->format == GITPHP_COMPRESS_GZ) {
+			// hack to get around the fact that gzip files
+			// can't be compressed on the fly and the php zlib stream
+			// doesn't seem to daisy chain with any non-file streams
+
+			$this->tempfile = tempnam(sys_get_temp_dir(), "GitPHP");
+
+			$compress = GitPHP_Config::GetInstance()->GetValue('compresslevel');
+
+			$mode = 'wb';
+			if (is_int($compress) && ($compress >= 1) && ($compress <= 9))
+				$mode .= $compress;
+
+			$temphandle = gzopen($this->tempfile, $mode);
+			if ($temphandle) {
+				while (!feof($this->handle)) {
+					gzwrite($temphandle, fread($this->handle, 1048576));
+				}
+				gzclose($temphandle);
+
+				$temphandle = fopen($this->tempfile, 'rb');
+			}
+			
+			if ($this->handle) {
+				pclose($this->handle);
+			}
+			$this->handle = $temphandle;
+		}
+
+		return ($this->handle !== false);
+	}
+
+	/**
+	 * Close
+	 *
+	 * Close the archive data descriptor
+	 *
+	 * @access public
+	 * @return boolean true on success
+	 */
+	public function Close()
+	{
+		if (!$this->handle) {
+			return true;
+		}
+
+		if ($this->format == GITPHP_COMPRESS_GZ) {
+			fclose($this->handle);
+			if (!empty($this->tempfile)) {
+				unlink($this->tempfile);
+				$this->tempfile = '';
+			}
+		} else {
+			pclose($this->handle);
+		}
+
+		$this->handle = null;
+		
+		return true;
+	}
+
+	/**
+	 * Read
+	 *
+	 * Read a chunk of the archive data
+	 *
+	 * @access public
+	 * @param int $size size of data to read
+	 * @return string archive data
+	 */
+	public function Read($size = 1048576)
+	{
+		if (!$this->handle) {
+			return false;
+		}
+
+		if (feof($this->handle)) {
+			return false;
+		}
+
+		$data = fread($this->handle, $size);
+
+		if ($this->format == GITPHP_COMPRESS_BZ2) {
+			$data = bzcompress($data, GitPHP_Config::GetInstance()->GetValue('compresslevel', 4));
 		}
 
 		return $data;
