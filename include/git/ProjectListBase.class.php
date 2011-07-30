@@ -320,11 +320,4 @@ abstract class GitPHP_ProjectListBase implements Iterator
 		$this->projectSettings = $settings;
 	}
 
-	/** Save and restore project list to prevent parsing directories
-	 */
-	public function CacheSaveProjectList()
-	{
-		$data = serialize($this->projects);
-		return (file_put_contents(GITPHP_CACHE.'ProjectList.dat',$data) > 0);
-	}
 }
