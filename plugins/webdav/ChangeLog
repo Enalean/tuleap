@@ -1,3 +1,6 @@
+Version 1.6
+	* Add write access for docman
+
 Version 1.2
 	* Add md5 sum computation.
 	* Fix permissions setting on Package & Release.

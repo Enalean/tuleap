@@ -29,6 +29,7 @@
  
  
 require_once 'common/plugin/Plugin.class.php';
+require_once('exception/DocmanWatermark_EncryptedPdfException.class.php');
 
 class DocmanWatermarkPlugin extends Plugin {
     
@@ -90,9 +91,8 @@ class DocmanWatermarkPlugin extends Plugin {
 
             // Here is the case when pdf doc is encrypted. We cancel download and redirect to error page.
             if(strpos($e->getMessage(), "Encrypted") !== FALSE){
-                $watermarkingDetailsUrl = $params['docmanControler']->getDefaultUrl().'&action=details&id='.$params['item']->getId().'&section=watermarking';
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_docmanwatermark', 'error_watermarking_encrypted_pdf', array($watermarkingDetailsUrl)), CODENDI_PURIFIER_DISABLED);
-                $GLOBALS['Response']->redirect($params['docmanControler']->getDefaultUrl());
+                $watermarkingDetailsUrl = '/plugins/docman/?group_id='.$params['item']->getGroupId().'&action=details&id='.$params['item']->getId().'&section=watermarking';
+                throw new DocmanWatermark_EncryptedPdfException($GLOBALS['Language']->getText('plugin_docmanwatermark', 'error_watermarking_encrypted_pdf', array($watermarkingDetailsUrl)));
             }
             exit(0);
         }

@@ -748,7 +748,7 @@ class Docman_ItemFactory {
         $dao =& $this->_getItemDao();
         return $item && $this->isMoveable($item) && $dao->setNewParent($item_id, $new_parent_id, $ordering);
     }
-    
+
     /**
     * Walk through a item hierarchy and for each subitem apply callback method
     * in parameter.
@@ -1113,6 +1113,34 @@ class Docman_ItemFactory {
         }
         
         return $stats;
+    }
+
+    /**
+     * Mark item as deleted
+     *
+     * @param Docman_Item $item 
+     *
+     * @return void
+     */
+    function delete($item) {
+        // The event must be processed before the item is deleted
+        $um         = UserManager::instance();
+        $user       = $um->getCurrentUser();
+        $itemParent = $this->getItemFromDb($item->getParentId());
+        $item->fireEvent('plugin_docman_event_del', $user, $itemParent);
+        
+        // Delete Lock if any
+        $lF = new Docman_LockFactory();
+        if($lF->itemIsLocked($item)) {
+            $lF->unlock($item);
+        }
+
+        $item->setDeleteDate(time());
+        $this->delCutPreferenceForAllUsers($item->getId());
+        $this->delCopyPreferenceForAllUsers($item->getId());
+        $dao = $this->_getItemDao();
+        $dao->updateFromRow($item->toRow());
+        $dao->storeDeletedItem($item->getId());
     }
 
     /**

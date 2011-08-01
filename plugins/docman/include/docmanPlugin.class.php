@@ -454,6 +454,12 @@ class DocmanPlugin extends Plugin {
      */
     function getRootItemForProject($params) {
         if ($params['service'] == 'docman') {
+            // First, need to instanciate controller to register docman event listeners (actions logging, notification, etc)
+            require_once('Docman_Controller.class.php');
+            $request   = new Codendi_Request(array('group_id' => $params['project']->getId()));
+            $controler = new Docman_Controller($this, $this->getPluginPath(), $this->getThemePath(), $request);
+            
+            // Then return root object
             require_once('Docman_ItemFactory.class.php');
             $docmanItemFactory = new Docman_ItemFactory();
             $root = $docmanItemFactory->getRoot($params['project']->getId());

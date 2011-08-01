@@ -112,14 +112,12 @@ class WebDAVFRSFile extends Sabre_DAV_File {
     }
 
     /**
-     * Returns the file Id
+     * Returns a unique identifier of the file
      *
-     * @return Integer
+     * @return String
      */
     function getETag() {
-
-        return $this->getUtils()->getIncomingFileMd5Sum($this->getFileLocation());
-
+        return '"'.$this->getUtils()->getIncomingFileMd5Sum($this->getFileLocation()).'"';
     }
 
     /**
@@ -130,10 +128,10 @@ class WebDAVFRSFile extends Sabre_DAV_File {
      * @see plugins/webdav/lib/Sabre/DAV/Sabre_DAV_File#getContentType()
      */
     function getContentType() {
-
-        $mime = MIME::instance();
-        return $mime->type($this->getFileLocation());
-
+        if (file_exists($this->getFileLocation())) {
+            $mime = MIME::instance();
+            return $mime->type($this->getFileLocation());
+        }
     }
 
     /**

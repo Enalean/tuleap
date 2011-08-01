@@ -156,6 +156,50 @@ class Docman_Version {
         if (isset($row['filetype']))$this->setFiletype($row['filetype']);
         if (isset($row['path']))$this->setPath($row['path']);
     }
+
+    /**
+     * Generally invoked before file download, this method will log a version
+     * access event and would launch watermarking process.
+     *
+     * @param Docman_Item    $item
+     * @param User           $user
+     *
+     * @return void
+     */
+    function preDownload($item, $user) {
+        $em = EventManager::instance();
+        $em->processEvent('plugin_docman_event_access', array(
+                    'group_id' => $item->getGroupId(),
+                    'item'     => $item,
+                    'version'  => $this->getNumber(),
+                    'user'     => $user
+                ));
+        $em->processEvent('plugin_docman_file_before_download', array(
+                                             'item'            => $item,
+                                             'user'            => $user,
+                                             'version'         => $this
+        ));
+    }
+
+    /**
+     * Logging a version deletion event
+     *
+     * @param Docman_Item    $item
+     * @param User           $user
+     *
+     * @return void
+     */
+    function fireDeleteEvent($item, $user) {
+        $value = $this->getNumber();
+        if ($this->getLabel() != '') {
+            $value .= ' ('.$this->getLabel().')';
+        }
+        $params = array('group_id'   => $item->getGroupId(),
+                        'item'       => $item,
+                        'old_value'  => $value,
+                        'user'       => $user);
+        EventManager::instance()->processEvent('plugin_docman_event_del_version', $params);
+    }
 }
 
 ?>

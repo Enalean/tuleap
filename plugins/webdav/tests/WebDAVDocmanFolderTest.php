@@ -20,7 +20,12 @@
 
 require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
+require_once (dirname(__FILE__).'/../../../src/common/user/User.class.php');
+Mock::generate('User');
+require_once (dirname(__FILE__).'/../../../src/common/project/Project.class.php');
+Mock::generate('Project');
 require_once (dirname(__FILE__).'/../include/WebDAVUtils.class.php');
+Mock::generate('WebDAVUtils');
 require_once ('requirements.php');
 require_once (dirname(__FILE__).'/../../docman/include/Docman_Item.class.php');
 Mock::generate('Docman_Item');
@@ -28,13 +33,26 @@ require_once (dirname(__FILE__).'/../../docman/include/Docman_Folder.class.php')
 Mock::generate('Docman_Folder');
 require_once (dirname(__FILE__).'/../../docman/include/Docman_ItemFactory.class.php');
 Mock::generate('Docman_ItemFactory');
+require_once (dirname(__FILE__).'/../../docman/include/Docman_VersionFactory.class.php');
+Mock::generate('Docman_VersionFactory');
+require_once (dirname(__FILE__).'/../../docman/include/Docman_FileStorage.class.php');
+Mock::generate('Docman_FileStorage');
 require_once (dirname(__FILE__).'/../../docman/include/Docman_PermissionsManager.class.php');
 Mock::generate('Docman_PermissionsManager');
 require_once (dirname(__FILE__).'/../include/FS/WebDAVDocmanFolder.class.php');
 Mock::generatePartial(
     'WebDAVDocmanFolder',
     'WebDAVDocmanFolderTestVersion',
-array('getDocmanItemFactory', 'getDocmanPermissionsManager')
+array('getDocmanItemFactory',
+      'getDocmanPermissionsManager',
+      'cloneItemPermissions',
+      'deleteDirectoryContent',
+      'getUtils',
+      'getItem',
+      'getUser',
+      'getProject',
+      'getMaxFileSize',
+      'isDocmanRoot')
 );
 Mock::generatePartial(
     'WebDAVDocmanFolder',
@@ -44,7 +62,7 @@ array('getChildList')
 Mock::generatePartial(
     'WebDAVDocmanFolder',
     'WebDAVDocmanFolderTestVersion3',
-array('getItem', 'getDocmanItemFactory', 'getDocmanPermissionsManager', 'getWebDAVDocmanFolder')
+array('getItem', 'getDocmanItemFactory', 'getDocmanPermissionsManager', 'getWebDAVDocmanFolder', 'getUtils')
 );
 
 /**
@@ -74,9 +92,14 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     function testGetChildListNoChildrens() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
 
+        $utils = new MockWebDAVUtils();
+        $docmanPermissionManager = new MockDocman_PermissionsManager();
+        $docmanPermissionManager->setReturnValue('userCanAccess', true);
+        $utils->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array());
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+        $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
         $this->assertEqual($webDAVDocmanFolder->getChildList(), array());
     }
@@ -90,11 +113,13 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $item = new MockDocman_Item();
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
+        $utils = new MockWebDAVUtils();
         $docmanPermissionManager = new MockDocman_PermissionsManager();
         $docmanPermissionManager->setReturnValue('userCanAccess', false);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
         $this->assertEqual($webDAVDocmanFolder->getChildList(), array());
     }
@@ -111,11 +136,13 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $item2->setReturnValue('getTitle', 'SameName');
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
+        $utils = new MockWebDAVUtils();
         $docmanPermissionManager = new MockDocman_PermissionsManager();
         $docmanPermissionManager->setReturnValue('userCanAccess', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
         $children = $webDAVDocmanFolder->getChildList();
 
@@ -136,11 +163,13 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $item2->setReturnValue('getTitle', 'AnotherName');
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
+        $utils = new MockWebDAVUtils();
         $docmanPermissionManager = new MockDocman_PermissionsManager();
         $docmanPermissionManager->setReturnValue('userCanAccess', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
         $this->assertNoErrors();
         $children = $webDAVDocmanFolder->getChildList();
@@ -184,11 +213,13 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $item2->setReturnValue('getTitle', 'AnotherName');
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
+        $utils = new MockWebDAVUtils();
         $docmanPermissionManager = new MockDocman_PermissionsManager();
         $docmanPermissionManager->setReturnValue('userCanAccess', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
         $this->assertNoErrors();
         $children = $webDAVDocmanFolder->getChildren();
@@ -204,9 +235,14 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
     function testGetChildNotFound() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion($this);
 
+        $utils = new MockWebDAVUtils();
+        $docmanPermissionManager = new MockDocman_PermissionsManager();
+        $docmanPermissionManager->setReturnValue('userCanAccess', true);
+        $utils->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array());
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+        $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
         $webDAVDocmanFolder->getChild('whatever');
@@ -224,11 +260,14 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $item2->setReturnValue('getTitle', 'SameName');
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
+        $utils = new MockWebDAVUtils();
         $docmanPermissionManager = new MockDocman_PermissionsManager();
         $docmanPermissionManager->setReturnValue('userCanAccess', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+        $utils->setReturnValue('retrieveName', 'SameName');
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
         $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $item1);
 
@@ -248,11 +287,14 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $item2->setReturnValue('getTitle', 'samename');
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item1, $item2));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
+        $utils = new MockWebDAVUtils();
         $docmanPermissionManager = new MockDocman_PermissionsManager();
         $docmanPermissionManager->setReturnValue('userCanAccess', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+        $utils->setReturnValue('retrieveName', 'SameName');
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
         $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $item1);
 
@@ -274,16 +316,365 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
 
         $docmanItemFactory = new MockDocman_ItemFactory();
         $docmanItemFactory->setReturnValue('getChildrenFromParent', array($item));
-        $webDAVDocmanFolder->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
 
+        $utils = new MockWebDAVUtils();
         $docmanPermissionManager = new MockDocman_PermissionsManager();
         $docmanPermissionManager->setReturnValue('userCanAccess', true);
-        $webDAVDocmanFolder->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanPermissionsManager', $docmanPermissionManager);
+        $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
+        $utils->setReturnValue('retrieveName', 'SomeName');
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
         $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $folder);
 
         $this->assertNoErrors();
         $this->assertEqual($webDAVDocmanFolder->getChild('SomeName'), $folder);
+    }
+
+    function testCreateDirectoryNoWriteEnabled() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', false);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $webDAVDocmanFolder->createDirectory('name');
+    }
+
+    function testCreateDirectoryNoPermissions() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', false);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $item = new MockDocman_Item();
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $user = new MockUser();
+        $webDAVDocmanFolder->setReturnValue('getUser', $user);
+        $project = new MockProject();
+        $webDAVDocmanFolder->setReturnValue('getProject', $project);
+        $dpm->expectOnce('userCanWrite');
+
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $webDAVDocmanFolder->createDirectory('name');
+    }
+
+    function testCreateDirectorySuccess() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $item = new MockDocman_Item();
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $user = new MockUser();
+        $webDAVDocmanFolder->setReturnValue('getUser', $user);
+        $project = new MockProject();
+        $webDAVDocmanFolder->setReturnValue('getProject', $project);
+        $dpm->expectOnce('userCanWrite');
+
+        $this->assertNoErrors();
+        $webDAVDocmanFolder->createDirectory('name');
+    }
+
+    function testDeleteDirectorySuccess() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $item = new MockDocman_Item();
+        $item->setReturnValue('getGroupId', 101);
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $dpm->setReturnValue('currentUserCanWriteSubItems', true);
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+
+        $dif->expectOnce('delete');
+
+        $this->assertNoErrors();
+        $webDAVDocmanFolder->delete();
+    }
+
+    function testDeleteDirectoryNoWriteOnSubItems() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $item = new MockDocman_Item();
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $dpm->setReturnValue('currentUserCanWriteSubItems', false);
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+
+        $dif->expectNever('delete');
+        $item->expectNever('fireEvent');
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $webDAVDocmanFolder->delete();
+    }
+
+    function testDeleteDirectoryNoPermissions() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', false);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', true);
+
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $item = new MockDocman_Item();
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $webDAVDocmanFolder->delete();
+    }
+
+    function testDeleteDirectoryNoWriteEnabled() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', false);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $webDAVDocmanFolder->delete();
+    }
+
+    function testSetNameNoWriteEnabled() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', false);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $webDAVDocmanFolder->setName('newName');
+    }
+
+    function testSetNameDocmanRoot() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', false);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFolder->setReturnValue('isDocmanRoot', true);
+
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $webDAVDocmanFolder->setName('newName');
+    }
+
+    function testSetNameNoPermissions() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', false);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFolder->setReturnValue('isDocmanRoot', false);
+        $item = new MockDocman_Item();
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $dpm->expectOnce('userCanWrite');
+
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
+        $webDAVDocmanFolder->setName('newName');
+    }
+
+    function testSetNameSuccess() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $dif = new MockDocman_ItemFactory();
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFolder->setReturnValue('isDocmanRoot', false);
+        $item = new MockDocman_Item();
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $dpm->expectOnce('userCanWrite');
+
+        $this->assertNoErrors();
+        $webDAVDocmanFolder->setName('newName');
+    }
+
+    function testCreateFileNoWriteEnabled() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('isWriteEnabled', false);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $webDAVDocmanFolder->createFile('name', $data);
+    }
+
+    function testCreateFileNoPermissions() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', false);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $item = new MockDocman_Item();
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $dpm->expectOnce('userCanWrite');
+
+        $this->expectException('Sabre_DAV_Exception_Forbidden');
+        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $webDAVDocmanFolder->createFile('name', $data);
+    }
+
+    function testCreateFileBigFile() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $item = new MockDocman_Item();
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $dpm->expectOnce('userCanWrite');
+        $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 23);
+
+        $this->expectException('Sabre_DAV_Exception_RequestedRangeNotSatisfiable');
+        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $webDAVDocmanFolder->createFile('name', $data);
+    }
+
+    function testCreateFileNoItem() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $dif = new MockDocman_ItemFactory();
+        $dif->setReturnValue('create', null);
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $item = new MockDocman_Item();
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $user = new MockUser();
+        $webDAVDocmanFolder->setReturnValue('getUser', $user);
+        $project = new MockProject();
+        $webDAVDocmanFolder->setReturnValue('getProject', $project);
+        $dpm->expectOnce('userCanWrite');
+        $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 24);
+
+        $this->expectException('WebDAVExceptionServerError');
+        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $webDAVDocmanFolder->createFile('name', $data);
+    }
+
+    function testCreateFileNotStored() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $item = new MockDocman_Item();
+        $dif = new MockDocman_ItemFactory();
+        $dif->setReturnValue('getItemFromDb', $item);
+        $dif->setReturnValue('create', 1);
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $user = new MockUser();
+        $webDAVDocmanFolder->setReturnValue('getUser', $user);
+        $project = new MockProject();
+        $webDAVDocmanFolder->setReturnValue('getProject', $project);
+        $dpm->expectOnce('userCanWrite');
+        $vf = new MockDocman_VersionFactory();
+        $utils->setReturnValue('getVersionFactory', $vf);
+        $fs = new MockDocman_FileStorage();
+        $fs->setReturnValue('store', null);
+        $utils->setReturnValue('getFileStorage', $fs);
+        $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 24);
+
+        $this->expectException('WebDAVExceptionServerError');
+        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $webDAVDocmanFolder->createFile('name', $data);
+    }
+
+    function testCreateFileFailToCreate() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $item = new MockDocman_Item();
+        $dif = new MockDocman_ItemFactory();
+        $dif->setReturnValue('getItemFromDb', $item);
+        $dif->setReturnValue('create', 1);
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $user = new MockUser();
+        $webDAVDocmanFolder->setReturnValue('getUser', $user);
+        $project = new MockProject();
+        $webDAVDocmanFolder->setReturnValue('getProject', $project);
+        $dpm->expectOnce('userCanWrite');
+        $vf = new MockDocman_VersionFactory();
+        $vf->setReturnValue('create', null);
+        $utils->setReturnValue('getVersionFactory', $vf);
+        $fs = new MockDocman_FileStorage();
+        $fs->setReturnValue('store', dirname(__FILE__).'/_fixtures/');
+        $utils->setReturnValue('getFileStorage', $fs);
+        $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 24);
+
+        $this->expectException('WebDAVExceptionServerError');
+        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $webDAVDocmanFolder->createFile('name', $data);
+    }
+
+    function testCreateFileSucceede() {
+        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
+        $dpm = new MockDocman_PermissionsManager();
+        $dpm->setReturnValue('userCanWrite', true);
+        $utils = new MockWebDAVUtils();
+        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
+        $utils->setReturnValue('isWriteEnabled', true);
+        $item = new MockDocman_Item();
+        $dif = new MockDocman_ItemFactory();
+        $dif->setReturnValue('getItemFromDb', $item);
+        $dif->setReturnValue('create', 1);
+        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
+        $webDAVDocmanFolder->setReturnValue('getItem', $item);
+        $user = new MockUser();
+        $webDAVDocmanFolder->setReturnValue('getUser', $user);
+        $project = new MockProject();
+        $webDAVDocmanFolder->setReturnValue('getProject', $project);
+        $dpm->expectOnce('userCanWrite');
+        $vf = new MockDocman_VersionFactory();
+        $vf->setReturnValue('create', true);
+        $utils->setReturnValue('getVersionFactory', $vf);
+        $fs = new MockDocman_FileStorage();
+        $fs->setReturnValue('store', dirname(__FILE__).'/_fixtures/');
+        $utils->setReturnValue('getFileStorage', $fs);
+        $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 24);
+
+        $this->assertNoErrors();
+        $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
+        $webDAVDocmanFolder->createFile('name', $data);
     }
 
 }

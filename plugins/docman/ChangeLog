@@ -1,7 +1,8 @@
 Version 2.11
         Global text search is now more visible
         The "View as" (tree|table|icons) selectbox is replaced by nice icons
-        
+        Internal refactoring for webdav
+
 Version 2.9
         Add hook to display info message in permission request dedicated screen.
 

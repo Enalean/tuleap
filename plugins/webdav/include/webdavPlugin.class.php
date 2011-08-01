@@ -87,8 +87,9 @@ class WebDAVPlugin extends Plugin {
         if ($root) {
             require_once ('FS/WebDAVDocmanFolder.class.php');
             WebDAVDocmanFile::setMaxFileSize($params['maxFileSize']);
+            WebDAVDocmanFolder::setMaxFileSize($params['maxFileSize']);
             $docman = new WebDAVDocmanFolder($params['user'] , $params['project'], $root);
-            $params['children']['Documents'] = $docman;
+            $params['children'][$docman->getName()] = $docman;
         }
     }
 
@@ -105,7 +106,8 @@ class WebDAVPlugin extends Plugin {
 
         // Include the SabreDAV library
         $SabreDAVPath = $this->getPluginInfo()->getPropertyValueForName('sabredav_path');
-        require_once ($SabreDAVPath.'/lib/Sabre.autoload.php');
+        require_once ($SabreDAVPath.'/lib/Sabre/autoload.php');
+        require_once ('exception/WebDAVExceptionServerError.class.php');
 
         // Creating the Root directory from WebDAV file system
         $maxFileSize = $this->getPluginInfo()->getPropertyValueForName('max_file_size');

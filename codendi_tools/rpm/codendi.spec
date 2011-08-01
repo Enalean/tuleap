@@ -226,7 +226,7 @@ Summary: WebDAV plugin for Codendi
 Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, Sabre_DAV = 1.0.14
+Requires: %{PKG_NAME}, SabreDAV = 1.4.4
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
 

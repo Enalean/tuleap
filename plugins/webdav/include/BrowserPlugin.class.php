@@ -243,6 +243,13 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                 echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th>";/*<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'move')."</th>";*/
             }
         }
+        if ($class == 'WebDAVDocmanFolder') {
+            echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'size')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'last_modified')."</th>";
+            $docmanPermissionManager = $node->getUtils()->getDocmanPermissionsManager($node->getProject());
+            if ($node->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($node->getUser(), $node->getItem()->getId())) {
+                echo "<th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'delete')."</th><th>".$GLOBALS['Language']->getText('plugin_webdav_html', 'rename')."</th>";
+            }
+        }
         echo "</tr><tr><td colspan=\"6\"><hr /></td></tr>";
 
         $files = $this->server->getPropertiesForPath(
@@ -254,33 +261,45 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
         ), 1
         );
 
-        foreach ($files as $file) {
+        if ($path) {
+            list($parentUri) = Sabre_DAV_URLUtil::splitPath($path);
+            $fullPath = Sabre_DAV_URLUtil::encodePath($this->server->getBaseUri() . $parentUri);
+            echo "<tr><td><a href=\"{$fullPath}\">..</a></td></tr>";
+        }
 
-            // Link to the parent directory
-            if ($file['href']==$path) {
-                echo str_replace("%", "%25", "<td><a href=\"".$this->server->getBaseUri().dirname($path)."\"><b>..<b></a></td>");
+        foreach ($files as $file) {
+            // This is the current directory, we can skip it
+            if (rtrim($file['href'],'/')==$path) {
                 continue;
             }
 
-            $name = basename($file['href']);
+            list(, $name) = Sabre_DAV_URLUtil::splitPath($file['href']);
+            $type = null;
 
             if (isset($file[200]['{DAV:}resourcetype'])) {
                 $type = $file[200]['{DAV:}resourcetype']->getValue();
-                if ($type=='{DAV:}collection') {
-                    $type = $GLOBALS["Language"]->getText("plugin_webdav_html", "directory");
-                } elseif ($type=='') {
-                    if (isset($file[200]['{DAV:}getcontenttype'])) {
-                        $type = $file[200]['{DAV:}getcontenttype'];
-                    } else {
-                        $type = $GLOBALS["Language"]->getText("plugin_webdav_html", "unknown");
-                    }
-                } elseif (is_array($type)) {
-                    $type = implode(', ', $type);
+                // resourcetype can have multiple values
+                if (!is_array($type)) {
+                    $type = array($type);
                 }
+                foreach($type as $k=>$v) {
+                    // Some name mapping is preferred
+                    if ($v == '{DAV:}collection') {
+                        $type[$k] = $GLOBALS["Language"]->getText("plugin_webdav_html", "directory");
+                    } elseif ($v == '') {
+                        if (isset($file[200]['{DAV:}getcontenttype'])) {
+                            $type[$k] = $file[200]['{DAV:}getcontenttype'];
+                        } else {
+                            $type[$k] = $GLOBALS["Language"]->getText("plugin_webdav_html", "unknown");
+                        }
+                    }
+                }
+                $type = implode(', ', $type);
+                
             }
             $type = $this->escapeHTML($type);
             $size = isset($file[200]['{DAV:}getcontentlength'])?(int)$file[200]['{DAV:}getcontentlength']:'';
-            $lastmodified = isset($file[200]['{DAV:}getlastmodified'])?date(DATE_ATOM, $file[200]['{DAV:}getlastmodified']->getTime()):'';
+            $lastmodified = isset($file[200]['{DAV:}getlastmodified'])?$file[200]['{DAV:}getlastmodified']->getTime()->format(DATE_ATOM):'';
 
             $fullPath = '/' . trim($this->server->getBaseUri() . ($path?$this->escapeHTML($path) . '/':'') . $name, '/');
 
@@ -308,6 +327,15 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                     //$this->moveForm($file, $destinations);
                 }
             }
+            if ($class == 'WebDAVDocmanFolder') {
+                echo "<td>{$size}</td>";
+                echo "<td>{$lastmodified}</td>";
+                $docmanPermissionManager = $node->getUtils()->getDocmanPermissionsManager($node->getProject());
+                if ($node->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($node->getUser(), $node->getItem()->getId())) {
+                    $this->deleteForm($file);
+                    $this->renameForm($file);
+                }
+            }
             echo "</tr>";
 
         }
@@ -332,6 +360,19 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin {
                 '.$GLOBALS["Language"]->getText("plugin_webdav_html", "file").' : <input type="file" name="file" />
                 <button type="submit" style="background:white; border:0;" value="upload"><img src="https://'.$GLOBALS['sys_https_host'].'/themes/Dawn/images/ic/tick.png"></button>
                 </form>';
+            }
+            if ($class == 'WebDAVDocmanFolder') {
+                if ($node->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($node->getUser(), $node->getItem()->getId())) {
+                    echo '<h4>Create a new folder :</h4>';
+                    $this->mkcolForm();
+                    echo '<h4>'.$GLOBALS["Language"]->getText("plugin_webdav_html", "upload_file").' :</h4>
+                    <form method="post" action="" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="put" />
+                    '.$GLOBALS["Language"]->getText("plugin_webdav_html", "name").' ('.$GLOBALS["Language"]->getText("plugin_webdav_html", "optional").') : <input type="text" name="name" /><br />
+                    '.$GLOBALS["Language"]->getText("plugin_webdav_html", "file").' : <input type="file" name="file" />
+                    <button type="submit" style="background:white; border:0;" value="upload"><img src="https://'.$GLOBALS['sys_https_host'].'/themes/Dawn/images/ic/tick.png"></button>
+                    </form>';
+                }
             }
             echo '</td></tr>';
         }

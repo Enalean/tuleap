@@ -173,8 +173,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -191,8 +189,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -209,8 +205,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -227,8 +221,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -245,8 +237,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -263,8 +253,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -281,8 +269,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -299,8 +285,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $utils = new MockWebDAVUtils();
-        $webDAVFRS->setReturnValue('getUtils', $utils);
         $user = new MockUser();
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
@@ -314,7 +298,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $webDAVFRS = new WebDAVFRSTestVersion($this);
 
         $webDAVFRS->setReturnValue('userCanWrite', false);
-
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRS->createDirectory('pkg');

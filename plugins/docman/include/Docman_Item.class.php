@@ -358,6 +358,18 @@ class Docman_Item {
     function &getPathTitle() {
         return $this->pathTitle;
     }
+
+    function fireEvent($event, $user, $parent=null) {
+        $params = array('group_id' => $this->getGroupId(),
+                        'parent'   => $parent,
+                        'item'     => $this,
+                        'user'     => $user);
+        $this->getEventManager()->processEvent($event, $params);
+    }
+    
+    protected function getEventManager() {
+        return EventManager::instance();
+    }
 }
 
 ?>

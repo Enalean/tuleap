@@ -410,7 +410,6 @@ class WebDAVFRSPackageTest extends UnitTestCase {
 
     }
 
-
     /**
      * Testing delete when user is not admin
      */
@@ -489,8 +488,8 @@ class WebDAVFRSPackageTest extends UnitTestCase {
     function testSetNameFailWithUserNotAdmin() {
 
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+        $webDAVFRSPackage->setReturnValue('userCanWrite', false);
         $packageFactory = new MockFRSPackageFactory();
-        $packageFactory->setReturnValue('userCanUpdate', false);
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('getPackageFactory', $packageFactory);
         $webDAVFRSPackage->setReturnValue('getUtils', $utils);
@@ -508,8 +507,8 @@ class WebDAVFRSPackageTest extends UnitTestCase {
     function testSetNameFailWithNameExist() {
 
     $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+    $webDAVFRSPackage->setReturnValue('userCanWrite', true);
     $packageFactory = new MockFRSPackageFactory();
-    $packageFactory->setReturnValue('userCanUpdate', true);
     $packageFactory->setReturnValue('isPackageNameExist', true);
     $utils = new MockWebDAVUtils();
     $utils->setReturnValue('getPackageFactory', $packageFactory);
@@ -528,8 +527,8 @@ class WebDAVFRSPackageTest extends UnitTestCase {
     function testSetNameSucceede() {
 
     $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
+    $webDAVFRSPackage->setReturnValue('userCanWrite', true);
     $packageFactory = new MockFRSPackageFactory();
-    $packageFactory->setReturnValue('userCanUpdate', true);
     $packageFactory->setReturnValue('isPackageNameExist', false);
     $utils = new MockWebDAVUtils();
     $utils->setReturnValue('getPackageFactory', $packageFactory);
@@ -552,7 +551,6 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage = new WebDAVFRSPackageTestVersion($this);
 
         $webDAVFRSPackage->setReturnValue('userCanWrite', false);
-
         $this->expectException('Sabre_DAV_Exception_Forbidden');
 
         $webDAVFRSPackage->createDirectory('release');

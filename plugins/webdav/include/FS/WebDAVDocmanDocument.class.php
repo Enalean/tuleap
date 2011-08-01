@@ -161,7 +161,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     function download($fileType, $fileSize, $path) {
         header('Content-Description: File Transfer');
         header('Content-Type: '. $fileType);
-        header('Content-Disposition: attachment; filename="'. basename($path) .'"');
+        header('Content-Disposition: attachment; filename="'.$this->getName().'"');
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -171,6 +171,47 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
         flush();
         readfile($path);
         exit;
+    }
+
+    /**
+     * Delete the document
+     *
+     * @return void
+     */
+    function delete() {
+        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
+        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+            $item = $this->getItem();
+            $itemFactory = $this->getUtils()->getDocmanItemFactory();
+            $itemFactory->delete($item);
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
+        }
+    }
+
+    /**
+     * Rename the document
+     *
+     * Even if rename is forbidden some silly WebDAV clients (ie : Micro$oft's one)
+     * will bypass that and try to delete the original document
+     * then upload another one with the same content and a new name
+     * Which is very different from just renaming the document
+     *
+     * @param String $name New name of the document
+     *
+     * @return void
+     */
+    function setName($name) {
+        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
+        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+            $row          = $this->getItem()->toRow();
+            $row['title'] = htmlspecialchars($name);
+            $row['id']    = $this->getItem()->getId();
+            $itemFactory  = $this->getUtils()->getDocmanItemFactory();
+            $itemFactory->update($row);
+        } else {
+            throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
+        }
     }
 
 }

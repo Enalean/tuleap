@@ -138,7 +138,7 @@ class WebDAVUtils {
     function userCanWrite($user, $groupId) {
 
         // R2 refers to File release admin
-        return ($user->isSuperUser() || $user->isMember($groupId, 'R2'));
+        return $this->isWriteEnabled() && ($user->isSuperUser() || $user->isMember($groupId, 'R2'));
 
     }
 
@@ -200,11 +200,73 @@ class WebDAVUtils {
     }
 
     function getIncomingFileSize($name) {
-        return file_utils_get_size($GLOBALS['ftp_incoming_dir'].'/'.$name);
+        return PHP_BigFile::getSize($GLOBALS['ftp_incoming_dir'].'/'.$name);
     }
-    
+
     function getIncomingFileMd5Sum($file) {
         return PHP_BigFile::getMd5Sum($file);
+    }
+
+    /**
+     * Returns an instance of PermissionsManager
+     *
+     * @param Project $project Used project
+     *
+     * @return Docman_PermissionsManager
+     */
+    function getDocmanPermissionsManager($project) {
+        return Docman_PermissionsManager::instance($project->getGroupId());
+    }
+
+    /**
+     * Returns a new instance of ItemFactory
+     *
+     * @return Docman_ItemFactory
+     */
+    function getDocmanItemFactory() {
+        return new Docman_ItemFactory();
+    }
+
+    /**
+     * Returns a new instance of VersionFactory
+     *
+     * @return Docman_VersionFactory
+     */
+    function getVersionFactory() {
+        return new Docman_VersionFactory();
+    }
+
+    /**
+     * Returns the file system root of docman
+     *
+     * @return String
+     */
+    function getDocmanRoot() {
+        $pluginManager = PluginManager::instance();
+        $p             = $pluginManager->getPluginByName('docman');
+        $info          = $p->getPluginInfo();
+        return $info->getPropertyValueForName('docman_root');
+    }
+
+    /**
+     * Returns a new instance of FileStorage
+     *
+     * @return Docman_FileStorage
+     */
+    function getFileStorage() {
+        return new Docman_FileStorage($this->getDocmanRoot());
+    }
+
+    /**
+     * Tells if write acces is enabled or not for the WebDAV plugin
+     *
+     * @return Boolean
+     */
+    function isWriteEnabled() {
+        $pluginManager = PluginManager::instance();
+        $p             = $pluginManager->getPluginByName('webdav');
+        $info          = $p->getPluginInfo();
+        return $info->getPropertyValueForName('write_access_enabled');
     }
 
 }

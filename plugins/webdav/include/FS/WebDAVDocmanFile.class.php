@@ -41,8 +41,11 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
 
         if (file_exists($version->getPath())) {
             if ($this->getSize() <= $this->getMaxFileSize()) {
-                $this->logDownload($version);
-                $this->download($version);
+                try {
+                    $this->download($version);
+                } catch (Exception $e) {
+                    throw new Sabre_DAV_Exception_FileNotFound($e->getMessage());
+                }
             } else {
                 throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
@@ -97,6 +100,17 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     }
 
     /**
+     * Returns a unique identifier of the file
+     *
+     * @return String
+     */
+    function getETag() {
+        $item = $this->getItem();
+        $version = $item->getCurrentVersion();
+        return '"'.$this->getUtils()->getIncomingFileMd5Sum($version->getPath()).'"';
+    }
+
+    /**
      * Returns the max file size
      *
      * @return Integer
@@ -117,23 +131,6 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
     }
 
     /**
-     * Log the download
-     *
-     * @param Docman_Version $version
-     *
-     * @return void
-     */
-    function logDownload($version) {
-        $logger = new Docman_Log();
-        $params = array('group_id' => $this->getProject()->getGroupId(),
-                        'item'     => $this->getItem(),
-                        'version'  => $version->getNumber(),
-                        'user'     => $this->getUser(),
-                        'event'    => 'plugin_docman_event_access');
-        $logger->log($params['event'], $params);
-    }
-
-    /**
      * Downloads the file
      *
      * @param Docman_Version $version
@@ -141,17 +138,109 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * @return void
      */
     function download($version) {
-        // Wait for watermarking
-        $em =& EventManager::instance();
-        $em->processEvent('plugin_docman_file_before_download', array(
-                                             'item'            => $this->getItem(),
-                                             'user'            => $this->getUser(),
-                                             'version'         => $version,
-                                             'docmanControler' => null
-        ));
-
+        $version->preDownload($this->getItem(), $this->getUser());
         // Download the file
         parent::download($version->getFiletype(), $version->getFilesize(), $version->getPath());
+    }
+
+    /**
+     * Create a new version of the file
+     *
+     * @param $data
+     *
+     * @return void
+     */
+    function put($data) {
+        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
+        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+            $versionFactory = $this->getUtils()->getVersionFactory();
+            $nextNb         = $versionFactory->getNextVersionNumber($this->getItem());
+            if($nextNb === false) {
+                $number     = 1;
+                $_changelog = 'Initial version';
+            } else {
+                $number     = $nextNb;
+                $_changelog = '';
+            }
+            $fs   = $this->getUtils()->getFileStorage();
+            $path = $fs->store(stream_get_contents($data), $this->getProject()->getGroupId(), $this->getItem()->getId(), $number);
+            if ($path) {
+                $_filesize = PHP_BigFile::getSize($path);
+                if ($_filesize <= $this->getMaxFileSize()) {
+                    $_filename = $this->getName();
+                    $_filetype = mime_content_type($path);
+                    $vArray    = array('item_id'   => $this->getItem()->getId(),
+                                       'number'    => $number,
+                                       'user_id'   => $this->getUser()->getId(),
+                                       'label'     => '',
+                                       'changelog' => $_changelog,
+                                       'filename'  => $_filename,
+                                       'filesize'  => $_filesize,
+                                       'filetype'  => $_filetype, 
+                                       'path'      => $path,
+                                       'date'      => '');
+                    if (!$versionFactory->create($vArray)) {
+                        throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
+                    }
+                } else {
+                    throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
+                }
+            } else {
+                throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));
+            }
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_new_version'));
+        }
+    }
+
+    /**
+     * Deletes the file
+     *
+     * @return void
+     */
+    function delete() {
+        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
+        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
+            // Mark the file as deleted
+            $item = $this->getItem();
+            $itemFactory = $this->getUtils()->getDocmanItemFactory();
+            $itemFactory->delete($item);
+            // Delete all its versions
+            $versionFactory = $this->getUtils()->getVersionFactory();
+            if ($versions = $versionFactory->getAllVersionForItem($this->getItem())) {
+                if (count($versions)) {
+                    foreach ($versions as $version) {
+                        $versionFactory->deleteSpecificVersion($this->getItem(), $version->getNumber());
+                    }
+                }
+            }
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
+        }
+    }
+
+    /**
+     * Rename an embedded file
+     * We don't allow renaming files
+     *
+     * Even if rename is forbidden some silly WebDAV clients (ie : Micro$oft's one)
+     * will bypass that and try to delete the original file
+     * then upload another one with the same content and a new name
+     * Which is very different from just renaming the file
+     *
+     * @param String $name New name of the document
+     *
+     * @return void
+     */
+    function setName($name) {
+        switch (get_class($this->getItem())) {
+            case 'Docman_File':
+                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_rename'));
+                break;
+            case 'Docman_EmbeddedFile':
+                parent::setName($name);
+                break;
+        }
     }
 
 }

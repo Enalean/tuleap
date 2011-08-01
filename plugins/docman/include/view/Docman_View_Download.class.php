@@ -22,19 +22,12 @@ class Docman_View_Download extends Docman_View_View {
         }
         if ($version) {
             if (file_exists($version->getPath())) {
-                $event_manager =& EventManager::instance();
-                $event_manager->processEvent('plugin_docman_event_access', array(
-                    'group_id' => $params['group_id'],
-                    'item'     => &$params['item'],
-                    'version'  => $version->getNumber(),
-                    'user'     => &$params['user']
-                ));
-                $event_manager->processEvent('plugin_docman_file_before_download', array(
-                                             'item'      => $params['item'],
-                                             'user'      => $params['user'],
-                                             'version'   => $version,
-                                             'docmanControler' => &$this->_controller
-                                            ));
+                try {
+                    $version->preDownload($params['item'], $params['user']);
+                } catch (Exception $e) {
+                    $GLOBALS['Response']->addFeedback('error',$e->getMessage(), CODENDI_PURIFIER_DISABLED);
+                    $GLOBALS['Response']->redirect($this->_controller->getDefaultUrl());
+                }
                 header('Expires: Mon, 26 Nov 1962 00:00:00 GMT');  // IE & HTTPS
                 header('Pragma: private');                         // IE & HTTPS
                 header('Cache-control: private, must-revalidate'); // IE & HTTPS

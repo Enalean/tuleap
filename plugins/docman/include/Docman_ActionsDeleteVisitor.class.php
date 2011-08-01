@@ -132,28 +132,8 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     function _deleteItem($item, $params) {
        if ($this->docman->userCanWrite($item->getId())) {
 
-            // The event must be processed before the item is deleted
-            $em =& $this->_getEventManager();
-            $em->processEvent('plugin_docman_event_del', array(
-                'group_id' => $item->getGroupId(),
-                'item'     => &$item,
-                'parent'   => &$params['parent'],
-                'user'     => &$params['user'])
-            );
-
-            // Delete Lock if any
-            $lF = $this->_getLockFactory();
-            if($lF->itemIsLocked($item)) {
-                $lF->unlock($item);
-            }
-
-            $item->setDeleteDate($this->deleteDate);
-            $dIF =& $this->_getItemFactory();
-            $dIF->delCutPreferenceForAllUsers($item->getId());
-            $dIF->delCopyPreferenceForAllUsers($item->getId());
-            $dao = $this->_getItemDao();
-            $dao->updateFromRow($item->toRow());
-            $dao->storeDeletedItem($item->getId());
+            $dIF = $this->_getItemFactory();
+            $dIF->delete($item);
             return true;
         } else {
             $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
@@ -194,19 +174,6 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
      * @return Boolean
      */
     function _deleteVersion(Docman_File $item, Docman_Version $version, User $user) {
-        // The event must be processed before the version is deleted
-        $value = $version->getNumber();
-        if ($version->getLabel() !== '') {
-            $value .= ' ('.$version->getLabel().')';
-        }
-        $em = $this->_getEventManager();
-        $em->processEvent('plugin_docman_event_del_version', array(
-                          'group_id'   => $item->getGroupId(),
-                          'item'       => $item,
-                          'old_value'  => $value,
-                          'user'       => $user)
-        );
-
         // Proceed to deletion
         $version_factory = $this->_getVersionFactory();
         return $version_factory->deleteSpecificVersion($item, $version->getNumber());

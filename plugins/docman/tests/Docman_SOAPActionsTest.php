@@ -67,10 +67,12 @@ class Docman_SOAPActionsTest extends UnitTestCase {
     private $fileStorage;
     private $lockFactory;
 
-    function Docman_SOAPActionsTest($name = 'Docman_Actions test') {
-        $this->UnitTestCase($name);
+    function getPartialMock($className, $methods) {
+        $partialName = $className.'Partial'.uniqid();
+        Mock::generatePartial($className, $partialName, $methods);
+        return new $partialName($this);
     }
-    
+
     public function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         
@@ -346,8 +348,13 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $action->getControler()->request = $request;
         
         $this->itemFactory->expectOnce('create');
+        
+        $item = $this->getPartialMock('Docman_Item', array('getEventManager'));
+        $item->setReturnValue('getEventManager', $action->event_manager);
+        $this->itemFactory->setReturnValue('getItemFromDb', $item);
+
         $this->permissionManager->expectOnce('clonePermissions');
-        $action->event_manager->expectAt(0, 'processEvent', array('plugin_docman_event_add', '*')); 
+        $action->event_manager->expectAt(0, 'processEvent', array('plugin_docman_event_add', '*'));
         $action->event_manager->expectAt(1, 'processEvent', array('plugin_docman_event_metadata_update', '*'));
         $action->event_manager->expectAt(2, 'processEvent', array('plugin_docman_event_metadata_update', '*'));
         $action->event_manager->expectAt(3, 'processEvent', array('send_notifications', '*'));
@@ -360,7 +367,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
      * Item creation, without dates
      */
     public function testCreateItemNoDates() {
-                $action = $this->action;
+        $action = $this->action;
         
         $params = array(
                       'item' => array(
@@ -377,9 +384,13 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         
         $this->itemFactory->setReturnValue('create', 128002);
         
+        $item = $this->getPartialMock('Docman_Item', array('getEventManager'));
+        $item->setReturnValue('getEventManager', $action->event_manager);
+        $this->itemFactory->setReturnValue('getItemFromDb', $item);
+        
         $action->getControler()->request = $request;
         
-        $action->event_manager->expectAt(0, 'processEvent', array('plugin_docman_event_add', '*')); 
+        $action->event_manager->expectAt(0, 'processEvent', array('plugin_docman_event_add', '*'));
         $action->event_manager->expectAt(1, 'processEvent', array('send_notifications', '*'));
         
         $action->createItem();
