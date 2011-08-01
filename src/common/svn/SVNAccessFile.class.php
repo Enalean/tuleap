@@ -21,42 +21,58 @@
  *
  * When updating .SVNAccessFile this class verifies ugroup permission lines.
  * It comments lines with invalid synatx, non existant or empty ugroups.
- * If a such line is kept uncommented it will cause error when browsing
- * svn tree and will make svn requests fail with a 403 (forbidden) error
  */
 class SVNAccessFile {
 
     /**
-     * Detect if a line is correctly formatted and 
-     * corresponds to a valid ugroup which is not empty
+     * Value in $groups when the group is (re)defined by user
+     */
+    const UGROUP_REDEFINED = 0;
+
+    /**
+     * Value in $groups when the group is defined only in default [groups] section
+     */
+    const UGROUP_DEFAULT   = 1;
+
+    /**
+     * Pattern used to find a line defining permission on group
+     */
+    const GROUPNAME_PATTERN = "([a-zA-Z0-9_-]+)";
+
+    /**
+     * New name of the renamed group
      *
-     * @param Project $project Project of the svn repository
+     * @var String
+     */
+    private $ugroupNewName = null;
+
+    /**
+     * Old name of the renamed group
+     *
+     * @var String
+     */
+    private $ugroupOldName = null;
+
+    /**
+     * Detect if a line is correctly formatted and
+     * corresponds to a defined group
+     *
+     * @param Array   $groups  List of already defined groups
      * @param String  $line    Line to validate
      * @param Boolean $verbose Show feedback or not
      *
      * @return Boolean
      */
-    function isValidUGroupLine($project, $line, $verbose = false) {
-        preg_match('/^@([a-zA-Z0-9\-_]+)[ ]*=/', $line, $matches);
+    public function isGroupDefined($groups, $line, $verbose = false) {
+        preg_match($this->getGroupMatcher(self::GROUPNAME_PATTERN), $line, $matches);
         if (!empty($matches)) {
-            $match = $matches[1];
+            $match = strtolower($matches[1]);
             if ($match == 'members') {
                 return true;
             } else {
-                $ugroupDao = $this->_getUGroupDao();
-                $dar = $ugroupDao->searchByGroupId($project->getId());
-                foreach ($dar as $row) {
-                    $ugroup = $this->_getUGroupFromRow($row);
-                    if ($ugroup->getName() == $match) {
-                        $members = $ugroup->getMembers();
-                        if (empty($members)) {
-                            if ($verbose) {
-                                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('svn_admin_access_control', 'ugroup_empty', $match));
-                            }
-                            return false;
-                        } else {
-                            return true;
-                        }
+                foreach ($groups as $group => $value) {
+                    if ($group == $match) {
+                        return true;
                     }
                 }
                 if ($verbose) {
@@ -72,21 +88,61 @@ class SVNAccessFile {
     }
 
     /**
-     * Update renamed ugroup line or comment invalid ugroup line
+     * Update renamed ugroup line or comment invalid ugroup line.
+     * This validation process cover all groups defined until the current line.
      *
-     * @param Project $project         Project of the svn repository
-     * @param String  $line            Line to validate
-     * @param Boolean $verbose         Show feedback or not
-     * @param String  $ugroup_name     New name of the renamed ugroup
-     * @param String  $ugroup_old_name Old name of the renamed ugroup
+     * @param Array   $groups  List of already defined groups
+     * @param String  $line    Line to validate
+     * @param Boolean $verbose Show feedback or not
      *
      * @return String
      */
-    function validateUGroupLine($project, $line, $verbose = null, $ugroup_name = null, $ugroup_old_name = null) {
+    public function validateUGroupLine($groups, $line, $verbose = null) {
         $trimmedLine = ltrim($line);
-        if (!empty($ugroup_name) && preg_match('/^@'.$ugroup_old_name.'\s*=/', $trimmedLine)) {
-            return str_replace($ugroup_old_name, $ugroup_name, $line);
-        } elseif ($trimmedLine && substr($trimmedLine, 0, 1) == '@' && !$this->isValidUGroupLine($project, $trimmedLine, $verbose)) {
+        if (!empty($this->ugroupNewName) && preg_match($this->getGroupMatcher($this->ugroupOldName), $trimmedLine)) {
+            return $this->renameGroup($groups, $line);
+        } else {
+            return $this->commentInvalidLine($groups, $line, $verbose);
+        }
+    }
+
+    /**
+     * If line contains a mention of renamed group, update it
+     *
+     * @param Array  $groups Defined groups
+     * @param String $line   Line that may be renamed
+     *
+     * @return String
+     */
+    public function renameGroup($groups, $line) {
+        $line = strtolower($line);
+        $renamable = true;
+        foreach ($groups as $group => $value) {
+            //Only groups defined in the default section and not have been redefined in the extra one should be renamed
+            if ($group == $this->ugroupOldName) {
+                if ($value == self::UGROUP_REDEFINED) {
+                    $renamable = false;
+                    return $line;
+                }
+            }
+        }
+        if ($renamable) {
+            return str_replace($this->ugroupOldName, $this->ugroupNewName, $line);
+        }
+    }
+
+    /**
+     * Comments the line corresponding to groups that are not defined
+     * 
+     * @param Array   $groups  List of already defined groups
+     * @param String  $line    Line to validate
+     * @param Boolean $verbose Show feedback or not
+     * 
+     * @return String
+     */
+    public function commentInvalidLine($groups, $line, $verbose = false) {
+        $trimmedLine = ltrim($line);
+        if ($trimmedLine && substr($trimmedLine, 0, 1) == '@' && !$this->isGroupDefined($groups, $trimmedLine, $verbose)) {
             return "# ".$line;
         } else {
             return $line;
@@ -94,7 +150,7 @@ class SVNAccessFile {
     }
 
     /**
-     * Comment invalid ugroup lines
+     * Update renamed ugroup line or comment invalid ugroup lines for all lines of .SVNAccessFile
      *
      * @param Project $project  Project of the svn repository
      * @param String  $contents Text to validate
@@ -102,35 +158,102 @@ class SVNAccessFile {
      *
      * @return String
      */
-    function validateUGroupLines($project, $contents, $verbose = false) {
-        $lines = split("[\n]", $contents);
+    public function parseGroupLines($project, $contents, $verbose = false) {
+        $defaultLines = explode("\n", svn_utils_read_svn_access_file_defaults($project->getUnixName(), true));
+        $groups = array();
+        $currentSection = -1;
+        foreach ($defaultLines as $line) {
+            $currentSection = $this->getCurrentSection($line, $currentSection);
+            if ($currentSection == 'groups') {
+                $groups = $this->accumulateDefinedGroups($groups, $line, true);
+            }
+        }
+        $lines = explode("\n", $contents);
         $validContents = '';
         foreach ($lines as $line) {
-            $validContents .= $this->validateUGroupLine($project, $line, $verbose).PHP_EOL;
+            $currentSection = $this->getCurrentSection($line, $currentSection);
+            switch ($currentSection) {
+                case 'groups' :
+                    $groups = $this->accumulateDefinedGroups($groups, $line, false);
+                    $validContents .= $line.PHP_EOL;
+                    break;
+                default :
+                    $validContents .= $this->validateUGroupLine($groups, $line, $verbose).PHP_EOL;
+                    break;
+            }
         }
         return substr($validContents, 0, -1);
     }
 
     /**
-     * Wrapper for tests
+     * Get the list of groups defined until the current line.
+     * Foreach $groups as $group => $value :
+     * If $value == self::UGROUP_DEFAULT then $group is defined only in the default [groups] section (it's a regular ugroup).
+     * If $value == self::UGROUP_REDEFINED then $group is a regular ugroup that has been redefined in an extra [groups] section.
      *
-     * @return UGroupDao
+     * @param Array   $groups         Groups accumulated until the current line
+     * @param String  $line           Current line
+     * @param Boolean $defaultSection Distinguish list of groups retrieved from default [groups] section
+     *                                and those retrieved from extra [groups] section.
+     *
+     * @return Array
      */
-    protected function _getUGroupDao() {
-        return new UGroupDao(CodendiDataAccess::instance());
+    public function accumulateDefinedGroups($groups, $line, $defaultSection = false) {
+        $trimmedLine = ltrim(strtolower($line));
+        if ($trimmedLine != '') {
+            preg_match('/^'.self::GROUPNAME_PATTERN.'\s*=/', $trimmedLine, $matches);
+            if (!empty($matches)) {
+                if (!$defaultSection){
+                    $groups[$matches[1]] = self::UGROUP_REDEFINED;
+                } else {
+                    $groups[$matches[1]] = self::UGROUP_DEFAULT;
+                }
+            }
+        }
+        return $groups;
     }
 
     /**
-     * Wrapper for tests
+     * For the moment it just tells if the current section is [groups] or not
      *
-     * @param array $row a row from the db for a ugroup
+     * @param String $line           Current line
+     * @param String $currentSection Current section d'oh!
      *
-     * @return UGroup
+     * @return String
      */
-    protected function _getUGroupFromRow($row) {
-        return new UGroup($row);
+    public function getCurrentSection($line, $currentSection) {
+        $trimmedLine = ltrim(strtolower($line));
+        if (substr($trimmedLine, 0, 8) == '[groups]') {
+            $currentSection = 'groups';
+        } elseif (substr($trimmedLine, 0, 1) == '[') {
+            $currentSection = -1;
+        }
+        return $currentSection;
     }
 
+    /**
+     * Set the group to rename
+     *
+     * @param String $ugroupNewName New group name
+     * @param String $ugroupOldName Old group name
+     *
+     * @return void
+     */
+    public function setRenamedGroup($ugroupNewName, $ugroupOldName) {
+        $this->ugroupNewName = strtolower($ugroupNewName);
+        $this->ugroupOldName = strtolower($ugroupOldName);
+    }
+
+    /**
+     * Match the pattern of a line difining permission on a gorup
+     *
+     * @param String $groupPattern Pattern to match group name
+     *
+     * @return String
+     */
+    protected function getGroupMatcher($groupPattern) {
+        return '/^@'.$groupPattern.'\s*=/';
+    }
 }
 
 ?>

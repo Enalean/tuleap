@@ -113,6 +113,16 @@
         <revremark>Describe new command line option</revremark>
       </revision>
 
+      <revision>
+        <revnumber>1.4.2</revnumber>
+
+        <date>29-Jul-2011</date>
+
+        <authorinitials>Hatem Ounis, Nouha Terzi</authorinitials>
+
+        <revremark>SVN access control validation</revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--

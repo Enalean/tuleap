@@ -18,142 +18,122 @@
 
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
-require_once('common/dao/UGroupDao.class.php');
-Mock::generate('UGroupDao');
-require_once('common/project/UGroup.class.php');
-Mock::generate('UGroup');
 require_once('common/svn/SVNAccessFile.class.php');
-Mock::generatePartial('SVNAccessFile', 'SVNAccessFileTestVersion', array('_getUGroupDao', '_getUGroupFromRow'));
-Mock::generatePartial('SVNAccessFile', 'SVNAccessFileTestVersion2', array('isValidUGroupLine'));
+Mock::generatePartial('SVNAccessFile', 'SVNAccessFileTestVersion', array('isGroupDefined'));
 
 class SVNAccessFileTest extends UnitTestCase {
 
-    function testIsValidUGroupLineInvalidSyntax() {
+    function testisGroupDefinedInvalidSyntax() {
         $saf = new SVNAccessFile();
-        $project = new MockProject();
-        $this->assertFalse($saf->isValidUGroupLine($project, 'uGroup1 = rw'));
-        $this->assertFalse($saf->isValidUGroupLine($project, '@uGroup1  rw'));
-        $this->assertFalse($saf->isValidUGroupLine($project, '@uGroup1'));
-        $this->assertFalse($saf->isValidUGroupLine($project, '@ uGroup1 = rw'));
-        $this->assertFalse($saf->isValidUGroupLine($project, '@@uGroup1 = rw'));
+        $groups = array();
+        $this->assertFalse($saf->isGroupDefined($groups, 'uGroup1 = rw'));
+        $this->assertFalse($saf->isGroupDefined($groups, '@uGroup1  rw'));
+        $this->assertFalse($saf->isGroupDefined($groups, '@uGroup1'));
+        $this->assertFalse($saf->isGroupDefined($groups, '@ uGroup1 = rw'));
+        $this->assertFalse($saf->isGroupDefined($groups, '@@uGroup1 = rw'));
     }
 
-    function testIsValidUGroupLineNoUGroup() {
-        $ugroups = array(1, 2);
-        $ugdao = new MockUGroupDao();
-        $ugdao->setReturnValue('searchByGroupId',$ugroups);
-
-        $ugroup1 = new MockUGroup();
-        $ugroup1->setReturnValue('getMembers',array(1));
-        $ugroup1->setReturnValue('getName',"uGroup1");
-        $ugroup2 = new MockUGroup();
-        $ugroup2->setReturnValue('getMembers',array(2));
-        $ugroup2->setReturnValue('getName',"uGroup2");
-
-        $project = new MockProject();
-
-        $saf = new SVNAccessFileTestVersion();
-        $saf->setReturnValueAt(0, '_getUGroupFromRow', $ugroup1);
-        $saf->setReturnValueAt(1, '_getUGroupFromRow', $ugroup2);
-        $saf->setReturnValue('_getUGroupDao', $ugdao);
-        $this->assertFalse($saf->isValidUGroupLine($project, '@uGroup3 = rw'));
+    function testisGroupDefinedNoUGroup() {
+        $groups = array();
+        $saf = new SVNAccessFile();
+        $this->assertFalse($saf->isGroupDefined($groups, '@uGroup3 = rw'));
     }
 
-    function testIsValidUGroupLineEmptyUGroup() {
-        $ugroups = array(1, 2);
-        $ugdao = new MockUGroupDao();
-        $ugdao->setReturnValue('searchByGroupId',$ugroups);
-
-        $ugroup1 = new MockUGroup();
-        $ugroup1->setReturnValue('getMembers',array(1));
-        $ugroup1->setReturnValue('getName',"uGroup1");
-        $ugroup2 = new MockUGroup();
-        $ugroup2->setReturnValue('getName',"uGroup2");
-        $ugroup2->setReturnValue('getMembers',array());
-
-        $project = new MockProject();
-
-        $saf = new SVNAccessFileTestVersion();
-        $saf->setReturnValueAt(0, '_getUGroupFromRow', $ugroup1);
-        $saf->setReturnValueAt(1, '_getUGroupFromRow', $ugroup2);
-        $saf->setReturnValue('_getUGroupDao', $ugdao);
-        $this->assertFalse($saf->isValidUGroupLine($project, '@uGroup2 = rw'));
-    }
-
-    function testIsValidUGroupLineMembers() {
-        $ugroups = array(1, 2);
-        $ugdao = new MockUGroupDao();
-        $ugdao->setReturnValue('searchByGroupId',$ugroups);
-
-        $ugroup1 = new MockUGroup();
-        $ugroup1->setReturnValue('getMembers',array(1));
-        $ugroup1->setReturnValue('getName',"uGroup1");
-        $ugroup2 = new MockUGroup();
-        $ugroup2->setReturnValue('getMembers',array(2));
-        $ugroup2->setReturnValue('getName',"uGroup2");
-
-        $project = new MockProject();
-
-        $saf = new SVNAccessFileTestVersion();
-        $saf->setReturnValueAt(0, '_getUGroupFromRow', $ugroup1);
-        $saf->setReturnValueAt(1, '_getUGroupFromRow', $ugroup2);
-        $saf->setReturnValue('_getUGroupDao', $ugdao);
-        $this->assertTrue($saf->isValidUGroupLine($project, '@members = rw'));
-    }
-
-    function testIsValidUGroupLine() {
-        $ugroups = array(1, 2);
-        $ugdao = new MockUGroupDao();
-        $ugdao->setReturnValue('searchByGroupId',$ugroups);
-
-        $ugroup1 = new MockUGroup();
-        $ugroup1->setReturnValue('getMembers',array());
-        $ugroup1->setReturnValue('getName',"uGroup1");
-        $ugroup2 = new MockUGroup();
-        $ugroup2->setReturnValue('getName',"uGroup2");
-        $ugroup2->setReturnValue('getMembers',array(2));
-
-        $project = new MockProject();
-
-        $saf = new SVNAccessFileTestVersion();
-        $saf->setReturnValueAt(0, '_getUGroupFromRow', $ugroup1);
-        $saf->setReturnValueAt(1, '_getUGroupFromRow', $ugroup2);
-        $saf->setReturnValue('_getUGroupDao', $ugdao);
-        $this->assertTrue($saf->isValidUGroupLine($project, '@uGroup2=rw'));
-    }
-
-    function testIsValidUGroupLineOneCharacter() {
-        $ugroups = array(1, 2);
-        $ugdao = new MockUGroupDao();
-        $ugdao->setReturnValue('searchByGroupId',$ugroups);
-
-        $ugroup1 = new MockUGroup();
-        $ugroup1->setReturnValue('getMembers',array());
-        $ugroup1->setReturnValue('getName',"uGroup1");
-        $ugroup2 = new MockUGroup();
-        $ugroup2->setReturnValue('getName',"a");
-        $ugroup2->setReturnValue('getMembers',array(2));
-
-        $project = new MockProject();
-
-        $saf = new SVNAccessFileTestVersion();
-        $saf->setReturnValueAt(0, '_getUGroupFromRow', $ugroup1);
-        $saf->setReturnValueAt(1, '_getUGroupFromRow', $ugroup2);
-        $saf->setReturnValue('_getUGroupDao', $ugdao);
-        $this->assertTrue($saf->isValidUGroupLine($project, '@a=rw'));
+    function testisGroupDefined() {
+        $groups = array('ugroup2' => true, 'a' => true);
+        $saf = new SVNAccessFile();
+        $this->assertTrue($saf->isGroupDefined($groups, '@uGroup2=rw'));
+        $this->assertFalse($saf->isGroupDefined($groups, '@uGroup3 = rw'));
+        $this->assertTrue($saf->isGroupDefined($groups, '@a=rw'));
     }
 
     function testValidateUGroupLine() {
-        $saf = new SVNAccessFileTestVersion2();
-        $saf->setReturnValue('isValidUGroupLine', true);
-        $project = new MockProject();
-        $this->assertEqual(' uGroup1 = rw', $saf->validateUGroupLine($project, ' uGroup1 = rw', null, 'uGroup2', 'uGroup1'));
-        $this->assertEqual(' @uGroup11 = rw', $saf->validateUGroupLine($project, ' @uGroup11 = rw', null, 'uGroup2', 'uGroup1'));
-        $this->assertEqual(' @@uGroup1 = rw', $saf->validateUGroupLine($project, ' @@uGroup1 = rw', null, 'uGroup2', 'uGroup1'));
-        $this->assertEqual('# @uGroup1 = rw', $saf->validateUGroupLine($project, '# @uGroup1 = rw', null, 'uGroup2', 'uGroup1'));
+        $saf = new SVNAccessFileTestVersion();
+        $saf->setReturnValue('isGroupDefined', true);
+        $groups = array('uGroup1' => false, 'uGroup2' => false, 'uGroup3' => true, 'uGroup33' => true);
+        $this->assertEqual(' uGroup1 = rw', $saf->validateUGroupLine($groups, ' uGroup1 = rw', null));
+        $this->assertEqual(' @uGroup11 = rw', $saf->validateUGroupLine($groups, ' @uGroup11 = rw', null));
+        $this->assertEqual(' @@uGroup1 = rw', $saf->validateUGroupLine($groups, ' @@uGroup1 = rw', null));
+        $this->assertEqual('# @uGroup1 = rw', $saf->validateUGroupLine($groups, '# @uGroup1 = rw', null));
 
-        $this->assertEqual('@uGroup2 = rw', $saf->validateUGroupLine($project, '@uGroup1 = rw', null, 'uGroup2', 'uGroup1'));
-        $this->assertEqual(' @uGroup2 = rw', $saf->validateUGroupLine($project, ' @uGroup1 = rw', null, 'uGroup2', 'uGroup1'));
+        $this->assertEqual('@uGroup3 = rw', $saf->validateUGroupLine($groups, '@uGroup3 = rw', null));
+        $this->assertEqual('@uGroup33 = rw', $saf->validateUGroupLine($groups, '@uGroup33 = rw', null));
+        $this->assertEqual('@uGroup33	= rw', $saf->validateUGroupLine($groups, '@uGroup33	= rw', null));
+    }
+
+    function testRenameGroup() {
+        $groups = array('ugroup1' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup2' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup3' => SVNAccessFile::UGROUP_REDEFINED);
+        $saf = new SVNAccessFile();
+        $saf->setRenamedGroup('ugroup11', 'ugroup1');
+        $this->assertEqual('@ugroup11 = rw', $saf->renameGroup($groups, '@ugroup1 = rw'));
+        $this->assertEqual('@ugroup2 = rw', $saf->renameGroup($groups, '@ugroup2 = rw'));
+
+        $saf->setRenamedGroup('ugroup33', 'ugroup3');
+        $this->assertEqual('@ugroup3 = rw', $saf->renameGroup($groups, '@ugroup3 = rw'));
+        $this->assertEqual('@ugroup2 = rw', $saf->renameGroup($groups, '@ugroup2 = rw'));
+    }
+
+    function testCommentInvalidLine() {
+        $groups = array('ugroup1' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup2' => SVNAccessFile::UGROUP_DEFAULT, 'ugroup3' => SVNAccessFile::UGROUP_REDEFINED);
+        $saf = new SVNAccessFile();
+        $this->assertEqual('@ugroup1 = rw', $saf->commentInvalidLine($groups, '@ugroup1 = rw'));
+        $this->assertEqual('# @ugroup2', $saf->commentInvalidLine($groups, '@ugroup2'));
+    }
+
+    function testParseGroupLines() {
+        $this->skipUnless(MOCKFUNCTION_AVAILABLE, "Function mocking not available");
+        if (MOCKFUNCTION_AVAILABLE) {
+            MockFunction::generate('svn_utils_read_svn_access_file_defaults');
+            MockFunction::setReturnValue('svn_utils_read_svn_access_file_defaults', "[groups]\nmembers = user1, user2\nuGroup1 = user3\n\n[/]\n*=\n@members=rw\n");
+
+            $project = new MockProject();
+            $saf = new SVNAccessFile();
+            $this->assertEqual("[/]\n@members=rw\n# @group1 = r", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r"));
+            $this->assertEqual("[/]\n@members=rw\n# @group1 = r\n[Groups]\ngroup1=user1, user2\n[/trunk]\n@group1=r\nuser1=rw", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r\n[Groups]\ngroup1=user1, user2\n[/trunk]\n@group1=r\nuser1=rw"));
+            $this->assertEqual("[/]\n@members=rw\n# @group1 = r\n[Groups]\ngroup1=user1, user2\n[groups]\ngroup2=user3\n[/trunk]\n@group1=r\nuser1=rw\n@group2=rw", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r\n[Groups]\ngroup1=user1, user2\n[groups]\ngroup2=user3\n[/trunk]\n@group1=r\nuser1=rw\n@group2=rw"));
+
+            MockFunction::restore('svn_utils_read_svn_access_file_defaults');
+        }
+    }
+
+    function testAccumulateDefinedGroupsFromDeFaultGroupsSection() {
+        $saf = new SVNAccessFile();
+        $this->assertEqual(array(), $saf->accumulateDefinedGroups(array(), '', true));
+
+        $this->assertEqual(array('group1' => SVNAccessFile::UGROUP_DEFAULT), $saf->accumulateDefinedGroups(array(), 'group1 = user1, user2', true));
+
+        $this->assertEqual(array('group1' => SVNAccessFile::UGROUP_DEFAULT), $saf->accumulateDefinedGroups(array('group1' => SVNAccessFile::UGROUP_DEFAULT), 'group1 = user11, user22', true));
+
+        $this->assertEqual(array('group1' => SVNAccessFile::UGROUP_REDEFINED, 'group2' => SVNAccessFile::UGROUP_DEFAULT), $saf->accumulateDefinedGroups(array('group1' => SVNAccessFile::UGROUP_REDEFINED), 'group2 = user11, user22', true));
+    }
+
+    function testAccumulateDefinedGroups() {
+        $saf = new SVNAccessFile();
+        $this->assertEqual(array(), $saf->accumulateDefinedGroups(array(), ''));
+
+        $this->assertEqual(array(), $saf->accumulateDefinedGroups(array(), 'blah'));
+
+        $this->assertEqual(array(), $saf->accumulateDefinedGroups(array(), '[Groups]'));
+
+        $this->assertEqual(array(), $saf->accumulateDefinedGroups(array(), '[/]'));
+
+        $this->assertEqual(array('group1' => SVNAccessFile::UGROUP_REDEFINED), $saf->accumulateDefinedGroups(array(), 'Group1 = user1, user2', false));
+
+        $this->assertEqual(array('group1' => SVNAccessFile::UGROUP_REDEFINED), $saf->accumulateDefinedGroups(array('group1' => SVNAccessFile::UGROUP_DEFAULT), 'Group1 = user1, user2', false));
+
+        $this->assertEqual(array('group1' => SVNAccessFile::UGROUP_DEFAULT, 'group2' => SVNAccessFile::UGROUP_REDEFINED), $saf->accumulateDefinedGroups(array('group1' => SVNAccessFile::UGROUP_DEFAULT), 'Group2 = user1, user2', false));
+    }
+
+    function testGetCurrentSection() {
+        $saf = new SVNAccessFile();
+        $this->assertEqual(-1, $saf->getCurrentSection('', -1));
+        $this->assertEqual(-1, $saf->getCurrentSection('blah', -1));
+        $this->assertEqual('groups', $saf->getCurrentSection('[Groups]', -1));
+        $this->assertEqual('groups', $saf->getCurrentSection('[Groups]', 'groups'));
+        $this->assertEqual(-1, $saf->getCurrentSection('[/]', -1));
+        $this->assertEqual(-1, $saf->getCurrentSection('[/]', 'groups'));
+        $this->assertEqual('groups', $saf->getCurrentSection('Group1 = user1, user2', 'groups'));
+        $this->assertEqual(-1, $saf->getCurrentSection('Group1 = user1, user2', -1));
     }
 
 }

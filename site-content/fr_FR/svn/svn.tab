@@ -11,8 +11,7 @@ svn_admin_access_control	access_ctrl	Administration de Subversion - Contrôle d'
 svn_admin_access_control	def_policy	La politique par défaut de $1 est d'autoriser l'accès en lecture et en écriture à tous les membres du projet sur l'ensemble du dépôt et l'accès en lecture seule aux autres utilisateurs de $1. Vous pouvez ajuster ou même redéfinir les permissions d'accès pour vos besoins.
 svn_admin_access_control	access_ctrl_file	Fichier de contrôle d'accès
 svn_admin_access_control	not_created	Votre dépôt Subversion n'a pas été créé. Les permissions d'accès ne peuvent pas encore être définies.
-svn_admin_access_control	ugroup_empty	Le groupe "$1" est vide
-svn_admin_access_control	no_ugroup	Le groupe "$1" n'existe pas
+svn_admin_access_control	no_ugroup	Le groupe "$1" est vide ou n'existe pas
 svn_admin_access_control	invalid_line	La ligne "$1" est invalide
 #
 #-----------------------------------------------

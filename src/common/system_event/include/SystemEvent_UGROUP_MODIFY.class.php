@@ -48,26 +48,17 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      * Process stored event
      */
     function process() {
+        $ugroup_name = null;
+        $ugroup_old_name = null;
         // Check parameters
-        if(count($this->getParametersAsArray()) == 4) {
-            list($group_id,$ugroup_id,$ugroup_name,$ugroup_old_name) = $this->getParametersAsArray();
-        } else {
-            list($group_id, $ugroup_id) = $this->getParametersAsArray();
-        }
+        list($group_id, $ugroup_id, $ugroup_name, $ugroup_old_name) = $this->getParametersAsArray();
         if ($project = $this->getProject($group_id)) {
             // Update SVN access file
             if ($project->usesSVN()) {
                 $backendSVN = Backend::instance('SVN');
-                if (!empty($ugroup_name)){
-                    if (!$backendSVN->updateSVNAccess($group_id, $ugroup_name, $ugroup_old_name)) {
-                        $this->error("Could not update SVN access file ($group_id)");
-                        return false;
-                    }
-                } else {
-                    if (!$backendSVN->updateSVNAccess($group_id)) {
-                        $this->error("Could not update SVN access file ($group_id)");
-                        return false;
-                    }
+                if (!$backendSVN->updateSVNAccess($group_id, $ugroup_name, $ugroup_old_name)) {
+                    $this->error("Could not update SVN access file ($group_id)");
+                    return false;
                 }
             }
         }

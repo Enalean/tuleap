@@ -513,7 +513,7 @@ project_admin_ugroup_utils	cant_remove_u	Error: cannot remove users! $1
 project_admin_ugroup_utils	all_u_removed	all users removed from this group
 project_admin_ugroup_utils	cant_remove_perm	Error: cannot remove permissions! $1
 project_admin_ugroup_utils	perm_warning	WARNING: $1 associated permissions deleted. If this group was the only one authorized to access an object, permissions are now reset to default for this object.
-project_admin_ugroup_utils	ug_upd_empty	This User Group became empty it will be commented, if exists, in Subversion access control list
+project_admin_ugroup_utils	ug_upd_empty	This user group became empty. It will be commented, if exists, in Subversion access control list
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/userperms.php

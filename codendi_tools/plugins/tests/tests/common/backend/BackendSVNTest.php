@@ -37,6 +37,8 @@ require_once('common/project/UGroup.class.php');
 Mock::generate('UGroup');
 require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');
+require_once('common/svn/SVNAccessFile.class.php');
+Mock::generate('SVNAccessFile');
 Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('getUserManager', 
                                                                    'getProjectManager',
                                                                    'getUGroupDao',
@@ -45,6 +47,7 @@ Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('getUserManag
                                                                    'chown',
                                                                    'chgrp',
                                                                    'chmod',
+                                                                   '_getSVNAccessFile'
                                                                    ));
 
 Mock::generatePartial('BackendSVN', 'BackendSVNAccessTestVersion', array('updateSVNAccess',
@@ -231,6 +234,8 @@ class BackendSVNTest extends UnitTestCase {
         $this->assertTrue(is_dir($GLOBALS['svn_prefix']."/TestProj"),"SVN dir should be created");
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"),"SVN access file should be created");
 
+        $saf = new MockSVNAccessFile();
+        $backend->setReturnValue('_getSVNAccessFile', $saf);
         // Update without modification
         $this->assertEqual($backend->updateSVNAccess(142),True);
         $this->assertTrue(is_file($GLOBALS['svn_prefix']."/TestProj/.SVNAccessFile"),"SVN access file should exist");

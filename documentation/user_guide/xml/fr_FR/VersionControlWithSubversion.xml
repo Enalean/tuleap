@@ -820,6 +820,8 @@ members = membre1,membre2,...,membreN
 	<para>où <literal>membre1,membre2,...,membreN</literal>
 	représentent la liste des utilisateurs du projet.</para>
         <para>En outre, tous les groupes d'utilisateurs définis dans ce projet sont également détaillés dans cette section.</para>
+        <para>Il est à noter que si un groupe d'utilisateurs n'est défini ni dans la configuration par défaut
+        ni manuellement par l'utilisateur, chaque définition de permission reprenant ce group sera commentée.</para>
         <para>Cette configuration par défaut est générée automatiquement, et ne peut pas être éditée par l'utilisateur. Il faut considérer cette section comme le début du fichier de spécification des permission du dépôt Subversion: les administrateurs du projet peuvent définir des permissions, qui seront ajoutées à la suite de cette section.</para>
         <para>Notez bien qu'il n'est pas possible de restreindre des permissions déjà accordées sur un même répertoire.</para>
        <para>Par exemple, un projet publique aura le fichier de permission décrit plus haut; il est inutile dans ce cas d'écrire des règles plus strictes pour limiter l'accès au repertoire racine. Ainsi, ajouter:

@@ -86,10 +86,11 @@ def fetch_access_file(svnrepo):
 
                     if who[0] == '@':
                         this_group=who[1:]
-                        for who in SVNGROUPS[this_group.lower()]:
-                            if not SVNACCESS.has_key(who): SVNACCESS[who] = {}
-                            SVNACCESS[who][path] = string.strip(perm)
-                            #SVNACCESS[who][path] = perm
+                        if SVNGROUPS.has_key(this_group.lower()):
+                            for who in SVNGROUPS[this_group.lower()]:
+                                if not SVNACCESS.has_key(who): SVNACCESS[who] = {}
+                                SVNACCESS[who][path] = string.strip(perm)
+                                #SVNACCESS[who][path] = perm
                     else:
                         if not SVNACCESS.has_key(who.lower()): SVNACCESS[who.lower()] = {}
                         SVNACCESS[who.lower()][path] = string.strip(perm)

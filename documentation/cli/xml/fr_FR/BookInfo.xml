@@ -113,6 +113,16 @@
         <revremark>Ajout d'une option sur la ligne de commande</revremark>
       </revision>
 
+      <revision>
+        <revnumber>1.4.2</revnumber>
+
+        <date>29-Jul-2011</date>
+
+        <authorinitials>Hatem Ounis, Nouha Terzi</authorinitials>
+
+        <revremark>Validation du contole d'accés SVN</revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--

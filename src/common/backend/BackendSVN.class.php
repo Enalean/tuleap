@@ -25,6 +25,8 @@ require_once('common/dao/UGroupDao.class.php');
 require_once('common/project/UGroup.class.php');
 require_once('common/dao/ServiceDao.class.php');
 require_once('common/svn/SVNAccessFile.class.php');
+require_once('common/include/Error.class.php');
+require_once('www/svn/svn_utils.php');
 
 /**
  * Backend class to work on subversion repositories
@@ -218,6 +220,15 @@ class BackendSVN extends Backend {
     }
 
     /**
+     * Wrapper for tests
+     *
+     * @return SVNAccessFile
+     */
+    function _getSVNAccessFile() {
+        return new SVNAccessFile();
+    }
+
+    /**
      * Update Subversion DAV access control file if needed
      *
      * @param int    $group_id        the id of the project
@@ -251,16 +262,19 @@ class BackendSVN extends Backend {
         // Retrieve custom permissions, if any
         if (is_file("$svnaccess_file")) {
             $svnaccess_array = file($svnaccess_file);
-            $configlines=false;
-            $saf = new SVNAccessFile();
+            $configlines = false;
+            $contents = '';
             while ($line = array_shift($svnaccess_array)) {
                 if ($configlines) {
-                    $custom_perms .= $saf->validateUGroupLine($project, $line, null, $ugroup_name, $ugroup_old_name);
+                    $contents .= $line;
                 }
                 if (strcmp($line, $default_block_end) == 0) { 
                     $configlines=1;
                 }
             }
+            $saf = $this->_getSVNAccessFile();
+            $saf->setRenamedGroup($ugroup_name, $ugroup_old_name);
+            $custom_perms .= $saf->parseGroupLines($project, $contents);
         }
 
         $fp = fopen($svnaccess_file_new, 'w');

@@ -511,7 +511,7 @@ project_admin_ugroup_utils	cant_remove_u	Erreur - Impossible d'enlever l'utilisa
 project_admin_ugroup_utils	all_u_removed	Tous les utilisateurs ont été enlevés de ce groupe
 project_admin_ugroup_utils	cant_remove_perm	Erreur : impossible d'enlever les permissions ! $1
 project_admin_ugroup_utils	perm_warning	AVERTISSEMENT: permissions associées à $1 détruites. Si ce groupe était le seul autorisé à accéder à cet objet, les permissions seront réinitialisées à leurs valeurs par défaut.
-project_admin_ugroup_utils	ug_upd_empty	Ce groupe d'utilisateurs est devenu vide il va etre commenté, si utilisé, dans la configuration d'accés de Subversion
+project_admin_ugroup_utils	ug_upd_empty	Ce groupe d'utilisateurs est devenu vide. Il va etre commenté, si utilisé, dans la configuration d'accés de Subversion
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/userperms.php

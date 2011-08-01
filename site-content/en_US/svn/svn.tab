@@ -18,8 +18,7 @@ svn_admin_access_control	access_ctrl	Subversion Administration - Access Control
 svn_admin_access_control	def_policy	The default policy is to allow read-write access to all project members on the entire repository and read-only access to all other $1 users. You can tune or even redefine the access permissions below to suit your needs.
 svn_admin_access_control	access_ctrl_file	Access Control File
 svn_admin_access_control	not_created	Your subversion repository has not been created yet. Access permissions cannot yet be defined
-svn_admin_access_control	ugroup_empty	Ugroup "$1" is empty
-svn_admin_access_control	no_ugroup	Ugroup "$1" does not exist
+svn_admin_access_control	no_ugroup	User group "$1" is empty or does not exist
 svn_admin_access_control	invalid_line	Invalid line "$1"
 #
 #-----------------------------------------------
