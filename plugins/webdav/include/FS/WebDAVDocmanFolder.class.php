@@ -416,7 +416,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
                 }
                 else if(get_class($child)=='Docman_Folder') {
                     $this->deleteDirectoryContent($child);
-                    $child->delete();
+                    $docmanFolder= $this->getWebDAVDocmanFolder($child);
+                    $docmanFolder->delete();
                 }
             }
         } else {
