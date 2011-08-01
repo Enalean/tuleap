@@ -14,8 +14,8 @@ require_once('Docman_View_DocmanError.class.php');
 class Docman_View_Download extends Docman_View_View {
     
     /* protected */ function _content($params) {
-        $version_factory =& $this->_getVersionFactory($params);
         if (isset($params['version_number'])) {
+            $version_factory =& $this->_getVersionFactory($params);
             $version =& $version_factory->getSpecificVersion($params['item'], $params['version_number']);
         } else {
             $version =& $params['item']->getCurrentVersion();
@@ -23,8 +23,8 @@ class Docman_View_Download extends Docman_View_View {
         if ($version) {
             if (file_exists($version->getPath())) {
                 try {
-                $version->preDownload($params['item'], $params['user']);
-                } catch (DocmanWatermark_EncryptedPdfException $e) {
+                    $version->preDownload($params['item'], $params['user']);
+                } catch (Exception $e) {
                     $GLOBALS['Response']->addFeedback('error',$e->getMessage(), CODENDI_PURIFIER_DISABLED);
                     $GLOBALS['Response']->redirect($this->_controller->getDefaultUrl());
                 }
