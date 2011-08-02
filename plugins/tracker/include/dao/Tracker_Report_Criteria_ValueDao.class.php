@@ -17,23 +17,23 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('pre.php');
-require_once('common/tracker/TrackerManager.class.php');
-require_once('www/project/admin/permissions.php');
-require_once('common/plugin/PluginManager.class.php');
- 
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('tracker');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $request = HTTPRequest::instance();
-    $current_user = UserManager::instance()->getCurrentUser();
+require_once('common/dao/include/DataAccessObject.class.php');
+abstract class Tracker_Report_Criteria_ValueDao extends DataAccessObject {
     
-    $tracker_manager = new TrackerManager();
-    $tracker_manager->process(HTTPRequest::instance(), UserManager::instance()->getCurrentUser());
-} elseelse {
-    header('Location: '.get_server_url());
+    public function searchByCriteriaId($criteria_id) {
+        $criteria_id  = $this->da->escapeInt($criteria_id);
+        $sql = "SELECT *
+                FROM $this->table_name
+                WHERE criteria_id = $criteria_id ";
+        return $this->retrieve($sql);
+    }
+    
+    public function delete($id) {
+        $id  = $this->da->escapeInt($id);
+        $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
+        return $this->update($sql);
+    }
+    
+    abstract public function save($id, $value);
 }
-
-
 ?>

@@ -18,22 +18,35 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('common/tracker/TrackerManager.class.php');
-require_once('www/project/admin/permissions.php');
-require_once('common/plugin/PluginManager.class.php');
- 
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('tracker');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $request = HTTPRequest::instance();
-    $current_user = UserManager::instance()->getCurrentUser();
+class Tracker_GlobalNotification {
     
-    $tracker_manager = new TrackerManager();
-    $tracker_manager->process(HTTPRequest::instance(), UserManager::instance()->getCurrentUser());
-} elseelse {
-    header('Location: '.get_server_url());
+    var $data;
+	
+    /**
+    * Constructor
+    */
+    function Tracker_GlobalNotification($data) {
+        $this->data = $data;
+    }
+    function getId() {
+        return $this->data['id'];
+    }
+    function getTrackerId() {
+        return $this->data['tracker_id'];
+    }
+    function getAddresses($asArray=false) {
+        $data = $this->data['addresses'];
+        if ( $asArray )  {
+            $data = split('[,;]', $this->data['addresses']);
+            $data = array_map('trim', $data);
+        }
+        return $data;
+    }
+    function isAllUpdates() {
+        return $this->data['all_updates'];
+    }
+    function isCheckPermissions() {
+        return $this->data['check_permissions'];
+    }
 }
-
-
 ?>

@@ -18,22 +18,28 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('common/tracker/TrackerManager.class.php');
-require_once('www/project/admin/permissions.php');
-require_once('common/plugin/PluginManager.class.php');
- 
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('tracker');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $request = HTTPRequest::instance();
-    $current_user = UserManager::instance()->getCurrentUser();
+/**
+* Rule between two dynamic fields
+*
+* For a tracker, if a source field is selected to a specific value,
+* then target field will react, depending of the implementation of the rule.
+*
+* @abstract
+*/
+/* abstract */ class Tracker_Rule {
     
-    $tracker_manager = new TrackerManager();
-    $tracker_manager->process(HTTPRequest::instance(), UserManager::instance()->getCurrentUser());
-} elseelse {
-    header('Location: '.get_server_url());
+    var $id;
+    var $tracker_id;
+    var $source_field;
+    var $target_field;
+    var $source_value;
+    
+    function Tracker_Rule($id, $tracker_id, $source_field, $source_value, $target_field) {
+        $this->id                = $id;
+        $this->tracker_id        = $tracker_id;
+        $this->source_field      = $source_field;
+        $this->source_value      = $source_value;
+        $this->target_field      = $target_field;
+    }
 }
-
-
 ?>

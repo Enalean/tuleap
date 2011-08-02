@@ -18,22 +18,27 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('common/tracker/TrackerManager.class.php');
-require_once('www/project/admin/permissions.php');
-require_once('common/plugin/PluginManager.class.php');
- 
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('tracker');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $request = HTTPRequest::instance();
-    $current_user = UserManager::instance()->getCurrentUser();
-    
-    $tracker_manager = new TrackerManager();
-    $tracker_manager->process(HTTPRequest::instance(), UserManager::instance()->getCurrentUser());
-} elseelse {
-    header('Location: '.get_server_url());
-}
+require_once('Tracker_FormElement_Field_List_Value.class.php');
 
+class Tracker_FormElement_Field_List_UnsavedValue extends Tracker_FormElement_Field_List_Value {
+    
+    protected $label;
+    
+    public function __construct($id) {
+        parent::__construct($id);
+    }
+    
+    public function __toString() {
+        return $this->getLabel();
+    }
+    
+    public function getLabel() {
+        return $this->getId();
+    }
+    
+    public function getJsonId() {
+        return '!'. $this->getId();
+    }
+}
 
 ?>

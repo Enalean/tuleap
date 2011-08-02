@@ -1,9 +1,6 @@
 <?php
-
-/*
- * Copyright (c) Xerox, 2011. All Rights Reserved.
- *
- * Originally written by Nicolas Terray, 2011. Xerox Codendi Team.
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Codendi.
  *
@@ -18,28 +15,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Codendi; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/mvc/Actions.class.php');
-require_once('common/include/HTTPRequest.class.php');
-
-/**
- * trackerActions
- */
-class trackerActions extends Actions {
-    
-    function trackerActions(&$controler, $view=null) {
-        $this->Actions($controler);
-	}
-	
-	// {{{ Actions
-    
-    // }}}
-    
-    
+require_once('Tracker_Report_Criteria_ValueDao.class.php');
+class Tracker_Report_Criteria_OpenList_ValueDao extends Tracker_Report_Criteria_Alphanum_ValueDao {
+    function __construct() {
+        parent::__construct();
+        $this->table_name = 'tracker_report_criteria_openlist_value';
+    }
 }
-
-
 ?>

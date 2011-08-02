@@ -17,23 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once('Tracker_Artifact_ChangesetValue_List.class.php');
+require_once('common/include/Codendi_HTMLPurifier.class.php');
 
-require_once('pre.php');
-require_once('common/tracker/TrackerManager.class.php');
-require_once('www/project/admin/permissions.php');
-require_once('common/plugin/PluginManager.class.php');
- 
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('tracker');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $request = HTTPRequest::instance();
-    $current_user = UserManager::instance()->getCurrentUser();
+/**
+ * Manage values in changeset for string fields
+ */
+class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_ChangesetValue_List {
     
-    $tracker_manager = new TrackerManager();
-    $tracker_manager->process(HTTPRequest::instance(), UserManager::instance()->getCurrentUser());
-} elseelse {
-    header('Location: '.get_server_url());
+    /**
+     * Get the value (an array of int)
+     *
+     * @return array of int The values of this artifact changeset value
+     */
+    public function getValue() {
+        $values = $this->getListValues();
+        $array = array();
+        foreach ($values as $value) {
+            $array[] = $value->getJsonId();
+        }
+        return $array;
+    }
 }
-
-
 ?>

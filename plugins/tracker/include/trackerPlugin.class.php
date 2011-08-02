@@ -54,12 +54,6 @@ class trackerPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
-    
-    function process() {
-        require_once('tracker.class.php');
-        $controler =& new tracker();
-        $controler->process();
-    }
 }
 
 ?>

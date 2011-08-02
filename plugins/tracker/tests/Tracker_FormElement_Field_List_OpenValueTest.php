@@ -18,22 +18,16 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('common/tracker/TrackerManager.class.php');
-require_once('www/project/admin/permissions.php');
-require_once('common/plugin/PluginManager.class.php');
- 
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('tracker');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $request = HTTPRequest::instance();
-    $current_user = UserManager::instance()->getCurrentUser();
+require_once('common/tracker/Tracker_FormElement_Field_List_OpenValue.class.php');
+
+class Tracker_FormElement_Field_List_OpenValueTest extends UnitTestCase {
     
-    $tracker_manager = new TrackerManager();
-    $tracker_manager->process(HTTPRequest::instance(), UserManager::instance()->getCurrentUser());
-} elseelse {
-    header('Location: '.get_server_url());
+    public function testJSon() {
+        $id          = 123;
+        $label       = 'Reopen';
+        $value = new Tracker_FormElement_Field_List_OpenValue($id, $label);
+        $this->assertEqual($value->fetchJson(), '{"value":"o123","caption":"Reopen"}');
+    }
+    
 }
-
-
 ?>

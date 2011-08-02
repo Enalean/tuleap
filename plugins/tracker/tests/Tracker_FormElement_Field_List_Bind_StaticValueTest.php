@@ -17,23 +17,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once('common/tracker/Tracker_FormElement_Field_List_Bind_StaticValue.class.php');
 
-require_once('pre.php');
-require_once('common/tracker/TrackerManager.class.php');
-require_once('www/project/admin/permissions.php');
-require_once('common/plugin/PluginManager.class.php');
- 
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('tracker');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $request = HTTPRequest::instance();
-    $current_user = UserManager::instance()->getCurrentUser();
+class Tracker_FormElement_Field_List_Bind_StaticValueTest extends UnitTestCase {
     
-    $tracker_manager = new TrackerManager();
-    $tracker_manager->process(HTTPRequest::instance(), UserManager::instance()->getCurrentUser());
-} elseelse {
-    header('Location: '.get_server_url());
+    public function testGetLabel() {
+        $id          = 123;
+        $label       = 'Reopen';
+        $description = 'The artifact has been re-opened';
+        $rank        = 200;
+        $is_hidden   = 0;
+        $bv = new Tracker_FormElement_Field_List_Bind_StaticValue($id, $label, $description, $rank, $is_hidden);
+        $this->assertEqual($bv->getLabel(), $label);
+    }
+    
 }
-
-
 ?>

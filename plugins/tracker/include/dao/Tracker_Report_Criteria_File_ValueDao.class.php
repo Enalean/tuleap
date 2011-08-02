@@ -18,22 +18,23 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('pre.php');
-require_once('common/tracker/TrackerManager.class.php');
-require_once('www/project/admin/permissions.php');
-require_once('common/plugin/PluginManager.class.php');
- 
-$plugin_manager = PluginManager::instance();
-$p = $plugin_manager->getPluginByName('tracker');
-if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $request = HTTPRequest::instance();
-    $current_user = UserManager::instance()->getCurrentUser();
+require_once('Tracker_Report_Criteria_ValueDao.class.php');
+class Tracker_Report_Criteria_File_ValueDao extends Tracker_Report_Criteria_ValueDao {
+    function __construct() {
+        parent::__construct();
+        $this->table_name = 'tracker_report_criteria_file_value';
+    }
     
-    $tracker_manager = new TrackerManager();
-    $tracker_manager->process(HTTPRequest::instance(), UserManager::instance()->getCurrentUser());
-} elseelse {
-    header('Location: '.get_server_url());
+    public function save($id, $value) {
+        $id = $this->da->escapeInt($id);
+        $value = trim($value);
+        $v  = $this->da->quoteSmart($value);
+        if ($value) {
+            $sql = "REPLACE INTO $this->table_name(criteria_id, value) VALUES ($id, $v)";
+        } else {
+            $sql = "DELETE FROM $this->table_name WHERE criteria_id = $id";
+        }
+        return $this->update($sql);
+    }
 }
-
-
 ?>

@@ -1,0 +1,313 @@
+default namespace = "http://codendi.org/tracker"
+namespace xsd = "http://www.w3.org/2001/XMLSchema"
+
+grammar {
+
+    start = element tracker {   
+        
+        # old ids
+        attribute id { xsd:int }?,
+        attribute group_id { xsd:int }?,
+        # these attributes should be optional and have default values
+        attribute allow_copy { "0" | "1" }?, # default is false
+        attribute instantiate_for_new_projects { "0" | "1" }?, # default is false
+        attribute stop_notification { "0" | "1" }?, # default is false
+        
+        # these elements are not used, they are provided by the user during the import
+        element name { xsd:string }?,
+        element item_name { xsd:string }?,
+        element description { xsd:string }?,
+        
+        element submit_instructions { xsd:string }?,
+        element browse_instructions { xsd:string }?,
+        
+        
+        element cannedResponses { 
+            element cannedResponse {
+                attribute id { xsd:int }?,
+                attribute tracker { xsd:int }?,
+                element title { xsd:string },
+                element body { xsd:string }
+            }*
+        },
+        
+        formElementsContent,
+        
+        element semantics {
+            element semantic { semanticContent }*
+        }?,
+        
+        element reports { 
+            element report { reportContent }* 
+        }?,
+        
+        element workflow {
+            element field_id {
+                attribute REF { xsd:IDREF }
+            }?,
+            element is_used {xsd:int}?,
+            element transitions { 
+                element transition { transitionContent }*
+            }?
+        }*,
+
+        element permissions {
+            element permission {
+                attribute REF { xsd:IDREF }?,
+                attribute scope { "tracker" | "field" },
+                attribute ugroup { xsd:string },
+                attribute type { xsd:string }
+            }*
+        }?
+    }
+    
+    
+    formElementsContent = 
+        element formElements { 
+            element formElement { formElementContent }*
+        }?
+    
+    
+    formElementContent =
+        # ID is internal to the XML file
+        attribute ID { xsd:ID }, 
+        attribute rank { xsd:int },
+        # id is the initial id of the exported field
+        attribute id { xsd:int }?,
+        attribute tracker_id { xsd:int }?,
+        attribute parent_id { xsd:int }?,
+        # these attributes should be optional and have  default values
+        attribute use_it { "0" | "1" }?, # default is true
+        attribute scope { "S" | "P" }?, # default is 'P'
+        attribute required { "0" | "1" }?, # default is false
+        attribute notifications { "0" | "1" }?, # default is false
+        
+        element name { xsd:string },
+        element label { xsd:string },
+        element description { xsd:string }?,
+         
+        element properties {
+            attribute maxchars { xsd:int }?,
+            attribute size { xsd:int }?,
+            attribute rows { xsd:int }?,
+            attribute cols { xsd:int }?,
+            attribute static_value { xsd:string }?,
+            attribute default_value { xsd:string }?,
+            attribute hint { xsd:string }?
+        }?,
+        
+        (
+            (
+                attribute type { xsd:string }
+            )
+        |
+            (
+                attribute type { "fieldset" | "column" },
+                formElementsContent?
+            )
+        |
+            (
+                attribute type { "sb" | "msb" | "tbl" },
+                bindContent
+            )
+        )
+        
+    bindContent = 
+        element bind {
+            (
+                (
+                    attribute type { "static" },
+                    attribute is_rank_alpha { "0" | "1" }
+                ) 
+            | 
+                (
+                    attribute type { "users" }
+                )
+            ),
+            element items { 
+                element item {
+                    attribute ID { xsd:ID }?, 
+                    attribute label { xsd:string }, 
+                    attribute is_hidden { "0" | "1" }?,
+                    element description { xsd:string }?
+                }*
+            }?,
+            element decorators { 
+                element decorator {
+                    attribute REF { xsd:IDREF }, 
+                    attribute r { xsd:int }, 
+                    attribute g { xsd:int }, 
+                    attribute b { xsd:int }
+                }*
+            }?,
+            element default_values {
+                element value {
+                    attribute REF { xsd:IDREF }
+                }*
+            }?
+        } 
+        
+    transitionContent =
+        element from_id {
+            attribute REF { xsd:string }
+        },
+        element to_id {
+            attribute REF { xsd:string }
+        }
+        
+        
+    semanticContent = 
+        (
+            (
+                attribute type { "title" },
+                element shortname {xsd:string},
+                element label {xsd:string},
+                element description {xsd:string},
+                element field { 
+                    attribute REF { xsd:IDREF }
+                }
+            )
+         |
+            (
+                attribute type { "status" },
+                element shortname {xsd:string},
+                element label {xsd:string},
+                element description {xsd:string},
+                element field { 
+                    attribute REF { xsd:IDREF }
+                },
+                element open_values { 
+                    element open_value { 
+                        attribute REF { xsd:IDREF }
+                    }*
+                }
+            )
+         |
+            (
+                attribute type { "contributor" },
+                element shortname {xsd:string},
+                element label {xsd:string},
+                element description {xsd:string},
+                element field { 
+                    attribute REF { xsd:IDREF }
+                }
+            )
+         |
+            (
+                attribute type { "tooltip" },
+                element field { 
+                    attribute REF { xsd:IDREF }
+                }*
+            )
+        )
+        
+        
+    reportContent = 
+        # these attributes should be optional and have  default values
+        attribute is_default { "0" | "1" }?, # default is false
+        attribute is_query_displayed { "0" | "1" }?, # defaout is true
+        # these ids are initial ids of the exported report 
+        attribute id { xsd:int }?,
+        attribute tracker_id { xsd:int }?,
+        attribute current_renderer_id { xsd:int }?,
+        attribute user_id { xsd:int }?,
+        attribute parent_report_id { xsd:int }?,
+        
+        element name { xsd:string },
+        element description { xsd:string }?,
+        
+        element criterias {
+            element criteria { criteriaContent }*
+        },
+        element renderers {
+            element renderer { rendererContent }*
+        }
+        
+    criteriaContent = 
+        attribute rank { xsd:int },
+        # these attributes should be optional and have  default values
+        attribute is_advanced { "0" | "1" }?, # default is false
+        # these ids are initial ids of the exported report
+        attribute id { xsd:int }?,
+        attribute report { xsd:int }?, 
+        
+        element field { 
+            attribute REF { xsd:IDREF }
+        }
+    
+    rendererContent = 
+        element name { xsd:string }, 
+        element description { xsd:string }?,
+        attribute id { xsd:int }?, 
+        attribute report { xsd:int }?,
+        attribute rank { xsd:int },
+        (
+            (
+                attribute type { "table" },
+                attribute chunksz { xsd:int },
+                attribute multisort { xsd:int }?, # default is false
+                element columns {
+                    element field {
+                        attribute REF { xsd:IDREF }
+                    }*
+                }?,
+                element sort {
+                    element field {
+                        attribute REF { xsd:IDREF }
+                    }*
+                }?
+            )
+        | 
+            (
+                attribute type { "plugin_graphontrackers" },
+                element charts { 
+                    element chart {
+                        attribute width { xsd:int },
+                        attribute height { xsd:int },
+                        attribute rank { xsd:int },
+                        element title { xsd:string },
+                        element description { xsd:string }?,
+                        (
+                            (
+                                attribute type { "gantt" },
+                                attribute scale { xsd:string }?,
+                                attribute as_of_date { xsd:string }?,
+                                attribute start { xsd:IDREF }?,
+                                attribute due { xsd:IDREF }?,
+                                attribute finish { xsd:IDREF }?,
+                                attribute righttext { xsd:IDREF }?,
+                                attribute summary { xsd:IDREF }?,
+                                attribute percentage { xsd:IDREF }?
+                            )
+                        | 
+                            (
+                                attribute type { "pie" },
+                                attribute base { xsd:IDREF }?
+                            )
+                        |
+                            (
+                                attribute type { "bar" },
+                                attribute base { xsd:IDREF }?,
+                                attribute group { xsd:IDREF }?
+                            )
+                        |
+                            (
+                                attribute type { "graphontrackers_scrum_burnup" },
+                                attribute start_date { xsd:string }?,
+                                attribute duration { xsd:int }?,
+                                attribute remaining_field{ xsd:IDREF }?,
+                                attribute done_field { xsd:IDREF }?
+                            )
+                        |
+                            (
+                                attribute type { "graphontrackers_scrum_burndown" },
+                                attribute start_date { xsd:string }?,
+                                attribute duration { xsd:int }?,
+                                attribute field{ xsd:IDREF }?
+                            )
+                        )
+                    }*
+                }?
+            )
+        )        
+}
