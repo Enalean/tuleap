@@ -18,10 +18,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/Tracker_Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
-require_once('common/tracker/Tracker_FormElement_Field_LastUpdateDate.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_LastUpdateDate.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_LastUpdateDate', 
     'Tracker_FormElement_Field_LastUpdateDateTestVersion', 
@@ -35,7 +35,7 @@ Mock::generatePartial(
     )
 );
     
-require_once('common/tracker/Tracker_Artifact_ChangesetValue_Date.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact_ChangesetValue_Date.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_Date');
 
 class Tracker_FormElement_Field_LastUpdateDateTest extends UnitTestCase {

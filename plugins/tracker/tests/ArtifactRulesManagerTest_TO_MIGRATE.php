@@ -1,16 +1,16 @@
 <?php
 /* OBSOLETE 
-require_once('common/tracker/Tracker_RulesManager.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_RulesManager.class.php');
 Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('_getTracker_RuleFactory', '_getSelectedValuesForField'));
 
-require_once('common/tracker/Tracker_Rule_Value.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Rule_Value.class.php');
 Mock::generate('Tracker_Rule_Value');
 
-require_once('common/tracker/Tracker_RuleFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_RuleFactory.class.php');
 Mock::generate('Tracker_RuleFactory');
 
 //We cannot mock ArtifactField ($Language is undefined)
-//require_once('common/tracker/Tracker_FieldFactory.class.php');
+//require_once(dirname(__FILE__).'/../include/Tracker_FieldFactory.class.php');
 class Tracker_RulesManagerTest_Tracker_FieldFactory {
     function getFieldFromName() {}
 }
@@ -20,7 +20,7 @@ require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
 //We cannot mock ArtifactField ($Language is undefined)
-//require_once('common/tracker/ArtifactField.class.php');
+//require_once(dirname(__FILE__).'/../include/ArtifactField.class.php');
 class Tracker_RulesManagerTest_ArtifactField {
     function getID() {}
     function getFieldPredefinedValues() {}

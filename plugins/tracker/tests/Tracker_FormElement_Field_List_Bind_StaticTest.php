@@ -18,12 +18,12 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once('common/tracker/Tracker_Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
-require_once('common/tracker/Tracker_FormElement_Field_List_Bind_Static.class.php');
-require_once('common/tracker/Tracker_FormElement_Field_List_Bind_StaticValue.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_Bind_Static.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_Bind_StaticValue.class.php');
 Mock::generate('Tracker_FormElement_Field_List_Bind_StaticValue');
-require_once('common/tracker/Tracker_FormElement_Field_List.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 
 class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {

@@ -18,13 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/Tracker_Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
-require_once('common/tracker/Tracker_ArtifactLinkInfo.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_ArtifactLinkInfo.class.php');
 Mock::generate('Tracker_ArtifactLinkInfo');
 
-require_once('common/tracker/Tracker_Artifact_ChangesetValue_ArtifactLink.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact_ChangesetValue_ArtifactLink.class.php');
 Mock::generatePartial(
     'Tracker_Artifact_ChangesetValue_ArtifactLink',
     'Tracker_Artifact_ChangesetValue_ArtifactLinkTestVersion',
@@ -33,7 +33,7 @@ Mock::generatePartial(
     )
 );
 
-require_once('common/tracker/Tracker_FormElement_Field_ArtifactLink.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_ArtifactLink.class.php');
 Mock::generate('Tracker_FormElement_Field_ArtifactLink');
 
 require_once('common/language/BaseLanguage.class.php');

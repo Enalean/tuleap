@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/Tracker.class.php');
+require_once('Tracker.class.php');
 require_once('dao/TrackerDao.class.php');
 
 class Tracker_TooltipFactory {

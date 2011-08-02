@@ -2,7 +2,7 @@
 
 /* OBSOLETE
 require_once('common/include/Error.class.php');
-require_once('common/tracker/Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Artifact.class.php');
 
 Mock::generatePartial('Artifact', 'ArtifactTestVersion', array('insertDependency', 'validArtifact', 'existDependency'));
 

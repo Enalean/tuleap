@@ -17,19 +17,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_Bind_StaticValue.class.php');
 
-class Tracker_FormElement_Field_List_Bind_StaticValueTest extends UnitTestCase {
-    
-    public function testGetLabel() {
-        $id          = 123;
-        $label       = 'Reopen';
-        $description = 'The artifact has been re-opened';
-        $rank        = 200;
-        $is_hidden   = 0;
-        $bv = new Tracker_FormElement_Field_List_Bind_StaticValue($id, $label, $description, $rank, $is_hidden);
-        $this->assertEqual($bv->getLabel(), $label);
+class PHP_Session {
+
+    public static function start() {
+        session_start();
+    }   
+
+    public static function destroy() {
+        unset($_SESSION);
+        session_destroy();
+    } 
+
+    public function clean() {
+        $_SESSION = array();
     }
-    
+
+    protected function &getSession() {
+        return $_SESSION;
+    }
+
 }
+
 ?>

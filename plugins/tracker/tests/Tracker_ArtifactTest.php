@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('common/tracker/Tracker_Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact.class.php');
 Mock::generatePartial(
     'Tracker_Artifact', 
     'Tracker_ArtifactTestVersion', 
@@ -50,23 +50,23 @@ Mock::generatePartial(
     )
 );
 
-require_once('common/tracker/Tracker_Artifact_Changeset.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact_Changeset.class.php');
 Mock::generate('Tracker_Artifact_Changeset');
-require_once('common/tracker/Tracker_Artifact_ChangesetValue.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact_ChangesetValue.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue');
-require_once('common/tracker/Tracker_FormElement_Field_Date.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
-require_once('common/tracker/Tracker_Artifact_ChangesetValue_Date.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact_ChangesetValue_Date.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_Date');
-require_once('common/tracker/dao/Tracker_Artifact_ChangesetDao.class.php');
+require_once(dirname(__FILE__).'/../include/dao/Tracker_Artifact_ChangesetDao.class.php');
 Mock::generate('Tracker_Artifact_ChangesetDao');
-require_once('common/tracker/dao/Tracker_Artifact_Changeset_CommentDao.class.php');
+require_once(dirname(__FILE__).'/../include/dao/Tracker_Artifact_Changeset_CommentDao.class.php');
 Mock::generate('Tracker_Artifact_Changeset_CommentDao');
-require_once('common/tracker/Tracker.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker.class.php');
 Mock::generate('Tracker');
-require_once('common/tracker/Tracker_FormElementFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
-require_once('common/tracker/Tracker_FormElement_Field.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field.class.php');
 Mock::generatePartial('Tracker_FormElement_Field', 'MockTracker_FormElement_Field', array(
         'getId',
         'getLabel',
@@ -116,9 +116,9 @@ require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
-require_once('common/tracker/Tracker_ArtifactFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_ArtifactFactory.class.php');
 Mock::generate('Tracker_ArtifactFactory');
-require_once('common/tracker/Tracker_RulesManager.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_RulesManager.class.php');
 Mock::generate('Tracker_RulesManager');
 /*Mock::generatePartial('Tracker_RulesManager', 'MockTracker_RulesManager', array(
         'validate'

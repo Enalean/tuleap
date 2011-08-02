@@ -100,9 +100,9 @@ class Toggler {
         $current_user = UserManager::instance()->getCurrentUser();
         if ($current_user->isLoggedIn()) {
             if (strpos($id, 'tracker_report_query_') === 0) {
-                require_once('common/tracker/ArtifactReportFactory.class.php');
+                require_once('common/tracker/Tracker_ReportFactory.class.php');
                 $report_id = (int)substr($id, strlen('tracker_report_query_'));
-                $report_factory = ArtifactReportFactory::instance();
+                $report_factory = Tracker_ReportFactory::instance();
                 if (($report = $report_factory->getReportById($report_id, $current_user->getid())) && $report->userCanUpdate($current_user)) {
                     $report->toggleQueryDisplay();
                     $report_factory->save($report);

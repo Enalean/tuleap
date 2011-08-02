@@ -39,13 +39,13 @@ if (!function_exists('require_whitebox')) {
         }
     }
 }
-require_whitebox('common/tracker/ArtifactField_Integer.class.php');
+require_whitebox(dirname(__FILE__).'/../include/ArtifactField_Integer.class.php');
 Mock::generatePartial('ArtifactField_Integer', 'ArtifactField_IntegerTestVersion', array());
 
-require_whitebox('common/tracker/ArtifactField_Float.class.php');
+require_whitebox(dirname(__FILE__).'/../include/ArtifactField_Float.class.php');
 Mock::generatePartial('ArtifactField_Float', 'ArtifactField_FloatTestVersion', array());
 
-require_whitebox('common/tracker/ArtifactField_Text.class.php');
+require_whitebox(dirname(__FILE__).'/../include/ArtifactField_Text.class.php');
 Mock::generatePartial('ArtifactField_Text', 'ArtifactField_TextTestVersion', array('quote'));
 */
 class ArtifactFieldTest extends UnitTestCase {

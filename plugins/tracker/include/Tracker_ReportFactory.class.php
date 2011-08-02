@@ -19,8 +19,8 @@
  */
 
 require_once('common/include/Error.class.php');
-require_once('common/tracker/Tracker_Report.class.php');
-require_once('common/tracker/Tracker_Report_CriteriaFactory.class.php');
+require_once('Tracker_Report.class.php');
+require_once('Tracker_Report_CriteriaFactory.class.php');
 require_once('dao/Tracker_ReportDao.class.php');
 
 class Tracker_ReportFactory extends Error {

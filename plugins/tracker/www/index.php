@@ -19,7 +19,7 @@
  */
 
 require_once('pre.php');
-require_once('common/tracker/TrackerManager.class.php');
+require_once(dirname(__FILE__).'/../include/TrackerManager.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/plugin/PluginManager.class.php');
  

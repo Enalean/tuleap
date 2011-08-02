@@ -1,8 +1,8 @@
 <?php
 /* OBSOLETE 
-require_once('common/tracker/ArtifactRuleFactory.class.php');
+require_once(dirname(__FILE__).'/../include/ArtifactRuleFactory.class.php');
 
-require_once('common/tracker/dao/ArtifactRuleDao.class.php');
+require_once(dirname(__FILE__).'/../include/dao/ArtifactRuleDao.class.php');
 Mock::generate('ArtifactRuleDao');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');

@@ -10,7 +10,7 @@
 //
 
 require_once('pre.php');
-require_once('common/tracker/TrackerFactory.class.php');
+require_once(dirname(__FILE__).'/../include/TrackerFactory.class.php');
 
 ?>
 <html>

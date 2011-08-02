@@ -1,7 +1,7 @@
 <?php
 /* OBSOLETE 
-require_once('common/tracker/ArtifactRuleValueView.class.php');
-require_once('common/tracker/ArtifactRuleValue.class.php');
+require_once(dirname(__FILE__).'/../include/ArtifactRuleValueView.class.php');
+require_once(dirname(__FILE__).'/../include/ArtifactRuleValue.class.php');
 Mock::generate('ArtifactRuleValue');
 */
 /**

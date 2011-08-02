@@ -18,9 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once('common/tracker/Tracker_Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact.class.php');
 
-require_once('common/tracker/Tracker_FormElement_Field_List_Bind_Users.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_Bind_Users.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_List_Bind_Users',
     'Tracker_FormElement_Field_List_Bind_UsersTestVersion',
@@ -28,15 +28,15 @@ Mock::generatePartial(
         'getAllValues'
     )
 );
-require_once('common/tracker/Tracker_FormElement_Field_List_Bind_UsersValue.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_Bind_UsersValue.class.php');
 Mock::generate('Tracker_FormElement_Field_List_Bind_UsersValue');
-require_once('common/tracker/Tracker_FormElement_Field_List.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 
-require_once('common/tracker/Tracker_Artifact_ChangesetValue_List.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact_ChangesetValue_List.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_List');
 
-require_once('common/tracker/Tracker_FormElement_Field_List_Bind_UsersValue.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_Bind_UsersValue.class.php');
 Mock::generate('Tracker_FormElement_Field_List_Bind_UsersValue');
 
 

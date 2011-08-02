@@ -18,10 +18,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/Tracker.class.php');
+require_once('Tracker.class.php');
 require_once('dao/TrackerDao.class.php');
-require_once('common/tracker/Tracker_CannedResponseFactory.class.php');
-require_once('common/tracker/Tracker_SemanticFactory.class.php');
+require_once('Tracker_CannedResponseFactory.class.php');
+require_once('Tracker_SemanticFactory.class.php');
 
 class TrackerFactory {
 

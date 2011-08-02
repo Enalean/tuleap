@@ -18,10 +18,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/Tracker_FormElement_Container_Column_Group.class.php');
-require_once('common/tracker/Tracker_FormElement_Container_Column.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Container_Column_Group.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Container_Column.class.php');
 Mock::generate('Tracker_FormElement_Container_Column');
-require_once('common/tracker/Tracker_Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
 

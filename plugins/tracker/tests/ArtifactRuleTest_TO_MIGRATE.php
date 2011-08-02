@@ -1,6 +1,6 @@
 <?php
 /* OBSOLETE 
-require_once('common/tracker/ArtifactRule.class.php');
+require_once(dirname(__FILE__).'/../include/ArtifactRule.class.php');
 Mock::generate('ArtifactCondition');
 */
 /**

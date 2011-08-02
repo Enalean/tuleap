@@ -26,7 +26,7 @@ Mock::generatePartial(
     )
 );
 
-require_once('common/tracker/Tracker_FormElement_Field_Date.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
 
 class Tracker_FormElement_Container_ColumnTest extends UnitTestCase {

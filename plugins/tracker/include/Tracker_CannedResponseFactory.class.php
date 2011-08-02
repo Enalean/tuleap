@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/Tracker_CannedResponse.class.php');
+require_once('Tracker_CannedResponse.class.php');
 
 class Tracker_CannedResponseFactory {
     

@@ -21,10 +21,10 @@
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once('common/tracker/Tracker_Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
-require_once('common/tracker/Tracker_FormElement_Field_ArtifactLink.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_ArtifactLink.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_ArtifactLink', 
     'Tracker_FormElement_Field_ArtifactLinkTestVersion', 
@@ -46,13 +46,13 @@ Mock::generatePartial(
     )
 );
 
-require_once('common/tracker/Tracker_Artifact_Changeset.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact_Changeset.class.php');
 Mock::generate('Tracker_Artifact_Changeset');
 
-require_once('common/tracker/Tracker_Artifact_ChangesetValue_ArtifactLink.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact_ChangesetValue_ArtifactLink.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_ArtifactLink');
 
-require_once('common/tracker/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php');
+require_once(dirname(__FILE__).'/../include/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php');
 Mock::generate('Tracker_FormElement_Field_Value_ArtifactLinkDao');
 
 require_once('common/dao/include/DataAccessResult.class.php');

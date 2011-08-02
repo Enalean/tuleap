@@ -1,6 +1,6 @@
 <?php
 /* OBSOLETE 
-require_once('common/tracker/ArtifactRuleValue.class.php');
+require_once(dirname(__FILE__).'/../include/ArtifactRuleValue.class.php');
 */
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved

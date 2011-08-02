@@ -18,10 +18,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/Tracker_FileInfo.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FileInfo.class.php');
 Mock::generatePartial('Tracker_FileInfo', 'Tracker_FileInfoTestVersion', array('getFiletype'));
 
-require_once('common/tracker/Tracker_FormElement_Field_File.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_File.class.php');
 Mock::generate('Tracker_FormElement_Field_File');
 
 class Tracker_FileInfoTest extends UnitTestCase {

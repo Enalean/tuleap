@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/Tracker_CannedResponseFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_CannedResponseFactory.class.php');
 Mock::generatePartial(
     'Tracker_CannedResponseFactory', 
     'Tracker_CannedResponseFactoryTestVersion', 
@@ -29,13 +29,13 @@ Mock::generatePartial(
     )
 );
 
-require_once('common/tracker/Tracker_CannedResponse.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_CannedResponse.class.php');
 Mock::generate('Tracker_CannedResponse');
 
-require_once('common/tracker/Tracker.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker.class.php');
 Mock::generate('Tracker');
 
-require_once('common/tracker/TrackerFactory.class.php');
+require_once(dirname(__FILE__).'/../include/TrackerFactory.class.php');
 Mock::generate('TrackerFactory');
 
 class Tracker_CannedResponseFactoryTest extends UnitTestCase {

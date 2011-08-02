@@ -18,10 +18,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/tracker/Tracker_Artifact_ChangesetValue_OpenList.class.php');
-require_once('common/tracker/Tracker_FormElement_Field_OpenList.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_Artifact_ChangesetValue_OpenList.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_OpenList.class.php');
 Mock::generate('Tracker_FormElement_Field_OpenList');
-require_once('common/tracker/Tracker_FormElement_Field_List_OpenValue.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_OpenValue.class.php');
 Mock::generate('Tracker_FormElement_Field_List_OpenValue');
 
 require_once('common/language/BaseLanguage.class.php');

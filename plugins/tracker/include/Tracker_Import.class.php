@@ -20,7 +20,7 @@
 
 require_once('common/include/Error.class.php');
 require_once('common/include/Codendi_HTMLPurifier.class.php');
-require_once('common/tracker/Tracker_NotificationsManager.class.php');
+require_once('Tracker_NotificationsManager.class.php');
 require_once('common/include/SimpleSanitizer.class.php');
 
 class Tracker_Import extends Error {
