@@ -24,6 +24,7 @@ require_once('dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php');
 require_once('dao/Tracker_Report_Criteria_ArtifactLink_ValueDao.class.php');
 require_once('Tracker_ArtifactFactory.class.php');
 require_once('TrackerFactory.class.php');
+require_once('Tracker_Valid_Rule.class.php');
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     
@@ -841,7 +842,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
     
     public function getRuleArtifactId() {
-        return new Rule_ArtifactId();
+        return new Tracker_Valid_Rule_ArtifactId();
     }
     
     /**

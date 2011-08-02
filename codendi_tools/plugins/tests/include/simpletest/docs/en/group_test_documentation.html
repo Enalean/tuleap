@@ -1,12 +1,11 @@
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>SimpleTest for PHP test suites</title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -30,8 +29,7 @@
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <h1>Test suite documentation</h1>
         This page...
         <ul>
@@ -47,11 +45,7 @@
         </li>
 </ul>
 <div class="content">
-        <p>
-<a class="target" name="group">
-<h2>Grouping tests into suites</h2>
-</a>
-</p>
+        <p><a class="target" name="group"><h2>Grouping tests into suites</h2></a></p>
             <p>
                 To run test cases as part of a group, the test cases should really
                 be placed in files without the runner code...
@@ -172,7 +166,8 @@ class SocketTester extends UnitTestCase { ... }
                         The file could already have been parsed by PHP, and so no
                         new classes will have been added. You should make
                         sure that the test cases are only included in this file
-                        and no others.
+                        and no others (Note : with the new <cite>autorun</cite>
+                        functionnality, this problem has now been solved).
                     </li>
                     <li>
                         New test case extension classes that get included will be
@@ -185,11 +180,7 @@ class SocketTester extends UnitTestCase { ... }
                 </ol>
             </p>
         
-        <p>
-<a class="target" name="higher">
-<h2>Composite suites</h2>
-</a>
-</p>
+        <p><a class="target" name="higher"><h2>Composite suites</h2></a></p>
             <p>
                 The above method places all of the test cases into one large group.
                 For larger projects though this may not be flexible enough; you
@@ -290,11 +281,7 @@ class SocketTester extends UnitTestCase { ... }
 </pre>
             </p>
         
-        <p>
-<a class="target" name="legacy">
-<h2>Integrating legacy test cases</h2>
-</a>
-</p>
+        <p><a class="target" name="legacy"><h2>Integrating legacy test cases</h2></a></p>
             <p>
                 If you already have unit tests for your code or are extending external
                 classes that have tests, it is unlikely that all of the test cases
@@ -367,8 +354,7 @@ class SocketTester extends UnitTestCase { ... }
             SimpleTest download page on <a href="http://www.lastcraft.com/simple_test.php">LastCraft</a>.
         </li>
 </ul>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -392,8 +378,7 @@ class SocketTester extends UnitTestCase { ... }
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <div class="copyright">
             Copyright<br>Marcus Baker 2006
         </div>

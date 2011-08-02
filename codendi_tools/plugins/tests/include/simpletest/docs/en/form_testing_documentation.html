@@ -1,12 +1,11 @@
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Simple Test documentation for testing HTML forms</title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -30,8 +29,7 @@
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <h1>Form testing documentation</h1>
         This page...
         <ul>
@@ -44,16 +42,15 @@
             by setting lists.
         </li>
 <li>
+            Bypassing javascript to <a href="#hidden-field">set a hidden field</a>.
+        </li>
+<li>
             <a href="#raw">Raw posting</a> when you don't have a button
             to click.
         </li>
 </ul>
 <div class="content">
-        <p>
-<a class="target" name="submit">
-<h2>Submitting a simple form</h2>
-</a>
-</p>
+        <p><a class="target" name="submit"><h2>Submitting a simple form</h2></a></p>
             <p>
                 When a page is fetched by the <span class="new_code">WebTestCase</span>
                 using <span class="new_code">get()</span> or
@@ -175,16 +172,20 @@ class SimpleFormTests extends WebTestCase {
                 </ul>
             </p>
             <p>
-                Although most standard HTML widgets are catered for by <em>SimpleTest</em>'s
-                built in parser, it is unlikely that JavaScript will be implemented
-                anytime soon.
+                The browser emulation offered by SimpleTest mimics
+                the actions which can be perform by a user on a
+                standard HTML page. Javascript is not supported, and
+                it's unlikely that support will be added any time
+                soon.
+            </p>
+            <p>
+                Of particular note is that the Javascript idiom of
+                passing form results by setting a hidden field cannot
+                be performed using the normal SimpleTest
+                commands. See below for a way to test such forms.
             </p>
         
-        <p>
-<a class="target" name="multiple">
-<h2>Fields with multiple values</h2>
-</a>
-</p>
+        <p><a class="target" name="multiple"><h2>Fields with multiple values</h2></a></p>
             <p>
                 SimpleTest can cope with two types of multivalue controls: Multiple
                 selection drop downs, and multiple checkboxes with the same name
@@ -210,17 +211,13 @@ class SimpleFormTests extends WebTestCase {
             <p>
                 <form class="demo">
                     <strong>Create privileges allowed:</strong>
-                    <input type="checkbox" name="crud" value="c" checked>
-<br>
+                    <input type="checkbox" name="crud" value="c" checked><br>
                     <strong>Retrieve privileges allowed:</strong>
-                    <input type="checkbox" name="crud" value="r" checked>
-<br>
+                    <input type="checkbox" name="crud" value="r" checked><br>
                     <strong>Update privileges allowed:</strong>
-                    <input type="checkbox" name="crud" value="u" checked>
-<br>
+                    <input type="checkbox" name="crud" value="u" checked><br>
                     <strong>Destroy privileges allowed:</strong>
-                    <input type="checkbox" name="crud" value="d" checked>
-<br>
+                    <input type="checkbox" name="crud" value="d" checked><br>
                     <input type="submit" value="Enable Privileges">
                 </form>
             </p>
@@ -244,11 +241,42 @@ class SimpleFormTests extends WebTestCase {
                 We can then write other test code to confirm the effect of this, perhaps
                 by logging in as that user and attempting an update.
             </p>
+        
+        <p><a class="target" name="hidden-field"><h2>Forms which use javascript to set a hidden field</h2></a></p>
             <p>
-                <a class="target" name="raw">
-<h2>Raw posting</h2>
-</a>
+                If you want to test a form which relies on javascript to set a hidden
+                field, you can't just call setField().
+                The following code will <em>not</em> work:
+<pre>
+class SimpleFormTests extends WebTestCase {
+    function testMyJavascriptForm() {
+        <strong>// This does *not* work</strong>
+        $this-&gt;setField('a_hidden_field', '123');
+        $this-&gt;clickSubmit('OK');
+    }
+}
+</pre>
+                Instead, you need to pass the additional form parameters to the
+                clickSubmit() method:
+<pre>
+class SimpleFormTests extends WebTestCase {
+    function testMyJavascriptForm() {
+        // Pass the hidden field value as an additional POST variable
+        <strong>$this-&gt;clickSubmit('OK', array('a_hidden_field'=&gt;'123'));</strong>
+    }
+
+}
+</pre>
             </p>
+            <p>
+                Bear in mind that in doing this you're effectively stubbing out a
+                part of your software (the javascript code in the form), and
+                perhaps you might be better off using something like 
+                <a href="http://selenium.openqa.org/">Selenium</a> to ensure a complete
+                acceptance test.
+            </p>
+        
+        <p><a class="target" name="raw"><h2>Raw posting</h2></a></p>
             <p>
                 If you want to test a form handler, but have not yet written
                 or do not have access to the form itself, you can create a
@@ -278,12 +306,11 @@ class SimpleFormTests extends WebTestCase {
             SimpleTest download page on <a href="http://www.lastcraft.com/simple_test.php">LastCraft</a>.
         </li>
 <li>
-            The <a href="http://simpletest.sourceforge.net/">developer's API for SimpleTest</a>
+            The <a href="http://simpletest.org/api/">developer's API for SimpleTest</a>
             gives full detail on the classes and assertions available.
         </li>
 </ul>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -307,8 +334,7 @@ class SimpleFormTests extends WebTestCase {
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <div class="copyright">
             Copyright<br>Marcus Baker 2006
         </div>

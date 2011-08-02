@@ -1,5 +1,5 @@
 <?php
-    // $Id: visual_test.php,v 1.45 2006/11/20 23:44:37 lastcraft Exp $
+    // $Id: visual_test.php 1547 2007-07-04 00:42:05Z lastcraft $
 
     // NOTE:
     // Some of these tests are designed to fail! Do not be alarmed.
@@ -259,72 +259,6 @@
             $this->assertEqual($text . $text, $text . "a" . $text);        // Fail.
         }
 	}
-	
-	class VisualTestOfErrors extends UnitTestCase {
-
-        function testDumping() {
-            $this->dump(array('Hello'), 'Displaying a variable');
-        }
-
-        function testErrorDisplay() {
-            trigger_error('Default');        // Exception.
-            trigger_error('Error', E_USER_ERROR);        // Exception.
-            trigger_error('Warning', E_USER_WARNING);        // Exception.
-            trigger_error('Notice', E_USER_NOTICE);        // Exception.
-        }
-
-        function testErrorTrap() {
-            $this->expectError();        // Pass.
-            trigger_error('Error 1');
-        }
-
-        function testErrorText() {
-            $this->expectError('Error 2', "%s -> Pass");
-            $this->expectError('Error 2b', "%s -> Fail");        // Fail.
-            trigger_error('Error 2');
-            $this->dump('This should lie between the two errors');
-            trigger_error('Error 3');
-        }
-
-        function testErrorPatterns() {
-            $this->expectError(new PatternExpectation('/Error 2/'), "%s -> Pass");
-            $this->expectError(new PatternExpectation('/Error 2/'), "%s -> Fail");        // Fail.
-            trigger_error('Error 2');
-            $this->dump('This should lie between the two errors');
-            trigger_error('Error 3');
-        }
-
-        function testExceptionTrap() {
-            if (version_compare(phpversion(), '5') >= 0) {
-                eval('throw new Exception("Ouch!");');
-				$this->message('Should not be here');
-            } else {
-                trigger_error('No exceptions in PHP4');
-            }
-        }
-
-		function testExceptionExpectationShowsErrorWhenNoException() {
-            if (version_compare(phpversion(), '5') >= 0) {
-				$this->expectException();
-            } else {
-                trigger_error('No exceptions in PHP4');
-            }
-		}
-
-		function testExceptionExpectationShowsPassWhenException() {
-            if (version_compare(phpversion(), '5') >= 0) {
-				$this->expectException();
-                eval('throw new Exception("Ouch!");');
-            } else {
-                trigger_error('No exceptions in PHP4');
-            }
-		}
-
-        function testSignal() {
-            $fred = "signal as a string";
-            $this->signal("Signal", $fred);        // Signal.
-        }
-    }
 
     class Dummy {
         function Dummy() {
@@ -491,7 +425,6 @@
     }
     
     class TestOfSkippingNoMatterWhat extends UnitTestCase {
-        
         function skip() {
             $this->skipIf(true, 'Always skipped -> %s');
         }
@@ -502,7 +435,6 @@
     }
     
     class TestOfSkippingOrElse extends UnitTestCase {
-        
         function skip() {
             $this->skipUnless(false, 'Always skipped -> %s');
         }
@@ -513,7 +445,6 @@
     }
     
     class TestOfSkippingTwiceOver extends UnitTestCase {
-        
         function skip() {
             $this->skipIf(true, 'First reason -> %s');
             $this->skipIf(true, 'Second reason -> %s');
@@ -525,7 +456,6 @@
     }
     
     class TestThatShouldNotBeSkipped extends UnitTestCase {
-        
         function skip() {
             $this->skipIf(false);
             $this->skipUnless(true);
@@ -540,10 +470,9 @@
         }
     }
 
-    $test = &new TestSuite('Visual test with 50 passes, 50 fails and 7 exceptions');
+    $test = &new TestSuite('Visual test with 46 passes, 47 fails and 0 exceptions');
     $test->addTestCase(new PassingUnitTestCaseOutput());
     $test->addTestCase(new FailingUnitTestCaseOutput());
-    $test->addTestCase(new VisualTestOfErrors());
     $test->addTestCase(new TestOfMockObjectsOutput());
     $test->addTestCase(new TestOfPastBugs());
     $test->addTestCase(new TestOfVisualShell());

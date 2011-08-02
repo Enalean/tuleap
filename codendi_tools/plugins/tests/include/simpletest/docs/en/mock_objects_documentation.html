@@ -1,12 +1,11 @@
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>SimpleTest for PHP mock objects documentation</title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -30,8 +29,7 @@
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <h1>Mock objects documentation</h1>
         This page...
         <ul>
@@ -52,11 +50,7 @@
         </li>
 </ul>
 <div class="content">
-        <p>
-<a class="target" name="what">
-<h2>What are mock objects?</h2>
-</a>
-</p>
+        <p><a class="target" name="what"><h2>What are mock objects?</h2></a></p>
             <p>
                 Mock objects have two roles during a test case: actor and critic.
             </p>
@@ -106,11 +100,7 @@
                 hardly need manual assertions at all.
             </p>
         
-        <p>
-<a class="target" name="creation">
-<h2>Creating mock objects</h2>
-</a>
-</p>
+        <p><a class="target" name="creation"><h2>Creating mock objects</h2></a></p>
             <p>
                 In the same way that we create server stubs, all we need is an
                 existing class, say a database connection that looks like this...
@@ -162,9 +152,7 @@ class MyTestCase extends UnitTestCase {
                 if mocks are available.
             </p>
             <p>
-                <a class="target" name="stub">
-<h2>Mocks as actors</h2>
-</a>
+                <a class="target" name="stub"><h2>Mocks as actors</h2></a>
             </p>
             <p>
                 The mock version of a class has all the methods of the original,
@@ -287,14 +275,12 @@ $config-&gt;getValue('db_user')
             </p>
             <p>
                 You can set a default argument argument like so...
-<pre>
-<strong>
+<pre><strong>
 $config-&gt;setReturnValue('getValue', false, array('*'));</strong>
 </pre>
                 This is not the same as setting the return value without
                 any argument requirements like this...
-<pre>
-<strong>
+<pre><strong>
 $config-&gt;setReturnValue('getValue', false);</strong>
 </pre>
                 In the first case it will accept any single argument,
@@ -405,11 +391,7 @@ class DatabaseTest extends UnitTestCase {
                 A very precise test and not a real database in sight.
             </p>
         
-        <p>
-<a class="target" name="expectations">
-<h2>Mocks as critics</h2>
-</a>
-</p>
+        <p><a class="target" name="expectations"><h2>Mocks as critics</h2></a></p>
             <p>
                 Although the server stubs approach insulates your tests from
                 real world disruption, it is only half the benefit.
@@ -440,9 +422,10 @@ class DatabaseTest extends UnitTestCase {
 class Session {
     ...
 }</strong>
-&lt;/php&gt;
+</pre>
                 While our logging code looks like this...
-&lt;php&gt;<strong>
+<pre>
+<strong>
 class Log {
     function Log() {
         ...
@@ -458,7 +441,7 @@ class LoggingSessionPool {
         ...
     }
     
-    function &amp;findSession(\$cookie) {
+    function &amp;findSession($cookie) {
         ...
     }
     ...
@@ -575,7 +558,9 @@ class LoggingSessionPoolTest extends UnitTestCase {
                 <table>
 <thead>
                     <tr>
-<th>Expectation</th><th>Needs <span class="new_code">tally()</span></th>
+<th>Expectation</th>
+<th>Needs <span class="new_code">tally()</span>
+</th>
 </tr>
                     </thead>
 <tbody>
@@ -637,17 +622,21 @@ class LoggingSessionPoolTest extends UnitTestCase {
                 It is silent if the limit is never reached.
             </p>
             <p>
+                Also if you have juste one call in your test, make sure you're using
+                <span class="new_code">expectOnce</span>.<br>
+                Using <span class="new_code">$mocked-&gt;expectAt(0, 'method', 'args);</span>
+                on its own will not be catched :
+                checking the arguments and the overall call count
+                are currently independant.
+            </p>
+            <p>
                 Like the assertions within test cases, all of the expectations
                 can take a message override as an extra parameter.
                 Also the original failure message can be embedded in the output
                 as "%s".
             </p>
         
-        <p>
-<a class="target" name="approaches">
-<h2>Other approaches</h2>
-</a>
-</p>
+        <p><a class="target" name="approaches"><h2>Other approaches</h2></a></p>
             <p>
                 There are three approaches to creating mocks including the one
                 that SimpleTest employs.
@@ -736,8 +725,7 @@ class LoggingSessionPoolTest extends UnitTestCase {
             SimpleTest home page on <a href="http://www.lastcraft.com/simple_test.php">LastCraft</a>.
         </li>
 </ul>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -761,8 +749,7 @@ class LoggingSessionPoolTest extends UnitTestCase {
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <div class="copyright">
             Copyright<br>Marcus Baker 2006
         </div>

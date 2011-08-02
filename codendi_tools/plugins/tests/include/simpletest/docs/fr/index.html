@@ -1,14 +1,14 @@
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>
-        Prise en main rapide de SimpleTest pour PHP - Tests unitaire et objets fantaisie pour PHP
+        Prise en main rapide de SimpleTest pour PHP -
+        Tests unitaire et objets fantaisie pour PHP
     </title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -32,8 +32,7 @@
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <h1>Prise en main rapide de SimpleTest</h1>
         This page...
         <ul>
@@ -47,7 +46,7 @@
         </li>
 <li>
             <a href="#mock">Utiliser les objets fantaisie</a>
-            pour faciliter les tests et gagner en contr&ocirc;le.
+            pour faciliter les tests et gagner en contrôle.
         </li>
 <li>
             <a href="#web">Tester des pages web</a>
@@ -57,173 +56,269 @@
 <div class="content">
         
             <p>
-                Le pr&eacute;sent article pr&eacute;suppose que vous soyez familier avec le concept de tests unitaires ainsi que celui de d&eacute;veloppement web avec le langage PHP. Il s'agit d'un guide pour le nouvel et impatient utilisateur de <a href="https://sourceforge.net/project/showfiles.php?group_id=76550">SimpleTest</a>. Pour une documentation plus compl&egrave;te, particuli&egrave;rement si vous d&eacute;couvrez les tests unitaires, consultez la <a href="http://www.lastcraft.com/unit_test_documentation.php">documentation en cours</a>, et pour des exemples de sc&eacute;narios de test, consultez le <a href="http://www.lastcraft.com/first_test_tutorial.php">tutorial sur les tests unitaires</a>.
+                Le présent article présuppose que vous soyez familier avec
+                le concept de tests unitaires ainsi que celui de développement
+                web avec le langage PHP. Il s'agit d'un guide pour le nouvel
+                et impatient utilisateur de
+                <a href="https://sourceforge.net/project/showfiles.php?group_id=76550">SimpleTest</a>.
+                Pour une documentation plus complète, particulièrement si
+                vous découvrez les tests unitaires, consultez la
+                <a href="http://www.lastcraft.com/unit_test_documentation.php">documentation
+                en cours</a>, et pour des exemples de scénarios de test,
+                consultez le
+                <a href="http://www.lastcraft.com/first_test_tutorial.php">tutorial
+                sur les tests unitaires</a>.
             </p>
         
-        <p>
-<a class="target" name="unit">
-<h2>Utiliser le testeur rapidement</h2>
-</a>
-</p>
+        <p><a class="target" name="unit"><h2>Utiliser le testeur rapidement</h2></a></p>
             <p>
-                Parmi les outils de test pour logiciel, le testeur unitaire est le plus proche du d&eacute;veloppeur. Dans un contexte de d&eacute;veloppement agile, le code de test se place juste &agrave; c&ocirc;t&eacute; du code source &eacute;tant donn&eacute; que tous les deux sont &eacute;crits simultan&eacute;ment. Dans ce contexte, SimpleTest aspire &agrave; &ecirc;tre une solution compl&egrave;te de test pour un d&eacute;veloppeur PHP et s'appelle "Simple" parce qu'elle devrait &ecirc;tre simple &agrave; utiliser et &agrave; &eacute;tendre. Ce nom n'&eacute;tait pas vraiment un bon choix. Non seulement cette solution inclut toutes les fonctions classiques qu'on est en droit d'attendre de la part des portages de <a href="http://www.junit.org/">JUnit</a> et des <a href="http://sourceforge.net/projects/phpunit/">PHPUnit</a>, mais elle inclut aussi les <a href="http://www.mockobjects.com/">objets fantaisie ou "mock objects"</a>. Sans compter quelques fonctionnalit&eacute;s de <a href="http://sourceforge.net/projects/jwebunit/">JWebUnit</a> : parmi celles-ci la navigation sur des pages web, les tests sur les cookies et l'envoi de formulaire.
+                Parmi les outils de test pour logiciel, le testeur unitaire
+                est le plus proche du développeur. Dans un contexte de
+                développement agile, le code de test se place juste à côté
+                du code source étant donné que tous les deux sont écrits
+                simultanément. Dans ce contexte, SimpleTest aspire à être
+                une solution complète de test pour un développeur PHP et
+                s'appelle "Simple" parce qu'elle devrait être simple à
+                utiliser et à étendre. Ce nom n'était pas vraiment un bon
+                choix. Non seulement cette solution inclut toutes les
+                fonctions classiques qu'on est en droit d'attendre de la
+                part des portages de <a href="http://www.junit.org/">JUnit</a> et des <a href="http://sourceforge.net/projects/phpunit/">PHPUnit</a>,
+                mais elle inclut aussi les <a href="http://www.mockobjects.com/">objets fantaisie ou
+                "mock objects"</a>.
             </p>
             <p>
-                La d&eacute;monstration la plus rapide : l'exemple
+                Ce qui rend cet outil immédiatement utile pour un développeur PHP,
+                c'est son navigateur web interne.
+                Il permet des tests qui parcourent des sites web, remplissent
+                des formulaires et testent le contenu des pages.
+                Etre capable d'écrire ces tests en PHP veut dire qu'il devient
+                facile d'écrire des tests de recette (ou d'intégration).
+                Un exemple serait de confirmer qu'un utilisateur a bien été ajouté
+                dans une base de données après s'être enregistré sur une site web.
             </p>
             <p>
-                Supposons que nous sommes en train de tester une simple classe de log dans un fichier : elle s'appelle <span class="new_code">Log</span> dans <em>classes/Log.php</em>. Commen&ccedil;ons par cr&eacute;er un script de test, appel&eacute; <em>tests/log_test.php</em>. Son contenu est le suivant...
-<pre>
-<strong>&lt;?php
-require_once('simpletest/unit_tester.php');
-require_once('simpletest/reporter.php');
-require_once('../classes/log.php');
-?&gt;</strong>
-</pre>
-                Ici le r&eacute;pertoire <em>simpletest</em> est soit dans le dossier courant, soit dans les dossiers pour fichiers inclus. Vous auriez &agrave; &eacute;diter ces arborescences suivant l'endroit o&ugrave; vous avez install&eacute; SimpleTest. Ensuite cr&eacute;ons un sc&eacute;nario de test...
-<pre>
-&lt;?php
-require_once('simpletest/unit_tester.php');
-require_once('simpletest/reporter.php');
-require_once('../classes/log.php');
-<strong>
-class TestOfLogging extends UnitTestCase {
-}</strong>
-?&gt;
-</pre>
-                A pr&eacute;sent il y a 5 lignes de code d'&eacute;chafaudage et toujours pas de test. Cependant &agrave; partir de cet instant le retour sur investissement arrive tr&egrave;s rapidement. Supposons que la classe <span class="new_code">Log</span> prenne le nom du fichier &agrave; &eacute;crire dans le constructeur et que nous ayons un r&eacute;pertoire temporaire dans lequel placer ce fichier...
+                La démonstration la plus rapide : l'exemple
+            </p>
+            <p>
+                Supposons que nous sommes en train de tester une simple
+                classe de log dans un fichier : elle s'appelle
+                <span class="new_code">Log</span> dans <em>classes/Log.php</em>. Commençons
+                par créer un script de test, appelé
+                <em>tests/log_test.php</em>. Son contenu est le suivant...
 <pre>
 &lt;?php
-require_once('simpletest/unit_tester.php');
-require_once('simpletest/reporter.php');
+<strong>require_once('simpletest/autorun.php');</strong>
 require_once('../classes/log.php');
 
-class TestOfLogging extends UnitTestCase {
-    <strong>
-    function testCreatingNewFile() {
-        @unlink('/temp/test.log');
-        $log = new Log('/temp/test.log');
-        $this-&gt;assertFalse(file_exists('/temp/test.log'));
-        $log-&gt;message('Should write this to a file');
-        $this-&gt;assertTrue(file_exists('/temp/test.log'));
-    }</strong>
+class TestOfLogging extends <strong>UnitTestCase</strong> {
 }
 ?&gt;
 </pre>
-                Au lancement du sc&eacute;nario de test, toutes les m&eacute;thodes qui commencent avec la cha&icirc;ne <span class="new_code">test</span> sont identifi&eacute;es puis ex&eacute;cut&eacute;es. D'ordinaire nous avons bien plusieurs m&eacute;thodes de tests. Les assertions dans les m&eacute;thodes de test envoient des messages vers le framework de test qui affiche imm&eacute;diatement le r&eacute;sultat. Cette r&eacute;ponse imm&eacute;diate est importante, non seulement lors d'un crash caus&eacute; par le code, mais aussi de mani&egrave;re &agrave; rapprocher l'affichage de l'erreur au plus pr&egrave;s du sc&eacute;nario de test concern&eacute;.
+                Ici le répertoire <em>simpletest</em> est soit dans le
+                dossier courant, soit dans les dossiers pour fichiers
+                inclus. Vous auriez à éditer ces arborescences suivant
+                l'endroit où vous avez installé SimpleTest.
+                Le fichier "autorun.php" fait plus que juste inclure
+                les éléments de SimpleTest : il lance aussi les tests pour nous.  
             </p>
             <p>
-                Pour voir ces r&eacute;sultats lan&ccedil;ons effectivement les tests. S'il s'agit de l'unique sc&eacute;nario de test &agrave; lancer, on peut y arriver avec...
+                <span class="new_code">TestOfLogging</span> est notre premier scénario de test
+                et il est pour l'instant vide.
+                Chaque scénario de test est une classe qui étend une des classes
+                de base de SimpleTest. Nous pouvons avoir autant de classes de ce type
+                que nous voulons.
+            </p>
+            <p>
+                Avec ces trois lignes d'échafaudage
+                l'inclusion de notre classe <span class="new_code">Log</span>, nous avons une suite
+                de tests. Mais pas encore de test !
+            </p>
+            <p>
+                Pour notre premier test, supposons que la classe <span class="new_code">Log</span>
+                prenne le nom du fichier à écrire au sein du constructeur,
+                et que nous avons un répertoire temporaire dans lequel placer
+                ce fichier.
 <pre>
 &lt;?php
-require_once('simpletest/unit_tester.php');
-require_once('simpletest/reporter.php');
+require_once('simpletest/autorun.php');
 require_once('../classes/log.php');
 
 class TestOfLogging extends UnitTestCase {
-    
-    function testCreatingNewFile() {
+    function <strong>testLogCreatesNewFileOnFirstMessage()</strong> {
         @unlink('/temp/test.log');
         $log = new Log('/temp/test.log');
-        $this-&gt;assertFalse(file_exists('/temp/test.log'));
+        <strong>$this-&gt;assertFalse(file_exists('/temp/test.log'));</strong>
         $log-&gt;message('Should write this to a file');
-        $this-&gt;assertTrue(file_exists('/temp/test.log'));
+        <strong>$this-&gt;assertTrue(file_exists('/temp/test.log'));</strong>
     }
 }
-<strong>
-$test = &amp;new TestOfLogging();
-$test-&gt;run(new HtmlReporter());</strong>
 ?&gt;
 </pre>
+                Au lancement du scénario de test, toutes les méthodes qui
+                commencent avec la chaîne <span class="new_code">test</span> sont
+                identifiées puis exécutées.
+                Si la méthode commence par <span class="new_code">test</span>, c'est un test.
+                Remarquez bien le nom très long de notre exemple :
+                <span class="new_code">testLogCreatesNewFileOnFirstMessage()</span>.
+                C'est bel et bien délibéré : ce style est considéré désirable
+                et il rend la sortie du test plus lisible.
             </p>
             <p>
-                En cas &eacute;chec, l'affichage ressemble &agrave;...
+                D'ordinaire nous avons bien plusieurs méthodes de tests.
+                Mais ce sera pour plus tard.
+            </p>
+            <p>
+                Les assertions dans les
+                méthodes de test envoient des messages vers le framework de
+                test qui affiche immédiatement le résultat. Cette réponse
+                immédiate est importante, non seulement lors d'un crash
+                causé par le code, mais aussi de manière à rapprocher
+                l'affichage de l'erreur au plus près du scénario de test
+                concerné via un appel à <span class="new_code">print</span>code&gt;.
+            </p>
+            <p>
+                Pour voir ces résultats lançons effectivement les tests.
+                Aucun autre code n'est nécessaire, il suffit d'ouvrir
+                la page dans un navigateur.
+            </p>
+            <p>
+                En cas échec, l'affichage ressemble à...
                 <div class="demo">
-                    <h1>testoflogging</h1>
+                    <h1>TestOfLogging</h1>
                     <span class="fail">Fail</span>: testcreatingnewfile-&gt;True assertion failed.<br>
                     <div style="padding: 8px; margin-top: 1em; background-color: red; color: white;">1/1 test cases complete.
                     <strong>1</strong> passes and <strong>1</strong> fails.</div>
                 </div>
-                ...et si &ccedil;a passe, on obtient...
+                ...et si ça passe, on obtient...
                 <div class="demo">
-                    <h1>testoflogging</h1>
+                    <h1>TestOfLogging</h1>
                     <div style="padding: 8px; margin-top: 1em; background-color: green; color: white;">1/1 test cases complete.
                     <strong>2</strong> passes and <strong>0</strong> fails.</div>
                 </div>
-				Et si vous obtenez &ccedil;a...
+                Et si vous obtenez ça...
                 <div class="demo">
                     <b>Fatal error</b>:  Failed opening required '../classes/log.php' (include_path='') in <b>/home/marcus/projects/lastcraft/tutorial_tests/Log/tests/log_test.php</b> on line <b>7</b>
                 </div>
-				c'est qu'il vous manque le fichier <em>classes/Log.php</em> qui pourrait ressembler &agrave; : 
-<pre>
-&lt;?php
-class Log {
-    
-        function Log($file_path) {
-        }
-}
-?&gt;;
-</pre>
-            </p>
-        
-        <p>
-<a class="target" name="group">
-<h2>Construire des groupes de tests</h2>
-</a>
-</p>
-            <p>
-                Il est peu probable que dans une v&eacute;ritable application on ait uniquement besoin de passer un seul sc&eacute;nario de test. Cela veut dire que nous avons besoin de grouper les sc&eacute;narios dans un script de test qui peut, si n&eacute;cessaire, lancer tous les tests de l'application.
-            </p>
-            <p>
-                Notre premi&egrave;re &eacute;tape est de supprimer les includes et de d&eacute;faire notre hack pr&eacute;c&eacute;dent...
+                c'est qu'il vous manque le fichier <em>classes/Log.php</em>
+                qui pourrait ressembler à : 
 <pre>
 &lt;?php<strong>
-require_once('../classes/log.php');</strong>
-
-class TestOfLogging extends UnitTestCase {
-    
-    function testCreatingNewFile() {
-        @unlink('/temp/test.log');
-        $log = new Log('/temp/test.log');
-        $this-&gt;assertFalse(file_exists('/temp/test.log'));
-        $log-&gt;message('Should write this to a file');
-        $this-&gt;assertTrue(file_exists('/temp/test.log'));<strong>
+class Log {
+    function Log($file_path) {
     }
-}
-?&gt;</strong>
-</pre>
-                Ensuite nous cr&eacute;ons un nouveau fichier appel&eacute; <em>tests/all_tests.php</em>. On y ins&egrave;re le code suivant...
-<pre>
-<strong>&lt;?php
-require_once('simpletest/unit_tester.php');
-require_once('simpletest/reporter.php');
 
-$test = &amp;new GroupTest('All tests');
-$test-&gt;addTestFile('log_test.php');
-$test-&gt;run(new HtmlReporter());
-?&gt;</strong>
+    function message() {
+    }
+}</strong>
+?&gt;
 </pre>
-                Cette m&eacute;thode <span class="new_code">GroupTest::addTestFile()</span> va inclure le fichier de sc&eacute;narios de test et lire parmi toutes les nouvelles classes cr&eacute;&eacute;es celles qui sont issues de <span class="new_code">TestCase</span>. Dans un premier temps, seuls les noms sont stock&eacute;s, de la sorte le lanceur de test peut instancier la classe au fur et &agrave; mesure qu'il ex&eacute;cute votre suite de tests.
+                C'est largement plus sympathique d'écrire le code après le test.
+                Plus que sympatique même - cette technique s'appelle
+                "Développement Piloté par les Tests" ou 
+                "Test Driven Development" en anglais.
             </p>
             <p>
-                Pour que &ccedil;a puisse marcher proprement le fichier de suite de tests ne devrait pas inclure aveuglement d'autres extensions de sc&eacute;narios de test qui n'ex&eacute;cuteraient pas effectivement de test. Le r&eacute;sultat pourrait &ecirc;tre que des tests suppl&eacute;mentaires soient alors comptabilis&eacute;s pendant l'ex&eacute;cution des tests. Ce n'est pas un probl&egrave;me grave mais pour &eacute;viter ce d&eacute;sagr&eacute;ment, il suffit d'ajouter la commande <span class="new_code">SimpleTestOptions::ignore()</span> quelque part dans le fichier de sc&eacute;nario de test. Par ailleurs le sc&eacute;nario de test ne devrait pas avoir &eacute;t&eacute; inclus ailleurs ou alors aucun sc&eacute;nario ne sera ajout&eacute; aux groupes de test. Il s'agirait l&agrave; d'une erreur autrement s&eacute;rieuse : si toutes les classes de sc&eacute;nario de test sont charg&eacute;es par PHP, alors la m&eacute;thode <span class="new_code">GroupTest::addTestFile()</span> ne pourra pas les d&eacute;tecter.
-            </p>
-            <p>
-                Pour afficher les r&eacute;sultats, il est seulement n&eacute;cessaire d'invoquer <em>tests/all_tests.php</em> &agrave; partir du serveur web.
+                Pour plus de renseignements sur le testeur, voyez la
+                <a href="unit_test_documentation.html">documentation pour les tests de régression</a>.
             </p>
         
-        <p>
-<a class="target" name="mock">
-<h2>Utiliser les objets fantaisie</h2>
-</a>
-</p>
+        <p><a class="target" name="group"><h2>Construire des groupes de tests</h2></a></p>
             <p>
-                Avan&ccedil;ons un peu plus dans le futur.
+                Il est peu probable que dans une véritable application on
+                ait uniquement besoin de passer un seul scénario de test.
+                Cela veut dire que nous avons besoin de grouper les
+                scénarios dans un script de test qui peut, si nécessaire,
+                lancer tous les tests de l'application.
             </p>
             <p>
-                Supposons que notre class logging soit test&eacute;e et termin&eacute;e. Supposons aussi que nous testons une autre classe qui ait besoin d'&eacute;crire des messages de log, disons <span class="new_code">SessionPool</span>. Nous voulons tester une m&eacute;thode qui ressemblera probablement &agrave; quelque chose comme...
+                Notre première étape est de créer un nouveau fichier appelé
+                <em>tests/all_tests.php</em> et d'y inclure le code suivant...
 <pre>
-<strong>
+&lt;?php
+<strong>require_once('simpletest/autorun.php');</strong>
+
+class AllTests extends <strong>TestSuite</strong> {
+    function AllTests() {
+        $this-&gt;TestSuite(<strong>'All tests'</strong>);
+        <strong>$this-&gt;addFile('log_test.php');</strong>
+    }
+}
+?&gt;
+</pre>
+                L'inclusion de "autorun" permettra à notre future suite
+                de tests d'être lancée juste en invoquant ce script.
+            </p>
+            <p>
+                La sous-classe <span class="new_code">TestSuite</span> doit chaîner
+                son constructeur. Cette limitation sera supprimée dans
+                les versions à venir.   
+            </p>
+            <p>
+                The method <span class="new_code">TestSuite::addFile()</span>
+                will include the test case file and read any new classes
+                that are descended from <span class="new_code">SimpleTestCase</span>.
+
+                Cette méthode <span class="new_code">TestSuite::addTestFile()</span> va
+                inclure le fichier de scénarios de test et lire parmi
+                toutes les nouvelles classes créées celles qui sont issues
+                de <span class="new_code">SimpleTestCase</span>.
+                <span class="new_code">UnitTestCase</span> est juste un exemple de classe dérivée
+                depuis <span class="new_code">SimpleTestCase</span> et vous pouvez créer les vôtres.
+                <span class="new_code">TestSuite::addFile()</span> peut aussi inclure d'autres suites.
+            </p>
+            <p>
+                La classe ne sera pas encore instanciée.
+                Quand la suite de tests est lancée, elle construira chaque instance
+                une fois le test atteint, et le détuira juste ensuite.
+                Cela veut dire que le constructeur n'est lancé qu'une fois avant
+                chaque initialisation de ce scénario de test et que le destructeur
+                est lui aussi lancé avant que le test suivant ne commence.
+            </p>
+            <p>
+                Il est commun de grouper des scénarios de test dans des super-classes
+                qui ne sont pas sensées être lancées, mais qui deviennent une classe de base
+                pour d'autres tests.
+                Pour que "autorun" fonctionne proprement les fichiers
+                des scénarios de test ne devraient pas lancer aveuglement
+                d'autres extensions de scénarios de test qui ne lanceraient pas
+                effectivement des tests.
+                Cela pourrait aboutir à un mauvais comptages des scénarios de test
+                pendant la procédure.
+                Pas vraiement un problème majeure, mais pour éviter cet inconvénient
+                il suffit de marquer vos classes de base comme <span class="new_code">abstract</span>.
+                SimpleTest ne lance pas les classes abstraites. Et si vous utilisez encore
+                PHP4 alors une directive <span class="new_code">SimpleTestOptions::ignore()</span>
+                dans votre fichier de scénario de test aura le même effet.
+            </p>
+            <p>
+                Par ailleurs, le fichier avec le scénario de test ne devrait pas
+                avoir été inclus ailleurs. Sinon aucun scénario de test
+                ne sera inclus à ce groupe.
+                Ceci pourrait se transformer en un problème plus grave :
+                si des fichiers ont déjà été inclus par PHP alors la méthode
+                <span class="new_code">TestSuite::addFile()</span> ne les détectera pas.
+            </p>
+            <p>
+                Pour afficher les résultats, il est seulement nécessaire
+                d'invoquer <em>tests/all_tests.php</em> à partir du serveur
+                web.
+            </p>
+            <p>
+                Pour plus de renseignements des groupes de tests, voyez le
+                <a href="group_test_documentation.html">documentation sur le groupement des tests</a>.
+            </p>
+        
+        <p><a class="target" name="mock"><h2>Utiliser les objets fantaisie</h2></a></p>
+            <p>
+                Avançons un peu plus dans le futur.
+            </p>
+            <p>
+                Supposons que notre class logging soit testée et terminée.
+                Supposons aussi que nous testons une autre classe qui ait
+                besoin d'écrire des messages de log, disons
+                <span class="new_code">SessionPool</span>. Nous voulons tester une méthode
+                qui ressemblera probablement à quelque chose comme...
+<pre><strong>
 class SessionPool {
     ...
     function logIn($username) {
@@ -235,102 +330,199 @@ class SessionPool {
 }
 </strong>
 </pre>
-                Avec le concept de "r&eacute;utilisation de code" comme fil conducteur, nous utilisons notre class <span class="new_code">Log</span>. Un sc&eacute;nario de test classique ressemblera peut-&ecirc;tre &agrave;...
+                Avec le concept de "réutilisation de code" comme fil
+                conducteur, nous utilisons notre class <span class="new_code">Log</span>. Un
+                scénario de test classique ressemblera peut-être à...
 <pre>
-<strong>
 &lt;?php
+require_once('simpletest/autorun.php');
 require_once('../classes/log.php');
-require_once('../classes/session_pool.php');
+<strong>require_once('../classes/session_pool.php');</strong>
 
-class TestOfSessionLogging extends UnitTestCase {
+class <strong>TestOfSessionLogging</strong> extends UnitTestCase {
     
     function setUp() {
-        @unlink('/temp/test.log');
+        <strong>@unlink('/temp/test.log');</strong>
     }
     
     function tearDown() {
-        @unlink('/temp/test.log');
+        <strong>@unlink('/temp/test.log');</strong>
     }
     
-    function testLogInIsLogged() {
-        $log = new Log('/temp/test.log');
+    function testLoggingInIsLogged() {
+        <strong>$log = new Log('/temp/test.log');
         $session_pool = &amp;new SessionPool($log);
-        $session_pool-&gt;logIn('fred');
+        $session_pool-&gt;logIn('fred');</strong>
         $messages = file('/temp/test.log');
-        $this-&gt;assertEqual($messages[0], "User fred logged in.\n");
+        $this-&gt;assertEqual($messages[0], "User fred logged in.<strong>\n</strong>");
     }
 }
-?&gt;</strong>
+?&gt;
 </pre>
-                Le design de ce sc&eacute;nario de test n'est pas compl&egrave;tement mauvais, mais on peut l'am&eacute;liorer. Nous passons du temps &agrave; tripoter les fichiers de log qui ne font pas partie de notre test. Pire, nous avons cr&eacute;&eacute; des liens de proximit&eacute; entre la classe <span class="new_code">Log</span> et ce test. Que se passerait-il si nous n'utilisions plus de fichiers, mais la biblioth&egrave;que <em>syslog</em> &agrave; la place ? Avez-vous remarqu&eacute; le retour chariot suppl&eacute;mentaire &agrave; la fin du message ? A-t-il &eacute;t&eacute; ajout&eacute; par le loggueur ? Et si il ajoutait aussi un timestamp ou d'autres donn&eacute;es ?
+                Nous expliquerons les méthodes <span class="new_code">setUp()</span>
+                et <span class="new_code">tearDown()</span> plus tard.
             </p>
             <p>
-                L'unique partie &agrave; tester r&eacute;ellement est l'envoi d'un message pr&eacute;cis au loggueur. Nous r&eacute;duisons le couplage en cr&eacute;ant une fausse classe de logging : elle ne fait qu'enregistrer le message pour le test, mais ne produit aucun r&eacute;sultat. Sauf qu'elle doit ressembler exactement &agrave; l'original.
+                Le design de ce scénario de test n'est pas complètement
+                mauvais, mais on peut l'améliorer. Nous passons du temps à
+                tripoter les fichiers de log qui ne font pas partie de
+                notre test.
+                Pire, nous avons créé des liens de proximité
+                entre la classe <span class="new_code">Log</span> et ce test. Que se
+                passerait-il si nous n'utilisions plus de fichiers, mais la
+                bibliothèque <em>syslog</em> à la place ?
+                
+                Cela veut dire que notre test <span class="new_code">TestOfSessionLogging</span>
+                enverra un échec alors même qu'il ne teste pas Logging.
             </p>
             <p>
-                Si l'objet fantaisie n'&eacute;crit pas dans un fichier alors nous nous &eacute;pargnons la suppression du fichier avant et apr&egrave;s le test. Nous pourrions m&ecirc;me nous &eacute;pargner quelques lignes de code suppl&eacute;mentaires si l'objet fantaisie pouvait ex&eacute;cuter l'assertion.
+                Il est aussi fragile sur des petites retouches. Avez-vous
+                remarqué le retour chariot supplémentaire à la fin du
+                message ? A-t-il été ajouté par le loggueur ? Et si il
+                ajoutait aussi un timestamp ou d'autres données ?
+            </p>
+            <p>
+                L'unique partie à tester réellement est l'envoi d'un
+                message précis au loggueur.
+                Nous pouvons réduire le couplage en
+                créant une fausse classe de logging : elle ne fait
+                qu'enregistrer le message pour le test, mais ne produit
+                aucun résultat. Sauf qu'elle doit ressembler exactement à
+                l'original.
+            </p>
+            <p>
+                Si l'objet fantaisie n'écrit pas dans un fichier alors nous
+                nous épargnons la suppression du fichier avant et après le
+                test. Nous pourrions même nous épargner quelques lignes de
+                code supplémentaires si l'objet fantaisie pouvait exécuter
+                l'assertion.
             <p>
             </p>
-                Trop beau pour &ecirc;tre vrai ? Par chance on peut cr&eacute;er un tel objet tr&egrave;s facilement...
+                Trop beau pour être vrai ? Pas vraiement on peut créer un tel
+                objet très facilement...
 <pre>
 &lt;?php
+require_once('simpletest/autorun.php');
 require_once('../classes/log.php');
-require_once('../classes/session_pool.php');<strong>
-Mock::generate('Log');</strong>
+require_once('../classes/session_pool.php');
+
+<strong>Mock::generate('Log');</strong>
 
 class TestOfSessionLogging extends UnitTestCase {
     
-    function testLogInIsLogged() {<strong>
-        $log = &amp;new MockLog($this);
+    function testLoggingInIsLogged() {<strong>
+        $log = &amp;new MockLog();
         $log-&gt;expectOnce('message', array('User fred logged in.'));</strong>
-        $session_pool = &amp;new SessionPool($log);
-        $session_pool-&gt;logIn('fred');<strong>
-        $log-&gt;tally();</strong>
+        $session_pool = &amp;new SessionPool(<strong>$log</strong>);
+        $session_pool-&gt;logIn('fred');
     }
 }
 ?&gt;
 </pre>
-                L'appel <span class="new_code">tally()</span> est n&eacute;cessaire pour annoncer &agrave; l'objet fantaisie qu'il n'y aura plus d'appels ult&eacute;rieurs. Sans &ccedil;a l'objet fantaisie pourrait attendre pendant une &eacute;ternit&eacute; l'appel de la m&eacute;thode sans jamais pr&eacute;venir le sc&eacute;nario de test. Les autres tests sont d&eacute;clench&eacute;s automatiquement quand l'appel &agrave; <span class="new_code">message()</span> est invoqu&eacute; sur l'objet <span class="new_code">MockLog</span>. L'appel <span class="new_code">mock</span> va d&eacute;clencher une comparaison des param&egrave;tres et ensuite envoyer le message "pass" ou "fail" au test pour l'affichage. Des jokers peuvent &ecirc;tre inclus ici aussi afin d'emp&ecirc;cher que les tests ne deviennent trop sp&eacute;cifiques.
+                L'appel <span class="new_code">Mock::generate()</span> a généré
+                une nouvelle classe appelé <span class="new_code">MockLog</span>.
+                Cela ressemble à un clone identique, sauf que nous pouvons
+                y adjoindre du code de test.
+                C'est ce que fait <span class="new_code">expectOnce()</span>.
+                Cela dit que si <span class="new_code">message()</span> m'est appelé,
+                il a intérêt à l'être avec le paramètre
+                "User fred logged in.".
             </p>
             <p>
-                Les objets fantaisie dans la suite SimpleTest peuvent avoir un ensemble de valeurs de sortie arbitraires, des s&eacute;quences de sorties, des valeurs de sortie s&eacute;lectionn&eacute;es &agrave; partir des arguments d'entr&eacute;e, des s&eacute;quences de param&egrave;tres attendus et des limites sur le nombre de fois qu'une m&eacute;thode peut &ecirc;tre invoqu&eacute;e.
+                L'appel <span class="new_code">tally()</span> est nécessaire pour annoncer à
+                l'objet fantaisie qu'il n'y aura plus d'appels ultérieurs.
+                Sans ça l'objet fantaisie pourrait attendre pendant une
+                éternité l'appel de la méthode sans jamais prévenir le
+                scénario de test. Les autres tests sont déclenchés
+                automatiquement quand l'appel à <span class="new_code">message()</span> est
+                invoqué sur l'objet <span class="new_code">MockLog</span> par le code 
+                <span class="new_code">SessionPool::logIn()</span>.
+                L'appel <span class="new_code">mock</span> va déclencher une comparaison des
+                paramètres et ensuite envoyer le message "pass" ou "fail"
+                au test pour l'affichage. Des jokers peuvent être inclus
+                pour ne pas avoir à tester tous les paramètres d'un appel
+                alors que vous ne souhaitez qu'en tester un.
             </p>
             <p>
-                Pour que ce test fonctionne la librairie avec les objets fantaisie doit &ecirc;tre incluse dans la suite de tests, par exemple dans <em>all_tests.php</em>.
+                Les objets fantaisie dans la suite SimpleTest peuvent avoir
+                un ensemble de valeurs de sortie arbitraires, des séquences
+                de sorties, des valeurs de sortie sélectionnées à partir
+                des arguments d'entrée, des séquences de paramètres
+                attendus et des limites sur le nombre de fois qu'une
+                méthode peut être invoquée.
+            </p>
+            <p>
+                Pour que ce test fonctionne la librairie avec les objets
+                fantaisie doit être incluse dans la suite de tests, par
+                exemple dans <em>all_tests.php</em>.
+            </p>
+            <p>
+                Pour plus de renseignements sur les objets fantaisie, voyez le
+                <a href="mock_objects_documentation.html">documentation sur les objets fantaisie</a>.
             </p>
         
-        <p>
-<a class="target" name="web">
-<h2>Tester une page web</h2>
-</a>
-</p>
+        <p><a class="target" name="web"><h2>Tester une page web</h2></a></p>
             <p>
-                Une des exigences des sites web, c'est qu'ils produisent des pages web. Si vous construisez un projet de A &agrave; Z et que vous voulez int&eacute;grer des tests au fur et &agrave; mesure alors vous voulez un outil qui puisse effectuer une navigation automatique et en examiner le r&eacute;sultat. C'est le boulot d'un testeur web.
+                Une des exigences des sites web, c'est qu'ils produisent
+                des pages web. Si vous construisez un projet de A à Z et
+                que vous voulez intégrer des tests au fur et à mesure alors
+                vous voulez un outil qui puisse effectuer une navigation
+                automatique et en examiner le résultat. C'est le boulot
+                d'un testeur web.
             </p>
             <p>
-                Effectuer un test web via SimpleTest reste assez primitif : il n'y a pas de javascript par exemple. Pour vous donner une id&eacute;e, voici un exemple assez trivial : aller chercher une page web, &agrave; partir de l&agrave; naviguer vers la page "about" et finalement tester un contenu d&eacute;termin&eacute; par le client.
+                Effectuer un test web via SimpleTest reste assez primitif :
+                il n'y a pas de javascript par exemple.
+                La plupart des autres opérations d'un navigateur sont simulées.
+            </p>
+            <p>
+                Pour vous donner une idée, voici un exemple assez trivial :
+                aller chercher une page web,
+                à partir de là naviguer vers la page "about"
+                et finalement tester un contenu déterminé par le client.
 <pre>
-&lt;?php<strong>
-require_once('simpletest/web_tester.php');</strong>
-require_once('simpletest/reporter.php');
-<strong>
-class TestOfAbout extends WebTestCase {
-    
-    function setUp() {
-        $this-&gt;get('http://test-server/index.php');
-        $this-&gt;clickLink('About');
+&lt;?php
+require_once('simpletest/autorun.php');
+<strong>require_once('simpletest/web_tester.php');</strong>
+
+class TestOfAbout extends <strong>WebTestCase</strong> {
+    function testOurAboutPageGivesFreeReignToOurEgo() {
+        <strong>$this-&gt;get('http://test-server/index.php');
+        $this-&gt;click('About');
+        $this-&gt;assertTitle('About why we are so great');
+        $this-&gt;assertText('We are really great');</strong>
     }
-    
-    function testSearchEngineOptimisations() {
-        $this-&gt;assertTitle('A long title about us for search engines');
-        $this-&gt;assertWantedPattern('/a popular keyphrase/i');
-    }
-}</strong>
-$test = &amp;new TestOfAbout();
-$test-&gt;run(new HtmlReporter());
+}
 ?&gt;
 </pre>
-                Avec ce code comme test de recette, vous pouvez vous assurer que le contenu corresponde toujours aux sp&eacute;cifications &agrave; la fois des d&eacute;veloppeurs et des autres parties prenantes au projet.
+                Avec ce code comme test de recette, vous pouvez vous
+                assurer que le contenu corresponde toujours aux
+                spécifications à la fois des développeurs et des autres
+                parties prenantes au projet.
+            </p>
+            <p>
+                Vous pouvez aussi naviguer à travers des formulaires...
+<pre>
+&lt;?php
+require_once('simpletest/autorun.php');
+require_once('simpletest/web_tester.php');
+
+class TestOfRankings extends WebTestCase {
+    function testWeAreTopOfGoogle() {
+        $this-&gt;get('http://google.com/');
+        $this-&gt;setField('q', 'simpletest');
+        $this-&gt;click("I'm Feeling Lucky");
+        $this-&gt;assertTitle('SimpleTest - Unit Testing for PHP');
+    }
+}
+?&gt;
+</pre>
+                ...même si cela pourrait constituer une violation
+                des documents juridiques de Google(tm).
+            </p>
+            <p>
+                Pour plus de renseignements sur comment tester une page web, voyez la
+                <a href="web_tester_documentation.html">documentation sur tester des scripts web</a>.
             </p>
             <p>
                 <a href="http://sourceforge.net/projects/simpletest/"><img src="http://sourceforge.net/sflogo.php?group_id=76550&amp;type=5" width="210" height="62" border="0" alt="SourceForge.net Logo"></a>
@@ -340,16 +532,15 @@ $test-&gt;run(new HtmlReporter());
         References and related information...
         <ul>
 <li>
-            <a href="https://sourceforge.net/project/showfiles.php?group_id=76550&amp;release_id=153280">T&eacute;l&eacute;charger PHP Simple Test</a>
+            <a href="https://sourceforge.net/project/showfiles.php?group_id=76550&amp;release_id=153280">Télécharger PHP Simple Test</a>
             depuis <a href="http://sourceforge.net/projects/simpletest/">SourceForge</a>.
         </li>
 <li>
-            L'<a href="http://simpletest.sourceforge.net/">API de SimpleTest pour d&eacute;veloppeur</a>
-            donne tous les d&eacute;tails sur les classes et assertions existantes.
+            L'<a href="http://simpletest.org/api/">API de SimpleTest pour développeur</a>
+            donne tous les détails sur les classes et assertions existantes.
         </li>
 </ul>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -373,8 +564,7 @@ $test-&gt;run(new HtmlReporter());
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <div class="copyright">
             Copyright<br>Marcus Baker 2006
         </div>

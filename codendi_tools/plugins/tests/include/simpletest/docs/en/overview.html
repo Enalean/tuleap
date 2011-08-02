@@ -1,14 +1,13 @@
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>
         Overview and feature list for the SimpleTest PHP unit tester and web tester
     </title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <span class="chosen">Overview</span>
@@ -32,8 +31,7 @@
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <h1>Overview of SimpleTest</h1>
         This page...
         <ul>
@@ -51,11 +49,7 @@
         </li>
 </ul>
 <div class="content">
-        <p>
-<a class="target" name="summary">
-<h2>What is SimpleTest?</h2>
-</a>
-</p>
+        <p><a class="target" name="summary"><h2>What is SimpleTest?</h2></a></p>
             <p>
                 The heart of SimpleTest is a testing framework built around
                 test case classes.
@@ -74,9 +68,11 @@
                 A <a href="unit_test_documentation.html">test case</a> looks like this...
 <pre>
 &lt;?php
+require_once('simpletest/autorun.php');
+
 class <strong>MyTestCase</strong> extends UnitTestCase {
     <strong>
-    function testLogWroteMessage() {
+    function testCreatedLogFile() {
         $log = &amp;new Log('my.log');
         $log-&gt;message('Hello');
         $this-&gt;assertTrue(file_exists('my.log'));
@@ -122,6 +118,9 @@ class <strong>MyTestCase</strong> extends UnitTestCase {
                 A <a href="web_tester_documentation.html">WebTestCase</a> looks like this...
 <pre>
 &lt;?php
+require_once('simpletest/autorun.php');
+require_once('simpletest/web_tester.php');
+
 class <strong>MySiteTest</strong> extends WebTestCase {
     <strong>
     function testHomePage() {
@@ -136,23 +135,21 @@ class <strong>MySiteTest</strong> extends WebTestCase {
 </pre>
             </p>
         
-        <p>
-<a class="target" name="features">
-<h2>Feature list</h2>
-</a>
-</p>
+        <p><a class="target" name="features"><h2>Feature list</h2></a></p>
             <p>
                 The following is a very rough outline of past and future features
                 and their expected point of release.
-                I am afraid it is liable to change without warning as meeting the
+                I am afraid it is liable to change without warning, as meeting the
                 milestones rather depends on time available.
                 Green stuff has been coded, but not necessarily released yet.
                 If you have a pressing need for a green but unreleased feature
-                then you should check-out the code from Sourceforge CVS directly.
+                then you should check-out the code from Sourceforge SVN directly.
                 <table>
 <thead>
                     <tr>
-<th>Feature</th><th>Description</th><th>Release</th>
+<th>Feature</th>
+<th>Description</th>
+<th>Release</th>
 </tr>
                     </thead>
 <tbody>
@@ -280,56 +277,86 @@ class <strong>MySiteTest</strong> extends WebTestCase {
                     <tr>
                         <td>HTML label support</td>
                         <td>Can access all controls using the visual label</td>
-                        <td style="color: red;">1.0.1</td>
+                        <td style="color: green;">1.0.1</td>
                     </tr>
                     <tr>
-                        <td>Code coverage</td>
-                        <td>Reports using the bundled SpikeSource coverage tool</td>
-                        <td style="color: red;">1.0.1</td>
+                        <td>Base tag support</td>
+                        <td>Respects page base tag when clicking</td>
+                        <td style="color: green;">1.0.1</td>
+                    </tr>
+                    <tr>
+                        <td>PHP 5 E_STRICT compliant</td>
+                        <td>PHP 5 only version that works with the E_STRICT error level</td>
+                        <td style="color: red;">1.1</td>
+                    </tr>
+                    <tr>
+                        <td>BDD style fixtures</td>
+                        <td>Can import fixtures using a mixin like given() method</td>
+                        <td style="color: red;">1.5</td>
                     </tr>
                     <tr>
                         <td>Reporting machinery enhancements</td>
                         <td>Improved message passing for better cooperation with IDEs</td>
-                        <td style="color: red;">1.1</td>
+                        <td style="color: red;">1.5</td>
+                    </tr>
+                    <tr>
+                        <td>Fluent mock interface</td>
+                        <td>More flexible and concise mock objects</td>
+                        <td style="color: red;">1.6</td>
                     </tr>
                     <tr>
                         <td>Localisation</td>
-                        <td>Messages abstracted and code generated from XML</td>
-                        <td style="color: red;">1.1</td>
+                        <td>Messages abstracted and code generated</td>
+                        <td style="color: red;">1.6</td>
+                    </tr>
+                    <tr>
+                        <td>CSS selectors</td>
+                        <td>HTML content can be examined using CSS selectors</td>
+                        <td style="color: red;">1.7</td>
+                    </tr>
+                    <tr>
+                        <td>HTML table assertions</td>
+                        <td>Can match HTML or table elements to expectations</td>
+                        <td style="color: red;">1.7</td>
+                    </tr>
+                    <tr>
+                        <td>Unified acceptance testing model</td>
+                        <td>Content searchable through selectors combined with expectations</td>
+                        <td style="color: red;">1.7</td>
+                    </tr>
+                    <tr>
+                        <td>DatabaseTestCase</td>
+                        <td>SQL selectors and DB drivers</td>
+                        <td style="color: red;">1.7</td>
                     </tr>
                     <tr>
                         <td>IFrame support</td>
                         <td>Reads IFrame content that can be refreshed</td>
-                        <td style="color: red;">1.1</td>
-                    </tr>
-                    <tr>
-                        <td>Improved mock interface</td>
-                        <td>More compact way of expressing mocks using fluent interfaces</td>
-                        <td style="color: red;">2.0</td>
-                    </tr>
-                    <tr>
-                        <td>Assertion packs</td>
-                        <td>Can dynamically add assertions to test cases</td>
-                        <td style="color: red;">2.0</td>
-                    </tr>
-                    <tr>
-                        <td>HTML table assertions</td>
-                        <td>Can match table elements to numerical assertions</td>
-                        <td style="color: red;">2.0</td>
-                    </tr>
-                    <tr>
-                        <td>XPath searching of HTML elements</td>
-                        <td>More flexible content matching</td>
-                        <td style="color: red;">2.0</td>
+                        <td style="color: red;">1.8</td>
                     </tr>
                     <tr>
                         <td>Alternate HTML parsers</td>
                         <td>Can detect compiled parsers for performance improvements</td>
+                        <td style="color: red;">1.8</td>
+                    </tr>
+                    <tr>
+                        <td>Integrated Selenium support</td>
+                        <td>Easy to use built in Selenium driver and tutorial</td>
+                        <td style="color: red;">1.9</td>
+                    </tr>
+                    <tr>
+                        <td>Code coverage</td>
+                        <td>Reports using the bundled tool when using XDebug</td>
+                        <td style="color: red;">1.9</td>
+                    </tr>
+                    <tr>
+                        <td>Deprecation of old methods</td>
+                        <td>Simpler interface for SimpleTest2</td>
                         <td style="color: red;">2.0</td>
                     </tr>
                     <tr>
                         <td>Javascript suport</td>
-                        <td>Use of PECL module to add Javascript</td>
+                        <td>Use of PECL module to add Javascript to the native browser</td>
                         <td style="color: red;">3.0</td>
                     </tr>
                 </tbody>
@@ -337,14 +364,10 @@ class <strong>MySiteTest</strong> extends WebTestCase {
                 PHP5 migraton will start straight after the version 1.0.1 series,
                 whereupon only PHP 5.1+ will be supported.
                 SimpleTest is currently compatible with PHP 5, but will not
-                make use of all of the new features until version 2.
+                make use of all of the new features until version 1.1.
             </p>
         
-        <p>
-<a class="target" name="resources">
-<h2>Web resources for testing</h2>
-</a>
-</p>
+        <p><a class="target" name="resources"><h2>Web resources for testing</h2></a></p>
             <p>
                 Process is at least as important as tools.
                 The type of process that makes the heaviest use of a developer's
@@ -369,19 +392,22 @@ class <strong>MySiteTest</strong> extends WebTestCase {
                 Once you get bitten by the bug you will certainly appreciate the phrase
                 <a href="http://junit.sourceforge.net/doc/testinfected/testing.htm">test infected</a>
                 coined by Eric Gamma.
-                If you are still reviewing which unit tester to use the main choices
-                are <a href="http://phpunit.sourceforge.net/">PHPUnit</a>
-                and <a href="http://pear.php.net/manual/en/package.php.phpunit.php">Pear PHP::PHPUnit</a>.
-                They currently lack a lot of features found in
-                <a href="http://www.lastcraft.com/simple_test.php">SimpleTest</a>, but the PEAR
-                version at least has been upgraded for PHP5 and is recommended if you are porting
-                existing <a href="http://www.junit.org/">JUnit</a> test cases.
+                If you are still reviewing which unit tester to use you can find pretty complete
+                lists from
+                <a href="http://en.wikipedia.org/wiki/List_of_unit_testing_frameworks">Wikipedia</a>,
+                <a href="http://www.testingfaqs.org/t-unit.html">Software testing FAQ</a>,
+                and <a href="http://www.opensourcetesting.org/functional.php">Open source testing</a>.
             </p>
             <p>
-                There is currently a sad lack of material on mock objects, which is a shame
+                There is still very little material on using mock objects, which is a shame
                 as unit testing without them is a lot more work.
                 The <a href="http://www.sidewize.com/company/mockobjects.pdf">original mock objects paper</a>
                 is very Java focused, but still worth a read.
+                The most authoritive sources are probably
+                <a href="http://mockobjects.com">the original mock objects site</a> and
+                <a href="http://jmock.org/">JMock</a>.
+                Java centric, but tucked away in PDFs they contain some deep knowledge on using mocks from the
+                extended experience of the concept inventors.
                 As a new technology there are plenty of discussions and debate on how to use mocks,
                 often on Wikis such as
                 <a href="http://xpdeveloper.com/cgi-bin/oldwiki.cgi?MockObjects">Extreme Tuesday</a>
@@ -403,11 +429,12 @@ class <strong>MySiteTest</strong> extends WebTestCase {
                 require Java to run.
             </p>
             <p>
-                A new generation of tools that run directly in the web browser
+                Most significant is a new generation of tools that run directly in the web browser
                 are now available.
                 These include
                 <a href="http://www.openqa.org/selenium/">Selenium</a> and
                 <a href="http://wtr.rubyforge.org/">Watir</a>.
+                They are non-trivial to set up and slow to run, but can essentially test anything.
                 As SimpleTest does not support JavaScript you would probably
                 have to look at these tools anyway if you have highly dynamic
                 pages.
@@ -424,11 +451,10 @@ class <strong>MySiteTest</strong> extends WebTestCase {
             is a fairly advanced tutorial.
         </li>
 <li>
-            <a href="http://simpletest.sourceforge.net/">SimpleTest API</a> from phpdoc.
+            <a href="http://simpletest.org/api/">SimpleTest API</a> from phpdoc.
         </li>
 </ul>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <span class="chosen">Overview</span>
@@ -452,8 +478,7 @@ class <strong>MySiteTest</strong> extends WebTestCase {
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <div class="copyright">
             Copyright<br>Marcus Baker 2006
         </div>

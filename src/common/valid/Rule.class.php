@@ -44,7 +44,7 @@ abstract class Rule {
      * @param String $val Value to check.
      * @return Boolean
      */
-    function getErrorMessage($key) {
+    function getErrorMessage($key='') {
         return $this->error;
     }
 }
@@ -207,6 +207,21 @@ extends Rule {
             return true;
         }
         return false;
+    }
+}
+
+/**
+ * Check if given string match a pattern
+ */
+class Rule_Regexp extends Rule {
+    protected $pattern;
+    public function __construct($pattern) {
+        parent::__construct();
+        $this->pattern = $pattern;
+    }
+    
+    function isValid($val) {
+        return preg_match($this->pattern, $val);
     }
 }
 

@@ -1,12 +1,11 @@
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>SimpleTest for PHP regression test documentation</title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -30,8 +29,7 @@
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <h1>PHP Unit Test documentation</h1>
         This page...
         <ul>
@@ -48,11 +46,7 @@
         </li>
 </ul>
 <div class="content">
-        <p>
-<a class="target" name="unit">
-<h2>Unit test cases</h2>
-</a>
-</p>
+        <p><a class="target" name="unit"><h2>Unit test cases</h2></a></p>
             <p>
                 The core system is a regression testing framework built around
                 test cases.
@@ -70,6 +64,7 @@
             <p>
                 For example...
 <pre>
+require_once('simpletest/autorun.php');
 require_once('../classes/writer.php');
 
 class FileTestCase extends UnitTestCase {
@@ -130,64 +125,80 @@ class FileTestCase extends UnitTestCase {
                 methods.
                 Here is the full list for the <span class="new_code">UnitTestCase</span>
                 class, the default for SimpleTest...
-                <table>
-<tbody>
+                <table><tbody>
                     <tr>
-<td><span class="new_code">assertTrue($x)</span></td><td>Fail if $x is false</td>
+<td><span class="new_code">assertTrue($x)</span></td>
+<td>Fail if $x is false</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertFalse($x)</span></td><td>Fail if $x is true</td>
+<td><span class="new_code">assertFalse($x)</span></td>
+<td>Fail if $x is true</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNull($x)</span></td><td>Fail if $x is set</td>
+<td><span class="new_code">assertNull($x)</span></td>
+<td>Fail if $x is set</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNotNull($x)</span></td><td>Fail if $x not set</td>
+<td><span class="new_code">assertNotNull($x)</span></td>
+<td>Fail if $x not set</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertIsA($x, $t)</span></td><td>Fail if $x is not the class or type $t</td>
+<td><span class="new_code">assertIsA($x, $t)</span></td>
+<td>Fail if $x is not the class or type $t</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNotA($x, $t)</span></td><td>Fail if $x is of the class or type $t</td>
+<td><span class="new_code">assertNotA($x, $t)</span></td>
+<td>Fail if $x is of the class or type $t</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertEqual($x, $y)</span></td><td>Fail if $x == $y is false</td>
+<td><span class="new_code">assertEqual($x, $y)</span></td>
+<td>Fail if $x == $y is false</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNotEqual($x, $y)</span></td><td>Fail if $x == $y is true</td>
+<td><span class="new_code">assertNotEqual($x, $y)</span></td>
+<td>Fail if $x == $y is true</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertWithinMargin($x, $y, $m)</span></td><td>Fail if abs($x - $y) &lt; $m is false</td>
+<td><span class="new_code">assertWithinMargin($x, $y, $m)</span></td>
+<td>Fail if abs($x - $y) &lt; $m is false</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertOutsideMargin($x, $y, $m)</span></td><td>Fail if abs($x - $y) &lt; $m is true</td>
+<td><span class="new_code">assertOutsideMargin($x, $y, $m)</span></td>
+<td>Fail if abs($x - $y) &lt; $m is true</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertIdentical($x, $y)</span></td><td>Fail if $x == $y is false or a type mismatch</td>
+<td><span class="new_code">assertIdentical($x, $y)</span></td>
+<td>Fail if $x == $y is false or a type mismatch</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNotIdentical($x, $y)</span></td><td>Fail if $x == $y is true and types match</td>
+<td><span class="new_code">assertNotIdentical($x, $y)</span></td>
+<td>Fail if $x == $y is true and types match</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertReference($x, $y)</span></td><td>Fail unless $x and $y are the same variable</td>
+<td><span class="new_code">assertReference($x, $y)</span></td>
+<td>Fail unless $x and $y are the same variable</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertClone($x, $y)</span></td><td>Fail unless $x and $y are identical copies</td>
+<td><span class="new_code">assertClone($x, $y)</span></td>
+<td>Fail unless $x and $y are identical copies</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertPattern($p, $x)</span></td><td>Fail unless the regex $p matches $x</td>
+<td><span class="new_code">assertPattern($p, $x)</span></td>
+<td>Fail unless the regex $p matches $x</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNoPattern($p, $x)</span></td><td>Fail if the regex $p matches $x</td>
+<td><span class="new_code">assertNoPattern($p, $x)</span></td>
+<td>Fail if the regex $p matches $x</td>
 </tr>
                     <tr>
-<td><span class="new_code">expectError($x)</span></td><td>Swallows any upcoming matching error</td>
+<td><span class="new_code">expectError($x)</span></td>
+<td>Swallows any upcoming matching error</td>
 </tr>
                     <tr>
-<td><span class="new_code">assert($e)</span></td><td>Fail on failed <a href="expectation_documentation.html">expectation</a> object $e</td>
+<td><span class="new_code">assert($e)</span></td>
+<td>Fail on failed <a href="expectation_documentation.html">expectation</a> object $e</td>
 </tr>
-                </tbody>
-</table>
+                </tbody></table>
                 All assertion methods can take an optional description as a
                 last parameter.
                 This is to label the displayed result with.
@@ -248,43 +259,44 @@ trigger_error('Catastrophe');
             <p>
                 The test cases also have some convenience methods for debugging
                 code or extending the suite...
-                <table>
-<tbody>
+                <table><tbody>
                     <tr>
-<td><span class="new_code">setUp()</span></td><td>Runs this before each test method</td>
+<td><span class="new_code">setUp()</span></td>
+<td>Runs this before each test method</td>
 </tr>
                     <tr>
-<td><span class="new_code">tearDown()</span></td><td>Runs this after each test method</td>
+<td><span class="new_code">tearDown()</span></td>
+<td>Runs this after each test method</td>
 </tr>
                     <tr>
-<td><span class="new_code">pass()</span></td><td>Sends a test pass</td>
+<td><span class="new_code">pass()</span></td>
+<td>Sends a test pass</td>
 </tr>
                     <tr>
-<td><span class="new_code">fail()</span></td><td>Sends a test failure</td>
+<td><span class="new_code">fail()</span></td>
+<td>Sends a test failure</td>
 </tr>
                     <tr>
-<td><span class="new_code">error()</span></td><td>Sends an exception event</td>
+<td><span class="new_code">error()</span></td>
+<td>Sends an exception event</td>
 </tr>
                     <tr>
-<td><span class="new_code">signal($type, $payload)</span></td><td>Sends a user defined message to the test reporter</td>
+<td><span class="new_code">signal($type, $payload)</span></td>
+<td>Sends a user defined message to the test reporter</td>
 </tr>
                     <tr>
-<td><span class="new_code">dump($var)</span></td><td>Does a formatted <span class="new_code">print_r()</span> for quick and dirty debugging</td>
+<td><span class="new_code">dump($var)</span></td>
+<td>Does a formatted <span class="new_code">print_r()</span> for quick and dirty debugging</td>
 </tr>
-                </tbody>
-</table>
+                </tbody></table>
             </p>
         
-        <p>
-<a class="target" name="extending_unit">
-<h2>Extending test cases</h2>
-</a>
-</p>
+        <p><a class="target" name="extending_unit"><h2>Extending test cases</h2></a></p>
             <p>
                 Of course additional test methods can be added to create
                 specific types of test case, so as to extend framework...
 <pre>
-require_once('simpletest/unit_tester.php');
+require_once('simpletest/autorun.php');
 <strong>
 class FileTester extends UnitTestCase {
     function FileTester($name = false) {
@@ -305,6 +317,11 @@ class FileTester extends UnitTestCase {
             <p>
                 To prevent this test case being run accidently, it is
                 advisable to mark it as <span class="new_code">abstract</span>.
+            </p>
+            <p>
+                Alternatively you could add a
+                <span class="new_code">SimpleTestOptions::ignore('FileTester');</span>
+                directive in your code.
             </p>
             <p>
                 This new case can be now be inherited just like
@@ -341,30 +358,27 @@ class FileTestCase extends <strong>FileTester</strong> {
                 test cases in your test suites.
             </p>
         
-        <p>
-<a class="target" name="running_unit">
-<h2>Running a single test case</h2>
-</a>
-</p>
+        <p><a class="target" name="running_unit"><h2>Running a single test case</h2></a></p>
             <p>
                 You won't often run single test cases except when bashing
                 away at a module that is having difficulty, and you don't
                 want to upset the main test suite.
-                Here is the scaffolding needed to run a lone test case...
+                With <em>autorun</em> no particular scaffolding is needed,
+                just launch your particular test file and you're ready to go.
+            </p>
+            <p>
+                You can even decide which reporter (for example,
+                <span class="new_code">TextReporter</span> or <span class="new_code">HtmlReporter</span>)
+                you prefer for a specific file when launched on its own...
 <pre>
 &lt;?php
-    require_once('simpletest/unit_tester.php');<strong>
-    require_once('simpletest/reporter.php');</strong>
-    require_once('../classes/writer.php');
+require_once('simpletest/autorun.php');<strong>
+SimpleTest :: prefer(new TextReporter());</strong>
+require_once('../classes/writer.php');
 
-    class FileTestCase extends UnitTestCase {
-        function FileTestCase() {
-            $this-&gt;UnitTestCase('File test');
-        }
-    }<strong>
-    
-    $test = &amp;new FileTestCase();
-    $test-&gt;run(new HtmlReporter());</strong>
+class FileTestCase extends UnitTestCase {
+    ...
+}
 ?&gt;
 </pre>
                 This script will run as is, but of course will output zero passes
@@ -381,12 +395,11 @@ class FileTestCase extends <strong>FileTester</strong> {
             SimpleTest download page on <a href="http://www.lastcraft.com/simple_test.php">LastCraft</a>.
         </li>
 <li>
-            <a href="http://simpletest.sourceforge.net/">Full API for SimpleTest</a>
+            <a href="http://simpletest.org/api/">Full API for SimpleTest</a>
             from the PHPDoc.
         </li>
 </ul>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -410,8 +423,7 @@ class FileTestCase extends <strong>FileTester</strong> {
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <div class="copyright">
             Copyright<br>Marcus Baker 2006
         </div>

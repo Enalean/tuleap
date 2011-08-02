@@ -21,6 +21,7 @@
 require_once('common/user/User.class.php');
 require_once('common/dao/UserDao.class.php');
 require_once('common/dao/WikiDao.class.php');
+require_once('common/session/Codendi_Session.class.php');
 
 class UserManager {
     
@@ -54,7 +55,13 @@ class UserManager {
         }
         return $this->_userdao;
     }
-    
+
+
+    public function getUserAnonymous() {
+        return $this->getUserbyId(0);
+    }
+
+
     /**
      * @param int the user_id of the user to find
      * @return User or null if the user is not found
@@ -63,11 +70,11 @@ class UserManager {
         if (!isset($this->_users[$user_id])) {
             if (is_numeric($user_id)) {
                 if ($user_id == 0) {
-                    $this->_users[$user_id] = $this->_getUserInstanceFromRow(array('user_id' => 0));
+                    $this->_users[$user_id] = $this->getUserInstanceFromRow(array('user_id' => 0));
                 } else {
                     $dar = $this->getDao()->searchByUserId($user_id);
                     if ($row = $dar->getRow()) {
-                        $u = $this->_getUserInstanceFromRow($row);
+                        $u = $this->getUserInstanceFromRow($row);
                         $this->_users[$u->getId()] = $u;
                         $this->_userid_bynames[$u->getUserName()] = $user_id;
                     } else {
@@ -89,7 +96,7 @@ class UserManager {
         if (!isset($this->_userid_bynames[$user_name])) {
             $dar = $this->getDao()->searchByUserName($user_name);
             if ($row = $dar->getRow()) {
-                $u = $this->_getUserInstanceFromRow($row);
+                $u = $this->getUserInstanceFromRow($row);
                 $this->_users[$u->getId()] = $u;
                 $this->_userid_bynames[$user_name] = $u->getId();
             } else {
@@ -103,7 +110,11 @@ class UserManager {
         return $user;
     }
     
-    function _getUserInstanceFromRow($row) {
+    public function _getUserInstanceFromRow($row) {
+        return $this->getUserInstanceFromRow($row);
+    }
+
+    public function getUserInstanceFromRow($row) {
         $u = new User($row);
         return $u;
     }
@@ -119,7 +130,7 @@ class UserManager {
         if (!isset($this->_userid_byldapid[$ldapId])) {
             $dar =& $this->getDao()->searchByLdapId($ldapId);
             if ($row = $dar->getRow()) {
-                $u =& $this->_getUserInstanceFromRow($row);
+                $u =& $this->getUserInstanceFromRow($row);
                 $this->_users[$u->getId()] = $u;
                 $this->_userid_byldapid[$ldapId] = $u->getId();
             } else {
@@ -178,7 +189,7 @@ class UserManager {
         $user_result = $this->getDao()->searchByEmail($email);
 
         if ($user_result->rowCount() == 1) {
-            return $this->_getUserInstanceFromRow($user_result->getRow());
+            return $this->getUserInstanceFromRow($user_result->getRow());
         } else {
             if ($user_result->rowCount() > 1) {
                 throw new Exception("Several accounts share the same email address '$email'");
@@ -286,7 +297,7 @@ class UserManager {
             }
             if (!isset($this->_currentuser)) {
                 //No valid session_hash/ip found. User is anonymous
-                $this->_currentuser = $this->_getUserInstanceFromRow(array('user_id' => 0));
+                $this->_currentuser = $this->getUserInstanceFromRow(array('user_id' => 0));
                 $this->_currentuser->setSessionHash(false);
             }
             //cache the user
@@ -307,7 +318,13 @@ class UserManager {
             $this->getDao()->deleteSession($user->getSessionHash());
             $user->setSessionHash(false);
             $this->_getCookieManager()->removeCookie('session_hash');
+            $this->destroySession();
         }
+    }
+    
+    protected function destroySession() {
+        $session = new Codendi_Session();
+        $session->destroy();
     }
 
     /**
@@ -351,7 +368,7 @@ class UserManager {
                 if ($auth_success) {
                     $this->_currentuser = $this->getUserById($auth_user_id);
                 } else {
-                    $this->_currentuser = $this->_getUserInstanceFromRow($row);
+                    $this->_currentuser = $this->getUserInstanceFromRow($row);
                     if ($this->_currentuser->getUserPw() == md5($pwd)) {
                         //We have the good user, but check that he is allowed to connect
                         $auth_success = true;
@@ -464,6 +481,48 @@ class UserManager {
 
         if (!$logged_in) {
             $this->_currentuser = $this->_getUserInstanceFromRow(array('user_id' => 0));
+        }
+        
+        //cache the user
+        $this->_users[$this->_currentuser->getId()] = $this->_currentuser;
+        $this->_userid_bynames[$this->_currentuser->getUserName()] = $this->_currentuser->getId();
+        return $this->_currentuser;
+    }
+    
+    /**
+     * Force the login of the user.
+     *
+     * Do not delegate auth to plugins (ldap, ...)
+     * Do not check the status
+     * Do not check password expiration
+     * Do not create the session
+     *
+     * @throws Exception when not in IS_SCRIPT
+     *
+     * @param $name string The login name submitted by the user
+     * @param $pwd string The password submitted by the user
+     *
+     * @return User Registered user or anonymous if the authentication failed
+     */
+    function forceLogin($name, $pwd) {
+        if (!IS_SCRIPT) {
+            throw new Exception("Can't log in the user when not is script");
+        }
+        $logged_in = false;
+        
+        //If nobody answer success, look for the user into the db
+        if ($row = $this->getDao()->searchByUserName($name)->getRow()) {
+            $this->_currentuser = $this->getUserInstanceFromRow($row);
+            if ($this->_currentuser->getUserPw() === md5($pwd)) {
+                $logged_in = true;
+            } else {
+                //invalid password or user_name
+                $GLOBALS['Response']->addFeedback('error', "Unable to authenticate $name");
+            }
+        }
+
+        if (!$logged_in) {
+            $this->_currentuser = $this->getUserInstanceFromRow(array('user_id' => 0));
         }
         
         //cache the user
@@ -687,6 +746,7 @@ class UserManager {
             return $this->getDao()->suspendUserNotProjectMembers($lastRemove);
         }
     }
+
     /**
      * Update user name in different tables containing the old user name  
      * @param User $user

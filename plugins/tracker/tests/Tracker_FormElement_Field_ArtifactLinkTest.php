@@ -58,8 +58,8 @@ Mock::generate('Tracker_FormElement_Field_Value_ArtifactLinkDao');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-require_once('common/valid/Rule.class.php');
-Mock::generate('Rule_ArtifactId');
+require_once(dirname(__FILE__).'/../include/Tracker_Valid_Rule.class.php');
+Mock::generate('Tracker_Valid_Rule_ArtifactId');
 
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
@@ -125,7 +125,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends UnitTestCase {
         $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $f->setReturnValue('isRequired', true);
         
-        $rai = new MockRule_ArtifactId();
+        $rai = new MockTracker_Valid_Rule_ArtifactId();
         $rai->setReturnValue('isValid', true, array('123'));
         $rai->setReturnValue('isValid', true, array('321'));
         $rai->setReturnValue('isValid', true, array('999'));
@@ -156,7 +156,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends UnitTestCase {
         $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $f->setReturnValue('isRequired', true);
         
-        $rai = new MockRule_ArtifactId();
+        $rai = new MockTracker_Valid_Rule_ArtifactId();
         $rai->setReturnValue('isValid', true, array('123'));
         $rai->setReturnValue('isValid', true, array('321'));
         $rai->setReturnValue('isValid', true, array('999'));
@@ -186,7 +186,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends UnitTestCase {
         $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $f->setReturnValue('isRequired', false);
         
-        $rai = new MockRule_ArtifactId();
+        $rai = new MockTracker_Valid_Rule_ArtifactId();
         $f->setReturnReference('getRuleArtifactId', $rai);
         
         $a = new MockTracker_Artifact();

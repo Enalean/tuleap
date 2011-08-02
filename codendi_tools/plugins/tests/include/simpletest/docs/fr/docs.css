@@ -3,7 +3,7 @@ body {
     padding-right: 3%;
 }
 pre {
-    font-family: courier;
+    font-family: "courier new", courier;
     font-size: 80%;
     border: 1px solid;
     background-color: #cccccc;

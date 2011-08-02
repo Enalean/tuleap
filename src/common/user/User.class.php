@@ -360,7 +360,21 @@ class User {
         }
         return $is_member;
     }
-
+    
+    /**
+     * Check membership of the user to a specified ugroup
+     * (call to old style ugroup_user_is_member in /src/www/project/admin ; here for unit tests purpose)
+     *
+     * @param int $ugroup_id  the id of the ugroup
+     * @param int $group_id   the id of the project (is necessary for automatic project groups like project member, release admin, etc.)
+     * @param int $tracker_id the id of the tracker (is necessary for trackers since the tracker admin role is different for each tracker.)
+     *
+     * @return boolean true if user is member of the ugroup, false otherwise.
+     */
+    public function isMemberOfUGroup($ugroup_id, $group_id, $tracker_id = 0) {
+        return ugroup_user_is_member($this->getId(), $ugroup_id, $group_id, $tracker_id);
+    }
+    
     public function isNone() {
         return $this->getId() == 100;
     }
@@ -735,12 +749,19 @@ class User {
     }
     
     /**
+     *
+     * @param bool $return_all_data true if you want all groups data instead of only group_id (the later is the default)
+     *
      * @return array groups id the user is member of
      */
-    function getProjects() {
+    function getProjects($return_all_data = false) {
         $projects = array();
         foreach($this->getUserGroupDao()->searchActiveGroupsByUserId($this->user_id) as $data) {
-            $projects[] = $data['group_id'];
+            if ($return_all_data) {
+                $projects[] = $data;
+            } else {
+                $projects[] = $data['group_id'];
+            }
         }
         return $projects;
     }
@@ -1074,6 +1095,47 @@ class User {
       */
      public static function getAllWorkingStatus() {
          return array(self::STATUS_ACTIVE, self::STATUS_RESTRICTED, self::STATUS_SUSPENDED, self::STATUS_DELETED);
+     }
+
+     /**
+      * Say if the user has avatar
+      *
+      * @return bool
+      */
+     public function hasAvatar() {
+         return false;
+     }
+
+     /**
+      * Set if the user has avatar
+      *
+      * @param bool $has_avatar true if the user has an avatar
+      *
+      * @return User for chaining methods
+      */
+     public function setHasAvatar($has_avatar = 1) {
+         /*$this->has_avatar = ($has_avatar ? 1 : 0);
+         return $this;*/
+     }
+     
+     /**
+      * Display the html code for this users's avatar
+      *
+      * @return string html
+      */
+     public function fetchHtmlAvatar() {
+         /*$purifier = Codendi_HTMLPurifier::instance();
+         $html = '';
+         $html .= '<div class="avatar">';
+         if ($this->isAnonymous()) {
+             $html .= '<img src="http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s=50&amp;d=wavatar" />';
+         } else {
+             if ($this->hasAvatar()) {
+                 $html .= '<img src="/users/'. $purifier->purify($this->getUserName()) .'/avatar.png" />';
+             }
+         }
+         $html .= '</div>';
+         return $html;*/
      }
 
      /**

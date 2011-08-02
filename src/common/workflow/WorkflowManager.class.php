@@ -18,8 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/Workflow_Dao.class.php');
-require_once('common/dao/Workflow_TransitionDao.class.php');
+require_once('Workflow_Dao.class.php');
+require_once('Workflow_TransitionDao.class.php');
 require_once('Workflow.class.php');
 require_once('WorkflowFactory.class.php');
 

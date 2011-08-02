@@ -18,10 +18,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/workflow/Workflow.class.php');
-require_once('common/workflow/Transition.class.php');
-require_once('common/dao/Workflow_Dao.class.php');
-require_once('common/dao/Workflow_TransitionDao.class.php');
+require_once('Workflow.class.php');
+require_once('Transition.class.php');
+require_once('Workflow_Dao.class.php');
+require_once('Workflow_TransitionDao.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 
 

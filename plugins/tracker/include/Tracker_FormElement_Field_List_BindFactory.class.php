@@ -29,7 +29,7 @@ require_once('dao/Tracker_FormElement_Field_List_Bind_StaticDao.class.php');
 require_once('dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php');
 require_once('dao/Tracker_FormElement_Field_List_Bind_UsersDao.class.php');
 
-require_once('common/html/HTML_Element_Input_Radio.class.php');
+require_once('HTML_Element_Input_Radio.class.php');
 
 class Tracker_FormElement_Field_List_BindFactory {
     const STATIK  = 'static';
