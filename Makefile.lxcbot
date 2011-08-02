@@ -1,3 +1,13 @@
+#
+# Sample of what we use internally
+#
+#centos-5-x86_64.cfg and centos-5-i386.cfg contains data to use an internal Centos mirror
+#Do once :
+#make -f Makefile.remote gettestfromff
+#To get testsuite from FusionForge
+#Then use in jenkins like this:
+#cd $WORKSPACE/tuleap ; make -f Makefile.extra
+
 BUILDHOST=tuleap.rd.francetelecom.fr
 DEPSDIR=rpm/SRPMS
 DEPSDIR=DEPS
