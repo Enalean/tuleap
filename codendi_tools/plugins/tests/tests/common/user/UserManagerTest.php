@@ -16,13 +16,14 @@ Mock::generate('EventManager');
 require_once('common/user/UserManager.class.php');
 Mock::generatePartial('UserManager', 
                       'UserManagerTestVersion', 
-                      array('_getUserInstanceFromRow', 
+                      array('getUserInstanceFromRow', 
                             '_getCookieManager', 
                             '_getServerIp', 
                             'generateSessionHash',
                             '_getPasswordLifetime',
                             '_getEventManager',
                             'getDao',
+                            'destroySession',
                       )
 );
 // Special mock for getUserByIdentifier test
@@ -81,8 +82,8 @@ class UserManagerTest extends UnitTestCase {
         $user456->setReturnValue('getUserName', 'user_456');
         
         $um = new UserManagerTestVersion($this);
-        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
-        $um->setReturnReference('_getUserInstanceFromRow', $user456, array(array('user_name' => 'user_456', 'user_id' => 456)));
+        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('getUserInstanceFromRow', $user456, array(array('user_name' => 'user_456', 'user_id' => 456)));
         
         $um->setReturnReference('getDao', $dao);
         $user_1 = $um->getUserById(123);
@@ -108,8 +109,8 @@ class UserManagerTest extends UnitTestCase {
         $user456->setReturnValue('getUserName', 'user_456');
         
         $um = new UserManagerTestVersion($this);
-        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
-        $um->setReturnReference('_getUserInstanceFromRow', $user456, array(array('user_name' => 'user_456', 'user_id' => 456)));
+        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('getUserInstanceFromRow', $user456, array(array('user_name' => 'user_456', 'user_id' => 456)));
         
         $um->setReturnReference('getDao', $dao);
         $user_1 = $um->getUserByUserName('user_123');
@@ -140,8 +141,8 @@ class UserManagerTest extends UnitTestCase {
         $user456->setReturnValue('getUserName', 'user_456');
         
         $um = new UserManagerTestVersion($this);
-        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
-        $um->setReturnReference('_getUserInstanceFromRow', $user456, array(array('user_name' => 'user_456', 'user_id' => 456)));
+        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('getUserInstanceFromRow', $user456, array(array('user_name' => 'user_456', 'user_id' => 456)));
         
         $um->setReturnReference('getDao', $dao);
         $user_1 = $um->getUserById(123);
@@ -166,7 +167,7 @@ class UserManagerTest extends UnitTestCase {
         $user123->setReturnValue('getUserName', 'user_123');
         
         $um = new UserManagerTestVersion($this);
-        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         
         $um->setReturnReference('getDao', $dao);
         $this->assertFalse($um->isUserLoadedById(123));
@@ -189,10 +190,10 @@ class UserManagerTest extends UnitTestCase {
         
         $um->setReturnReference('getDao', $dao);
         $um->setReturnReference('_getCookieManager', $cm);
-        $um->setReturnReference('_getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
+        $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
         
         //expect that the user is cached
-        $um->expectOnce('_getUserInstanceFromRow');
+        $um->expectOnce('getUserInstanceFromRow');
         
         $user = $um->getCurrentUser();
         $this->assertTrue($user->isAnonymous(), 'An empty session hash gives an anonymous user');
@@ -217,7 +218,7 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnValue('_getServerIp', '212.212.123.12');
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
         $dao->setReturnReference('searchBySessionHashAndIp', $dar_valid_hash, array('valid_hash', '212.212.123.12'));
-        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         
         $dao->expectOnce('storeLastAccessDate', array(123, '*'));
         
@@ -242,7 +243,7 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnValue('_getServerIp', '212.212.123.12');
         $dar_invalid_hash->setReturnValue('getRow', false);
         $dao->setReturnReference('searchBySessionHashAndIp', $dar_invalid_hash, array('invalid_hash', '212.212.123.12'));
-        $um->setReturnReference('_getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
+        $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
         
         $um->setReturnReference('getDao', $dao);
         $um->setReturnReference('_getCookieManager', $cm);
@@ -265,7 +266,7 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnValue('_getServerIp', 'in.val.id.ip');
         $dar_invalid->setReturnValue('getRow', false);
         $dao->setReturnReference('searchBySessionHashAndIp', $dar_invalid, array('valid_hash', 'in.val.id.ip'));
-        $um->setReturnReference('_getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
+        $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
         
         $um->setReturnReference('getDao', $dao);
         $um->setReturnReference('_getCookieManager', $cm);
@@ -295,11 +296,11 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnValue('_getServerIp', '212.212.35.25');
         $dao->setReturnReference('searchBySessionHashAndIp', $dar_invalid_hash, array('empty_hash', ''));
         $dar_invalid_hash->setReturnValue('getRow', false);
-        $um->setReturnReference('_getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
+        $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
         
         $dao->setReturnReference('searchBySessionHashAndIp', $dar_valid_hash, array('valid_hash', '212.212.35.25'));
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         
         $um->setReturnReference('getDao', $dao);
         $um->setReturnReference('_getCookieManager', $cm);
@@ -338,10 +339,11 @@ class UserManagerTest extends UnitTestCase {
         $dao->expectOnce('deleteSession', array('valid_hash'));
         $dao->setReturnReference('searchBySessionHashAndIp', $dar_valid_hash, array('valid_hash', '212.212.123.12'));
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         
         $um->setReturnReference('getDao', $dao);
         $um->setReturnReference('_getCookieManager', $cm);
+        $um->expectOnce('destroySession');
         
         $user = $um->getCurrentUser();
         $um->logout();
@@ -372,7 +374,7 @@ class UserManagerTest extends UnitTestCase {
         
         $dao->setReturnReference('searchByUserName', $dar, array('user_123'));
         $dar->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
         
         $dao->expectNever('storeLoginFailure');
         
@@ -405,8 +407,8 @@ class UserManagerTest extends UnitTestCase {
         
         $dao->setReturnReference('searchByUserName', $dar, array('user_123'));
         $dar->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
-        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
-        $um->setReturnReference('_getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
+        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
         
         $dao->expectNever('createSession');
         $dao->expectOnce('storeLoginFailure');
@@ -434,8 +436,8 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnValue('_getServerIp', '212.212.123.12');
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
         $dao->setReturnReference('searchBySessionHashAndIp', $dar_valid_hash, array('valid_hash', '212.212.123.12'));
-        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
-        $um->setReturnReference('_getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
+        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
         
         $dao->expectNever('storeLastAccessDate');
         $dao->expectOnce('deleteAllUserSessions', array(123));
@@ -466,8 +468,8 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnValue('_getServerIp', '212.212.123.12');
         $dar_valid_hash->setReturnValue('getRow', array('user_name' => 'user_123', 'user_id' => 123));
         $dao->setReturnReference('searchBySessionHashAndIp', $dar_valid_hash, array('valid_hash', '212.212.123.12'));
-        $um->setReturnReference('_getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
-        $um->setReturnReference('_getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
+        $um->setReturnReference('getUserInstanceFromRow', $user123, array(array('user_name' => 'user_123', 'user_id' => 123)));
+        $um->setReturnReference('getUserInstanceFromRow', $userAnonymous, array(array('user_id' => 0)));
         
         $dao->expectNever('storeLastAccessDate');
         $dao->expectOnce('deleteAllUserSessions', array(123));

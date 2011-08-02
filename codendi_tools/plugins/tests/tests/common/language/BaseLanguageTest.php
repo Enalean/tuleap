@@ -33,6 +33,7 @@ class BaseLanguageTest extends UnitTestCase {
     }
 
     function setUp() {
+        $this->glob = $GLOBALS;
         $GLOBALS['sys_incdir']            = dirname(__FILE__) . '/_fixtures/codendi/site-content';
         $GLOBALS['sys_pluginsroot']       = dirname(__FILE__) . '/_fixtures/codendi/plugins';
         $GLOBALS['sys_themeroot']         = dirname(__FILE__) . '/_fixtures/codendi/themes';
@@ -51,13 +52,7 @@ class BaseLanguageTest extends UnitTestCase {
             }
         }
         
-        unset($GLOBALS['sys_custom_incdir']);
-        unset($GLOBALS['sys_custompluginsroot']);
-        unset($GLOBALS['sys_incdir']);
-        unset($GLOBALS['sys_pluginsroot']);
-        unset($GLOBALS['sys_themeroot']);
-        unset($GLOBALS['sys_custom_themeroot']);
-        unset($GLOBALS['codendi_cache_dir']);
+       $GLOBALS = $this->glob;
     }
     
     function testConstructor() {

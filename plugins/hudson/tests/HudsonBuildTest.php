@@ -43,35 +43,16 @@ class HudsonBuildTest extends UnitTestCase {
     
     function testMalformedURL() {
         $this->expectException('HudsonJobURLMalformedException');
-        $this->expectError();
         $b = new HudsonBuild("toto");
     }
     function testMissingSchemeURL() {
         $this->expectException('HudsonJobURLMalformedException');
-        $this->expectError();
         $b = new HudsonBuild("code4:8080/hudson/jobs/Codendi");
     }
     function testMissingHostURL() {
         $this->expectException('HudsonJobURLMalformedException');
         $this->expectError();
         $b = new HudsonBuild("http://");
-    }
-    
-    function testWrongXMLFile() {
-        $xmlstr = <<<XML
-<?xml version='1.0' standalone='yes'?>
-<foo>
- <bar>1</bar>
- <bar>2</bar>
-</foo>
-XML;
-        $xmldom = new SimpleXMLElement($xmlstr);
-        
-        $b = new HudsonBuildTestVersion($this);
-        $b->setReturnValue('_getXMLObject', $xmldom);
-        $b->buildBuildObject();
-        
-        $this->expectError();
     }
     
     function testSimpleJobBuild() {
