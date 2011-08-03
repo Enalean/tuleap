@@ -31,7 +31,7 @@ if ($p && $plugin_manager->isPluginAvailable($p)) {
     
     $tracker_manager = new TrackerManager();
     $tracker_manager->process(HTTPRequest::instance(), UserManager::instance()->getCurrentUser());
-} elseelse {
+} else {
     header('Location: '.get_server_url());
 }
 
