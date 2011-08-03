@@ -31,6 +31,12 @@ abstract class Rule {
     var $error;
 
     /**
+     * Constructor
+     */
+    public function __construct() {
+    }
+    
+    /**
      * Check if $val is a valid not.
      *
      * @param String $val Value to check.
@@ -215,6 +221,7 @@ extends Rule {
  */
 class Rule_Regexp extends Rule {
     protected $pattern;
+    
     public function __construct($pattern) {
         parent::__construct();
         $this->pattern = $pattern;
