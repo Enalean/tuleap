@@ -93,14 +93,14 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
      * @return the label of the formElement (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'static_rich_text_label');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'static_rich_text_label');
     }
     
     /**
      * @return the description of the formElement (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'static_rich_text_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'static_rich_text_description');
     }
     
     /**

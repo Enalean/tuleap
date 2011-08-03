@@ -244,7 +244,7 @@ class Tracker {
                 if ($this->userCanSubmitArtifact($current_user)) {
                     $this->displaySubmit($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -253,7 +253,7 @@ class Tracker {
                 if ($this->userCanSubmitArtifact($current_user)) {
                     $this->displaySubmit($tracker_manager, $request, $current_user, $link);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                 }
                 break;
             case 'delete':
@@ -282,7 +282,7 @@ class Tracker {
                                 $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)));
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                 }
                 $GLOBALS['Response']->redirect('/tracker/?group_id='. $this->group_id);
                 break;
@@ -290,7 +290,7 @@ class Tracker {
                 if ($this->userIsAdmin($current_user)) {
                     $this->displayAdmin($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -301,7 +301,7 @@ class Tracker {
                     }
                     $this->displayAdminOptions($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -309,7 +309,7 @@ class Tracker {
                 if ($this->userIsAdmin($current_user)) {
                     $this->displayAdminPerms($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -321,7 +321,7 @@ class Tracker {
                     }
                     $this->displayAdminPermsTracker($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -340,7 +340,7 @@ class Tracker {
                     }
                     $this->displayAdminPermsFields($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -349,7 +349,7 @@ class Tracker {
                     if (is_array($request->get('add-formElement'))) {
                         list($formElement_id,) = each($request->get('add-formElement'));
                         if (Tracker_FormElementFactory::instance()->addFormElement($formElement_id)) {
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_admin_index', 'field_added'));
+                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_added'));
                             $GLOBALS['Response']->redirect('/tracker/?tracker='. (int)$this->getId() .'&func=admin-formElements');
                         }
                     } else if (is_array($request->get('create-formElement'))) {
@@ -371,7 +371,7 @@ class Tracker {
                     }
                     $this->displayAdminFormElements($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -385,7 +385,7 @@ class Tracker {
                         $this->displayAdminFormElements($tracker_manager, $request, $current_user);
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -393,7 +393,7 @@ class Tracker {
                 if ($this->userIsAdmin($current_user)) {
                     $this->getTrackerSemanticManager()->process($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -401,7 +401,7 @@ class Tracker {
                 if ($this->userIsAdmin($current_user)) {
                     $this->getNotificationsManager()->process($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -410,7 +410,7 @@ class Tracker {
                 if ($current_user->isLoggedIn()) {
                     $this->getNotificationsManager()->process($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -419,7 +419,7 @@ class Tracker {
                 if ($this->userIsAdmin($current_user)) {
                     $this->getCannedResponseManager()->process($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -427,7 +427,7 @@ class Tracker {
                 if ($this->userIsAdmin($current_user)) {
                     $this->getWorkflowManager()->process($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -442,16 +442,16 @@ class Tracker {
                         $csv_body   = $session->get('csv_body');
                         
                         if ($this->importFromCSV($tracker_manager, $request, $current_user, $csv_header, $csv_body)) {
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_admin_import', 'import_succeed'));
+                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'import_succeed'));
                             $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                         } else {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'import_failed'));
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'import_failed'));
                             $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                         }
                     }
                     $this->displayAdminCSVImport($tracker_manager, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -478,7 +478,7 @@ class Tracker {
                             exit;
                         } else {
                             $art_link = '<a href="/tracker?aid=' . $artifact->getId() . '">' . $this->getItemName() . ' #' . $artifact->getId() . '</a>';
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_index', 'create_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
+                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'create_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                             
                             $url_redirection = '/tracker/?tracker='. $this->getId();
                             if ($request->get('submit_and_continue')) {
@@ -492,7 +492,7 @@ class Tracker {
                     }
                     $this->displaySubmit($tracker_manager, $request, $current_user, $link);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -562,7 +562,7 @@ class Tracker {
                 $GLOBALS['Response']->addFeedback('error', 'Something is wrong with your request');
                 $GLOBALS['Response']->redirect('/tracker/?aid='. $linked_artifact->getId());
             }
-            echo $linked_artifact->fetchTitle($GLOBALS['Language']->getText('tracker_artifactlink', 'title_prefix'));
+            echo $linked_artifact->fetchTitle($GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'title_prefix'));
             
             echo '<input type="hidden" id="link-artifact-id" value="'. (int)$link_artifact_id .'" />';
             
@@ -575,12 +575,12 @@ class Tracker {
             echo '<div id="tracker-link-artifact-manual-way">';
             echo '<div class="boxtitle">';
             echo $GLOBALS['HTML']->getImage('ic/lightning-white.png', array('style' => 'vertical-align:middle')). '&nbsp;';
-            echo $GLOBALS['Language']->getText('tracker_artifactlink', 'manual_panel_title');
+            echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'manual_panel_title');
             echo '</div>';
             echo '<div class="tracker-link-artifact-manual-way-content">';
-            echo $GLOBALS['Language']->getText('tracker_artifactlink', 'manual_panel_desc');
+            echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'manual_panel_desc');
             echo '<p><label for="link-artifact-manual-field">';
-            echo $GLOBALS['Language']->getText('tracker_artifactlink', 'manual_panel_label');
+            echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'manual_panel_label');
             echo '</label><br />';
             echo '<input type="text" name="link-artifact[manual]" value="" id="link-artifact-manual-field" />';
             echo '</p>';
@@ -591,11 +591,11 @@ class Tracker {
             echo '<div id="tracker-link-artifact-recentitems-way">';
             echo '<div class="boxtitle">';
             echo $GLOBALS['HTML']->getImage('ic/star-white.png', array('style' => 'vertical-align:middle')). '&nbsp;';
-            echo $GLOBALS['Language']->getText('tracker_artifactlink', 'recent_panel_title');
+            echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'recent_panel_title');
             echo '</div>';
             echo '<div class="tracker-link-artifact-recentitems-way-content">';
             if ($recent_items = $current_user->getRecentArtifacts()) {
-                echo $GLOBALS['Language']->getText('tracker_artifactlink', 'recent_panel_desc');
+                echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'recent_panel_desc');
                 echo '<ul>';
                 foreach ($recent_items as $item) {
                     if ($item['id'] != $link_artifact_id) {
@@ -620,7 +620,7 @@ class Tracker {
                 echo '<td><div id="tracker-link-artifact-slow-way">';
                 echo '<div class="boxtitle">';
                 echo $GLOBALS['HTML']->getImage('ic/magnifier-white.png', array('style' => 'vertical-align:middle')). '&nbsp;';
-                echo $GLOBALS['Language']->getText('tracker_artifactlink', 'search_panel_title');
+                echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'search_panel_title');
                 echo '</div>';
                 echo '<div id="tracker-link-artifact-slow-way-content">';
             }
@@ -630,7 +630,7 @@ class Tracker {
             $report->process($tracker_manager, $request, $current_user);
         } elseif (!$link_artifact_id) {
             $this->displayHeader($tracker_manager, $this->name, array());
-            echo $GLOBALS['Language']->getText('tracker', 'no_reports_available');
+            echo $GLOBALS['Language']->getText('plugin_tracker', 'no_reports_available');
             $this->displayFooter($tracker_manager);
         }
         
@@ -755,7 +755,7 @@ class Tracker {
         
         $breadcrumbs = array(
                 array(
-                        'title' => $GLOBALS['Language']->getText('tracker_browse', 'search_result'),
+                        'title' => $GLOBALS['Language']->getText('plugin_tracker_browse', 'search_result'),
                         'url'   => '/tracker/?tracker='. $this->getId(),
                 ),
         );
@@ -794,7 +794,7 @@ class Tracker {
             
             $summary_field = $this->getTitleField();
             if ($summary_field && $summary_field->userCanRead()) {
-                $title_arr[] = $GLOBALS['Language']->getText('search_index','artifact_title');
+                $title_arr[] = $GLOBALS['Language']->getText('plugin_tracker_search_index','artifact_title');
             }
             $submitted_field = $art_field_fact->getFormElementByName($this->getId(), 'submitted_by');
             if ($submitted_field && $submitted_field->userCanRead()) {
@@ -877,7 +877,7 @@ class Tracker {
     
     protected function fetchAnonymousEmailForm() {
         $html = '<p>';
-        $html .= $GLOBALS['Language']->getText('tracker_artifact', 'not_logged_in', array('/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI'])));
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'not_logged_in', array('/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI'])));
         $html .= '<br />';
         $html .= '<input type="text" name="email" id="email" size="50" maxsize="100" />';
         $html .= '</p>';
@@ -894,24 +894,24 @@ class Tracker {
             if (!$toolbar) {
                 $toolbar = array();
                 $toolbar[] = array(
-                        'title' => $GLOBALS['Language']->getText('tracker', 'submit_new_artifact'),
+                        'title' => $GLOBALS['Language']->getText('plugin_tracker', 'submit_new_artifact'),
                         'url'   => '/tracker/?tracker='. $this->id .'&amp;func=new-artifact',
                         'class' => 'tracker-submit-new',
                 );
                 if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
                     $toolbar[] = array(
-                            'title' => $GLOBALS['Language']->getText('tracker', 'notifications'),
+                            'title' => $GLOBALS['Language']->getText('plugin_tracker', 'notifications'),
                             'url'   => '/tracker/?tracker='. $this->id .'&amp;func=notifications',
                     );
                 }
                 if ($this->userIsAdmin()) {
                     $toolbar[] = array(
-                            'title' => $GLOBALS['Language']->getText('tracker', 'administration'),
+                            'title' => $GLOBALS['Language']->getText('plugin_tracker', 'administration'),
                             'url'   => '/tracker/?tracker='. $this->id .'&amp;func=admin'
                     );
                 }
                 $toolbar[] = array(
-                        'title' => $GLOBALS['Language']->getText('tracker', 'help'),
+                        'title' => $GLOBALS['Language']->getText('plugin_tracker', 'help'),
                         'url'   => 'javascript:help_window(\''.get_server_url().'/documentation/user_guide/html/'.UserManager::instance()->getCurrentUser()->getLocale().'/Codendi_User_Guide.html#TrackerService\');',
                 );
             }
@@ -929,72 +929,72 @@ class Tracker {
         return array(
                 'editoptions' => array(
                         'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-editoptions',
-                        'short_title' => $GLOBALS['Language']->getText('tracker_include_type','settings'),
-                        'title'       => $GLOBALS['Language']->getText('tracker_include_type','settings'),
-                        'description' => $GLOBALS['Language']->getText('tracker_include_type','define_title'),
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','settings'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','settings'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_title'),
                         'img'         => 'ic/48/tracker-general.png',
                 ),
                 'editperms' => array(
                         'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-perms',
-                        'short_title' => $GLOBALS['Language']->getText('tracker_include_type','permissions'),
-                        'title'       => $GLOBALS['Language']->getText('tracker_include_type','manage_permissions'),
-                        'description' => $GLOBALS['Language']->getText('tracker_include_type','define_manage_permissions'),
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','permissions'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','manage_permissions'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_manage_permissions'),
                         'img'         => 'ic/48/tracker-perms.png',
                 ),
                 'editformElements' => array(
                         'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-formElements',
-                        'short_title' => $GLOBALS['Language']->getText('tracker_include_type','field_usage'),
-                        'title'       => $GLOBALS['Language']->getText('tracker_include_type','mng_field_usage'),
-                        'description' => $GLOBALS['Language']->getText('tracker_include_type','define_use'),
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','field_usage'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','mng_field_usage'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_use'),
                         'img'         => 'ic/48/tracker-form.png',
                 ),
                 'dependencies' => array(
                         'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-dependencies',
-                        'short_title' => $GLOBALS['Language']->getText('tracker_admin','manage_dependencies'),
-                        'title'       => $GLOBALS['Language']->getText('tracker_admin','manage_dependencies'),
-                        'description' => $GLOBALS['Language']->getText('tracker_admin','manage_dependencies_desc'),
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_dependencies'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_dependencies'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_dependencies_desc'),
                         'img'         => 'ic/48/tracker-fdependencies.png',
                 ),
                 'editsemantic' => array(
                         'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-semantic',
-                        'short_title' => $GLOBALS['Language']->getText('tracker_admin','semantic'),
-                        'title'       => $GLOBALS['Language']->getText('tracker_admin','manage_semantic'),
-                        'description' => $GLOBALS['Language']->getText('tracker_admin','manage_semantic_desc'),
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','semantic'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_semantic'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_semantic_desc'),
                         'img'         => 'ic/48/tracker-semantic.png',
                 ),
                 'editworkflow' => array(
                         'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-workflow',
-                        'short_title' => $GLOBALS['Language']->getText('tracker_admin','workflow'),
-                        'title'       => $GLOBALS['Language']->getText('tracker_admin','manage_workflow'),
-                        'description' => $GLOBALS['Language']->getText('tracker_admin','manage_workflow_desc'),
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','workflow'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow_desc'),
                         'img'         => 'ic/48/tracker-workflow.png',
                 ),
                 'editcanned' => array(
                         'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-canned',
-                        'short_title' => $GLOBALS['Language']->getText('tracker_include_type','canned_resp'),
-                        'title'       => $GLOBALS['Language']->getText('tracker_include_type','mng_response'),
-                        'description' => $GLOBALS['Language']->getText('tracker_include_type','add_del_resp'),
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','canned_resp'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','mng_response'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','add_del_resp'),
                         'img'         => 'ic/48/tracker-canned.png',
                 ),
                 'editnotifications' => array(
                         'url'         => '/tracker/?tracker='. $this->id .'&amp;func=notifications',
-                        'short_title' => $GLOBALS['Language']->getText('tracker_include_type','mail_notif'),
-                        'title'       => $GLOBALS['Language']->getText('tracker_include_type','mail_notif'),
-                        'description' => $GLOBALS['Language']->getText('tracker_include_type','define_notif'),
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','mail_notif'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','mail_notif'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_notif'),
                         'img'         => 'ic/48/tracker-notifs.png',
                 ),
                 'csvimport' => array(
                         'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-csvimport',
-                        'short_title' => $GLOBALS['Language']->getText('tracker_admin','csv_import'),
-                        'title'       => $GLOBALS['Language']->getText('tracker_admin','csv_import'),
-                        'description' => $GLOBALS['Language']->getText('tracker_admin','csv_import_desc'),
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','csv_import'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','csv_import'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','csv_import_desc'),
                         'img'         => 'ic/48/tracker-import.png',
                 ),
                 'export' => array(
                         'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-export',
-                        'short_title' => $GLOBALS['Language']->getText('tracker_admin','export'),
-                        'title'       => $GLOBALS['Language']->getText('tracker_admin','export'),
-                        'description' => $GLOBALS['Language']->getText('tracker_admin','export_desc'),
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','export'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','export'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','export_desc'),
                         'img'         => 'ic/48/tracker-export.png',
                 ),
         );
@@ -1002,13 +1002,13 @@ class Tracker {
     public function displayAdminHeader(TrackerManager $tracker_manager, $title, $breadcrumbs) {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
-            $title = ($title ? $title .' - ' : ''). $GLOBALS['Language']->getText('tracker_include_type','administration');
+            $title = ($title ? $title .' - ' : ''). $GLOBALS['Language']->getText('plugin_tracker_include_type','administration');
             $toolbar = null;
             if ($this->userIsAdmin()) {
                 $breadcrumbs = array_merge(
                         array(
                         array(
-                                'title' => $GLOBALS['Language']->getText('tracker_include_type','administration'),
+                                'title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','administration'),
                                 'url'   => '/tracker/?tracker='. $this->id .'&amp;func=admin',
                         ),
                         ),
@@ -1100,25 +1100,25 @@ class Tracker {
           <input type="hidden" name="instantiate_for_new_projects" value="0">
           <table width="100%" border="0" cellpadding="5">
             <tr> 
-              <td width="15%"><b>'.$GLOBALS['Language']->getText('tracker_include_artifact','name').'</b> <font color="red">*</font>:</td>
+              <td width="15%"><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','name').'</b> <font color="red">*</font>:</td>
               <td> 
               <input type="text" name="name" value="'. $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) .'">
               </td>
             </tr>
             <tr> 
-              <td width="15%"><b>'.$GLOBALS['Language']->getText('tracker_include_artifact','desc').'</b>: <font color="red">*</font></td>
+              <td width="15%"><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','desc').'</b>: <font color="red">*</font></td>
               <td> 
                 <textarea name="description" rows="3" cols="50">'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
               </td>
             </tr>
             <tr> 
-              <td width="15%"><b>'.$GLOBALS['Language']->getText('tracker_include_type','short_name').'</b>: <font color="red">*</font></td>
+              <td width="15%"><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','short_name').'</b>: <font color="red">*</font></td>
               <td> 
                 <input type="text" name="item_name" value="'. $hp->purify($this->item_name, CODENDI_PURIFIER_CONVERT_HTML) .'">
               </td>
             </tr>';
         //<tr>
-        //  <td width="15%"><b>'.$GLOBALS['Language']->getText('tracker_include_type','allow_copy').'</b></td>
+        //  <td width="15%"><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','allow_copy').'</b></td>
         //  <td>
         //    <input type="checkbox" name="allow_copy" value="1" '. ($this->allow_copy ? 'checked="checked"' : '') . '>
         //  </td>
@@ -1127,7 +1127,7 @@ class Tracker {
         if ($project->isTemplate()) { // Template group
             echo '
                 <tr> 
-                  <td width="15%"><b>'.$GLOBALS['Language']->getText('tracker_include_type','instantiate').':</b></td>
+                  <td width="15%"><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','instantiate').':</b></td>
                   <td>
                     <input type="checkbox" name="instantiate_for_new_projects" value="1" '. ($this->instantiate_for_new_projects ? 'checked="checked"' : '') . '>
                   </td>
@@ -1135,13 +1135,13 @@ class Tracker {
         }
         echo '
             <tr> 
-              <td width="15%">'.$GLOBALS['Language']->getText('tracker_include_type','submit_instr').'</td>
+              <td width="15%">'.$GLOBALS['Language']->getText('plugin_tracker_include_type','submit_instr').'</td>
               <td> 
                 <textarea name="submit_instructions" rows="3" cols="50">'. $hp->purify($this->submit_instructions, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
               </td>
             </tr>
             <tr> 
-              <td>'.$GLOBALS['Language']->getText('tracker_include_type','browse_instr').'</td>
+              <td>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','browse_instr').'</td>
               <td> 
                 <textarea name="browse_instructions" rows="3" cols="50">'. $hp->purify($this->browse_instructions, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
               </td>
@@ -1165,13 +1165,13 @@ class Tracker {
         return array(
                 'tracker' => array(
                         'url'         => '/tracker/?tracker='.(int)$this->getId().'&amp;func=admin-perms-tracker',
-                        'title'       => $GLOBALS['Language']->getText('tracker_include_type','manage_tracker_permissions'),
-                        'description' => $GLOBALS['Language']->getText('tracker_include_type','define_manage_tracker_permissions')
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','manage_tracker_permissions'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_manage_tracker_permissions')
                 ),
                 'fields' => array(
                         'url'         => '/tracker/?tracker='.(int)$this->getId().'&amp;func=admin-perms-fields',
-                        'title'       => $GLOBALS['Language']->getText('tracker_include_type','manage_fields_tracker_permissions'),
-                        'description' => $GLOBALS['Language']->getText('tracker_include_type','define_manage_fields_tracker_permissions')
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','manage_fields_tracker_permissions'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_manage_fields_tracker_permissions')
                 )
         );
     }
@@ -1208,12 +1208,12 @@ class Tracker {
         $html .= '<div>';
 
         //intro
-        $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'tracker_intro');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'tracker_intro');
 
         //header
         $html .= html_build_list_table_top(array(
-                $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
-                $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')));
+                $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'ugroup'),
+                $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'permissions')));
 
         //body
         $ugroups_permissions = permission_get_tracker_ugroups_permissions($this->getGroupId(), $this->getId());
@@ -1239,14 +1239,14 @@ class Tracker {
 
             $html .= '<select name="permissions_'. $ugroup['id'] .'">';
             $attributes_for_selected = 'selected="selected" style="background:#EEE;"'; //TODO: put style in stylesheet
-            $html .= '<option value="100" '.(count($permissions) == 0 ? $attributes_for_selected : "").' >'. $GLOBALS['Language']->getText('tracker_admin_permissions', $none) .'</option>';
-            $html .= '<option value="0" '.(isset($permissions[$full_permission]) ? $attributes_for_selected : "") .' >'. $GLOBALS['Language']->getText('tracker_admin_permissions', $full_permission) .'</option>';
+            $html .= '<option value="100" '.(count($permissions) == 0 ? $attributes_for_selected : "").' >'. $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $none) .'</option>';
+            $html .= '<option value="0" '.(isset($permissions[$full_permission]) ? $attributes_for_selected : "") .' >'. $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $full_permission) .'</option>';
 
             //We don't show specific access permissions for anonymous users and registered
             if ($ugroup['id'] != $GLOBALS['UGROUP_ANONYMOUS'] && $ugroup['id'] != $GLOBALS['UGROUP_REGISTERED']) {
-                $html .= '<option value="1" '.(isset($permissions[$assignee_permission]) && !isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $assignee_permission) .'</option>';
-                $html .= '<option value="2" '.(!isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $submitter_permission) .'</option>';
-                $html .= '<option value="3" '.(isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $assignee_permission .'_AND_'. $submitter_permission) .'</option>';
+                $html .= '<option value="1" '.(isset($permissions[$assignee_permission]) && !isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $assignee_permission) .'</option>';
+                $html .= '<option value="2" '.(!isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $submitter_permission) .'</option>';
+                $html .= '<option value="3" '.(isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $assignee_permission .'_AND_'. $submitter_permission) .'</option>';
             }
             $html .= '</select></td>';
             $html .= '</tr>';
@@ -1342,10 +1342,10 @@ EOS;
             }
             ksort($ugroups_permissions);
             $header = array(
-                    $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
-                    $GLOBALS['Language']->getText('tracker_include_report', 'field_label'),
-                    $GLOBALS['Language']->getText('tracker_admin_permissions', $submit_permission),
-                    $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')) ;
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'ugroup'),
+                    $GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label'),
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $submit_permission),
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'permissions')) ;
         } else {
             foreach($ugroups_permissions as $key_field => $value_field) {
                 $ugroups_permissions[$key_field]['values']        =& $ugroups_permissions[$key_field]['field'];
@@ -1357,17 +1357,17 @@ EOS;
                 reset($ugroups_permissions[$key_field]['related_parts']);
             }
             $header = array(
-                    $GLOBALS['Language']->getText('tracker_include_report', 'field_label'),
-                    $GLOBALS['Language']->getText('tracker_admin_permissions', 'ugroup'),
-                    $GLOBALS['Language']->getText('tracker_admin_permissions', $submit_permission),
-                    $GLOBALS['Language']->getText('tracker_admin_permissions', 'permissions')) ;
+                    $GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label'),
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'ugroup'),
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $submit_permission),
+                    $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'permissions')) ;
         }
         reset($ugroups_permissions);
         list($key, $value) = each($ugroups_permissions);
 
         //header
         if (($group_first && count($ugroups_permissions) < 1) || (!$group_first && count($ugroups_permissions[$key]['related_parts']) < 1)) {
-            $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'fields_no_ugroups');
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'fields_no_ugroups');
         } else {
 
             //The permission form
@@ -1376,15 +1376,15 @@ EOS;
             $html .= '<input type="hidden" name="selected_id" value="'. (int)$selected_id .'" />';
 
             //intro
-            $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'fields_tracker_intro');
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'fields_tracker_intro');
 
             //We display 'group_first' or 'field_first'
             if ($group_first) {
-                $html .= $GLOBALS['Language']->getText('tracker_admin_permissions',
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions',
                         'fields_tracker_toggle_field',
                         $url_action_without_group_first.'&amp;group_first=0');
             } else {
-                $html .= $GLOBALS['Language']->getText('tracker_admin_permissions',
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions',
                         'fields_tracker_toggle_group',
                         $url_action_without_group_first.'&amp;group_first=1');
             }
@@ -1473,11 +1473,11 @@ EOS;
 
                     //Other permissions (R/W)
                     $html .= "<select name='".$name_of_variable."[others]' >";
-                    $html .= "<option value='100' ".(!isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $none)."</option>";
-                    $html .= "<option value='0' ".(isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $read_permission)."</option>";
+                    $html .= "<option value='100' ".(!isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $none)."</option>";
+                    $html .= "<option value='0' ".(isset($permissions[$read_permission]) && !isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $read_permission)."</option>";
 
                     if ($can_update) {
-                        $html .= "<option value='1' ".(isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('tracker_admin_permissions', $update_permission)."</option>";
+                        $html .= "<option value='1' ".(isset($permissions[$update_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $update_permission)."</option>";
                     }
                     $html .= "</select>";
 
@@ -1489,7 +1489,7 @@ EOS;
             //end of table
             $html .= "</table>";
             if ($a_star_is_displayed) {
-                $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'ug_may_have_no_access',"/tracker/admin/?group_id=".(int)$this->getGroupID()."&atid=".(int)$this->getID()."&func=permissions&perm_type=tracker");
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'ug_may_have_no_access',"/tracker/admin/?group_id=".(int)$this->getGroupID()."&atid=".(int)$this->getID()."&func=permissions&perm_type=tracker");
             }
             $html .= "<input type='submit' name='update' value=\"".$GLOBALS['Language']->getText('project_admin_permissions','submit_perm')."\" />";
             //{{{20050602 NTY: removed. what is default permissions ???
@@ -1534,7 +1534,7 @@ EOS;
 
         echo Tracker_FormElementFactory::instance()->fetchFactories();
 
-        echo '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('tracker_formelement_admin','unused_elements') .'</div>';
+        echo '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','unused_elements') .'</div>';
         echo '<div class="tracker-admin-palette-content">';
         echo '<table>';
         foreach(Tracker_FormElementFactory::instance()->getUnusedFormElementForTracker($this) as $f) {
@@ -1572,13 +1572,13 @@ EOS;
         echo '<form name="form1" method="POST" enctype="multipart/form-data" action="/tracker/?tracker='. (int)$this->id .'&amp;func=admin-csvimport">';
         echo '<input type="file" name="csv_filename" size="50">';
         echo '<br>';
-        echo '<span class="smaller"><em>'.$GLOBALS['Language']->getText('tracker_import','max_upload_size',formatByteToMb($GLOBALS['sys_max_size_upload'])).'</em></span>';
+        echo '<span class="smaller"><em>'.$GLOBALS['Language']->getText('plugin_tracker_import','max_upload_size',formatByteToMb($GLOBALS['sys_max_size_upload'])).'</em></span>';
         echo '<br>';
-        echo $GLOBALS['Language']->getText('tracker_admin_import','send_notifications');
+        echo $GLOBALS['Language']->getText('plugin_tracker_admin_import','send_notifications');
         echo '<input type="checkbox" name="notify" value="ok" />';
         echo '<br>';
         echo '<input type="hidden" name="action" value="import_preview">';
-        echo '<input type="submit" value="'.$GLOBALS['Language']->getText('tracker_import','submit_info').'">';
+        echo '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_import','submit_info').'">';
         echo '</form>';
         $this->displayFooter($tracker_manager);
     }
@@ -1586,7 +1586,7 @@ EOS;
     public function displayMasschangeForm(TrackerManager $tracker_manager, $masschange_aids) {
         $breadcrumbs = array(
                 array(
-                        'title' => $GLOBALS['Language']->getText('tracker_index', 'mass_change'),
+                        'title' => $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change'),
                         'url'   => '#' //'/tracker/?tracker='. $this->id .'&amp;func=display-masschange-form',
                 ),
         );
@@ -1594,7 +1594,7 @@ EOS;
         
         $html = '';
         
-        $html .= '<strong>' . $GLOBALS['Language']->getText('tracker_artifact_masschange', 'changing_items', array(count($masschange_aids))) . '</strong>';
+        $html .= '<strong>' . $GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'changing_items', array(count($masschange_aids))) . '</strong>';
         $html .= '<p class="masschange_artifact_ids">';
         foreach ($masschange_aids as $art_id) {
             $html .= '<a href="/tracker/?aid='.$art_id.'">#' . $art_id . '</a> ';
@@ -1609,16 +1609,16 @@ EOS;
         $html .= $this->fetchFormElementsMasschange();
         
         // Follow-up comment
-        $html .= '<b>'. $GLOBALS['Language']->getText('tracker_include_artifact', 'add_comment') .'</b><br />';
-        $html .= '<textarea wrap="soft" rows="12" cols="80" name="artifact_masschange_followup_comment" id="artifact_masschange_followup_comment">'.$GLOBALS['Language']->getText('tracker_index', 'mass_change').'</textarea>';
+        $html .= '<b>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment') .'</b><br />';
+        $html .= '<textarea wrap="soft" rows="12" cols="80" name="artifact_masschange_followup_comment" id="artifact_masschange_followup_comment">'.$GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change').'</textarea>';
         $html .= '<br />';
         
         // Send notification checkbox
-        $html .= $GLOBALS['Language']->getText('tracker_admin_import','send_notifications');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_import','send_notifications');
         $html .= '<input type="checkbox" name="notify" value="ok" />';
         $html .= '<br />';
         
-        $html .= '<input type="submit" value="'.$GLOBALS['Language']->getText('tracker_include_type', 'submit_mass_change').'"/>';
+        $html .= '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'submit_mass_change').'"/>';
         $html .= '</form>';
         echo $html;
 
@@ -1652,11 +1652,11 @@ EOS;
             }
         }
         if ( !empty($not_updated_aids) ) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_index', 'mass_update_failed', implode(', ', $not_updated_aids)));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_update_failed', implode(', ', $not_updated_aids)));
             return false;
         } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_index', 'mass_update_success'));
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_index', 'updated_aid', implode(', ', $masschange_aids)));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_update_success'));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'updated_aid', implode(', ', $masschange_aids)));
             return true;
         }
     }
@@ -1674,33 +1674,33 @@ EOS;
         $this->instantiate_for_new_projects = $project->isTemplate() && $request->getValidated('instantiate_for_new_projects') ? 1 : 0;
 
         if (!$this->name || !$this->description || !$this->item_name) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type','name_requ'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_requ'));
         } else {
             if ($old_name != $this->name) {
                 if(TrackerFactory::instance()->isNameExists($this->name, $this->group_id)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type','name_already_exists', $this->name));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_already_exists', $this->name));
                     return false;
                 }
             }
             if ($old_item_name != $this->item_name) {
                 if (!$this->itemNameIsValid($this->item_name)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type','invalid_shortname', $this->item_name, CODENDI_PURIFIER_CONVERT_HTML));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','invalid_shortname', $this->item_name, CODENDI_PURIFIER_CONVERT_HTML));
                     return false;
                 }
 
                 if(TrackerFactory::instance()->isShortNameExists($this->item_name, $this->group_id)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type','shortname_already_exists', $this->item_name));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','shortname_already_exists', $this->item_name));
                     return false;
                 }
 
                 $reference_manager = ReferenceManager::instance();
                 if (!$reference_manager->checkKeyword($this->item_name) ) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type','invalid_shortname', $this->item_name, CODENDI_PURIFIER_CONVERT_HTML));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','invalid_shortname', $this->item_name, CODENDI_PURIFIER_CONVERT_HTML));
                     return false;
                 }
 
                 if ($reference_manager->_isKeywordExists($this->item_name, $this->group_id)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type', 'shortname_already_exists', $this->item_name, CODENDI_PURIFIER_CONVERT_HTML));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'shortname_already_exists', $this->item_name, CODENDI_PURIFIER_CONVERT_HTML));
                     return false;
                 }
 
@@ -1711,7 +1711,7 @@ EOS;
 
             $dao = new TrackerDao();
             if ($dao->save($this)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_admin', 'successfully_updated'));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin', 'successfully_updated'));
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error'));
             }
@@ -2192,7 +2192,7 @@ EOS;
                 $lines = array();
                 while ($line = fgetcsv($f, 0, $separator)) {
                     if ($line === false) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'error_in_csv_file', array($i)));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'error_in_csv_file', array($i)));
                         $is_valid = false;
                     } else {
                         $lines[] = $line;
@@ -2267,18 +2267,18 @@ EOS;
                             $html_table .=  '</table>';
                             
                             echo '<p>';
-                            echo $GLOBALS['Language']->getText('tracker_import', 'check_data') . '<br />';
-                            echo $GLOBALS['Language']->getText('tracker_admin_import', 'date_format_help', array($GLOBALS['Language']->getText('account_preferences', $this->_getCSVDateformat($current_user))));
+                            echo $GLOBALS['Language']->getText('plugin_tracker_import', 'check_data') . '<br />';
+                            echo $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'date_format_help', array($GLOBALS['Language']->getText('account_preferences', $this->_getCSVDateformat($current_user))));
                             echo '</p>';
                             
                             if ($is_valid) {
                                 echo '<form name="form1" method="POST" enctype="multipart/form-data" action="/tracker/?tracker='. (int)$this->id .'&amp;func=admin-csvimport">';
-                                echo '<p>' . $GLOBALS['Language']->getText('tracker_import','ready', array($nb_lines, $nb_artifact_creation, $nb_artifact_update)) . '</p>';
+                                echo '<p>' . $GLOBALS['Language']->getText('plugin_tracker_import','ready', array($nb_lines, $nb_artifact_creation, $nb_artifact_update)) . '</p>';
                                 echo '<input type="hidden" name="action" value="import">';
                                 if ($request->exist('notify') && $request->get('notify') == 'ok') {
                                     echo '<input type="hidden" name="notify" value="ok">';
                                 }
-                                echo '<input type="submit" value="'.$GLOBALS['Language']->getText('tracker_import','import_new_hdr').'">';
+                                echo '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_tracker_import','import_new_hdr').'">';
                             }
                             echo $html_table;
                             if ($is_valid) {
@@ -2294,14 +2294,14 @@ EOS;
                         $this->displayFooter($tracker_manager);
                         exit();
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'no_data'));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'no_data'));
                     }
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'unable_to_open_file', array($_FILES['csv_filename']['tmp_name'])));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_open_file', array($_FILES['csv_filename']['tmp_name'])));
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'file_not_found'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'file_not_found'));
             $GLOBALS['Response']->redirect('/tracker/?tracker='. (int)$this->getId() .'&func=admin-csvimport');
         }
     }
@@ -2317,7 +2317,7 @@ EOS;
         
         if (count($header_line) == 1) {
             // not sure it is an error, so don't set is_valid to false.
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_import', 'separator_not_found', array($separator)), CODENDI_PURIFIER_FULL);
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'separator_not_found', array($separator)), CODENDI_PURIFIER_FULL);
         }
         
         if ($this->hasError($header_line, $lines)) {
@@ -2342,7 +2342,7 @@ EOS;
             foreach ($lines as $line) {
                 if($line[$aid_key] != '') {
                     if (!$this->aidExists($line[$aid_key])) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'aid_does_not_exist', array($line[$aid_key])));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'aid_does_not_exist', array($line[$aid_key])));
                         $has_unknown = true;
                     }
                 }
@@ -2373,7 +2373,7 @@ EOS;
                     $field = $fef->getUsedFieldByName($this->getId(), $field_name);
                     if (! $field) {
                         // a field is unknown
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'unknown_field', array($field_name)));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_field', array($field_name)));
                         $has_error = true;
                     } else {
                         //check if value is ok
@@ -2397,7 +2397,7 @@ EOS;
                             $data[$field->getId()] = $field->getFieldData($line[$idx]);
                             
                             if ($data[$field->getId()] === null) {
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));
+                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));
                                 $has_error = true;
                             }
                         }
@@ -2436,13 +2436,13 @@ EOS;
                 $key = array_search($field->getName(), $header_line);
                 if ($key === false) {
                     //search if field  is in the CSV file header line
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'missing_required_field', array($field->getName())));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_required_field', array($field->getName())));
                     $is_missing = true;
                 } else {
                     //search if there is a value at each line for that field
                     foreach ($lines as $line) {
                         if (! isset($line[$key]) || $line[$key] == '') {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'missing_required_field_value', array($field->getName())));
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_required_field_value', array($field->getName())));
                             $is_missing = true;
                         }
                     }
@@ -2513,7 +2513,7 @@ EOS;
                     if ($artifact = $af->createArtifact($this, $fields_data, $current_user, null, $send_notifications)) {
                         $nb_artifact_creation++;
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'unable_to_create_artifact'));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_create_artifact'));
                         $is_error = true;
                     }
                 } else {
@@ -2524,25 +2524,25 @@ EOS;
                         if ($artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications)) {
                             $nb_artifact_update++;
                         } else {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'unable_to_update_artifact', array($artifact_id)));
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($artifact_id)));
                             $is_error = true;
                         }
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'unknown_artifact', array($artifact_id)));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_artifact', array($artifact_id)));
                         $is_error = true;
                     }
                 }
             }
             if ( ! $is_error) {
                 if ($nb_artifact_creation > 0) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_admin_import', 'nb_created_import', array($nb_artifact_creation)));
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'nb_created_import', array($nb_artifact_creation)));
                 }
                 if ($nb_artifact_update > 0) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_admin_import', 'nb_updated_import', array($nb_artifact_update)));
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'nb_updated_import', array($nb_artifact_update)));
                 }
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_import', 'no_data'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'no_data'));
             $is_error = true;
         }
         return  ! $is_error;
@@ -2660,21 +2660,21 @@ EOS;
             $html .= '<div class="tracker_statistics" style="font-size:0.9em; color:#666;">';
             $html .= '<div style="text-align:right;font-size:0.825em;">#'. $this->id .'</div>';
             if ($row['nb_total'] && $this->hasSemanticsStatus()) {
-                $html .= $GLOBALS['Language']->getText('tracker_stat','number_open_artifacts').' '. $row['nb_open'] .'<br />';
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_stat','number_open_artifacts').' '. $row['nb_open'] .'<br />';
             }
 
-            $html .= $GLOBALS['Language']->getText('tracker_stat','total_number_artifacts'). ' '.$row['nb_total'] .'<br />';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_stat','total_number_artifacts'). ' '.$row['nb_total'] .'<br />';
             if ($row['last_creation'] && $row['last_update']) {
 
-                $html .= $GLOBALS['Language']->getText('tracker_stat','recent_activity');
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_stat','recent_activity');
                 $html .= '<ul>';
                 if ($row['last_update']) {
-                    $html .= '<li>'. $GLOBALS['Language']->getText('tracker_stat','last_update').' ';
+                    $html .= '<li>'. $GLOBALS['Language']->getText('plugin_tracker_stat','last_update').' ';
                     $html .= DateHelper::timeAgoInWords($row['last_update'], true, true);
                     $html .= '</li>';
                 }
                 if ($row['last_creation']) {
-                    $html .= '<li>'. $GLOBALS['Language']->getText('tracker_stat','last_artifact_created').' ';
+                    $html .= '<li>'. $GLOBALS['Language']->getText('plugin_tracker_stat','last_artifact_created').' ';
                     $html .= DateHelper::timeAgoInWords($row['last_creation'], true, true);
                     $html .= '</li>';
                 }
@@ -2753,7 +2753,7 @@ EOS;
      */
     function existUser($id) {
         if (!$id) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_canned','missing_param'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_canned','missing_param'));
             return false;
         }
         $perm_dao = new Tracker_PermDao();
@@ -2774,11 +2774,11 @@ EOS;
      */
     function updateUser($id, $perm_level) {
         if (!$this->userIsAdmin()) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_canned','perm_denied'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_canned','perm_denied'));
             return false;
         }
         if (!$id) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_canned','missing_param'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_canned','missing_param'));
             return false;
         }
 
@@ -2813,11 +2813,11 @@ EOS;
         global $Language;
 
         if (!$this->userIsAdmin()) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_canned','perm_denied'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_canned','perm_denied'));
             return false;
         }
         if (!$id) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_canned','missing_param'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_canned','missing_param'));
             return false;
         }
         $perm_dao = new Tracker_PermDao();
@@ -2838,11 +2838,11 @@ EOS;
         global $Language;
 
         if (!$this->userIsAdmin()) {
-            $this->setError($Language->getText('tracker_common_canned','perm_denied'));
+            $this->setError($Language->getText('plugin_tracker_common_canned','perm_denied'));
             return false;
         }
         if (!$id) {
-            $this->setError($Language->getText('tracker_common_canned','missing_param'));
+            $this->setError($Language->getText('plugin_tracker_common_canned','missing_param'));
             return false;
         }
         $perm_dao = new Tracker_PermDao();

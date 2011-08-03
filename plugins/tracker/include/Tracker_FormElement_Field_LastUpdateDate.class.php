@@ -99,7 +99,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     public function fetchLabel() {
         $html = parent::fetchLabel();
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('tracker_formelement_admin', 'lastupdatedate_help');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_help');
         $html .= '</span>';
         return $html;
     }
@@ -108,14 +108,14 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'lastupdatedate_label');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_label');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'lastupdatedate_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_description');
     }
     
     /**
@@ -284,10 +284,10 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         if ($last_changeset_value === null && $submitted_value === null && $this->isRequired()) {
             $is_valid = false;
             $this->setHasErrors(true);
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
         } else if ($submitted_value !== null &&  ! $this->userCanUpdate()) {
             $is_valid = true;
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_import', 'field_not_taken_account', array($this->getName())));
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
         } 
         return $is_valid;
     }
@@ -333,7 +333,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         $html = '';
         $html .= '<div>'. $this->formatDateTime(time()) . '</div>';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('tracker_formelement_admin', 'submittedon_help');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedon_help');
         $html .= '</span>';
         return $html;
     }

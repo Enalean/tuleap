@@ -253,7 +253,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs();
         } else {
-            $html .= '<div>'. $GLOBALS['Language']->getText('tracker_include_artifact', 'ref_list_empty') .'</div>';
+            $html .= '<div>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') .'</div>';
         }
         return $html;
     }
@@ -321,7 +321,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      */
     protected function fetchAdminFormElement() {
         $html = '';
-        $html .= '<div>' . $GLOBALS['Language']->getText('tracker_formelement_admin','display_references') .'</div>';
+        $html .= '<div>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','display_references') .'</div>';
         return $html;
     }
     
@@ -329,14 +329,14 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'crossreferences_label');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'crossreferences_label');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'crossreferences_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'crossreferences_description');
     }
     
     /**
@@ -367,7 +367,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs($with_links = false);
         } else {
-            $html .= '<div>'. $GLOBALS['Language']->getText('tracker_include_artifact', 'ref_list_empty') .'</div>';
+            $html .= '<div>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') .'</div>';
         }
         return $html;
     }

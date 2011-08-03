@@ -105,13 +105,13 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
             $previous_date = $changeset_value->getDate();
             if ($previous_date !== $next_date) {
                 if ($next_date === '') {
-                    return $GLOBALS['Language']->getText('tracker_artifact','cleared');
+                    return $GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
                 } else {
-                    return $GLOBALS['Language']->getText('tracker_artifact','changed_from'). ' '.$previous_date .' '.$GLOBALS['Language']->getText('tracker_artifact','to').' '.$next_date;
+                    return $GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' '.$previous_date .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' '.$next_date;
                 }
             }
         } else {
-            return $GLOBALS['Language']->getText('tracker_artifact','set_to').' '.$next_date;
+            return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$next_date;
         }
         return false;
     }
@@ -124,7 +124,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
     public function nodiff() {
         if ($this->getTimestamp() !=0) {
             $next_date     = $this->getDate();
-            return $GLOBALS['Language']->getText('tracker_artifact','set_to').' '.$next_date;
+            return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$next_date;
         }
     }
     

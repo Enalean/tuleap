@@ -141,14 +141,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
             break;
         case 'admin-formElement-remove':
             if (Tracker_FormElementFactory::instance()->removeFormElement($this->id)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_admin_index', 'field_removed'));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_removed'));
                 $GLOBALS['Response']->redirect('/tracker/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
             }
             $this->getTracker()->displayAdminFormElements($tracker_manager, $request, $current_user);
             break;
         case 'admin-formElement-delete':
             if ($this->delete() && Tracker_FormElementFactory::instance()->deleteFormElement($this->id)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_admin_index', 'field_deleted'));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_deleted'));
                 $GLOBALS['Response']->redirect('/tracker/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
             }
             $this->getTracker()->displayAdminFormElements($tracker_manager, $request, $current_user);
@@ -175,7 +175,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
             if (!isset($formElement_data['specific_properties']) || !is_array($formElement_data['specific_properties']) || $this->storeProperties($formElement_data['specific_properties'])) {
                 //Then store the formElement itself
                 if (Tracker_FormElementFactory::instance()->updateFormElement($this, $formElement_data)) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_admin_index', 'field_updated'));
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_updated'));
                     if ($request->isAjax()) {
                         echo $this->fetchAdminFormElement();
                         exit;
@@ -186,9 +186,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
             }
         } else if ($request->get('change-type')) {
             if (Tracker_FormElementFactory::instance()->changeFormElementType($this, $request->get('change-type'))) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_admin_index', 'field_type_changed'));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_type_changed'));
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin_index', 'field_type_not_changed'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_type_not_changed'));
             }
             $redirect = true;
         }
@@ -347,7 +347,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
         $html = '';
         
         //type
-        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('tracker_include_type', 'type') .': </label><br />';
+        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
         $html .= '<img width="16" height="16" alt="" src="'. $this->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->getFactoryLabel(); //should not make call to static method thru an instance
 
         if ($submit_name == 'update-formElement') {
@@ -360,7 +360,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
         //name
         if ($submit_name == 'update-formElement') {
             $html .= '<p>';
-            $html .= '<label for="formElement_name">'. $GLOBALS['Language']->getText('tracker_include_type', 'name') .': </label><br />';
+            $html .= '<label for="formElement_name">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'name') .': </label><br />';
             $html .= '<input type="text" id="formElement_name" name="formElement_data[name]" value="'. $hp->purify($this->getName(), CODENDI_PURIFIER_CONVERT_HTML) .'" />';
             $html .= '</p>';
         }
@@ -373,7 +373,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
         
         //rank
         $html .= '<p>';
-        $html .= '<label for="formElement_rank">'.$GLOBALS['Language']->getText('tracker_include_type', 'rank_screen').': <font color="red">*</font></label>';
+        $html .= '<label for="formElement_rank">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'rank_screen').': <font color="red">*</font></label>';
         $html .= '<br />';
         $items = array();
         foreach (Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->getTracker()) as $field) {
@@ -432,7 +432,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
             'style' => 'vertical-align:middle;',
         ));
         $html .= ' ';
-        $html .= $GLOBALS['Language']->getText('tracker_formelement_admin','edit_permissions') .'</a>';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','edit_permissions') .'</a>';
         $html .= '</p>';
         return $html;
     }
@@ -455,7 +455,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
     protected function fetchLabel() {
         $html = '';
         $html .= '<p>';
-        $html .= '<label for="formElement_label">'.$GLOBALS['Language']->getText('tracker_include_report', 'field_label').': <font color="red">*</font></label> ';
+        $html .= '<label for="formElement_label">'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').': <font color="red">*</font></label> ';
         $html .= '<br />';
         $html .= '<input type="text" name="formElement_data[label]" id="formElement_label" value="'. $this->getLabel() .'" size="40" />';
         $html .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
@@ -472,7 +472,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
-        $html .= '<label for="formElement_description">'.$GLOBALS['Language']->getText('tracker_include_type', 'fieldset_desc').':</label>';
+        $html .= '<label for="formElement_description">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'fieldset_desc').':</label>';
         $html .= '<br />';
         $html .= '<textarea name="formElement_data[description]" id="formElement_description" cols="40">'.  $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML)  .'</textarea>';
         $html .= '</p>';
@@ -513,7 +513,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      */
     protected function displayAdminFormElement(TrackerManager $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
-        $title = $GLOBALS['Language']->getText('tracker_include_type', 'upd_label', $this->getLabel());
+        $title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'upd_label', $this->getLabel());
         $url   = $this->getAdminEditUrl();
         $breadcrumbs = array(
             array(
@@ -547,8 +547,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
         $html .= '<tr><td>';
         $html .= Tracker_FormElementFactory::instance()->getFactoryButton(__CLASS__, 'add-formElement['. $this->id .']', $this->label, $this->description, $this->getFactoryIconUseIt());
         $html .= '</td><td>';
-        $html .= '<a href="'. $this->getAdminEditUrl() .'" title="'.$GLOBALS['Language']->getText('tracker_formelement_admin','edit_field').'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        $confirm = $GLOBALS['Language']->getText('tracker_formelement_admin','delete_field') .' '. addslashes($this->getLabel()) .'?';
+        $html .= '<a href="'. $this->getAdminEditUrl() .'" title="'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','edit_field').'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
+        $confirm = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','delete_field') .' '. addslashes($this->getLabel()) .'?';
         $query = http_build_query(
             array(
                 'tracker'  => $this->getTracker()->id,
@@ -848,7 +848,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      * @return string the label 
      */
     protected function getPropertyLabel($key) {
-        return $GLOBALS['Language']->getText('tracker_formelement_property', $key);
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', $key);
     }
     
     /**

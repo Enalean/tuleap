@@ -285,9 +285,9 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     public function fetchFollowUp($artifact, $from, $to) {
         $html = '';
         if (!$from || !($from_value = $from->getNumeric())) {
-            $html .= $GLOBALS['Language']->getText('tracker_artifact','set_to').' ';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' ';
         } else {
-            $html .= ' '.$GLOBALS['Language']->getText('tracker_artifact','changed_from').' '. $from_value .'  '.$GLOBALS['Language']->getText('tracker_artifact','to').' ';
+            $html .= ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from').' '. $from_value .'  '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' ';
         }
         $html .= $to->getNumeric();
         return $html;

@@ -37,7 +37,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
     function getLabel() {
         global $Language;
         if ($this->isLabelMustBeLocalized()) {
-            return $Language->getText('tracker_common_staticfield', $this->label);
+            return $Language->getText('plugin_tracker_common_staticfield', $this->label);
         } else {
             return $this->label;
         }
@@ -64,7 +64,7 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
     function getDescriptionText() {
         global $Language;
         if ($this->isDescriptionMustBeLocalized()) {
-            return $Language->getText('tracker_common_staticfield', $this->description);
+            return $Language->getText('plugin_tracker_common_staticfield', $this->description);
         } else {
             return $this->description;
         }

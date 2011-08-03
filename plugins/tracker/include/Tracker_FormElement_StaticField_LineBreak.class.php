@@ -51,7 +51,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
     public function fetchLabel() {
         $html = parent::fetchLabel();
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('tracker_formelement_admin', 'line_break_label_help');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label_help');
         $html .= '</span>';
         return $html;
     }
@@ -83,7 +83,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
         global $Language;
         $label = parent::getLabel();
         if ( ! $label) {
-            return $GLOBALS['Language']->getText('tracker_formelement_admin', 'line_break_label');
+            return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label');
         } else {
             return $label;
         }
@@ -98,14 +98,14 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
      * @return the label of the formElement (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'line_break_label');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label');
     }
     
     /**
      * @return the description of the formElement (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'line_break_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_description');
     }
     
     /**

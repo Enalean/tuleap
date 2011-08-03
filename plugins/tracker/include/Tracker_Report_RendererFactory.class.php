@@ -304,7 +304,7 @@ class Tracker_Report_RendererFactory {
     
     
     public function getTypes() {
-        $types = array(Tracker_Report_Renderer::TABLE => $GLOBALS['Language']->getText('tracker_report','table'));
+        $types = array(Tracker_Report_Renderer::TABLE => $GLOBALS['Language']->getText('plugin_tracker_report','table'));
         EventManager::instance()
                     ->processEvent('tracker_report_renderer_types', 
                                    array('types' => &$types));

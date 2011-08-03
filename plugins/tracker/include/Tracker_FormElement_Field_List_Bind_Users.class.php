@@ -514,7 +514,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 	    if (in_array("artifact_submitters", $value_function)) {
 	        $selected = 'selected="selected"';
 	    }
-	    $html .= '<option value="artifact_submitters" '.$selected.'>'.$GLOBALS['Language']->getText('tracker_include_type','submitters').'</option>';
+	    $html .= '<option value="artifact_submitters" '.$selected.'>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','submitters').'</option>';
 	    
 	    $selected = "";
 	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_PROJECT_MEMBERS']);

@@ -136,14 +136,14 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'artifactid_label');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_label');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'artifactid_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_description');
     }
     
     /**

@@ -295,11 +295,11 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $criteria_value = $this->getCriteriaValue($criteria);
         $html .= '<div style="text-align:right">';
         $value = isset($criteria_value['from_date']) ? $this->formatDate($criteria_value['from_date']) : '';
-        $html .= $GLOBALS['Language']->getText('tracker_include_field','start');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','start');
         $html .= $GLOBALS['HTML']->getDatePicker("criteria_".$this->id ."_from", "criteria[". $this->id ."][from_date]", $value);
         $html .= "<br />";
         $value = isset($criteria_value['to_date']) ? $this->formatDate($criteria_value['to_date']) : '';
-        $html .= $GLOBALS['Language']->getText('tracker_include_field','end');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field','end');
         $html .= $GLOBALS['HTML']->getDatePicker("criteria_".$this->id ."_to", "criteria[". $this->id ."][to_date]", $value);
         $html .= '</div>';
         return $html;
@@ -527,9 +527,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function fetchFollowUp($artifact, $from, $to) {
         $html = '';
         if (!$from || !($from_value = $this->getValue($from['value_id']))) {
-            $html .= $GLOBALS['Language']->getText('tracker_artifact','set_to').' ';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' ';
         } else {
-            $html .= $GLOBALS['Language']->getText('tracker_artifact','changed_from').' '. $this->formatDate($from_value['value']) .' '.$GLOBALS['Language']->getText('tracker_artifact','to').' ';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from').' '. $this->formatDate($from_value['value']) .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' ';
         }
         $to_value = $this->getValue($to['value_id']);
         $html .= $this->formatDate($to_value['value']);
@@ -554,14 +554,14 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','date');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','date');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','date_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','date_description');
     }
     
     /**
@@ -606,7 +606,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         if ($value) {
             $r = new Rule_Date();
             if (!($is_valid = $r->isValid($value))) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'error_date_value', array($this->getLabel())));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_date_value', array($this->getLabel())));
             }
         }
         return $is_valid;

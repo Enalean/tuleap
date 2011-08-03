@@ -233,11 +233,11 @@ class Tracker_FormElement_Field_List_BindFactory {
      */
     public function fetchCreateABind($field) {
         $html = '';
-        $html .= '<h3>'.$GLOBALS['Language']->getText('tracker_formelement_admin','values').'</h3>';
+        $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','values').'</h3>';
         $html .= '<dl id="tracker-bind-factory">';
         
         $html .= '<dt class="tracker-bind-type">';
-        $h = new HTML_Element_Input_Radio( $GLOBALS['Language']->getText('tracker_formelement_admin','choose_values'), 'formElement_data[bind-type]', self::STATIK, 'checked');
+        $h = new HTML_Element_Input_Radio( $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','choose_values'), 'formElement_data[bind-type]', self::STATIK, 'checked');
         $h->addParam('autocomplete', 'off');
         $html .= $h->render();
         $html .= '</dt>';
@@ -247,7 +247,7 @@ class Tracker_FormElement_Field_List_BindFactory {
         $html .= '</dd>';
         
         $html .= '<dt class="tracker-bind-type">';
-        $h = new HTML_Element_Input_Radio( $GLOBALS['Language']->getText('tracker_formelement_admin','bind_to_users'), 'formElement_data[bind-type]', self::USERS, '');
+        $h = new HTML_Element_Input_Radio( $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','bind_to_users'), 'formElement_data[bind-type]', self::USERS, '');
         $h->addParam('autocomplete', 'off');
         $html .= $h->render();
         $html .= '</dt>';

@@ -317,29 +317,29 @@ class TrackerFactory {
      */
     protected function validMandatoryInfoOnCreate($name, $description, $itemname, $group_id) {
         if (!$name || !$description || !$itemname || trim($name) == "" || trim($description) == "" || trim($itemname) == ""  ) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type','name_requ'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_requ'));
             return false;
         }
 
         // Necessary test to avoid issues when exporting the tracker to a DB (e.g. '-' not supported as table name)
         if (!eregi("^[a-zA-Z0-9_]+$",$itemname)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type','invalid_shortname',$itemname));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','invalid_shortname',$itemname));
             return false;
         }
 
         if($this->isNameExists($name, $group_id)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type','name_already_exists',$itemname));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_already_exists',$itemname));
             return false;
         }
 
         if($this->isShortNameExists($itemname, $group_id)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type','shortname_already_exists',$itemname));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','shortname_already_exists',$itemname));
             return false;
         }
 
         $reference_manager = $this->getReferenceManager();
         if($reference_manager->_isKeywordExists($itemname, $group_id)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type','shortname_already_exists',$itemname));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','shortname_already_exists',$itemname));
             return false;
         }
 
@@ -366,7 +366,7 @@ class TrackerFactory {
             // get the template Group object
             $template_group = $this->getProjectManager()->getProject($project_id_template);
             if (!$template_group || !is_object($template_group) || $template_group->isError()) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type','invalid_templ'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','invalid_templ'));
                 return false;
             }
             //Ask to dao to duplicate the tracker
@@ -502,7 +502,7 @@ class TrackerFactory {
                     $tracker_mapping[$t->getId()] = $new->getId();
                     $report_mapping = $report_mapping + $report_mapping_for_this_tracker;
                 } else {
-                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin','tracker_not_duplicated', array($t->getName())));
+                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin','tracker_not_duplicated', array($t->getName())));
                 }
             }
         }

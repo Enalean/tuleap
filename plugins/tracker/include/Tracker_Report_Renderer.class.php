@@ -167,7 +167,7 @@ abstract class Tracker_Report_Renderer {
                         )
                     ),
                     'icon'  => $GLOBALS['HTML']->getImage('ic/layout_user.png'),
-                    'label' => $GLOBALS['Language']->getText('tracker_report','my_dashboard'),
+                    'label' => $GLOBALS['Language']->getText('plugin_tracker_report','my_dashboard'),
                 );
                
                 
@@ -190,7 +190,7 @@ abstract class Tracker_Report_Renderer {
                             )
                         ),
                         'icon'  => $GLOBALS['HTML']->getImage('ic/layout_project.png'),
-                        'label' => $GLOBALS['Language']->getText('tracker_report','project_dashboard'),
+                        'label' => $GLOBALS['Language']->getText('plugin_tracker_report','project_dashboard'),
                     );
                 }
             }
@@ -212,7 +212,7 @@ abstract class Tracker_Report_Renderer {
      * @return string html
      */
     public function fetchWidgetGoToReport() {
-        return $this->fetchLinkGoTo('['. $GLOBALS['Language']->getText('tracker_report_widget','go_to_report') .']');
+        return $this->fetchLinkGoTo('['. $GLOBALS['Language']->getText('plugin_tracker_report_widget','go_to_report') .']');
     }
     
     /**
@@ -226,7 +226,7 @@ abstract class Tracker_Report_Renderer {
     public function fetchArtifactLinkGoToTracker() {
         $html = '';
         $html .= '<div class="tracker-form-element-artifactlink-gototracker">';
-        $html .=  $this->fetchLinkGoTo($GLOBALS['Language']->getText('tracker_artifactlink', 'go_to_tracker'), array('target' => '_blank'));
+        $html .=  $this->fetchLinkGoTo($GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'go_to_tracker'), array('target' => '_blank'));
         $html .= '</div>';
         return $html;
     }

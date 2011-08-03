@@ -28,14 +28,14 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','selectbox');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','selectbox');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','selectbox_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','selectbox_description');
     }
     
     /**
@@ -63,8 +63,8 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
                 'func'               => 'admin-formElement-update',
                 'formElement'        => $this->id,
                 'change-type'        => 'msb'
-            )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('tracker_formelement_admin','switch_type_confirm').'\');">'
-               .$GLOBALS['Language']->getText('tracker_formelement_admin','switch_msb').'</a>)';
+            )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
+               .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_msb').'</a>)';
 
         return $html;
     }

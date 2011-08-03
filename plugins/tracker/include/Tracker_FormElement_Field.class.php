@@ -516,7 +516,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
                 'formElement'    => $this->id,
             )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
         } else {
-            $html .= '<span style="color:gray;" title="'. $GLOBALS['Language']->getText('tracker_formelement_admin','delete_field_impossible') .'">';
+            $html .= '<span style="color:gray;" title="'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','delete_field_impossible') .'">';
             $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
             $html .= '</span>';
         }
@@ -569,7 +569,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
             $html .=' <p>';
             $html .= '<input type="hidden" name="formElement_data[notifications]" value="0" />';
             $html .= '<input type="checkbox" name="formElement_data[notifications]" id="formElement_notifications" value="1" '. ($this->notifications ? 'checked="checked"' : '') .'" />';
-            $html .= '<label for="formElement_notifications">'.$GLOBALS['Language']->getText('tracker_common_field', 'notifications');
+            $html .= '<label for="formElement_notifications">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'notifications');
             $html .= '</p>';
         }
         return $html;
@@ -594,7 +594,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         $html .= '<p>';
         $html .= '<input type="hidden" name="formElement_data[required]" value="0" />';
         $html .= '<input type="checkbox" name="formElement_data[required]" id="formElement_required" value="1" '. ($this->required ? 'checked="checked"' : '') .'" />';
-        $html .= '<label for="formElement_required">'.$GLOBALS['Language']->getText('tracker_common_field', 'required');
+        $html .= '<label for="formElement_required">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'required');
         $html .= '</p>';
         return $html;
     }
@@ -745,11 +745,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
             $is_valid = false;
             $this->setHasErrors(true);
 
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
         } else if (((!is_array($submitted_value) && $submitted_value !== null) || (is_array($submitted_value) && !empty($submitted_value))) &&  ! $hasPermission) {
             $is_valid = false;
             $this->setHasErrors(true);
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'bad_field_permission_update', $this->getLabel()));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'bad_field_permission_update', $this->getLabel()));
         } else if ($submitted_value !== null && $hasPermission) {
             $is_valid = $this->isValid($artifact, $submitted_value);
         }
@@ -767,7 +767,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
     public function isValid(Tracker_Artifact $artifact, $value) {
         if (($value === null || $value === '') && $this->isRequired()) {
             $this->has_errors = true;
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
         } else {
             $this->has_errors = !$this->validate($artifact, $value);
         }

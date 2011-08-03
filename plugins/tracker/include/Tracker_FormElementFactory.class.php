@@ -605,7 +605,7 @@ class Tracker_FormElementFactory {
                 $formElement_data['name'] = $this->deductNameFromLabel($formElement_data['name']);
                 if ($existing_field = $this->getFormElementByName($formElement->getTracker()->getId(), $formElement_data['name'])) {
                     if ($existing_field->getId() != $formElement->getId()) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_include_type', 'error_uniq_name'));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_include_type', 'error_uniq_name'));
                         unset($formElement_data['name']);
                     }
                 }
@@ -734,11 +734,11 @@ class Tracker_FormElementFactory {
         $all_klasses = array_merge($klasses, $special_klasses);
         EventManager::instance()->processEvent('tracker_formElement_classnames', 
                                                array('classnames' => &$all_klasses));
-        $html .= '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('tracker_formelement_admin','fields') .'</div>';
+        $html .= '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fields') .'</div>';
         $html .= $this->fetchFactoryButtons($klasses);
-        $html .= '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('tracker_formelement_admin','dynamic_fields') .'</div>';
+        $html .= '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','dynamic_fields') .'</div>';
         $html .= $this->fetchFactoryButtons($special_klasses);
-        $html .= '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('tracker_formelement_admin','structural_elements') .'</div>';
+        $html .= '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','structural_elements') .'</div>';
         $html .= $this->fetchFactoryButtons(array_merge($this->group_classnames, $this->staticfield_classnames));
         return $html;
     }

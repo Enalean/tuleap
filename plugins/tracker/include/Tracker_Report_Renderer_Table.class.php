@@ -427,7 +427,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 )
             ),
             'icon'  => $GLOBALS['HTML']->getImage('ic/clipboard-paste.png', array('border' => 0, 'alt' => '', 'style' => 'vertical-align:middle;')),
-            'label' => $GLOBALS['Language']->getText('tracker_include_report' ,'export_only_report_columns'),
+            'label' => $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'export_only_report_columns'),
         );
         $items['export_full'] = array(
             'url'   => '/tracker/?'.http_build_query(
@@ -442,7 +442,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 )
             ),
             'icon'  => $GLOBALS['HTML']->getImage('ic/clipboard-paste.png', array('border' => 0, 'alt' => '', 'style' => 'vertical-align:middle;')),
-            'label' => $GLOBALS['Language']->getText('tracker_include_report' ,'export_all_columns'),
+            'label' => $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'export_all_columns'),
         );
         return $items;
     }
@@ -493,7 +493,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     }
     
     protected function _fetchMatchingNumber($total_rows) {
-        $html = '<h3>'. $total_rows .' '. $GLOBALS['Language']->getText('tracker_include_report','matching') .'</h3>';
+        $html = '<h3>'. $total_rows .' '. $GLOBALS['Language']->getText('plugin_tracker_include_report','matching') .'</h3>';
         return $html;
     }
     
@@ -502,7 +502,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $html .= '<div id="tracker_report_table_sortby_panel">';
         $sort_columns = $this->getSort();
         if ($this->sortHasUsedField()) {
-            $html .= $GLOBALS['Language']->getText('tracker_report','sort_by');
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_report','sort_by');
             $ff = $this->getFieldFactory();
             $sort = array();
             foreach($sort_columns as $row) {
@@ -531,11 +531,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                                'func'                      => 'renderer',
                                'renderer_table[resetsort]' => 1
                                )) .'">'. 
-                     $GLOBALS['Language']->getText('tracker_report','reset_sort') .
+                     $GLOBALS['Language']->getText('plugin_tracker_report','reset_sort') .
                      '</a>';
             $html .= ' | ';
             //toggle multisort
-            $multisort_label = $this->multisort ? $GLOBALS['Language']->getText('tracker_report','disable_multisort') : $GLOBALS['Language']->getText('tracker_report','enable_multisort');
+            $multisort_label = $this->multisort ? $GLOBALS['Language']->getText('plugin_tracker_report','disable_multisort') : $GLOBALS['Language']->getText('plugin_tracker_report','enable_multisort');
             $html .= '<a href="?' . http_build_query(array(
                                'report'                    => $this->report->id,
                                'renderer'                  => $this->id,
@@ -545,7 +545,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html .= '>'. $multisort_label .'</a>';
             $html .= '</div>';
         } else {
-            $html .= '<span style="color:#666">'. $GLOBALS['Language']->getText('tracker_report', 'click_to_sort') .'</span>';
+            $html .= '<span style="color:#666">'. $GLOBALS['Language']->getText('plugin_tracker_report', 'click_to_sort') .'</span>';
         }
         $html .= '</div>';
         return $html;
@@ -564,7 +564,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html .= $this->_form('tracker_report_table_addcolumn_form');
             $html .= '<div id="tracker_report_table_addcolumn_panel">';
             $html .= '<select name="renderer_table[add_column]" id="tracker_report_table_add_column" autocomplete="off">';
-            $html .= '<option selected="selected" value="">'. '-- '.$GLOBALS['Language']->getText('tracker_report', 'toggle_columns').'</option>';
+            $html .= '<option selected="selected" value="">'. '-- '.$GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_columns').'</option>';
             $html .= $options;
             $html .= '</select>';
             $html .= '<noscript><input type="submit" value="Add !" /></noscript>';
@@ -576,9 +576,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     
     protected function _fetchRange($from, $to, $total_rows) {
         $html = '';
-        $html .= $GLOBALS['Language']->getText('tracker_include_report','items');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_report','items');
         $html .= ' <b>'. $from .' - '. $to .'</b>';
-        $html .= ' ' . $GLOBALS['Language']->getText('tracker_renderer_table','items_range_of') . ' <b>'. $total_rows .'</b>';
+        $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_renderer_table','items_range_of') . ' <b>'. $total_rows .'</b>';
         $html .= '. ';
         return $html;
     }
@@ -605,7 +605,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             } else {
                 $chunk .= ' '. (int)$this->chunksz .' ';
             }
-            $chunk .= $GLOBALS['Language']->getText('tracker_include_report','at_once');
+            $chunk .= $GLOBALS['Language']->getText('plugin_tracker_include_report','at_once');
             
             
             $html .= $this->_form('tracker_report_table_next_previous_form');
@@ -1000,7 +1000,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     if ($column['field']->getAggregateFunctions()) {
                         $html .= '<div class="tracker_aggregate_function_add_panel">';
                         $html .= '<select name="tracker_aggregate_function_add[' . (int) $column['field']->getId() . ']">';
-                        $html .= '<option value="" selected="selected">' . $GLOBALS['Language']->getText('tracker_aggregate', 'toggle') . '</option>';
+                        $html .= '<option value="" selected="selected">' . $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'toggle') . '</option>';
                         foreach ($column['field']->getAggregateFunctions() as $f) {
                             $classname = 'tracker_aggregate_function_add_';
                             if (isset($aggregates[$column['field']->getId()]) && in_array($f, $aggregates[$column['field']->getId()])) {
@@ -1008,7 +1008,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             } else {
                                 $classname .= 'unused';
                             }
-                            $html .= '<option value="' . $hp->purify($f, CODENDI_PURIFIER_CONVERT_HTML) . '" class="'. $classname .'">' . $GLOBALS['Language']->getText('tracker_aggregate', $f . '_sel') . '</option>';
+                            $html .= '<option value="' . $hp->purify($f, CODENDI_PURIFIER_CONVERT_HTML) . '" class="'. $classname .'">' . $GLOBALS['Language']->getText('plugin_tracker_aggregate', $f . '_sel') . '</option>';
                         }
                         $html .= '</select>';
                         $html .= '</div>';
@@ -1019,7 +1019,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     foreach ($aggregates[$column['field']->getId()] as $f) {
                         if (isset($results[$column['field']->getName() . '_' . $f])) {
                             $html .= '<li>';
-                            $html .= '<strong>' . $GLOBALS['Language']->getText('tracker_aggregate', $f . '_title') . '</strong> ';
+                            $html .= '<strong>' . $GLOBALS['Language']->getText('plugin_tracker_aggregate', $f . '_title') . '</strong> ';
                             if (is_a($results[$column['field']->getName() . '_' . $f], 'DataAccessResult')) {
                                 if ($row = $results[$column['field']->getName() . '_' . $f]->getRow()) {
                                     if (isset($row[$column['field']->getName() . '_' . $f])) {
@@ -1222,8 +1222,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $html .= '<input type="hidden" name="masschange_aids_all[]" value="'. $id .'"/>';
             }
             $html .= '<div id="tracker_report_table_masschange_panel">';
-            $html .= '<input id="masschange_btn_checked" type="submit" name="renderer_table[masschange_checked]" value="'.$GLOBALS['Language']->getText('tracker_include_report', 'mass_change_checked', $first_row, $last_row) .'" />';
-            $html .= '<input id="masschange_btn_all" type="submit" name="renderer_table[masschange_all]" value="'.$GLOBALS['Language']->getText('tracker_include_report', 'mass_change_all', $total_rows) .'" />';
+            $html .= '<input id="masschange_btn_checked" type="submit" name="renderer_table[masschange_checked]" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'mass_change_checked', $first_row, $last_row) .'" />';
+            $html .= '<input id="masschange_btn_all" type="submit" name="renderer_table[masschange_all]" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'mass_change_all', $total_rows) .'" />';
             $html .= '</div>';
             $html .= '</form>';
         }

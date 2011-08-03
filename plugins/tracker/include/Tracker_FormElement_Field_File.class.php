@@ -222,9 +222,9 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     protected function fetchSubmitValue() {
         $html = '';
         $html .= '<div class="tracker_artifact_attachment">';
-        $html .= '<p>'.$GLOBALS['Language']->getText('tracker_formelement_admin','add_new_file').'</p>';
+        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file').'</p>';
         $html .= '<table class="tracker_artifact_add_attachment">';
-        $html .= '<tr><td><label>'.$GLOBALS['Language']->getText('tracker_formelement_admin','add_new_file_description').'</label></td><td><label>'.$GLOBALS['Language']->getText('tracker_formelement_admin','add_new_file_file').'</label></td></tr>';
+        $html .= '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_description').'</label></td><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_file').'</label></td></tr>';
         $html .= '<tr><td><input type="text" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][description]" /></td>';
         $html .= '<td><input type="file" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][file]" /></td></tr>';
         $html .= '</table>';
@@ -242,9 +242,9 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         
         $html = '';
         $html .= '<div class="tracker_artifact_attachment">';
-        $html .= '<p>'.$GLOBALS['Language']->getText('tracker_formelement_admin','add_new_file').'</p>';
+        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file').'</p>';
         $html .= '<table class="tracker_artifact_add_attachment">';
-        $html .= '<tr><td><label>'.$GLOBALS['Language']->getText('tracker_formelement_admin','add_new_file_description').'</label></td><td><label>'.$GLOBALS['Language']->getText('tracker_formelement_admin','add_new_file_file').'</label></td></tr>';
+        $html .= '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_description').'</label></td><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_file').'</label></td></tr>';
         $html .= '<tr><td><input type="text" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][description]" /></td>';
         $html .= '<td><input type="file" id="tracker_field_'. $this->id .'" name="artifact['. $this->id .'][][file]" /></td></tr>';
         $html .= '</table>';
@@ -444,9 +444,9 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     protected function fetchAdminFormElement() {
         $html = '';
         $html .= '<div class="tracker_artifact_attachment">';
-        $html .= '<p>'.$GLOBALS['Language']->getText('tracker_formelement_admin','add_new_file').'</p>';
+        $html .= '<p>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file').'</p>';
         $html .= '<table class="tracker_artifact_add_attachment">';
-        $html .= '<tr><td><label>'.$GLOBALS['Language']->getText('tracker_formelement_admin','add_new_file_description').'</label></td><td><label>'.$GLOBALS['Language']->getText('tracker_formelement_admin','add_new_file_file').'</label></td></tr>';
+        $html .= '<tr><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_description').'</label></td><td><label>'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_file_file').'</label></td></tr>';
         $html .= '<tr><td><input type="text" id="tracker_field_'. $this->id .'" /></td>';
         $html .= '<td><input type="file" id="tracker_field_'. $this->id .'" /></td></tr>';
         $html .= '</table>';
@@ -458,14 +458,14 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','file');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','file');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','file_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','file_description');
     }
     
     /**
@@ -563,7 +563,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 //check that there is at least one file uploaded
                 if ( ! $this->checkThatAtLeastOneFileIsUploaded($value)) {
                     $this->has_errors = true;
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
                 }
             }
             

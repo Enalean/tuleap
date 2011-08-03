@@ -91,7 +91,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     public function fetchLabel() {
         $html = parent::fetchLabel();
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('tracker_formelement_admin', 'submittedby_help');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_help');
         $html .= '</span>';
         return $html;
     }
@@ -100,14 +100,14 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'submittedby_label');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_label');
     }
 
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'submittedby_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_description');
     }
 
     /**
@@ -261,10 +261,10 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         if ($last_changeset_value === null && $submitted_value === null && $this->isRequired()) {
             $is_valid = false;
             $this->setHasErrors(true);
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
         } else if ($submitted_value !== null &&  ! $this->userCanUpdate()) {
             $is_valid = true;
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_import', 'field_not_taken_account', array($this->getName())));
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
         } 
         return $is_valid;
     }
@@ -289,7 +289,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         $fake_value = new Tracker_FormElement_Field_List_Bind_UsersValue(UserManager::instance()->getCurrentUser()->getId());
         $html .= $fake_value->getLabel() . '<br />';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('tracker_formelement_admin', 'submittedby_help');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_help');
         $html .= '</span>';
         return $html;
     }

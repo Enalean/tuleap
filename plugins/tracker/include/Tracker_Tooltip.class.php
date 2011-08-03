@@ -101,7 +101,7 @@ class Tracker_Tooltip extends Tracker_Semantic {
      * @return string
      */
     public function getLabel() {
-        return $GLOBALS['Language']->getText('tracker_admin_semantic','tooltip_label');
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_label');
     }
     
     /**
@@ -110,7 +110,7 @@ class Tracker_Tooltip extends Tracker_Semantic {
      * @return string
      */
     public function getDescription() {
-        return $GLOBALS['Language']->getText('tracker_admin_semantic','tooltip_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_description');
     }
     
     
@@ -132,17 +132,17 @@ class Tracker_Tooltip extends Tracker_Semantic {
         $html = '';
         $fields = $this->getFields();
         if (!count($fields)) {
-            $html .= $GLOBALS['Language']->getText('tracker_admin_semantic','no_tooltip');
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','no_tooltip');
         } else {
-            $html .= $GLOBALS['Language']->getText('tracker_admin_semantic','tooltip_fields');
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_fields');
             $html .= '<blockquote>';
             $html .= '<table>';
             foreach($fields as $f) {
                 $html .= '<tr><td>';
                 $html .=  $hp->purify($f->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) ;
                 $html .= '</td><td>';
-                $html .= '<a href="'. $this->getUrl() .'&amp;remove='. (int)$f->id .'" title="' . $GLOBALS['Language']->getText('tracker_admin_semantic','tooltip_remove_field') . '">';
-                $html .= $GLOBALS['HTML']->getimage('ic/cross.png', array('alt' => $GLOBALS['Language']->getText('tracker_admin_semantic','tooltip_remove_field')));
+                $html .= '<a href="'. $this->getUrl() .'&amp;remove='. (int)$f->id .'" title="' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_remove_field') . '">';
+                $html .= $GLOBALS['HTML']->getimage('ic/cross.png', array('alt' => $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_remove_field')));
                 $html .= '</a>';
                 $html .= '</td></tr>';
             }
@@ -155,7 +155,7 @@ class Tracker_Tooltip extends Tracker_Semantic {
         }
         if ($options) {
             $html .= '<form action="'. $this->getUrl() .'" method="POST">';
-            $html .= '<p>'. $GLOBALS['Language']->getText('tracker_admin_semantic','tooltip_add_field');
+            $html .= '<p>'. $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_add_field');
             $html .= '<select name="field">';
             $html .= $options;
             $html .= '</select>';
@@ -163,10 +163,10 @@ class Tracker_Tooltip extends Tracker_Semantic {
             $html .= '</p>';
             $html .= '</form>';
         } else {
-            $html .= '<em>' . $GLOBALS['Language']->getText('tracker_admin_semantic','tooltip_no_more_field') . '</em>';
+            $html .= '<em>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_no_more_field') . '</em>';
         }
         
-        $html .= '<p><a href="/tracker/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('tracker_admin_semantic','go_back_overview') . '</a></p>';
+        $html .= '<p><a href="/tracker/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
         echo $html;
         $sm->displaySemanticFooter($this, $tracker_manager);
     }
@@ -182,9 +182,9 @@ class Tracker_Tooltip extends Tracker_Semantic {
         $fields = $this->getFields();
         $html .= '<p>';
         if (!count($fields)) {
-            $html .= $GLOBALS['Language']->getText('tracker_admin_semantic','no_tooltip');
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','no_tooltip');
         } else {
-            $html .= $GLOBALS['Language']->getText('tracker_admin_semantic','tooltip_fields');
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_fields');
             $html .= '<ul>';
             foreach($fields as $f) {
                 $html .=  '<li><strong>'. $hp->purify($f->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) .'</strong></li>';

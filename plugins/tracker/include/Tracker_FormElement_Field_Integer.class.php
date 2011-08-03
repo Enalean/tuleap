@@ -79,14 +79,14 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','integer');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','integer');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','integer_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','integer_description');
     }
     
     /**
@@ -122,7 +122,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      * @return string the i18n error message to display if the value submitted by the user is not valid
      */
     protected function getValidatorErrorMessage() {
-        return $this->getLabel() . ' ' . $GLOBALS['Language']->getText('tracker_common_artifact', 'error_integer_value');
+        return $this->getLabel() . ' ' . $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_integer_value');
     }
     
     /**

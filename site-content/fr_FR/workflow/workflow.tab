@@ -1,0 +1,33 @@
+#/**
+#  *
+#  * Workflow scripts message catalog (French)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/common/workflow/WorkflowManager.class.php
+#
+workflow_admin	title	Gestion du Workflow
+workflow_admin	title_define_transitions	Definir les transitions
+workflow_admin	field	Champ
+workflow_admin	enabled	Activer
+workflow_admin	delete	Supprimer
+workflow_admin	choose_field	Choisir le champ sur lequel appliquer le workflow :
+workflow_admin	updated	Mis à jour
+workflow_admin	not_updated	Aucune mise à jour effectuée
+workflow_admin	created	Crée
+workflow_admin	deleted	Supprimé
+workflow_admin	workflow_enabled	Le workflow est activé.
+workflow_admin	workflow_disabled	Le workflow est désactivé.
+workflow_admin	delete_workflow	Etes-vous sûr de vouloir supprimer le workflow?
+workflow_admin	title_define_transition_details	Définir  les règles à appliquer sur une transition : de $1 à $2
+workflow_admin	label_define_transition_permissions	Groupes autorisés à effectuer la transition :
+workflow_admin	permissions_not_updated	Les mises à jour n'ont pas été prises en compte.
+workflow_admin	permissions_updated	Les mises à jour ont été prises en compte.
+

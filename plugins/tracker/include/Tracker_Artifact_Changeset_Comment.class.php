@@ -74,14 +74,14 @@ class Tracker_Artifact_Changeset_Comment {
                 $hp = Codendi_HTMLPurifier::instance();
                 $html .= '<div class="tracker_artifact_followup_comment_edited_by">';
                 if ($this->parent_id) {                    
-                    $html .= $GLOBALS['Language']->getText('tracker_include_artifact', 'last_edited');
+                    $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
                     $html .= ' '. $uh->getLinkFromUserid($this->submitted_by) .' ';
                     $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
                 }
                 $html .= '</div>';
                 $html .= '<div class="tracker_artifact_followup_comment_body">';
                 if ($this->parent_id && !trim($this->body)) {
-                    $html .= '<em>'. $GLOBALS['Language']->getText('tracker_include_artifact', 'comment_cleared') .'</em>';
+                    $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
                 } else {
                     $html .= $hp->purify($this->body, CODENDI_PURIFIER_BASIC, $this->changeset->artifact->getTracker()->group_id);
                 }
@@ -91,7 +91,7 @@ class Tracker_Artifact_Changeset_Comment {
             default:
                 $output = '';
                 //if ($this->parent_id) {
-                //$output .= $GLOBALS['Language']->getText('tracker_include_artifact', 'last_edited');
+                //$output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
                 //$output .= ' '.$uh->getDisplayNameFromUserId($this->submitted_by);
                 //$output .= ' '.DateHelper::timeAgoInWords($this->submitted_on).PHP_EOL;
                 //}

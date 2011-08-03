@@ -85,20 +85,20 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
             }
             $added   = implode(', ', $added_arr);
             if (empty($next)) {
-                $changes = ' '.$GLOBALS['Language']->getText('tracker_artifact','cleared');
+                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
             } else if (empty($previous)) {
-                $changes = ' '.$GLOBALS['Language']->getText('tracker_artifact','set_to').' '.$added;
+                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
             } else if (count($previous) == 1 && count($next) == 1) {
-                $changes = ' '.$GLOBALS['Language']->getText('tracker_artifact','changed_from'). ' '.$removed .' '.$GLOBALS['Language']->getText('tracker_artifact','to').' '.$added;
+                $changes = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' '.$removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' '.$added;
             } else {
                 if ($removed) {
-                    $changes = $removed .' '.$GLOBALS['Language']->getText('tracker_artifact','removed');
+                    $changes = $removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','removed');
                 }
                 if ($added) {
                     if ($changes) {
                         $changes .= PHP_EOL;
                     }
-                    $changes .= $added .' '.$GLOBALS['Language']->getText('tracker_artifact','added');
+                    $changes .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
                 }
             }
         }
@@ -119,7 +119,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
                 $added_arr[] = $added_element->getUrl();
             }
             $added   = implode(', ', $added_arr);
-            $result = ' '.$GLOBALS['Language']->getText('tracker_artifact','set_to').' '.$added;
+            $result = ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$added;
             return $result;
         }
     }

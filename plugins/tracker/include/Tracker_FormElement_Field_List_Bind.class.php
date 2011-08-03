@@ -310,7 +310,7 @@ abstract class Tracker_FormElement_Field_List_Bind {
         
         //Select default values
         $html .= '<p>';
-        $html .= '<strong>'. $GLOBALS['Language']->getText('tracker_formelement_admin','select_default_value'). '</strong><br />';
+        $html .= '<strong>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','select_default_value'). '</strong><br />';
         $html .= '<select name="bind[default][]" size="7" multiple="multiple">';
         foreach ($this->getAllValues() as $v) {
             $selected = isset($this->default_values[$v->getId()]) ? 'selected="selected"' : '';

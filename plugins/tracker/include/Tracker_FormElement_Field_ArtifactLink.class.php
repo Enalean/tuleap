@@ -260,7 +260,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                              class="tracker-form-element-artifactlink-new"
                              size="40"
                              value="'.  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
-                             title="' . $GLOBALS['Language']->getText('tracker_artifact', 'formelement_artifactlink_help') . '" />';
+                             title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
             $html .= '</div>';
         }
         $html .= '<div class="tracker-form-element-artifactlink-list">';
@@ -310,10 +310,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                             }
                         }
                         if ( ! $renderer_table_found) {
-                            $html .= $GLOBALS['Language']->getText('tracker', 'no_reports_available');
+                            $html .= $GLOBALS['Language']->getText('plugin_tracker', 'no_reports_available');
                         }
                     } else {
-                        $html .= $GLOBALS['Language']->getText('tracker', 'no_reports_available');
+                        $html .= $GLOBALS['Language']->getText('plugin_tracker', 'no_reports_available');
                     }
                 }
             }
@@ -500,7 +500,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $html .= '<input type="text"
                              '. $html_name_new .'
                              value="'.  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  .'"
-                             title="' . $GLOBALS['Language']->getText('tracker_artifact', 'formelement_artifactlink_help') . '" />';
+                             title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
             $html .= '<br />';
         }
         if ($artifact_links) {
@@ -768,14 +768,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'artifact_link_label');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifact_link_label');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin', 'artifact_link_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifact_link_description');
     }
     
     /**
@@ -808,7 +808,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $this->has_errors = false;
             } else {
                 $this->has_errors = true;
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
             }
         } else {
             $this->has_errors = !$this->validate($artifact, $value);
@@ -834,7 +834,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $artifact_id = trim ($artifact_id);
                 if ( ! $r->isValid($artifact_id)) {
                     $is_valid = false;
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'error_artifactlink_value', array($this->getLabel(), $artifact_id)));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_value', array($this->getLabel(), $artifact_id)));
                 }
             }
         }

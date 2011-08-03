@@ -340,7 +340,7 @@ class Tracker_RulesManager {
     
     function displayRules($engine, $source_field = false, $target_field = false, $source_value = false, $target_value = false) {
         $this->tracker->displayAdminItemHeader($engine, 'dependencies');
-        echo '<p>'. $GLOBALS['Language']->getText('tracker_field_dependencies','inline_help') .'</p>';
+        echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','inline_help') .'</p>';
         echo '<br />';
         $this->displayEditForm($source_field, $target_field, $source_value, $target_value);
         echo '<br />';
@@ -383,7 +383,7 @@ class Tracker_RulesManager {
                     $this->fieldIsAForbiddenSource($tracker_id, $source_field, $target_field) ||
                     $this->fieldIsAForbiddenTarget($tracker_id, $target_field, $source_field)
                 ) {                
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_field_dependencies','dependencies_not_authorized'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','dependencies_not_authorized'));
                     $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array('tracker' => (int)$tracker_id, 'func'    => 'admin-dependencies')));
                 } else {
                     
@@ -424,7 +424,7 @@ class Tracker_RulesManager {
         $ff = Tracker_FormElementFactory::instance();
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($engine, 'dependencies');
-        echo '<p>'. $GLOBALS['Language']->getText('tracker_field_dependencies','inline_help') .'</p>';
+        echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','inline_help') .'</p>';
         
         echo '<form action="/tracker/?" method="GET">';
         echo '<input type="hidden" name="tracker" value="'. (int)$this->tracker->id .'" />';
@@ -434,7 +434,7 @@ class Tracker_RulesManager {
         $source_field = $ff->getFormElementById($source_field_id);
         if (!$source_field) {
             echo '<select name="source_field" onchange="this.form.submit()">';
-            echo '<option value="0">'. $GLOBALS['Language']->getText('tracker_field_dependencies','choose_source_field') .'</option>';
+            echo '<option value="0">'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','choose_source_field') .'</option>';
             $sources = $this->getAllSourceFields(null);
             foreach($sources as $id => $field) {
                 echo '<option value="'. $id .'">';
@@ -455,7 +455,7 @@ class Tracker_RulesManager {
             $disabled = 'disabled="disabled" readonly="readonly"';
         }
         echo '<select name="target_field" '. $disabled .'>';
-        echo '<option value="0">'. $GLOBALS['Language']->getText('tracker_field_dependencies','choose_target_field') .'</option>';
+        echo '<option value="0">'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','choose_target_field') .'</option>';
         if ($source_field) {
             $sources = $this->getAllTargetFields($source_field_id);
             foreach($sources as $id => $field) {
@@ -492,7 +492,7 @@ class Tracker_RulesManager {
             }
             
             if ($dependencies) {
-                echo '<p>'.$GLOBALS['Language']->getText('tracker_field_dependencies','choose_existing_dependency').'</p>';
+                echo '<p>'.$GLOBALS['Language']->getText('plugin_tracker_field_dependencies','choose_existing_dependency').'</p>';
                 echo '<ul><li>'. implode('</li><li>', $dependencies) .'</li></ul>';
             }
             echo '</ul>';
@@ -509,8 +509,8 @@ class Tracker_RulesManager {
         $source_field = $ff->getFieldById($source_field_id);
         $target_field = $ff->getFieldById($target_field_id);
         //Display creation form
-        echo '<h3>'.$GLOBALS['Language']->getText('tracker_field_dependencies','dependencies_matrix_title').'</h3>';
-        echo '<p>'. $GLOBALS['Language']->getText('tracker_field_dependencies','dependencies_matrix_help', array($source_field->getlabel(), $target_field->getlabel())) .'</p>';
+        echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_field_dependencies','dependencies_matrix_title').'</h3>';
+        echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','dependencies_matrix_help', array($source_field->getlabel(), $target_field->getlabel())) .'</p>';
      
         $this->displayDependenciesMatrix($source_field, $target_field);
     }

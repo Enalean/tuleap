@@ -535,9 +535,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             return true;
         } else {
             if ($field_value_to !== null) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'transition_not_valid', array($field_value_to->getLabel())));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'transition_not_valid', array($field_value_to->getLabel())));
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'transition_to_none'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'transition_to_none'));
             }
             return false;
         }
@@ -697,9 +697,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
         
         if (!$from_value) {
-            $html .= $GLOBALS['Language']->getText('tracker_artifact','set_to').' ';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' ';
         } else {
-            $html .= ' '.$GLOBALS['Language']->getText('tracker_artifact','changed_from').' '. $from_value .'  '.$GLOBALS['Language']->getText('tracker_artifact','to').' ';
+            $html .= ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from').' '. $from_value .'  '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' ';
         }
         
         $values = array();
@@ -1034,7 +1034,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         
         if ($this->isNone($value) && $this->isRequired()) {
             $this->has_errors = true;
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
         } else {
             $this->has_errors = !$this->validate($artifact, $value);
         }

@@ -71,11 +71,11 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
         $next_numeric     = $this->getValue();
         if ($previous_numeric !== $next_numeric) {
             if ($previous_numeric === null) {
-                return $GLOBALS['Language']->getText('tracker_artifact','set_to') . ' ' . $next_numeric;
+                return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to') . ' ' . $next_numeric;
             } elseif ($next_numeric === null) {
-                return $GLOBALS['Language']->getText('tracker_artifact','cleared');
+                return $GLOBALS['Language']->getText('plugin_tracker_artifact','cleared');
             } else {
-                return $GLOBALS['Language']->getText('tracker_artifact','changed_from'). ' ' . $previous_numeric . ' ' . $GLOBALS['Language']->getText('tracker_artifact','to') . ' ' . $next_numeric;
+                return $GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from'). ' ' . $previous_numeric . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact','to') . ' ' . $next_numeric;
             }
         }
         return false;
@@ -88,7 +88,7 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      */
     public function nodiff() {
         if ($this->getNumeric() != 0) {
-            return $GLOBALS['Language']->getText('tracker_artifact','set_to').' '.$this->getValue();
+            return $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' '.$this->getValue();
         }
     }
 }

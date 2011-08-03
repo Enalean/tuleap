@@ -188,7 +188,7 @@ function getUsedFields() {
     for ($c=0; $c < $this->num_columns; $c++) {
         $field_label = SimpleSanitizer::sanitize($data[$c]);
       if (!array_key_exists($field_label,$this->used_fields)) {
-	$this->setError($Language->getText('tracker_import_utils','field_not_known',array($field_label,$this->ath->getName())));
+	$this->setError($Language->getText('plugin_tracker_import_utils','field_not_known',array($field_label,$this->ath->getName())));
 	return false;
       }
       
@@ -230,7 +230,7 @@ function getUsedFields() {
 	      $label != $this->lbl_list['cc_comment'] &&
 	      !$field->isEmptyOk() && !in_array($label,$this->parsed_labels)) {
 	    
-	    $this->setError($Language->getText('tracker_import_utils','field_mandatory',array($label,$this->ath->getName())));
+	    $this->setError($Language->getText('plugin_tracker_import_utils','field_mandatory',array($label,$this->ath->getName())));
 	    return false;
 	  }
 	}
@@ -256,7 +256,7 @@ function getUsedFields() {
       $val_arr = explode(",",$val);
       while (list(,$name) = each($val_arr)) {
 	if (!array_key_exists($name,$predef_vals) && $name != $Language->getText('global','none')) {
-	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array(
+	  $this->setError($Language->getText('plugin_tracker_import_utils','not_a_predefined_value',array(
           $row+1,
           $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML),
           $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) ,
@@ -277,7 +277,7 @@ function getUsedFields() {
 		    user_getemail_from_unix($val) != $Language->getText('include_user','not_found'))) {
 	  //accept anonymous user, use importing user as 'submitted by', or simply make sure that user is a known user
 	} else {
-	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array(
+	  $this->setError($Language->getText('plugin_tracker_import_utils','not_a_predefined_value',array(
           $row+1,
           $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML),
           $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) ,
@@ -329,7 +329,7 @@ function getUsedFields() {
 	  $is_empty = ( ($field->isSelectBox() || $field->isMultiSelectBox()) ? ($val==$Language->getText('global','none')) : ($val==''));
 
 	  if ($is_empty) {
-	    $this->setError($Language->getText('tracker_import_utils','field_mandatory_and_current',array(
+	    $this->setError($Language->getText('plugin_tracker_import_utils','field_mandatory_and_current',array(
             $row+1,
             $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML),
             $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
@@ -352,7 +352,7 @@ function getUsedFields() {
 	  } else {
 	    list($unix_time,$ok) = util_importdatefmt_to_unixtime($val);
 	    if (!$ok) {
-	      $this->setError($Language->getText('tracker_import_utils','incorrect_date',array(
+	      $this->setError($Language->getText('plugin_tracker_import_utils','incorrect_date',array(
               $row+1,
               $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML) ,
               $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) )));
@@ -389,7 +389,7 @@ function getUsedFields() {
               $label != $this->lbl_list['cc_comment'] &&
               !$field->isEmptyOk() && !in_array($label,$this->parsed_labels)) {
 	    
-	    $this->setError($Language->getText('tracker_import_utils','field_mandatory_and_line',array(
+	    $this->setError($Language->getText('plugin_tracker_import_utils','field_mandatory_and_line',array(
             $row+1,
             $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML) ,
             $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
@@ -437,7 +437,7 @@ function getUsedFields() {
     $res=db_query("SELECT * FROM artifact WHERE group_artifact_id = ". db_ei($this->ath->getID()) .
 		  " AND submitted_by=".  db_ei($sub_user_id) ." AND summary='".  db_es($summary) ."'");
     if ($res && db_numrows($res) > 0) {
-      $this->setError($Language->getText('tracker_import_utils','already_submitted',array(
+      $this->setError($Language->getText('plugin_tracker_import_utils','already_submitted',array(
           $row+1,
           $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML) ,
           $sub_user_name,
@@ -458,7 +458,7 @@ function getUsedFields() {
     $sql = "SELECT tracker_id FROM artifact WHERE tracker_id = $aid and group_artifact_id = ".$this->ath->getID();
     $result = db_query($sql);
     if (db_numrows($result) == 0) {
-      $this->setError($Language->getText('tracker_import_utils','art_not_exists',array(
+      $this->setError($Language->getText('plugin_tracker_import_utils','art_not_exists',array(
           $row+1,
           $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML) ,
           $aid,
@@ -528,7 +528,7 @@ function getUsedFields() {
 	  $data_details .= "[".$this->parsed_labels[$key]."] => $value";
 	}
 	reset($data);
-	$this->setError($Language->getText('tracker_import_utils','column_mismatch',array(
+	$this->setError($Language->getText('plugin_tracker_import_utils','column_mismatch',array(
         $row+1,
         $hp->purify($data_details, CODENDI_PURIFIER_CONVERT_HTML) ,
         $num,
@@ -677,14 +677,14 @@ function getUsedFields() {
       $i++;
       if (($i == 1) && 
 	  ( (count($comments) > 1) || 
-	    (trim($comment) == $Language->getText('tracker_import_utils','no_followups')) ) ) {
+	    (trim($comment) == $Language->getText('plugin_tracker_import_utils','no_followups')) ) ) {
 	//skip first line
 	continue;
       }
       $comment = trim($comment);
       
       //skip the "Date: "
-      if (strpos($comment, $Language->getText('tracker_import_utils','date').":") === false) {
+      if (strpos($comment, $Language->getText('plugin_tracker_import_utils','date').":") === false) {
 	//if no date given, consider this whole string as the comment
 	
 	//try nevertheless if we can apply legacy Bug and Task export format
@@ -711,10 +711,10 @@ function getUsedFields() {
       }
       
       // here starts reel parsing
-      $comment = substr($comment, strlen($Language->getText('tracker_import_utils','date').":"));
+      $comment = substr($comment, strlen($Language->getText('plugin_tracker_import_utils','date').":"));
       $by_position = strpos($comment,$Language->getText('global','by').": ");
       if ($by_position === false) {
-	$this->setError($Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
+	$this->setError($Language->getText('plugin_tracker_import_utils','specify_originator',array($i-1,$comment)));
 	return false;
       }
       $date_str = trim(substr($comment, 0, $by_position));
@@ -729,7 +729,7 @@ function getUsedFields() {
       $comment = trim(substr($comment,strlen($by)+1));
       
       if ($by == $Language->getText('global','none')) {
-	$this->setError($Language->getText('tracker_import_utils','specify_valid_user',$i-1));
+	$this->setError($Language->getText('plugin_tracker_import_utils','specify_valid_user',$i-1));
 	return false;
       }
       if (!$for_parse_report) {
@@ -739,7 +739,7 @@ function getUsedFields() {
 	} else if (validate_email($by)) {
 	  //ok, $by remains what it is
 	} else {
-	  $this->setError($Language->getText('tracker_import_utils','not_a_user',array($by,$i-1)));
+	  $this->setError($Language->getText('plugin_tracker_import_utils','not_a_user',array($by,$i-1)));
 	  return false;
 	}
       }
@@ -823,15 +823,15 @@ function getUsedFields() {
       
       $comment = trim($comment);
       //skip the "Type: "
-      if (strpos($comment, $Language->getText('tracker_import_utils','type').": ") === false) {
+      if (strpos($comment, $Language->getText('plugin_tracker_import_utils','type').": ") === false) {
 	//if no type given, consider this whole string as the comment
 	if ($for_parse_report) $comment_type = $Language->getText('global','none');
 	else $comment_type = 100;
       } else {
-	$comment = substr($comment, strlen($Language->getText('tracker_import_utils','type').": "));
+	$comment = substr($comment, strlen($Language->getText('plugin_tracker_import_utils','type').": "));
 	$by_position = strpos($comment,$Language->getText('global','by').": ");
 	if ($by_position === false) {
-	  $this->setError($Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
+	  $this->setError($Language->getText('plugin_tracker_import_utils','specify_originator',array($i-1,$comment)));
 	  return false;
 	}
 	$type = trim(substr($comment,0,$by_position));
@@ -848,7 +848,7 @@ function getUsedFields() {
       // By:
       $by_position = strpos($comment,$Language->getText('global','by').": ");
       if ($by_position === false) {
-	$this->setError($Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
+	$this->setError($Language->getText('plugin_tracker_import_utils','specify_originator',array($i-1,$comment)));
 	return false;
       }
       
@@ -864,7 +864,7 @@ function getUsedFields() {
 	} else if (validate_email($by)) {
 	  //ok, $by remains what it is
 	} else {
-	  $this->setError($Language->getText('tracker_import_utils','not_a_user',array($by,$i-1)));
+	  $this->setError($Language->getText('plugin_tracker_import_utils','not_a_user',array($by,$i-1)));
 	  return false;
 	}
       }
@@ -902,7 +902,7 @@ function getUsedFields() {
     // FOLLOW-UP COMMENTS
     if ($label == $this->lbl_list['follow_ups']) {
       //$field_name = "details";
-      if ($data[$label] != "" && trim($data[$label]) != $Language->getText('tracker_import_utils','no_followups')) {
+      if ($data[$label] != "" && trim($data[$label]) != $Language->getText('plugin_tracker_import_utils','no_followups')) {
 	$comments = $data[$label];
       }
       continue;
@@ -1000,7 +1000,7 @@ function getUsedFields() {
   //prepare everything to be able to call the artifacts create method
   $ah=new Tracker_Html($this->ath);
   if (!$ah || !is_object($ah)) {
-    exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_art'));
+    exit_error($Language->getText('global','error'),$Language->getText('plugin_tracker_index','not_create_art'));
   } else {
     // Check if a user can submit a new without loggin
     if ( !user_isloggedin() && !$this->ath->allowsAnon() ) {
@@ -1024,20 +1024,20 @@ function getUsedFields() {
     //handle dependencies and such stuff ...
     if ($artifact_depend_id) {
       if (!$ah->addDependencies($artifact_depend_id,$changes,false)) {
-	$errors .= $Language->getText('tracker_import_utils','problem_insert_dependent',$ah->getID())." ";
+	$errors .= $Language->getText('plugin_tracker_import_utils','problem_insert_dependent',$ah->getID())." ";
 	//return false;
       }
     }
     if ($add_cc) {
       if (!$ah->addCC($add_cc,$cc_comment,$changes)) {
-	$errors .= $Language->getText('tracker_import_utils','problem_add_cc',$ah->getID())." ";
+	$errors .= $Language->getText('plugin_tracker_import_utils','problem_add_cc',$ah->getID())." ";
       }
     }
 
     if ($comments) {
       if ($this->parseFollowUpComments($comments,$parsed_comments,'0') && $parsed_comments && !empty($parsed_comments)) {
 	if (!$ah->addFollowUpComments($parsed_comments)) {
-	  $errors .= $Language->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";
+	  $errors .= $Language->getText('plugin_tracker_import_utils','problem_insert_followup',$ah->getID())." ";
 	  return false;
 	}
       } else {
@@ -1060,7 +1060,7 @@ function getUsedFields() {
 
   $ah=new Tracker_Html($this->ath,$aid);
   if (!$ah || !is_object($ah)) {
-    exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_art'));
+    exit_error($Language->getText('global','error'),$Language->getText('plugin_tracker_index','not_create_art'));
   } else if ($ah->isError()) {
     exit_error($Language->getText('global','error'),$ah->getErrorMessage());
   } else {
@@ -1084,7 +1084,7 @@ function getUsedFields() {
     }
     if ($add_cc) {
       if (!$ah->updateCC($add_cc,$cc_comment)) {
-	$errors .= $Language->getText('tracker_import_utils','problem_add_cc',$ah->getID())." ";
+	$errors .= $Language->getText('plugin_tracker_import_utils','problem_add_cc',$ah->getID())." ";
       }
     }
     $comments_ok = false;
@@ -1092,7 +1092,7 @@ function getUsedFields() {
       if ($this->parseFollowUpComments($comments,$parsed_comments,$aid) && $parsed_comments && !empty($parsed_comments)) {
             $comments_ok = true;
             if (!$ah->addFollowUpComments($parsed_comments)) {
-                $errors .= $Language->getText('tracker_import_utils','problem_insert_followup',$ah->getID())." ";
+                $errors .= $Language->getText('plugin_tracker_import_utils','problem_insert_followup',$ah->getID())." ";
                 $comments_ok = false;
                 return false;
             }

@@ -40,11 +40,11 @@ class TrackerManager { /* extends Engine? */
                     $GLOBALS['group_id'] = $artifact->getTracker()->getGroupId();
                     $artifact->process($this, $request, $user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type', 'no_view_permission_on_artifact'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission_on_artifact'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $artifact->getTrackerId());
                 }
             } else {
-                exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('tracker_common_type', 'artifact_not_exist'));
+                exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist'));
             }
         } else if ((int)$request->get('report')) {
             $store_in_session = true;
@@ -55,7 +55,7 @@ class TrackerManager { /* extends Engine? */
                 $GLOBALS['group_id'] = $report->getTracker()->getGroupId();
                 $report->process($this, $request, $user);
             } else {
-                exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('tracker_common_type', 'report_not_exist'));
+                exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'report_not_exist'));
             }
         } else if ((int)$request->get('tracker') || (int)$request->get('atid')) {
             $tracker_id = (int)$request->get('tracker');
@@ -67,7 +67,7 @@ class TrackerManager { /* extends Engine? */
                     $GLOBALS['group_id'] = $tracker->getGroupId();
                     $tracker->process($this, $request, $user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_type', 'no_view_permission'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission'));
                     $this->displayAllTrackers($tracker->getProject(), $user);
                 }
             }
@@ -136,7 +136,7 @@ class TrackerManager { /* extends Engine? */
                                     }
                                 }
                             } else {
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                                 $GLOBALS['Response']->redirect('/tracker/?group_id='. $group_id);
                             }
                             break;
@@ -144,7 +144,7 @@ class TrackerManager { /* extends Engine? */
                             if ($this->userCanCreateTracker($group_id)) {
                                 $this->displayCreateTracker($project);
                             } else {
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                                 $GLOBALS['Response']->redirect('/tracker/?group_id='. $group_id);
                             }
                             break;
@@ -175,7 +175,7 @@ class TrackerManager { /* extends Engine? */
             $breadcrumbs = array_merge(
                 array(
                     array(
-                        'title'     => $GLOBALS['Language']->getText('tracker', 'trackers'),
+                        'title'     => $GLOBALS['Language']->getText('plugin_tracker', 'trackers'),
                         'url'       => '/tracker/?group_id='. $project->group_id,
                         'classname' => 'trackers',
                     )
@@ -211,7 +211,7 @@ class TrackerManager { /* extends Engine? */
         global $Language;
         $breadcrumbs = array(
             array(
-                'title' => $GLOBALS['Language']->getText('tracker_index', 'create_new_tracker'),
+                'title' => $GLOBALS['Language']->getText('plugin_tracker_index', 'create_new_tracker'),
                 'url'   => '/tracker/?group_id='. $project->group_id .'&amp;func=create'
             )
         );
@@ -229,15 +229,15 @@ class TrackerManager { /* extends Engine? */
                 codendi.feedback.clear();
                 var is_error = false;
                 if ( !document.form_create.name.value.match(/\S/) ) {
-                    codendi.feedback.log(\'error\', \''. addslashes($Language->getText('tracker_include_type','fill_name')) .'\');
+                    codendi.feedback.log(\'error\', \''. addslashes($Language->getText('plugin_tracker_include_type','fill_name')) .'\');
                     is_error = true;
                 }
                 if ( !document.form_create.description.value.match(/\S/) ) {
-                    codendi.feedback.log(\'error\', \''. addslashes($Language->getText('tracker_include_type','fill_desc')) .'\');
+                    codendi.feedback.log(\'error\', \''. addslashes($Language->getText('plugin_tracker_include_type','fill_desc')) .'\');
                     is_error = true;
                 }
                 if ( !document.form_create.itemname.value.match(/\S/) ) {
-                    codendi.feedback.log(\'error\', \''. addslashes($Language->getText('tracker_include_type','fill_short')) .'\');
+                    codendi.feedback.log(\'error\', \''. addslashes($Language->getText('plugin_tracker_include_type','fill_short')) .'\');
                     is_error = true;
                 }
                 return !is_error;
@@ -248,7 +248,7 @@ class TrackerManager { /* extends Engine? */
                 codendi.feedback.clear();
                 if ( checkValues() ) {
                     if ( (document.form_create.group_id_template.value == "")||(document.form_create.atid_template.value == "") ) {
-                        document.form_create.feedback.value = "'.$Language->getText('tracker_include_type','choose_proj').'";
+                        document.form_create.feedback.value = "'.$Language->getText('plugin_tracker_include_type','choose_proj').'";
                         document.form_create.func.value = "create";
                     } else {
                         document.form_create.atid_chosen.value = document.form_create.atid_template.value;
@@ -262,7 +262,7 @@ class TrackerManager { /* extends Engine? */
                 codendi.feedback.clear();
                 if ( checkValues() ) {
                     if ( document.form_create.codendi_template.value == 100 ) {
-                        codendi.feedback.log(\'error\', \''. addslashes($Language->getText('tracker_include_type','choose_tmpl')) .'\');
+                        codendi.feedback.log(\'error\', \''. addslashes($Language->getText('plugin_tracker_include_type','choose_tmpl')) .'\');
                     } else {
                         document.form_create.atid_chosen.value = document.form_create.codendi_template.value;
                         document.form_create.group_id_chosen.value = 100;
@@ -278,7 +278,7 @@ class TrackerManager { /* extends Engine? */
     
               function showTrackerSelection() {
                 if ( document.form_create.group_id_template.value == "" ) {
-                    alert("'.$Language->getText('tracker_include_type','select_proj').'");
+                    alert("'.$Language->getText('plugin_tracker_include_type','select_proj').'");
                     return;
                 }
                 win=window.open("","artifact_group_id_selection","height=45,width=400,toolbar=no,location=no,resizable=yes,left=200,top=200");
@@ -287,7 +287,7 @@ class TrackerManager { /* extends Engine? */
     
               </script>
              ';
-        echo $Language->getText('tracker_include_type','create_tracker');
+        echo $Language->getText('plugin_tracker_include_type','create_tracker');
         echo '<form name="form_create" method="post" enctype="multipart/form-data">
           <input type="hidden" name="group_id" value="'.(int)$project->group_id.'">
           <input type="hidden" name="func" value="docreate">
@@ -295,43 +295,43 @@ class TrackerManager { /* extends Engine? */
           <input type="hidden" name="group_id_chosen" value="">
           <table width="100%" border="0" cellpadding="5">
             <tr> 
-              <td width="21%"><b>'.$Language->getText('tracker_include_artifact','name').'</b>: <font color="red">*</font></td>
+              <td width="21%"><b>'.$Language->getText('plugin_tracker_include_artifact','name').'</b>: <font color="red">*</font></td>
               <td width="79%"> 
                 <input type="text" name="name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'">
               </td>
             </tr>
             <tr> 
-              <td width="21%"><b>'.$Language->getText('tracker_include_artifact','desc').'</b>: <font color="red">*</font></td>
+              <td width="21%"><b>'.$Language->getText('plugin_tracker_include_artifact','desc').'</b>: <font color="red">*</font></td>
               <td width="79%"> 
                 <textarea name="description" rows="3" cols="50">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
               </td>
             </tr>
             <tr> 
-              <td width="21%"><b>'.$Language->getText('tracker_include_type','short_name').'</b>: <font color="red">*</font></td>
+              <td width="21%"><b>'.$Language->getText('plugin_tracker_include_type','short_name').'</b>: <font color="red">*</font></td>
               <td width="79%"> 
                 <input type="text" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'">
               </td>
             </tr>
-                    <tr><td colspan=2><i>'.$Language->getText('tracker_include_type','avoid_spaces').'</i></td></tr>';
+                    <tr><td colspan=2><i>'.$Language->getText('plugin_tracker_include_type','avoid_spaces').'</i></td></tr>';
         echo '</table>';
-        echo '<p>'.$Language->getText('tracker_include_type','choose_creation').'</p>';
+        echo '<p>'.$Language->getText('plugin_tracker_include_type','choose_creation').'</p>';
         echo '<table>
               <tr valign="top">
-                 <td width="300"><li><b>'.$Language->getText('tracker_include_type','from_tmpl').'</b></li></td>
+                 <td width="300"><li><b>'.$Language->getText('plugin_tracker_include_type','from_tmpl').'</b></li></td>
                  <td colspan="2">';
         echo $this->trackersSelectBox(100,"codendi_template",$codendi_template);
         echo ' &nbsp;<input type="button" name="CreateCodendiTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodendiTemplate()"><br><br></td>
               <tr valign="top">    
-                 <td width="300"><li>'.$Language->getText('tracker_include_type','from_exist').'</li></td>
+                 <td width="300"><li>'.$Language->getText('plugin_tracker_include_type','from_exist').'</li></td>
                  
                  <td>
                     <table>
                       <tr>
-                        <td>'.$Language->getText('tracker_include_type','proj_id').'</td>
+                        <td>'.$Language->getText('plugin_tracker_include_type','proj_id').'</td>
                         <td><input name="group_id_template" value="'. $hp->purify($group_id_template, CODENDI_PURIFIER_CONVERT_HTML) .'"><a href="javascript:showGroupSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
                       </tr>
                       <tr>
-                        <td>'.$Language->getText('tracker_include_type','tracker_id').'</td>
+                        <td>'.$Language->getText('plugin_tracker_include_type','tracker_id').'</td>
                         <td><input name="atid_template" value="'. $hp->purify($atid_template, CODENDI_PURIFIER_CONVERT_HTML) .'"><a href="javascript:showTrackerSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
                       <tr>
                     </table>
@@ -339,7 +339,7 @@ class TrackerManager { /* extends Engine? */
                  <td><input type="button" name="CreateTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateTemplate()"></td>
               <tr>
               <tr>
-                <td width="300"><li>'.$Language->getText('tracker_include_type','from_xml').'</li></td>
+                <td width="300"><li>'.$Language->getText('plugin_tracker_include_type','from_xml').'</li></td>
                     <td>
                         <input type="hidden" name="create_mode" value="">
                         <input type="file" name="file" id="file" />
@@ -383,19 +383,19 @@ class TrackerManager { /* extends Engine? */
             echo $html;
         } else {
             
-            $this->displayHeader($project, $GLOBALS['Language']->getText('tracker', 'trackers'), $breadcrumbs, $toolbar);
+            $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar);
             
             
             $html .= '<p>';
             if (count($trackers)) {
-                $html .= $GLOBALS['Language']->getText('tracker_index','choose_tracker');
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_index','choose_tracker');
             } else {
-                $html .= $GLOBALS['Language']->getText('tracker_index','no_accessible_trackers_msg');
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_index','no_accessible_trackers_msg');
             }
             if ($this->userCanCreateTracker($project->group_id, $user)) {
                 $html .= '<br /><a id="tracker_createnewlink" href="/tracker/?group_id='. $project->group_id .'&amp;func=create">';
                 $html .= $GLOBALS['HTML']->getImage('ic/add.png', array('alt' => 'add')) .' ';
-                $html .= $GLOBALS['Language']->getText('tracker_index', 'create_new_tracker');
+                $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'create_new_tracker');
                 $html .= '</a>';
             }
             $html .= '</p>';
@@ -406,7 +406,7 @@ class TrackerManager { /* extends Engine? */
                         $html .= '<div style="float:right;">
                                 <a href="/tracker/?tracker='. $tracker->id .'&amp;func=delete" 
                                    onclick="return confirm(\'Do you want to delete this tracker?\');"
-                                   title=" ' . $GLOBALS['Language']->getText('tracker', 'delete_tracker', array($hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML))) . '">';
+                                   title=" ' . $GLOBALS['Language']->getText('plugin_tracker', 'delete_tracker', array($hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML))) . '">';
                         $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete'));
                         $html .= '</a></div>';
                     }
@@ -420,9 +420,9 @@ class TrackerManager { /* extends Engine? */
                         $stats = $tracker->getStats();
                         $html .= ' <span style="font-size:0.75em">( <strong>';
                         if ($tracker->hasSemanticsStatus() && $stats['nb_total']) {
-                            $html .= (int)($stats['nb_open']) .' '.$GLOBALS['Language']->getText('tracker_index','open').' / ';
+                            $html .= (int)($stats['nb_open']) .' '.$GLOBALS['Language']->getText('plugin_tracker_index','open').' / ';
                         }
-                        $html .= (int)($stats['nb_total']) .' '.$GLOBALS['Language']->getText('tracker_index','total');
+                        $html .= (int)($stats['nb_total']) .' '.$GLOBALS['Language']->getText('plugin_tracker_index','total');
                         $html .= '</strong> )</span>';
                         
                         $html .= '</dt>';
@@ -451,7 +451,7 @@ class TrackerManager { /* extends Engine? */
         $hp = Codendi_HTMLPurifier::instance();
         $breadcrumbs = array();
         $toolbar = array();
-        $this->displayHeader($project, $GLOBALS['Language']->getText('tracker', 'trackers'), $breadcrumbs, $toolbar);
+        $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar);
                 
         $html = '';
         
@@ -463,10 +463,10 @@ class TrackerManager { /* extends Engine? */
         echo ' <tr class="boxtable">';
         echo '  <td class="boxtitle">&nbsp;</td>';
         echo '  <td class="boxtitle">';
-        echo '   <div align="center"><b>'.$GLOBALS['Language']->getText('tracker_import_admin','art_data_import').'</b></div>';
+        echo '   <div align="center"><b>'.$GLOBALS['Language']->getText('plugin_tracker_import_admin','art_data_import').'</b></div>';
         echo '  </td>';
         echo '  <td class="boxtitle">';
-        echo '   <div align="center"><b>'.$GLOBALS['Language']->getText('tracker_import_admin','import_format').'</b></div>';
+        echo '   <div align="center"><b>'.$GLOBALS['Language']->getText('plugin_tracker_import_admin','import_format').'</b></div>';
         echo '  </td>';
         echo ' </tr>';
         
@@ -475,9 +475,9 @@ class TrackerManager { /* extends Engine? */
             if ($tracker->userIsAdmin($user)) {
                 
                 echo '<tr class="'.util_get_alt_row_color($cpt).'">';
-                echo ' <td><b>'.$GLOBALS['Language']->getText('tracker_import_admin','tracker').': '. $hp->purify(SimpleSanitizer::unsanitize($tracker->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</b></td>';
-                echo ' <td align="center"><a href="/tracker/?tracker='.(int)($tracker->getID()).'&func=admin-csvimport">'.$GLOBALS['Language']->getText('tracker_import_admin','import').'</a></td>';
-                echo ' <td align="center"><a href="/tracker/?tracker='.(int)($tracker->getID()).'&func=csvimport-showformat">'.$GLOBALS['Language']->getText('tracker_import_admin','show_format').'</a></td>';
+                echo ' <td><b>'.$GLOBALS['Language']->getText('plugin_tracker_import_admin','tracker').': '. $hp->purify(SimpleSanitizer::unsanitize($tracker->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</b></td>';
+                echo ' <td align="center"><a href="/tracker/?tracker='.(int)($tracker->getID()).'&func=admin-csvimport">'.$GLOBALS['Language']->getText('plugin_tracker_import_admin','import').'</a></td>';
+                echo ' <td align="center"><a href="/tracker/?tracker='.(int)($tracker->getID()).'&func=csvimport-showformat">'.$GLOBALS['Language']->getText('plugin_tracker_import_admin','show_format').'</a></td>';
                 echo '</tr>';
                 
             }
@@ -527,7 +527,7 @@ class TrackerManager { /* extends Engine? */
         if ($current_tracker) {
             $html .= $hp->purify($current_tracker->getProject()->getPublicName(), CODENDI_PURIFIER_CONVERT_HTML);
         } else {
-            $html .= $GLOBALS['Language']->getText('tracker', 'tracker_switcher');
+            $html .= $GLOBALS['Language']->getText('plugin_tracker', 'tracker_switcher');
         }
         $html .= '</strong>'. $separator;
         $html .= '<select id="tracker_select_tracker">';

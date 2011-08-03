@@ -187,7 +187,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
         
         //check if this field is the title we do not allow to change it
         if ($this->isSemanticTitle()) {
-            $html .= '<textarea readonly="readonly" title="'.$GLOBALS['Language']->getText('tracker_artifact_masschange', 'cannot_masschange_title').'">'.$value.'</textarea>';
+            $html .= '<textarea readonly="readonly" title="'.$GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title').'">'.$value.'</textarea>';
         } else {
             $hp = Codendi_HTMLPurifier::instance();
             $html .= '<textarea name="artifact['. $this->id .']" 
@@ -324,14 +324,14 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','text');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','text');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','text_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','text_description');
     }
     
     /**
@@ -406,7 +406,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
     protected function validate(Tracker_Artifact $artifact, $value) {
         $r = $this->getRuleString();
         if (!($is_valid = $r->isValid($value))) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact', 'error_text_value', array($this->getLabel())));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_text_value', array($this->getLabel())));
         }
         return $is_valid;
     }

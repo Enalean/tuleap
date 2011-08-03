@@ -338,46 +338,46 @@ class Tracker_Report extends Error {
             echo $options;
             echo '</p>';
         } else {
-            echo $GLOBALS['Language']->getText('tracker_report', 'current_report'). $options;
+            echo $GLOBALS['Language']->getText('plugin_tracker_report', 'current_report'). $options;
         }
         
         if ($report_can_be_modified) {
-            echo '<a href="#report-options" id="tracker_report_updater_handle" title="'. $GLOBALS['Language']->getText('tracker_report', 'edit_report') .'">';
+            echo '<a href="#report-options" id="tracker_report_updater_handle" title="'. $GLOBALS['Language']->getText('plugin_tracker_report', 'edit_report') .'">';
             echo '<span>options</span>';
             echo $GLOBALS['HTML']->getimage('ic/dropdown_panel_handler_button.png');
             echo '</a>';
             
             echo '<div id="tracker_report_haschanged_explenations">';
-            echo $GLOBALS['Language']->getText('tracker_report', 'haschanged_explanations', $this->tracker_id); 
+            echo $GLOBALS['Language']->getText('plugin_tracker_report', 'haschanged_explanations', $this->tracker_id); 
             echo '</div>';
             
             echo '<div id="tracker_report_isobsolete_explenations">';
-            echo $GLOBALS['Language']->getText('tracker_report', 'isobsolete_explanations', array($img, $updated_by_username, $this->tracker_id)); 
+            echo $GLOBALS['Language']->getText('plugin_tracker_report', 'isobsolete_explanations', array($img, $updated_by_username, $this->tracker_id)); 
             echo '</div>';
             
             echo '<div id="tracker_report_haschanged_and_isobsolete_explenations">';
-            echo $GLOBALS['Language']->getText('tracker_report', 'haschanged_isobsolete_explanations', array($img, $updated_by_username, $this->tracker_id)); 
+            echo $GLOBALS['Language']->getText('plugin_tracker_report', 'haschanged_isobsolete_explanations', array($img, $updated_by_username, $this->tracker_id)); 
             echo '</div>';
             
             $update_report  = '';
             if ($this->user_id == null && !$this->getTracker()->userIsAdmin($current_user)) {
-                $update_report  = $GLOBALS['Language']->getText('tracker_report', 'report_is_public');
+                $update_report  = $GLOBALS['Language']->getText('plugin_tracker_report', 'report_is_public');
             }
             $update_report .= '<ul>';
             if ($this->userCanUpdate($current_user)) {
-                    $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVE  .'" id="tracker_report_updater_save"  /> <label for="tracker_report_updater_save" >'. $GLOBALS['Language']->getText('tracker_report', 'save') .'</label></li>';
+                    $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVE  .'" id="tracker_report_updater_save"  /> <label for="tracker_report_updater_save" >'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save') .'</label></li>';
             }
             if (!$current_user->isAnonymous()) {
-                $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVEAS  .'" id="tracker_report_updater_saveas"  /> <label for="tracker_report_updater_saveas" >'. $GLOBALS['Language']->getText('tracker_report', 'save_as') .'</label> <input type="text" name="report_copy_name" value="Copy of '.  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)  .'" /></li>';
+                $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVEAS  .'" id="tracker_report_updater_saveas"  /> <label for="tracker_report_updater_saveas" >'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save_as') .'</label> <input type="text" name="report_copy_name" value="Copy of '.  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)  .'" /></li>';
             }
             if ($this->getTracker()->userIsAdmin($current_user)) {
                 $h = new HTML_Element_Input_Checkbox('Public', 'report_scope_public', ($this->user_id ? 0 : 1));
-                $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SCOPE  .'" id="tracker_report_updater_scope"  /> <label for="tracker_report_updater_scope" >'. $GLOBALS['Language']->getText('tracker_report', 'change_visibility') .'</label> '. $h->render() .'</li>';
+                $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SCOPE  .'" id="tracker_report_updater_scope"  /> <label for="tracker_report_updater_scope" >'. $GLOBALS['Language']->getText('plugin_tracker_report', 'change_visibility') .'</label> '. $h->render() .'</li>';
             }
             
             if(count($reports) > 1 && $this->getTracker()->userIsAdmin($current_user)) { 
                 $h = new HTML_Element_Input_Checkbox('Default', 'report_default', ($this->is_default ? 1 : 0));
-                $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DEFAULT  .'" id="tracker_report_updater_default"  /> <label for="tracker_report_updater_default" >'. $GLOBALS['Language']->getText('tracker_report', 'set_default_report') .'</label> '. $h->render() .'</li>';
+                $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DEFAULT  .'" id="tracker_report_updater_default"  /> <label for="tracker_report_updater_default" >'. $GLOBALS['Language']->getText('plugin_tracker_report', 'set_default_report') .'</label> '. $h->render() .'</li>';
             }
             
             if (count($reports) > 1) { 
@@ -387,7 +387,7 @@ class Tracker_Report extends Error {
             }
             $update_report .= '</ul>';
             if (!$current_user->isAnonymous()) {
-                $update_report .= '<input type="submit" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if ($(\'tracker_report_updater_delete\') && $(\'tracker_report_updater_delete\').checked) { return confirm(\''.$GLOBALS['Language']->getText('tracker_report', 'confirm_delete').'\'); } else { return true; }"/> ';
+                $update_report .= '<input type="submit" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if ($(\'tracker_report_updater_delete\') && $(\'tracker_report_updater_delete\').checked) { return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_report', 'confirm_delete').'\'); } else { return true; }"/> ';
                 $update_report .= '<input type="reset" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_cancel'), CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
             }
             echo $GLOBALS['HTML']->getDropdownPanel('tracker_report_updater', $update_report);
@@ -573,14 +573,14 @@ class Tracker_Report extends Error {
                     $update_renderer .= '<input type="hidden" name="report" value="'. $this->id .'" />';
                     $update_renderer .= '<input type="hidden" name="renderer" value="'. (int)$current_renderer->id .'" />';
                     $update_renderer .= '<ul>';
-                    $update_renderer .= '<li><input type="radio" name="func" value="rename-renderer" id="tracker_renderer_updater_rename" /> <label for="tracker_renderer_updater_rename">'. $GLOBALS['Language']->getText('tracker_report','update') .'</label><br />
+                    $update_renderer .= '<li><input type="radio" name="func" value="rename-renderer" id="tracker_renderer_updater_rename" /> <label for="tracker_renderer_updater_rename">'. $GLOBALS['Language']->getText('plugin_tracker_report','update') .'</label><br />
                                          <blockquote>
-                                            <label for="tracker_renderer_updater_rename_name">'. $GLOBALS['Language']->getText('tracker_report','name') .'</label><br />
+                                            <label for="tracker_renderer_updater_rename_name">'. $GLOBALS['Language']->getText('plugin_tracker_report','name') .'</label><br />
                                             <input type="text" 
                                                    name="new_name"  
                                                    id="tracker_renderer_updater_rename_name" 
                                                    value="'.  $hp->purify($current_renderer->name, CODENDI_PURIFIER_CONVERT_HTML)  .'" /><br />
-                                            <label for="tracker_renderer_updater_rename_description">'. $GLOBALS['Language']->getText('tracker_report','description') .'</label><br />
+                                            <label for="tracker_renderer_updater_rename_description">'. $GLOBALS['Language']->getText('plugin_tracker_report','description') .'</label><br />
                                             <textarea 
                                                    name="new_description" 
                                                    rows="5"
@@ -616,9 +616,9 @@ class Tracker_Report extends Error {
                         }
                         $update_renderer .= '</li>';
                     }
-                    $update_renderer .= '<li><input type="radio" name="func" value="delete-renderer" id="tracker_renderer_updater_delete" /> <label for="tracker_renderer_updater_delete">'. $GLOBALS['Language']->getText('tracker_report', 'delete') .'</label></li>';
+                    $update_renderer .= '<li><input type="radio" name="func" value="delete-renderer" id="tracker_renderer_updater_delete" /> <label for="tracker_renderer_updater_delete">'. $GLOBALS['Language']->getText('plugin_tracker_report', 'delete') .'</label></li>';
                     $update_renderer .= '</ul>';
-                    $update_renderer .= '<input type="submit" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if ($(\'tracker_renderer_updater_delete\').checked) return confirm(\''. $GLOBALS['Language']->getText('tracker_report', 'confirm_delete_renderer') .'\');"/> ';
+                    $update_renderer .= '<input type="submit" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if ($(\'tracker_renderer_updater_delete\').checked) return confirm(\''. $GLOBALS['Language']->getText('plugin_tracker_report', 'confirm_delete_renderer') .'\');"/> ';
                     $update_renderer .= '<input type="reset" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_cancel'), CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
                     $update_renderer .= '</form>';
                     $html .= $GLOBALS['HTML']->getDropdownPanel('tracker_renderer_updater', $update_renderer);
@@ -643,16 +643,16 @@ class Tracker_Report extends Error {
                     } else {
                         list(,$type) = each($types);
                     }
-                    $add_renderer .= '<p><strong>' . $GLOBALS['Language']->getText('tracker_report','add_new') . ' ' . $type .'</strong></p>';
+                    $add_renderer .= '<p><strong>' . $GLOBALS['Language']->getText('plugin_tracker_report','add_new') . ' ' . $type .'</strong></p>';
                     $add_renderer .= '<p>';
-                    $add_renderer .= '<label for="tracker_renderer_add_name">'. $GLOBALS['Language']->getText('tracker_report','name') .'</label><br/>
+                    $add_renderer .= '<label for="tracker_renderer_add_name">'. $GLOBALS['Language']->getText('plugin_tracker_report','name') .'</label><br/>
                                      <input type="text" name="new_name" value="" id="tracker_renderer_add_name" /><br />';
                                      
-                    $add_renderer .= '<label for="tracker_renderer_add_description">'. $GLOBALS['Language']->getText('tracker_report','description') .'</label><br/>
+                    $add_renderer .= '<label for="tracker_renderer_add_description">'. $GLOBALS['Language']->getText('plugin_tracker_report','description') .'</label><br/>
                                      <input type="text" name="new_description" value="" id="tracker_renderer_add_description" /><br />';
                                      
                     $add_renderer .= '</p>';
-                    $add_renderer .= '<input type="submit" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if (!$(\'tracker_renderer_add_name\').getValue()) { alert(\''. $GLOBALS['Language']->getText('tracker_report','name_mandatory') .'\'); return false;}"/> ';
+                    $add_renderer .= '<input type="submit" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="if (!$(\'tracker_renderer_add_name\').getValue()) { alert(\''. $GLOBALS['Language']->getText('plugin_tracker_report','name_mandatory') .'\'); return false;}"/> ';
                     $add_renderer .= '<input type="reset" value="'.  $hp->purify($GLOBALS['Language']->getText('global', 'btn_cancel'), CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
                     $add_renderer .= '</form>';
                     $html .= $GLOBALS['HTML']->getDropdownPanel('tracker_renderer_add', $add_renderer);
@@ -726,7 +726,7 @@ class Tracker_Report extends Error {
         }
         if ($options) {
             $html .= '<select name="add_criteria" id="tracker_report_add_criteria" autocomplete="off">';
-            $html .= '<option selected="selected" value="">'. '-- '.$GLOBALS['Language']->getText('tracker_report', 'toggle_criteria').'</option>';
+            $html .= '<option selected="selected" value="">'. '-- '.$GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_criteria').'</option>';
             $html .= $options;
             $html .= '</select>';
         }
@@ -919,12 +919,12 @@ class Tracker_Report extends Error {
                     }
                     
                     if( empty($masschange_aids) ) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_masschange_detail', 'no_items_selected'));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
                         $GLOBALS['Response']->redirect('/tracker/?tracker='. $tracker->getId());
                     }
                     $tracker->displayMasschangeForm($tracker_manager, $masschange_aids);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $tracker->getId());
                 }
                 break;
@@ -932,12 +932,12 @@ class Tracker_Report extends Error {
                 if ($tracker->userIsAdmin($current_user)) {
                     $masschange_aids = $request->get('masschange_aids');
                     if ( empty($masschange_aids) ) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_masschange_detail', 'no_items_selected'));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
                         $GLOBALS['Response']->redirect('/tracker/?tracker='. $tracker->getId());
                     }
                     $masschange_data = $request->get('artifact');
                     if ( empty($masschange_data) ) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_masschange_detail', 'no_items_selected'));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
                         $GLOBALS['Response']->redirect('/tracker/?tracker='. $tracker->getId());
                     }
                     $send_notifications = false; // by default, don't send notifications.
@@ -949,7 +949,7 @@ class Tracker_Report extends Error {
                     $tracker->updateArtifactsMasschange($current_user, $masschange_aids, $masschange_data, $request->get('artifact_masschange_followup_comment'), $send_notifications);
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $tracker->getId());
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
                 }
                 break;
@@ -1001,7 +1001,7 @@ class Tracker_Report extends Error {
                 break;
             case 'rename-renderer':
                 if ($request->get('new_name') == '') {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_report','renderer_name_mandatory'));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_report','renderer_name_mandatory'));
                 } else if ($this->userCanUpdate($current_user) && (int)$request->get('renderer') && trim($request->get('new_name'))) { 
                     $this->report_session->renameRenderer((int)$request->get('renderer'), trim($request->get('new_name')), trim($request->get('new_description')));
                     $this->report_session->setHasChanged();                    

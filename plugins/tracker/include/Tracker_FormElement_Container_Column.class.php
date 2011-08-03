@@ -88,7 +88,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
                 'formElement' => $this->id,
             )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
         } else {
-            $html .= '<span style="color:gray;" title="'. $GLOBALS['Language']->getText('tracker_common_fieldset_factory','delete_only_empty_fieldset') .'">';
+            $html .= '<span style="color:gray;" title="'. $GLOBALS['Language']->getText('plugin_tracker_common_fieldset_factory','delete_only_empty_fieldset') .'">';
             $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
             $html .= '</span>';
         }
@@ -155,14 +155,14 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','column');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','column');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','column_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','column_description');
     }
     
     /**

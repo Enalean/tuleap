@@ -55,7 +55,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function fetchLabel() {
         $html = parent::fetchLabel();
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('tracker_formelement_admin', 'permissions_help');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions_help');
         $html .= '</span>';
         return $html;
     }
@@ -178,7 +178,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $html .= '<p class="tracker_field_permissionsonartifact">';
         $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
         $html .= '<input type="checkbox" name="artifact['.$this->getId().'][use_artifact_permissions]" id="artifact_'.$this->getId().'_use_artifact_permissions" value="1" '.$checked.'/>';
-        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
+        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
         $html .= '</p>';
         
         if (is_array($value)) {
@@ -204,7 +204,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $html .= '<p class="tracker_field_permissionsonartifact">';
         $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
         $html .= '<input type="checkbox" name="artifact['.$this->getId().'][use_artifact_permissions]" id="artifact_'.$this->getId().'_use_artifact_permissions" value="1"/>';
-        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
+        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
         $html .= '</p>';
         $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', 0, $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]');
         return $html;
@@ -240,7 +240,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             case 'html':
                 break;
             default:                               
-                $output .= $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label');
+                $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
                 $ugroups  = permission_fetch_selected_ugroups('TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId());
                 $output .= "\n".implode(', ',$ugroups);
                 break;
@@ -305,7 +305,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
                          value="1" '.
                          $checked.' '.
                          $readonly .'/>';
-        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
+        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
         $html .= '</p>';
 
         if ($value == null) {
@@ -328,9 +328,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function fetchFollowUp($artifact, $from, $to) {        
         $html = '';
         if (!$from || !($from_value = $this->getValue($from['value_id']))) {
-            $html .= $GLOBALS['Language']->getText('tracker_artifact','set_to').' ';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact','set_to').' ';
         } else {
-            $html .= ' '.$GLOBALS['Language']->getText('tracker_artifact','changed_from').' '. $from_value .'  '.$GLOBALS['Language']->getText('tracker_artifact','to').' ';
+            $html .= ' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','changed_from').' '. $from_value .'  '.$GLOBALS['Language']->getText('plugin_tracker_artifact','to').' ';
         }
         $to_value = $this->getValue($to['value_id']);
         $html .= $to_value['value'];
@@ -351,7 +351,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $html .= '<p class="tracker_field_permissionsonartifact">';
         $html .= '<input type="hidden" name="use_artifact_permissions" value="0" />';
         $html .= '<input type="checkbox" name="artifact['.$this->getId().'][use_artifact_permissions]" id="artifact_'.$this->getId().'_use_artifact_permissions" value="1"/>';
-        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('tracker_include_artifact', 'permissions_label') .'</label>';
+        $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
         $html .= '</p>';
         $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', 0, 0, 'artifact['.$this->getId().'][u_groups][]');
         return $html;
@@ -361,14 +361,14 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','permissions');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','permissions');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','permissions_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','permissions_description');
     }
     
     /**

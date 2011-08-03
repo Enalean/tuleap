@@ -45,7 +45,7 @@ class Tracker_SemanticManager {
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editsemantic');
         
         echo '<p>';
-        echo $GLOBALS['Language']->getText('tracker_admin_semantic','semantic_intro');
+        echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','semantic_intro');
         echo '</p>';
         
         foreach($this->getSemantics() as $key => $s) {

@@ -60,7 +60,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
                 'formElement' => $this->id,
             )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
         } else {
-            $html .= '<span style="color:gray;" title="'. $GLOBALS['Language']->getText('tracker_common_fieldset_factory','delete_only_empty_fieldset') .'">';
+            $html .= '<span style="color:gray;" title="'. $GLOBALS['Language']->getText('plugin_tracker_common_fieldset_factory','delete_only_empty_fieldset') .'">';
             $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
             $html .= '</span>';
         }
@@ -85,7 +85,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
     function getLabel() {
         global $Language;
         if ($this->isLabelMustBeLocalized()) {
-            return $Language->getText('tracker_common_fieldset', $this->label);
+            return $Language->getText('plugin_tracker_common_fieldset', $this->label);
         } else {
             return $this->label;
         }
@@ -101,7 +101,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
     function getDescriptionText() {
         global $Language;
         if ($this->isDescriptionMustBeLocalized()) {
-            return $Language->getText('tracker_common_fieldset', $this->description);
+            return $Language->getText('plugin_tracker_common_fieldset', $this->description);
         } else {
             return $this->description;
         }
@@ -133,14 +133,14 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','fieldset');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fieldset');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('tracker_formelement_admin','fieldset_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fieldset_description');
     }
     
     /**

@@ -382,7 +382,7 @@ class Tracker_ReportFactory extends Error {
 	    				  
 			$res_insert = db_query($sql_insert);
 			if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-				$this->setError($Language->getText('tracker_common_reportfactory','ins_err',array($report_array["report_id"],$atid_dest,db_error())));
+				$this->setError($Language->getText('plugin_tracker_common_reportfactory','ins_err',array($report_array["report_id"],$atid_dest,db_error())));
 				return false;
 			}
 			
@@ -413,7 +413,7 @@ class Tracker_ReportFactory extends Error {
 		    	//echo $sql_insert;
 				$res_insert = db_query($sql_insert);
 				if (!$res_insert || db_affected_rows($res_insert) <= 0) {
-					$this->setError($Language->getText('tracker_common_reportfactory','f_ind_err',array($report_array["report_id"],$field_array["field_name"],db_error())));
+					$this->setError($Language->getText('plugin_tracker_common_reportfactory','f_ind_err',array($report_array["report_id"],$field_array["field_name"],db_error())));
 					return false;
 				}
 			} // while
@@ -495,7 +495,7 @@ class Tracker_ReportFactory extends Error {
 	    $result = db_query($sql);
 	    $rows = db_numrows($result);
 	    if (db_error()) {
-			$this->setError($GLOBALS ['Language']->getText('tracker_common_factory','db_err').': '.db_error());
+			$this->setError($GLOBALS ['Language']->getText('plugin_tracker_common_factory','db_err').': '.db_error());
 			return false;
 	    } else {
 			while ($arr = db_fetch_array($result)) {

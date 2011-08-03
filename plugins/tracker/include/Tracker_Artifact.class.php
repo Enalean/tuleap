@@ -201,7 +201,7 @@ class Tracker_Artifact {
     }
 
     public function fetchMailFollowUp($recipient, $format='text', $ignore_perms=false) {
-        $output = ' ===== '.$GLOBALS['Language']->getText('tracker_include_artifact','follow_ups').' ===== ';
+        $output = ' ===== '.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').' ===== ';
         $uh = UserHelper::instance();
         $um = UserManager::instance();
         $cs = $this->getChangesets();
@@ -215,8 +215,8 @@ class Tracker_Artifact {
             $output .= PHP_EOL;
             $output .= '----------------------------- ';
             $output .= PHP_EOL;
-            $output .= $GLOBALS['Language']->getText('tracker_artifact','mail_followup_date') . util_timestamp_to_userdateformat($comment->submitted_on);
-            $output .= "\t" . $GLOBALS['Language']->getText('tracker_artifact','mail_followup_by') . $uh->getDisplayNameFromUser($user);
+            $output .= $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_date') . util_timestamp_to_userdateformat($comment->submitted_on);
+            $output .= "\t" . $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_by') . $uh->getDisplayNameFromUser($user);
             $output .= PHP_EOL;
             $output .= $comment->body;
             $output .= PHP_EOL;
@@ -430,7 +430,7 @@ class Tracker_Artifact {
     
     protected function fetchAnonymousEmailForm() {
         $html = '<p>';
-        $html .= $GLOBALS['Language']->getText('tracker_artifact', 'not_logged_in', array('/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI'])));
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'not_logged_in', array('/account/login.php?return_to='.urlencode($_SERVER['REQUEST_URI'])));
         $html .= '<br />';
         $html .= '<input type="text" name="email" id="email" size="50" maxsize="100" />';
         $html .= '</p>';
@@ -457,7 +457,7 @@ class Tracker_Artifact {
         
         $html .= '<fieldset id="tracker_artifact_followup_comments"><legend
                           class="'. Toggler::getClassName('tracker_artifact_followups', true, true) .'" 
-                          id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('tracker_include_artifact','follow_ups').'</legend>';
+                          id="tracker_artifact_followups">'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</legend>';
         $html .= '<ul class="tracker_artifact_followups">';
         $previous_changeset = null;
         $i = 0;
@@ -475,7 +475,7 @@ class Tracker_Artifact {
         $hp = Codendi_HTMLPurifier::instance();
         
         if (count($responses = $this->getTracker()->getCannedResponseFactory()->getCannedResponses($this->getTracker()))) {            
-            $html .= '<p><b>' . $GLOBALS['Language']->getText('tracker_include_artifact', 'use_canned') . '</b>&nbsp;';
+            $html .= '<p><b>' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'use_canned') . '</b>&nbsp;';
             $html .= '<select id="tracker_artifact_canned_response_sb">';
             $html .= '<option selected="selected" value="">--</option>';
             foreach ($responses as $r) {
@@ -485,7 +485,7 @@ class Tracker_Artifact {
             $html .= '<noscript> javascript must be enabled to use this feature! </noscript>';
             $html .= '</p>';
         }
-        $html .= '<b>'. $GLOBALS['Language']->getText('tracker_include_artifact', 'add_comment') .'</b><br />';
+        $html .= '<b>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment') .'</b><br />';
         $html .= '<textarea wrap="soft" rows="12" cols="80" style="width:99%;" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
         $html .= '</div>';
         
@@ -569,7 +569,7 @@ class Tracker_Artifact {
                 $this->getTracker()->augmentDataFromRequest($fields_data);
                 if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'))) {
                     $art_link = '<a class="direct-link-to-artifact" href="/tracker/?aid=' . $this->getId() . '">' . $this->getTracker()->getItemName() . ' #' . $this->getId() . '</a>';
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                     
                     $url_redirection = '/tracker/?tracker='. $this->tracker_id;
                     if ($request->get('submit_and_continue')) {
@@ -654,7 +654,7 @@ class Tracker_Artifact {
                 }
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_artifact', 'email_required'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required'));
         }
         return $changeset_id;
     }
@@ -752,18 +752,18 @@ class Tracker_Artifact {
                         }
                         
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_artifact', 'unable_update'));
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update'));
                         $is_valid = false; //TODO To be removed
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_artifact', 'no_changes', array($this->getId())));
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'no_changes', array($this->getId())));
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_artifact', 'fields_not_valid'));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'fields_not_valid'));
                 $is_valid = false;
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_artifact', 'email_required'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required'));
             $is_valid = false;
         }
         return $is_valid;
