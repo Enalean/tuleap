@@ -103,7 +103,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends UnitTestCase {
         $art_links_2 = array('999' => $this->artlink_info_999, '123' => $this->artlink_info_123, '321' => $this->artlink_info_321);
         $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'cleared', array('tracker_artifact','cleared'));
+        $GLOBALS['Language']->setReturnValue('getText', 'cleared', array('plugin_tracker_artifact','cleared'));
         $this->assertEqual($list_1->diff($list_2), ' cleared');
     }
     
@@ -113,7 +113,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends UnitTestCase {
         $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
         $list_2 = new $this->changesetvalue_class(111, $field, false, array());
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'set to', array('tracker_artifact','set_to'));
+        $GLOBALS['Language']->setReturnValue('getText', 'set to', array('plugin_tracker_artifact','set_to'));
         $this->assertEqual($list_1->diff($list_2), ' set to bug #123, story #999');
     }
     
@@ -124,8 +124,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends UnitTestCase {
         $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
         $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('tracker_artifact','changed_from'));
-        $GLOBALS['Language']->setReturnValue('getText', 'to', array('tracker_artifact','to'));
+        $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('plugin_tracker_artifact','changed_from'));
+        $GLOBALS['Language']->setReturnValue('getText', 'to', array('plugin_tracker_artifact','to'));
         $this->assertEqual($list_1->diff($list_2), ' changed from task #321 to bug #123');
         $this->assertEqual($list_2->diff($list_1), ' changed from bug #123 to task #321');
     }
@@ -137,7 +137,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends UnitTestCase {
         $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
         $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'added', array('tracker_artifact','added'));
+        $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
         $this->assertEqual($list_1->diff($list_2), 'story #999 added');
     }
     
@@ -148,7 +148,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends UnitTestCase {
         $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
         $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('tracker_artifact','removed'));
+        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
         $this->assertEqual($list_1->diff($list_2), 'story #999 removed');
     }
     
@@ -159,8 +159,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends UnitTestCase {
         $list_1 = new $this->changesetvalue_class(111, $field, false, $art_links_1);
         $list_2 = new $this->changesetvalue_class(111, $field, false, $art_links_2);
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('tracker_artifact','removed'));
-        $GLOBALS['Language']->setReturnValue('getText', 'added', array('tracker_artifact','added'));
+        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
+        $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
         $this->assertPattern('/sr #666 removed/', $list_1->diff($list_2));
         $this->assertPattern('/task #321 added/', $list_1->diff($list_2));
     }

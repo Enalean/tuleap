@@ -208,7 +208,7 @@ class Tracker_FormElement_FieldTest extends UnitTestCase {
             case 'R':
                 $field->expectNever('isValid');
                 $field->expectOnce('setHasErrors', array(true));
-                $GLOBALS['Language']->expectOnce('getText', array('tracker_common_artifact', 'err_required', $field->getLabel() .' ('. $field->getName() .')'));
+                $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $field->getLabel() .' ('. $field->getName() .')'));
                 $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
                 $is_valid = false;
                 break;
@@ -216,7 +216,7 @@ class Tracker_FormElement_FieldTest extends UnitTestCase {
             case 'P':
                 $field->expectNever('isValid');
                 $field->expectOnce('setHasErrors', array(true));
-                $GLOBALS['Language']->expectOnce('getText', array('tracker_common_artifact', 'bad_field_permission_update', $field->getLabel()));
+                $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'bad_field_permission_update', $field->getLabel()));
                 $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
                 $is_valid = false;
                 break;
@@ -267,7 +267,7 @@ class Tracker_FormElement_FieldTest extends UnitTestCase {
         $field->setReturnValue('validate', true);
         $field->expectOnce('validate');
         
-        $this->language->expect('getText', array('tracker_common_artifact', 'err_required', $field->getLabel() .' ('. $field->getName() .')'));
+        $this->language->expect('getText', array('plugin_tracker_common_artifact', 'err_required', $field->getLabel() .' ('. $field->getName() .')'));
         $this->response->expectCallCount('addFeedback', 2);        
         
         $this->assertFalse($field->hasErrors());

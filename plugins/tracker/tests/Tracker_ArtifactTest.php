@@ -280,7 +280,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $this->field->setReturnValue('hasDefaultValue', true);
         $this->field->setReturnValue('getDefaultValue', 'MyDefaultValue');
         
-        $GLOBALS['Language']->expectOnce('getText', array('tracker_common_artifact', 'err_required', $this->field->getLabel() .' ('. $this->field->getName() .')'));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $this->field->getLabel() .' ('. $this->field->getName() .')'));
         
         $fields_data = array();
         $this->assertFalse($this->artifact->validateFields($fields_data));
@@ -294,7 +294,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $this->field->setReturnValue('isRequired', true);
         $this->field->setReturnValue('hasDefaultValue', false);
         
-        $GLOBALS['Language']->expectOnce('getText', array('tracker_common_artifact', 'err_required', $this->field->getLabel() .' ('. $this->field->getName() .')'));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_tracker_common_artifact', 'err_required', $this->field->getLabel() .' ('. $this->field->getName() .')'));
         
         $fields_data = array();
         $this->assertFalse($this->artifact->validateFields($fields_data));
@@ -320,7 +320,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $this->field->setReturnValue('isRequired', true);
         $this->changeset_value->setReturnValue('getValue', 999);
         
-        $GLOBALS['Language']->expectNever('getText', array('tracker_common_artifact', 'err_required', $this->field->getLabel() .' ('. $this->field->getName() .')'));
+        $GLOBALS['Language']->expectNever('getText', array('plugin_tracker_common_artifact', 'err_required', $this->field->getLabel() .' ('. $this->field->getName() .')'));
         
         $fields_data = array();
         $this->assertTrue($this->artifact_update->validateFields($fields_data));
@@ -916,7 +916,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
     }
     
     function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
-        $this->language->setReturnValue('getText', 'no changes', array('tracker_artifact', 'no_changes', '*'));
+        $this->language->setReturnValue('getText', 'no changes', array('plugin_tracker_artifact', 'no_changes', '*'));
         $this->response->expectOnce('addFeedback', array('info', 'no changes'));
         
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();

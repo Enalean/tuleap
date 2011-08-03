@@ -30,8 +30,8 @@ class Tracker_Semantic_TitleTest extends UnitTestCase {
 
     public function testExport() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText','Title',array('tracker_admin_semantic','title_label'));
-        $GLOBALS['Language']->setReturnValue('getText','Define the title of an artifact',array('tracker_admin_semantic','title_description'));
+        $GLOBALS['Language']->setReturnValue('getText','Title',array('plugin_tracker_admin_semantic','title_label'));
+        $GLOBALS['Language']->setReturnValue('getText','Define the title of an artifact',array('plugin_tracker_admin_semantic','title_description'));
         
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticTitleTest.xml');
         

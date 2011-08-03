@@ -151,7 +151,7 @@ class TrackerManagerTest extends UnitTestCase {
         $this->tracker->setReturnValue('userCanView', false);
         $this->tracker->expectOnce('userCanView');
         $GLOBALS['Response']->expect('addFeedback', array('error', '*'));
-        $GLOBALS['Language']->expect('getText', array('tracker_common_type', 'no_view_permission'));
+        $GLOBALS['Language']->expect('getText', array('plugin_tracker_common_type', 'no_view_permission'));
         $this->tm->expectOnce('displayAllTrackers');
         
         $request_artifact = new MockCodendi_Request($this);

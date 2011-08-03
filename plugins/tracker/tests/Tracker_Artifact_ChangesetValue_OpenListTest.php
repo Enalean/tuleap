@@ -29,7 +29,7 @@ Mock::generate('BaseLanguage');
 
 class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_ChangesetValue_ListTest {
     
-    function __construct($name = 'Chageset Value Open List Test') {
+    function __construct($name = 'Changeset Value Open List Test') {
         parent::__construct($name);
         $this->field_class          = 'MockTracker_FormElement_Field_OpenList';
         $this->changesetvalue_class = 'Tracker_Artifact_ChangesetValue_OpenList';
@@ -58,7 +58,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $list_1 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1, $open_value_2));
         $list_2 = new $this->changesetvalue_class(111, $field, false, array());
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'set to', array('tracker_artifact','set_to'));
+        $GLOBALS['Language']->setReturnValue('getText', 'set to', array('plugin_tracker_artifact','set_to'));
         $this->assertEqual($list_1->diff($list_2), ' set to Sandra, Manon');
     }
     
@@ -73,8 +73,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $list_1 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1));
         $list_2 = new $this->changesetvalue_class(111, $field, false, array($open_value_2));
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('tracker_artifact','changed_from'));
-        $GLOBALS['Language']->setReturnValue('getText', 'to', array('tracker_artifact','to'));
+        $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('plugin_tracker_artifact','changed_from'));
+        $GLOBALS['Language']->setReturnValue('getText', 'to', array('plugin_tracker_artifact','to'));
         $this->assertEqual($list_1->diff($list_2), ' changed from Manon to Sandra');
         $this->assertEqual($list_2->diff($list_1), ' changed from Sandra to Manon');
     }
@@ -90,7 +90,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $list_1 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1, $open_value_2));
         $list_2 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1));
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'added', array('tracker_artifact','added'));
+        $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
         $this->assertEqual($list_1->diff($list_2), 'Manon added');
     }
     
@@ -105,7 +105,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $list_1 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1));
         $list_2 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1, $open_value_2));
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('tracker_artifact','removed'));
+        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
         $this->assertEqual($list_1->diff($list_2), 'Manon removed');
     }
     
@@ -126,8 +126,8 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $list_1 = new $this->changesetvalue_class(111, $field, false, array($open_value_3, $open_value_4));
         $list_2 = new $this->changesetvalue_class(111, $field, false, array($bind_value_1, $bind_value_2));
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('tracker_artifact','removed'));
-        $GLOBALS['Language']->setReturnValue('getText', 'added', array('tracker_artifact','added'));
+        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
+        $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
         $this->assertPattern('/Sandra, Manon removed/', $list_1->diff($list_2));
         $this->assertPattern('/Marc, Nicolas added/', $list_1->diff($list_2));
     }

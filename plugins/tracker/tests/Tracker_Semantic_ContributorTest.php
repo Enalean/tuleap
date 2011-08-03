@@ -30,8 +30,8 @@ class Tracker_Semantic_ContributorTest extends UnitTestCase {
 
     public function testExport() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
-        $GLOBALS['Language']->setReturnValue('getText','Assigned to',array('tracker_admin_semantic','contributor_label'));
-        $GLOBALS['Language']->setReturnValue('getText','Define the contributor of the artifact',array('tracker_admin_semantic','contributor_description'));
+        $GLOBALS['Language']->setReturnValue('getText','Assigned to',array('plugin_tracker_admin_semantic','contributor_label'));
+        $GLOBALS['Language']->setReturnValue('getText','Define the contributor of the artifact',array('plugin_tracker_admin_semantic','contributor_description'));
         
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticContributorTest.xml');
         

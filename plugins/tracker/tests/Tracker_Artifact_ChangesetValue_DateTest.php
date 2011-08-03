@@ -62,8 +62,8 @@ class Tracker_Artifact_ChangesetValue_DateTest extends UnitTestCase {
     }
     
     function testDiff() {
-        $GLOBALS['Language']->setReturnValue('getText', "changed from", array('tracker_artifact','changed_from'));
-        $GLOBALS['Language']->setReturnValue('getText', "to", array('tracker_artifact','to'));        
+        $GLOBALS['Language']->setReturnValue('getText', "changed from", array('plugin_tracker_artifact','changed_from'));
+        $GLOBALS['Language']->setReturnValue('getText', "to", array('plugin_tracker_artifact','to'));        
         $GLOBALS['Language']->setReturnValue('getText', "Y-m-d", array('system', 'datefmt_short'));
         
         $field = new MockTracker_FormElement_Field_Date();
