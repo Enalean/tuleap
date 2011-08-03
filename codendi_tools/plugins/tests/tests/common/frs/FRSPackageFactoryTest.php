@@ -21,7 +21,6 @@
 require_once(dirname(__FILE__).'/../../../../../../src/common/frs/FRSPackageFactory.class.php');
 Mock::generatePartial('FRSPackageFactory', 'FRSPackageFactoryTestVersion', array('_getFRSPackageDao', 'getUserManager', 'getPermissionsManager'));
 require_once(dirname(__FILE__).'/../../../../../../src/common/dao/include/DataAccess.class.php');
-Mock::generatePartial('DataAccess', 'DataAccessTestVersion', array('DataAccess'));
 require_once(dirname(__FILE__).'/../../../../../../src/common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 require_once(dirname(__FILE__).'/../../../../../../src/common/dao/FRSPackageDao.class.php');
@@ -83,8 +82,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         $dar3->setReturnValue('rowCount', 0);
 
         $dao = new FRSPackageDaoTestVersion();
-        $da = new DataAccessTestVersion();
-        $dao->da = $da;
+        $dao->da = TestHelper::getPartialMock('DataAccess', array('DataAccess'));
         $dao->setReturnValue('retrieve', $dar1, array('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 1  ORDER BY rank DESC LIMIT 1'));
         $dao->setReturnValue('retrieve', $dar2, array('SELECT p.*  FROM frs_package AS p  WHERE  p.package_id = 2  AND p.status_id != 0  ORDER BY rank DESC LIMIT 1'));
         $dao->setReturnValue('retrieve', $dar3);
