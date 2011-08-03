@@ -62,6 +62,7 @@ class Tracker_Artifact_ChangesetValue_DateTest extends UnitTestCase {
     }
     
     function testDiff() {
+        $tz = ini_get('date.timezone');
         ini_set('date.timezone', 'Europe/Paris');
         
         $GLOBALS['Language']->setReturnValue('getText', "changed from", array('plugin_tracker_artifact','changed_from'));
@@ -73,6 +74,8 @@ class Tracker_Artifact_ChangesetValue_DateTest extends UnitTestCase {
         $date_2 = new Tracker_Artifact_ChangesetValue_Date(111, $field, false, 1234567890);
         $this->assertEqual($date_1->diff($date_2), 'changed from 2009-02-14 to 2008-09-12');
         $this->assertEqual($date_2->diff($date_1), 'changed from 2008-09-12 to 2009-02-14');
+        
+        ini_set('date.timezone', $tz);
     }
 }
 ?>
