@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once('common/workflow/WorkflowFactory.class.php');
+require_once('WorkflowFactory.class.php');
 
 class Workflow {
     

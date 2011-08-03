@@ -76,7 +76,7 @@ Mock::generate('Tracker_FormElement_Field_ListDao');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-require_once('common/workflow/Workflow.class.php');
+require_once(dirname(__FILE__).'/../include/workflow/Workflow.class.php');
 Mock::generate('Workflow');
 
 require_once(dirname(__FILE__).'/../include/Tracker_Artifact_Changeset.class.php');
@@ -97,7 +97,7 @@ Mock::generate('BaseLanguage');
 require_once(dirname(__FILE__).'/../include/Tracker.class.php');
 Mock::generate('Tracker');
 
-require_once('common/workflow/TransitionFactory.class.php');
+require_once(dirname(__FILE__).'/../include/workflow/TransitionFactory.class.php');
 Mock::generate('TransitionFactory');
 
 require_once('common/user/User.class.php');

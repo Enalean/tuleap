@@ -25,7 +25,7 @@ require_once('Tracker_Tooltip.class.php');
 require_once('Tracker_NotificationsManager.class.php');
 require_once('Tracker_CannedResponseManager.class.php');
 require_once('Tracker_RulesManager.class.php');
-require_once('common/workflow/WorkflowManager.class.php');
+require_once('workflow/WorkflowManager.class.php');
 require_once('common/date/DateHelper.class.php');
 
 class Tracker {

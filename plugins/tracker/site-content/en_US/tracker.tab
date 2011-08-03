@@ -1198,3 +1198,37 @@ plugin_tracker_aggregate	toggle	-- Toggle an aggregate function
 
 
 plugin_tracker_search_index	artifact_title	Artifact Title
+#/**
+#  *
+#  * Workflow scripts message catalog (English)
+#  *
+#  * Codendi 
+#  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+#  * http://www.codendi.com
+#  *
+#  *
+#  */
+#
+#
+#-----------------------------------------------
+# Script: SF/common/workflow/WorkflowManager.class.php
+#
+workflow_admin	title	Workflow Administration
+workflow_admin	title_define_transitions	Define the transitions
+workflow_admin	field	Field
+workflow_admin	enabled	Enabled
+workflow_admin	delete	Delete
+workflow_admin	choose_field	Choose the field on which applies the workflow:
+workflow_admin	updated	Updated
+workflow_admin	not_updated	Nothing to update
+workflow_admin	created	Created
+workflow_admin	deleted	Deleted
+workflow_admin	workflow_enabled	The workflow has been enabled.
+workflow_admin	workflow_disabled	The workflow has been disabled.
+workflow_admin	delete_workflow	Are you sure you want to delete that workflow?
+workflow_admin	title_define_transition_details	Define rules on transition : from $1 to $2
+workflow_admin	label_define_transition_permissions	Groups that may make the transition:
+workflow_admin	permissions_not_updated	Permissions on transition have not been updated.
+workflow_admin	permissions_updated	Permissions on transition have been updated.
+
+

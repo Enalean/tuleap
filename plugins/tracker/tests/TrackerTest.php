@@ -118,13 +118,13 @@ Mock::generate('Tracker_NotificationsManager');
 require_once(dirname(__FILE__).'/../include/Tracker_CannedResponseManager.class.php');
 Mock::generate('Tracker_CannedResponseManager');
 
-require_once('common/workflow/WorkflowManager.class.php');
+require_once(dirname(__FILE__).'/../include/workflow/WorkflowManager.class.php');
 Mock::generate('WorkflowManager');
 
 require_once(dirname(__FILE__).'/../include/Tracker_ReportFactory.class.php');
 Mock::generate('Tracker_ReportFactory');
 
-require_once('common/workflow/WorkflowFactory.class.php');
+require_once(dirname(__FILE__).'/../include/workflow/WorkflowFactory.class.php');
 Mock::generate('WorkflowFactory');
 
 require_once(dirname(__FILE__).'/../include/Tracker_FormElementFactory.class.php');
