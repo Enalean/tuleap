@@ -1,5 +1,24 @@
 <?php
 /**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
  *  Base class for data access objects
  */
 class DataAccessObject {
@@ -14,32 +33,23 @@ class DataAccessObject {
     * Constructs the Dao
     * @param $da instance of the DataAccess class
     */
-    function DataAccessObject( & $da ) {
+    public function __construct($da = null) {
         $this->table_name = 'CLASSNAME_MUST_BE_DEFINE_FOR_EACH_CLASS';
-        //Dynamic table_name guessing does not work (at least in php4)
-        //because classname are lowercase only :(
-        /*
-        $s = get_class($this);
-        $this->table_name = '';
-        $len = strlen($s);
-        for($i = 1 ; $i <= $len ; ++$i) {
-            if ($i < $len && preg_match('`[A-Z]`', $s[$i - 1]) && preg_match('`[a-z]`', $s[$i])) {
-                $this->table_name .= '_';
-            }
-            $this->table_name .= strtolower($s[$i - 1]);
-        }
-        */
-        $this->da=$da;
+        $this->da = $da ? $da : CodendiDataAccess::instance();
     }
-
-    //! An accessor
+    public function DataAccessObject($da = null) {
+        $this->__construct($da);
+    }
+    
     /**
-    * For SELECT queries
-    * @param $sql the query string
-    * @return mixed either false if error or object DataAccessResult
-    */
-    function &retrieve($sql) {
-        $result =& $this->da->fetch($sql);
+     * For SELECT queries
+     *
+     * @param $sql the query string
+     *
+     * @return mixed either false if error or object DataAccessResult
+     */
+    public function retrieve($sql) {
+        $result = $this->da->query($sql);
         if ($error = $result->isError()) {
             $trace = debug_backtrace();
             $i = isset($trace[1]) ? 1 : 0;
@@ -51,12 +61,14 @@ class DataAccessObject {
 
     //! An accessor
     /**
-    * For INSERT, UPDATE and DELETE queries
-    * @param $sql the query string
-    * @return boolean true if success
-    */
-    function update($sql) {
-        $result = $this->da->fetch($sql);
+     * For INSERT, UPDATE and DELETE queries
+     *
+     * @param $sql the query string
+     *
+     * @return boolean true if success
+     */
+    public function update($sql) {
+        $result = $this->da->query($sql);
         if ($error = $result->isError()) {
             $trace = debug_backtrace();
             $i = isset($trace[1]) ? 1 : 0;
@@ -68,29 +80,44 @@ class DataAccessObject {
     }
     
     /**
-    * Prepare ranking of items.
-    * 
-    * @see  https://partners.xrce.xerox.com/plugins/docman/?group_id=120&action=show&id=95
-    * 
-    * @param   int $id  The id of the item to rank. 0 if the item doesn't exist.
-    * @param   int $parent_id   The id of the element used to group items
-    * @param   mixed $rank    The rank asked for the items. Possible values are :
-    *                       '--'        => do not change the rank
-    *                       'beginning' => to put item before each others
-    *                       'end'       => to put item after each others
-    *                       'up'        => to put item before previous sibling
-    *                       'down'      => to put item after next sibling
-    *                       <int>       => to put item at a specific position. 
-    *                   Please note that for a new item ($id = 0) you must not use
-    *                   '--', 'up' or 'down' value
-    * @param   string $primary_key the column name of the primary key. Default 'id'
-    * @param   string $parent_key the column key used to groups items. Default 'parent_id'
-    * @param   string $rank_key the column key used to rank items. Default 'rank'
-    * @return  mixed false if there is no rank to update of the numerical
-    *          value of the new rank of the item. If return 'null' it means
-    *          that sth wrong happended.
-    */
-    function prepareRanking($id, $parent_id, $rank, $primary_key = 'id', $parent_key = 'parent_id', $rank_key = 'rank') {
+     * execute and get the last insert id
+     *
+     * @param string $sql statement (INSERT INTO ...)
+     *
+     * @return int the last insert id or false if there is an error 
+     */
+    protected function updateAndGetLastId($sql) {
+        if ($inserted = $this->update($sql)) {
+            $inserted = $this->da->lastInsertId();
+        }
+        return $inserted;
+    }
+    
+    /**
+     * Prepare ranking of items.
+     * 
+     * @see  https://partners.xrce.xerox.com/plugins/docman/?group_id=120&action=show&id=95
+     * 
+     * @param   int $id  The id of the item to rank. 0 if the item doesn't exist.
+     * @param   int $parent_id   The id of the element used to group items
+     * @param   mixed $rank    The rank asked for the items. Possible values are :
+     *                       '--'        => do not change the rank
+     *                       'beginning' => to put item before each others
+     *                       'end'       => to put item after each others
+     *                       'up'        => to put item before previous sibling
+     *                       'down'      => to put item after next sibling
+     *                       <int>       => to put item at a specific position. 
+     *                   Please note that for a new item ($id = 0) you must not use
+     *                   '--', 'up' or 'down' value
+     * @param   string $primary_key the column name of the primary key. Default 'id'
+     * @param   string $parent_key the column key used to groups items. Default 'parent_id'
+     * @param   string $rank_key the column key used to rank items. Default 'rank'
+     *
+     * @return  mixed false if there is no rank to update of the numerical
+     *          value of the new rank of the item. If return 'null' it means
+     *          that sth wrong happended.
+     */
+    protected function prepareRanking($id, $parent_id, $rank, $primary_key = 'id', $parent_key = 'parent_id', $rank_key = 'rank') {
         $newRank = null;
         
         // First, check if there is already some items

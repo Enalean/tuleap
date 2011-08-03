@@ -49,16 +49,7 @@ class SystemEventsFollowersDao extends DataAccessObject {
         $sql = "INSERT INTO $this->table_name(emails, types)
                 VALUES ($emails, $types)";
         
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        } 
-        return $inserted;
+        return $this->updateAndGetLastId($sql);
     }
     
     public function delete($id) {

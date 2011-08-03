@@ -38,7 +38,7 @@ class NotificationsDao extends DataAccessObject {
     * Searches Notifications 
     * @return DataAccessResult
     */
-    function & search($user_id, $object_id, $type) {
+    function search($user_id, $object_id, $type) {
         $sql = sprintf("SELECT user_id, object_id, type FROM notifications WHERE user_id = %s AND object_id = %s AND type = %s",
 				$this->da->quoteSmart($user_id),
 				$this->da->quoteSmart($object_id),
@@ -50,7 +50,7 @@ class NotificationsDao extends DataAccessObject {
     * Searches Notifications by UserId 
     * @return DataAccessResult
     */
-    function & searchByUserId($user_id) {
+    function searchByUserId($user_id) {
         $sql = sprintf("SELECT user_id, object_id, type FROM notifications WHERE user_id = %s",
 				$this->da->quoteSmart($user_id));
         return $this->retrieve($sql);
@@ -60,7 +60,7 @@ class NotificationsDao extends DataAccessObject {
     * Searches Notifications by UserId 
     * @return DataAccessResult
     */
-    function & searchByObjectId($object_id) {
+    function searchByObjectId($object_id) {
         $sql = sprintf("SELECT user_id, object_id, type FROM notifications WHERE object_id = %s",
 				$this->da->quoteSmart($object_id));
         return $this->retrieve($sql);
@@ -70,7 +70,7 @@ class NotificationsDao extends DataAccessObject {
     * Searches Notifications by UserId 
     * @return DataAccessResult
     */
-    function & searchUserIdByObjectIdAndType($object_id, $type) {
+    function searchUserIdByObjectIdAndType($object_id, $type) {
         $sql = sprintf("SELECT user_id, object_id, type FROM notifications WHERE object_id = %s AND type = %s",
 				$this->da->quoteSmart($object_id),
 				$this->da->quoteSmart($type));

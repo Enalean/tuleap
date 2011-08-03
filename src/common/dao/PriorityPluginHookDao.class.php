@@ -36,7 +36,7 @@ class PriorityPluginHookDao extends DataAccessObject {
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function & searchAll() {
+    function searchAll() {
         $sql = "SELECT * FROM priority_plugin_hook";
         return $this->retrieve($sql);
     }
@@ -45,7 +45,7 @@ class PriorityPluginHookDao extends DataAccessObject {
     * Searches PriorityPluginHook by PluginId 
     * @return DataAccessResult
     */
-    function & searchByPluginId($pluginId) {
+    function searchByPluginId($pluginId) {
         $sql = sprintf("SELECT hook, priority FROM priority_plugin_hook WHERE plugin_id = %s",
                 $this->da->quoteSmart($pluginId));
         return $this->retrieve($sql);
@@ -55,7 +55,7 @@ class PriorityPluginHookDao extends DataAccessObject {
     * Searches PriorityPluginHook by Hook 
     * @return DataAccessResult
     */
-    function & searchByHook($hook) {
+    function searchByHook($hook) {
         $sql = sprintf("SELECT plugin_id, priority FROM priority_plugin_hook WHERE hook = %s",
                 $this->da->quoteSmart($hook));
         return $this->retrieve($sql);
@@ -65,7 +65,7 @@ class PriorityPluginHookDao extends DataAccessObject {
     * Searches PriorityPluginHook by Priority 
     * @return DataAccessResult
     */
-    function & searchByPriority($priority) {
+    function searchByPriority($priority) {
         $sql = sprintf("SELECT plugin_id, hook FROM priority_plugin_hook WHERE priority = %s",
                 $this->da->quoteSmart($priority));
         return $this->retrieve($sql);
@@ -87,7 +87,7 @@ class PriorityPluginHookDao extends DataAccessObject {
     }
 
     
-    function &searchByHook_PluginId($hook, $pluginId) {
+    function searchByHook_PluginId($hook, $pluginId) {
         $sql = "SELECT priority FROM priority_plugin_hook WHERE hook = '".$hook."' AND plugin_id = '".$pluginId."'";
         return $this->retrieve($sql);
     }

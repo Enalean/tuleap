@@ -36,7 +36,7 @@ class ServiceDao extends DataAccessObject {
     * Searches Service by Server Id 
     * @return DataAccessResult
     */
-    function & searchByServerId($server_id) {
+    function searchByServerId($server_id) {
         $sql = sprintf("SELECT * FROM service WHERE server_id = %s ORDER BY group_id, rank",
                 $this->da->quoteSmart($server_id));
         return $this->retrieve($sql);
@@ -47,7 +47,7 @@ class ServiceDao extends DataAccessObject {
     * WARNING: this returns all fields of all projects (might be big)
     * @return DataAccessResult
     */
-    function & searchActiveUnixGroupByUsedService($service_short_name) {
+    function searchActiveUnixGroupByUsedService($service_short_name) {
         $sql = sprintf("SELECT * FROM groups, service WHERE groups.group_id=service.group_id AND service.short_name=%s AND service.is_used='1' AND groups.status='A'",
                 $this->da->quoteSmart($service_short_name));
         return $this->retrieve($sql);

@@ -36,8 +36,8 @@ function db_query($sql,$print=0) {
     if ($print) {
         print "<br>Query is: $sql<br>";
     }
-    $dar = $conn->fetch($sql);
-    $GLOBALS['db_qhandle'] = $dar->query;
+    $dar = $conn->query($sql);
+    $GLOBALS['db_qhandle'] = $dar->result;
     if (db_numrows($GLOBALS['db_qhandle'])) {
         db_reset_result($GLOBALS['db_qhandle']);
     }

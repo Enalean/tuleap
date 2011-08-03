@@ -459,7 +459,7 @@ class UserDao extends DataAccessObject {
      * You can limit the number of results.
      * This is used by "search users as you type"
      */
-    function & searchUserNameLike($name, $limit=0) {
+    function searchUserNameLike($name, $limit=0) {
         $sql = "SELECT SQL_CALC_FOUND_ROWS realname, user_name".
             " FROM user".
             " WHERE (realname LIKE '%".db_es($name)."%'".

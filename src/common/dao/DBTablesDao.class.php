@@ -36,13 +36,18 @@ class DBTablesDao extends DataAccessObject {
     * Gets a log files
     * @return object a result object
     */
-    function &searchAll() {
+    function searchAll() {
         $sql="SHOW TABLES";
         return $this->retrieve($sql);
     }
     
     function analyzeTable($name) {
         $sql = "ANALYZE TABLE ".$name;
+        return $this->retrieve($sql);
+    }
+    
+    function checkTable($name) {
+        $sql = "CHECK TABLE ".$name;
         return $this->retrieve($sql);
     }
     

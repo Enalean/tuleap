@@ -63,8 +63,8 @@ class UserAccountValidityTest extends UnitTestCase {
         $dar->setReturnValue('isError', false);
 
         $da = new MockDataAccess($this);
-        $da->expectOnce('fetch', array('UPDATE user SET status = "S", unix_status = "S" WHERE toto'));
-        $da->setReturnValue('fetch', $dar);
+        $da->expectOnce('query', array('UPDATE user SET status = "S", unix_status = "S" WHERE toto'));
+        $da->setReturnValue('query', $dar);
         
         $dao = new UserDao($da);
         $d2 = $dao->suspendAccount('toto');
