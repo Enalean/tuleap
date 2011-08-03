@@ -3,6 +3,8 @@ plugin_tracker	descriptor_name	Tracker
 
 plugin_tracker	title	Tracker
 
+plugin_tracker	service_lbl_key	Outils de suivi v5
+plugin_tracker	service_desc_key	Outils de suivi du projet v5
 #
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # This file is licensed under the GNU General Public License version 2 or any later version at your convenience.

@@ -3,6 +3,9 @@ plugin_tracker	descriptor_name	Tracker
 
 plugin_tracker	title	Tracker
 
+plugin_tracker	service_lbl_key	Trackers v5
+plugin_tracker	service_desc_key	Project Trackers v5
+
 #/**
 #  *
 #  * Tracker scripts message catalog (English)

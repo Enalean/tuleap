@@ -523,3 +523,9 @@ CREATE TABLE IF NOT EXISTS tracker_rule(
   target_value_id int(11) unsigned default NULL,
   KEY tracker_id (tracker_id)
 );
+
+
+-- Create service for all projects (but disabled)
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
+SELECT DISTINCT group_id , 'plugin_tracker:service_lbl_key' , 'plugin_tracker:service_desc_key' , 'plugin_tracker', CONCAT('/plugins/tracker/?group_id=', group_id), 1 , 0 , 'system',  151
+FROM service;
