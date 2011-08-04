@@ -293,7 +293,7 @@ class Tracker_Artifact implements Recent_Element_Interface {
         );
         $tracker->displayHeader($tracker_manager, $title, $breadcrumbs);
         
-        $current_user->addRecentArtifact($this);
+        $current_user->addRecentElement($this);
         $from_aid = $request->get('from_aid');
         
         $html = '';

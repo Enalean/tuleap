@@ -594,7 +594,7 @@ class Tracker {
             echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'recent_panel_title');
             echo '</div>';
             echo '<div class="tracker-link-artifact-recentitems-way-content">';
-            if ($recent_items = $current_user->getRecentArtifacts()) {
+            if ($recent_items = $current_user->getRecentElements()) {
                 echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'recent_panel_desc');
                 echo '<ul>';
                 foreach ($recent_items as $item) {
