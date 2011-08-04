@@ -214,7 +214,7 @@ class WorkflowManager {
     }
     
     protected function displayWorkflowPermissions($transition) {
-        echo '<form action="/tracker/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow', 'transition' => $transition->getTransitionId())) .'" method="POST">';
+        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow', 'transition' => $transition->getTransitionId())) .'" method="POST">';
         echo '<p>';
         echo $GLOBALS['Language']->getText('workflow_admin','label_define_transition_permissions');
         echo '</p>';
@@ -229,7 +229,7 @@ class WorkflowManager {
        
         $field =Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
         
-        echo '<form action="/tracker/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')) .'" method="POST">';
+        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')) .'" method="POST">';
         echo "<table>";
         echo "<tr class='boxtitle'>\n";
         echo "<td>".$GLOBALS['Language']->getText('workflow_admin','field')."</td>";
@@ -275,7 +275,7 @@ class WorkflowManager {
             echo '<p>';            
             $aff =Tracker_FormElementFactory::instance(); 
             
-            echo '<form action="/tracker/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')).'" method="POST">';
+            echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')).'" method="POST">';
             echo '<SELECT name="field_id">'; 
             //We display only the 'sb' static type field
             foreach ($aff->getUsedFormElementsByType($this->tracker, 'sb') as $field) {

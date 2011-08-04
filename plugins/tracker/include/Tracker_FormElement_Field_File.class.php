@@ -317,7 +317,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                     );
                     $add .= $link_show;
                     $add .= '<span class="tracker_artifact_preview_attachment">';
-                    $add .= '<img src="/tracker/?'. $query_add .'" 
+                    $add .= '<img src="'.TRACKER_BASE_URL.'/?'. $query_add .'" 
                                   alt="'. $sanitized_description .'" 
                                   style="vertical-align:middle;" />';
                     $add .= '</span> ';
@@ -510,7 +510,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                                 'attachment' => $file_info->getId()
                             )
                         );
-                        $add .= '<img src="/tracker/?'. $query .'" 
+                        $add .= '<img src="'.TRACKER_BASE_URL.'/?'. $query .'" 
                                       alt="'.  $hp->purify($file_info->getDescription(), CODENDI_PURIFIER_CONVERT_HTML)  .'" 
                                       style="vertical-align:middle;" />';
                     } else if ($file_info->getDescription()) {

@@ -58,7 +58,7 @@ class Tracker_NotificationsManager {
     protected function displayAdminNotifications(TrackerManager $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editnotifications');        
-        echo '<form action="/tracker/?tracker='. (int)$this->tracker->id .'&amp;func=admin-notifications" method="POST">';
+        echo '<form action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker->id .'&amp;func=admin-notifications" method="POST">';
         
         $this->displayAdminNotifications_Toggle();
         $this->displayAdminNotifications_Global($request);

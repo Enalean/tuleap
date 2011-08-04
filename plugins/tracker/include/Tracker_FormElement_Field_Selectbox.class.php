@@ -188,7 +188,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
        }
        
        $nb_field_values =count($field_values);
-        echo '<form action="/tracker/?'. http_build_query(array('tracker' => (int)$this->tracker_id, 'func'    => 'admin-workflow')) .'" method="POST">';
+        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker_id, 'func'    => 'admin-workflow')) .'" method="POST">';
         echo '<table id="tracker_workflow_matrix">';
             echo "<tr class='boxtitle'>\n";
             echo "<td>FROM</td>";

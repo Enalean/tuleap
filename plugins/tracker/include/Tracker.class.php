@@ -1095,7 +1095,7 @@ class Tracker {
         $this->displayAdminItemHeader($tracker_manager, 'editoptions');
         $project = ProjectManager::instance()->getProject($this->group_id);
 
-        echo '<form name="form1" method="POST" action="/tracker/?tracker='. (int)$this->id .'&amp;func=admin-editoptions">
+        echo '<form name="form1" method="POST" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-editoptions">
           <input type="hidden" name="update" value="1">
           <input type="hidden" name="instantiate_for_new_projects" value="0">
           <table width="100%" border="0" cellpadding="5">
@@ -1526,7 +1526,7 @@ EOS;
         $this->displayAdminFormElementsHeader($tracker_manager, $title, array());
 
         echo '<h2>'. $title .'</h2>';
-        echo '<form name="form1" method="POST" action="/tracker/?tracker='. (int)$this->id .'&amp;func=admin-formElements">';
+        echo '<form name="form1" method="POST" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-formElements">';
 
 
         echo '<table cellspacing="4" cellpadding="0"><tr valign="top"><td>';
@@ -1569,7 +1569,7 @@ EOS;
         $this->displayAdminCSVImportHeader($tracker_manager, $title, array());
 
         echo '<h2>'. $title . ' ' . help_button('ArtifactImport') . '</h2>';
-        echo '<form name="form1" method="POST" enctype="multipart/form-data" action="/tracker/?tracker='. (int)$this->id .'&amp;func=admin-csvimport">';
+        echo '<form name="form1" method="POST" enctype="multipart/form-data" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-csvimport">';
         echo '<input type="file" name="csv_filename" size="50">';
         echo '<br>';
         echo '<span class="smaller"><em>'.$GLOBALS['Language']->getText('plugin_tracker_import','max_upload_size',formatByteToMb($GLOBALS['sys_max_size_upload'])).'</em></span>';
@@ -2272,7 +2272,7 @@ EOS;
                             echo '</p>';
                             
                             if ($is_valid) {
-                                echo '<form name="form1" method="POST" enctype="multipart/form-data" action="/tracker/?tracker='. (int)$this->id .'&amp;func=admin-csvimport">';
+                                echo '<form name="form1" method="POST" enctype="multipart/form-data" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-csvimport">';
                                 echo '<p>' . $GLOBALS['Language']->getText('plugin_tracker_import','ready', array($nb_lines, $nb_artifact_creation, $nb_artifact_update)) . '</p>';
                                 echo '<input type="hidden" name="action" value="import">';
                                 if ($request->exist('notify') && $request->get('notify') == 'ok') {

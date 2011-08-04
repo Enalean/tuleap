@@ -102,7 +102,7 @@ class Tracker_CannedResponseManager {
         echo '<p>';
         echo $GLOBALS['Language']->getText('plugin_tracker_include_canned','save_time');
         echo '<p>';
-        echo '<form action="/tracker/?'. http_build_query(array(
+        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker->id,
                                                         'func'    => 'admin-canned')) .'" 
                     method="POST">';
@@ -134,7 +134,7 @@ class Tracker_CannedResponseManager {
             echo '<p>';
             echo $GLOBALS['Language']->getText('plugin_tracker_include_canned','save_time');
             echo '<p>';
-            echo '<form action="/tracker/?'. http_build_query(array(
+            echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                             'tracker' => (int)$this->tracker->id,
                                                             'func'    => 'admin-canned',
                                                             'update'  => (int)$response->id)) .'" 

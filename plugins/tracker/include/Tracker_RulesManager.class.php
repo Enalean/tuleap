@@ -426,7 +426,7 @@ class Tracker_RulesManager {
         $this->tracker->displayAdminItemHeader($engine, 'dependencies');
         echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','inline_help') .'</p>';
         
-        echo '<form action="/tracker/?" method="GET">';
+        echo '<form action="'.TRACKER_BASE_URL.'/?" method="GET">';
         echo '<input type="hidden" name="tracker" value="'. (int)$this->tracker->id .'" />';
         echo '<input type="hidden" name="func" value="admin-dependencies" />';
         
@@ -533,7 +533,7 @@ class Tracker_RulesManager {
        }       
        
        $nb_target_field_values =count($target_field_values);
-       echo '<form action="/tracker/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func'    => 'admin-dependencies')) .'" method="POST">';
+       echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func'    => 'admin-dependencies')) .'" method="POST">';
        echo '<table id="tracker_field_dependencies_matrix">';
                     
        echo "<tr class=\"".util_get_alt_row_color(1)."\">\n";
