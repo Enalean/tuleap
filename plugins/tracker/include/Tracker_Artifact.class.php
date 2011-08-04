@@ -25,8 +25,9 @@ require_once('Tracker_Artifact_Changeset.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 require_once('www/project/admin/permissions.php');
+require_once('common/include/Recent_Element_Interface.class.php');
 
-class Tracker_Artifact {
+class Tracker_Artifact implements Recent_Element_Interface {
 
     public $id;
     public $tracker_id;
