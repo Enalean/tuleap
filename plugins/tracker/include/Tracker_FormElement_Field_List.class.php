@@ -24,6 +24,7 @@ require_once('Tracker_FormElement_Field_List_BindFactory.class.php');
 require_once('dao/Tracker_FormElement_Field_ListDao.class.php');
 require_once('dao/Tracker_FormElement_Field_Value_ListDao.class.php');
 require_once('dao/Tracker_Report_Criteria_List_ValueDao.class.php');
+require_once('workflow/TransitionFactory.class.php');
 
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field {
     
