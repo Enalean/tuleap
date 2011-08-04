@@ -33,7 +33,7 @@ class EventManager {
         $this->listeners = new PrioritizedMultiMap();
     }
     
-    function &instance() {
+    function instance() {
         static $_eventmanager_instance;
         if (!$_eventmanager_instance) {
             $_eventmanager_instance = new EventManager();

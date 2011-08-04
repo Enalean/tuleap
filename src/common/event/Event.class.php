@@ -35,7 +35,6 @@ class Event {
      * 
      * No expected results
      */
-
     const EDIT_SSH_KEYS = 'edit_ssh_keys';
 
     /**
@@ -44,7 +43,6 @@ class Event {
      * No parameters
      * No expected results
      */
-
     const DUMP_SSH_KEYS = 'dump_ssh_keys';
 
     /**
@@ -182,5 +180,12 @@ class Event {
      *   array of array('title' => ..., 'description' => ..., 'cssclass' => ...)
      */
     const LAB_FEATURES_DEFINITION_LIST = 'lab_features_definition_list';
+
+    /**
+     * Display javascript snippets in the page footer (just before </body>)
+     * No Parameters.
+     * No expected results
+     */
+    const JAVASCRIPT_FOOTER = 'javascript_footer';
 }
 ?>
