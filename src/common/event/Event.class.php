@@ -187,5 +187,16 @@ class Event {
      * No expected results
      */
     const JAVASCRIPT_FOOTER = 'javascript_footer';
+    
+    /**
+     * Get an instance of service object corresponding to $row
+     * 
+     * Parameters:
+     *  'classnames' => array of Service child class names indexed by service short name
+     *  
+     * Example (in tracker plugin):
+     * $params['classnames']['plugin_tracker'] = 'ServiceTracker'; 
+     */
+    const SERVICE_CLASSNAMES = 'service_classnames';
 }
 ?>

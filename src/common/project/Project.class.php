@@ -86,72 +86,71 @@ class Project extends Group {
     var $use_service;
     var $cache_active_service;
     var $services;
-    
+        
     /*
 		basically just call the parent to set up everything
                 and set up services arrays
     */
     function Project($param) {
-	global $Language;
-
+        global $Language;
+        
         $this->Group($param);
         
         //for right now, just point our prefs array at Group's data array
         //this will change later when we split the project_data table off from groups table
-        $this->project_data_array=$this->data_array;
+        $this->project_data_array = $this->data_array;
+        
+        // Get defined classname of services
+        $classnames = array('file' => 'ServiceFile',
+                            'svn'  => 'ServiceSVN');
+        EventManager::instance()->processEvent(Event::SERVICE_CLASSNAMES, array('classnames' => &$classnames));
         
         // Get Service data
-        $db_res=db_query("SELECT * FROM service WHERE group_id='".db_es($this->group_id)."' ORDER BY rank");
-        $rows=db_numrows($db_res); 
+        $db_res = db_query("SELECT * FROM service WHERE group_id='" . db_es($this->group_id) . "' ORDER BY rank");
+        $rows = db_numrows($db_res);
         if ($rows < 1) {
-            $this->service_data_array=array();
+            $this->service_data_array = array();
         }
-            for ($j = 0; $j < $rows; $j++) { 
-                $res_row = db_fetch_array($db_res);
-                $short_name=$res_row['short_name'];
-                if (!$short_name) { $short_name=$j;}
-
-		// needed for localisation
-        $matches = array();
-		if ($res_row['description'] == "service_".$short_name."_desc_key") {
-		  $res_row['description'] = $Language->getText('project_admin_editservice',$res_row['description']);
-		}
-        elseif(preg_match('/(.*):(.*)/', $res_row['description'], $matches)) {
-            if ($Language->hasText($matches[1], $matches[2])) {
-                $res_row['description'] = $Language->getText($matches[1], $matches[2]);
+        for ($j = 0 ; $j < $rows ; $j++) {
+            $res_row = db_fetch_array($db_res);
+            $short_name = $res_row['short_name'];
+            if (! $short_name) {
+                $short_name = $j;
             }
-        }
-		if ($res_row['label'] == "service_".$short_name."_lbl_key") {
-		  $res_row['label'] = $Language->getText('project_admin_editservice',$res_row['label']);
-		}
-        elseif(preg_match('/(.*):(.*)/', $res_row['label'], $matches)) {
-            if ($Language->hasText($matches[1], $matches[2])) {
-                $res_row['label'] = $Language->getText($matches[1], $matches[2]);
-            }
-        }
-                $this->service_data_array[$short_name] = $res_row;
-                if ($short_name) {
-                    $this->use_service[$short_name]= $res_row['is_used'];
+            
+            // needed for localisation
+            $matches = array();
+            if ($res_row['description'] == "service_" . $short_name . "_desc_key") {
+                $res_row['description'] = $Language->getText('project_admin_editservice', $res_row['description']);
+            } elseif (preg_match('/(.*):(.*)/', $res_row['description'], $matches)) {
+                if ($Language->hasText($matches[1], $matches[2])) {
+                    $res_row['description'] = $Language->getText($matches[1], $matches[2]);
                 }
-                
+            }
+            if ($res_row['label'] == "service_" . $short_name . "_lbl_key") {
+                $res_row['label'] = $Language->getText('project_admin_editservice', $res_row['label']);
+            } elseif (preg_match('/(.*):(.*)/', $res_row['label'], $matches)) {
+                if ($Language->hasText($matches[1], $matches[2])) {
+                    $res_row['label'] = $Language->getText($matches[1], $matches[2]);
+                }
+            }
+            $this->service_data_array[$short_name] = $res_row;
+            if ($short_name) {
+                $this->use_service[$short_name] = $res_row['is_used'];
+            }
+            
+            // Init Service object corresponding to given service
+            if (isset($classnames[$short_name])) {
+                $classname = $classnames[$short_name];
+            } else {
                 $classname = 'Service';
-                switch ($res_row['short_name']) {
-                    case 'file':
-                        $classname .= 'File';
-                        break;
-                    case 'svn':
-                        $classname .= 'SVN';
-                        break;
-                    default:
-						//TODO: plugins
-                        break;
-                }
-                $s = new $classname($this, $res_row);
-                $this->services[$short_name] = $s;
-                if ($res_row['is_active']) {
-                    $this->cache_active_services[] = $s;
-                }
             }
+            $s = new $classname($this, $res_row);
+            $this->services[$short_name] = $s;
+            if ($res_row['is_active']) {
+                $this->cache_active_services[] = $s;
+            }
+        }
     }
 
     public function getService($service_name) {

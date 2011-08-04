@@ -33,6 +33,7 @@ class trackerPlugin extends Plugin {
 		parent::__construct($id);
 		$this->setScope(self::SCOPE_PROJECT);
         $this->_addHook('cssfile', 'cssFile', false);
+        $this->_addHook(Event::SERVICE_CLASSNAMES, 'service_classnames', false);
 	}
 	
     public function getPluginInfo() {
@@ -50,6 +51,11 @@ class trackerPlugin extends Plugin {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/print.css" media="print" />';
         }
+    }
+    
+    public function service_classnames($params) {
+        include_once 'ServiceTracker.class.php';
+        $params['classnames']['plugin_tracker'] = 'ServiceTracker';
     }
 }
 
