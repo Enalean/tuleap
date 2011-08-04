@@ -198,5 +198,16 @@ class Event {
      * $params['classnames']['plugin_tracker'] = 'ServiceTracker'; 
      */
     const SERVICE_CLASSNAMES = 'service_classnames';
+    
+    /**
+     * Get combined scripts
+     * 
+     * Parameters:
+     *   'scripts' => array of scripts to combined
+     *   
+     * Examples:
+     * $params['scripts'][] = '/path/to/script.js';
+     */
+    const COMBINED_SCRIPTS = 'combined_scripts';
 }
 ?>

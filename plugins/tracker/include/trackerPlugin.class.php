@@ -36,6 +36,7 @@ class trackerPlugin extends Plugin {
 		$this->setScope(self::SCOPE_PROJECT);
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook(Event::SERVICE_CLASSNAMES, 'service_classnames', false);
+        $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
 	}
 	
     public function getPluginInfo() {
@@ -57,6 +58,24 @@ class trackerPlugin extends Plugin {
     
     public function service_classnames($params) {
         include_once 'ServiceTracker.class.php';
+        $params['classnames']['plugin_tracker'] = 'ServiceTracker';
+    }
+    
+    public function combined_scripts($params) {
+        array_merge(
+            $params['scripts'],
+            array(
+                '/plugins/tracker/scripts/TrackerReports.js',
+                '/plugins/tracker/scripts/TrackerBinds.js',
+                '/plugins/tracker/scripts/ReorderColumns.js',
+                '/plugins/tracker/scripts/TrackerTextboxLists.js',
+                '/plugins/tracker/scripts/TrackerAdminFields.js',
+                '/plugins/tracker/scripts/TrackerArtifact.js',
+                '/plugins/tracker/scripts/TrackerArtifactLink.js',
+                '/plugins/tracker/scripts/TrackerFormElementFieldPermissions.js',
+                '/plugins/tracker/scripts/TrackerFieldDependencies.js',
+            )
+        );
         $params['classnames']['plugin_tracker'] = 'ServiceTracker';
     }
 }

@@ -24,80 +24,98 @@
 
 var codendi = codendi || { };
 
+codendi.reorder_columns = { };
+
 codendi.ReorderColumns = Class.create({
-    initialize: function(table) {
+    initialize: function (table) {
         this.has_just_been_dragged = {};
         //Take the first row, and register the cells
-        Element.childElements(table.rows[0]).map(this.register.bind(this));
+        $(table).down('thead').down('tr').select('.tracker_report_table_column').map(this.register.bind(this));
     },
     register: function (cell) {
-        this.registerDraggables(cell);
-        this.registerDroppables(cell);
+        if (cell.id.match(/_\d+$/)) {
+            this.registerDraggables(cell);
+            this.registerDroppables(cell);
+        }
     },
     registerDraggables: function (cell) {
         this.has_just_been_dragged[cell.identify()] = false;
-        cell.observe('click', (function(evt) {
+        cell.observe('click', (function (evt) {
             if (this.has_just_been_dragged[cell.identify()]) {
                 this.has_just_been_dragged[cell.identify()] = false;
                 Event.stop(evt);
             }
         }).bind(this));
-        new Draggable(cell.down(), {
+        var d = new Draggable(cell.down('.tracker_report_table_column_title'), {
             revert: true,
             onStart: function () {
-                Element.setStyle(cell, { cursor:"move" });
+                Element.addClassName(cell, "reordercolumns_ondrag");
             },
             onEnd: (function () {
                 this.has_just_been_dragged[cell.identify()] = true;
-                Element.setStyle(cell, { cursor:"auto" });
+                Element.removeClassName(cell, "reordercolumns_ondrag");
             }).bind(this)
         });
     },
     registerDroppables: function (cell) {
         Droppables.add(cell, {
             hoverclass: 'drop-over',
-            onDrop: (function(dragged, dropped, evt) {
+            onDrop: (function (dragged, dropped, evt) {
                 dragged.undoPositioned();
                 var from = dragged.up('th').cellIndex;
                 var to   = dropped.cellIndex;
                 
                 //don't change column order if it is not necessary
-                if (from != to) {
-                    var form = dropped.up('form');
-                    var input = new Element('input', { 
-                            type: 'hidden', 
-                            name: 'reordercolumns['+dragged.id+']', 
-                            value: (from < to ? (dropped.next() ? dropped.next().down().id : '-1') : dropped.down().id)
-                    });
-                    form.appendChild(input);
+                if (from !== to) {
                     
-                    this.reorder(dropped.up('table'), from, to);
-    
+                    var parameters = {
+                            func:     'renderer',
+                            renderer: $('tracker_report_table_addcolumn_form').renderer.value
+                        }, 
+                        param_name = 'renderer_table[reorder-column][' + dragged.up('th').id.match(/_(\d+)$/)[1] + ']';
+                    if (from < to) {
+                        parameters[param_name] = '-2';
+                        if (dropped.next()) {
+                            parameters[param_name] = dropped.id.match(/_(\d+)$/)[1];
+                        }
+                    } else {
+                        parameters[param_name] = '-1';
+                        if (dropped.previous() && dropped.previous().id) {
+                            parameters[param_name] = dropped.previous().id.match(/_(\d+)$/)[1];
+                        }
+                    }
+                    
                     //save the new column order
-                    form.request();
-                    
-                    //remove the input for other requests
-                    Element.remove(input);
+                    var form = $('tracker_report_table_addcolumn_form');
+                    var req = new Ajax.Request('/tracker/?report=' + form.report.value + '&renderer=' + form.renderer.value, {
+                        parameters: parameters,
+                        onSuccess: function (transport) {
+                            this.reorder(dropped.up('table'), from, to);
+                            codendi.tracker.report.setHasChanged();
+                        }.bind(this)
+                    });
                 }
             }).bind(this)
         });
     },
-    reorder: function(table, from, to) {
+    reorder: function (table, from, to) {
         var i = table.rows.length;
         while (i--) {
             var row  = table.rows[i];
-            var cell = row.removeChild(row.cells[from]);
-            if (to < row.cells.length) {
-                row.insertBefore(cell, row.cells[to]);
-            } else {
-                row.appendChild(cell);
+            if (row.cells[from] && row.cells[to]) {
+                var cell = row.removeChild(row.cells[from]);
+                if (to < row.cells.length) {
+                    row.insertBefore(cell, row.cells[to]);
+                } else {
+                    row.appendChild(cell);
+                }
             }
         }
     }
 });
 
-document.observe('dom:loaded', function() {
+document.observe('dom:loaded', function () {
     $$('table.reorderable').each(function (table) {
-            new codendi.ReorderColumns(table);
+        codendi.reorder_columns[table.identify()] = new codendi.ReorderColumns(table);
     });
 });

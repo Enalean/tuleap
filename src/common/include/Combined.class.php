@@ -23,6 +23,7 @@ class Combined {
     protected function getCombinedScripts() {
         $arr = array(
             '/scripts/prototype/prototype.js',
+            '/scripts/protocheck/protocheck.js',
             '/scripts/scriptaculous/scriptaculous.js',
             '/scripts/scriptaculous/builder.js',
             '/scripts/scriptaculous/effects.js',
@@ -33,8 +34,14 @@ class Combined {
             '/scripts/codendi/common.js',
             '/scripts/codendi/cross_references.js',
             '/scripts/codendi/Tooltip.js',
+            '/scripts/codendi/Toggler.js',
             '/scripts/codendi/LayoutManager.js',
+            '/scripts/codendi/DropDownPanel.js',
+            '/scripts/codendi/colorpicker.js',
             '/scripts/autocomplete.js',
+            '/scripts/ckeditor/ckeditor_basic.js',
+            '/scripts/textboxlist/multiselect.js',
+            '/scripts/tablekit/tablekit.js',
             '/scripts/codendi/RichTextEditor.js',
             '/scripts/codendi/Tracker.js',
         );
