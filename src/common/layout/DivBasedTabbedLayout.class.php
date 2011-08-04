@@ -139,6 +139,8 @@ echo $this->outerTabs($params);
 
   <div class="contenttable">      
 	<?php
+        echo $this->getBreadCrumbs();
+        echo $this->getToolbar();
       echo $this->_getFeedback();
       $this->_feedback->display();
 	}
@@ -242,7 +244,10 @@ echo $this->outerTabs($params);
 
 	function outerTabs($params) {
 		global $Language,$sys_use_trove,$sys_use_snippet,$sys_use_people,$sys_use_snippet,$sys_use_people;
-
+		$selected_top_tab = '';
+		if (isset($params['selected_top_tab'])) {
+		    $selected_top_tab = $params['selected_top_tab'];
+		}
         $menuTree = new TreeNode();
         $sthSelected = false;
 
@@ -337,7 +342,7 @@ echo $this->outerTabs($params);
 		}
 
 		if (user_ismember(1,'A')) {
-            $selected = strpos(getStringFromServer('REQUEST_URI'),'/admin/') === 0;
+            $selected = strpos(getStringFromServer('REQUEST_URI'),'/admin/') === 0 || $selected_top_tab === 'admin';
             $sthSelected = ($sthSelected || $selected);
             $menuTree->addChild(new TreeNode(array('link'=>'/admin/'
                                                    ,'title'=>$Language->getText('menu','admin')

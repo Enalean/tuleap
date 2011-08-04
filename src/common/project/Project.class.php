@@ -84,6 +84,7 @@ class Project extends Group {
     // All data concerning services for this project
     var $service_data_array;
     var $use_service;
+    var $cache_active_service;
     var $services;
     
     /*
@@ -142,15 +143,24 @@ class Project extends Group {
                         $classname .= 'SVN';
                         break;
                     default:
+						//TODO: plugins
                         break;
                 }
-                $s =& new $classname($res_row);
-                $this->services[$s->getShortName()] =& $s;
-                unset($s);
+                $s = new $classname($this, $res_row);
+                $this->services[$short_name] = $s;
+                if ($res_row['is_active']) {
+                    $this->cache_active_services[] = $s;
+                }
             }
     }
 
-
+    public function getService($service_name) {
+        return $this->usesService($service_name) ? $this->services[$service_name] : null;
+    }
+    public function getActiveServices() {
+        return $this->cache_active_services;
+    }
+    
     function usesHomePage() {
         return isset($this->use_service['homepage']) && $this->use_service['homepage'];
     }
@@ -358,6 +368,10 @@ class Project extends Group {
     function isSVNPrivate() {
         // TODO XXXX not implemented yet.
         return false;
+    }
+    
+    function getSVNAccess() {
+        return $this->project_data_array['svn_accessfile'];
     }
 
     function getProjectsCreatedFrom() {
