@@ -273,7 +273,7 @@ class TrackerManager { /* extends Engine? */
     
               function showGroupSelection() {
                 win=window.open("","group_id_selection","height=210,width=480,toolbar=no,location=no,resizable=yes,left=200,top=200");
-                win.location = "/tracker/group_selection.php?opener_form=form_create&opener_field=group_id_template&filter=member";
+                win.location = '.TRACKER_BASE_URL.'"/group_selection.php?opener_form=form_create&opener_field=group_id_template&filter=member";
               }
     
               function showTrackerSelection() {
@@ -282,7 +282,7 @@ class TrackerManager { /* extends Engine? */
                     return;
                 }
                 win=window.open("","artifact_group_id_selection","height=45,width=400,toolbar=no,location=no,resizable=yes,left=200,top=200");
-                win.location = "/tracker/tracker_selection.php?group_id=" + document.form_create.group_id_template.value + "&opener_form=form_create&opener_field=atid_template";
+                win.location = '.TRACKER_BASE_URL.'"/tracker_selection.php?group_id=" + document.form_create.group_id_template.value + "&opener_form=form_create&opener_field=atid_template";
               }
     
               </script>

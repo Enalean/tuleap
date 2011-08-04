@@ -128,7 +128,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      */
     protected function fetchAdminFormElement() {
         $html = '';
-        $html .= '<a href="#/tracker/?aid=123" onclick="return false;">#42</a>';
+        $html .= '<a href="#'.TRACKER_BASE_URL.'/?aid=123" onclick="return false;">#42</a>';
         return $html;
     }
     
