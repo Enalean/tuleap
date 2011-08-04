@@ -90,7 +90,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      * @return string html
      */
     protected function fetchChangeType() {
-        $html = ' (<a href="/tracker/?'. http_build_query(array(
+        $html = ' (<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                 'tracker'            => $this->tracker_id,
                 'func'               => 'admin-formElement-update',
                 'formElement'        => $this->id,

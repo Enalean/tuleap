@@ -462,7 +462,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             
             if ($this->canValueBeDeleted($v)) {
                 $html .= '<a title="Delete the value"
-                href="/tracker/?'. http_build_query(array(
+                href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                     'tracker'            => $this->field->getTracker()->id,
                     'func'               => 'admin-formElement-update',
                     'formElement'        => $this->field->getId(),

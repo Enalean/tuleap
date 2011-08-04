@@ -58,7 +58,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      * @return string html
      */
     protected function fetchChangeType() {
-        $html = ' (<a href="/tracker/?'. http_build_query(array(
+        $html = ' (<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                 'tracker'            => $this->tracker_id,
                 'func'               => 'admin-formElement-update',
                 'formElement'        => $this->id,
@@ -169,7 +169,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
           }
           echo '<td class="matrix_cell" style="white-space:nowrap; text-align:center;"><label class="pc_checkbox"><input type="checkbox" name="'.$box_value.'" '. $check .' />&nbsp;</label>';
           if ($check) {
-              echo ' <a href="/tracker/?'. http_build_query(array(
+              echo ' <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker_id,
                                                         'func'    => 'admin-workflow',
                                                         'edit_transition'  => $box_value)) .'">[Details]</a>';

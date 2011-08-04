@@ -41,7 +41,7 @@ class WorkflowManager {
                 
                 if (WorkflowFactory::instance()->create((int)$this->tracker->id, $request->get('field_id'))) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','created'));
-                    $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array(
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker->id,
                                                         'func'    => 'admin-workflow')));
                 }
@@ -70,7 +70,7 @@ class WorkflowManager {
             if (WorkflowFactory::instance()->delete($request->get('delete'))) {
                 if(WorkflowFactory::instance()->deleteWorkflowTransitions($request->get('delete'))) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','deleted'));
-                    $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array(
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                     'tracker' => (int)$this->tracker->id,
                                                     'func'    => 'admin-workflow')));
                 }
@@ -130,10 +130,10 @@ class WorkflowManager {
 
             if ($k>0) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','updated'));
-                $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
             } else {                
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','not_updated'));
-                $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
             }
 
             
@@ -152,7 +152,7 @@ class WorkflowManager {
                 
            if (WorkflowFactory::instance()->updateActivation((int)$workflow->workflow_id, $is_used)) {
                $GLOBALS['Response']->addFeedback('info', $feedback);
-               $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));                 
+               $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));                 
            }          
         } else if ($request->get('workflow_details')) {
             $ugroups = $request->get('ugroups');
@@ -163,7 +163,7 @@ class WorkflowManager {
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin','permissions_not_updated'));
             }
-            $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));                 
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));                 
             
         }else {        
             $this->displayAdminDefineWorkflow($engine, $request, $current_user);
@@ -245,7 +245,7 @@ class WorkflowManager {
               echo '<td align="center"><input type="checkbox" name="is_used" ></td>';
         }
            
-         echo '<td align="center"><a href="/tracker/?'. http_build_query(array(
+         echo '<td align="center"><a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker->id,
                                                         'func'    => 'admin-workflow',
                                                         'delete'  => (int)$workflow->workflow_id)) .'" 

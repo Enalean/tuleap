@@ -24,6 +24,8 @@
 
 require_once('common/plugin/Plugin.class.php');
 
+define('TRACKER_BASE_URL', '/plugins/tracker');
+
 /**
  * trackerPlugin
  */

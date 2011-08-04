@@ -465,7 +465,7 @@ class TrackerFactory {
                 // description
                 $GLOBALS['Language']->getText('project_reference','reference_art_desc_key') .' - '. $tracker->getName(),
                 // link
-                '/tracker/?aid=$1&group_id=$group_id',
+                TRACKER_BASE_URL.'/?aid=$1&group_id=$group_id',
                 // scope is 'project'
                 'P',
                 // service short name
@@ -534,10 +534,10 @@ class TrackerFactory {
             // XML validation before creating a new tracker
             $dom = new DOMDocument;
             $dom->load($xmlFile);
-            if(!@$dom->relaxNGValidate($GLOBALS['sys_urlroot'] .'/tracker/resources/tracker.rng')) { //hide warning since we will extract the errors below
+            if(!@$dom->relaxNGValidate($GLOBALS['sys_urlroot'] .TRACKER_BASE_URL.'/resources/tracker.rng')) { //hide warning since we will extract the errors below
                 //try to be more verbose for the end user (RelaxNG notices are hidden)
                 $hp = Codendi_HTMLPurifier::instance();
-                $rng    = $GLOBALS['sys_urlroot'] .'/tracker/resources/tracker.rng';
+                $rng    = $GLOBALS['sys_urlroot'] .TRACKER_BASE_URL.'/resources/tracker.rng';
                 $indent = $GLOBALS['codendi_utils_prefix'] .'/xml/indent.xsl';
                 $jing   = $GLOBALS['codendi_utils_prefix'] .'/xml/jing.jar';
                 $temp   = tempnam($GLOBALS['tmp_dir'], 'xml');
@@ -554,7 +554,7 @@ class TrackerFactory {
                     $breadcrumbs = array(
                             array(
                                     'title' => 'Create a new tracker',
-                                    'url'   => '/tracker/?group_id='. $project->group_id .'&amp;func=create'
+                                    'url'   => TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&amp;func=create'
                             )
                     );
                     $toolbar = array();

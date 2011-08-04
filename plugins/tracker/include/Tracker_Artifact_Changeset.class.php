@@ -591,7 +591,7 @@ class Tracker_Artifact_Changeset {
         $output .= PHP_EOL;
         $output .= PHP_EOL;
         $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
-        $output .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .'/tracker/?aid='. $art->getId() .'>';
+        $output .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $art->getId() .'>';
         $output .= PHP_EOL;
         $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
         $output .= ' '.UserHelper::instance()->getDisplayNameFromUserId($this->submitted_by);

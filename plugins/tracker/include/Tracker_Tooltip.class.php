@@ -166,7 +166,7 @@ class Tracker_Tooltip extends Tracker_Semantic {
             $html .= '<em>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_no_more_field') . '</em>';
         }
         
-        $html .= '<p><a href="/tracker/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
+        $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
         echo $html;
         $sm->displaySemanticFooter($this, $tracker_manager);
     }

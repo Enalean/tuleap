@@ -199,7 +199,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         } else {
             $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_impossible');
         }
-        $html .= '<p><a href="/tracker/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
+        $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
         echo $html;
         $sm->displaySemanticFooter($this, $tracker_manager);
     }

@@ -415,7 +415,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     public function getOptionsMenuItems() {
         $items = parent::getOptionsMenuItems();
         $items['export_light'] = array(
-            'url'   => '/tracker/?'.http_build_query(
+            'url'   => TRACKER_BASE_URL.'/?'.http_build_query(
                 array(
                     'report'         => $this->report->id,
                     'renderer'       => $this->id,
@@ -430,7 +430,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             'label' => $GLOBALS['Language']->getText('plugin_tracker_include_report' ,'export_only_report_columns'),
         );
         $items['export_full'] = array(
-            'url'   => '/tracker/?'.http_build_query(
+            'url'   => TRACKER_BASE_URL.'/?'.http_build_query(
                 array(
                     'report'         => $this->report->id,
                     'renderer'       => $this->id,
@@ -898,9 +898,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     }
                     if (!$only_one_column) {
                         if ($from_aid != null) {
-                            $html .= '<td width="16"><a class="direct-link-to-artifact" href="/tracker/?aid='. $row['id'] .'&from_aid='.$from_aid.'" title="Display artifact #'. $row['id'] .'">'. $GLOBALS['HTML']->getImage('ic/artifact-arrow.png', array('alt' => '#'.$row['id'])) .'</a></td>';
+                            $html .= '<td width="16"><a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'&from_aid='.$from_aid.'" title="Display artifact #'. $row['id'] .'">'. $GLOBALS['HTML']->getImage('ic/artifact-arrow.png', array('alt' => '#'.$row['id'])) .'</a></td>';
                         } else {
-                            $html .= '<td width="16"><a class="direct-link-to-artifact" href="/tracker/?aid='. $row['id'] .'" title="Display artifact #'. $row['id'] .'">'. $GLOBALS['HTML']->getImage('ic/artifact-arrow.png', array('alt' => '#'.$row['id'])) .'</a></td>';
+                            $html .= '<td width="16"><a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid='. $row['id'] .'" title="Display artifact #'. $row['id'] .'">'. $GLOBALS['HTML']->getImage('ic/artifact-arrow.png', array('alt' => '#'.$row['id'])) .'</a></td>';
                         }
                     }
                     foreach($columns as $column) {

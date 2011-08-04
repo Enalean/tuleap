@@ -142,14 +142,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
         case 'admin-formElement-remove':
             if (Tracker_FormElementFactory::instance()->removeFormElement($this->id)) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_removed'));
-                $GLOBALS['Response']->redirect('/tracker/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
             }
             $this->getTracker()->displayAdminFormElements($tracker_manager, $request, $current_user);
             break;
         case 'admin-formElement-delete':
             if ($this->delete() && Tracker_FormElementFactory::instance()->deleteFormElement($this->id)) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_deleted'));
-                $GLOBALS['Response']->redirect('/tracker/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
             }
             $this->getTracker()->displayAdminFormElements($tracker_manager, $request, $current_user);
             break;
@@ -193,7 +193,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
             $redirect = true;
         }
         if ($redirect) {
-            $GLOBALS['Response']->redirect('/tracker/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
         }
     }
     
@@ -294,7 +294,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
     public function displayAdminCreate(TrackerManager $tracker_manager, $request, $current_user, $type, $factory_label) {
         $hp = Codendi_HTMLPurifier::instance();
         $title = 'Create a new '. $factory_label;
-        $url   = '/tracker/?tracker='. (int)$this->tracker_id .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
+        $url   = TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
         $breadcrumbs = array(
             array(
                 'title' => $title,
@@ -421,7 +421,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
     protected function fetchAdminFormPermissionLink() {
         $html = '';
         $html .= '<p>';
-        $html .= '<a href="/tracker/?'. http_build_query(
+        $html .= '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker'     => $this->tracker_id,
                 'func'        => 'admin-perms-fields',
@@ -911,7 +911,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      * @return string url to display in html (&amp; instead of &)
      */
     protected function getAdminEditUrl() {
-        return '/tracker/?tracker='. (int)$this->getTracker()->id .'&amp;func=admin-formElement-update&amp;formElement='. $this->id;
+        return TRACKER_BASE_URL.'/?tracker='. (int)$this->getTracker()->id .'&amp;func=admin-formElement-update&amp;formElement='. $this->id;
     }
     
     /**

@@ -49,7 +49,7 @@ class Tracker_SemanticManager {
         echo '</p>';
         
         foreach($this->getSemantics() as $key => $s) {
-            echo '<h3>'. $s->getLabel() .' <a href="/tracker/?'. http_build_query(array(
+            echo '<h3>'. $s->getLabel() .' <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                 'tracker'  => $this->tracker->getId(),
                 'func'     => 'admin-semantic',
                 'semantic' => $key,
@@ -68,7 +68,7 @@ class Tracker_SemanticManager {
             'editsemantic', 
             array(
                 array(
-                    'url'         => '/tracker/?'. http_build_query(array(
+                    'url'         => TRACKER_BASE_URL.'/?'. http_build_query(array(
                         'tracker'  => $this->tracker->getId(),
                         'func'     => 'admin-semantic',
                         'semantic' => $semantic->getShortName(),

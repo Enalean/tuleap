@@ -259,8 +259,8 @@ class Tracker_Artifact {
     public function fetchWidget($item_name, $title) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
-        $html .= '<a class="direct-link-to-artifact" href="/tracker/?aid='. $this->id .'" title="Display artifact #'. $this->id .'">'. $GLOBALS['HTML']->getImage('ic/artifact-arrow.png', array('alt' => '#'.$this->id)) .'</a> ';
-        $html .= '<a class="direct-link-to-artifact" href="/tracker/?aid=' . $this->id . '">';
+        $html .= '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid='. $this->id .'" title="Display artifact #'. $this->id .'">'. $GLOBALS['HTML']->getImage('ic/artifact-arrow.png', array('alt' => '#'.$this->id)) .'</a> ';
+        $html .= '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->id . '">';
         $html .= $hp->purify($item_name, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= ' #';
         $html .= $this->id;
@@ -288,7 +288,7 @@ class Tracker_Artifact {
         $title = $hp->purify($tracker->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
         $breadcrumbs = array(
             array('title' => $title,
-                  'url'   => '/tracker/?aid='. $this->id)
+                  'url'   => TRACKER_BASE_URL.'/?aid='. $this->id)
         );
         $tracker->displayHeader($tracker_manager, $title, $breadcrumbs);
         
@@ -568,16 +568,16 @@ class Tracker_Artifact {
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
                 $this->getTracker()->augmentDataFromRequest($fields_data);
                 if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'))) {
-                    $art_link = '<a class="direct-link-to-artifact" href="/tracker/?aid=' . $this->getId() . '">' . $this->getTracker()->getItemName() . ' #' . $this->getId() . '</a>';
+                    $art_link = '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->getId() . '">' . $this->getTracker()->getItemName() . ' #' . $this->getId() . '</a>';
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                     
-                    $url_redirection = '/tracker/?tracker='. $this->tracker_id;
+                    $url_redirection = TRACKER_BASE_URL.'/?tracker='. $this->tracker_id;
                     if ($request->get('submit_and_continue')) {
-                        $url_redirection = '/tracker/?aid=' . $this->getId();
+                        $url_redirection = TRACKER_BASE_URL.'/?aid=' . $this->getId();
                     }
                     
                     if ($request->get('from_aid')) {
-                        $url_redirection = '/tracker/?aid=' . $request->get('from_aid');
+                        $url_redirection = TRACKER_BASE_URL.'/?aid=' . $request->get('from_aid');
                     }
                     $GLOBALS['Response']->redirect($url_redirection);
                 } else {

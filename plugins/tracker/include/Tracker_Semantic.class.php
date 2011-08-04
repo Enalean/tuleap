@@ -135,7 +135,7 @@ abstract class Tracker_Semantic {
                 'func'     => 'admin-semantic',
                 'semantic' => $this->getShortName(),
             ));
-        return '/tracker/?'. $query;
+        return TRACKER_BASE_URL.'/?'. $query;
     }
     
     /**

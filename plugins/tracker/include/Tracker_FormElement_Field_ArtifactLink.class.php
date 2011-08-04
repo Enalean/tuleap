@@ -402,7 +402,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                                     $head .= '</h2>';
                                     //if ($artifact) {
                                     //    $title = $hp->purify('link a '. $tracker->getItemName(), CODENDI_PURIFIER_CONVERT_HTML);
-                                    //    $head .= '<a href="/tracker/?tracker='.$tracker_id.'&func=new-artifact-link&id='.$artifact->getId().'" class="tracker-form-element-artifactlink-link-new-artifact">'. 'create a new '.$hp->purify($tracker->getItemName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</a>';
+                                    //    $head .= '<a href="'.TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=new-artifact-link&id='.$artifact->getId().'" class="tracker-form-element-artifactlink-link-new-artifact">'. 'create a new '.$hp->purify($tracker->getItemName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</a>';
                                     //}
                                     $result[$key]['head'] = $head . $result[$key]['head'];
                                     break;

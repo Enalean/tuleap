@@ -135,7 +135,7 @@ abstract class Tracker_Report_Renderer {
     public function getOptionsMenuItems() {
         $items = array(
             'printer_version' => array(
-                'url'   => '/tracker/?'.http_build_query(
+                'url'   => TRACKER_BASE_URL.'/?'.http_build_query(
                     array(
                         'report'   => $this->report->id,
                         'renderer' => $this->id,
@@ -240,7 +240,7 @@ abstract class Tracker_Report_Renderer {
      */
     protected function fetchLinkGoTo($msg, $params = array()) {
         $html = '';
-        $html .= '<a href="/tracker/?'. http_build_query(
+        $html .= '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'report'   => $this->report->id,
                 'renderer' => $this->id

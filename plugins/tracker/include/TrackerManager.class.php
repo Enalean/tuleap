@@ -41,7 +41,7 @@ class TrackerManager { /* extends Engine? */
                     $artifact->process($this, $request, $user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission_on_artifact'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $artifact->getTrackerId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $artifact->getTrackerId());
                 }
             } else {
                 exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist'));
@@ -127,7 +127,7 @@ class TrackerManager { /* extends Engine? */
                                     }
                                     
                                     if ($new_tracker) {
-                                        $GLOBALS['Response']->redirect('/tracker/?group_id='. $project->group_id .'&tracker='. $new_tracker->id);
+                                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&tracker='. $new_tracker->id);
                                     } else {
                                         $codendi_template  = $codendi_template  ? $codendi_template  : ''; 
                                         $group_id_template = $group_id_template ? $group_id_template : '';
@@ -137,7 +137,7 @@ class TrackerManager { /* extends Engine? */
                                 }
                             } else {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                                $GLOBALS['Response']->redirect('/tracker/?group_id='. $group_id);
+                                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
                             }
                             break;
                         case 'create':
@@ -145,7 +145,7 @@ class TrackerManager { /* extends Engine? */
                                 $this->displayCreateTracker($project);
                             } else {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                                $GLOBALS['Response']->redirect('/tracker/?group_id='. $group_id);
+                                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
                             }
                             break;
                         case 'csvimportoverview':
@@ -176,7 +176,7 @@ class TrackerManager { /* extends Engine? */
                 array(
                     array(
                         'title'     => $GLOBALS['Language']->getText('plugin_tracker', 'trackers'),
-                        'url'       => '/tracker/?group_id='. $project->group_id,
+                        'url'       => TRACKER_BASE_URL.'/?group_id='. $project->group_id,
                         'classname' => 'trackers',
                     )
                 ),
@@ -212,7 +212,7 @@ class TrackerManager { /* extends Engine? */
         $breadcrumbs = array(
             array(
                 'title' => $GLOBALS['Language']->getText('plugin_tracker_index', 'create_new_tracker'),
-                'url'   => '/tracker/?group_id='. $project->group_id .'&amp;func=create'
+                'url'   => TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&amp;func=create'
             )
         );
         $toolbar = array();
@@ -371,7 +371,7 @@ class TrackerManager { /* extends Engine? */
         if (HTTPRequest::instance()->isAjax()) {
             foreach ($trackers as $tracker) {
                 if ($tracker->userCanView($user)) {
-                    $html .= '<a href="/tracker/?tracker='. $tracker->id .'" title="';
+                    $html .= '<a href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'" title="';
                     $html .= $hp->purify($tracker->description, CODENDI_PURIFIER_CONVERT_HTML);
                     $html .= '">';
                     $html .= $GLOBALS['HTML']->getImage('ic/clipboard-list.png', array('border' => 0, 'alt' => '', 'style="vertical-align:top;"')) .' ';
@@ -393,7 +393,7 @@ class TrackerManager { /* extends Engine? */
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_index','no_accessible_trackers_msg');
             }
             if ($this->userCanCreateTracker($project->group_id, $user)) {
-                $html .= '<br /><a id="tracker_createnewlink" href="/tracker/?group_id='. $project->group_id .'&amp;func=create">';
+                $html .= '<br /><a id="tracker_createnewlink" href="'.TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&amp;func=create">';
                 $html .= $GLOBALS['HTML']->getImage('ic/add.png', array('alt' => 'add')) .' ';
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'create_new_tracker');
                 $html .= '</a>';
@@ -404,13 +404,13 @@ class TrackerManager { /* extends Engine? */
                     $html .= '<dt>';
                     if ($tracker->userCanDeleteTracker()) {
                         $html .= '<div style="float:right;">
-                                <a href="/tracker/?tracker='. $tracker->id .'&amp;func=delete" 
+                                <a href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'&amp;func=delete" 
                                    onclick="return confirm(\'Do you want to delete this tracker?\');"
                                    title=" ' . $GLOBALS['Language']->getText('plugin_tracker', 'delete_tracker', array($hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML))) . '">';
                         $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete'));
                         $html .= '</a></div>';
                     }
-                    $html .= '<a class="direct-link-to-tracker" href="/tracker/?tracker='. $tracker->id .'">';
+                    $html .= '<a class="direct-link-to-tracker" href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'">';
                     $html .= $GLOBALS['HTML']->getImage('ic/clipboard-list.png', array('border' => 0, 'alt' => '', 'style="vertical-align:top;"')) .' ';
                     $html .= $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML);
                     $html .= '</a>';
@@ -476,8 +476,8 @@ class TrackerManager { /* extends Engine? */
                 
                 echo '<tr class="'.util_get_alt_row_color($cpt).'">';
                 echo ' <td><b>'.$GLOBALS['Language']->getText('plugin_tracker_import_admin','tracker').': '. $hp->purify(SimpleSanitizer::unsanitize($tracker->getName()), CODENDI_PURIFIER_CONVERT_HTML) .'</b></td>';
-                echo ' <td align="center"><a href="/tracker/?tracker='.(int)($tracker->getID()).'&func=admin-csvimport">'.$GLOBALS['Language']->getText('plugin_tracker_import_admin','import').'</a></td>';
-                echo ' <td align="center"><a href="/tracker/?tracker='.(int)($tracker->getID()).'&func=csvimport-showformat">'.$GLOBALS['Language']->getText('plugin_tracker_import_admin','show_format').'</a></td>';
+                echo ' <td align="center"><a href="'.TRACKER_BASE_URL.'/?tracker='.(int)($tracker->getID()).'&func=admin-csvimport">'.$GLOBALS['Language']->getText('plugin_tracker_import_admin','import').'</a></td>';
+                echo ' <td align="center"><a href="'.TRACKER_BASE_URL.'/?tracker='.(int)($tracker->getID()).'&func=csvimport-showformat">'.$GLOBALS['Language']->getText('plugin_tracker_import_admin','show_format').'</a></td>';
                 echo '</tr>';
                 
             }
@@ -655,7 +655,7 @@ class TrackerManager { /* extends Engine? */
                     $tracker->displaySearch($this, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
-                    $GLOBALS['HTML']->redirect('/tracker/?group_id='. $tracker->getGroupId());
+                    $GLOBALS['HTML']->redirect(TRACKER_BASE_URL.'/?group_id='. $tracker->getGroupId());
                 }
             }
         } else {

@@ -245,7 +245,7 @@ class Tracker {
                     $this->displaySubmit($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'new-artifact-link':
@@ -284,14 +284,14 @@ class Tracker {
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                 }
-                $GLOBALS['Response']->redirect('/tracker/?group_id='. $this->group_id);
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $this->group_id);
                 break;
             case 'admin':
                 if ($this->userIsAdmin($current_user)) {
                     $this->displayAdmin($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-editoptions':
@@ -302,7 +302,7 @@ class Tracker {
                     $this->displayAdminOptions($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-perms':
@@ -310,7 +310,7 @@ class Tracker {
                     $this->displayAdminPerms($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-perms-tracker':
@@ -322,7 +322,7 @@ class Tracker {
                     $this->displayAdminPermsTracker($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-perms-fields':
@@ -341,7 +341,7 @@ class Tracker {
                     $this->displayAdminPermsFields($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-formElements':
@@ -350,14 +350,14 @@ class Tracker {
                         list($formElement_id,) = each($request->get('add-formElement'));
                         if (Tracker_FormElementFactory::instance()->addFormElement($formElement_id)) {
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_added'));
-                            $GLOBALS['Response']->redirect('/tracker/?tracker='. (int)$this->getId() .'&func=admin-formElements');
+                            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->getId() .'&func=admin-formElements');
                         }
                     } else if (is_array($request->get('create-formElement'))) {
                         list($type,) = each($request->get('create-formElement'));
                         if ($request->get('docreate-formElement') && is_array($request->get('formElement_data'))) {
                             Tracker_FormElementFactory::instance()->createFormElement($this, $type, $request->get('formElement_data'));
                             $GLOBALS['Response']->redirect(
-                                    '/tracker/?'. http_build_query(
+                                    TRACKER_BASE_URL.'/?'. http_build_query(
                                     array(
                                     'tracker' => $this->getId(),
                                     'func'    => $func,
@@ -372,7 +372,7 @@ class Tracker {
                     $this->displayAdminFormElements($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-formElement-update':
@@ -386,7 +386,7 @@ class Tracker {
                     }
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-semantic':
@@ -394,7 +394,7 @@ class Tracker {
                     $this->getTrackerSemanticManager()->process($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-notifications':
@@ -402,7 +402,7 @@ class Tracker {
                     $this->getNotificationsManager()->process($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'notifications':
@@ -411,7 +411,7 @@ class Tracker {
                     $this->getNotificationsManager()->process($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-canned':
@@ -420,7 +420,7 @@ class Tracker {
                     $this->getCannedResponseManager()->process($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-workflow':
@@ -428,7 +428,7 @@ class Tracker {
                     $this->getWorkflowManager()->process($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-csvimport':
@@ -443,16 +443,16 @@ class Tracker {
                         
                         if ($this->importFromCSV($tracker_manager, $request, $current_user, $csv_header, $csv_body)) {
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'import_succeed'));
-                            $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                         } else {
                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'import_failed'));
-                            $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                         }
                     }
                     $this->displayAdminCSVImport($tracker_manager, $request, $current_user);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-export':
@@ -480,12 +480,12 @@ class Tracker {
                             $art_link = '<a href="/tracker?aid=' . $artifact->getId() . '">' . $this->getItemName() . ' #' . $artifact->getId() . '</a>';
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'create_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                             
-                            $url_redirection = '/tracker/?tracker='. $this->getId();
+                            $url_redirection = TRACKER_BASE_URL.'/?tracker='. $this->getId();
                             if ($request->get('submit_and_continue')) {
                                 $url_redirection .= '&func=new-artifact';
                             }
                             if ($request->get('submit_and_stay')) {
-                                $url_redirection = '/tracker/?aid=' . $artifact->getId();
+                                $url_redirection = TRACKER_BASE_URL.'/?aid=' . $artifact->getId();
                             }
                             $GLOBALS['Response']->redirect($url_redirection);
                         }
@@ -493,7 +493,7 @@ class Tracker {
                     $this->displaySubmit($tracker_manager, $request, $current_user, $link);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                    $GLOBALS['Response']->redirect('/tracker/?tracker='. $this->getId());
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             default:
@@ -560,7 +560,7 @@ class Tracker {
             if (!$request->isAjax()) {
                 //screwed up
                 $GLOBALS['Response']->addFeedback('error', 'Something is wrong with your request');
-                $GLOBALS['Response']->redirect('/tracker/?aid='. $linked_artifact->getId());
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?aid='. $linked_artifact->getId());
             }
             echo $linked_artifact->fetchTitle($GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'title_prefix'));
             
@@ -656,7 +656,7 @@ class Tracker {
         $breadcrumbs = array(
                 array(
                         'title' => 'New artifact',
-                        'url'   => '/tracker/?tracker='. $this->id .'&amp;func=new-artifact',
+                        'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=new-artifact',
                 ),
         );
         
@@ -756,7 +756,7 @@ class Tracker {
         $breadcrumbs = array(
                 array(
                         'title' => $GLOBALS['Language']->getText('plugin_tracker_browse', 'search_result'),
-                        'url'   => '/tracker/?tracker='. $this->getId(),
+                        'url'   => TRACKER_BASE_URL.'/?tracker='. $this->getId(),
                 ),
         );
         $this->displayHeader($tracker_manager, $this->name, $breadcrumbs);
@@ -818,7 +818,7 @@ class Tracker {
                 if ($artifact->userCanView()) {
                     $html .= '<tr class="' . html_get_alt_row_color($nb_artifacts) . '">';
                     if ($summary_field->userCanRead()) {
-                        $html .= '<td><a href="/tracker/?aid=' . $artifact_id . '"><img src="' . util_get_image_theme('msg.png') . '" border="0" height="12" width="10"> '
+                        $html .= '<td><a href="'.TRACKER_BASE_URL.'/?aid=' . $artifact_id . '"><img src="' . util_get_image_theme('msg.png') . '" border="0" height="12" width="10"> '
                         . $artifact->getTitle() . '</a></td>';
                     }
                     if ($submitted_field->userCanRead()) {
@@ -888,26 +888,26 @@ class Tracker {
         if ($project = ProjectManager::instance()->getProject($this->group_id)) {
             $hp = Codendi_HTMLPurifier::instance();
             $breadcrumbs = array_merge(array(array('title' => $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML),
-                            'url'   => '/tracker/?tracker='. $this->id)
+                            'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id)
                     ),
                     $breadcrumbs);
             if (!$toolbar) {
                 $toolbar = array();
                 $toolbar[] = array(
                         'title' => $GLOBALS['Language']->getText('plugin_tracker', 'submit_new_artifact'),
-                        'url'   => '/tracker/?tracker='. $this->id .'&amp;func=new-artifact',
+                        'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=new-artifact',
                         'class' => 'tracker-submit-new',
                 );
                 if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
                     $toolbar[] = array(
                             'title' => $GLOBALS['Language']->getText('plugin_tracker', 'notifications'),
-                            'url'   => '/tracker/?tracker='. $this->id .'&amp;func=notifications',
+                            'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=notifications',
                     );
                 }
                 if ($this->userIsAdmin()) {
                     $toolbar[] = array(
                             'title' => $GLOBALS['Language']->getText('plugin_tracker', 'administration'),
-                            'url'   => '/tracker/?tracker='. $this->id .'&amp;func=admin'
+                            'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin'
                     );
                 }
                 $toolbar[] = array(
@@ -928,70 +928,70 @@ class Tracker {
     protected function getAdminItems() {
         return array(
                 'editoptions' => array(
-                        'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-editoptions',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-editoptions',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','settings'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','settings'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_title'),
                         'img'         => 'ic/48/tracker-general.png',
                 ),
                 'editperms' => array(
-                        'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-perms',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-perms',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','permissions'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','manage_permissions'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_manage_permissions'),
                         'img'         => 'ic/48/tracker-perms.png',
                 ),
                 'editformElements' => array(
-                        'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-formElements',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-formElements',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','field_usage'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','mng_field_usage'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_use'),
                         'img'         => 'ic/48/tracker-form.png',
                 ),
                 'dependencies' => array(
-                        'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-dependencies',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-dependencies',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_dependencies'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_dependencies'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_dependencies_desc'),
                         'img'         => 'ic/48/tracker-fdependencies.png',
                 ),
                 'editsemantic' => array(
-                        'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-semantic',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-semantic',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','semantic'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_semantic'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_semantic_desc'),
                         'img'         => 'ic/48/tracker-semantic.png',
                 ),
                 'editworkflow' => array(
-                        'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-workflow',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-workflow',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','workflow'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow_desc'),
                         'img'         => 'ic/48/tracker-workflow.png',
                 ),
                 'editcanned' => array(
-                        'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-canned',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-canned',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','canned_resp'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','mng_response'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','add_del_resp'),
                         'img'         => 'ic/48/tracker-canned.png',
                 ),
                 'editnotifications' => array(
-                        'url'         => '/tracker/?tracker='. $this->id .'&amp;func=notifications',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=notifications',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','mail_notif'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','mail_notif'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_notif'),
                         'img'         => 'ic/48/tracker-notifs.png',
                 ),
                 'csvimport' => array(
-                        'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-csvimport',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-csvimport',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','csv_import'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','csv_import'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','csv_import_desc'),
                         'img'         => 'ic/48/tracker-import.png',
                 ),
                 'export' => array(
-                        'url'         => '/tracker/?tracker='. $this->id .'&amp;func=admin-export',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-export',
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','export'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','export'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','export_desc'),
@@ -1009,7 +1009,7 @@ class Tracker {
                         array(
                         array(
                                 'title' => $GLOBALS['Language']->getText('plugin_tracker_include_type','administration'),
-                                'url'   => '/tracker/?tracker='. $this->id .'&amp;func=admin',
+                                'url'   => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin',
                         ),
                         ),
                         $breadcrumbs
@@ -1164,12 +1164,12 @@ class Tracker {
     protected function getPermsItems() {
         return array(
                 'tracker' => array(
-                        'url'         => '/tracker/?tracker='.(int)$this->getId().'&amp;func=admin-perms-tracker',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='.(int)$this->getId().'&amp;func=admin-perms-tracker',
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','manage_tracker_permissions'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_manage_tracker_permissions')
                 ),
                 'fields' => array(
-                        'url'         => '/tracker/?tracker='.(int)$this->getId().'&amp;func=admin-perms-fields',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='.(int)$this->getId().'&amp;func=admin-perms-fields',
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_include_type','manage_fields_tracker_permissions'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_include_type','define_manage_fields_tracker_permissions')
                 )
@@ -1587,7 +1587,7 @@ EOS;
         $breadcrumbs = array(
                 array(
                         'title' => $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change'),
-                        'url'   => '#' //'/tracker/?tracker='. $this->id .'&amp;func=display-masschange-form',
+                        'url'   => '#' //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
                 ),
         );
         $this->displayHeader($tracker_manager, $this->name, $breadcrumbs);
@@ -1597,7 +1597,7 @@ EOS;
         $html .= '<strong>' . $GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'changing_items', array(count($masschange_aids))) . '</strong>';
         $html .= '<p class="masschange_artifact_ids">';
         foreach ($masschange_aids as $art_id) {
-            $html .= '<a href="/tracker/?aid='.$art_id.'">#' . $art_id . '</a> ';
+            $html .= '<a href="'.TRACKER_BASE_URL.'/?aid='.$art_id.'">#' . $art_id . '</a> ';
         }
         $html .= '</p>';
         
@@ -2302,7 +2302,7 @@ EOS;
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'file_not_found'));
-            $GLOBALS['Response']->redirect('/tracker/?tracker='. (int)$this->getId() .'&func=admin-csvimport');
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->getId() .'&func=admin-csvimport');
         }
     }
     

@@ -384,7 +384,7 @@ class Tracker_RulesManager {
                     $this->fieldIsAForbiddenTarget($tracker_id, $target_field, $source_field)
                 ) {                
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','dependencies_not_authorized'));
-                    $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array('tracker' => (int)$tracker_id, 'func'    => 'admin-dependencies')));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$tracker_id, 'func'    => 'admin-dependencies')));
                 } else {
                     
                     $this->displayDefineDependencies($engine, $request, $current_user, $source_field, $target_field);
@@ -412,7 +412,7 @@ class Tracker_RulesManager {
                    }
                 }
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','updated'));
-                $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-dependencies')));
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-dependencies')));
             }
         } else {
             $this->displayChooseSourceAndTarget($engine, $request, $current_user, null);
@@ -476,7 +476,7 @@ class Tracker_RulesManager {
             foreach ($sources_targets as $row) {
                 if ($source = $ff->getFormElementById($row['source_field_id'])) {
                     if ($target = $ff->getFormElementById($row['target_field_id'])) {
-                        $d = '<a href="/tracker/?'. http_build_query(
+                        $d = '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
                             array(
                                 'tracker'      => (int)$this->tracker->id, 
                                 'func'         => 'admin-dependencies',
@@ -559,7 +559,7 @@ class Tracker_RulesManager {
        }
 
         echo '</table>';
-        echo '<a href="/tracker/?'. http_build_query(
+        echo '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' => (int)$this->tracker->id,
                 'func'    => 'admin-dependencies',

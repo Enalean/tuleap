@@ -31,7 +31,7 @@ class Tracker_CannedResponseManager {
             if ($request->existAndNonEmpty('title') && $request->existAndNonEmpty('body')) {
                 if (Tracker_CannedResponseFactory::instance()->create($this->tracker, $request->get('title'), $request->get('body'))) {
                     $GLOBALS['Response']->addFeedback('info', 'Created');
-                    $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array(
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker->id,
                                                         'func'    => 'admin-canned')));
                 }
@@ -39,14 +39,14 @@ class Tracker_CannedResponseManager {
         } else if ($canned_id = (int)$request->get('delete')) {
             if (Tracker_CannedResponseFactory::instance()->delete($canned_id)) {
                 $GLOBALS['Response']->addFeedback('info', 'Deleted');
-                $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array(
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                     'tracker' => (int)$this->tracker->id,
                                                     'func'    => 'admin-canned')));
             }
         } else if ($canned_id = (int)$request->get('update')) {
             if (Tracker_CannedResponseFactory::instance()->update($canned_id, $this->tracker, trim($request->get('title')), $request->get('body'))) {
                 $GLOBALS['Response']->addFeedback('info', 'Updated');
-                $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array(
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                     'tracker' => (int)$this->tracker->id,
                                                     'func'    => 'admin-canned')));
             }
@@ -70,7 +70,7 @@ class Tracker_CannedResponseManager {
             foreach($responses as $response) {
                 echo '<tr class="'. util_get_alt_row_color($i++) .'" valign="top">';
                 //title
-                echo '<td><a href="/tracker/?'. http_build_query(array(
+                echo '<td><a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker->id,
                                                         'func'    => 'admin-canned',
                                                         'edit'    => (int)$response->id)) .'">';
@@ -83,7 +83,7 @@ class Tracker_CannedResponseManager {
                 echo '</td>';
                 
                 //delete
-                echo '<td><a href="/tracker/?'. http_build_query(array(
+                echo '<td><a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker->id,
                                                         'func'    => 'admin-canned',
                                                         'delete'  => (int)$response->id)) .'" 
@@ -122,7 +122,7 @@ class Tracker_CannedResponseManager {
         if ($response = Tracker_CannedResponseFactory::instance()->getCannedResponse($this->tracker, (int)$request->get('edit'))) {
             $hp = Codendi_HTMLPurifier::instance();
             $this->tracker->displayAdminItemHeader($tracker_manager, 'editcanned', array(array(
-                'url'         => '/tracker/?'. http_build_query(array(
+                'url'         => TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker->id,
                                                         'func'    => 'admin-canned',
                                                         'edit'    => (int)$response->id)),
@@ -147,7 +147,7 @@ class Tracker_CannedResponseManager {
             echo '<p>';
             echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
             echo '</from>';
-            echo '<p><a href="/tracker/?'. http_build_query(array(
+            echo '<p><a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                             'tracker' => (int)$this->tracker->id,
                                                             'func'    => 'admin-canned')) .'">&laquo; Go back to canned responses</a></p>';
             $this->tracker->displayFooter($tracker_manager);

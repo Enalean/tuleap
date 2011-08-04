@@ -293,7 +293,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                     )
                 );
                 $sanitized_description = $hp->purify($fileinfo->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
-                $link_show = '<a href="/tracker/?'. $query_link .'" 
+                $link_show = '<a href="'.TRACKER_BASE_URL.'/?'. $query_link .'" 
                                  '. ($fileinfo->isImage() ? 'rel="lytebox['. $this->getId() .']" ' : '') .'
                                  '. ($fileinfo->isImage() ? 'style="cursor:-moz-zoom-in;" '        : '') .'
                                  title="'. $sanitized_description .'">';
@@ -428,7 +428,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     }
     
     protected function getRootPath() {
-        return $GLOBALS['sys_data_dir'] .'/tracker/'. $this->id;
+        return $GLOBALS['sys_data_dir'] .TRACKER_BASE_URL.'/'. $this->id;
     }
     
     protected function isImage($value) {
