@@ -290,19 +290,19 @@ class Tracker_ReportFactory extends Error {
                                         $report->is_query_displayed);
         //create criterias
         $reportDB = Tracker_ReportFactory::instance()->getReportById($reportId, null);
-        if ($report->criterias) {
-            foreach ($report->criterias as $criteria){
+        if ($report->criteria) {
+            foreach ($report->criteria as $criteria){
                 $reportDB->addCriteria($criteria);
             }
         }
         //create renderers
         if ($report->renderers) {
             foreach ($report->renderers as $renderer) {
-	            $rendererId = $reportDB->addRenderer($renderer->name,
-					                                 $renderer->description,
-					                                 $renderer->getType());
-	            $rendererDB = Tracker_Report_RendererFactory::instance()->getReportRendererById($rendererId, $reportDB);
-	            $rendererDB->afterSaveObject($renderer);
+                if ($renderer) {
+                    $rendererId = $reportDB->addRenderer($renderer->name, $renderer->description, $renderer->getType());
+                    $rendererDB = Tracker_Report_RendererFactory::instance()->getReportRendererById($rendererId, $reportDB);
+                    $rendererDB->afterSaveObject($renderer);
+                }
 	        }
         }
         return $reportDB->id;

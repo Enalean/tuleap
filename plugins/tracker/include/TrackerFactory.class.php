@@ -534,10 +534,10 @@ class TrackerFactory {
             // XML validation before creating a new tracker
             $dom = new DOMDocument;
             $dom->load($xmlFile);
-            if(!@$dom->relaxNGValidate($GLOBALS['sys_urlroot'] .TRACKER_BASE_URL.'/resources/tracker.rng')) { //hide warning since we will extract the errors below
+            $rng = realpath(dirname(__FILE__).'/../www/resources/tracker.rng');
+            if(!@$dom->relaxNGValidate($rng)) { //hide warning since we will extract the errors below
                 //try to be more verbose for the end user (RelaxNG notices are hidden)
                 $hp = Codendi_HTMLPurifier::instance();
-                $rng    = $GLOBALS['sys_urlroot'] .TRACKER_BASE_URL.'/resources/tracker.rng';
                 $indent = $GLOBALS['codendi_utils_prefix'] .'/xml/indent.xsl';
                 $jing   = $GLOBALS['codendi_utils_prefix'] .'/xml/jing.jar';
                 $temp   = tempnam($GLOBALS['tmp_dir'], 'xml');
@@ -607,6 +607,7 @@ class TrackerFactory {
                     echo '</pre>';
                     unlink($temp);
                     $trackermanager->displayFooter($project);
+                    exit;
                 } else {
                     unlink($temp);
                     echo PHP_EOL;

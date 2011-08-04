@@ -185,7 +185,7 @@ class TrackerManager { /* extends Engine? */
         } else {
             $breadcrumbs = array();
         }
-        if ($service = $project->getService('tracker')) {
+        if ($service = $project->getService('plugin_tracker')) {
             $service->displayHeader($title, $breadcrumbs, $toolbar);
         }
     }
@@ -196,7 +196,7 @@ class TrackerManager { /* extends Engine? */
      * @param Project $project The project
      */
     public function displayFooter($project) {
-        if ($service = $project->getService('tracker')) {
+        if ($service = $project->getService('plugin_tracker')) {
             $service->displayFooter();
         }
     }
@@ -613,7 +613,7 @@ class TrackerManager { /* extends Engine? */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
         $this->getTrackerFactory()->duplicate($from_project_id, $to_project_id, $ugroup_mapping);
     }
-    
+
     protected function getTrackerFactory() {
         return TrackerFactory::instance();
     }
