@@ -29,29 +29,26 @@ require_once('common/plugin/Plugin.class.php');
  */
 class trackerPlugin extends Plugin {
 	
-	function trackerPlugin($id) {
-		$this->Plugin($id);
-        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
+	public function __construct($id) {
+		parent::__construct($id);
+		$this->setScope(self::SCOPE_PROJECT);
         $this->_addHook('cssfile', 'cssFile', false);
 	}
 	
-    function &getPluginInfo() {
+    public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'trackerPluginInfo')) {
-            require_once('trackerPluginInfo.class.php');
-            $this->pluginInfo =& new trackerPluginInfo($this);
+            include_once('trackerPluginInfo.class.php');
+            $this->pluginInfo = new trackerPluginInfo($this);
         }
         return $this->pluginInfo;
     }
-    
-    function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->getPluginPath().'/">tracker</a></li>';
-    }
-    
-    function cssFile($params) {
+
+    public function cssFile($params) {
         // Only show the stylesheet if we're actually in the tracker pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/print.css" media="print" />';
         }
     }
 }

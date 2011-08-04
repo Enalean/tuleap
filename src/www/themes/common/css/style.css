@@ -1342,3 +1342,69 @@ ul.ServiceMenu li.current {
     margin-right: 1em;
 }
 /* }}} */
+
+/* {{{ Toggler */
+h3.toggler,
+h3.toggler-noajax,
+h3.toggler-hide,
+h3.toggler-hide-noajax {
+    padding-bottom:1em;
+    margin-bottom:0;
+}
+
+.toggler-noajax, .toggler-hide-noajax,
+.toggler, .toggler-hide {
+    background-position:left middle;
+    background-repeat:no-repeat;
+    padding-left:16px;
+    cursor:pointer;
+}
+.toggler,
+.toggler-noajax {
+    background-image:url('../images/ic/toggle_minus.png');
+}
+.toggler-hide,
+.toggler-hide-noajax {
+    background-image:url('../images/ic/toggle_plus.png');
+}
+/* }}} */
+
+/* {{{ Breadcrumbs */
+.breadcrumb {
+    list-style-type: none;
+    margin: 0;
+    padding:0;
+    font-size:0.8em;
+}
+.breadcrumb select {
+    vertical-align:middle;
+}
+.breadcrumb li {
+    margin: 0;
+    display: inline;
+}
+.breadcrumb-sep {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+/* }}} */
+
+/* {{{ Toolbar */
+.toolbar {
+    list-style-type: none;
+    margin: 1em 0;
+    padding:0;
+    font-weight:bold;
+    padding-bottom:0.5em;
+    border-bottom: 1px solid #999;
+}
+.toolbar li {
+    margin: 0;
+    display: inline;
+}
+.toolbar-sep {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+/* }}} */
+
