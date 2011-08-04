@@ -595,6 +595,16 @@ function permission_fetch_selection_form($permission_type, $object_id, $group_id
     return $html;
 }
 
+function permission_fetch_selected_ugroups($permission_type, $object_id, $group_id) {
+    $ugroups = array();
+    $res_ugroups = permission_db_authorized_ugroups($permission_type, $object_id);
+    while ( $row = db_fetch_array($res_ugroups) ) {
+       $data = db_fetch_array(ugroup_db_get_ugroup($row['ugroup_id']));
+       $ugroups[] = util_translate_name_ugroup($data['name']);
+    }
+    return $ugroups;
+}
+
 function permission_fetch_selection_field($permission_type, $object_id, $group_id, $htmlname = 'ugroups') {
     $html = '';
     // Get ugroups already defined for this permission_type
