@@ -235,10 +235,19 @@ Summary: Insert Remedy tickets using Codex
 Group: Development/Tools
 Version: @@PLUGIN_REQUESTHELP_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, php-pecl-oci8 = 1.4.5
+Requires: %{PKG_NAME}, php-pecl-oci8 = 1.4.5
 Provides: codendi-plugin-requesthelp = %{version}
 %description plugin-requesthelp
 Plugin to insert Remedy tickets using Codex (used for ST only)
+
+%package plugin-tracker
+Summary: Tracker v5 for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_TRACKER_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}, libxslt
+%description plugin-tracker
+New tracker generation for Tuleap.
 
 #
 ## Themes
@@ -751,6 +760,10 @@ fi
 %files plugin-requesthelp
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/requesthelp
+
+%files plugin-tracker
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/tracker
 
 #
 # Themes
