@@ -62,7 +62,7 @@ class trackerPlugin extends Plugin {
     }
     
     public function combined_scripts($params) {
-        array_merge(
+        $params['scripts'] = array_merge(
             $params['scripts'],
             array(
                 '/plugins/tracker/scripts/TrackerReports.js',
@@ -76,7 +76,6 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerFieldDependencies.js',
             )
         );
-        $params['classnames']['plugin_tracker'] = 'ServiceTracker';
     }
 }
 

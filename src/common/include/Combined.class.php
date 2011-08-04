@@ -45,6 +45,7 @@ class Combined {
             '/scripts/codendi/RichTextEditor.js',
             '/scripts/codendi/Tracker.js',
         );
+        EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
         return $arr;
     }
     
