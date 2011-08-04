@@ -27,7 +27,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
         $this->END    = 2;
         
         //The directories that should not be parsed
-        $this->exclude = array('.', '..', '.svn', 'simpletest', 'tiny_mce', 'phpwiki', 'SimplePie');
+        $this->exclude = array('.', '..', '.svn', 'simpletest', 'tiny_mce', 'phpwiki', 'SimplePie', 'ckeditor', 'xhprof_lib', 'xhprof_html', 'doxygen');
         
         //Same as before when the dirname is ambiguous
         $this->exclude_wholedir = '`(?:'. implode('|', array(
@@ -63,6 +63,9 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'src/www/scripts/check_pw.js.php',
             'src/www/scripts/cross_references.js.php',
             'plugins/salome/include/SalomeWithCodendi.jnlp.php',
+            'plugins/tracker/www/scripts/codendi/TrackerArtifact.js.php',
+            'plugins/tracker/www/scripts/codendi/TrackerReports.js.php',
+            'plugins/tracker/www/scripts/codendi/TrackerAdminFields.js.php',
             'site-content/en_US/others/default_page.php',
             'site-content/fr_FR/others/default_page.php'
         );
