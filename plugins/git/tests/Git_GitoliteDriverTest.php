@@ -32,15 +32,16 @@ Mock::generate('Git_PostReceiveMailManager');
 class Git_GitoliteDriverTest extends UnitTestCase {
 
     function setUp() {
-        $this->cwd = getcwd();
-        
-        $this->_fixDir = dirname(__FILE__).'/_fixtures';
+        $this->cwd           = getcwd();
+        $this->_fixDir       = dirname(__FILE__).'/_fixtures';
+        $this->_glAdmDirRef  = $this->_fixDir.'/gitolite-admin-ref';
+        $this->_glAdmDir     = $this->_fixDir.'/gitolite-admin';
 
-        $this->_glAdmDirRef = $this->_fixDir.'/gitolite-admin-ref';
-        
-        $this->_glAdmDir = $this->_fixDir.'/gitolite-admin';
-
-        system('cp -r '. $this->_glAdmDirRef .' '. $this->_glAdmDir);
+        // Copy the reference to save time & create symlink because
+        // git is very sensitive to path you are using. Just symlinking
+        // spots bugs
+        system('tar -xf '. $this->_glAdmDirRef .'.tar --directory '.$this->_fixDir);
+        symlink($this->_glAdmDirRef, $this->_glAdmDir);
 
         $this->httpsHost = $GLOBALS['sys_https_host'];
         $GLOBALS['sys_https_host'] = 'localhost';
@@ -48,7 +49,8 @@ class Git_GitoliteDriverTest extends UnitTestCase {
 
     function tearDown() {
         chdir($this->cwd);
-        system('rm -rf '.$this->_glAdmDir);
+        system('rm -rf '.$this->_glAdmDirRef);
+        unlink($this->_glAdmDir);
         $GLOBALS['sys_https_host'] = $this->httpsHost;
     }
 
@@ -312,8 +314,8 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $gitoliteConf = file_get_contents($this->_fixDir.'/gitolite-admin/conf/gitolite.conf');
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
-    /**/
     
+    /**/
     function testRenameProject() {
         $driver = $this->getPartialMock('Git_GitoliteDriver', array('gitPush'));
         $driver->expectOnce('gitPush');
@@ -337,6 +339,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertPattern('`\ninclude "projects/newone.conf"\n`', file_get_contents($this->_glAdmDir.'/conf/gitolite.conf'));
         $this->assertEmptyGitStatus();
     }
+    /**/
 }
 
 ?>
