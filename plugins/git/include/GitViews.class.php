@@ -368,7 +368,7 @@ class GitViews extends PluginViews {
         $repoName     = $repository->getName();
         $initialized  = $repository->isInitialized();
         $mails        = $params['mails'];
-        if ( $initialized && $this->getController()->isAPermittedAction('save') ) :
+        if ( $this->getController()->isAPermittedAction('save') ) :
         ?>
         <div class="confirm">
         <h3><?php echo $this->getText('set_private_confirm'); ?></h3>
