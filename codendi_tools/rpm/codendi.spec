@@ -122,7 +122,7 @@ to send mails through the web interface. It can replace the forums.
 Summary: Git plugin for Codendi
 Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
-Release: 2%{?dist}
+Release: 1%{?dist}
 Requires: %{name} >= %{version}, git > 1.6, geshi, php-Smarty, gitolite
 Provides: codendi-plugin-git = %{version}
 %description plugin-git

@@ -1,5 +1,11 @@
-Version 1.11 (Not released yet)
-	* TODO: add reference to backlog
+Version 1.12 (Not released yet)
+	* Fix gitolite behaviour when data dir is located in a symlinked path
+	* No longer possible to create 2 repositories with the same name
+	
+Version 1.11 (Not released)
+	* Introduce usage of Gitolite for fine grain permissions management
+	  Not complete yet (delete & fork are missing) and only for "Tuleap Lab"
+	  users.
 
 Version 1.10 (Tuleap 4.0.19)
 	* Rewrite management of cross references extraction to improve performances
