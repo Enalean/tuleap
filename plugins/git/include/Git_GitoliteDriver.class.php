@@ -201,8 +201,17 @@ class Git_GitoliteDriver {
         return $this->gitCmd($cmd);
     }
 
+    /**
+     * Commit stuff to repository
+     * 
+     * Always force commit, even when there no changes it's mandatory with
+     * dump ssh keys event, otherwise the commit is empty and it raises errors.
+     * TODO: find a better way to manage that!
+     *
+     * @param String $message
+     */
     protected function gitCommit($message) {
-        $cmd = 'git commit -m '.escapeshellarg($message);
+        $cmd = 'git commit --allow-empty -m '.escapeshellarg($message);
         return $this->gitCmd($cmd);
     }
     
