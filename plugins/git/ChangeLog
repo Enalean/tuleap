@@ -1,3 +1,7 @@
+Version 1.13 (Not released yet)
+	* Fix issue when trying to set Private a empty git repo.
+	* Fix bug when system_check's dump ssh keys doesn't modify anything
+
 Version 1.12 (Not released yet)
 	* Fix gitolite behaviour when data dir is located in a symlinked path
 	* No longer possible to create 2 repositories with the same name
