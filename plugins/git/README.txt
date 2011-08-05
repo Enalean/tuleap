@@ -1,23 +1,24 @@
-!!! Gitolite support
+If you installed this plugin from the package management system (RPM) all
+dependencies are already installed, you just need to activate the plugin
+to start using it.
 
-* Update git from epel (1.7.x), compatible with existing git integration.
-* Install gitolite from epel.
+Git plugin has 2 access methods for user
+* The historical one, based on git-shell. End users use their "Tuleap login"
+  to login, commit & update. They can use either password or ssh key access
+  method
 
-!! Setup gitolite
+* Gitolite, currently in "Lab mode". Project admins who want to activate it
+  has to go in "My personal page > Preferences > Tuleap Lab" and to activate
+  the lab mode. Once activated, in git new repositories can be created with
+  "fine grain permissions capabilities".
+  To access those repositories, end users HAVE TO use 'gitolite' ssh user and
+  to deploy their ssh key.
 
+
+=== Under the hood ===
+
+Git plugins depends of both gitolite 1.5.9 (that depends of git >= 1.7)
+Both packages and their dependencies are available in epel repository
+
+More gitolite info can be found on gitolite web site:
 Reference: http://sitaramc.github.com/gitolite/doc/1-INSTALL.html#_package_method
-
-* Generate a SSH key for codendiadm: ssh-keygen -q -t rsa -f $HOME/.ssh/id_rsa_gitolite -N ""
-* cp $HOME/.ssh/id_rsa_gitolite.pub /var/tmp/codendi_cache
-* su - gitolite
-* gl-setup /var/tmp/codendi_cache/id_rsa_gitolite.pub
-
-Deploy Gitolite Membership Program
-/usr/bin/install -g codendiadm -o codendiadm -m 06755 /usr/share/codendi/plugins/git/bin/gl-membership.pl /usr/lib/codendi/bin
-+ edit ~/gitolite.rc
--> gl-membership
--> umask to 0007
-
-# Add codendiadm as a member of "gitolite" group
-groups codendiadm
-usermod -a -G gitolite codendiadm

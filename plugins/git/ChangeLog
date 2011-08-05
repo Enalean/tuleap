@@ -1,3 +1,7 @@
+Version 1.12 (Not released yet)
+	* Fix gitolite behaviour when data dir is located in a symlinked path
+	* No longer possible to create 2 repositories with the same name
+
 Version 1.11 (Tuleap 4.0.20 - Not released yet)
 	* backlog #22 : Gitolite integration
 

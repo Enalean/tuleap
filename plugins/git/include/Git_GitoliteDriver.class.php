@@ -24,7 +24,22 @@ require_once 'common/user/User.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
 require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
+require_once 'exceptions/Git_Command_Exception.class.php';
 
+/**
+ * This class manage the interaction between Tuleap and Gitolite
+ * Warning: as gitolite "interface" is made through a git repository
+ * we need to execute git commands. Those commands are very sensitive
+ * to the environement (especially the current working directory). 
+ * So this class expect to work in Tuleap's Gitolite admin directory
+ * all the time (chdir in constructor/setAdminPath) and change back to
+ * the previous location after push.
+ * If you want to re-do some gitolite stuff after push; you have to either
+ * + Use new object
+ * + Call setAdminPath again
+ * And if you don't push, you will stay in Gitolite admin directory!
+ *
+ */
 class Git_GitoliteDriver {
     protected $oldCwd;
     protected $confFilePath;
@@ -62,10 +77,11 @@ class Git_GitoliteDriver {
     }
 
     public function setAdminPath($adminPath) {
+        $this->oldCwd    = getcwd();
         $this->adminPath = $adminPath;
-        $this->confFilePath = $adminPath.'/conf/gitolite.conf';
-        $this->oldCwd = getcwd();
         chdir($this->adminPath);
+
+        $this->confFilePath = 'conf/gitolite.conf';
     }
     
     public function masterExists($repoPath) {
@@ -93,7 +109,7 @@ class Git_GitoliteDriver {
                 $backend->removeBlock($this->confFilePath);
             }
             $newConf = '';
-            $dir = new DirectoryIterator($this->adminPath.'/conf/projects');
+            $dir = new DirectoryIterator('conf/projects');
             foreach ($dir as $file) {
                 if (!$file->isDot()) {
                     $newConf .= 'include "projects/'.basename($file->getFilename()).'"'.PHP_EOL;
@@ -130,17 +146,21 @@ class Git_GitoliteDriver {
         $this->removeUserExistingKeys($user);
 
         // Create path if need
-        $keydir = $this->adminPath.'/keydir';
+        clearstatcache();
+        $keydir = 'keydir';
         if (!is_dir($keydir)) {
-            mkdir($keydir);
+            if (!mkdir($keydir)) {
+                throw new Exception('Unable to create "keydir" directory in '.getcwd());
+            }
         }
 
         // Dump keys
         $i    = 0;
         foreach ($user->getAuthorizedKeys(true) as $key) {
             $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
-            file_put_contents($filePath, $key);
-            $this->gitAdd($filePath);
+            if (file_put_contents($filePath, $key) == strlen($key)) {
+                $this->gitAdd($filePath);
+            }
             $i++;
         }
 
@@ -153,13 +173,13 @@ class Git_GitoliteDriver {
      * @param User $user
      */
     protected function removeUserExistingKeys($user) {
-        $keydir = $this->adminPath.'/keydir';
+        $keydir = 'keydir';
         if (is_dir($keydir)) {
             $dir = new DirectoryIterator($keydir);
             foreach ($dir as $file) {
                 $userbase = $user->getUserName().'@';
                 if (preg_match('/^'.$userbase.'[0-9]+.pub$/', $file)) {
-                    unlink($file->getPathname());
+                    //unlink($file->getPathname());
                     $this->gitRm($file->getPathname());
                 }
             }
@@ -167,47 +187,37 @@ class Git_GitoliteDriver {
     }
 
     protected function gitMv($from, $to) {
-        exec('git mv '.escapeshellarg($from) .' '. escapeshellarg($to), $output, $retVal);
-        if ($retVal == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        $cmd = 'git mv '.escapeshellarg($from) .' '. escapeshellarg($to);
+        return $this->gitCmd($cmd);
     }
 
     protected function gitAdd($file) {
-        exec('git add '.escapeshellarg($file), $output, $retVal);
-        if ($retVal == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        $cmd = 'git add '.escapeshellarg($file);
+        return $this->gitCmd($cmd);
     }
 
     protected function gitRm($file) {
-        exec('git rm '.escapeshellarg($file), $output, $retVal);
-        if ($retVal == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        $cmd = 'git rm '.escapeshellarg($file);
+        return $this->gitCmd($cmd);
     }
 
     protected function gitCommit($message) {
-        exec('git commit -m '.escapeshellarg($message).' 2>&1 >/dev/null', $output, $retVal);
-        if ($retVal == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        $cmd = 'git commit -m '.escapeshellarg($message);
+        return $this->gitCmd($cmd);
     }
     
     protected function gitPush() {
-        exec('git push origin master 2>&1', $output, $retVal);
+        $cmd = 'git push origin master';
+        return $this->gitCmd($cmd);
+    }
+    
+    protected function gitCmd($cmd) {
+        $cmd = $cmd.' 2>&1';
+        exec($cmd, $output, $retVal);
         if ($retVal == 0) {
             return true;
         } else {
-            return false;
+            throw new Git_Command_Exception($cmd, $output, $retVal);
         }
     }
     
@@ -357,7 +367,7 @@ class Git_GitoliteDriver {
     }
     
     protected function getProjectPermissionConfFile($project) {
-        $prjConfDir = $this->adminPath.'/conf/projects';
+        $prjConfDir = 'conf/projects';
         if (!is_dir($prjConfDir)) {
             mkdir($prjConfDir);
         }
@@ -405,18 +415,18 @@ class Git_GitoliteDriver {
      */
     public function renameProject($oldName, $newName) {
         $ok = true;
-        if (is_file($this->adminPath.'/conf/projects/'. $oldName .'.conf')) {
+        if (is_file('conf/projects/'. $oldName .'.conf')) {
             $ok = $this->gitMv(
-                $this->adminPath.'/conf/projects/'. $oldName .'.conf',
-                $this->adminPath.'/conf/projects/'. $newName .'.conf'
+                'conf/projects/'. $oldName .'.conf',
+                'conf/projects/'. $newName .'.conf'
             );
             if ($ok) {
                 //conf/projects/newone.conf
-                $orig = file_get_contents($this->adminPath.'/conf/projects/'. $newName .'.conf');
+                $orig = file_get_contents('conf/projects/'. $newName .'.conf');
                 $dest = preg_replace('`(^|\n)repo '. preg_quote($oldName) .'/`', '$1repo '. $newName .'/', $orig);
                 $dest = str_replace('@'. $oldName .'_project_', '@'. $newName .'_project_', $dest);
-                file_put_contents($this->adminPath.'/conf/projects/'. $newName .'.conf', $dest);
-                $this->gitAdd($this->adminPath. '/conf/projects/'. $newName .'.conf');
+                file_put_contents('conf/projects/'. $newName .'.conf', $dest);
+                $this->gitAdd('conf/projects/'. $newName .'.conf');
                 
                 //conf/gitolite.conf
                 $orig = file_get_contents($this->confFilePath);

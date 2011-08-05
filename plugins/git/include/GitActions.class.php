@@ -118,7 +118,11 @@ class GitActions extends PluginActions {
             $repository->setProject($project);
             $repository->setName($repositoryName);
             $repository->setBackend($backend);
-            $repository->create();
+            if (!$repository->exists()) {
+                $repository->create();
+            } else {
+                $c->addError($this->getText('actions_create_repo_exists', array($repositoryName)));
+            }
         } else {
             $this->systemEventManager->createEvent('GIT_REPO_CREATE',
                 $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryName.SystemEvent::PARAMETER_SEPARATOR.$this->user->getId(),
