@@ -23,6 +23,12 @@ Mock::generatePartial('SVNAccessFile', 'SVNAccessFileTestVersion', array('isGrou
 
 class SVNAccessFileTest extends UnitTestCase {
 
+    function getPartialMock($className, $methods) {
+        $partialName = $className.'Partial'.uniqid();
+        Mock::generatePartial($className, $partialName, $methods);
+        return new $partialName($this);
+    }
+
     function testisGroupDefinedInvalidSyntax() {
         $saf = new SVNAccessFile();
         $groups = array();
@@ -81,19 +87,14 @@ class SVNAccessFileTest extends UnitTestCase {
     }
 
     function testParseGroupLines() {
-        $this->skipUnless(MOCKFUNCTION_AVAILABLE, "Function mocking not available");
-        if (MOCKFUNCTION_AVAILABLE) {
-            MockFunction::generate('svn_utils_read_svn_access_file_defaults');
-            MockFunction::setReturnValue('svn_utils_read_svn_access_file_defaults', "[groups]\nmembers = user1, user2\nuGroup1 = user3\n\n[/]\n*=\n@members=rw\n");
-
-            $project = new MockProject();
-            $saf = new SVNAccessFile();
-            $this->assertEqual("[/]\n@members=rw\n# @group1 = r", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r"));
-            $this->assertEqual("[/]\n@members=rw\n# @group1 = r\n[Groups]\ngroup1=user1, user2\n[/trunk]\n@group1=r\nuser1=rw", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r\n[Groups]\ngroup1=user1, user2\n[/trunk]\n@group1=r\nuser1=rw"));
-            $this->assertEqual("[/]\n@members=rw\n# @group1 = r\n[Groups]\ngroup1=user1, user2\n[groups]\ngroup2=user3\n[/trunk]\n@group1=r\nuser1=rw\n@group2=rw", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r\n[Groups]\ngroup1=user1, user2\n[groups]\ngroup2=user3\n[/trunk]\n@group1=r\nuser1=rw\n@group2=rw"));
-
-            MockFunction::restore('svn_utils_read_svn_access_file_defaults');
-        }
+        $project = new MockProject();
+        
+        $saf = $this->getPartialMock('SVNAccessFile', array('getPlatformBlock'));
+        $saf->setReturnValue('getPlatformBlock', "[groups]\nmembers = user1, user2\nuGroup1 = user3\n\n[/]\n*=\n@members=rw\n");
+        
+        $this->assertEqual("[/]\n@members=rw\n# @group1 = r", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r"));
+        $this->assertEqual("[/]\n@members=rw\n# @group1 = r\n[Groups]\ngroup1=user1, user2\n[/trunk]\n@group1=r\nuser1=rw", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r\n[Groups]\ngroup1=user1, user2\n[/trunk]\n@group1=r\nuser1=rw"));
+        $this->assertEqual("[/]\n@members=rw\n# @group1 = r\n[Groups]\ngroup1=user1, user2\n[groups]\ngroup2=user3\n[/trunk]\n@group1=r\nuser1=rw\n@group2=rw", $saf->parseGroupLines($project, "[/]\n@members=rw\n@group1 = r\n[Groups]\ngroup1=user1, user2\n[groups]\ngroup2=user3\n[/trunk]\n@group1=r\nuser1=rw\n@group2=rw"));
     }
 
     function testAccumulateDefinedGroupsFromDeFaultGroupsSection() {
@@ -136,6 +137,16 @@ class SVNAccessFileTest extends UnitTestCase {
         $this->assertEqual(-1, $saf->getCurrentSection('Group1 = user1, user2', -1));
     }
 
+    function testSvnAccessFileShouldCallsvn_utils_read_svn_access_file_defaultsWithCaseSensitiveRepositoryName() {
+        $project = new MockProject();
+        $project->setReturnValue('getUnixName', 'MyTestProject', array(false));
+        $project->setReturnValue('getUnixName', 'mytestproject');
+        
+        $saf = $this->getPartialMock('SVNAccessFile', array('getPlatformBlock'));
+        $saf->expectOnce('getPlatformBlock', array('MyTestProject'));
+        
+        $saf->parseGroupLines($project, '');
+    }
 }
 
 ?>

@@ -459,20 +459,22 @@ function svn_utils_read_svn_access_file_defaults($gname,$display=false) {
     $filename = "$svn_prefix/$gname/.SVNAccessFile";
 
     $fd = @fopen("$filename", "r");
-    $in_settings = false;
     $buffer = '';
-    while (!feof($fd)) {
-        $line = fgets($fd, 4096);
-        //if for display: don't include comment lines 
-        if ($display && strpos($line,'# END CODENDI DEFAULT') !== false) { $in_settings = false; break; }
-        else if (!$display && strpos($line,'# BEGIN CODENDI DEFAULT') !== false) { $in_settings = true; }
-    
-        if ($in_settings) { $buffer .= $line; }
-    
-        if ($display && strpos($line,'# BEGIN CODENDI DEFAULT') !== false) { $in_settings = true; }
-        else if (!$display && strpos($line,'# END CODENDI DEFAULT') !== false) { $in_settings = false; break; }
+    if ($fd) {
+        $in_settings = false;
+        while (!feof($fd)) {
+            $line = fgets($fd, 4096);
+            //if for display: don't include comment lines
+            if ($display && strpos($line,'# END CODENDI DEFAULT') !== false) { $in_settings = false; break; }
+            else if (!$display && strpos($line,'# BEGIN CODENDI DEFAULT') !== false) { $in_settings = true; }
+
+            if ($in_settings) { $buffer .= $line; }
+
+            if ($display && strpos($line,'# BEGIN CODENDI DEFAULT') !== false) { $in_settings = true; }
+            else if (!$display && strpos($line,'# END CODENDI DEFAULT') !== false) { $in_settings = false; break; }
+        }
+        fclose($fd);
     }
-    fclose($fd);
     return $buffer;
 
 }

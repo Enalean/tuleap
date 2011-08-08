@@ -159,7 +159,7 @@ class SVNAccessFile {
      * @return String
      */
     public function parseGroupLines($project, $contents, $verbose = false) {
-        $defaultLines = explode("\n", svn_utils_read_svn_access_file_defaults($project->getUnixName(), true));
+        $defaultLines = explode("\n", $this->getPlatformBlock($project->getUnixName(false)));
         $groups = array();
         $currentSection = -1;
         foreach ($defaultLines as $line) {
@@ -253,6 +253,17 @@ class SVNAccessFile {
      */
     protected function getGroupMatcher($groupPattern) {
         return '/^@'.$groupPattern.'\s*=/';
+    }
+
+    /**
+     * Returns permissions defined by Tuleap (based on ugroups)
+     *
+     * @param String $projectName
+     *
+     * @return String
+     */
+    protected function getPlatformBlock($projectName) {
+        return svn_utils_read_svn_access_file_defaults($projectName, true);
     }
 }
 
