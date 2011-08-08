@@ -17,9 +17,20 @@ COMPRESSORJAR="yuicompressor-2.4.2.jar"
 JSEXT=".js"
 MINEXT=".min.js"
 
+CSSDIR="css"
+CSSEXT=".css"
+MINCSSEXT=".min.css"
+
 rm -f ${JSDIR}/*${MINEXT}
 
 for i in ${JSDIR}/*${JSEXT}; do
 	echo "Minifying ${i}..."
 	java -jar "${COMPRESSORDIR}/${COMPRESSORJAR}" --charset utf-8 -o "${i%$JSEXT}${MINEXT}" "${i}"
+done
+
+rm -f ${CSSDIR}/*${MINCSSEXT}
+
+for i in ${CSSDIR}/*${CSSEXT}; do
+	echo "Minifying ${i}..."
+	java -jar "${COMPRESSORDIR}/${COMPRESSORJAR}" --charset utf-8 -o "${i%$CSSEXT}${MINCSSEXT}" "${i}"
 done
