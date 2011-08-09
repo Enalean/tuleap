@@ -398,6 +398,7 @@ class SystemEventManager {
         $consts  = $reflect->getConstants();
         array_walk($consts, array($this, 'filterConstants'));
         $types = array_filter($consts);
+        EventManager::instance()->processEvent(Event::SYSTEM_EVENT_GET_TYPES, array('types' => &$types));
         return $types;
     }
     

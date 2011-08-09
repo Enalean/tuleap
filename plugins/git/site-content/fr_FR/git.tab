@@ -136,7 +136,8 @@ plugin_git	gitolite_lab_feature_description	Permet de positionner des permission
 
 plugin_git	perm_R	Lecture
 plugin_git	perm_W	Ecriture
-plugin_git	perm_W+	Ecriture et Rewind
+plugin_git	perm_W+	Rewind
 
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
+project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1

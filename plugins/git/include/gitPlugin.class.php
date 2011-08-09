@@ -53,6 +53,7 @@ class GitPlugin extends Plugin {
         $this->_addHook(Event::EDIT_SSH_KEYS, 'edit_ssh_keys', false);
         $this->_addHook(Event::DUMP_SSH_KEYS, 'dump_ssh_keys', false);
         $this->_addHook(Event::LAB_FEATURES_DEFINITION_LIST, 'lab_features_definition_list', false);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
         
         $this->_addHook('permission_get_name',               'permission_get_name',               false);
         $this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
@@ -337,6 +338,13 @@ class GitPlugin extends Plugin {
             }
             $params['allowed'] = $this->_cached_permission_user_allowed_to_change;
         }
+    }
+    
+    public function system_event_get_types($params) {
+        $params['types'][] = 'GIT_REPO_ACCESS';
+        $params['types'][] = 'GIT_REPO_CLONE';
+        $params['types'][] = 'GIT_REPO_CREATE';
+        $params['types'][] = 'GIT_REPO_DELETE';
     }
 }
 

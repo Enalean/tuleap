@@ -138,7 +138,8 @@ plugin_git	gitolite_lab_feature_description	Allow to set specifics, distincts, p
 
 plugin_git	perm_R	Read
 plugin_git	perm_W	Write
-plugin_git	perm_W+	Write & Rewind
+plugin_git	perm_W+	Rewind
 
 project_admin_utils	perm_granted_for_git_repository	Permission granted for git repository $1
+project_admin_utils	perm_reset_for_git_repository	Permission reset for git repository $1
 
