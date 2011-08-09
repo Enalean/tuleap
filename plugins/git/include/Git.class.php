@@ -208,7 +208,7 @@ class Git extends PluginController {
                     $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc) );
                     $this->addView('view');
                 } else {
-                    $this->addError( $this->getText('controller_action_permission_denied') );
+                    $this->addError( $this->getText('controller_access_denied') );
                     $this->redirect('/plugins/git/?group_id='.$this->groupId);
                 }
                 break;
