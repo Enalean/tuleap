@@ -44,8 +44,7 @@ plugin_git	admin_deletion_input_name	Delete
 plugin_git	admin_save_submit	Save
 
 
-plugin_git	controller_access_denied	You are not allowed to access this page. You must be a project member
-plugin_git	controller_action_permission_denied	You do not have sufficient permissions to perform this action
+plugin_git	controller_access_denied	You are not allowed to access this page
 
 plugin_git	dao_delete_error	Unable to delete repository from database
 plugin_git	dao_delete_params	Missing repository id or project id

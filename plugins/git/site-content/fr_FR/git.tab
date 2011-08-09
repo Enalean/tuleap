@@ -44,8 +44,7 @@ plugin_git	admin_deletion_input_name	Supprimer ce dépôt
 plugin_git	admin_save_submit	Enregistrer
 
 
-plugin_git	controller_access_denied	Vous n'êtes pas autorisé a accéder à cette page. Vous devez être membre du projet
-plugin_git	controller_action_permission_denied	Vous n'avez pas les droits suffisant pour effectuer cette action
+plugin_git	controller_access_denied	Vous n'êtes pas autorisé a accéder à cette page
 
 plugin_git	dao_delete_error	Impossible de supprimer le dépôt de la base de données
 plugin_git	dao_delete_params	Impossible de supprimer le dépôt de la base de données, paramètres invalides
