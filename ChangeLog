@@ -10,7 +10,7 @@ Version 4.0.20 - Not released yet
 
 	== Plugins ==
 	* New plugin "Request Help" to link Tuleap with BMC Remedy ticketing system (works only for STMicroeletronics).
-	* Git plugin v1.13 See separated ChangeLog.
+	* Git plugin v1.14 See separated ChangeLog.
 	* Webdav plugin v1.6. See separated ChangeLog
 	* Docman plugin v2.11 See separated ChangeLog
 
