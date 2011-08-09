@@ -70,7 +70,6 @@ class Git extends PluginController {
         if($this->request->valid($valid)) {
             $this->action = $this->request->get('action');
         }
-        $this->nonMember   = false;
 
         if (  empty($this->action) ) {
             $this->action = 'index';
@@ -87,7 +86,13 @@ class Git extends PluginController {
         }
 
         $this->permittedActions = array();
-        //user access control
+    }
+
+    protected function getText($key, $params = array()) {
+        return $GLOBALS['Language']->getText('plugin_git', $key, $params);
+    }
+    
+    protected function definePermittedActions($repoId, $user) {
         if ( $this->user->isMember($this->groupId, 'A') === true ) {
             $this->permittedActions = array('index',
                                             'view' ,
@@ -105,22 +110,18 @@ class Git extends PluginController {
                                             'fork',
                                             'set_private',
                                             'confirm_private');
-        } else if ( $this->user->isMember($this->groupId) === true ) {
-            $this->permittedActions = array('index','view', 'edit', 'clone');
-        } else if ( !$this->user->isAnonymous() && !$this->user->isRestricted() ) {
-            //public repository access
-            $this->permittedActions = array('index');
-            $this->nonMember        = true;
+        } else {
+            $this->addPermittedAction('index');
+            if ($repoId !== 0) {
+                $repo = new GitRepository();
+                $repo->setId($repoId);
+                if ($repo->exists() && $repo->userCanRead($user)) {
+                    $this->addPermittedAction('view');
+                    $this->addPermittedAction('edit');
+                    $this->addPermittedAction('clone');
+                }
+            }
         }
-
-        if ( empty($this->permittedActions) ) {            
-            $this->addError( $this->getText('controller_access_denied') );
-            $this->redirect('/projects/'.$this->projectName.'/');
-        }                
-    }
-
-    protected function getText($key, $params = array()) {
-        return $GLOBALS['Language']->getText('plugin_git', $key, $params);
     }
 
     public function request() {
@@ -139,18 +140,12 @@ class Git extends PluginController {
 
         $user = UserManager::instance()->getCurrentUser();
 
-        //public access
-        if ($repoId !== 0) {
-            $repo = new GitRepository();
-            $repo->setId($repoId);
-            if ($repo->exists() && $repo->userCanRead($user)) {
-                $this->addPermittedAction('view');
-            }
-        } 
+        //define access permissions
+        $this->definePermittedActions($repoId, $user);
 
         //check permissions
-        if (!empty($this->action) && !$this->isAPermittedAction($this->action)) {
-            $this->addError($this->getText('controller_action_permission_denied'));
+        if ( empty($this->permittedActions) || !$this->isAPermittedAction($this->action) ) {
+            $this->addError($this->getText('controller_access_denied'));
             $this->redirect('/plugins/git/?group_id='.$this->groupId);
             return;
         }
@@ -213,7 +208,7 @@ class Git extends PluginController {
                     $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc) );
                     $this->addView('view');
                 } else {
-                    $this->addError( $this->getText('controller_action_permission_denied') );
+                    $this->addError( $this->getText('controller_access_denied') );
                     $this->redirect('/plugins/git/?group_id='.$this->groupId);
                 }
                 break;

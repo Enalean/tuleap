@@ -44,8 +44,7 @@ plugin_git	admin_deletion_input_name	Supprimer ce dépôt
 plugin_git	admin_save_submit	Enregistrer
 
 
-plugin_git	controller_access_denied	Vous n'êtes pas autorisé a accéder à cette page. Vous devez être membre du projet
-plugin_git	controller_action_permission_denied	Vous n'avez pas les droits suffisant pour effectuer cette action
+plugin_git	controller_access_denied	Vous n'êtes pas autorisé a accéder à cette page
 
 plugin_git	dao_delete_error	Impossible de supprimer le dépôt de la base de données
 plugin_git	dao_delete_params	Impossible de supprimer le dépôt de la base de données, paramètres invalides
@@ -136,7 +135,8 @@ plugin_git	gitolite_lab_feature_description	Permet de positionner des permission
 
 plugin_git	perm_R	Lecture
 plugin_git	perm_W	Ecriture
-plugin_git	perm_W+	Ecriture et Rewind
+plugin_git	perm_W+	Rewind
 
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
+project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1
