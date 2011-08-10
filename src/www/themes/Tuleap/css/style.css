@@ -539,7 +539,8 @@ img {
 .widget {
     margin-bottom:10px;
     border: 1px solid lightgray;
-    background: white; alt:#F5F5F5;
+    background: white; 
+    alt:#F5F5F5;
     -moz-border-radius: 3px 3px 3px 3px;
     -moz-box-shadow: 2px 2px 3px #aaa;
     -webkit-box-shadow: 2px 2px 3px #aaa;
@@ -547,7 +548,7 @@ img {
 }
 .widget_content {
     clear:both;
-    	padding: 0 10px 5px 10px;
+    padding: 0 10px 5px 10px;
 }
 .widget_content p {
 	font-size: 12;
@@ -565,9 +566,9 @@ img {
     margin:0;
 }
 .widget_titlebar {
-	border: 1px solid white;
+    border: 1px solid white;
     -moz-border-radius: 3px 3px 0px 0px;
-    background: #aaaaaa url(../images/navigation_grad.png) left top repeat-x; 
+    background: #e9e9e9 url(../images/widget_title_grad.png) top left repeat-x; 
     font-size: 100%;
     font-weight: normal; 
     text-align: center; 
@@ -575,13 +576,14 @@ img {
     height: 18px;
     padding-left:10px;
     padding-right:4px;
+    color: #444;
+    text-shadow: 0 1px 1px #FFFFFF;
 }
 .widget_titlebar_handle {
     cursor:move;
 }
 .widget_titlebar_title {
     font-size: 100%;
-    color: white;
     float:left;
 }
 .widget_titlebar_close,
@@ -981,20 +983,6 @@ font-weight:bold;
 text-shadow: 0 1px 1px #FFFFFF; 
 }
 
-td.header_logo a:before { 
-background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAQCAYAAAAbBi9cAAAAAXNSR0IArs4c6QAAAAZiS0dEAMcAAAAAonaPtAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sEHA4IJKUmS3gAAAKlSURBVDjLjZPPa1RXFMc/582bJrbT/FiYxRDbCkoNmMRIAl1YQ8QKRTAtWGzoIotujCv/gUJCl2bjalbVTSGLuqmbQkFLCaQuMpmiQintygyu4xT1vXd/fF3Mm2mFKXjgwOV7zrnnfM/3XmvNXb6mpNo43dwSA+z305dXBMzt3dkaFN9bWLEkuLXE0mTTQnZ9UFJr9vM5mW5h3GrNfjY3KMdcdp2KbSbVidEhYrjRmr549bVOM5cOWYW7KrJh5dmwpdxtTV869N+c5smLV4n+RvXw2FCSjr6TxSKryLtGc+qTZYDdE+crBHc7vHw+iXcQCsKL55OSu7134kIFoDl1ftm8a8jllXSslqXp+LsHFoq3I0DCnd3jiytGrONeXgEQwgBkKLgrZraze2zxqWLYMjkEpOO1g7Q6Mb6vkNcNIJAqSb7Hh0QxlpcYPRUEkNimQZSLadmC6sT4flJbmN1WcMg7YnBQ5EPRZdXoCwiOGAqi7zqhIBZ5NRb5UC8mX1BbmN02SdMPP/r0YdF+iknIDBAmQ9ad57V3ITCjj701WWfmwU8ziZk9Gjkz3yEUKHQXi3co5hByFArwpYcCxQKFvI+NnJnvmNmjBKA2f+oe3qHgujRCQfQe+aJPuUcR343FEq/Nn7oHlIJIS48/vnD/xeM/SqQMSWBgosuHErLuYfjkFNPbP58zs1/6ZQf3f/3rz+UvjvV0EpCUShkw6P98+OMPf4+dWzxOmQvA6NLZ1aONm5ipu5fgCMEhX/Rp4Ms9Ghxt3GR06exqrz7tEzHbkbQa/nn2Xfub9dQ/63TZYeVIQoJkZIQj3274w199+bWZ7fB/Jmkta7c7T9Y31DzygX6rpHpQSdV87309Wd9Q1m53JK3xJiapLmld0r7+tf0Sqw+qeQVaE5uRrQJpZwAAAABJRU5ErkJggg==) 90% 70% no-repeat; 
-padding-right: 20px; 
-content: "T"; 
-// color: #8B4020; 
-}
-td.header_logo a:after { 
-content: "leap"; 
-}
-
-td.header_logo a img { 
-display: none; 
-}
-
 body {
     padding: 0;
     background: #e6e6e6;
@@ -1044,8 +1032,8 @@ a:hover {
 }
 
 .boxtitle {
-    background: #f0f0f0;
-    color: #333;
+    background: #e9e9e9 url(../images/widget_title_grad.png) top left repeat-x; 
+    color: #444;
     text-shadow: 0 1px 1px #FFFFFF;
 }
 
