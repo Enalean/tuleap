@@ -2,6 +2,7 @@ Version 4.0.20 - Not released yet
 	== Enhancement ==
 	* Centralize "Code exchange policy link" in site configuration.
 	* Improve rpm packaging: Tuleap needs customized packages (like jpgraph or mailman). Those packages were suffixed with .codendi which was not compatible with default yum package distribution. Custom packages are now known as "package-tuleap".
+	* Improve Tuleap theme stylesheet
 
 	== Bug fix ==
 	* Mass mail no longer mandate 'noreply' to be valid Tuleap user before to send mail.
