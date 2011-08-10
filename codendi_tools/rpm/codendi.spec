@@ -47,8 +47,10 @@ Requires: dejavu-lgc-fonts
 %if %{PKG_NAME} == codendi_st
 Requires: jpgraph
 # = 2.3.4-0.codendi
+Provides: codendi
 %else
 Requires: jpgraph-%{PKG_NAME}
+Provides: tuleap
 %endif
 Requires: php-pecl-apc
 Requires: htmlpurifier
@@ -80,8 +82,10 @@ Requires: %{PKG_NAME}
 %if %{PKG_NAME} == codendi_st
 Requires: mailman
 # = 3:2.1.9-6.codendi
+Provides: codendi-core-mailman
 %else
 Requires: mailman-%{PKG_NAME}
+Provides: tuleap-core-mailman
 %endif
 %description core-mailman
 Manage dependencies for Codendi mailman integration
@@ -92,12 +96,13 @@ Group: Development/Tools
 Version: @@CORE_SUBVERSION_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}, subversion, mod_dav_svn, subversion-perl, highlight
-#Conflicts: cadaver
 %if %{PKG_NAME} == codendi_st
 Requires: viewvc
 # = 1.0.7-2.codendi
+Provides: codendi-core-subversion
 %else
 Requires: viewvc-%{PKG_NAME}
+Provides: tuleap-core-subversion
 %endif
 %description core-subversion
 Manage dependencies for Codendi Subversion integration
@@ -113,9 +118,11 @@ Requires: viewvc
 # = 1.0.7-2.codendi
 Requires: cvs
 # = 1.11.22-5.codendi
+Provides: codendi-core-cvs
 %else
 Requires: viewvc-%{PKG_NAME}
 Requires: cvs-%{PKG_NAME}
+Provides: tuleap-core-cvs
 %endif
 %description core-cvs
 Manage dependencies for Codendi CVS integration
@@ -130,7 +137,13 @@ Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
+%if %{PKG_NAME} == codendi_st
 Requires: codendi-core-mailman
+Provides: codendi-plugin-forumml = %{version}
+%else
+Requires: tuleap-core-mailman
+Provides: tuleap-plugin-forumml = %{version}
+%endif
 %description plugin-forumml
 ForumML brings to Codendi a very nice mail archive viewer and the possibility
 to send mails through the web interface. It can replace the forums.
@@ -141,7 +154,11 @@ Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: 1%{?dist}
 Requires: %{name} >= %{version}, git > 1.6, geshi, php-Smarty, gitolite
+%if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-git = %{version}
+%else
+Provides: tuleap-plugin-git = %{version}
+%endif
 %description plugin-git
 Integration of git distributed software configuration management tool together
 with Codendi
@@ -152,6 +169,11 @@ Group: Development/Tools
 Version: @@PLUGIN_SVNTODIMENSIONS_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-svntodimensions = %{version}
+%else
+Provides: tuleap-plugin-svntodimensions = %{version}
+%endif
 %description plugin-svntodimensions
 Codendi plugin for svntodimensions
 
@@ -161,6 +183,11 @@ Group: Development/Tools
 Version: @@PLUGIN_CVSTODIMENSIONS_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-cvstodimensions = %{version}
+%else
+Provides: tuleap-plugin-cvstodimensions = %{version}
+%endif
 %description plugin-cvstodimensions
 Codendi plugin for cvstodimensions
 
@@ -170,7 +197,11 @@ Group: Development/Tools
 Version: @@PLUGIN_DOCMANWATERMARK_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}, php-zendframework = 1.8.1
-# Requires: codendi-plugin-docman
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-docmanwatermark = %{version}
+%else
+Provides: tuleap-plugin-docmanwatermark = %{version}
+%endif
 %description plugin-docmanwatermark
 PDF Watermark plugin. Provide the possibility to add a customizable banner to
 PDF file uploaded in Docman
@@ -181,6 +212,11 @@ Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}, php-ldap, perl-LDAP, python-ldap
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-ldap = %{version}
+%else
+Provides: tuleap-plugin-ldap = %{version}
+%endif
 %description plugin-ldap
 LDAP Plugin for Codendi. Provides LDAP information, LDAP
 authentication, user and group management.
@@ -191,6 +227,11 @@ Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}, openfire, openfire-codendi-plugins
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-im = %{version}
+%else
+Provides: tuleap-plugin-im = %{version}
+%endif
 %description plugin-im
 Provides instant messaging capabilities, based on a Jabber/XMPP server.
 
@@ -200,6 +241,11 @@ Group: Development/Tools
 Version: @@PLUGIN_JRI_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-jri = %{version}
+%else
+Provides: tuleap-plugin-jri = %{version}
+%endif
 %description plugin-jri
 Codendi Java Remote Interface: the java API for Codendi
 
@@ -209,6 +255,11 @@ Group: Development/Tools
 Version: @@PLUGIN_ECLIPSE_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-eclipse = %{version}
+%else
+Provides: tuleap-plugin-eclipse = %{version}
+%endif
 %description plugin-eclipse
 Plugin to install the Codendi Eclipse plugin and access the documentation
 
@@ -218,6 +269,11 @@ Group: Development/Tools/Building
 Version: @@PLUGIN_HUDSON_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-hudson = %{version}
+%else
+Provides: tuleap-plugin-hudson = %{version}
+%endif
 %description plugin-hudson
 Plugin to install the Codendi Hudson plugin for continuous integration
 
@@ -227,6 +283,11 @@ Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}, SabreDAV = 1.4.4
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-webdav = %{version}
+%else
+Provides: tuleap-plugin-webdav = %{version}
+%endif
 %description plugin-webdav
 Plugin to access to file releases & docman though WebDAV
 
@@ -235,8 +296,12 @@ Summary: Insert Remedy tickets using Codex
 Group: Development/Tools
 Version: @@PLUGIN_REQUESTHELP_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, php-pecl-oci8 = 1.4.5
+Requires: %{PKG_NAME}, php-pecl-oci8 = 1.4.5
+%if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-requesthelp = %{version}
+%else
+Provides: tuleap-plugin-requesthelp = %{version}
+%endif
 %description plugin-requesthelp
 Plugin to insert Remedy tickets using Codex (used for ST only)
 
@@ -311,7 +376,7 @@ Summary: Tuleap theme
 Group: Development/Tools
 Version: @@THEME_TULEAP_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}
+Requires: %{PKG_NAME}
 %description theme-tuleap
 Tuleap theme
 
