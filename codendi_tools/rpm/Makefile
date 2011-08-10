@@ -143,7 +143,7 @@ clean:
 
 dist:
 	mkdir -p $(RPM_DIST)
-	find $(RPM_TMP)/RPMS -type d -mindepth 1 -not -path "*.svn*" -exec cp -r {} $(RPM_DIST) \;
+	find $(RPM_TMP)/RPMS -mindepth 1 -type d -not -path "*.svn*" -exec cp -r {} $(RPM_DIST) \;
 	createrepo $(RPM_DIST)
 
 build-depends: /usr/bin/rpmbuild /usr/bin/createrepo /usr/bin/zip $(DOCBOOK_TOOLS_DIR)
