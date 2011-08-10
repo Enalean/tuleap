@@ -10,7 +10,7 @@ set -ex
 
 sys_default_domain="codendi.org";
 #sys_ip_address='127.0.0.1';
-local_module_directory="codendi-src";
+local_module_directory="tuleap";
 port="80";
 sys_org_name="Codendi";
 sys_long_org_name="Codendi";
@@ -79,7 +79,8 @@ php -d include_path="$codendi_src/src/www/include:$codendi_src/src:/usr/share/pe
 # Checkstyle
 pushd .
 cd "$codendi_src"
-files=$(php "$codendi_src/codendi_tools/continuous_integration/findFilesToSniff.php")
+#files=$(php "$codendi_src/codendi_tools/continuous_integration/findFilesToSniff.php")
+files=""
 
 php -d memory_limit=256M /usr/bin/phpcs --standard="$codendi_src/codendi_tools/utils/phpcs/Codendi" "$codendi_src/src/common/chart" "$codendi_src/src/common/backend" --report=checkstyle -n --ignore=*/phpwiki/* --ignore="*/webdav/lib/*" $files > $WORKSPACE/var/tmp/checkstyle.xml || true
 popd
