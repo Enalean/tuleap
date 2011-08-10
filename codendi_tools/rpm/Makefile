@@ -2,6 +2,10 @@ ifeq ($(strip $(RPM_TMP)),)
 	RPM_TMP=$(HOME)/rpmbuild
 endif
 
+ifeq ($(strip $(RPM_DIST)),)
+	RPM_DIST=$(RPM_TMP)/yum
+endif
+
 BASE_DIR=$(shell cd ../..; pwd)
 
 ifeq (,$(shell echo "$$DOCBOOK_TOOLS_DIR"))
@@ -138,15 +142,15 @@ clean:
 	-rm -f /tmp/log_xml2pdf_*
 
 dist:
-	mkdir -p $(RPM_TMP)/yum
-	cp -ar $(RPM_TMP)/RPMS/* $(RPM_TMP)/yum
-	createrepo $(RPM_TMP)/yum
+	mkdir -p $(RPM_DIST)
+	find $(RPM_TMP)/RPMS -type d -not -path "*.svn" -exec cp -r {} $(RPM_DIST) \;
+	createrepo $(RPM_DIST)
 
 build-depends: /usr/bin/rpmbuild /usr/bin/createrepo /usr/bin/zip $(DOCBOOK_TOOLS_DIR)
 
 /usr/bin/rpmbuild:
 	yum -y install rpm-build
-	
+
 /usr/bin/createrepo:
 	yum -y install createrepo
 

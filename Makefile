@@ -1,3 +1,4 @@
+RPM_DIST=$(HOME)/rpmbuild/yum
 PKG_NAME=tuleap
 
 help:
