@@ -51,7 +51,11 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
         $ugroup_name = null;
         $ugroup_old_name = null;
         // Check parameters
-        list($group_id, $ugroup_id, $ugroup_name, $ugroup_old_name) = $this->getParametersAsArray();
+        if(count($this->getParametersAsArray()) == 4) {
+            list($group_id, $ugroup_id, $ugroup_name, $ugroup_old_name) = $this->getParametersAsArray();
+        } else {
+            list($group_id, $ugroup_id) = $this->getParametersAsArray();
+        }
         if ($project = $this->getProject($group_id)) {
             // Update SVN access file
             if ($project->usesSVN()) {
