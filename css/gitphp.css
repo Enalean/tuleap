@@ -25,6 +25,21 @@ div.title a.title {
 	display: block; 
 }
 
+/*
+ * Project list
+ */
+.projectList .projectRow .projectOwner {
+	white-space: nowrap;
+}
+
+.projectList .projectRow .projectAge {
+	white-space: nowrap;
+}
+
+.projectList .projectRow .link {
+	white-space: nowrap;
+}
+
 
 /*
  * Full log view
