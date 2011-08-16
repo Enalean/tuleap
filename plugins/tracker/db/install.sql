@@ -524,8 +524,16 @@ CREATE TABLE IF NOT EXISTS tracker_rule(
   KEY tracker_id (tracker_id)
 );
 
+-- Enable service for project 100
+INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
+       VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 0, 'system', 151);
+
 
 -- Create service for all projects (but disabled)
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
 SELECT DISTINCT group_id , 'plugin_tracker:service_lbl_key' , 'plugin_tracker:service_desc_key' , 'plugin_tracker', CONCAT('/plugins/tracker/?group_id=', group_id), 1 , 0 , 'system',  151
-FROM service;
+FROM service
+WHERE group_id NOT IN (SELECT group_id
+                               FROM service
+                               WHERE short_name
+                               LIKE 'plugin_tracker');
