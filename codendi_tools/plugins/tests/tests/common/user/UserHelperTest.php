@@ -4,6 +4,8 @@ require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 require_once('common/user/User.class.php');
 Mock::generate('User');
+require_once('common/language/BaseLanguage.class.php');
+Mock::generate('BaseLanguage');
 require_once('common/user/UserHelper.class.php');
 Mock::generatePartial('UserHelper', 'UserHelperTestVersion', array('_getUserDao', '_getCurrentUserUsernameDisplayPreference', '_getUserManager', '_isUserNameNone'));
 
@@ -15,6 +17,12 @@ Mock::generatePartial('UserHelper', 'UserHelperTestVersion', array('_getUserDao'
  * Tests the class User
  */
 class UserHelperTest extends UnitTestCase {
+    function setUp() {
+        $GLOBALS['Language'] = new MockBaseLanguage();
+    }
+    function tearDown() {
+        unset($GLOBALS['Language']);
+    }
     /**
      * Constructor of the test. Can be ommitted.
      * Usefull to set the name of the test
@@ -57,6 +65,7 @@ class UserHelperTest extends UnitTestCase {
         $uh->setReturnValue('_getCurrentUserUsernameDisplayPreference', 1);
         $uh->UserHelper();
         $this->assertEqual("user_name (realname)", $uh->getDisplayNameFromUser($user));
+        $this->assertNull($uh->getDisplayNameFromUser(null));
     }
     
     function testGetDisplayNameFromUserId() {
