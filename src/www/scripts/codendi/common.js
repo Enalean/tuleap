@@ -86,5 +86,30 @@ document.observe('dom:loaded', function () {
         var col = cell.up('table').down('tbody').childElements().collect(function (tr) {
             return tr.childElements()[idx];
         });
+        cell.observe('mouseover', function (evt) {
+            col.invoke('addClassName', 'matrix_highlight_col');
+        }).observe('mouseout', function (evt) {
+            col.invoke('removeClassName', 'matrix_highlight_col');
+        });
     });
+    
+    //load protocheck, if needed
+    new ProtoCheck();
 });
+
+window.CKEDITOR_BASEPATH = '/scripts/ckeditor/';
+
+/**
+ * Ajax.Request.abort
+ * extend the prototype.js Ajax.Request object so that it supports an abort method
+ *
+ * @see http://blog.pothoven.net/2007/12/aborting-ajax-requests-for-prototypejs.html
+ */
+Ajax.Request.prototype.abort = function() {
+    // prevent and state change callbacks from being issued
+    this.transport.onreadystatechange = Prototype.emptyFunction;
+    // abort the XHR
+    this.transport.abort();
+    // update the request counter
+    Ajax.activeRequestCount--;
+};
