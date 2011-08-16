@@ -39,19 +39,13 @@ class Config {
      *
      * @return boolean true if success false otherwise
      */
-    public static function load($file,$passfile=null) {
+    public static function load($file) {
         if (is_file($file) && is_readable($file)) {
             // include the file in the local scope
             include($file);
             
-            //hack for fusionforge compat: load additional file
-            //todo: Accept only one file but allow developers to call Config::load more than once 
-            if (is_file($passfile) && is_readable($passfile)) {
-              include($passfile);
-            }
-            
             // Store in the stack the local scope...
-            self::$conf_stack[0] = get_defined_vars();
+            self::$conf_stack[0] = array_merge(self::$conf_stack[0], get_defined_vars());
             
             // ...but filter out the local parameter '$file'
             if (self::$conf_stack[0]['file'] === $file) {
