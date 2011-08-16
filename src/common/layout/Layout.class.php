@@ -1373,6 +1373,14 @@ class Layout extends Response {
         $hook_params = array();
         EventManager::instance()->processEvent('layout_footer_debug', $hook_params);
 
+        //Display the config
+        // Uncomment this only if you know what you are doing. This may lead to sensitive information leakage /!\
+        //echo '<fieldset><legend id="footer_debug_config" class="'. Toggler::getClassname('footer_debug_config') .'">Config:</legend>';
+        //echo '<pre>';
+        //Config::dump();
+        //echo '</pre>';
+        //echo '</fieldset>';
+        
         // Display all queries used to generate the page
         echo '<fieldset><legend id="footer_debug_allqueries" class="'. Toggler::getClassname('footer_debug_allqueries') .'">All queries:</legend>';
         echo '<pre>';

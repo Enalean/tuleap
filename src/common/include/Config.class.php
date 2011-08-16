@@ -30,7 +30,7 @@ class Config {
     /**
      * Hold the configuration variables
      */
-    protected static $conf_stack = array();
+    protected static $conf_stack = array(0 => array());
     
     /**
      * Load the configuration variables into the current stack
@@ -69,6 +69,15 @@ class Config {
             return self::$conf_stack[0][$name];
         }
         return $default;
+    }
+    
+    /**
+     * Dump the content of the config for debugging purpose
+     *
+     * @return void
+     */
+    public static function dump() {
+        var_export(self::$conf_stack[0]);
     }
     
     /**

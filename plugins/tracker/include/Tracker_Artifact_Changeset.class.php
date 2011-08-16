@@ -176,7 +176,7 @@ class Tracker_Artifact_Changeset {
 
         $html .= '</div>';
         
-        if (Config::get('sys_enable_avatars', 1)) {
+        if (Config::get('sys_enable_avatars')) {
             if ($this->submitted_by) {
                 $submitter = UserManager::instance()->getUserById($this->submitted_by);
             } else {

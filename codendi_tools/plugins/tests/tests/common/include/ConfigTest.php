@@ -62,5 +62,14 @@ class ConfigTest extends UnitTestCase {
         $this->assertIdentical(Config::get('tutu'), 421);
         $this->assertIdentical(Config::get('tata'), 456);
     }
+    
+    public function testDump() {
+        Config::load(dirname(__FILE__).'/_fixtures/config/local.inc');
+        ob_start();
+        Config::dump();
+        $dump = ob_get_contents();
+        ob_end_clean();
+        $this->assertEqual($dump, var_export(array('toto' => 66, 'tutu' => 123), 1));
+    }
 }
 ?>
