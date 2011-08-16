@@ -1108,7 +1108,7 @@ class User {
       * @return bool
       */
      public function hasAvatar() {
-         return false;
+         return $this->has_avatar;
      }
 
      /**
@@ -1119,8 +1119,8 @@ class User {
       * @return User for chaining methods
       */
      public function setHasAvatar($has_avatar = 1) {
-         /*$this->has_avatar = ($has_avatar ? 1 : 0);
-         return $this;*/
+         $this->has_avatar = ($has_avatar ? 1 : 0);
+         return $this;
      }
      
      /**
@@ -1129,7 +1129,7 @@ class User {
       * @return string html
       */
      public function fetchHtmlAvatar() {
-         /*$purifier = Codendi_HTMLPurifier::instance();
+         $purifier = Codendi_HTMLPurifier::instance();
          $html = '';
          $html .= '<div class="avatar">';
          if ($this->isAnonymous()) {
@@ -1140,7 +1140,7 @@ class User {
              }
          }
          $html .= '</div>';
-         return $html;*/
+         return $html;
      }
 
      /**

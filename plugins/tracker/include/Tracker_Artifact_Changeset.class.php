@@ -24,6 +24,7 @@ require_once('Tracker_Artifact_Changeset_Comment.class.php');
 require_once('Tracker_FormElementFactory.class.php');
 require_once('Tracker_NotificationsManager.class.php');
 require_once('common/date/DateHelper.class.php');
+require_once('common/include/Config.class.php');
 
 class Tracker_Artifact_Changeset {
     public $id;
@@ -175,7 +176,7 @@ class Tracker_Artifact_Changeset {
 
         $html .= '</div>';
         
-        if (Config::get('sys_enable_avatars')) {
+        if (Config::get('sys_enable_avatars', 1)) {
             if ($this->submitted_by) {
                 $submitter = UserManager::instance()->getUserById($this->submitted_by);
             } else {
