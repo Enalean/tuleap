@@ -21,12 +21,27 @@
 require_once('common/include/Config.class.php');
 
 class ConfigTest extends UnitTestCase {
+    
+    public function setUp() {
+        Config::store();
+    }
+    
+    public function tearDown() {
+        Config::restore();
+    }
+    
     public function testUsage() {
         $this->assertFalse(Config::get('toto'));
         $this->assertFalse(Config::load('does_not_exist'));
         $this->assertTrue(Config::load(dirname(__FILE__).'/_fixtures/config/local.inc'));
         $this->assertEqual(Config::get('toto'), 66);
         $this->assertFalse(Config::get('titi')); //not defined should return false
+    }
+    
+    public function testDefault() {
+        $this->assertEqual(Config::get('toto', 99), 99); //not defined should return default value given in parameter
+        $this->assertTrue(Config::load(dirname(__FILE__).'/_fixtures/config/local.inc'));
+        $this->assertEqual(Config::get('toto', 99), 66); //now it is defined. Should NOT return default value given in parameter
     }
 }
 ?>

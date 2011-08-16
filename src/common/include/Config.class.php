@@ -1,5 +1,6 @@
 <?php
 /*
+ * Copyright (c) Enalean, 2011. All Rights Reserved.
  * Copyright (c) Xerox, 2009. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2009. Xerox Codendi Team.
@@ -19,29 +20,84 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+
+/**
+ * Base class to read forge configuration
+ */
 class Config {
-    protected static $conf = array();
     
+    /**
+     * Hold the configuration variables
+     */
+    protected static $conf_stack = array();
+    
+    /**
+     * Load the configuration variables into the current stack
+     *
+     * @param $file string /path/to/config.file.php
+     *
+     * @return boolean true if success false otherwise
+     */
     public static function load($file,$passfile=null) {
         if (is_file($file) && is_readable($file)) {
+            // include the file in the local scope
             include($file);
+            
+            //hack for fusionforge compat: load additional file
+            //todo: Accept only one file but allow developers to call Config::load more than once 
             if (is_file($passfile) && is_readable($passfile)) {
               include($passfile);
             }
-            self::$conf = get_defined_vars();
-            if (self::$conf['file'] === $file) {
-                unset(self::$conf['file']);
+            
+            // Store in the stack the local scope...
+            self::$conf_stack[0] = get_defined_vars();
+            
+            // ...but filter out the local parameter '$file'
+            if (self::$conf_stack[0]['file'] === $file) {
+                unset(self::$conf_stack[0]['file']);
             }
             return true;
         }
         return false;
     }
     
+    /**
+     * Get the $name configuration variable
+     *
+     * @param $name    string the variable name
+     * @param $default mixed  the value to return if the variable is not set in the configuration. TODO: read in the local.inc.dist
+     *
+     * @return mixed
+     */
     public static function get($name, $default = false) {
-        if (isset(self::$conf[$name])) {
-            return self::$conf[$name];
+        if (isset(self::$conf_stack[0][$name])) {
+            return self::$conf_stack[0][$name];
         }
         return $default;
+    }
+    
+    /**
+     * Store and clear the current stack. Only useful for testing purpose. DON'T USE IT IN PRODUCTION
+     * @see ConfigTest::setUp() for details
+     * 
+     * @return void
+     */
+    public static function store() {
+        array_unshift(self::$conf_stack, array());
+        if (!count(self::$conf_stack)) {
+            trigger_error('Config registry lost');
+        }
+    }
+    
+    /**
+     * Restore the previous stack. Only useful for testing purpose. DON'T USE IT IN PRODUCTION
+     * @see ConfigTest::tearDown() for details
+     * 
+     * @return void
+     */
+    public static function restore() {
+        array_shift(self::$conf_stack);
     }
 }
 ?>
