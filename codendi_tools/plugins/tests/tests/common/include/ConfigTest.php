@@ -43,5 +43,24 @@ class ConfigTest extends UnitTestCase {
         $this->assertTrue(Config::load(dirname(__FILE__).'/_fixtures/config/local.inc'));
         $this->assertEqual(Config::get('toto', 99), 66); //now it is defined. Should NOT return default value given in parameter
     }
+    
+    public function testMultipleFiles() {
+        // Unitialized
+        $this->assertIdentical(Config::get('toto'), false);
+        $this->assertIdentical(Config::get('tutu'), false);
+        $this->assertIdentical(Config::get('tata'), false);
+        
+        // Load the first file
+        $this->assertTrue(Config::load(dirname(__FILE__).'/_fixtures/config/local.inc'));
+        $this->assertIdentical(Config::get('toto'), 66);
+        $this->assertIdentical(Config::get('tutu'), 123);
+        $this->assertIdentical(Config::get('tata'), false);
+        
+        // Load the second one. Merge of the conf
+        $this->assertTrue(Config::load(dirname(__FILE__).'/_fixtures/config/other_file.inc.dist'));
+        $this->assertIdentical(Config::get('toto'), 66);
+        $this->assertIdentical(Config::get('tutu'), 421);
+        $this->assertIdentical(Config::get('tata'), 456);
+    }
 }
 ?>
