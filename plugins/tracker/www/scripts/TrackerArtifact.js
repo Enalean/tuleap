@@ -61,8 +61,8 @@ document.observe('dom:loaded', function () {
     
     $$('#tracker_artifact_followup_comments').each(function (followup_section) {
         //We only have one followup_section but I'm too lazy to do a if()
-        followup_section.down('legend').insert({
-            after: new Element('div').setStyle({
+        
+        var div = new Element('div').setStyle({
                     textAlign: 'right'
                 }).insert(new Element('a', {
                     href: '#invert-order',
@@ -80,7 +80,12 @@ document.observe('dom:loaded', function () {
                     }
                     Event.stop(evt);
                     return false;
-                }))
+                }));
+        if (followup_section.down('.tracker_artifact_followups').childElements().size() < 2) {
+            div.hide();
+        }
+        followup_section.down('legend').insert({
+            after: div
         });
     });
     
