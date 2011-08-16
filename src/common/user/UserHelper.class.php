@@ -53,7 +53,7 @@ class UserHelper {
     }
     
     function _getCurrentUserUsernameDisplayPreference() {
-        return user_get_preference("username_display");
+        return $this->_getUserManager()->getCurrentUser()->getPreference("username_display");
     }
     function _getUserManager() {
         return UserManager::instance();
@@ -103,16 +103,16 @@ class UserHelper {
         $name = '';
         switch($this->_username_display) {
         case 1:
-            $name = "CONCAT(user.user_name,' (',user.realname,')') full_name";
+            $name = "CONCAT(user.user_name,' (',user.realname,')') AS full_name";
             break;
         case 2:
-            $name = 'user.user_name';
+            $name = 'user.user_name AS full_name';
             break;
         case 3:
-            $name = 'user.realname';
+            $name = 'user.realname AS full_name';
             break;
         default:
-            $name = "CONCAT(user.realname,' (',user.user_name,')') full_name";
+            $name = "CONCAT(user.realname,' (',user.user_name,')') AS full_name";
             break;
         }
         return $name;
@@ -151,13 +151,19 @@ class UserHelper {
      * Get user name from Codendi login, according to the user prefs: Codendi login or Real name
      *
      * @param User the user to display
+     *
+     * @return the display name of the user $user or null if $user is null
+     *
      * @see getDisplayName
      */
-    function getDisplayNameFromUser(&$user) {
-        if ($user->isNone()) {
+    function getDisplayNameFromUser($user) {
+        if ($user == null) {
+            return null;
+        } elseif ($user->isNone()) {
             return $user->getUserName();
+        } else {
+            return $this->getDisplayName($user->getUserName(), $user->getRealName());
         }
-        return $this->getDisplayName($user->getUserName(), $user->getRealName());
     }
     
     /**
@@ -169,12 +175,13 @@ class UserHelper {
      * @see getDisplayName
      */
     function getDisplayNameFromUserId($user_id) {
-        $um =& $this->_getUserManager();
+        $um = $this->_getUserManager();
         if ($um->isUserLoadedById($user_id)) {
-            $user =& $um->getUserById($user_id);
+            $user = $um->getUserById($user_id);
             $display = $this->getDisplayNameFromUser($user);
         } else {
             if (!isset($this->_cache_by_id[$user_id])) {
+                $this->_cache_by_id[$user_id] = $GLOBALS['Language']->getText('global', 'none');
                 $dar = $this->_userdao->searchByUserId($user_id);
                 if ($row = $dar->getRow()) {
                     $this->_cache_by_id[$user_id] = $this->getDisplayName($row['user_name'], $row['realname']);
@@ -198,9 +205,9 @@ class UserHelper {
         if ($this->_isUserNameNone($user_name)) {
             return $user_name;
         } else {
-            $um =& $this->_getUserManager();
+            $um = $this->_getUserManager();
             if ($um->isUserLoadedByUserName($user_name)) {
-                $user =& $um->getUserByUserName($user_name);
+                $user = $um->getUserByUserName($user_name);
                 $display = $this->getDisplayNameFromUser($user);
             } else {
                 if (!isset($this->_cache_by_username[$user_name])) {
@@ -250,6 +257,19 @@ class UserHelper {
     function _getUserDao() {
         $dao = new UserDao(CodendiDataAccess::instance());
         return $dao;
+    }
+    
+    function getLinkFromUserid($user_id) {
+        $hp = Codendi_HTMLPurifier::instance();
+        $a = '';
+        $um = $this->_getUserManager();
+        if ($user = $um->getUserById($user_id)) {
+            $display = $this->getDisplayNameFromUser($user);
+            $a = '<a href="/users/'.  $hp->purify($user->getUserName(), CODENDI_PURIFIER_CONVERT_HTML)  .'">';
+            $a .= $display;
+            $a .= '</a>';
+        }
+        return $a;
     }
 }
 
