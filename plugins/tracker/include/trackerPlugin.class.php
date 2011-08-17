@@ -93,29 +93,29 @@ class trackerPlugin extends Plugin {
     function permission_get_name($params) {
         if (!$params['name']) {
             switch($params['permission_type']) {
-                case 'PLUGIN_TRACKER_FIELD_SUBMIT':
-		    $params['name'] = $Language->getText('project_admin_permissions','tracker_field_submit');
-                    break;
-	        case 'PLUGIN_TRACKER_FIELD_READ':
-		    $params['name'] = $Language->getText('project_admin_permissions','tracker_field_read');
-                    break;
-	        case 'PLUGIN_TRACKER_FIELD_UPDATE':
-		    $params['name'] = $Language->getText('project_admin_permissions','tracker_field_update');
-                    break;
-	        case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
-		    $params['name'] = $Language->getText('project_admin_permissions','tracker_submitter_access');
-                    break;
-	        case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
-		    $params['name'] = $Language->getText('project_admin_permissions','tracker_assignee_access');
-                    break;
-	        case 'PLUGIN_TRACKER_ACCESS_FULL':
-		    $params['name'] = $Language->getText('project_admin_permissions','tracker_full_access');
-                    break;
-	        case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
-		    $params['name'] = $Language->getText('project_admin_permissions','tracker_artifact_access');
-                    break;
-                default:
-                    break;
+            case 'PLUGIN_TRACKER_FIELD_SUBMIT':
+                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_field_submit');
+                break;
+            case 'PLUGIN_TRACKER_FIELD_READ':
+                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_field_read');
+                break;
+            case 'PLUGIN_TRACKER_FIELD_UPDATE':
+                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_field_update');
+                break;
+            case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
+                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_submitter_access');
+                break;
+            case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
+                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_assignee_access');
+                break;
+            case 'PLUGIN_TRACKER_ACCESS_FULL':
+                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_full_access');
+                break;
+            case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
+                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_artifact_access');
+                break;
+            default:
+                break;
             }
         }
     }
@@ -128,40 +128,40 @@ class trackerPlugin extends Plugin {
     }
     
     function getObjectTypeFromPermissions($params) {
-    	if (!$params['object_type']) {
-    	    switch($params['permission_type']) {
-    	    case 'PLUGIN_TRACKER_FIELD_SUBMIT':
-    	    case 'PLUGIN_TRACKER_FIELD_READ':
-    	    case 'PLUGIN_TRACKER_FIELD_UPDATE':
-	    	    return 'field';
-	    	case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
-	    	case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
-	    	case 'PLUGIN_TRACKER_ACCESS_FULL':
-	    	    return 'tracker';
-	    	case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
-	    	    return 'artifact';
-	    	}
-    	}
-    	return false;
+        if (!$params['object_type']) {
+            switch($params['permission_type']) {
+            case 'PLUGIN_TRACKER_FIELD_SUBMIT':
+            case 'PLUGIN_TRACKER_FIELD_READ':
+            case 'PLUGIN_TRACKER_FIELD_UPDATE':
+                return 'field';
+            case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
+            case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
+            case 'PLUGIN_TRACKER_ACCESS_FULL':
+                return 'tracker';
+            case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
+                return 'artifact';
+            }
+        }
+        return false;
     }
     
     function permission_get_object_name($params) {
         if (!$params['object_name']) {
             $type = $this->getObjectTypeFromPermissions($params);
             if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
-            	    if ($type == 'tracker') {
-            	    	    $tracker = new Tracker();
-            	    	    $tracker->setId($params['object_id']);
-            	    	    $params['object_name'] = $tracker->getItemName();
-            	    } else if ($type == 'field') {
-            	           $aff = Tracker_FormElementFactory::instance();
-            	           $field = $aff->getFormElementById(permission_extract_field_id($params['object_id']));
-            	    	   $params['object_name'] = $field->getName();
-            	    } else if ($type == 'artifact') {
-            	    	    $artifact = new Tracker_Artifact();
-            	    	    $artifact->setId($params['object_id']);
-            	    	    $params['object_name'] = ($artifact->getTitle() != null) ? $artifact->getTitle() : 'art #'.$params['object_id'];
-            	    }
+                if ($type == 'tracker') {
+                    $tf = TrackerFactory::instance();
+                    $tracker = $tf->getTrackerById($params['object_id']);
+                    $params['object_name'] = $tracker->getItemName();
+                } else if ($type == 'field') {
+                    $aff = Tracker_FormElementFactory::instance();
+                    $field = $aff->getFormElementById(permission_extract_field_id($params['object_id']));
+                    $params['object_name'] = $field->getName();
+                } else if ($type == 'artifact') {
+                    $artifact = new Tracker_Artifact();
+                    $artifact->setId($params['object_id']);
+                    $params['object_name'] = ($artifact->getTitle() != null) ? $artifact->getTitle() : 'art #'.$params['object_id'];
+                }
             }
         }
     }
@@ -170,52 +170,61 @@ class trackerPlugin extends Plugin {
         if (!$params['object_fullname']) {
             $type = $this->getObjectTypeFromPermissions($params);
             if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
-            	    if ($type == 'tracker') {
-            	    	    $tracker = new Tracker();
-            	    	    $tracker->setId($params['object_id']);
-            	    	    $params['object_fullname'] = $tracker->getName();
-            	    } else if ($type == 'field') {
-            	    	    $field = new Tracker_FormElement_Field();
-            	    	    $field->setId(permission_extract_field_id($params['object_id']));
-            	    	    $params['object_fullname'] = $field->getLabel();
-            	    } else if ($type == 'artifact') {
-            	    	    $artifact = new Tracker_Artifact();
-            	    	    $artifact->setId($params['object_id']);
-            	    	    $params['object_fullname'] = ($artifact->getTitle() != null) ? $artifact->getTitle() : 'art #'.$params['object_id'];
-            	    }
+                if ($type == 'tracker') {
+                    $tf = TrackerFactory::instance();
+                    $tracker = $tf->getTrackerById($params['object_id']);
+                    $params['object_fullname'] = $tracker->getName();
+                } else if ($type == 'field') {
+                    $field = new Tracker_FormElement_Field();
+                    $field->setId(permission_extract_field_id($params['object_id']));
+                    $params['object_fullname'] = $field->getLabel();
+                } else if ($type == 'artifact') {
+                    $artifact = new Tracker_Artifact();
+                    $artifact->setId($params['object_id']);
+                    $params['object_fullname'] = ($artifact->getTitle() != null) ? $artifact->getTitle() : 'art #'.$params['object_id'];
+                }
             }
         }
     }
     
     function permissions_for_ugroup($params) {
         if (!$params['results']) {
+            //TODO : change urls
+            $tf = TrackerFactory::instance();
+            $tracker = $tf->getTrackerById($params['object_id']);
+            $group_id = $tracker->getGroupID();
+            $hp = Codendi_HTMLPurifier::instance();
+            $atid = $params['object_id'];
+            $objname = $params['objname'];
+            
             if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
-            	if (strpos($row['permission_type'], 'PLUGIN_TRACKER_ACCESS') === 0) {
-            	    echo '<TD>'.$Language->getText('project_admin_editugroup','tracker') 
-            	        .' <a href="plugins/tracker/admin/?func=permissions&perm_type=tracker&group_id='.$group_id.'&atid='.$row['object_id'].'">'
-            	        .$objname.'</a></TD>';
-            	} else if (strpos($row['permission_type'], 'PLUGIN_TRACKER_FIELD') === 0) {
-            	    $tracker_field_displayed[$atid]=1;
-            	    $atid = permission_extract_atid($row['object_id']);
-            	    echo '<TD>'.$Language->getText('project_admin_editugroup','tracker_field')
-            	        .' <a href="plugins/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions&perm_type=fields&group_first=1&selected_id='.$ugroup_id.'">' 
-            	        .$objname.'</a></TD>';
-            	} else if ($row['permission_type'] == 'PLUGIN_TRACKER_ARTIFACT_ACCESS') {
-            	    echo '<td>'. $hp->purify($objname, CODENDI_PURIFIER_BASIC) .'</td>';
-            	}
+                if (strpos($row['permission_type'], 'PLUGIN_TRACKER_ACCESS') === 0) {
+                    echo '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
+                    .' <a href="'.TRACKER_BASE_URL.'/admin/?func=permissions&perm_type=tracker&group_id='.$group_id.'&atid='.$atid.'">'
+                    .$objname.'</a></TD>';
+                } else if (strpos($row['permission_type'], 'PLUGIN_TRACKER_FIELD') === 0) {            	    
+                    $tracker_field_displayed[$atid]=1;
+                    
+                    echo '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup','tracker_field')
+                    .' <a href="'.TRACKER_BASE_URL.'/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions&perm_type=fields&group_first=1&selected_id='.$ugroup_id.'">' 
+                    .$objname.'</a></TD>';
+                } else if ($row['permission_type'] == 'PLUGIN_TRACKER_ARTIFACT_ACCESS') {
+                    echo '<td>'. $hp->purify($objname, CODENDI_PURIFIER_BASIC) .'</td>';
+                }
             }
         }
     }
     
     var $_cached_permission_user_allowed_to_change;
     function permission_user_allowed_to_change($params) {
-    	//TODO: manage permissions related to field "permission on artifact"
+        //TODO: manage permissions related to field "permission on artifact"
         if (!$params['allowed']) {
             if (!$this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
-                    $tracker = new Tracker();
-                    $tracker->setId($params['object_id']);
+                    $tf = TrackerFactory::instance();
+                    $tracker = $tf->getTrackerById($params['object_id']);
                     try {
+                        //TODO : userIsAdmin has to check that user is project admin and not tracker admin
                         //Only tracker admin can update perms
                         $this->_cached_permission_user_allowed_to_change = $tracker->userIsAdmin(UserManager::instance()->getCurrentUser());
                     } catch (Exception $e) {
