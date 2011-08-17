@@ -823,6 +823,7 @@ plugin_tracker_admin_permissions	ignore_g_regis_update	Le groupe '$1' est ignor�
 plugin_tracker_admin_permissions	ignore_g_tech_update	Le groupe '$1' est ignoré car le groupe '$2' peut mettre à jour
 plugin_tracker_admin_permissions	ignore_ug_during_copy	Veuillez noter que certaines permissions du tracker original n'ont pas été copiées
 plugin_tracker_admin_permissions	permissions	Droits d'accès
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_ADMIN	Administrateur de l'outil de suivi
 plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_FULL	Accès à tous les artefacts
 plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_ASSIGNEE	Accès aux artefacts confiés au groupe
 plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_SUBMITTER	Accès aux artefacts soumis par le groupe
@@ -1231,4 +1232,14 @@ workflow_admin	title_define_transition_details	Définir  les règles à applique
 workflow_admin	label_define_transition_permissions	Groupes autorisés à effectuer la transition :
 workflow_admin	permissions_not_updated	Les mises à jour n'ont pas été prises en compte.
 workflow_admin	permissions_updated	Les mises à jour ont été prises en compte.
+
+
+project_admin_permissions	tracker_artifact_access	Accès à un artefact
+project_admin_permissions	tracker_full_access	Accès à tous les artefacts du tracker
+project_admin_permissions	tracker_submitter_access	Accès à tous les artefacts soumis par le groupe
+project_admin_permissions	tracker_assignee_access	Accès à tous les artefacts confiés au groupe
+project_admin_permissions	tracker_field_submit	Peut soumettre ce champ dans l'outil de suivi
+project_admin_permissions	tracker_field_read	Peut lire ce champ dans l'outil de suivi
+project_admin_permissions	tracker_field_update	Peut éditer ce champ dans l'outil de suivi
+project_admin_permissions	tracker_admin	Administre l'outil de suivi
 

@@ -1198,6 +1198,7 @@ class Tracker {
         echo '<h2>'. $title .'</h2>';
         $hp = Codendi_HTMLPurifier::instance();
 
+        $admin_permission     = 'PLUGIN_TRACKER_ADMIN';
         $full_permission      = 'PLUGIN_TRACKER_ACCESS_FULL';
         $assignee_permission  = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
         $submitter_permission = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
@@ -1249,6 +1250,7 @@ class Tracker {
                 $html .= '<option value="1" '.(isset($permissions[$assignee_permission]) && !isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $assignee_permission) .'</option>';
                 $html .= '<option value="2" '.(!isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $submitter_permission) .'</option>';
                 $html .= '<option value="3" '.(isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $assignee_permission .'_AND_'. $submitter_permission) .'</option>';
+                $html .= '<option value="4" '.(isset($permissions[$admin_permission]) && isset($permissions[$admin_permission])?$attributes_for_selected:"")." >".$GLOBALS['Language']->getText('plugin_tracker_admin_permissions', $admin_permission) .'</option>';
             }
             $html .= '</select></td>';
             $html .= '</tr>';
@@ -1836,7 +1838,7 @@ EOS;
             } else {
                 foreach ($this->getPermissions() as $ugroup_id => $permission_types) {
                     foreach ($permission_types as $permission_type) {
-                        if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId(), $this->getId())) {
+                        if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
                             return true;
                         }
                     }
@@ -1916,7 +1918,20 @@ EOS;
                 $user = $um->getUserById((int)$user);
             }
         }
-        return $user->isTrackerAdmin($this->getGroupId(), $this->getID());
+        if ($user->isSuperUser() || $user->isMember($this->getGroupId(), 'A')) {
+            return true;
+        }
+        $permissions = $this->getPermissions();
+        foreach ($permissions as $ugroup_id => $permission_types) {
+            foreach ( $permission_types as $permission_type ) {
+                if($permission_type == 'PLUGIN_TRACKER_ADMIN') {
+                    if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -1951,7 +1966,7 @@ EOS;
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
-        return $user->isMember($this->getGroupId(), 'A');
+        return $user->isSuperUser() || $user->isMember($this->getGroupId(), 'A');
     }
     
     /**
@@ -1966,14 +1981,14 @@ EOS;
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
-        if ($user->isSuperUser()) {
+        if ($user->isSuperUser() || $user->isMember($this->getGroupId(), 'A')) {
             return true;
         }  else {
             $permissions = $this->getPermissions();
             foreach ($permissions as $ugroup_id => $permission_types) {
                 foreach ( $permission_types as $permission_type ) {
-                    if($permission_type == 'PLUGIN_TRACKER_ACCESS_FULL') {
-                        if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId(), $this->getId())) {
+                    if($permission_type == 'PLUGIN_TRACKER_ACCESS_FULL' || $permission_type == 'PLUGIN_TRACKER_ADMIN') {
+                        if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId())) {
                                 return true;
                         }
                     }
@@ -2073,7 +2088,7 @@ EOS;
         // permissions
         $node_perms = $xmlElem->addChild('permissions');
         // tracker permissions
-        if ($permissions = $this->getPermissions()) {      
+        if ($permissions = $this->getPermissions()) {
             foreach ($permissions as $ugroup_id => $permission_types) {
                 if (($ugroup = array_search($ugroup_id, $GLOBALS['UGROUPS'])) !== false && $ugroup_id < 100) {
                     foreach ( $permission_types as $permission_type) {

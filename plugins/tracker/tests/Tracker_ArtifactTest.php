@@ -1026,26 +1026,26 @@ class Tracker_ArtifactTest extends UnitTestCase {
         //
         $assignee = new MockUser();
         $assignee->setReturnValue('getId', 121);
-        $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222, 666));
-        $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222, 666));
+        $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
+        $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $assignee->setReturnValue('isSuperUser', false);
         //
         $u_ass = new MockUser();
         $u_ass->setReturnValue('getId', 122);
-        $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222, 666));
-        $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222, 666));
+        $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
+        $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $u_ass->setReturnValue('isSuperUser', false);
         //
         $submitter = new MockUser();
         $submitter->setReturnValue('getId', 123);
-        $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222, 666));
-        $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222, 666));
+        $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
+        $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $submitter->setReturnValue('isSuperUser', false);
         //
         $u_sub = new MockUser();
         $u_sub->setReturnValue('getId', 124);
-        $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222, 666));
-        $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222, 666));
+        $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222));
+        $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $u_sub->setReturnValue('isSuperUser', false);
         //
         $other = new MockUser();
@@ -1106,26 +1106,26 @@ class Tracker_ArtifactTest extends UnitTestCase {
         //
         $assignee = new MockUser();
         $assignee->setReturnValue('getId', 121);
-        $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222, 666));
-        $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222, 666));
+        $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
+        $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $assignee->setReturnValue('isSuperUser', false);
         //
         $u_ass = new MockUser();
         $u_ass->setReturnValue('getId', 122);
-        $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222, 666));
-        $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222, 666));
+        $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
+        $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $u_ass->setReturnValue('isSuperUser', false);
         //
         $submitter = new MockUser();
         $submitter->setReturnValue('getId', 123);
-        $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222, 666));
-        $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222, 666));
+        $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
+        $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $submitter->setReturnValue('isSuperUser', false);
         //
         $u_sub = new MockUser();
         $u_sub->setReturnValue('getId', 124);
-        $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222, 666));
-        $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222, 666));
+        $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222));
+        $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $u_sub->setReturnValue('isSuperUser', false);
         //
         $other = new MockUser();
@@ -1191,26 +1191,26 @@ class Tracker_ArtifactTest extends UnitTestCase {
         //
         $assignee = new MockUser();
         $assignee->setReturnValue('getId', 121);
-        $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222, 666));
-        $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222, 666));
+        $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
+        $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $assignee->setReturnValue('isSuperUser', false);
         //
         $u_ass = new MockUser();
         $u_ass->setReturnValue('getId', 122);
-        $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222, 666));
-        $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222, 666));
+        $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
+        $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $u_ass->setReturnValue('isSuperUser', false);
         //
         $submitter = new MockUser();
         $submitter->setReturnValue('getId', 123);
-        $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222, 666));
-        $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222, 666));
+        $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
+        $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $submitter->setReturnValue('isSuperUser', false);
         //
         $u_sub = new MockUser();
         $u_sub->setReturnValue('getId', 124);
-        $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222, 666));
-        $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222, 666));
+        $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222));
+        $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $u_sub->setReturnValue('isSuperUser', false);
         //
         $other = new MockUser();

@@ -111,9 +111,10 @@ class TrackerManager { /* extends Engine? */
                                         $this->displayTrackerPreview($_FILES["file"]["tmp_name"]);
                                     } else {
                                         $new_tracker = null;
-                                        $name              = trim($request->get('name'));
-                                        $description       = trim($request->get('description'));
-                                        $itemname          = trim($request->get('itemname'));
+                                        $rand = uniqid();
+                                        $name              = trim($request->get('name').' '.$rand);
+                                        $description       = trim($request->get('description').' '.$rand);
+                                        $itemname          = trim($request->get('itemname').$rand);
                                         $codendi_template  = (int)$request->get('codendi_template');
                                         $group_id_template = (int)$request->get('group_id_template');
                                         $atid_template     = (int)$request->get('atid_template');

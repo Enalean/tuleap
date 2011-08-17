@@ -754,7 +754,7 @@ class Tracker_Report extends Error {
             return $this->user_id == $user->getId();
         } else {
             $tracker = $this->getTracker();
-            return $user->isSuperUser() || $user->isTrackerAdmin($tracker->group_id, $tracker->id);
+            return $user->isSuperUser() || $tracker->userIsAdmin($user);
         }
     }
     

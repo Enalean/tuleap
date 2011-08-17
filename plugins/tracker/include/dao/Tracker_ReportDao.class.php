@@ -194,19 +194,6 @@ class Tracker_ReportDao extends DataAccessObject {
                 }
                 // }}}
                 
-                // {{{ tracker_admins
-                if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'])) 
-                {
-                    $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                           $from ." INNER JOIN tracker_perm AS p ON (
-                                artifact.submitted_by = p.user_id
-                                AND p.tracker_id = ". $this->da->escapeInt($tracker_id) ."
-                                AND p.perm_level >= 2 
-                           ) ".
-                           $where;
-                }
-                //}}}
                 // {{{ project_members
                 if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
                     in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'])) 
@@ -253,23 +240,6 @@ class Tracker_ReportDao extends DataAccessObject {
                     }
                     // }}}
                     
-                    // {{{ tracker_admins
-                    if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
-                        in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) {
-                        $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
-                               $from ." INNER JOIN tracker_changeset_value AS tcv ON (
-                                    tcv.field_id = ". $this->da->escapeInt($contributor_field_id) ."
-                                    AND tcv.changeset_id = c.id
-                               ) INNER JOIN tracker_changeset_value_list AS tcvl ON (
-                                    tcvl.changeset_value_id = tcv.id
-                               ) INNER JOIN tracker_perm AS p ON (
-                                    p.user_id = tcvl.bindvalue_id
-                                    AND p.tracker_id = ". $this->da->escapeInt($tracker_id) ." 
-                                    AND p.perm_level >= 2
-                               ) ".
-                               $where;
-                    }
-                    //}}}
                     // {{{ project_members
                     if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
                         in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) {

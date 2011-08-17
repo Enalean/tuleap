@@ -139,9 +139,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                             case 'group_admins':
                                 $sql[] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_ADMIN'], $tracker->id, $tracker->group_id, true, $keyword);
                                 break;
-                            case 'tracker_admins':
-                                $sql[] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_TRACKER_ADMIN'], $tracker->id, $tracker->group_id, true, $keyword);
-                                break;
                             case 'artifact_submitters':
                                 $da = CodendiDataAccess::instance();
                                 $field_id   = $da->escapeInt($this->field->id);
@@ -532,15 +529,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 	    }
 	    $html .= '<option value="group_admins" '.$selected.'>'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'</option>';
 	    
-	    $selected = "";
-	    $ugroup_res = ugroup_db_get_ugroup($GLOBALS['UGROUP_TRACKER_ADMIN']);
-	    $name = util_translate_name_ugroup(db_result($ugroup_res, 0, 'name'));
-	    if (in_array("tracker_admins", $value_function)) {
-	        $selected = 'selected="selected"';
-	    }
-	    $html .= '<option value="tracker_admins" '.$selected.'>'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'</option>';
-	    
-	    
 	    $ugroup_res = ugroup_db_get_existing_ugroups(100);
 	    $rows = db_numrows($ugroup_res);
 	    for ( $i = 0 ; $i < $rows ; $i++) {
@@ -549,8 +537,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             if (($ug == $GLOBALS['UGROUP_NONE']) || 
                 ($ug == $GLOBALS['UGROUP_ANONYMOUS']) || 
                 ($ug == $GLOBALS['UGROUP_PROJECT_MEMBERS']) || 
-                ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN']) || 
-                ($ug == $GLOBALS['UGROUP_TRACKER_ADMIN'])
+                ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN']) 
             ) { 
                 continue;
             }

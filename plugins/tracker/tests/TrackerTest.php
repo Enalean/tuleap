@@ -198,144 +198,192 @@ class TrackerTest extends UnitTestCase {
         $this->tracker2->setReturnValue('getGroupId', $group_id);
         $this->tracker2->setReturnValue('getId', 112);
         
+        
+        $this->tracker->setReturnValue('getPermissions', array(
+            1 => array('PERM_1'),
+            3 => array('PERM_2'),
+            5 => array('PERM_3'),
+            115 => array('PERM_3'),
+        ));
+        $this->tracker1->setReturnValue('getPermissions', array(
+            1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
+        ));
+        $this->tracker2->setReturnValue('getPermissions', array(
+            1002 => array( 102 => 'PLUGIN_TRACKER_ADMIN'),
+        ));
+        
         $this->site_admin_user = new MockUser($this);
         $this->site_admin_user->setReturnValue('getId', 1);
-        $this->site_admin_user->setReturnValue('isMember', true);
-        $this->site_admin_user->setReturnValue('isTrackerAdmin', true);
+        $this->site_admin_user->setReturnValue('isMember', false);
+        $this->site_admin_user->setReturnValue('isSuperUser', true);
+        $this->site_admin_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->site_admin_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         $this->site_admin_user->setReturnValue('isLoggedIn', true);
         
         $this->project_admin_user = new MockUser($this);
         $this->project_admin_user->setReturnValue('getId', 123);
         $this->project_admin_user->setReturnValue('isMember', true, array($group_id, 'A'));
-        $this->project_admin_user->setReturnValue('isTrackerAdmin', true, array($group_id, '*'));
+        $this->project_admin_user->setReturnValue('isSuperUser', false);
+        $this->project_admin_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->project_admin_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         $this->project_admin_user->setReturnValue('isLoggedIn', true);
         
         $this->all_trackers_admin_user = new MockUser($this);
         $this->all_trackers_admin_user->setReturnValue('getId', 222);
         $this->all_trackers_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
+        $this->all_trackers_admin_user->setReturnValue('isSuperUser', false);
         $this->all_trackers_admin_user->setReturnValue('isMember', true, array($group_id, 0));
-        $this->all_trackers_admin_user->setReturnValue('isTrackerAdmin', true, array($group_id, 111));
-        $this->all_trackers_admin_user->setReturnValue('isTrackerAdmin', true, array($group_id, 112));
+        $this->all_trackers_admin_user->setReturnValue('isMemberOfUGroup', true, array(1001, '*')); //1001 = ugroup who has ADMIN perm on tracker
+        $this->all_trackers_admin_user->setReturnValue('isMemberOfUGroup', true, array(1002, '*')); //1002 = ugroup who has ADMIN perm on tracker
         $this->all_trackers_admin_user->setReturnValue('isLoggedIn', true);
                 
         $this->tracker1_admin_user = new MockUser($this);
         $this->tracker1_admin_user->setReturnValue('getId', 333);
         $this->tracker1_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
+        $this->tracker1_admin_user->setReturnValue('isSuperUser', false);
         $this->tracker1_admin_user->setReturnValue('isMember', true, array($group_id, 0));
-        $this->tracker1_admin_user->setReturnValue('isTrackerAdmin', true, array($group_id, 111));
-        $this->tracker1_admin_user->setReturnValue('isTrackerAdmin', false, array($group_id, 112));
+        $this->tracker1_admin_user->setReturnValue('isMemberOfUGroup', true, array(1001, '*'));
+        $this->tracker1_admin_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         $this->tracker1_admin_user->setReturnValue('isLoggedIn', true);
         
         $this->tracker2_admin_user = new MockUser($this);
         $this->tracker2_admin_user->setReturnValue('getId', 444);
         $this->tracker2_admin_user->setReturnValue('isMember', false, array($group_id, 'A'));
+        $this->tracker2_admin_user->setReturnValue('isSuperUser', false);
         $this->tracker2_admin_user->setReturnValue('isMember', true, array($group_id, 0));
-        $this->tracker2_admin_user->setReturnValue('isTrackerAdmin', false, array($group_id, 111));
-        $this->tracker2_admin_user->setReturnValue('isTrackerAdmin', true, array($group_id, 112));
+        $this->tracker2_admin_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->tracker2_admin_user->setReturnValue('isMemberOfUGroup', true, array(1002, '*'));
         $this->tracker2_admin_user->setReturnValue('isLoggedIn', true);
         
         $this->project_member_user = new MockUser($this);
         $this->project_member_user->setReturnValue('getId', 555);
         $this->project_member_user->setReturnValue('isMember', false, array($group_id, 'A'));
+        $this->project_member_user->setReturnValue('isSuperUser', false);
         $this->project_member_user->setReturnValue('isMember', true, array($group_id, 0));
+        $this->project_member_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->project_member_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         $this->project_member_user->setReturnValue('isTrackerAdmin', false);
         $this->project_member_user->setReturnValue('isLoggedIn', true);
         
         $this->registered_user = new MockUser($this);
         $this->registered_user->setReturnValue('getId', 777);
         $this->registered_user->setReturnValue('isMember', false);
-        $this->registered_user->setReturnValue('isTrackerAdmin', false);
+        $this->registered_user->setReturnValue('isSuperUser', false);
+        $this->registered_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->registered_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         $this->registered_user->setReturnValue('isLoggedIn', true);
         
         $this->anonymous_user = new MockUser($this);
         $this->anonymous_user->setReturnValue('getId', 777);
         $this->anonymous_user->setReturnValue('isMember', false);
-        $this->anonymous_user->setReturnValue('isTrackerAdmin', false);
+        $this->anonymous_user->setReturnValue('isSuperUser', false);
+        $this->anonymous_user->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->anonymous_user->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         $this->anonymous_user->setReturnValue('isLoggedIn', false);
         
         // Users for tracker access perm tests
         $this->anonymous = new MockUser();
         $this->anonymous->setReturnValue('isSuperUser', false);
-        $this->anonymous->setReturnValue('isTrackerAdmin', false);
         $this->anonymous->setReturnValue('getId', 0);
-        $this->anonymous->setReturnValue('isMemberOfUGroup', true, array(1, '*', '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(2, '*', '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(3, '*', '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(4, '*', '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(138, '*', '*'));
-        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(196, '*', '*'));
+        $this->anonymous->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
+        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(2, '*'));
+        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
+        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
+        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
+        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
+        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->anonymous->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
          
         $this->registered = new MockUser();
         $this->registered->setReturnValue('isSuperUser',false);
-        $this->registered->setReturnValue('isTrackerAdmin',false);
         $this->registered->setReturnValue('getId', 101);
-        $this->registered->setReturnValue('isMemberOfUGroup', true, array(1, '*', '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', true, array(2, '*', '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', false, array(3, '*', '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', false, array(4, '*', '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', false, array(138, '*', '*'));
-        $this->registered->setReturnValue('isMemberOfUGroup', false, array(196, '*', '*'));
+        $this->registered->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
+        $this->registered->setReturnValue('isMemberOfUGroup', true, array(2, '*'));
+        $this->registered->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
+        $this->registered->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
+        $this->registered->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
+        $this->registered->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
+        $this->registered->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->registered->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
          
         $this->project_member = new MockUser();
         $this->project_member->setReturnValue('isSuperUser', false);
-        $this->project_member->setReturnValue('isTrackerAdmin', false);
         $this->project_member->setReturnValue('getId', 102);
-        $this->project_member->setReturnValue('isMemberOfUGroup', true, array(1, '*', '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', true, array(2, '*', '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', true, array(3, '*', '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(4, '*', '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(138, '*', '*'));
-        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(196, '*', '*'));
+        $this->project_member->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
+        $this->project_member->setReturnValue('isMemberOfUGroup', true, array(2, '*'));
+        $this->project_member->setReturnValue('isMemberOfUGroup', true, array(3, '*'));
+        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
+        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
+        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
+        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->project_member->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
          
         $this->project_admin = new MockUser();
         $this->project_admin->setReturnValue('isSuperUser', false);
-        $this->project_admin->setReturnValue('isTrackerAdmin', true);
         $this->project_admin->setReturnValue('getId', 103);
-        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(1, '*', '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(2, '*', '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(3, '*', '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(4, '*', '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(138, '*', '*'));
-        $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(196, '*', '*'));
+        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
+        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(2, '*'));
+        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(3, '*'));
+        $this->project_admin->setReturnValue('isMemberOfUGroup', true, array(4, '*'));
+        $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
+        $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
+        $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->project_admin->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
          
         $this->super_admin = new MockUser();
         $this->super_admin->setReturnValue('isSuperUser', true);
-        $this->super_admin->setReturnValue('isTrackerAdmin', true);
         $this->super_admin->setReturnValue('getId', 104);
-        $this->super_admin->setReturnValue('isMemberOfUGroup', true, array('*', '*', '*'));
+        $this->super_admin->setReturnValue('isMemberOfUGroup', true, array('*', '*'));
+        $this->super_admin->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->super_admin->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
          
         $this->tracker_submitter = new MockUser();
         $this->tracker_submitter->setReturnValue('isSuperUser', false);
-        $this->tracker_submitter->setReturnValue('isTrackerAdmin', false);
         $this->tracker_submitter->setReturnValue('getId', 105);
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', true, array(1, '*', '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(2, '*', '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(3, '*', '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(4, '*', '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', true, array(138, '*', '*'));
-        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(196, '*', '*'));
+        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
+        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(2, '*'));
+        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
+        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
+        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', true, array(138, '*'));
+        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
+        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->tracker_submitter->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
          
         $this->tracker_assignee = new MockUser();
         $this->tracker_assignee->setReturnValue('isSuperUser', false);
-        $this->tracker_assignee->setReturnValue('isTrackerAdmin', false);
         $this->tracker_assignee->setReturnValue('getId', 106);
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', true, array(1, '*', '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(2, '*', '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(3, '*', '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(4, '*', '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(138, '*', '*'));
-        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', true, array(196, '*', '*'));
+        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
+        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(2, '*'));
+        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
+        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
+        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
+        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', true, array(196, '*'));
+        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->tracker_assignee->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         
         $this->tracker_submitterassignee = new MockUser();
         $this->tracker_submitterassignee->setReturnValue('isSuperUser', false);
-        $this->tracker_submitterassignee->setReturnValue('isTrackerAdmin', false);
-        $this->tracker_submitterassignee->setReturnValue('getId', 106);
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', true, array(1, '*', '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(2, '*', '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(3, '*', '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(4, '*', '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', true, array(138, '*', '*'));
-        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', true, array(196, '*', '*'));
+        $this->tracker_submitterassignee->setReturnValue('getId', 107);
+        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', true, array(1, '*'));
+        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(2, '*'));
+        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
+        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
+        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', true, array(138, '*'));
+        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', true, array(196, '*'));
+        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(1001, '*'));
+        $this->tracker_submitterassignee->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
+        
+        $this->tracker_admin = new MockUser();
+        $this->tracker_admin->setReturnValue('isSuperUser', false);
+        $this->tracker_admin->setReturnValue('getId', 107);
+        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(1, '*'));
+        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(2, '*'));
+        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(3, '*'));
+        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(4, '*'));
+        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(138, '*'));
+        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(196, '*'));
+        $this->tracker_admin->setReturnValue('isMemberOfUGroup', true, array(1001, '*'));
+        $this->tracker_admin->setReturnValue('isMemberOfUGroup', false, array(1002, '*'));
         
         $this->workflow_factory = new MockWorkflowFactory();
         $this->tracker->setReturnReference('getWorkflowFactory', $this->workflow_factory);
@@ -375,6 +423,8 @@ class TrackerTest extends UnitTestCase {
         unset($this->super_admin);
         unset($this->tracker_submitter);
         unset($this->tracker_assignee);
+        unset($this->tracker_submitterassignee);
+        unset($this->tracker_admin);
         
         unset($GLOBALS['Response']);
         unset($GLOBALS['Language']);
@@ -1218,7 +1268,8 @@ class TrackerTest extends UnitTestCase {
         $t_access_anonymous->setReturnValue('getId', 1);
         $t_access_anonymous->setReturnValue('getGroupId', 101);
         $perms = array(
-                1 => array( 101 => 'PLUGIN_TRACKER_ACCESS_FULL')
+                1 => array( 101 => 'PLUGIN_TRACKER_ACCESS_FULL'),
+                1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
         $t_access_anonymous->setReturnReference('getPermissions', $perms);
         
@@ -1230,6 +1281,7 @@ class TrackerTest extends UnitTestCase {
         $this->assertTrue($t_access_anonymous->userCanView($this->tracker_submitter));
         $this->assertTrue($t_access_anonymous->userCanView($this->tracker_assignee));
         $this->assertTrue($t_access_anonymous->userCanView($this->tracker_submitterassignee));
+        $this->assertTrue($t_access_anonymous->userCanView($this->tracker_admin));
     }
     
     public function testAccessPermsRegisteredFullAccess() {
@@ -1237,7 +1289,8 @@ class TrackerTest extends UnitTestCase {
         $t_access_registered->setReturnValue('getId', 2);
         $t_access_registered->setReturnValue('getGroupId', 101);
         $perms = array(
-                2 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL')
+                2 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
+                1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
         $t_access_registered->setReturnReference('getPermissions', $perms);
         
@@ -1249,6 +1302,7 @@ class TrackerTest extends UnitTestCase {
         $this->assertFalse($t_access_registered->userCanView($this->tracker_submitter));
         $this->assertFalse($t_access_registered->userCanView($this->tracker_assignee));
         $this->assertFalse($t_access_registered->userCanView($this->tracker_submitterassignee));
+        $this->assertTrue($t_access_registered->userCanView($this->tracker_admin));
     }
     
     public function testAccessPermsMemberFullAccess() {
@@ -1256,7 +1310,8 @@ class TrackerTest extends UnitTestCase {
         $t_access_members->setReturnValue('getId', 3);
         $t_access_members->setReturnValue('getGroupId', 101);
         $perms = array(
-                3 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL')
+                3 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
+                1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
         $t_access_members->setReturnReference('getPermissions', $perms);
         
@@ -1268,6 +1323,7 @@ class TrackerTest extends UnitTestCase {
         $this->assertFalse($t_access_members->userCanView($this->tracker_submitter));
         $this->assertFalse($t_access_members->userCanView($this->tracker_assignee));
         $this->assertFalse($t_access_members->userCanView($this->tracker_submitterassignee));
+        $this->assertTrue($t_access_members->userCanView($this->tracker_admin));
     }
     
     public function testAccessPermsAdminFullAccess() {
@@ -1275,7 +1331,8 @@ class TrackerTest extends UnitTestCase {
         $t_access_admin->setReturnValue('getId', 4);
         $t_access_admin->setReturnValue('getGroupId', 101);
         $perms = array(
-                4 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL')
+                4 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL'),
+                1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
                 );
         $t_access_admin->setReturnReference('getPermissions', $perms);
         
@@ -1287,6 +1344,7 @@ class TrackerTest extends UnitTestCase {
         $this->assertFalse($t_access_admin->userCanView($this->tracker_submitter));
         $this->assertFalse($t_access_admin->userCanView($this->tracker_assignee));
         $this->assertFalse($t_access_admin->userCanView($this->tracker_submitterassignee));
+        $this->assertTrue($t_access_admin->userCanView($this->tracker_admin));
     }
     
     public function testAccessPermsSubmitterFullAccess() {
@@ -1295,7 +1353,8 @@ class TrackerTest extends UnitTestCase {
         $t_access_submitter->setReturnValue('getGroupId', 101);
         $perms = array(
                 4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
-                138 => array(101=>'PLUGIN_TRACKER_ACCESS_SUBMITTER')
+                138 => array(101=>'PLUGIN_TRACKER_ACCESS_SUBMITTER'),
+                1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
         $t_access_submitter->setReturnReference('getPermissions', $perms);
         
@@ -1307,6 +1366,7 @@ class TrackerTest extends UnitTestCase {
         $this->assertTrue($t_access_submitter->userCanView($this->tracker_submitter));
         $this->assertFalse($t_access_submitter->userCanView($this->tracker_assignee));
         $this->assertTrue($t_access_submitter->userCanView($this->tracker_submitterassignee));
+        $this->assertTrue($t_access_submitter->userCanView($this->tracker_admin));
     }
     
     public function testAccessPermsAssigneeFullAccess() {
@@ -1315,7 +1375,8 @@ class TrackerTest extends UnitTestCase {
         $t_access_assignee->setReturnValue('getGroupId', 101);
         $perms = array(
                 4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
-                196 => array(101=>'PLUGIN_TRACKER_ACCESS_ASSIGNEE')
+                196 => array(101=>'PLUGIN_TRACKER_ACCESS_ASSIGNEE'),
+                1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
         $t_access_assignee->setReturnReference('getPermissions', $perms);
         
@@ -1327,6 +1388,7 @@ class TrackerTest extends UnitTestCase {
         $this->assertFalse($t_access_assignee->userCanView($this->tracker_submitter));
         $this->assertTrue($t_access_assignee->userCanView($this->tracker_assignee));
         $this->assertTrue($t_access_assignee->userCanView($this->tracker_submitterassignee));
+        $this->assertTrue($t_access_assignee->userCanView($this->tracker_admin));
     }
     
     public function testAccessPermsSubmitterAssigneeFullAccess() {
@@ -1337,7 +1399,8 @@ class TrackerTest extends UnitTestCase {
         $perms = array(
                 4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
                 138 => array(101=>'PLUGIN_TRACKER_ACCESS_SUBMITTER'),
-                196 => array(101=>'PLUGIN_TRACKER_ACCESS_ASSIGNEE')
+                196 => array(101=>'PLUGIN_TRACKER_ACCESS_ASSIGNEE'),
+                1001 => array( 101 => 'PLUGIN_TRACKER_ADMIN'),
             );
         $t_access_submitterassignee->setReturnReference('getPermissions', $perms);
         
@@ -1349,6 +1412,7 @@ class TrackerTest extends UnitTestCase {
         $this->assertTrue($t_access_submitterassignee->userCanView($this->tracker_submitter));
         $this->assertTrue($t_access_submitterassignee->userCanView($this->tracker_assignee));
         $this->assertTrue($t_access_submitterassignee->userCanView($this->tracker_submitterassignee));
+        $this->assertTrue($t_access_submitterassignee->userCanView($this->tracker_admin));
     }
     
     //
@@ -1380,15 +1444,6 @@ class TrackerTest extends UnitTestCase {
         $this->tracker->setReturnValue('getAllFormElements', array($f1, $f2));
         $this->formelement_factory->setReturnValue('getAllFormElementsForTracker', array($f1, $f2));
 
-        $this->tracker->setReturnValue(
-            'getPermissions', 
-            array(
-                1 => array('PERM_1'),
-                3 => array('PERM_2'),
-                5 => array('PERM_3'),
-                115 => array('PERM_3'),
-            )
-        );
         $xml = $this->tracker->exportToXML();
         
         $this->assertTrue(isset($xml->permissions));        
