@@ -58,6 +58,7 @@ function ugroup_get_parent($ugroup_id) {
 }
 
 // Return members (user_id + user_name according to user preferences) of given user group
+// * $keword is used to filter the users.
 function ugroup_db_get_members($ugroup_id, $with_display_preferences = false, $keyword = null) {
     $sqlname="user.user_name AS full_name";
     $sqlorder="user.user_name";
@@ -72,7 +73,7 @@ function ugroup_db_get_members($ugroup_id, $with_display_preferences = false, $k
         $having_keyword = " AND full_name LIKE $keyword ";
     }
     $ugroup_id = (int)$ugroup_id;
-    $sql="(SELECT user.user_id, user.user_name, $sqlname 
+    $sql="(SELECT user.user_id, $sqlname, user.user_name
             FROM ugroup_user, user 
             WHERE user.user_id = ugroup_user.user_id 
               AND ugroup_user.ugroup_id = $ugroup_id 
@@ -232,6 +233,7 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
  * Check membership of the user to a specified ugroup
  * $group_id is necessary for automatic project groups like project member, release admin, etc.
  * $atid is necessary for trackers since the tracker admin role is different for each tracker.
+ * $keword is used to filter the users
  */
 function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id, $with_display_preferences=false, $keyword = null) {
     $sqlname="user.user_name AS full_name";
@@ -255,28 +257,28 @@ function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id, $with_displ
         return;
     } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED']) {
         // Registered user
-        return "(SELECT user.user_id, user.user_name, ".$sqlname." FROM user WHERE ( status='A' OR status='R' ) $having_keyword ORDER BY ".$sqlorder." )";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user WHERE ( status='A' OR status='R' ) $having_keyword ORDER BY ".$sqlorder." )";
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
-        return "(SELECT user.user_id, user.user_name, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_FILE_MANAGER_ADMIN']) {
         // File manager admins
-        return "(SELECT user.user_id, user.user_name, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND file_flags = 2 AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND file_flags = 2 AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_ADMIN']) {
         // Document admin
-        return "(SELECT user.user_id, user.user_name, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (2,3) AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (2,3) AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_TECH']) {
         // Document tech
-        return "(SELECT user.user_id, user.user_name, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (1,2) AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (1,2) AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
         // Wiki admins
-        return "(SELECT user.user_id, user.user_name, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
-        return "(SELECT user.user_id, user.user_name, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
-        return "(SELECT user.user_id, user.user_name, ".$sqlname." FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
     } 
 }
 
