@@ -128,8 +128,7 @@ class trackerPlugin extends Plugin {
     }
     
     function getObjectTypeFromPermissions($params) {
-        if (!$params['object_type']) {
-            switch($params['permission_type']) {
+        switch($params['permission_type']) {
             case 'PLUGIN_TRACKER_FIELD_SUBMIT':
             case 'PLUGIN_TRACKER_FIELD_READ':
             case 'PLUGIN_TRACKER_FIELD_UPDATE':
@@ -140,7 +139,6 @@ class trackerPlugin extends Plugin {
                 return 'tracker';
             case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
                 return 'artifact';
-            }
         }
         return false;
     }
@@ -190,9 +188,7 @@ class trackerPlugin extends Plugin {
     function permissions_for_ugroup($params) {
         if (!$params['results']) {
             //TODO : change urls
-            $tf = TrackerFactory::instance();
-            $tracker = $tf->getTrackerById($params['object_id']);
-            $group_id = $tracker->getGroupID();
+            $group_id = $params['group_id'];
             $hp = Codendi_HTMLPurifier::instance();
             $atid = $params['object_id'];
             $objname = $params['objname'];
@@ -221,12 +217,13 @@ class trackerPlugin extends Plugin {
         if (!$params['allowed']) {
             if (!$this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
-                    $tf = TrackerFactory::instance();
-                    $tracker = $tf->getTrackerById($params['object_id']);
+                    //$tf = TrackerFactory::instance();
+                    //$tracker = $tf->getTrackerById($params['object_id']);
                     try {
-                        //TODO : userIsAdmin has to check that user is project admin and not tracker admin
+                        $group_id = $params['group_id'];
+                        //TODO : check perms on tracker, fields and artifact (and workflow?)
                         //Only tracker admin can update perms
-                        $this->_cached_permission_user_allowed_to_change = $tracker->userIsAdmin(UserManager::instance()->getCurrentUser());
+                        $this->_cached_permission_user_allowed_to_change = UserManager::instance()->getCurrentUser()->isMember($group_id,'A');
                     } catch (Exception $e) {
                         // do nothing
                     }
