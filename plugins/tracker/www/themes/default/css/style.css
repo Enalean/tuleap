@@ -818,3 +818,35 @@ ul.my_artifacts_list {
     padding-left: 1em;
     list-style-type: none;
 }
+
+#tracker_admin_menu {
+    border:none;
+    border-spacing:2em;
+}
+
+#tracker_admin_menu td {
+    border-radius:1em;
+    border:1px solid #999;
+    padding:0.5em 1em;
+    margin-right:1em;
+    box-shadow:1px 1px 2px #ccc;
+    /* First background-image statement is for browsers that do not support gradients. */
+    background: white;
+    background-image: -moz-linear-gradient(top, white, #ededed);
+    background-image: -webkit-gradient(linear, left top, left bottom, 
+                                        from(white),
+                                        to(#ededed));
+}
+
+#tracker_admin_menu td:hover {
+    background-image: -moz-linear-gradient(top, #f2f9fe, #d6f0fd);
+    background-image: -webkit-gradient(linear, left top, left bottom, 
+                                        from(#f2f9fe),
+                                        to(#d6f0fd));
+}
+#tracker_admin_menu td img {
+    margin-right: 8px;
+}
+#tracker_admin_menu td div {
+    padding-left: 56px;
+}

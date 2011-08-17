@@ -1045,7 +1045,7 @@ class Tracker {
             }
         }
         if ($cleaned_items) {
-            $html .= '<table>';
+            $html .= '<table id="tracker_admin_menu">';
             $chunks = array_chunk($cleaned_items, 2);
             foreach($chunks as $row) {
                 $html .= '<tr valign="top">';
@@ -1067,7 +1067,7 @@ class Tracker {
                     }
                     $html .= '</h3>';
                     if (isset($item['description'])) {
-                        $html .= $hp->purify($item['description'], CODENDI_PURIFIER_BASIC, $this->getGroupId());
+                        $html .= '<div>'. $hp->purify($item['description'], CODENDI_PURIFIER_BASIC, $this->getGroupId()) .'</div>';
                     }
                     $html .= '</td>';
                 }

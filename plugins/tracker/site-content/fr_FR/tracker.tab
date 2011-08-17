@@ -443,7 +443,7 @@ plugin_tracker_include_type	add_del_resp	Ajouter, modifier ou détruire les rép
 plugin_tracker_include_type	mng_reports	Gérer les rapports de recherche de l'outil de suivi
 plugin_tracker_include_type	define_reports	Définir les rapports de recherche de cet outil de suivi&nbsp;: quels critères de recherche et quels champs montrer dans les rapports de recherche.
 plugin_tracker_include_type	define_title	Définir le titre, la description, ... de cet outil de suivi.
-plugin_tracker_include_type	define_notif	Les utilisateurs peuvent définir des options de notification personnelles relatives aux modifications des artefacts de cet outil. Les administrateurs du projet peuvent aussi définir des règles de notification globale.
+plugin_tracker_include_type	define_notif	Définir des règles de notification.
 plugin_tracker_include_type	user	Utilisateur
 plugin_tracker_include_type	perm	Permissions
 plugin_tracker_include_type	del_user	Détruire cet utilisateur ?

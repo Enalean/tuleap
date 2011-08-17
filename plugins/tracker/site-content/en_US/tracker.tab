@@ -452,7 +452,7 @@ plugin_tracker_include_type	add_del_resp	Add, update or delete the canned respon
 plugin_tracker_include_type	mng_reports	Manage Tracker Reports
 plugin_tracker_include_type	define_reports	Define tracker search reports: what search criteria to use and what tracker fields to show in the tracker search reports.
 plugin_tracker_include_type	define_title	Define the title, the description, etc of this tracker.
-plugin_tracker_include_type	define_notif	Users can define when they want to be notified of a tracker update via email. Project Administrators can also define global email notification rules.
+plugin_tracker_include_type	define_notif	Manage email notification rules.
 plugin_tracker_include_type	user	User
 plugin_tracker_include_type	perm	Permissions
 plugin_tracker_include_type	del_user	Delete this user?
