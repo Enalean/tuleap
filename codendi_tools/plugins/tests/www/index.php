@@ -86,8 +86,15 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
             text-align:center;
         }
         #submit_panel input {
+            width:96px;
             font-size:2em;
-            width:200px;;
+            height:100%;
+            border:1px solid #ccc;
+            background-image:url('bg.png');
+            color:transparent;
+        }
+        #submit_panel input:hover {
+            background-image:url('bg-hover.png');
         }
         tr {
             vertical-align:top;
@@ -175,11 +182,10 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
         </script>
     </head>
     <body>
-        <table width="100%">
-            <tr>
-                <td width="10%" nowrap="nowrap">
-                    <form action="" method="POST">
-                        <div id="submit_panel"><input type="submit" value="Run !" /></div>
+        <form action="" method="POST">
+            <table width="100%">
+                <tr>
+                    <td width="10%" nowrap="nowrap">
                         <fieldset>
                             <legend>Options</legend>
                             <input type="checkbox" id="show_pass" name="show_pass" value="1" <?= isset($_REQUEST['show_pass']) ? 'checked="checked"' : '' ?> /><label for="show_pass">Show pass</label>
@@ -204,7 +210,23 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                         </fieldset>
                     </form>
                 </td>
+                    <td width="5%">
+                        <div id="submit_panel"><input type="submit" value="Run !" /></div>
+                    </td>
                 <td width="90%">
+                        <script>
+                        var inp = $('submit_panel').down('input');
+                        if (inp) {
+                            var hei = $('submit_panel').up('td').offsetHeight;
+                            document.observe('mouseover', function() {
+                                if (inp.offsetHeight != hei) {
+                                    inp.setStyle({
+                                        height:hei + 'px',
+                                    });
+                                }
+                            });
+                        }
+                        </script>
                     <fieldset>
                         <legend>Results</legend>
                         <?php
