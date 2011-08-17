@@ -108,6 +108,7 @@ class User {
     protected $language_id;
     protected $last_pwd_update;
     protected $expiry_date;
+    protected $has_avatar;
 
     /**
      * Keep super user info
