@@ -154,9 +154,9 @@ class trackerPlugin extends Plugin {
             	    	    $tracker->setId($params['object_id']);
             	    	    $params['object_name'] = $tracker->getItemName();
             	    } else if ($type == 'field') {
-            	    	    $field = new Tracker_FormElement_Field();
-            	    	    $field->setId(permission_extract_field_id($params['object_id']));
-            	    	    $params['object_name'] = $field->getName();
+            	           $aff = Tracker_FormElementFactory::instance();
+            	           $field = $aff->getFormElementById(permission_extract_field_id($params['object_id']));
+            	    	   $params['object_name'] = $field->getName();
             	    } else if ($type == 'artifact') {
             	    	    $artifact = new Tracker_Artifact();
             	    	    $artifact->setId($params['object_id']);

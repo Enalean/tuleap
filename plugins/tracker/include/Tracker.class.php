@@ -331,7 +331,7 @@ class Tracker {
             	    if ($this->userIsAdmin($current_user)) {
                     if ($request->exist('update')) {
                         if ($request->exist('permissions') && is_array($request->get('permissions'))) {
-                            permission_process_update_fields_permissions(
+                            plugin_tracker_permission_process_update_fields_permissions(
                                     $this->getGroupId(),
                                     $this->getId(),
                                     Tracker_FormElementFactory::instance()->getUsedFields($this),
@@ -1285,7 +1285,7 @@ class Tracker {
         $group_first = $request->get('group_first') ? 1 : 0;
         $selected_id = $request->get('selected_id');
         $selected_id = $selected_id ? $selected_id : false;
-        $ugroups_permissions = permission_get_field_tracker_ugroups_permissions(
+        $ugroups_permissions = plugin_tracker_permission_get_field_tracker_ugroups_permissions(
                 $this->getGroupId(),
                 $this->getId(),
                 Tracker_FormElementFactory::instance()->getUsedFields($this),
@@ -1401,6 +1401,7 @@ EOS;
             $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
             $html .= '<td rowspan="'. (count($ugroups_permissions[$key]['related_parts'])+1) .'" style="vertical-align:top;">';
             $html .= '<select onchange="changeFirstPartId(this.options[this.selectedIndex].value);">';
+            
             foreach($ugroups_permissions as $part_permissions) {
                 if ($selected_id === false) {
                     $selected_id = $part_permissions['values']['id'];
@@ -1450,7 +1451,7 @@ EOS;
                 $html .= $name;
 
                 $html .= '</td>';
-
+  
                 //The permissions
                 {
                     //Submit permission
@@ -1461,7 +1462,7 @@ EOS;
                         $name_of_variable = "permissions[".(int)$first_part['id']."][".(int)$second_part['id']."]";
                     }
                     $html .= '<input type="hidden" name="'. $name_of_variable .'[submit]" value="off"/>';
-
+                    
                     $can_submit = ($group_first && $second_part['field']->isSubmitable())
                             || (!$group_first && $first_part['field']->isSubmitable());
 
@@ -2072,7 +2073,7 @@ EOS;
         // permissions
         $node_perms = $xmlElem->addChild('permissions');
         // tracker permissions
-        if ($permissions = $this->getPermissions()) {            
+        if ($permissions = $this->getPermissions()) {      
             foreach ($permissions as $ugroup_id => $permission_types) {
                 if (($ugroup = array_search($ugroup_id, $GLOBALS['UGROUPS'])) !== false && $ugroup_id < 100) {
                     foreach ( $permission_types as $permission_type) {

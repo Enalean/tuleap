@@ -688,13 +688,13 @@ class Tracker_FormElementFactory {
                     //Set default permissions
                     $permissions = array( $formElement_id => 
                          array(
-                               $GLOBALS['UGROUP_ANONYMOUS']     => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_READ'),
-                               $GLOBALS['UGROUP_REGISTERED']    => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_SUBMIT'),
-                               $GLOBALS['UGROUP_PROJECT_MEMBERS']  => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_UPDATE')
+                               $GLOBALS['UGROUP_ANONYMOUS']     => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_READ'),
+                               $GLOBALS['UGROUP_REGISTERED']    => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_SUBMIT'),
+                               $GLOBALS['UGROUP_PROJECT_MEMBERS']  => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_UPDATE')
                          )
                     );   
                     $tracker = $formElement->getTracker();
-                    permission_process_update_fields_permissions(
+                    plugin_tracker_permission_process_update_fields_permissions(
                             $tracker->getGroupID(),
                             $tracker->getID(),
                             $this->getUsedFields($tracker),
@@ -872,7 +872,7 @@ class Tracker_FormElementFactory {
                         if (!array_key_exists($type, array_merge($this->group_classnames, $this->staticfield_classnames))) {
                             $ugroups_permissions = $this->getPermissionsFromFormElementData($id, $formElement_data);
                             if ($ugroups_permissions) {
-                                permission_process_update_fields_permissions(
+                                plugin_tracker_permission_process_update_fields_permissions(
                                     $tracker->group_id,
                                     $tracker->id,
                                     $this->getUsedFields($tracker),
@@ -922,7 +922,7 @@ class Tracker_FormElementFactory {
                 foreach ($ugroups_permissions as $ugroup_id => $perms) {
                     $ugroups_permissions[$ugroup_id] = array();
                     foreach ($perms as $key => $value) {
-                        $new_value = permission_get_input_value_from_permission($value);
+                        $new_value = plugin_tracker_permission_get_input_value_from_permission($value);
                         $ugroups_permissions[$ugroup_id] = array_merge($ugroups_permissions[$ugroup_id], $new_value);
                     }
                 }
@@ -933,8 +933,8 @@ class Tracker_FormElementFactory {
         } else {
             $ugroups_permissions = array($elmtId =>
                 array(
-                    $GLOBALS['UGROUP_ANONYMOUS'] => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_READ'),
-                    $GLOBALS['UGROUP_REGISTERED'] => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_SUBMIT'),
+                    $GLOBALS['UGROUP_ANONYMOUS'] => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_READ'),
+                    $GLOBALS['UGROUP_REGISTERED'] => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_SUBMIT'),
                     $GLOBALS['UGROUP_PROJECT_MEMBERS'] => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_UPDATE')
                 )
             );
