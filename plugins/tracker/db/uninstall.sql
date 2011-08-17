@@ -64,5 +64,5 @@ DROP TABLE IF EXISTS tracker_rule;
 
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 
-DELETE FROM service WHERE shortname = 'plugin_tracker';
+DELETE FROM service WHERE short_name = 'plugin_tracker';
 
