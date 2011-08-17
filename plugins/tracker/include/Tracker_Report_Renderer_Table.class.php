@@ -269,8 +269,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     public function storeColumnsInSession() {
         $columns = $this->_columns;
         foreach($columns as $key => $column) {
-            $this->report_session->set("{$this->id}.columns.{$key}.width", $column['width'] );
-            $this->report_session->set("{$this->id}.columns.{$key}.rank", $column['rank']);
+            $this->report_session->set("{$this->id}.columns.{$key}.width", isset($column['width']) ? $column['width'] : 0);
+            $this->report_session->set("{$this->id}.columns.{$key}.rank", isset($column['rank']) ? $column['rank'] : 0);
         }
     }
     
