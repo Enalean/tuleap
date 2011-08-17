@@ -264,13 +264,13 @@ class Tracker {
                         $GLOBALS['Response']->addFeedback(
                                 'info',
                                 $GLOBALS['Language']->getText(
-                                'tracker_admin_index',
+                                'plugin_tracker_admin_index',
                                 'delete_success',
                                 $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)));
                         $GLOBALS['Response']->addFeedback(
                                 'info',
                                 $GLOBALS['Language']->getText(
-                                'tracker_admin_index',
+                                'plugin_tracker_admin_index',
                                 'tracker_deleted',
                                 $GLOBALS['sys_email_admin']),
                                 CODENDI_PURIFIER_FULL
@@ -279,7 +279,7 @@ class Tracker {
                         $GLOBALS['Response']->addFeedback(
                                 'error',
                                 $GLOBALS['Language']->getText(
-                                'tracker_admin_index',
+                                'plugin_tracker_admin_index',
                                 'deletion_failed',
                                 $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)));
                     }
