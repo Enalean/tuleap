@@ -47,9 +47,10 @@ document.observe('dom:loaded', function () {
             admin_field_properties = new Element(
                 'div',
                 {
-                    id: 'tracker-admin-field-properties'
+                    id: 'tracker-admin-field-properties',
+                    className: 'widget'
                 }
-            ).hide().update('<div class="tracker-admin-palette-toggle"></div><div class="tracker-admin-palette-content"></div>');
+            ).hide().update('<div class="widget_titlebar"><div class="widget_titlebar_title"></div></div><div class="widget_content"></div>');
             palette.insert({
                 after: admin_field_properties
             });
@@ -77,8 +78,8 @@ document.observe('dom:loaded', function () {
                             var rtes = [];
                             
                             //Don't use directly updater since the form is stripped
-                            admin_field_properties.down().next().update('').insert(new Element('div').update(transport.responseText).down());
-                            admin_field_properties.down().update('Create an element');
+                            admin_field_properties.down('.widget_content').update('').insert(new Element('div').update(transport.responseText).down());
+                            admin_field_properties.down('.widget_titlebar_title').update('Create an element');
                             admin_field_properties.select('input[type=submit]')[0].insert({
                                 before: new Element(
                                     'a',
@@ -138,7 +139,8 @@ document.observe('dom:loaded', function () {
                     selected_element = new Element('div')
                         .hide()
                         .addClassName('tracker-admin-field-selected')
-                        .update('<div class="tracker-admin-palette-toggle"></div><div class="tracker-admin-palette-content"></div>');
+                        .addClassName('widget')
+                        .update('<div class="widget_titlebar"><div class="widget_titlebar_title"></div></div><div class="widget_content"></div>');
                     element = a.up('.tracker-admin-field');
                     if (element) {
                         element.insert(selected_element);
@@ -167,8 +169,8 @@ document.observe('dom:loaded', function () {
                     {
                         onComplete: function (transport) {
                             //Don't use directly updater since the form is stripped
-                            selected_element.down().next().update('').insert(new Element('div').update(transport.responseText).down());
-                            selected_element.down().update('Update an element');
+                            selected_element.down('.widget_content').update('').insert(new Element('div').update(transport.responseText).down());
+                            selected_element.down('.widget_titlebar_title').update('Update an element');
                             var submit_button = selected_element.select('input[type=submit]')[0];
                             submit_button.insert({
                                 before: new Element(

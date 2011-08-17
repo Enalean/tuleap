@@ -747,12 +747,7 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 /* {{{ Palette */
 .tracker-admin-palette,
 #tracker-admin-field-properties {
-    border: 1px solid #666;
-    background: #fcfcfc;
     min-width:250px;
-    -webkit-box-shadow: 2px 2px 10px #ccc;
-    -moz-box-shadow: 2px 2px 10px #ccc;
-    box-shadow: 2px 2px 10px #ccc;
 }
 #tracker-admin-field-properties {
     background: #fcfcff;
@@ -795,12 +790,6 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
     padding-bottom:2px; /* push text down 1px */
 }
 
-.tracker-admin-palette-toggle {
-    padding: 2px 4px;
-    background: #f60;
-    color:#fff;
-    text-shadow: 1px 1px #000;
-}
 .tracker-admin-palette-content {
     padding: 5px 5px 10px;
 }

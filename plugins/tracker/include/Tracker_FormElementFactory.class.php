@@ -41,6 +41,7 @@ require_once('Tracker_FormElement_Container_Column.class.php');
 require_once('Tracker_FormElement_StaticField_LineBreak.class.php');
 require_once('Tracker_FormElement_StaticField_Separator.class.php');
 require_once('Tracker_FormElement_StaticField_RichText.class.php');
+require_once('common/widget/Widget_Static.class.php');
 
 class Tracker_FormElementFactory {
     
@@ -722,25 +723,28 @@ class Tracker_FormElementFactory {
     }
     
     /**
-     * Return the HTML for "field usage" admininistration
+     * Display the HTML for "field usage" admininistration
      *
-     * @return string the HTML for "field usage" admininistration
+     * @return void
      */
-    public function fetchFactories() {
+    public function displayFactories() {
         $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
         $klasses = $this->classnames;
         $special_klasses = $this->special_classnames;
         $all_klasses = array_merge($klasses, $special_klasses);
         EventManager::instance()->processEvent('tracker_formElement_classnames', 
                                                array('classnames' => &$all_klasses));
-        $html .= '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fields') .'</div>';
-        $html .= $this->fetchFactoryButtons($klasses);
-        $html .= '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','dynamic_fields') .'</div>';
-        $html .= $this->fetchFactoryButtons($special_klasses);
-        $html .= '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','structural_elements') .'</div>';
-        $html .= $this->fetchFactoryButtons(array_merge($this->group_classnames, $this->staticfield_classnames));
-        return $html;
+        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fields'));
+        $w->setContent($this->fetchFactoryButtons($klasses));
+        $w->display();
+        
+        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','dynamic_fields'));
+        $w->setContent($this->fetchFactoryButtons($special_klasses));
+        $w->display();
+        
+        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','structural_elements'));
+        $w->setContent($this->fetchFactoryButtons(array_merge($this->group_classnames, $this->staticfield_classnames)));
+        $w->display();
     }
     
     protected function fetchFactoryButtons($klasses) {

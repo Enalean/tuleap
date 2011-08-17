@@ -27,6 +27,7 @@ require_once('Tracker_CannedResponseManager.class.php');
 require_once('Tracker_RulesManager.class.php');
 require_once('workflow/WorkflowManager.class.php');
 require_once('common/date/DateHelper.class.php');
+require_once('common/widget/Widget_Static.class.php');
 require_once('tracker_permissions.php');
 
 class Tracker {
@@ -1528,21 +1529,22 @@ EOS;
 
         echo '<h2>'. $title .'</h2>';
         echo '<form name="form1" method="POST" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-formElements">';
-
+        
 
         echo '<table cellspacing="4" cellpadding="0"><tr valign="top"><td>';
         echo '<div class="tracker-admin-palette">';
 
-        echo Tracker_FormElementFactory::instance()->fetchFactories();
+        Tracker_FormElementFactory::instance()->displayFactories();
 
-        echo '<div class="tracker-admin-palette-toggle">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','unused_elements') .'</div>';
-        echo '<div class="tracker-admin-palette-content">';
-        echo '<table>';
+        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','unused_elements'));
+        $unused_elements_content = '';
+        $unused_elements_content .= '<div class="tracker-admin-palette-content"><table>';
         foreach(Tracker_FormElementFactory::instance()->getUnusedFormElementForTracker($this) as $f) {
-            echo $f->fetchAdminAdd();
+            $unused_elements_content .= $f->fetchAdminAdd();
         }
-        echo '</table>';
-        echo '</div>';
+        $unused_elements_content .= '</table></div>';
+        $w->setContent($unused_elements_content);
+        $w->display();
 
         echo '</div>';
         echo '</td><td>';
