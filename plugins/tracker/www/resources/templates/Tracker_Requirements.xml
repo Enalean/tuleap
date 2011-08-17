@@ -559,7 +559,7 @@
     <permission scope="field" REF="F42" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
     <permission scope="field" REF="F44" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F47" ugroup="UGROUP_PROJECT_ADMIN" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F47" ugroup="UGROUP_PLUGIN_TRACKER_ADMIN" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <!--TODO TRACKER_ADMIN <permission scope="field" REF="F47" ugroup="UGROUP_PLUGIN_TRACKER_ADMIN" type="PLUGIN_TRACKER_FIELD_UPDATE"/> -->
     <permission scope="field" REF="F5" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F5" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
     <permission scope="field" REF="F5" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>

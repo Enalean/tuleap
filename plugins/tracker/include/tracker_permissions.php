@@ -16,7 +16,7 @@ function plugin_tracker_permission_process_update_tracker_permissions($group_id,
     $add_submitter_to_history = false;
 
     //The actual permissions
-    $stored_ugroups_permissions = permission_get_tracker_ugroups_permissions($group_id, $atid);
+    $stored_ugroups_permissions = plugin_tracker_permission_get_tracker_ugroups_permissions($group_id, $atid);
 
     //We look for anonymous and registered users' permissions, both in the user's request and in the db
     $user_set_anonymous_to_fullaccess        = isset($_REQUEST[$prefixe_expected.$GLOBALS['UGROUP_ANONYMOUS']]) && $_REQUEST[$prefixe_expected.$GLOBALS['UGROUP_ANONYMOUS']] === "0";
@@ -476,7 +476,8 @@ function plugin_tracker_permission_get_tracker_ugroups_permissions($group_id, $o
 
 function plugin_tracker_permission_process_update_fields_permissions($group_id, $atid, $fields, $permissions_wanted_by_user) {
     //The actual permissions
-    $stored_ugroups_permissions = permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields);
+    
+    $stored_ugroups_permissions = plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_id, $atid, $fields);
     
     $permissions_updated = false;
     
@@ -908,7 +909,7 @@ function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_
 
     $ugroups_permissions = array();
     foreach($fields as $field) {
-        $fake_id = permission_build_field_id($atid, $field->getID());
+        $fake_id = $field->getID();
         $ugroups = permission_get_ugroups_permissions($group_id, $fake_id, array('PLUGIN_TRACKER_FIELD_READ','PLUGIN_TRACKER_FIELD_UPDATE','PLUGIN_TRACKER_FIELD_SUBMIT'), false);
 
         //{{{ We remove the ugroups which can't access to tracker and don't have permissions
@@ -923,8 +924,9 @@ function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_
         $ugroups_permissions[$field->getID()] = array(
                                                       'field' => array(
                                                                        'shortname'  => $field->getName(),
-                                                                       'name'       => $field->getLabel(),
+                                                                       'name'       => $field->getLabel() . ($field->isRequired() ? ' *' : ''),
                                                                        'id'         => $field->getID(),
+                                                                       'field'      => $field,
                                                                        'link'       => '/tracker/admin/index.php?group_id='.$group_id.'&atid='.$atid.'&func=display_field_update&field_id='.$field->getID()
                                                                        ),
                                                       'ugroups' => $ugroups

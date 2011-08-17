@@ -201,7 +201,7 @@ class TrackerFactory {
                         //field permissions
                         $ugroup = (string) $permission['ugroup'];
                         $REF    = (string) $permission['REF'];
-                        $type   = (string) $permission['type'];                        
+                        $type   = (string) $permission['type'];
                         if (isset($xmlMapping[$REF]) && isset($GLOBALS['UGROUPS'][$ugroup]) && in_array($type, $allowed_field_perms)) {                            
                             $xmlMapping[$REF]->setCachePermission($GLOBALS['UGROUPS'][$ugroup], $type);
                         }
