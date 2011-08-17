@@ -747,16 +747,18 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 /* {{{ Palette */
 .tracker-admin-palette,
 #tracker-admin-field-properties {
-    min-width:250px;
+    
 }
 #tracker-admin-field-properties {
     background: #fcfcff;
 }
-.tracker-admin-palette button img {
+.tracker-admin-palette button img,
+.tracker-admin-palette a.button img {
     vertical-align:middle;
     margin-right:0.5em;
 }
-.tracker-admin-palette button {
+.tracker-admin-palette button,
+.tracker-admin-palette a.button {
     font-family: Corbel,
          "Lucida Grande",
          "Lucida Sans Unicode",
@@ -766,7 +768,6 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
          "Liberation Sans",
          Verdana,
          sans-serif;
-    width: 100%;
     background:transparent url(../images/button-gradient.png) top left repeat-x;
     text-align:left;
     white-space:nowrap;
@@ -778,13 +779,17 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
     text-decoration:none;
     color:#565656;
     cursor:pointer;
-    padding:4px 8px 3px 5px; 
+    padding:4px 8px 3px 5px;
+    display:block;
 }
 .tracker-admin-palette button:focus,
-.tracker-admin-palette button:hover {
+.tracker-admin-palette button:hover,
+.tracker-admin-palette a.button:focus,
+.tracker-admin-palette a.button:hover {
     background:transparent url(../images/button-gradient-hover.png) top left repeat-x;
 }
-.tracker-admin-palette button:active {
+.tracker-admin-palette button:active,
+.tracker-admin-palette a.button:active {
     background:transparent url(../images/button-gradient-hover.png) bottom left repeat-x;
     padding-top:5px;    /* push text down 1px */
     padding-bottom:2px; /* push text down 1px */

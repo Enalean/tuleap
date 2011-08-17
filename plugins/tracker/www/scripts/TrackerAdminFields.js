@@ -56,7 +56,7 @@ document.observe('dom:loaded', function () {
             });
         }
         
-        $$('button[name^=create]').each(function (button) {
+        $$('a.button[name^=create]').each(function (button) {
             button.observe('click', function (evt) {
                 $$('.tracker-admin-field-selected').each(function (selected_element) {
                     if (selected_element.visible()) {
@@ -70,7 +70,7 @@ document.observe('dom:loaded', function () {
                 var parameters = {};
                 parameters[button.name] = 1;
                 var req = new Ajax.Request(
-                    button.form.action,
+                    button.up('form').action,
                     {
                         parameters: parameters,
                         onComplete: function (transport) {

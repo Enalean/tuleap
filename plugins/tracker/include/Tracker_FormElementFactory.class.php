@@ -781,10 +781,10 @@ class Tracker_FormElementFactory {
             eval("\$icon = $klass::getFactoryIconCreate();");
         }
         $button = '';
-        $button .= '<button name="'. $name .'" title="'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'"><span>';
+        $button .= '<a class="button" name="'. $name .'" title="'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'"><span>';
         $button .= '<img width="16" height="16" alt="" src="'. $icon .'" />';
         $button .=  $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML);
-        $button .= '</span></button>';
+        $button .= '</span></a>';
         return $button;
     }
     
