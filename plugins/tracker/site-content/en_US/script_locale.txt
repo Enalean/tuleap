@@ -1,0 +1,20 @@
+codendi.locales['tracker_formelement_admin'] = {
+    cancel: 'cancel',
+    add_another_file: 'Add another file'
+};
+codendi.locales['tracker_artifact'] = {
+    masschange: 'Masschange',
+    masschange_check_all: 'Check all',
+    masschange_uncheck_all: 'Uncheck all'
+};
+codendi.locales['tracker_renderer'] = {
+    order_dragdrop: 'You can order tabs with drag \'n drop'
+};
+codendi.locales['tracker_artifact_link'] = {
+    nb_artifacts: 'artifact(s)',
+    or: ' or ',
+    select: 'Select artifacts to link',
+    create: 'Create a new artifact',
+    advanced: 'Advanced functionalities (browse artifacts...) are not available at artifact creation.'
+};
+

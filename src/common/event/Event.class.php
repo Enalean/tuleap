@@ -209,5 +209,15 @@ class Event {
      * $params['scripts'][] = '/path/to/script.js';
      */
     const COMBINED_SCRIPTS = 'combined_scripts';
+    
+    /**
+     * Display javascript snippets
+     *
+     * No Parameters.
+     * 
+     * Expected result:
+     *   Javascript snippets are directly output to the browser
+     */
+    const JAVASCRIPT = 'javascript';
 }
 ?>

@@ -797,7 +797,7 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 
 .tracker-admin-palette-toggle {
     padding: 2px 4px;
-    background: #f60 url('../images/tracker-palette-toggle.png') top left repeat-x;
+    background: #f60;
     color:#fff;
     text-shadow: 1px 1px #000;
 }

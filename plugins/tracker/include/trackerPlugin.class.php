@@ -36,7 +36,8 @@ class trackerPlugin extends Plugin {
 		$this->setScope(self::SCOPE_PROJECT);
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook(Event::SERVICE_CLASSNAMES, 'service_classnames', false);
-        $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
+        $this->_addHook(Event::COMBINED_SCRIPTS,   'combined_scripts',   false);
+        $this->_addHook(Event::JAVASCRIPT,         'javascript',         false);
 	}
 	
     public function getPluginInfo() {
@@ -76,6 +77,10 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerFieldDependencies.js',
             )
         );
+    }
+    
+    public function javascript($params) {
+        include $GLOBALS['Language']->getContent('script_locale', null, 'tracker');
     }
 }
 

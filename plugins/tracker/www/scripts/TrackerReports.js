@@ -55,7 +55,7 @@ Ajax.Responders.register({
     //TODO: REMOVE THIS DEBUG FEATURE ---v
     ,onException: function (request, e) {
         if (console && console.debug) {
-            console.debug(e);
+            console.error(e);
         } else {
             alert(e.message); 
         }

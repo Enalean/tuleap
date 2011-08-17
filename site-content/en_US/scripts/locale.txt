@@ -1,3 +1,7 @@
+var codendi = codendi || { };
+codendi.locales = codendi.locales || { };
+
+codendi.locale = 'en';
 codendi.locales['cross_ref_fact_include'] = {
     legend: 'List of items referenced by or referencing this item.',
     legend_referenced_by: 'List of items referencing this item.',

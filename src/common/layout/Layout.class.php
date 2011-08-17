@@ -1154,7 +1154,7 @@ class Layout extends Response {
             }
         }
         echo '<script type="text/javascript">'."\n";
-        $em->processEvent("javascript", null);
+        $em->processEvent(Event::JAVASCRIPT, null);
         echo '
         </script>';
     }
