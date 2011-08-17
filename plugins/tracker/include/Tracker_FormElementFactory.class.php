@@ -687,9 +687,9 @@ class Tracker_FormElementFactory {
                     //Set default permissions
                     $permissions = array( $formElement_id => 
                          array(
-                               $GLOBALS['UGROUP_ANONYMOUS']     => permission_get_input_value_from_permission('TRACKER_FIELD_READ'),
-                               $GLOBALS['UGROUP_REGISTERED']    => permission_get_input_value_from_permission('TRACKER_FIELD_SUBMIT'),
-                               $GLOBALS['UGROUP_PROJECT_MEMBERS']  => permission_get_input_value_from_permission('TRACKER_FIELD_UPDATE')
+                               $GLOBALS['UGROUP_ANONYMOUS']     => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_READ'),
+                               $GLOBALS['UGROUP_REGISTERED']    => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_SUBMIT'),
+                               $GLOBALS['UGROUP_PROJECT_MEMBERS']  => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_UPDATE')
                          )
                     );   
                     $tracker = $formElement->getTracker();
@@ -929,9 +929,9 @@ class Tracker_FormElementFactory {
         } else {
             $ugroups_permissions = array($elmtId =>
                 array(
-                    $GLOBALS['UGROUP_ANONYMOUS'] => permission_get_input_value_from_permission('TRACKER_FIELD_READ'),
-                    $GLOBALS['UGROUP_REGISTERED'] => permission_get_input_value_from_permission('TRACKER_FIELD_SUBMIT'),
-                    $GLOBALS['UGROUP_PROJECT_MEMBERS'] => permission_get_input_value_from_permission('TRACKER_FIELD_UPDATE')
+                    $GLOBALS['UGROUP_ANONYMOUS'] => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_READ'),
+                    $GLOBALS['UGROUP_REGISTERED'] => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_SUBMIT'),
+                    $GLOBALS['UGROUP_PROJECT_MEMBERS'] => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_UPDATE')
                 )
             );
         }

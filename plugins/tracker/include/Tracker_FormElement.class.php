@@ -1119,7 +1119,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      * Say if a user has permission. Checks super user status.
      * Do not call this directly. Use userCanRead, userCanUpdate or userCanSubmit instead.
      *
-     * @param string $permission_type TRACKER_FIELD_READ | TRACKER_FIELD_UPDATE | TRACKER_FIELD_SUBMIT
+     * @param string $permission_type PLUGIN_TRACKER_FIELD_READ | PLUGIN_TRACKER_FIELD_UPDATE | PLUGIN_TRACKER_FIELD_SUBMIT
      * @param User  $user             The user. if null given take the current user
      *
      * @return bool
@@ -1148,8 +1148,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      * @return bool
      */ 
     public function userCanRead(User $user = null) {
-        $ok = $this->userHasPermission('TRACKER_FIELD_READ', $user)
-              || $this->userHasPermission('TRACKER_FIELD_UPDATE', $user);
+        $ok = $this->userHasPermission('PLUGIN_TRACKER_FIELD_READ', $user)
+              || $this->userHasPermission('PLUGIN_TRACKER_FIELD_UPDATE', $user);
         return $ok;
     }
     
@@ -1161,7 +1161,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      * @return bool
      */ 
     public function userCanUpdate(User $user = null) {
-        $ok = $this->isUpdateable() && $this->userHasPermission('TRACKER_FIELD_UPDATE', $user);
+        $ok = $this->isUpdateable() && $this->userHasPermission('PLUGIN_TRACKER_FIELD_UPDATE', $user);
         return $ok;
     }
     
@@ -1173,7 +1173,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      * @return bool
      */ 
     public function userCanSubmit(User $user = null) {
-        $ok = $this->isSubmitable() && $this->userHasPermission('TRACKER_FIELD_SUBMIT', $user);
+        $ok = $this->isSubmitable() && $this->userHasPermission('PLUGIN_TRACKER_FIELD_SUBMIT', $user);
         return $ok;
     }
     
@@ -1186,7 +1186,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      */ 
     protected function ugroupsCanRead($ugroups) {
       $pm = PermissionsManager::instance();
-      $ok = $pm->userHasPermission($this->id, 'TRACKER_FIELD_READ', $ugroups);
+      $ok = $pm->userHasPermission($this->id, 'PLUGIN_TRACKER_FIELD_READ', $ugroups);
       return $ok;
     }
     
@@ -1199,7 +1199,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      */ 
     protected function ugroupsCanUpdate($ugroups) {
       $pm = PermissionsManager::instance();
-      $ok = $pm->userHasPermission($this->id, 'TRACKER_FIELD_UPDATE', $ugroups);
+      $ok = $pm->userHasPermission($this->id, 'PLUGIN_TRACKER_FIELD_UPDATE', $ugroups);
       return $ok;
     }
     
@@ -1212,12 +1212,12 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      */ 
     protected function ugroupsCanSubmit($ugroups) {
       $pm = PermissionsManager::instance();
-      $ok = $pm->userHasPermission($this->id, 'TRACKER_FIELD_SUBMIT', $ugroups);
+      $ok = $pm->userHasPermission($this->id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $ugroups);
       return $ok;
     }
     
     /**
-     * Retrieve users permissions (TRACKER_FIELD_SUBMIT, -UPDATE, -READ)
+     * Retrieve users permissions (PLUGIN_TRACKER_FIELD_SUBMIT, -UPDATE, -READ)
      * on this field.
      *
      * @param array $ugroups the ugroups users are part of (called from Tracker_Html createMailForUsers)
@@ -1227,13 +1227,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
     protected function getPermissionForUgroups($ugroups) {
         $perms = array();
         if ($this->ugroupsCanRead($ugroups)) {
-            $perms[] = 'TRACKER_FIELD_READ';
+            $perms[] = 'PLUGIN_TRACKER_FIELD_READ';
         }
         if ($this->ugroupsCanUpdate($ugroups)) {
-            $perms[] = 'TRACKER_FIELD_UPDATE';
+            $perms[] = 'PLUGIN_TRACKER_FIELD_UPDATE';
         }
         if ($this->ugroupsCanSubmit($ugroups)) {
-            $perms[] = 'TRACKER_FIELD_SUBMIT';
+            $perms[] = 'PLUGIN_TRACKER_FIELD_SUBMIT';
         }
         return $perms;
     }

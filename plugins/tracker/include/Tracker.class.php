@@ -27,6 +27,7 @@ require_once('Tracker_CannedResponseManager.class.php');
 require_once('Tracker_RulesManager.class.php');
 require_once('workflow/WorkflowManager.class.php');
 require_once('common/date/DateHelper.class.php');
+require_once('tracker_permissions.php');
 
 class Tracker {
 
@@ -317,7 +318,7 @@ class Tracker {
                 if ($this->userIsAdmin($current_user)) {
                     if ($request->get('update')) {
                         //TODO : really bad! _REQUEST must be processed before using it, or refactor: use request object
-                        permission_process_update_tracker_permissions($this->getGroupId(), $this->getId(), $_REQUEST);
+                        plugin_tracker_permission_process_update_tracker_permissions($this->getGroupId(), $this->getId(), $_REQUEST);
                     }
                     $this->displayAdminPermsTracker($tracker_manager, $request, $current_user);
                 } else {
@@ -326,7 +327,7 @@ class Tracker {
                 }
                 break;
             case 'admin-perms-fields':
-                if ($this->userIsAdmin($current_user)) {
+            	    if ($this->userIsAdmin($current_user)) {
                     if ($request->exist('update')) {
                         if ($request->exist('permissions') && is_array($request->get('permissions'))) {
                             permission_process_update_fields_permissions(
@@ -1196,10 +1197,10 @@ class Tracker {
         echo '<h2>'. $title .'</h2>';
         $hp = Codendi_HTMLPurifier::instance();
 
-        $full_permission      = 'TRACKER_ACCESS_FULL';
-        $assignee_permission  = 'TRACKER_ACCESS_ASSIGNEE';
-        $submitter_permission = 'TRACKER_ACCESS_SUBMITTER';
-        $none                 = 'TRACKER_NONE';
+        $full_permission      = 'PLUGIN_TRACKER_ACCESS_FULL';
+        $assignee_permission  = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
+        $submitter_permission = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
+        $none                 = 'PLUGIN_TRACKER_NONE';
 
         $html = '';
 
@@ -1216,14 +1217,14 @@ class Tracker {
                 $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'permissions')));
 
         //body
-        $ugroups_permissions = permission_get_tracker_ugroups_permissions($this->getGroupId(), $this->getId());
+        $ugroups_permissions = plugin_tracker_permission_get_tracker_ugroups_permissions($this->getGroupId(), $this->getId());
         ksort($ugroups_permissions);
         reset($ugroups_permissions);
         $i = 0;
         foreach($ugroups_permissions as $ugroup_permissions) {
             $ugroup      = $ugroup_permissions['ugroup'];
             $permissions = $ugroup_permissions['permissions'];
-
+            
             $html .= '<tr class="'. util_get_alt_row_color($i++).'">';
             $html .= '<td>';
             $name  =  $hp->purify($ugroup['name'], CODENDI_PURIFIER_CONVERT_HTML) ;
@@ -1290,10 +1291,10 @@ class Tracker {
                 false
         );
         
-        $submit_permission = 'TRACKER_FIELD_SUBMIT';
-        $read_permission   = 'TRACKER_FIELD_READ';
-        $update_permission = 'TRACKER_FIELD_UPDATE';
-        $none = 'TRACKER_NONE';
+        $submit_permission = 'PLUGIN_TRACKER_FIELD_SUBMIT';
+        $read_permission   = 'PLUGIN_TRACKER_FIELD_READ';
+        $update_permission = 'PLUGIN_TRACKER_FIELD_UPDATE';
+        $none = 'PLUGIN_TRACKER_NONE';
         $attributes_for_selected = 'selected="selected" style="background:#EEE;"'; //TODO: put style in stylesheet
 
         $html = '';
@@ -1968,7 +1969,7 @@ EOS;
             $permissions = $this->getPermissions();
             foreach ($permissions as $ugroup_id => $permission_types) {
                 foreach ( $permission_types as $permission_type ) {
-                    if($permission_type == 'TRACKER_ACCESS_FULL') {
+                    if($permission_type == 'PLUGIN_TRACKER_ACCESS_FULL') {
                         if ($user->isMemberOfUGroup($ugroup_id, $this->getGroupId(), $this->getId())) {
                                 return true;
                         }

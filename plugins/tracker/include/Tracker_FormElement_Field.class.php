@@ -976,7 +976,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
             //berk... legacy permission code... legacy db functions... berk!
             $sql="SELECT ugroup_id, permission_type 
                   FROM permissions 
-                  WHERE permission_type LIKE 'TRACKER_FIELD%'
+                  WHERE permission_type LIKE 'PLUGIN_TRACKER_FIELD%'
                     AND object_id='". db_ei($this->getId()) ."' 
                   ORDER BY ugroup_id";
             

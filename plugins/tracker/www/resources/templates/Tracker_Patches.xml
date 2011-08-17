@@ -220,34 +220,34 @@
   </reports>
   <workflow/>
   <permissions>
-    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="TRACKER_ACCESS_FULL"/>
-    <permission scope="field" REF="F2" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F3" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F4" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F5" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F5" ugroup="UGROUP_REGISTERED" type="TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F5" ugroup="UGROUP_PROJECT_MEMBERS" type="TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F7" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F8" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F8" ugroup="UGROUP_REGISTERED" type="TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F8" ugroup="UGROUP_PROJECT_MEMBERS" type="TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F9" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F9" ugroup="UGROUP_REGISTERED" type="TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F9" ugroup="UGROUP_PROJECT_MEMBERS" type="TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F10" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F10" ugroup="UGROUP_REGISTERED" type="TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F10" ugroup="UGROUP_PROJECT_MEMBERS" type="TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F11" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F11" ugroup="UGROUP_REGISTERED" type="TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F11" ugroup="UGROUP_PROJECT_MEMBERS" type="TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F14" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F14" ugroup="UGROUP_REGISTERED" type="TRACKER_FIELD_SUBMIT"/>
-    <permission scope="field" REF="F14" ugroup="UGROUP_PROJECT_MEMBERS" type="TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F16" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F16" ugroup="UGROUP_PROJECT_MEMBERS" type="TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F17" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F17" ugroup="UGROUP_PROJECT_MEMBERS" type="TRACKER_FIELD_UPDATE"/>
-    <permission scope="field" REF="F18" ugroup="UGROUP_ANONYMOUS" type="TRACKER_FIELD_READ"/>
-    <permission scope="field" REF="F18" ugroup="UGROUP_PROJECT_MEMBERS" type="TRACKER_FIELD_UPDATE"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="field" REF="F2" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F3" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F4" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F5" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F5" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F5" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F7" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F8" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F8" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F8" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F9" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F9" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F9" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F10" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F10" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F10" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F11" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F11" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F11" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F14" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F14" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+    <permission scope="field" REF="F14" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F16" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F16" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F17" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F17" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+    <permission scope="field" REF="F18" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+    <permission scope="field" REF="F18" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
   </permissions>
 </tracker>

@@ -97,7 +97,7 @@ class Tracker_Artifact implements Recent_Element_Interface {
         //Individual artifact permission
         $can_access = ! $this->useArtifactPermissions();
         if (!$can_access) {
-            $rows = $this->permission_db_authorized_ugroups('TRACKER_ARTIFACT_ACCESS');
+            $rows = $this->permission_db_authorized_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS');
             if ( $rows !== false ) {
                 foreach ( $rows as $row ) {
                     if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId(), $this->getTracker()->getId())) {
@@ -108,7 +108,7 @@ class Tracker_Artifact implements Recent_Element_Interface {
         }
         if ($can_access) {
             // Full access
-            $rows = $this->getTracker()->permission_db_authorized_ugroups('TRACKER_ACCESS_FULL');
+            $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_FULL');
             if ( $rows !== false ) {
                 foreach ( $rows as $row ) {
                     if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId(), $this->getTracker()->getId())) {
@@ -118,7 +118,7 @@ class Tracker_Artifact implements Recent_Element_Interface {
             }
     
             // 'submitter' access
-            $rows = $this->getTracker()->permission_db_authorized_ugroups('TRACKER_ACCESS_SUBMITTER');
+            $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_SUBMITTER');
             if ( $rows !== false ) {
                 foreach ($rows as $row) {
                     if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId(), $this->getTracker()->getId())) {
@@ -131,7 +131,7 @@ class Tracker_Artifact implements Recent_Element_Interface {
                 }
             }
             // 'assignee' access
-            $rows = $this->getTracker()->permission_db_authorized_ugroups('TRACKER_ACCESS_ASSIGNEE');
+            $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_ASSIGNEE');
             if ( $rows !==  false ) {
                 foreach ($rows as $row) {
                     if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId(), $this->getTracker()->getId())) {

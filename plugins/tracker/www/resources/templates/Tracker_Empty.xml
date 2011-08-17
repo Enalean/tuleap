@@ -170,6 +170,6 @@
   </reports>
   <workflow/>
   <permissions>
-    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
   </permissions>
 </tracker>

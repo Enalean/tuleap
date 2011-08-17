@@ -54,7 +54,7 @@ class Tracker_ArtifactDao extends DataAccessObject {
                 
         $user = UserManager::instance()->getCurrentuser();
         if (!$user->isSuperUser()) {
-            $from   .= " LEFT JOIN permissions ON (permissions.object_id = artifact.id AND permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS')";
+            $from   .= " LEFT JOIN permissions ON (permissions.object_id = artifact.id AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS')";
             $where  .= " AND (artifact.use_artifact_permissions = 0 OR  (permissions.ugroup_id IN (". $ugroups.")))";
         }
         

@@ -72,7 +72,7 @@ class Tracker_PermDao extends DataAccessObject {
         
         $sql="SELECT *
               FROM permissions 
-              WHERE permission_type LIKE 'TRACKER_ACCESS%'
+              WHERE permission_type LIKE 'PLUGIN_TRACKER_ACCESS%'
                     AND object_id='$tracker_id' 
               ORDER BY ugroup_id";
         return $this->retrieve($sql);

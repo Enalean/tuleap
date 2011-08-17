@@ -534,3 +534,40 @@ INSERT INTO service(group_id, label, description, short_name, link, is_active, i
 SELECT DISTINCT group_id , 'plugin_tracker:service_lbl_key' , 'plugin_tracker:service_desc_key' , 'plugin_tracker', CONCAT('/plugins/tracker/?group_id=', group_id), 1 , 0 , 'system',  151
 FROM service
 WHERE group_id != 100;
+
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('PLUGIN_TRACKER_ACCESS_FULL',1,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_FULL',2);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_FULL',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_FULL',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_FULL',15);
+
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_SUBMITTER',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_SUBMITTER',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_SUBMITTER',15);
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_ASSIGNEE',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_ASSIGNEE',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_ASSIGNEE',15);
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_SUBMIT',1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_SUBMIT',2);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_SUBMIT',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_SUBMIT',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_SUBMIT',15);
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_READ',1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_READ',2);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_READ',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_READ',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_READ',15);
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_UPDATE',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_UPDATE',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_FIELD_UPDATE',15);
+
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('PLUGIN_TRACKER_ARTIFACT_ACCESS',1,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ARTIFACT_ACCESS',2);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ARTIFACT_ACCESS',3);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ARTIFACT_ACCESS',4);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ARTIFACT_ACCESS',15);

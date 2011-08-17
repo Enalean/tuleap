@@ -831,14 +831,14 @@ plugin_tracker_admin_permissions	ignore_g_regis_update	Ignoring group '$1' becau
 plugin_tracker_admin_permissions	ignore_g_tech_update	Ignoring group '$1' because '$2' are allowed to update
 plugin_tracker_admin_permissions	ignore_ug_during_copy	Please note that some original tracker permissions have not been copied
 plugin_tracker_admin_permissions	permissions	Access Permissions
-plugin_tracker_admin_permissions	TRACKER_ACCESS_FULL	have access to all artifacts
-plugin_tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	have access to artifacts assigned to group
-plugin_tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	have access to artifacts submitted by group
-plugin_tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	have access to artifacts assigned to or submitted by group
-plugin_tracker_admin_permissions	TRACKER_FIELD_SUBMIT	Can Submit
-plugin_tracker_admin_permissions	TRACKER_FIELD_READ	Read Only
-plugin_tracker_admin_permissions	TRACKER_FIELD_UPDATE	Update
-plugin_tracker_admin_permissions	TRACKER_NONE	-
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_FULL	have access to all artifacts
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_ASSIGNEE	have access to artifacts assigned to group
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_SUBMITTER	have access to artifacts submitted by group
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_ASSIGNEE_AND_PLUGIN_TRACKER_ACCESS_SUBMITTER	have access to artifacts assigned to or submitted by group
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_FIELD_SUBMIT	Can Submit
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_FIELD_READ	Read Only
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_FIELD_UPDATE	Update
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_NONE	-
 plugin_tracker_admin_permissions	tracker_ignore_g_anon_full	Ignoring group '$1' because '$2' have access to all artifacts
 plugin_tracker_admin_permissions	tracker_ignore_g_regis_full	Ignoring group '$1' because '$2' have access to all artifacts
 plugin_tracker_admin_permissions	tracker_ignore_g_regis_assignee	Ignoring group '$1' because '$2' have access to artifacts assigned to group

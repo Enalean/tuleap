@@ -185,8 +185,8 @@ class TrackerFactory {
         
         //set permissions
         if (isset($xml->permissions->permission)) {
-            $allowed_tracker_perms = array('TRACKER_ACCESS_FULL', 'TRACKER_ACCESS_SUBMITTER', 'TRACKER_ACCESS_ASSIGNEE');
-            $allowed_field_perms = array('TRACKER_FIELD_READ', 'TRACKER_FIELD_UPDATE', 'TRACKER_FIELD_SUBMIT');
+            $allowed_tracker_perms = array('PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE');
+            $allowed_field_perms = array('PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_FIELD_SUBMIT');
             foreach ($xml->permissions->permission as $permission) {
                 switch ((string) $permission['scope']) {
                     case 'tracker':
@@ -639,7 +639,7 @@ class TrackerFactory {
      */
     public function saveTrackerDefaultPermission($tracker_id) {
         $pm = PermissionsManager::instance();
-        $permission_type = 'TRACKER_ACCESS_FULL';
+        $permission_type = 'PLUGIN_TRACKER_ACCESS_FULL';
         $ugroup = 1; //all_users
 
         if(!$pm->addPermission($permission_type, $tracker_id, $ugroup)) {

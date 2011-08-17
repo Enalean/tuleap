@@ -823,14 +823,14 @@ plugin_tracker_admin_permissions	ignore_g_regis_update	Le groupe '$1' est ignor�
 plugin_tracker_admin_permissions	ignore_g_tech_update	Le groupe '$1' est ignoré car le groupe '$2' peut mettre à jour
 plugin_tracker_admin_permissions	ignore_ug_during_copy	Veuillez noter que certaines permissions du tracker original n'ont pas été copiées
 plugin_tracker_admin_permissions	permissions	Droits d'accès
-plugin_tracker_admin_permissions	TRACKER_ACCESS_FULL	Accès à tous les artefacts
-plugin_tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE	Accès aux artefacts confiés au groupe
-plugin_tracker_admin_permissions	TRACKER_ACCESS_SUBMITTER	Accès aux artefacts soumis par le groupe
-plugin_tracker_admin_permissions	TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER	Accès aux artefacts confiés au groupe ou soumis par le groupe
-plugin_tracker_admin_permissions	TRACKER_FIELD_SUBMIT	Peut Soummettre
-plugin_tracker_admin_permissions	TRACKER_FIELD_READ	Lecture Seule
-plugin_tracker_admin_permissions	TRACKER_FIELD_UPDATE	Mise à Jour
-plugin_tracker_admin_permissions	TRACKER_NONE	-
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_FULL	Accès à tous les artefacts
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_ASSIGNEE	Accès aux artefacts confiés au groupe
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_SUBMITTER	Accès aux artefacts soumis par le groupe
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_ACCESS_ASSIGNEE_AND_PLUGIN_TRACKER_ACCESS_SUBMITTER	Accès aux artefacts confiés au groupe ou soumis par le groupe
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_FIELD_SUBMIT	Peut Soummettre
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_FIELD_READ	Lecture Seule
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_FIELD_UPDATE	Mise à Jour
+plugin_tracker_admin_permissions	PLUGIN_TRACKER_NONE	-
 plugin_tracker_admin_permissions	tracker_ignore_g_anon_full	Le groupe '$1' est ignoré car le groupe '$2' a accès à tous les artefacts
 plugin_tracker_admin_permissions	tracker_ignore_g_regis_full	Le groupe '$1' est ignoré car le groupe '$2' a accès à tous les artefacts
 plugin_tracker_admin_permissions	tracker_ignore_g_regis_assignee	Le groupe '$1' est ignoré car le groupe '$2' a accès aux artefacts confiés au groupe

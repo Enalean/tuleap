@@ -1218,7 +1218,7 @@ class TrackerTest extends UnitTestCase {
         $t_access_anonymous->setReturnValue('getId', 1);
         $t_access_anonymous->setReturnValue('getGroupId', 101);
         $perms = array(
-                1 => array( 101 => 'TRACKER_ACCESS_FULL')
+                1 => array( 101 => 'PLUGIN_TRACKER_ACCESS_FULL')
             );
         $t_access_anonymous->setReturnReference('getPermissions', $perms);
         
@@ -1237,7 +1237,7 @@ class TrackerTest extends UnitTestCase {
         $t_access_registered->setReturnValue('getId', 2);
         $t_access_registered->setReturnValue('getGroupId', 101);
         $perms = array(
-                2 => array( 101=>'TRACKER_ACCESS_FULL')
+                2 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL')
             );
         $t_access_registered->setReturnReference('getPermissions', $perms);
         
@@ -1256,7 +1256,7 @@ class TrackerTest extends UnitTestCase {
         $t_access_members->setReturnValue('getId', 3);
         $t_access_members->setReturnValue('getGroupId', 101);
         $perms = array(
-                3 => array( 101=>'TRACKER_ACCESS_FULL')
+                3 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL')
             );
         $t_access_members->setReturnReference('getPermissions', $perms);
         
@@ -1275,7 +1275,7 @@ class TrackerTest extends UnitTestCase {
         $t_access_admin->setReturnValue('getId', 4);
         $t_access_admin->setReturnValue('getGroupId', 101);
         $perms = array(
-                4 => array( 101=>'TRACKER_ACCESS_FULL')
+                4 => array( 101=>'PLUGIN_TRACKER_ACCESS_FULL')
                 );
         $t_access_admin->setReturnReference('getPermissions', $perms);
         
@@ -1294,8 +1294,8 @@ class TrackerTest extends UnitTestCase {
         $t_access_submitter->setReturnValue('getId', 5);
         $t_access_submitter->setReturnValue('getGroupId', 101);
         $perms = array(
-                4   => array(101=>'TRACKER_ACCESS_FULL'),
-                138 => array(101=>'TRACKER_ACCESS_SUBMITTER')
+                4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
+                138 => array(101=>'PLUGIN_TRACKER_ACCESS_SUBMITTER')
             );
         $t_access_submitter->setReturnReference('getPermissions', $perms);
         
@@ -1314,8 +1314,8 @@ class TrackerTest extends UnitTestCase {
         $t_access_assignee->setReturnValue('getId', 6);
         $t_access_assignee->setReturnValue('getGroupId', 101);
         $perms = array(
-                4   => array(101=>'TRACKER_ACCESS_FULL'),
-                196 => array(101=>'TRACKER_ACCESS_ASSIGNEE')
+                4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
+                196 => array(101=>'PLUGIN_TRACKER_ACCESS_ASSIGNEE')
             );
         $t_access_assignee->setReturnReference('getPermissions', $perms);
         
@@ -1335,9 +1335,9 @@ class TrackerTest extends UnitTestCase {
         $t_access_submitterassignee->setReturnValue('getGroupId', 101);
         
         $perms = array(
-                4   => array(101=>'TRACKER_ACCESS_FULL'),
-                138 => array(101=>'TRACKER_ACCESS_SUBMITTER'),
-                196 => array(101=>'TRACKER_ACCESS_ASSIGNEE')
+                4   => array(101=>'PLUGIN_TRACKER_ACCESS_FULL'),
+                138 => array(101=>'PLUGIN_TRACKER_ACCESS_SUBMITTER'),
+                196 => array(101=>'PLUGIN_TRACKER_ACCESS_ASSIGNEE')
             );
         $t_access_submitterassignee->setReturnReference('getPermissions', $perms);
         

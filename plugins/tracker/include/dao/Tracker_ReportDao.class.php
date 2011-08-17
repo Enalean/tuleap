@@ -162,7 +162,7 @@ class Tracker_ReportDao extends DataAccessObject {
         
         if(!$user_is_superuser) {
             //artifact permissions
-            $from   .= " LEFT JOIN permissions ON (permissions.object_id = c.artifact_id AND permissions.permission_type = 'TRACKER_ARTIFACT_ACCESS') ";
+            $from   .= " LEFT JOIN permissions ON (permissions.object_id = c.artifact_id AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS') ";
             $where  .= " AND (artifact.use_artifact_permissions = 0 OR  (permissions.ugroup_id IN (". implode(', ', $ugroups) .")))";
         }
         
@@ -176,15 +176,15 @@ class Tracker_ReportDao extends DataAccessObject {
         // $sqls => SELECT UNION SELECT UNION SELECT ...
         $sqls = array();
         //Does the user member of at least one group which has ACCESS_FULL or is super user?
-        if ($user_is_superuser || (isset($permissions['TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_FULL'])) > 0)) {
+        if ($user_is_superuser || (isset($permissions['PLUGIN_TRACKER_ACCESS_FULL']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_FULL'])) > 0)) {
             
             $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ". $from ." ". $where;
             
         } else {
             //Does the user member of at least one group which has ACCESS_SUBMITTER ?
-            if (isset($permissions['TRACKER_ACCESS_SUBMITTER']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_SUBMITTER'])) > 0) {
+            if (isset($permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'])) > 0) {
                 // {{{ The static ugroups
-                if (count(array_intersect($static_ugroups, $permissions['TRACKER_ACCESS_SUBMITTER'])) > 0) {
+                if (count(array_intersect($static_ugroups, $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'])) > 0) {
                     $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
                            $from ." INNER JOIN ugroup_user uu ON (
                                 artifact.submitted_by = uu.user_id
@@ -196,7 +196,7 @@ class Tracker_ReportDao extends DataAccessObject {
                 
                 // {{{ tracker_admins
                 if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_SUBMITTER'])) 
+                    in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'])) 
                 {
                     $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
                            $from ." INNER JOIN tracker_perm AS p ON (
@@ -209,7 +209,7 @@ class Tracker_ReportDao extends DataAccessObject {
                 //}}}
                 // {{{ project_members
                 if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
-                    in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_SUBMITTER'])) 
+                    in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['PLUGIN_TRACKER_ACCESS_SUBMITTER'])) 
                 {
                     $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
                            $from ." INNER JOIN user_group AS ug ON ( 
@@ -235,10 +235,10 @@ class Tracker_ReportDao extends DataAccessObject {
             }
             
             //Does the user member of at least one group which has ACCESS_ASSIGNEE ?
-            if (isset($permissions['TRACKER_ACCESS_ASSIGNEE']) && count(array_intersect($ugroups, $permissions['TRACKER_ACCESS_ASSIGNEE'])) > 0) {
+            if (isset($permissions['TRACKER_ACCESS_ASSIGNEE']) && count(array_intersect($ugroups, $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) > 0) {
                 if ($contributor_field_id) {
                     // {{{ The static ugroups
-                    if (count(array_intersect($static_ugroups, $permissions['TRACKER_ACCESS_ASSIGNEE'])) > 0) {
+                    if (count(array_intersect($static_ugroups, $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) > 0) {
                         $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
                                $from ." INNER JOIN tracker_changeset_value AS tcv ON (
                                     tcv.field_id = ". $this->da->escapeInt($contributor_field_id) ."
@@ -255,7 +255,7 @@ class Tracker_ReportDao extends DataAccessObject {
                     
                     // {{{ tracker_admins
                     if (in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $dynamic_ugroups) &&
-                        in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) {
+                        in_array($GLOBALS['UGROUP_TRACKER_ADMIN'], $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) {
                         $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
                                $from ." INNER JOIN tracker_changeset_value AS tcv ON (
                                     tcv.field_id = ". $this->da->escapeInt($contributor_field_id) ."
@@ -272,7 +272,7 @@ class Tracker_ReportDao extends DataAccessObject {
                     //}}}
                     // {{{ project_members
                     if (in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $dynamic_ugroups) &&
-                        in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) {
+                        in_array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) {
                         $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
                                $from ." INNER JOIN tracker_changeset_value AS tcv ON (
                                     tcv.field_id = ". $this->da->escapeInt($contributor_field_id) ."
@@ -288,7 +288,7 @@ class Tracker_ReportDao extends DataAccessObject {
                     //}}}
                     // {{{ project_admins
                     if (in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $dynamic_ugroups) &&
-                        in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['TRACKER_ACCESS_ASSIGNEE'])) {
+                        in_array($GLOBALS['UGROUP_PROJECT_ADMIN'], $permissions['PLUGIN_TRACKER_ACCESS_ASSIGNEE'])) {
                         $sqls[] = "SELECT c.artifact_id AS id, c.id AS last_changeset_id ".
                                $from ." INNER JOIN tracker_changeset_value AS tcv ON (
                                     tcv.field_id = ". $this->da->escapeInt($contributor_field_id) ."

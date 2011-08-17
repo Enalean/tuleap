@@ -105,10 +105,10 @@ class Tracker_FormElementFactoryTest extends UnitTestCase {
     //WARNING : READ/UPDATE is actual when last is READ, UPDATE liste (weird case, but good to know)
     function test_getPermissionFromFormElementData() {
       $formElementData = array('permissions'=> array( 
-                                               $GLOBALS['UGROUP_ANONYMOUS'] => array(0 => 'TRACKER_FIELD_READ',
-                                                                            1 => 'TRACKER_FIELD_UPDATE'), 
-                                               $GLOBALS['UGROUP_REGISTERED'] => array(0 => 'TRACKER_FIELD_UPDATE',
-                                                                            1 => 'TRACKER_FIELD_READ'),                                                                                              
+                                               $GLOBALS['UGROUP_ANONYMOUS'] => array(0 => 'PLUGIN_TRACKER_FIELD_READ',
+                                                                            1 => 'PLUGIN_TRACKER_FIELD_UPDATE'), 
+                                               $GLOBALS['UGROUP_REGISTERED'] => array(0 => 'PLUGIN_TRACKER_FIELD_UPDATE',
+                                                                            1 => 'PLUGIN_TRACKER_FIELD_READ'),                                                                                              
           ) );
 
       $ff = Tracker_FormElementFactory::instance();
@@ -127,10 +127,10 @@ class Tracker_FormElementFactoryTest extends UnitTestCase {
 
     function test_getPermissionFromFormElementData_Submit() {
       $formElementData = array('permissions'=> array(
-                                               $GLOBALS['UGROUP_ANONYMOUS'] => array(0 => 'TRACKER_FIELD_UPDATE',
-                                                                            1 => 'TRACKER_FIELD_SUBMIT'),
-                                               $GLOBALS['UGROUP_REGISTERED'] => array(0 => 'TRACKER_FIELD_SUBMIT',
-                                                                            1 => 'TRACKER_FIELD_READ'),
+                                               $GLOBALS['UGROUP_ANONYMOUS'] => array(0 => 'PLUGIN_TRACKER_FIELD_UPDATE',
+                                                                            1 => 'PLUGIN_TRACKER_FIELD_SUBMIT'),
+                                               $GLOBALS['UGROUP_REGISTERED'] => array(0 => 'PLUGIN_TRACKER_FIELD_SUBMIT',
+                                                                            1 => 'PLUGIN_TRACKER_FIELD_READ'),
 
           ) );
 

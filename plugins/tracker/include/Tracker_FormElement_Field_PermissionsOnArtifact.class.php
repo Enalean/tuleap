@@ -182,10 +182,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $html .= '</p>';
         
         if (is_array($value)) {
-            $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', 0, $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]', false, $value['u_groups']);
+            $html .= permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', 0, $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]', false, $value['u_groups']);
 
         } else {
-            $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', 0, $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]');
+            $html .= permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', 0, $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]');
         }
         return $html;
     }
@@ -206,7 +206,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $html .= '<input type="checkbox" name="artifact['.$this->getId().'][use_artifact_permissions]" id="artifact_'.$this->getId().'_use_artifact_permissions" value="1"/>';
         $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
         $html .= '</p>';
-        $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', 0, $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]');
+        $html .= permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', 0, $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]');
         return $html;
     }
 
@@ -241,7 +241,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
                 break;
             default:                               
                 $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
-                $ugroups  = permission_fetch_selected_ugroups('TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId());
+                $ugroups  = permission_fetch_selected_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId());
                 $output .= "\n".implode(', ',$ugroups);
                 break;
         }
@@ -309,12 +309,12 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $html .= '</p>';
 
         if ($value == null) {
-            $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]', $is_read_only, $value);
+            $html .= permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]', $is_read_only, $value);
         } else if (is_array($value)) {
-            $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]', $is_read_only, $value['u_groups']);
+            $html .= permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]', $is_read_only, $value['u_groups']);
 
         } else {
-            $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]', $is_read_only);
+            $html .= permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId(), 'artifact['.$this->getId().'][u_groups][]', $is_read_only);
         }
         return $html;
     }
@@ -353,7 +353,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $html .= '<input type="checkbox" name="artifact['.$this->getId().'][use_artifact_permissions]" id="artifact_'.$this->getId().'_use_artifact_permissions" value="1"/>';
         $html .= '<label for="artifact_'.$this->getId().'_use_artifact_permissions">'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') .'</label>';
         $html .= '</p>';
-        $html .= permission_fetch_selection_field('TRACKER_ARTIFACT_ACCESS', 0, 0, 'artifact['.$this->getId().'][u_groups][]');
+        $html .= permission_fetch_selection_field('PLUGIN_TRACKER_ARTIFACT_ACCESS', 0, 0, 'artifact['.$this->getId().'][u_groups][]');
         return $html;
     }
 
@@ -524,7 +524,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $name     = "criteria[$this->id][values][]";
         
         //Field values
-        $permission_type ='TRACKER_ARTIFACT_ACCESS';
+        $permission_type ='PLUGIN_TRACKER_ARTIFACT_ACCESS';
         $object_id = 0;
         $group_id = $this->getTracker()->getGroupId();
         
@@ -620,7 +620,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             $value['u_groups'] = array();
         }
         $artifact->setUseArtifactPermissions($value['use_artifact_permissions']);
-        permission_clear_all($this->getTracker()->getGroupId(), 'TRACKER_ARTIFACT_ACCESS', $artifact->getId(), false);
+        permission_clear_all($this->getTracker()->getGroupId(), 'PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), false);
         
         if (!empty($value['u_groups'])) {
                 $ok = $this->addPermissions($value['u_groups'], $artifact->getId());
@@ -725,7 +725,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     public function addPermissions ($ugroups, $artifact_id) {
         $pm = PermissionsManager::instance();
-        $permission_type = 'TRACKER_ARTIFACT_ACCESS';
+        $permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
         foreach ($ugroups as $ugroup) {
             if(!$pm->addPermission($permission_type, $artifact_id, $ugroup)) {
                 return false;
