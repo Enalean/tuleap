@@ -1,24 +1,24 @@
 <?php
 
-require_once(dirname(__FILE__).'/../include/Tracker_RulesManager.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
 Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('_getTracker_RuleFactory', '_getSelectedValuesForField'));
 
-require_once(dirname(__FILE__).'/../include/Tracker_Rule_Value.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_Rule_Value.class.php');
 Mock::generate('Tracker_Rule_Value');
 
-require_once(dirname(__FILE__).'/../include/Tracker_RuleFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RuleFactory.class.php');
 Mock::generate('Tracker_RuleFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElementFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
 
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_Selectbox.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Selectbox.class.php');
 Mock::generate('Tracker_FormElement_Field_Selectbox');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_Bind_Static.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Static.class.php');
 Mock::generate('Tracker_FormElement_Field_List_Bind_Static');
 
 

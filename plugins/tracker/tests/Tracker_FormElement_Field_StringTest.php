@@ -18,10 +18,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_String.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php');
 Mock::generatePartial('Tracker_FormElement_Field_String', 'Tracker_FormElement_Field_StringTestVersion', array('getRuleString', 'getRuleNoCr', 'getProperty'));
 
-require_once(dirname(__FILE__).'/../include/Tracker_Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
 require_once('common/valid/Rule.class.php');

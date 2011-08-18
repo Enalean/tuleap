@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_Bind_UsersValue.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_UsersValue.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_List_Bind_UsersValue', 
     'Tracker_FormElement_Field_List_Bind_UsersValueTestVersion', 

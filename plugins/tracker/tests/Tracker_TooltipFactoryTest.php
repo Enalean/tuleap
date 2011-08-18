@@ -18,8 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker_TooltipFactory.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_TooltipFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 
 class Tracker_TooltipFactoryTest extends UnitTestCase {

@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_StaticField_LineBreak.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_StaticField_LineBreak.class.php');
 
 class Tracker_FormElement_StaticField_LineBreakTest extends UnitTestCase {
     

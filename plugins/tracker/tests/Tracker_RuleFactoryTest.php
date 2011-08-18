@@ -1,8 +1,8 @@
 <?php
 
-require_once(dirname(__FILE__).'/../include/Tracker_RuleFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RuleFactory.class.php');
 
-require_once(dirname(__FILE__).'/../include/dao/Tracker_RuleDao.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/dao/Tracker_RuleDao.class.php');
 Mock::generate('Tracker_RuleDao');
 
 require_once('common/dao/include/DataAccessResult.class.php');

@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/TrackerManager.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Interface');
 Mock::generate('Tracker_Artifact');

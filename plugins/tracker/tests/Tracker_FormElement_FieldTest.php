@@ -19,19 +19,19 @@
  */
  
  
-require_once(dirname(__FILE__).'/../include/Tracker_Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElementFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Artifact_Changeset.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
 Mock::generate('Tracker_Artifact_Changeset');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field', 
     'Tracker_FormElement_FieldTestVersion', 
@@ -65,7 +65,7 @@ Mock::generatePartial(
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field', 
     'Tracker_FormElement_FieldTestVersion2', 
@@ -109,7 +109,7 @@ Mock::generate('Response');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Artifact_ChangesetValue.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue');
 
 class Tracker_FormElement_FieldTest extends UnitTestCase {

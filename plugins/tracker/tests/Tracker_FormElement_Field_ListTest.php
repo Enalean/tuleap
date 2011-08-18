@@ -18,10 +18,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker_Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_List', 
     'Tracker_FormElement_Field_ListTestVersion', 
@@ -58,19 +58,19 @@ Mock::generatePartial(
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_BindFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindFactory.class.php');
 Mock::generate('Tracker_FormElement_Field_List_BindFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_Bind.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind.class.php');
 Mock::generate('Tracker_FormElement_Field_List_Bind');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_List_BindValue.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindValue.class.php');
 Mock::generate('Tracker_FormElement_Field_List_BindValue');
 
-require_once(dirname(__FILE__).'/../include/dao/Tracker_FormElement_Field_Value_ListDao.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_ListDao.class.php');
 Mock::generate('Tracker_FormElement_Field_Value_ListDao');
 
-require_once(dirname(__FILE__).'/../include/dao/Tracker_FormElement_Field_ListDao.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_ListDao.class.php');
 Mock::generate('Tracker_FormElement_Field_ListDao');
 
 require_once('common/dao/include/DataAccessResult.class.php');
@@ -79,13 +79,13 @@ Mock::generate('DataAccessResult');
 require_once(dirname(__FILE__).'/../include/workflow/Workflow.class.php');
 Mock::generate('Workflow');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Artifact_Changeset.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
 Mock::generate('Tracker_Artifact_Changeset');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Artifact_ChangesetValue.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Artifact_ChangesetValue_List.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_List.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_List');
 
 require_once('common/include/Response.class.php');
@@ -94,7 +94,7 @@ Mock::generate('Response');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once(dirname(__FILE__).'/../include/Tracker.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 
 require_once(dirname(__FILE__).'/../include/workflow/TransitionFactory.class.php');

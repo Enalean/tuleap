@@ -1,7 +1,7 @@
 <?php
 
-require_once(dirname(__FILE__).'/../include/Tracker_Rule_Value_View.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker_Rule_Value.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_Rule_Value_View.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_Rule_Value.class.php');
 Mock::generate('Tracker_Rule_Value');
 
 /**

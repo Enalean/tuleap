@@ -22,7 +22,7 @@ if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker');
 }
 
-require_once(dirname(__FILE__).'/../include/Tracker.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generatePartial('Tracker', 
                       'TrackerTestVersion', 
                       array(
@@ -107,46 +107,46 @@ Mock::generate('User');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
-require_once(dirname(__FILE__).'/../include/TrackerManager.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 Mock::generate('TrackerManager');
 
-require_once(dirname(__FILE__).'/../include/TrackerFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/TrackerFactory.class.php');
 Mock::generate('TrackerFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_SemanticManager.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_SemanticManager.class.php');
 Mock::generate('Tracker_SemanticManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker_NotificationsManager.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker_NotificationsManager.class.php');
 Mock::generate('Tracker_NotificationsManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker_CannedResponseManager.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/CannedResponse/Tracker_CannedResponseManager.class.php');
 Mock::generate('Tracker_CannedResponseManager');
 
 require_once(dirname(__FILE__).'/../include/workflow/WorkflowManager.class.php');
 Mock::generate('WorkflowManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker_ReportFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_ReportFactory.class.php');
 Mock::generate('Tracker_ReportFactory');
 
 require_once(dirname(__FILE__).'/../include/workflow/WorkflowFactory.class.php');
 Mock::generate('WorkflowFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElementFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_String.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php');
 Mock::generate('Tracker_FormElement_Field_String');
 
-require_once(dirname(__FILE__).'/../include/Tracker_CannedResponseFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/CannedResponse/Tracker_CannedResponseFactory.class.php');
 Mock::generate('Tracker_CannedResponseFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Interface.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Interface.class.php');
 Mock::generate('Tracker_FormElement_Interface');
 
-require_once(dirname(__FILE__).'/../include/Tracker_ArtifactFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_ArtifactFactory.class.php');
 Mock::generate('Tracker_ArtifactFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Artifact.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
 class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {

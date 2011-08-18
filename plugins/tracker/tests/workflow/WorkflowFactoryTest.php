@@ -19,10 +19,10 @@
  */
 
 require_once(dirname(__FILE__).'/../../include/workflow/WorkflowFactory.class.php');
-require_once(dirname(__FILE__).'/../../include/Tracker.class.php');
+require_once(dirname(__FILE__).'/../../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 
-require_once(dirname(__FILE__).'/../../include/Tracker_FormElement_Field_List.class.php');
+require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 
 class WorkflowFactoryTest extends UnitTestCase {

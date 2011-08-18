@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElementFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generatePartial(
     'Tracker_FormElementFactory', 
     'Tracker_FormElementFactoryTestVersion', 
@@ -29,13 +29,13 @@ Mock::generatePartial(
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Container_Fieldset.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Container_Fieldset.class.php');
 Mock::generate('Tracker_FormElement_Container_Fieldset');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_Date.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
 
-require_once(dirname(__FILE__).'/../include/Tracker.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 
 

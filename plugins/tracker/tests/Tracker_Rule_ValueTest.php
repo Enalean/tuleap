@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/../include/Tracker_Rule_Value.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_Rule_Value.class.php');
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved

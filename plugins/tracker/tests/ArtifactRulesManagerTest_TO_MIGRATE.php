@@ -1,16 +1,16 @@
 <?php
 /* OBSOLETE 
-require_once(dirname(__FILE__).'/../include/Tracker_RulesManager.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
 Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('_getTracker_RuleFactory', '_getSelectedValuesForField'));
 
-require_once(dirname(__FILE__).'/../include/Tracker_Rule_Value.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_Rule_Value.class.php');
 Mock::generate('Tracker_Rule_Value');
 
-require_once(dirname(__FILE__).'/../include/Tracker_RuleFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RuleFactory.class.php');
 Mock::generate('Tracker_RuleFactory');
 
 //We cannot mock ArtifactField ($Language is undefined)
-//require_once(dirname(__FILE__).'/../include/Tracker_FieldFactory.class.php');
+//require_once(dirname(__FILE__).'/../include/Tracker/Tracker_FieldFactory.class.php');
 class Tracker_RulesManagerTest_Tracker_FieldFactory {
     function getFieldFromName() {}
 }

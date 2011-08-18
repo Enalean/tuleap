@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('TrackerManager.class.php');
+require_once('Tracker/TrackerManager.class.php');
 class ServiceTracker extends Service {
     /**
      * Display header for service tracker

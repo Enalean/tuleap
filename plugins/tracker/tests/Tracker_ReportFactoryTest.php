@@ -18,13 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker_ReportFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_ReportFactory.class.php');
 Mock::generatePartial('Tracker_ReportFactory',
                       'Tracker_ReportFactoryTestVersion',
                       array('getCriteriaFactory', 'getRendererFactory'));
-require_once(dirname(__FILE__).'/../include/Tracker_Report_CriteriaFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_Report_CriteriaFactory.class.php');
 Mock::generate('Tracker_Report_CriteriaFactory');
-require_once(dirname(__FILE__).'/../include/Tracker_Report_RendererFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_Report_RendererFactory.class.php');
 Mock::generate('Tracker_Report_RendererFactory');
 
 class Tracker_ReportFactoryTest extends UnitTestCase {

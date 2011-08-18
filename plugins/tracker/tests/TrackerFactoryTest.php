@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
+var_dump(get_include_path());
 //require_once('common/dao/include/DataAccessObject.class.php');
-//require_once(dirname(__FILE__).'/../include/Tracker_Tooltip.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker.class.php');
+//require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_Tooltip.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
-require_once(dirname(__FILE__).'/../include/TrackerFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/TrackerFactory.class.php');
 Mock::generatePartial('TrackerFactory',
                       'TrackerFactoryTestVersion',
                       array('getCannedResponseFactory',
@@ -48,7 +48,7 @@ Mock::generatePartial('TrackerFactory',
                       )
 );
 
-require_once(dirname(__FILE__).'/../include/dao/TrackerDao.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/dao/TrackerDao.class.php');
 Mock::generate('TrackerDao');
 require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
@@ -56,13 +56,13 @@ require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
-require_once(dirname(__FILE__).'/../include/Tracker_CannedResponseFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/CannedResponse/Tracker_CannedResponseFactory.class.php');
 Mock::generate('Tracker_CannedResponseFactory');
-require_once(dirname(__FILE__).'/../include/Tracker_FormElementFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
-require_once(dirname(__FILE__).'/../include/Tracker_TooltipFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_TooltipFactory.class.php');
 Mock::generate('Tracker_TooltipFactory');
-require_once(dirname(__FILE__).'/../include/Tracker_ReportFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_ReportFactory.class.php');
 Mock::generate('Tracker_ReportFactory');
 require_once('common/include/Response.class.php');
 Mock::generate('response');

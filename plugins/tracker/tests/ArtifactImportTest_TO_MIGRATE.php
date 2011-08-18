@@ -3,7 +3,7 @@
 require_once('common/include/Error.class.php');
 require_once('www/include/utils.php');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Import.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker_Import.class.php');
 //Mock::generatePartial('Tracker_Import','Tracker_ImportTestVersion',array());
 
 require_once('common/language/BaseLanguage.class.php');
@@ -39,7 +39,7 @@ Mock::generate('ArtifactFieldFactory');
 //}
 //Mock::generate('ArtifactImportTest_ArtifactFieldFactory','ArtifactFieldFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FieldFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker_FieldFactory.class.php');
 Mock::generate('Tracker_FieldFactory');
 
 // class Tracker_ImportTest_Tracker_FieldFactory {
@@ -49,7 +49,7 @@ Mock::generate('Tracker_FieldFactory');
 // Mock::generate('Tracker_ImportTest_Tracker_FieldFactory','Tracker_FieldFactory');
 
 
-require_once(dirname(__FILE__).'/../include/Tracker.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generatePartial('Tracker','TrackerTestVersion',array('getName','allowsAnon','getID','userIsAdmin'));
 
 // class Tracker {

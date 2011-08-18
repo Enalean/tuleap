@@ -20,7 +20,7 @@
 
 require_once('Tracker_FormElement_Field_ListTest.php');
 
-require_once(dirname(__FILE__).'/../include/Tracker_FormElement_Field_OpenList.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_OpenList.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_OpenList', 
     'Tracker_FormElement_Field_OpenListTestVersion', 
@@ -60,13 +60,13 @@ class Tracker_FormElement_Field_OpenListTestVersion_for_saveValue extends Tracke
         parent::saveValue($artifact, $changeset_value_id, $value, $previous_changesetvalue);
     }
 }
-require_once(dirname(__FILE__).'/../include/dao/Tracker_FormElement_Field_Value_OpenListDao.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_OpenListDao.class.php');
 Mock::generate('Tracker_FormElement_Field_Value_OpenListDao');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Artifact_ChangesetValue_OpenList.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_OpenList.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_OpenList');
 
-require_once(dirname(__FILE__).'/../include/dao/Tracker_FormElement_Field_List_OpenValueDao.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_List_OpenValueDao.class.php');
 Mock::generate('Tracker_FormElement_Field_List_OpenValueDao');
 
 class Tracker_FormElement_Field_OpenListTest extends UnitTestCase {

@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker_SemanticFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_SemanticFactory.class.php');
 Mock::generatePartial('Tracker_SemanticFactory',
                       'Tracker_SemanticFactoryTestVersion',
                       array(
@@ -28,31 +28,31 @@ Mock::generatePartial('Tracker_SemanticFactory',
                           'getSemanticTooltipFactory',
                           ));
 
-require_once(dirname(__FILE__).'/../include/Tracker.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Semantic_Status.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_Semantic_Status.class.php');
 Mock::generate('Tracker_Semantic_Status');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Semantic_Title.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_Semantic_Title.class.php');
 Mock::generate('Tracker_Semantic_Title');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Tooltip.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_Tooltip.class.php');
 Mock::generate('Tracker_Tooltip');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Semantic_Contributor.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_Semantic_Contributor.class.php');
 Mock::generate('Tracker_Semantic_Contributor');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Semantic_StatusFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_Semantic_StatusFactory.class.php');
 Mock::generate('Tracker_Semantic_StatusFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Semantic_TitleFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_Semantic_TitleFactory.class.php');
 Mock::generate('Tracker_Semantic_TitleFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_TooltipFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_TooltipFactory.class.php');
 Mock::generate('Tracker_TooltipFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker_Semantic_ContributorFactory.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_Semantic_ContributorFactory.class.php');
 Mock::generate('Tracker_Semantic_ContributorFactory');
 
 class Tracker_SemanticFactoryTest extends UnitTestCase {
