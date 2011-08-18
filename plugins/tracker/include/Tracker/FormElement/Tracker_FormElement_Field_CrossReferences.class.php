@@ -40,9 +40,9 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 }
                 $a = 'A_'. $this->id; 
                 return " INNER JOIN cross_references AS $a 
-                         ON (artifact.id = $a.source_id AND $a.source_type = 'artifact' AND $a.target_id $cond
+                         ON (artifact.id = $a.source_id AND $a.source_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.target_id $cond
                              OR
-                             artifact.id = $a.target_id AND $a.target_type = 'artifact' AND $a.source_id $cond
+                             artifact.id = $a.target_id AND $a.target_type = '".Tracker_Artifact::REFERENCE_NATURE."' AND $a.source_id $cond
                          )
                 ";
             }
@@ -62,16 +62,16 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         $R1 = 'R1_'. $this->id;
         return " LEFT JOIN (
                      cross_references AS $R1
-                 ) ON (a.id = $R1.source_id AND $R1.source_type = 'artifact' 
+                 ) ON (a.id = $R1.source_id AND $R1.source_type = '".Tracker_Artifact::REFERENCE_NATURE."' 
                        OR
-                       a.id = $R1.target_id AND $R1.target_type = 'artifact'
+                       a.id = $R1.target_id AND $R1.target_type = '".Tracker_Artifact::REFERENCE_NATURE."'
                  )
         ";
     }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
         $html = '';
-        $crossref_fact= new CrossReferenceFactory($artifact_id, ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->getTracker()->getGroupId());
+        $crossref_fact= new CrossReferenceFactory($artifact_id, Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_fact->fetchDatas();
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs($with_links = true, $condensed = true);
@@ -248,7 +248,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
-        $crossref_fact= new CrossReferenceFactory($artifact->getId(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->getTracker()->getGroupId());
+        $crossref_fact= new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_fact->fetchDatas();
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs();
@@ -273,7 +273,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
             case 'html':
                 break;
             default:
-                $crf  = new CrossReferenceFactory($artifact->getId(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->getTracker()->getGroupId());
+                $crf  = new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
                 $crf->fetchDatas();
                 $refs = $crf->getMailCrossRefs('text');
                 $src  = '';
@@ -362,7 +362,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
-        $crossref_fact= new CrossReferenceFactory($artifact->getId(), ReferenceManager::REFERENCE_NATURE_ARTIFACT, $this->getTracker()->getGroupId());
+        $crossref_fact= new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
         $crossref_fact->fetchDatas();
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs($with_links = false);
