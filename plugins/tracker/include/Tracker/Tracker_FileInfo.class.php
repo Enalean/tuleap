@@ -137,7 +137,7 @@ class Tracker_FileInfo {
      * @return string
      */
     protected function getRootPath() {
-        return $GLOBALS['sys_data_dir'] .'/tracker/'. $this->field->getId();
+        return $this->field->getRootPath();
     }
     
     public function __toString() {

@@ -427,8 +427,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         exit();
     }
     
-    protected function getRootPath() {
-        return $GLOBALS['sys_data_dir'] .TRACKER_BASE_URL.'/'. $this->id;
+    public function getRootPath() {
+        return $GLOBALS['sys_data_dir'] .'/plugins/tracker/'. $this->id;
     }
     
     protected function isImage($value) {
