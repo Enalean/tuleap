@@ -42,6 +42,7 @@ class Combined {
             '/scripts/ckeditor/ckeditor_basic.js',
             '/scripts/textboxlist/multiselect.js',
             '/scripts/tablekit/tablekit.js',
+            '/scripts/lytebox/lytebox.js',
             '/scripts/codendi/RichTextEditor.js',
             '/scripts/codendi/Tracker.js',
         );
