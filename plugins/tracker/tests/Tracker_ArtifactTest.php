@@ -747,6 +747,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         
         $tracker = new MockTracker();
         $tracker->setReturnValue('getGroupId', 666);
+        $tracker->setReturnValue('getItemName', 'foobar');
         
         $factory = new MockTracker_FormElementFactory();
         
@@ -788,9 +789,10 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $reference_manager->expect('extractCrossRef', array(
             $comment, 
             66, 
-            'artifact', 
+            'plugin_tracker_artifact', 
             666,
             $user->getId(),
+            'foobar',
         ));
         
         $art_factory = new MockTracker_ArtifactFactory();
@@ -841,6 +843,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         
         $tracker = new MockTracker();
         $tracker->setReturnValue('getGroupId', 666);
+        $tracker->setReturnValue('getItemName', 'foobar');
         
         $factory = new MockTracker_FormElementFactory();
         
@@ -882,9 +885,10 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $reference_manager->expect('extractCrossRef', array(
             $comment, 
             66, 
-            'artifact', 
+            'plugin_tracker_artifact', 
             666,
             $user->getId(),
+            'foobar',
         ));
         
         $art_factory = new MockTracker_ArtifactFactory();

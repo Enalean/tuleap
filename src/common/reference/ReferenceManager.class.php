@@ -78,7 +78,10 @@ class ReferenceManager {
         $this->reservedKeywords = array_merge($this->reservedKeywords, $plugins_reserved_keywords);
     }
 
-    function &instance() {
+    /**
+     * @return ReferenceManager
+     */
+    function instance() {
         static $_referencemanager_instance;
         if (!$_referencemanager_instance) {
             $_referencemanager_instance = new ReferenceManager();
