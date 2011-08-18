@@ -286,11 +286,13 @@ class trackerPlugin extends Plugin {
     
     public function ajax_reference_tooltip($params) {
         if ($params['reference']->getServiceShortName() == 'plugin_tracker') {
-            $user = UserManager::instance()->getCurrentUser();
-            $aid = $params['val'];
-            require_once('Tracker/Artifact/Tracker_ArtifactFactory.class.php');
-            if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($aid)) {
-                echo $artifact->fetchTooltip($user);
+            if ($params['reference']->getNature() == Tracker_Artifact::REFERENCE_NATURE) {
+                $user = UserManager::instance()->getCurrentUser();
+                $aid = $params['val'];
+                require_once('Tracker/Artifact/Tracker_ArtifactFactory.class.php');
+                if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($aid)) {
+                    echo $artifact->fetchTooltip($user);
+                }
             }
         }
     }
