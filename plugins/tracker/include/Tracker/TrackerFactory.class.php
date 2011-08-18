@@ -185,7 +185,7 @@ class TrackerFactory {
         
         //set permissions
         if (isset($xml->permissions->permission)) {
-            $allowed_tracker_perms = array('PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE');
+            $allowed_tracker_perms = array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE');
             $allowed_field_perms = array('PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_FIELD_SUBMIT');
             foreach ($xml->permissions->permission as $permission) {
                 switch ((string) $permission['scope']) {
