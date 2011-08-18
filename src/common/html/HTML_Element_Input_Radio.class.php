@@ -18,8 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/html/HTML_Element_Input.class.php');
-require_once('common/html/HTML_Element_Input_Hidden.class.php');
+require_once('HTML_Element_Input.class.php');
+require_once('HTML_Element_Input_Hidden.class.php');
 /**
  * Define a html input Radio field
  */
