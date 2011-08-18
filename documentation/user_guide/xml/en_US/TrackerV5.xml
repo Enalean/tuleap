@@ -1,0 +1,3107 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+//
+// Copyright (c) Xerox Corporation, Codendi 2007-2008.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING. 
+//
+//
+//
+-->
+      
+<chapter id="TrackerService">
+  <title>Tracker Service</title>
+
+  <para>The &SYS_PRODUCT_NAME; Tracker is one of the most powerful and versatile
+  services offered to &SYS_PRODUCT_NAME; hosted projects. It allows for the tracking 
+  of various artifacts like bugs, tasks, requirements, etc... and a 
+  project can create and customize as many trackers as necessary.</para>
+
+  <para>All trackers, whether predefined at the site level or created
+  by a project can be fully customized. </para>
+
+  <section id="CodendiTrackerPrinciples">
+    <title>Terminology and common features</title>
+
+    <para>Before we explain the features of the tracker service, it's
+    worth spending some time on the terminology used in the tracker
+    service as well as on some of the features that are shared by all
+    trackers.</para>
+
+    <para>As the Tracker Service is meant to track virtually any kind
+    of item, the generic term &#34;<emphasis role="bold">artifact</emphasis>&#34; 
+    will be used throughout this document to designate items that are being 
+    tracked - be it bug, task, support request, user stories or other such type.</para>
+
+    <para>Defining a tracker is just a matter of assigning it a name,
+    choosing the fields that are going to be used in the tracker,
+    and what values will be allowed in those fields.</para>
+
+    <para>In addition to the project definable fields and field values there
+    is a <emphasis role="bold">Follow-ups</emphasis> section that is permanently attached to a tracker
+    artifact. This one allows you to follow the artifact lifecycle (values changed 
+    and free text comments attached to an artifact and posted by users).
+    In this section you can also add a <emphasis role="bold">follow-up comment</emphasis>
+    that will be added in the follow-ups flow.
+    </para>
+  </section>
+
+
+  <section id="EnteringtheTrackerService">
+    <title>Entering the Tracker Service</title>
+
+    <para>To enter the Tracker service of a given project, first go to
+    the Project Summary page (see <xref
+	linkend="AccessingAProjectSummaryPage" />) and either click
+    the &#34;Trackers&#34; item in the Project Main Menu located in the
+    upper part of the page or you can directly choose a tracker from the
+    trackers listed in the Public Area of the Project Summary page.</para>
+
+    <para>You will be presented with a list of trackers available for
+    this particular project (see <xref linkend="TrackerWelcomeScreen"
+	/>. Select the tracker you are interested in. Entering the
+    tracker will give you access to various tracker functions
+    depending on the permissions you have with this tracker. You may
+    be able to submit new artifacts, update existing ones, search
+    and browse the artifact database or configure the tracker.</para>
+
+    <figure id="TrackerWelcomeScreen">
+      <title>Tracker Welcome Screen</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_trackerwelcomescreen_new.png" width="14.5cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+    
+
+  </section>
+
+  <section id="ArtifactSubmission">
+    <title>New Artifact Submission</title>
+
+    <para>To submit a new artifact to a given project you must first
+    access the appropriate tracker of that project as indicated in the
+    section above (see <xref linkend="EnteringtheTrackerService" />.</para>
+
+    <para>When entering a given tracker you are presented with the
+    artifact selection and browsing screen (more about this facility
+    in <xref linkend="ArtifactBrowsing" />). For now let&#39;s click
+    on the &#34;Submit new artifact&#34; item (or whatever the artifact
+    name is) from the Tracker Menu Bar in the upper part of the welcome
+    screen (see <xref linkend="FigureASampleTrackerBrowsingScreen"
+	/>).</para>
+
+    <figure id="ArtifactSubmissionScreenFromTheCodendiProject">
+      <title>A sample artifact submission screen (the artifact is of type &#34;bug&#34; here)</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_artifactsubmission_new.png" width="14.5cm" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para><xref linkend="ArtifactSubmissionScreenFromTheCodendiProject"
+	/> shows a sample submission screen from one of the &SYS_PRODUCT_NAME; hosted
+    projects. Because of the &SYS_PRODUCT_NAME; Tracker high level of
+    customizability no two submission screens look alike. Depending on
+    the project more or less fields may appear on the tracker
+    submission form and the name of artifact managed by the tracker
+    may change as well.</para>
+
+    <para>In the example provided on <xref
+    linkend="ArtifactSubmissionScreenFromTheCodendiProject" /> the
+    artifact type is a bug (also know as &#34;defect&#34; in corporate
+    language). The user is asked to give a one-line description for the bug and a longer
+    text entry field where you can fully characterize the bug. Then, he has to choose a bug Category
+    and a Severeity. After clicking on the Submit button, a unique ID is automatically
+    assigned to the submitted artifact.</para>
+
+    <para>When submitting a new artifact, make the Summary and the
+    detailed description as explicit as possible.  Do not use a
+    clueless summary like: &#34;Service X doesn&#39;t work&#34; or
+    &#34;Blocking problem in Document Mgr&#34;. Explain the exact
+    nature of the artifact by giving an explicit Summary and
+    Description to the person in charge. A unique ID is automatically
+    assigned to the submitted artifact.</para>
+
+    <para>The values proposed by a field could depend upon other field value. If javascript is activated in your browser, fields will be filtered dynamically. Otherwise, &SYS_PRODUCT_NAME; will ensure that the values you submit are correct.</para>
+
+    <para>As explained above, artifact submission forms vary from one
+    project to another depending on the fields used by the
+    tracker. The submission form can also vary according to the
+    permission level. Depending whether you are a project member or an
+    ordinary registered user the artifact fields displayed on the
+    screen may differ. As an example, on <xref
+    linkend="ArtifactSubmissionScreenFromTheCodendiProject" />, the bug
+    submitter using the form is probably a project member because
+    giving access to the &#34;Assigned to&#34; field to an ordinary
+    registered user doesn&#39;t make much sense. It is very unlikely
+    that users external to the project team know enough about the
+    project organization to correctly assign the bug. That's the reason why 
+    artifact fields shown to users on the submission form can be
+    configured in the Tracker Administration module (see <xref
+    linkend="TrackerAdministration" />)</para>
+
+    <para>In any case don&#39;t forget to click on the
+    &#34;Submit&#34; button when you are finished !</para>
+
+    <para><tip><title>Tip: make sure your artifact hasn&#39;t yet been
+    submitted</title><para>About to submit a bug or a support request
+    to a &SYS_PRODUCT_NAME; Project? Before you do that, make sure that others
+    haven&#39;t yet submitted a similar artifact. To do so you can
+    either browse the artifact database through the Artifact Selection
+    and Browsing facility or you can use the search box in the &SYS_PRODUCT_NAME;
+    Main Menu and search by keywords.</para></tip></para>
+
+  </section>
+
+  <section id="ArtifactBrowsing">
+    <title>Artifact Browsing</title>
+
+    <para>&SYS_PRODUCT_NAME; offers the ability to browse the artifact database
+    according to a variable set of criteria.</para>
+
+    <section id="ArtifactSelectionCriteria">
+      <title>Selection Criteria</title>
+
+      <para>The upper part of the artifact browsing screen is devoted to the
+        selection criteria. <xref
+	  linkend="FigureASampleTrackerBrowsingScreen" /> shows the
+        default set of selection criteria that is available when a new tracker
+        is created. You can select bugs by Category (the module in which the
+        bug occurred), Group (nature of the bug like Crash, Documentation
+        Typo, ...), Status (e.g. Open, Closed, ...) and Assignee (the person
+        in charge of the bug). But you may also add or remove criteria 
+        by using the "Toggle criteria" link.(for more details, see <xref
+        linkend="TrackerReports" />)</para>
+
+      <para>How selection criteria are filled out depend on their
+      field type. The Tracker Service currently has several types
+      of fields used as search criteria:</para>
+
+      <section id="ArtifactSelectBoxField">
+	<title>Select Box Field and Multiple Select Box Field</title>
+
+	<para>A select box field can take its value in a set of
+	predefined values. By default, only one value can be selected at a time. If you
+	want to select multiple values at once, use the Advanced Search
+	facility by clicking on the + icon. A multi select box appears and allows the user to select multiple
+	values for the same field.</para>
+
+	<para>There might be 2 specific values in the list of choices:
+	&#34;Any&#34; matches any value in the list and &#34;None&#34; matches the
+	items where no value has been assigned yet</para>
+      </section>
+
+
+      <section id="ArtifactTextField">
+	<title>Text Field</title>
+
+        <para>A Text field can contain any kind of text. There are two
+        ways to query a text field:</para>
+
+
+	<itemizedlist mark="bullet" spacing="compact">
+
+	  <listitem>
+	    <para> <emphasis role="underline">Keyword
+	    search</emphasis>: you can type a series of space
+	    separated keywords that will ALL be searched for in the
+	    text field (including as substring in
+	    words)</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="underline">Regular
+	    expression</emphasis>: You can also specify a <ulink
+	    url="http://dev.mysql.com/doc/refman/5.0/en/regexp.html">MySQL
+	    Extended Regular Expression</ulink> as a matching criteria
+	    (mind the surrounding /.../ !)</para>
+
+	    <para>Examples:</para>
+	    <itemizedlist mark="dash" spacing="compact">
+	      <listitem>
+		<para>/^[Aa]ddition/ : matches any text field starting
+		with either &#34;addition&#34;or &#34;Addition&#34;</para>
+	      </listitem>
+	      <listitem>
+		<para>/foo|bar|dim/ : matches text fields containing the string &#34;foo&#34;, &#34;bar&#34; or &#34;dim&#34;</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+
+	</itemizedlist>
+
+      </section>
+
+      <section id="ArtifactDateField">
+	<title>Date Field</title>
+
+	<para>A date criteria follows the following pattern:
+	YYYY-MM-DD where YYYY is the year number, MM is the month
+	number and DD is the day number.</para>
+
+	<para>Examples: 1999-03-21 is March 21st, 1999, 2002-12-05 is
+	Dec 5th, 2002. </para>
+	
+	<para>You can search an exact date (using = in the operator select box),
+	all dates before a certain date (using &lt;) or all dates after (using &gt;).
+	</para>
+	<para>By cliking the + icon, you can use the advance search and search for dates 
+	between two specific dates.</para>
+
+      </section>
+
+      <section id="ArtifactIntegerField">
+	<title>Integer Field</title>
+
+	<para>An integer field can take positive or (possibly)
+	negative values and has no decimal part.</para>
+
+	<para>Examples: 0, 1, +2, -100&hellip;</para>
+
+	<para>There are several ways to query an integer field. Here
+	are the values you can specify in a integer query field:</para>
+	<itemizedlist>
+	  <listitem>
+	    <para> <emphasis role="underline">Single
+	    Integer</emphasis>: if you type a single integer the field
+	    will be matched against this value (e.g. 610)</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="underline">Inequality</emphasis>: if
+	    you use &gt;, &lt;, &gt;= or =&lt; followed by an integer
+	    the search will look for integer values which are greater,
+	    lesser, greater or equal, lesser or equal to the integer
+	    value (e.g. &gt; 120 , &lt; -30)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Range</emphasis>:
+	  if you use the &#34;integer1-integer2&#34; notation the search
+	  engine will look for all values greater or equal to integer1
+	  and lesser or equal to integer2 (e.g. 800 - 900 for integers
+	  between 800 and 900, -45 - 12 for integers between -45 and
+	  +12)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Regular
+	  expression</emphasis>: <ulink
+	  url="http://dev.mysql.com/doc/refman/5.0/en/regexp.html">MySQL
+	  Extended Regular Expression</ulink> can also be used as a
+	  matching criteria (e.g. /^4.*8$/ will look for all integer
+	  values starting with a &#34;4&#34;, ending with an &#34;8&#34; with any
+	  number of digits in between.</para>
+	  </listitem>
+	</itemizedlist>
+      </section>
+
+      <section id="ArtifactFloatingPointNumberField">
+	<title>Floating Point Number Field</title><para>A floating
+	point number field can take positive or (possibly) negative
+	values, may have a decimal part or use the exponential
+	notation for large values.. .</para>
+
+	<para>Examples: 0, 1.23, -2.456, 122.45E+12&hellip;</para>
+
+	<para>There are several ways to query an floating point number
+	field. Here are the values you can specify in such a
+	field:</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para> <emphasis role="underline">Single
+	    Number</emphasis>: if you type a single number the field
+	    will be matched against this value (e.g. 2.35)</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="underline">Inequality</emphasis>: if
+	    you use &gt;, &lt;, &gt;= or =&lt; followed by a number
+	    the search will look for all values which are greater,
+	    lesser, greater or equal, lesser or equal to the integer
+	    value (e.g. &gt; 120.3 , &lt; -3.3456E-2)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Range</emphasis>:
+	  if you use the &#34;number1-number2&#34; notation the search
+	  engine will look for all values greater or equal to integer1
+	  and lesser or equal to integer2 (e.g. -1.2 - 4.5 for numbers greater than or equal to -1.2 and lesser than or equal to 4.5)</para>
+	  </listitem>
+	  <listitem><para><emphasis role="underline">Regular
+	  expression</emphasis>: <ulink
+	  url="http://dev.mysql.com/doc/refman/5.0/en/regexp.html">MySQL
+	  Extended Regular Expression</ulink> can also be used as a
+	  matching criteria (e.g. /^4.*8$/ will look for all 
+	  values starting with a &#34;4&#34;, ending with an &#34;8&#34; with any
+	  number of characters in between including the decimal point.</para>
+	  </listitem>
+	</itemizedlist>
+    </section>
+    
+    </section>
+    
+    <section id="TrackerSearchResults">
+      <title>Tracker Search Results</title>
+      
+      <para>Based on your selection of search criteria, &SYS_PRODUCT_NAME; runs a
+      query against the tracker database, selects the matching
+      artifacts, and displays them right below the selection
+      criteria. Columns displayed in the artifact list are entirely
+      configurable by the user. (see <xref
+	  linkend="TrackerReports" />). Therefore, the artifact browsing
+      screen might look completely different from the one shown in
+      <xref linkend="FigureASampleTrackerBrowsingScreen" />.</para>
+
+      <figure id="FigureASampleTrackerBrowsingScreen">
+	<title>A sample Tracker browsing screen</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	      fileref="../../screenshots/en_US/sc_artifactbrowsing.png" width="15.3cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+
+      <para>Results are listed by chunks of N
+      artifacts where N is user-definable. If more than N artifacts
+      are retrieved from the tracker database you are invited to click
+      on the navigation bar to display the next or previous chunk of
+      artifacts.</para>
+
+      <para>To access a given artifact from the list of results,
+      simply click on the icon <inlinemediaobject><imageobject><imagedata
+          format="PNG" fileref="../../icons/artifact-arrow.png" /></imageobject></inlinemediaobject>.</para>
+
+      <section id="ArtifactListSorting">
+	<title>Artifact List Sorting</title>
+
+	<para>By default, artifacts are sorted by the chronological order of the submission on the &SYS_PRODUCT_NAME;.</para>
+
+	<para>The list of artifacts can be sorted by any of the
+	columns displayed on the screen by clicking on the column
+	heading. Clicking twice on the same heading toggles the sort
+	order between ascending to descending.  The currently displayed
+        sorting direction is shown by a small up or down arrow next to
+	the sort criteria right above the artifact list. </para>
+
+	<para>For more sophisticated sorting you can also use the
+	multi-column sort.  In this mode sort criteria accumulates as
+	you click on column headings.  So you can for instance click
+	&#34;Severity&#34; first and &#34;Assigned To&#34; second to see who in the
+	team is assigned critical bugs and how many.At any point in
+	the multi-column sort process, a click on one of the sort
+	criteria displayed in the list (criteria 1 > criteria 2 >
+	criteria 3...)  will bring you backward in the sort criteria
+	list. Using this feature you can easily test various sorting
+	strategies.</para>
+
+      </section>
+      
+    <section id="ExportSearchResults">
+        <title>Export Tracker Search Results</title>
+        <para>In the report "options" menu, "Export all report columns" and "Export all columns" links allow
+        to export all artifacts of your search result into CSV format. 
+        Using this facility you can easily select the tracker
+        artifacts that you want to process with other tools outside 
+        &SYS_PRODUCT_NAME;. </para>
+        <para>See <xref linkend="ArtifactImport" /> for how to import artifacts 
+        from CSV file.</para>
+    </section>
+    
+      <section id="ArtifactPrinterFriendlyVersion">
+	<title>Printer Friendly Version</title>
+
+	<para>At any point in the process of browsing the tracker
+	database you can click on the &#34;Printer Version&#34; link 
+    (in the report "options" menu) to display a simplified and non-decorated artifact list that
+	prints nicely or can be copy-pasted in a document of your
+	choice. For better readability we strongly advise you to print
+	the list of results in landscape format.</para>
+      </section>
+
+
+	<section id="ArtifactCharts">
+	 <title>Graphical visualization</title>
+	 <para>You can also view graphical results of your search by adding a Charts tab.
+     There is three types of graphs supported : Pie, Bar and Gantt charts. 
+     Like the list of artifact (table renderer), the graphical view respond to the 
+     selection criteria.
+     For more details, see <xref linkend="TrackerReportRendererCharts" />.
+	 </para>
+	</section>
+</section>
+
+    <section id="TrackerReports">
+	<title>Tracker Report Management</title>
+
+	<para>Tracker reports allow the definition of a specific
+	layout of the artifact search and browsing screen where one
+	can choose the selection criteria and the renderers, which present the search result.
+    &SYS_PRODUCT_NAME; is proposing two kinds of renderers : "Table" and "Charts".
+    The "Table" renderer presents the list of matching artifacts using columns.
+    The "Charts" renderer gives a graphical visualization of the results.
+    Depending on the project, users may enjoy the ability to 
+	choose from several graphical tracker renderers available in the renderer tabs section.
+    
+    Depending on the project, users may enjoy the ability to choose from several tracker reports
+	by using the upper pull-down menu of the artifact browsing
+	screen. If no project or user specific tracker report has been
+	defined, the &SYS_PRODUCT_NAME; &#39;Default&#39; report is the only one
+	available.</para>
+
+
+     <para>Any &SYS_PRODUCT_NAME; user with access to the tracker can define his
+	 own personal report, choosing his own search criteria and adding renderers (tables and charts). 
+     In this case the report is a personal one
+	 and is only visible to this particular user. On the contrary,
+	 tracker administrators have the ability to define project-wide
+	 graphical reports that all users will be able to use.
+	 </para>
+     <section id="TrackerReportSetting">
+      <title>Tracker Report Setting</title>
+      <para>
+       The current report is defined at the top left of the report page (see 
+       <xref linkend="FigureASampleTrackerBrowsingScreen" />).
+       If several reports are available, a select box will allow to change the 
+       current report.
+      </para>
+      <para>
+       For each report, if you are granted enough to do it, you can either save, 
+       save as, change the visibility from public to private, set the current as 
+       the default tracker report or delete it.
+      </para>
+      <para>
+            Be careful! When you are tracker admin, updating a public report will
+            update the report for every other tracker user. Keep this in mind 
+            before saving your modifications.
+      </para>
+     </section>
+     <section id="TrackerReportRendererAdd">
+      <title>Adding a renderer</title>
+      <para>
+       You can add as many renderers as you want in any tracker report. 
+       Renderer are ordered in tabs. Adding a renderer is easy: simply select 
+       the [+] tab on the right of the renderer tabs (see 
+       <xref linkend="FigureASampleTrackerBrowsingScreen" />).
+       Select the kind of renderer you want to add (either table or charts), give 
+       the renderer a name and a description, and select the submit button.
+      </para>
+      <tip>
+        <title>Ordering report renderers</title>
+          <para>
+            Renderers can be easily reordered: just drag and drop the tabs!
+          </para>
+      </tip>
+     </section>
+     
+     <section id="TrackerReportRendererTable">
+      <title>Table renderer</title>
+       <para>
+        Table renderer is a textual renderer, usually displayed in a table.
+        Columns of the table are tracker fields, and rows of the table are 
+        the artifacts.
+        <xref linkend="FigureASampleTrackerBrowsingScreen" />) shows an example 
+        of a table renderer.
+       </para>
+       <para>
+        You can select the fields of the renderer (using the Toggle columns link),
+        reorder the fields using drag and drop, 
+        sort artifact list by fields (by clicking on the field name in the table header),
+        browse artifact list selecting the number of displayed artifacts at once
+       </para>
+       <para>
+       It is possible to add aggregates functions on table renderer on specific fields.
+       For int, float, select box and multi select box fields, an icon <inlinemediaobject><imageobject><imagedata format="PNG"
+          fileref="../../icons/sum--plus.png"/></imageobject></inlinemediaobject> is displayed under each column.
+       </para>
+       <para>
+          Simply click on it to add one or several aggragate functions.
+       Aggregates functions available are:
+       <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+            <para><emphasis role="bold">Count</emphasis> (only for int, float, select box and multi select box fields)</para>
+        </listitem>
+        <listitem>
+            <para><emphasis role="bold">Count Group By</emphasis> (only for int, float, select box and multi select box fields)</para>
+        </listitem>
+        <listitem>
+            <para><emphasis role="bold">Average</emphasis>  (only for int and float fields)</para>
+        </listitem>
+        <listitem>
+            <para><emphasis role="bold">Maximum</emphasis>  (only for int and float fields)</para>
+        </listitem>
+        <listitem>
+            <para><emphasis role="bold">Minimum</emphasis>  (only for int and float fields)</para>
+        </listitem>
+        <listitem>
+            <para><emphasis role="bold">Std Deviation</emphasis>  (only for int and float fields)</para>
+        </listitem>
+        <listitem>
+            <para><emphasis role="bold">Sum</emphasis>  (only for int and float fields)</para>
+        </listitem>
+       </itemizedlist>
+       </para>
+     </section>
+     
+     <section id="TrackerReportRendererCharts">
+      <title>Charts renderer</title>
+       <para>
+        Charts renderer allows to add charts in your report.
+        &SYS_PRODUCT_NAME; provides three kind of graphs: pie, bar and gantt charts.
+        <figure id="FigureChartsTrackerBrowsingScreen">
+         <title>A sample charts renderer screen</title>
+            <mediaobject>
+             <imageobject>
+               <imagedata format="PNG"
+                 fileref="../../screenshots/en_US/sc_graphs_renderer.png" width="15.3cm" />
+               </imageobject>
+            </mediaobject>
+        </figure>
+       </para>
+       <para>
+        You can add as many graphs as you want in a charts renderer. To add a graph,
+        click on the selected graph icon on the top of the current renderer.
+        Regarding the chart type, you will then provide a name, a description,
+        and the fields required to build the chart.
+       </para>
+       <section id="TrackerReportRendererChartPie">
+        <title>Pie Chart</title>
+        <para>
+          <figure id="FigurePieChartEdition">
+          <title>Pie chart edition screen</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG"
+                    fileref="../../screenshots/en_US/sc_trackergraphpie.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+       </section>
+       <section id="TrackerReportRendererChartBar">
+        <title>Bar Chart</title>
+        <para>
+          <figure id="FigureBarChartEdition">
+          <title>Bar chart edition screen</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG"
+                    fileref="../../screenshots/en_US/sc_trackergraphbar.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+       </section>
+       <section id="TrackerReportRendererChartGantt">
+        <title>Gantt Chart</title>
+        <para>
+          <figure id="FigureGanttChartEdition">
+          <title>Gantt chart edition screen</title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata format="PNG"
+                    fileref="../../screenshots/en_US/sc_trackergraphgantt.png" width="15.3cm" />
+                </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+       </section>
+       <tip>
+        <title>Gantt charts</title>
+        <para>
+         Warning! If you're dealing with big projects and your dates spread on 
+         several years, don't display your gantt chart by day. The chart will
+         be too large. Please chnage the time scale to week, month or year.
+        </para>
+       </tip>
+     </section>
+     
+     <section id="TrackerReportRendererUpdate">
+      <title>Updating/removing a renderer</title>
+      <para>
+        Depending on your permissions, you will be able to update a renderer,
+        by clicking the down arrow next to the renderer name.
+      </para>
+      <para>
+        Available actions are title and description update, or renderer deletion.
+      </para>
+     </section>
+     <tip>
+      <title>Adding renderers in dashboards</title>
+      <para>
+       Every renderer (either table or charts) can be displayed in your dashboard.
+       To do it, select the link "add to my dashboard" or "add to project dashboard" in the "Options"
+       menu.
+      </para>
+     </tip>
+   
+    </section>
+
+  
+  </section>
+  <section id="ArtifactUpdate">
+    <title>Artifact Update</title>
+
+    <para>Selecting an artifact from the list generated by
+    a search operation will bring you to a screen with all the artifact
+    details. Depending on the permissions you have on this tracker 
+    (see <xref linkend="FieldPermissionsManagement" />), the 
+    detailed view is made of text fields and menus that you
+    can update with new values. If you are an
+    anonymous user or a registered user who does not belong to the
+    project team, most of the fields will likely appear as immutable
+    text. By default, non-project members cannot edit any of the artifact
+    fields. They can only submit a follow-up comment.</para>
+
+    <para>The Artifact Update screen is divided in several parts:
+    <emphasis role="bold">Header and Comments.</emphasis></para>
+
+    <section id="ArtifactHeaders">
+      <title>Header</title>
+
+      <para>The header zone is where you&#39;ll find all the fields
+      associated with an artifact. As shown on <xref
+      linkend="FigureHeaderOfArtifactUpdateScreen" />, many of these
+      fields are assigned a set of predefined values (Status,
+      Category, Resolution) while some others have a number format
+      (Effort) or a free text format (Summary). For more clarity, 
+      the fields are grouped in field sets.
+      The set of fields used in a given tracker, as well as the related set of predefined
+      values and the field sets can be configured by project members who have
+      administration permissions on this tracker. (see <xref
+      linkend="TrackerAdministration" /> for more details on the
+      Tracker configuration).</para>
+      
+      <section id="DynamicFields">
+        <title>Dynamic Fields</title>
+        <para>Some fields have a particular behaviour and some explanations seem necessary.
+        </para>
+        <itemizedlist mark="bullet">
+            <listitem>
+                <para><emphasis role="bold">Automatically edit fields</emphasis>: &SYS_PRODUCT_NAME; 
+                    includes fields that are automatically set : "Artifact ID", "Last Update Date", "Submitted By" and "Submitted On".
+                    The users can't edit that fields.
+                 </para>
+            </listitem>
+            
+            <listitem>
+                  <para><emphasis role="bold">Cross-Reference</emphasis>: Codendi offers another dynamic field which has the ability to
+                    cross-reference any artifact, or any other &SYS_PRODUCT_NAME; object from within a follow-up
+                    comment.
+                  </para>
+                  <para>When typing a follow-up comment, any text that follows the
+                    pattern &#34;XXX #NNN&#34; will be interpreted as a reference to the
+                    artifact XXX number NNN, where NNN is the unique artifact ID, and XXX is the 
+                    tracker short name (e.g. &#34;bug #123&#34;, &#34;task #321&#34;,
+                    &#34;req #12&#34;, etc.).
+                    If you don't know the tracker short name or don't want to specify it, you
+                    may simply use  &#34;art #NNN&#34;.
+                    Each time &SYS_PRODUCT_NAME; displays a piece of text that follows this pattern it will
+                    auto-magically create an hyperlink to the web page showing all
+                    the details of the artifact.
+                  </para>
+                  <para>&SYS_PRODUCT_NAME; reference patterns may be used to reference artifacts, as well as source
+                     code commits, documents, files, etc. Please refer to 
+                     <xref linkend="ReferenceOverview" /> for more details on Codendi references.
+                  </para>
+
+                  <para>Furthemore references concerning artifacts, svn revisions and
+                    cvs commits are stored in the database. They are displayed in the next section, ordered 
+                    by type and initial reference direction.
+                  </para>
+                  
+            </listitem>
+            <!--<listitem>
+                <para><emphasis role="bold">Permissions on artifacts</emphasis>: Users that have 
+                    permission to access that field can restrict access to artifact. Those permissions are 
+                    a complement to the permissions defined at tracker level. 
+                </para>
+                <para>The user just has to edit the artifact and update permissions 
+                    like in the example below (where the artifact is currently restricted to 
+                    project admins and members).
+                </para>
+      
+                <figure id="FigureArtifactPermissions">
+                    <title>Permission on an artifact</title>
+        
+                        <mediaobject>
+                          <imageobject>
+                            <imagedata format="PNG"
+                              fileref="../../screenshots/en_US/sc_artifactpermissions.png" />
+                          </imageobject>
+                        </mediaobject>
+                 </figure>
+            </listitem>-->
+        </itemizedlist>
+        
+      </section>
+      
+      <figure id="FigureHeaderOfArtifactUpdateScreen">
+	<title>Header of Tracker Update screen (artifact fields)</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	      fileref="../../screenshots/en_US/sc_artifactupdateheader.png" width="15.3cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+    </section>
+
+    <section id="ArtifactComments">
+      <title>Comments</title>
+
+      <para>As many follow-up comments as needed can be attached to
+      any given artifact. Follow-up comments are free text fields
+      where virtually any kind of information or comment can be typed
+      in.</para>
+      
+      <para>Follow-up comments have several of interesting capabilities and extensions:</para>
+
+      <itemizedlist mark="bullet">
+    <listitem>
+      <para><emphasis role="bold">Changeset</emphasis>: 
+      Each follow-up comment has a part dedicated to the artifact history. 
+      This keeps track of all changes that occurred on all artifact fields since
+      the creation of the artifact.
+      The artifact history shows what fields changed, what the old value was befor the change took place, who changed it and when.
+      </para>
+        
+    </listitem>
+	<listitem>
+	  <para><emphasis role="bold">Canned Responses</emphasis>: it
+	  is not infrequent to see the project members in charge of
+	  the artifact classification and dispatch process to post the
+	  same follow-up comments again and again. Typical examples of
+	  repeatedly posted comments are: a thank you message to the
+	  originator, a request for the originator to provide commonly
+	  missing information like version numbers or type of machine
+	  used, etc. Rather than typing the same comments all the
+	  time, &SYS_PRODUCT_NAME; allows project members to create a predefined
+	  set of responses. Each canned response is defined by a name
+	  and by the body of the response.</para>
+
+	  <para>Posting a canned response is just a matter of
+	  selecting the appropriate response from the pull down menu
+	  in the artifact update screen and submitting the
+	  changes. <!--Defining a new Canned Response can be done on the
+	  fly from the artifact update form by clicking on the
+	  &#34;define a new Canned Response&#34; link.--></para>
+	</listitem>
+   </itemizedlist>
+
+
+      <figure id="FigureFollowupCommentsAttachedToAnArtifact">
+	<title>Follow-up comments attached to an artifact</title>
+	
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	      fileref="../../screenshots/en_US/sc_artifactupdatecomments.png" width="15.3cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+      
+    </section>
+    
+    <section id="ArtifactMassChange">
+      <title>Artifact Mass Change</title>
+      <para>
+       Tracker admins have the ability to update many artifacts at once.
+       This feature can be convenient to assign all bugs or tasks of a team 
+       member to another if the person is moving on another project for instance.
+      </para>
+      <para>
+       To do this, select the "mass change" link in the "options" menu of the tracker report.
+       Please note that only tracker admins have access to that option.
+      </para>
+      <para>
+       You will be able to update any kind of field (except the semantic title field).
+       Number of artifacts to be updated are displayed with their artifact Ids.
+       By default, all fields have the "value" set to "unchanged".
+       If you don't want to update a field, please keep the value unchanged.
+       To update a field for every artifacts, just update it.
+       You can also add a follow-up comment.
+      </para>
+      <para>N.B. The artifact mass change feature allows to by-pass any workflow on field(s)</para>
+      <figure id="FigureArtifactMassChange">
+        <title>Artifact Mass Change</title>
+        
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackermasschange.png" width="15.3cm" />
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </section>
+    
+    </section>
+
+    <section id="TrackerArtifactLinkTabs">
+        <title>Artifact Link</title>
+        <para>
+        Artifact link field provides a very powerful way to link an artifact to others. Any artifact from any accessible tracker
+        can be linked to the current edited artifact.
+        Artifact are displayed as a regular tracker report where each tab is a list of artifact of a given tracker according to
+        the default renderer of the default selected report.
+        </para>
+        <section>
+            <title>Linking an artifact</title>
+            <para>Click on the sheet icon on the right hand side of the input text field. Then a modal window is opening.
+            There one can check or unckeck artifacts. Tracker/Report can be selected, and search criteria specified to browse trackers.
+            Once artifact selection is done, selected artifacts are added to the input text field (comma separated), and can be viewed in trackers tabs.
+            Note that these advanced functionalities are not available at artifact creation.
+            <figure id="HowToLinkAnArtifact">
+                <title>How to link an artifact</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata format="PNG"
+                                fileref="../../screenshots/en_US/sc_linkingartifact.png" width="15.3cm" />
+                        </imageobject>
+                    </mediaobject>
+             </figure>
+             <figure id="ModalWindowLinkAnArtifact">
+                <title>Browse existing artifacts</title>
+                    <mediaobject>
+                        <imageobject>
+                            <imagedata format="PNG"
+                                fileref="../../screenshots/en_US/sc_modalwindowlinkingartifact.png" width="15.3cm" />
+                        </imageobject>
+                    </mediaobject>
+             </figure>
+            </para>
+        </section>
+        <section>
+            <title>Creating an artifact</title>
+            <para>As linking another artifacs to a currently edited one, it is possible to create a artifact in different tracker (e.g. sub-tasks addition)
+            any created artefact is set as "to be linked", this means that right after creating it is added to its tracker tab, and in the input field text.
+            </para>
+        </section>
+        <section>
+            <title>Managing linked artifacts</title>
+            <para>Linked or "to be linked" artifacts can be managed in the artifact link tabs view. Not yet linked artifacts are highlighted.
+           All artifacts can be unckeck (by clicking the red cross).
+            </para>
+        </section>
+    </section>
+
+    <section id="TrackerEmailNotification">
+        <title>E-mail Notification</title>
+
+        <para>The &SYS_PRODUCT_NAME; Tracker is equipped with a powerful and flexible
+    e-mail notification system. Unless otherwise instructed by the
+    project administrators or the users themselves, the e-mail
+    notification system follows simple default rules. Whenever an
+    artifact is created or updated - whether with an additional
+    follow-up comment or a change in any of the
+    artifact fields - an e-mail message is sent to:</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem>
+	<para>The artifact submitter (the person who initially submitted the artifact)</para>
+      </listitem>
+
+      <listitem>
+	<para>The artifact assignee (the person to whom the artifact is
+          currently assigned if the option "Send notifications to selected people" 
+          of the field which refers to the assignee has been checked by the tracker admin)</para>
+      </listitem>
+
+      <listitem>
+	<para>All users who posted at least one follow-up comment to
+	the artifact.</para>
+      </listitem>
+    </itemizedlist>    
+
+    <para>The e-mail message generated by the &SYS_PRODUCT_NAME; Tracker first
+    shows the most recent changes that occurred on the artifact in
+    case of an update. It is then followed by a complete snapshot of
+    the artifact. Web pointers are also included in the message to
+    quickly and easily access the artifact form on &SYS_PRODUCT_NAME;.</para>
+
+  </section>
+
+    <section id="ArtifactImport">
+        <title>Tracker Artifact Import</title>
+
+        <para>Project Administrators have the means to import
+        artifacts into &SYS_PRODUCT_NAME; trackers using the well known
+        CSV (Comma Separated Value) format supported by all
+        of the major office productivity suites. The artifact
+        import functionality greatly facilitates the migration
+        and integration of external project tracking and management
+        tools into &SYS_PRODUCT_NAME; trackers.</para>
+
+        <para>The import is divided into three steps:
+
+            <itemizedlist mark="bullet" spacing="compact">
+                <listitem>
+                    <para><emphasis role="bold">CSV file submission. </emphasis>
+                        The project administrators can access the Import
+                        functionality from the tracker administration screen or 
+                        over the Project Administration Menu. Enter/choose 
+                        the tracker to update and specify the CSV file to 
+                        import. In this step you can also check the option
+                        to send a mail notification to all users concerned by the artifact
+                        changes due to the import. If you don't check this
+                        option no notification will be sent.
+                    </para>
+                </listitem>
+                
+                <listitem>
+                    <para>
+                        <emphasis role="bold">CSV file parsing. </emphasis>
+                        If no parse errors were found in the uploaded file, 
+                        a parse report is shown to validate that the information 
+                        to import is correct.
+                    </para>
+                </listitem>
+                
+                <listitem>
+                    <para>
+                        <emphasis role="bold">Database update. </emphasis>
+                        Depending on the parsed information
+                        new artifacts are created or existing ones updated.
+                    </para>
+                </listitem>
+            </itemizedlist>
+        </para>
+
+        <section>
+            <title>When to use the Import</title>
+            <para>You will find below a couple of suggestions regarding
+                the use of the tracker import feature:
+
+                <itemizedlist mark="bullet" spacing="compact">
+                    <listitem>
+                        <para>Initial import from a project management software
+                        to your &SYS_PRODUCT_NAME; task tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Migration of your legacy defect tracking system
+                        into your new &SYS_PRODUCT_NAME; defect tracker.</para>
+                    </listitem>
+                    <listitem>
+                        <para>Migration of artifacts from one &SYS_PRODUCT_NAME; tracker
+                        to another.</para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </section>
+
+        <section>
+            <title>Exporting Excel Sheets in CSV Format</title>
+            <para>To export an Excel sheet to CSV format, simply follow the steps below:
+                <itemizedlist mark="bullet" spacing="compact">
+                    <listitem>
+                        <para>Select <literal>File -> Save As</literal>
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>In the dialog window choose 
+                            <literal>CSV</literal> as the <literal>Save 
+                            as type</literal>
+                        </para>
+                    </listitem>
+                </itemizedlist>
+            </para>
+        </section>
+
+        <section>
+            <title>CSV File Parsing</title>
+            <para>The CSV format that is accepted as import input 
+            is accessible over the CSV file submission screen. 
+            This page allows manual validation of the tracker 
+            field names (shortname), indicating which fields are mandatory in
+            case of a new artifact submission. In addition, it gives
+            you a sample CSV file.
+            As for the export feature, you can specify the separator
+            used in the CSV file you want to import as well as the date format 
+            (See <xref linkend="UserPreferences" />).
+            If you already use the Tracker
+            Artifact Export (see <xref linkend="ProjectDataExport" />)
+            you will notice that the format of the files to import
+            and the exported files are exactly the same. 
+            This means that if you changed your CSV separator for exporting 
+            data, you must use the same to import those data.
+            You can refer to the export format especially
+            for the date formats as well as the format of the
+            follow-up comments (see <xref linkend="ArtifactComments" />).
+            The first record in the CSV import file is always the 
+            header row containing all the tracker field names that 
+            will be used in the following artifact records.</para>
+            
+            <para>Depending on whether you want to import new artifacts
+            or update the ones that already exist in the tracker you
+            need to provide different information. Nevertheless,
+            you can mix in one CSV file the submission of new artifacts
+            and the update of existing ones. </para>
+            
+            <para>For the artifact creation you need to provide
+            information on all fields that are specified
+            as mandatory in the CSV import format except the Artifact 
+            ID which must not be specified. You may omit
+            the submitter and submission date. The artifact
+            submitter is then automatically set to the
+            user importing the CSV file and the submission date
+            will be the date of the import.</para>
+            
+            <para>For the artifact update you need to provide the
+            artifact identifier of the artifacts to update in the 
+            special column 'aid'. Beside
+            this, you only need to provide the fields you want
+            to update. All fields not specified in the CSV file 
+            will remain unchanged.</para>
+
+            <para>The parsing method checks several potential errors 
+                in the CSV file:
+                <itemizedlist mark="bullet" spacing="compact">
+                    <listitem>
+                        <para>Omission of mandatory fields when submitting
+                        new artifacts </para>
+                    </listitem>
+                    <listitem>
+                        <para>Not the same number of columns in the header 
+                        row and an artifact row</para>
+                    </listitem>
+                    <listitem>
+                        <para>Unknown tracker field name</para>
+                    </listitem>
+                    <listitem>
+                        <para>Field values that do not correspond to the 
+                        predefined field values of a (multi) select box field
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>Unknown artifact identifier</para>
+                    </listitem>
+                    <listitem>
+                        <para>Wrong date value</para>
+                    </listitem>
+                </itemizedlist>
+
+                All other potential errors have to be checked manually
+                by looking at the parse report table.
+            </para>
+        </section>
+
+        <section>
+            <title>The Database Update</title>
+
+            <para>If you import new artifacts, all 
+            non-mandatory fields that are omitted in the CSV 
+            file will be initialized to their default value.</para>
+            
+            <para>The submitter and submission date of an existing
+            artifact is never changed by an import even if the
+            import file contains relevant information.</para>
+            
+            <para>If an error occurs for some artifact during 
+            the database update the following artifacts in the CSV
+            file are not imported any more.</para>
+            
+            <para>Each import is tracked in the project history 
+            (<xref linkend="ProjectHistory" />). On the other
+            hand, no e-mail notification is sent in response to 
+            the import.</para>
+        </section>
+
+        <para>
+            <tip id="ExcelAndRegionals">
+                <title>Tip: Excel and Regionals</title>
+                <para>
+                If a .csv file is opened in Excel, any change to the spreadsheet 
+                (even something as simple as a column resizing) may cause 
+                Excel to modify and update the .csv file. Changes that may 
+                occur include: dates, times and numbers converted to 
+                the same format as those used by your system's regional 
+                settings, single line feeds converted to line feed 
+                and carriage return, extra commas appended to certain lines.
+                </para>
+
+                <para>
+                The updated date format might not be compatible with the 
+                &SYS_PRODUCT_NAME; date format and potentially cause troubles when 
+                importing such updated CSV files back into &SYS_PRODUCT_NAME;.
+                On the other hand &SYS_PRODUCT_NAME;-exported CSV files might not open correctly
+                under Excel in certain Regionals.
+                </para>
+
+                <para>
+                If you have a .csv file that either will not open correctly under 
+                Excel or was opened in Excel and will not import 
+                into &SYS_PRODUCT_NAME; please try the following:
+                Make sure all applications are closed. Change your system's 
+                regional settings (Start > Settings > Control Panel > Regional 
+                Options) to use the English with the following formats: 
+                Date = MM/dd/YYYY Time = hh:mm. Using Excel, open the 
+                .csv files that don't import, make a column width change, 
+                save the files and exit Excel. Go back and restore your 
+                original regional settings. Import the "fixed" .csv file into &SYS_PRODUCT_NAME;.
+                </para>
+            </tip>
+        </para>
+    </section>
+  
+  <section id="DefaultTrackerAccessPermissions">
+    <title>Default Tracker Access Permissions</title>
+
+    <para>Depending on the class of citizen a user belongs to and the
+    level of permissions granted as a project member, the various
+    features of the &SYS_PRODUCT_NAME; Tracker may or may not be accessible. Please
+    note that the default access permissions listed below may change
+    for a particular tracker if the tracker administrator modifies the
+    access permission settings. For more information on how to
+    configure tracker access permissions see <xref
+    linkend="TrackerPermissionsManagement"/>. Default permission
+    settings are summarized in the table below:</para>
+
+    <table frame="all">
+      <title>Default Tracker Access Permissions</title>
+      <tgroup cols="2">
+	<colspec colname="c1" colwidth="200pt" />
+
+	<colspec colname="c2" colwidth="250pt"  />
+
+	<thead>
+	  <row>
+	    <entry>Tracker Feature</entry>
+	    <entry>Access Permission</entry>
+	  </row>
+	</thead>
+
+	<tbody>
+	  <row>
+	    <entry><link linkend="ArtifactSubmission">New Artifact
+	      Submission</link></entry> <entry>By default any &SYS_PRODUCT_NAME;
+	      visitor, whether logged in or not, has the ability to
+	      submit a new artifact to a tracker. The tracker
+	      administrator has the ability to limit the scope of this
+	      feature to &SYS_PRODUCT_NAME; registered users (anonymous users are
+	      requested to login first) or to the project members if
+	      the tracker is made private.</entry>
+	  </row>
+	  <row>
+	    <entry><link linkend="ArtifactBrowsing">Artifact
+	      Browsing</link></entry> <entry>Searching the Artifact
+	      database and browsing the results is available to all
+	      &SYS_PRODUCT_NAME; visitors (whether registered or not) unless the
+	      tracker has been made private by the project
+	      administrator. If so the tracker is only visible to
+	      project members.</entry>
+	  </row>
+	  <row>
+	    <entry><link linkend="ArtifactUpdate">Artifact
+	    Update</link></entry> <entry>By default only project
+	    members can update an artifact. Non members have only
+	    limited access and can only add a comment or attach a
+	    file.</entry>
+	  </row>
+	  <row>
+	    <entry><link linkend="ArtifactImport">Tracker
+	      Administration - Artifact Import</link></entry>
+	    <entry>Only Project administrators and
+	      project members with Admin. permission can import data into trackers.
+	    </entry>
+	  </row>
+	  <row>
+	    <entry><link
+	      linkend="TrackerCreation">Tracker
+	      Creation</link></entry> <entry>Only available to project
+	      administrators.</entry>
+	  </row>
+	  <row>
+	    <entry><link
+	      linkend="TrackerGeneralSettings">Tracker
+	      Administration - General Settings</link></entry>
+	    <entry>Only available to project administrators and
+	      project members with Admin. permission on this
+	      tracker.</entry>
+	  </row>
+	  <row>
+	    <entry><link
+	      linkend="TrackerFieldUsageManagement">Tracker
+	      Administration - Field Usage Management</link></entry>
+	    <entry>Only available to project administrators and
+	      project members with Admin. permission on this
+	      tracker.</entry>
+	  </row>
+	  <row>
+	    <entry><link
+	      linkend="TrackerSemanticManagement">Tracker
+	      Administration - Semantic Management</link></entry>
+	    <entry>Only available to project administrators and
+	      project members with Admin. permission on this
+	      tracker.</entry>
+	  </row>
+	  <row>
+	    <entry><link linkend="TrackerWorkflow">Tracker
+	      Administration - Workflow Management</link></entry>
+	    <entry>Only Project administrators and
+	      project members with Admin. permission can define and configure 
+	      workflow.</entry>
+	  </row>
+      <row>
+	    <entry><link linkend="TrackerPermissionsManagement">Tracker
+	      Administration - Permissions Management</link></entry>
+	    <entry>Only Project administrators and
+	      project members with Admin. permission can define tracker permissions.</entry>
+	  </row>
+      <row>
+	    <entry><link linkend="TrackerCannedResponses">Tracker
+	      Administration - Canned Responses Management</link></entry>
+	    <entry>Only Project administrators and
+	      project members with Admin. permission can define canned responses.</entry>
+	  </row>
+	  <row>
+	    <entry><link
+	      linkend="TrackerEmailNotificationSettings">Tracker
+	      Administration - Email Notification
+	      Settings</link></entry> <entry>Only Project
+	      administrators can add email addresses in the global
+	      email notification field. Project members can watch artifacts
+	      of other team members. Any registered &SYS_PRODUCT_NAME; user can
+	      customize her notification preferences.</entry>
+	  </row>
+	  <row>
+	    <entry><link linkend="TrackerAdminStructureExport">Tracker
+	      Administration - Structure Export</link></entry>
+	    <entry>Only Project administrators and
+	      project members with Admin. permission can export tracker structure.
+	    </entry>
+	  </row>
+
+	</tbody>
+      </tgroup>
+    </table>
+  </section>
+
+
+  <section id="TrackerCreation">
+    <title>Tracker Creation</title>
+
+    <para>Before one can define what fields and field values to use in
+    a tracker, it must first be created. Tracker creation can be
+    accessed from the &#34;Create a New Tracker&#34; menu item that is
+    available in the tracker servide page.</para>
+
+    <para><tip><title>Tip: Use the predefined trackers
+      first!</title> <para>When a new project is created on &SYS_PRODUCT_NAME; a
+      number of trackers are automatically created for this
+      project. This would typically be a bug tracker, a task tracker
+      and a user story tracker. If your project manages this type
+      of artifact please use the predefined trackers first. Of course,
+      you are free to define new fields or customize existing ones in
+      each of the trackers.</para></tip></para>
+
+    <para>To define a new tracker you must provide the following
+      information (see <xref linkend="FigureCreateANewTracker"
+	/>): </para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem id="TrackerCreationName">
+	<para><emphasis role="bold">Name</emphasis>: this is the
+	  name of your tracker. A tracker is typically named after the
+	  type of artifact it is going to manage. This name will be
+	  used by &SYS_PRODUCT_NAME; in the title of the various screens of the
+	  trackers. Typical examples of tracker names are: Action
+	  Requests, Support Requests, Requirements, Defects,
+	  Bugs&hellip;</para>
+      </listitem>
+      <listitem id="TrackerCreationDescription">
+	<para><emphasis role="bold">Description</emphasis>: A longer
+	  description of what this tracker is all about and the type
+	  of managed artifacts.</para>
+      </listitem>
+
+      <listitem id="TrackerCreationShortName">
+	<para><emphasis role="bold">Short name</emphasis>: this is a
+	  short name that best describe the type of artifact managed
+	  in this tracker. This name must be quite short as it is used
+	  in various screens of the &SYS_PRODUCT_NAME; Tracker like the artifact
+	  update form where it appears in the tracker menu and also 
+          next to the artifact ID. Following the examples
+	  given for the Name field above, short names can be: AR for
+	  Action Request, SR for Support Requests, Reqt for
+	  Requirements, bug for Bugs&hellip;</para>
+      </listitem>
+    </itemizedlist>
+
+    <figure id="FigureCreateANewTracker">
+      <title>Creation of a new tracker (here a defect tracking system)</title>
+      
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_trackercreatenewtracker.png" width="13cm"/>
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+    <para>The next step is to decide upon the set of fields
+      available for this tracker. In order to avoid the pain of
+      defining the most common type of trackers again and again
+      (e.g. Bug tracker, Support Request tracker, etc.) &SYS_PRODUCT_NAME; offers
+      the ability to create a new tracker from a set of
+      templates. Those templates are either &SYS_PRODUCT_NAME;-wide templates (also
+      known as site templates), project specific templates or an xml file.</para>
+
+    <para><emphasis role="bold">Remark</emphasis>: using a template
+      doesn't mean you have to stick to the list of fields and field
+      values defined in this template. You can always add or remove
+      fields or fine-tune the field settings afterwards.</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem id="TrackerCreationFromCodendiTemplate">
+	<para><emphasis role="bold">&SYS_PRODUCT_NAME;-wide Template</emphasis>:
+	  these are templates that have been defined by the
+	  administrators of the &SYS_PRODUCT_NAME; site because it is expected that
+	  most project needs them. It is also a way to ensure a
+	  certain level of harmonization across projects that will
+	  make developers' life easier. The list of available
+	  templates may vary from one &SYS_PRODUCT_NAME; site to another but you
+	  will typically find templates for Bugs, Tasks, etc. A
+	  specific tracker called &#34;Empty&#34; allows you to create a
+	  virgin tracker with no predefined fields other than the
+	  minimal set of required fields. See <xref
+          linkend="CodendiTrackerTemplates" /> for more explanations
+          on the semantic of those templates.</para>
+      </listitem>
+
+      <listitem id="TrackerCreationFromProjectTemplate">
+	<para><emphasis role="bold">Project Templates</emphasis>: in
+	  case you have already defined a tracker that suits your
+	  needs or you have seen a tracker from another project that
+	  you'd like to reuse, you just have to specify the project ID
+	  and tracker ID either by hand or from the pull down menus
+	  and click on the create button to create the exact same
+	  tracker in your project (<emphasis
+	  role="bold">Note</emphasis>: this does not copy the
+	  artifacts of the original tracker but only the field
+	  settings).</para>
+      </listitem>
+      <listitem id="TrackerCreationFromXML">
+	<para><emphasis role="bold">XML file</emphasis>:
+     &SYS_PRODUCT_NAME; allows you to create trackers from XML file.
+     The expected XML file describes the structure of the trackers, the fields
+     used, the values of the fields, and the permissions. XML schema is available 
+     in /src/www/tracker/resources/tracker.rnc. Most of the time, you will use an XML
+     file coming from a tracker structure export (See <xref
+      linkend="TrackerAdminStructureExport" />). This feature is really convenient 
+     to copy a tracker from a server to another.
+     <emphasis
+	  role="bold">Note</emphasis>: this does not copy the
+	  artifacts of the original tracker but only the structure).
+    </para>
+      </listitem>
+      
+    </itemizedlist>
+
+  </section>
+
+
+  <section id="CodendiTrackerTemplates">
+    <title>&SYS_PRODUCT_NAME;-wide Tracker Templates</title>
+
+    <para>The standard trackers provided for each new &SYS_PRODUCT_NAME; project are:
+	<itemizedlist mark="bullet" spacing="compact">
+	<listitem><para>Bugs</para></listitem>
+	<listitem><para>Tasks</para></listitem>
+	<listitem><para>User stories</para></listitem>
+	<listitem><para>Change Requests</para></listitem>
+	<listitem><para>Requirements</para></listitem>
+	<listitem><para>Risks</para></listitem>
+      </itemizedlist>
+	Each of those templates have predefined fields that correspond
+	to the specific work processes around bugs, tasks etc. In
+	the following, we give a short overview of these different
+	work processes. For each of those templates, the &SYS_PRODUCT_NAME; Team
+	also tried to maintain a fair balance between sophistication
+	and ease of use. As a consequence, fairly simple and
+	straightforward templates are configured by default for all
+	new hosted projects. Then it is up to the project members to
+	decide how much information they want to see attached to an
+	artifact and customize their tracker configuration
+	accordingly.
+	</para>
+
+    <section id="BugTemplate">
+      <title>The Bug Tracker Template</title> 
+
+      <para>One of the golden rules in a collaborative project
+      environment is to let your project community test the software
+      and freely report on any defect (or bug) they have seen. The Bug
+      template was developed with this objective in mind.</para>
+
+      <para>The template Bug Tracker comes pre-configured with a set
+      of fields (used or not) that are probably enough for the
+      majority of projects hosted on &SYS_PRODUCT_NAME;. You can either decide that
+      the template is lacking some critical fields that you can create
+      or, on the contrary, switch some fields to the "Unused" status
+      to make the tracker simpler.</para>
+
+    </section>
+
+
+    <section id="TaskTemplate">
+      <title>The Task Tracker Template</title>
+
+      <para>The &SYS_PRODUCT_NAME; Task tracker is a task manager and not a project
+      management software like CA-SuperProject, MS-Project or other
+      powerful and complex desktop products available on the
+      market. The &SYS_PRODUCT_NAME; Task Tracker cannot build a Pert
+      chart, it doesn&#39;t have any planning capabilities. It is
+      rather a time sheet tool which allows project members to track
+      their time and manage other things like weekly TODO list for
+      instance.</para>
+
+      <para>However the &SYS_PRODUCT_NAME; Task Tracker offer a number of
+    	  features that makes it very complementary with the above
+    	  mentioned project planning tools:</para>
+
+      <itemizedlist mark="bullet"
+	spacing="compact">
+	<listitem>
+	  <para>Like all &SYS_PRODUCT_NAME; tools, the Task Tracker is entirely web
+	  based.  Therefore any project member can update his/her time
+	  sheet regardless of its physical location.</para>
+	</listitem>
+
+	<listitem>
+	  <para>Tasks can be managed by authorized project
+	  members.</para>
+	</listitem>
+
+	<listitem>
+	  <para>Each project member has its own time sheet showing all
+	  open tasks assigned to her, their priority, description,
+	  start and end dates, percentage completion, related tasks,
+	  follow-up comments and a full audit trail of the past
+	  changes.</para>
+	</listitem>
+
+	<listitem>
+	  <para>Task data can be collected by the project leader(s) at
+	  any point in time and exported out of the &SYS_PRODUCT_NAME; project
+	  thanks to the Project Data Export facility (see <xref
+	  linkend="ProjectDataExport" />). This allows for an easy
+	  generation of progress reports or project
+	  re-planning.</para>
+	</listitem>
+      </itemizedlist>
+
+    </section>
+    <section id="ScrumTemplate">
+      <title>The User Story Template</title>
+
+      <para>Codendi makes it easy to implement the Scrum methodology, by providing
+      a User Story tracker to each project. You will find a comprehensive
+      description of Scrum on <ulink url="http://en.wikipedia.org/wiki/Scrum_(development)">
+      Wikipedia</ulink>.</para>
+
+      <para>The User Story tracker contains artifacts called "User Stories", that
+      describe needs expressed by the customers of the project. The tracker has
+      been customized to capture customer requirements: it is possible to 
+      define the customer value of each story, its acceptance criteria, its
+      effort, etc.
+      </para>
+    
+      <para>Other optional fields are available, and of course, each project may
+      customize the tracker to fit the way it implements the methodology</para>
+
+      <para>At the beginning of a Scrum project, each customer user story must 
+      be stored. During the first Sprint Meeting, a few stories are selected by the team to be implemented 
+      in the first iteration. The team then affects the stories to team members ('Owner') and can start 
+      developing.</para>
+     
+      <para>At the end of the Sprint (after two to four weeks), the team meets
+      for the new Sprint Meeting. User stories selected in the past Sprint are updated, 
+      and new stories are selected for the next Sprint.</para> 
+
+    </section>
+    
+    <section id="ChangeRequestTemplate">
+      <title>The Change Request Tracker Template</title>
+      <para>
+       This tracker allows to submit change requests for your application adjustment. 
+       This is of great importance for change management process (ITIL, PRINCE2, ...).
+       A change request is declarative, i.e. it states what needs to be accomplished, 
+       but leaves out how the change should be carried out.
+      </para>
+      <para>
+       When submitting a change request, you have to provide:
+       <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+         <para>The impacted product (Product, version)</para>
+        </listitem>
+        <listitem>
+         <para>The approval status (approved by, disposal)</para>
+        </listitem>
+        <listitem>
+         <para>The change request description (description, justification, impact if no change)</para>
+        </listitem>
+        <listitem>
+         <para>The change impact analysis (Objectives, deliverable, risks, schedule, budget)</para>
+        </listitem>
+       </itemizedlist>
+      </para>
+      <para>
+       You can set permission to allow only client and project manager groups 
+       to access this tracker. For instance:
+       <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+         <para>only client can set the "priority" field</para>
+        </listitem>
+        <listitem>
+         <para>only project manager can set the "approved by" and "disposal" fields</para>
+        </listitem>
+        <listitem>
+         <para>both can describe impacts fields</para>
+        </listitem>
+       </itemizedlist>
+      </para>
+      <para>
+       As for all trackers, tracker administrator can customize the fields according to the internal process.
+      </para>
+    </section>
+    
+    <section id="RequirementsTemplate">
+      <title>The Requirements Tracker Template</title>
+      <para>
+       This tracker helps software engineers to identify a necessary attribute, 
+       capability, characteristic, or quality of a system in order for it 
+       to have value and utility to a user.
+      </para>
+      <para>
+       All system Requirements are also an important input into the verification process, 
+       since tests should trace back to specific Requirements.
+       This tracker is really useful for Requirements management processes such CMMI.
+      </para>
+      <para>
+       When submitting a Requirement, you have to fulfill:
+       <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+         <para>The designed Product (Product, version)</para>
+        </listitem>
+        <listitem>
+         <para>The Requirement characteristics (type, nature, complexity, priority)</para>
+        </listitem>
+        <listitem>
+         <para>The Requirement description (origin, description, proposed solution)</para>
+        </listitem>
+        <listitem>
+         <para>The Requirement state (state, satisfied by)</para>
+        </listitem>
+       </itemizedlist>
+      </para>
+      <para>
+       You then can link (using artifacts references) a requirement to a test case/result artifact, 
+       or other requirements artifacts for traceability/satisfaction.
+      </para>
+      <para>
+       You can set permission to allow only client and project manager groups to access this tracker.
+      </para>
+      <para>
+       As for all trackers, tracker administrator can customize the fields according to the internal process.
+      </para>
+    </section>
+    
+    <section id="RiskTemplate">
+      <title>The Risk Tracker Template</title>
+      <para>
+       This tracker aims to support Risk management. It provides information for identification, 
+       assessment, and prioritization of risks during the project lifecycle.
+       You can minimize, monitor, and control the probability and/or impact of unfortunate events 
+       or to maximize the realization of opportunities.
+       Risks may be linked (using artifacts references) to actions/task/documentation for minimizing 
+       likelihood or impact.
+      </para>
+      <para>
+       When assessing a Risk, you have to set:
+       <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+         <para>Rate of occurrence (likelihood, tendency)</para>
+        </listitem>
+        <listitem>
+         <para>Impacts</para>
+        </listitem>
+        <listitem>
+         <para>Timescale for Risk occurrence</para>
+        </listitem>
+        <listitem>
+         <para>Action for risk reduction (action, responsible)</para>
+        </listitem>
+       </itemizedlist>
+      </para>
+      <para>
+       You may use the query form to filter the risks :
+       <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+         <para>select the "likelihood" field value "any" if you wish to get all predefined risks</para>
+        </listitem>
+        <listitem>
+         <para>select the "likelihood" field value"high", "medium" and "low" if you wish to review your assessed risks</para>
+        </listitem>
+       </itemizedlist>
+      </para>
+    </section>
+
+  </section>
+
+  <section id="TrackerAdministration">
+    <title>Tracker Administration</title>
+
+    <para>As we went through the description of the &SYS_PRODUCT_NAME; Tracker
+    features, we referred several times to the flexibility of this
+    system and how easy it is to customize your own tracker. This can
+    be done through the Tracker Administration available in the menu bar of each tracker.</para>
+
+    <para>The configuration settings for a given tracker is divided
+      in ten sections:</para>
+
+    <itemizedlist mark="bullet" spacing="compact">
+      <listitem><para><emphasis role="bold">General
+      Settings</emphasis>: name, description and some other general
+      purpose parameters are defined in this section.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Permissions
+        Management</emphasis>: allows you to give different
+      access permissions to different users depending on their
+      role.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Manage Field
+	Usage</emphasis>: this is where you will build the tracker.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Manage Semantic</emphasis>: 
+      this section allows you to define some fields semantic.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Manage Fields Dependencies
+      </emphasis>: allows you to define how values in one field depend upon other field values.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Manage Canned
+	Responses</emphasis>: allows you to create some pre-defined
+	follow-up comments that your team is using on a regular basis.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Manage Workflow</emphasis>: allows you to define
+      a workflow
+      </para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Email Notification
+	Settings</emphasis>: fine tuning of the global and personal
+	email notification settings.</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">CSV Import</emphasis>: allows you to import 
+      data (artifacts) in the tracker with a CSV format</para>
+      </listitem>
+      <listitem><para><emphasis role="bold">Export</emphasis>: allows you to export 
+      the tracker in a xml format</para>
+      </listitem>
+    </itemizedlist>
+
+    <section id="TrackerGeneralSettings">
+      <title>General Configuration Settings</title>
+
+      <para>This module allows you to define a series of properties
+      for your tracker. Some of those properties have already been
+      defined in the tracker creation form while some others are only
+      available on this configuration page. The properties are as
+      follows:</para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem id="TrackerGeneralSettingsName">
+	  <para><emphasis role="bold">Name</emphasis>: this is the
+	  name of your tracker. More precisely you want to name your
+	  tracker after the type of artifact that are going to be
+	  managed in your tracker. This name will be used by &SYS_PRODUCT_NAME; in
+	  the title of the various screens of the trackers. Typical
+	  example of tracker names are: Action Requests, Support Requests,
+	  Requirements, Defects or Bugs&hellip;</para>
+	</listitem>
+
+	<listitem id="TrackerGeneralSettingsDescription">
+	  <para><emphasis role="bold">Description</emphasis>: A longer
+	  description of what this tracker is all about and the type
+	  of artifact that it manages.</para>
+	</listitem>
+
+	<listitem id="TrackerGeneralSettingsShortName">
+	  <para><emphasis role="bold">Short name</emphasis>: this is a
+	  short name that best describe the type of artifact managed
+	  in this tracker. This name must be quite short as it is used
+	  in various screens of the &SYS_PRODUCT_NAME; Tracker like the artifact
+	  update form next to the artifact ID. Following the examples
+	  given for the Name field above, short names can be: AR for
+	  Action Request, SR for Support Requests, Reqt for
+	  Requirements, bug for Bugs&hellip;</para>
+	</listitem>
+
+    <!--
+    <listitem id="TrackerGeneralSettingsAllowArtifactDuplication">
+	  <para><emphasis role="bold">Allow artifact duplication</emphasis>: 
+      if artifact duplication is allowed or not. If it is, only project members
+      are able to duplicate artifacts.</para>
+	</listitem>
+    -->
+    
+    <listitem id="TrackerGeneralSettingsInstantiateForNewProjects">
+	  <para><emphasis role="bold">Instantiate for new projects</emphasis>: 
+          This parameter is only displayed when working on a &#34;template&#34; type of project (see <xref linkend="ProjectType" />).
+          If the parameter is selected, then projects created from this template project will have this tracker created.
+          If not selected, the tracker will not be available in the new project.</para>
+	</listitem>
+
+	<listitem id="TrackerGeneralSettingsSubmitInstructions">
+	  <para><emphasis role="bold">Submit instructions</emphasis>:
+	  an introductory message that displays at the top of the
+	  artifact submission form. This is a convenient way to give
+	  directions and recommendations to the submitter. The text
+	  must use HTML tags for formatting which gives a great
+	  flexibility to shape the content of this preamble (you can
+	  use bold, italic, colors, embedded URL&hellip;)</para>
+	</listitem>
+
+	<listitem id="TrackerGeneralSettingsBrowseInstructions">
+	  <para><emphasis role="bold">Browse
+	    instructions</emphasis>: an introductory message that
+	    displays at the top of the artifact searching and browsing
+	    screen.  The text must use HTML tags for formatting which
+	    gives a great flexibility to shape the content of this
+	    preamble (you can use bold, italic, colors, embedded
+	    URL&hellip;)</para>
+	</listitem >
+      </itemizedlist>
+    </section>
+
+
+    <section id="TrackerPermissionsManagement">
+      <title>Permissions Management</title>
+
+      <para>This module is used to give different
+      access permissions to different users depending on their
+      role. </para>
+
+      <para>Access permissions to a tracker can be defined at two
+       levels: </para>
+
+      <itemizedlist mark="bullet" spacing="compact">
+	<listitem>
+	  <!--<para><emphasis role="bold">Tracker/Artifact
+	  level</emphasis>: at this level, you can define the group
+	  of users who have access to only certain artifacts or have no
+	  access at all.</para>-->
+      <para><emphasis role="bold">Tracker
+	  level</emphasis>: at this level, you can define the group
+	  of users who have access or not to the tracker.</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="bold">Field level</emphasis>: this is a 
+          more fine-grained level, where access permissions can be 
+          defined field by field. Using this feature you can specify 
+          which groups has read-only permission on a field, which ones 
+          can modify it or which ones do not have access to it at 
+          all. </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>All access permissions are defined for groups of users
+      rather than individuals. See <xref linkend="UserGroups" /> for more
+      information on how project administrators can define and manage
+      groups of users.</para>
+
+      <section id="TrackerAndArtifactPermissionsManagement">
+        <title>Tracker <!--and Artifacts-->Permissions Management</title>
+
+        <para>When entering this module, a list of user groups appears
+        along with their access permissions. The user group list first
+        shows groups of users defined at the system level like
+        all_users, registered_users, project_members, etc. These are
+        groups that &SYS_PRODUCT_NAME; manages for you so you don't have to keep
+        them up to date when new users subscribe to the site or become
+        member of your project. The second part of the user group list
+        shows all groups of users defined at the project level (see
+        <xref linkend="UserGroups" /> for more information on how to
+        define and manage groups of users).</para>
+
+        <para>Each group can be associated with the following access
+        permissions:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+
+  	  <listitem>
+	    <para><emphasis role="bold">&hyphen;</emphasis>:
+	    this level of permission that displays as a hyphen
+	    means that the group has no specific permission.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">access to all
+	    artifacts</emphasis>: when granted this permission a user
+	    group has access to all the artifacts of the
+	    tracker.</para>
+	  </listitem>
+      
+	  <listitem>
+	    <para><emphasis role="bold">access to artifacts assigned
+	    to group</emphasis>: when granted this permission a group
+	    of users can only see those artifacts that have been
+	    assigned to one or several members of this group.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">access to artifacts submitted
+	    by group</emphasis>: when granted this permission a group
+	    of users can only see those artifacts that have been
+	    submitted by one or several members of this group.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">access to artifacts assigned
+	    to or submitted by group</emphasis>: when granted this
+	    permission a group of users can only see those artifacts
+	    that have been submitted by or assigned to one or several
+	    members of this group.</para>
+	</listitem>
+
+      </itemizedlist>
+<!--
+      <para>
+        <tip>
+          <title>Example: Using tracker access permissions with your clients</title>
+    <figure id="TrackerPermissionsExample">
+      <title>A sample tracker permissions screen</title>
+
+      <mediaobject>
+	<imageobject>
+	  <imagedata format="PNG"
+	    fileref="../../screenshots/en_US/sc_trackerpermissions.png" />
+	</imageobject>
+      </mediaobject>
+    </figure>
+
+	  <para>As an example of how you can use these permissions
+	  let's assume that you have created a tracker where several
+	  of your customers can report defects on your software. In
+	  such a situation, you may decide that a customer from a
+	  given company should only see those defects that were
+	  submitted by its employees and not those submitted by other
+	  companies.</para>
+
+	  <para>To achieve this you just need to create a group called
+	  'company_A' in which you include the login names of all the
+	  users working for company A. Then do the same with the group
+	  'company_B' for company B. Those two groups will then be
+	  given the 'access to artifacts submitted by group' type of
+	  permission. In addition you probably want to grant 'access
+	  to all artifacts' to the project members or to the
+	  'tracker_administrators' groups so that your team members can
+	  manage artifacts from any customer.</para>
+
+          <para>In this example:</para>
+          <itemizedlist mark="bullet" spacing="compact">
+            <listitem><simpara>a user which is not logged-in will not have access to artifacts,</simpara></listitem>
+            <listitem><simpara>a user which is logged-in will not have access to artifacts,</simpara></listitem>
+            <listitem><simpara>a project member will have access to all artifacts,</simpara></listitem>
+            <listitem><simpara>a project admin will have access to all artifacts, since a project admin is a project member,</simpara></listitem>
+            <listitem><simpara>a tracker admin will have access to all artifacts, since a tracker admin is a project member,</simpara></listitem>
+            <listitem><simpara>a member of ugroup Company_A will only have access to artifacts submitted by members of the ugroup Company_A (the same for Company_B),</simpara></listitem>
+            <listitem><simpara>a project member which is also member of ugroup Company_A will have access to all artifacts since he is a project member,</simpara></listitem>
+            <listitem><simpara>a member of ugroup Company_C will not have access to artifacts (if he is not also member of a ugroup like project_member, Company_A or Company_B).</simpara></listitem>
+          </itemizedlist>
+
+	  </tip>
+        </para>
+        -->
+      </section>
+
+      <section id="FieldPermissionsManagement">
+        <title>Field Permissions Management</title>
+
+        <para>Beside defining access permissions for the tracker and
+        its artifacts (see <xref
+        linkend="TrackerAndArtifactPermissionsManagement"/>) it is
+        sometimes necessary to restrict access to certain fields of
+        the tracker to a given population. As an example if you share
+        a defect tracking system with your customers you may want to
+        hide some fields from the view of your customer or prevent
+        them from modifying certain fields. This is precisely what
+        this module is meant for.</para>
+
+        
+        <para>When using this configuration module, you can toggle the
+        display between two different views: you can either view all
+        user groups permissions for a given field OR for a given user
+        group you can view all the field permissions defined for
+        it. The experience shows that the view by field is often the
+        preferred one when you configure a tracker for the first time
+        whereas the view by group of users is more convenient to
+        adjust the permission settings later on (see <xref
+        linkend="UserGroups" /> for more information on how to define
+        and manage groups of users).</para>
+
+        <para>Each group of users can be granted the following
+        permissions for a given field:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+
+  	  <listitem>
+	    <para><emphasis role="bold">Can submit</emphasis>: this
+	    permission determines whether a group of users can define
+	    the initial value of a field when an artifact is first
+	    submitted. If not checked, this field will not be visible
+	    on the submission screen for this user group.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Read-only</emphasis>: if
+	    granted read-only permission a group of users only has
+	    read access to a field. In other words the users see the
+	    value of the field but cannot modify it.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">Update</emphasis>: if granted
+	    update permission, a group of users can see the current
+	    value of a field and also modify it.</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="bold">-</emphasis>: this level of permission that displays as a hyphen
+	    means that the group has no specific permission, like in tracker permissions.</para>
+	  </listitem>
+
+        </itemizedlist>
+
+        <para><emphasis role="bold">Important Note</emphasis>: the
+        permissions associated with a field apply in many areas of a
+        tracker. For instance if a group of users has no access to a
+        given field, this field becomes invisible on the initial
+        submission form, on the artifact search form as well as in the
+        table of results returned by the search, in the artifact
+        update form, in the history of changes associated with each
+        artifact and finally in the email notification sent to this
+        group of users.</para>
+
+      </section>
+    </section>
+    
+    <section id="TrackerFieldUsageManagement">
+      <title>Field Usage Management</title>
+
+      <para>When a tracker is first created, it comes pre-configured
+      with a set of fields inherited form the template that was used
+      to create it. For the majority of projects hosted on &SYS_PRODUCT_NAME; it is
+      very likely that the standard Tracker templates (e.g Bugs,
+      Tasks, User strories) will cover most of the needs.</para>
+
+      <para> However &SYS_PRODUCT_NAME; gives you the ability to customize your trackers. 
+      It can be a variation on an
+      existing template with some fields or structural elements addition or removal or it can
+      be an entirely new tracker created from an empty
+      template.</para>
+      
+      <para>The Field Usage Manager is divided in two parts : a fields palette 
+      on the left and a tracker visualization on the right (see 
+      <xref linkend="TrackerAdminFieldUsageOverview" />)</para>
+      
+      <figure id="TrackerAdminFieldUsageOverview">
+       <title>Tracker Admin Field Usage Overview</title>
+       <mediaobject>
+        <imageobject>
+         <imagedata format="PNG" fileref="../../screenshots/en_US/sc_tracker_admin_field_usage_overview.png" />
+        </imageobject>
+       </mediaobject>
+      </figure>
+      
+      <section id="TrackerFieldTypes" xreflabel="Tracker Field Types">
+        <title>Tracker Fields Palette</title>
+        <para>The palette allows the user to choose the elements he wants
+        to add to his tracker. The field usage manager palette consists of 4 groups: </para>
+        <itemizedlist mark="dash" spacing="compact">
+            <listitem>
+                <para><emphasis role="underline">Fields</emphasis>: 
+                    These are regular fields (int, float, list, etc.) that the user
+                    will be able to update. These fields have no special behaviour.
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="underline">Dynamic Fields</emphasis>:
+                    These fields have a special behaviour. Their value cannot be
+                    updated by the user. The value is determined dynamically 
+                    (e.g. the user that submitted the artifact, the Id of the 
+                    artifact, the artifact submission date, etc.).
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="underline">Structural Elements</emphasis>:
+                    These elements are not real fields. There are really useful 
+                    to enhance the artifact presentation. They can be containers 
+                    (fieldset, columns) or decorative elements (line break, text).
+                </para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="underline">Unused Fields</emphasis>:
+                    In this section, you will find all the fields that are not 
+                    used in the tracker definition. If you remove a used field 
+                    from your tracker definition, it won't be deleted but placed 
+                    in this unused field section. It will then be easier to use it
+                    again. If you really want to delete it, delete it from the 
+                    unused field section.
+                    Unused fields are also used in tracker template definition.
+                    You can find here some fields that the team didn't decide to 
+                    introduce in the template but that makes sense however. It is 
+                    easy then to add such a field whereas creating from scratch.
+                </para>
+            </listitem>
+        </itemizedlist>
+    
+    <section id="TrackerFieldFields" xreflabel="Tracker Field Types">
+        <title>Fields</title>
+        <para>Find below a detailed description of each type:</para>
+        <itemizedlist mark="dash" spacing="compact">
+        <listitem>
+	        <para><emphasis role="underline">String</emphasis>: allows the user
+            to enter free text in a one-line text field. The summary of a
+	        defect or a task is a good example of a one-line text field.</para>
+        </listitem>
+        <listitem>
+	        <para><emphasis role="underline">Text</emphasis>: allows 
+            the user to enter free text in a multi-line text
+	        area. The field &#34;Original Submission&#34; that is used to describe in
+	        details a defect, a task, etc. is of type &#34;Text&#34;.</para>
+        </listitem>
+        <listitem>
+	        <para><emphasis role="underline">Select Box</emphasis>: a
+	        &#34;Select Box&#34; field takes its value from a predefined list
+	        of values defined by the tracker administrator. The predefined values 
+	        can either be a static list of values or a dynamic list (of users for instance).
+	        Depending on the browser you use it may be displayed slightly
+	        differently but it is generally shown as a pull-down menu
+	        with the list of predefined values. At any
+	        given time this type of field can only be assigned one
+	        single value.</para>
+        </listitem>
+
+        <listitem>
+	        <para><emphasis role="underline">Multi-Select
+	        Box</emphasis>: like the Select Box field described above
+	        this field takes its value from a predefined list of
+	        values or users. As opposed to the Select Box field, the
+	        Multi-Select Box can be given multiple values at once by
+	        the end user. As an example, this type of field can be
+	        used to assign several persons to a given task in a task
+	        tracker.</para>
+        </listitem>
+        <listitem>
+	        <para><emphasis role="underline">Date</emphasis>:
+            one-line field that only accept ISO formatted dates
+            (YYYY-MM-DD). For user convenience, each date field comes with 
+            a calendar.</para>
+        </listitem>
+      	<listitem>
+	        <para><emphasis role="underline">File upload</emphasis>:
+	        this field allows to add any kind of files. Users can add several
+	        files in the same file updload field. A typical example of file 
+	        upload file is an attachment section of defect or bugs artifacts.
+            </para>
+        </listitem>
+        <listitem>
+	        <para><emphasis role="underline">Integer</emphasis>:
+	        one-line field that only accept well-formed integral
+	        numbers (e.g 3, -100, 2345&hellip;)</para>
+        </listitem>	  
+        <listitem>
+	        <para><emphasis role="underline">Float</emphasis>:
+	        one-line field that only accept well-formed floating point
+	        numbers (e.g 3.56, -100.3, 2345, 34E+6&hellip;)</para>
+        </listitem>      
+      	<listitem>
+	        <para><emphasis role="underline">Open List</emphasis>:
+	        this field allows to have a list of values, but the values are not 
+	        predefined. The list is "open". It means that users can use an 
+	        existing value, but can also add a new value. This new value will
+	        be part of the existing ones the next time! Moreover, this field 
+	        provides autocompletion (typing the beginning of a word, the system
+	        suggests values starting with the entered text).
+	        This fields accepts multi values.
+            </para>
+            <para>Like the standard lists, open lists can be linked with static 
+            values or with users.
+            </para>
+            <tip>
+             <title>Use open list field to add people in CC</title>
+             <para>Former trackers version of &SYS_PRODUCT_NAME; contained 
+             a section called CC that was used to notify people of artifact 
+             updates. This section no more exists, but can be easily replaced 
+             by an open list field, linked with users. Don't forget to check 
+             the notify option when defining your field!</para>
+            </tip>
+        </listitem>
+        <listitem>
+            <para><emphasis role="underline">Artifact link</emphasis>:
+            this field allows to make specific reference or dependance to other 
+            artifacts. A typical use for this kind of field is a reference from 
+            a task to several sub-tasks. This field is multi valued.
+            </para>
+        </listitem>
+        <listitem>
+            <para><emphasis role="underline">Permissions on artifact</emphasis>:
+            this field allows to define specific permissions on an artifact.
+            The artifact submitter can then choose to restrict the access of the
+            artifact to a group of users.
+            </para>
+        </listitem>
+	  
+	</itemizedlist>
+    </section>
+    
+    <section id="TrackerFieldDynamicFields" xreflabel="Tracker Field Types">
+        <title>Dynamic Fields</title>
+        <para>Find below a detailed description of each type:</para>
+        <itemizedlist mark="dash" spacing="compact">
+             <listitem>
+                <para><emphasis role="underline">Artifact ID</emphasis>:
+                this is the unique identifier of the artifact. It can be
+                useful to make reference to the artifact. The artifact Id 
+                cannot be updated and is determined by the system. This is a
+                read only field.
+                </para>
+             </listitem>
+
+	         <listitem>
+	           <para><emphasis role="underline">Last Update Date</emphasis>:
+	           this field is a read only field and cannot be updated by the user.
+	           This field is automatically set to the date of the artifact was 
+	           updated last time. Each artifact modification will update this field
+	           (field update, follow-up comment, etc.). This field can be useful 
+	           in a report sorted on this field to follow the activity of the tracker.
+	           </para>
+	         </listitem>
+             
+	         <listitem>
+	           <para> <emphasis role="underline">Submitted By </emphasis>:
+	           this field is a read only field and cannot be updated by the user.
+	           This field is automatically set to the user that submitted the 
+	           artifact.
+	           </para>
+	         </listitem>
+	         <listitem>
+	           <para><emphasis role="underline">Submitted On</emphasis>:
+	           this field is a read only field and cannot be updated by the user.
+	           This field is automatically set to the date of the artifact was 
+	           created.
+	           </para>
+	         </listitem>
+             
+	         <listitem>
+	           <para><emphasis role="underline">Cross References</emphasis>:
+	           this field is automatically updated with existing references from 
+	           and/or to this artifact. It displays all references from or to 
+	           this artifact, grouped by reference type (artifact, document, wiki, etc.).
+	           </para>
+	         </listitem>
+        </itemizedlist>
+    </section>
+        
+   <section id="TrackerFieldStructuralElements" xreflabel="Tracker Field Types">
+        <title>Structural Elements</title>
+        <para>Find below a detailed description of each type:</para>
+        <itemizedlist mark="dash" spacing="compact">
+	          <listitem>
+	            <para><emphasis role="underline">Fieldset</emphasis>:
+	            this structural element allows to group several fields together.
+	            Fields are stacked one above the other.
+	            </para>
+	          </listitem>
+              
+	          <listitem>
+	            <para><emphasis role="underline">Column</emphasis>:
+	            this structural element allows to add columns in the artifact form.
+	            Columns are aligned one next to the other. You can use columns if
+	            you want to put several fields on the same row.
+	            </para>
+	          </listitem>
+              
+	          <listitem>
+	            <para> <emphasis role="underline">Line Break</emphasis>:
+	            this structural element adds an invisible line break in the artifact 
+	            form. Use this field to arrange the different elements.
+	            </para>
+	          </listitem>
+              
+	          <listitem>
+	            <para><emphasis role="underline">Separator</emphasis>:
+	            this structural element adds a visible line break in the artifact 
+	            form. Use this field to arrange the different elements.
+	            </para>
+	          </listitem>
+              
+	          <listitem>
+	            <para><emphasis role="underline">Static Text</emphasis>:
+	            this element allows to add static text in the artifact form.
+	            You can use the rich text editor to add color, formatting, etc.
+	            You can use this field to add instructions, ot just for decoration.
+	            </para>
+	          </listitem>
+         </itemizedlist>
+    </section>
+	        
+    <section id="TrackerFieldUnusedElements" xreflabel="Tracker Field Types">
+        <title>Unused Elements</title>
+        <para>Unused fields is not a kind of fields, but all the fields that are not 
+            used in the tracker definition. Select one of these fields to use it again.
+        </para>
+    </section>
+    
+  </section>
+
+
+  <section id="CreationandModificationofaTrackerField">
+	<title>Creation and Modification of a Tracker Field</title>
+    <section id="AddFieldToTracker">
+        <title>Add a field to a tracker</title>
+        <para>To add a field to a tracker, you just have to choose a field type 
+        on the fields palette. Simply click on it, and a property field form will 
+        appear instead of the palette!</para>
+        <para>Depending on the fields, the properties can change. But, here is the properties
+        that can be tuned :</para>
+        <itemizedlist mark="bullet" spacing="compact">
+            <listitem>
+                <para><emphasis role="bold">Label</emphasis>: this
+	            is the name of the field. Although you are entirely free
+	            to change the name of a field, we recommend that you only
+	            change it for a new name with a similar meaning. If you
+	            want to change the name for something radically different
+	            then we recommend that you create an entirely new field
+	            and you leave the existing field in the list of unused
+	            fields.</para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Description</emphasis>: a
+                longer description of the purpose of this field.</para>
+            </listitem>
+             <listitem>
+	    <para id="FieldDisplaySize" xreflabel="Field Display
+	    Size"><emphasis role="bold">Size</emphasis>: this
+	    property allows you to define how much space a field is
+	    going to take on the screen. It has a different meaning
+	    and a different format depending on the field type.</para>
+
+
+	    <itemizedlist mark="dash" spacing="compact">
+	      
+	      <listitem>
+		<para><emphasis role="underline">Multi-Select
+		  Box</emphasis>: the display size is made of a single
+		  number which indicates how many of the values
+		  associated with this field are visible at once. A
+		  reasonable value for the size of multi-select box is
+		  between 2 and 5.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">String, Integer
+		Float Fields</emphasis>: "maxchars" and "size" can be filled where "size"
+        is the number of character visible at once in
+		the field display window and "maxchars" is the maximum number
+		of characters that can be typed for this field. If
+		"Size" is less than "Maxchars" then the text will shift in the
+		visible window as more text is entered. The maximum
+		value of "Size" is 255.</para>
+	      </listitem>
+	      <listitem>
+		<para><emphasis role="underline">Date Field</emphasis>: A date
+		always follows the same pattern (YYYY-MM-DD) and
+		therefore it always has a fixed length of 10
+		characters.</para>
+	      </listitem>
+
+	      <listitem>
+		<para><emphasis role="underline">Text </emphasis>: for text areas, "rows"
+          and "cols" can be filled, 
+		  where "cols" is the number of
+		  columns in the text area (the width in number of
+		  characters) and "rows" is the number of rows or lines of
+		  text. Note that the number of lines is not limited
+		  to "rows". If the text typed in the field has more than "rows"
+		  lines then a scrollbar will show up to navigate
+		  through the text.</para>
+	      </listitem>
+	    </itemizedlist>
+	  </listitem>
+      <listitem>
+         <para><emphasis role="bold">Rank</emphasis>: this
+	     is the position of the field on the form. Positions are relatives
+	     one against another.</para>
+      </listitem>
+      <listitem>
+         <para><emphasis role="bold">Required</emphasis>: determines whether 
+        leaving the field blank in the artifact
+	    submission or update form is allowed or not. If checked
+	    the tracker won't accept the form unless the field is
+	    given a value. The fields that must be filled out are
+	    marked with a red start on the submission and modification
+	    forms</para>
+      </listitem>
+      <listitem>
+         <para><emphasis role="bold">Default value</emphasis>: This applies to 
+         one-line fields with no restricted set of values. For those the default
+         value can be defined. It is the value which will be displayed 
+         at the artifact submission.</para>
+      </listitem>
+      <listitem>
+         <para><emphasis role="bold">Values</emphasis>: This 
+         applies to &#34;Select Box&#34;, &#34;Multi-Select Box&#34; and 
+         &#34;Text Box List&#34; type of fields
+         where the list of values you are going to choose will show up
+         in the pull-down menus when an artifact is submitted or
+         updated.</para>
+         <para>You can bind those fields to :</para>
+         <itemizedlist mark="dash" spacing="compact">
+            <listitem>
+                <para><emphasis role="bold">Add the values</emphasis>: To configure values 
+                simply add values in the text area (one per row). Check "alphabetically sort values"
+                will sort automatically your values.
+                </para>
+                <para>&SYS_PRODUCT_NAME; allows to add what we call "decorator" to each value but only on edition mode (see <xref
+                linkend="ModifyFieldOfTracker" />)</para>
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Binding a field to a list of users</emphasis>: 
+                the &SYS_PRODUCT_NAME; Tracker offers the ability
+	            to associate  &#34;Select Box&#34;, &#34;Multi-Select Box&#34; and 
+                &#34;Text Box List&#34; type of fields with a list of predefined values
+	            that is actually dynamically generated by the &SYS_PRODUCT_NAME; system. A
+	            typical example of this is when one would like to create a new
+	            select box showing the list of project members. Instead of
+	            creating and maintaining the list of values manually, &SYS_PRODUCT_NAME;
+	            builds this list for you and allows you to bind it to a field
+	            of type select box.</para>
+                <para>Note that if you decide to bind a select box to a list
+                of dynamically generated values you can no longer create your
+                own values. The following lists are currently available
+                (others may be added in the future):</para>
+                
+	            <itemizedlist mark="dash" spacing="compact">
+	              <listitem>
+	                <para><emphasis role="bold">Project Members</emphasis> :
+	                list of people belonging to the project.</para>
+	              </listitem>
+	              <listitem>
+	                <para><emphasis role="bold">Project Administrators</emphasis> :
+	                project members who have been granted the status of
+	                project administrators.</para>
+	              </listitem>
+	              <listitem>
+	                <para><emphasis role="bold">Artifact
+	                Submitters</emphasis>: the full list of people who once
+	                submitted an artifact to the tracker.</para>
+	              </listitem>
+	              <listitem>
+	                <para><emphasis role="bold">Project Defined User Groups</emphasis>: 
+                        you can bind a select box to any of the user groups that
+                        are defined by the project. To see how to define such
+                        user groups refer to <xref linkend="UserGroups" />.
+                        </para>
+	              </listitem>
+	            </itemizedlist>
+                
+            </listitem>
+            
+         </itemizedlist>
+      </listitem>
+    </itemizedlist>
+
+    </section>
+    
+    <section id="ModifyFieldOfTracker">
+        <title>Modify the field of a tracker</title>
+        <section id="EditFieldOfTracker">
+            <title>Edit the field of a tracker</title>
+            <para>In order to make some change on a field, you can simply edit 
+            it by clicking on the Edit icon.</para>
+            <para>The edition mode allow fields configuration not available at the creation :</para>
+            <itemizedlist mark="bullet" spacing="compact">
+                <listitem>
+                 <para><emphasis role="bold">Change the field name</emphasis>:
+                  the field name is different from the field label. Field name 
+                  is an internal name for the field. It is used in SOAP API for 
+                  instance. It must not contain any special characters. Only lower case 
+                  letters and "_" are authorized.
+                 </para>
+                </listitem>
+                <listitem>
+                 <para><emphasis role="bold">Add a decorator</emphasis>:
+                 List values can be embellished with a decorator. A decorator 
+                 is a colored square. You can choose the color for each value 
+                 in a large palette of colors.
+                 (see <xref linkend="FigureTrackerAdminFieldUsageEdition" />).
+                 Decorators can be used to get a quick visual indicator feedback 
+                 for the user. For instance, the values for the priority of a bug 
+                 can be given a color with the meaning "the darker the more important".
+                 </para>
+                </listitem>
+                <listitem>
+                 <para><emphasis role="bold">Add values</emphasis>
+                 You can easily add new values to the list by selecting the
+                 "add new values" link below existing values.
+                 </para>
+                </listitem>
+                <listitem>
+                 <para><emphasis role="bold">Hide values</emphasis>
+                 You can easily hide existing values by clicking the hide icon next 
+                 to the value. If the eye is open, the value is available. 
+                 If the eye is medium closed, then the value is hidden. 
+                 Just click again to enable the value. Artifact with hidden values 
+                 will still be set to the hidden values. But hidden values won't be 
+                 proposed anymore for new artifacts.
+                 </para>
+                </listitem>
+                <listitem>
+                 <para><emphasis role="bold">Remove values</emphasis>
+                 You can remove a list value by clicking the cross icon next to the value.
+                 It is impossible to delete values if there are some artifacts with this value.
+                 In this case, you can hide the value.
+                 </para>
+                </listitem>
+                <listitem>
+                 <para><emphasis role="bold">Access directly to the field permissions manager</emphasis>
+                 Editing a field, you can access the permissions administration of 
+                 this field selecting the "edit permission" link.
+                 </para>
+                </listitem>
+                <listitem>
+                 <para><emphasis role="bold">Configure notifications</emphasis>:
+                    if the field is a "Select Box", a "Multi Select Box" or a 
+                    "Text Box List" bind to a list of users, a checkbox 
+                    "Send notifications to selected people" will be displayed. If 
+                    checked, all selected users of an artifact will receive a email 
+                    if the artifact is modified.
+                 </para>
+                </listitem>
+            </itemizedlist>
+            
+            <figure id="FigureTrackerAdminFieldUsageEdition">
+             <title>Tracker Admin Field Edition</title>
+             <mediaobject>
+              <imageobject>
+               <imagedata format="PNG" fileref="../../screenshots/en_US/sc_tracker_admin_field_usage_edition.png" />
+              </imageobject>
+             </mediaobject>
+            </figure>
+            
+        </section>
+        <section id="DeleteFieldOfTracker">
+            <title>Delete the field of a tracker</title>
+            <para>In order to delete a field, simply click on the Delete icon 
+            on the visualization tracker page. The field won't be deleted since it will be 
+            now present in the "Unused Elements" part of the palette.
+            </para>
+            <para>
+             Please note that you won't be able to remove a field if this field 
+             is used in tracker semantic, or in tracker workflow.
+            </para>
+            <para>
+            To delete definitively that field, click on the trash icon in
+            the "Unused Elements" part of the palette.</para>
+        </section>
+        
+    </section>
+
+  </section>
+      
+    </section>
+
+    <section id="TrackerSemanticManagement">
+        <title>Semantic </title>
+        
+        <para>
+            As trackers can be fully customized, you may need a way to define 
+            what is the title of your artifacts, when you consider an artifact 
+            to be open or close, or the field used to define the contributor (or assignee)
+            of an artifact. This feature is provided by the admin section 
+            "Semantics".
+        </para>
+        <para>
+            Most of the trackers you will use already defined a semantic. 
+            This is the case for instance for all tracker templates (see 
+            <xref linkend="CodendiTrackerTemplates" />).
+        </para>
+        <para>
+            To define or update a semantic field, select the pencil icon next to the
+            semantic property. Semantic admin section lets you define the following 
+            semantic properties:
+        </para>
+        
+        <section id="TrackerSemanticManagementTitle">
+            <title>Title</title>
+            <para>
+                The title of an artifact is a field that sum up the best the artifact.
+                For instance, it can be the field <emphasis role="bold">summary</emphasis> 
+                for a bug tracker, the field <emphasis role="bold">name</emphasis> 
+                for a contact tracker, or the field <emphasis role="bold">I want to</emphasis> 
+                for a Scrum user story tracker.
+            </para>
+            <para>
+                You can choose any <emphasis role="bold">text field</emphasis> 
+                as the title of your artifacts.
+            </para>
+            <para>
+                This semantic information is used in the edition page of an existing artifact, 
+                next to the ID. It is also displayed in <emphasis role="bold">My artifacts</emphasis> widget.
+            </para>
+        </section>
+        
+        <section id="TrackerSemanticManagementStatus">
+            <title>Status</title>
+            <para>
+                The status of an artifact is a field that describes the stage of the artifact.
+                If you set a semantic for status, please define the values that mean <emphasis>open</emphasis>
+                for this field.
+            </para>
+            <para>
+                The most commom case is a field <emphasis role="bold">Status</emphasis> 
+                with the value <emphasis role="bold">open</emphasis> for open values.
+                All other values will be considered as <emphasis role="bold">closed</emphasis>
+                values. But you may want to define any other semantic.
+                You can choose any <emphasis role="bold">selectbox field</emphasis> 
+                (single or multi) as the status of your artifacts.
+            </para>
+            <para>
+                This semantic information is used in <emphasis role="bold">My artifacts</emphasis> 
+                widget (this widget displays only <emphasis>open</emphasis> artifacts that belongs to you).
+            </para>
+        </section>
+        
+        <section id="TrackerSemanticManagementContributor">
+            <title>Contributor / Assignee</title>
+            <para>
+                The contributor of an artifact (or assignee) is a field that is bound to 
+                users. The contributor(s) of an artifact are the person(s) who are responsible 
+                for the work needed to complete the artifact.
+                For instance, it can be the field <emphasis role="bold">assigned_to</emphasis> 
+                for a bug tracker, the field <emphasis role="bold">owner</emphasis> 
+                for a task tracker.
+            </para>
+            <para>
+                You can choose any <emphasis role="bold">user list field</emphasis> 
+                as the contributor of your trackers.
+            </para>
+            <para>
+                This semantic information is used to define specific permissions on a tracker 
+                (for instance restrict tracker access to a group of assignee people).
+            </para>
+        </section>
+        
+        <section id="TrackerSemanticManagementTooltip">
+            <title>Tooltip</title>
+            <para>
+                The tooltip of an artifact is a piece of information that is displayed
+                when you hover an artifact reference with your mouse.
+            </para>
+            <para>
+                You can select all the fields you want to compose the artifact tooltip.
+            </para>
+        </section>
+        
+    </section>
+    
+    
+    
+    <section id="TrackerFieldDependenciesManagement">
+      <title>Field Dependencies</title>
+
+      <para>Field dependencies allow us to link source field values to target field values. In other words, the values proposed to a final user for a field will depend upon the value selected for another field.</para>
+      <para>As an example, if you define a field Operating System(Linux, MacOS X, MS Windows, NetBSD) and a field Version(2.0, 2.1, 2.2, 2.4, 2.6, 3.0, 10.1, 10.2, 10.3, 10.4 (Tiger), NT, 2000, XP), you can define dependencies in the tracker administration interface:</para>
+
+      <orderedlist numerotation="arabic" spacing="compact">
+        <listitem><para>First, select the source field "Operating System" then the target field "Version".</para></listitem>
+        <listitem><para>To create dependencies between each "Operating System" values and the corresponding versions, you just have to check the corresponding box in the matrix.</para></listitem>
+      </orderedlist>
+
+      <para>First, you select a source field.</para>
+      <figure id="FigureFieldChooseSource">
+        <title>Source field selection</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_01.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>Once the source field selected (here, "Operating System"), you can select the target field.</para>
+      <figure id="FigureFieldChooseTarget">
+        <title>Target Field Selection</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_02.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>Then submit, and a matrix with all values is displayed:</para>
+      <figure id="FigureFieldDependenciesMatrix">
+        <title>Dependencies Matrix</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_03.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>You can now check the boxes corresponding to the dependencies. In the example, if the source field value is "Linux", the corresponding target values are "2.0", "2.2", "2.4", "2.6".</para>
+      <figure id="FigureFieldDependenciesMatrixFilled">
+        <title>A Filled Field Dependencies Matrix </title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_04.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>Once a field dependency has been created, it appeared at the "Choose Source/Target" page as a quick link if you need to edit it. Note that to delete a field dependency, you need to empty the matrix.</para>
+      <figure id="FigureExistingFieldDependencies">
+        <title>Display of existing Field Dependencies</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_05.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <para>Once dependencies are defined, the final user (when submitting/updating an artifact) will see the Version options filtered according to the selection of the Operating System:</para>
+      <figure id="FigureFieldDependenciesFinalUserLinux">
+        <title>Proposed versions for Linux</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_07.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <figure id="FigureFieldDependenciesFinalUserMac">
+        <title>Proposed versions for MacOS X</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_08.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <figure id="FigureFieldDependenciesFinalUserWin">
+        <title>Proposed versions for MS Windows</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_09.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      <figure id="FigureFieldDependenciesFinalUserBSD">
+        <title>Proposed versions for NetBSD</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG"
+              fileref="../../screenshots/en_US/sc_trackerfielddependencies_10.png" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+
+      <para>When you define your dependencies, please be aware of the following points:</para>
+      <itemizedlist mark="bullet" spacing="compact">
+        <listitem>
+          <para>Only <emphasis>Select Boxes</emphasis> and <emphasis>Multi Select Boxes</emphasis> can have dependencies,</para>
+        </listitem>
+        <listitem>
+          <para>The cyclic dependencies are forbidden (Field 1 => Field 2 => ... => Field 1),</para>
+        </listitem>
+        <listitem>
+          <para>A field can depend upon only one field,</para>
+        </listitem>
+        <listitem>
+          <para>Javascript must be allowed on the browser to manage dependencies,</para>
+        </listitem>
+        <listitem>
+          <para>If a field is not the target of a dependency, then it will propose all its values. On the opposite, it will propose only those which satisfy the dependencies.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="TrackerCannedResponses">
+      <title>Canned Responses</title>
+
+      <para>One frequently sees project members in
+	charge of the artifact classification and dispatch process
+	posting the same follow-up comments repeatedly. Typical
+	examples of repeated posted comments are: a thank you
+	message to the originator, a request for the originator to
+	provide commonly missing information like version numbers or
+	type of machine used, etc. (see <xref
+	  linkend="FigureTrackerCannedResponses" /></para>
+
+      <para>Rather than repeatedly typing the same follow-up
+	comments, &SYS_PRODUCT_NAME; allows project members to create a predefined
+	set of responses. After these canned responses have been
+	defined, posting a follow-up comment is just a matter of
+	selecting the appropriate response from the pull down menu in
+	the artifact update form.</para>
+
+      <figure id="FigureTrackerCannedResponses">
+	<title>Definition of Canned Responses</title>
+
+	<mediaobject>
+	  <imageobject>
+	    <imagedata format="PNG"
+	      fileref="../../screenshots/en_US/sc_trackercannedresponses.png" width="15.3cm" />
+	  </imageobject>
+	</mediaobject>
+      </figure>
+    </section>
+
+    <section id="TrackerWorkflow">
+        <title>Workflow Manager</title>
+        <section id="TrackerWorkflowOverview">
+            <title>Overview</title>
+            <para>
+             The power of the &SYS_PRODUCT_NAME; trackers is further increased with 
+             the workflow manager! It allows you to define a workflow for any tracker.
+            </para>
+            <para>
+             Workflow can help you control the artifact lifecycle, ensure that 
+             your teams follow the rule of your company methodology (CMMi, etc.).
+            </para>
+            <para>
+             For now, a tracker can have only one workflow defined on one field.
+             This field must be a list field (select box).
+            </para>
+            <para>N.B. Worflow is not taen n account in artifacts mass change</para>
+        </section>
+        <section id="TrackerWorkflowAdd">
+            <title>Add a workflow to a tracker</title>
+             <itemizedlist>
+                <listitem>
+                    <para><emphasis role="bold">First step</emphasis>:
+                    you have to choose the field on which applies the workflow. 
+                    A workflow can be applied only on select box field type not bind to users.</para>
+                </listitem>
+                <listitem>
+                    <para><emphasis role="bold">Second step</emphasis>:
+                    you have to define the transitions of the workflow.
+                    <xref linkend="ManageWorkflowScreen" /> shows a sample workflow definition screen used in the 
+                    Bugs Tracker template.
+                    Thanks to the "Workflow Administration" part of the page, you see that the workflow is defined on the field "Status". 
+                    The workflow can be simply enabled or disabled while checking the checkbox and click on "Submit".
+                    To delete the workflow, simply, click on the red cross. This will completely delete the workflow defined, and all the transitions.
+                    </para>
+                    <para>
+                    The "Define the transitions" part allows to define the transitions of the workflow.
+                    In the example provided on <xref linkend="ManageWorkflowScreen" />, various transitions have been defined.
+                    For instance, at the submission of an artifact, defined by the state "new artifact", the only value available for the field "Status"
+                    will be "New".
+                    When the status value is "New", the only value available will be "Unconfirmed", "Verified" and "Closed".
+                    </para>
+                    <figure id="ManageWorkflowScreen">
+                        <title>A sample workflow definition screen</title>
+                        <mediaobject>
+                            <imageobject>
+                                <imagedata format="PNG"
+                                fileref="../../screenshots/en_US/sc_manage_workflow.png" width="15.3cm" />
+                            </imageobject>
+                        </mediaobject>
+                    </figure>
+                </listitem>
+             </itemizedlist>
+        </section>
+        
+        <section id="TrackerWorkflowPostFunctions">
+            <title>Define rules on transitions</title>
+            <section id="TrackerWorkflowTransitionsUgroup">
+                <title>Groups that may make the transition</title>
+                <para>
+                 Once the transition is defined, you can refine who can make 
+                 the transition. To do this, click the "[details]" link next to the 
+                 transition. Then, select the group of users you allow to do the
+                 transition (see <xref linkend="FigureTrackerWorkflowTransitionsPermissions" />).
+                </para>
+                <figure id="FigureTrackerWorkflowTransitionsPermissions">
+                 <title>Permissions on workflow transitions</title>
+                    <mediaobject>
+                      <imageobject>
+                        <imagedata format="PNG"
+                          fileref="../../screenshots/en_US/sc_manage_workflow_transitions.png" width="15.3cm" />
+                      </imageobject>
+                    </mediaobject>
+                </figure>
+            </section>
+        </section>
+    </section>
+    
+    <section id="TrackerEmailNotificationSettings">
+      <title>Email Notification Settings</title>
+
+      <para>As explained earlier in <xref
+	  linkend="TrackerEmailNotification" /> the Codendi Tracker comes
+      with a predefined set of rules to keep relevant people aware of
+      the artifact life. The default rules can however be complemented
+      or tuned in a number of ways:</para>
+
+      <section id="TrackerGlobalEmailNotification">
+	<title>Global Email Notification</title>
+
+	<para>In addition to the default notification rules, the
+	tracker administrators have the ability to specify a list of
+	email addresses to which submissions of new
+	artifacts (and optionally artifact updates) will be
+	systematically sent. To add an email address, click the "add" link.
+	You can add as many email addresses as required.
+	<!--Note that in this case notifications will
+	be sent to users regardless of their personal preferences
+	defined (see section &#34;<xref
+	linkend="TrackerEventRoleBasedEmailNotification" />&#34;
+	below).--></para>
+    
+    <para>You can choose to disable the permission check for global 
+    email notification.
+    This can be useful if the email address is a mailing list,
+    because individual permissions can't be checked for each
+    member of the mailing list. So for mailing lists, if the check box
+    "check permissions" is checked, the notifications will be send to each 
+    member with the permissions of an anonymous user.
+    </para>
+
+	<para>This feature is typically used to send submissions of
+	new artifacts to a number of well identified persons in the
+	team who are in charge of qualifying and dispatching the
+	artifacts.</para>
+
+	<para><tip>
+	    <title>Tip: Create a Distribution List to notify several people</title>
+	    
+	    <para>If you want to notify many people at once, we suggest
+	  that you use the &SYS_PRODUCT_NAME; Mailing Lists service to create a
+	  distribution lists (see <xref linkend="MailingLists"
+		/>). Once the Mailing List is up and running type the e-mail
+	  address in the Global Email Notification field.</para>
+
+	    <para>Creating a Mailing List on &SYS_PRODUCT_NAME; has several
+	  advantages: first individuals can (un)subscribe by
+	  themselves and second all messages sent to a &SYS_PRODUCT_NAME; mailing
+	  list are kept in an archive that can serve as an audit
+	  trail for your tracker.</para>
+	  </tip>
+        </para>
+
+      </section>
+
+<!--
+      <section id="TrackerWatchers">
+	<title>Tracker Watchers</title>
+
+	<para>The &SYS_PRODUCT_NAME; Tracker offers to all project members the
+	ability to be carbon-copied on all email notifications sent to
+	some other project members.</para>
+
+	<para>Here are a couple of examples where the tracker watch
+	feature can be extremely useful:</para>
+
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="bold">Backups</emphasis>: when a
+	    team member is away from the office it is often convenient
+	    to delegate her artifact management activity to another
+	    person in the team who is acting as a backup. Becoming the
+	    backup of another team member is as easy as inserting her
+	    name in the Watchers field of the backup person when
+	    the team member quits and remove it when the team member
+	    returns.</para>
+
+	    <para>As soon as you specify a person name in the 
+	    watchers field you'll start receiving all the artifact
+	    notification of this person and you can act accordingly on her
+	    behalf.</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="bold">QA Contacts</emphasis>:
+	    another possible use is for the QA team members to fill
+	    the tracker watcher field with the names of the software
+	    engineers whom QA activity they are responsible for.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<note><para>Remark: The goal of the tracker watch feature is not
+	to spy on you. To make sure that you are only watched by
+	authorized persons, &SYS_PRODUCT_NAME; always shows you the list of &SYS_PRODUCT_NAME;
+	users who are currently watching your email 
+	notifications. </para></note>
+
+      </section>
+-->
+      <!--<section id="TrackerEventRoleBasedEmailNotification" xreflabel="Event/Role Based Notification Settings">
+	<title>Event/Role Based Notification Settings</title>
+
+	<para>This is the most sophisticated part of the customization
+	process. It allows any user to specify what types of events
+	they wants to be notified of by email. Note that these settings
+	are project and user specific so you can tune your own email
+	notification preferences for each tracker you are involved
+	with.</para>
+
+	<para>The customization matrix (see <xref
+	    linkend="FigureTrackerNotificationMatrix" />) presents you with a
+	series of check boxes. Each check box allows you to specify
+	what kind of events you want to be aware of depending on
+	the role you play with respect to the artifact.</para>
+
+	<para>There are 4 roles defined with respect to an artifact:</para>
+
+	<itemizedlist mark="bullet" spacing="compact">
+	  <listitem>
+	    <para><emphasis role="bold">Submitter</emphasis>: you are
+	    the person who initially reported the artifact by filling
+	    out the artifact submission form.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Assignee</emphasis>: you were
+	    assigned the artifact and you are therefore responsible
+	    for managing it.</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">CC</emphasis>: you are
+	    mentioned in the list of CC names (see <xref
+	    linkend="ArtifactCCList" />).</para>
+	  </listitem>
+	  
+	  <listitem>
+	    <para><emphasis role="bold">Commenter</emphasis>: you have
+	    once posted a follow-up comment in the artifact.</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>For each of these roles you can instruct the &SYS_PRODUCT_NAME;
+	Tracker to send email notifications to you only when some
+	specific events occur. Nine different events (see the right
+	most column on <xref linkend="FigureTrackerNotificationMatrix"
+	    />) are monitored by the &SYS_PRODUCT_NAME; Tracker. The description of the
+	events is self explanatory and only appeal one comment: the
+	first 8 events in the list can only occur on artifact
+	updates. Only the last event relates to the submission of a
+	new artifact.</para>
+
+	<para>Let's review the sample matrix shown on <xref
+	    linkend="FigureTrackerNotificationMatrix" /> and see, step by
+	step, how this user has configured her notification
+	settings:</para>
+
+	<itemizedlist>
+	  <listitem><para>First let's look at the Commenter
+	  column. The Commenter column says that this user has decided
+	  that if she is involved in an artifact as a Commenter (she just
+	  posted a follow-up comment at some point in time) then she is
+	   only interested in receiving email notification when the
+	  status of the artifact goes to &#34;Closed&#34; or when any of the fields
+	  Priority, Status and Severity is modified. All other events
+	  will be ignored by the &SYS_PRODUCT_NAME; tracker and no notification
+	  will be sent to this user.</para></listitem>
+
+	  <listitem><para>Second, looking at the matrix by row, one
+	  can see that the user said that when she makes a
+	  modification to an artifact herself (Event &#34;I am the
+	  author of the change&#34;) she doesn't want to receive any
+	  email notification whatever their role in this artifact
+	  is. Please note that the event &#34;I am the author of the
+	  change&#34; overlaps with other events. So in our example,
+	  the submitter will not get a notification when she adds a new
+	  artifact. Even if the event &#34;A new artifact has been
+	  submitted&#34; is marked</para></listitem>
+
+	  <listitem>
+            <para>Finally, the user also said that when a new artifact
+            is submitted to the project and is immediately assigned to
+            her (Assignee role), she wants to be notified. However if
+            she is the submitter of the new artifact then she is not
+            interested in receiving the notification.</para>
+
+	    <para>Note that the Commenter role is meaningless for the
+	    event &#34;A new artifact has been submitted&#34; because
+	    follow-up comments can only be added at update time not at
+	    creation time. Also, the event &#34;I'm added or removed
+	    from this role&#34; is meaningless for the Submitter and
+	    the Commenter because these roles can not be modified in
+	    an artefact.</para>
+	  </listitem>
+
+	</itemizedlist>
+
+	<figure id="FigureTrackerNotificationMatrix">
+	  <title>Configuration of the Personal Notification Matrix</title>
+	  <mediaobject>
+	    <imageobject>
+	      <imagedata format="PNG"
+		fileref="../../screenshots/en_US/sc_trackernotificationmatrix.png" width="12.5cm" />
+	    </imageobject>
+	  </mediaobject>
+	</figure>
+
+      </section>
+      -->
+
+      <!--<section id="ToggleEmailNotification">
+	<title>Suspend Email Notification</title>
+
+	<para>Sometimes, it can be convenient to suspend all email
+        notifications for one specific tracker, for instance during 
+        maintenance tasks. By selecting this option, 
+        a tracker administrator disables both global notifications and
+        event/role notifications.</para>
+
+	<para>This feature is typically used when doing mass-changes 
+        or for testing purposes.</para>
+
+      </section>
+      -->
+
+    </section>
+    
+    <section id="TrackerAdminCSVImport">
+        <title>Tracker Artifact Import</title>
+        <para>
+        &SYS_PRODUCT_NAME; allows you to import artifacts in a tracker from 
+        a CSV file. See <xref linkend="ArtifactImport" /> for more details about 
+        this feature.
+        </para>
+    </section>
+    
+    <section id="TrackerAdminStructureExport">
+     <title>Tracker Structure Export</title>
+     <para>
+      &SYS_PRODUCT_NAME; allows you to export the structure of the trackers into 
+      an XML file. The &SYS_PRODUCT_NAME; tracker templates are provided under 
+      the form of such XML files.
+      This feature is also really convenient to copy a tracker from a 
+      &SYS_PRODUCT_NAME; server to another.
+     </para>
+     <para>
+      To export the structure of your tracker, please go to the admin part of 
+      your tracker, and select the Export link.
+      This will open a browser window to choose the location of the exported file.
+     </para>
+     <para>
+      <emphasis
+	   role="bold">Note</emphasis>: this does not copy the
+	   artifacts of the tracker but only the structure 
+	   (general settings, fields, values, workflow, 
+	   semantic, canned responses and permissions).
+     </para>
+    </section>
+
+  </section>
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+End:
+-->
+
