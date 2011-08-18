@@ -309,7 +309,7 @@ class WorkflowFactory {
      */
     public function addPermissions ($ugroups, $transition) {
         $pm = PermissionsManager::instance();
-        $permission_type = 'WORKFLOW_TRANSITION';
+        $permission_type = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
         foreach ($ugroups as $ugroup) {
             if(!$pm->addPermission($permission_type, (int)$transition, $ugroup)) {
                 return false;

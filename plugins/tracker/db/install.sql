@@ -564,3 +564,9 @@ INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('P
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ARTIFACT_ACCESS',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ARTIFACT_ACCESS',3);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ARTIFACT_ACCESS',4);
+
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',2);
+INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',3,1);
+INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_WORKFLOW_TRANSITION',4);
+

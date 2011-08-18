@@ -157,7 +157,7 @@ class WorkflowManager {
         } else if ($request->get('workflow_details')) {
             $ugroups = $request->get('ugroups');
             $transition = $request->get('transition');
-            permission_clear_all($this->tracker->group_id, 'WORKFLOW_TRANSITION', $transition, false); 
+            permission_clear_all($this->tracker->group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition, false); 
             if (WorkflowFactory::instance()->addPermissions($ugroups, $transition)) {
                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','permissions_updated'));
             } else {
@@ -219,7 +219,7 @@ class WorkflowManager {
         echo $GLOBALS['Language']->getText('workflow_admin','label_define_transition_permissions');
         echo '</p>';
         echo '<p>';
-        echo permission_fetch_selection_field('WORKFLOW_TRANSITION', $transition->getTransitionId(), $this->tracker->group_id); 
+        echo permission_fetch_selection_field('PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), $this->tracker->group_id); 
         echo '</p>';
         echo '<input type="submit" name="workflow_details" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         echo '</form>';

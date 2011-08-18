@@ -998,7 +998,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             if (!$user) {
                 $user = $this->getCurrentUser();
             }
-            return $this->permission_is_authorized('WORKFLOW_TRANSITION', $transition_id, $user->getId(), $group_id);
+            return $this->permission_is_authorized('PLUGIN_WORKFLOW_TRANSITION', $transition_id, $user->getId(), $group_id);
         }
         return true;
     }
