@@ -36,6 +36,8 @@ class Plugin {
     const SCOPE_PROJECT = 1;
     const SCOPE_USER    = 2;
     
+    public $scopeProjectIsRestrictedPerDefault = false;
+    
     public function Plugin($id = -1) {
         $this->id            = $id;
         $this->hooks         = new Map();

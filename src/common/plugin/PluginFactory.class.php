@@ -88,6 +88,9 @@ class PluginFactory {
             $id = $this->plugin_dao->create($name, 0);
             if (is_int($id)) {
                 $p  = $this->_getInstancePlugin($id, array('name' => $name, 'available' => 0));
+                if ($p && $p->getScope() === Plugin::SCOPE_PROJECT && $p->scopeProjectIsRestrictedPerDefault) {
+                    $this->plugin_dao->restrictProjectPluginUse($id, true);
+                }
             }
         }
         return $p;

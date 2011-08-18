@@ -31,6 +31,8 @@ define('TRACKER_BASE_URL', '/plugins/tracker');
  */
 class trackerPlugin extends Plugin {
     
+    public $scopeProjectIsRestrictedPerDefault = true; //until the plugin becomes stable
+    
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
