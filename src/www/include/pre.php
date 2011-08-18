@@ -107,6 +107,7 @@ if (!isset($GLOBALS['feedback'])) {
 }
 
 if (!IS_SCRIPT) {
+    session_start();
     $cookie_manager =& new CookieManager();
     $GLOBALS['session_hash'] = $cookie_manager->isCookie('session_hash') ? $cookie_manager->getCookie('session_hash') : false;
 }
