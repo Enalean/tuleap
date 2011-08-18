@@ -22,7 +22,7 @@
   site ou bien créés par chaque projet sont entièrement
   personnalisables.</para>
 
-  <section id="CodendiTrackerPrinciples">
+  <section id="TrackerV5CodendiTrackerPrinciples">
     <title>Terminologie et Points communs</title>
 
     <para>Avant de présenter les fonctionnalités des outils de suivi,
@@ -49,7 +49,7 @@
   </section>
 
 
-<section id="EnteringtheTrackerService">
+<section id="TrackerV5EnteringtheTrackerService">
     <title>Accéder à un outil de suivi</title>
 
     <para>Pour accéder au service outil de suivi d'un projet, rendez
@@ -82,22 +82,22 @@
     
 
   </section>
- <section id="ArtifactSubmission">
+ <section id="TrackerV5ArtifactSubmission">
     <title>Soumission d'un nouvel artefact</title>
 
 <para>Pour soumettre un nouvel artefact à un projet donné, vous
     devez tout d'abord accéder à l'outil de suivi approprié comme indiqué dans la
-    section ci-dessus (voir <xref linkend="EnteringtheTrackerService"
+    section ci-dessus (voir <xref linkend="TrackerV5EnteringtheTrackerService"
     />.</para>
 
     <para>En pénétrant dans un outil de suivi, un écran de sélection et de
     navigation apparaît (plus d'information sur cette fonctionnalité
-    dans la <xref linkend="ArtifactBrowsing" />). Pour le moment
+    dans la <xref linkend="TrackerV5ArtifactBrowsing" />). Pour le moment
     cliquez sur l'entrée &#34;Soumettre un nouvel artefact&#34; dans le menu de l'outil de suivi en
     haut de l'écran (voir <xref
-    linkend="FigureASampleTrackerBrowsingScreen" />).</para>
+    linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />).</para>
 
-    <figure id="ArtifactSubmissionScreenFromTheCodendiProject">
+    <figure id="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject">
       <title>Un exemple d'écran de soumission d'artefact  (ici de type &#34;bug&#34;) </title>
 
       <mediaobject>
@@ -109,7 +109,7 @@
     </figure>
 
     <para>La <xref
-    linkend="ArtifactSubmissionScreenFromTheCodendiProject" /> montre un
+    linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject" /> montre un
     exemple de soumission d'écran provenant d'un projet &SYS_PRODUCT_NAME;. En
     raison du très haut niveau de personnalisation du service "outil de suivi" de
     &SYS_PRODUCT_NAME;, les écrans de soumission d'artefact varient énormément d'un
@@ -117,7 +117,7 @@
     artefacts diffèrent.</para>
 
     <para>Dans l'exemple fourni sur la <xref
-    linkend="ArtifactSubmissionScreenFromTheCodendiProject" /> les
+    linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject" /> les
     artefacts sont des bugs (aussi connu sous le nom &#34;défauts&#34;
     ou &#34;anomalies&#34;). Ici
     l'utilisateur doit fournir une catégorie, un groupe, une priorité
@@ -139,7 +139,7 @@
     typique consiste à donner accès à plus de champs aux membres du
     projet qu'aux utilisateurs externes à l'équipe. A titre
     d'exemple, sur la <xref
-    linkend="ArtifactSubmissionScreenFromTheCodendiProject" />, la
+    linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject" />, la
     personne qui soumet le bug est probablement un membre du projet
     car donner une valeur au champ &#34;Assigné à&#34; n'est, en
     général, pas du ressort d'un utilisateur externe. Il est en effet
@@ -165,17 +165,17 @@
   </section>
 
 
-  <section id="ArtifactBrowsing">
+  <section id="TrackerV5ArtifactBrowsing">
     <title>Naviguer dans les artefacts</title>
 
     <para>&SYS_PRODUCT_NAME; permet de naviguer dans la base des artefacts selon un
     nombre de critères variables.</para>
 
-    <section id="ArtifactSelectionCriteria">
+    <section id="TrackerV5ArtifactSelectionCriteria">
       <title>Critères de sélection</title>
 
       <para>La partie supérieure de l'écran de navigation est consacrée aux critères de recherche. La <xref
-	  linkend="FigureASampleTrackerBrowsingScreen" /> montre le jeu de
+	  linkend="TrackerV5FigureASampleTrackerBrowsingScreen" /> montre le jeu de
       critères par défaut disponibles à la création d'un outil de suivi. Ici, des
       bugs peuvent être sélectionnés en fonction de leur catégorie, de
       leur groupe, de leur statut et de la personne à qui ils ont été
@@ -187,7 +187,7 @@
       dépend de son type. Le service outil de suivi propose
       actuellement les types de champs suivants :</para>
 
-      <section id="ArtifactSelectBoxField">
+      <section id="TrackerV5ArtifactSelectBoxField">
 	<title>Champs de type boîte de sélection et boîte de sélection multiple</title>
 
 	<para>Une boîte de sélection prend ses valeurs dans une liste prédéfinie.
@@ -204,7 +204,7 @@
    </section>
 
 
-      <section id="ArtifactTextField">
+      <section id="TrackerV5ArtifactTextField">
 	<title>Champ texte</title>
 
         <para>Un champ texte peut contenir n'importe quel texte. Il
@@ -250,7 +250,7 @@
 
       </section>
 
-      <section id="ArtifactDateField">
+      <section id="TrackerV5ArtifactDateField">
 	<title>Champ de type date</title>
 
 	<para>Un critère de sélection de type date s'exprime sous la
@@ -269,7 +269,7 @@
 
       </section>
 
-      <section id="ArtifactIntegerField">
+      <section id="TrackerV5ArtifactIntegerField">
         <title>Champ de type entier</title>
 
         <para>Un champ de type entier peut prendre des valeurs
@@ -315,7 +315,7 @@
         </itemizedlist>
       </section>
 
-      <section id="ArtifactFloatingPointNumberField">
+      <section id="TrackerV5ArtifactFloatingPointNumberField">
 	        <title>Champ de type nombre flottant</title>
 
         <para>Un champ de type flottant peut prendre des valeurs
@@ -377,10 +377,10 @@
       (voir <xref linkend="TrackerV5Reports" />). C'est pour
       cette raison que l'écran d'affichage des résultats d'une requête
       peut être totalement différents de l'exemple montré sur la <xref
-      linkend="FigureASampleTrackerBrowsingScreen" />.</para>
+      linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />.</para>
       
       
-      <figure id="FigureASampleTrackerBrowsingScreen">
+      <figure id="TrackerV5FigureASampleTrackerBrowsingScreen">
 	<title>Exemple d'affichage des résultats d'une requête</title>
 
 	<mediaobject>
@@ -399,7 +399,7 @@
       <para>Pour accéder à un artefact, cliquez simplement sur l'icône <inlinemediaobject><imageobject><imagedata
           format="PNG" fileref="../../icons/artifact-arrow.png" /></imageobject></inlinemediaobject> dans la liste des résultats.</para>
 
-      <section id="ArtifactListSorting">
+      <section id="TrackerV5ArtifactListSorting">
 	<title>Tri de la liste des artefacts</title>
 
 	<para>Par défaut, les artefacts sont triés par ordre chronologique de soumission sur &SYS_PRODUCT_NAME;.</para>
@@ -427,7 +427,7 @@
 
       </section>
       
-    <section id="ExportSearchResults">
+    <section id="TrackerV5ExportSearchResults">
         <title>Exporter les résultats d'une requête</title>
         <para>Dans le menu "options" du rapport, les liens "Exporter uniquement 
         les colonnes du rapport" et "Exporter toutes les colonnes" permettent d'exporter les artefacts
@@ -435,11 +435,11 @@
         vous pouvez aisément sélectionner les artefacts auxquels vous
         souhaitez appliquer des traitements supplémentaires avec des
         outils externes à &SYS_PRODUCT_NAME; </para>
-        <para>Voir <xref linkend="ArtifactImport" /> pour savoir comment importer des artefacts à partir d'un fichier CSV.
+        <para>Voir <xref linkend="TrackerV5ArtifactImport" /> pour savoir comment importer des artefacts à partir d'un fichier CSV.
         </para>
     </section>
     
-      <section id="ArtifactPrinterFriendlyVersion">
+      <section id="TrackerV5ArtifactPrinterFriendlyVersion">
 	<title>Version imprimable</title>
 
 	<para>Vous pouvez à tout moment cliquer sur le lien
@@ -452,7 +452,7 @@
       </section>
 
 
-	<section id="ArtifactCharts">
+	<section id="TrackerV5ArtifactCharts">
 	 <title>Visualisation Graphique</title>
 	 <para>Il est également possible de visualiser les résultats d'une requête sous forme graphique en ajoutant 
      un onglet de type "Graphique(s)"..
@@ -487,7 +487,7 @@
       <title>Paramétrage d'un rapport</title>
       <para>
       Le rapport courant est défini en haut à gauche de la page du rapport 
-       (Voir <xref linkend="FigureASampleTrackerBrowsingScreen" />).
+       (Voir <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />).
        Si plusieurs rapports sont disponibles, une boîte de sélection permet de 
        changer de rapport courant.
       </para>
@@ -511,7 +511,7 @@
       Les outils de restitution sont affichés sous forme d'onglets.
       Ajouter un outil de restitution est simple : sélectionnez l'onglet [+] à droite des
       onglets des outils de restitution (see 
-       <xref linkend="FigureASampleTrackerBrowsingScreen" />).
+       <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />).
        Ensuite, sélectionnez le type d'outil de restitution à ajouter (table ou graphiques), donnez-lui un nom et
        une description, et cliquez sur le bouton "Soumettre" : un nouvel onglet est crée!
       </para>
@@ -528,7 +528,7 @@
        <para>
         L'outil de restitution de type "Table" est textuel, et se présente sous forme de
         tableau. Les colonnes du tableaux sont les champs de l'outil de suivi et les lignes représent les artefacts. La figure
-        (<xref linkend="FigureASampleTrackerBrowsingScreen" />) présente un exemple de 'outil de restitution de type "Table".
+        (<xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />) présente un exemple de 'outil de restitution de type "Table".
        </para>
        <para>
        Vous pouvez modifier les champs de l'outil de restitution (en utilisant le lien "Modifier les colonnes"),
@@ -576,7 +576,7 @@
        L'outil de restitution de type "Graphiques" permet d'ajouter des graphes à un rapport.
         &SYS_PRODUCT_NAME; fournit trois types de graphes : le camembert, le graphique en bâton, et le diagramme 
 		 de Gantt.
-        <figure id="FigureChartsTrackerBrowsingScreen">
+        <figure id="TrackerV5FigureChartsTrackerBrowsingScreen">
          <title>Exemple d'outil de restitution de type "Graphiques"</title>
             <mediaobject>
              <imageobject>
@@ -597,7 +597,7 @@
        <section id="TrackerV5ReportRendererChartPie">
         <title>Graphique de type Camembert</title>
         <para>
-          <figure id="FigurePieChartEdition">
+          <figure id="TrackerV5FigurePieChartEdition">
           <title>Edition d'un graphique de type camembert</title>
             <mediaobject>
                 <imageobject>
@@ -611,7 +611,7 @@
        <section id="TrackerV5ReportRendererChartBar">
         <title>Gaphique en bâtons</title>
         <para>
-          <figure id="FigureBarChartEdition">
+          <figure id="TrackerV5FigureBarChartEdition">
           <title>Edition d'un graphique en bâtons</title>
             <mediaobject>
                 <imageobject>
@@ -625,7 +625,7 @@
        <section id="TrackerV5ReportRendererChartGantt">
         <title>Diagramme de Gantt</title>
         <para>
-          <figure id="FigureGanttChartEdition">
+          <figure id="TrackerV5FigureGanttChartEdition">
           <title>Edition d'un diagramme de Gantt</title>
             <mediaobject>
                 <imageobject>
@@ -670,13 +670,13 @@
 
   
   </section>
-  <section id="ArtifactUpdate">
+  <section id="TrackerV5ArtifactUpdate">
     <title>Modifier un artefact</title>
     <para>La sélection d'un artefact dans la
     liste générée suite à une opération de recherche entraîne
     l'affichage d'une page qui comporte toutes les informations
     concernant cet artefact. Selon les droits qui vous ont été octroyés
-    sur cet outil de suivi (voir <xref linkend="FieldPermissionsManagement" />)
+    sur cet outil de suivi (voir <xref linkend="TrackerV5FieldPermissionsManagement" />)
     la vue détaillée présente un certain nombre de champs texte
     immuables ou d'autres champs modifiables. Si vous êtes un visiteur
     anonyme ou un utilisateur enregistré qui n'est pas membre du
@@ -689,11 +689,11 @@
     sections : <emphasis role="bold">Entête et Commentaires
     </emphasis></para>
     
-    <section id="ArtifactHeaders">
+    <section id="TrackerV5ArtifactHeaders">
       <title>Entête</title>
       <para>La zone d'entête concentre l'ensemble des champs associés
       à un artefact. Comme le montre la figure <xref
-      linkend="FigureHeaderOfArtifactUpdateScreen" />, certains champs
+      linkend="TrackerV5FigureHeaderOfArtifactUpdateScreen" />, certains champs
       disposent d'un jeu de valeurs prédéfinies, d'autres sont des
       champs numériques (Effort) ou des champs texte (Résumé). Pour plus de 
       clarté, les champs sont regroupés en groupes de champs. Le jeu
@@ -703,7 +703,7 @@
       sur cet outil de suivi (voir <xref linkend="TrackerV5Administration" /> à ce sujet).
       </para>
       
-      <section id="DynamicFields">
+      <section id="TrackerV5DynamicFields">
         <title>Les champs dynamiques</title>
         <para>Certains champs ont un comportement particulier et une explication semble nécessaire.
         </para>
@@ -750,7 +750,7 @@
                     project admins and members).
                 </para>
       
-                <figure id="FigureArtifactPermissions">
+                <figure id="TrackerV5FigureArtifactPermissions">
                     <title>Permission on an artifact</title>
         
                         <mediaobject>
@@ -765,7 +765,7 @@
         
       </section>
       
-      <figure id="FigureHeaderOfArtifactUpdateScreen">
+      <figure id="TrackerV5FigureHeaderOfArtifactUpdateScreen">
 	<title>Entête d'un écran de modification d'un artefact (champs de l'outil de suivi)</title>
 
 	<mediaobject>
@@ -777,7 +777,7 @@
       </figure>
     </section>
 
-    <section id="ArtifactComments">
+    <section id="TrackerV5ArtifactComments">
       <title>Commentaires</title>
 
       <para>Autant de commentaires que nécessaire peuvent être attachés à un artefact.
@@ -816,7 +816,7 @@
    </itemizedlist>
 
 
-      <figure id="FigureFollowupCommentsAttachedToAnArtifact">
+      <figure id="TrackerV5FigureFollowupCommentsAttachedToAnArtifact">
 	<title>Commentaires attachés à un artefact</title>
 	
 	<mediaobject>
@@ -829,7 +829,7 @@
       
     </section>
     
-    <section id="ArtifactMassChange">
+    <section id="TrackerV5ArtifactMassChange">
       <title>Mise à jour massive d'artefacts</title>
       <para>&SYS_PRODUCT_NAME; permet aux administrateurs d'un outil de suivi ou du projet
         d'effectuer la même modification sur un ensemble d'artefacts en
@@ -849,7 +849,7 @@
        Vous pouvez également ajouter un commentaire.
       </para>
       <para>N.B. La mise à jour massive d'artefacts permet de passer outre tout worflow sur un ou plusieurs champs</para>
-      <figure id="FigureArtifactMassChange">
+      <figure id="TrackerV5FigureArtifactMassChange">
         <title>Mise à jour massive d'artefacts</title>        
         <mediaobject>
           <imageobject>
@@ -908,7 +908,7 @@
             des artefacts. Un rapport pour un tracker peut être sélectionné, affichant les critères de recherche associés.
             Une fois le bouton de mise à jour cliqué, la fenêtre modale est fermé et le id des artefacts selectionnés ajoutés (séparés par des virgules) dans le champs texte;
             et visibles (lignes jaunes) dans les onlgets correspondants.
-            <figure id="HowToLinkAnArtifact">
+            <figure id="TrackerV5HowToLinkAnArtifact">
                 <title>Comment lier un artefact ?</title>
                     <mediaobject>
                         <imageobject>
@@ -917,7 +917,7 @@
                         </imageobject>
                     </mediaobject>
              </figure>
-             <figure id="ModalWindowLinkAnArtifact">
+             <figure id="TrackerV5ModalWindowLinkAnArtifact">
                 <title>Rechercher des artefacts existants</title>
                     <mediaobject>
                         <imageobject>
@@ -945,7 +945,7 @@
         </section>
     </section>
 
-    <section id="ArtifactImport">
+    <section id="TrackerV5ArtifactImport">
         <title>Importation d'artefacts</title>
         
           <para>Les administrateurs d'un projet ont la possibilité
@@ -1032,7 +1032,7 @@
             Vous pouvez vous référez
             à la documentation du format d'exportation en particulier pour
             les champs de type date et commentaire (voir <xref
-            linkend="ArtifactComments" />). Le premier enregistrement d'un
+            linkend="TrackerV5ArtifactComments" />). Le premier enregistrement d'un
             fichier d'importation CSV doit toujours être constitué des
             noms des champs de l'ids utilisé dans les lignes de données
             qui suivent.</para>
@@ -1100,7 +1100,7 @@
             suite à l'opération d'importation.</para>
         </section>
 
-        <para><tip id="ExcelAndRegionals"><title>Tip : Excel et les
+        <para><tip id="TrackerV5ExcelAndRegionals"><title>Tip : Excel et les
         paramètres régionaux</title> <para>Si un fichier CSV est ouvert
         avec Excel, tout changement opéré sur la feuille de calcul (y
         compris un simple changement d'une largeur de colonne) peut amener
@@ -1136,7 +1136,7 @@
         </tip></para>
     </section>
   
-  <section id="DefaultTrackerAccessPermissions">
+  <section id="TrackerV5DefaultTrackerAccessPermissions">
     <title>Permissions d'accès par défaut aux outils de suivi</title>
 
     <para>Selon la classe d'utilisateurs à laquelle vous appartenez et
@@ -1166,7 +1166,7 @@
 
 	<tbody>
 	  <row>
-	    <entry><link linkend="ArtifactSubmission">Soumission d'un
+	    <entry><link linkend="TrackerV5ArtifactSubmission">Soumission d'un
             nouvel artefact</link></entry> <entry>Par défaut tout
             visiteur, connecté à &SYS_PRODUCT_NAME; ou pas, peut soumettre un
             nouvel artefact. L'administrateur de l'outil de suivi peut limiter
@@ -1174,21 +1174,21 @@
             aux membres du projet si l'outil de suivi est privé.</entry>
 	  </row>
 	  <row>
-	    <entry><link linkend="ArtifactBrowsing">Navigation/Recherche
+	    <entry><link linkend="TrackerV5ArtifactBrowsing">Navigation/Recherche
           d'artefact</link></entry> <entry>La recherche et la
             navigation dans la base d'artefacts est accessible à tous
             les visiteurs &SYS_PRODUCT_NAME; sauf si l'outil de suivi est privé auquel cas
             seuls les membres de l'équipe y ont accès.</entry>
 	  </row>
 	  <row>
-	    <entry><link linkend="ArtifactUpdate">Modification des
+	    <entry><link linkend="TrackerV5ArtifactUpdate">Modification des
         artefacts</link></entry> <entry>Par défaut seuls les
             membres du projet peuvent modifier un artefact. Les
             visiteurs externes ne peuvent soumettre qu'un commentaire
             ou attacher un fichier.</entry>
 	  </row>
 	  <row>
-	    <entry><link linkend="ArtifactImport">Administration de l'outil de suivi -Importation d'artefacts</link></entry>
+	    <entry><link linkend="TrackerV5ArtifactImport">Administration de l'outil de suivi -Importation d'artefacts</link></entry>
 	    <entry>Uniquement accessible
             aux administrateurs du projet et aux membres du projet
             ayant les droits d'administration sur l'outil de suivi.
@@ -1279,7 +1279,7 @@
 
     <para>Pour définir un nouvel outil de suivi vous devez fournir les
     informations suivantes (voir <xref
-    linkend="FigureCreateANewTracker" />) : </para>
+    linkend="TrackerV5FigureCreateANewTracker" />) : </para>
 
     <itemizedlist mark="bullet" spacing="compact">
       <listitem id="TrackerV5CreationName">
@@ -1309,7 +1309,7 @@
       </listitem>
     </itemizedlist>
 
-    <figure id="FigureCreateANewTracker">
+    <figure id="TrackerV5FigureCreateANewTracker">
       <title>Création d'un nouvel outil de suivi (ici pour le anomalies)</title>
       
       <mediaobject>
@@ -1346,7 +1346,7 @@
         trouverez typiquement des outils de suivi pour les anomalies, les tâches,
         etc... Un patron particulier appelé &#34;Aucun&#34; permet de
         créer un tracker vierge de tout champ sauf certains qui restent
-        obligatoires. Voir <xref linkend="CodendiTrackerTemplates" />
+        obligatoires. Voir <xref linkend="TrackerV5CodendiTrackerTemplates" />
         pour plus d'information concernant ces patrons.</para>
       </listitem>
 
@@ -1367,7 +1367,7 @@
   </section>
 
 
-  <section id="CodendiTrackerTemplates">
+  <section id="TrackerV5CodendiTrackerTemplates">
     <title>Patrons d'outils de suivi de &SYS_PRODUCT_NAME;</title>
 
     <para>Les outils de suivi standards fournis pour chaque projet sont :
@@ -1391,7 +1391,7 @@
         qu'un artefact doit comporter et de personnaliser la
         définition des champs en conséquence. </para>
 
-    <section id="BugTemplate">
+    <section id="TrackerV5BugTemplate">
       <title>L'outil de suivi d'anomalies (Bugs)</title> 
 
       <para>L'une des règles d'or d'un environnement de projet
@@ -1410,7 +1410,7 @@
     </section>
 
 
-    <section id="TaskTemplate">
+    <section id="TrackerV5TaskTemplate">
       <title>L'outil de suivi de tâches (Tasks)</title>
 
       <para>L'outil de suivi de tâches de &SYS_PRODUCT_NAME; est un gestionnaire de tâches et
@@ -1462,7 +1462,7 @@
       </itemizedlist>
 
     </section>
-    <section id="ScrumTemplate">
+    <section id="TrackerV5ScrumTemplate">
       <title>L'outil de suivi "User Story"</title>
 
       <para>&SYS_PRODUCT_NAME; facilite le déploiement de la méthodologie Scrum 
@@ -1493,7 +1493,7 @@
 
     </section>
     
-    <section id="ChangeRequestTemplate">
+    <section id="TrackerV5ChangeRequestTemplate">
       <title>L'outil de suivi "Change Request"</title>
       <para>
        Cet outil de suivi permet de stocker des "Change Request" afin de gérer les réajustements de
@@ -1541,7 +1541,7 @@
       </para>
     </section>
     
-    <section id="RequirementsTemplate">
+    <section id="TrackerV5RequirementsTemplate">
       <title>L'outil de suivi de exigences (Requirements)</title>
       <para>
       Cet outil de suivi permet, en ingénierie informatique, de gérer les exigences d'un projet, 
@@ -1583,7 +1583,7 @@
       selon ses propres process.</para>
     </section>
     
-    <section id="RiskTemplate">
+    <section id="TrackerV5RiskTemplate">
       <title>L'outil de suivi des risques</title>
       <para>
        Cet outil de suivi permet de gérer les risques. Il fournit des informations liées à 
@@ -1823,7 +1823,7 @@
 
      </section>
 
-      <section id="FieldPermissionsManagement">
+      <section id="TrackerV5FieldPermissionsManagement">
         <title>Gestion des permissions des champs</title>
 
         <para>En complément des permissions d'accès sur l'outil de suivi et ses
@@ -2186,9 +2186,9 @@
   </section>
 
 
-  <section id="CreationandModificationofaTrackerField">
+  <section id="TrackerV5CreationandModificationofaTrackerField">
 	<title>Creation et Modification d'un champ de l'outil de suivi</title>
-    <section id="AddFieldToTracker">
+    <section id="TrackerV5AddFieldToTracker">
         <title>Ajouter un champ à l'outil de suivi</title>
         <para>Pour ajouter un champ à un outil de suivi, il suffit de sélectionner un
         type de champ dans la palette. Cliquez simplement dessus et un formulaire apparaitra à la place
@@ -2212,7 +2212,7 @@
               </para>
             </listitem>
              <listitem>
-	    <para id="FieldDisplaySize" xreflabel="Field Display
+	    <para id="TrackerV5FieldDisplaySize" xreflabel="Field Display
 	    Size"><emphasis role="bold">Taille</emphasis> :
         Cette propriéte permet de définir l'espace que va prendre ce champ 
         à l'écran. Selon le type de champ, cette propriété peut avoir des significations
@@ -2283,7 +2283,7 @@
                 </para>
                 <para>&SYS_PRODUCT_NAME; permet d'ajouter ce que nous appelons un "decorator"
                 à chaque valeur mais seulement en mode édition. (voir <xref
-                linkend="ModifyFieldOfTracker" />)</para>
+                linkend="TrackerV5ModifyFieldOfTracker" />)</para>
             </listitem>
             <listitem>
                 <para><emphasis role="bold">Une liste d'utilisateurs</emphasis>:
@@ -2330,9 +2330,9 @@
 
     </section>
     
-    <section id="ModifyFieldOfTracker">
+    <section id="TrackerV5ModifyFieldOfTracker">
         <title>Modifier les champs d'un outil de suivi</title>
-        <section id="EditFieldOfTracker">
+        <section id="TrackerV5EditFieldOfTracker">
             <title>Editer un champ</title>
             <para>Afin d'apporter des modifications à un champ, cliquez sur l'icône d'édition du champ.</para>
             <para>Le mode édition permet de configurer certains paramètres non disponibles
@@ -2351,7 +2351,7 @@
                  La liste des valeurs peut être enjolivée par un "decorator", qui 
                  est un carré de couleur. Vous pouvez choisir la couleur de chaque valeur
                  à l'aide d'une palette de couleurs.
-                 (voir la <xref linkend="FigureTrackerAdminFieldUsageEdition" />).
+                 (voir la <xref linkend="TrackerV5FigureTrackerAdminFieldUsageEdition" />).
                  Les "decorators" permettent d'obtenir un indicateur visuel.
                  Par exemple, plus une couleur est foncée sur les valeurs de priorité d'un bug, plus
                  le bug est prioritaire.
@@ -2401,7 +2401,7 @@
                 </listitem>
             </itemizedlist>
             
-            <figure id="FigureTrackerAdminFieldUsageEdition">
+            <figure id="TrackerV5FigureTrackerAdminFieldUsageEdition">
              <title>Administration : Edition d'un champ</title>
              <mediaobject>
               <imageobject>
@@ -2411,7 +2411,7 @@
             </figure>
             
         </section>
-        <section id="DeleteFieldOfTracker">
+        <section id="TrackerV5DeleteFieldOfTracker">
             <title>Supprimer un champ</title>
             <para>Pour supprimer un champ, cliquez simplement sur l'icône de suppression sur la 
             page de visualisation. Le champ ne sera plus visible sur le formulaire, mais
@@ -2446,7 +2446,7 @@
         <para>
             La plupart des outils de suivi que vous utilisez ont une sémantique de définie.
             C'est le cas par exemple de tous les outils de suivi prédéfinis de Codendi.
-            (voir <xref linkend="CodendiTrackerTemplates" />).
+            (voir <xref linkend="TrackerV5CodendiTrackerTemplates" />).
         </para>
         <para>
             Pour définir ou modifier la sémantique d'un champ, sélectionnez l'icône "crayon"
@@ -2549,7 +2549,7 @@
       </orderedlist>
 
       <para>Commencez par sélectionner le champ source</para>
-      <figure id="FigureFieldChooseSource">
+      <figure id="TrackerV5FigureFieldChooseSource">
         <title>Sélection du champ source</title>
         <mediaobject>
           <imageobject>
@@ -2559,7 +2559,7 @@
         </mediaobject>
       </figure>
       <para>Une fois, le champ source sélectionné (ici, "Système d'exploitation"), vous pouvez sélectionner le champ cible.</para>
-      <figure id="FigureFieldChooseTarget">
+      <figure id="TrackerV5FigureFieldChooseTarget">
         <title>Sélection du champ cible</title>
         <mediaobject>
           <imageobject>
@@ -2569,7 +2569,7 @@
         </mediaobject>
       </figure>
       <para>Validez, et une matrice avec des valeurs s'affiche :</para>
-      <figure id="FigureFieldDependenciesMatrix">
+      <figure id="TrackerV5FigureFieldDependenciesMatrix">
         <title>Matrice des dépendances</title>
         <mediaobject>
           <imageobject>
@@ -2580,7 +2580,7 @@
       </figure>
       <para>A présent, vous pouvez cocher les cases correspondants aux dépendances.
       Dans cet exemple, si la valeur du champ source est "Linux", les valeurs cible correspondantes sont "2.0", "2.2", "2.4", "2.6".</para>
-      <figure id="FigureFieldDependenciesMatrixFilled">
+      <figure id="TrackerV5FigureFieldDependenciesMatrixFilled">
         <title>Une matrice des dépendances remplie</title>
         <mediaobject>
           <imageobject>
@@ -2591,7 +2591,7 @@
       </figure>
       <para>Une fois la dépendance créée, un lien s'affiche dans la page "Choisir Source/Cible" si vous avez besoin de la rééditer.
       Notez que pour supprimer la dépendance, la matrice doit être vide.</para>
-      <figure id="FigureExistingFieldDependencies">
+      <figure id="TrackerV5FigureExistingFieldDependencies">
         <title>Récapitulatif des dépendances entre champs</title>
         <mediaobject>
           <imageobject>
@@ -2602,7 +2602,7 @@
       </figure>
       <para>Une fois les dépendances définies, la liste des valeurs du champ "Version" sera filtrée selon
       le "Système d'Exploitation" sélectionné.</para>
-      <figure id="FigureFieldDependenciesFinalUserLinux">
+      <figure id="TrackerV5FigureFieldDependenciesFinalUserLinux">
         <title>Les versions proposées pour Linux</title>
         <mediaobject>
           <imageobject>
@@ -2611,7 +2611,7 @@
           </imageobject>
         </mediaobject>
       </figure>
-      <figure id="FigureFieldDependenciesFinalUserMac">
+      <figure id="TrackerV5FigureFieldDependenciesFinalUserMac">
         <title>Les versions proposées pour MacOS X</title>
         <mediaobject>
           <imageobject>
@@ -2620,7 +2620,7 @@
           </imageobject>
         </mediaobject>
       </figure>
-      <figure id="FigureFieldDependenciesFinalUserWin">
+      <figure id="TrackerV5FigureFieldDependenciesFinalUserWin">
         <title>Les versions proposées pour MS Windows</title>
         <mediaobject>
           <imageobject>
@@ -2629,7 +2629,7 @@
           </imageobject>
         </mediaobject>
       </figure>
-      <figure id="FigureFieldDependenciesFinalUserBSD">
+      <figure id="TrackerV5FigureFieldDependenciesFinalUserBSD">
         <title>Les versions proposées pour NetBSD</title>
         <mediaobject>
           <imageobject>
@@ -2668,7 +2668,7 @@
       qui a soumis l'artefact, une demande d'information
       complémentaire comme un numéro de version ou le type de machine
       utilisée, etc...(voir la <xref
-      linkend="FigureTrackerCannedResponses" />).</para>
+      linkend="TrackerV5FigureTrackerCannedResponses" />).</para>
 
       <para>Plutôt que de resaisir sans cesse les mêmes commentaires,
       &SYS_PRODUCT_NAME; permet aux membres du projet de définir un ensemble de
@@ -2679,7 +2679,7 @@
       commentaire dans le formulaire de modification d'un artefact.
       </para>
 
-      <figure id="FigureTrackerCannedResponses">
+      <figure id="TrackerV5FigureTrackerCannedResponses">
 	<title>Définition d'une réponse-type</title>
 
 	<mediaobject>
@@ -2724,7 +2724,7 @@
                 <listitem>
                     <para><emphasis role="bold">Deuxième étape</emphasis>:
                     définir les transitions du workflow. La 
-                    <xref linkend="ManageWorkflowScreen" /> montre un exemple de définition
+                    <xref linkend="TrackerV5ManageWorkflowScreen" /> montre un exemple de définition
                     d'un workflow dans l'outil de suivi de Bugs prédéfini.
                     Grâce à la partie "Administration du Workflow", vous voyez que le workflow est défini sur le champ "Status".
                     Le workflow peut simplement être activé ou désactivé en cochant la case et en cliquant sur "Valider".
@@ -2733,7 +2733,7 @@
                     </para>
                     <para>
                     La partie "Définir les transitions" permet de définir les transitions du workflow.
-                    Dans l'exemple fourni par la <xref linkend="ManageWorkflowScreen" />, 
+                    Dans l'exemple fourni par la <xref linkend="TrackerV5ManageWorkflowScreen" />, 
                     plusieurs transitions ont été définies
                     Par exemple, à la soumission d'un artefact, définie par l'état
                     "(new artifact)", la seule valeur disponible pour le champ "Status"
@@ -2741,7 +2741,7 @@
                     Quand le statut sera à "New", les seules valeurs disponibles seront
                     "Unconfirmed", "Verified" et "Closed".
                     </para>
-                    <figure id="ManageWorkflowScreen">
+                    <figure id="TrackerV5ManageWorkflowScreen">
                         <title>Ecran de définition d'un workflow</title>
                         <mediaobject>
                             <imageobject>
@@ -2763,9 +2763,9 @@
                 transition. Pour cela, cliquez sur le lien 
                 "[details]" à côté de la transition. Sélectionnez alors le groupe
                 d'utilisateurs que vous autorisez à effectuer la transition.
-                 transition (voir la <xref linkend="FigureTrackerWorkflowTransitionsPermissions" />).
+                 transition (voir la <xref linkend="TrackerV5FigureTrackerWorkflowTransitionsPermissions" />).
                 </para>
-                <figure id="FigureTrackerWorkflowTransitionsPermissions">
+                <figure id="TrackerV5FigureTrackerWorkflowTransitionsPermissions">
                  <title>Permissions sur les transitions du workflow</title>
                     <mediaobject>
                       <imageobject>
@@ -2839,7 +2839,7 @@
         <para>
         Les administrateurs d'un projet ont la possibilité
         d'importer des artefacts dans un outil de suivi de &SYS_PRODUCT_NAME; en utilisant des
-        fichiers au format CSV . Voir la section <xref linkend="ArtifactImport" /> pour plus de détails
+        fichiers au format CSV . Voir la section <xref linkend="TrackerV5ArtifactImport" /> pour plus de détails
         sur cette fonctionnalité.
         </para>
     </section>

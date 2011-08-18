@@ -19,7 +19,7 @@
   <para>All trackers, whether predefined at the site level or created
   by a project can be fully customized. </para>
 
-  <section id="CodendiTrackerPrinciples">
+  <section id="TrackerV5CodendiTrackerPrinciples">
     <title>Terminology and common features</title>
 
     <para>Before we explain the features of the tracker service, it's
@@ -46,7 +46,7 @@
   </section>
 
 
-  <section id="EnteringtheTrackerService">
+  <section id="TrackerV5EnteringtheTrackerService">
     <title>Entering the Tracker Service</title>
 
     <para>To enter the Tracker service of a given project, first go to
@@ -78,22 +78,22 @@
 
   </section>
 
-  <section id="ArtifactSubmission">
+  <section id="TrackerV5ArtifactSubmission">
     <title>New Artifact Submission</title>
 
     <para>To submit a new artifact to a given project you must first
     access the appropriate tracker of that project as indicated in the
-    section above (see <xref linkend="EnteringtheTrackerService" />.</para>
+    section above (see <xref linkend="TrackerV5EnteringtheTrackerService" />.</para>
 
     <para>When entering a given tracker you are presented with the
     artifact selection and browsing screen (more about this facility
-    in <xref linkend="ArtifactBrowsing" />). For now let&#39;s click
+    in <xref linkend="TrackerV5ArtifactBrowsing" />). For now let&#39;s click
     on the &#34;Submit new artifact&#34; item (or whatever the artifact
     name is) from the Tracker Menu Bar in the upper part of the welcome
-    screen (see <xref linkend="FigureASampleTrackerBrowsingScreen"
+    screen (see <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen"
 	/>).</para>
 
-    <figure id="ArtifactSubmissionScreenFromTheCodendiProject">
+    <figure id="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject">
       <title>A sample artifact submission screen (the artifact is of type &#34;bug&#34; here)</title>
 
       <mediaobject>
@@ -104,7 +104,7 @@
       </mediaobject>
     </figure>
 
-    <para><xref linkend="ArtifactSubmissionScreenFromTheCodendiProject"
+    <para><xref linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject"
 	/> shows a sample submission screen from one of the &SYS_PRODUCT_NAME; hosted
     projects. Because of the &SYS_PRODUCT_NAME; Tracker high level of
     customizability no two submission screens look alike. Depending on
@@ -113,7 +113,7 @@
     may change as well.</para>
 
     <para>In the example provided on <xref
-    linkend="ArtifactSubmissionScreenFromTheCodendiProject" /> the
+    linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject" /> the
     artifact type is a bug (also know as &#34;defect&#34; in corporate
     language). The user is asked to give a one-line description for the bug and a longer
     text entry field where you can fully characterize the bug. Then, he has to choose a bug Category
@@ -136,7 +136,7 @@
     permission level. Depending whether you are a project member or an
     ordinary registered user the artifact fields displayed on the
     screen may differ. As an example, on <xref
-    linkend="ArtifactSubmissionScreenFromTheCodendiProject" />, the bug
+    linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject" />, the bug
     submitter using the form is probably a project member because
     giving access to the &#34;Assigned to&#34; field to an ordinary
     registered user doesn&#39;t make much sense. It is very unlikely
@@ -159,18 +159,18 @@
 
   </section>
 
-  <section id="ArtifactBrowsing">
+  <section id="TrackerV5ArtifactBrowsing">
     <title>Artifact Browsing</title>
 
     <para>&SYS_PRODUCT_NAME; offers the ability to browse the artifact database
     according to a variable set of criteria.</para>
 
-    <section id="ArtifactSelectionCriteria">
+    <section id="TrackerV5ArtifactSelectionCriteria">
       <title>Selection Criteria</title>
 
       <para>The upper part of the artifact browsing screen is devoted to the
         selection criteria. <xref
-	  linkend="FigureASampleTrackerBrowsingScreen" /> shows the
+	  linkend="TrackerV5FigureASampleTrackerBrowsingScreen" /> shows the
         default set of selection criteria that is available when a new tracker
         is created. You can select bugs by Category (the module in which the
         bug occurred), Group (nature of the bug like Crash, Documentation
@@ -183,7 +183,7 @@
       field type. The Tracker Service currently has several types
       of fields used as search criteria:</para>
 
-      <section id="ArtifactSelectBoxField">
+      <section id="TrackerV5ArtifactSelectBoxField">
 	<title>Select Box Field and Multiple Select Box Field</title>
 
 	<para>A select box field can take its value in a set of
@@ -198,7 +198,7 @@
       </section>
 
 
-      <section id="ArtifactTextField">
+      <section id="TrackerV5ArtifactTextField">
 	<title>Text Field</title>
 
         <para>A Text field can contain any kind of text. There are two
@@ -238,7 +238,7 @@
 
       </section>
 
-      <section id="ArtifactDateField">
+      <section id="TrackerV5ArtifactDateField">
 	<title>Date Field</title>
 
 	<para>A date criteria follows the following pattern:
@@ -256,7 +256,7 @@
 
       </section>
 
-      <section id="ArtifactIntegerField">
+      <section id="TrackerV5ArtifactIntegerField">
 	<title>Integer Field</title>
 
 	<para>An integer field can take positive or (possibly)
@@ -297,7 +297,7 @@
 	</itemizedlist>
       </section>
 
-      <section id="ArtifactFloatingPointNumberField">
+      <section id="TrackerV5ArtifactFloatingPointNumberField">
 	<title>Floating Point Number Field</title><para>A floating
 	point number field can take positive or (possibly) negative
 	values, may have a decimal part or use the exponential
@@ -350,9 +350,9 @@
       configurable by the user. (see <xref
 	  linkend="TrackerV5Reports" />). Therefore, the artifact browsing
       screen might look completely different from the one shown in
-      <xref linkend="FigureASampleTrackerBrowsingScreen" />.</para>
+      <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />.</para>
 
-      <figure id="FigureASampleTrackerBrowsingScreen">
+      <figure id="TrackerV5FigureASampleTrackerBrowsingScreen">
 	<title>A sample Tracker browsing screen</title>
 
 	<mediaobject>
@@ -373,7 +373,7 @@
       simply click on the icon <inlinemediaobject><imageobject><imagedata
           format="PNG" fileref="../../icons/artifact-arrow.png" /></imageobject></inlinemediaobject>.</para>
 
-      <section id="ArtifactListSorting">
+      <section id="TrackerV5ArtifactListSorting">
 	<title>Artifact List Sorting</title>
 
 	<para>By default, artifacts are sorted by the chronological order of the submission on the &SYS_PRODUCT_NAME;.</para>
@@ -398,18 +398,18 @@
 
       </section>
       
-    <section id="ExportSearchResults">
+    <section id="TrackerV5ExportSearchResults">
         <title>Export Tracker Search Results</title>
         <para>In the report "options" menu, "Export all report columns" and "Export all columns" links allow
         to export all artifacts of your search result into CSV format. 
         Using this facility you can easily select the tracker
         artifacts that you want to process with other tools outside 
         &SYS_PRODUCT_NAME;. </para>
-        <para>See <xref linkend="ArtifactImport" /> for how to import artifacts 
+        <para>See <xref linkend="TrackerV5ArtifactImport" /> for how to import artifacts 
         from CSV file.</para>
     </section>
     
-      <section id="ArtifactPrinterFriendlyVersion">
+      <section id="TrackerV5ArtifactPrinterFriendlyVersion">
 	<title>Printer Friendly Version</title>
 
 	<para>At any point in the process of browsing the tracker
@@ -421,7 +421,7 @@
       </section>
 
 
-	<section id="ArtifactCharts">
+	<section id="TrackerV5ArtifactCharts">
 	 <title>Graphical visualization</title>
 	 <para>You can also view graphical results of your search by adding a Charts tab.
      There is three types of graphs supported : Pie, Bar and Gantt charts. 
@@ -462,7 +462,7 @@
       <title>Tracker Report Setting</title>
       <para>
        The current report is defined at the top left of the report page (see 
-       <xref linkend="FigureASampleTrackerBrowsingScreen" />).
+       <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />).
        If several reports are available, a select box will allow to change the 
        current report.
       </para>
@@ -483,7 +483,7 @@
        You can add as many renderers as you want in any tracker report. 
        Renderer are ordered in tabs. Adding a renderer is easy: simply select 
        the [+] tab on the right of the renderer tabs (see 
-       <xref linkend="FigureASampleTrackerBrowsingScreen" />).
+       <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />).
        Select the kind of renderer you want to add (either table or charts), give 
        the renderer a name and a description, and select the submit button.
       </para>
@@ -501,7 +501,7 @@
         Table renderer is a textual renderer, usually displayed in a table.
         Columns of the table are tracker fields, and rows of the table are 
         the artifacts.
-        <xref linkend="FigureASampleTrackerBrowsingScreen" />) shows an example 
+        <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />) shows an example 
         of a table renderer.
        </para>
        <para>
@@ -549,7 +549,7 @@
        <para>
         Charts renderer allows to add charts in your report.
         &SYS_PRODUCT_NAME; provides three kind of graphs: pie, bar and gantt charts.
-        <figure id="FigureChartsTrackerBrowsingScreen">
+        <figure id="TrackerV5FigureChartsTrackerBrowsingScreen">
          <title>A sample charts renderer screen</title>
             <mediaobject>
              <imageobject>
@@ -568,7 +568,7 @@
        <section id="TrackerV5ReportRendererChartPie">
         <title>Pie Chart</title>
         <para>
-          <figure id="FigurePieChartEdition">
+          <figure id="TrackerV5FigurePieChartEdition">
           <title>Pie chart edition screen</title>
             <mediaobject>
                 <imageobject>
@@ -582,7 +582,7 @@
        <section id="TrackerV5ReportRendererChartBar">
         <title>Bar Chart</title>
         <para>
-          <figure id="FigureBarChartEdition">
+          <figure id="TrackerV5FigureBarChartEdition">
           <title>Bar chart edition screen</title>
             <mediaobject>
                 <imageobject>
@@ -596,7 +596,7 @@
        <section id="TrackerV5ReportRendererChartGantt">
         <title>Gantt Chart</title>
         <para>
-          <figure id="FigureGanttChartEdition">
+          <figure id="TrackerV5FigureGanttChartEdition">
           <title>Gantt chart edition screen</title>
             <mediaobject>
                 <imageobject>
@@ -640,13 +640,13 @@
 
   
   </section>
-  <section id="ArtifactUpdate">
+  <section id="TrackerV5ArtifactUpdate">
     <title>Artifact Update</title>
 
     <para>Selecting an artifact from the list generated by
     a search operation will bring you to a screen with all the artifact
     details. Depending on the permissions you have on this tracker 
-    (see <xref linkend="FieldPermissionsManagement" />), the 
+    (see <xref linkend="TrackerV5FieldPermissionsManagement" />), the 
     detailed view is made of text fields and menus that you
     can update with new values. If you are an
     anonymous user or a registered user who does not belong to the
@@ -657,12 +657,12 @@
     <para>The Artifact Update screen is divided in several parts:
     <emphasis role="bold">Header and Comments.</emphasis></para>
 
-    <section id="ArtifactHeaders">
+    <section id="TrackerV5ArtifactHeaders">
       <title>Header</title>
 
       <para>The header zone is where you&#39;ll find all the fields
       associated with an artifact. As shown on <xref
-      linkend="FigureHeaderOfArtifactUpdateScreen" />, many of these
+      linkend="TrackerV5FigureHeaderOfArtifactUpdateScreen" />, many of these
       fields are assigned a set of predefined values (Status,
       Category, Resolution) while some others have a number format
       (Effort) or a free text format (Summary). For more clarity, 
@@ -673,7 +673,7 @@
       linkend="TrackerV5Administration" /> for more details on the
       Tracker configuration).</para>
       
-      <section id="DynamicFields">
+      <section id="TrackerV5DynamicFields">
         <title>Dynamic Fields</title>
         <para>Some fields have a particular behaviour and some explanations seem necessary.
         </para>
@@ -722,7 +722,7 @@
                     project admins and members).
                 </para>
       
-                <figure id="FigureArtifactPermissions">
+                <figure id="TrackerV5FigureArtifactPermissions">
                     <title>Permission on an artifact</title>
         
                         <mediaobject>
@@ -737,7 +737,7 @@
         
       </section>
       
-      <figure id="FigureHeaderOfArtifactUpdateScreen">
+      <figure id="TrackerV5FigureHeaderOfArtifactUpdateScreen">
 	<title>Header of Tracker Update screen (artifact fields)</title>
 
 	<mediaobject>
@@ -749,7 +749,7 @@
       </figure>
     </section>
 
-    <section id="ArtifactComments">
+    <section id="TrackerV5ArtifactComments">
       <title>Comments</title>
 
       <para>As many follow-up comments as needed can be attached to
@@ -792,7 +792,7 @@
    </itemizedlist>
 
 
-      <figure id="FigureFollowupCommentsAttachedToAnArtifact">
+      <figure id="TrackerV5FigureFollowupCommentsAttachedToAnArtifact">
 	<title>Follow-up comments attached to an artifact</title>
 	
 	<mediaobject>
@@ -805,7 +805,7 @@
       
     </section>
     
-    <section id="ArtifactMassChange">
+    <section id="TrackerV5ArtifactMassChange">
       <title>Artifact Mass Change</title>
       <para>
        Tracker admins have the ability to update many artifacts at once.
@@ -825,7 +825,7 @@
        You can also add a follow-up comment.
       </para>
       <para>N.B. The artifact mass change feature allows to by-pass any workflow on field(s)</para>
-      <figure id="FigureArtifactMassChange">
+      <figure id="TrackerV5FigureArtifactMassChange">
         <title>Artifact Mass Change</title>
         
         <mediaobject>
@@ -853,7 +853,7 @@
             There one can check or unckeck artifacts. Tracker/Report can be selected, and search criteria specified to browse trackers.
             Once artifact selection is done, selected artifacts are added to the input text field (comma separated), and can be viewed in trackers tabs.
             Note that these advanced functionalities are not available at artifact creation.
-            <figure id="HowToLinkAnArtifact">
+            <figure id="TrackerV5HowToLinkAnArtifact">
                 <title>How to link an artifact</title>
                     <mediaobject>
                         <imageobject>
@@ -862,7 +862,7 @@
                         </imageobject>
                     </mediaobject>
              </figure>
-             <figure id="ModalWindowLinkAnArtifact">
+             <figure id="TrackerV5ModalWindowLinkAnArtifact">
                 <title>Browse existing artifacts</title>
                     <mediaobject>
                         <imageobject>
@@ -923,7 +923,7 @@
 
   </section>
 
-    <section id="ArtifactImport">
+    <section id="TrackerV5ArtifactImport">
         <title>Tracker Artifact Import</title>
 
         <para>Project Administrators have the means to import
@@ -1028,7 +1028,7 @@
             data, you must use the same to import those data.
             You can refer to the export format especially
             for the date formats as well as the format of the
-            follow-up comments (see <xref linkend="ArtifactComments" />).
+            follow-up comments (see <xref linkend="TrackerV5ArtifactComments" />).
             The first record in the CSV import file is always the 
             header row containing all the tracker field names that 
             will be used in the following artifact records.</para>
@@ -1109,7 +1109,7 @@
         </section>
 
         <para>
-            <tip id="ExcelAndRegionals">
+            <tip id="TrackerV5ExcelAndRegionals">
                 <title>Tip: Excel and Regionals</title>
                 <para>
                 If a .csv file is opened in Excel, any change to the spreadsheet 
@@ -1145,7 +1145,7 @@
         </para>
     </section>
   
-  <section id="DefaultTrackerAccessPermissions">
+  <section id="TrackerV5DefaultTrackerAccessPermissions">
     <title>Default Tracker Access Permissions</title>
 
     <para>Depending on the class of citizen a user belongs to and the
@@ -1174,7 +1174,7 @@
 
 	<tbody>
 	  <row>
-	    <entry><link linkend="ArtifactSubmission">New Artifact
+	    <entry><link linkend="TrackerV5ArtifactSubmission">New Artifact
 	      Submission</link></entry> <entry>By default any &SYS_PRODUCT_NAME;
 	      visitor, whether logged in or not, has the ability to
 	      submit a new artifact to a tracker. The tracker
@@ -1184,7 +1184,7 @@
 	      the tracker is made private.</entry>
 	  </row>
 	  <row>
-	    <entry><link linkend="ArtifactBrowsing">Artifact
+	    <entry><link linkend="TrackerV5ArtifactBrowsing">Artifact
 	      Browsing</link></entry> <entry>Searching the Artifact
 	      database and browsing the results is available to all
 	      &SYS_PRODUCT_NAME; visitors (whether registered or not) unless the
@@ -1193,14 +1193,14 @@
 	      project members.</entry>
 	  </row>
 	  <row>
-	    <entry><link linkend="ArtifactUpdate">Artifact
+	    <entry><link linkend="TrackerV5ArtifactUpdate">Artifact
 	    Update</link></entry> <entry>By default only project
 	    members can update an artifact. Non members have only
 	    limited access and can only add a comment or attach a
 	    file.</entry>
 	  </row>
 	  <row>
-	    <entry><link linkend="ArtifactImport">Tracker
+	    <entry><link linkend="TrackerV5ArtifactImport">Tracker
 	      Administration - Artifact Import</link></entry>
 	    <entry>Only Project administrators and
 	      project members with Admin. permission can import data into trackers.
@@ -1297,7 +1297,7 @@
       each of the trackers.</para></tip></para>
 
     <para>To define a new tracker you must provide the following
-      information (see <xref linkend="FigureCreateANewTracker"
+      information (see <xref linkend="TrackerV5FigureCreateANewTracker"
 	/>): </para>
 
     <itemizedlist mark="bullet" spacing="compact">
@@ -1329,7 +1329,7 @@
       </listitem>
     </itemizedlist>
 
-    <figure id="FigureCreateANewTracker">
+    <figure id="TrackerV5FigureCreateANewTracker">
       <title>Creation of a new tracker (here a defect tracking system)</title>
       
       <mediaobject>
@@ -1366,7 +1366,7 @@
 	  specific tracker called &#34;Empty&#34; allows you to create a
 	  virgin tracker with no predefined fields other than the
 	  minimal set of required fields. See <xref
-          linkend="CodendiTrackerTemplates" /> for more explanations
+          linkend="TrackerV5CodendiTrackerTemplates" /> for more explanations
           on the semantic of those templates.</para>
       </listitem>
 
@@ -1402,7 +1402,7 @@
   </section>
 
 
-  <section id="CodendiTrackerTemplates">
+  <section id="TrackerV5CodendiTrackerTemplates">
     <title>&SYS_PRODUCT_NAME;-wide Tracker Templates</title>
 
     <para>The standard trackers provided for each new &SYS_PRODUCT_NAME; project are:
@@ -1427,7 +1427,7 @@
 	accordingly.
 	</para>
 
-    <section id="BugTemplate">
+    <section id="TrackerV5BugTemplate">
       <title>The Bug Tracker Template</title> 
 
       <para>One of the golden rules in a collaborative project
@@ -1445,7 +1445,7 @@
     </section>
 
 
-    <section id="TaskTemplate">
+    <section id="TrackerV5TaskTemplate">
       <title>The Task Tracker Template</title>
 
       <para>The &SYS_PRODUCT_NAME; Task tracker is a task manager and not a project
@@ -1493,7 +1493,7 @@
       </itemizedlist>
 
     </section>
-    <section id="ScrumTemplate">
+    <section id="TrackerV5ScrumTemplate">
       <title>The User Story Template</title>
 
       <para>Codendi makes it easy to implement the Scrum methodology, by providing
@@ -1522,7 +1522,7 @@
 
     </section>
     
-    <section id="ChangeRequestTemplate">
+    <section id="TrackerV5ChangeRequestTemplate">
       <title>The Change Request Tracker Template</title>
       <para>
        This tracker allows to submit change requests for your application adjustment. 
@@ -1567,7 +1567,7 @@
       </para>
     </section>
     
-    <section id="RequirementsTemplate">
+    <section id="TrackerV5RequirementsTemplate">
       <title>The Requirements Tracker Template</title>
       <para>
        This tracker helps software engineers to identify a necessary attribute, 
@@ -1608,7 +1608,7 @@
       </para>
     </section>
     
-    <section id="RiskTemplate">
+    <section id="TrackerV5RiskTemplate">
       <title>The Risk Tracker Template</title>
       <para>
        This tracker aims to support Risk management. It provides information for identification, 
@@ -1915,7 +1915,7 @@
         -->
       </section>
 
-      <section id="FieldPermissionsManagement">
+      <section id="TrackerV5FieldPermissionsManagement">
         <title>Field Permissions Management</title>
 
         <para>Beside defining access permissions for the tracker and
@@ -2257,9 +2257,9 @@
   </section>
 
 
-  <section id="CreationandModificationofaTrackerField">
+  <section id="TrackerV5CreationandModificationofaTrackerField">
 	<title>Creation and Modification of a Tracker Field</title>
-    <section id="AddFieldToTracker">
+    <section id="TrackerV5AddFieldToTracker">
         <title>Add a field to a tracker</title>
         <para>To add a field to a tracker, you just have to choose a field type 
         on the fields palette. Simply click on it, and a property field form will 
@@ -2282,7 +2282,7 @@
                 longer description of the purpose of this field.</para>
             </listitem>
              <listitem>
-	    <para id="FieldDisplaySize" xreflabel="Field Display
+	    <para id="TrackerV5FieldDisplaySize" xreflabel="Field Display
 	    Size"><emphasis role="bold">Size</emphasis>: this
 	    property allows you to define how much space a field is
 	    going to take on the screen. It has a different meaning
@@ -2364,7 +2364,7 @@
                 will sort automatically your values.
                 </para>
                 <para>&SYS_PRODUCT_NAME; allows to add what we call "decorator" to each value but only on edition mode (see <xref
-                linkend="ModifyFieldOfTracker" />)</para>
+                linkend="TrackerV5ModifyFieldOfTracker" />)</para>
             </listitem>
             <listitem>
                 <para><emphasis role="bold">Binding a field to a list of users</emphasis>: 
@@ -2414,9 +2414,9 @@
 
     </section>
     
-    <section id="ModifyFieldOfTracker">
+    <section id="TrackerV5ModifyFieldOfTracker">
         <title>Modify the field of a tracker</title>
-        <section id="EditFieldOfTracker">
+        <section id="TrackerV5EditFieldOfTracker">
             <title>Edit the field of a tracker</title>
             <para>In order to make some change on a field, you can simply edit 
             it by clicking on the Edit icon.</para>
@@ -2435,7 +2435,7 @@
                  List values can be embellished with a decorator. A decorator 
                  is a colored square. You can choose the color for each value 
                  in a large palette of colors.
-                 (see <xref linkend="FigureTrackerAdminFieldUsageEdition" />).
+                 (see <xref linkend="TrackerV5FigureTrackerAdminFieldUsageEdition" />).
                  Decorators can be used to get a quick visual indicator feedback 
                  for the user. For instance, the values for the priority of a bug 
                  can be given a color with the meaning "the darker the more important".
@@ -2481,7 +2481,7 @@
                 </listitem>
             </itemizedlist>
             
-            <figure id="FigureTrackerAdminFieldUsageEdition">
+            <figure id="TrackerV5FigureTrackerAdminFieldUsageEdition">
              <title>Tracker Admin Field Edition</title>
              <mediaobject>
               <imageobject>
@@ -2491,7 +2491,7 @@
             </figure>
             
         </section>
-        <section id="DeleteFieldOfTracker">
+        <section id="TrackerV5DeleteFieldOfTracker">
             <title>Delete the field of a tracker</title>
             <para>In order to delete a field, simply click on the Delete icon 
             on the visualization tracker page. The field won't be deleted since it will be 
@@ -2525,7 +2525,7 @@
         <para>
             Most of the trackers you will use already defined a semantic. 
             This is the case for instance for all tracker templates (see 
-            <xref linkend="CodendiTrackerTemplates" />).
+            <xref linkend="TrackerV5CodendiTrackerTemplates" />).
         </para>
         <para>
             To define or update a semantic field, select the pencil icon next to the
@@ -2620,7 +2620,7 @@
       </orderedlist>
 
       <para>First, you select a source field.</para>
-      <figure id="FigureFieldChooseSource">
+      <figure id="TrackerV5FigureFieldChooseSource">
         <title>Source field selection</title>
         <mediaobject>
           <imageobject>
@@ -2630,7 +2630,7 @@
         </mediaobject>
       </figure>
       <para>Once the source field selected (here, "Operating System"), you can select the target field.</para>
-      <figure id="FigureFieldChooseTarget">
+      <figure id="TrackerV5FigureFieldChooseTarget">
         <title>Target Field Selection</title>
         <mediaobject>
           <imageobject>
@@ -2640,7 +2640,7 @@
         </mediaobject>
       </figure>
       <para>Then submit, and a matrix with all values is displayed:</para>
-      <figure id="FigureFieldDependenciesMatrix">
+      <figure id="TrackerV5FigureFieldDependenciesMatrix">
         <title>Dependencies Matrix</title>
         <mediaobject>
           <imageobject>
@@ -2650,7 +2650,7 @@
         </mediaobject>
       </figure>
       <para>You can now check the boxes corresponding to the dependencies. In the example, if the source field value is "Linux", the corresponding target values are "2.0", "2.2", "2.4", "2.6".</para>
-      <figure id="FigureFieldDependenciesMatrixFilled">
+      <figure id="TrackerV5FigureFieldDependenciesMatrixFilled">
         <title>A Filled Field Dependencies Matrix </title>
         <mediaobject>
           <imageobject>
@@ -2660,7 +2660,7 @@
         </mediaobject>
       </figure>
       <para>Once a field dependency has been created, it appeared at the "Choose Source/Target" page as a quick link if you need to edit it. Note that to delete a field dependency, you need to empty the matrix.</para>
-      <figure id="FigureExistingFieldDependencies">
+      <figure id="TrackerV5FigureExistingFieldDependencies">
         <title>Display of existing Field Dependencies</title>
         <mediaobject>
           <imageobject>
@@ -2670,7 +2670,7 @@
         </mediaobject>
       </figure>
       <para>Once dependencies are defined, the final user (when submitting/updating an artifact) will see the Version options filtered according to the selection of the Operating System:</para>
-      <figure id="FigureFieldDependenciesFinalUserLinux">
+      <figure id="TrackerV5FigureFieldDependenciesFinalUserLinux">
         <title>Proposed versions for Linux</title>
         <mediaobject>
           <imageobject>
@@ -2679,7 +2679,7 @@
           </imageobject>
         </mediaobject>
       </figure>
-      <figure id="FigureFieldDependenciesFinalUserMac">
+      <figure id="TrackerV5FigureFieldDependenciesFinalUserMac">
         <title>Proposed versions for MacOS X</title>
         <mediaobject>
           <imageobject>
@@ -2688,7 +2688,7 @@
           </imageobject>
         </mediaobject>
       </figure>
-      <figure id="FigureFieldDependenciesFinalUserWin">
+      <figure id="TrackerV5FigureFieldDependenciesFinalUserWin">
         <title>Proposed versions for MS Windows</title>
         <mediaobject>
           <imageobject>
@@ -2697,7 +2697,7 @@
           </imageobject>
         </mediaobject>
       </figure>
-      <figure id="FigureFieldDependenciesFinalUserBSD">
+      <figure id="TrackerV5FigureFieldDependenciesFinalUserBSD">
         <title>Proposed versions for NetBSD</title>
         <mediaobject>
           <imageobject>
@@ -2737,7 +2737,7 @@
 	message to the originator, a request for the originator to
 	provide commonly missing information like version numbers or
 	type of machine used, etc. (see <xref
-	  linkend="FigureTrackerCannedResponses" /></para>
+	  linkend="TrackerV5FigureTrackerCannedResponses" /></para>
 
       <para>Rather than repeatedly typing the same follow-up
 	comments, &SYS_PRODUCT_NAME; allows project members to create a predefined
@@ -2746,7 +2746,7 @@
 	selecting the appropriate response from the pull down menu in
 	the artifact update form.</para>
 
-      <figure id="FigureTrackerCannedResponses">
+      <figure id="TrackerV5FigureTrackerCannedResponses">
 	<title>Definition of Canned Responses</title>
 
 	<mediaobject>
@@ -2787,7 +2787,7 @@
                 <listitem>
                     <para><emphasis role="bold">Second step</emphasis>:
                     you have to define the transitions of the workflow.
-                    <xref linkend="ManageWorkflowScreen" /> shows a sample workflow definition screen used in the 
+                    <xref linkend="TrackerV5ManageWorkflowScreen" /> shows a sample workflow definition screen used in the 
                     Bugs Tracker template.
                     Thanks to the "Workflow Administration" part of the page, you see that the workflow is defined on the field "Status". 
                     The workflow can be simply enabled or disabled while checking the checkbox and click on "Submit".
@@ -2795,12 +2795,12 @@
                     </para>
                     <para>
                     The "Define the transitions" part allows to define the transitions of the workflow.
-                    In the example provided on <xref linkend="ManageWorkflowScreen" />, various transitions have been defined.
+                    In the example provided on <xref linkend="TrackerV5ManageWorkflowScreen" />, various transitions have been defined.
                     For instance, at the submission of an artifact, defined by the state "new artifact", the only value available for the field "Status"
                     will be "New".
                     When the status value is "New", the only value available will be "Unconfirmed", "Verified" and "Closed".
                     </para>
-                    <figure id="ManageWorkflowScreen">
+                    <figure id="TrackerV5ManageWorkflowScreen">
                         <title>A sample workflow definition screen</title>
                         <mediaobject>
                             <imageobject>
@@ -2821,9 +2821,9 @@
                  Once the transition is defined, you can refine who can make 
                  the transition. To do this, click the "[details]" link next to the 
                  transition. Then, select the group of users you allow to do the
-                 transition (see <xref linkend="FigureTrackerWorkflowTransitionsPermissions" />).
+                 transition (see <xref linkend="TrackerV5FigureTrackerWorkflowTransitionsPermissions" />).
                 </para>
-                <figure id="FigureTrackerWorkflowTransitionsPermissions">
+                <figure id="TrackerV5FigureTrackerWorkflowTransitionsPermissions">
                  <title>Permissions on workflow transitions</title>
                     <mediaobject>
                       <imageobject>
@@ -2947,7 +2947,7 @@
 	with.</para>
 
 	<para>The customization matrix (see <xref
-	    linkend="FigureTrackerNotificationMatrix" />) presents you with a
+	    linkend="TrackerV5FigureTrackerNotificationMatrix" />) presents you with a
 	series of check boxes. Each check box allows you to specify
 	what kind of events you want to be aware of depending on
 	the role you play with respect to the artifact.</para>
@@ -2982,7 +2982,7 @@
 	<para>For each of these roles you can instruct the &SYS_PRODUCT_NAME;
 	Tracker to send email notifications to you only when some
 	specific events occur. Nine different events (see the right
-	most column on <xref linkend="FigureTrackerNotificationMatrix"
+	most column on <xref linkend="TrackerV5FigureTrackerNotificationMatrix"
 	    />) are monitored by the &SYS_PRODUCT_NAME; Tracker. The description of the
 	events is self explanatory and only appeal one comment: the
 	first 8 events in the list can only occur on artifact
@@ -2990,7 +2990,7 @@
 	new artifact.</para>
 
 	<para>Let's review the sample matrix shown on <xref
-	    linkend="FigureTrackerNotificationMatrix" /> and see, step by
+	    linkend="TrackerV5FigureTrackerNotificationMatrix" /> and see, step by
 	step, how this user has configured her notification
 	settings:</para>
 
@@ -3034,7 +3034,7 @@
 
 	</itemizedlist>
 
-	<figure id="FigureTrackerNotificationMatrix">
+	<figure id="TrackerV5FigureTrackerNotificationMatrix">
 	  <title>Configuration of the Personal Notification Matrix</title>
 	  <mediaobject>
 	    <imageobject>
@@ -3047,7 +3047,7 @@
       </section>
       -->
 
-      <!--<section id="ToggleEmailNotification">
+      <!--<section id="TrackerV5ToggleEmailNotification">
 	<title>Suspend Email Notification</title>
 
 	<para>Sometimes, it can be convenient to suspend all email
@@ -3068,7 +3068,7 @@
         <title>Tracker Artifact Import</title>
         <para>
         &SYS_PRODUCT_NAME; allows you to import artifacts in a tracker from 
-        a CSV file. See <xref linkend="ArtifactImport" /> for more details about 
+        a CSV file. See <xref linkend="TrackerV5ArtifactImport" /> for more details about 
         this feature.
         </para>
     </section>
