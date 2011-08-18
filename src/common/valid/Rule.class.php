@@ -721,7 +721,7 @@ extends Rule {
 
     function Rule_File() {
         $this->maxSize = $GLOBALS['sys_max_size_upload'];
-        $this->i18nPageName = 'rule_valid';
+        $this->i18nPageName = 'rule_file';
     }
 
     function setMaxSize($max) {
