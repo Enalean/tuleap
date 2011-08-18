@@ -534,7 +534,7 @@ class TrackerFactory {
             // XML validation before creating a new tracker
             $dom = new DOMDocument;
             $dom->load($xmlFile);
-            $rng = realpath(dirname(__FILE__).'/../www/resources/tracker.rng');
+            $rng = realpath(dirname(__FILE__).'/../../www/resources/tracker.rng');
             if(!@$dom->relaxNGValidate($rng)) { //hide warning since we will extract the errors below
                 //try to be more verbose for the end user (RelaxNG notices are hidden)
                 $hp = Codendi_HTMLPurifier::instance();
