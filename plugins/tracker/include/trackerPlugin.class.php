@@ -26,7 +26,12 @@ define('TRACKER_BASE_URL', '/plugins/tracker');
  */
 class trackerPlugin extends Plugin {
     
-    public $scopeProjectIsRestrictedPerDefault = true; //until the plugin becomes stable
+    /**
+     * @var bool True if the plugin should be disabled for all projects on installation
+     *
+     * Usefull only for plugins with scope == SCOPE_PROJECT
+     */
+    public $isRestrictedByDefault = true; //until the plugin becomes stable
     
     public function __construct($id) {
         parent::__construct($id);

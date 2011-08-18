@@ -36,7 +36,16 @@ class Plugin {
     const SCOPE_PROJECT = 1;
     const SCOPE_USER    = 2;
     
-    public $scopeProjectIsRestrictedPerDefault = false;
+    /**
+     * @var bool True if the plugin should be disabled for all projects on installation
+     *
+     * Usefull only for plugins with scope == SCOPE_PROJECT
+     */
+    public $isRestrictedByDefault = false;
+    
+    /**
+     * @var array List of allowed projects
+     */
     protected $allowedForProject = array();
     
     public function Plugin($id = -1) {
