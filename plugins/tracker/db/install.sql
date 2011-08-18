@@ -535,6 +535,13 @@ SELECT DISTINCT group_id , 'plugin_tracker:service_lbl_key' , 'plugin_tracker:se
 FROM service
 WHERE group_id != 100;
 
+-- Disable for all templates
+UPDATE service INNER JOIN groups USING(group_id) 
+SET service.is_active = 1 
+WHERE groups.type = 2 
+  AND service.short_name = 'plugin_tracker';
+
+
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('PLUGIN_TRACKER_ACCESS_FULL',1,1);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_FULL',2);
 INSERT INTO permissions_values (permission_type,ugroup_id) VALUES ('PLUGIN_TRACKER_ACCESS_FULL',3);
