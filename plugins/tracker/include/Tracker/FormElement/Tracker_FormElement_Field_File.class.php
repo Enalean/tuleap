@@ -19,6 +19,7 @@
  */
 
 require_once('Tracker_FormElement_Field.class.php');
+require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact.class.php');
 require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_File.class.php');
 require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_File_ValueDao.class.php');
 require_once('dao/Tracker_FormElement_Field_Value_FileDao.class.php');
@@ -428,7 +429,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     }
     
     public function getRootPath() {
-        return $GLOBALS['sys_data_dir'] .'/plugins/tracker/'. $this->id;
+        return Config::get('sys_data_dir') .'/plugins/tracker/'. $this->getId();
     }
     
     protected function isImage($value) {

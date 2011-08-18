@@ -50,12 +50,14 @@ Mock::generate('BaseLanguage');
 
 class Tracker_FormElement_Field_FileTest extends UnitTestCase {
     function setUp() {
+        Config::store();
         mkdir(dirname(__FILE__) .'/_fixtures/attachments/thumbnails/');
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
     }
     
     function tearDown() {
+        Config::restore();
         foreach(glob(dirname(__FILE__) .'/_fixtures/attachments/thumbnails/*') as $f) {
             if ($f != '.' && $f != '..') {
                 unlink($f);
@@ -667,5 +669,11 @@ class Tracker_FormElement_Field_FileTest extends UnitTestCase {
         $this->assertTrue($not_required_file->isValid($artifact, $value));
     }
     
+    function testGetRootPath() {
+        Config::load(dirname(__FILE__).'/_fixtures/local.inc');
+        $f = new Tracker_FormElement_Field_FileTestVersion();
+        $f->setReturnValue('getId', 123);
+        $this->assertEqual($f->getRootPath(), Config::get('sys_data_dir') .'/plugins/tracker/123');
+    }
 }
 ?>

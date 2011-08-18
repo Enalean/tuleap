@@ -27,10 +27,10 @@ Mock::generate('Tracker_FormElement_Field_File');
 class Tracker_FileInfoTest extends UnitTestCase {
     
     function setUp() {
-        $GLOBALS['sys_data_dir'] = dirname(__FILE__) .'/_fixtures/data';
-        
+        $this->fixture_data_dir = dirname(__FILE__) .'/_fixtures/data';
         $field = new MockTracker_FormElement_Field_File();
         $field->setReturnValue('getId', 123);
+        $field->setReturnValue('getRootPath', $this->fixture_data_dir .'/123');
         
         $id           = 1;
         $submitted_by = 103;
@@ -44,7 +44,6 @@ class Tracker_FileInfoTest extends UnitTestCase {
         $this->file_info_2 = new Tracker_FileInfo($id, $field, $submitted_by, $description, $filename, $filesize, $filetype);
     }
     function tearDown() {
-        unset($GLOBALS['sys_data_dir']);
         unset($this->file_info_1);
         unset($this->file_info_2);
     }
@@ -59,8 +58,8 @@ class Tracker_FileInfoTest extends UnitTestCase {
     }
     
     function testGetPath() {
-        $this->assertEqual($this->file_info_1->getPath(), $GLOBALS['sys_data_dir'] .'/tracker/123/1');
-        $this->assertEqual($this->file_info_1->getThumbnailPath(), $GLOBALS['sys_data_dir'] .'/tracker/123/thumbnails/1');
+        $this->assertEqual($this->file_info_1->getPath(), $this->fixture_data_dir .'/123/1');
+        $this->assertEqual($this->file_info_1->getThumbnailPath(), $this->fixture_data_dir .'/123/thumbnails/1');
         $this->assertNull($this->file_info_2->getThumbnailPath(), "A file that is not an image doesn't have any thumbnail (for now)");
     }
     
