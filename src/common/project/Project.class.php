@@ -16,6 +16,8 @@ require_once('common/svn/ServiceSVN.class.php');
 
 require_once('ProjectManager.class.php');
 
+require_once('ServiceNotAllowedForProjectException.class.php');
+
 /*
 
 	An object wrapper for project data
@@ -134,10 +136,6 @@ class Project extends Group {
                     $res_row['label'] = $Language->getText($matches[1], $matches[2]);
                 }
             }
-            $this->service_data_array[$short_name] = $res_row;
-            if ($short_name) {
-                $this->use_service[$short_name] = $res_row['is_used'];
-            }
             
             // Init Service object corresponding to given service
             if (isset($classnames[$short_name])) {
@@ -145,10 +143,18 @@ class Project extends Group {
             } else {
                 $classname = 'Service';
             }
-            $s = new $classname($this, $res_row);
-            $this->services[$short_name] = $s;
-            if ($res_row['is_active']) {
-                $this->cache_active_services[] = $s;
+            try {
+                $s = new $classname($this, $res_row);
+                $this->service_data_array[$short_name] = $res_row;
+                if ($short_name) {
+                    $this->use_service[$short_name] = $res_row['is_used'];
+                }
+                $this->services[$short_name] = $s;
+                if ($res_row['is_active']) {
+                    $this->cache_active_services[] = $s;
+                }
+            } catch (ServiceNotAllowedForProjectException $e) {
+                //do nothing
             }
         }
     }

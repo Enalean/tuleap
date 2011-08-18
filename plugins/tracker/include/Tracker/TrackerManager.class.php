@@ -26,6 +26,23 @@ require_once('Report/Tracker_ReportFactory.class.php');
 class TrackerManager { /* extends Engine? */
     
     /**
+     * Check that the service is used and the plugin is allowed for project $project
+     * if it is not the case then exit with an error
+     * 
+     * @param Project $project
+     * 
+     * @return bool true if success. Otherwise the process terminates.
+     */
+    public function checkServiceEnabled(Project $project) {
+        if ($project->usesService('plugin_tracker')) {
+            return true;
+        }
+        $GLOBALS['Response']->addFeedback('error', "The project doesn't use the 'tracker v5' service");
+        $GLOBALS['HTML']->redirect('/projects/'. $project->getUnixName() .'/');
+        exit();
+    }
+    
+    /**
      * Controler
      *
      * @param Codendi_Request $request The request
@@ -36,6 +53,7 @@ class TrackerManager { /* extends Engine? */
     public function process($request, $user) {
         if ((int)$request->get('aid')) {
             if ($artifact = $this->getArtifactFactory()->getArtifactByid($request->get('aid'))) {
+                $this->checkServiceEnabled($artifact->getTracker()->getProject());
                 if ($artifact->userCanView($user)) {
                     $GLOBALS['group_id'] = $artifact->getTracker()->getGroupId();
                     $artifact->process($this, $request, $user);
@@ -52,6 +70,7 @@ class TrackerManager { /* extends Engine? */
                 $store_in_session = (bool)$request->get('store_in_session');
             }
             if ($report = $this->getArtifactReportFactory()->getReportById($request->get('report'), $user->getId(), $store_in_session)) {
+                $this->checkServiceEnabled($report->getTracker()->getProject());
                 $GLOBALS['group_id'] = $report->getTracker()->getGroupId();
                 $report->process($this, $request, $user);
             } else {
@@ -63,6 +82,7 @@ class TrackerManager { /* extends Engine? */
                 $tracker_id = (int)$request->get('atid');
             }
             if ($tracker = $this->getTrackerFactory()->getTrackerByid($tracker_id)) {
+                $this->checkServiceEnabled($tracker->getProject());
                 if ($tracker->userCanView($user)) {
                     $GLOBALS['group_id'] = $tracker->getGroupId();
                     $tracker->process($this, $request, $user);
@@ -73,11 +93,13 @@ class TrackerManager { /* extends Engine? */
             }
         } else if ((int)$request->get('formElement')) {
             if ($formElement = $this->getTracker_FormElementFactory()->getFormElementByid($request->get('formElement'))) {
+                $this->checkServiceEnabled($formElement->getTracker()->getProject());
                 $GLOBALS['group_id'] = $formElement->getTracker()->getGroupId();
                 $formElement->process($this, $request, $user);
             }
         } else if ($request->get('func') == 'new-artifact-link') {
             if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($request->get('id'))) {
+                $this->checkServiceEnabled($artifact->getTracker()->getProject());
                 echo '<html>';
                 echo '<head>';
                 $GLOBALS['HTML']->displayStylesheetElements(array());
@@ -92,6 +114,7 @@ class TrackerManager { /* extends Engine? */
             }
         } else if ((int)$request->get('link-artifact-id')) {
             if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($request->get('link-artifact-id'))) {
+                $this->checkServiceEnabled($artifact->getTracker()->getProject());
                 $artifact->getTracker()->displayAReport($this, $request, $user);
             }
         } else {
@@ -99,10 +122,7 @@ class TrackerManager { /* extends Engine? */
             if ((int)$request->get('group_id')) {
                 $group_id = (int)$request->get('group_id');
                 if ($project = $this->getProject($group_id)) {
-                    if (!$project->usesService('plugin_tracker')) {
-                        $GLOBALS['Response']->addFeedback('error', "The project doesn't use the 'tracker v5' service");
-                        $GLOBALS['HTML']->redirect('/projects/'. $project->getUnixName() .'/');
-                    } else {
+                    if ($this->checkServiceEnabled($project)) {
                         switch($request->get('func')) {
                             case 'docreate':
                                 if ($this->userCanCreateTracker($group_id)) {

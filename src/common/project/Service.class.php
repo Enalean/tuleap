@@ -22,6 +22,9 @@ define('SERVICE_MASTER',    'master');
 define('SERVICE_SAME',      'same');
 define('SERVICE_SATELLITE', 'satellite');
 require_once('common/server/ServerFactory.class.php');
+
+require_once('ServiceNotAllowedForProjectException.class.php');
+
 /**
 * Service
 */
@@ -30,7 +33,18 @@ class Service {
     public $data;
     public $project;
     
+    /**
+     * Create an instance of Service
+     *
+     * @param Project $project The project the service belongs to
+     * @param array   $data    The service data coming from the db
+     *
+     * @throws ServiceNotAllowedForProjectException if the Service is not allowed for the project (mainly for plugins)
+     */
     public function __construct($project, $data) {
+        if (!$this->isAllowed($project)) {
+            throw new ServiceNotAllowedForProjectException();
+        }
         $this->project = $project;
         $this->data    = $data;
     }
@@ -143,6 +157,17 @@ class Service {
     }
     
     public function duplicate($to_project_id, $ugroup_mapping) {
+    }
+    
+    /**
+     * Say if the service is allowed for the project
+     *
+     * @param Project $project
+     *
+     * @return bool
+     */
+    protected function isAllowed($project) {
+        return true;
     }
 
 }

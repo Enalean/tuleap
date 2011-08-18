@@ -46,5 +46,21 @@ class ServiceTracker extends Service {
         $tracker_manager = new TrackerManager();
         $tracker_manager->duplicate($this->project->getId(), $to_project_id, $ugroup_mapping);
     }
+    
+    /**
+     * Say if the service is allowed for the project
+     *
+     * @param Project $project
+     *
+     * @return bool
+     */
+    protected function isAllowed($project) {
+        $plugin_manager = PluginManager::instance();
+        $p = $plugin_manager->getPluginByName('tracker');
+        if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed($project->getGroupId())) {
+            return true;
+        }
+        return false;
+    }
 }
 ?>

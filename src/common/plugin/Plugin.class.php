@@ -37,12 +37,20 @@ class Plugin {
     const SCOPE_USER    = 2;
     
     public $scopeProjectIsRestrictedPerDefault = false;
+    protected $allowedForProject = array();
     
     public function Plugin($id = -1) {
         $this->id            = $id;
         $this->hooks         = new Map();
         
         $this->_scope = Plugin::SCOPE_SYSTEM;
+    }
+    
+    public function isAllowed($group_id) {
+        if(!isset($this->allowedForProject[$group_id])) {
+            $this->allowedForProject[$group_id] = PluginManager::instance()->isPluginAllowedForProject($this, $group_id);
+        }
+        return $this->allowedForProject[$group_id];
     }
     
     public function getId() {
