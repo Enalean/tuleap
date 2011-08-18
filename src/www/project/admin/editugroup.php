@@ -222,6 +222,7 @@ if (($func=='edit')||($func=='do_create')) {
                     'object_id'       => $row['object_id'],
                     'objname'         => $objname,
                     'group_id'        => $group_id,
+                    'ugroup_id'       => $ugroup_id,
                     'results'         => &$results
                 ));
                 if ($results) {
