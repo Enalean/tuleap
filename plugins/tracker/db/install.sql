@@ -537,7 +537,7 @@ WHERE group_id != 100;
 
 -- Disable for all templates
 UPDATE service INNER JOIN groups USING(group_id) 
-SET service.is_active = 1 
+SET service.is_active = 0 
 WHERE groups.type = 2 
   AND service.short_name = 'plugin_tracker';
 
