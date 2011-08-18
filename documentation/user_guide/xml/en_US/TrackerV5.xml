@@ -8,7 +8,7 @@
 //
 -->
       
-<chapter id="TrackerService">
+<chapter id="TrackerV5Service">
   <title>Tracker Service</title>
 
   <para>The &SYS_PRODUCT_NAME; Tracker is one of the most powerful and versatile
@@ -57,14 +57,14 @@
     trackers listed in the Public Area of the Project Summary page.</para>
 
     <para>You will be presented with a list of trackers available for
-    this particular project (see <xref linkend="TrackerWelcomeScreen"
+    this particular project (see <xref linkend="TrackerV5WelcomeScreen"
 	/>. Select the tracker you are interested in. Entering the
     tracker will give you access to various tracker functions
     depending on the permissions you have with this tracker. You may
     be able to submit new artifacts, update existing ones, search
     and browse the artifact database or configure the tracker.</para>
 
-    <figure id="TrackerWelcomeScreen">
+    <figure id="TrackerV5WelcomeScreen">
       <title>Tracker Welcome Screen</title>
 
       <mediaobject>
@@ -144,7 +144,7 @@
     project organization to correctly assign the bug. That's the reason why 
     artifact fields shown to users on the submission form can be
     configured in the Tracker Administration module (see <xref
-    linkend="TrackerAdministration" />)</para>
+    linkend="TrackerV5Administration" />)</para>
 
     <para>In any case don&#39;t forget to click on the
     &#34;Submit&#34; button when you are finished !</para>
@@ -177,7 +177,7 @@
         Typo, ...), Status (e.g. Open, Closed, ...) and Assignee (the person
         in charge of the bug). But you may also add or remove criteria 
         by using the "Toggle criteria" link.(for more details, see <xref
-        linkend="TrackerReports" />)</para>
+        linkend="TrackerV5Reports" />)</para>
 
       <para>How selection criteria are filled out depend on their
       field type. The Tracker Service currently has several types
@@ -340,7 +340,7 @@
     
     </section>
     
-    <section id="TrackerSearchResults">
+    <section id="TrackerV5SearchResults">
       <title>Tracker Search Results</title>
       
       <para>Based on your selection of search criteria, &SYS_PRODUCT_NAME; runs a
@@ -348,7 +348,7 @@
       artifacts, and displays them right below the selection
       criteria. Columns displayed in the artifact list are entirely
       configurable by the user. (see <xref
-	  linkend="TrackerReports" />). Therefore, the artifact browsing
+	  linkend="TrackerV5Reports" />). Therefore, the artifact browsing
       screen might look completely different from the one shown in
       <xref linkend="FigureASampleTrackerBrowsingScreen" />.</para>
 
@@ -427,12 +427,12 @@
      There is three types of graphs supported : Pie, Bar and Gantt charts. 
      Like the list of artifact (table renderer), the graphical view respond to the 
      selection criteria.
-     For more details, see <xref linkend="TrackerReportRendererCharts" />.
+     For more details, see <xref linkend="TrackerV5ReportRendererCharts" />.
 	 </para>
 	</section>
 </section>
 
-    <section id="TrackerReports">
+    <section id="TrackerV5Reports">
 	<title>Tracker Report Management</title>
 
 	<para>Tracker reports allow the definition of a specific
@@ -458,7 +458,7 @@
 	 tracker administrators have the ability to define project-wide
 	 graphical reports that all users will be able to use.
 	 </para>
-     <section id="TrackerReportSetting">
+     <section id="TrackerV5ReportSetting">
       <title>Tracker Report Setting</title>
       <para>
        The current report is defined at the top left of the report page (see 
@@ -477,7 +477,7 @@
             before saving your modifications.
       </para>
      </section>
-     <section id="TrackerReportRendererAdd">
+     <section id="TrackerV5ReportRendererAdd">
       <title>Adding a renderer</title>
       <para>
        You can add as many renderers as you want in any tracker report. 
@@ -495,7 +495,7 @@
       </tip>
      </section>
      
-     <section id="TrackerReportRendererTable">
+     <section id="TrackerV5ReportRendererTable">
       <title>Table renderer</title>
        <para>
         Table renderer is a textual renderer, usually displayed in a table.
@@ -544,7 +544,7 @@
        </para>
      </section>
      
-     <section id="TrackerReportRendererCharts">
+     <section id="TrackerV5ReportRendererCharts">
       <title>Charts renderer</title>
        <para>
         Charts renderer allows to add charts in your report.
@@ -565,7 +565,7 @@
         Regarding the chart type, you will then provide a name, a description,
         and the fields required to build the chart.
        </para>
-       <section id="TrackerReportRendererChartPie">
+       <section id="TrackerV5ReportRendererChartPie">
         <title>Pie Chart</title>
         <para>
           <figure id="FigurePieChartEdition">
@@ -579,7 +579,7 @@
           </figure>
         </para>
        </section>
-       <section id="TrackerReportRendererChartBar">
+       <section id="TrackerV5ReportRendererChartBar">
         <title>Bar Chart</title>
         <para>
           <figure id="FigureBarChartEdition">
@@ -593,7 +593,7 @@
           </figure>
         </para>
        </section>
-       <section id="TrackerReportRendererChartGantt">
+       <section id="TrackerV5ReportRendererChartGantt">
         <title>Gantt Chart</title>
         <para>
           <figure id="FigureGanttChartEdition">
@@ -617,7 +617,7 @@
        </tip>
      </section>
      
-     <section id="TrackerReportRendererUpdate">
+     <section id="TrackerV5ReportRendererUpdate">
       <title>Updating/removing a renderer</title>
       <para>
         Depending on your permissions, you will be able to update a renderer,
@@ -670,7 +670,7 @@
       The set of fields used in a given tracker, as well as the related set of predefined
       values and the field sets can be configured by project members who have
       administration permissions on this tracker. (see <xref
-      linkend="TrackerAdministration" /> for more details on the
+      linkend="TrackerV5Administration" /> for more details on the
       Tracker configuration).</para>
       
       <section id="DynamicFields">
@@ -839,7 +839,7 @@
     
     </section>
 
-    <section id="TrackerArtifactLinkTabs">
+    <section id="TrackerV5ArtifactLinkTabs">
         <title>Artifact Link</title>
         <para>
         Artifact link field provides a very powerful way to link an artifact to others. Any artifact from any accessible tracker
@@ -887,7 +887,7 @@
         </section>
     </section>
 
-    <section id="TrackerEmailNotification">
+    <section id="TrackerV5EmailNotification">
         <title>E-mail Notification</title>
 
         <para>The &SYS_PRODUCT_NAME; Tracker is equipped with a powerful and flexible
@@ -1155,7 +1155,7 @@
     for a particular tracker if the tracker administrator modifies the
     access permission settings. For more information on how to
     configure tracker access permissions see <xref
-    linkend="TrackerPermissionsManagement"/>. Default permission
+    linkend="TrackerV5PermissionsManagement"/>. Default permission
     settings are summarized in the table below:</para>
 
     <table frame="all">
@@ -1208,13 +1208,13 @@
 	  </row>
 	  <row>
 	    <entry><link
-	      linkend="TrackerCreation">Tracker
+	      linkend="TrackerV5Creation">Tracker
 	      Creation</link></entry> <entry>Only available to project
 	      administrators.</entry>
 	  </row>
 	  <row>
 	    <entry><link
-	      linkend="TrackerGeneralSettings">Tracker
+	      linkend="TrackerV5GeneralSettings">Tracker
 	      Administration - General Settings</link></entry>
 	    <entry>Only available to project administrators and
 	      project members with Admin. permission on this
@@ -1222,7 +1222,7 @@
 	  </row>
 	  <row>
 	    <entry><link
-	      linkend="TrackerFieldUsageManagement">Tracker
+	      linkend="TrackerV5FieldUsageManagement">Tracker
 	      Administration - Field Usage Management</link></entry>
 	    <entry>Only available to project administrators and
 	      project members with Admin. permission on this
@@ -1230,34 +1230,34 @@
 	  </row>
 	  <row>
 	    <entry><link
-	      linkend="TrackerSemanticManagement">Tracker
+	      linkend="TrackerV5SemanticManagement">Tracker
 	      Administration - Semantic Management</link></entry>
 	    <entry>Only available to project administrators and
 	      project members with Admin. permission on this
 	      tracker.</entry>
 	  </row>
 	  <row>
-	    <entry><link linkend="TrackerWorkflow">Tracker
+	    <entry><link linkend="TrackerV5Workflow">Tracker
 	      Administration - Workflow Management</link></entry>
 	    <entry>Only Project administrators and
 	      project members with Admin. permission can define and configure 
 	      workflow.</entry>
 	  </row>
       <row>
-	    <entry><link linkend="TrackerPermissionsManagement">Tracker
+	    <entry><link linkend="TrackerV5PermissionsManagement">Tracker
 	      Administration - Permissions Management</link></entry>
 	    <entry>Only Project administrators and
 	      project members with Admin. permission can define tracker permissions.</entry>
 	  </row>
       <row>
-	    <entry><link linkend="TrackerCannedResponses">Tracker
+	    <entry><link linkend="TrackerV5CannedResponses">Tracker
 	      Administration - Canned Responses Management</link></entry>
 	    <entry>Only Project administrators and
 	      project members with Admin. permission can define canned responses.</entry>
 	  </row>
 	  <row>
 	    <entry><link
-	      linkend="TrackerEmailNotificationSettings">Tracker
+	      linkend="TrackerV5EmailNotificationSettings">Tracker
 	      Administration - Email Notification
 	      Settings</link></entry> <entry>Only Project
 	      administrators can add email addresses in the global
@@ -1266,7 +1266,7 @@
 	      customize her notification preferences.</entry>
 	  </row>
 	  <row>
-	    <entry><link linkend="TrackerAdminStructureExport">Tracker
+	    <entry><link linkend="TrackerV5AdminStructureExport">Tracker
 	      Administration - Structure Export</link></entry>
 	    <entry>Only Project administrators and
 	      project members with Admin. permission can export tracker structure.
@@ -1279,7 +1279,7 @@
   </section>
 
 
-  <section id="TrackerCreation">
+  <section id="TrackerV5Creation">
     <title>Tracker Creation</title>
 
     <para>Before one can define what fields and field values to use in
@@ -1301,7 +1301,7 @@
 	/>): </para>
 
     <itemizedlist mark="bullet" spacing="compact">
-      <listitem id="TrackerCreationName">
+      <listitem id="TrackerV5CreationName">
 	<para><emphasis role="bold">Name</emphasis>: this is the
 	  name of your tracker. A tracker is typically named after the
 	  type of artifact it is going to manage. This name will be
@@ -1310,13 +1310,13 @@
 	  Requests, Support Requests, Requirements, Defects,
 	  Bugs&hellip;</para>
       </listitem>
-      <listitem id="TrackerCreationDescription">
+      <listitem id="TrackerV5CreationDescription">
 	<para><emphasis role="bold">Description</emphasis>: A longer
 	  description of what this tracker is all about and the type
 	  of managed artifacts.</para>
       </listitem>
 
-      <listitem id="TrackerCreationShortName">
+      <listitem id="TrackerV5CreationShortName">
 	<para><emphasis role="bold">Short name</emphasis>: this is a
 	  short name that best describe the type of artifact managed
 	  in this tracker. This name must be quite short as it is used
@@ -1354,7 +1354,7 @@
       fields or fine-tune the field settings afterwards.</para>
 
     <itemizedlist mark="bullet" spacing="compact">
-      <listitem id="TrackerCreationFromCodendiTemplate">
+      <listitem id="TrackerV5CreationFromCodendiTemplate">
 	<para><emphasis role="bold">&SYS_PRODUCT_NAME;-wide Template</emphasis>:
 	  these are templates that have been defined by the
 	  administrators of the &SYS_PRODUCT_NAME; site because it is expected that
@@ -1370,7 +1370,7 @@
           on the semantic of those templates.</para>
       </listitem>
 
-      <listitem id="TrackerCreationFromProjectTemplate">
+      <listitem id="TrackerV5CreationFromProjectTemplate">
 	<para><emphasis role="bold">Project Templates</emphasis>: in
 	  case you have already defined a tracker that suits your
 	  needs or you have seen a tracker from another project that
@@ -1382,14 +1382,14 @@
 	  artifacts of the original tracker but only the field
 	  settings).</para>
       </listitem>
-      <listitem id="TrackerCreationFromXML">
+      <listitem id="TrackerV5CreationFromXML">
 	<para><emphasis role="bold">XML file</emphasis>:
      &SYS_PRODUCT_NAME; allows you to create trackers from XML file.
      The expected XML file describes the structure of the trackers, the fields
      used, the values of the fields, and the permissions. XML schema is available 
      in /src/www/tracker/resources/tracker.rnc. Most of the time, you will use an XML
      file coming from a tracker structure export (See <xref
-      linkend="TrackerAdminStructureExport" />). This feature is really convenient 
+      linkend="TrackerV5AdminStructureExport" />). This feature is really convenient 
      to copy a tracker from a server to another.
      <emphasis
 	  role="bold">Note</emphasis>: this does not copy the
@@ -1650,7 +1650,7 @@
 
   </section>
 
-  <section id="TrackerAdministration">
+  <section id="TrackerV5Administration">
     <title>Tracker Administration</title>
 
     <para>As we went through the description of the &SYS_PRODUCT_NAME; Tracker
@@ -1700,7 +1700,7 @@
       </listitem>
     </itemizedlist>
 
-    <section id="TrackerGeneralSettings">
+    <section id="TrackerV5GeneralSettings">
       <title>General Configuration Settings</title>
 
       <para>This module allows you to define a series of properties
@@ -1710,7 +1710,7 @@
       follows:</para>
 
       <itemizedlist mark="bullet" spacing="compact">
-	<listitem id="TrackerGeneralSettingsName">
+	<listitem id="TrackerV5GeneralSettingsName">
 	  <para><emphasis role="bold">Name</emphasis>: this is the
 	  name of your tracker. More precisely you want to name your
 	  tracker after the type of artifact that are going to be
@@ -1720,13 +1720,13 @@
 	  Requirements, Defects or Bugs&hellip;</para>
 	</listitem>
 
-	<listitem id="TrackerGeneralSettingsDescription">
+	<listitem id="TrackerV5GeneralSettingsDescription">
 	  <para><emphasis role="bold">Description</emphasis>: A longer
 	  description of what this tracker is all about and the type
 	  of artifact that it manages.</para>
 	</listitem>
 
-	<listitem id="TrackerGeneralSettingsShortName">
+	<listitem id="TrackerV5GeneralSettingsShortName">
 	  <para><emphasis role="bold">Short name</emphasis>: this is a
 	  short name that best describe the type of artifact managed
 	  in this tracker. This name must be quite short as it is used
@@ -1738,21 +1738,21 @@
 	</listitem>
 
     <!--
-    <listitem id="TrackerGeneralSettingsAllowArtifactDuplication">
+    <listitem id="TrackerV5GeneralSettingsAllowArtifactDuplication">
 	  <para><emphasis role="bold">Allow artifact duplication</emphasis>: 
       if artifact duplication is allowed or not. If it is, only project members
       are able to duplicate artifacts.</para>
 	</listitem>
     -->
     
-    <listitem id="TrackerGeneralSettingsInstantiateForNewProjects">
+    <listitem id="TrackerV5GeneralSettingsInstantiateForNewProjects">
 	  <para><emphasis role="bold">Instantiate for new projects</emphasis>: 
           This parameter is only displayed when working on a &#34;template&#34; type of project (see <xref linkend="ProjectType" />).
           If the parameter is selected, then projects created from this template project will have this tracker created.
           If not selected, the tracker will not be available in the new project.</para>
 	</listitem>
 
-	<listitem id="TrackerGeneralSettingsSubmitInstructions">
+	<listitem id="TrackerV5GeneralSettingsSubmitInstructions">
 	  <para><emphasis role="bold">Submit instructions</emphasis>:
 	  an introductory message that displays at the top of the
 	  artifact submission form. This is a convenient way to give
@@ -1762,7 +1762,7 @@
 	  use bold, italic, colors, embedded URL&hellip;)</para>
 	</listitem>
 
-	<listitem id="TrackerGeneralSettingsBrowseInstructions">
+	<listitem id="TrackerV5GeneralSettingsBrowseInstructions">
 	  <para><emphasis role="bold">Browse
 	    instructions</emphasis>: an introductory message that
 	    displays at the top of the artifact searching and browsing
@@ -1775,7 +1775,7 @@
     </section>
 
 
-    <section id="TrackerPermissionsManagement">
+    <section id="TrackerV5PermissionsManagement">
       <title>Permissions Management</title>
 
       <para>This module is used to give different
@@ -1810,7 +1810,7 @@
       information on how project administrators can define and manage
       groups of users.</para>
 
-      <section id="TrackerAndArtifactPermissionsManagement">
+      <section id="TrackerV5AndArtifactPermissionsManagement">
         <title>Tracker <!--and Artifacts-->Permissions Management</title>
 
         <para>When entering this module, a list of user groups appears
@@ -1869,7 +1869,7 @@
       <para>
         <tip>
           <title>Example: Using tracker access permissions with your clients</title>
-    <figure id="TrackerPermissionsExample">
+    <figure id="TrackerV5PermissionsExample">
       <title>A sample tracker permissions screen</title>
 
       <mediaobject>
@@ -1920,7 +1920,7 @@
 
         <para>Beside defining access permissions for the tracker and
         its artifacts (see <xref
-        linkend="TrackerAndArtifactPermissionsManagement"/>) it is
+        linkend="TrackerV5AndArtifactPermissionsManagement"/>) it is
         sometimes necessary to restrict access to certain fields of
         the tracker to a given population. As an example if you share
         a defect tracking system with your customers you may want to
@@ -1986,7 +1986,7 @@
       </section>
     </section>
     
-    <section id="TrackerFieldUsageManagement">
+    <section id="TrackerV5FieldUsageManagement">
       <title>Field Usage Management</title>
 
       <para>When a tracker is first created, it comes pre-configured
@@ -2003,9 +2003,9 @@
       
       <para>The Field Usage Manager is divided in two parts : a fields palette 
       on the left and a tracker visualization on the right (see 
-      <xref linkend="TrackerAdminFieldUsageOverview" />)</para>
+      <xref linkend="TrackerV5AdminFieldUsageOverview" />)</para>
       
-      <figure id="TrackerAdminFieldUsageOverview">
+      <figure id="TrackerV5AdminFieldUsageOverview">
        <title>Tracker Admin Field Usage Overview</title>
        <mediaobject>
         <imageobject>
@@ -2014,7 +2014,7 @@
        </mediaobject>
       </figure>
       
-      <section id="TrackerFieldTypes" xreflabel="Tracker Field Types">
+      <section id="TrackerV5FieldTypes" xreflabel="Tracker Field Types">
         <title>Tracker Fields Palette</title>
         <para>The palette allows the user to choose the elements he wants
         to add to his tracker. The field usage manager palette consists of 4 groups: </para>
@@ -2056,7 +2056,7 @@
             </listitem>
         </itemizedlist>
     
-    <section id="TrackerFieldFields" xreflabel="Tracker Field Types">
+    <section id="TrackerV5FieldFields" xreflabel="Tracker Field Types">
         <title>Fields</title>
         <para>Find below a detailed description of each type:</para>
         <itemizedlist mark="dash" spacing="compact">
@@ -2156,7 +2156,7 @@
 	</itemizedlist>
     </section>
     
-    <section id="TrackerFieldDynamicFields" xreflabel="Tracker Field Types">
+    <section id="TrackerV5FieldDynamicFields" xreflabel="Tracker Field Types">
         <title>Dynamic Fields</title>
         <para>Find below a detailed description of each type:</para>
         <itemizedlist mark="dash" spacing="compact">
@@ -2204,7 +2204,7 @@
         </itemizedlist>
     </section>
         
-   <section id="TrackerFieldStructuralElements" xreflabel="Tracker Field Types">
+   <section id="TrackerV5FieldStructuralElements" xreflabel="Tracker Field Types">
         <title>Structural Elements</title>
         <para>Find below a detailed description of each type:</para>
         <itemizedlist mark="dash" spacing="compact">
@@ -2247,7 +2247,7 @@
          </itemizedlist>
     </section>
 	        
-    <section id="TrackerFieldUnusedElements" xreflabel="Tracker Field Types">
+    <section id="TrackerV5FieldUnusedElements" xreflabel="Tracker Field Types">
         <title>Unused Elements</title>
         <para>Unused fields is not a kind of fields, but all the fields that are not 
             used in the tracker definition. Select one of these fields to use it again.
@@ -2512,7 +2512,7 @@
       
     </section>
 
-    <section id="TrackerSemanticManagement">
+    <section id="TrackerV5SemanticManagement">
         <title>Semantic </title>
         
         <para>
@@ -2533,7 +2533,7 @@
             semantic properties:
         </para>
         
-        <section id="TrackerSemanticManagementTitle">
+        <section id="TrackerV5SemanticManagementTitle">
             <title>Title</title>
             <para>
                 The title of an artifact is a field that sum up the best the artifact.
@@ -2552,7 +2552,7 @@
             </para>
         </section>
         
-        <section id="TrackerSemanticManagementStatus">
+        <section id="TrackerV5SemanticManagementStatus">
             <title>Status</title>
             <para>
                 The status of an artifact is a field that describes the stage of the artifact.
@@ -2573,7 +2573,7 @@
             </para>
         </section>
         
-        <section id="TrackerSemanticManagementContributor">
+        <section id="TrackerV5SemanticManagementContributor">
             <title>Contributor / Assignee</title>
             <para>
                 The contributor of an artifact (or assignee) is a field that is bound to 
@@ -2593,7 +2593,7 @@
             </para>
         </section>
         
-        <section id="TrackerSemanticManagementTooltip">
+        <section id="TrackerV5SemanticManagementTooltip">
             <title>Tooltip</title>
             <para>
                 The tooltip of an artifact is a piece of information that is displayed
@@ -2608,7 +2608,7 @@
     
     
     
-    <section id="TrackerFieldDependenciesManagement">
+    <section id="TrackerV5FieldDependenciesManagement">
       <title>Field Dependencies</title>
 
       <para>Field dependencies allow us to link source field values to target field values. In other words, the values proposed to a final user for a field will depend upon the value selected for another field.</para>
@@ -2727,7 +2727,7 @@
       </itemizedlist>
     </section>
 
-    <section id="TrackerCannedResponses">
+    <section id="TrackerV5CannedResponses">
       <title>Canned Responses</title>
 
       <para>One frequently sees project members in
@@ -2758,9 +2758,9 @@
       </figure>
     </section>
 
-    <section id="TrackerWorkflow">
+    <section id="TrackerV5Workflow">
         <title>Workflow Manager</title>
-        <section id="TrackerWorkflowOverview">
+        <section id="TrackerV5WorkflowOverview">
             <title>Overview</title>
             <para>
              The power of the &SYS_PRODUCT_NAME; trackers is further increased with 
@@ -2776,7 +2776,7 @@
             </para>
             <para>N.B. Worflow is not taen n account in artifacts mass change</para>
         </section>
-        <section id="TrackerWorkflowAdd">
+        <section id="TrackerV5WorkflowAdd">
             <title>Add a workflow to a tracker</title>
              <itemizedlist>
                 <listitem>
@@ -2813,9 +2813,9 @@
              </itemizedlist>
         </section>
         
-        <section id="TrackerWorkflowPostFunctions">
+        <section id="TrackerV5WorkflowPostFunctions">
             <title>Define rules on transitions</title>
-            <section id="TrackerWorkflowTransitionsUgroup">
+            <section id="TrackerV5WorkflowTransitionsUgroup">
                 <title>Groups that may make the transition</title>
                 <para>
                  Once the transition is defined, you can refine who can make 
@@ -2836,16 +2836,16 @@
         </section>
     </section>
     
-    <section id="TrackerEmailNotificationSettings">
+    <section id="TrackerV5EmailNotificationSettings">
       <title>Email Notification Settings</title>
 
       <para>As explained earlier in <xref
-	  linkend="TrackerEmailNotification" /> the Codendi Tracker comes
+	  linkend="TrackerV5EmailNotification" /> the Codendi Tracker comes
       with a predefined set of rules to keep relevant people aware of
       the artifact life. The default rules can however be complemented
       or tuned in a number of ways:</para>
 
-      <section id="TrackerGlobalEmailNotification">
+      <section id="TrackerV5GlobalEmailNotification">
 	<title>Global Email Notification</title>
 
 	<para>In addition to the default notification rules, the
@@ -2857,7 +2857,7 @@
 	<!--Note that in this case notifications will
 	be sent to users regardless of their personal preferences
 	defined (see section &#34;<xref
-	linkend="TrackerEventRoleBasedEmailNotification" />&#34;
+	linkend="TrackerV5EventRoleBasedEmailNotification" />&#34;
 	below).--></para>
     
     <para>You can choose to disable the permission check for global 
@@ -2894,7 +2894,7 @@
       </section>
 
 <!--
-      <section id="TrackerWatchers">
+      <section id="TrackerV5Watchers">
 	<title>Tracker Watchers</title>
 
 	<para>The &SYS_PRODUCT_NAME; Tracker offers to all project members the
@@ -2936,7 +2936,7 @@
 
       </section>
 -->
-      <!--<section id="TrackerEventRoleBasedEmailNotification" xreflabel="Event/Role Based Notification Settings">
+      <!--<section id="TrackerV5EventRoleBasedEmailNotification" xreflabel="Event/Role Based Notification Settings">
 	<title>Event/Role Based Notification Settings</title>
 
 	<para>This is the most sophisticated part of the customization
@@ -3064,7 +3064,7 @@
 
     </section>
     
-    <section id="TrackerAdminCSVImport">
+    <section id="TrackerV5AdminCSVImport">
         <title>Tracker Artifact Import</title>
         <para>
         &SYS_PRODUCT_NAME; allows you to import artifacts in a tracker from 
@@ -3073,7 +3073,7 @@
         </para>
     </section>
     
-    <section id="TrackerAdminStructureExport">
+    <section id="TrackerV5AdminStructureExport">
      <title>Tracker Structure Export</title>
      <para>
       &SYS_PRODUCT_NAME; allows you to export the structure of the trackers into 
