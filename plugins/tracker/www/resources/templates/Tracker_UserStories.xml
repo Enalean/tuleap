@@ -400,7 +400,7 @@
   </reports>
   <workflow/>
   <permissions>
-    <permission scope="tracker" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+    <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
     <permission scope="field" REF="F2" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F3" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
     <permission scope="field" REF="F5" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
