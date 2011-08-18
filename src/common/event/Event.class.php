@@ -219,5 +219,17 @@ class Event {
      *   Javascript snippets are directly output to the browser
      */
     const JAVASCRIPT = 'javascript';
+    
+    /**
+     * Manage the toggle of an element
+     *
+     * Parameter
+     *  'id'   => the string identifier for the element
+     *  'user' => the current user
+     *
+     * Expected result:
+     *  'done' => set to true if the element has been toggled
+     */
+    const TOGGLE = 'toggle';
 }
 ?>

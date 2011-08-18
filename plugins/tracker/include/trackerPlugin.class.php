@@ -30,23 +30,24 @@ define('TRACKER_BASE_URL', '/plugins/tracker');
  * trackerPlugin
  */
 class trackerPlugin extends Plugin {
-	
-	public function __construct($id) {
-		parent::__construct($id);
-		$this->setScope(self::SCOPE_PROJECT);
-		$this->_addHook('cssfile', 'cssFile', false);
-		$this->_addHook(Event::SERVICE_CLASSNAMES, 'service_classnames', false);
-		$this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
-		$this->_addHook(Event::JAVASCRIPT,         'javascript',         false);
-		$this->_addHook('permission_get_name',               'permission_get_name',               false);
-		$this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
-		$this->_addHook('permission_get_object_name',        'permission_get_object_name',        false);
-		$this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
-		$this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
-		$this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
-		
-	}
-	
+    
+    public function __construct($id) {
+        parent::__construct($id);
+        $this->setScope(self::SCOPE_PROJECT);
+        $this->_addHook('cssfile', 'cssFile', false);
+        $this->_addHook(Event::SERVICE_CLASSNAMES, 'service_classnames', false);
+        $this->_addHook(Event::COMBINED_SCRIPTS,   'combined_scripts',   false);
+        $this->_addHook(Event::JAVASCRIPT,         'javascript',         false);
+        $this->_addHook(Event::TOGGLE,             'toggle',             false);
+        $this->_addHook('permission_get_name',               'permission_get_name',               false);
+        $this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
+        $this->_addHook('permission_get_object_name',        'permission_get_object_name',        false);
+        $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
+        $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
+        $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
+        
+    }
+    
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'trackerPluginInfo')) {
             include_once('trackerPluginInfo.class.php');
@@ -88,6 +89,19 @@ class trackerPlugin extends Plugin {
     
     public function javascript($params) {
         include $GLOBALS['Language']->getContent('script_locale', null, 'tracker');
+    }
+    
+    public function toggle($params) {
+        if (strpos($params['id'], 'tracker_report_query_') === 0) {
+            require_once('Tracker/Report/Tracker_ReportFactory.class.php');
+            $report_id = (int)substr($params['id'], strlen('tracker_report_query_'));
+            $report_factory = Tracker_ReportFactory::instance();
+            if (($report = $report_factory->getReportById($report_id, $params['user']->getid())) && $report->userCanUpdate($params['user'])) {
+                $report->toggleQueryDisplay();
+                $report_factory->save($report);
+            }
+            $params['done'] = true;
+        }
     }
     
     function permission_get_name($params) {
