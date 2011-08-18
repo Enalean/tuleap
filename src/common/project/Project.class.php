@@ -88,7 +88,12 @@ class Project extends Group {
     var $use_service;
     var $cache_active_service;
     var $services;
-        
+    
+    /**
+     * @var array The classnames for services
+     */
+    protected $serviceClassnames;
+    
     /*
 		basically just call the parent to set up everything
                 and set up services arrays
@@ -103,9 +108,10 @@ class Project extends Group {
         $this->project_data_array = $this->data_array;
         
         // Get defined classname of services
-        $classnames = array('file' => 'ServiceFile',
+        // TODO: Move this in a helper for performances pov (load of many projects)
+        $this->serviceClassnames = array('file' => 'ServiceFile',
                             'svn'  => 'ServiceSVN');
-        EventManager::instance()->processEvent(Event::SERVICE_CLASSNAMES, array('classnames' => &$classnames));
+        EventManager::instance()->processEvent(Event::SERVICE_CLASSNAMES, array('classnames' => &$this->serviceClassnames));
         
         // Get Service data
         $db_res = db_query("SELECT * FROM service WHERE group_id='" . db_es($this->group_id) . "' ORDER BY rank");
@@ -138,12 +144,8 @@ class Project extends Group {
             }
             
             // Init Service object corresponding to given service
-            if (isset($classnames[$short_name])) {
-                $classname = $classnames[$short_name];
-            } else {
-                $classname = 'Service';
-            }
             try {
+                $classname = $this->getServiceClassName($short_name);
                 $s = new $classname($this, $res_row);
                 $this->service_data_array[$short_name] = $res_row;
                 if ($short_name) {
@@ -157,6 +159,21 @@ class Project extends Group {
                 //do nothing
             }
         }
+    }
+    
+    /**
+     * Return the name of the class to instantiate a service based on its short name
+     *
+     * @param string $short_name the short name of the service
+     *
+     * @return string
+     */
+    public function getServiceClassName($short_name) {
+        $classname = 'Service';
+        if (isset($this->serviceClassnames[$short_name])) {
+            $classname = $this->serviceClassnames[$short_name];
+        }
+        return $classname;
     }
 
     public function getService($service_name) {
