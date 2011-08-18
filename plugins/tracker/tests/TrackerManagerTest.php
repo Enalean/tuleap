@@ -36,6 +36,7 @@ Mock::generatePartial('TrackerManager',
                           'getArtifactReportFactory',
                           'getProject',
                           'displayAllTrackers',
+                          'checkServiceEnabled',
                       )
 );
 require_once('common/include/Codendi_Request.class.php');
@@ -48,12 +49,16 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 require_once('common/layout/Layout.class.php');
 Mock::generate('Layout');
+require_once('common/project/Project.class.php');
+Mock::generate('Project');
 
 class TrackerManagerTest extends UnitTestCase {
     
     public function setup() {
         $this->user = new MockUser($this);
         $this->user->setReturnValue('getId', 666);
+        
+        $project = new MockProject();
         
         $this->artifact = new MockTracker_Artifact($this);
         $af = new MockTracker_ArtifactFactory($this);
@@ -75,12 +80,14 @@ class TrackerManagerTest extends UnitTestCase {
         $this->report->setReturnReference('getTracker', $this->tracker);
         $this->formElement->setReturnReference('getTracker', $this->tracker);
         $this->tracker->setReturnValue('getGroupId', 5);
+        $this->tracker->setReturnReference('getProject', $project);
         
         $this->tm = new TrackerManagerTestVersion($this);
         $this->tm->setReturnReference('getTrackerFactory', $tf);
         $this->tm->setReturnReference('getTracker_FormElementFactory', $ff);
         $this->tm->setReturnReference('getArtifactFactory', $af);
         $this->tm->setReturnReference('getArtifactReportFactory', $rf);
+        $this->tm->setReturnValue('checkServiceEnabled', true);
         
         $GLOBALS['Language'] = new MockBaseLanguage();
         $GLOBALS['Response'] = new MockResponse();
