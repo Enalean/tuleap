@@ -457,7 +457,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      */
     protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
         parent::saveValue($artifact, $changeset_value_id, $value, $previous_changesetvalue);
-        ReferenceManager::instance()->extractCrossRef($value, $artifact->getId(), 'artifact', $this->getTracker()->getGroupID(), UserManager::instance()->getCurrentUser()->getId());
+        ReferenceManager::instance()->extractCrossRef($value, $artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupID(), UserManager::instance()->getCurrentUser()->getId(), $this->getTracker()->getItemName());
     }
 }
 ?>
