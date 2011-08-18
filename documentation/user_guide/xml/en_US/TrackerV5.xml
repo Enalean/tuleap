@@ -19,7 +19,7 @@
   <para>All trackers, whether predefined at the site level or created
   by a project can be fully customized. </para>
 
-  <section id="TrackerV5CodendiTrackerPrinciples">
+  <section id="TrackerV5TrackerPrinciples">
     <title>Terminology and common features</title>
 
     <para>Before we explain the features of the tracker service, it's
@@ -93,7 +93,7 @@
     screen (see <xref linkend="TrackerV5FigureASampleTrackerBrowsingScreen"
 	/>).</para>
 
-    <figure id="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject">
+    <figure id="TrackerV5ArtifactSubmissionScreenFromTheProject">
       <title>A sample artifact submission screen (the artifact is of type &#34;bug&#34; here)</title>
 
       <mediaobject>
@@ -104,7 +104,7 @@
       </mediaobject>
     </figure>
 
-    <para><xref linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject"
+    <para><xref linkend="TrackerV5ArtifactSubmissionScreenFromTheProject"
 	/> shows a sample submission screen from one of the &SYS_PRODUCT_NAME; hosted
     projects. Because of the &SYS_PRODUCT_NAME; Tracker high level of
     customizability no two submission screens look alike. Depending on
@@ -113,7 +113,7 @@
     may change as well.</para>
 
     <para>In the example provided on <xref
-    linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject" /> the
+    linkend="TrackerV5ArtifactSubmissionScreenFromTheProject" /> the
     artifact type is a bug (also know as &#34;defect&#34; in corporate
     language). The user is asked to give a one-line description for the bug and a longer
     text entry field where you can fully characterize the bug. Then, he has to choose a bug Category
@@ -136,7 +136,7 @@
     permission level. Depending whether you are a project member or an
     ordinary registered user the artifact fields displayed on the
     screen may differ. As an example, on <xref
-    linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject" />, the bug
+    linkend="TrackerV5ArtifactSubmissionScreenFromTheProject" />, the bug
     submitter using the form is probably a project member because
     giving access to the &#34;Assigned to&#34; field to an ordinary
     registered user doesn&#39;t make much sense. It is very unlikely
@@ -686,7 +686,7 @@
             </listitem>
             
             <listitem>
-                  <para><emphasis role="bold">Cross-Reference</emphasis>: Codendi offers another dynamic field which has the ability to
+                  <para><emphasis role="bold">Cross-Reference</emphasis>: &SYS_PRODUCT_NAME; offers another dynamic field which has the ability to
                     cross-reference any artifact, or any other &SYS_PRODUCT_NAME; object from within a follow-up
                     comment.
                   </para>
@@ -703,7 +703,7 @@
                   </para>
                   <para>&SYS_PRODUCT_NAME; reference patterns may be used to reference artifacts, as well as source
                      code commits, documents, files, etc. Please refer to 
-                     <xref linkend="ReferenceOverview" /> for more details on Codendi references.
+                     <xref linkend="ReferenceOverview" /> for more details on References.
                   </para>
 
                   <para>Furthemore references concerning artifacts, svn revisions and
@@ -1354,7 +1354,7 @@
       fields or fine-tune the field settings afterwards.</para>
 
     <itemizedlist mark="bullet" spacing="compact">
-      <listitem id="TrackerV5CreationFromCodendiTemplate">
+      <listitem id="TrackerV5CreationFromTemplate">
 	<para><emphasis role="bold">&SYS_PRODUCT_NAME;-wide Template</emphasis>:
 	  these are templates that have been defined by the
 	  administrators of the &SYS_PRODUCT_NAME; site because it is expected that
@@ -1366,7 +1366,7 @@
 	  specific tracker called &#34;Empty&#34; allows you to create a
 	  virgin tracker with no predefined fields other than the
 	  minimal set of required fields. See <xref
-          linkend="TrackerV5CodendiTrackerTemplates" /> for more explanations
+          linkend="TrackerV5TrackerTemplates" /> for more explanations
           on the semantic of those templates.</para>
       </listitem>
 
@@ -1402,7 +1402,7 @@
   </section>
 
 
-  <section id="TrackerV5CodendiTrackerTemplates">
+  <section id="TrackerV5TrackerTemplates">
     <title>&SYS_PRODUCT_NAME;-wide Tracker Templates</title>
 
     <para>The standard trackers provided for each new &SYS_PRODUCT_NAME; project are:
@@ -1496,7 +1496,7 @@
     <section id="TrackerV5ScrumTemplate">
       <title>The User Story Template</title>
 
-      <para>Codendi makes it easy to implement the Scrum methodology, by providing
+      <para>&SYS_PRODUCT_NAME; makes it easy to implement the Scrum methodology, by providing
       a User Story tracker to each project. You will find a comprehensive
       description of Scrum on <ulink url="http://en.wikipedia.org/wiki/Scrum_(development)">
       Wikipedia</ulink>.</para>
@@ -2525,7 +2525,7 @@
         <para>
             Most of the trackers you will use already defined a semantic. 
             This is the case for instance for all tracker templates (see 
-            <xref linkend="TrackerV5CodendiTrackerTemplates" />).
+            <xref linkend="TrackerV5TrackerTemplates" />).
         </para>
         <para>
             To define or update a semantic field, select the pencil icon next to the
@@ -2840,7 +2840,7 @@
       <title>Email Notification Settings</title>
 
       <para>As explained earlier in <xref
-	  linkend="TrackerV5EmailNotification" /> the Codendi Tracker comes
+	  linkend="TrackerV5EmailNotification" /> the Tracker comes
       with a predefined set of rules to keep relevant people aware of
       the artifact life. The default rules can however be complemented
       or tuned in a number of ways:</para>
@@ -3101,7 +3101,7 @@
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

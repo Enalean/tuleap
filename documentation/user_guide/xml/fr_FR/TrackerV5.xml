@@ -22,7 +22,7 @@
   site ou bien créés par chaque projet sont entièrement
   personnalisables.</para>
 
-  <section id="TrackerV5CodendiTrackerPrinciples">
+  <section id="TrackerV5TrackerPrinciples">
     <title>Terminologie et Points communs</title>
 
     <para>Avant de présenter les fonctionnalités des outils de suivi,
@@ -97,7 +97,7 @@
     haut de l'écran (voir <xref
     linkend="TrackerV5FigureASampleTrackerBrowsingScreen" />).</para>
 
-    <figure id="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject">
+    <figure id="TrackerV5ArtifactSubmissionScreenFromTheProject">
       <title>Un exemple d'écran de soumission d'artefact  (ici de type &#34;bug&#34;) </title>
 
       <mediaobject>
@@ -109,7 +109,7 @@
     </figure>
 
     <para>La <xref
-    linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject" /> montre un
+    linkend="TrackerV5ArtifactSubmissionScreenFromTheProject" /> montre un
     exemple de soumission d'écran provenant d'un projet &SYS_PRODUCT_NAME;. En
     raison du très haut niveau de personnalisation du service "outil de suivi" de
     &SYS_PRODUCT_NAME;, les écrans de soumission d'artefact varient énormément d'un
@@ -117,7 +117,7 @@
     artefacts diffèrent.</para>
 
     <para>Dans l'exemple fourni sur la <xref
-    linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject" /> les
+    linkend="TrackerV5ArtifactSubmissionScreenFromTheProject" /> les
     artefacts sont des bugs (aussi connu sous le nom &#34;défauts&#34;
     ou &#34;anomalies&#34;). Ici
     l'utilisateur doit fournir une catégorie, un groupe, une priorité
@@ -139,7 +139,7 @@
     typique consiste à donner accès à plus de champs aux membres du
     projet qu'aux utilisateurs externes à l'équipe. A titre
     d'exemple, sur la <xref
-    linkend="TrackerV5ArtifactSubmissionScreenFromTheCodendiProject" />, la
+    linkend="TrackerV5ArtifactSubmissionScreenFromTheProject" />, la
     personne qui soumet le bug est probablement un membre du projet
     car donner une valeur au champ &#34;Assigné à&#34; n'est, en
     général, pas du ressort d'un utilisateur externe. Il est en effet
@@ -734,7 +734,7 @@
                   
                   <para>Les patrons de référence de &SYS_PRODUCT_NAME; peuvent etre utilisés pour référencer des artifacts,
                    mais aussi des commits CVS, des révision Subversion, des documents, des fichiers, etc. Voir la
-                   <xref linkend="ReferenceOverview" /> pour plus d'information sur les références dans Codendi.</para>
+                   <xref linkend="ReferenceOverview" /> pour plus d'information sur les Références.</para>
                    <para>De plus les références vers les outils de suivi, les révision SVN et les 
                    commits CVS sont stockées en base de données, et sont résumées dans la section suivante, 
                    classées par type puis par sens de référence initial.</para>
@@ -1336,7 +1336,7 @@
     initial.</para>
 
     <itemizedlist mark="bullet" spacing="compact">
-      <listitem id="TrackerV5CreationFromCodendiTemplate">
+      <listitem id="TrackerV5CreationFromTemplate">
         <para><emphasis role="bold">Patrons-site</emphasis> : il s'agit
         de patrons définis par les administrateurs du site &SYS_PRODUCT_NAME; qui
         sont en général utiles à de nombreux projets. C'est aussi un
@@ -1346,7 +1346,7 @@
         trouverez typiquement des outils de suivi pour les anomalies, les tâches,
         etc... Un patron particulier appelé &#34;Aucun&#34; permet de
         créer un tracker vierge de tout champ sauf certains qui restent
-        obligatoires. Voir <xref linkend="TrackerV5CodendiTrackerTemplates" />
+        obligatoires. Voir <xref linkend="TrackerV5TrackerTemplates" />
         pour plus d'information concernant ces patrons.</para>
       </listitem>
 
@@ -1367,7 +1367,7 @@
   </section>
 
 
-  <section id="TrackerV5CodendiTrackerTemplates">
+  <section id="TrackerV5TrackerTemplates">
     <title>Patrons d'outils de suivi de &SYS_PRODUCT_NAME;</title>
 
     <para>Les outils de suivi standards fournis pour chaque projet sont :
@@ -2445,8 +2445,8 @@
         </para>
         <para>
             La plupart des outils de suivi que vous utilisez ont une sémantique de définie.
-            C'est le cas par exemple de tous les outils de suivi prédéfinis de Codendi.
-            (voir <xref linkend="TrackerV5CodendiTrackerTemplates" />).
+            C'est le cas par exemple de tous les outils de suivi prédéfinis.
+            (voir <xref linkend="TrackerV5TrackerTemplates" />).
         </para>
         <para>
             Pour définir ou modifier la sémantique d'un champ, sélectionnez l'icône "crayon"
@@ -2872,7 +2872,7 @@
 </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 
