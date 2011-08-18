@@ -946,7 +946,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $artifact_target->getTracker()->getId(),
                 $artifact_target->getLastChangeset()->getId()
             );
-            $rm->extractCrossRef($artifactlink->getLabel(), $artifact->getId(), 'artifact', $this->getTracker()->getGroupId(), UserManager::instance()->getCurrentUser()->getId());
+            $rm->extractCrossRef($artifactlink->getLabel(), $artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId(), UserManager::instance()->getCurrentUser()->getId(), $this->getTracker()->getItemName());
         }
         // TODO : remove the removed elements
     }
