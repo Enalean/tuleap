@@ -151,42 +151,39 @@ class trackerPlugin extends Plugin {
         if (!$params['object_name']) {
             $type = $this->getObjectTypeFromPermissions($params);
             if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
+                $object_id = $params['object_id'];
                 if ($type == 'tracker') {
-                    $tf = TrackerFactory::instance();
-                    $tracker = $tf->getTrackerById($params['object_id']);
-                    $params['object_name'] = $tracker->getItemName();
+                    $ret = (string)$object_id;
+                    if ($tracker = TrackerFactory::instance()->getTrackerById($object_id)) {
+                        $params['object_name'] = $tracker->getName();
+                    }
                 } else if ($type == 'field') {
-                    $aff = Tracker_FormElementFactory::instance();
-                    $field = $aff->getFormElementById(permission_extract_field_id($params['object_id']));
-                    $params['object_name'] = $field->getName();
+                    $ret = (string)$object_id;
+                    if ($field = Tracker_FormElementFactory::instance()->getFormElementById($object_id)) {
+                        $ret = $field->getName() .' ('. $field->getTracker()->getName() .')';
+                    }
+                    $params['object_name'] =  $ret;
                 } else if ($type == 'artifact') {
-                    $artifact = new Tracker_Artifact();
-                    $artifact->setId($params['object_id']);
-                    $params['object_name'] = ($artifact->getTitle() != null) ? $artifact->getTitle() : 'art #'.$params['object_id'];
+                    $ret = (string)$object_id;
+                    if ($a  = Tracker_ArtifactFactory::instance()->getArtifactById($object_id)) {
+                        $ret = 'art #'. $a->getId();
+                        $semantics = $a->getTracker()
+                                       ->getTrackerSemanticManager()
+                                       ->getSemantics();
+                        if (isset($semantics['title'])) {
+                            if ($field = Tracker_FormElementFactory::instance()->getFormElementById($semantics['title']->getFieldId())) {
+                                $ret .= ' - '. $a->getValue($field)->getText();
+                            }
+                        }
+                    }
+                    $params['object_name'] =  $ret;
                 }
             }
         }
     }
     
     function permission_get_object_fullname($params) {
-        if (!$params['object_fullname']) {
-            $type = $this->getObjectTypeFromPermissions($params);
-            if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
-                if ($type == 'tracker') {
-                    $tf = TrackerFactory::instance();
-                    $tracker = $tf->getTrackerById($params['object_id']);
-                    $params['object_fullname'] = $tracker->getName();
-                } else if ($type == 'field') {
-                    $field = new Tracker_FormElement_Field();
-                    $field->setId(permission_extract_field_id($params['object_id']));
-                    $params['object_fullname'] = $field->getLabel();
-                } else if ($type == 'artifact') {
-                    $artifact = new Tracker_Artifact();
-                    $artifact->setId($params['object_id']);
-                    $params['object_fullname'] = ($artifact->getTitle() != null) ? $artifact->getTitle() : 'art #'.$params['object_id'];
-                }
-            }
-        }
+        $this->permission_get_object_name($params);
     }
     
     function permissions_for_ugroup($params) {
@@ -198,7 +195,7 @@ class trackerPlugin extends Plugin {
             $objname = $params['objname'];
             
             if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
-                if (strpos($params['permission_type'], 'PLUGIN_TRACKER_ACCESS') === 0) {
+                if (strpos($params['permission_type'], 'PLUGIN_TRACKER_ACCESS') === 0 || $params['permission_type'] === 'PLUGIN_TRACKER_ADMIN') {
                     echo '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
                     .' <a href="'.TRACKER_BASE_URL.'/admin/?func=permissions&perm_type=tracker&group_id='.$group_id.'&atid='.$atid.'">'
                     .$objname.'</a></TD>';
@@ -217,23 +214,35 @@ class trackerPlugin extends Plugin {
     
     var $_cached_permission_user_allowed_to_change;
     function permission_user_allowed_to_change($params) {
-        //TODO: manage permissions related to field "permission on artifact"
         if (!$params['allowed']) {
-            if (!$this->_cached_permission_user_allowed_to_change) {
-                if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
-                    //$tf = TrackerFactory::instance();
-                    //$tracker = $tf->getTrackerById($params['object_id']);
-                    try {
-                        $group_id = $params['group_id'];
-                        //TODO : check perms on tracker, fields and artifact (and workflow?)
-                        //Only tracker admin can update perms
-                        $this->_cached_permission_user_allowed_to_change = UserManager::instance()->getCurrentUser()->isMember($group_id,'A');
-                    } catch (Exception $e) {
-                        // do nothing
+            if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
+                $group_id  = $params['group_id'];
+                $object_id = $params['object_id'];
+                $type      = $this->getObjectTypeFromPermissions($params);
+                if (!isset($this->_cached_permission_user_allowed_to_change[$type][$object_id])) {
+                    switch ($type) {
+                        case 'tracker':
+                            if ($tracker = TrackerFactory::instance()->getTrackerById($object_id)) {
+                                $this->_cached_permission_user_allowed_to_change[$type][$object_id] = $tracker->userIsAdmin();
+                            }
+                            break;
+                        case 'field':
+                            if ($field = Tracker_FormElementFactory::instance()->getFormElementById($object_id)) {
+                                $this->_cached_permission_user_allowed_to_change[$type][$object_id] = $field->getTracker()->userIsAdmin();
+                            }
+                            break;
+                        case 'artifact':
+                            if ($a  = Tracker_ArtifactFactory::instance()->getArtifactById($object_id)) {
+                                //TODO: manage permissions related to field "permission on artifact"
+                                $this->_cached_permission_user_allowed_to_change[$type][$object_id] = $a->getTracker()->userIsAdmin();
+                            }
+                            break;
                     }
                 }
             }
-            $params['allowed'] = $this->_cached_permission_user_allowed_to_change;
+            if (isset($this->_cached_permission_user_allowed_to_change[$type][$object_id])) {
+                $params['allowed'] = $this->_cached_permission_user_allowed_to_change[$type][$object_id];
+            }
         }
     }
 }
