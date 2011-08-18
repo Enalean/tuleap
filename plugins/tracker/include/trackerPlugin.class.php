@@ -117,6 +117,9 @@ class trackerPlugin extends Plugin {
             case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
                 $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_artifact_access');
                 break;
+            case 'PLUGIN_TRACKER_WORKFLOW_TRANSITION':
+                $params['name'] = $GLOBALS['Language']->getText('workflow_admin','permissions_transition');
+                break;
             default:
                 break;
             }
@@ -143,6 +146,8 @@ class trackerPlugin extends Plugin {
                 return 'tracker';
             case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
                 return 'artifact';
+            case 'PLUGIN_TRACKER_WORKFLOW_TRANSITION':
+                return 'workflow transition';
         }
         return false;
     }
@@ -160,7 +165,7 @@ class trackerPlugin extends Plugin {
                 } else if ($type == 'field') {
                     $ret = (string)$object_id;
                     if ($field = Tracker_FormElementFactory::instance()->getFormElementById($object_id)) {
-                        $ret = $field->getName() .' ('. $field->getTracker()->getName() .')';
+                        $ret = $field->getLabel() .' ('. $field->getTracker()->getName() .')';
                     }
                     $params['object_name'] =  $ret;
                 } else if ($type == 'artifact') {
@@ -188,25 +193,34 @@ class trackerPlugin extends Plugin {
     
     function permissions_for_ugroup($params) {
         if (!$params['results']) {
-            //TODO : change urls
+            
             $group_id = $params['group_id'];
             $hp = Codendi_HTMLPurifier::instance();
             $atid = $params['object_id'];
             $objname = $params['objname'];
             
-            if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
+            if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS', 'PLUGIN_TRACKER_WORKFLOW_TRANSITION'))) {
                 if (strpos($params['permission_type'], 'PLUGIN_TRACKER_ACCESS') === 0 || $params['permission_type'] === 'PLUGIN_TRACKER_ADMIN') {
                     echo '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
-                    .' <a href="'.TRACKER_BASE_URL.'/admin/?func=permissions&perm_type=tracker&group_id='.$group_id.'&atid='.$atid.'">'
+                    .' <a href="'.TRACKER_BASE_URL.'/?tracker='.$atid.'&func=admin-perms-tracker">'
                     .$objname.'</a></TD>';
-                } else if (strpos($params['permission_type'], 'PLUGIN_TRACKER_FIELD') === 0) {
-                    $tracker_field_displayed[$atid]=1;
                     
-                    echo '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup','tracker_field')
-                    .' <a href="'.TRACKER_BASE_URL.'/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions&perm_type=fields&group_first=1&selected_id='.$ugroup_id.'">' 
+                } else if (strpos($params['permission_type'], 'PLUGIN_TRACKER_FIELD') === 0) {
+                    $field = Tracker_FormElementFactory::instance()->getFormElementById($atid);
+                    $tracker_id = $field->getTrackerId();
+                    
+                    echo '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
+                    .' <a href="'.TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=admin-perms-fields">'
                     .$objname.'</a></TD>';
+                    
                 } else if ($params['permission_type'] == 'PLUGIN_TRACKER_ARTIFACT_ACCESS') {
                     echo '<td>'. $hp->purify($objname, CODENDI_PURIFIER_BASIC) .'</td>';
+                    
+                } else if ($params['permission_type'] == 'PLUGIN_TRACKER_WORKFLOW_TRANSITION') {
+                    $transition = TransitionFactory::instance()->getTransition($atid);
+                    $tracker_id = $transition->getWorkflow()->getTrackerId();
+                    $edit_transition = $transition->getFieldValueFrom().'_'.$transition->getFieldValueTo();
+                    echo '<TD><a href="'.TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=admin-workflow&edit_transition='.$edit_transition.'">'.$objname.'</a></TD>';
                 }
             }
         }
