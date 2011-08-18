@@ -914,7 +914,7 @@ class Tracker {
                 }
                 $toolbar[] = array(
                         'title' => $GLOBALS['Language']->getText('plugin_tracker', 'help'),
-                        'url'   => 'javascript:help_window(\''.get_server_url().'/documentation/user_guide/html/'.UserManager::instance()->getCurrentUser()->getLocale().'/Codendi_User_Guide.html#TrackerService\');',
+                        'url'   => 'javascript:help_window(\''.get_server_url().'/documentation/user_guide/html/'.UserManager::instance()->getCurrentUser()->getLocale().'/TrackerV5Service.html\');',
                 );
             }
             $title = ($title ? $title .' - ' : ''). $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML);
@@ -1574,7 +1574,7 @@ EOS;
         $title = $items['csvimport']['title'];
         $this->displayAdminCSVImportHeader($tracker_manager, $title, array());
 
-        echo '<h2>'. $title . ' ' . help_button('ArtifactImport') . '</h2>';
+        echo '<h2>'. $title . ' ' . help_button('TrackerV5ArtifactImport') . '</h2>';
         echo '<form name="form1" method="POST" enctype="multipart/form-data" action="'.TRACKER_BASE_URL.'/?tracker='. (int)$this->id .'&amp;func=admin-csvimport">';
         echo '<input type="file" name="csv_filename" size="50">';
         echo '<br>';

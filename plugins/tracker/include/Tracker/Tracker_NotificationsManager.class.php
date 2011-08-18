@@ -78,7 +78,7 @@ class Tracker_NotificationsManager {
         
         if ($this->tracker->userIsAdmin()) {
             echo '<h3><a name="ToggleEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notification').' '.
-            help_button('TrackerAdministration.html#ToggleEmailNotification').'</h3>';
+            help_button('TrackerV5Administration.html#TrackerV5ToggleEmailNotification').'</h3>';
             echo '
                 <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notif_note').'<br>
                 <br><input type="hidden" name="stop_notification" value="0" /> 
@@ -86,7 +86,7 @@ class Tracker_NotificationsManager {
                 '<label for="toggle_stop_notification">'. $GLOBALS['Language']->getText('plugin_tracker_include_type','stop_notification') .'</label>';     
         } else if ($this->tracker->stop_notification) {
             echo '<h3><a name="ToggleEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','notification_suspended').' '.
-            help_button('TrackerAdministration.html#ToggleEmailNotification').'</h3>';
+            help_button('TrackerV5Administration.html#TrackerV5ToggleEmailNotification').'</h3>';
             echo '
             <P><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','toggle_notif_warn').'</b><BR>';
         }
@@ -95,7 +95,7 @@ class Tracker_NotificationsManager {
     protected function displayAdminNotifications_Global(HTTPRequest $request) {
         $hp = Codendi_HTMLPurifier::instance();
         echo '<h3><a name="GlobalEmailNotification"></a>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','global_mail_notif').' '.
-        help_button('TrackerAdministration.html#TrackerGlobalEmailNotification').'</h3>';
+        help_button('TrackerV5Administration.html#TrackerV5GlobalEmailNotification').'</h3>';
         
         $notifs    = $this->getGlobalNotifications();
         $nb_notifs = count($notifs);
@@ -195,7 +195,7 @@ class Tracker_NotificationsManager {
             // To watch other users you must have at least admin rights on the tracker
             echo'
             <h4>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','users_to_watch').' '.
-            help_button('TrackerAdministration.html#TrackerWatchers').'</h4>
+            help_button('TrackerV5Administration.html#TrackerV5Watchers').'</h4>
             <P>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','backup_person').'
             <p><INPUT TYPE="TEXT" NAME="watchees" VALUE="'. $hp->purify($watchees, CODENDI_PURIFIER_CONVERT_HTML) .'" SIZE="55" MAXLENGTH="255"><br></p>
             ';
@@ -236,7 +236,7 @@ class Tracker_NotificationsManager {
 
         // Rk: Can't use html_build_list_table_top because of the specific layout
         echo '<h4>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','event_settings').' '.
-        help_button('TrackerAdministration.html#TrackerEventRoleBasedEmailNotification').'</h4>
+        help_button('TrackerV5Administration.html#TrackerV5EventRoleBasedEmailNotification').'</h4>
                       <P>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','tune_settings');
         
         echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
