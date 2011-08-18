@@ -250,7 +250,7 @@ class ReferenceManager {
     }
 
 
-    function &loadReferenceFromKeywordAndNumArgs($keyword,$group_id=100,$num_args=1) {
+    function loadReferenceFromKeywordAndNumArgs($keyword,$group_id=100,$num_args=1) {
         $reference_dao =& $this->_getReferenceDao();
         $dar = $reference_dao->searchByKeywordAndGroupID($keyword,$group_id);
         $ref=null;
@@ -457,18 +457,31 @@ class ReferenceManager {
         }
     }
     
-    function extractCrossRef($html,$source_id, $source_type, $source_gid, $user_id=0) {
-		$referencesInstances=array();		
-		$available_natures = $this->getAvailableNatures();
-		if ($source_type == self::REFERENCE_NATURE_ARTIFACT) {
-		    $source_key = $this->getArtifactKeyword($source_id, $source_gid);
-		    if (! $source_key) {
-		        $source_key = $available_natures[$source_type]['keyword'];
-		    }
-		} else {
-		    $source_key = $available_natures[$source_type]['keyword'];
-		}
-		
+    /**
+     * Extract References from a given text and insert extracted refs into the database
+     *
+     * @param String  $html        Text to parse
+     * @param Integer $source_id   Id of the item where the text was added
+     * @param String  $source_type Nature of the source 
+     * @param Integer $source_gid  Project Id of the project the source item belongs to
+     * @param Integer $user_id     User who owns the text to parse
+     * @param String  $source_key  Keyword to use for the reference (if different from the one associated to the nature)
+     * 
+     * @retrun Boolean True if no error
+     */
+    function extractCrossRef($html,$source_id, $source_type, $source_gid, $user_id=0, $source_key=null) {
+        if ($source_key == null) {
+            $available_natures = $this->getAvailableNatures();
+            if ($source_type == self::REFERENCE_NATURE_ARTIFACT) {
+                $source_key = $this->getArtifactKeyword($source_id, $source_gid);
+                if (! $source_key) {
+                    $source_key = $available_natures[$source_type]['keyword'];
+                }
+            } else {
+                $source_key = $available_natures[$source_type]['keyword'];
+            }
+        }
+        
         $matches = $this->_extractAllMatches($html);
         foreach ($matches as $match) {
         	// Analyse match

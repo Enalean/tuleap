@@ -37,6 +37,8 @@ class trackerPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         $this->_addHook('cssfile', 'cssFile', false);
+        $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures', false);
+        $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
         $this->_addHook(Event::SERVICE_CLASSNAMES, 'service_classnames', false);
         $this->_addHook(Event::COMBINED_SCRIPTS,   'combined_scripts',   false);
         $this->_addHook(Event::JAVASCRIPT,         'javascript',         false);
@@ -271,6 +273,24 @@ class trackerPlugin extends Plugin {
             }
             if (isset($this->_cached_permission_user_allowed_to_change[$type][$object_id])) {
                 $params['allowed'] = $this->_cached_permission_user_allowed_to_change[$type][$object_id];
+            }
+        }
+    }
+    
+    public function get_available_reference_natures($params) {
+        require_once('Tracker/Artifact/Tracker_Artifact.class.php');
+        $natures = array(Tracker_Artifact::REFERENCE_NATURE => array('keyword' => 'artifact',
+                                                                     'label'   => 'Artifact Tracker v5'));
+        $params['natures'] = array_merge($params['natures'], $natures);
+    }
+    
+    public function ajax_reference_tooltip($params) {
+        if ($params['reference']->getServiceShortName() == 'plugin_tracker') {
+            $user = UserManager::instance()->getCurrentUser();
+            $aid = $params['val'];
+            require_once('Tracker/Artifact/Tracker_ArtifactFactory.class.php');
+            if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($aid)) {
+                echo $artifact->fetchTooltip($user);
             }
         }
     }

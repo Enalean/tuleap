@@ -469,9 +469,9 @@ class TrackerFactory {
                 // scope is 'project'
                 'P',
                 // service short name
-                'tracker',
+                'plugin_tracker',
                 // nature
-                ReferenceManager::REFERENCE_NATURE_ARTIFACT,
+                Tracker_Artifact::REFERENCE_NATURE,
                 // is_used
                 '1',
                 // project id

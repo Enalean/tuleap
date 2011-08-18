@@ -29,6 +29,8 @@ require_once('common/include/Recent_Element_Interface.class.php');
 
 class Tracker_Artifact implements Recent_Element_Interface {
 
+    const REFERENCE_NATURE = 'plugin_tracker_artifact';
+
     public $id;
     public $tracker_id;
     public $use_artifact_permissions;
@@ -732,7 +734,7 @@ class Tracker_Artifact implements Recent_Element_Interface {
                         $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0);
                         
                         //extract references from the comment
-                        $this->getReferenceManager()->extractCrossRef($comment, $this->getId(), 'artifact', $this->getTracker()->getGroupID(), $submitter->getId());
+                        $this->getReferenceManager()->extractCrossRef($comment, $this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupID(), $submitter->getId(), $this->getTracker()->getItemName());
                         
                         //Store the value(s) of the fields
                         $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());

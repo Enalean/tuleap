@@ -133,6 +133,18 @@ class Event {
       */
      const GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES = 'get_plugins_available_keywords_references';
 
+     /**
+      * Allow to define specific references natures provided by a plugin
+      * 
+      * Parameters:
+      *   'natures' => array of references natures
+      * 
+      * Expected result:
+      *   A new nature added into $params['nature']
+      *   array('keyword' => 'awsome', label => 'Really kick ass')
+      */
+     const GET_AVAILABLE_REFERENCE_NATURE = 'get_available_reference_natures';
+     
     /**
      * Project unix name changed
      *
