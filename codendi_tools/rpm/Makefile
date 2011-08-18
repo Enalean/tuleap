@@ -22,6 +22,7 @@ PLUGIN_ECLIPSE_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/eclipse/VERSION)
 PLUGIN_HUDSON_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/hudson/VERSION)
 PLUGIN_WEBDAV_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/webdav/VERSION)
 PLUGIN_REQUESTHELP_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/requesthelp/VERSION)
+PLUGIN_TRACKER_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/tracker/VERSION)
 
 THEME_CODEX_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodeX/VERSION)
 THEME_CODEXTAB_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodeXTab/VERSION)
@@ -41,10 +42,9 @@ rpmprep:
 	echo '%_tmppath %{_topdir}/TMP' >> ~/.rpmmacros
 	echo '%_buildroot %{_tmppath}/%{name}-root' >> ~/.rpmmacros
 	echo '%_sysconfdir /etc' >> ~/.rpmmacros
-	#echo '%dist -zata' >> ~/.rpmmacros
 
-tarball:
-	cd $(BASE_DIR) && find . -type f -or -type l  | grep -v '/.svn/' | egrep -v '^\./plugins/tests' | egrep -v '^\./plugins/maillog' | cpio -pdumB --quiet $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
+tarball: 
+	cd $(BASE_DIR) && find . \( -path ./rpm -o -path '*/.svn' -o -path ./plugins/tests -o -path ./plugins/maillog -o -path ./plugins/salome \) -prune -o -print | cpio -pdumB --quiet $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
 	cd $(RPM_TMP)/SOURCES && tar czf $(PKG_NAME)-$(version).tar.gz $(PKG_NAME)-$(version)
 
 codendi: rpmprep tarball
@@ -65,6 +65,7 @@ codendi: rpmprep tarball
 		sed -e 's/@@PLUGIN_HUDSON_VERSION@@/$(PLUGIN_HUDSON_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_WEBDAV_VERSION@@/$(PLUGIN_WEBDAV_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_REQUESTHELP_VERSION@@/$(PLUGIN_REQUESTHELP_VERSION)/g' |\
+		sed -e 's/@@PLUGIN_TRACKER_VERSION@@/$(PLUGIN_TRACKER_VERSION)/g' |\
 		sed -e 's/@@THEME_CODEX_VERSION@@/$(THEME_CODEX_VERSION)/g' |\
 		sed -e 's/@@THEME_CODEXTAB_VERSION@@/$(THEME_CODEXTAB_VERSION)/g' |\
 		sed -e 's/@@THEME_DAWN_VERSION@@/$(THEME_DAWN_VERSION)/g' |\
@@ -80,8 +81,8 @@ codendi: rpmprep tarball
 custom_codendi: tarball
 	cat codendi-customization.spec |\
 		sed -e 's/@@PLATFORM@@/default/' |\
-		sed -e 's/@@SYS_DEFAULT_DOMAIN@@/codendi.org/' |\
-		sed -e 's/@@SYS_HTTPS_HOST@@/codendi.org/' |\
+		sed -e 's/@@SYS_DEFAULT_DOMAIN@@/tuleap.net/' |\
+		sed -e 's/@@SYS_HTTPS_HOST@@/tuleap.net/' |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/codendi-customization.spec
@@ -96,15 +97,6 @@ codendi-all-deps: codendi-all-deps.spec
 		> $(RPM_TMP)/SPECS/$<
 	cp README.all-deps $(RPM_TMP)/SOURCES/
 	rpmbuild -bb $(RPM_TMP)/SPECS/$<
-
-#
-# Rebuild codendi's rpms
-#
-# Only mailman as of today
-core_rpms:
-	cp -ar $(BASE_DIR)/rpm/SPECS/* $(RPM_TMP)/SPECS
-	cp -ar $(BASE_DIR)/rpm/SOURCES/* $(RPM_TMP)/SOURCES
-	cd $(RPM_TMP)/SPECS && $(MAKE) mailman.codendi
 
 clean:
 	-rm -Rf $(RPM_TMP)/*
