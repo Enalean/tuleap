@@ -6,10 +6,11 @@ usage() {
     cat <<EOF
 Usage: $1 [options]
 Options
-  --without-svn-sniff Disable usage of SVN log to discover new files to sniff
+  --without-svn-sniff  Disable usage of SVN log to discover new files to sniff
   --srcdir=<value>    Specify a sourcedir
+  --workspace=<value>  Absolute path to where 'src-dir' stands
 
-Note: WORKSPACE is a variable of Hudson/Jenkins
+Note: $WORKSPACE is a variable of Hudson/Jenkins and might replace --workspace
 EOF
 }
 
@@ -28,13 +29,12 @@ local_module_directory="codendi-src";
 port="80";
 sys_org_name="Codendi";
 sys_long_org_name="Codendi";
-codendi_dir="$WORKSPACE";
 sniff_svn="true"
 
 ##
 ## Parse options
 ##
-options=`getopt -o h -l help,without-svn-sniff,srcdir: -- "$@"`
+options=`getopt -o h -l help,without-svn-sniff,srcdir:,workspace: -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
 eval set -- "$options"
 while true
@@ -49,9 +49,12 @@ do
 	--srcdir)
 	    local_module_directory=$2; 
 	    shift 2;;
+	--workspace)
+	    WORKSPACE=$2; 
+	    shift 2;;
 	 *)
 	    break;;
- esac
+    esac
 done
 # Options post treatment
 codendi_src="$WORKSPACE/$local_module_directory"
@@ -85,15 +88,15 @@ substitute '../etc/codendi/conf/local.inc' '%sys_org_name%' "Xerox"
 substitute '../etc/codendi/conf/local.inc' '%sys_long_org_name%' "Xerox Corp" 
 substitute '../etc/codendi/conf/local.inc' '%sys_fullname%' "$sys_default_domain" 
 substitute '../etc/codendi/conf/local.inc' '%sys_win_domain%' " " 
-substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/codendi' "$codendi_dir/$local_module_directory"
-substitute '../etc/codendi/conf/local.inc' '\/var\/lib\/codendi' "$codendi_dir/var/lib/codendi"
-substitute '../etc/codendi/conf/local.inc' '\/var\/log\/codendi' "$codendi_dir/var/log/codendi"
-substitute '../etc/codendi/conf/local.inc' '\/etc\/codendi' "$codendi_dir/etc/codendi"
-substitute '../etc/codendi/conf/local.inc' '\/usr\/lib\/codendi\/bin' "$codendi_dir/etc/codendi"
+substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/codendi' "$WORKSPACE/$local_module_directory"
+substitute '../etc/codendi/conf/local.inc' '\/var\/lib\/codendi' "$WORKSPACE/var/lib/codendi"
+substitute '../etc/codendi/conf/local.inc' '\/var\/log\/codendi' "$WORKSPACE/var/log/codendi"
+substitute '../etc/codendi/conf/local.inc' '\/etc\/codendi' "$WORKSPACE/etc/codendi"
+substitute '../etc/codendi/conf/local.inc' '\/usr\/lib\/codendi\/bin' "$WORKSPACE/etc/codendi"
 substitute '../etc/codendi/conf/local.inc' '^\$sys_https_host ' "// \\\$sys_https_host"
 substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/htmlpurifier' "/usr/share/htmlpurifier"
 substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/jpgraph' "/usr/share/jpgraph"
-substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$codendi_dir/var/tmp"
+substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$WORKSPACE/var/tmp"
 
 # Set environment var CODENDI_LOCAL_INC
 export CODENDI_LOCAL_INC="$WORKSPACE/etc/codendi/conf/local.inc"
