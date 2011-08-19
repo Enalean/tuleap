@@ -69,6 +69,7 @@ class TrackerManagerTest extends UnitTestCase {
         $rf->setReturnReference('getReportById', $this->report, array('2', $this->user->getId(), true));
         
         $this->tracker = new MockTracker($this);
+        $this->tracker->setReturnValue('isActive', true);
         $tf = new MockTrackerFactory($this);
         $tf->setReturnReference('getTrackerById', $this->tracker, array(3));
         
