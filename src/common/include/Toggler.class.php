@@ -102,7 +102,17 @@ class Toggler {
             $done = false;
             EventManager::instance()->processEvent(Event::TOGGLE, array('id' => $id, 'user' => $current_user, 'done' => &$done));
             if (!$done) {
-                $current_user->setPreference('toggle_'. $id, 1 - (int)$current_user->getPreference('toggle_'. $id));
+                if (strpos($id, 'tracker_report_query_') === 0) {
+                    require_once('common/tracker/ArtifactReportFactory.class.php');
+                    $report_id = (int)substr($id, strlen('tracker_report_query_'));
+                    $report_factory = ArtifactReportFactory::instance();
+                    if (($report = $report_factory->getReportById($report_id, $current_user->getid())) && $report->userCanUpdate($current_user)) {
+                        $report->toggleQueryDisplay();
+                        $report_factory->save($report);
+                    }
+                } else {
+                    $current_user->setPreference('toggle_'. $id, 1 - (int)$current_user->getPreference('toggle_'. $id));
+                }
             }
         }
     }
