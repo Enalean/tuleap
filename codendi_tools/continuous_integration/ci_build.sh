@@ -1,26 +1,17 @@
 #!/bin/sh
 
-set -ex
+set -e
 
-#
-# CI build: build Codendi project on a Continuous Integration server
-# Usage: sh ci_build.sh
-# Note: WORKSPACE is a variable of Hudson
-#
+usage() {
+    cat <<EOF
+Usage: $1 [options]
+Options
+  --without-svn-sniff Disable usage of SVN log to discover new files to sniff
+  --srcdir=<value>    Specify a sourcedir
 
-sys_default_domain="codendi.org";
-#sys_ip_address='127.0.0.1';
-local_module_directory="codendi-src";
-port="80";
-sys_org_name="Codendi";
-sys_long_org_name="Codendi";
-codendi_dir="$WORKSPACE";
-codendi_src="$WORKSPACE/$local_module_directory"
-
-
-cd "$codendi_src"
-
-
+Note: WORKSPACE is a variable of Hudson/Jenkins
+EOF
+}
 
 substitute() {
   # $1: filename, $2: string to match, $3: replacement string
@@ -28,6 +19,46 @@ substitute() {
   replacement=`echo $3 | sed "s|/|\\\\\/|g"`
   perl -pi -e "s/$2/$replacement/g" $1
 }
+
+##
+## Default values
+##
+sys_default_domain="codendi.org";
+local_module_directory="codendi-src";
+port="80";
+sys_org_name="Codendi";
+sys_long_org_name="Codendi";
+codendi_dir="$WORKSPACE";
+sniff_svn="true"
+
+##
+## Parse options
+##
+options=`getopt -o h -l help,without-svn-sniff,srcdir: -- "$@"`
+if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
+eval set -- "$options"
+while true
+do
+    case "$1" in
+	-h|--help)
+	    usage $0
+	    exit 0;;
+	--without-svn-sniff)
+	    sniff_svn="false"
+	    shift 1;;
+	--srcdir)
+	    local_module_directory=$2; 
+	    shift 2;;
+	 *)
+	    break;;
+ esac
+done
+# Options post treatment
+codendi_src="$WORKSPACE/$local_module_directory"
+
+# Go!
+set -x
+cd "$codendi_src"
 
 # Create /var/tmp/codendi_cache dir
 mkdir -p ../var/
@@ -79,7 +110,11 @@ php -d include_path="$codendi_src/src/www/include:$codendi_src/src:/usr/share/pe
 # Checkstyle
 pushd .
 cd "$codendi_src"
-files=$(php "$codendi_src/codendi_tools/continuous_integration/findFilesToSniff.php")
+
+files=""
+if [ "$sniff_svn" = "true" ]; then
+    files=$(php "$codendi_src/codendi_tools/continuous_integration/findFilesToSniff.php")
+fi
 
 php -d memory_limit=256M /usr/bin/phpcs --standard="$codendi_src/codendi_tools/utils/phpcs/Codendi" "$codendi_src/src/common/chart" "$codendi_src/src/common/backend" --report=checkstyle -n --ignore=*/phpwiki/* --ignore="*/webdav/lib/*" $files > $WORKSPACE/var/tmp/checkstyle.xml || true
 popd
