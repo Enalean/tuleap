@@ -69,6 +69,15 @@ class Tracker_ArtifactLinkInfo {
     }
     
     /**
+     * Returns the tracker this artifact belongs to
+     *
+     * @return Tracker The tracker this artifact belongs to
+     */
+    public function getTracker() {
+        return TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+    }
+    
+    /**
      * @return int the last changeset_id of the artifact link
      */
     public function getLastChangesetId() {

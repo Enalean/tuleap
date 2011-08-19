@@ -268,13 +268,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $ids = array();
             // build an array of artifact_id / last_changeset_id for fetch renderer method
             foreach ($artifact_links as $artifact_link) {
-                if (!isset($ids[$artifact_link->getTrackerId()])) {
-                    $ids[$artifact_link->getTrackerId()] = array(
+                if ($artifact_link->getTracker()->isActive() && $artifact_link->userCanView()) {
+                    if (!isset($ids[$artifact_link->getTrackerId()])) {
+                        $ids[$artifact_link->getTrackerId()] = array(
                         'id'                => '',
                         'last_changeset_id' => '',
-                    );
-                }
-                if ($artifact_link->userCanView()) {
+                        );
+                    }
                     $ids[$artifact_link->getTrackerId()]['id'] .= $artifact_link->getArtifactId() .',';
                     $ids[$artifact_link->getTrackerId()]['last_changeset_id'] .= $artifact_link->getLastChangesetId() .',';
                 }
