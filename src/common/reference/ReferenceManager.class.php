@@ -764,13 +764,9 @@ class ReferenceManager {
     function _isKeywordExists($keyword, $group_id) {
         $reference_dao = $this->_getReferenceDao();
         $dar=$reference_dao->searchByKeywordAndGroupId($keyword,$group_id);
-        $row = $dar->getRow();
-        while ($row = $dar->getRow()) {
-            if ($keyword == $row['keyword']) {
-                return true;
-            }
+        if ($dar->rowCount() > 0) {
+            return true;
         }
-        return false;
     }
     
     public function checkKeyword($keyword) {            
