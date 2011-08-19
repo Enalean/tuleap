@@ -62,7 +62,7 @@ class Tracker_History {
                 //user
                 $change .= '<td>';
                 if ($row['submitted_by']) {
-                    $change .= $uh->getLinkFromUserid($row['submitted_by']);
+                    $change .= $uh->getLinkOnUserFromUserId($row['submitted_by']);
                 }
                 $change .= '</td>';
                 

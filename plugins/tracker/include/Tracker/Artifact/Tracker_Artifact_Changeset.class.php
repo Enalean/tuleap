@@ -160,7 +160,7 @@ class Tracker_Artifact_Changeset {
         //The submitter
         if ($this->submitted_by) {
             $uh = UserHelper::instance();
-            $submitter = $uh->getLinkFromUserid($this->submitted_by);
+            $submitter = $uh->getLinkOnUserFromUserId($this->submitted_by);
         } else {
             $hp = Codendi_HTMLPurifier::instance();
             $submitter = $hp->purify($this->email, CODENDI_PURIFIER_BASIC);

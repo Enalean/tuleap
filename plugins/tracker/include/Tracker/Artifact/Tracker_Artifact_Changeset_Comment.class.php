@@ -75,7 +75,7 @@ class Tracker_Artifact_Changeset_Comment {
                 $html .= '<div class="tracker_artifact_followup_comment_edited_by">';
                 if ($this->parent_id) {                    
                     $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
-                    $html .= ' '. $uh->getLinkFromUserid($this->submitted_by) .' ';
+                    $html .= ' '. $uh->getLinkOnUserFromUserId($this->submitted_by) .' ';
                     $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
                 }
                 $html .= '</div>';

@@ -258,19 +258,6 @@ class UserHelper {
         $dao = new UserDao(CodendiDataAccess::instance());
         return $dao;
     }
-    
-    function getLinkFromUserid($user_id) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $a = '';
-        $um = $this->_getUserManager();
-        if ($user = $um->getUserById($user_id)) {
-            $display = $this->getDisplayNameFromUser($user);
-            $a = '<a href="/users/'.  $hp->purify($user->getUserName(), CODENDI_PURIFIER_CONVERT_HTML)  .'">';
-            $a .= $display;
-            $a .= '</a>';
-        }
-        return $a;
-    }
 }
 
 ?>

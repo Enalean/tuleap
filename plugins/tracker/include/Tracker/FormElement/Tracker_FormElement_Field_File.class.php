@@ -302,7 +302,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $info = $link_show . $hp->purify($fileinfo->getFilename(), CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
                 $info .= ' ('. $fileinfo->getHumanReadableFilesize() .')';
                 if ($submitter_needed) {
-                    $info .= '<div class="tracker_artifact_attachment_submitter">'. 'By '. $uh->getLinkFromUserid($fileinfo->getSubmittedBy()) .'</div>';
+                    $info .= '<div class="tracker_artifact_attachment_submitter">'. 'By '. $uh->getLinkOnUserFromUserId($fileinfo->getSubmittedBy()) .'</div>';
                 }
                 
                 $add = '<div class="tracker_artifact_attachment">';
