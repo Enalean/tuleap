@@ -24,10 +24,10 @@ require_once('common/tracker/ArtifactReportFactory.class.php');
 require_once('common/tracker/ArtifactReportField.class.php');
 require_once('common/tracker/Artifact.class.php');
 require_once('common/reference/ReferenceManager.class.php');
-require('../include/ArtifactTypeHtml.class.php');
-require('../include/ArtifactCannedHtml.class.php');
-require('../include/ArtifactReportHtml.class.php');
-require('../include/ArtifactHtml.class.php');
+require_once('../include/ArtifactTypeHtml.class.php');
+require_once('../include/ArtifactCannedHtml.class.php');
+require_once('../include/ArtifactReportHtml.class.php');
+require_once('../include/ArtifactHtml.class.php');
 
 require_once('common/include/SimpleSanitizer.class.php');
 $sanitizer =& new SimpleSanitizer();
