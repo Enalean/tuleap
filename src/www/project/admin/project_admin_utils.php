@@ -193,7 +193,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo '<FORM METHOD="POST" id="project_history_form" NAME="project_history_form">';
 
         echo '<TABLE ID="project_history_search">';
-        echo '<TH style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
+        echo '<TH colspan="2" style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
               <TH style="text-align:left">'.$Language->getText('project_admin_utils','val').'</TH>
               <TH style="text-align:left">'.$Language->getText('project_export_task_export', 'start_date').'</TH>
               <TH style="text-align:left">'.$Language->getText('project_export_task_export', 'end_date').'</TH>
@@ -207,32 +207,32 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         if ($event == "Any") {
             echo 'selected';
         }
-        echo '>Any</Option>
+        echo '>'.$Language->getText('global','any').'</Option>
               <Option value="Permissions"';
         if ($event == "Permissions") {
             echo 'selected';
         }
-        echo '>Permissions</Option>
+        echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_permission").'</Option>
               <Option value="Project"';
         if ($event == "Project") {
             echo 'selected';
         }
-        echo '>Project</Option>
+        echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_project").'</Option>
               <Option value="Users"';
         if ($event == "Users") {
             echo 'selected';
         }
-        echo '>Users</Option>
+        echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_user").'</Option>
               <Option value="User Group"';
         if ($event == "User Group") {
             echo 'selected';
         }
-        echo '>User Group</Option>
+        echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_ug").'</Option>
               <Option value="Others"';
         if ($event == "Others") {
             echo 'selected';
         }
-        echo '>Others</Option>
+        echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_others").'</Option>
               </select>';
 
         //SubEvent select Box
