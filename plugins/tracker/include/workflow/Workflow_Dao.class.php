@@ -23,7 +23,7 @@ require_once('common/dao/include/DataAccessObject.class.php');
 class Workflow_Dao extends DataAccessObject {
     public function __construct($da = null) {
         parent::__construct($da);
-        $this->table_name = 'workflow_tracker';
+        $this->table_name = 'tracker_workflow';
     }
     
     public function create($tracker_id, $field_id) {

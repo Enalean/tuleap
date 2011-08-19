@@ -2,8 +2,8 @@
 --  
 --  Table structure for workflow_tracker
 --  
-DROP TABLE IF EXISTS workflow_tracker;
-CREATE TABLE IF NOT EXISTS workflow_tracker (
+DROP TABLE IF EXISTS tracker_workflow;
+CREATE TABLE IF NOT EXISTS tracker_workflow (
   workflow_id int(11) NOT NULL auto_increment  PRIMARY KEY,
   tracker_id int(11) NOT NULL,
   field_id int(11) NOT NULL,
@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS workflow_tracker (
 --  
 --  Table structure for workflow_transition
 -- 
-DROP TABLE IF EXISTS workflow_transition;
-CREATE TABLE IF NOT EXISTS workflow_transition (
+DROP TABLE IF EXISTS tracker_workflow_transition;
+CREATE TABLE IF NOT EXISTS tracker_workflow_transition (
   transition_id int(11) NOT NULL auto_increment  PRIMARY KEY,
   from_id int(11) default NULL,
   to_id int(11) NOT NULL,
