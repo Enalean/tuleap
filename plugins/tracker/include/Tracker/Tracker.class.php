@@ -1759,9 +1759,18 @@ EOS;
      * @return boolean
      */
     public function isActive() {
-        return $this->status === 'A';
+        return !$this->isDeleted();
     }
 
+    /**
+     * Test if tracker is deleted
+     * 
+     * @return Boolean
+     */
+    public function isDeleted() {
+        return ($this->deletion_date != '');
+    }
+    
     /**
      * @return Tracker_SemanticManager
      */

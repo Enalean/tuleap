@@ -759,6 +759,7 @@ plugin_tracker_common_type	name_already_exists	The tracker name is already used.
 plugin_tracker_common_type	no_view_permission_on_artifact	You don't have the permissions to view this artifact.
 plugin_tracker_common_type	artifact_not_exist	This artifact does not exist.
 plugin_tracker_common_type	report_not_exist	This report does not exist.
+plugin_tracker_common_type	tracker_not_exist	This tracker does not exist.
 
 #
 #-----------------------------------------------

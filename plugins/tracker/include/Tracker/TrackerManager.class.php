@@ -54,12 +54,16 @@ class TrackerManager { /* extends Engine? */
         if ((int)$request->get('aid')) {
             if ($artifact = $this->getArtifactFactory()->getArtifactByid($request->get('aid'))) {
                 $this->checkServiceEnabled($artifact->getTracker()->getProject());
-                if ($artifact->userCanView($user)) {
-                    $GLOBALS['group_id'] = $artifact->getTracker()->getGroupId();
-                    $artifact->process($this, $request, $user);
+                if ($artifact->getTracker()->isActive()) {
+                    if ($artifact->userCanView($user)) {
+                        $GLOBALS['group_id'] = $artifact->getTracker()->getGroupId();
+                        $artifact->process($this, $request, $user);
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission_on_artifact'));
+                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $artifact->getTrackerId());
+                    }
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission_on_artifact'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $artifact->getTrackerId());
+                    exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
                 }
             } else {
                 exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist'));
@@ -71,8 +75,12 @@ class TrackerManager { /* extends Engine? */
             }
             if ($report = $this->getArtifactReportFactory()->getReportById($request->get('report'), $user->getId(), $store_in_session)) {
                 $this->checkServiceEnabled($report->getTracker()->getProject());
-                $GLOBALS['group_id'] = $report->getTracker()->getGroupId();
-                $report->process($this, $request, $user);
+                if ($report->getTracker()->isActive()) {
+                    $GLOBALS['group_id'] = $report->getTracker()->getGroupId();
+                    $report->process($this, $request, $user);
+                } else {
+                    exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
+                }
             } else {
                 exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'report_not_exist'));
             }
@@ -81,7 +89,7 @@ class TrackerManager { /* extends Engine? */
             if (!$tracker_id) {
                 $tracker_id = (int)$request->get('atid');
             }
-            if ($tracker = $this->getTrackerFactory()->getTrackerByid($tracker_id)) {
+            if (($tracker = $this->getTrackerFactory()->getTrackerByid($tracker_id)) && $tracker->isActive()) {
                 $this->checkServiceEnabled($tracker->getProject());
                 if ($tracker->userCanView($user)) {
                     $GLOBALS['group_id'] = $tracker->getGroupId();
@@ -90,32 +98,46 @@ class TrackerManager { /* extends Engine? */
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission'));
                     $this->displayAllTrackers($tracker->getProject(), $user);
                 }
+            } else {
+                exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
             }
         } else if ((int)$request->get('formElement')) {
             if ($formElement = $this->getTracker_FormElementFactory()->getFormElementByid($request->get('formElement'))) {
                 $this->checkServiceEnabled($formElement->getTracker()->getProject());
-                $GLOBALS['group_id'] = $formElement->getTracker()->getGroupId();
-                $formElement->process($this, $request, $user);
+                if ($formElement->getTracker()->isActive()) {
+                    $GLOBALS['group_id'] = $formElement->getTracker()->getGroupId();
+                    $formElement->process($this, $request, $user);
+                } else {
+                    exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
+                }
             }
         } else if ($request->get('func') == 'new-artifact-link') {
             if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($request->get('id'))) {
-                $this->checkServiceEnabled($artifact->getTracker()->getProject());
-                echo '<html>';
-                echo '<head>';
-                $GLOBALS['HTML']->displayStylesheetElements(array());
-                $GLOBALS['HTML']->displayJavascriptElements(array());
-                echo '</head>';
-                
-                echo '<body>';
-                echo '<div class="contenttable">';
+                if ($artifact->getTracker()->isActive()) {
+                    $this->checkServiceEnabled($artifact->getTracker()->getProject());
+                    echo '<html>';
+                    echo '<head>';
+                    $GLOBALS['HTML']->displayStylesheetElements(array());
+                    $GLOBALS['HTML']->displayJavascriptElements(array());
+                    echo '</head>';
 
-                $project = $artifact->getTracker()->getProject();
-                echo $this->fetchTrackerSwitcher($user, ' ', $project, null);
+                    echo '<body>';
+                    echo '<div class="contenttable">';
+
+                    $project = $artifact->getTracker()->getProject();
+                    echo $this->fetchTrackerSwitcher($user, ' ', $project, null);
+                } else {
+                    exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
+                }
             }
         } else if ((int)$request->get('link-artifact-id')) {
             if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($request->get('link-artifact-id'))) {
-                $this->checkServiceEnabled($artifact->getTracker()->getProject());
-                $artifact->getTracker()->displayAReport($this, $request, $user);
+                if ($artifact->getTracker()->isActive()) {
+                    $this->checkServiceEnabled($artifact->getTracker()->getProject());
+                    $artifact->getTracker()->displayAReport($this, $request, $user);
+                } else {
+                    exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
+                }
             }
         } else {
             //show, admin all trackers
@@ -639,6 +661,9 @@ class TrackerManager { /* extends Engine? */
         $this->getTrackerFactory()->duplicate($from_project_id, $to_project_id, $ugroup_mapping);
     }
 
+    /**
+     * @return TrackerFactory
+     */
     protected function getTrackerFactory() {
         return TrackerFactory::instance();
     }
