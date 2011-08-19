@@ -25,6 +25,8 @@ require_once('common/reference/Reference.class.php');
 require_once('common/reference/ReferenceInstance.class.php');
 require_once('common/include/GroupFactory.class.php');
 require_once('common/reference/CrossReference.class.php');
+require_once('common/dao/CrossReferenceDao.class.php');
+require_once('common/event/EventManager.class.php');
 
 /**
  * Reference Manager
@@ -71,11 +73,15 @@ class ReferenceManager {
    
     function ReferenceManager() {
         $this->activeReferencesByProject = array();
-        //retrieve reserved keywords from plugins
-        $plugins_reserved_keywords = array();
+        $this->loadReservedKeywords();
+    }
+    
+    protected function loadReservedKeywords() {
+        //retrieve additional reserved keywords from other part of the plateform
+        $additional_reserved_keywords = array();
         $em = EventManager::instance();
-        $em->processEvent( Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, array('keywords' => &$plugins_reserved_keywords));
-        $this->reservedKeywords = array_merge($this->reservedKeywords, $plugins_reserved_keywords);
+        $em->processEvent( Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, array('keywords' => &$additional_reserved_keywords));
+        $this->reservedKeywords = array_merge($this->reservedKeywords, $additional_reserved_keywords);
     }
 
     /**
@@ -118,18 +124,18 @@ class ReferenceManager {
         return $natures;
     }
 
-    function &getReferencesByGroupId($group_id) {
+    function getReferencesByGroupId($group_id) {
         $p = false;
         if (isset($this->referencesByProject[$group_id])) {
-            $p =& $this->referencesByProject[$group_id];
+            $p = $this->referencesByProject[$group_id];
         } else {
             $p = array();
-            $reference_dao =& $this->_getReferenceDao();
-            $dar =& $reference_dao->searchByGroupID($group_id);
+            $reference_dao = $this->_getReferenceDao();
+            $dar = $reference_dao->searchByGroupID($group_id);
             while ($row = $dar->getRow()) {
-                $p[] =& $this->_buildReference($row);
+                $p[] = $this->_buildReference($row);
             }
-            $this->referencesByProject[$group_id] =& $p;
+            $this->referencesByProject[$group_id] = $p;
         }
         return $p;
     }
@@ -137,7 +143,7 @@ class ReferenceManager {
     // Create a reference
     // First, check that keyword is valid, except if $force is true
     function createReference(&$ref,$force=false) {
-        $reference_dao =& $this->_getReferenceDao();
+        $reference_dao = $this->_getReferenceDao();
         if (!$force) {
             // Check if keyword is valid [a-z0-9_]
             if (!$this->_isValidKeyword($ref->getKeyword())) return false;
@@ -166,7 +172,7 @@ class ReferenceManager {
 
     // When creating a system reference, add occurence to all projects
     function createSystemReference($ref,$force=false) {
-        $reference_dao =& $this->_getReferenceDao();
+        $reference_dao = $this->_getReferenceDao();
 
         // Check if keyword is valid [a-z0-9_]
         if (!$this->_isValidKeyword($ref->getKeyword())) return false;
@@ -193,7 +199,7 @@ class ReferenceManager {
 
 
     function updateReference($ref,$force=false) {
-        $reference_dao =& $this->_getReferenceDao();
+        $reference_dao = $this->_getReferenceDao();
         // Check if keyword is valid [a-z0-9_]
         if (!$this->_isValidKeyword($ref->getKeyword())) return false;
 
@@ -234,7 +240,7 @@ class ReferenceManager {
     }
 
     function deleteReference($ref) {
-        $reference_dao =& $this->_getReferenceDao();
+        $reference_dao = $this->_getReferenceDao();
         // delete reference for this group_id
         $status=$reference_dao->removeRefGroup($ref->getId(),$ref->getGroupId());
         // delete reference itself if it is not used
@@ -246,7 +252,7 @@ class ReferenceManager {
 
     // When deleting a system reference, delete all occurences for all projects
     function deleteSystemReference($ref) {
-        $reference_dao =& $this->_getReferenceDao();
+        $reference_dao = $this->_getReferenceDao();
         if ($ref->isSystemReference()) {
             return $reference_dao->removeAllById($ref->getId());
         } else return false;
@@ -254,35 +260,35 @@ class ReferenceManager {
 
 
     function loadReferenceFromKeywordAndNumArgs($keyword,$group_id=100,$num_args=1) {
-        $reference_dao =& $this->_getReferenceDao();
+        $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchByKeywordAndGroupID($keyword,$group_id);
         $ref=null;
         while($row = $dar->getRow()) {
-            $ref =& $this->_buildReference($row);
+            $ref = $this->_buildReference($row);
             if ($ref->getNumParam()==$num_args) return $ref;
         }
         return null;
     }
 
-    function &loadReference($refid,$group_id) {
-        $reference_dao =& $this->_getReferenceDao();
+    function loadReference($refid,$group_id) {
+        $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchByIdAndGroupID($refid,$group_id);
         $ref=null;
         if ($row = $dar->getRow()) {
-            $ref =& $this->_buildReference($row);
+            $ref = $this->_buildReference($row);
         }
         return $ref;
     }
 
 
     function updateIsActive($ref,$is_active) {
-        $reference_dao =& $this->_getReferenceDao();
+        $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->update_ref_group($ref->getId(),$is_active,$ref->getGroupId());
     }
 
     /** Add all system references associated to the given service */
     function addSystemReferencesForService($template_id,$group_id,$short_name) {
-      $reference_dao =& $this->_getReferenceDao();
+      $reference_dao = $this->_getReferenceDao();
       $dar = $reference_dao->searchByScopeAndServiceShortName('S',$short_name);
       while ($row = $dar->getRow()) {
 	$this->createSystemReferenceGroup($template_id,$group_id,$row['id']);
@@ -292,7 +298,7 @@ class ReferenceManager {
 
     /** Add all system references not associated to any service */
     function addSystemReferencesWithoutService($template_id, $group_id) {
-      $reference_dao =& $this->_getReferenceDao();
+      $reference_dao = $this->_getReferenceDao();
       $dar = $reference_dao->searchByScopeAndServiceShortName('S',"");
       while ($row = $dar->getRow()) {
 	$this->createSystemReferenceGroup($template_id,$group_id,$row['id']);
@@ -305,13 +311,13 @@ class ReferenceManager {
      separately in project/register.php script are not created twice
     */
     function addProjectReferences($template_id, $group_id) {
-      $reference_dao =& $this->_getReferenceDao();
+      $reference_dao = $this->_getReferenceDao();
       $dar = $reference_dao->searchByScopeAndServiceShortNameAndGroupId('P',"",$template_id);
       while ($row = $dar->getRow()) {
 	$dares = $reference_dao->searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($row['keyword'],$group_id,$row['description'],$row['link'],$row['scope']);
 	if ($dares && $dares->rowCount() > 0) {continue;}
 	// Create corresponding reference
-	$ref=& new Reference(0, // no ID yet
+	$ref= new Reference(0, // no ID yet
 			     $row['keyword'],
 			     $row['description'],
 			     preg_replace('`group_id='. $template_id .'(&|$)`', 'group_id='. $group_id .'$1', $row['link']), // link
@@ -327,7 +333,7 @@ class ReferenceManager {
 
     /** update reference associated to the given service and group_id */
     function updateReferenceForService($group_id,$short_name,$is_active) {
-        $reference_dao =& $this->_getReferenceDao();
+        $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchByServiceShortName($short_name);
         while ($row = $dar->getRow()) {
             $reference_dao->update_ref_group($row['id'],$is_active,$group_id);
@@ -335,9 +341,25 @@ class ReferenceManager {
         return true;
     }
 
+    /**
+     * This method updates (rename) reference short name and related cross references
+     * @param Integer $group_id
+     * @param String $old_short_name
+     * @param Stirng $new_short_name
+     */
+    function updateProjectReferenceShortName($group_id, $old_short_name, $new_short_name) {
+        $ref_dao  = $this->_getReferenceDao();
+        if ( $ref_dao->updateProjectReferenceShortName($group_id, $old_short_name, $new_short_name) === false ) {
+            return false;
+        }
+        $xref_dao = $this->_getCrossReferenceDao();
+        $xref_dao->updateTargetKeyword($old_short_name, $new_short_name, $group_id);
+        $xref_dao->updateSourceKeyword($old_short_name, $new_short_name, $group_id);
+    }
+
      function createSystemReferenceGroup($template_id,$group_id,$refid) {
-        $reference_dao =& $this->_getReferenceDao();
-        $proj_ref=& $this->loadReference($refid, $template_id);// Is it active in template project ?
+        $reference_dao = $this->_getReferenceDao();
+        $proj_ref= $this->loadReference($refid, $template_id);// Is it active in template project ?
         $rgid = $reference_dao->create_ref_group($refid,
                                                  ($proj_ref==null?false:$proj_ref->isActive()),
                                                  $group_id);
@@ -346,7 +368,7 @@ class ReferenceManager {
 
 
 
-    function &_buildReference($row) {
+    function _buildReference($row) {
         if (isset($row['reference_id'])) $refid=$row['reference_id'];
         else $refid=$row['id'];
         $ref = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
@@ -415,7 +437,7 @@ class ReferenceManager {
         foreach ($matches as $match) {
             $ref_instance=$this->_getReferenceInstanceFromMatch($match);
             if (!$ref_instance) continue;
-            $ref =& $ref_instance->getReference();
+            $ref = $ref_instance->getReference();
 
             // Replace description key with real description if needed
             if (strpos($ref->getDescription(),"_desc_key")!==false) {
@@ -572,7 +594,7 @@ class ReferenceManager {
         $referencesInstances = $this->extractReferences($html,$group_id);
         $groupedReferencesInstances = array();
         foreach ($referencesInstances as $idx => $referenceInstance) {
-            $reference =& $referenceInstance->getReference();
+            $reference = $referenceInstance->getReference();
             // description to group the references
             // match to remove duplicates entries
             $groupedReferencesInstances[$reference->getDescription()][$referenceInstance->getMatch()] = $referenceInstance;
@@ -586,7 +608,7 @@ class ReferenceManager {
         $ref_instance=$this->_getReferenceInstanceFromMatch($match);
         if (!$ref_instance) return $match[1]." #".$match[2].$match[3];
         else {
-            $ref =& $ref_instance->getReference();
+            $ref = $ref_instance->getReference();
             if (strpos($ref->getDescription(),"_desc_key")!==false) {
                 if (preg_match('/(.*):(.*)/', $ref->getDescription(), $ref_matches)) {
                     if ($GLOBALS['Language']->hasText($ref_matches[1], $ref_matches[2])) {
@@ -642,7 +664,7 @@ class ReferenceManager {
         $value=$match[3];
         if ($ref_gid=="") $ref_gid=100; // use system references only
         $num_args=substr_count($value,'/')+1; // Count number of arguments in detected reference
-        $ref =& $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
+        $ref = $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
         $refInstance = null;
         if ($ref) {
             $refInstance= new ReferenceInstance($match[1]." #".$match[2].$match[3],$ref,$match[3]);
@@ -653,7 +675,7 @@ class ReferenceManager {
     }
 
 
-    function &_getReferenceFromKeywordAndNumArgs($keyword,$group_id,$num_args) {
+    function _getReferenceFromKeywordAndNumArgs($keyword,$group_id,$num_args) {
         $this->_initProjectReferences($group_id);
         $refs = $this->activeReferencesByProject[$group_id];
         if (isset($refs["$keyword"]))
@@ -668,10 +690,10 @@ class ReferenceManager {
     function _initProjectReferences($group_id) {        
         if (!isset($this->activeReferencesByProject[$group_id])) {
             $p = array();
-            $reference_dao =& $this->_getReferenceDao();
-            $dar =& $reference_dao->searchActiveByGroupID($group_id);
+            $reference_dao = $this->_getReferenceDao();
+            $dar = $reference_dao->searchActiveByGroupID($group_id);
             while ($row = $dar->getRow()) {
-                $ref =& $this->_buildReference($row);
+                $ref = $this->_buildReference($row);
                 $num_args=$ref->getNumParam();
                 if (!isset($p[$ref->getKeyword()])) {
                     $p[$ref->getKeyword()] = array();
@@ -681,9 +703,9 @@ class ReferenceManager {
                     // (but you can't normally create such references, except in CX 2.6 to 2.8 migration)
                     if ($ref->isSystemReference()) continue;
                 }
-                $p[$ref->getKeyword()][$num_args] =& $ref;
+                $p[$ref->getKeyword()][$num_args] = $ref;
             }
-            $this->activeReferencesByProject[$group_id] =& $p;
+            $this->activeReferencesByProject[$group_id] = $p;
         }
     }
 
@@ -697,14 +719,14 @@ class ReferenceManager {
                     $p[$groups_array["unix_group_name"]]=$groups_array["group_id"];
                     $pl[strtolower($groups_array["unix_group_name"])]=$groups_array["group_id"];
                 }                
-                $this->groupIdByName =& $p;
+                $this->groupIdByName = $p;
                 $this->groupIdByNameLower =& $pl;               
             }
     }
 
 
-    function &_referenceNotUsed($refid) {
-        $reference_dao =& $this->_getReferenceDao();
+    function _referenceNotUsed($refid) {
+        $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchById($refid);
         if ($row = $dar->getRow())
             return false;
@@ -725,7 +747,7 @@ class ReferenceManager {
 
     function _isSystemKeyword($keyword) {
         // Not cached because the information is only used when creating a new reference
-        $reference_dao =& $this->_getReferenceDao();
+        $reference_dao = $this->_getReferenceDao();
         $dar=$reference_dao->searchByScope('S');
         while ($row = $dar->getRow()) {
             if ($keyword == $row['keyword']) {
@@ -736,7 +758,7 @@ class ReferenceManager {
     }
     
     function _isKeywordExists($keyword, $group_id) {
-        $reference_dao =& $this->_getReferenceDao();
+        $reference_dao = $this->_getReferenceDao();
         $dar=$reference_dao->searchByKeywordAndGroupId($keyword,$group_id);
         $row = $dar->getRow();
         while ($row = $dar->getRow()) {
@@ -756,7 +778,7 @@ class ReferenceManager {
     }
     
     function _keywordAndNumArgsExists($keyword,$num_args,$group_id) {
-        $reference_dao =& $this->_getReferenceDao();
+        $reference_dao = $this->_getReferenceDao();
         $dar=$reference_dao->searchByKeywordAndGroupId($keyword,$group_id);
         $existing_refs=array();
         while($row = $dar->getRow()) {
@@ -766,11 +788,15 @@ class ReferenceManager {
         return false;
     }
 
-    function &_getReferenceDao() {
+    function _getReferenceDao() {
         if (!is_a($this->referenceDao, 'ReferenceDao')) {
-            $this->referenceDao =& new ReferenceDao(CodendiDataAccess::instance());
+            $this->referenceDao = new ReferenceDao(CodendiDataAccess::instance());
         }
         return $this->referenceDao;
+    }
+
+    function _getCrossReferenceDao() {
+        return new CrossReferenceDao();
     }
 
 
