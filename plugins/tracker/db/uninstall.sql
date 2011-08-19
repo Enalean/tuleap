@@ -68,3 +68,9 @@ DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 
 DELETE FROM service WHERE short_name = 'plugin_tracker';
 
+-- Cleanup references
+DELETE reference_group FROM reference_group INNER JOIN reference ON (reference_group.reference_id = reference.id) WHERE reference.service_short_name = 'plugin_tracker';
+DELETE FROM reference WHERE service_short_name = 'plugin_tracker';
+DELETE FROM cross_references WHERE source_type = 'plugin_tracker_artifact' OR target_type = 'plugin_tracker_artifact';
+
+
