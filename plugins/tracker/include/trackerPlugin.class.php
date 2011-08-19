@@ -291,7 +291,11 @@ class trackerPlugin extends Plugin {
                 $aid = $params['val'];
                 require_once('Tracker/Artifact/Tracker_ArtifactFactory.class.php');
                 if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($aid)) {
-                    echo $artifact->fetchTooltip($user);
+                    if ($artifact && $artifact->getTracker()->isActive()) {
+                        echo $artifact->fetchTooltip($user);
+                    } else {
+                        echo $GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist');
+                    }
                 }
             }
         }
