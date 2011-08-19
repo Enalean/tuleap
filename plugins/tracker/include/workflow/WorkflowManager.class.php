@@ -200,7 +200,7 @@ class WorkflowManager {
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title').'</h3>';
         $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
         if ($transition->from ==null) {
-            $from_label = 'New Artifact';
+            $from_label = $GLOBALS['Language']->getText('workflow_admin','new_artifact');
         } else {
             $from_label = $transition->from->getLabel();
         }
