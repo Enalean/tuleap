@@ -165,6 +165,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
                        'rename_request'                 =>'rename_request',
                        'is_public'                      =>'is_public',
                        'group_type'                     =>'group_type',
+                       'http_domain'                    =>'http_domain',
                        'unix_box'                       =>'unix_box',
                        'changed_public_info'            =>'changed_public_info',
                        'changed_trove'                  =>'changed_trove',
