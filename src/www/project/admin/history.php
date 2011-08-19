@@ -90,7 +90,7 @@ if ( !$offset || $offset < 0 ) {
 $limit  = 50;
 
 if (isset($_REQUEST['export'])) {
-    export_grouphistory($group_id);
+    export_grouphistory($group_id, $event, $subEvents, $value, $startDate, $endDate, $by);
     exit;
 }
 

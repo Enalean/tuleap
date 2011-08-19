@@ -15,32 +15,32 @@ require_once('common/include/TemplateSingleton.class.php');
 
 
 function project_admin_header($params) {
-	global $group_id,$feedback,$Language;
+    global $group_id,$feedback,$Language;
 
-	$params['toptab']='admin';
-	$params['group']=$group_id;
-	site_project_header($params);
+    $params['toptab']='admin';
+    $params['group']=$group_id;
+    site_project_header($params);
 
-	echo '
+    echo '
 	<P><TABLE width="100%"><TR>';
-        echo '<TD width="1"><b>'.$Language->getText('project_admin_utils','menu_config').'</b></td><td><b>
+    echo '<TD width="1"><b>'.$Language->getText('project_admin_utils','menu_config').'</b></td><td><b>
 	<A HREF="/project/admin/editgroupinfo.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','edit_public_info').'</A> |
 	<A HREF="/project/admin/servicebar.php?group_id='.$group_id.'">'.$Language->getText('project_admin_editservice','s_conf').'</A> |
 	<A HREF="/project/admin/reference.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','references').'</A>';
-        
+
     $em = EventManager::instance();
     $em->processEvent('admin_toolbar_configuration', array('group_id' => $group_id));
 
-        echo '</td><td>';
-	if (isset($params['help'])) {
-	    echo help_button($params['help'],false,$Language->getText('global','help'));
-	}
-        echo '</td></tr>';
-        echo '</td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_permissions').'</b></td><td><b>
+    echo '</td><td>';
+    if (isset($params['help'])) {
+        echo help_button($params['help'],false,$Language->getText('global','help'));
+    }
+    echo '</td></tr>';
+    echo '</td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_permissions').'</b></td><td><b>
 	<A HREF="/project/admin/userperms.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','user_perms').'</A> | 
 	<A HREF="/project/admin/ugroup.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','ug_admin').'</A> | 
 	<A HREF="/project/admin/permission_request.php?group_id='.$group_id.'">'.$Language->getText('project_admin_ugroup','permission_request').'</A>';
-        echo '</td><td></td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_data').'</b></td><td><b>
+    echo '</td><td></td></tr><tr><td><b>'.$Language->getText('project_admin_utils','menu_data').'</b></td><td><b>
 	<A HREF="/project/export/index.php?group_id='.$group_id.'">'.$Language->getText('project_admin_utils','project_data_export').'</A> |
 	<A HREF="/tracker/import_admin.php?group_id='.$group_id.'&mode=admin">'.$Language->getText('project_admin_utils','tracker_import').'</A> |
 	<A HREF="/project/admin/history.php?group_id='.$group_id.'">'.$Language->getText('project_admin_history','proj_history').'</A> |
@@ -48,10 +48,10 @@ function project_admin_header($params) {
     //Call hook that can be displayed in this area
     $em->processEvent('admin_toolbar_data', array('group_id' => $group_id));
 
-	//<A HREF="/project/admin/?group_id='.$group_id.'&func=import">Tracker Import</A>
+    //<A HREF="/project/admin/?group_id='.$group_id.'&func=import">Tracker Import</A>
 
-        echo '</td><td></td></tr></table>';
-	echo '</B>
+    echo '</td><td></td></tr></table>';
+    echo '</B>
 	<P>';
 }
 
@@ -62,7 +62,7 @@ function project_admin_header($params) {
 */
 
 function project_admin_footer($params) {
-	site_project_footer($params);
+    site_project_footer($params);
 }
 
 
@@ -78,12 +78,15 @@ function project_admin_footer($params) {
 
 */
 
-function group_get_history ($offset, $limit, $group_id=false) {
+function group_get_history ($offset, $limit, $group_id=false, $history_filter) {
 
     $sql='select SQL_CALC_FOUND_ROWS group_history.field_name,group_history.old_value,group_history.date,user.user_name '.
          'FROM group_history,user '.
-         'WHERE group_history.mod_by=user.user_id '.
-         'AND group_id='.db_ei($group_id).' ORDER BY group_history.date DESC';
+         'WHERE group_history.mod_by=user.user_id ';
+    if ($history_filter) {
+        $sql .= $history_filter;
+    }
+    $sql.=' AND group_id='.db_ei($group_id).' ORDER BY group_history.date DESC';
     if ($offset > 0 || $limit > 0) {
          $sql .= ' LIMIT '.db_ei($offset).', '.db_ei($limit);
     }
@@ -97,26 +100,40 @@ function group_get_history ($offset, $limit, $group_id=false) {
 }       
 
 function group_add_history ($field_name,$old_value,$group_id, $args=false) {
-	/*      
-		handle the insertion of history for these parameters
-		$args is an array containing a list of parameters to use when
-		   the message is to be displayed by the history.php script
-		   The array is stored as a string at the end of the field_name
-		   with the following format:
-		   field_name %% [arg1, arg2...]
-	*/
-	
+    /*
+     handle the insertion of history for these parameters
+     $args is an array containing a list of parameters to use when
+     the message is to be displayed by the history.php script
+     The array is stored as a string at the end of the field_name
+     with the following format:
+     field_name %% [arg1, arg2...]
+     */
+
     if ($args) {
-	    $field_name .= " %% ".implode("||", $args);
-	}
-	$user_id = user_getid();
-	if ($user_id == 0){
-		$user_id = 100;
-	}
-	$sql= 'insert into group_history(group_id,field_name,old_value,mod_by,date) '.
+        $field_name .= " %% ".implode("||", $args);
+    }
+    $user_id = user_getid();
+    if ($user_id == 0){
+        $user_id = 100;
+    }
+    $sql= 'insert into group_history(group_id,field_name,old_value,mod_by,date) '.
 		'VALUES ('.db_ei($group_id).' , "'.db_es($field_name). '", "'.db_es($old_value).'" , '.db_ei($user_id).' , '.db_ei(time()).')';
-	return db_query($sql);
-}	       
+    return db_query($sql);
+}
+
+function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
+    $filter = " AND 1 ";
+    if(!empty($startDate)) {
+    $filter .= " AND group_history.date > '".strtotime($startDate." 00:00:00")."'";
+    }
+    if(!empty($endDate)) {
+    $filter .= " AND group_history.date < '".strtotime($endDate." 23:59:59")."'";
+    }
+    if(!empty($by)) {
+    $filter .= " AND user.user_name LIKE '%".substr(strstr($by, '('), 1, -1)."%'";
+    }
+    return $filter;
+}
 
 /*
  * Nicely html-formatted output of this group's audit trail
@@ -126,15 +143,16 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
  * 
 */
 function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
-	/*      
-		show the group_history rows that are relevant to 
-		this group_id
-	*/
-	global $Language;
-	
-	$res = group_get_history($offset, $limit, $group_id );	
-	
-	$hp =& Codendi_HTMLPurifier::instance();
+    /*
+     show the group_history rows that are relevant to
+     this group_id
+     */
+    global $Language;
+
+    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
+    $res = group_get_history($offset, $limit, $group_id, $history_filter);
+
+    $hp =& Codendi_HTMLPurifier::instance();
 
     $subEvents = array('perm_reset_for_field'           =>'perm_reset_for_field',
                        'perm_reset_for_tracker'         =>'perm_reset_for_tracker',
@@ -184,8 +202,8 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
                        'changed_task_mgr_other_settings'=>'changed_task_mgr_other_settings',
                        'changed_sr_settings'            =>'changed_sr_settings',
                        'choose_event'                   =>'choose_event');
-	
-	if ($res['numrows'] > 0) {
+
+    if ($res['numrows'] > 0) {
 
         echo '
         <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>';
@@ -252,25 +270,25 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 
         echo '<TR><TD><INPUT TYPE="SUBMIT" NAME="filter"></TD></TR>
               </TABLE>';
-		echo'<P>';
-		$title_arr=array();
-		$title_arr[]=$Language->getText('project_admin_utils','event');
-		$title_arr[]=$Language->getText('project_admin_utils','val');
-		$title_arr[]=$Language->getText('project_admin_utils','date');
-		$title_arr[]=$Language->getText('global','by');
-		
-		echo html_build_list_table_top ($title_arr);
-		$i=1;
-		
-		while ($row = db_fetch_array($res['history'])) {
-			$field = $row['field_name'];
+        echo'<P>';
+        $title_arr=array();
+        $title_arr[]=$Language->getText('project_admin_utils','event');
+        $title_arr[]=$Language->getText('project_admin_utils','val');
+        $title_arr[]=$Language->getText('project_admin_utils','date');
+        $title_arr[]=$Language->getText('global','by');
+
+        echo html_build_list_table_top ($title_arr);
+        $i=1;
+
+        while ($row = db_fetch_array($res['history'])) {
+            $field = $row['field_name'];
 
             // see if there are any arguments after the message key 
-			// format is "msg_key ## arg1||arg2||...
-			// If msg_key cannot be found in the localized message
-			// catalog then display the msg has is because this is very
-			// likely a legacy message (pre-localization version)
-                        if (strpos($field," %% ") !== false) {
+            // format is "msg_key ## arg1||arg2||...
+            // If msg_key cannot be found in the localized message
+            // catalog then display the msg has is because this is very
+            // likely a legacy message (pre-localization version)
+            if (strpos($field," %% ") !== false) {
                                 list($msg_key, $args) = explode(" %% ",$field);
                                 if ($args) {
                                     $arr_args = explode('||',$args);
@@ -279,43 +297,40 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
                             $msg_key=$field;
                             $arr_args="";
                         }
-			$msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
-			if (!(strpos($msg,"*** Unkown msg") === false)) {
-			    $msg = $field;
-			}
+                        $msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
+                        if (!(strpos($msg,"*** Unkown msg") === false)) {
+                            $msg = $field;
+                        }
 
-			echo '
-			<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
-			$val = $row['old_value'];
-			if ($msg_key == "perm_granted_for_field") {
-			  $pattern = '/ugroup_([^ ,]*)_name_key/';
-			  preg_match_all($pattern,$val,$matches);
+                        echo '<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
+                        $val = $row['old_value'];
+                        if ($msg_key == "perm_granted_for_field") {
+                            $pattern = '/ugroup_([^ ,]*)_name_key/';
+                            preg_match_all($pattern,$val,$matches);
 
-			  if (!empty($matches[0])) {
-			    foreach ($matches[0] as $match) {
-			      $val = str_replace($match,$Language->getText('project_ugroup', $match),$val);
-			    }
-			  }
-			} else if ($msg_key == "group_type") {
-			  $template =& TemplateSingleton::instance();
-			  $val = $template->getLabel($val);
-			}
+                            if (!empty($matches[0])) {
+                                foreach ($matches[0] as $match) {
+                                    $val = str_replace($match,$Language->getText('project_ugroup', $match),$val);
+                                }
+                            }
+                        } else if ($msg_key == "group_type") {
+                            $template =& TemplateSingleton::instance();
+                            $val = $template->getLabel($val);
+                        }
 
-			echo $hp->purify($val);
-						
-			echo '</TD>'.
-				'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
-				'<TD>'.user_get_name_display_from_unix($row['user_name']).'</TD></TR>';
-		}	       
-				
-		echo '	 
-		</TABLE>'; 
-		
-			echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-			
-			if ($offset > 0) {
-				echo  '<a href="?group_id='.$group_id.'&offset='.($offset-$limit).'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
-                echo '&nbsp;';
+                        echo $hp->purify($val);
+
+                        echo '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
+                             '<TD>'.user_get_name_display_from_unix($row['user_name']).'</TD></TR>';
+        }
+
+        echo '</TABLE>'; 
+
+        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+
+        if ($offset > 0) {
+            echo  '<a href="?group_id='.$group_id.'&offset='.($offset-$limit).'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
+            echo '&nbsp;';
             }
             if (($offset + $limit) < $res['numrows']) {
                 echo '&nbsp;';
@@ -350,7 +365,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
  *
  * @return void
  */
-function export_grouphistory ($group_id) {
+function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
     global $Language;
 
     header ('Content-Type: text/csv');
@@ -365,7 +380,8 @@ function export_grouphistory ($group_id) {
                               'by'    => $Language->getText('global','by'));
     echo build_csv_header($col_list, $documents_title).$eol;
 
-    $res = group_get_history(0, 0, $group_id );
+    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
+    $res = group_get_history(0, 0, $group_id, $history_filter);
 
     $hp = Codendi_HTMLPurifier::instance();
 
