@@ -135,8 +135,8 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 	$res = group_get_history($offset, $limit, $group_id );	
 	
 	$hp =& Codendi_HTMLPurifier::instance();
-	//TBM
-    /*$subEvents = array('perm_reset_for_field'           =>'perm_reset_for_field',
+
+    $subEvents = array('perm_reset_for_field'           =>'perm_reset_for_field',
                        'perm_reset_for_tracker'         =>'perm_reset_for_tracker',
                        'perm_reset_for_package'         =>'perm_reset_for_package',
                        'perm_reset_for_release'         =>'perm_reset_for_release',
@@ -182,17 +182,16 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
                        'changed_patch_mgr_settings'     =>'changed_task_mgr_other_settings',
                        'changed_task_mgr_other_settings'=>'changed_task_mgr_other_settings',
                        'changed_sr_settings'            =>'changed_sr_settings',
-                       'choose_event'                   =>'choose_event');*/
+                       'choose_event'                   =>'choose_event');
 	
 	if ($res['numrows'] > 0) {
 
         echo '
         <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>';
-        //TBM
-        //echo'<SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title"><img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="toggle_form_icon"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
+        echo'<SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title"><img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="toggle_form_icon"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
         echo '<FORM METHOD="POST" id="project_history_form" NAME="project_history_form">';
-        //TBM        
-        /*echo '<TABLE ID="project_history_search">';
+
+        echo '<TABLE ID="project_history_search">';
         echo '<TH style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
               <TH style="text-align:left">'.$Language->getText('project_admin_utils','val').'</TH>
               <TH style="text-align:left">'.$Language->getText('project_export_task_export', 'start_date').'</TH>
@@ -202,8 +201,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 
 
         //Event select Box
-        //TBM
-        /*echo '<select name="events_box" id="events_box">
+        echo '<select name="events_box" id="events_box">
               <Option value="Any"';
         if ($event == "Any") {
             echo 'selected';
@@ -234,10 +232,10 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
             echo 'selected';
         }
         echo '>Others</Option>
-              </select>';*/
+              </select>';
 
         //SubEvent select Box
-         /*echo '</TD><TD><select id="sub_events_box" name="sub_events_box[]" multiple>
+         echo '</TD><TD><select id="sub_events_box" name="sub_events_box[]" multiple>
          <Option value="choose_event">'.$GLOBALS['Language']->getText('project_admin_utils', 'choose_event').'</Option>
          </select>';
 
@@ -253,7 +251,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 
         echo '<TR><TD><INPUT TYPE="SUBMIT" NAME="filter"></TD></TR>
               </TABLE>';
-		echo'<P>';*/
+		echo'<P>';
 		$title_arr=array();
 		$title_arr[]=$Language->getText('project_admin_utils','event');
 		$title_arr[]=$Language->getText('project_admin_utils','val');
@@ -333,13 +331,13 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
     echo '<BR><TABLE align="left"><TR><TD>
           <INPUT TYPE="SUBMIT" NAME="export" VALUE="'.$GLOBALS['Language']->getText('project_admin_utils', 'export_history').'">
           </TD></TR></TABLE></FORM><BR><P>';
-        //TBM
-        /*$translatedEvents = phpArrayToJsArray($subEvents);
-    $translatedSelectedEvents = phpArrayToJsArray($subEventsBox);
+
+        $translatedEvents = util_php_array_to_js_array($subEvents);
+        $translatedSelectedEvents = util_php_array_to_js_array($subEventsBox);
         $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
            new ProjectHistory(".$translatedEvents.", ".$translatedSelectedEvents.");";
-     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
-     $GLOBALS['Response']->includeFooterJavascriptSnippet($js);*/
+        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 }
 
 /**
@@ -432,31 +430,4 @@ function project_admin_display_bullet_user($user_id, $action, $url = null) {
     echo '<img alt="'. $action .'" src="'. util_get_dir_image_theme() . $icon .'" />';
     echo '</a>';
 }
-//TBM
-/**
- * Convert a php array to JS
- */
-/*function phpArrayToJsArray($array) {
-    if (is_array($array)) {
-        if (count($array)) {
-            $output = '{';
-            reset($array);
-            $comma = '';
-            do {
-                if(list($key, $value) = each($array)) {
-                    $output .= $comma . $key .': '. phpArrayToJsArray($GLOBALS["Language"]->getText("project_admin_utils", $value));
-                    $comma = ', ';
-                }
-            } while($key);
-            $output .= '}';
-        } else {
-            $output = '{}';
-        }
-    } else if (is_bool($array)) {
-        $output = $array?'true':'false';
-    } else {
-        $output = "'". addslashes($array) ."'";
-    }
-    return $output;
-}*/
 ?>

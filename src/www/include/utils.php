@@ -1573,4 +1573,30 @@ foreach($times as $key => $time) {
     echo $key ."\t\t\t". util_time_ago_in_words($time, false) ."\t\t\t". util_time_ago_in_words($time, true) ."\n";
 }
 */
+/**
+ * Convert a php array to JS
+ */
+function util_php_array_to_js_array($array) {
+    if (is_array($array)) {
+        if (count($array)) {
+            $output = '{';
+            reset($array);
+            $comma = '';
+            do {
+                if(list($key, $value) = each($array)) {
+                    $output .= $comma . $key .': '. util_php_array_to_js_array($GLOBALS["Language"]->getText("project_admin_utils", $value));
+                    $comma = ', ';
+                }
+            } while($key);
+            $output .= '}';
+        } else {
+            $output = '{}';
+        }
+    } else if (is_bool($array)) {
+        $output = $array?'true':'false';
+    } else {
+        $output = "'". addslashes($array) ."'";
+    }
+    return $output;
+}
 ?>
