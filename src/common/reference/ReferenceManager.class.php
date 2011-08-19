@@ -140,8 +140,11 @@ class ReferenceManager {
         return $p;
     }
 
-    // Create a reference
-    // First, check that keyword is valid, except if $force is true
+    /**
+     * Create a reference
+     * 
+     * First, check that keyword is valid, except if $force is true
+     */
     function createReference(&$ref,$force=false) {
         $reference_dao = $this->_getReferenceDao();
         if (!$force) {
@@ -155,7 +158,7 @@ class ReferenceManager {
             $num_args=Reference::computeNumParam($ref->getLink());
             if ($this->_keywordAndNumArgsExists($ref->getKeyword(),$num_args,$ref->getGroupId())) return false;
         }
-        # Create new reference
+        // Create new reference
         $id = $reference_dao->create($ref->getKeyword(),
                                      $ref->getDescription(),
                                      $ref->getLink(),
@@ -170,7 +173,9 @@ class ReferenceManager {
         return $rgid;
     }
 
-    // When creating a system reference, add occurence to all projects
+    /**
+     * When creating a system reference, add occurence to all projects
+     */
     function createSystemReference($ref,$force=false) {
         $reference_dao = $this->_getReferenceDao();
 
@@ -197,7 +202,6 @@ class ReferenceManager {
         return $rgid;
     }
 
-
     function updateReference($ref,$force=false) {
         $reference_dao = $this->_getReferenceDao();
         // Check if keyword is valid [a-z0-9_]
@@ -212,7 +216,7 @@ class ReferenceManager {
                     // The same keyword exists for another reference
                     return false;
                 }
-                # Don't check keyword if the reference is the same
+                // Don't check keyword if the reference is the same
             } else {
                 // Check that there is no system reference with the same keyword
                 if ($this->_isSystemKeyword($ref->getKeyword())) {
@@ -224,14 +228,14 @@ class ReferenceManager {
             }
         }
 
-        # update reference
+        // update reference
         $reference_dao->update_ref($ref->getId(),
-                               $ref->getKeyword(),
-                               $ref->getDescription(),
-                               $ref->getLink(),
-                               $ref->getScope(),
-                               $ref->getServiceShortName(),
-                               $ref->getNature());
+                                   $ref->getKeyword(),
+                                   $ref->getDescription(),
+                                   $ref->getLink(),
+                                   $ref->getScope(),
+                                   $ref->getServiceShortName(),
+                                   $ref->getNature());
         $rgid = $reference_dao->update_ref_group($ref->getId(),
                                                  $ref->isActive(),
                                                  $ref->getGroupId());
@@ -258,7 +262,6 @@ class ReferenceManager {
         } else return false;
     }
 
-
     function loadReferenceFromKeywordAndNumArgs($keyword,$group_id=100,$num_args=1) {
         $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchByKeywordAndGroupID($keyword,$group_id);
@@ -280,58 +283,66 @@ class ReferenceManager {
         return $ref;
     }
 
-
     function updateIsActive($ref,$is_active) {
         $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->update_ref_group($ref->getId(),$is_active,$ref->getGroupId());
     }
 
-    /** Add all system references associated to the given service */
+    /**
+     * Add all system references associated to the given service
+     */
     function addSystemReferencesForService($template_id,$group_id,$short_name) {
-      $reference_dao = $this->_getReferenceDao();
-      $dar = $reference_dao->searchByScopeAndServiceShortName('S',$short_name);
-      while ($row = $dar->getRow()) {
-	$this->createSystemReferenceGroup($template_id,$group_id,$row['id']);
-      }
-      return true;
+        $reference_dao = $this->_getReferenceDao();
+        $dar = $reference_dao->searchByScopeAndServiceShortName('S',$short_name);
+        while ($row = $dar->getRow()) {
+            $this->createSystemReferenceGroup($template_id,$group_id,$row['id']);
+        }
+        return true;
     }
 
-    /** Add all system references not associated to any service */
+    /**
+     * Add all system references not associated to any service
+     */
     function addSystemReferencesWithoutService($template_id, $group_id) {
-      $reference_dao = $this->_getReferenceDao();
-      $dar = $reference_dao->searchByScopeAndServiceShortName('S',"");
-      while ($row = $dar->getRow()) {
-	$this->createSystemReferenceGroup($template_id,$group_id,$row['id']);
-      }
-      return true;
+        $reference_dao = $this->_getReferenceDao();
+        $dar = $reference_dao->searchByScopeAndServiceShortName('S',"");
+        while ($row = $dar->getRow()) {
+            $this->createSystemReferenceGroup($template_id,$group_id,$row['id']);
+        }
+        return true;
     }
 
-    /** Add project references which are not system references.
-     Make sure that references for trackers that have been added
-     separately in project/register.php script are not created twice
-    */
+    /**
+     * Add project references which are not system references.
+     * Make sure that references for trackers that have been added
+     * separately in project/register.php script are not created twice
+     */
     function addProjectReferences($template_id, $group_id) {
-      $reference_dao = $this->_getReferenceDao();
-      $dar = $reference_dao->searchByScopeAndServiceShortNameAndGroupId('P',"",$template_id);
-      while ($row = $dar->getRow()) {
-	$dares = $reference_dao->searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($row['keyword'],$group_id,$row['description'],$row['link'],$row['scope']);
-	if ($dares && $dares->rowCount() > 0) {continue;}
-	// Create corresponding reference
-	$ref= new Reference(0, // no ID yet
-			     $row['keyword'],
-			     $row['description'],
-			     preg_replace('`group_id='. $template_id .'(&|$)`', 'group_id='. $group_id .'$1', $row['link']), // link
-			     'P', // scope is 'project'
-			     $row['service_short_name'],  // service ID - N/A
-			     $row['nature'],
-			     $row['is_active'], // is_used
-			     $group_id);
-	$this->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
-      }
-      return true;
+        $reference_dao = $this->_getReferenceDao();
+        $dar = $reference_dao->searchByScopeAndServiceShortNameAndGroupId('P',"",$template_id);
+        while ($row = $dar->getRow()) {
+            $dares = $reference_dao->searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($row['keyword'],$group_id,$row['description'],$row['link'],$row['scope']);
+            if ($dares && $dares->rowCount() > 0) {
+                continue;
+            }
+            // Create corresponding reference
+            $ref= new Reference(0, // no ID yet
+                                $row['keyword'],
+                                $row['description'],
+                                preg_replace('`group_id='. $template_id .'(&|$)`', 'group_id='. $group_id .'$1', $row['link']), // link
+                                'P', // scope is 'project'
+                                $row['service_short_name'],  // service ID - N/A
+                                $row['nature'],
+                                $row['is_active'], // is_used
+                                $group_id);
+            $this->createReference($ref,true); // Force reference creation because default trackers use reserved keywords
+        }
+        return true;
     }
 
-    /** update reference associated to the given service and group_id */
+    /**
+     * update reference associated to the given service and group_id
+     */
     function updateReferenceForService($group_id,$short_name,$is_active) {
         $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchByServiceShortName($short_name);
@@ -364,9 +375,6 @@ class ReferenceManager {
                                                  ($proj_ref==null?false:$proj_ref->isActive()),
                                                  $group_id);
     }
-       
-
-
 
     function _buildReference($row) {
         if (isset($row['reference_id'])) $refid=$row['reference_id'];
@@ -420,10 +428,9 @@ class ReferenceManager {
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
         $exp = $this->_getExpForRef();
         $count=preg_match_all($exp, $html, $matches,PREG_SET_ORDER);
-        setlocale(LC_CTYPE, $locale);        
-    	return $matches;
+        setlocale(LC_CTYPE, $locale);
+        return $matches;
     }
-    
     
     /**
      * extract references from text $html
@@ -509,77 +516,74 @@ class ReferenceManager {
         
         $matches = $this->_extractAllMatches($html);
         foreach ($matches as $match) {
-        	// Analyse match
-	        $key=strtolower($match[1]);
-	        if ($match[2]) {
-	            // A target project name or ID was specified
-	            // remove trailing colon
-	            $target_project=substr($match[2],0,strlen($match[2])-1);
-	            // id or name?
-	            if (is_numeric($target_project)) {
-	                $ref_gid = $target_project;
-	            } else {
-	                // project name instead...
-	                $this->_initGroupHash();
-                    
-	                if (isset($this->groupIdByName[$target_project])) {
-                         $ref_gid = $this->groupIdByName[$target_project];
-	                } else if(isset($this->groupIdByNameLower[$target_project])) {
+            // Analyse match
+            $key=strtolower($match[1]);
+            if ($match[2]) {
+                // A target project name or ID was specified
+                // remove trailing colon
+                $target_project=substr($match[2],0,strlen($match[2])-1);
+                // id or name?
+                if (is_numeric($target_project)) {
+                    $ref_gid = $target_project;
+                } else {
+                    // project name instead...
+                    $this->_initGroupHash();
+
+                    if (isset($this->groupIdByName[$target_project])) {
+                        $ref_gid = $this->groupIdByName[$target_project];
+                    } else if(isset($this->groupIdByNameLower[$target_project])) {
                         $ref_gid = $this->groupIdByNameLower[$target_project];
                     }else {
-	                    return null;
-	                }
-	            }
-	        } else {
-	            if ($this->tmpGroupIdForCallbackFunction) {
-	                $ref_gid = $this->tmpGroupIdForCallbackFunction;
-	            } else {
-	                if (array_key_exists('group_id', $GLOBALS)) {
-	                    $ref_gid=$GLOBALS['group_id']; // might not be set
-	                } else {
-	                    $ref_gid = '';
-	                }
-	            }
-	        }
-	
-	        $value=$match[3];
-	        if ($ref_gid=="") $ref_gid=100; // use system references only
-		    $num_args=substr_count($value,'/')+1; // Count number of arguments in detected reference
-	        $ref =& $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
-  
-	        if ($ref) {
-         
-        
-		    	//Cross reference
-	            $sqlkey='SELECT link, nature from reference r,reference_group rg where keyword="'.$match[1].'" AND r.id = rg.reference_id AND rg.group_id='.$source_gid;
-	            $reskey = db_query($sqlkey);
-	    		if ($reskey && db_numrows($reskey) >0) {
-	    			$key_array = db_fetch_array($reskey);
-	    			
-	    			$target_type = $key_array['nature'];
-	    			$target_id = $match[3];
-	    			$target_key = $match[1];    // keyword
-		            $target_gid = $ref_gid;
-		            if ($user_id==0){
-		            	$user_id=user_getid();
-		            }
-		            
-		            $cross_ref=new CrossReference($source_id, 
-		                                          $source_gid,
-		                                          $source_type,
-		                                          $source_key, 
-		                                          $target_id,
-		                                          $target_gid,
-		                                          $target_type,
-		                                          $target_key,
-		                                          $user_id);
-			            
-		            if(!$cross_ref->existInDb()){
-			           	$cross_ref->createDbCrossRef();
-			        }
-	    			
-	    		}
-	        }
+                        return null;
+                    }
+                }
+            } else {
+                if ($this->tmpGroupIdForCallbackFunction) {
+                    $ref_gid = $this->tmpGroupIdForCallbackFunction;
+                } else {
+                    if (array_key_exists('group_id', $GLOBALS)) {
+                        $ref_gid=$GLOBALS['group_id']; // might not be set
+                    } else {
+                        $ref_gid = '';
+                    }
+                }
+            }
+
+            $value=$match[3];
+            if ($ref_gid=="") $ref_gid=100; // use system references only
+            $num_args=substr_count($value,'/')+1; // Count number of arguments in detected reference
+            $ref = $this->_getReferenceFromKeywordAndNumArgs($key,$ref_gid,$num_args);
+
+            if ($ref) {
+                //Cross reference
+                $sqlkey='SELECT link, nature from reference r,reference_group rg where keyword="'.$match[1].'" AND r.id = rg.reference_id AND rg.group_id='.$source_gid;
+                $reskey = db_query($sqlkey);
+                if ($reskey && db_numrows($reskey) > 0) {
+                    $key_array = db_fetch_array($reskey);
+
+                    $target_type = $key_array['nature'];
+                    $target_id = $match[3];
+                    $target_key = $match[1];    // keyword
+                    $target_gid = $ref_gid;
+                    if ($user_id==0){
+                        $user_id=user_getid();
+                    }
+
+                    $cross_ref=new CrossReference($source_id,
+                                                  $source_gid,
+                                                  $source_type,
+                                                  $source_key,
+                                                  $target_id,
+                                                  $target_gid,
+                                                  $target_type,
+                                                  $target_key,
+                                                  $user_id);
+
+                    if(!$cross_ref->existInDb()){
+                        $cross_ref->createDbCrossRef();
+                    }
+                }
+            }
         }
         return true;
     }
