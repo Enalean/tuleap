@@ -935,7 +935,7 @@ class Tracker_FormElementFactory {
                 array(
                     $GLOBALS['UGROUP_ANONYMOUS'] => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_READ'),
                     $GLOBALS['UGROUP_REGISTERED'] => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_SUBMIT'),
-                    $GLOBALS['UGROUP_PROJECT_MEMBERS'] => permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_UPDATE')
+                    $GLOBALS['UGROUP_PROJECT_MEMBERS'] => plugin_tracker_permission_get_input_value_from_permission('PLUGIN_TRACKER_FIELD_UPDATE')
                 )
             );
         }
