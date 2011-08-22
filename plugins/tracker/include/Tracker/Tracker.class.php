@@ -479,7 +479,7 @@ class Tracker {
                             echo '<script>window.parent.codendi.tracker.artifact.artifactLink.newArtifact('. (int)$artifact->getId() .');</script>';
                             exit;
                         } else {
-                            $art_link = '<a href="/tracker?aid=' . $artifact->getId() . '">' . $this->getItemName() . ' #' . $artifact->getId() . '</a>';
+                            $art_link = '<a href="'.TRACKER_BASE_URL.'/?aid=' . $artifact->getId() . '">' . $this->getItemName() . ' #' . $artifact->getId() . '</a>';
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'create_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                             
                             $url_redirection = TRACKER_BASE_URL.'/?tracker='. $this->getId();
