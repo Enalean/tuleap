@@ -18,10 +18,12 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../Tracker_TrackerCanDispatch_Interface.class.php');
+
 /**
  * Base interface for all form elements in trackers, from fieldsets to selectboxes
  */
-interface Tracker_FormElement_Interface {
+interface Tracker_FormElement_Interface extends Tracker_TrackerCanDispatch_Interface {
 
     /**
      * @return the label of the formElement (mainly used in admin part)
@@ -42,13 +44,6 @@ interface Tracker_FormElement_Interface {
      * @return the path to the icon to create an element
      */
     public static function getFactoryIconCreate();
-    
-    /**
-     * Return the tracker of this formElement
-     *
-     * @return Tracker
-     */
-    public function getTracker();
     
     /**
      *  Get the id
@@ -82,17 +77,5 @@ interface Tracker_FormElement_Interface {
      * @return void
      */
     public function exportToXML($root, &$xmlMapping, &$index);
-
-    /**
-     * Process the request
-     * 
-     * @param TrackerManager         $tracker_manager      The tracker manager
-     * @param Codendi_Request $request      The data coming from the user
-     * @param User            $current_user The user who mades the request
-     *
-     * @return void
-     */
-    public function process(TrackerManager $tracker_manager, $request, $current_user);
-
 }
 ?>

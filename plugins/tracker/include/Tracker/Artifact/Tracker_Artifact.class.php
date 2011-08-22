@@ -21,13 +21,14 @@
 require_once(dirname(__FILE__).'/../Tracker_History.class.php');
 require_once(dirname(__FILE__).'/../TrackerFactory.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
+require_once(dirname(__FILE__).'/../Tracker_TrackerCanDispatch_Interface.class.php');
 require_once('Tracker_Artifact_Changeset.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/Recent_Element_Interface.class.php');
 
-class Tracker_Artifact implements Recent_Element_Interface {
+class Tracker_Artifact implements Recent_Element_Interface, Tracker_TrackerCanDispatch_Interface {
 
     const REFERENCE_NATURE = 'plugin_tracker_artifact';
 

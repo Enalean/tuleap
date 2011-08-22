@@ -29,8 +29,9 @@ require_once(dirname(__FILE__).'/../workflow/WorkflowManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/widget/Widget_Static.class.php');
 require_once(dirname(__FILE__).'/../tracker_permissions.php');
+require_once('Tracker_TrackerCanDispatch_Interface.class.php');
 
-class Tracker {
+class Tracker implements Tracker_TrackerCanDispatch_Interface {
 
     public $id;
     public $group_id;
@@ -237,6 +238,17 @@ class Tracker {
         return TrackerFactory::instance();
     }
 
+    /**
+     * Return self
+     * 
+     * @see plugins/tracker/include/Tracker/Tracker_TrackerCanDispatch_Interface::getTracker()
+     * 
+     * @return Tracker
+     */
+    public function getTracker() {
+        return $this;
+    }
+    
     public function process(TrackerManager $tracker_manager, $request, $current_user) {
         //TODO: log the admin actions (add a formElement, ...) ?
         $hp = Codendi_HTMLPurifier::instance();

@@ -24,6 +24,7 @@ require_once 'common/include/URL.class.php';
 require_once 'Tracker_RessourceDoesntExistException.class.php';
 require_once 'Tracker_NoMachingRessourceException.class.php';
 require_once 'TrackerFactory.class.php';
+require_once 'Tracker_TrackerCanDispatch_Interface.class.php';
 
 class Tracker_URL extends URL {
     
@@ -33,9 +34,9 @@ class Tracker_URL extends URL {
      * @param Codendi_Request $request The request
      * @param User            $user    Who access the request
      * 
-     * @return Mixed
+     * @return Tracker_TrackerCanDispatch_Interface
      */
-    function getObjectFromRequest($request, $user) {
+    function getObjectFromRequest(Codendi_Request $request, User $user) {
         if ((int)$request->get('aid')) {
             if ($artifact = $this->getArtifactFactory()->getArtifactByid($request->get('aid'))) {
                 return $artifact;
@@ -60,7 +61,7 @@ class Tracker_URL extends URL {
             if (($tracker = $this->getTrackerFactory()->getTrackerByid($tracker_id)) && $tracker->isActive()) {
                 return $tracker;
             } else {
-                exit_error($GLOBALS['Language']->getText('global','error'), $GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
+                throw new Tracker_RessourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
             }
         } else if ((int)$request->get('formElement')) {
             if ($formElement = $this->getTracker_FormElementFactory()->getFormElementByid($request->get('formElement'))) {

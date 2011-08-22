@@ -54,7 +54,7 @@ class TrackerManager { /* extends Engine? */
             throw new Tracker_CannotAccessTrackerException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission'));
         }
     }
-    
+
     /**
      * Controler
      *
@@ -69,29 +69,12 @@ class TrackerManager { /* extends Engine? */
             $object = $url->getObjectFromRequest($request, $user);
             
             // Tracker related check
-            $tracker = null;
-            if ($object instanceof Tracker) {
-                $tracker = $object;
-            } else {
-                if (method_exists($object, 'getTracker')) {
-                    $tracker = $object->getTracker();
-                }
-            }
-            if ($tracker) {
-                $this->checkUserCanAccessTracker($tracker, $user);
-                $GLOBALS['group_id'] = $tracker->getGroupId();
-            }
+            $this->checkUserCanAccessTracker($object->getTracker(), $user);
+            $GLOBALS['group_id'] = $object->getTracker()->getGroupId();
 
-            // Dispatch depending of the type of object
-            if ($object instanceof Tracker) {
-                $tracker->process($this, $request, $user);
-            } else if ($object instanceof Tracker_Report) {
-                $report = $object;
-                $report->process($this, $request, $user);
-            } else if ($object instanceof Tracker_FormElement_Interface) {
-                $formElement = $object;
-                $formElement->process($this, $request, $user);
-            } else if ($object instanceof Tracker_Artifact) {
+            // Need specific treatment for artifact
+            // TODO: transfer in Tracker_Artifact::process
+            if ($object instanceof Tracker_Artifact) {
                 $artifact = $object;
                 if ((int)$request->get('aid')) {
                     if ($artifact->userCanView($user)) {
@@ -101,26 +84,28 @@ class TrackerManager { /* extends Engine? */
                         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $artifact->getTrackerId());
                     }
                 } else if ($request->get('func') == 'new-artifact-link') {
-                        echo '<html>';
-                        echo '<head>';
-                        $GLOBALS['HTML']->displayStylesheetElements(array());
-                        $GLOBALS['HTML']->displayJavascriptElements(array());
-                        echo '</head>';
+                    echo '<html>';
+                    echo '<head>';
+                    $GLOBALS['HTML']->displayStylesheetElements(array());
+                    $GLOBALS['HTML']->displayJavascriptElements(array());
+                    echo '</head>';
 
-                        echo '<body>';
-                        echo '<div class="contenttable">';
+                    echo '<body>';
+                    echo '<div class="contenttable">';
 
-                        $project = $artifact->getTracker()->getProject();
-                        echo $this->fetchTrackerSwitcher($user, ' ', $project, null);
+                    $project = $artifact->getTracker()->getProject();
+                    echo $this->fetchTrackerSwitcher($user, ' ', $project, null);
                 } else if ((int)$request->get('link-artifact-id')) {
                     $artifact->getTracker()->displayAReport($this, $request, $user);
                 }
+            } else {
+                $object->process($this, $request, $user);
             }
         } catch (Tracker_RessourceDoesntExistException $e) {
              exit_error($GLOBALS['Language']->getText('global', 'error'), $e->getMessage());
         } catch (Tracker_CannotAccessTrackerException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-            $this->displayAllTrackers($tracker->getProject(), $user);
+            $this->displayAllTrackers($object->getTracker()->getProject(), $user);
         } catch (Tracker_NoMachingRessourceException $e) {
             //show, admin all trackers
             if ((int)$request->get('group_id')) {
