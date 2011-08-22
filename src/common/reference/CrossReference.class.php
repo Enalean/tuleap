@@ -8,8 +8,9 @@
  * Stores a Cross Reference as extracted from some user text.
  */
 
+require_once 'common/include/Error.class.php';
 
-class CrossReference extends Error{
+class CrossReference extends Error {
     var $id; 
     var $userId;
     var $createdAt;

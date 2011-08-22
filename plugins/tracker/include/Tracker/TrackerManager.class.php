@@ -20,6 +20,7 @@
 
 require_once('TrackerFactory.class.php');
 require_once('Tracker_URL.class.php');
+require_once('Tracker_CannotAccessTrackerException.class.php');
 require_once('FormElement/Tracker_FormElementFactory.class.php');
 require_once('Artifact/Tracker_ArtifactFactory.class.php');
 require_once('Report/Tracker_ReportFactory.class.php');
@@ -47,12 +48,10 @@ class TrackerManager { /* extends Engine? */
         $this->checkServiceEnabled($tracker->getProject());
         
         if (!$tracker->isActive()) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
-            $this->displayAllTrackers($tracker->getProject(), $user);
+            throw new Tracker_CannotAccessTrackerException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
         }
         if (!$tracker->userCanView($user)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission'));
-            $this->displayAllTrackers($tracker->getProject(), $user);
+            throw new Tracker_CannotAccessTrackerException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission'));
         }
     }
     
@@ -65,7 +64,7 @@ class TrackerManager { /* extends Engine? */
      * @return void
      */
     public function process($request, $user) {
-        $url = new Tracker_URL();
+        $url = $this->getUrl();
         try {
             $object = $url->getObjectFromRequest($request, $user);
             
@@ -89,7 +88,7 @@ class TrackerManager { /* extends Engine? */
             } else if ($object instanceof Tracker_Report) {
                 $report = $object;
                 $report->process($this, $request, $user);
-            } else if ($object instanceof Tracker_FormElement) {
+            } else if ($object instanceof Tracker_FormElement_Interface) {
                 $formElement = $object;
                 $formElement->process($this, $request, $user);
             } else if ($object instanceof Tracker_Artifact) {
@@ -119,68 +118,71 @@ class TrackerManager { /* extends Engine? */
             }
         } catch (Tracker_RessourceDoesntExistException $e) {
              exit_error($GLOBALS['Language']->getText('global', 'error'), $e->getMessage());
-        }
-
-        //show, admin all trackers
-        if ((int)$request->get('group_id')) {
-            $group_id = (int)$request->get('group_id');
-            if ($project = $this->getProject($group_id)) {
-                if ($this->checkServiceEnabled($project)) {
-                    switch($request->get('func')) {
-                        case 'docreate':
-                            if ($this->userCanCreateTracker($group_id)) {
-                                if ($request->exist('preview_xml') && $request->get('preview_xml')) {
-                                    //todo: check that a file is uploaded
-                                    $this->displayTrackerPreview($_FILES["file"]["tmp_name"]);
-                                } else {
-                                    $new_tracker = null;
-                                    $name              = trim($request->get('name'));
-                                    $description       = trim($request->get('description'));
-                                    $itemname          = trim($request->get('itemname'));
-                                    $codendi_template  = (int)$request->get('codendi_template');
-                                    $group_id_template = (int)$request->get('group_id_template');
-                                    $atid_template     = (int)$request->get('atid_template');
-
-                                    if ($codendi_template != 100) {
-                                        $group_id_template =100;
-                                        $atid_template = $codendi_template;
-                                    }
-
-                                    if ($request->exist('create_from_xml') && $request->get('create_from_xml')) {
+        } catch (Tracker_CannotAccessTrackerException $e) {
+            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+            $this->displayAllTrackers($tracker->getProject(), $user);
+        } catch (Tracker_NoMachingRessourceException $e) {
+            //show, admin all trackers
+            if ((int)$request->get('group_id')) {
+                $group_id = (int)$request->get('group_id');
+                if ($project = $this->getProject($group_id)) {
+                    if ($this->checkServiceEnabled($project)) {
+                        switch($request->get('func')) {
+                            case 'docreate':
+                                if ($this->userCanCreateTracker($group_id)) {
+                                    if ($request->exist('preview_xml') && $request->get('preview_xml')) {
                                         //todo: check that a file is uploaded
-                                        $new_tracker = $this->importTracker($project, $name, $description, $itemname, $_FILES["file"]["tmp_name"]);
+                                        $this->displayTrackerPreview($_FILES["file"]["tmp_name"]);
                                     } else {
-                                        $new_tracker = $this->getTrackerFactory()->create($project->getId(), $group_id_template, $atid_template, $name, $description, $itemname);
-                                    }
+                                        $new_tracker = null;
+                                        $name              = trim($request->get('name'));
+                                        $description       = trim($request->get('description'));
+                                        $itemname          = trim($request->get('itemname'));
+                                        $codendi_template  = (int)$request->get('codendi_template');
+                                        $group_id_template = (int)$request->get('group_id_template');
+                                        $atid_template     = (int)$request->get('atid_template');
 
-                                    if ($new_tracker) {
-                                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&tracker='. $new_tracker->id);
-                                    } else {
-                                        $codendi_template  = $codendi_template  ? $codendi_template  : '';
-                                        $group_id_template = $group_id_template ? $group_id_template : '';
-                                        $atid_template     = $atid_template     ? $atid_template     : '';
-                                        $this->displayCreateTracker($project,$name,$description,$itemname,$codendi_template,$group_id_template,$atid_template);
+                                        if ($codendi_template != 100) {
+                                            $group_id_template =100;
+                                            $atid_template = $codendi_template;
+                                        }
+
+                                        if ($request->exist('create_from_xml') && $request->get('create_from_xml')) {
+                                            //todo: check that a file is uploaded
+                                            $new_tracker = $this->importTracker($project, $name, $description, $itemname, $_FILES["file"]["tmp_name"]);
+                                        } else {
+                                            $new_tracker = $this->getTrackerFactory()->create($project->getId(), $group_id_template, $atid_template, $name, $description, $itemname);
+                                        }
+
+                                        if ($new_tracker) {
+                                            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&tracker='. $new_tracker->id);
+                                        } else {
+                                            $codendi_template  = $codendi_template  ? $codendi_template  : '';
+                                            $group_id_template = $group_id_template ? $group_id_template : '';
+                                            $atid_template     = $atid_template     ? $atid_template     : '';
+                                            $this->displayCreateTracker($project,$name,$description,$itemname,$codendi_template,$group_id_template,$atid_template);
+                                        }
                                     }
+                                } else {
+                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
                                 }
-                            } else {
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
-                            }
-                            break;
-                        case 'create':
-                            if ($this->userCanCreateTracker($group_id)) {
-                                $this->displayCreateTracker($project);
-                            } else {
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
-                                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
-                            }
-                            break;
-                        case 'csvimportoverview':
-                            $this->displayCSVImportOverview($project, $group_id, $user);
-                            break;
-                        default:
-                            $this->displayAllTrackers($project, $user);
-                            break;
+                                break;
+                            case 'create':
+                                if ($this->userCanCreateTracker($group_id)) {
+                                    $this->displayCreateTracker($project);
+                                } else {
+                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
+                                }
+                                break;
+                            case 'csvimportoverview':
+                                $this->displayCSVImportOverview($project, $group_id, $user);
+                                break;
+                            default:
+                                $this->displayAllTrackers($project, $user);
+                                break;
+                        }
                     }
                 }
             }
@@ -639,6 +641,13 @@ class TrackerManager { /* extends Engine? */
     
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
         $this->getTrackerFactory()->duplicate($from_project_id, $to_project_id, $ugroup_mapping);
+    }
+
+    /**
+     * @return Tracker_URL
+     */
+    protected function getUrl() {
+        return new Tracker_URL();
     }
 
     /**

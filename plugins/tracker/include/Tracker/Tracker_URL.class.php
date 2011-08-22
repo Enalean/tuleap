@@ -19,7 +19,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'common/include/URL.class.php';
+
 require_once 'Tracker_RessourceDoesntExistException.class.php';
+require_once 'Tracker_NoMachingRessourceException.class.php';
 require_once 'TrackerFactory.class.php';
 
 class Tracker_URL extends URL {
@@ -76,6 +79,7 @@ class Tracker_URL extends URL {
                 throw new Tracker_RessourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist'));
             }
         }
+        throw new Tracker_NoMachingRessourceException();
     }
 
     /**

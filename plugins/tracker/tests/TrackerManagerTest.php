@@ -19,6 +19,7 @@
  */
 
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
+Mock::generate('Tracker_URL');
 Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Interface');
 Mock::generate('Tracker_Artifact');
@@ -30,6 +31,7 @@ Mock::generate('Tracker_ReportFactory');
 Mock::generatePartial('TrackerManager', 
                       'TrackerManagerTestVersion', 
                       array(
+                          'getUrl',
                           'getTrackerFactory',
                           'getTracker_FormElementFactory',
                           'getArtifactFactory',
@@ -52,11 +54,17 @@ Mock::generate('Layout');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
 
+if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/coin');
+}
+
 class TrackerManagerTest extends UnitTestCase {
     
     public function setup() {
         $this->user = new MockUser($this);
         $this->user->setReturnValue('getId', 666);
+        
+        $this->url = new MockTracker_URL();
         
         $project = new MockProject();
         
@@ -84,6 +92,7 @@ class TrackerManagerTest extends UnitTestCase {
         $this->tracker->setReturnReference('getProject', $project);
         
         $this->tm = new TrackerManagerTestVersion($this);
+        $this->tm->setReturnReference('getUrl', $this->url);
         $this->tm->setReturnReference('getTrackerFactory', $tf);
         $this->tm->setReturnReference('getTracker_FormElementFactory', $ff);
         $this->tm->setReturnReference('getArtifactFactory', $af);
@@ -95,6 +104,7 @@ class TrackerManagerTest extends UnitTestCase {
         $GLOBALS['HTML'] = new MockLayout();
     }
     public function tearDown() {
+        unset($this->url);
         unset($this->user);
         unset($this->artifact);
         unset($this->tracker);
@@ -108,15 +118,12 @@ class TrackerManagerTest extends UnitTestCase {
         $this->tracker->expectNever('process');
         $this->formElement->expectNever('process');
         $this->report->expectNever('process');
-        $store_in_session = true;
         
         $request_artifact = new MockCodendi_Request($this);
         $request_artifact->setReturnValue('get', '1', array('aid'));
-        $request_artifact->setReturnValue('get', '2', array('report'));
-        $request_artifact->setReturnValue('get', 3, array('tracker'));
-        $request_artifact->setReturnValue('get', '4', array('formElement'));
-        $request_artifact->setReturnValue('get', '5', array('group_id'));
         $this->artifact->setReturnValue('userCanView', true);
+        $this->tracker->setReturnValue('userCanView', true);
+        $this->url->setReturnValue('getObjectFromRequest', $this->artifact);
         $this->tm->process($request_artifact, $this->user);
     }
     
@@ -127,10 +134,8 @@ class TrackerManagerTest extends UnitTestCase {
         $this->formElement->expectNever('process');
         
         $request_artifact = new MockCodendi_Request($this);
-        $request_artifact->setReturnValue('get', '2', array('report'));
-        $request_artifact->setReturnValue('get', 3, array('tracker'));
-        $request_artifact->setReturnValue('get', '4', array('formElement'));
-        $request_artifact->setReturnValue('get', '5', array('group_id'));
+        $this->tracker->setReturnValue('userCanView', true);
+        $this->url->setReturnValue('getObjectFromRequest', $this->report);
         $this->tm->process($request_artifact, $this->user);
     }
     
@@ -144,9 +149,8 @@ class TrackerManagerTest extends UnitTestCase {
         $this->tracker->expectOnce('userCanView');
         
         $request_artifact = new MockCodendi_Request($this);
-        $request_artifact->setReturnValue('get', 3, array('tracker'));
-        $request_artifact->setReturnValue('get', '4', array('formElement'));
-        $request_artifact->setReturnValue('get', '5', array('group_id'));
+        
+        $this->url->setReturnValue('getObjectFromRequest', $this->tracker);
         $this->tm->process($request_artifact, $this->user);
     }
     
@@ -163,12 +167,11 @@ class TrackerManagerTest extends UnitTestCase {
         $this->tm->expectOnce('displayAllTrackers');
         
         $request_artifact = new MockCodendi_Request($this);
-        $request_artifact->setReturnValue('get', 3, array('tracker'));
-        $request_artifact->setReturnValue('get', '4', array('formElement'));
-        $request_artifact->setReturnValue('get', '5', array('group_id'));
+        
+        $this->url->setReturnValue('getObjectFromRequest', $this->tracker);
         $this->tm->process($request_artifact, $this->user);
     }
-        
+    
     public function testProcessField() {
         $this->artifact->expectNever('process');
         $this->report->expectNever('process');
@@ -178,6 +181,8 @@ class TrackerManagerTest extends UnitTestCase {
         $request_artifact = new MockCodendi_Request($this);
         $request_artifact->setReturnValue('get', '4', array('formElement'));
         $request_artifact->setReturnValue('get', '5', array('group_id'));
+        $this->tracker->setReturnValue('userCanView', true);
+        $this->url->setReturnValue('getObjectFromRequest', $this->formElement);
         $this->tm->process($request_artifact, $this->user);
     }
     
