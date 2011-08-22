@@ -23,17 +23,6 @@ require_once('Error_PermissionDenied.class.php');
 
 class Error_PermissionDenied_RestrictedUser extends Error_PermissionDenied {
 
-    /**
-     * Constructor of the class
-     *
-     * @param Url $url Url that lead to the error
-     *
-     * @return void
-     */
-    function __construct(Url $url) {
-        parent::__construct($url);
-    }
-
     function getType() {
         return 'restricted_user';
     }

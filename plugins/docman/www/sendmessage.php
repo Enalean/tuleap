@@ -37,7 +37,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         }
     }
 
-    $sendMail = new Docman_Error_PermissionDenied();
+    $sendMail = new Docman_Error_PermissionDenied(new URL());
     $vMessage = new Valid_Text('msg_docman_access');
     $vMessage->required();
     if ($request->valid($vMessage) && (trim($request->get('msg_docman_access')) != $defaultMsg)) {
