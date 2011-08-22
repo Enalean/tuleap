@@ -247,7 +247,7 @@ a.tabsellink:hover {
 #header {
 	background: transparent url(../images/pageheader.png) center top;
 	border: 1px solid gray;
-	height: 40px;    /* mandated to adjust to image, otherwise IE sucks */
+	height: 60px;    /* mandated to adjust to image, otherwise IE sucks */
 }
 
 .osdn_codex_logo {
@@ -261,6 +261,7 @@ a.tabsellink:hover {
 }
 
 .header_actions, .header_searchbox {
+    float:right;
 	text-align:right;
 	vertical-align: bottom;
 	padding: 0; margin: 0;
@@ -276,6 +277,7 @@ a.tabsellink:hover {
 }
 
 .header_actions ul {
+    white-space: nowrap;
 	list-style-type:none;
 	margin:0;
 	padding:0;
@@ -995,9 +997,12 @@ body {
 
 .header_actions,.header_searchbox {
     text-align: right;
-    vertical-align: bottom;
+    vertical-align: top;
     padding: 0;
     margin: 0;
+}
+.header_logo {
+    vertical-align: top;
 }
 
 div.header_searchbox select {
