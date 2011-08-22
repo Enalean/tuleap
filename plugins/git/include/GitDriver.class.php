@@ -126,7 +126,7 @@ class GitDriver implements DVCSDriver {
            throw new GitDriverErrorException('Unable to delete path '.$path);
         }
         return true;
-    }    
+    }
 
     public function activateHook($hookName, $repoPath, $uid=false, $gid=false) {
         //newer version of git

@@ -65,22 +65,21 @@ class GitActions extends PluginActions {
         $repository->setId( $repositoryId );
         $repository->load();
 
-        // Disable possibility to delete gitolite repositories
-        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-            $c->addError( $this->getText('disable_delete_gitolite') );
-            $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
-        }
-
         if ( $repository->hasChild() ) {
             $c->addError( $this->getText('backend_delete_haschild_error') );
             $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
             return false;
         }
-        $this->systemEventManager->createEvent(
-            'GIT_REPO_DELETE',
-            $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryId,
-            SystemEvent::PRIORITY_MEDIUM
-        );       
+        
+        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+            $repository->delete();
+        } else {
+            $this->systemEventManager->createEvent(
+                'GIT_REPO_DELETE',
+                $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryId,
+                SystemEvent::PRIORITY_MEDIUM
+            );
+        }
         $c->addInfo( $this->getText('actions_delete_process') );
         $c->addInfo( $this->getText('actions_delete_backup').' : '.PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir') );
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);

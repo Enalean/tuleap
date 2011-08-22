@@ -449,6 +449,19 @@ class Git_GitoliteDriver {
         }
         return $ok;
     }
+    
+    public function delete($path) {
+        if ( empty($path) || !is_writable($path) ) {
+           throw new GitDriverErrorException('Empty path or permission denied '.$path);
+        }
+        $rcode = 0;
+        $output = system('rm -fr '.$path, $rcode);
+        if ( $rcode != 0 ) {
+           throw new GitDriverErrorException('Unable to delete path '.$path);
+        }
+        return true;
+    }
+    
 }
 
 ?>
