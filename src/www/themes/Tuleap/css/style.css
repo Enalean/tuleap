@@ -261,6 +261,7 @@ a.tabsellink:hover {
 }
 
 .header_actions, .header_searchbox {
+    float:right;
 	text-align:right;
 	vertical-align: bottom;
 	padding: 0; margin: 0;
@@ -276,6 +277,7 @@ a.tabsellink:hover {
 }
 
 .header_actions ul {
+    white-space: nowrap;
 	list-style-type:none;
 	margin:0;
 	padding:0;
