@@ -343,16 +343,17 @@ class TrackerManager { /* extends Engine? */
             </tr>
                     <tr><td colspan=2><i>'.$Language->getText('plugin_tracker_include_type','avoid_spaces').'</i></td></tr>';
         echo '</table>';
+
         echo '<p>'.$Language->getText('plugin_tracker_include_type','choose_creation').'</p>';
-        echo '<table>
-              <tr valign="top">
+        echo '<table>';
+        /*
+        echo ' <tr valign="top">
                  <td width="300"><li><b>'.$Language->getText('plugin_tracker_include_type','from_tmpl').'</b></li></td>
                  <td colspan="2">';
         echo $this->trackersSelectBox(100,"codendi_template",$codendi_template);
-        echo ' &nbsp;<input type="button" name="CreateCodendiTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodendiTemplate()"><br><br></td>
-              <tr valign="top">    
+        echo ' &nbsp;<input type="button" name="CreateCodendiTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodendiTemplate()"><br><br></td></tr>';
+        echo ' <tr valign="top">
                  <td width="300"><li>'.$Language->getText('plugin_tracker_include_type','from_exist').'</li></td>
-                 
                  <td>
                     <table>
                       <tr>
@@ -366,16 +367,18 @@ class TrackerManager { /* extends Engine? */
                     </table>
                  </td>
                  <td><input type="button" name="CreateTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateTemplate()"></td>
-              <tr>
-              <tr>
-                <td width="300"><li>'.$Language->getText('plugin_tracker_include_type','from_xml').'</li></td>
-                    <td>
-                        <input type="hidden" name="create_mode" value="">
-                        <input type="file" name="file" id="file" />
-                    </td>
-                    <td><input type="submit" name="create_from_xml" value="'.$Language->getText('global','btn_create').'" /></td>
-                    <td><input type="submit" name="preview_xml" id="button_preview_xml" value="'.$Language->getText('global','btn_preview').'" /></td>
-              </td>';
+               </tr>';
+        */
+        echo ' <tr>
+                <td width="300">'.$Language->getText('plugin_tracker_include_type','from_xml').'</td>
+                <td>
+                 <input type="hidden" name="create_mode" value="">
+                 <input type="file" name="file" id="file" />
+                </td>
+                <td><input type="submit" name="create_from_xml" value="'.$Language->getText('global','btn_create').'" /></td>
+                <td><input type="submit" name="preview_xml" id="button_preview_xml" value="'.$Language->getText('global','btn_preview').'" /></td>
+               </tr>';
+        echo '</table>';
     
         echo '</form>
               </table>';
