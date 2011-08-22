@@ -29,7 +29,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
 
     switch ($func) {
         case 'restricted_user_request':
-            $sendMail = new Error_PermissionDenied_RestrictedUser();
+            $sendMail = new Error_PermissionDenied_RestrictedUser(new URL());
             $vMessage = new Valid_Text('msg_restricted_user');
             $vMessage->required();
             if ($request->valid($vMessage) && (trim($request->get('msg_restricted_user'))!= $defaultMsg )) {
@@ -40,7 +40,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
             break;
 
         case 'private_project_request':
-            $sendMail = new Error_PermissionDenied_PrivateProject();
+            $sendMail = new Error_PermissionDenied_PrivateProject(new URL());
             $vMessage = new Valid_Text('msg_private_project');
             $vMessage->required();
             if ($request->valid($vMessage) && (trim($request->get('msg_private_project')) != $defaultMsg )) {

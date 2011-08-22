@@ -293,6 +293,8 @@ class URLVerification {
      * @param Url   $url
      * @param Array $request_uri
      * @param Array $script_name
+     * 
+     * @return Boolean False if user not allowed to see the content
      */
     protected function restrictedUserCanAccessUrl($user, $url, $request_uri, $script_name) {
         $group_id =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($request_uri);
@@ -471,10 +473,47 @@ class URLVerification {
      * @return void
      */
     function checkPrivateAccess($server) {
-        if ((strcmp(substr($server['SCRIPT_NAME'], 0, 5), '/api/') !=0)&&
-        !util_check_private_access($server['REQUEST_URI'])) {
-            exit_private_project_permission_denied();
+        $url = $this->getUrl();
+        if ((strcmp(substr($server['SCRIPT_NAME'], 0, 5), '/api/') !=0) && !$this->userCanAccessPrivate($url, $server['REQUEST_URI'])) {
+            $this->displayPrivateProjectError($url);
         }
+    }
+
+    /**
+     * Check if current user can access the given URL if it's a private project
+     *
+     * @param URL    $url         URL to check
+     * @param String $request_uri is the original REQUEST_URI
+     *
+     * @return Boolean False if it's a private project and user is not member of
+     */
+    function userCanAccessPrivate($url, $requestUri) {
+        $group_id = (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($requestUri);
+        if ($group_id) {
+            $project = ProjectManager::instance()->getProject($group_id);
+            $user    = UserManager::instance()->getCurrentUser();
+            if(!$project->isPublic()) {
+                if (!$user->isMember($group_id)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Display error message for restricted project
+     *
+     * @param URL $url Accessed url
+     * 
+     * @return void
+     */
+    function displayPrivateProjectError($url) {
+        site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
+        $sendMail = new Error_PermissionDenied_PrivateProject($url);
+        $sendMail->buildInterface();
+        $GLOBALS['HTML']->footer(array('showfeedback' => false));
+        exit;
     }
 
     /**

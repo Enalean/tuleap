@@ -1188,32 +1188,6 @@ function getStringFromServer($key) {
 }
 
 /**
- * checkPrivateAccess - prevent a registered but not member user access a private project with the current url.
- *
- * @param string $request_uri is the original REQUEST_URI
- * @return true is access is granted
- * @return false is access is forbidden
-*/
-function util_check_private_access($request_uri) {
-
-     $url = new URL();
-     $group_id =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($request_uri);
-     if(isset($group_id)){
-        $pm = ProjectManager::instance();
-        $project=$pm->getProject($group_id);
-        $public_project = $project->isPublic();
-        $user = UserManager::instance()->getCurrentUser();
-        if(!$public_project && !$user->isRestricted()) {
-           
-            if (!$user->isMember($group_id)) {
-                 return false;
-            }
-         }  
-    }
-    return true;
-}
-
-/**
  * If $text begins with $prefixe ends with $suffixe then returns the 
  * translated name found in page $pagename. Else returns $name.
 **/ 

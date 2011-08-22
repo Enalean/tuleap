@@ -53,38 +53,6 @@ function exit_display_soap_error() {
     print_soap_fault($fault_code, $fault_factor, $fault_string, $fault_detail);
 }
 
-
-function exit_restricted_user_permission_denied() {
-    global $HTML,$Language;
-
-    // if the error comes from the SOAP API, we don't display the site_header and footer, but a soap fault (xml).
-    if (substr($_SERVER['SCRIPT_NAME'], 1, 4) != "soap") {
-        site_header(array('title'=>$Language->getText('include_exit','exit_error')));
-        $sendMail = new Error_PermissionDenied_RestrictedUser(new URL());
-        $sendMail->buildInterface();
-        $HTML->footer(array('showfeedback' => false));
-    } else {
-        exit_display_soap_error();
-    }
-    exit;
-}
-
-
-function exit_private_project_permission_denied() {
-    global $HTML,$Language;
-
-    // if the error comes from the SOAP API, we don't display the site_header and footer, but a soap fault (xml).
-    if (substr($_SERVER['SCRIPT_NAME'], 1, 4) != "soap") {
-        site_header(array('title'=>$Language->getText('include_exit','exit_error')));
-        $sendMail = new Error_PermissionDenied_PrivateProject(new URL());
-        $sendMail->buildInterface();
-        $HTML->footer(array('showfeedback' => false));
-    } else {
-        exit_display_soap_error();
-    }
-    exit;
-}
-
 function exit_not_logged_in() {
   global $Language;
     //instead of a simple error page, now take them to the login page
