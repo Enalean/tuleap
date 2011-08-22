@@ -44,6 +44,13 @@ class TrackerManager { /* extends Engine? */
         exit();
     }
     
+    /**
+     * Check that tracker can be accessed by user
+     *
+     * @param Tracker $tracker
+     * @param User    $user
+     * @throws Tracker_CannotAccessTrackerException
+     */
     public function checkUserCanAccessTracker($tracker, $user) {
         $this->checkServiceEnabled($tracker->getProject());
         
@@ -54,7 +61,50 @@ class TrackerManager { /* extends Engine? */
             throw new Tracker_CannotAccessTrackerException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission'));
         }
     }
+    
+    /**
+     * Propagate process dispatch to sub-tracker elements
+     *
+     * @param Tracker_TrackerCanDispatch_Interface $object
+     * @param Codendi_Request                      $request
+     * @param User                                 $user
+     */
+    protected function processSubElement(Tracker_TrackerCanDispatch_Interface $object, Codendi_Request $request, User $user) {
+        // Tracker related check
+        $this->checkUserCanAccessTracker($object->getTracker(), $user);
+        $GLOBALS['group_id'] = $object->getTracker()->getGroupId();
 
+        // Need specific treatment for artifact
+        // TODO: transfer in Tracker_Artifact::process
+        if ($object instanceof Tracker_Artifact) {
+            $artifact = $object;
+            if ((int)$request->get('aid')) {
+                if ($artifact->userCanView($user)) {
+                    $artifact->process($this, $request, $user);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission_on_artifact'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $artifact->getTrackerId());
+                }
+            } else if ($request->get('func') == 'new-artifact-link') {
+                echo '<html>';
+                echo '<head>';
+                $GLOBALS['HTML']->displayStylesheetElements(array());
+                $GLOBALS['HTML']->displayJavascriptElements(array());
+                echo '</head>';
+
+                echo '<body>';
+                echo '<div class="contenttable">';
+
+                $project = $artifact->getTracker()->getProject();
+                echo $this->fetchTrackerSwitcher($user, ' ', $project, null);
+            } else if ((int)$request->get('link-artifact-id')) {
+                $artifact->getTracker()->displayAReport($this, $request, $user);
+            }
+        } else {
+            $object->process($this, $request, $user);
+        }
+    }
+    
     /**
      * Controler
      *
@@ -64,43 +114,10 @@ class TrackerManager { /* extends Engine? */
      * @return void
      */
     public function process($request, $user) {
-        $url = $this->getUrl();
         try {
+            $url    = $this->getUrl();
             $object = $url->getObjectFromRequest($request, $user);
-            
-            // Tracker related check
-            $this->checkUserCanAccessTracker($object->getTracker(), $user);
-            $GLOBALS['group_id'] = $object->getTracker()->getGroupId();
-
-            // Need specific treatment for artifact
-            // TODO: transfer in Tracker_Artifact::process
-            if ($object instanceof Tracker_Artifact) {
-                $artifact = $object;
-                if ((int)$request->get('aid')) {
-                    if ($artifact->userCanView($user)) {
-                        $artifact->process($this, $request, $user);
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission_on_artifact'));
-                        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $artifact->getTrackerId());
-                    }
-                } else if ($request->get('func') == 'new-artifact-link') {
-                    echo '<html>';
-                    echo '<head>';
-                    $GLOBALS['HTML']->displayStylesheetElements(array());
-                    $GLOBALS['HTML']->displayJavascriptElements(array());
-                    echo '</head>';
-
-                    echo '<body>';
-                    echo '<div class="contenttable">';
-
-                    $project = $artifact->getTracker()->getProject();
-                    echo $this->fetchTrackerSwitcher($user, ' ', $project, null);
-                } else if ((int)$request->get('link-artifact-id')) {
-                    $artifact->getTracker()->displayAReport($this, $request, $user);
-                }
-            } else {
-                $object->process($this, $request, $user);
-            }
+            $this->processSubElement($object, $request, $user);
         } catch (Tracker_RessourceDoesntExistException $e) {
              exit_error($GLOBALS['Language']->getText('global', 'error'), $e->getMessage());
         } catch (Tracker_CannotAccessTrackerException $e) {

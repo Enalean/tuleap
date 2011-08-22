@@ -21,6 +21,7 @@
 require_once('dao/Tracker_Report_CriteriaDao.class.php');
 
 require_once(dirname(__FILE__).'/../TrackerFactory.class.php');
+require_once(dirname(__FILE__).'/../Tracker_TrackerCanDispatch_Interface.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once('Tracker_Report_RendererFactory.class.php');
 require_once('Tracker_Report_Criteria.class.php');
@@ -31,7 +32,7 @@ require_once('common/include/Toggler.class.php');
  * Tracker_ report.
  * Set of criteria + set of Renderer to search and display artifacts
  */
-class Tracker_Report extends Error {
+class Tracker_Report extends Error implements Tracker_TrackerCanDispatch_Interface {
     
     const ACTION_SAVE    = 'report-save';
     const ACTION_SAVEAS  = 'report-saveas';
