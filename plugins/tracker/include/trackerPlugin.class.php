@@ -36,6 +36,7 @@ class trackerPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+        
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures', false);
         $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
@@ -49,6 +50,8 @@ class trackerPlugin extends Plugin {
         $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
+        
+        $this->_addHook('url_verification_instance', 'url_verification_instance', false);
     }
     
     public function getPluginInfo() {
@@ -299,6 +302,13 @@ class trackerPlugin extends Plugin {
                     }
                 }
             }
+        }
+    }
+    
+    public function url_verification_instance($params) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            include_once 'Tracker/Tracker_URLVerification.class.php';
+            $params['url_verification'] = new Tracker_URLVerification();
         }
     }
 }
