@@ -18,6 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('common/error/Error_PermissionDenied_PrivateProject.class.php');
+require_once('common/error/Error_PermissionDenied_RestrictedUser.class.php');
+
 /**
  * Check the URL validity (protocol, host name, query) regarding server constraints
  * (anonymous, user status, project privacy, ...) and manage redirection when needed  
@@ -60,6 +63,15 @@ class URLVerification {
      */
     public function getEventManager() {
         return EventManager::instance();
+    }
+
+    /**
+     * Returns a instance of Url
+     *
+     * @return Url
+     */
+    function getUrl() {
+        return new Url();
     }
 
     /**
@@ -265,12 +277,192 @@ class URLVerification {
      * @return void
      */
     function checkRestrictedAccess($server) {
-        if ($this->getCurrentUser()->isRestricted() &&
-        !util_check_restricted_access($server['REQUEST_URI'], $server['SCRIPT_NAME'])) {
-            exit_restricted_user_permission_denied();
+        $user = $this->getCurrentUser();
+        if ($user->isRestricted()) {
+            $url = $this->getUrl();
+            if (!$this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'], $server['SCRIPT_NAME'])) {
+                $this->displayRestrictedUserError($url);
+            }
         }
     }
 
+    /**
+     * Test if given url is restricted for user
+     *
+     * @param User  $user
+     * @param Url   $url
+     * @param Array $request_uri
+     * @param Array $script_name
+     */
+    protected function restrictedUserCanAccessUrl($user, $url, $request_uri, $script_name) {
+        $group_id =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($request_uri);
+        
+         // Make sure the URI starts with a single slash
+        $req_uri='/'.trim($request_uri, "/");
+        $user_is_allowed=false;
+        /* Examples of input params:
+         Script: /projects, Uri=/projects/ljproj/
+         Script: /survey/index.php, Uri=/survey/?group_id=101
+         Script: /project/admin/index.php, Uri=/project/admin/?group_id=101
+         Script: /tracker/index.php, Uri=/tracker/index.php?group_id=101
+         Script: /tracker/index.php, Uri=/tracker/?func=detail&aid=14&atid=101&group_id=101
+        */
+
+        // Restricted users cannot access any page belonging to a project they are not a member of.
+        // In addition, the following URLs are forbidden (value overriden in site-content file)
+        $forbidden_url = array( 
+          '/snippet',     // Code Snippet Library
+          '/softwaremap/',// browsable software map
+          '/new/',        // list of the newest releases made on the Codendi site ('/news' must be allowed...)
+          '/search',      // search for people, projects, and artifacts in trackers!
+          '/people/',     // people skills and profile
+          '/stats',       // Codendi site statistics
+          '/top',         // projects rankings (active, downloads, etc)
+          '/project/register.php',    // Register a new project
+          '/export',      // Codendi XML feeds
+          '/info.php'     // PHP info
+          );
+        // Default values are very restrictive, but they can be overriden in the site-content file
+        // Default support project is project 1.
+        $allow_welcome_page=false;       // Allow access to welcome page 
+        $allow_news_browsing=false;      // Allow restricted users to read/comment news, including for their project
+        $allow_user_browsing=false;      // Allow restricted users to access other user's page (Developer Profile)
+        $allow_access_to_project_forums   = array(1); // Support project help forums are accessible through the 'Discussion Forums' link
+        $allow_access_to_project_trackers = array(1); // Support project trackers are used for support requests
+        $allow_access_to_project_docs     = array(1); // Support project documents and wiki (Note that the User Guide is always accessible)
+        $allow_access_to_project_mail     = array(1); // Support project mailing lists (Developers Channels)
+        $allow_access_to_project_frs      = array(1); // Support project file releases
+        $allow_access_to_project_refs     = array(1); // Support project references
+        $allow_access_to_project_news     = array(1); // Support project news
+       
+        // List of fully public projects (same access for restricted and unrestricted users)
+        $public_projects = array(); 
+
+        // Customizable security settings for restricted users:
+        include($GLOBALS['Language']->getContent('include/restricted_user_permissions','en_US'));
+        // End of customization
+        
+        // For convenient reasons, admin can customize those variables as arrays
+        // but for performances reasons we prefer to use hashes (avoid in_array)
+        // so we transform array(101) => array(101=>0)
+        $allow_access_to_project_forums   = array_flip($allow_access_to_project_forums); 
+        $allow_access_to_project_trackers = array_flip($allow_access_to_project_trackers);
+        $allow_access_to_project_docs     = array_flip($allow_access_to_project_docs);
+        $allow_access_to_project_mail     = array_flip($allow_access_to_project_mail);
+        $allow_access_to_project_frs      = array_flip($allow_access_to_project_frs);
+        $public_projects                  = array_flip($public_projects);
+        $allow_access_to_project_refs     = array_flip($allow_access_to_project_refs);
+        $allow_access_to_project_news     = array_flip($allow_access_to_project_news);
+
+        foreach ($forbidden_url as $str) {
+            $pos = strpos($req_uri,$str);
+            if ($pos === false) {
+                // Not found
+            } else {
+                if ($pos == 0) {
+                    // beginning of string
+                    return false;
+                }
+            }
+        }
+
+        // Welcome page
+        if (!$allow_welcome_page) {
+            $sc_name='/'.trim($script_name, "/");
+            if ($sc_name == '/index.php') {
+                return false;
+            }
+        }
+
+        // Forbid access to other user's page (Developer Profile)
+        if ((strpos($req_uri,'/users/') === 0)&&(!$allow_user_browsing)) {
+            if ($req_uri != '/users/'.$user->getName()) {
+                return false;
+            }
+        }
+
+        // Forum and news. Each published news is a special forum of project 'news'
+        if (strpos($req_uri,'/news/') === 0 &&
+            isset($allow_access_to_project_news[$group_id])) {
+            $user_is_allowed=true;
+        }
+        
+        if (strpos($req_uri,'/news/') === 0 && 
+            $allow_news_browsing) {
+            $user_is_allowed=true;
+         }
+        
+        if (strpos($req_uri,'/forum/') === 0 &&
+            isset($allow_access_to_project_forums[$group_id])) {
+              $user_is_allowed=true;
+         }
+
+        // Codendi trackers
+        if (strpos($req_uri,'/tracker/') === 0 && 
+            isset($allow_access_to_project_trackers[$group_id])) {
+            $user_is_allowed=true;
+        }
+
+        // Codendi documents and wiki
+        if (((strpos($req_uri,'/docman/') === 0) || 
+            (strpos($req_uri,'/plugins/docman/') === 0) ||
+            (strpos($req_uri,'/wiki/') === 0)) &&
+            isset($allow_access_to_project_docs[$group_id])) {
+            $user_is_allowed=true;
+        }
+
+        // Codendi mailing lists page
+        if (strpos($req_uri,'/mail/') === 0 &&
+            isset($allow_access_to_project_mail[$group_id])) {
+            $user_is_allowed=true;
+        }
+        
+        // Codendi file releases
+        if (strpos($req_uri,'/file/') === 0 &&
+            isset($allow_access_to_project_frs[$group_id])) {
+            $user_is_allowed=true;
+        }
+        
+        // References
+        if (strpos($req_uri,'/goto') === 0 &&
+            isset($allow_access_to_project_refs[$group_id])) {
+            $user_is_allowed=true;
+        }
+
+        // Now check group_id
+        if (isset($group_id)) { 
+            if (!$user_is_allowed) { 
+                if ((!$user->isMember($group_id))
+                    &&(!isset($public_projects[$group_id]))) {
+                    return false;
+                }
+            }
+        } elseif (array_key_exists('group_id', $_REQUEST)) {
+            if (!$user_is_allowed) {
+                if ((!$user->isMember($_REQUEST['group_id']))
+                    &&(!isset($public_projects[$_REQUEST['group_id']])))  {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Display error message for restricted user.
+     *
+     * @param URL $url Accessed url
+     * 
+     * @return void
+     */
+    function displayRestrictedUserError($url) {
+        site_header(array('title' => $GLOBALS['Language']->getText('include_exit','exit_error')));
+        $error = new Error_PermissionDenied_RestrictedUser($url);
+        $error->buildInterface();
+        $GLOBALS['HTML']->footer(array('showfeedback' => false));
+        exit;
+    }
+    
     /**
      * Checks that registreded users but not members of a private project can't access to it.
      *

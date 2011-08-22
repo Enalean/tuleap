@@ -60,7 +60,7 @@ function exit_restricted_user_permission_denied() {
     // if the error comes from the SOAP API, we don't display the site_header and footer, but a soap fault (xml).
     if (substr($_SERVER['SCRIPT_NAME'], 1, 4) != "soap") {
         site_header(array('title'=>$Language->getText('include_exit','exit_error')));
-        $sendMail = new Error_PermissionDenied_RestrictedUser();
+        $sendMail = new Error_PermissionDenied_RestrictedUser(new URL());
         $sendMail->buildInterface();
         $HTML->footer(array('showfeedback' => false));
     } else {
@@ -76,7 +76,7 @@ function exit_private_project_permission_denied() {
     // if the error comes from the SOAP API, we don't display the site_header and footer, but a soap fault (xml).
     if (substr($_SERVER['SCRIPT_NAME'], 1, 4) != "soap") {
         site_header(array('title'=>$Language->getText('include_exit','exit_error')));
-        $sendMail = new Error_PermissionDenied_PrivateProject();
+        $sendMail = new Error_PermissionDenied_PrivateProject(new URL());
         $sendMail->buildInterface();
         $HTML->footer(array('showfeedback' => false));
     } else {
