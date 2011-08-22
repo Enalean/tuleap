@@ -87,7 +87,7 @@ codendi.ReorderColumns = Class.create({
                     
                     //save the new column order
                     var form = $('tracker_report_table_addcolumn_form');
-                    var req = new Ajax.Request('/tracker/?report=' + form.report.value + '&renderer=' + form.renderer.value, {
+                    var req = new Ajax.Request(codendi.tracker.base_url + '?report=' + form.report.value + '&renderer=' + form.renderer.value, {
                         parameters: parameters,
                         onSuccess: function (transport) {
                             this.reorder(dropped.up('table'), from, to);

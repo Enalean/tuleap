@@ -97,7 +97,7 @@ codendi.tracker.artifact.artifactLink = {
             .join(',');
         if (ids) {
             var req = new Ajax.Request(
-            '/tracker/?',
+            codendi.tracker.base_url + '?',
             {
                 parameters: {
                     formElement: codendi.tracker.artifact.artifactLinker_currentField_id,
@@ -146,7 +146,7 @@ codendi.tracker.artifact.artifactLink = {
         
         //Compute the new aggregates
         codendi.tracker.artifact.artifactLink.reload_aggregates_functions_request = new Ajax.Request(
-            '/tracker/?',
+            codendi.tracker.base_url + '?',
             {
                 parameters: {
                     formElement: field_id,
@@ -293,7 +293,7 @@ document.observe('dom:loaded', function () {
         });
         
         $('tracker_select_tracker').observe('change', function () {
-            new Ajax.Updater('tracker-link-artifact-slow-way-content', '/tracker/', {
+            new Ajax.Updater('tracker-link-artifact-slow-way-content', codendi.tracker.base_url, {
                 parameters: {
                     tracker: $F('tracker_select_tracker'),
                     'link-artifact-id': $F('link-artifact-id'),
@@ -308,7 +308,7 @@ document.observe('dom:loaded', function () {
         
         if ($('tracker_select_report')) {
             $('tracker_select_report').observe('change', function () {
-                new Ajax.Updater('tracker-link-artifact-slow-way-content', '/tracker/', {
+                new Ajax.Updater('tracker-link-artifact-slow-way-content', codendi.tracker.base_url, {
                     parameters: {
                         tracker: $F('tracker_select_tracker'),
                         report: $F('tracker_select_report'),
@@ -521,7 +521,7 @@ document.observe('dom:loaded', function () {
                 
             };
             myLightWindow.activateWindow({
-                href: '/tracker/?'+ $H({
+                href: codendi.tracker.base_url + '?'+ $H({
                     tracker: codendi.tracker.artifact.artifactLink.selector_url.tracker,
                     func: 'new-artifact-link',
                     id: codendi.tracker.artifact.artifactLink.selector_url['link-artifact-id'],

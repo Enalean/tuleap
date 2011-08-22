@@ -181,7 +181,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
             this.setUsed(li);
         } else {
             var req = new Ajax.Request(
-                '/tracker/?report=' + form.report.value + '&renderer=' + form.renderer.value,
+                codendi.tracker.base_url + '?report=' + form.report.value + '&renderer=' + form.renderer.value,
                 {
                     parameters: {
                         func:                         'renderer',
@@ -261,7 +261,7 @@ codendi.tracker.report.table.AddRemoveColumn = Class.create({
             });
         } else {
             var form = $('tracker_report_table_addcolumn_form');
-            var req = new Ajax.Request('/tracker/?report=' + form.report.value + '&renderer=' + form.renderer.value, {
+            var req = new Ajax.Request(codendi.tracker.base_url + '?report=' + form.report.value + '&renderer=' + form.renderer.value, {
                 parameters: {
                     func:                            'renderer',
                     renderer:                        $('tracker_report_table_addcolumn_form').renderer.value,

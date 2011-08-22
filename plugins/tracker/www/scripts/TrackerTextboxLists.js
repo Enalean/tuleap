@@ -27,7 +27,7 @@ document.observe('dom:loaded', function () {
             var id = textbox.id.match(/_(\d+)$/)[1];
             if ($('tracker_field_' + id)) {
                 codendi.tracker.textboxlist[id] = new ProtoMultiSelect('tracker_field_' + id, textbox.id, {
-                    fetchFile: '/tracker/?formElement=' + id + '&func=textboxlist',
+                    fetchFile: codendi.tracker.base_url + '?formElement=' + id + '&func=textboxlist',
                     loadOnInit: false,
                     newValues: true,
                     newValuePrefix: '!'
