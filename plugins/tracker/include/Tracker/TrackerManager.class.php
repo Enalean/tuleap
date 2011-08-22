@@ -374,9 +374,8 @@ class TrackerManager { /* extends Engine? */
                 <td>
                  <input type="hidden" name="create_mode" value="">
                  <input type="file" name="file" id="file" />
+                 <input type="submit" name="create_from_xml" value="'.$Language->getText('global','btn_create').'" />
                 </td>
-                <td><input type="submit" name="create_from_xml" value="'.$Language->getText('global','btn_create').'" /></td>
-                <td><input type="submit" name="preview_xml" id="button_preview_xml" value="'.$Language->getText('global','btn_preview').'" /></td>
                </tr>';
         echo '</table>';
     
