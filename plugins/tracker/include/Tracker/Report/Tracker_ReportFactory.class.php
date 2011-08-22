@@ -290,8 +290,8 @@ class Tracker_ReportFactory extends Error {
                                         $report->is_query_displayed);
         //create criterias
         $reportDB = Tracker_ReportFactory::instance()->getReportById($reportId, null);
-        if ($report->criteria) {
-            foreach ($report->criteria as $criteria){
+        if ($report->criterias) {
+            foreach ($report->criterias as $criteria){
                 $reportDB->addCriteria($criteria);
             }
         }
