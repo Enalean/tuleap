@@ -47,7 +47,7 @@ INSERT INTO user SET
         people_view_skills = 0, 
         timezone = 'GMT', 
         language_id = 'en_US', 
-        last_pwd_update = '0'); 
+        last_pwd_update = '0'; 
 
 INSERT INTO user_access (user_id, last_access_date) VALUES (99 , '0');
 
