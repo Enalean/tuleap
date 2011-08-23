@@ -523,6 +523,12 @@ if $RPM -q mailman | $GREP codendi 2>&1 >/dev/null; then
     enable_core_mailman="true"
 fi
 
+# Check if munin is installed
+enable_munin="false"
+if $RPM -q tuleap 2>&1 >/dev/null; then
+    enable_munin="true"
+fi
+
 
 
 rm -f $TODO_FILE
@@ -881,7 +887,9 @@ $CHMOD 644 /etc/libnss-mysql.cfg
 $CHMOD 600 /etc/libnss-mysql-root.cfg
 
 # replace string patterns in munin.conf (for MySQL authentication)
-substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+if [ -f '/etc/httpd/conf.d/munin.conf' ]; then
+    substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+fi
 
 # Make sure SELinux contexts are valid
 if [ $SELINUX_ENABLED ]; then
@@ -1134,7 +1142,6 @@ EOF
 $CHKCONFIG sshd on
 $CHKCONFIG httpd on
 $CHKCONFIG mysqld on
-$CHKCONFIG munin-node on
 $CHKCONFIG crond on
 
 /etc/init.d/codendi start
@@ -1145,9 +1152,12 @@ $SERVICE crond restart
 # NSCD is the Name Service Caching Daemon.
 # It is very useful when libnss-mysql is used for authentication
 $CHKCONFIG nscd on
-
 $SERVICE nscd start
-$SERVICE munin-node start
+
+if [ "$enable_munin" = "true" ]; then
+    $CHKCONFIG munin-node on
+    $SERVICE munin-node start
+fi
 
 ##############################################
 # Set SELinux contexts and load policies
