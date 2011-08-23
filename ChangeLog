@@ -1,7 +1,7 @@
 Version 4.0.21 - Not Released Yet
     == Bug Fix ==
     * Fix issue with Tuleap theme stylesheet on IE7
-
+    * backlog #95: Forum message is no more reachable
 
 Version 4.0.20 - Wednesday, 10th August 2011
 	== Enhancement ==
