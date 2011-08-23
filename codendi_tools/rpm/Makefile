@@ -97,6 +97,14 @@ codendi-all-deps: codendi-all-deps.spec
 	cp README.all-deps $(RPM_TMP)/SOURCES/
 	rpmbuild -bb $(RPM_TMP)/SPECS/$<
 
+tuleap-all: tuleap-all.spec
+	cat $< |\
+		sed -e 's/@@VERSION@@/$(version)/g' |\
+		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
+		> $(RPM_TMP)/SPECS/$<
+	cp README.all $(RPM_TMP)/SOURCES/
+	rpmbuild -bb $(RPM_TMP)/SPECS/$<
+
 #
 # Rebuild codendi's rpms
 #
