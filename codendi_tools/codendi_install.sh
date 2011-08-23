@@ -525,7 +525,7 @@ fi
 
 # Check if munin is installed
 enable_munin="false"
-if $RPM -q tuleap 2>&1 >/dev/null; then
+if $RPM -q munin 2>&1 >/dev/null; then
     enable_munin="true"
 fi
 
