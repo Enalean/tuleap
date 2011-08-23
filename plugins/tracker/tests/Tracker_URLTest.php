@@ -141,7 +141,7 @@ class Tracker_URLTest extends UnitTestCase {
             $this->url->getObjectFromRequest($request_artifact, $this->user);
         } catch (Exception $e) {
             $exeptionThrown = true;
-            $this->assertIsA($e, 'Tracker_NoMachingRessourceException');
+            $this->assertIsA($e, 'Tracker_NoMachingResourceException');
         }
         $this->assertTrue($exeptionThrown, "Exception not thrown");
     }

@@ -118,12 +118,12 @@ class TrackerManager { /* extends Engine? */
             $url    = $this->getUrl();
             $object = $url->getObjectFromRequest($request, $user);
             $this->processSubElement($object, $request, $user);
-        } catch (Tracker_RessourceDoesntExistException $e) {
+        } catch (Tracker_ResourceDoesntExistException $e) {
              exit_error($GLOBALS['Language']->getText('global', 'error'), $e->getMessage());
         } catch (Tracker_CannotAccessTrackerException $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             $this->displayAllTrackers($object->getTracker()->getProject(), $user);
-        } catch (Tracker_NoMachingRessourceException $e) {
+        } catch (Tracker_NoMachingResourceException $e) {
             //show, admin all trackers
             if ((int)$request->get('group_id')) {
                 $group_id = (int)$request->get('group_id');
