@@ -58,7 +58,7 @@ class Tracker_URL extends URL {
             if (!$tracker_id) {
                 $tracker_id = (int)$request->get('atid');
             }
-            if (($tracker = $this->getTrackerFactory()->getTrackerByid($tracker_id)) && $tracker->isActive()) {
+            if (($tracker = $this->getTrackerFactory()->getTrackerByid($tracker_id))) {
                 return $tracker;
             } else {
                 throw new Tracker_ResourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
