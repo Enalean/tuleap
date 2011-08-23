@@ -24,6 +24,9 @@ Requires: @@PKG_NAME@@-plugin-webdav
 Requires: @@PKG_NAME@@-theme-tuleap
 Requires: @@PKG_NAME@@-customization-default
 
+Requires: vsftpd
+Requires: mysql-server
+
 %description
 This package install all @@PKG_NAME@@ component to have a large view of
 what the platform propose.
