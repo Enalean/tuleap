@@ -65,11 +65,11 @@ class TrackerManager { /* extends Engine? */
     /**
      * Propagate process dispatch to sub-tracker elements
      *
-     * @param Tracker_TrackerCanDispatch_Interface $object
-     * @param Codendi_Request                      $request
-     * @param User                                 $user
+     * @param Tracker_Dispatchable_Interface $object
+     * @param Codendi_Request                $request
+     * @param User                           $user
      */
-    protected function processSubElement(Tracker_TrackerCanDispatch_Interface $object, Codendi_Request $request, User $user) {
+    protected function processSubElement(Tracker_Dispatchable_Interface $object, Codendi_Request $request, User $user) {
         // Tracker related check
         $this->checkUserCanAccessTracker($object->getTracker(), $user);
         $GLOBALS['group_id'] = $object->getTracker()->getGroupId();

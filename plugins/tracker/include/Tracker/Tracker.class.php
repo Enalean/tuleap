@@ -29,9 +29,9 @@ require_once(dirname(__FILE__).'/../workflow/WorkflowManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/widget/Widget_Static.class.php');
 require_once(dirname(__FILE__).'/../tracker_permissions.php');
-require_once('Tracker_TrackerCanDispatch_Interface.class.php');
+require_once('Tracker_Dispatchable_Interface.class.php');
 
-class Tracker implements Tracker_TrackerCanDispatch_Interface {
+class Tracker implements Tracker_Dispatchable_Interface {
 
     public $id;
     public $group_id;
@@ -241,7 +241,7 @@ class Tracker implements Tracker_TrackerCanDispatch_Interface {
     /**
      * Return self
      * 
-     * @see plugins/tracker/include/Tracker/Tracker_TrackerCanDispatch_Interface::getTracker()
+     * @see plugins/tracker/include/Tracker/Tracker_Dispatchable_Interface::getTracker()
      * 
      * @return Tracker
      */

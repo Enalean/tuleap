@@ -24,7 +24,7 @@ require_once 'common/include/URL.class.php';
 require_once 'Tracker_ResourceDoesntExistException.class.php';
 require_once 'Tracker_NoMachingResourceException.class.php';
 require_once 'TrackerFactory.class.php';
-require_once 'Tracker_TrackerCanDispatch_Interface.class.php';
+require_once 'Tracker_Dispatchable_Interface.class.php';
 
 class Tracker_URL extends URL {
     
@@ -34,7 +34,7 @@ class Tracker_URL extends URL {
      * @param Codendi_Request $request The request
      * @param User            $user    Who access the request
      * 
-     * @return Tracker_TrackerCanDispatch_Interface
+     * @return Tracker_Dispatchable_Interface
      */
     function getObjectFromRequest(Codendi_Request $request, User $user) {
         if ((int)$request->get('aid')) {

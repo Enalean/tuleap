@@ -18,12 +18,12 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../Tracker_TrackerCanDispatch_Interface.class.php');
+require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
 
 /**
  * Base interface for all form elements in trackers, from fieldsets to selectboxes
  */
-interface Tracker_FormElement_Interface extends Tracker_TrackerCanDispatch_Interface {
+interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface {
 
     /**
      * @return the label of the formElement (mainly used in admin part)

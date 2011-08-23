@@ -23,21 +23,21 @@
  * All elements that must be dispatched from TrackerManager have to implement this
  * interface.
  */
-interface Tracker_TrackerCanDispatch_Interface {
-    
+interface Tracker_Dispatchable_Interface {
+
     /**
      * Return the tracker the object belongs to
      *
      * @return Tracker
      */
     public function getTracker();
-    
+
     /**
      * Process the request
-     * 
-     * @param TrackerManager         $tracker_manager      The tracker manager
-     * @param Codendi_Request $request      The data coming from the user
-     * @param User            $current_user The user who mades the request
+     *
+     * @param TrackerManager  $trackerManager The tracker manager
+     * @param Codendi_Request $request        The data coming from the user
+     * @param User            $current_user   The user who mades the request
      *
      * @return void
      */
