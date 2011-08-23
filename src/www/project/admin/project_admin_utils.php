@@ -124,13 +124,15 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
 function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
     $filter = " AND 1 ";
     if(!empty($startDate)) {
-    $filter .= " AND group_history.date > '".strtotime($startDate." 00:00:00")."'";
+    list($timestamp,) = util_date_to_unixtime($startDate." 00:00:00");
+    $filter .= " AND group_history.date > '".$timestamp."'";
     }
     if(!empty($endDate)) {
-    $filter .= " AND group_history.date < '".strtotime($endDate." 23:59:59")."'";
+    list($timestamp,) = util_date_to_unixtime($endDate." 23:59:59");
+    $filter .= " AND group_history.date < '".$timestamp."'";
     }
     $um = UserManager::instance();
-    $filter .= $um->getUserFilter($by);
+    $filter .= $um->getUserFilter($by); print "##".$filter;
     return $filter;
 }
 
