@@ -60,10 +60,18 @@ INSTALL='/usr/bin/install'
 CHCON='/usr/bin/chcon'
 SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
 SELINUX_ENABLED=1
-$GREP -i -q '^SELINUX=disabled' /etc/selinux/config
-if [ $? -eq 0 ] || [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] ; then
-   # SELinux not installed
-   SELINUX_ENABLED=0
+if [ -e /etc/selinux/config ]
+then
+	$GREP -i -q '^SELINUX=disabled' /etc/selinux/config
+	if [ $? -eq 0 ] || [ ! -e $CHCON ] ; then
+		# SELinux not installed
+		SELINUX_ENABLED=0
+	fi
+else
+	if [ ! -e $CHCON ] ; then
+		# SELinux not installed
+		SELINUX_ENABLED=0
+	fi
 fi
 
 
@@ -428,15 +436,21 @@ usage() {
     cat <<EOF
 Usage: $1 [options]
 Options:
-  --auto-passwd                  Automaticaly generate random passwords
-  --without-bind-config          Do not setup local DNS server
+  --auto-passwd                    Automaticaly generate random passwords
+  --without-bind-config            Do not setup local DNS server
+  --disable-subdomains		   Disable subdomain
 
   Mysql configuration (if database on remote server):
-  --mysql-host=host              Hostname (or IP) of mysql server
-  --mysql-port=port              Port if not default (3306)
-  --mysql-root-password=password Mysql root user password on remote host
-  --mysql-httpd-host=host        Name or IP of the current server as seen by
-                                 remote host
+  --sys-default-domain=<domain>	   Server Domain name
+  --sys-fullname=<fqdn>            Server fully qualified machine name
+  --sys-ip-address=<ip address>    Server IP address
+  --sys-org-name=<string>          Your Company short name
+  --sys-long-org-name=<string>     Your Company long name
+  --mysql-host=<host>              Hostname (or IP) of mysql server
+  --mysql-port=<integer>           Port if not default (3306)
+  --mysql-root-password=<password> Mysql root user password on remote host
+  --mysql-httpd-host=<host>        Name or IP of the current server as seen by
+                                   remote host
 EOF
     exit 1
 }
@@ -444,45 +458,90 @@ EOF
 ##############################################
 # Codendi installation
 ##############################################
+sys_default_domain=""
+sys_fullname=""
+sys_ip_address=""
+sys_org_name=""
+sys_long_org_name=""
+disable_subdomains=""
 
+auto=""
 auto_passwd=""
 configure_bind=""
 mysql_host=""
 mysql_port=""
 mysql_httpd_host="localhost"
 rt_passwd=""
-for arg in $@; do
-    case "$arg" in
-        --auto-passwd)         auto_passwd="true";;
-        --without-bind-config) configure_bind="false";;
-        --mysql-host=*)
-            mysql_host=$(echo "$arg" | sed -e 's/--mysql-host=//')
-            MYSQL="$MYSQL -h$mysql_host"
-            MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
-            ;;
-        --mysql-port=*)
-            mysql_port=$(echo "$arg" | sed -e 's/--mysql-port=//')
-            MYSQL="$MYSQL -P$mysql_port"
-            MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
-            ;;
-        --mysql-root-password=*)
-            rt_passwd=$(echo "$arg" | sed -e 's/--mysql-root-password=//')
-            ;;
-        --mysql-httpd-host=*)
-            mysql_httpd_host=$(echo "$arg" | sed -e 's/--mysql-httpd-host=//')
-            ;;
-        -*)
-            usage $0
-            ;;
+
+options=`getopt -o h -l auto,auto-passwd,without-bind-config,mysql-host:,mysql-port:,mysql-root-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,disable-subdomains -- "$@"`
+
+if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
+
+eval set -- "$options"
+
+while true
+do
+    case "$1" in
+	--auto)
+		auto_passwd="true";
+		configure_bind="false"
+		disable_subdomains="y"
+		sys_default_domain="`hostname -f`"
+		sys_fullname="`hostname -f`"
+		sys_ip_address="127.0.1.1"
+		sys_org_name="Tuleap"
+		sys_long_org_name="Tuleap ALM"
+		#rt_passwd="`dd if=/dev/urandom count=1 bs=16 2> /dev/null | md5sum | cut -c-32`"
+		auto_passwd="true"
+		mysql_host="localhost"
+		MYSQL="$MYSQL -h$mysql_host"
+		MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
+		shift 1 ;;
+	--auto-passwd)
+		auto_passwd="true";shift 1 ;;
+        --without-bind-config)
+		configure_bind="false";shift 1 ;;
+	--disable-subdomains)
+		disable_subdomains="y"; shift 1 ;;
+	--sys-default-domain)
+		sys_default_domain="$2" ; shift 2 ;;
+	--sys-fullname)
+		sys_fullname="$2" ; shift 2 ;;
+	--sys-ip-address)
+		sys_ip_address="$2" ; shift 2 ;;
+	--sys-org-name)
+		sys_org_name="$2" ; shift 2 ;;
+	--sys-long-org-name)
+		sys_long_org_name="$2" ; shift 2 ;;
+	--mysql-host) 
+		mysql_host="$2";shift 2
+		MYSQL="$MYSQL -h$mysql_host"
+		MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
+		;;
+	--mysql-port)
+		mysql_port="$2";shift 2
+		MYSQL="$MYSQL -P$mysql_port"
+		MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
+		;;
+	--mysql-root-password=*)
+		rt_passwd="$2";shift 2
+		;;
+	--mysql-httpd-host=*)
+		mysql_httpd_host="$2";shift 2 ;;
+	-h|--help)
+		usage $0 ;;
+        --)
+		shift 1; break ;;
+        *)
+		break ;;
     esac
 done
 
 if [ ! -z "$mysql_host" ]; then
     test_mysql_host
 else
-    if ! $RPM -q mysql 2>&1 >/dev/null; then
-	echo "No mysql found, please install package"
-	exit 1
+    if $RPM -q mysql-server 2>&1 >/dev/null; then
+	die "No --mysql-host nor local mysql server installed, exit. Please install 'mysql-server' package"
     fi
 fi
 
@@ -544,12 +603,30 @@ echo "Configuration questions"
 echo
 
 # Ask for domain name and other installation parameters
-read -p "Codendi Domain name: " sys_default_domain
-read -p "Codendi Server fully qualified machine name: " sys_fullname
-read -p "Codendi Server IP address: " sys_ip_address
-read -p "Your Company short name: " sys_org_name
-read -p "Your Company long name: " sys_long_org_name
-read -p "Disable sub-domain management (no DNS delegation)? [y|n]:" disable_subdomains
+if [ -z "$sys_default_domain" ]
+then
+	read -p "Codendi Domain name: " sys_default_domain
+fi
+if [ -z "$sys_fullname" ]
+then
+	read -p "Codendi Server fully qualified machine name: " sys_fullname
+fi
+if [ -z "$sys_ip_address" ]
+then
+	read -p "Codendi Server IP address: " sys_ip_address
+fi
+if [ -z "$sys_org_name" ]
+then
+	read -p "Your Company short name: " sys_org_name
+fi
+if [ -z "$sys_long_org_name" ]
+then
+	read -p "Your Company long name: " sys_long_org_name
+fi
+if [ -z "$disable_subdomains" ]
+then
+	read -p "Disable sub-domain management (no DNS delegation)? [y|n]:" disable_subdomains
+fi
 
 if [ "$disable_subdomains" != "y" ]; then
     if [ "$configure_bind" != "false" ]; then
@@ -961,7 +1038,9 @@ todo "Finish sendmail settings (see installation Guide). By default, emails sent
 
 ##############################################
 # CVS
-setup_cvs
+if $RPM -q cvs 2>&1 >/dev/null; then
+    setup_cvs
+fi
 
 ##############################################
 # Make the system daily cronjob run at 23:58pm
@@ -970,7 +1049,9 @@ $PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 
 ##############################################
 # FTP
-setup_vsftpd
+if $RPM -q vsftpd 2>&1 >/dev/null; then
+    setup_vsftpd
+fi
 
 ##############################################
 # Create the custom default page for the project Web sites
