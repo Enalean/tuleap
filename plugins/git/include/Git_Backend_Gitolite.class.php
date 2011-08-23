@@ -198,8 +198,9 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @param GitRepository $repository
      */
     public function changeRepositoryMailingList($repository) {
-        $this->driver->dumpProjectRepoConf($repository->getProject());
-        return $this->driver->push();
+        $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
+        $this->getDriver()->dumpProjectRepoConf($repository->getProject());
+        return $this->getDriver()->push();
     }
 
     /**
