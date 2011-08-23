@@ -479,6 +479,11 @@ done
 
 if [ ! -z "$mysql_host" ]; then
     test_mysql_host
+else
+    if ! $RPM -q mysql 2>&1 >/dev/null; then
+	echo "No mysql found, please install package"
+	exit 1
+    fi
 fi
 
 ##############################################
@@ -562,7 +567,7 @@ if [ "$auto_passwd" = "true" ]; then
     $CHMOD 0600 $passwd_file
 
     # Mysql Root password (what if remote DB ?)
-    if [ -z "rt_passwd" ]; then
+    if [ -z "$rt_passwd" ]; then
         rt_passwd=$(generate_passwd)
         echo "Mysql root (root): $rt_passwd" >> $passwd_file
     fi
