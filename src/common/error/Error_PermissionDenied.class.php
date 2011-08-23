@@ -40,7 +40,10 @@ abstract class Error_PermissionDenied {
      *
      * @return void
      */
-    function __construct(Url $url) {
+    function __construct(Url $url = null) {
+        if ($url === null) {
+            $url = new URL();
+        }
         $this->url = $url;
     }
 
