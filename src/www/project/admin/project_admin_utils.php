@@ -122,7 +122,8 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
 }
 
 function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
-    $filter = " AND 1 ";
+    $um = UserManager::instance();
+    $filter = $um->getUserFilter($by);
     if(!empty($startDate)) {
         list($timestamp,) = util_date_to_unixtime($startDate." 00:00:00");
         $filter .= " AND group_history.date > '".$timestamp."'";
@@ -134,13 +135,15 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
     if(!empty($value)) {
         $filter .= " AND group_history.old_value LIKE '%".$value."%'";
     }
-    if(!empty($subEventsBox)) {
-        foreach ($subEventsBox as $key => $value) {
-            $filter .= " AND group_history.field_name LIKE '".$key."%'";
+    if(!empty($event)) {
+        if(!empty($subEventsBox)) {
+            $filter .= " AND ( 0 ";
+            foreach ($subEventsBox as $key => $value) {
+                $filter .= " OR group_history.field_name LIKE '".$key."%'";
+            }
+            $filter .= " ) ";
         }
     }
-    $um = UserManager::instance();
-    $filter .= $um->getUserFilter($by);
     return $filter;
 }
 
