@@ -22,6 +22,7 @@ Requires: @@PKG_NAME@@-plugin-im
 Requires: @@PKG_NAME@@-plugin-hudson
 Requires: @@PKG_NAME@@-plugin-webdav
 Requires: @@PKG_NAME@@-theme-tuleap
+Requires: @@PKG_NAME@@-customization-default
 
 %description
 This package install all @@PKG_NAME@@ component to have a large view of
