@@ -12,32 +12,6 @@ require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactTypeFactory.class.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/user/UserHelper.class.php');
-/**
- * Returns filter according to the search pattern 
- *  * 
- * @param String $search 
- * 
- * @return String
- */
-function getUserFilter($search) {
-    $um = UserManager::instance();
-    $userArray = explode(',' , $search);
-    $users = array();
-    foreach ($userArray as $user) {
-        $user = $um->findUser($user);
-        if ($user) {
-            $users[] = $user->getId();
-        }
-    }
-    
-    if (count($users) > 0) {
-        $filter = ' AND user.user_id IN ('.implode (',', $users).')';
-    } else {
-        $filter = ' AND user.user_name LIKE "%'.db_es($search).'%"'; 
-    }
-    return $filter;
-}
-
 
 //	  
 //  get the Group object
@@ -203,7 +177,8 @@ $sql['where'] = " WHERE user.user_id = user_group.user_id
                     AND user_group.group_id = ". db_ei($group_id);
 
 if ($request->exist('search') && $request->get('search') != null) {
-    $sql['filter'] = getUserFilter($search);  
+    $um = UserManager::instance();
+    $sql['filter'] = $um->getUserFilter($search);
 } else {
     $sql['filter'] = '';
 

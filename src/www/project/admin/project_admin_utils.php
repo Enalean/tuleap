@@ -129,9 +129,8 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
     if(!empty($endDate)) {
     $filter .= " AND group_history.date < '".strtotime($endDate." 23:59:59")."'";
     }
-    if(!empty($by)) {
-    $filter .= " AND user.user_name LIKE '%".substr(strstr($by, '('), 1, -1)."%'";
-    }
+    $um = UserManager::instance();
+    $filter .= $um->getUserFilter($by);
     return $filter;
 }
 

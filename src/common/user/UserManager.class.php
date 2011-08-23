@@ -162,7 +162,31 @@ class UserManager {
         
         return $user;
     }
-    
+
+/**
+ * Returns filter according to the search pattern 
+ *  * 
+ * @param String $search 
+ * 
+ * @return String
+ */
+function getUserFilter($search) {
+    $userArray = explode(',' , $search);
+    $users = array();
+    foreach ($userArray as $user) {
+        $user = $this->findUser($user);
+        if ($user) {
+            $users[] = $user->getId();
+        }
+    }
+    if (count($users) > 0) {
+        $filter = ' AND user.user_id IN ('.implode (',', $users).')';
+    } else {
+        $filter = ' AND user.user_name LIKE "%'.db_es($search).'%"'; 
+    }
+    return $filter;
+}
+
     /**
      * Returns the user that have the given email address.
      * Returns null if no account is found.
