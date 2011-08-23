@@ -121,7 +121,7 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
     return db_query($sql);
 }
 
-function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
+function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $all_sub_events = null) {
     $um = UserManager::instance();
     $filter = $um->getUserFilter($by);
     if(!empty($startDate)) {
@@ -136,13 +136,18 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
         $filter .= " AND group_history.old_value LIKE '%".$value."%'";
     }
     if(!empty($event)) {
+        $filter .= " AND ( 0 ";
         if(!empty($subEventsBox)) {
-            $filter .= " AND ( 0 ";
             foreach ($subEventsBox as $key => $value) {
                 $filter .= " OR group_history.field_name LIKE '".$key."%'";
             }
-            $filter .= " ) ";
+        } else {
+            $subEventsBox = explode(",", $all_sub_events);
+            foreach ($subEventsBox as $key => $value) {
+                $filter .= " OR group_history.field_name LIKE '".$value."%'";
+            }
         }
+        $filter .= " ) ";
     }
     return $filter;
 }
@@ -154,14 +159,14 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
  * @param Intager $limit
  * 
 */
-function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
+function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $all_sub_events = null) {
     /*
      show the group_history rows that are relevant to
      this group_id
      */
     global $Language;
 
-    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
+    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by, $all_sub_events);
     $res = group_get_history($offset, $limit, $group_id, $history_filter);
 
     $hp =& Codendi_HTMLPurifier::instance();
@@ -230,7 +235,6 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
               <TH style="text-align:left">'.$Language->getText('global','by').'</TH>
               <TR VALIGN="TOP"><TD>';
 
-
         //Event select Box
         echo '<select name="events_box" id="events_box">
               <Option value="Any"';
@@ -279,7 +283,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo '</TD>
               <TD><INPUT TYPE="TEXT" NAME="by" ID="by" CLASS="by" VALUE="'.$by.'"></TD>
               </TR>';
-
+        echo '<TR><TD id="events_array"></TD></TR>';
         echo '<TR><TD><INPUT TYPE="SUBMIT" NAME="filter"></TD></TR>
               </TABLE>';
         echo'<P>';

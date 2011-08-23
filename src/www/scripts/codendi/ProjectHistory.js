@@ -46,70 +46,120 @@ var ProjectHistory = Class.create({
         //Try to use a loop instead
         //Permission section
         if ($('events_box').value == 'Permissions') {
-            this.addOption("perm_reset_for_field", selected_sub_events['perm_reset_for_field']);
-            this.addOption("perm_reset_for_tracker", selected_sub_events['perm_reset_for_tracker']);
-            this.addOption("perm_reset_for_package", selected_sub_events['perm_reset_for_package']);
-            this.addOption("perm_reset_for_release", selected_sub_events['perm_reset_for_release']);
-            this.addOption("perm_reset_for_document", selected_sub_events['perm_reset_for_document']);
-            this.addOption("perm_reset_for_folder", selected_sub_events['perm_reset_for_folder']);
-            this.addOption("perm_reset_for_docgroup", selected_sub_events['perm_reset_for_docgroup']);
-            this.addOption("perm_reset_for_wiki", selected_sub_events['perm_reset_for_wiki']);
-            this.addOption("perm_reset_for_wikipage", selected_sub_events['perm_reset_for_wikipage']);
-            this.addOption("perm_reset_for_wikiattachment", selected_sub_events['perm_reset_for_wikiattachment']);
-            this.addOption("perm_reset_for_object", selected_sub_events['perm_reset_for_object']);
-            this.addOption("perm_granted_for_field", selected_sub_events['perm_granted_for_field']);
-            this.addOption("perm_granted_for_tracker", selected_sub_events['perm_granted_for_tracker']);
-            this.addOption("perm_granted_for_package", selected_sub_events['perm_granted_for_package']);
-            this.addOption("perm_granted_for_release", selected_sub_events['perm_granted_for_release']);
-            this.addOption("perm_granted_for_document", selected_sub_events['perm_granted_for_document']);
-            this.addOption("perm_granted_for_folder", selected_sub_events['perm_granted_for_folder']);
-            this.addOption("perm_granted_for_docgroup", selected_sub_events['perm_granted_for_docgroup']);
-            this.addOption("perm_granted_for_wiki", selected_sub_events['perm_granted_for_wiki']);
-            this.addOption("perm_granted_for_wikipage", selected_sub_events['perm_granted_for_wikipage']);
-            this.addOption("perm_granted_for_wikiattachment", selected_sub_events['perm_granted_for_wikiattachment']);
-            this.addOption("perm_granted_for_object", selected_sub_events['perm_granted_for_object']);
+            PermissionsSubEvents = this.getPermissionsSubEventsInArray();
+            $('events_array').update('<INPUT TYPE="HIDDEN" NAME="all_sub_events" ID="all_sub_events" VALUE="'+PermissionsSubEvents+'">');
+            $('events_array').innerHTML;
+            for (var i = 0; i < PermissionsSubEvents.length; ++i) {
+                 this.addOption(PermissionsSubEvents[i], selected_sub_events[PermissionsSubEvents[i]]);
+            }
         }
 
         //Project section
         if ($('events_box').value == "Project") {
-            this.addOption("rename_done", selected_sub_events['rename_done']);
-            this.addOption("rename_with_error", selected_sub_events['rename_with_error']);
-            this.addOption("approved", selected_sub_events['approved']);
-            this.addOption("deleted", selected_sub_events['deleted']);
-            this.addOption("rename_request", selected_sub_events['rename_request']);
-            this.addOption("is_public", selected_sub_events['is_public']);
-            this.addOption("group_type", selected_sub_events['group_type']);
-            this.addOption("http_domain", selected_sub_events['http_domain']);
-            this.addOption("unix_box", selected_sub_events['unix_box']);
-            this.addOption("changed_public_info", selected_sub_events['changed_public_info']);
-            this.addOption("changed_trove", selected_sub_events['changed_trove']);
-            this.addOption("membership_request_updated", selected_sub_events['membership_request_updated']);
-            this.addOption("import", selected_sub_events['import']);
-            this.addOption("mass_change", selected_sub_events['mass_change']);
+            ProjectSubEvents = this.getProjectSubEventsInArray();
+            $('events_array').update('<INPUT TYPE="HIDDEN" NAME="all_sub_events" ID="all_sub_events" VALUE="'+ProjectSubEvents+'">');
+            $('events_array').innerHTML;
+            for (var i = 0; i < ProjectSubEvents.length; ++i) {
+                 this.addOption(ProjectSubEvents[i], selected_sub_events[ProjectSubEvents[i]]);
+            }
         }
 
         //User group section
        if ($('events_box').value == "User Group") {
-            this.addOption("upd_ug", selected_sub_events['upd_ug']);
-            this.addOption("del_ug", selected_sub_events['del_ug']);
-            this.addOption("changed_member_perm", selected_sub_events['changed_member_perm']);
+           UserGroupSubEvents = this.getUserGroupSubEventsInArray();
+           $('events_array').update('<INPUT TYPE="HIDDEN" NAME="all_sub_events" ID="all_sub_events" VALUE="'+UserGroupSubEvents+'">');
+           $('events_array').innerHTML;
+           for (var i = 0; i < UserGroupSubEvents.length; ++i) {
+                this.addOption(UserGroupSubEvents[i], selected_sub_events[UserGroupSubEvents[i]]);
+           }
         }
 
         //Users section
         if ($('events_box').value == "Users") {
-            this.addOption("changed_personal_email_notif", selected_sub_events['changed_personal_email_notif']);
-            this.addOption("added_user", selected_sub_events['added_user']);
-            this.addOption("removed_user", selected_sub_events['removed_user']);
+            UsersSubEvents = this.getUsersSubEventsInArray();
+            $('events_array').update('<INPUT TYPE="HIDDEN" NAME="all_sub_events" ID="all_sub_events" VALUE="'+UsersSubEvents+'">');
+            $('events_array').innerHTML;
+            for (var i = 0; i < UsersSubEvents.length; ++i) {
+                 this.addOption(UsersSubEvents[i], selected_sub_events[UsersSubEvents[i]]);
+            }
         }
 
         //Uncatogorised items section
         if ($('events_box').value == "Others") {
-            this.addOption("changed_bts_form_message", selected_sub_events['changed_bts_form_message']);
-            this.addOption("changed_bts_allow_anon", selected_sub_events['changed_bts_allow_anon']);
-            this.addOption("changed_patch_mgr_settings", selected_sub_events['changed_patch_mgr_settings']);
-            this.addOption("changed_task_mgr_other_settings", selected_sub_events['changed_task_mgr_other_settings']);
-            this.addOption("changed_sr_settings", selected_sub_events['changed_sr_settings']);
+            OthersSubEvents = this.getOthersSubEventsInArray();
+            $('events_array').update('<INPUT TYPE="HIDDEN" NAME="all_sub_events" ID="all_sub_events" VALUE="'+OthersSubEvents+'">');
+            $('events_array').innerHTML;
+            for (var i = 0; i < OthersSubEvents.length; ++i) {
+                 this.addOption(OthersSubEvents[i], selected_sub_events[OthersSubEvents[i]]);
+            }
         }
+    },
+    getPermissionsSubEventsInArray: function() {
+        var PermissionsSubEvents = new Array();
+        PermissionsSubEvents.push("perm_reset_for_field");
+        PermissionsSubEvents.push("perm_reset_for_tracker");
+        PermissionsSubEvents.push("perm_reset_for_package");
+        PermissionsSubEvents.push("perm_reset_for_release");
+        PermissionsSubEvents.push("perm_reset_for_document");
+        PermissionsSubEvents.push("perm_reset_for_folder");
+        PermissionsSubEvents.push("perm_reset_for_docgroup");
+        PermissionsSubEvents.push("perm_reset_for_wiki");
+        PermissionsSubEvents.push("perm_reset_for_wikipage");
+        PermissionsSubEvents.push("perm_reset_for_wikiattachment");
+        PermissionsSubEvents.push("perm_reset_for_object");
+        PermissionsSubEvents.push("perm_granted_for_field");
+        PermissionsSubEvents.push("perm_granted_for_tracker");
+        PermissionsSubEvents.push("perm_granted_for_package");
+        PermissionsSubEvents.push("perm_granted_for_release");
+        PermissionsSubEvents.push("perm_granted_for_document");
+        PermissionsSubEvents.push("perm_granted_for_folder");
+        PermissionsSubEvents.push("perm_granted_for_docgroup");
+        PermissionsSubEvents.push("perm_granted_for_wiki");
+        PermissionsSubEvents.push("perm_granted_for_wikipage");
+        PermissionsSubEvents.push("perm_granted_for_wikiattachment");
+        PermissionsSubEvents.push("perm_granted_for_object");
+        return PermissionsSubEvents;
+    },
+    getProjectSubEventsInArray: function() {
+        var ProjectSubEvents = new Array();
+        ProjectSubEvents.push("rename_done");
+        ProjectSubEvents.push("rename_with_error");
+        ProjectSubEvents.push("approved");
+        ProjectSubEvents.push("deleted");
+        ProjectSubEvents.push("rename_request");
+        ProjectSubEvents.push("is_public");
+        ProjectSubEvents.push("group_type");
+        ProjectSubEvents.push("http_domain");
+        ProjectSubEvents.push("unix_box");
+        ProjectSubEvents.push("changed_public_info");
+        ProjectSubEvents.push("changed_trove");
+        ProjectSubEvents.push("membership_request_updated");
+        ProjectSubEvents.push("import");
+        ProjectSubEvents.push("mass_change");
+        return ProjectSubEvents;
+    },
+    getUserGroupSubEventsInArray: function() {
+        var UserGroupSubEvents = new Array();
+        UserGroupSubEvents.push("upd_ug");
+        UserGroupSubEvents.push("del_ug");
+        UserGroupSubEvents.push("changed_member_perm");
+        return UserGroupSubEvents;
+    },
+    getUsersSubEventsInArray: function() {
+        var UsersSubEvents = new Array();
+        UsersSubEvents.push("changed_personal_email_notif");
+        UsersSubEvents.push("added_user");
+        UsersSubEvents.push("removed_user");
+        return UsersSubEvents;
+    },
+    getOthersSubEventsInArray: function() {
+        var OthersSubEvents = new Array();
+        OthersSubEvents.push("changed_bts_form_message");
+        OthersSubEvents.push("changed_bts_allow_anon");
+        OthersSubEvents.push("changed_patch_mgr_settings");
+        OthersSubEvents.push("changed_task_mgr_other_settings");
+        OthersSubEvents.push("changed_sr_settings");
+        return OthersSubEvents;
     },
     removeAllOptions: function(selectbox) {
         var i;

@@ -98,8 +98,10 @@ project_admin_header(array('title'=>$Language->getText('project_admin_history','
 
 echo $Language->getText('project_admin_history','proj_change_log_msg');
 
+$all_sub_events = $request->get('all_sub_events');
+
 //for pagination
-echo show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by);
+echo show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by, $all_sub_events);
 
 project_admin_footer(array());
 ?>
