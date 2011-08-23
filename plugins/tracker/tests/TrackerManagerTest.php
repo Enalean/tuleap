@@ -124,7 +124,7 @@ class TrackerManagerTest extends UnitTestCase {
         $request_artifact->setReturnValue('get', '1', array('aid'));
         $this->artifact->setReturnValue('userCanView', true);
         $this->tracker->setReturnValue('userCanView', true);
-        $this->url->setReturnValue('getObjectFromRequest', $this->artifact);
+        $this->url->setReturnValue('getDispatchableFromRequest', $this->artifact);
         $this->tm->process($request_artifact, $this->user);
     }
     
@@ -136,7 +136,7 @@ class TrackerManagerTest extends UnitTestCase {
         
         $request_artifact = new MockCodendi_Request($this);
         $this->tracker->setReturnValue('userCanView', true);
-        $this->url->setReturnValue('getObjectFromRequest', $this->report);
+        $this->url->setReturnValue('getDispatchableFromRequest', $this->report);
         $this->tm->process($request_artifact, $this->user);
     }
     
@@ -151,7 +151,7 @@ class TrackerManagerTest extends UnitTestCase {
         
         $request_artifact = new MockCodendi_Request($this);
         
-        $this->url->setReturnValue('getObjectFromRequest', $this->tracker);
+        $this->url->setReturnValue('getDispatchableFromRequest', $this->tracker);
         $this->tm->process($request_artifact, $this->user);
     }
     
@@ -169,7 +169,7 @@ class TrackerManagerTest extends UnitTestCase {
         
         $request_artifact = new MockCodendi_Request($this);
         
-        $this->url->setReturnValue('getObjectFromRequest', $this->tracker);
+        $this->url->setReturnValue('getDispatchableFromRequest', $this->tracker);
         $this->tm->process($request_artifact, $this->user);
     }
     
@@ -183,7 +183,7 @@ class TrackerManagerTest extends UnitTestCase {
         $request_artifact->setReturnValue('get', '4', array('formElement'));
         $request_artifact->setReturnValue('get', '5', array('group_id'));
         $this->tracker->setReturnValue('userCanView', true);
-        $this->url->setReturnValue('getObjectFromRequest', $this->formElement);
+        $this->url->setReturnValue('getDispatchableFromRequest', $this->formElement);
         $this->tm->process($request_artifact, $this->user);
     }
     

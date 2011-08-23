@@ -36,7 +36,7 @@ class Tracker_URL extends URL {
      * 
      * @return Tracker_Dispatchable_Interface
      */
-    function getObjectFromRequest(Codendi_Request $request, User $user) {
+    function getDispatchableFromRequest(Codendi_Request $request, User $user) {
         if ((int)$request->get('aid')) {
             if ($artifact = $this->getArtifactFactory()->getArtifactByid($request->get('aid'))) {
                 return $artifact;
@@ -97,7 +97,7 @@ class Tracker_URL extends URL {
         $user    = UserManager::instance()->getCurrentUser();
 
         try {
-            $object = $this->getObjectFromRequest($request, $user);
+            $object = $this->getDispatchableFromRequest($request, $user);
             if ($object instanceof Tracker) {
                 $tracker = $object;
             } else {

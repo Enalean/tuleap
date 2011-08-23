@@ -98,7 +98,7 @@ class Tracker_URLTest extends UnitTestCase {
         $request_artifact->setReturnValue('get', 3, array('tracker'));
         $request_artifact->setReturnValue('get', '4', array('formElement'));
         $request_artifact->setReturnValue('get', '5', array('group_id'));
-        $this->assertIsA($this->url->getObjectFromRequest($request_artifact, $this->user), 'Tracker_Artifact');
+        $this->assertIsA($this->url->getDispatchableFromRequest($request_artifact, $this->user), 'Tracker_Artifact');
     }
     
     public function testGetReport() {
@@ -107,7 +107,7 @@ class Tracker_URLTest extends UnitTestCase {
         $request_artifact->setReturnValue('get', 3, array('tracker'));
         $request_artifact->setReturnValue('get', '4', array('formElement'));
         $request_artifact->setReturnValue('get', '5', array('group_id'));
-        $this->assertIsA($this->url->getObjectFromRequest($request_artifact, $this->user), 'Tracker_Report');
+        $this->assertIsA($this->url->getDispatchableFromRequest($request_artifact, $this->user), 'Tracker_Report');
     }
     
     public function testGetTracker() {
@@ -115,7 +115,7 @@ class Tracker_URLTest extends UnitTestCase {
         $request_artifact->setReturnValue('get', 3, array('tracker'));
         $request_artifact->setReturnValue('get', '4', array('formElement'));
         $request_artifact->setReturnValue('get', '5', array('group_id'));
-        $this->assertIsA($this->url->getObjectFromRequest($request_artifact, $this->user), 'Tracker');
+        $this->assertIsA($this->url->getDispatchableFromRequest($request_artifact, $this->user), 'Tracker');
     }
     
     public function testGetTrackerWithAtid() {
@@ -123,14 +123,14 @@ class Tracker_URLTest extends UnitTestCase {
         $request_artifact->setReturnValue('get', 3, array('atid'));
         $request_artifact->setReturnValue('get', '4', array('formElement'));
         $request_artifact->setReturnValue('get', '5', array('group_id'));
-        $this->assertIsA($this->url->getObjectFromRequest($request_artifact, $this->user), 'Tracker');
+        $this->assertIsA($this->url->getDispatchableFromRequest($request_artifact, $this->user), 'Tracker');
     }
     
     public function testGetField() {
         $request_artifact = new MockCodendi_Request($this);
         $request_artifact->setReturnValue('get', '4', array('formElement'));
         $request_artifact->setReturnValue('get', '5', array('group_id'));
-        $this->assertIsA($this->url->getObjectFromRequest($request_artifact, $this->user), 'Tracker_FormElement_Interface');
+        $this->assertIsA($this->url->getDispatchableFromRequest($request_artifact, $this->user), 'Tracker_FormElement_Interface');
     }
     
     public function testGetNotMatchingElement() {
@@ -138,7 +138,7 @@ class Tracker_URLTest extends UnitTestCase {
         $request_artifact->setReturnValue('get', '5', array('group_id'));
         $exeptionThrown = false;
         try {
-            $this->url->getObjectFromRequest($request_artifact, $this->user);
+            $this->url->getDispatchableFromRequest($request_artifact, $this->user);
         } catch (Exception $e) {
             $exeptionThrown = true;
             $this->assertIsA($e, 'Tracker_NoMachingResourceException');

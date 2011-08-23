@@ -116,7 +116,7 @@ class TrackerManager { /* extends Engine? */
     public function process($request, $user) {
         try {
             $url    = $this->getUrl();
-            $object = $url->getObjectFromRequest($request, $user);
+            $object = $url->getDispatchableFromRequest($request, $user);
             $this->processSubElement($object, $request, $user);
         } catch (Tracker_ResourceDoesntExistException $e) {
              exit_error($GLOBALS['Language']->getText('global', 'error'), $e->getMessage());
