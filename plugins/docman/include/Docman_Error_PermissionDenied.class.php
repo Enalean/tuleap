@@ -24,6 +24,15 @@ require_once('Docman_ItemFactory.class.php');
 
 
 class Docman_Error_PermissionDenied extends Error_PermissionDenied {
+    
+        /**
+     * Constructor of the class
+     *
+     * @return void
+     */
+    function __construct() {
+        parent::__construct();
+    }
 
     function getType() {
         return 'docman_permission_denied';

@@ -29,7 +29,7 @@ require_once(dirname(__FILE__).'/../Docman_Error_PermissionDenied.class.php');
 class Docman_View_PermissionDeniedError extends Docman_View_DocmanError {
     function display($params = array()) {
         site_header(array('title'=>$GLOBALS['Language']->getText('include_exit','exit_error')));
-        $sendMail = new Docman_Error_PermissionDenied(new URL());
+        $sendMail = new Docman_Error_PermissionDenied();
         $sendMail->buildInterface();
         $GLOBALS['HTML']->footer(array('showfeedback' => false));
         exit;
