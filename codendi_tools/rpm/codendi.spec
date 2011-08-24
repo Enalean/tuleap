@@ -398,6 +398,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
 %{__install} plugins/git/bin/gl-membership.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 
+# Plugin tracker
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
+
 ##
 ## On package install
 ##
