@@ -226,4 +226,5 @@ document.observe('dom:loaded', function () {
 
 });
 
+codendi.Tooltip.selectors.push('a[class=direct-link-to-artifact]');
 

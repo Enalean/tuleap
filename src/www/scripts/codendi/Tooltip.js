@@ -105,8 +105,11 @@ codendi.Tooltip = Class.create({
         }
     }
 });
+
+codendi.Tooltip.selectors = ['a[class=cross-reference]'];
+
 codendi.Tooltip.load = function (element) {
-    $(element).select('a[class=cross-reference]', 'a[class=direct-link-to-artifact]').each(function (a) {
+    $(element).select.apply(element, codendi.Tooltip.selectors).each(function (a) {
         codendi.Tooltips.push(new codendi.Tooltip(a, a.href));
     });
 };
