@@ -84,6 +84,7 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertFalse($repo->isDotGit('default.conf'));
         $this->assertFalse($repo->isDotGit('d'));
         $this->assertFalse($repo->isDotGit('defaultgit'));
+        $this->assertFalse($repo->isDotGit('default.git.old'));
     }
 
 }
