@@ -2749,24 +2749,6 @@ INSERT INTO reference SET \
 --   17 folder
 --   18 dossier
 
-
-INSERT INTO reference SET 
-    id='20',        
-    keyword='slmbug', 
-    description='reference_slmbug_desc_key', 
-    link='/tracker/?func=detail&aid=$1&group_id=$group_id', 
-    scope='S', 
-    service_short_name='tracker', \
-    nature='artifact';
-INSERT INTO reference SET 
-    id='21',        
-    keyword='story', 
-    description='reference_story_desc_key', 
-    link='/tracker/?func=detail&aid=$1&group_id=$group_id', 
-    scope='S', 
-    service_short_name='tracker', \
-    nature='artifact';
-    
 -- Site-wide references
 
 INSERT INTO reference SET \
