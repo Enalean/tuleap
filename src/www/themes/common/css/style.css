@@ -128,7 +128,7 @@ fieldset {
 }
 td.matrix_cell.matrix_highlight_col,
 tr.boxitem:hover {
-    background-color: #eaece0;
+    background-color: #fffff0;
 }
 td.matrix_cell.matrix_highlight_col,
 tr.boxitemalt:hover {
