@@ -506,8 +506,20 @@ class TrackerFactory {
                 }
             }
         }
-
-        EventManager::instance()->processEvent(Event::TRACKERS_DUPLICATED, array(
+        
+        
+        /**
+         * The trackers from a project have been duplicated in another project
+         *
+         * Parameters:
+         * 'reportMapping'  => The mapping between source and target project trackers reports
+         * 'trackerMapping' => The mapping between source and target project trackers
+         * 'ugroupsMapping' => The mapping between source and target project ugroups
+         * 'group_id        => The id of the target project
+         *
+         * No expected results
+         */
+        EventManager::instance()->processEvent('trackers_duplicated', array(
                 'reportMapping'  => $report_mapping,
                 'trackerMapping' => $tracker_mapping,
                 'ugroupsMapping' => $ugroup_mapping,

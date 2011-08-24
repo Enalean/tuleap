@@ -155,19 +155,6 @@ class Event {
      * No expected results
      */
     const PROJECT_RENAME = 'project_rename';
-    
-    /**
-     * The trackers from a project have been duplicated in another project
-     *
-     * Parameters:
-     * 'reportMapping'  => The mapping between source and target project trackers reports
-     * 'trackerMapping' => The mapping between source and target project trackers
-     * 'ugroupsMapping' => The mapping between source and target project ugroups
-     * 'group_id        => The id of the target project
-     *
-     * No expected results
-     */
-    const TRACKERS_DUPLICATED = 'trackers_duplicated';
 
     /**
      * User name changed
