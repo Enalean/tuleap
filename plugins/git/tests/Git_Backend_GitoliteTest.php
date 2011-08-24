@@ -83,6 +83,14 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $this->assertFalse($backend->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/../../default.conf'));
         $this->assertFalse($backend->isSubPath('_fixtures/perms/', 'coincoin'));
     }
+    
+    public function testDeletionShoultAffectDotGit() {
+        $backend = new Git_Backend_Gitolite(null);
+        $this->assertTrue($backend->isDotGit('default.git'));
+        $this->assertFalse($backend->isDotGit('default.conf'));
+        $this->assertFalse($backend->isDotGit('d'));
+        $this->assertFalse($backend->isDotGit('defaultgit'));
+    }
 }
 
 ?>

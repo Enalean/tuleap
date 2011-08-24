@@ -297,7 +297,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         
         $referencePath = $this->getDriver()->getRepositoriesPath().'/'.$repository->getProject()->getUnixName();
         
-        if ($this->isSubPath($referencePath, $path)) {
+        if ($this->isSubPath($referencePath, $path) && $this->isDotGit($path)) {
             if ($this->getDao()->delete($repository) && $this->deletePermissions($repository)) {
                 $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
                 $this->getDriver()->dumpProjectRepoConf($repository->getProject());
@@ -347,6 +347,17 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             return true;
         }
         return false;
+    }
+    
+    /**
+     * Check if path contains .git at the end
+     *
+     * @param String $path
+     *
+     * @return Boolean
+     */
+    public function isDotGit($path) {
+        return (substr($path, -4) == '.git');
     }
 }
 
