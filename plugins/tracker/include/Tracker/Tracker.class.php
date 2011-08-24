@@ -696,7 +696,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 $GLOBALS['Response']->addFeedback(
                     'warning', 
                     $GLOBALS['Language']->getText(
-                        'tracker', 
+                        'plugin_tracker', 
                         'linked_to', 
                         array(
                             $link, 
