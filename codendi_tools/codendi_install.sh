@@ -540,7 +540,7 @@ done
 if [ ! -z "$mysql_host" ]; then
     test_mysql_host
 else
-    if $RPM -q mysql-server 2>&1 >/dev/null; then
+    if ! $RPM -q mysql-server 2>&1 >/dev/null; then
 	die "No --mysql-host nor local mysql server installed, exit. Please install 'mysql-server' package"
     fi
 fi
@@ -583,7 +583,7 @@ fi
 
 # Check if mailman is installed
 enable_core_mailman="false"
-if $RPM -q mailman | $GREP codendi 2>&1 >/dev/null; then
+if $RPM -q mailman-tuleap; then
     enable_core_mailman="true"
 fi
 
@@ -1038,7 +1038,7 @@ todo "Finish sendmail settings (see installation Guide). By default, emails sent
 
 ##############################################
 # CVS
-if $RPM -q cvs 2>&1 >/dev/null; then
+if $RPM -q cvs-tuleap 2>&1 >/dev/null; then
     setup_cvs
 fi
 
