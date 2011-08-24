@@ -74,23 +74,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $this->assertFalse(is_dir($this->fixtureRenamePath .'/legacy'));
         $this->assertTrue(is_dir($this->fixtureRenamePath .'/newone'));
     }
-    
-    public function testDeletionPathShouldBeInProjectPath() {
-        $backend = new Git_Backend_Gitolite(null);
-        $this->assertTrue($backend->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/default.conf'));
-        $this->assertTrue($backend->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/tmp/perms/default.conf'));
-        
-        $this->assertFalse($backend->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/../../default.conf'));
-        $this->assertFalse($backend->isSubPath('_fixtures/perms/', 'coincoin'));
-    }
-    
-    public function testDeletionShoultAffectDotGit() {
-        $backend = new Git_Backend_Gitolite(null);
-        $this->assertTrue($backend->isDotGit('default.git'));
-        $this->assertFalse($backend->isDotGit('default.conf'));
-        $this->assertFalse($backend->isDotGit('d'));
-        $this->assertFalse($backend->isDotGit('defaultgit'));
-    }
+
 }
 
 ?>

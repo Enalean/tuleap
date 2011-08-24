@@ -25,6 +25,14 @@ require_once(dirname(__FILE__).'/../include/GitBackend.class.php');
 Mock::generate('GitBackend');
 
 class GitRepositoryTest extends UnitTestCase {
+    
+    public function setUp() {
+        symlink(dirname(__FILE__).'/_fixtures/perms', dirname(__FILE__).'/_fixtures/tmp/perms');
+    }
+    
+    public function tearDown() {
+        unlink(dirname(__FILE__).'/_fixtures/tmp/perms');
+    }
 
     public function test_isNameValid() {
         $gitolite = new MockGit_Backend_Gitolite();
@@ -59,7 +67,24 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertFalse($repo->isNameValid('jambon...beurre'));
         $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
     }
-
+    
+        
+    public function testDeletionPathShouldBeInProjectPath() {
+        $repo = new GitRepository();
+        $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/default.conf'));
+        $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/tmp/perms/default.conf'));
+        
+        $this->assertFalse($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/../../default.conf'));
+        $this->assertFalse($repo->isSubPath('_fixtures/perms/', 'coincoin'));
+    }
+    
+    public function testDeletionShoultAffectDotGit() {
+        $repo = new GitRepository();
+        $this->assertTrue($repo->isDotGit('default.git'));
+        $this->assertFalse($repo->isDotGit('default.conf'));
+        $this->assertFalse($repo->isDotGit('d'));
+        $this->assertFalse($repo->isDotGit('defaultgit'));
+    }
 
 }
 
