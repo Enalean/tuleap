@@ -339,7 +339,7 @@ function frs_display_package_form(&$package, $title, $url, $siblings) {
     if ($nb_siblings && ($nb_siblings > 1 || $siblings[0] != $package->getPackageId())) {
         echo '</td></tr>';
         echo '<tr><th>'.$GLOBALS['Language']->getText('file_admin_editpackages','rank_on_screen').':</th><td>';
-        $GLOBALS['HTML']->selectRank($package->getPackageId(), $package->getRank(), $siblings, array('name' => 'package[rank]'));
+        echo $GLOBALS['HTML']->selectRank($package->getPackageId(), $package->getRank(), $siblings, array('name' => 'package[rank]'));
     } else {
         echo '<input type="hidden" name="package[rank]" value="0" />';
     }
