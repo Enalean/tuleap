@@ -195,8 +195,11 @@ class Event {
 
     /**
      * Display javascript snippets in the page footer (just before </body>)
+     *
      * No Parameters.
-     * No expected results
+     * 
+     * Expected result:
+     *   Javascript snippets are directly output to the browser
      */
     const JAVASCRIPT_FOOTER = 'javascript_footer';
     
@@ -223,7 +226,7 @@ class Event {
     const COMBINED_SCRIPTS = 'combined_scripts';
     
     /**
-     * Display javascript snippets
+     * Display javascript snippets in the page header (<head>)
      *
      * No Parameters.
      * 
