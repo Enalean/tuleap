@@ -116,28 +116,28 @@ class trackerPlugin extends Plugin {
         if (!$params['name']) {
             switch($params['permission_type']) {
             case 'PLUGIN_TRACKER_FIELD_SUBMIT':
-                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_field_submit');
+                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_submit');
                 break;
             case 'PLUGIN_TRACKER_FIELD_READ':
-                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_field_read');
+                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_read');
                 break;
             case 'PLUGIN_TRACKER_FIELD_UPDATE':
-                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_field_update');
+                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_field_update');
                 break;
             case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
-                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_submitter_access');
+                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_submitter_access');
                 break;
             case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
-                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_assignee_access');
+                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_assignee_access');
                 break;
             case 'PLUGIN_TRACKER_ACCESS_FULL':
-                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_full_access');
+                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_full_access');
                 break;
             case 'PLUGIN_TRACKER_ADMIN':
-                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_admin');
+                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_admin');
                 break;
             case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
-                $params['name'] = $GLOBALS['Language']->getText('project_admin_permissions','tracker_artifact_access');
+                $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions','plugin_tracker_artifact_access');
                 break;
             case 'PLUGIN_TRACKER_WORKFLOW_TRANSITION':
                 $params['name'] = $GLOBALS['Language']->getText('workflow_admin','permissions_transition');
