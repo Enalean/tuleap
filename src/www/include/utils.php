@@ -1274,9 +1274,10 @@ function util_return_to($url) {
 }
 
 
-/* 
+/**
 * return the apporximate distance between a time and now 
 * inspired from ActionView::Helpers::DateHelper in RubyOnRails
+* @deprecated Use DateHelper::timeAgoInWords() instead
 */
 function util_time_ago_in_words($time, $include_seconds = false) {
     if ($time) {
@@ -1285,6 +1286,10 @@ function util_time_ago_in_words($time, $include_seconds = false) {
         return '-';
     }
 }
+
+/**
+ * @deprecated Use DateHelper::distanceOfTimeInWords() instead
+ */
 function util_distance_of_time_in_words($from_time, $to_time, $include_seconds = false) {    
     $distance_in_minutes = round((abs($to_time - $from_time))/60);
     $distance_in_seconds = round(abs($to_time - $from_time));
