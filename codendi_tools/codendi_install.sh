@@ -22,7 +22,7 @@ cd "${scriptdir}";TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remo
 RPMS_DIR="${TOP_DIR}/RPMS_Codendi"
 nonRPMS_DIR="${TOP_DIR}/nonRPMS_Codendi"
 Codendi_DIR="${TOP_DIR}/Codendi"
-TODO_FILE=/root/todo_codendi.txt
+TODO_FILE=/root/todo_tuleap.txt
 export INSTALL_DIR="/usr/share/codendi"
 
 # path to command line tools
@@ -176,13 +176,13 @@ EOF
 setup_vsftpd() {
     # Configure vsftpd
     $PERL -i'.orig' -p -e "s/^#anon_upload_enable=YES/anon_upload_enable=YES/g" /etc/vsftpd/vsftpd.conf 
-    $PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Codendi FTP service./g" /etc/vsftpd/vsftpd.conf 
+    $PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Tuleap FTP service./g" /etc/vsftpd/vsftpd.conf 
     $PERL -pi -e "s/^local_umask=.*/local_umask=002/g" /etc/vsftpd/vsftpd.conf 
 
     # Add welcome messages
     $CAT <<'EOF' > /var/lib/codendi/ftp/.message
 ********************************************************************
-Welcome to Codendi FTP server
+Welcome to Tuleap FTP server
 
 On This Site:
 /incoming          Place where to upload your new file release
@@ -258,7 +258,7 @@ setup_bind() {
   substitute '/var/named/chroot/var/named/codendi.zone' '%sys_shortname%' "$sys_shortname"
   substitute '/var/named/chroot/var/named/codendi.zone' '%dns_serial%' "$dns_serial"
 
-  todo "Create the DNS configuration files as explained in the Codendi Installation Guide:"
+  todo "Create the DNS configuration files as explained in the Tuleap Installation Guide:"
   todo "    update /var/named/chroot/var/named/codendi.zone - replace all words starting with %%."
   todo "    make sure the file is readable by 'other':"
   todo "      > chmod o+r /var/named/chroot/var/named/codendi.zone"
@@ -344,7 +344,7 @@ EOF
 # Mysql configuration
 #
 setup_mysql() {
-    echo "Creating the Codendi database..."
+    echo "Creating the Tuleap database..."
 
     # If DB is local, mysql password where not already tested
     pass_opt=""
@@ -365,14 +365,14 @@ setup_mysql() {
         pass_opt="-uroot --password=$rt_passwd"
     fi
 
-    # Test if codendi DB already exists
+    # Test if tuleap DB already exists
     yn="-"
     freshdb=0
     if $MYSQLSHOW $pass_opt | $GREP codendi 2>&1 >/dev/null; then
-        read -p "Codendi Database already exists. Overwrite? [y|n]:" yn
+        read -p "Tuleap Database already exists. Overwrite? [y|n]:" yn
     fi
 
-    # Delete the Codendi DB if asked for
+    # Delete the Tuleap DB if asked for
     if [ "$yn" = "y" ]; then
         $MYSQL $pass_opt -e "DROP DATABASE codendi"
     fi
@@ -392,7 +392,7 @@ EOF
     pass_opt="-uroot --password=$rt_passwd"
 
     if [ $freshdb -eq 1 ]; then
-        echo "Populating the Codendi database..."
+        echo "Populating the Tuleap database..."
         cd $INSTALL_DIR/src/db/mysql/
         $MYSQL -u codendiadm codendi --password=$codendiadm_passwd < database_structure.sql   # create the DB
         cp database_initvalues.sql /tmp/database_initvalues.sql
@@ -456,7 +456,7 @@ EOF
 }
 
 ##############################################
-# Codendi installation
+# Tuleap installation
 ##############################################
 sys_default_domain=""
 sys_fullname=""
@@ -596,7 +596,7 @@ fi
 
 
 rm -f $TODO_FILE
-todo "WHAT TO DO TO FINISH THE CODENDI INSTALLATION (see $TODO_FILE)"
+todo "WHAT TO DO TO FINISH THE TULEAP INSTALLATION (see $TODO_FILE)"
 
 echo
 echo "Configuration questions"
@@ -605,15 +605,15 @@ echo
 # Ask for domain name and other installation parameters
 if [ -z "$sys_default_domain" ]
 then
-	read -p "Codendi Domain name: " sys_default_domain
+	read -p "Tuleap Domain name: " sys_default_domain
 fi
 if [ -z "$sys_fullname" ]
 then
-	read -p "Codendi Server fully qualified machine name: " sys_fullname
+	read -p "Tuleap Server fully qualified machine name: " sys_fullname
 fi
 if [ -z "$sys_ip_address" ]
 then
-	read -p "Codendi Server IP address: " sys_ip_address
+	read -p "Tuleap Server IP address: " sys_ip_address
 fi
 if [ -z "$sys_org_name" ]
 then
@@ -637,8 +637,8 @@ else
 fi
 
 if [ "$auto_passwd" = "true" ]; then
-    # Save in /root/.codendi_passwd
-    passwd_file=/root/.codendi_passwd
+    # Save in /root/.tuleap_passwd
+    passwd_file=/root/.tuleap_passwd
     $RM -f $passwd_file
     touch $passwd_file
     $CHMOD 0600 $passwd_file
@@ -726,7 +726,7 @@ done
 
 fi
 
-# Update codendi user password
+# Update tuleap user password
 echo "$codendiadm_passwd" | passwd --stdin codendiadm
 
 # Build file structure
@@ -880,7 +880,7 @@ fi
 
 
 ##############################################
-# Install the Codendi software 
+# Install the Tuleap software 
 #
 
 echo "Installing configuration files..."
@@ -992,7 +992,7 @@ $USERMOD -a -G apache codendiadm
 $CHMOD 770 /var/lib/dav/
 
 ##############################################
-# Installing the Codendi database
+# Installing the Tuleap database
 #
 setup_mysql
 
@@ -1082,10 +1082,10 @@ todo "  svn/intro.txt include/new_project_email.txt, etc."
 echo "Installing root user crontab..."
 crontab -u root -l > /tmp/cronfile
 
-$GREP -q "Codendi" /tmp/cronfile
+$GREP -q "Tuleap" /tmp/cronfile
 if [ $? -ne 0 ]; then
     $CAT <<'EOF' >>/tmp/cronfile
-# Codendi: weekly backup preparation (mysql shutdown, file dump and restart)
+# Tuleap: weekly backup preparation (mysql shutdown, file dump and restart)
 45 0 * * Sun /usr/lib/codendi/bin/backup_job
 EOF
     crontab -u root /tmp/cronfile
@@ -1161,14 +1161,14 @@ $CHOWN root:root /etc/logrotate.d/httpd
 $CHMOD 644 /etc/logrotate.d/httpd
 
 ##############################################
-# Create Codendi profile script
+# Create Tuleap profile script
 #
 
 # customize the global profile 
 $GREP profile_codendi /etc/profile 1>/dev/null
 [ $? -ne 0 ] && \
     cat <<'EOF' >>/etc/profile
-# Now the Part specific to Codendi users
+# Now the Part specific to Tuleap users
 #
 if [ `id -u` -gt 20000 -a `id -u` -lt 50000 ]; then
         . /etc/profile_codendi
@@ -1178,7 +1178,7 @@ EOF
 $CAT <<'EOF' >/etc/profile_codendi
 # /etc/profile_codendi
 #
-# Specific login set up and messages for Codendi users`
+# Specific login set up and messages for Tuleap users`
  
 # All projects this user belong to
  
@@ -1214,7 +1214,7 @@ cat <<EOM
 Corresponding CVS and Subversion repositories are in /cvsroot and /svnroot
 
              *** IMPORTANT REMARK ***
-The Codendi server hosts very valuable yet publicly available
+The Tuleap server hosts very valuable yet publicly available
 data. Therefore we recommend that you keep working only in
 the directories listed above for which you have full rights
 and responsibilities.
@@ -1254,7 +1254,7 @@ if [ $SELINUX_ENABLED ]; then
 fi
 
 ##############################################
-# Install & configure forgeupgrade for Codendi
+# Install & configure forgeupgrade for Tuleap
 #
 
 $MYSQL -ucodendiadm -p$codendiadm_passwd codendi < /usr/share/forgeupgrade/db/install-mysql.sql
@@ -1266,7 +1266,7 @@ $INSTALL --group=codendiadm --owner=codendiadm --mode=0644 $INSTALL_DIR/src/etc/
 # *Last* step: install plugins
 #
 
-echo "Install codendi plugins"
+echo "Install tuleap plugins"
 # docman plugin
 $CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 build_dir /etc/codendi/plugins/docman/etc codendiadm codendiadm 755
