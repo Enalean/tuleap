@@ -20,6 +20,10 @@ require($GLOBALS['db_config_file']);
 require_once('common/include/Config.class.php');
 Config::load($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
 Config::load($local_inc);
+if (isset($GLOBALS['DEBUG_MODE'])) {
+    Config::load($GLOBALS['codendi_dir'] .'/src/etc/development.inc.dist');
+    Config::load(dirname($local_inc).'/development.inc');
+}
 
 define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/usr/share/fonts/');
 
@@ -268,7 +272,7 @@ if ($request->exist('postExpected') && !$request->exist('postReceived')) {
     $e = 'You tried to upload a file that is larger than the Codendi post_max_size setting.';
     exit_error('Error', $e);
 }
-if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE']) {
+if (Config::get('DEBUG_MODE')) {
     $GLOBALS['DEBUG_TIME_IN_PRE'] = microtime(1) - $GLOBALS['debug_time_start'];
 }
 ?>

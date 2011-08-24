@@ -46,7 +46,7 @@
     }
     
     function registerShutdownFunction() {
-        if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE'] && (strpos($_SERVER['REQUEST_URI'], '/soap/') !== 0)) {
+        if (Config::get('DEBUG_MODE') && (strpos($_SERVER['REQUEST_URI'], '/soap/') !== 0)) {
             register_shutdown_function(create_function('', '$request =& '. get_class($this) .'::instance(); $request->checkThatAllVariablesAreValidated();'));
         }
     }
