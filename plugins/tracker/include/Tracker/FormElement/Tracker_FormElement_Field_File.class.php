@@ -429,7 +429,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     }
     
     public function getRootPath() {
-        return Config::get('sys_data_dir') .'/plugins/tracker/'. $this->getId();
+        return Config::get('sys_data_dir') .'/tracker/'. $this->getId();
     }
     
     protected function isImage($value) {
