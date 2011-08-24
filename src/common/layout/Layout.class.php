@@ -30,6 +30,8 @@ require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 require_once('common/include/Combined.class.php');
 
+require_once('common/include/Toggler.class.php');
+
 /** 
  *
  * Extends the basic Response class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
