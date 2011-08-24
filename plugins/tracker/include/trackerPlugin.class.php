@@ -94,6 +94,7 @@ class trackerPlugin extends Plugin {
     }
     
     public function javascript($params) {
+        // TODO: Move this in ServiceTracker::displayHeader()
         include $GLOBALS['Language']->getContent('script_locale', null, 'tracker');
         echo "\ncodendi.tracker.base_url = '". TRACKER_BASE_URL ."/';\n";
     }
