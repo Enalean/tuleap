@@ -673,7 +673,7 @@ class Tracker_FormElement_Field_FileTest extends UnitTestCase {
         Config::load(dirname(__FILE__).'/_fixtures/local.inc');
         $f = new Tracker_FormElement_Field_FileTestVersion();
         $f->setReturnValue('getId', 123);
-        $this->assertEqual($f->getRootPath(), Config::get('sys_data_dir') .'/plugins/tracker/123');
+        $this->assertEqual($f->getRootPath(), Config::get('sys_data_dir') .'/tracker/123');
     }
 }
 ?>
