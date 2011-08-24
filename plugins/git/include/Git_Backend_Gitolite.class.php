@@ -295,13 +295,20 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
         }
         
-        if ($this->getDao()->delete($repository) && $this->deletePermissions($repository)) {
-            $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-            $this->getDriver()->dumpProjectRepoConf($repository->getProject());
-            $this->getDriver()->push();
-            $this->getDriver()->delete($path);
-            return true;
+        $referencePath = $this->getDriver()->getRepositoriesPath().'/'.$repository->getProject()->getUnixName();
+        
+        if ($this->isSubPath($referencePath, $path)) {
+            if ($this->getDao()->delete($repository) && $this->deletePermissions($repository)) {
+                $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
+                $this->getDriver()->dumpProjectRepoConf($repository->getProject());
+                $this->getDriver()->push();
+                $this->getDriver()->delete($path);
+                return true;
+            }
+        } else {
+            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error') );
         }
+        
         return false;
     }
     
@@ -325,6 +332,21 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     
     public function getDriver() {
         return $this->driver;
+    }
+    
+    /**
+     * Check if path is a subpath of referencepath
+     *
+     * @param String $referencePath
+     * @param String $path
+     *
+     * @return Boolean
+     */
+    public function isSubPath($referencePath, $path) {
+        if (strpos(realpath($path), realpath($referencePath)) === 0) {
+            return true;
+        }
+        return false;
     }
 }
 

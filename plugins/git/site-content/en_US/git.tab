@@ -58,6 +58,7 @@ plugin_git	dao_error_remove_notification	Mail not removed
 plugin_git	dao_child_params	Repository child search failed : missing repository id
 
 plugin_git	backend_delete_haschild_error	Unable to delete repository : it has child(ren)
+plugin_git	backend_delete_path_error	Unable to delete repository : path outside project repository root
 plugin_git	backend_gitroot_mkdir_error	Error while creating root for Git repositories (Contact the site admin)
 plugin_git	backend_projectroot_mkdir_error	Error while creating project root for Git repository (Contact the site admin)
 plugin_git	backend_projectroot_chgrp_error	Error while setting project root permissions (Contact the site admin)

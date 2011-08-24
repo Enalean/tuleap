@@ -58,6 +58,7 @@ plugin_git	dao_error_remove_notification	L'adresse mail n'a pas été supprimée
 plugin_git	dao_child_params	Paramètres invalides
 
 plugin_git	backend_delete_haschild_error	Impossible de supprimer le dépôt : est parent d'au moins un autre dépôt
+plugin_git	backend_delete_path_error	Impossible de supprimer le dépôt : chemin n'appartient pas au répertoire root du projet
 plugin_git	backend_gitroot_mkdir_error	Erreur à la création du répertoire racine des dépôts Git (Contactez l'administrateur)
 plugin_git	backend_projectroot_mkdir_error	Erreur à la création du répertoire racine des dépôts Git du projet (Contactez l'administrateur)
 plugin_git	backend_projectroot_chgrp_error	Erreur aux changement des permissions du répertoire racine des dépôts Git du projet (Contactez l'administrateur)

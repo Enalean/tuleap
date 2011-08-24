@@ -34,12 +34,14 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     public function setUp() {
         $this->fixtureRenamePath = dirname(__FILE__).'/_fixtures/rename';
         mkdir($this->fixtureRenamePath .'/legacy', 0777, true);
+        symlink(dirname(__FILE__).'/_fixtures/perms', dirname(__FILE__).'/_fixtures/tmp/perms');
     }
     
     public function tearDown() {
         @rmdir($this->fixtureRenamePath .'/legacy');
         @rmdir($this->fixtureRenamePath .'/newone');
         @rmdir($this->fixtureRenamePath);
+        unlink(dirname(__FILE__).'/_fixtures/tmp/perms');
     }
     
     function getPartialMock($className, $methods) {
@@ -71,6 +73,15 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         clearstatcache(true, $this->fixtureRenamePath .'/legacy');
         $this->assertFalse(is_dir($this->fixtureRenamePath .'/legacy'));
         $this->assertTrue(is_dir($this->fixtureRenamePath .'/newone'));
+    }
+    
+    public function testDeletionPathShouldBeInProjectPath() {
+        $backend = new Git_Backend_Gitolite(null);
+        $this->assertTrue($backend->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/default.conf'));
+        $this->assertTrue($backend->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/tmp/perms/default.conf'));
+        
+        $this->assertFalse($backend->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/../../default.conf'));
+        $this->assertFalse($backend->isSubPath('_fixtures/perms/', 'coincoin'));
     }
 }
 
