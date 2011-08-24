@@ -43,6 +43,7 @@ class Combined {
             '/scripts/textboxlist/multiselect.js',
             '/scripts/tablekit/tablekit.js',
             '/scripts/lytebox/lytebox.js',
+            '/scripts/lightwindow/lightwindow.js',
             '/scripts/codendi/RichTextEditor.js',
             '/scripts/codendi/Tracker.js',
         );
