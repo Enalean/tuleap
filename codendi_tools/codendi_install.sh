@@ -1034,7 +1034,7 @@ fi
 # TODO check if already there
 echo "codendi-admin:          root" >> /etc/aliases
 
-todo "Finish sendmail settings (see installation Guide). By default, emails sent to codendi-admin are redirected to root (see /etc/aliases)"
+#todo "Finish sendmail settings (see installation Guide). By default, emails sent to codendi-admin are redirected to root (see /etc/aliases)"
 
 ##############################################
 # CVS

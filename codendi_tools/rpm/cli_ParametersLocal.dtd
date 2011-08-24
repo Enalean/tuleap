@@ -23,7 +23,7 @@ For instance:
 <!ENTITY SYS_DEFAULT_DOMAIN "my.domain.here">
 etc...
 -->
-<!ENTITY SYS_DEFAULT_DOMAIN "codendi.org">
+<!ENTITY SYS_DEFAULT_DOMAIN "tuleap.net">
 
 <!-- 
 Redefine here (with the blank string "") the chapters you don't want to be included in the book (and only these ones) 

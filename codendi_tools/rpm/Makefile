@@ -80,8 +80,8 @@ codendi: rpmprep tarball
 custom_codendi: tarball
 	cat codendi-customization.spec |\
 		sed -e 's/@@PLATFORM@@/default/' |\
-		sed -e 's/@@SYS_DEFAULT_DOMAIN@@/codendi.org/' |\
-		sed -e 's/@@SYS_HTTPS_HOST@@/codendi.org/' |\
+		sed -e 's/@@SYS_DEFAULT_DOMAIN@@/tuleap.net/' |\
+		sed -e 's/@@SYS_HTTPS_HOST@@/tuleap.net/' |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/codendi-customization.spec
