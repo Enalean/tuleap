@@ -218,6 +218,19 @@ class ReferenceDao extends DataAccessObject {
         return $this->update($sql);
     }    
 
+    function updateProjectReferenceShortName($group_id, $old_short_name, $new_short_name) {
+        
+        $group_id       = $this->da->escapeInt($group_id);     
+        $old_short_name = $this->da->quoteSmart($old_short_name);
+        $new_short_name = $this->da->quoteSmart($new_short_name);
+                 
+        $sql = "UPDATE  reference r
+                      INNER JOIN reference_group rg ON (r.id=rg.reference_id)
+                SET r.keyword=$new_short_name
+                WHERE r.keyword=$old_short_name AND rg.group_id=$group_id";
+        return $this->update($sql);
+    }
+
     function update_keyword($old_keyword, $keyword, $group_id) {
         $sql = sprintf("UPDATE reference, reference_group SET keyword=%s WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s",
                        $this->da->quoteSmart($keyword),
