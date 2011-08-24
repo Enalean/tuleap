@@ -764,6 +764,7 @@ fi
 %files plugin-tracker
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/tracker
+%dir %{APP_DATA_DIR}/tracker
 
 #
 # Themes
