@@ -504,7 +504,6 @@ class GitRepository implements DVCSRepository {
 
     /**
      * Delete a repository (reference and fork)
-     * @todo think about a really good way to check repository path deletion!!!
      */
     public function delete() {
         $project = $this->getProject();
