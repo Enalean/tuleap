@@ -1584,8 +1584,10 @@ function util_php_array_to_js_array($array) {
             $comma = '';
             do {
                 if(list($key, $value) = each($array)) {
-                    $output .= $comma . $key .': '. util_php_array_to_js_array($GLOBALS["Language"]->getText("project_admin_utils", $value));
-                    $comma = ', ';
+                    if (is_string($value)) {
+                        $output .= $comma . $key .': '.util_php_array_to_js_array($GLOBALS['Language']->getText('project_admin_utils', $value));
+                        $comma = ', ';
+                    }
                 }
             } while($key);
             $output .= '}';
