@@ -37,7 +37,15 @@ class UGroupDao extends DataAccessObject {
                 WHERE group_id = $group_id ORDER BY name";
         return $this->retrieve($sql);
     }
-    
+
+    function searchByUGroupId($ugroup_id) {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+        $sql = "SELECT * 
+                FROM ugroup 
+                WHERE ugroup_id = $ugroup_id ORDER BY name";
+        return $this->retrieve($sql);
+    }
+
     /**
     * Searches group that user belongs to one of its static ugroup
     * return all groups 

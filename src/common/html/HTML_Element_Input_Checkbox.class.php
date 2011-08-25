@@ -19,7 +19,7 @@
  */
 
 require_once('HTML_Element_Input.class.php');
-
+require_once('HTML_Element_Input_Hidden.class.php');
 /**
  * Define a html input checkbox field
  */
@@ -33,12 +33,12 @@ class HTML_Element_Input_Checkbox extends HTML_Element_Input {
     public function render() {
         $html  = '';
         $html .= $this->renderValue();
-        $html .' ';
+        $html .= ' ';
         $html .= $this->renderLabel();
         return $html;
     }
     public function renderValue() {
-        $hf = new HTML_Element_Input_Hidden($this->name, 0, '');
+        $hf = new HTML_Element_Input_Hidden('', $this->name, 0, '');
         $html = $hf->render();
         $html .= parent::renderValue();
         return $html;

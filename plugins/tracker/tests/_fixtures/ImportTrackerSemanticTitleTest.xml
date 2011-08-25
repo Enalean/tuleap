@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<semantic type="title">
+ <shortname>title</shortname>
+ <label>Title</label>
+ <description>Define the title of an artifact</description>
+ <field REF="F13"/>
+</semantic>

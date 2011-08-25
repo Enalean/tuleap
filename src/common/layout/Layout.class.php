@@ -30,6 +30,8 @@ require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 require_once('common/include/Combined.class.php');
 
+require_once('common/include/Toggler.class.php');
+
 /** 
  *
  * Extends the basic Response class to add HTML functions for displaying all site dependent HTML, while allowing extendibility/overriding by themes via the Theme class.
@@ -75,6 +77,9 @@ class Layout extends Response {
     var $feeds;
     protected $javascriptFooter;
     
+    protected $breadcrumbs;
+    protected $toolbar;
+
     /**
      * Constuctor
      * @param string $root the root of the theme : '/themes/CodeXTab/'
@@ -83,8 +88,10 @@ class Layout extends Response {
         // Constructor for parent class...
         parent::Response();
         
-        $this->feeds      = array();
-        $this->javascript = array();
+        $this->feeds       = array();
+        $this->javascript  = array();
+        $this->breadcrumbs = array();
+        $this->toolbar     = array();
         $this->javascriptFooter = array();
 
         /*
@@ -718,19 +725,63 @@ class Layout extends Response {
     }
     
     function selectRank($id, $rank, $items, $html_options) {
-        echo '<select ';
+        $html = '';
+        $html .= '<select ';
         foreach($html_options as $key => $value) {
-            echo $key .'="'. $value .'"';
+            $html .= $key .'="'. $value .'"';
         }
-        echo '>';
-        echo '<option value="beginning">'. $GLOBALS['Language']->getText('global', 'at_the_beginning') .'</option>';
-        echo '<option value="end">'. $GLOBALS['Language']->getText('global', 'at_the_end') .'</option>';
+        $html .= '>';
+        $html .= '<option value="beginning">'. $GLOBALS['Language']->getText('global', 'at_the_beginning') .'</option>';
+        $html .= '<option value="end">'. $GLOBALS['Language']->getText('global', 'at_the_end') .'</option>';
+        list($options, $optgroups) = $this->selectRank_optgroup($id, $items);
+        $html .= $options . $optgroups;
+        $html .= '</select>';
+        return $html;
+    }
+    
+    protected function selectRank_optgroup($id, $items, $prefix = '', $value_prefix = '') {
+        $html = '';
+        $optgroups = '';
         foreach($items as $i => $item) {
+            // don't include the item itself
             if ($item['id'] != $id) {
-                echo '<option value="'. ($item['rank']+1) .'" '. (isset($items[$i + 1]) && $items[$i + 1]['id'] == $id ? 'selected="selected"' : '') .'>'. $GLOBALS['Language']->getText('global', 'after', $item['name']) .'</option>';
+                
+                // need an optgroup ?
+                if (isset($item['subitems'])) {
+                    $optgroups .= '<optgroup label="'. $prefix . $item['name'] .'">';
+                    
+                    $selected = '';
+                    if ( count($item['subitems']) ) {
+                        // look if our item is the first subitem
+                        // if it is the case then select 'At the beginning of <parent>'
+                        reset($item['subitems']);
+                        list(,$subitem) = each($item['subitems']);
+                        if ($subitem['id'] == $id) {
+                            $selected = 'selected="selected"';
+                        }
+                    }
+                    $optgroups .= '<option value="'. $item['id'] . ':' . 'beginning' .'" '. $selected .'>'. 'At the beginning of '. $prefix . $item['name'] .'</option>';
+                    list($o, $g) = $this->selectRank_optgroup($id, $item['subitems'], $prefix . $item['name'] .'::', $item['id'] . ':');
+                    $optgroups .= $o;
+                    $optgroups .= '</optgroup>';
+                    $optgroups .= $g;
+                }
+                
+                // The rank is the next one.
+                // TODO: use the next rank instead?
+                $value = $item['rank']+1;
+                
+                // select the element if the item is just after id
+                $selected = '';
+                if (isset($items[$i + 1]) && $items[$i + 1]['id'] == $id) {
+                    $selected = 'selected="selected"';
+                }
+                $html .= '<option value="'. $value_prefix . $value .'" '. $selected .'>';
+                $html .= $GLOBALS['Language']->getText('global', 'after', $prefix . $item['name']);
+                $html .= '</option>';
             }
         }
-        echo '</select>';
+        return array($html, $optgroups);
     }
     
     /**
@@ -749,6 +800,7 @@ class Layout extends Response {
      */
     function includeJavascriptFile($file) {
         $this->javascript[] = array('file' => $file);
+        return $this;
     }
     
     /**
@@ -765,6 +817,7 @@ class Layout extends Response {
      */
     function includeJavascriptSnippet($snippet) {
         $this->javascript[] = array('snippet' => $snippet);
+        return $this;
     }
     
     /**
@@ -803,8 +856,34 @@ class Layout extends Response {
     function includeCalendarScripts() {
         $this->includeJavascriptSnippet("var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';");
         $this->includeJavascriptFile("/scripts/datepicker/datepicker.js");
+        return $this;
     }
-
+    function addBreadcrumb($step) {
+        $this->breadcrumbs[] = $step;
+        return $this;
+    }
+    function getBreadCrumbs() {
+        $html = '';
+        if (count($this->breadcrumbs)) {
+            $html .= '<ul class="breadcrumb"><li>';
+            $html .= implode('</li><li><span class="breadcrumb-sep">&raquo;</span>', $this->breadcrumbs);
+            $html .= '</ul>';
+        }
+        return $html;
+    }
+    function addToolbarItem($item) {
+        $this->toolbar[] = $item;
+        return $this;
+    }
+    function getToolbar() {
+        $html = '';
+        if (count($this->toolbar)) {
+            $html .= '<ul class="toolbar"><li>';
+            $html .= implode('</li><li><span class="toolbar-sep">|</span>', $this->toolbar);
+            $html .= '</li></ul>';
+        }
+        return $html;
+    }
     function addFeed($title, $href) {
         $this->feeds[] = array('title' => $title, 'href' => $href);
     }
@@ -858,7 +937,12 @@ class Layout extends Response {
             document.observe('dom:loaded', function () {
                 $('$element_id-ajax').update('<div style=\"text-align:center\">". $this->getImage('ic/spinner.gif') ."</div>');
                 new Ajax.Updater('$element_id-ajax', 
-                                 '". $widget->getAjaxUrl($owner_id, $owner_type) ."'
+                                 '". $widget->getAjaxUrl($owner_id, $owner_type) ."',
+                                 {
+                                     onComplete: function() {
+                                        codendi.Tooltip.load('$element_id-ajax');
+                                     }
+                                 }
                 );
             });
             </script>";
@@ -870,6 +954,14 @@ class Layout extends Response {
     }
     function _getToggleMinusForWidgets() {
         return 'ic/toggle_minus.png';
+    }
+
+    public function getDropdownPanel($id, $content) {
+        $html = '';
+        $html .= '<table id="'. $id .'" class="dropdown_panel"><tr><td>';
+        $html .= $content;
+        $html .= '</td></tr></table>';
+        return $html;
     }
 
     /**
@@ -952,15 +1044,79 @@ class Layout extends Response {
         echo $this->displaySyndicationElements();
         echo '</head>';
     }
+    protected $colorpicker_palettes = array(
+        'small'    => '[["#EEEEEE", "#FFFFFF", "#F9F7ED", "#FFFF88", "#CDEB8B", "#C3D9FF", "#36393D"],
+                        ["#FF1A00", "#CC0000", "#FF7400", "#008C00", "#006E2E", "#4096EE", "#FF0084"],
+                        ["#B02B2C", "#D15600", "#73880A", "#6BBA70", "#3F4C6B", "#356AA0", "#D01F3C"],
+                        ["#FEF5A8", "#C5F19A", "#FFD8A0", "#F5DDB7", "#B9D0E8", "#D6BFD4", "#F79494"]]',
+                        
+        'vivid'    => '[["#ffffff", "#0000ff", "#004dff", "#0077ff", "#00a0ff", "#00c4ff", "#00e3ff", "#4dfeff", "#00ffdf", "#00ffb2", "#00ff8c", "#00ff79", "#00ff31", "#00ff00", "#17ff00", "#70ff00", "#a0ff00", "#c8ff00", "#ebff00", "#ffff00", "#ffdc00", "#ffb000", "#ff8400", "#ff5d00", "#ff3600", "#ff0000", "#ff0034", "#ff006b", "#ff0091", "#ff00aa", "#ff00d0", "#ff00ff", "#cc19ff", "#9500f9", "#7a00ff", "#6100ff", "#4700ff", "#0000ff"],
+                        ["#e2e2e2", "#0000ec", "#0049f3", "#0070f3", "#0091e9", "#00b8f3", "#00d0ef", "#00f2f6", "#00efd4", "#00eda8", "#00e680", "#00ee73", "#00ee2d", "#00ff00", "#16ee00", "#68eb00", "#94e900", "#b8eb00", "#dced00", "#ffeb01", "#f6c800", "#f09e00", "#ec7700", "#ed5300", "#ed2e00", "#df1b00", "#ef072b", "#e90068", "#e60084", "#df1d96", "#ec00d9", "#e020e4", "#bb16ec", "#8a00e6", "#7000ea", "#6100ff", "#4700ff", "#0000ff"],
+                        ["#c6c6c6", "#0000d7", "#0041dd", "#0062d8", "#0081d3", "#009fdb", "#00b4da", "#00cbdc", "#00cdbe", "#00d69a", "#00cc74", "#00d86a", "#00da29", "#00d300", "#15da00", "#5ed200", "#89d500", "#aedc00", "#cee000", "#ffd202", "#edb100", "#e08900", "#d36700", "#d74601", "#d32201", "#d50000", "#d81633", "#c70063", "#cf0077", "#d4008d", "#ce00ae", "#d100d1", "#a913d6", "#7e00d1", "#6300cd", "#5414d9", "#4700ff", "#0000d7"],
+                        ["#aaaaaa", "#0000b3", "#0037c6", "#0056c1", "#006fbf", "#0087c3", "#009bc6", "#00aec8", "#00b2ab", "#00bf8d", "#00bb6c", "#00c463", "#00c324", "#00c100", "#14c300", "#54b900", "#7fc300", "#9ac200", "#bbc800", "#ffc000", "#e29500", "#ce7100", "#c85a00", "#c03901", "#bd1502", "#c60404", "#b8182a", "#b80366", "#b8006a", "#be007e", "#b5009c", "#ba00ba", "#9310ba", "#7000ba", "#5812b7", "#4c12c3", "#3e00e7", "#0000b3"],
+                        ["#8d8d8d", "#0000ab", "#002eae", "#004bab", "#015bbe", "#0071ae", "#0082b2", "#008eb3", "#009698", "#00a57e", "#00a965", "#00a959", "#00aa1e", "#00af00", "#13aa00", "#4aa000", "#75b100", "#89ad00", "#a4ae00", "#ec9f00", "#dd8900", "#c46200", "#b74e00", "#b53302", "#b31103", "#b00400", "#a11726", "#a80b54", "#a6005f", "#a5006e", "#9d008c", "#a600a6", "#7f0da4", "#6100a0", "#4e00a3", "#420fa8", "#3300c6", "#0000ab"],
+                        ["#717171", "#0000a0", "#002593", "#003e93", "#01449e", "#005996", "#006a9e", "#006d9d", "#007d87", "#008b6f", "#009a5e", "#009351", "#008f18", "#009f00", "#139500", "#448e00", "#699b00", "#759300", "#8d9500", "#ca7900", "#b96a00", "#aa5500", "#954000", "#952700", "#9c0d01", "#a50303", "#8a1522", "#98094c", "#980057", "#8d005e", "#88007d", "#920092", "#611681", "#530087", "#4a0099", "#38068e", "#2800a5", "#0000a0"],
+                        ["#555555", "#00008e", "#001c7c", "#00327b", "#023a8e", "#004380", "#004f89", "#00538b", "#006577", "#007360", "#008052", "#007847", "#007512", "#008200", "#127b00", "#397300", "#5a8200", "#5e7400", "#757000", "#995100", "#8c4800", "#863a00", "#792e00", "#801f00", "#820a00", "#8f0303", "#76141e", "#81073f", "#810049", "#77004e", "#74006f", "#7c007c", "#52066e", "#43006c", "#3f0082", "#300978", "#240981", "#00008e"],
+                        ["#383838", "#00007d", "#001263", "#0f225c", "#00266f", "#002c6b", "#003474", "#003879", "#004b6b", "#005750", "#006642", "#00613e", "#005d0e", "#006800", "#116000", "#306000", "#456a00", "#495900", "#4d4a00", "#663800", "#6e3100", "#652300", "#652100", "#6f1900", "#6e0901", "#700101", "#63141b", "#611032", "#730041", "#670043", "#5d005e", "#600060", "#42045b", "#350054", "#350071", "#280663", "#240563", "#00007d"],
+                        ["#1c1c1c", "#0a045b", "#00094c", "#0a194c", "#0a1950", "#0a1950", "#001c61", "#102863", "#002d51", "#003c40", "#004836", "#004c36", "#004d0a", "#004a00", "#0f4c00", "#294c00", "#354d00", "#374200", "#393200", "#482100", "#491300", "#4d1300", "#480f00", "#4d0e00", "#4d0500", "#4e0101", "#4a0a0f", "#4a0222", "#53002e", "#570038", "#4d0045", "#480048", "#34024a", "#31004c", "#2d0556", "#240347", "#1f0346", "#150351"],
+                        ["#000000", "#000042", "#000540", "#00103a", "#060d41", "#000544", "#00054f", "#001355", "#00224a", "#00313a", "#00372e", "#003a30", "#003806", "#003200", "#0f3700", "#213700", "#233100", "#2b2d04", "#302302", "#350f00", "#350300", "#350300", "#350300", "#350300", "#350300", "#350300", "#360308", "#370118", "#37001e", "#370024", "#370032", "#370037", "#320040", "#260039", "#200035", "#210233", "#170039", "#000042"]]',
+                        
+        //See http://www.visibone.com. Copyright (c) 2011 VisiBone
+        'visibone-light' => '[["#FFFFFF", "#CCCCCC", "#999999", "#666666", "#333333", "#000000", "#FFCC00", "#FF9900", "#FF6600", "#FF3300", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"],
+                        ["#99CC00", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#CC9900", "#FFCC33", "#FFCC66", "#FF9966", "#FF6633", "#CC3300", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#CC0033"],
+                        ["#CCFF00", "#CCFF33", "#333300", "#666600", "#999900", "#CCCC00", "#FFFF00", "#CC9933", "#CC6633", "#330000", "#660000", "#990000", "#CC0000", "#FF0000", "#FF3366", "#FF0033"],
+                        ["#99FF00", "#CCFF66", "#99CC33", "#666633", "#999933", "#CCCC33", "#FFFF33", "#996600", "#993300", "#663333", "#993333", "#CC3333", "#FF3333", "#CC3366", "#FF6699", "#FF0066"],
+                        ["#66FF00", "#99FF66", "#66CC33", "#669900", "#999966", "#CCCC66", "#FFFF66", "#996633", "#663300", "#996666", "#CC6666", "#FF6666", "#990033", "#CC3399", "#FF66CC", "#FF0099"],
+                        ["#33FF00", "#66FF33", "#339900", "#66CC00", "#99FF33", "#CCCC99", "#FFFF99", "#CC9966", "#CC6600", "#CC9999", "#FF9999", "#FF3399", "#CC0066", "#990066", "#FF33CC", "#FF00CC"],
+                        ["#00CC00", "#33CC00", "#336600", "#669933", "#99CC66", "#CCFF99", "#FFFFCC", "#FFCC99", "#FF9933", "#FFCCCC", "#FF99CC", "#CC6699", "#993366", "#660033", "#CC0099", "#330033"],
+                        ["#33CC33", "#66CC66", "#00FF00", "#33FF33", "#66FF66", "#99FF99", "#CCFFCC", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#CC99CC", "#996699", "#993399", "#990099", "#663366", "#660066"],
+                        ["#006600", "#336633", "#009900", "#339933", "#669966", "#99CC99", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFCCFF", "#FF99FF", "#FF66FF", "#FF33FF", "#FF00FF", "#CC66CC", "#CC33CC"],
+                        ["#003300", "#00CC33", "#006633", "#339966", "#66CC99", "#99FFCC", "#CCFFFF", "#3399FF", "#99CCFF", "#CCCCFF", "#CC99FF", "#9966CC", "#663399", "#330066", "#9900CC", "#CC00CC"],
+                        ["#00FF33", "#33FF66", "#009933", "#00CC66", "#33FF99", "#99FFFF", "#99CCCC", "#0066CC", "#6699CC", "#9999FF", "#9999CC", "#9933FF", "#6600CC", "#660099", "#CC33FF", "#CC00FF"],
+                        ["#00FF66", "#66FF99", "#33CC66", "#009966", "#66FFFF", "#66CCCC", "#669999", "#003366", "#336699", "#6666FF", "#6666CC", "#666699", "#330099", "#9933CC", "#CC66FF", "#9900FF"],
+                        ["#00FF99", "#66FFCC", "#33CC99", "#33FFFF", "#33CCCC", "#339999", "#336666", "#006699", "#003399", "#3333FF", "#3333CC", "#333399", "#333366", "#6633CC", "#9966FF", "#6600FF"],
+                        ["#00FFCC", "#33FFCC", "#00FFFF", "#00CCCC", "#009999", "#006666", "#003333", "#3399CC", "#3366CC", "#0000FF", "#0000CC", "#000099", "#000066", "#000033", "#6633FF", "#3300FF"],
+                        ["#00CC99", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#0099CC", "#33CCFF", "#66CCFF", "#6699FF", "#3366FF", "#0033CC", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#3300CC"],
+                        ["#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#00CCFF", "#0099FF", "#0066FF", "#0033FF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF"]]',
+                        
+        'visibone-dark' => '[["#FFFFFF", "#CCCCCC", "#999999", "#666666", "#333333", "#000000", "#FFCC00", "#FF9900", "#FF6600", "#FF3300", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000"],
+                        ["#99CC00", "#000000", "#000000", "#000000", "#000000", "#CC9900", "#FFCC33", "#FFCC66", "#FF9966", "#FF6633", "#CC3300", "#000000", "#000000", "#000000", "#000000", "#CC0033"],
+                        ["#CCFF00", "#CCFF33", "#333300", "#666600", "#999900", "#CCCC00", "#FFFF00", "#CC9933", "#CC6633", "#330000", "#660000", "#990000", "#CC0000", "#FF0000", "#FF3366", "#FF0033"],
+                        ["#99FF00", "#CCFF66", "#99CC33", "#666633", "#999933", "#CCCC33", "#FFFF33", "#996600", "#993300", "#663333", "#993333", "#CC3333", "#FF3333", "#CC3366", "#FF6699", "#FF0066"],
+                        ["#66FF00", "#99FF66", "#66CC33", "#669900", "#999966", "#CCCC66", "#FFFF66", "#996633", "#663300", "#996666", "#CC6666", "#FF6666", "#990033", "#CC3399", "#FF66CC", "#FF0099"],
+                        ["#33FF00", "#66FF33", "#339900", "#66CC00", "#99FF33", "#CCCC99", "#FFFF99", "#CC9966", "#CC6600", "#CC9999", "#FF9999", "#FF3399", "#CC0066", "#990066", "#FF33CC", "#FF00CC"],
+                        ["#00CC00", "#33CC00", "#336600", "#669933", "#99CC66", "#CCFF99", "#FFFFCC", "#FFCC99", "#FF9933", "#FFCCCC", "#FF99CC", "#CC6699", "#993366", "#660033", "#CC0099", "#330033"],
+                        ["#33CC33", "#66CC66", "#00FF00", "#33FF33", "#66FF66", "#99FF99", "#CCFFCC", "#000000", "#000000", "#000000", "#CC99CC", "#996699", "#993399", "#990099", "#663366", "#660066"],
+                        ["#006600", "#336633", "#009900", "#339933", "#669966", "#99CC99", "#000000", "#000000", "#000000", "#FFCCFF", "#FF99FF", "#FF66FF", "#FF33FF", "#FF00FF", "#CC66CC", "#CC33CC"],
+                        ["#003300", "#00CC33", "#006633", "#339966", "#66CC99", "#99FFCC", "#CCFFFF", "#3399FF", "#99CCFF", "#CCCCFF", "#CC99FF", "#9966CC", "#663399", "#330066", "#9900CC", "#CC00CC"],
+                        ["#00FF33", "#33FF66", "#009933", "#00CC66", "#33FF99", "#99FFFF", "#99CCCC", "#0066CC", "#6699CC", "#9999FF", "#9999CC", "#9933FF", "#6600CC", "#660099", "#CC33FF", "#CC00FF"],
+                        ["#00FF66", "#66FF99", "#33CC66", "#009966", "#66FFFF", "#66CCCC", "#669999", "#003366", "#336699", "#6666FF", "#6666CC", "#666699", "#330099", "#9933CC", "#CC66FF", "#9900FF"],
+                        ["#00FF99", "#66FFCC", "#33CC99", "#33FFFF", "#33CCCC", "#339999", "#336666", "#006699", "#003399", "#3333FF", "#3333CC", "#333399", "#333366", "#6633CC", "#9966FF", "#6600FF"],
+                        ["#00FFCC", "#33FFCC", "#00FFFF", "#00CCCC", "#009999", "#006666", "#003333", "#3399CC", "#3366CC", "#0000FF", "#0000CC", "#000099", "#000066", "#000033", "#6633FF", "#3300FF"],
+                        ["#00CC99", "#000000", "#000000", "#000000", "#000000", "#0099CC", "#33CCFF", "#66CCFF", "#6699FF", "#3366FF", "#0033CC", "#000000", "#000000", "#000000", "#000000", "#3300CC"],
+                        ["#000000", "#000000", "#000000", "#000000", "#000000", "#000000", "#00CCFF", "#0099FF", "#0066FF", "#0033FF", "#000000", "#000000", "#000000", "#000000", "#000000", "#000000"]]',
+
+    );
     
     /**
-	 * Display the Javascript code to be included in <head>
-	 *
-	 * Snippet and files are included one after another in the order of call
-	 * of includeJavascriptFile & includeJavascriptSnippet methods.
-	 * 
-	 * @see includeJavascriptFile
-	 * @see includeJavascriptSnippet
+     * Customize the palette used for the colorpicker.
+     *
+     * @example return 'codendi.colorpicker.theme = '. $this->colorpicker_palettes['vivid'] .';';
+     *
+     * @return string javascript
+     */
+    protected function changeColorpickerPalette() {
+        return 'codendi.colorpicker_theme = '. $this->colorpicker_palettes['visibone-dark'] .';';
+    }
+    
+    /**
+     * Display the Javascript code to be included in <head>
+     *
+     * Snippet and files are included one after another in the order of call
+     * of includeJavascriptFile & includeJavascriptSnippet methods.
+     * 
+     * @see includeJavascriptFile
+     * @see includeJavascriptSnippet
      */
     public function displayJavascriptElements() {
         $c = new Combined();
@@ -970,12 +1126,14 @@ class Layout extends Response {
         echo '<script type="text/javascript">'."\n";
         include $GLOBALS['Language']->getContent('scripts/locale');
         echo '
+        codendi.imgroot = \''. $this->imgroot .'\';
+        '. $this->changeColorpickerPalette() .'
         </script>';
         
-        if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE'] && ($GLOBALS['DEBUG_DISPLAY_FOR_ALL'] || user_ismember(1, 'A')) ) {
+        if (Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>';
         }
-        if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE']) {
+        if (Config::get('DEBUG_MODE')) {
             echo '<!--[if IE]><script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script><![endif]-->';
         }
         
@@ -983,8 +1141,10 @@ class Layout extends Response {
         $em->processEvent("javascript_file", null);
         
         foreach ($this->javascript as $js) {
-            if (isset($js['file']) && !$c->isCombined($js['file'])) {
-                echo '<script type="text/javascript" src="'. $js['file'] .'"></script>'."\n";
+            if (isset($js['file'])) {
+                if (!$c->isCombined($js['file'])) {
+                    echo '<script type="text/javascript" src="'. $js['file'] .'"></script>'."\n";
+                }
             } else {
                 if (isset($js['snippet'])) {
                     echo '<script type="text/javascript">'."\n";
@@ -996,7 +1156,7 @@ class Layout extends Response {
             }
         }
         echo '<script type="text/javascript">'."\n";
-        $em->processEvent("javascript", null);
+        $em->processEvent(Event::JAVASCRIPT, null);
         echo '
         </script>';
     }
@@ -1021,6 +1181,20 @@ class Layout extends Response {
                 echo '</script>'."\n";
             }
         }
+        $em = EventManager::instance();
+        echo '<script type="text/javascript">'."\n";
+        $em->processEvent(Event::JAVASCRIPT_FOOTER, null);
+        echo '
+        </script>';
+    }
+    
+    function getStylesheetTheme($css) {
+        if ($GLOBALS['sys_is_theme_custom']) {
+            $path = '/custom/'.$GLOBALS['sys_user_theme'].'/css/'.$css;
+        } else {
+            $path = '/themes/'.$GLOBALS['sys_user_theme'].'/css/'.$css;
+        }
+        return $path;
     }
     
     /**
@@ -1029,13 +1203,17 @@ class Layout extends Response {
     public function displayStylesheetElements($params) {
         // Stylesheet external files
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="'. util_get_css_theme() .'" />';
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
+        $css = $GLOBALS['sys_user_theme'] . getFontsizeName($GLOBALS['sys_user_font_size']) .'.css';
+        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
+        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
         if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
             foreach($params['stylesheet'] as $css) {
                 print '<link rel="stylesheet" type="text/css" href="'.$css.'" />';
             }
         }
         EventManager::instance()->processEvent("cssfile", null);
+        
         
         // Inline stylesheets
         echo '
@@ -1146,7 +1324,7 @@ class Layout extends Response {
 
         include($Language->getContent('layout/footer'));
             
-        if ( isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE'] && ($GLOBALS['DEBUG_DISPLAY_FOR_ALL'] || user_ismember(1, 'A')) ) {
+        if ( Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             $this->showDebugInfo();
         }
 
@@ -1161,27 +1339,76 @@ class Layout extends Response {
      * @return void
      */
     public static function showDebugInfo() {
-        $debug_compute_tile=microtime(true) - $GLOBALS['debug_time_start'];
-        echo '<span class="debug">'.$GLOBALS['Language']->getText('include_layout','query_count').": ";
-        echo $GLOBALS['DEBUG_DAO_QUERY_COUNT'] ."<br>";
-        echo "Page generated in ".$debug_compute_tile." seconds (xdebug: ". xdebug_time_index() .")</span>\n";
-        if ($file = xdebug_get_profiler_filename()) {
-            echo '<div>Profiler info has been written in: '. $file .'</div>';
+        global $Language;
+        echo '<div id="footer_debug">';
+        $debug_compute_tile = microtime(true) - $GLOBALS['debug_time_start'];
+        if (function_exists('xdebug_time_index')) {
+            $xdebug_time_index  = xdebug_time_index();
         }
+        
+        $query_time = 0;
+        foreach($GLOBALS['DBSTORE'] as $d) {
+            foreach($d['trace'] as $trace) {
+                $query_time += $trace[2] - $trace[1];
+            }
+        }
+        
+        echo '<span class="debug">'.$Language->getText('include_layout','query_count').": ";
+        echo $GLOBALS['DEBUG_DAO_QUERY_COUNT'] ."</span>";
+        $percent     = (int) ($GLOBALS['DEBUG_TIME_IN_PRE'] * 100 / $debug_compute_tile);
+        $sql_percent = (int) ($query_time * 100 / $debug_compute_tile);
+        echo '<table border=1><thead><tr><th></th><th>Page generated in</th></tr></thead><tbody>';
+        echo '<tr><td>pre.php</td><td>'. number_format(1000 * $GLOBALS['DEBUG_TIME_IN_PRE'], 0, '.', "'") .' ms ('. $percent .'%)</td>';
+        echo '<tr><td>remaining</td><td>'. number_format(1000 * ($debug_compute_tile - $GLOBALS['DEBUG_TIME_IN_PRE']), 0, '.', "'") .' ms</td>';
+        echo '<tr><td><b>total</td><td><b>'. number_format(1000 * $debug_compute_tile, 0, '.', "'") .' ms</td>';
+        if (function_exists('xdebug_time_index')) {
+            echo '<tr><td>xdebug</td><td>'. number_format(1000 * $xdebug_time_index, 0, '.', "'") .' ms</tr>';
+        }
+        echo '<tr><td>sql</td><td>'. number_format(1000 * $query_time, 0, '.', "'") .' ms ('. $sql_percent .'%)</tr>';
+        echo '</tbody></table>';
+        if (function_exists('xdebug_get_profiler_filename')) {
+            if ($file = xdebug_get_profiler_filename()) {
+                echo '<div>Profiler info has been written in: '. $file .'</div>';
+            }
+        }
+        
+        $hook_params = array();
+        EventManager::instance()->processEvent('layout_footer_debug', $hook_params);
 
+        //Display the config
+        // Uncomment this only if you know what you are doing. This may lead to sensitive information leakage /!\
+        //echo '<fieldset><legend id="footer_debug_config" class="'. Toggler::getClassname('footer_debug_config') .'">Config:</legend>';
+        //echo '<pre>';
+        //Config::dump();
+        //echo '</pre>';
+        //echo '</fieldset>';
+        
         // Display all queries used to generate the page
-        /*
-        echo "<br>Queries:\n";
+        echo '<fieldset><legend id="footer_debug_allqueries" class="'. Toggler::getClassname('footer_debug_allqueries') .'">All queries:</legend>';
         echo '<pre>';
-        print_r($GLOBALS['QUERIES']);
+        $queries = array();
+        foreach($GLOBALS['QUERIES'] as $sql) {
+            $t = 0;
+            foreach($GLOBALS['DBSTORE'][md5($sql)]['trace'] as $trace) {
+                $t += $trace[2] - $trace[1];
+            }
+            $queries[] = array(
+                'sql' => $sql,
+                'total time' => number_format(1000 * $t, 0, '.', "'") .' ms',
+            );
+        }
+        print_r($queries);
         echo '</pre>';
+        echo '</fieldset>';
 
+        echo '<fieldset><legend id="footer_debug_queriespaths" class="'. Toggler::getClassname('footer_dubug_queriespaths') .'">Path of all queries:</legend>';
         $max = 0;
         foreach($GLOBALS['DBSTORE'] as $d) {
             foreach($d['trace'] as $trace) {
                 $time_taken = 1000 * round($trace[2] - $trace[1], 3);
                 if ($max < $time_taken) {
                     $max = $time_taken;
+
                 }
             }
         }
@@ -1192,16 +1419,15 @@ class Layout extends Response {
             foreach($d['trace'] as $trace) {
                 $time_taken = 1000 * round($trace[2] - $trace[1], 3);
                 self::_debug_backtrace_rec($paths, array_reverse($trace[0]),
-                            '['. (1000*round($trace[1] - $GLOBALS['debug_time_start'], 3)) 
-                .'/'. $time_taken .'] '.
-                ($time_taken >= $max ? ' top! ' : '') . $d['sql']);
+                    '['. (1000*round($trace[1] - $GLOBALS['debug_time_start'], 3)) 
+                    .'/'. $time_taken .'] '.
+                    ($time_taken >= $max ? ' <span style="background:yellow; padding-left:4px; padding-right:4px; color:red;">top!</span> ' : '') . $d['sql']);
             }
         }
         echo '<table>';
         self::_debug_display_paths($paths, false);
         echo '</table>';
-        /**/
-
+        echo '</fieldset>';
         //Print the backtrace of specific queries
         /*
         echo '<pre>';
@@ -1225,49 +1451,32 @@ class Layout extends Response {
         foreach ($GLOBALS['DBSTORE'] as $key => $value) {
             if ($GLOBALS['DBSTORE'][$key]['nb'] > 1) {
                 if (!$title_displayed) {
-                    echo '<p>Queries executed more than once :</p>';
+                    echo '<fieldset><legend>Queries executed more than once :</legend>';
                     $title_displayed = true;
                 }
-                echo "<div><legend>\n";
-                echo $GLOBALS['HTML']->getImage('ic/toggle_plus.png', 
-                        array(
-                              'id' => "stacktrace_toggle_$key", 
-                              'style' => 'vertical-align:middle; cursor:hand; cursor:pointer;',
-                              'title' => addslashes($GLOBALS['Language']->getText('tracker_include_artifact', 'toggle'))
-                             )
-                );
-                echo "<b>Run ".$GLOBALS['DBSTORE'][$key]['nb']." times: </b>";
+                echo "<fieldset>";
+                echo '<legend id="footer_debug_doublequery_'. $key .'" class="'. Toggler::getClassname('footer_debug_doublequery_'. $key) .'">';
+                echo '<b>Run '.$GLOBALS['DBSTORE'][$key]['nb']." times: </b>";
                 echo $GLOBALS['DBSTORE'][$key]['sql']."\n";
-                echo '</legend></div>';
-                // Display available stacktraces
-                echo "<div id=\"stacktrace_alternate_$key\" style=\"\" ></div>";
-                echo "<script type=\"text/javascript\">Event.observe($('stacktrace_toggle_$key'), 'click', function (evt) {
-                var element = $('stacktrace_$key');
-                if (element) {
-                    Element.toggle(element);
-                    Element.toggle($('stacktrace_alternate_$key'));
-                    
-                    //replace image
-                    var src_search = 'toggle_minus';
-                    var src_replace = 'toggle_plus';
-                    if ($('stacktrace_toggle_$key').src.match('toggle_plus')) {
-                        src_search = 'toggle_plus';
-                        src_replace = 'toggle_minus';
-                    }
-                    $('stacktrace_toggle_$key').src = $('stacktrace_toggle_$key').src.replace(src_search, src_replace);
-                }
-                Event.stop(evt);
-                return false;
-            });
-            $('stacktrace_alternate_$key').update('');
-            </script>";
-                echo "<div id=\"stacktrace_$key\" style=\"display: none;\">";
+                echo '</legend>';
                 self::_debug_backtraces($GLOBALS['DBSTORE'][$key]['trace']);
-                echo "</div>";
+                echo "</fieldset>";
             }
         }
-
+        if ($title_displayed) {
+            echo '</fieldset>';
+        }
+        echo '<fieldset>';
+        echo '<legend id="footer_debug_session" class="'. Toggler::getClassname('footer_debug_session') .'">Session</legend>';
+        echo "<div>";
+        echo '<a href="#" onclick="new Ajax.Updater(\'footer_debug_session_data\', \'/include/debug_session.php?reload\');return false;">reload</a>';
+        echo '  |  ';
+        echo '<a href="#" onclick="new Ajax.Updater(\'footer_debug_session_data\', \'/include/debug_session.php?reset\');return false;">reset</a>';
+        echo '<pre id="footer_debug_session_data">'.print_r($_SESSION, 1).'</pre>';
+        echo "</div>";
+        echo '</fieldset>';
         echo "</pre>\n";
+        echo '</div>';
     }
 
     public static function _debug_backtraces($backtraces) {
@@ -1283,7 +1492,11 @@ class Layout extends Response {
 
     public static function _debug_backtrace_rec(&$paths, $trace, $leaf = '') {
         if (count($trace)) {
-            $file = substr($trace[0]['file'], strlen($GLOBALS['codendi_dir'])) .' #'. $trace[0]['line'] .' ('. (isset($trace[0]['class']) ? $trace[0]['class'] .'::' : '') . $trace[0]['function'] .')';
+            $file = '';
+            if (isset($trace[0]['file'])) {
+                $file = substr($trace[0]['file'], strlen($GLOBALS['codendi_dir'])) .' #'. $trace[0]['line'];
+            }
+            $file .= ' ('. (isset($trace[0]['class']) ? $trace[0]['class'] .'::' : '') . $trace[0]['function'] .')';
             if (strpos($file, '/src/common/dao/include/DataAccessObject.class.php') === 0) {
                 self::_debug_backtrace_rec($paths, array_slice($trace, 1), $leaf);
             } else {
@@ -1435,6 +1648,8 @@ class Layout extends Response {
             }
             echo '<hr SIZE="1" NoShade>';
         }
+        echo $this->getBreadCrumbs();
+        echo $this->getToolbar();
         echo $this->_getFeedback();
         $this->_feedback->display();
     }
@@ -1570,15 +1785,15 @@ class Layout extends Response {
         $group_id = $project->getGroupId();
         reset($project->service_data_array);
          while (list($short_name,$service_data) = each($project->service_data_array)) {
-               if ((string)$short_name == "admin") {                   
+               if ((string)$short_name == "admin") {
                 // for the admin service, we will check if the user is allowed to use the service
                 // it means : 1) to be a super user, or
                 //            2) to be project admin
-                if (!user_is_super_user()) {                    
-                    if (!user_isloggedin()) {                        
+                if (!user_is_super_user()) {
+                    if (!user_isloggedin()) {
                         continue;   // we don't include the service in the $tabs
-                    } else {                        
-                        if (!user_ismember($group_id, 'A')) {                           
+                    } else {
+                        if (!user_ismember($group_id, 'A')) {
                             continue;   // we don't include the service in the $tabs
                         }
                     }
@@ -1816,6 +2031,10 @@ document.observe('dom:loaded', function() {
         return $output;
     }
     
+    public function getImagePath($src) {
+        return $this->imgroot . $src;
+    }
+    
     /**
      * Build an img tag
      *
@@ -1824,7 +2043,7 @@ document.observe('dom:loaded', function() {
      * @return string <img src="/themes/CodeXTab/images/trash.png" alt="Beautiful image" />
      */
     function getImage($src, $args = array()) {
-        $return = '<img src="'. $this->imgroot . $src .'"';
+        $return = '<img src="'. $this->getImagePath($src) .'"';
         foreach($args as $k => $v) {
             $return .= ' '.$k.'="'.$v.'"';
         }

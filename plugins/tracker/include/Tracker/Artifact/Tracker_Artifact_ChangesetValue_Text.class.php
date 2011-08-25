@@ -1,0 +1,131 @@
+<?php
+/**
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Codendi.
+ *
+ * Codendi is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Codendi is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+ */
+require_once('Tracker_Artifact_ChangesetValue.class.php');
+require_once('common/include/Codendi_HTMLPurifier.class.php');
+
+/**
+ * Manage values in changeset for string fields
+ */
+class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetValue {
+    
+    /**
+     * @var string
+     */
+    protected $text;
+    
+    /**
+     * Constructor
+     *
+     * @param Tracker_FormElement_Field_String $field       The field of the value
+     * @param boolean                          $has_changed If the changeset value has chnged from the previous one
+     * @param string                           $text        The string
+     */
+    public function __construct($id, $field, $has_changed, $text) {
+        parent::__construct($id, $field, $has_changed);
+        $this->text = $text;
+    }
+    
+    /**
+     * Get the text value of this changeset value
+     *
+     * @return string the text
+     */
+    public function getText() {
+        return $this->text;
+    }
+    
+    /**
+     * Return a string that will be use in SOAP API
+     * as the value of this ChangesetValue_Text 
+     *
+     * @return string The value of this artifact changeset value for Soap API
+     */
+    public function getSoapValue() {
+        return $this->getText();
+    }
+    
+    /**
+     * Get the value (string)
+     *
+     * @return string The value of this artifact changeset value
+     */
+    public function getValue() {
+         return $this->getText();
+    }
+    
+    /**
+     * Get the diff between this changeset value and the one passed in param
+     *
+     * @param Tracker_Artifact_ChangesetValue_Text $changeset_value the changeset value to compare
+     *
+     * @return string The difference between another $changeset_value, false if no differences
+     */
+    public function diff($changeset_value, $format='html') {
+        $previous = explode(PHP_EOL, $changeset_value->getText());
+        $next     = explode(PHP_EOL, $this->getText());
+        return $this->fetchDiff($previous, $next, $format);
+    }
+    
+    /**
+     * Returns the "set to" for field added later
+     *
+     * @return string The sentence to add in changeset
+     */
+    public function nodiff($format='html') {
+        $previous = '';
+        $next = $this->getText();
+        if ($next != '') {
+            return $this->fetchDiff($previous, $next, $format);
+        }
+    }
+    
+    /**
+    * Display the diff in changeset
+    *
+    * @return string The text to display
+    */
+    public function fetchDiff($previous, $next, $format) {
+        $string = '';
+        switch ($format) {
+            case 'html':
+                $callback = array(Codendi_HTMLPurifier::instance(), 'purify');
+                $d = new Codendi_Diff(
+                    array_map($callback, $previous, array_fill(0, count($previous), CODENDI_PURIFIER_CONVERT_HTML)),
+                    array_map($callback, $next,     array_fill(0, count($next),     CODENDI_PURIFIER_CONVERT_HTML))
+                );
+                $f = new Codendi_HtmlUnifiedDiffFormatter();
+                $diff = $f->format($d);
+                if ($diff) {
+                    $string .= '<div class="diff">'. $diff .'</div>';
+                }
+                break;
+            case 'text':              
+                $diff = new Codendi_Diff($previous, $next);
+                $f    = new Codendi_UnifiedDiffFormatter();
+                $string .= PHP_EOL.$f->format($diff);
+                break;
+            default:
+                break;
+        }
+        return $string;
+    }
+
+}
+?>

@@ -10,6 +10,8 @@ require_once('common/server/Server.class.php');
 Mock::generate('Server');
 require_once('common/server/ServerFactory.class.php');
 Mock::generate('ServerFactory');
+require_once('common/project/Project.class.php');
+Mock::generate('Project');
 
 class ServiceTest extends UnitTestCase {
     function ServiceTest($name = 'Service test') {
@@ -20,6 +22,7 @@ class ServiceTest extends UnitTestCase {
         $url_server_1 = 'url_server_1';
         $url_server_2 = 'url_server_2';
         $link = 'link';
+        $p = new MockProject($this);
         
         $server_1 =& new MockServer();
         $server_1->setReturnValue('getUrl', $url_server_1);
@@ -34,7 +37,7 @@ class ServiceTest extends UnitTestCase {
         $service =& new ServiceTestVersion();
         $service->setReturnReference('_getServerFactory', $sf);
         $service->setReturnValue('_sessionIsSecure', false);
-        $service->Service(array(
+        $service->__construct($p, array(
             'link' => $link,
             'location' => 'satellite',
             'server_id' => 1
@@ -44,7 +47,7 @@ class ServiceTest extends UnitTestCase {
         $service =& new ServiceTestVersion();
         $service->setReturnReference('_getServerFactory', $sf);
         $service->setReturnValue('_sessionIsSecure', false);
-        $service->Service(array(
+        $service->__construct($p, array(
             'link' => $link,
             'location' => 'satellite',
             'server_id' => 2
@@ -54,7 +57,7 @@ class ServiceTest extends UnitTestCase {
         $service =& new ServiceTestVersion();
         $service->setReturnReference('_getServerFactory', $sf);
         $service->setReturnValue('_sessionIsSecure', false);
-        $service->Service(array(
+        $service->__construct($p, array(
             'link' => $link,
             'location' => 'same',
             'server_id' => 1
@@ -65,6 +68,7 @@ class ServiceTest extends UnitTestCase {
     function testAbsoluteUrl() {
         $url_server = 'url_server';
         $link = 'http://abs.olu.te';
+        $p = new MockProject($this);
         
         $server =& new MockServer();
         $server->setReturnValue('getUrl', $url_server);
@@ -75,7 +79,7 @@ class ServiceTest extends UnitTestCase {
         $service =& new ServiceTestVersion();
         $service->setReturnReference('_getServerFactory', $sf);
         $service->setReturnValue('_sessionIsSecure', false);
-        $service->Service(array(
+        $service->__construct($p, array(
             'link' => $link,
             'location' => 'satellite',
             'server_id' => 1
@@ -85,7 +89,7 @@ class ServiceTest extends UnitTestCase {
         $service =& new ServiceTestVersion();
         $service->setReturnReference('_getServerFactory', $sf);
         $service->setReturnValue('_sessionIsSecure', false);
-        $service->Service(array(
+        $service->__construct($p, array(
             'link' => $link,
             'location' => 'same',
             'server_id' => 1

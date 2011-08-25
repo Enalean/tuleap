@@ -28,6 +28,18 @@ $GLOBALS['UGROUP_DOCUMENT_ADMIN']     =13;
 $GLOBALS['UGROUP_WIKI_ADMIN']         =14;
 $GLOBALS['UGROUP_TRACKER_ADMIN']      =15;
 
+$GLOBALS['UGROUPS'] = array(
+    'UGROUP_NONE'               => $GLOBALS['UGROUP_NONE'],
+    'UGROUP_ANONYMOUS'          => $GLOBALS['UGROUP_ANONYMOUS'],
+    'UGROUP_REGISTERED'         => $GLOBALS['UGROUP_REGISTERED'],
+    'UGROUP_PROJECT_MEMBERS'    => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
+    'UGROUP_PROJECT_ADMIN'      => $GLOBALS['UGROUP_PROJECT_ADMIN'],
+    'UGROUP_FILE_MANAGER_ADMIN' => $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'],
+    'UGROUP_DOCUMENT_TECH'      => $GLOBALS['UGROUP_DOCUMENT_TECH'],
+    'UGROUP_DOCUMENT_ADMIN'     => $GLOBALS['UGROUP_DOCUMENT_ADMIN'],
+    'UGROUP_WIKI_ADMIN'         => $GLOBALS['UGROUP_WIKI_ADMIN'],
+    'UGROUP_TRACKER_ADMIN'      => $GLOBALS['UGROUP_TRACKER_ADMIN'],
+);
 /*
 *      anonymous
 *          ^
@@ -58,18 +70,27 @@ function ugroup_get_parent($ugroup_id) {
 }
 
 // Return members (user_id + user_name according to user preferences) of given user group
-function ugroup_db_get_members($ugroup_id, $with_display_preferences=false) {
-    $sqlname="user.user_name";
+// * $keword is used to filter the users.
+function ugroup_db_get_members($ugroup_id, $with_display_preferences = false, $keyword = null) {
+    $sqlname="user.user_name AS full_name";
     $sqlorder="user.user_name";
     if ($with_display_preferences) {
-        $uh = new UserHelper();
+        $uh = UserHelper::instance();
         $sqlname=$uh->getDisplayNameSQLQuery();
         $sqlorder=$uh->getDisplayNameSQLOrder();
     }
-	  $sql="(SELECT user.user_id, ".$sqlname." ". 
-    "FROM ugroup_user, user ".
-    "WHERE user.user_id = ugroup_user.user_id ".
-    "AND ugroup_user.ugroup_id=".$ugroup_id." ORDER BY ".$sqlorder.")";
+    $having_keyword = '';
+    if ($keyword) {
+        $keyword = "'%". db_es((string)$keyword) ."%'";
+        $having_keyword = " AND full_name LIKE $keyword ";
+    }
+    $ugroup_id = (int)$ugroup_id;
+    $sql="(SELECT user.user_id, $sqlname, user.user_name
+            FROM ugroup_user, user 
+            WHERE user.user_id = ugroup_user.user_id 
+              AND ugroup_user.ugroup_id = $ugroup_id 
+            $having_keyword
+            ORDER BY $sqlorder)";
     return $sql;
 }
 
@@ -224,14 +245,20 @@ function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
  * Check membership of the user to a specified ugroup
  * $group_id is necessary for automatic project groups like project member, release admin, etc.
  * $atid is necessary for trackers since the tracker admin role is different for each tracker.
+ * $keword is used to filter the users
  */
-function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id, $with_display_preferences=false) {
-    $sqlname="user.user_name";
+function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id, $with_display_preferences=false, $keyword = null) {
+    $sqlname="user.user_name AS full_name";
     $sqlorder="user.user_name";
     if ($with_display_preferences) {
-        $uh = new UserHelper();
+        $uh = UserHelper::instance();
         $sqlname=$uh->getDisplayNameSQLQuery();
         $sqlorder=$uh->getDisplayNameSQLOrder(); 
+    }
+    $having_keyword = '';
+    if ($keyword) {
+        $keyword = "'%". db_es((string)$keyword) ."%'";
+        $having_keyword = " HAVING full_name LIKE $keyword ";
     }
 	// Special Cases
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) { 
@@ -242,31 +269,63 @@ function ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id, $with_displ
         return;
     } else if ($ugroup_id==$GLOBALS['UGROUP_REGISTERED']) {
         // Registered user
-        return "(SELECT user.user_id, ".$sqlname." FROM user WHERE ( status='A' OR status='R' ) ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user WHERE ( status='A' OR status='R' ) $having_keyword ORDER BY ".$sqlorder." )";
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_MEMBERS']) {
         // Project members
-        return "(SELECT user.user_id, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_FILE_MANAGER_ADMIN']) {
         // File manager admins
-        return "(SELECT user.user_id, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND file_flags = 2 AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND file_flags = 2 AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_ADMIN']) {
         // Document admin
-        return "(SELECT user.user_id, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (2,3) AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (2,3) AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_DOCUMENT_TECH']) {
         // Document tech
-        return "(SELECT user.user_id, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (1,2) AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND doc_flags IN (1,2) AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_WIKI_ADMIN']) {
         // Wiki admins
-        return "(SELECT user.user_id, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND wiki_flags = '2' AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_PROJECT_ADMIN']) {
         // Project admins
-        return "(SELECT user.user_id, ".$sqlname." FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM user, user_group ug WHERE user.user_id = ug.user_id AND ug.group_id = $group_id AND admin_flags = 'A' AND ( user.status='A' OR user.status='R' ) $having_keyword ORDER BY ".$sqlorder.")";
     } else if ($ugroup_id==$GLOBALS['UGROUP_TRACKER_ADMIN']) {
         // Tracker admins
-        return "(SELECT user.user_id, ".$sqlname." FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
+        return "(SELECT user.user_id, ".$sqlname.", user.user_name FROM artifact_perm ap, user WHERE (user.user_id = ap.user_id) and group_artifact_id=$atid AND perm_level in (2,3) AND ( user.status='A' OR user.status='R' ) ORDER BY ".$sqlorder.")";
     } 
 }
 
+/**
+ * Retrieve all dynamic groups' members except ANONYMOUS, NONE, REGISTERED
+ * @param Integer $group_id
+ * @param Integer $atid
+ * @return Array
+ */
+function ugroup_get_all_dynamic_members($group_id, $atid=0) {
+    $members = array();
+    $sql     = array();
+    $ugroups = array();
+    //retrieve dynamic ugroups id and name
+    $rs = db_query("SELECT ugroup_id, name FROM ugroup WHERE ugroup_id IN (".implode(',',$GLOBALS['UGROUPS']).") ");
+    while( $row = db_fetch_array($rs) ) {
+        $ugroups[ $row['ugroup_id'] ] = $row['name'];
+    }
+    foreach ( $GLOBALS['UGROUPS'] as $ugroup_id) {
+        if ( $ugroup_id == $GLOBALS['UGROUP_ANONYMOUS'] || $ugroup_id == $GLOBALS['UGROUP_REGISTERED'] || $ugroup_id == $GLOBALS['UGROUP_NONE'] ) {
+            continue;
+        }
+        $sql = ugroup_db_get_dynamic_members($ugroup_id, $atid, $group_id);
+        $rs  = db_query($sql);
+        while( $row = db_fetch_array($rs) ) {
+            $members[] = array(
+                'ugroup_id' => $ugroup_id,
+                'name'      => $ugroups[ $ugroup_id ],
+                'user_id'   => $row['user_id'],
+                'user_name' => $row['user_name'],
+            );
+        }
+    }
+    return $members;
+}
 
 /**
  * Remove user from all ugroups

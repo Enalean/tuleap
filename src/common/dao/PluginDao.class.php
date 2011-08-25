@@ -28,7 +28,7 @@ class PluginDao extends DataAccessObject {
     * Constructs the PluginDao
     * @param $da instance of the DataAccess class
     */
-    function PluginDao( & $da ) {
+    function PluginDao( $da ) {
         DataAccessObject::DataAccessObject($da);
     }
     
@@ -36,7 +36,7 @@ class PluginDao extends DataAccessObject {
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function & searchAll() {
+    function searchAll() {
         $sql = "SELECT * FROM plugin";
         return $this->retrieve($sql);
     }
@@ -45,7 +45,7 @@ class PluginDao extends DataAccessObject {
     * Searches Plugin by Id 
     * @return DataAccessResult
     */
-    function & searchById($id) {
+    function searchById($id) {
         $sql = sprintf("SELECT * FROM plugin WHERE id = %s",
                 $this->da->quoteSmart($id));
         return $this->retrieve($sql);
@@ -55,7 +55,7 @@ class PluginDao extends DataAccessObject {
     * Searches Plugin by Name 
     * @return DataAccessResult
     */
-    function & searchByName($name) {
+    function searchByName($name) {
         $sql = sprintf("SELECT * FROM plugin WHERE name = %s",
                 $this->da->quoteSmart($name));
         return $this->retrieve($sql);
@@ -65,7 +65,7 @@ class PluginDao extends DataAccessObject {
     * Searches Plugin by Available 
     * @return DataAccessResult
     */
-    function & searchByAvailable($available) {
+    function searchByAvailable($available) {
         $sql = sprintf("SELECT * FROM plugin WHERE available = %s",
                 $this->da->quoteSmart($available));
         return $this->retrieve($sql);
@@ -80,16 +80,7 @@ class PluginDao extends DataAccessObject {
         $sql = sprintf("INSERT INTO plugin (name, available) VALUES (%s, %s);",
                 $this->da->quoteSmart($name),
                 $this->da->quoteSmart($available));
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
-            if ($row = $dar->getRow()) {
-                $inserted = (int) $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        } 
-        return $inserted;
+        return $this->updateAndGetLastId($sql);
     }
     
     function updateAvailableByPluginId($available, $id) {
@@ -166,6 +157,13 @@ class PluginDao extends DataAccessObject {
             }
         }
         return false;
+    }
+    
+    function searchAvailableAndPriorities() {
+        $sql = "SELECT p.*, h.hook AS hook, h.priority AS priority
+                FROM priority_plugin_hook h RIGHT JOIN plugin p ON (h.plugin_id = p.id) 
+                WHERE p.available = 1";
+        return $this->retrieve($sql);
     }
 
 }

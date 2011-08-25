@@ -1,14 +1,13 @@
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>
         Extending the SimpleTest unit tester with additional expectation classes
     </title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -32,8 +31,7 @@
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <h1>Expectation documentation</h1>
         This page...
         <ul>
@@ -52,11 +50,7 @@
         </li>
 </ul>
 <div class="content">
-        <p>
-<a class="target" name="mock">
-<h2>More control over mock objects</h2>
-</a>
-</p>
+        <p><a class="target" name="mock"><h2>More control over mock objects</h2></a></p>
             <p>
                 The default behaviour of the
                 <a href="mock_objects_documentation.html">mock objects</a>
@@ -99,7 +93,7 @@
 <pre>
 class TestOfNewsService extends UnitTestCase {
     ...
-    function testConnectionFailure() {&lt;strong&gt;
+    function testConnectionFailure() {<strong>
         $writer = &amp;new MockWriter();
         $writer-&gt;expectOnce('write', array(
                 'Cannot connect to news service ' .
@@ -107,7 +101,7 @@ class TestOfNewsService extends UnitTestCase {
                 'Please try again later.'));
         
         $service = &amp;new NewsService('BBC News');
-        $service-&gt;publish($writer);
+        $service-&gt;publish($writer);</strong>
     }
 }
 </pre>
@@ -158,46 +152,57 @@ class TestOfNewsService extends UnitTestCase {
             </p>
             <p>
                 The possible expectation classes are...
-                <table>
-<tbody>
+                <table><tbody>
                     <tr>
-<td><span class="new_code">AnythingExpectation</span></td><td>Will always match</td>
+<td><span class="new_code">AnythingExpectation</span></td>
+<td>Will always match</td>
 </tr>
                     <tr>
-<td><span class="new_code">EqualExpectation</span></td><td>An equality, rather than the stronger identity comparison</td>
+<td><span class="new_code">EqualExpectation</span></td>
+<td>An equality, rather than the stronger identity comparison</td>
 </tr>
                     <tr>
-<td><span class="new_code">NotEqualExpectation</span></td><td>An inequality comparison</td>
+<td><span class="new_code">NotEqualExpectation</span></td>
+<td>An inequality comparison</td>
 </tr>
                     <tr>
-<td><span class="new_code">IndenticalExpectation</span></td><td>The default mock object check which must match exactly</td>
+<td><span class="new_code">IndenticalExpectation</span></td>
+<td>The default mock object check which must match exactly</td>
 </tr>
                     <tr>
-<td><span class="new_code">NotIndenticalExpectation</span></td><td>Inverts the mock object logic</td>
+<td><span class="new_code">NotIndenticalExpectation</span></td>
+<td>Inverts the mock object logic</td>
 </tr>
                     <tr>
-<td><span class="new_code">WithinMarginExpectation</span></td><td>Compares a value to within a margin</td>
+<td><span class="new_code">WithinMarginExpectation</span></td>
+<td>Compares a value to within a margin</td>
 </tr>
                     <tr>
-<td><span class="new_code">OutsideMarginExpectation</span></td><td>Checks that a value is out side the margin</td>
+<td><span class="new_code">OutsideMarginExpectation</span></td>
+<td>Checks that a value is out side the margin</td>
 </tr>
                     <tr>
-<td><span class="new_code">PatternExpectation</span></td><td>Uses a Perl Regex to match a string</td>
+<td><span class="new_code">PatternExpectation</span></td>
+<td>Uses a Perl Regex to match a string</td>
 </tr>
                     <tr>
-<td><span class="new_code">NoPatternExpectation</span></td><td>Passes only if failing a Perl Regex</td>
+<td><span class="new_code">NoPatternExpectation</span></td>
+<td>Passes only if failing a Perl Regex</td>
 </tr>
                     <tr>
-<td><span class="new_code">IsAExpectation</span></td><td>Checks the type or class name only</td>
+<td><span class="new_code">IsAExpectation</span></td>
+<td>Checks the type or class name only</td>
 </tr>
                     <tr>
-<td><span class="new_code">NotAExpectation</span></td><td>Opposite of the <span class="new_code">IsAExpectation</span></td>
+<td><span class="new_code">NotAExpectation</span></td>
+<td>Opposite of the <span class="new_code">IsAExpectation</span>
+</td>
 </tr>
                     <tr>
-<td><span class="new_code">MethodExistsExpectation</span></td><td>Checks a method is available on an object</td>
+<td><span class="new_code">MethodExistsExpectation</span></td>
+<td>Checks a method is available on an object</td>
 </tr>
-                </tbody>
-</table>
+                </tbody></table>
                 Most take the expected value in the constructor.
                 The exceptions are the pattern matchers, which take a regular expression,
                 and the <span class="new_code">IsAExpectation</span> and <span class="new_code">NotAExpectation</span> which takes a type
@@ -236,11 +241,7 @@ new WithinMarginExpectation(14.0, 0.001)
                 This will accept any value from 13.999 to 14.001 inclusive.
             </p>
         
-        <p>
-<a class="target" name="behaviour">
-<h2>Using expectations to control stubs</h2>
-</a>
-</p>
+        <p><a class="target" name="behaviour"><h2>Using expectations to control stubs</h2></a></p>
             <p>
                 The expectation classes can be used not just for sending assertions
                 from mock objects, but also for selecting behaviour for the
@@ -276,11 +277,7 @@ $authorisation-&gt;setReturnValue('isAllowed', false);</strong>
                 completeness.
             </p>
         
-        <p>
-<a class="target" name="extending">
-<h2>Creating your own expectations</h2>
-</a>
-</p>
+        <p><a class="target" name="extending"><h2>Creating your own expectations</h2></a></p>
             <p>
                 The expectation classes have a very simple structure.
                 So simple that it is easy to create your own versions for
@@ -317,11 +314,7 @@ $authorisation-&gt;setReturnValue('isAllowed', false);</strong>
                 classes.
             </p>
         
-        <p>
-<a class="target" name="unit">
-<h2>Under the bonnet of the unit tester</h2>
-</a>
-</p>
+        <p><a class="target" name="unit"><h2>Under the bonnet of the unit tester</h2></a></p>
             <p>
                 The <a href="http://sourceforge.net/projects/simpletest/">SimpleTest unit testing framework</a>
                 also uses the expectation classes internally for the
@@ -393,12 +386,11 @@ class TestOfNetworking extends UnitTestCase {
             The expectations mimic the constraints in <a href="http://www.jmock.org/">JMock</a>.
         </li>
 <li>
-            <a href="http://simpletest.sourceforge.net/">Full API for SimpleTest</a>
+            <a href="http://simpletest.org/api/">Full API for SimpleTest</a>
             from the PHPDoc.
         </li>
 </ul>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -422,8 +414,7 @@ class TestOfNetworking extends UnitTestCase {
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <div class="copyright">
             Copyright<br>Marcus Baker 2006
         </div>

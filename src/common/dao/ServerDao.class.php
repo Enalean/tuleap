@@ -32,7 +32,7 @@ class ServerDao extends DataAccessObject {
         DataAccessObject::DataAccessObject($da);
     }
     
-    function &searchAll() {
+    function searchAll() {
         $sql = "SELECT * FROM server ORDER BY id";
         return $this->retrieve($sql);
     }
@@ -41,13 +41,13 @@ class ServerDao extends DataAccessObject {
     * Searches Server 
     * @return DataAccessResult
     */
-    function & searchById($id) {
+    function searchById($id) {
         $sql = sprintf("SELECT * FROM server WHERE id = %s",
 				$this->da->quoteSmart($id));
         return $this->retrieve($sql);
     }
 
-    function & searchByIsMaster($is_master) {
+    function searchByIsMaster($is_master) {
         $sql = sprintf("SELECT * FROM server WHERE is_master = %s",
             $this->da->quoteSmart($is_master ? 1 : 0));
         return $this->retrieve($sql);

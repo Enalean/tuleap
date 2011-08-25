@@ -46,16 +46,7 @@ class SystemEventDao extends DataAccessObject {
                        $this->da->quoteSmart($status),
                        $this->da->escapeInt($create_date));
         
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        } 
-        return $inserted;
+        return $this->updateAndGetLastId($sql);
     }
 
      /** 

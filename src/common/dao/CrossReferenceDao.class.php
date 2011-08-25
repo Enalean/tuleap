@@ -21,7 +21,8 @@
 require_once('include/DataAccessObject.class.php');
 
 class CrossReferenceDao extends DataAccessObject {
-    public function __construct($da) {
+    
+    public function __construct($da = null) {
         parent::__construct($da);
         $this->table_name = 'cross_references';
     }

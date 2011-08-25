@@ -36,7 +36,7 @@ class PermissionsDao extends DataAccessObject {
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function & searchAll() {
+    function searchAll() {
         $sql = "SELECT * FROM permissions";
         return $this->retrieve($sql);
     }
@@ -45,7 +45,7 @@ class PermissionsDao extends DataAccessObject {
     * Searches Permissions by PermissionType 
     * @return DataAccessResult
     */
-    function & searchByPermissionType($permissionType) {
+    function searchByPermissionType($permissionType) {
         $sql = sprintf("SELECT object_id, ugroup_id FROM permissions WHERE permission_type = %s",
 				"'".$permissionType."'");
         return $this->retrieve($sql);
@@ -55,7 +55,7 @@ class PermissionsDao extends DataAccessObject {
     * Searches Permissions by ObjectId 
     * @return DataAccessResult
     */
-    function & searchByObjectId($objectId) {
+    function searchByObjectId($objectId) {
         $sql = sprintf("SELECT permission_type, ugroup_id FROM permissions WHERE object_id = '%s'",
 				"'".$objectId."'");
         return $this->retrieve($sql);
@@ -65,7 +65,7 @@ class PermissionsDao extends DataAccessObject {
     * Searches Permissions by UgroupId 
     * @return DataAccessResult
     */
-    function & searchByUgroupId($ugroupId) {
+    function searchByUgroupId($ugroupId) {
         $sql = sprintf("SELECT permission_type, object_id FROM permissions WHERE ugroup_id = %s",
 				"'".$ugroupId."'");
         return $this->retrieve($sql);
@@ -122,7 +122,7 @@ class PermissionsDao extends DataAccessObject {
     * Searches Permissions by ObjectId and Ugroups
     * @return DataAccessResult
     */
-    function & searchPermissionsByObjectId($objectId, $ptype=null) { 	
+    function searchPermissionsByObjectId($objectId, $ptype=null) { 	
         if(is_array($objectId)) {
             $_where_clause = " object_id IN ('".implode("','",$objectId)."')";
         }
@@ -141,7 +141,7 @@ class PermissionsDao extends DataAccessObject {
     * Searches Permissions by TrackerId and Ugroups
     * @return DataAccessResult
     */
-    function & searchPermissionsByArtifactFieldId($objectId) {
+    function searchPermissionsByArtifactFieldId($objectId) {
         $sql = sprintf("SELECT * FROM permissions WHERE object_id LIKE '%s#%%'" ,
 				$objectId);
         return $this->retrieve($sql);

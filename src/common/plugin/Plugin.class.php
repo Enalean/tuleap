@@ -36,11 +36,30 @@ class Plugin {
     const SCOPE_PROJECT = 1;
     const SCOPE_USER    = 2;
     
+    /**
+     * @var bool True if the plugin should be disabled for all projects on installation
+     *
+     * Usefull only for plugins with scope == SCOPE_PROJECT
+     */
+    public $isRestrictedByDefault = false;
+    
+    /**
+     * @var array List of allowed projects
+     */
+    protected $allowedForProject = array();
+    
     public function Plugin($id = -1) {
         $this->id            = $id;
         $this->hooks         = new Map();
         
         $this->_scope = Plugin::SCOPE_SYSTEM;
+    }
+    
+    public function isAllowed($group_id) {
+        if(!isset($this->allowedForProject[$group_id])) {
+            $this->allowedForProject[$group_id] = PluginManager::instance()->isPluginAllowedForProject($this, $group_id);
+        }
+        return $this->allowedForProject[$group_id];
     }
     
     public function getId() {

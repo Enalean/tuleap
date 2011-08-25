@@ -139,7 +139,7 @@ Object.extend(TableKit, {
 		var key = id + s;
 		if(!TableKit._opcache[key]){
 			TableKit._opcache[key] = $A($w(s)).inject([],function(a,v){
-				a.push(a[v] = o2[v] || o1[v]);
+				a.push(a[v] = (typeof o2[v] !== "undefined" ? o2[v] : o1[v]));
 				return a;
 			});
 		}

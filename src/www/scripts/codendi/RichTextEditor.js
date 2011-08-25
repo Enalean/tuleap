@@ -18,6 +18,72 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+var codendi = codendi || { };
+
+codendi.RTE = Class.create(
+    {
+        initialize: function (element, options) {
+            this.element = $(element);
+            this.options = Object.extend({
+                toolbar: 'basic', //basic | full
+                onLoad: Prototype.emptyFunction,
+                toggle: false,
+                default_in_html: true
+            }, options || { });
+            
+            this.rte = false;
+            if (this.options.toggle) {
+                var div = new Element('div');
+                var a = new Element('a', {href: "#"}).update("Toggle rich text formatting");
+                a.observe('click', this.toggle.bindAsEventListener(this));
+                div.appendChild(a);
+                Element.insert(this.element, {before: div});
+            }
+            if (!this.options.toggle || this.options.default_in_html) {
+                this.init_rte();
+            }
+        },
+        init_rte: function () {
+            this.rte = CKEDITOR.replace(this.element.id, { 
+                toolbar: this.options.toolbar === 'basic' ?
+                    [
+                        ['Styles', 'Format', 'Font', 'FontSize'],
+                        ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
+                        '/',
+                        ['TextColor', 'BGColor'],
+                        ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
+                        ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                        ['Link', 'Unlink', 'Anchor', 'Image']
+                    ] : 
+                    'Full'
+                }
+            );
+            CKEDITOR.on('instanceCreated', function (evt) {
+                if (evt.editor === this.rte) {
+                    this.options.onLoad();
+                }
+            }.bind(this));
+        },
+        toggle: function (evt) {
+            if (!this.rte) {
+                this.init_rte();
+            } else {
+                this.rte.destroy();
+                this.rte = null;
+            }
+            Event.stop(evt);
+            return false;
+        },
+        destroy: function () {
+            try {
+                this.rte.destroy(false);
+            } catch (e) {
+            }
+            this.rte = null;
+        }
+    }
+);
+
 var Codendi_RTE_Light = Class.create({
     initialize: function (element) {
         this.element = $(element);

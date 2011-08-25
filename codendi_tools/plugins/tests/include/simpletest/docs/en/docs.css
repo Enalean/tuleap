@@ -9,7 +9,7 @@ h1 {
     text-align: center;
 }
 pre {
-    font-family: courier, typewriter, monospace;
+    font-family: "courier new", courier, typewriter, monospace;
     font-size: 90%;
     border: 1px solid;
 	border-color: #999966;
@@ -19,7 +19,7 @@ pre {
     margin-right: 40px;
 }
 .code, .new_code, pre.new_code {
-    font-family: courier, typewriter, monospace;
+    font-family: "courier new", courier, typewriter, monospace;
     font-weight: bold;
 }
 div.copyright {
@@ -117,5 +117,5 @@ dl, dd {
 }
 em {
     font-weight: bold;
-    font-family: courier, typewriter, monospace;
+    font-family: "courier new", courier, typewriter, monospace;
 }

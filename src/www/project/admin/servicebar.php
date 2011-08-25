@@ -352,7 +352,26 @@ if (db_numrows($result) < 1) {
 }
 $row_num=0;
 while ($serv = db_fetch_array($result)) {
-    display_service_row($group_id,$serv['service_id'],$serv['label'],$serv['short_name'],$serv['description'],$serv['is_active'],$serv['is_used'],$serv['scope'],$serv['rank'],$row_num,$is_superuser,$project->isTemplate());
+    $classname = $project->getServiceClassName($serv['short_name']);
+    try {
+        $s = new $classname($project, $serv);
+        display_service_row(
+            $group_id,
+            $serv['service_id'],
+            $serv['label'],
+            $serv['short_name'],
+            $serv['description'],
+            $serv['is_active'],
+            $serv['is_used'],
+            $serv['scope'],
+            $serv['rank'],
+            $row_num,
+            $is_superuser,
+            $project->isTemplate()
+        );
+    } catch (ServiceNotAllowedForProjectException $e) {
+        //don't display the row for this servce
+    }
 }
 
 

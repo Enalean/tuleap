@@ -179,7 +179,7 @@ class Docman_Controller extends Controler {
         $this->logger->logsDaily($params);
     }
     
-    function &_getEventManager() {
+    function _getEventManager() {
         return EventManager::instance();
     }
     

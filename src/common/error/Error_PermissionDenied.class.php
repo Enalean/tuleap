@@ -28,14 +28,23 @@ require_once('common/user/User.class.php');
  * It offres to user the possibility to request the project membership directly.
  */
 abstract class Error_PermissionDenied {
+    /**
+     * @var URL
+     */
+    protected $url;
 
     /**
      * Constructor of the class
      *
+     * @param Url $url Url that lead to the error
+     *
      * @return void
      */
-    function __construct() {
-        
+    function __construct(Url $url = null) {
+        if ($url === null) {
+            $url = new URL();
+        }
+        $this->url = $url;
     }
 
     /**
@@ -77,8 +86,7 @@ abstract class Error_PermissionDenied {
      * 
      */
     function buildInterface() {
-        $url= new URL();
-        $groupId =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
+        $groupId =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $this->url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
         $userId = $this->getUserManager()->getCurrentUser()->getId();
         
         $param = $this->returnBuildInterfaceParam();

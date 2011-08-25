@@ -31,6 +31,12 @@ abstract class Rule {
     var $error;
 
     /**
+     * Constructor
+     */
+    public function __construct() {
+    }
+    
+    /**
      * Check if $val is a valid not.
      *
      * @param String $val Value to check.
@@ -44,7 +50,7 @@ abstract class Rule {
      * @param String $val Value to check.
      * @return Boolean
      */
-    function getErrorMessage($key) {
+    function getErrorMessage($key='') {
         return $this->error;
     }
 }
@@ -207,6 +213,22 @@ extends Rule {
             return true;
         }
         return false;
+    }
+}
+
+/**
+ * Check if given string match a pattern
+ */
+class Rule_Regexp extends Rule {
+    protected $pattern;
+    
+    public function __construct($pattern) {
+        parent::__construct();
+        $this->pattern = $pattern;
+    }
+    
+    function isValid($val) {
+        return preg_match($this->pattern, $val);
     }
 }
 
@@ -699,7 +721,7 @@ extends Rule {
 
     function Rule_File() {
         $this->maxSize = $GLOBALS['sys_max_size_upload'];
-        $this->i18nPageName = 'rule_valid';
+        $this->i18nPageName = 'rule_file';
     }
 
     function setMaxSize($max) {

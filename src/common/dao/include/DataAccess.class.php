@@ -93,6 +93,16 @@ class DataAccess {
         }
     }
     
+    /**
+     * Open a *new* connection to a RDBMS
+     * 
+     * @param string $host         The server
+     * @param string $user         The username
+     * @param string $pass         The password
+     * @param int    $client_flags The client_flags  parameter
+     *
+     * @return resource Returns a link identifier on success, or FALSE on failure. 
+     */
     protected function connect($host, $user, $pass, $opt) {
         return mysql_connect($host, $user, $pass, true, $opt);
     }
@@ -104,7 +114,7 @@ class DataAccess {
      * @param $sql string the database query to run
      * @return object DataAccessResult
      */
-    function fetch($sql) {
+    public function query($sql) {
         $time = microtime(1);
         $res  = mysql_query($sql,$this->db);
 
@@ -120,7 +130,7 @@ class DataAccess {
             }
         }
 
-        if (isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE']) {
+        if (Config::get('DEBUG_MODE')) {
             $GLOBALS['DEBUG_DAO_QUERY_COUNT']++;
             $GLOBALS['QUERIES'][]=$sql;
             if (!isset($GLOBALS['DBSTORE'][md5($sql)])) {
@@ -130,13 +140,13 @@ class DataAccess {
         }
         return new DataAccessResult($this, $res);
     }
-
+    
     /**
      * Return ID generated from the previous INSERT operation.
      *
      * @return int, or 0 if the previous query does not generate an AUTO_INCREMENT value, or FALSE if no MySQL connection was established
      */
-    function lastInsertId() {
+    public function lastInsertId() {
         if($this->db) {
             return mysql_insert_id($this->db);
         } else {
@@ -149,7 +159,7 @@ class DataAccess {
      *
      * @return int
      */
-    function affectedRows() {
+    public function affectedRows() {
         if($this->db) {
             return mysql_affected_rows($this->db);
         } else {
@@ -158,10 +168,10 @@ class DataAccess {
     }
 
     /**
-    * Returns any MySQL errors
-    * @return string a MySQL error
-    */
-    function isError() {
+     * Returns any MySQL errors
+     * @return string a MySQL error
+     */
+    public function isError() {
         if ($this->db) {
             return mysql_error($this->db);
         } else {
@@ -170,11 +180,12 @@ class DataAccess {
     }
     
     /**
-    * Quote variable to make safe
-    * @see http://php.net/mysql-real-escape-string
-    * @static
-    */
-    function quoteSmart($value, $params = array()) {
+     * Quote variable to make safe
+     * @see http://php.net/mysql-real-escape-string
+     * 
+     * @return string
+     */
+    public function quoteSmart($value, $params = array()) {
         // Quote if not integer
         if ($this->db) {
             $value = mysql_real_escape_string($value, $this->db);
@@ -205,8 +216,12 @@ class DataAccess {
         return $str;
     }
     
-
-    function escapeInt($v, $null = CODENDI_DB_NOT_NULL) {
+    /**
+     * cast to int
+     *
+     * @return int
+     */
+    public function escapeInt($v, $null = CODENDI_DB_NOT_NULL) {
         $m = array();
         if($null === CODENDI_DB_NULL && $v === '') {
             return 'NULL';
@@ -215,6 +230,40 @@ class DataAccess {
             return $m[1];
         }
         return '0';
+    }
+    
+    /**
+     * Retrieves the number of rows from a result set.
+     *
+     * @param resource $result The result resource that is being evaluated. This result comes from a call to query().
+     *
+     * @return int The number of rows in a result set on success, or FALSE on failure. 
+     */
+    public function numRows($result) {
+        return mysql_num_rows($result);
+    }
+    
+    /**
+     * Fetch a result row as an associative array
+     *
+     * @param resource $result The result resource that is being evaluated. This result comes from a call to query().
+     *
+     * @return array Returns an associative array of strings that corresponds to the fetched row, or FALSE if there are no more rows. 
+     */
+    public function fetch($result) {
+        return mysql_fetch_assoc($result);
+    }
+    
+    /**
+     * Move internal result pointer
+     *
+     * @param resource $result     The result resource that is being evaluated. This result comes from a call to query().
+     * @param int      $row_number The desired row number of the new result pointer. 
+     *
+     * @return boolean Returns TRUE on success or FALSE on failure.
+     */
+    public function dataSeek($result, $row_number) {
+        return mysql_data_seek($result, $row_number);
     }
 
 }

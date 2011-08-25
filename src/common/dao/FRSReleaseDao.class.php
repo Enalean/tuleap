@@ -247,17 +247,7 @@ class FRSReleaseDao extends DataAccessObject {
     }
 
     function _createAndReturnId($sql) {
-        $inserted = $this->update($sql);
-       
-        if ($inserted) {
-            $dar = $this->retrieve("SELECT LAST_INSERT_ID() AS id");
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        }
-        return $inserted;
+        return $this->updateAndGetLastId($sql);
     }
     /**
      * Update a row in the table frs_release 

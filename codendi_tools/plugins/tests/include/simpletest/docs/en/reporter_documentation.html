@@ -1,12 +1,11 @@
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>SimpleTest for PHP test runner and display documentation</title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -30,8 +29,7 @@
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <h1>Test reporter documentation</h1>
         This page...
         <ul>
@@ -64,11 +62,7 @@
                 and there are other places to control the test run.
             </p>
         
-        <p>
-<a class="target" name="html">
-<h2>Reporting results in HTML</h2>
-</a>
-</p>
+        <p><a class="target" name="html"><h2>Reporting results in HTML</h2></a></p>
             <p>
                 The default test display is minimal in the extreme.
                 It reports success and failure with the conventional red and
@@ -126,8 +120,7 @@ class HtmlReporter extends SimpleReporter {
                 that you will probably want to override...
                 <ul class="api">
                     <li>
-                        <span class="new_code">HtmlReporter(string $encoding)</span>
-<br>
+                        <span class="new_code">HtmlReporter(string $encoding)</span><br>
                         is the constructor.
                         Note that the unit test sets up the link to the display
                         rather than the other way around.
@@ -144,8 +137,7 @@ class HtmlReporter extends SimpleReporter {
                         function.
                     </li>
                     <li>
-                        <span class="new_code">void paintHeader(string $test_name)</span>
-<br>
+                        <span class="new_code">void paintHeader(string $test_name)</span><br>
                         is called once at the very start of the test when the first
                         start event arrives.
                         The first start event is usually delivered by the top level group
@@ -155,8 +147,7 @@ class HtmlReporter extends SimpleReporter {
                         It returns nothing (<span class="new_code">void</span>).
                     </li>
                     <li>
-                        <span class="new_code">void paintFooter(string $test_name)</span>
-<br>
+                        <span class="new_code">void paintFooter(string $test_name)</span><br>
                         Called at the very end of the test to close any tags opened
                         by the page header.
                         By default it also displays the red/green bar and the final
@@ -168,8 +159,7 @@ class HtmlReporter extends SimpleReporter {
                         Closing the last test finishes the display.
                     </li>
                     <li>
-                        <span class="new_code">void paintMethodStart(string $test_name)</span>
-<br>
+                        <span class="new_code">void paintMethodStart(string $test_name)</span><br>
                         is called at the start of each test method.
                         The name normally comes from method name.
                         The other test start events behave the same way except
@@ -179,26 +169,22 @@ class HtmlReporter extends SimpleReporter {
                         as the runner churns through the test cases.
                     </li>
                     <li>
-                        <span class="new_code">void paintMethodEnd(string $test_name)</span>
-<br>
+                        <span class="new_code">void paintMethodEnd(string $test_name)</span><br>
                         backs out of the test started with the same name.
                     </li>
                     <li>
-                        <span class="new_code">void paintFail(string $message)</span>
-<br>
+                        <span class="new_code">void paintFail(string $message)</span><br>
                         paints a failure.
                         By default it just displays the word fail, a breadcrumbs trail
                         showing the current test nesting and the message issued by
                         the assertion.
                     </li>
                     <li>
-                        <span class="new_code">void paintPass(string $message)</span>
-<br>
+                        <span class="new_code">void paintPass(string $message)</span><br>
                         by default does nothing.
                     </li>
                     <li>
-                        <span class="new_code">string _getCss()</span>
-<br>
+                        <span class="new_code">string _getCss()</span><br>
                         Returns the CSS styles as a string for the page header
                         method.
                         Additional styles have to be appended here if you are
@@ -212,8 +198,7 @@ class HtmlReporter extends SimpleReporter {
                 Use these to enrich the display...
                 <ul class="api">
                     <li>
-                        <span class="new_code">array getTestList()</span>
-<br>
+                        <span class="new_code">array getTestList()</span><br>
                         is the first convenience method for subclasses.
                         Lists the current nesting of the tests as a list
                         of test names.
@@ -221,30 +206,25 @@ class HtmlReporter extends SimpleReporter {
                         list and the current test method will be last.
                     </li>
                     <li>
-                        <span class="new_code">integer getPassCount()</span>
-<br>
+                        <span class="new_code">integer getPassCount()</span><br>
                         returns the number of passes chalked up so far.
                         Needed for the display at the end.
                     </li>
                     <li>
-                        <span class="new_code">integer getFailCount()</span>
-<br>
+                        <span class="new_code">integer getFailCount()</span><br>
                         is likewise the number of fails so far.
                     </li>
                     <li>
-                        <span class="new_code">integer getExceptionCount()</span>
-<br>
+                        <span class="new_code">integer getExceptionCount()</span><br>
                         is likewise the number of errors so far.
                     </li>
                     <li>
-                        <span class="new_code">integer getTestCaseCount()</span>
-<br>
+                        <span class="new_code">integer getTestCaseCount()</span><br>
                         is the total number of test cases in the test run.
                         This includes the grouping tests themselves.
                     </li>
                     <li>
-                        <span class="new_code">integer getTestCaseProgress()</span>
-<br>
+                        <span class="new_code">integer getTestCaseProgress()</span><br>
                         is the number of test cases completed so far.
                     </li>
                 </ul>
@@ -289,11 +269,7 @@ class HtmlReporter extends SimpleReporter {
                 this is easily accomplished.
             </p>
         
-        <p>
-<a class="target" name="other">
-<h2>Extending the reporter</h2>
-</a>
-</p>
+        <p><a class="target" name="other"><h2>Extending the reporter</h2></a></p>
             <p>
                 Rather than simply modifying the existing display, you might want to
                 produce a whole new HTML look, or even generate text or XML.
@@ -336,11 +312,7 @@ class MyDisplay extends SimpleReporter {<strong>
                 No output would come from this class until you add it.
             </p>
         
-        <p>
-<a class="target" name="cli">
-<h2>The command line reporter</h2>
-</a>
-</p>
+        <p><a class="target" name="cli"><h2>The command line reporter</h2></a></p>
             <p>
                 SimpleTest also ships with a minimal command line reporter.
                 The interface mimics JUnit to some extent, but paints the
@@ -349,12 +321,12 @@ class MyDisplay extends SimpleReporter {<strong>
                 for the HTML version...
 <pre>
 &lt;?php
-    require_once('simpletest/unit_tester.php');
-    require_once('simpletest/reporter.php');
+require_once('simpletest/unit_tester.php');
+require_once('simpletest/reporter.php');
 
-    $test = &amp;new TestSuite('File test');
-    $test-&gt;addTestFile('tests/file_test.php');
-    $test-&gt;run(<strong>new TextReporter()</strong>);
+$test = &amp;new TestSuite('File test');
+$test-&gt;addTestFile('tests/file_test.php');
+$test-&gt;run(<strong>new TextReporter()</strong>);
 ?&gt;
 </pre>
                 Then invoke the test suite from the command line...
@@ -373,7 +345,7 @@ Test cases run: 1/1, Failures: 0, Exceptions: 0
 <pre class="shell">
 File test
 1) True assertion failed.
-	in createnewfile
+    in createnewfile
 FAILURES!!!
 Test cases run: 1/1, Failures: 1, Exceptions: 0
 </pre>
@@ -391,12 +363,12 @@ Test cases run: 1/1, Failures: 1, Exceptions: 0
                 code...
 <pre>
 &lt;?php
-    require_once('simpletest/unit_tester.php');
-    require_once('simpletest/reporter.php');
+require_once('simpletest/unit_tester.php');
+require_once('simpletest/reporter.php');
 
-    $test = &amp;new TestSuite('File test');
-    $test-&gt;addTestFile('tests/file_test.php');
-    <strong>exit ($test-&gt;run(new TextReporter()) ? 0 : 1);</strong>
+$test = &amp;new TestSuite('File test');
+$test-&gt;addTestFile('tests/file_test.php');
+<strong>exit ($test-&gt;run(new TextReporter()) ? 0 : 1);</strong>
 ?&gt;
 </pre>
                 Of course we don't really want to create two test scripts,
@@ -405,25 +377,21 @@ Test cases run: 1/1, Failures: 1, Exceptions: 0
                 run time environment...
 <pre>
 &lt;?php
-    require_once('simpletest/unit_tester.php');
-    require_once('simpletest/reporter.php');
+require_once('simpletest/unit_tester.php');
+require_once('simpletest/reporter.php');
 
-    $test = &amp;new TestSuite('File test');
-    $test-&gt;addTestFile('tests/file_test.php');
-    <strong>if (TextReporter::inCli()) {</strong>
-        exit ($test-&gt;run(new TextReporter()) ? 0 : 1);
-    <strong>}</strong>
-    $test-&gt;run(new HtmlReporter());
+$test = &amp;new TestSuite('File test');
+$test-&gt;addTestFile('tests/file_test.php');
+<strong>if (TextReporter::inCli()) {</strong>
+    exit ($test-&gt;run(new TextReporter()) ? 0 : 1);
+<strong>}</strong>
+$test-&gt;run(new HtmlReporter());
 ?&gt;
 </pre>
                 This is the form used within SimpleTest itself.
             </p>
         
-        <p>
-<a class="target" name="xml">
-<h2>Remote testing</h2>
-</a>
-</p>
+        <p><a class="target" name="xml"><h2>Remote testing</h2></a></p>
             <p>
                 SimpleTest ships with an <span class="new_code">XmlReporter</span> class
                 used for internal communication.
@@ -456,11 +424,11 @@ Test cases run: 1/1, Failures: 1, Exceptions: 0
                 resides in <em>xml.php</em> within the SimpleTest package...
 <pre>
 &lt;?php
-    require_once('simpletest/xml.php');
+require_once('simpletest/xml.php');
     
-    ...
-    $parser = &amp;new SimpleTestXmlParser(new HtmlReporter());
-    $parser-&gt;parse($test_output);
+...
+$parser = &amp;new SimpleTestXmlParser(new HtmlReporter());
+$parser-&gt;parse($test_output);
 ?&gt;
 </pre>
                 The <span class="new_code">$test_output</span> should be the XML format
@@ -486,15 +454,15 @@ Test cases run: 1/1, Failures: 1, Exceptions: 0
                 framework, but it is currently experimental...
 <pre>
 &lt;?php
-    <strong>require_once('../remote.php');</strong>
-    require_once('../reporter.php');
+<strong>require_once('../remote.php');</strong>
+require_once('../reporter.php');
     
-    $test_url = ...;
-    $dry_url = ...;
+$test_url = ...;
+$dry_url = ...;
     
-    $test = &amp;new TestSuite('Remote tests');
-    $test-&gt;addTestCase(<strong>new RemoteTestCase($test_url, $dry_url)</strong>);
-    $test-&gt;run(new HtmlReporter());
+$test = &amp;new TestSuite('Remote tests');
+$test-&gt;addTestCase(<strong>new RemoteTestCase($test_url, $dry_url)</strong>);
+$test-&gt;run(new HtmlReporter());
 ?&gt;
 </pre>
                 The <span class="new_code">RemoteTestCase</span> takes the actual location
@@ -515,12 +483,11 @@ Test cases run: 1/1, Failures: 1, Exceptions: 0
             SimpleTest download page on <a href="http://www.lastcraft.com/simple_test.php">LastCraft</a>.
         </li>
 <li>
-            The <a href="http://simpletest.sourceforge.net/">developer's API for SimpleTest</a>
+            The <a href="http://simpletest.org/api/">developer's API for SimpleTest</a>
             gives full detail on the classes and assertions available.
         </li>
 </ul>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -544,8 +511,7 @@ Test cases run: 1/1, Failures: 1, Exceptions: 0
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <div class="copyright">
             Copyright<br>Marcus Baker 2006
         </div>

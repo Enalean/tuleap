@@ -1,12 +1,13 @@
 <?php
-// $Id: collector_test.php,v 1.11 2006/11/20 23:44:37 lastcraft Exp $
-
+// $Id: collector_test.php 1505 2007-04-30 23:39:59Z lastcraft $
+require_once(dirname(__FILE__) . '/../autorun.php');
 require_once(dirname(__FILE__) . '/../collector.php');
+SimpleTest::ignore('MockTestSuite');
 Mock::generate('TestSuite');
 
 class PathEqualExpectation extends EqualExpectation {
 	function PathEqualExpectation($value, $message = '%s') {
-    	$this->EqualExpectation($v = str_replace("\\", '/', $value), $message);
+    	$this->EqualExpectation(str_replace("\\", '/', $value), $message);
 	}
 
     function test($compare) {

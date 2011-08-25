@@ -77,7 +77,6 @@ class ArtifactTest extends UnitTestCase {
     
     function testFormatFollowUp() {
         $art = new ArtifactTestVersion($this);
-        $hp = new MockCodendi_HTMLPurifier($this);
 
         $txtContent = 'testing the feature';
         $htmlContent = '&lt;pre&gt;   function processEvent($event, $params) {&lt;br /&gt;       foreach(parent::processEvent($event, $params) as $key =&amp;gt; $value) {&lt;br /&gt;           $params[$key] = $value;&lt;br /&gt;       }&lt;br /&gt;   }&lt;br /&gt;&lt;/pre&gt; ';

@@ -22,18 +22,31 @@ define('SERVICE_MASTER',    'master');
 define('SERVICE_SAME',      'same');
 define('SERVICE_SATELLITE', 'satellite');
 require_once('common/server/ServerFactory.class.php');
+
+require_once('ServiceNotAllowedForProjectException.class.php');
+
 /**
 * Service
 */
 class Service {
     
-    var $data;
-	
+    public $data;
+    public $project;
+    
     /**
-    * Constructor
-    */
-    function Service($data) {
-        $this->data = $data;
+     * Create an instance of Service
+     *
+     * @param Project $project The project the service belongs to
+     * @param array   $data    The service data coming from the db
+     *
+     * @throws ServiceNotAllowedForProjectException if the Service is not allowed for the project (mainly for plugins)
+     */
+    public function __construct($project, $data) {
+        if (!$this->isAllowed($project)) {
+            throw new ServiceNotAllowedForProjectException();
+        }
+        $this->project = $project;
+        $this->data    = $data;
     }
     
     function getGroupId() {
@@ -59,6 +72,9 @@ class Service {
     }
     function isActive() {
         return $this->data['is_active'];
+    }
+    function isIFrame() {
+    	return $this->data['is_in_iframe'];
     }
     function getServerId() {
         return $this->data['server_id'];
@@ -98,6 +114,62 @@ class Service {
     function isRequestedPageDistributed(&$request) {
         return false;
     }
+    
+    public function displayHeader($title, $breadcrumbs, $toolbar) {
+        $breadcrumbs = array_merge(
+            array(
+                array(
+                    'title' => $this->project->getPublicName(),
+                    'url'   => '/projects/'. $this->project->getUnixName() .'/',
+                )
+            ),
+           $breadcrumbs
+        );
+        foreach($breadcrumbs as $b) {
+            $classname = '';
+            if (isset($b['classname'])) {
+                $classname = 'class="breadcrumb-step-'. $b['classname'] .'"';
+            }
+            $GLOBALS['HTML']->addBreadcrumb('<a href="'. $b['url'] .'" '. $classname .'>'. $b['title'] .'</a>');
+        }
+        foreach($toolbar as $t) {
+            $class = isset($t['class']) ? 'class="'. $t['class'] .'"' : '';
+            $item_title = isset($t['short_title']) ? $t['short_title'] :$t['title'];
+            $GLOBALS['HTML']->addToolbarItem('<a href="'. $t['url'] .'" '. $class .'>'. $item_title .'</a>');
+        }
+        $params = array(
+            'title' => $title, 
+            'group' => $this->project->group_id, 
+            'toptab' => $this->getId()
+        );
+        if ($pv = (int)HTTPRequest::instance()->get('pv')) {
+            $params['pv'] = (int)$pv;
+        }
+        site_project_header($params);
+    }
+    public function displayFooter() {
+        $params = array(
+        );
+        if ($pv = (int)HTTPRequest::instance()->get('pv')) {
+            $params['pv'] = (int)$pv;
+        }
+        site_project_footer($params);
+    }
+    
+    public function duplicate($to_project_id, $ugroup_mapping) {
+    }
+    
+    /**
+     * Say if the service is allowed for the project
+     *
+     * @param Project $project
+     *
+     * @return bool
+     */
+    protected function isAllowed($project) {
+        return true;
+    }
+
 }
 
 ?>

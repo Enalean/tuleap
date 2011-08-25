@@ -1,12 +1,11 @@
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Simple Test for PHP web script testing documentation</title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -30,8 +29,7 @@
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <h1>Web tester documentation</h1>
         This page...
         <ul>
@@ -50,11 +48,7 @@
         </li>
 </ul>
 <div class="content">
-        <p>
-<a class="target" name="fetch">
-<h2>Fetching a page</h2>
-</a>
-</p>
+        <p><a class="target" name="fetch"><h2>Fetching a page</h2></a></p>
             <p>
                 Testing classes is all very well, but PHP is predominately
                 a language for creating functionality within web pages.
@@ -89,17 +83,21 @@
 }</strong>
 </pre>
                 Here we are about to test the
-                <a href="http://www/lastcraft.com/">Last Craft</a> site itself.
+                <a href="http://www.lastcraft.com/">Last Craft</a> site itself.
                 If this test case is in a file called <em>lastcraft_test.php</em>
                 then it can be loaded in a runner script just like unit tests...
 <pre>
-&lt;?php<strong>
-    require_once('simpletest/web_tester.php');</strong>
-    require_once('simpletest/reporter.php');
-    
-    $test = &amp;new TestSuite('Web site tests');<strong>
-    $test-&gt;addTestFile('lastcraft_test.php');</strong>
-    exit ($test-&gt;run(new TextReporter()) ? 0 : 1);
+&lt;?php
+require_once('simpletest/autorun.php');<strong>
+require_once('simpletest/web_tester.php');</strong>
+SimpleTest::prefer(new TextReporter());
+
+class WebTests extends TestSuite {
+    function WebTests() {
+        $this-&gt;TestSuite('Web site tests');<strong>
+        $this-&gt;addFile('lastcraft_test.php');</strong>
+    }
+}
 ?&gt;
 </pre>
                 I am using the text reporter here to more clearly
@@ -138,11 +136,7 @@ Test cases run: 1/1, Failures: 0, Exceptions: 0
                 We don't yet know if it was the right one.
             </p>
         
-        <p>
-<a class="target" name="content">
-<h2>Testing page content</h2>
-</a>
-</p>
+        <p><a class="target" name="content"><h2>Testing page content</h2></a></p>
             <p>
                 To confirm that the page we think we are on is actually the
                 page we are on, we need to verify the page content.
@@ -161,70 +155,88 @@ class TestOfLastcraft extends WebTestCase {
             </p>
             <p>
                 Here is the list of possible content assertions...
-                <table>
-<tbody>
+                <table><tbody>
                     <tr>
-<td><span class="new_code">assertTitle($title)</span></td><td>Pass if title is an exact match</td>
+<td><span class="new_code">assertTitle($title)</span></td>
+<td>Pass if title is an exact match</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertText($text)</span></td><td>Pass if matches visible and "alt" text</td>
+<td><span class="new_code">assertText($text)</span></td>
+<td>Pass if matches visible and "alt" text</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNoText($text)</span></td><td>Pass if doesn't match visible and "alt" text</td>
+<td><span class="new_code">assertNoText($text)</span></td>
+<td>Pass if doesn't match visible and "alt" text</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertPattern($pattern)</span></td><td>A Perl pattern match against the page content</td>
+<td><span class="new_code">assertPattern($pattern)</span></td>
+<td>A Perl pattern match against the page content</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNoPattern($pattern)</span></td><td>A Perl pattern match to not find content</td>
+<td><span class="new_code">assertNoPattern($pattern)</span></td>
+<td>A Perl pattern match to not find content</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertLink($label)</span></td><td>Pass if a link with this text is present</td>
+<td><span class="new_code">assertLink($label)</span></td>
+<td>Pass if a link with this text is present</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNoLink($label)</span></td><td>Pass if no link with this text is present</td>
+<td><span class="new_code">assertNoLink($label)</span></td>
+<td>Pass if no link with this text is present</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertLinkById($id)</span></td><td>Pass if a link with this id attribute is present</td>
+<td><span class="new_code">assertLinkById($id)</span></td>
+<td>Pass if a link with this id attribute is present</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNoLinkById($id)</span></td><td>Pass if no link with this id attribute is present</td>
+<td><span class="new_code">assertNoLinkById($id)</span></td>
+<td>Pass if no link with this id attribute is present</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertField($name, $value)</span></td><td>Pass if an input tag with this name has this value</td>
+<td><span class="new_code">assertField($name, $value)</span></td>
+<td>Pass if an input tag with this name has this value</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertFieldById($id, $value)</span></td><td>Pass if an input tag with this id has this value</td>
+<td><span class="new_code">assertFieldById($id, $value)</span></td>
+<td>Pass if an input tag with this id has this value</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertResponse($codes)</span></td><td>Pass if HTTP response matches this list</td>
+<td><span class="new_code">assertResponse($codes)</span></td>
+<td>Pass if HTTP response matches this list</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertMime($types)</span></td><td>Pass if MIME type is in this list</td>
+<td><span class="new_code">assertMime($types)</span></td>
+<td>Pass if MIME type is in this list</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertAuthentication($protocol)</span></td><td>Pass if the current challenge is this protocol</td>
+<td><span class="new_code">assertAuthentication($protocol)</span></td>
+<td>Pass if the current challenge is this protocol</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNoAuthentication()</span></td><td>Pass if there is no current challenge</td>
+<td><span class="new_code">assertNoAuthentication()</span></td>
+<td>Pass if there is no current challenge</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertRealm($name)</span></td><td>Pass if the current challenge realm matches</td>
+<td><span class="new_code">assertRealm($name)</span></td>
+<td>Pass if the current challenge realm matches</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertHeader($header, $content)</span></td><td>Pass if a header was fetched matching this value</td>
+<td><span class="new_code">assertHeader($header, $content)</span></td>
+<td>Pass if a header was fetched matching this value</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNoHeader($header)</span></td><td>Pass if a header was not fetched</td>
+<td><span class="new_code">assertNoHeader($header)</span></td>
+<td>Pass if a header was not fetched</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertCookie($name, $value)</span></td><td>Pass if there is currently a matching cookie</td>
+<td><span class="new_code">assertCookie($name, $value)</span></td>
+<td>Pass if there is currently a matching cookie</td>
 </tr>
                     <tr>
-<td><span class="new_code">assertNoCookie($name)</span></td><td>Pass if there is currently no cookie of this name</td>
+<td><span class="new_code">assertNoCookie($name)</span></td>
+<td>Pass if there is currently no cookie of this name</td>
 </tr>
-                </tbody>
-</table>
+                </tbody></table>
                 As usual with the SimpleTest assertions, they all return
                 false on failure and true on pass.
                 They also allow an optional test message and you can embed
@@ -282,9 +294,9 @@ class TestOfLastcraft extends WebTestCase {
 <pre class="shell">
 Web site tests
 1) Expecting response in [200] got [302]
-	in testhomepage
-	in testoflastcraft
-	in lastcraft_test.php
+    in testhomepage
+    in testoflastcraft
+    in lastcraft_test.php
 FAILURES!!!
 Test cases run: 1/1, Failures: 1, Exceptions: 0
 </pre>
@@ -302,11 +314,7 @@ class TestOfLastcraft extends WebTestCase {
                 This now passes.
             </p>
         
-        <p>
-<a class="target" name="navigation">
-<h2>Navigating a web site</h2>
-</a>
-</p>
+        <p><a class="target" name="navigation"><h2>Navigating a web site</h2></a></p>
             <p>
                 Users don't often navigate sites by typing in URLs, but by
                 clicking links and buttons.
@@ -339,82 +347,104 @@ class TestOfLastcraft extends WebTestCase {
             </p>
             <p>
                 The list of navigation methods is...
-                <table>
-<tbody>
+                <table><tbody>
                     <tr>
-<td><span class="new_code">getUrl()</span></td><td>The current location</td>
+<td><span class="new_code">getUrl()</span></td>
+<td>The current location</td>
 </tr>
                     <tr>
-<td><span class="new_code">get($url, $parameters)</span></td><td>Send a GET request with these parameters</td>
+<td><span class="new_code">get($url, $parameters)</span></td>
+<td>Send a GET request with these parameters</td>
 </tr>
                     <tr>
-<td><span class="new_code">post($url, $parameters)</span></td><td>Send a POST request with these parameters</td>
+<td><span class="new_code">post($url, $parameters)</span></td>
+<td>Send a POST request with these parameters</td>
 </tr>
                     <tr>
-<td><span class="new_code">head($url, $parameters)</span></td><td>Send a HEAD request without replacing the page content</td>
+<td><span class="new_code">head($url, $parameters)</span></td>
+<td>Send a HEAD request without replacing the page content</td>
 </tr>
                     <tr>
-<td><span class="new_code">retry()</span></td><td>Reload the last request</td>
+<td><span class="new_code">retry()</span></td>
+<td>Reload the last request</td>
 </tr>
                     <tr>
-<td><span class="new_code">back()</span></td><td>Like the browser back button</td>
+<td><span class="new_code">back()</span></td>
+<td>Like the browser back button</td>
 </tr>
                     <tr>
-<td><span class="new_code">forward()</span></td><td>Like the browser forward button</td>
+<td><span class="new_code">forward()</span></td>
+<td>Like the browser forward button</td>
 </tr>
                     <tr>
-<td><span class="new_code">authenticate($name, $password)</span></td><td>Retry after a challenge</td>
+<td><span class="new_code">authenticate($name, $password)</span></td>
+<td>Retry after a challenge</td>
 </tr>
                     <tr>
-<td><span class="new_code">restart()</span></td><td>Restarts the browser as if a new session</td>
+<td><span class="new_code">restart()</span></td>
+<td>Restarts the browser as if a new session</td>
 </tr>
                     <tr>
-<td><span class="new_code">getCookie($name)</span></td><td>Gets the cookie value for the current context</td>
+<td><span class="new_code">getCookie($name)</span></td>
+<td>Gets the cookie value for the current context</td>
 </tr>
                     <tr>
-<td><span class="new_code">ageCookies($interval)</span></td><td>Ages current cookies prior to a restart</td>
+<td><span class="new_code">ageCookies($interval)</span></td>
+<td>Ages current cookies prior to a restart</td>
 </tr>
                     <tr>
-<td><span class="new_code">clearFrameFocus()</span></td><td>Go back to treating all frames as one page</td>
+<td><span class="new_code">clearFrameFocus()</span></td>
+<td>Go back to treating all frames as one page</td>
 </tr>
                     <tr>
-<td><span class="new_code">clickSubmit($label)</span></td><td>Click the first button with this label</td>
+<td><span class="new_code">clickSubmit($label)</span></td>
+<td>Click the first button with this label</td>
 </tr>
                     <tr>
-<td><span class="new_code">clickSubmitByName($name)</span></td><td>Click the button with this name attribute</td>
+<td><span class="new_code">clickSubmitByName($name)</span></td>
+<td>Click the button with this name attribute</td>
 </tr>
                     <tr>
-<td><span class="new_code">clickSubmitById($id)</span></td><td>Click the button with this ID attribute</td>
+<td><span class="new_code">clickSubmitById($id)</span></td>
+<td>Click the button with this ID attribute</td>
 </tr>
                     <tr>
-<td><span class="new_code">clickImage($label, $x, $y)</span></td><td>Click an input tag of type image by title or alt text</td>
+<td><span class="new_code">clickImage($label, $x, $y)</span></td>
+<td>Click an input tag of type image by title or alt text</td>
 </tr>
                     <tr>
-<td><span class="new_code">clickImageByName($name, $x, $y)</span></td><td>Click an input tag of type image by name</td>
+<td><span class="new_code">clickImageByName($name, $x, $y)</span></td>
+<td>Click an input tag of type image by name</td>
 </tr>
                     <tr>
-<td><span class="new_code">clickImageById($id, $x, $y)</span></td><td>Click an input tag of type image by ID attribute</td>
+<td><span class="new_code">clickImageById($id, $x, $y)</span></td>
+<td>Click an input tag of type image by ID attribute</td>
 </tr>
                     <tr>
-<td><span class="new_code">submitFormById($id)</span></td><td>Submit a form without the submit value</td>
+<td><span class="new_code">submitFormById($id)</span></td>
+<td>Submit a form without the submit value</td>
 </tr>
                     <tr>
-<td><span class="new_code">clickLink($label, $index)</span></td><td>Click an anchor by the visible label text</td>
+<td><span class="new_code">clickLink($label, $index)</span></td>
+<td>Click an anchor by the visible label text</td>
 </tr>
                     <tr>
-<td><span class="new_code">clickLinkById($id)</span></td><td>Click an anchor by the ID attribute</td>
+<td><span class="new_code">clickLinkById($id)</span></td>
+<td>Click an anchor by the ID attribute</td>
 </tr>
                     <tr>
-<td><span class="new_code">getFrameFocus()</span></td><td>The name of the currently selected frame</td>
+<td><span class="new_code">getFrameFocus()</span></td>
+<td>The name of the currently selected frame</td>
 </tr>
                     <tr>
-<td><span class="new_code">setFrameFocusByIndex($choice)</span></td><td>Focus on a frame counting from 1</td>
+<td><span class="new_code">setFrameFocusByIndex($choice)</span></td>
+<td>Focus on a frame counting from 1</td>
 </tr>
                     <tr>
-<td><span class="new_code">setFrameFocus($name)</span></td><td>Focus on a frame by name</td>
+<td><span class="new_code">setFrameFocus($name)</span></td>
+<td>Focus on a frame by name</td>
 </tr>
-                </tbody>
-</table>
+                </tbody></table>
             </p>
             <p>
                 The parameters in the <span class="new_code">get()</span>, <span class="new_code">post()</span> or
@@ -457,50 +487,54 @@ class TestOfLastcraft extends WebTestCase {
                 as well.
             </p>
         
-        <p>
-<a class="target" name="request">
-<h2>Modifying the request</h2>
-</a>
-</p>
+        <p><a class="target" name="request"><h2>Modifying the request</h2></a></p>
             <p>
                 Although SimpleTest does not have the goal of testing networking
                 problems, it does include some methods to modify and debug
                 the requests it makes.
                 Here is another method list...
-                <table>
-<tbody>
+                <table><tbody>
                     <tr>
-<td><span class="new_code">getTransportError()</span></td><td>The last socket error</td>
+<td><span class="new_code">getTransportError()</span></td>
+<td>The last socket error</td>
 </tr>
                     <tr>
-<td><span class="new_code">showRequest()</span></td><td>Dump the outgoing request</td>
+<td><span class="new_code">showRequest()</span></td>
+<td>Dump the outgoing request</td>
 </tr>
                     <tr>
-<td><span class="new_code">showHeaders()</span></td><td>Dump the incoming headers</td>
+<td><span class="new_code">showHeaders()</span></td>
+<td>Dump the incoming headers</td>
 </tr>
                     <tr>
-<td><span class="new_code">showSource()</span></td><td>Dump the raw HTML page content</td>
+<td><span class="new_code">showSource()</span></td>
+<td>Dump the raw HTML page content</td>
 </tr>
                     <tr>
-<td><span class="new_code">ignoreFrames()</span></td><td>Do not load framesets</td>
+<td><span class="new_code">ignoreFrames()</span></td>
+<td>Do not load framesets</td>
 </tr>
                     <tr>
-<td><span class="new_code">setCookie($name, $value)</span></td><td>Set a cookie from now on</td>
+<td><span class="new_code">setCookie($name, $value)</span></td>
+<td>Set a cookie from now on</td>
 </tr>
                     <tr>
-<td><span class="new_code">addHeader($header)</span></td><td>Always add this header to the request</td>
+<td><span class="new_code">addHeader($header)</span></td>
+<td>Always add this header to the request</td>
 </tr>
                     <tr>
-<td><span class="new_code">setMaximumRedirects($max)</span></td><td>Stop after this many redirects</td>
+<td><span class="new_code">setMaximumRedirects($max)</span></td>
+<td>Stop after this many redirects</td>
 </tr>
                     <tr>
-<td><span class="new_code">setConnectionTimeout($timeout)</span></td><td>Kill the connection after this time between bytes</td>
+<td><span class="new_code">setConnectionTimeout($timeout)</span></td>
+<td>Kill the connection after this time between bytes</td>
 </tr>
                     <tr>
-<td><span class="new_code">useProxy($proxy, $name, $password)</span></td><td>Make requests via this proxy URL</td>
+<td><span class="new_code">useProxy($proxy, $name, $password)</span></td>
+<td>Make requests via this proxy URL</td>
 </tr>
-                </tbody>
-</table>
+                </tbody></table>
                 These methods are principally for debugging.
             </p>
         
@@ -514,12 +548,11 @@ class TestOfLastcraft extends WebTestCase {
             SimpleTest download page on <a href="http://www.lastcraft.com/simple_test.php">LastCraft</a>.
         </li>
 <li>
-            The <a href="http://simpletest.sourceforge.net/">developer's API for SimpleTest</a>
+            The <a href="http://simpletest.org/api/">developer's API for SimpleTest</a>
             gives full detail on the classes and assertions available.
         </li>
 </ul>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -543,8 +576,7 @@ class TestOfLastcraft extends WebTestCase {
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <div class="copyright">
             Copyright<br>Marcus Baker 2006
         </div>

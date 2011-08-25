@@ -3,9 +3,19 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 require_once('common/reference/ReferenceManager.class.php');
-Mock::generatePartial('ReferenceManager', 'ReferenceManagerTestVersion', array('_getReferenceDao'));
+Mock::generatePartial(
+    'ReferenceManager', 
+    'ReferenceManagerTestVersion', 
+    array(
+        '_getReferenceDao', 
+        '_getCrossReferenceDao',
+        'loadReservedKeywords',
+    )
+);
 require_once('common/dao/ReferenceDao.class.php');
 Mock::generate('ReferenceDao');
+require_once('common/dao/CrossReferenceDao.class.php');
+Mock::generate('CrossReferenceDao');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
@@ -17,13 +27,6 @@ Mock::generate('DataAccessResult');
  * Tests the class ReferenceManager
  */
 class ReferenceManagerTest extends UnitTestCase {
-	/**
-	 * Constructor of the test. Can be ommitted.
-	 * Usefull to set the name of the test
-	 */
-	function ReferenceManagerTest($name = 'ReferenceManager test') {
-		$this->UnitTestCase($name);
-	}
 
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
@@ -134,6 +137,34 @@ class ReferenceManagerTest extends UnitTestCase {
 		$this->assertTrue(in_array($refarray,$rm->_extractAllMatches("art #abc-def:ghi")),"group-Name:ObjName");
 		$refarray =array(0=>"art #abc-de_f:ghi", 1=>"art", 2=>"abc-de_f:", 3=>"ghi");
 		$this->assertTrue(in_array($refarray,$rm->_extractAllMatches("art #abc-de_f:ghi")),"group-Na_me:ObjName");
-	}
+
+        # SR #2353 - Reference to wiki page name with "&" does not work
+        $this->assertEqual($rm->_extractAllMatches('wiki #project:page/subpage&amp;toto&tutu & co'), array(
+            array(
+                'wiki #project:page/subpage&amp;toto&tutu',
+                'wiki',
+                'project:',
+                'page/subpage&amp;toto&tutu'
+            )
+        ));
+    }
+    
+    function test_updateProjectReferenceShortName() {
+        $ref_dao   = new MockReferenceDao($this);
+        $cross_dao = new MockCrossReferenceDao($this);
+        
+        $rm = new ReferenceManagerTestVersion($this);
+        $rm->setReturnReference('_getReferenceDao', $ref_dao);
+        $rm->setReturnReference('_getCrossReferenceDao', $cross_dao);
+        
+        $group_id = 101;
+        $from     = 'bug';
+        $to       = 'task';
+        $ref_dao->expect('updateProjectReferenceShortName', array($group_id, $from, $to));
+        $cross_dao->expect('updateTargetKeyword', array($from, $to, $group_id));
+        $cross_dao->expect('updateSourceKeyword', array($from, $to, $group_id));
+        
+        $rm->updateProjectReferenceShortName($group_id, $from, $to);
+    }
 }
 ?>

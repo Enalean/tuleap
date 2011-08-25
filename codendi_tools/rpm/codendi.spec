@@ -305,6 +305,15 @@ Provides: tuleap-plugin-requesthelp = %{version}
 %description plugin-requesthelp
 Plugin to insert Remedy tickets using Codex (used for ST only)
 
+%package plugin-tracker
+Summary: Tracker v5 for Tuleap
+Group: Development/Tools
+Version: @@PLUGIN_TRACKER_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}, libxslt
+%description plugin-tracker
+New tracker generation for Tuleap.
+
 #
 ## Themes
 #
@@ -453,6 +462,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/templates_c
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/smarty/cache
 %{__install} plugins/git/bin/gl-membership.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+
+# Plugin tracker
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 
 ##
 ## On package install
@@ -816,6 +828,11 @@ fi
 %files plugin-requesthelp
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/requesthelp
+
+%files plugin-tracker
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/tracker
+%dir %{APP_DATA_DIR}/tracker
 
 #
 # Themes

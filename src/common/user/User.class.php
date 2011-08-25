@@ -20,7 +20,7 @@
 
 require_once('common/dao/UserPreferencesDao.class.php');
 require_once('common/dao/UserGroupDao.class.php');
-
+require_once('common/include/Recent_Element_Interface.class.php');
 /**
  *
  * User object
@@ -70,6 +70,11 @@ class User {
     const PREF_NAME_LAB_FEATURE = 'use_lab_features';
     
     /**
+     * Pref for recent elements
+     */
+    const PREFERENCE_RECENT_ELEMENTS = 'recent_elements';
+    
+    /**
      * the id of the user
      * = 0 if anonymous
      */
@@ -103,6 +108,7 @@ class User {
     protected $language_id;
     protected $last_pwd_update;
     protected $expiry_date;
+    protected $has_avatar;
 
     /**
      * Keep super user info
@@ -360,7 +366,21 @@ class User {
         }
         return $is_member;
     }
-
+    
+    /**
+     * Check membership of the user to a specified ugroup
+     * (call to old style ugroup_user_is_member in /src/www/project/admin ; here for unit tests purpose)
+     *
+     * @param int $ugroup_id  the id of the ugroup
+     * @param int $group_id   the id of the project (is necessary for automatic project groups like project member, release admin, etc.)
+     * @param int $tracker_id the id of the tracker (is necessary for trackers since the tracker admin role is different for each tracker.)
+     *
+     * @return boolean true if user is member of the ugroup, false otherwise.
+     */
+    public function isMemberOfUGroup($ugroup_id, $group_id, $tracker_id = 0) {
+        return ugroup_user_is_member($this->getId(), $ugroup_id, $group_id, $tracker_id);
+    }
+    
     public function isNone() {
         return $this->getId() == 100;
     }
@@ -735,12 +755,19 @@ class User {
     }
     
     /**
+     *
+     * @param bool $return_all_data true if you want all groups data instead of only group_id (the later is the default)
+     *
      * @return array groups id the user is member of
      */
-    function getProjects() {
+    function getProjects($return_all_data = false) {
         $projects = array();
         foreach($this->getUserGroupDao()->searchActiveGroupsByUserId($this->user_id) as $data) {
-            $projects[] = $data['group_id'];
+            if ($return_all_data) {
+                $projects[] = $data;
+            } else {
+                $projects[] = $data['group_id'];
+            }
         }
         return $projects;
     }
@@ -1077,6 +1104,47 @@ class User {
      }
 
      /**
+      * Say if the user has avatar
+      *
+      * @return bool
+      */
+     public function hasAvatar() {
+         return $this->has_avatar;
+     }
+
+     /**
+      * Set if the user has avatar
+      *
+      * @param bool $has_avatar true if the user has an avatar
+      *
+      * @return User for chaining methods
+      */
+     public function setHasAvatar($has_avatar = 1) {
+         $this->has_avatar = ($has_avatar ? 1 : 0);
+         return $this;
+     }
+     
+     /**
+      * Display the html code for this users's avatar
+      *
+      * @return string html
+      */
+     public function fetchHtmlAvatar() {
+         $purifier = Codendi_HTMLPurifier::instance();
+         $html = '';
+         $html .= '<div class="avatar">';
+         if ($this->isAnonymous()) {
+             $html .= '<img src="http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s=50&amp;d=wavatar" />';
+         } else {
+             if ($this->hasAvatar()) {
+                 $html .= '<img src="/users/'. $purifier->purify($this->getUserName()) .'/avatar.png" />';
+             }
+         }
+         $html .= '</div>';
+         return $html;
+     }
+
+     /**
       * Lab features mode
       *
       * @return Boolean true if the user want lab features
@@ -1109,6 +1177,58 @@ class User {
       */
      public function hasPermission($permissionType, $objectId, $groupId) {
          return permission_is_authorized($permissionType, $objectId, $this->getId(), $groupId);
+     }
+    
+    /**
+     * Get the list of recent elements the user browsed
+     * 
+     * @return Array of Recent_Element_Interface
+     */
+    public function getRecentElements() {
+        if ($recent_elements = $this->getPreference(self::PREFERENCE_RECENT_ELEMENTS)) {
+            if ($recent_elements = unserialize($recent_elements)) {
+                if (is_array($recent_elements)) {
+                    return $recent_elements;
+                }
+            }
+            //somthing wrong happen. Delete the preference
+            $this->delPreference(self::PREFERENCE_RECENT_ELEMENTS);
+        }
+        return array();
+    }
+     
+     /**
+      * Add in user preference an element "recently accessed"
+      * 
+      * @param Recent_Element_Interface $element
+      *
+      * @return void
+      */
+     public function addRecentElement(Recent_Element_Interface $element) {
+        $history = $this->getRecentElements();
+        
+        //search if the artifact is already in the history. If so remove it
+        $found = $i = 0;
+        reset($history);
+        while (! $found && (list(, $v) = each($history))) {
+            if ($element->getId() == $v['id']) {
+                array_splice($history, $i, 1);
+                $found = true;
+            }
+            ++$i;
+        }
+        if (! $found) {
+            //drop the oldest one if >= 5
+            while (count($history) >= 7) {
+                array_pop($history);
+            }
+        }
+        
+        //add the new one
+        array_unshift($history, array('id' => $element->getId(), 'link' => $element->fetchXRefLink()));
+        
+        //store
+        $this->setPreference(self::PREFERENCE_RECENT_ELEMENTS, serialize($history));
      }
 }
 

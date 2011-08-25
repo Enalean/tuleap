@@ -49,6 +49,9 @@ class Response {
     function addFeedback($level, $message,  $purify=CODENDI_PURIFIER_CONVERT_HTML) {
         $this->_feedback->log($level, $message, $purify);
     }
+    public function displayFeedback() {
+        $this->_feedback->display();
+    }
     function feedbackHasWarningsOrErrors() {
         return $this->_feedback->hasWarningsOrErrors();
     }

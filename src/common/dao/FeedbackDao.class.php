@@ -38,7 +38,7 @@ class FeedbackDao extends DataAccessObject {
     * Searches Feedback 
     * @return DataAccessResult
     */
-    function & search($session_hash) {
+    function search($session_hash) {
         $sql = sprintf("SELECT * FROM feedback WHERE session_hash = %s",
 				$this->da->quoteSmart($session_hash));
         return $this->retrieve($sql);

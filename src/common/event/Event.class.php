@@ -35,7 +35,6 @@ class Event {
      * 
      * No expected results
      */
-
     const EDIT_SSH_KEYS = 'edit_ssh_keys';
 
     /**
@@ -44,7 +43,6 @@ class Event {
      * No parameters
      * No expected results
      */
-
     const DUMP_SSH_KEYS = 'dump_ssh_keys';
 
     /**
@@ -135,6 +133,18 @@ class Event {
       */
      const GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES = 'get_plugins_available_keywords_references';
 
+     /**
+      * Allow to define specific references natures provided by a plugin
+      * 
+      * Parameters:
+      *   'natures' => array of references natures
+      * 
+      * Expected result:
+      *   A new nature added into $params['nature']
+      *   array('keyword' => 'awsome', label => 'Really kick ass')
+      */
+     const GET_AVAILABLE_REFERENCE_NATURE = 'get_available_reference_natures';
+     
     /**
      * Project unix name changed
      *
@@ -145,7 +155,7 @@ class Event {
      * No expected results
      */
     const PROJECT_RENAME = 'project_rename';
-    
+
     /**
      * User name changed
      *
@@ -180,5 +190,59 @@ class Event {
      *  array of string
      */
     const SYSTEM_EVENT_GET_TYPES = 'system_event_get_types';
+
+    /**
+     * Display javascript snippets in the page footer (just before </body>)
+     *
+     * No Parameters.
+     * 
+     * Expected result:
+     *   Javascript snippets are directly output to the browser
+     */
+    const JAVASCRIPT_FOOTER = 'javascript_footer';
+    
+    /**
+     * Get an instance of service object corresponding to $row
+     * 
+     * Parameters:
+     *  'classnames' => array of Service child class names indexed by service short name
+     *  
+     * Example (in tracker plugin):
+     * $params['classnames']['plugin_tracker'] = 'ServiceTracker'; 
+     */
+    const SERVICE_CLASSNAMES = 'service_classnames';
+    
+    /**
+     * Get combined scripts
+     * 
+     * Parameters:
+     *   'scripts' => array of scripts to combined
+     *   
+     * Examples:
+     * $params['scripts'][] = '/path/to/script.js';
+     */
+    const COMBINED_SCRIPTS = 'combined_scripts';
+    
+    /**
+     * Display javascript snippets in the page header (<head>)
+     *
+     * No Parameters.
+     * 
+     * Expected result:
+     *   Javascript snippets are directly output to the browser
+     */
+    const JAVASCRIPT = 'javascript';
+    
+    /**
+     * Manage the toggle of an element
+     *
+     * Parameter
+     *  'id'   => the string identifier for the element
+     *  'user' => the current user
+     *
+     * Expected result:
+     *  'done' => set to true if the element has been toggled
+     */
+    const TOGGLE = 'toggle';
 }
 ?>

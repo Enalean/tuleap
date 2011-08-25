@@ -184,6 +184,8 @@ if (isset($params['group']) && $params['group']) {
 				<td valign="top" width="99%" class="contenttable">
 
 	<?php
+        echo $this->getBreadCrumbs();
+        echo $this->getToolbar();
         $this->_feedback->display();
 	}
 

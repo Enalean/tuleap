@@ -23,12 +23,9 @@ require_once('include/DataAccessObject.class.php');
  *  Data Access Object for UserPreferences 
  */
 class UserPreferencesDao extends DataAccessObject {
-    /**
-     * Constructs the UserPreferencesDao
-     * @param $da instance of the DataAccess class
-     */
-    function UserPreferencesDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
+    
+    function __construct($da = null) {
+        parent::__construct($da);
     }
     
     /**
@@ -37,7 +34,7 @@ class UserPreferencesDao extends DataAccessObject {
      * @param string $preference_name
      * @return DataAccessResult
      */
-    function & search($user_id, $preference_name) {
+    function search($user_id, $preference_name) {
         $sql = sprintf("SELECT * FROM user_preferences WHERE user_id = %d AND preference_name = %s",
             $this->da->escapeInt($user_id),
             $this->da->quoteSmart($preference_name));
@@ -68,7 +65,16 @@ class UserPreferencesDao extends DataAccessObject {
     function delete($user_id, $preference_name) {
         $sql = sprintf("DELETE FROM user_preferences WHERE user_id = %d AND preference_name = %s",
             $this->da->escapeInt($user_id),
-            $this->da->quoteSmart($preference_name));
+            $this->da->quoteSmart($preference_name));        
+        return $this->update($sql);
+    }
+    
+    function deleteByPreferenceNameAndValue($preference_name, $preference_value) {
+        $preference_name  = $this->da->quoteSmart($preference_name);
+        $preference_value = $this->da->quoteSmart($preference_value);
+        $sql = "DELETE FROM $this->table_name
+                WHERE preference_name = $preference_name
+                  AND preference_value = $preference_value";
         return $this->update($sql);
     }
 }

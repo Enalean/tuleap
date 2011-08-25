@@ -27,11 +27,15 @@ global	btn_delete	Delete
 global	btn_cancel	Cancel
 global	btn_update	Update
 global	btn_submit	Submit
+global	btn_submit_and_continue	Submit and continue
+global	btn_submit_and_stay	Submit and stay
 global	btn_browse	Browse
 global	btn_create	Create
+global	btn_preview	Preview
 global	btn_close	Close
 global	btn_reset	Reset
 global	reset	reset
+global	delete	Delete
 global	yes	Yes
 global	no	No
 global	on	On
@@ -76,4 +80,5 @@ global	error_upload_unknown	File upload error($1). Unknown error code.
 global	service_conf_not_inherited	The configuration of this service will not be inherited for sub-projects
 global	pick_date	Pick up a date
 global	show_frame	Show only this frame
+global	null	NULL
 

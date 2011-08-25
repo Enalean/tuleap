@@ -22,12 +22,12 @@ class DaoTest extends UnitTestCase {
     }
 
     function testDao() {
-        $da =& new MockDataAccess($this);
-        $dar =& new MockDataAccessResult($this);
-        $da->setReturnReference('fetch', $dar);
-        $dao =& new DataAccessObject($da);
+        $da = new MockDataAccess($this);
+        $dar = new MockDataAccessResult($this);
+        $da->setReturnReference('query', $dar);
+        $dao = new DataAccessObject($da);
         
-        $result =& $dao->retrieve("SELECT *");
+        $result = $dao->retrieve("SELECT *");
         $this->assertIsA($result, 'MockDataAccessResult');
     }
 }

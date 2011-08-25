@@ -220,7 +220,9 @@ if (($func=='edit')||($func=='do_create')) {
                 $em->processEvent('permissions_for_ugroup', array(
                     'permission_type' => $row['permission_type'],
                     'object_id'       => $row['object_id'],
+                    'objname'         => $objname,
                     'group_id'        => $group_id,
+                    'ugroup_id'       => $ugroup_id,
                     'results'         => &$results
                 ));
                 if ($results) {

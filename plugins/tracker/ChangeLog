@@ -1,0 +1,42 @@
+Version 0.1 - (Tuleap 4.0.21)
+  DISCLAIMER: plugin in beta, do not use it on production servers.
+  DISCLAIMER: Your data might be trashed in a future update.
+  
+  Import (and improve) fifth generation trackers:
+  
+  * New tracker user interface
+    - Artifact and report views, administration interface: the whole interface has been redesign to provide easier and faster usage.
+    
+  * Workflow
+    - It is now possible to define artifact state transitions, with associated permissions.
+    
+  * Tracker Reports:
+    - Construct reports interactively: add, move, resize columns with drag'n drop.
+    - Add and remove query filters interactively
+    - Report contains query filter value: replay a complex query with a single click.
+    - A single report may now contain several tables
+    
+  * Tracker administration
+    - Build your tracker interactively: add new fields and values in a new comfortable way.
+    - Define tracker semantics: what is an "open" artifact, what is a "title". Customize artifact tooltip for each tracker.
+    
+  * New Tracker fields
+    - File (ie. attachments): you may now use file fields anywhere in the tracker form.
+    - Open lists: text field with auto-completion feature based on list.
+    - Reference: reference to another artifacts.
+    
+  * New Artifact layout
+    - In addition to new fields, structure your artifacts as you wish
+    - Available elements: columns, fieldsets, labels, free text, separators
+    - You can mix any of them as needed (eg. multi-columns in fieldset, etc)
+    
+  * Artifact history
+    - Artifact changes are now stored in "snapshots", improving historical information.
+    
+  * Import/export of tracker structure in XML format.
+    - Provides a way to exchange trackers between Tuleap instances
+    - Export format contains the whole tracker definition: fields, layout, reports, workflow, etc.
+    
+  * Tracker templates
+    - New tracker templates are provided for: Bugs, Change Request, Patches, Requirements, Risks, Support Request, Tasks, User Stories.
+    - Templates provided in XML format.

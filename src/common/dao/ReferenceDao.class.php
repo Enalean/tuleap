@@ -28,15 +28,15 @@ class ReferenceDao extends DataAccessObject {
     * Constructs the ReferenceDao
     * @param $da instance of the DataAccess class
     */
-    function ReferenceDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
+    function ReferenceDao($da = null) {
+        parent::__construct($da);
     }
     
     /**
     * Gets all references for the given project ID, sorted for presentation
     * @return DataAccessResult
     */
-    function & searchByGroupID($group_id) {
+    function searchByGroupID($group_id) {
         $sql = sprintf("SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id ORDER BY reference.scope DESC, reference.service_short_name, reference.keyword",
                        $this->da->quoteSmart($group_id));
         return $this->retrieve($sql);
@@ -46,7 +46,7 @@ class ReferenceDao extends DataAccessObject {
     * Gets a reference from the reference id and the group ID, so that we also have "is_active" row
     * @return DataAccessResult
     */
-    function & searchByIdAndGroupID($ref_id,$group_id) {
+    function searchByIdAndGroupID($ref_id,$group_id) {
         $sql = sprintf("SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference.id=%s AND reference_group.reference_id=reference.id",
                        $this->da->quoteSmart($group_id),
                        $this->da->quoteSmart($ref_id));
@@ -57,7 +57,7 @@ class ReferenceDao extends DataAccessObject {
     * Gets all active references for the given project ID
     * @return DataAccessResult
     */
-    function & searchActiveByGroupID($group_id) {
+    function searchActiveByGroupID($group_id) {
         $sql = sprintf("SELECT * FROM reference,reference_group WHERE reference_group.group_id=%s AND reference_group.reference_id=reference.id AND reference_group.is_active=1",
                        $this->da->quoteSmart($group_id));
         return $this->retrieve($sql);
@@ -67,7 +67,7 @@ class ReferenceDao extends DataAccessObject {
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function & searchAll() {
+    function searchAll() {
         $sql = "SELECT * FROM reference";
         return $this->retrieve($sql);
     }
@@ -76,7 +76,7 @@ class ReferenceDao extends DataAccessObject {
     * Searches Reference by reference Id 
     * @return DataAccessResult
     */
-    function & searchById($id) {
+    function searchById($id) {
         $sql = sprintf("SELECT * FROM reference WHERE id = %s",
                 $this->da->quoteSmart($id));
         return $this->retrieve($sql);
@@ -86,7 +86,7 @@ class ReferenceDao extends DataAccessObject {
     * Searches Reference by scope 
     * @return DataAccessResult
     */
-    function & searchByScope($scope) {
+    function searchByScope($scope) {
         $sql = sprintf("SELECT * FROM reference WHERE scope = %s",
                 $this->da->quoteSmart($scope));
         return $this->retrieve($sql);
@@ -97,7 +97,7 @@ class ReferenceDao extends DataAccessObject {
     * Searches Reference by service short name 
     * @return DataAccessResult
     */
-    function & searchByServiceShortName($service) {
+    function searchByServiceShortName($service) {
         $sql = sprintf("SELECT * FROM reference WHERE service_short_name = %s",
                 $this->da->quoteSmart($service));
         return $this->retrieve($sql);
@@ -109,7 +109,7 @@ class ReferenceDao extends DataAccessObject {
     * Don't return reference 100 (empty reference)
     * @return DataAccessResult
     */
-    function & searchByScopeAndServiceShortName($scope,$service) {
+    function searchByScopeAndServiceShortName($scope,$service) {
         $sql = sprintf("SELECT * FROM reference WHERE scope = %s AND service_short_name = %s AND id != 100",
                        $this->da->quoteSmart($scope),
                        $this->da->quoteSmart($service));
@@ -122,7 +122,7 @@ class ReferenceDao extends DataAccessObject {
     * Don't return reference 100 (empty reference)
     * @return DataAccessResult
     */
-    function & searchByScopeAndServiceShortNameAndGroupId($scope,$service,$group_id) {
+    function searchByScopeAndServiceShortNameAndGroupId($scope,$service,$group_id) {
         $sql = sprintf("SELECT * FROM reference,reference_group WHERE scope = %s AND reference.id=reference_group.reference_id AND service_short_name = %s AND group_id = %s AND reference.id != 100",
                        $this->da->quoteSmart($scope),
                        $this->da->quoteSmart($service),
@@ -135,7 +135,7 @@ class ReferenceDao extends DataAccessObject {
     * Searches Reference by keyword and group_id 
     * @return DataAccessResult with one field ('reference_id')
     */
-    function & searchByKeywordAndGroupId($keyword,$group_id) {
+    function searchByKeywordAndGroupId($keyword,$group_id) {
         # Order by scope to return 'P'roject references before 'S'ystem references
         # This may happen for old tracker created before Reference management.
         # Otherwise, there should not be both S and P reference with the same keyword...
@@ -150,7 +150,7 @@ class ReferenceDao extends DataAccessObject {
     * Searches Reference by keyword and group_id 
     * @return DataAccessResult with one field ('reference_id')
     */
-    function & searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($keyword,$group_id,$description,$link,$scope) {
+    function searchByKeywordAndGroupIdAndDescriptionAndLinkAndScope($keyword,$group_id,$description,$link,$scope) {
         # Order by scope to return 'P'roject references before 'S'ystem references
         # This may happen for old tracker created before Reference management.
         # Otherwise, there should not be both S and P reference with the same keyword...
@@ -183,16 +183,7 @@ class ReferenceDao extends DataAccessObject {
                        $this->da->quoteSmart($scope),
                        $this->da->quoteSmart($service_short_name),
                        $this->da->quoteSmart($nature));
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        } 
-        return $inserted;
+        return $this->updateAndGetLastId($sql);
     }
 
     function create_ref_group($refid,$is_active,$group_id) {
@@ -200,16 +191,7 @@ class ReferenceDao extends DataAccessObject {
                        $this->da->quoteSmart($refid),
                        $this->da->quoteSmart($is_active),
                        $this->da->quoteSmart($group_id));
-        $inserted = $this->update($sql);
-        if ($inserted) {
-            $dar =& $this->retrieve("SELECT LAST_INSERT_ID() AS id");
-            if ($row = $dar->getRow()) {
-                $inserted = $row['id'];
-            } else {
-                $inserted = $dar->isError();
-            }
-        } 
-        return $inserted;
+        return $this->updateAndGetLastId($sql);
     }
     
     /**
@@ -235,6 +217,19 @@ class ReferenceDao extends DataAccessObject {
                        $this->da->quoteSmart($group_id));
         return $this->update($sql);
     }    
+
+    function updateProjectReferenceShortName($group_id, $old_short_name, $new_short_name) {
+        
+        $group_id       = $this->da->escapeInt($group_id);     
+        $old_short_name = $this->da->quoteSmart($old_short_name);
+        $new_short_name = $this->da->quoteSmart($new_short_name);
+                 
+        $sql = "UPDATE  reference r
+                      INNER JOIN reference_group rg ON (r.id=rg.reference_id)
+                SET r.keyword=$new_short_name
+                WHERE r.keyword=$old_short_name AND rg.group_id=$group_id";
+        return $this->update($sql);
+    }
 
     function update_keyword($old_keyword, $keyword, $group_id) {
         $sql = sprintf("UPDATE reference, reference_group SET keyword=%s WHERE reference.keyword = %s and reference.id=reference_group.reference_id and reference_group.group_id=%s",

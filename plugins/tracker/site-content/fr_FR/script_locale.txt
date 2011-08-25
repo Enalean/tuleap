@@ -1,0 +1,20 @@
+codendi.locales['tracker_formelement_admin'] = {
+    cancel: 'annuler',
+    add_another_file: 'Ajouter un autre fichier'    
+};
+codendi.locales['tracker_artifact'] = {
+    masschange: 'Mise à jour massive',
+    masschange_check_all: 'Tout cocher',
+    masschange_uncheck_all: 'Décocher tout'
+};
+codendi.locales['tracker_renderer'] = {
+    order_dragdrop: 'Vous pouvez ordonner les onglets avec le glisser/déposer'
+};
+codendi.locales['tracker_artifact_link'] = {
+    nb_artifacts: 'artefact(s)',
+    or: ' ou ',
+    select: 'Selectionner les artefacts à lier',
+    create: 'Créer un nouvel artefact',
+    advanced: 'Les fonctionnalités avancées (recherche d\'artefacts...) ne sont pas disponibles à la création d\'un artefact.'
+};
+

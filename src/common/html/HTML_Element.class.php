@@ -60,10 +60,16 @@ abstract class HTML_Element {
     }
     protected function renderValue() {
         $hp = Codendi_HTMLPurifier::instance();
-        return  $hp->purify($this->value, CODENDI_PURIFIER_CONVERT_HTML) ;
+        return  $hp->purify($this->getValue(), CODENDI_PURIFIER_CONVERT_HTML) ;
     }
     public function getId() {
         return $this->id;
+    }
+    public function setId($id) {
+        $this->id = $id;
+    }
+    public function addParam($key, $value) {
+        $this->params[$key] = $value;
     }
 }
 ?>

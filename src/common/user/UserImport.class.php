@@ -22,7 +22,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require('www/include/account.php');
+require_once('www/include/account.php');
 require_once('common/dao/UserDao.class.php');
 require_once('common/include/Error.class.php');
 

@@ -1,12 +1,11 @@
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Documentation Simple Test : tester l'authentification</title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -30,8 +29,7 @@
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <h1>Documentation sur l'authentification</h1>
         This page...
         <ul>
@@ -39,25 +37,25 @@
             Passer au travers d'une <a href="#basique">authentification HTTP basique</a>
         </li>
 <li>
-            Tester l'<a href="#cookies">authentification bas&eacute;e sur des cookies</a>
+            Tester l'<a href="#cookies">authentification basée sur des cookies</a>
         </li>
 <li>
-            G&eacute;rer les <a href="#session">sessions du navigateur</a> et les timeouts
+            Gérer les <a href="#session">sessions du navigateur</a> et les timeouts
         </li>
 </ul>
 <div class="content">
         
             <p>
-                Un des secteurs &agrave; la fois d&eacute;licat et important lors d'un test de site web reste la s&eacute;curit&eacute;. Tester ces sch&eacute;mas est au coeur des objectifs du testeur web de SimpleTest.
+                Un des secteurs à la fois délicat et important lors d'un test
+                de site web reste la sécurité. Tester ces schémas est au coeur
+                des objectifs du testeur web de SimpleTest.
             </p>
         
-        <p>
-<a class="target" name="basique">
-<h2>Authentification HTTP basique</h2>
-</a>
-</p>
+        <p><a class="target" name="basique"><h2>Authentification HTTP basique</h2></a></p>
             <p>
-                Si vous allez chercher une page web prot&eacute;g&eacute;e par une authentification basique, vous h&eacute;riterez d'une ent&ecirc;te 401. Nous pouvons repr&eacute;senter ceci par ce test...
+                Si vous allez chercher une page web protégée
+                par une authentification basique, vous hériterez d'une entête 401.
+                Nous pouvons représenter ceci par ce test...
 <pre>
 class AuthenticationTest extends WebTestCase {<strong>
     function test401Header() {
@@ -66,7 +64,7 @@ class AuthenticationTest extends WebTestCase {<strong>
     }</strong>
 }
 </pre>
-                Ce qui nous permet de voir les ent&ecirc;tes re&ccedil;ues...
+                Ce qui nous permet de voir les entêtes reçues...
                 <div class="demo">
                     <h1>File test</h1>
 <pre style="background-color: lightgray; color: black">
@@ -80,7 +78,9 @@ Content-Type: text/html; charset=iso-8859-1
                     <div style="padding: 8px; margin-top: 1em; background-color: green; color: white;">1/1 test cases complete.
                     <strong>0</strong> passes, <strong>0</strong> fails and <strong>0</strong> exceptions.</div>
                 </div>
-                Sauf que nous voulons &eacute;viter l'inspection visuelle, on souhaite que SimpleTest puisse nous dire si oui ou non la page est prot&eacute;g&eacute;e. Voici un test en profondeur sur nos ent&ecirc;tes...
+                Sauf que nous voulons éviter l'inspection visuelle,
+                on souhaite que SimpleTest puisse nous dire si oui ou non
+                la page est protégée. Voici un test en profondeur sur nos entêtes...
 <pre>
 class AuthenticationTest extends WebTestCase {
     function test401Header() {
@@ -91,10 +91,15 @@ class AuthenticationTest extends WebTestCase {
     }
 }
 </pre>
-                N'importe laquelle de ces assertions suffirait, tout d&eacute;pend de la masse de d&eacute;tails que vous souhaitez voir.
+                N'importe laquelle de ces assertions suffirait,
+                tout dépend de la masse de détails que vous souhaitez voir.
             </p>
             <p>
-                La plupart du temps, nous ne souhaitons pas tester l'authentification en elle-m&ecirc;me, mais plut&ocirc;t les pages prot&eacute;g&eacute;es par cette authentification. D&egrave;s que la tentative d'authentification est re&ccedil;ue, nous pouvons y r&eacute;pondre &agrave; l'aide d'une r&eacute;ponse d'authentification :
+                La plupart du temps, nous ne souhaitons pas tester
+                l'authentification en elle-même, mais plutôt
+                les pages protégées par cette authentification.
+                Dès que la tentative d'authentification est reçue,
+                nous pouvons y répondre à l'aide d'une réponse d'authentification :
 <pre>
 class AuthenticationTest extends WebTestCase {
     function testAuthentication() {
@@ -104,10 +109,16 @@ class AuthenticationTest extends WebTestCase {
     }
 }
 </pre>
-                Le nom d'utilisateur et le mot de passe seront d&eacute;sormais envoy&eacute;s &agrave; chaque requ&ecirc;te vers ce r&eacute;pertoire et ses sous r&eacute;pertoires. En revanche vous devrez vous authentifier &agrave; nouveau si vous sortez de ce r&eacute;pertoire.
+                Le nom d'utilisateur et le mot de passe seront désormais
+                envoyés à chaque requête vers ce répertoire
+                et ses sous-répertoires.
+                En revanche vous devrez vous authentifier à nouveau
+                si vous sortez de ce répertoire mais SimpleTest est assez
+                intelligent pour fusionner les sous-répertoires dans un même domaine.
             </p>
             <p>
-                Vous pouvez gagner une ligne en d&eacute;finissant l'authentification au niveau de l'URL...
+                Vous pouvez gagner une ligne en définissant
+                l'authentification au niveau de l'URL...
 <pre>
 class AuthenticationTest extends WebTestCase {
     function testCanReadAuthenticatedPages() {
@@ -116,22 +127,32 @@ class AuthenticationTest extends WebTestCase {
     }
 }
 </pre>
-                Si votre nom d'utilisateur ou mot de passe comporte des caract&egrave;res sp&eacute;ciaux, alors n'oubliez pas de les encoder, sinon la requ&ecirc;te ne sera pas analys&eacute;e correctement. De plus cette ent&ecirc;te ne sera pas envoy&eacute;e aux sous requ&ecirc;tes si vous la d&eacute;finissez avec une URL absolue. Par contre si vous naviguez avec des URL relatives, l'information d'authentification sera pr&eacute;serv&eacute;e.
+                Si votre nom d'utilisateur ou mot de passe comporte
+                des caractères spéciaux, alors n'oubliez pas de les encoder,
+                sinon la requête ne sera pas analysée correctement.
+                De plus cette entête ne sera pas envoyée aux
+                sous requêtes si vous la définissez avec une URL absolue.
+                Par contre si vous naviguez avec des URL relatives,
+                l'information d'authentification sera préservée.
             </p>
             <p>
-                 Pour l'instant, seule l'authentification de base est impl&eacute;ment&eacute;e et elle n'est r&eacute;ellement fiable qu'en tandem avec une connexion HTTPS. C'est g&eacute;n&eacute;ralement suffisant pour prot&eacute;ger le serveur test&eacute; des regards malveillants. Les authentifications Digest et NTLM pourraient &ecirc;tre ajout&eacute;es prochainement.
+                 Pour l'instant, seule l'authentification de base est implémentée
+                 et elle n'est réellement fiable qu'en tandem avec une connexion HTTPS.
+                 C'est généralement suffisant pour protéger
+                 le serveur testé des regards malveillants.
+                 Les authentifications Digest et NTLM pourraient être ajoutées prochainement.
             </p>
         
-        <p>
-<a class="target" name="cookies">
-<h2>Cookies</h2>
-</a>
-</p>
+        <p><a class="target" name="cookies"><h2>Cookies</h2></a></p>
             <p>
-                L'authentification de base ne donne pas assez de contr&ocirc;le au d&eacute;veloppeur Web sur l'interface utilisateur. Il y a de forte chance pour que cette fonctionnalit&eacute; soit cod&eacute;e directement dans l'architecture web &agrave; grand renfort de cookies et de timeouts compliqu&eacute;s.
+                L'authentification de base ne donne pas assez de contrôle
+                au développeur Web sur l'interface utilisateur.
+                Il y a de forte chance pour que cette fonctionnalité
+                soit codée directement dans l'architecture web
+                à grand renfort de cookies et de timeouts compliqués.
             </p>
             <p>
-                Commen&ccedil;ons par un simple formulaire de connexion...
+                Commençons par un simple formulaire de connexion...
 <pre>
 &lt;form&gt;
     Username:
@@ -141,21 +162,23 @@ class AuthenticationTest extends WebTestCase {
     &lt;input type="submit" value="Log in" /&gt;
 &lt;/form&gt;
 </pre>
-                Lequel doit ressembler &agrave;...
+                Lequel doit ressembler à...
             </p>
             <p>
                 <form class="demo">
                     Username:
-                    <input type="text" name="u" value="">
-<br>
+                    <input type="text" name="u" value=""><br>
                     Password:
-                    <input type="password" name="p" value="">
-<br>
+                    <input type="password" name="p" value=""><br>
                     <input type="submit" value="Log in">
                 </form>
             </p>
             <p>
-                Supposons que, durant le chargement de la page, un cookie ait &eacute;t&eacute; inscrit avec un num&eacute;ro d'identifiant de session. Nous n'allons pas encore remplir le formulaire, juste tester que nous pistons bien l'utilisateur. Voici le test...
+                Supposons que, durant le chargement de la page,
+                un cookie ait été inscrit avec un numéro d'identifiant de session.
+                Nous n'allons pas encore remplir le formulaire,
+                juste tester que nous pistons bien l'utilisateur.
+                Voici le test...
 <pre>
 class LogInTest extends WebTestCase {
     function testSessionCookieSetBeforeForm() {
@@ -164,10 +187,15 @@ class LogInTest extends WebTestCase {
     }
 }
 </pre>
-                Nous nous contentons ici de v&eacute;rifier que le cookie a bien &eacute;t&eacute; d&eacute;fini. Etant donn&eacute; que sa valeur est plut&ocirc;t &eacute;nigmatique, elle ne vaut pas la peine d'&ecirc;tre test&eacute;e.
+                Nous nous contentons ici de vérifier que le cookie a bien été défini.
+                Etant donné que sa valeur est plutôt énigmatique,
+                elle ne vaut pas la peine d'être testée.
             </p>
             <p>
-                Le reste du test est le m&ecirc;me que dans n'importe quel autre formulaire, mais nous pourrions souhaiter nous assurer que le cookie n'a pas &eacute;t&eacute; modifi&eacute; depuis la phase de connexion. Voici comment cela pourrait &ecirc;tre test&eacute; :
+                Le reste du test est le même que dans n'importe quel autre formulaire,
+                mais nous pourrions souhaiter nous assurer
+                que le cookie n'a pas été modifié depuis la phase de connexion.
+                Voici comment cela pourrait être testé :
 <pre>
 class LogInTest extends WebTestCase {
     ...
@@ -182,10 +210,12 @@ class LogInTest extends WebTestCase {
     }
 }
 </pre>
-                Ceci confirme que l'identifiant de session est identique avant et apr&egrave;s la connexion.
+                Ceci confirme que l'identifiant de session
+                est identique avant et après la connexion.
             </p>
             <p>
-                Nous pouvons m&ecirc;me essayer de duper notre propre syst&egrave;me en cr&eacute;ant un cookie arbitraire pour se connecter...
+                Nous pouvons même essayer de duper notre propre système
+                en créant un cookie arbitraire pour se connecter...
 <pre>
 class LogInTest extends WebTestCase {
     ...
@@ -197,16 +227,14 @@ class LogInTest extends WebTestCase {
     }
 }
 </pre>
-                Votre site est-il prot&eacute;g&eacute; contre ce type d'attaque ?
+                Votre site est-il protégé contre ce type d'attaque ?
             </p>
         
-        <p>
-<a class="target" name="session">
-<h2>Sessions de navigateur</h2>
-</a>
-</p>
+        <p><a class="target" name="session"><h2>Sessions de navigateur</h2></a></p>
             <p>
-                Si vous testez un syst&egrave;me d'authentification, la reconnexion par un utilisateur est un point sensible. Essayons de simuler ce qui se passe dans ce cas :
+                Si vous testez un système d'authentification,
+                la reconnexion par un utilisateur est un point sensible.
+                Essayons de simuler ce qui se passe dans ce cas :
 <pre>
 class LogInTest extends WebTestCase {
     ...
@@ -223,13 +251,20 @@ class LogInTest extends WebTestCase {
     }
 }
 </pre>
-                La m&eacute;thode <span class="new_code">WebTestCase::restart()</span> pr&eacute;serve les cookies dont le timeout a expir&eacute;, mais conserve les cookies temporaires ou expir&eacute;s. Vous pouvez sp&eacute;cifier l'heure et la date de leur r&eacute;activation.
+                La méthode <span class="new_code">WebTestCase::restart()</span> préserve les cookies
+                dont le timeout a expiré, mais conserve les cookies temporaires ou expirés.
+                Vous pouvez spécifier l'heure et la date de leur réactivation.
             </p>
             <p>
-                L'expiration des cookies peut &ecirc;tre un probl&egrave;me. Si vous avez un cookie qui doit expirer au bout d'une heure, nous n'allons pas mettre le test en veille en attendant que le cookie expire...
+                L'expiration des cookies peut être un problème.
+                Si vous avez un cookie qui doit expirer au bout d'une heure,
+                nous n'allons pas mettre le test en veille en attendant
+                que le cookie expire...
             </p>
             <p>
-                Afin de provoquer leur expiration, vous pouvez dater manuellement les cookies, avant le d&eacute;but de la session.
+                Afin de provoquer leur expiration,
+                vous pouvez dater manuellement les cookies,
+                avant le début de la session.
 <pre>
 class LogInTest extends WebTestCase {
     ...
@@ -247,7 +282,9 @@ class LogInTest extends WebTestCase {
     }
 }
 </pre>
-                Apr&egrave;s le red&eacute;marrage, les cookies seront plus vieux d'une heure et que tous ceux dont la date d'expiration sera pass&eacute;e auront disparus.
+                Après le redémarrage, les cookies seront plus vieux
+                d'une heure et que tous ceux dont la date d'expiration
+                sera passée auront disparus.
             </p>
         
     </div>
@@ -257,14 +294,13 @@ class LogInTest extends WebTestCase {
             La page du projet SimpleTest sur <a href="http://sourceforge.net/projects/simpletest/">SourceForge</a>.
         </li>
 <li>
-            La page de t&eacute;l&eacute;chargement de SimpleTest sur <a href="http://www.lastcraft.com/simple_test.php">LastCraft</a>.
+            La page de téléchargement de SimpleTest sur <a href="http://www.lastcraft.com/simple_test.php">LastCraft</a>.
         </li>
 <li>
-            <a href="http://simpletest.sourceforge.net/">L'API du d&eacute;veloppeur pour SimpleTest</a> donne tous les d&eacute;tails sur les classes et les assertions disponibles.
+            <a href="http://simpletest.org/api/">L'API du développeur pour SimpleTest</a> donne tous les détails sur les classes et les assertions disponibles.
         </li>
 </ul>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -288,8 +324,7 @@ class LogInTest extends WebTestCase {
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <div class="copyright">
             Copyright<br>Marcus Baker 2006
         </div>

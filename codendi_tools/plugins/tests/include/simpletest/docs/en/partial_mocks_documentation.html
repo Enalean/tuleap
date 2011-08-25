@@ -1,12 +1,11 @@
 <html>
 <head>
-<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>SimpleTest for PHP partial mocks documentation</title>
 <link rel="stylesheet" type="text/css" href="docs.css" title="Styles">
 </head>
 <body>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -30,8 +29,7 @@
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <h1>Partial mock objects documentation</h1>
         This page...
         <ul>
@@ -59,11 +57,7 @@
                 on more than one occasion and has saved a lot of work at that point.
             </p>
         
-        <p>
-<a class="target" name="inject">
-<h2>The mock injection problem</h2>
-</a>
-</p>
+        <p><a class="target" name="inject"><h2>The mock injection problem</h2></a></p>
             <p>
                 When one object uses another it is very simple to just pass a mock
                 version in already set up with its expectations.
@@ -80,16 +74,16 @@
                 The connection method might look something like...
 <pre>
 <strong>&lt;?php
-    require_once('socket.php');
+require_once('socket.php');
     
-    class Telnet {
+class Telnet {
+    ...
+    function &amp;connect($ip, $port, $username, $password) {
+        $socket = &amp;new Socket($ip, $port);
+        $socket-&gt;read( ... );
         ...
-        function &amp;connect($ip, $port, $username, $password) {
-            $socket = &amp;new Socket($ip, $port);
-            $socket-&gt;read( ... );
-            ...
-        }
     }
+}
 ?&gt;</strong>
 </pre>
                 We would really like to have a mock object version of the socket
@@ -109,15 +103,15 @@
                 Here this would be...
 <pre>
 &lt;?php
-    require_once('socket.php');
+require_once('socket.php');
     
-    class Telnet {
+class Telnet {
+    ...
+    <strong>function &amp;connect(&amp;$socket, $username, $password) {
+        $socket-&gt;read( ... );
         ...
-        <strong>function &amp;connect(&amp;$socket, $username, $password) {
-            $socket-&gt;read( ... );
-            ...
-        }</strong>
-    }
+    }</strong>
+}
 ?&gt;
 </pre>
                 This means that the test code is typical for a test involving
@@ -145,19 +139,19 @@ class TelnetTest extends UnitTestCase {
                 in as an optional parameter...
 <pre>
 &lt;?php
-    require_once('socket.php');
+require_once('socket.php');
     
-    class Telnet {
-        ...<strong>
-        function &amp;connect($ip, $port, $username, $password, $socket = false) {
-            if (!$socket) {
-                $socket = &amp;new Socket($ip, $port);
-            }
-            $socket-&gt;read( ... );</strong>
-            ...
-            return $socket;
+class Telnet {
+    ...<strong>
+    function &amp;connect($ip, $port, $username, $password, $socket = false) {
+        if (!$socket) {
+            $socket = &amp;new Socket($ip, $port);
         }
+        $socket-&gt;read( ... );</strong>
+        ...
+        return $socket;
     }
+}
 ?&gt;
 </pre>
                 For a quick solution this is usually good enough.
@@ -185,20 +179,20 @@ class TelnetTest extends UnitTestCase {
                 The next method is to pass in a factory object to do the creation...
 <pre>
 &lt;?php
-    require_once('socket.php');
+require_once('socket.php');
     
-    class Telnet {<strong>
-        function Telnet(&amp;$network) {
-            $this-&gt;_network = &amp;$network;
-        }</strong>
+class Telnet {<strong>
+   function Telnet(&amp;$network) {
+        $this-&gt;_network = &amp;$network;
+    }</strong>
+    ...
+    function &amp;connect($ip, $port, $username, $password) {<strong>
+        $socket = &amp;$this-&gt;_network-&gt;createSocket($ip, $port);
+        $socket-&gt;read( ... );</strong>
         ...
-        function &amp;connect($ip, $port, $username, $password) {<strong>
-            $socket = &amp;$this-&gt;_network-&gt;createSocket($ip, $port);
-            $socket-&gt;read( ... );</strong>
-            ...
-            return $socket;
-        }
+        return $socket;
     }
+}
 ?&gt;
 </pre>
                 This is probably the most highly factored answer as creation
@@ -229,11 +223,7 @@ class TelnetTest extends UnitTestCase {
                 Is there a middle ground?
             </p>
         
-        <p>
-<a class="target" name="creation">
-<h2>Protected factory method</h2>
-</a>
-</p>
+        <p><a class="target" name="creation"><h2>Protected factory method</h2></a></p>
             <p>
                 There is a way we can circumvent the problem without creating
                 any new application classes, but it involves creating a subclass
@@ -241,20 +231,20 @@ class TelnetTest extends UnitTestCase {
                 Firstly we move the socket creation into its own method...
 <pre>
 &lt;?php
-    require_once('socket.php');
+require_once('socket.php');
     
-    class Telnet {
+class Telnet {
+    ...
+    function &amp;connect($ip, $port, $username, $password) {<strong>
+        $socket = &amp;$this-&gt;_createSocket($ip, $port);</strong>
+        $socket-&gt;read( ... );
         ...
-        function &amp;connect($ip, $port, $username, $password) {<strong>
-            $socket = &amp;$this-&gt;_createSocket($ip, $port);</strong>
-            $socket-&gt;read( ... );
-            ...
-        }<strong>
+    }<strong>
         
-        function &amp;_createSocket($ip, $port) {
-            return new Socket($ip, $port);
-        }</strong>
-    }
+    function &amp;_createSocket($ip, $port) {
+        return new Socket($ip, $port);
+    }</strong>
+}
 ?&gt;
 </pre>
                 This is the only change we make to the application code.
@@ -310,11 +300,7 @@ class TelnetTest extends UnitTestCase {
                 we automate the subclass creation?
             </p>
         
-        <p>
-<a class="target" name="partial">
-<h2>A partial mock</h2>
-</a>
-</p>
+        <p><a class="target" name="partial"><h2>A partial mock</h2></a></p>
             <p>
                 Of course the answer is "yes" or I would have stopped writing
                 this by now!
@@ -389,11 +375,7 @@ class TelnetTest extends UnitTestCase {
 </pre>
             </p>
         
-        <p>
-<a class="target" name="less">
-<h2>Testing less than a class</h2>
-</a>
-</p>
+        <p><a class="target" name="less"><h2>Testing less than a class</h2></a></p>
             <p>
                 The mocked out methods don't have to be factory methods,
                 they could be any sort of method.
@@ -422,7 +404,7 @@ class TelnetTest extends UnitTestCase {
             SimpleTest project page on <a href="http://sourceforge.net/projects/simpletest/">SourceForge</a>.
         </li>
 <li>
-            <a href="http://simpletest.sourceforge.net/">Full API for SimpleTest</a>
+            <a href="http://simpletest.org/api/">Full API for SimpleTest</a>
             from the PHPDoc.
         </li>
 <li>
@@ -431,8 +413,7 @@ class TelnetTest extends UnitTestCase {
             This is the only formal comment I have seen on this problem.
         </li>
 </ul>
-<div class="menu_back">
-<div class="menu">
+<div class="menu_back"><div class="menu">
 <a href="index.html">SimpleTest</a>
                 |
                 <a href="overview.html">Overview</a>
@@ -456,8 +437,7 @@ class TelnetTest extends UnitTestCase {
                 <a href="authentication_documentation.html">Authentication</a>
                 |
                 <a href="browser_documentation.html">Scriptable browser</a>
-</div>
-</div>
+</div></div>
 <div class="copyright">
             Copyright<br>Marcus Baker 2006
         </div>

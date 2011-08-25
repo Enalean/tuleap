@@ -2,10 +2,21 @@ Version 4.0.21 - Not Released Yet
     == Bug Fix ==
     * Fix issue with Tuleap theme stylesheet on IE7
     * backlog #95: Forum message is no more reachable
+    * Fix reference duplication issue
+    * Fix issue with restricted/disabled plugins on service bar
+    * Fix issue with slmbug and story trackers on fresh install
     
     == Plugins ==
-    * Git plugin v1.15. See separated Changelog
+    * Tracker v5 plugin v0.1. See separated ChangeLog
+    * Git plugin v1.15. See separated ChangeLog
 
+    == Development ==
+    * Upgrade simpletest to 1.0.1
+    * Add a Config class to read configuration files (replaces $GLOBALS['sys_blabla'] usage)
+    * DAO constructor paramaeter is now optionnal: The default DataAccess is CodendiDataAccess
+    * DAO offers now updateAndGetLastId() which execute the sql statement and return the last inserted id
+    
+    
 Version 4.0.20 - Wednesday, 10th August 2011
 	== Enhancement ==
 	* Centralize "Code exchange policy link" in site configuration.
