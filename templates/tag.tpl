@@ -28,6 +28,9 @@
        {elseif $objtype == 'tag'}
          <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tag&amp;h={$object->GetName()}" class="list">{$object->GetHash()}</a></td>
          <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=tag&amp;h={$object->GetName()}">{t}tag{/t}</a></td>
+       {elseif $objtype == 'blob'}
+         <td class="monospace"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$object->GetHash()}" class="list">{$object->GetHash()}</a></td>
+         <td class="link"><a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$object->GetHash()}">{t}blob{/t}</a></td>
        {/if}
      </tr>
      {if $tag->GetTagger()}

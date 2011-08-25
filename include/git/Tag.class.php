@@ -282,6 +282,22 @@ class GitPHP_Tag extends GitPHP_Ref
 	}
 
 	/**
+	 * GetAge
+	 *
+	 * Gets the tag age
+	 *
+	 * @access public
+	 * @return string age
+	 */
+	public function GetAge()
+	{
+		if (!$this->dataRead)
+			$this->ReadData();
+
+		return time() - $this->taggerEpoch;
+	}
+
+	/**
 	 * GetComment
 	 *
 	 * Gets the tag comment
@@ -431,6 +447,9 @@ class GitPHP_Tag extends GitPHP_Ref
 					}
 				}
 				break;
+			case 'blob':
+				$this->object = $this->GetProject()->GetBlob($objectHash);
+				break;
 		}
 	}
 
@@ -509,6 +528,9 @@ class GitPHP_Tag extends GitPHP_Ref
 					}
 				}
 				break;
+			case 'blob':
+				$this->object = $this->GetProject()->GetBlob($objectHash);
+				break;
 		}
 	}
 
@@ -560,6 +582,8 @@ class GitPHP_Tag extends GitPHP_Ref
 			$this->object = $this->object->GetHash();
 		} else if ($this->type == 'tag') {
 			$this->object = $this->object->GetName();
+		} else if ($this->type == 'blob') {
+			$this->object = $this->object->GetHash();
 		}
 
 		$this->objectReferenced = true;
@@ -584,6 +608,8 @@ class GitPHP_Tag extends GitPHP_Ref
 			$this->object = $this->GetProject()->GetCommit($this->object);
 		} else if ($this->type == 'tag') {
 			$this->object = $this->GetProject()->GetTag($this->object);
+		} else if ($this->type == 'blob') {
+			$this->object = $this->GetProject()->GetBlob($this->object);
 		}
 
 		$this->objectReferenced = false;

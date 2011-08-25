@@ -658,8 +658,10 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$projectRefs = $this->GetProject()->GetRefs('tags');
 
 		foreach ($projectRefs as $ref) {
-			if ($ref->GetCommit()->GetHash() === $this->hash) {
-				$tags[] = $ref;
+			if (($ref->GetType() == 'tag') || ($ref->GetType() == 'commit')) {
+				if ($ref->GetCommit()->GetHash() === $this->hash) {
+					$tags[] = $ref;
+				}
 			}
 		}
 
