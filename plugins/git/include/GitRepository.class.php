@@ -649,12 +649,12 @@ class GitRepository implements DVCSRepository {
      * Check if path is a subpath of referencepath
      *
      * @param String $referencePath The path the repository is supposed to belong to
-     * @param String $path The path of the repository
+     * @param String $repositoryPath The path of the repository
      *
      * @return Boolean
      */
-    public function isSubPath($referencePath, $path) {
-        if (strpos(realpath($path), realpath($referencePath)) === 0) {
+    public function isSubPath($referencePath, $repositoryPath) {
+        if (strpos(realpath($repositoryPath), realpath($referencePath)) === 0) {
             return true;
         }
         return false;
@@ -674,13 +674,13 @@ class GitRepository implements DVCSRepository {
     /**
      * Check if repository can be deleted
      *
-     * @param String $referencePath The path the repository is supposed to belong to
+     * @param String $referencePath The reference path is the path the repository is supposed to belong to
      *
      * @return Boolean
      */
     public function canBeDeleted($referencePath) {
-        $path = $this->getPath();
-        return ($this->isSubPath($referencePath, $path) && isDotGit($path));
+        $repositoryPath = $this->getPath();
+        return ($this->isSubPath($referencePath, $repositoryPath) && isDotGit($repositoryPath));
     }
 }
 
