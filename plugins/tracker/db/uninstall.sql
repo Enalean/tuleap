@@ -73,4 +73,6 @@ DELETE reference_group FROM reference_group INNER JOIN reference ON (reference_g
 DELETE FROM reference WHERE service_short_name = 'plugin_tracker';
 DELETE FROM cross_references WHERE source_type = 'plugin_tracker_artifact' OR target_type = 'plugin_tracker_artifact';
 
+DELETE FROM user_preferences WHERE preference_name LIKE 'tracker\_%\_last\_renderer';
+DELETE FROM user_preferences WHERE preference_name LIKE 'tracker\_%\_last\_report';
 
