@@ -304,6 +304,8 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
                 $this->getDriver()->push();
                 $this->getDriver()->delete($path);
                 return true;
+            } else {
+                return false;
             }
         } else {
             throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error') );

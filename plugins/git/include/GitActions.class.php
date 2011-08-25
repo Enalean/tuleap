@@ -73,15 +73,16 @@ class GitActions extends PluginActions {
         
         if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
             $repository->delete();
+            $c->addInfo( $this->getText('actions_delete_ok') );
         } else {
             $this->systemEventManager->createEvent(
                 'GIT_REPO_DELETE',
                 $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryId,
                 SystemEvent::PRIORITY_MEDIUM
             );
+            $c->addInfo( $this->getText('actions_delete_process') );
+            $c->addInfo( $this->getText('actions_delete_backup').' : '.PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir') );
         }
-        $c->addInfo( $this->getText('actions_delete_process') );
-        $c->addInfo( $this->getText('actions_delete_backup').' : '.PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir') );
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
     }
 
