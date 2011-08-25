@@ -168,7 +168,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		}
 
 		$blob = $this->project->GetBlob($this->params['hash']);
-		if ($this->params['file'])
+		if (!empty($this->params['file']))
 			$blob->SetPath($this->params['file']);
 		$blob->SetCommit($commit);
 		$this->tpl->assign('blob', $blob);
