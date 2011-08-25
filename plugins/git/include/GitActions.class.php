@@ -72,8 +72,12 @@ class GitActions extends PluginActions {
         }
         
         if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-            $repository->delete();
-            $c->addInfo( $this->getText('actions_delete_ok') );
+            try {
+                $repository->delete();
+                $c->addInfo( $this->getText('actions_delete_ok') );
+            } catch (Exception $e) {
+                $c->addError($e->getMessage());
+            }
         } else {
             $this->systemEventManager->createEvent(
                 'GIT_REPO_DELETE',

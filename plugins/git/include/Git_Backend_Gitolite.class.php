@@ -295,9 +295,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
         }
         
-        $referencePath = $this->getDriver()->getRepositoriesPath().'/'.$repository->getProject()->getUnixName();
-        
-        if ($repository->canBeDeleted($referencePath)) {
+        if ($repository->canBeDeleted()) {
             if ($this->getDao()->delete($repository) && $this->deletePermissions($repository)) {
                 $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
                 $this->getDriver()->dumpProjectRepoConf($repository->getProject());

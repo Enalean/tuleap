@@ -132,8 +132,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
             throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
         }
         
-        $referencePath = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getProject()->getUnixName();
-        if ($repository->canBeDeleted($referencePath)) {
+        if ($repository->canBeDeleted()) {
             $this->archive($repository);
             $this->getDao()->delete($repository);        
             $this->getDriver()->delete($path);

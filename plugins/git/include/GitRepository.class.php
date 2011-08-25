@@ -674,13 +674,12 @@ class GitRepository implements DVCSRepository {
     /**
      * Check if repository can be deleted
      *
-     * @param String $referencePath The reference path is the path the repository is supposed to belong to
-     *
      * @return Boolean
      */
-    public function canBeDeleted($referencePath) {
-        $repositoryPath = $this->getPath();
-        return ($this->isSubPath($referencePath, $repositoryPath) && isDotGit($repositoryPath));
+    public function canBeDeleted() {
+        $referencePath  = $this->getBackend()->getGitRootPath().'/'.$this->getProject()->getUnixName();
+        $repositoryPath = $this->getBackend()->getGitRootPath().'/'.$this->getPath();
+        return ($this->isSubPath($referencePath, $repositoryPath) && $this->isDotGit($repositoryPath));
     }
 }
 
