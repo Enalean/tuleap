@@ -241,7 +241,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo '
         <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>';
         echo'<SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title"><img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="toggle_form_icon"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
-        echo '<FORM METHOD="POST" id="project_history_form" NAME="project_history_form">';
+        echo '<FORM METHOD="POST" ACTION="'. $_SERVER['PHP_SELF'] .'?group_id='.$group_id.'" id="project_history_form" NAME="project_history_form" enctype="multipart/form-data">';
 
         echo '<TABLE ID="project_history_search">';
         echo '<TH colspan="2" style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
