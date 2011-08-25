@@ -363,7 +363,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         if (isset($subEventsBox)) {
             $forwardSubEvents = '&event='.$event.'&subEventsBox='.implode(",", array_keys($subEventsBox));
         } else {
-            $forwardSubEvents = '&event='.$event;
+            $forwardSubEvents = '&event='.$event.'&all_sub_events='.$all_sub_events;
         }
 
         if ($offset > 0) {
