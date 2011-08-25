@@ -5,23 +5,10 @@
 #
 #      Originally written by Laurent Julliard 2004, Codendi Team, Xerox
 #
-#  This file is part of the Codendi software and must be place at the same
-#  level as the Codendi, RPMS_Codendi and nonRPMS_Codendi directory when
-#  delivered on a CD or by other means
-#
 
 # In order to keep a log of the installation, you may run the script with:
 # ./codendi_install.sh 2>&1 | tee /tmp/codendi_install.log
 
-progname=$0
-#scriptdir=/mnt/cdrom
-if [ -z "$scriptdir" ]; then 
-    scriptdir=`dirname $progname`
-fi
-cd "${scriptdir}";TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove display of folder (RHEL4 only)
-RPMS_DIR="${TOP_DIR}/RPMS_Codendi"
-nonRPMS_DIR="${TOP_DIR}/nonRPMS_Codendi"
-Codendi_DIR="${TOP_DIR}/Codendi"
 TODO_FILE=/root/todo_tuleap.txt
 export INSTALL_DIR="/usr/share/codendi"
 
@@ -675,7 +662,7 @@ if [ "$auto_passwd" = "true" ]; then
 else
     # Ask for user passwords
 
-    if [ -z "rt_passwd" ]; then
+    if [ -z "$rt_passwd" ]; then
         rt_passwd="a"; rt_passwd2="b";
         while [ "$rt_passwd" != "$rt_passwd2" ]; do
             read -s -p "Password for MySQL root: " rt_passwd
