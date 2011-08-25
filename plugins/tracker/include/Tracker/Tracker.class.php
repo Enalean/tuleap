@@ -1553,6 +1553,7 @@ EOS;
 
         $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','unused_elements'));
         $unused_elements_content = '';
+        $unused_elements_content = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','unused_elements_desc');
         $unused_elements_content .= '<div class="tracker-admin-palette-content"><table>';
         foreach(Tracker_FormElementFactory::instance()->getUnusedFormElementForTracker($this) as $f) {
             $unused_elements_content .= $f->fetchAdminAdd();
