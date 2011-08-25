@@ -371,7 +371,7 @@ class TrackerManager { /* extends Engine? */
                  <td><input type="button" name="CreateTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateTemplate()"></td>
                </tr>';
         */
-        echo ' <tr>sds
+        echo ' <tr>
                 <td width="300">'.$Language->getText('plugin_tracker_include_type','from_xml', 'resources/templates/').'</td>
                 <td>
                  <input type="hidden" name="create_mode" value="">
