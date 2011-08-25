@@ -1,19 +1,22 @@
-Version 1.14 (Not released yet)
+Version 1.15 (Tuleap 4.0.21)
+    * Gitolite repository can be deleted
+    * Fix issue when adding several mails in notifications
+    
+Version 1.14 (Tuleap 4.0.20)
 	* Fix Gitolite access violation in gitphp.
 	* Fix issue with perm_reset_for_git_repository missing on project admin > Project history
 	* Fix issue with site content: replace 'Write & Rewind' by 'Rewind'
 	* Fix missing git specific system events missing on Admin > System Event Monitor
 
-
-Version 1.13 (Not released yet)
+Version 1.13 (Tuleap 4.0.20)
 	* Fix issue when trying to set Private a empty git repo.
 	* Fix bug when system_check's dump ssh keys doesn't modify anything
 
-Version 1.12 (Not released yet)
+Version 1.12 (Tuleap 4.0.20)
 	* Fix gitolite behaviour when data dir is located in a symlinked path
 	* No longer possible to create 2 repositories with the same name
 
-Version 1.11 (Tuleap 4.0.20 - Not released yet)
+Version 1.11 (Tuleap 4.0.20)
 	* backlog #22 : Gitolite integration
 
 Version 1.10 (Tuleap 4.0.19)
