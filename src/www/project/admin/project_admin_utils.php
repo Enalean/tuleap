@@ -344,13 +344,19 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
+        if (isset($subEventsBox)) {
+            $forwardSubEvents = '&event='.$event.'&subEventsBox='.implode(",", array_keys($subEventsBox));
+        } else {
+            $forwardSubEvents = '&event='.$event;
+        }
+
         if ($offset > 0) {
-            echo  '<a href="?group_id='.$group_id.'&offset='.($offset-$limit).'&value='.$value.'&startDate='.$startDate.'&endDate='.$endDate.'&by='.$by.'">[ '.$Language->getText('project_admin_utils', 'previous').' ]</a>';
+            echo  '<a href="?group_id='.$group_id.'&offset='.($offset-$limit).$forwardSubEvents.'&value='.$value.'&start='.$startDate.'&end='.$endDate.'&by='.$by.'">[ '.$Language->getText('project_admin_utils', 'previous').' ]</a>';
             echo '&nbsp;';
             }
             if (($offset + $limit) < $res['numrows']) {
                 echo '&nbsp;';
-                echo '<a href="?group_id='.$group_id.'&offset='.($offset+$limit).'&value='.$value.'&startDate='.$startDate.'&endDate='.$endDate.'&by='.$by.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+                echo '<a href="?group_id='.$group_id.'&offset='.($offset+$limit).$forwardSubEvents.'&value='.$value.'&start='.$startDate.'&end='.$endDate.'&by='.$by.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
             }
             echo '</div>';
             echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
