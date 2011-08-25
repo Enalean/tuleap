@@ -354,7 +354,7 @@ class GitRepository implements DVCSRepository {
         $this->rootPath = $dir;
     }
 
-    /*
+    /**
      * Gives the root path which is the project directory
      * @return String
      */
@@ -648,8 +648,8 @@ class GitRepository implements DVCSRepository {
     /**
      * Check if path is a subpath of referencepath
      *
-     * @param String $referencePath
-     * @param String $path
+     * @param String $referencePath The path the repository is supposed to belong to
+     * @param String $path The path of the repository
      *
      * @return Boolean
      */
