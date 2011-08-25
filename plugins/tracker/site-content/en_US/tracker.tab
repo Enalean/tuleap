@@ -473,7 +473,7 @@ plugin_tracker_include_type	avoid_spaces	Please avoid spaces and punctuation in 
 plugin_tracker_include_type	choose_creation	Choose a creation method:
 plugin_tracker_include_type	from_tmpl	From a predefined template:
 plugin_tracker_include_type	from_exist	<b>From an existing tracker:</b><br><i>(Choose a project first and then a tracker of this project)</i>
-plugin_tracker_include_type	from_xml	<b>From XML file:</b>
+plugin_tracker_include_type	from_xml	<b>From XML file:</b> if you do not have xml tracker template, examples are available <a href="$1">here</a>.
 plugin_tracker_include_type	proj_id	Project ID:
 plugin_tracker_include_type	tracker_id	Tracker ID:
 plugin_tracker_include_type	list_all_fields	List of all Available Fields
