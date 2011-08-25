@@ -372,7 +372,7 @@ class TrackerManager { /* extends Engine? */
                </tr>';
         */
         echo ' <tr>
-                <td width="300">'.$Language->getText('plugin_tracker_include_type','from_xml', 'resources/templates/').'</td>
+                <td width="300">'.$Language->getText('plugin_tracker_include_type','from_xml', TRACKER_BASE_URL.'/resources/templates/').'</td>
                 <td>
                  <input type="hidden" name="create_mode" value="">
                  <input type="file" name="file" id="file" />
