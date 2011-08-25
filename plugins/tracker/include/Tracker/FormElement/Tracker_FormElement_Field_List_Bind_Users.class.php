@@ -537,7 +537,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             if (($ug == $GLOBALS['UGROUP_NONE']) || 
                 ($ug == $GLOBALS['UGROUP_ANONYMOUS']) || 
                 ($ug == $GLOBALS['UGROUP_PROJECT_MEMBERS']) || 
-                ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN']) 
+                ($ug == $GLOBALS['UGROUP_PROJECT_ADMIN']) || 
+                ($ug == $GLOBALS['UGROUP_TRACKER_ADMIN']) 
             ) { 
                 continue;
             }
