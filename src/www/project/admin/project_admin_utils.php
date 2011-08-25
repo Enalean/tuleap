@@ -121,9 +121,25 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
     return db_query($sql);
 }
 
-function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $all_sub_events = null) {
-    $um = UserManager::instance();
-    $filter = $um->getUserFilter($by);
+/**
+ * Builds the group history filter
+ * 
+ * @param String $event
+ * @param Array  $subEventsBox
+ * @param String $value
+ * @param Date   $startDate
+ * @param Date   $endDate
+ * @param String $by
+ * @param String $allSubEvents
+ * 
+ * @return String
+ */
+function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $allSubEvents = null) {
+    $filter = '';
+    if (!empty($by)) {
+        $um = UserManager::instance();
+        $filter .= $um->getUserFilter($by);
+    }
     if(!empty($startDate)) {
         list($timestamp,) = util_date_to_unixtime($startDate." 00:00:00");
         $filter .= " AND group_history.date > '".$timestamp."'";
@@ -142,7 +158,7 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
                 $filter .= " OR group_history.field_name LIKE '".$key."%'";
             }
         } else {
-            $subEventsBox = explode(",", $all_sub_events);
+            $subEventsBox = explode(",", $allSubEvents);
             foreach ($subEventsBox as $key => $value) {
                 $filter .= " OR group_history.field_name LIKE '".$value."%'";
             }
@@ -180,10 +196,10 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
                        'perm_reset_for_docgroup'        =>'perm_reset_for_docgroup',
                        'perm_reset_for_wiki'            =>'perm_reset_for_wiki', 
                        'perm_reset_for_wikipage'        =>'perm_reset_for_wikipage',
-                       'perm_reset_for_wikiattachment'  =>'perm_reset_for_wikiattachment',   
+                       'perm_reset_for_wikiattachment'  =>'perm_reset_for_wikiattachment',
                        'perm_reset_for_object'          =>'perm_reset_for_object',
                        'perm_granted_for_field'         =>'perm_granted_for_field',
-                       'perm_granted_for_tracker'       =>'perm_granted_for_tracker',  
+                       'perm_granted_for_tracker'       =>'perm_granted_for_tracker',
                        'perm_granted_for_package'       =>'perm_granted_for_package',
                        'perm_granted_for_release'       =>'perm_granted_for_release', 
                        'perm_granted_for_document'      =>'perm_granted_for_document',

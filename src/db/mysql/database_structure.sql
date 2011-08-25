@@ -962,7 +962,8 @@ CREATE TABLE group_history (
   mod_by int(11) NOT NULL default '0',
   date int(11) default NULL,
   PRIMARY KEY  (group_history_id),
-  KEY idx_group_history_group_id (group_id)
+  KEY idx_group_history_group_id (group_id),
+  KEY idx_group_history_user_id (mod_by)
 );
 
 #
