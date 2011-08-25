@@ -12,6 +12,7 @@ URL: http://tuleap.net
 Source0: README.all
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
+Requires: @@PKG_NAME@@-install
 Requires: @@PKG_NAME@@-core-mailman
 Requires: @@PKG_NAME@@-core-subversion
 Requires: @@PKG_NAME@@-plugin-forumml
