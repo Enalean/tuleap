@@ -570,7 +570,7 @@ fi
 
 # Check if mailman is installed
 enable_core_mailman="false"
-if $RPM -q mailman-tuleap; then
+if $RPM -q mailman-tuleap 2>&1 >/dev/null; then
     enable_core_mailman="true"
 fi
 
@@ -1058,8 +1058,8 @@ if [ "$disable_subdomains" = "y" ]; then
   $MYSQL -u codendiadm codendi --password=$codendiadm_passwd -e "UPDATE service SET link = IF(group_id = 1, '/www/codendi', '/www/\$projectname/') WHERE short_name = 'homepage' "
 fi
 
-todo "Customize /etc/codendi/site-content/en_US/others/default_page.php (project web site default home page)"
-todo "Customize site-content information for your site."
+#todo "Customize /etc/codendi/site-content/en_US/others/default_page.php (project web site default home page)"
+todo "Customize /etc/codendi/site-content information for your site."
 todo "  For instance: contact/contact.txt cvs/intro.txt"
 todo "  svn/intro.txt include/new_project_email.txt, etc."
 
@@ -1307,7 +1307,6 @@ fi
 ##############################################
 # End of installation
 #
-todo "Don't forget to read the INSTALL file"
 todo ""
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE."
