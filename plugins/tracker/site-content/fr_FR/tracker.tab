@@ -464,7 +464,7 @@ plugin_tracker_include_type	avoid_spaces	Veuillez éviter les espaces et les pon
 plugin_tracker_include_type	choose_creation	Choisissez une méthode de création&nbsp;:
 plugin_tracker_include_type	from_tmpl	A partir d'un patron prédéfini&nbsp;:
 plugin_tracker_include_type	from_exist	<b>A partir d'un outil de suivi existant&nbsp;:</b><br><i>(Choisissez d'abord un projet et ensuite un outil de suivi pour ce projet)</i>
-plugin_tracker_include_type	from_xml	<b>A partir d'un fichier XML&nbsp;:</b><br><i>(Vous pouvez prévisualiser le l'outil de suivi avant de l'importer)</i>
+plugin_tracker_include_type	from_xml	<b>A partir d'un fichier XML&nbsp;:</b>
 plugin_tracker_include_type	proj_id	ID du projet&nbsp;:
 plugin_tracker_include_type	tracker_id	ID de l'outil de suivi&nbsp;:
 plugin_tracker_include_type	list_all_fields	Liste de tous les champs disponibles
