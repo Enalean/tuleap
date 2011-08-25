@@ -354,7 +354,7 @@ class GitRepository implements DVCSRepository {
         $this->rootPath = $dir;
     }
 
-    /*
+    /**
      * Gives the root path which is the project directory
      * @return String
      */
@@ -504,7 +504,6 @@ class GitRepository implements DVCSRepository {
 
     /**
      * Delete a repository (reference and fork)
-     * @todo think about a really good way to check repository path deletion!!!
      */
     public function delete() {
         $project = $this->getProject();
@@ -644,6 +643,43 @@ class GitRepository implements DVCSRepository {
                !preg_match('`[^'. $this->getBackend()->getAllowedCharsInNamePattern() .']`', $name) &&
                !preg_match('`(?:^|/)\.`', $name) && //do not allow dot at the begining of a world
                !preg_match('`\.\.`', $name); //do not allow double dots (prevent path collisions)
+    }
+    
+    /**
+     * Check if path is a subpath of referencepath
+     *
+     * @param String $referencePath The path the repository is supposed to belong to
+     * @param String $repositoryPath The path of the repository
+     *
+     * @return Boolean
+     */
+    public function isSubPath($referencePath, $repositoryPath) {
+        if (strpos(realpath($repositoryPath), realpath($referencePath)) === 0) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * Check if path contains .git at the end
+     *
+     * @param String $path
+     *
+     * @return Boolean
+     */
+    public function isDotGit($path) {
+        return (substr($path, -4) == '.git');
+    }
+    
+    /**
+     * Check if repository can be deleted
+     *
+     * @return Boolean
+     */
+    public function canBeDeleted() {
+        $referencePath  = $this->getBackend()->getGitRootPath().'/'.$this->getProject()->getUnixName();
+        $repositoryPath = $this->getBackend()->getGitRootPath().'/'.$this->getPath();
+        return ($this->isSubPath($referencePath, $repositoryPath) && $this->isDotGit($repositoryPath));
     }
 }
 

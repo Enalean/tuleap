@@ -121,12 +121,12 @@ class GitDriver implements DVCSDriver {
            throw new GitDriverErrorException('Empty path or permission denied '.$path);
         }
         $rcode = 0;
-        $output = system('rm -fr '.$path, $rcode);
+        $output = system('rm -fr '.escapeshellarg($path), $rcode);
         if ( $rcode != 0 ) {
            throw new GitDriverErrorException('Unable to delete path '.$path);
         }
         return true;
-    }    
+    }
 
     public function activateHook($hookName, $repoPath, $uid=false, $gid=false) {
         //newer version of git

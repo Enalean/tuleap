@@ -235,7 +235,7 @@ class GitViews extends PluginViews {
         <input type="hidden" id="action" name="action" value="edit" />
         <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId?>" />
         <?php
-        if ( $this->getController()->isAPermittedAction('del') && !$repository->hasChild() && !($repository->getBackend() instanceof Git_Backend_Gitolite)) {
+        if ($this->getController()->isAPermittedAction('del') && !$repository->hasChild()) {
             echo '<div id="plugin_git_confirm_deletion"><input type="submit" name="confirm_deletion" value="'. $this->getText('admin_deletion_submit') .'" /></div>';
         }
         if ( $this->getController()->isAPermittedAction('save') ) {

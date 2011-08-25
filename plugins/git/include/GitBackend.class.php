@@ -131,10 +131,16 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         if ( $this->getDao()->hasChild($repository) === true ) {
             throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
         }
-        $this->archive($repository);
-        $this->getDao()->delete($repository);        
-        $this->getDriver()->delete($path);
-        return true;
+        
+        if ($repository->canBeDeleted()) {
+            $this->archive($repository);
+            $this->getDao()->delete($repository);        
+            $this->getDriver()->delete($path);
+            return true;
+        } else {
+            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error') );
+        }
+        
     }
 
     public function save($repository) {

@@ -112,5 +112,15 @@ interface Git_Backend_Interface {
      * @return true if success, false otherwise
      */
     public function renameProject(Project $project, $newName);
+    
+     /**
+     * Delete a repository
+     *
+     * @param GitRepository $repository
+     * 
+     * @return Boolean
+     */
+    public function delete($repository);
+
 }
 ?>

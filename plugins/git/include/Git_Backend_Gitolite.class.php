@@ -147,6 +147,23 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         }
         return $ok;
     }
+    
+    /**
+     * Delete the permissions of the repository
+     *
+     * @param GitRepository $repository
+     *
+     * @return bool true if success, false otherwise
+     */
+    public function deletePermissions($repository) {
+        
+        $group_id = $repository->getProjectId();
+        $object_id = $repository->getId();
+        return permission_clear_all($group_id, Git::PERM_READ, $object_id)
+            && permission_clear_all($group_id, Git::PERM_WRITE, $object_id)
+            && permission_clear_all($group_id, Git::PERM_WPLUS, $object_id);
+    }
+    
 
     /**
      * Test is user can read the content of this repository and metadata
@@ -181,8 +198,9 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @param GitRepository $repository
      */
     public function changeRepositoryMailingList($repository) {
-        $this->driver->dumpProjectRepoConf($repository->getProject());
-        return $this->driver->push();
+        $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
+        $this->getDriver()->dumpProjectRepoConf($repository->getProject());
+        return $this->getDriver()->push();
     }
 
     /**
@@ -266,6 +284,34 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         }
     }
     
+    public function delete($repository) {
+        $path = $repository->getPath();
+        if ( empty($path) ) {
+            throw new GitBackendException('Bad repository path: '.$path);
+        }
+        $path = $this->getGitRootPath().$path;
+        
+        if ( $this->getDao()->hasChild($repository) === true ) {
+            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
+        }
+        
+        if ($repository->canBeDeleted()) {
+            if ($this->getDao()->delete($repository) && $this->deletePermissions($repository)) {
+                $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
+                $this->getDriver()->dumpProjectRepoConf($repository->getProject());
+                $this->getDriver()->push();
+                $this->getDriver()->delete($path);
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error') );
+        }
+        
+        return false;
+    }
+    
     /**
      * Set $driver
      *
@@ -283,6 +329,11 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     protected function getBackend() {
         return Backend::instance();
     }
+    
+    public function getDriver() {
+        return $this->driver;
+    }
+
 }
 
 ?>
