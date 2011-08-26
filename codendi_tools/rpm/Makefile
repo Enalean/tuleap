@@ -98,6 +98,14 @@ codendi-all-deps: codendi-all-deps.spec
 	cp README.all-deps $(RPM_TMP)/SOURCES/
 	rpmbuild -bb $(RPM_TMP)/SPECS/$<
 
+tuleap-all: tuleap-all.spec
+	cat $< |\
+		sed -e 's/@@VERSION@@/$(version)/g' |\
+		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
+		> $(RPM_TMP)/SPECS/$<
+	cp README.all $(RPM_TMP)/SOURCES/
+	rpmbuild -bb $(RPM_TMP)/SPECS/$<
+
 clean:
 	-rm -Rf $(RPM_TMP)/*
 	-rm -Rf ~/.rpmmacros
@@ -105,7 +113,7 @@ clean:
 	-rm -f /tmp/log_xml2html_*
 	-rm -f /tmp/log_xml2pdf_*
 
-all: clean codendi custom_codendi codendi-all-deps
+all: codendi custom_codendi codendi-all-deps tuleap-all
 
 dist:
 	mkdir -p $(RPM_TMP)/yum

@@ -73,6 +73,17 @@ Codendi is a web based application that address all the aspects of product devel
 ## Core component definitions
 #
 
+%package install
+Summary: Initial setup of the platform
+Group: Development/Tools
+Version: @@VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}
+%description install
+This package contains the setup script for the %{PKG_NAME} platform.
+It is meant to be install at the initial setup of the platform and
+recommanded to uninstall it after.
+
 %package core-mailman
 Summary: Mailman component for codendi
 Group: Development/Tools
@@ -420,6 +431,9 @@ done
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 
+# Install script
+%{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap-install
+%{__install} -m 755 codendi_tools/codendi_install.sh $RPM_BUILD_ROOT/%{_datadir}/tuleap-install/setup.sh
 #
 # Install Codendi executables
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -752,6 +766,12 @@ fi
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %dir %{APP_CACHE_DIR}
 
+#
+# Install
+#
+%files install
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{_datadir}/tuleap-install
 
 #
 # Core

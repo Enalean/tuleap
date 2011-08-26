@@ -1,14 +1,20 @@
 Version 4.0.21 - Not Released Yet
+    == Enhancement ==
+    * Improve rebuildability of Tuleap dependencies (contrib Christian Bayle).
+    * One rpm package to install all the best of the platform (tuleap-all)
+    * Start to remove deprecated stuff from SQL install values.
+
     == Bug Fix ==
     * Fix issue with Tuleap theme stylesheet on IE7
     * backlog #95: Forum message is no more reachable
     * Fix reference duplication issue
     * Fix issue with restricted/disabled plugins on service bar
     * Fix issue with slmbug and story trackers on fresh install
-    
+
     == Plugins ==
     * Tracker v5 plugin v0.1. See separated ChangeLog
     * Git plugin v1.15. See separated ChangeLog
+    * IM plugin v1.2. See separated ChangeLog
 
     == Development ==
     * Upgrade simpletest to 1.0.1

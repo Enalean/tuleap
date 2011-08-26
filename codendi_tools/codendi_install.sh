@@ -5,24 +5,11 @@
 #
 #      Originally written by Laurent Julliard 2004, Codendi Team, Xerox
 #
-#  This file is part of the Codendi software and must be place at the same
-#  level as the Codendi, RPMS_Codendi and nonRPMS_Codendi directory when
-#  delivered on a CD or by other means
-#
 
 # In order to keep a log of the installation, you may run the script with:
 # ./codendi_install.sh 2>&1 | tee /tmp/codendi_install.log
 
-progname=$0
-#scriptdir=/mnt/cdrom
-if [ -z "$scriptdir" ]; then 
-    scriptdir=`dirname $progname`
-fi
-cd "${scriptdir}";TOP_DIR=`pwd`;cd - > /dev/null # redirect to /dev/null to remove display of folder (RHEL4 only)
-RPMS_DIR="${TOP_DIR}/RPMS_Codendi"
-nonRPMS_DIR="${TOP_DIR}/nonRPMS_Codendi"
-Codendi_DIR="${TOP_DIR}/Codendi"
-TODO_FILE=/root/todo_codendi.txt
+TODO_FILE=/root/todo_tuleap.txt
 export INSTALL_DIR="/usr/share/codendi"
 
 # path to command line tools
@@ -60,10 +47,18 @@ INSTALL='/usr/bin/install'
 CHCON='/usr/bin/chcon'
 SELINUX_CONTEXT="root:object_r:httpd_sys_content_t";
 SELINUX_ENABLED=1
-$GREP -i -q '^SELINUX=disabled' /etc/selinux/config
-if [ $? -eq 0 ] || [ ! -e $CHCON ] || [ ! -e "/etc/selinux/config" ] ; then
-   # SELinux not installed
-   SELINUX_ENABLED=0
+if [ -e /etc/selinux/config ]
+then
+	$GREP -i -q '^SELINUX=disabled' /etc/selinux/config
+	if [ $? -eq 0 ] || [ ! -e $CHCON ] ; then
+		# SELinux not installed
+		SELINUX_ENABLED=0
+	fi
+else
+	if [ ! -e $CHCON ] ; then
+		# SELinux not installed
+		SELINUX_ENABLED=0
+	fi
 fi
 
 
@@ -168,13 +163,13 @@ EOF
 setup_vsftpd() {
     # Configure vsftpd
     $PERL -i'.orig' -p -e "s/^#anon_upload_enable=YES/anon_upload_enable=YES/g" /etc/vsftpd/vsftpd.conf 
-    $PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Codendi FTP service./g" /etc/vsftpd/vsftpd.conf 
+    $PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Tuleap FTP service./g" /etc/vsftpd/vsftpd.conf 
     $PERL -pi -e "s/^local_umask=.*/local_umask=002/g" /etc/vsftpd/vsftpd.conf 
 
     # Add welcome messages
     $CAT <<'EOF' > /var/lib/codendi/ftp/.message
 ********************************************************************
-Welcome to Codendi FTP server
+Welcome to Tuleap FTP server
 
 On This Site:
 /incoming          Place where to upload your new file release
@@ -250,7 +245,7 @@ setup_bind() {
   substitute '/var/named/chroot/var/named/codendi.zone' '%sys_shortname%' "$sys_shortname"
   substitute '/var/named/chroot/var/named/codendi.zone' '%dns_serial%' "$dns_serial"
 
-  todo "Create the DNS configuration files as explained in the Codendi Installation Guide:"
+  todo "Create the DNS configuration files as explained in the Tuleap Installation Guide:"
   todo "    update /var/named/chroot/var/named/codendi.zone - replace all words starting with %%."
   todo "    make sure the file is readable by 'other':"
   todo "      > chmod o+r /var/named/chroot/var/named/codendi.zone"
@@ -336,7 +331,7 @@ EOF
 # Mysql configuration
 #
 setup_mysql() {
-    echo "Creating the Codendi database..."
+    echo "Creating the Tuleap database..."
 
     # If DB is local, mysql password where not already tested
     pass_opt=""
@@ -357,14 +352,14 @@ setup_mysql() {
         pass_opt="-uroot --password=$rt_passwd"
     fi
 
-    # Test if codendi DB already exists
+    # Test if tuleap DB already exists
     yn="-"
     freshdb=0
     if $MYSQLSHOW $pass_opt | $GREP codendi 2>&1 >/dev/null; then
-        read -p "Codendi Database already exists. Overwrite? [y|n]:" yn
+        read -p "Tuleap Database already exists. Overwrite? [y|n]:" yn
     fi
 
-    # Delete the Codendi DB if asked for
+    # Delete the Tuleap DB if asked for
     if [ "$yn" = "y" ]; then
         $MYSQL $pass_opt -e "DROP DATABASE codendi"
     fi
@@ -384,7 +379,7 @@ EOF
     pass_opt="-uroot --password=$rt_passwd"
 
     if [ $freshdb -eq 1 ]; then
-        echo "Populating the Codendi database..."
+        echo "Populating the Tuleap database..."
         cd $INSTALL_DIR/src/db/mysql/
         $MYSQL -u codendiadm codendi --password=$codendiadm_passwd < database_structure.sql   # create the DB
         cp database_initvalues.sql /tmp/database_initvalues.sql
@@ -428,57 +423,113 @@ usage() {
     cat <<EOF
 Usage: $1 [options]
 Options:
-  --auto-passwd                  Automaticaly generate random passwords
-  --without-bind-config          Do not setup local DNS server
+  --auto-passwd                    Automaticaly generate random passwords
+  --without-bind-config            Do not setup local DNS server
+  --disable-subdomains		   Disable subdomain
 
   Mysql configuration (if database on remote server):
-  --mysql-host=host              Hostname (or IP) of mysql server
-  --mysql-port=port              Port if not default (3306)
-  --mysql-root-password=password Mysql root user password on remote host
-  --mysql-httpd-host=host        Name or IP of the current server as seen by
-                                 remote host
+  --sys-default-domain=<domain>	   Server Domain name
+  --sys-fullname=<fqdn>            Server fully qualified machine name
+  --sys-ip-address=<ip address>    Server IP address
+  --sys-org-name=<string>          Your Company short name
+  --sys-long-org-name=<string>     Your Company long name
+  --mysql-host=<host>              Hostname (or IP) of mysql server
+  --mysql-port=<integer>           Port if not default (3306)
+  --mysql-root-password=<password> Mysql root user password on remote host
+  --mysql-httpd-host=<host>        Name or IP of the current server as seen by
+                                   remote host
 EOF
     exit 1
 }
 
 ##############################################
-# Codendi installation
+# Tuleap installation
 ##############################################
+sys_default_domain=""
+sys_fullname=""
+sys_ip_address=""
+sys_org_name=""
+sys_long_org_name=""
+disable_subdomains=""
 
+auto=""
 auto_passwd=""
 configure_bind=""
 mysql_host=""
 mysql_port=""
 mysql_httpd_host="localhost"
 rt_passwd=""
-for arg in $@; do
-    case "$arg" in
-        --auto-passwd)         auto_passwd="true";;
-        --without-bind-config) configure_bind="false";;
-        --mysql-host=*)
-            mysql_host=$(echo "$arg" | sed -e 's/--mysql-host=//')
-            MYSQL="$MYSQL -h$mysql_host"
-            MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
-            ;;
-        --mysql-port=*)
-            mysql_port=$(echo "$arg" | sed -e 's/--mysql-port=//')
-            MYSQL="$MYSQL -P$mysql_port"
-            MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
-            ;;
-        --mysql-root-password=*)
-            rt_passwd=$(echo "$arg" | sed -e 's/--mysql-root-password=//')
-            ;;
-        --mysql-httpd-host=*)
-            mysql_httpd_host=$(echo "$arg" | sed -e 's/--mysql-httpd-host=//')
-            ;;
-        -*)
-            usage $0
-            ;;
+
+options=`getopt -o h -l auto,auto-passwd,without-bind-config,mysql-host:,mysql-port:,mysql-root-password:,mysql-httpd-host:,sys-default-domain:,sys-fullname:,sys-ip-address:,sys-org-name:,sys-long-org-name:,disable-subdomains -- "$@"`
+
+if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
+
+eval set -- "$options"
+
+while true
+do
+    case "$1" in
+	--auto)
+		auto_passwd="true";
+		configure_bind="false"
+		disable_subdomains="y"
+		sys_default_domain="`hostname -f`"
+		sys_fullname="`hostname -f`"
+		sys_ip_address="127.0.1.1"
+		sys_org_name="Tuleap"
+		sys_long_org_name="Tuleap ALM"
+		#rt_passwd="`dd if=/dev/urandom count=1 bs=16 2> /dev/null | md5sum | cut -c-32`"
+		auto_passwd="true"
+		mysql_host="localhost"
+		MYSQL="$MYSQL -h$mysql_host"
+		MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
+		shift 1 ;;
+	--auto-passwd)
+		auto_passwd="true";shift 1 ;;
+        --without-bind-config)
+		configure_bind="false";shift 1 ;;
+	--disable-subdomains)
+		disable_subdomains="y"; shift 1 ;;
+	--sys-default-domain)
+		sys_default_domain="$2" ; shift 2 ;;
+	--sys-fullname)
+		sys_fullname="$2" ; shift 2 ;;
+	--sys-ip-address)
+		sys_ip_address="$2" ; shift 2 ;;
+	--sys-org-name)
+		sys_org_name="$2" ; shift 2 ;;
+	--sys-long-org-name)
+		sys_long_org_name="$2" ; shift 2 ;;
+	--mysql-host) 
+		mysql_host="$2";shift 2
+		MYSQL="$MYSQL -h$mysql_host"
+		MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
+		;;
+	--mysql-port)
+		mysql_port="$2";shift 2
+		MYSQL="$MYSQL -P$mysql_port"
+		MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
+		;;
+	--mysql-root-password=*)
+		rt_passwd="$2";shift 2
+		;;
+	--mysql-httpd-host=*)
+		mysql_httpd_host="$2";shift 2 ;;
+	-h|--help)
+		usage $0 ;;
+        --)
+		shift 1; break ;;
+        *)
+		break ;;
     esac
 done
 
 if [ ! -z "$mysql_host" ]; then
     test_mysql_host
+else
+    if ! $RPM -q mysql-server 2>&1 >/dev/null; then
+	die "No --mysql-host nor local mysql server installed, exit. Please install 'mysql-server' package"
+    fi
 fi
 
 ##############################################
@@ -519,26 +570,50 @@ fi
 
 # Check if mailman is installed
 enable_core_mailman="false"
-if $RPM -q mailman | $GREP codendi 2>&1 >/dev/null; then
+if $RPM -q mailman-tuleap 2>&1 >/dev/null; then
     enable_core_mailman="true"
+fi
+
+# Check if munin is installed
+enable_munin="false"
+if $RPM -q munin 2>&1 >/dev/null; then
+    enable_munin="true"
 fi
 
 
 
 rm -f $TODO_FILE
-todo "WHAT TO DO TO FINISH THE CODENDI INSTALLATION (see $TODO_FILE)"
+todo "WHAT TO DO TO FINISH THE TULEAP INSTALLATION (see $TODO_FILE)"
 
 echo
 echo "Configuration questions"
 echo
 
 # Ask for domain name and other installation parameters
-read -p "Codendi Domain name: " sys_default_domain
-read -p "Codendi Server fully qualified machine name: " sys_fullname
-read -p "Codendi Server IP address: " sys_ip_address
-read -p "Your Company short name: " sys_org_name
-read -p "Your Company long name: " sys_long_org_name
-read -p "Disable sub-domain management (no DNS delegation)? [y|n]:" disable_subdomains
+if [ -z "$sys_default_domain" ]
+then
+	read -p "Tuleap Domain name: " sys_default_domain
+fi
+if [ -z "$sys_fullname" ]
+then
+	read -p "Tuleap Server fully qualified machine name: " sys_fullname
+fi
+if [ -z "$sys_ip_address" ]
+then
+	read -p "Tuleap Server IP address: " sys_ip_address
+fi
+if [ -z "$sys_org_name" ]
+then
+	read -p "Your Company short name: " sys_org_name
+fi
+if [ -z "$sys_long_org_name" ]
+then
+	read -p "Your Company long name: " sys_long_org_name
+fi
+if [ -z "$disable_subdomains" ]
+then
+	read -p "Disable sub-domain management (no DNS delegation)? [y|n]:" disable_subdomains
+fi
 
 if [ "$disable_subdomains" != "y" ]; then
     if [ "$configure_bind" != "false" ]; then
@@ -549,14 +624,14 @@ else
 fi
 
 if [ "$auto_passwd" = "true" ]; then
-    # Save in /root/.codendi_passwd
-    passwd_file=/root/.codendi_passwd
+    # Save in /root/.tuleap_passwd
+    passwd_file=/root/.tuleap_passwd
     $RM -f $passwd_file
     touch $passwd_file
     $CHMOD 0600 $passwd_file
 
     # Mysql Root password (what if remote DB ?)
-    if [ -z "rt_passwd" ]; then
+    if [ -z "$rt_passwd" ]; then
         rt_passwd=$(generate_passwd)
         echo "Mysql root (root): $rt_passwd" >> $passwd_file
     fi
@@ -587,7 +662,7 @@ if [ "$auto_passwd" = "true" ]; then
 else
     # Ask for user passwords
 
-    if [ -z "rt_passwd" ]; then
+    if [ -z "$rt_passwd" ]; then
         rt_passwd="a"; rt_passwd2="b";
         while [ "$rt_passwd" != "$rt_passwd2" ]; do
             read -s -p "Password for MySQL root: " rt_passwd
@@ -638,7 +713,7 @@ done
 
 fi
 
-# Update codendi user password
+# Update tuleap user password
 echo "$codendiadm_passwd" | passwd --stdin codendiadm
 
 # Build file structure
@@ -792,7 +867,7 @@ fi
 
 
 ##############################################
-# Install the Codendi software 
+# Install the Tuleap software 
 #
 
 echo "Installing configuration files..."
@@ -881,7 +956,9 @@ $CHMOD 644 /etc/libnss-mysql.cfg
 $CHMOD 600 /etc/libnss-mysql-root.cfg
 
 # replace string patterns in munin.conf (for MySQL authentication)
-substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+if [ -f '/etc/httpd/conf.d/munin.conf' ]; then
+    substitute '/etc/httpd/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+fi
 
 # Make sure SELinux contexts are valid
 if [ $SELINUX_ENABLED ]; then
@@ -902,7 +979,7 @@ $USERMOD -a -G apache codendiadm
 $CHMOD 770 /var/lib/dav/
 
 ##############################################
-# Installing the Codendi database
+# Installing the Tuleap database
 #
 setup_mysql
 
@@ -944,11 +1021,13 @@ fi
 # TODO check if already there
 echo "codendi-admin:          root" >> /etc/aliases
 
-todo "Finish sendmail settings (see installation Guide). By default, emails sent to codendi-admin are redirected to root (see /etc/aliases)"
+#todo "Finish sendmail settings (see installation Guide). By default, emails sent to codendi-admin are redirected to root (see /etc/aliases)"
 
 ##############################################
 # CVS
-setup_cvs
+if $RPM -q cvs-tuleap 2>&1 >/dev/null; then
+    setup_cvs
+fi
 
 ##############################################
 # Make the system daily cronjob run at 23:58pm
@@ -957,7 +1036,9 @@ $PERL -i'.orig' -p -e's/\d+ \d+ (.*daily)/58 23 \1/g' /etc/crontab
 
 ##############################################
 # FTP
-setup_vsftpd
+if $RPM -q vsftpd 2>&1 >/dev/null; then
+    setup_vsftpd
+fi
 
 ##############################################
 # Create the custom default page for the project Web sites
@@ -977,8 +1058,8 @@ if [ "$disable_subdomains" = "y" ]; then
   $MYSQL -u codendiadm codendi --password=$codendiadm_passwd -e "UPDATE service SET link = IF(group_id = 1, '/www/codendi', '/www/\$projectname/') WHERE short_name = 'homepage' "
 fi
 
-todo "Customize /etc/codendi/site-content/en_US/others/default_page.php (project web site default home page)"
-todo "Customize site-content information for your site."
+#todo "Customize /etc/codendi/site-content/en_US/others/default_page.php (project web site default home page)"
+todo "Customize /etc/codendi/site-content information for your site."
 todo "  For instance: contact/contact.txt cvs/intro.txt"
 todo "  svn/intro.txt include/new_project_email.txt, etc."
 
@@ -988,10 +1069,10 @@ todo "  svn/intro.txt include/new_project_email.txt, etc."
 echo "Installing root user crontab..."
 crontab -u root -l > /tmp/cronfile
 
-$GREP -q "Codendi" /tmp/cronfile
+$GREP -q "Tuleap" /tmp/cronfile
 if [ $? -ne 0 ]; then
     $CAT <<'EOF' >>/tmp/cronfile
-# Codendi: weekly backup preparation (mysql shutdown, file dump and restart)
+# Tuleap: weekly backup preparation (mysql shutdown, file dump and restart)
 45 0 * * Sun /usr/lib/codendi/bin/backup_job
 EOF
     crontab -u root /tmp/cronfile
@@ -1067,14 +1148,14 @@ $CHOWN root:root /etc/logrotate.d/httpd
 $CHMOD 644 /etc/logrotate.d/httpd
 
 ##############################################
-# Create Codendi profile script
+# Create Tuleap profile script
 #
 
 # customize the global profile 
 $GREP profile_codendi /etc/profile 1>/dev/null
 [ $? -ne 0 ] && \
     cat <<'EOF' >>/etc/profile
-# Now the Part specific to Codendi users
+# Now the Part specific to Tuleap users
 #
 if [ `id -u` -gt 20000 -a `id -u` -lt 50000 ]; then
         . /etc/profile_codendi
@@ -1084,7 +1165,7 @@ EOF
 $CAT <<'EOF' >/etc/profile_codendi
 # /etc/profile_codendi
 #
-# Specific login set up and messages for Codendi users`
+# Specific login set up and messages for Tuleap users`
  
 # All projects this user belong to
  
@@ -1120,7 +1201,7 @@ cat <<EOM
 Corresponding CVS and Subversion repositories are in /cvsroot and /svnroot
 
              *** IMPORTANT REMARK ***
-The Codendi server hosts very valuable yet publicly available
+The Tuleap server hosts very valuable yet publicly available
 data. Therefore we recommend that you keep working only in
 the directories listed above for which you have full rights
 and responsibilities.
@@ -1134,7 +1215,6 @@ EOF
 $CHKCONFIG sshd on
 $CHKCONFIG httpd on
 $CHKCONFIG mysqld on
-$CHKCONFIG munin-node on
 $CHKCONFIG crond on
 
 /etc/init.d/codendi start
@@ -1145,9 +1225,12 @@ $SERVICE crond restart
 # NSCD is the Name Service Caching Daemon.
 # It is very useful when libnss-mysql is used for authentication
 $CHKCONFIG nscd on
-
 $SERVICE nscd start
-$SERVICE munin-node start
+
+if [ "$enable_munin" = "true" ]; then
+    $CHKCONFIG munin-node on
+    $SERVICE munin-node start
+fi
 
 ##############################################
 # Set SELinux contexts and load policies
@@ -1158,7 +1241,7 @@ if [ $SELINUX_ENABLED ]; then
 fi
 
 ##############################################
-# Install & configure forgeupgrade for Codendi
+# Install & configure forgeupgrade for Tuleap
 #
 
 $MYSQL -ucodendiadm -p$codendiadm_passwd codendi < /usr/share/forgeupgrade/db/install-mysql.sql
@@ -1170,7 +1253,7 @@ $INSTALL --group=codendiadm --owner=codendiadm --mode=0644 $INSTALL_DIR/src/etc/
 # *Last* step: install plugins
 #
 
-echo "Install codendi plugins"
+echo "Install tuleap plugins"
 # docman plugin
 $CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 build_dir /etc/codendi/plugins/docman/etc codendiadm codendiadm 755
@@ -1224,7 +1307,6 @@ fi
 ##############################################
 # End of installation
 #
-todo "Don't forget to read the INSTALL file"
 todo ""
 todo "-----------------------------------------"
 todo "This TODO list is available in $TODO_FILE."
