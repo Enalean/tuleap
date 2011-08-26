@@ -84,7 +84,7 @@ if [ "$on_create" = "true" ]; then
     $remotecmd rpmbuild --rebuild /root/$src_dir/rpm/SRPMS/*.src.rpm
 
     # Install those rpm
-    $remotecmd yum install -y --nogpgcheck /root/$src_dir/rpm/RPMS/noarch/*.rpm
+    $remotecmd yum install -y --nogpgcheck zip /root/$src_dir/rpm/RPMS/noarch/*.rpm
 
     # Install phpcs (TODO: it should be done in the lxc template)
     $remotecmd pear install -f PHP_CodeSniffer-1.2.2
