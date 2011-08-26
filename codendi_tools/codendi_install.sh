@@ -324,7 +324,7 @@ EOF
 
     $CHKCONFIG mailman on
     # mailman start doesn't close stdout so we do it
-    $SERVICE mailman start >/dev/null 2>/dev/null
+    $SERVICE mailman start </dev/null >/dev/null 2>/dev/null &
 }
 
 ###############################################################################
