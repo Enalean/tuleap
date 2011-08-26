@@ -80,11 +80,11 @@ $remotecmd chown root:root -R /root/$src_dir
 
 # Build needed rpm to run UnitTests
 if [ "$on_create" = "true" ]; then
-    $remotecmd make -C /root/$src_dir/rpm/SPECS rpmprep jpgraph.codendi htmlpurifier
+    $remotecmd make -C /root/$src_dir/rpm/SPECS rpmprep jpgraph.codendi.src htmlpurifier.src
     $remotecmd rpmbuild --rebuild /root/$src_dir/rpm/SRPMS/*.src.rpm
 
     # Install those rpm
-    $remotecmd yum install -y --nogpgcheck /root/$src_dir/rpm/RPMS/noarch/*.rpm
+    $remotecmd yum install -y --nogpgcheck zip /root/$src_dir/rpm/RPMS/noarch/*.rpm
 
     # Install phpcs (TODO: it should be done in the lxc template)
     $remotecmd pear install -f PHP_CodeSniffer-1.2.2
