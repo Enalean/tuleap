@@ -361,7 +361,8 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
         if (isset($subEventsBox)) {
-            $forwardSubEvents = '&event='.$event.'&subEventsBox='.implode(",", array_keys($subEventsBox));
+            $subEventsString = implode(",", array_keys($subEventsBox));
+            $forwardSubEvents = '&event='.$event.'&subEventsBox='.$subEventsString;
         } else {
             $forwardSubEvents = '&event='.$event.'&all_sub_events='.$all_sub_events;
         }
@@ -386,7 +387,15 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
     }
 
     $translatedEvents = util_php_array_to_js_array($subEvents);
+
+            if(isset($subEventsString)) {
+                $selectedSubEvents = explode(",", $subEventsString);
+                foreach ($selectedSubEvents as $element) {
+                    $subEventsBox[$element] = $element;
+                }
+            }
     $translatedSelectedEvents = util_php_array_to_js_array($subEventsBox);
+
     $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
            new ProjectHistory(".$translatedEvents.", ".$translatedSelectedEvents.");";
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
