@@ -10,8 +10,11 @@ require_once('pre.php');
 require_once('vars.php');
 require_once('www/admin/admin_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
+require_once('www/project/export/project_export_utils.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/event/EventManager.class.php');
+$GLOBALS['HTML']->includeCalendarScripts();
+
 
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
@@ -98,6 +101,94 @@ if (db_numrows($res_grp) < 1) {
 }
 
 $row_grp = db_fetch_array($res_grp);
+
+// Check if group_id is valid
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $group_id = $request->get('group_id');
+} else {
+    exit_no_group();
+}
+
+$validEvents = new Valid_WhiteList('events_box' ,array('Permissions',
+                                                   'Project',
+                                                   'Users',
+                                                   'User Group',
+                                                   'Others'));
+$event = $request->getValidated('events_box', $validEvents, null);
+if(!$event) {
+    $event = $request->get('event');
+}
+
+$validSubEvents = new Valid_String('sub_events_box');
+if($request->validArray($validSubEvents)) {
+    $subEventsArray = $request->get('sub_events_box');
+    foreach ($subEventsArray as $element) {
+        $subEvents[$element] = true;
+    }
+} elseif ( $subEventsArray = $request->get('subEventsBox')) {
+    $subEventsBox = explode(",", $subEventsArray);
+    foreach ($subEventsBox as $element) {
+        $subEvents[$element] = true;
+    }
+} else {
+    $subEvents = null;
+}
+
+$validValue = new Valid_String('value');
+if($request->valid($validValue)) {
+    $value = $request->get('value');
+} else {
+    $value = null;
+}
+
+$vStartDate = new Valid('start');
+$vStartDate->addRule(new Rule_Date());
+$vStartDate->required();
+$startDate = $request->get('start');
+if ($request->valid($vStartDate)) {
+    $startDate = $request->get('start');
+} elseif (!empty($startDate)) {
+    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_start_date'));
+    $startDate = null;
+}
+
+$vEndDate = new Valid('end');
+$vEndDate->addRule(new Rule_Date());
+$vEndDate->required();
+$endDate = $request->get('end');
+if ($request->valid($vEndDate)) {
+    $endDate = $request->get('end');
+} elseif (!empty($endDate)) {
+    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_end_date'));
+    $endDate = null;
+}
+
+if ($startDate && $endDate && (strtotime($startDate) >= strtotime($endDate))) {
+    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_dates'));
+    $startDate = null;
+    $endDate = null;
+}
+
+$validBy = new Valid_String('by');
+if($request->valid($validBy)) {
+    $by = $request->get('by');
+} else {
+    $by = null;
+}
+
+$offset = $request->getValidated('offset', 'uint', 0);
+if ( !$offset || $offset < 0 ) {
+    $offset = 0;
+}
+$limit  = 50;
+
+$all_sub_events = $request->get('all_sub_events');
+if ($request->exist('export')) {
+    export_grouphistory($group_id, $event, $subEvents, $value, $startDate, $endDate, $by, $all_sub_events);
+    exit;
+}
 
 site_admin_header(array('title'=>$Language->getText('admin_groupedit','title')));
 
@@ -188,161 +279,6 @@ print "<h3>".$Language->getText('admin_groupedit','license_other')."</h3> $row_g
 
 $template_group = $pm->getProject($group->getTemplate());
 print "<h3>".$Language->getText('admin_groupedit','built_from_template').':</h3> <a href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
-
-// Check if group_id is valid
-$vGroupId = new Valid_GroupId();
-$vGroupId->required();
-if($request->valid($vGroupId)) {
-    $group_id = $request->get('group_id');
-} else {
-    exit_no_group();
-}
-
-$permissionsSubEventsArray = array("perm_reset_for_field", 
-                                    "perm_reset_for_tracker",
-                                    "perm_reset_for_package", 
-                                    "perm_reset_for_release",
-                                    "perm_reset_for_document",
-                                    "perm_reset_for_folder",
-                                    "perm_reset_for_docgroup",
-                                    "perm_reset_for_wiki",
-                                    "perm_reset_for_wikipage",
-                                    "perm_reset_for_wikiattachment",
-                                    "perm_reset_for_object",
-                                    "perm_granted_for_field",
-                                    "perm_granted_for_tracker",
-                                    "perm_granted_for_package",
-                                    "perm_granted_for_release",
-                                    "perm_granted_for_document",
-                                    "perm_granted_for_folder",
-                                    "perm_granted_for_docgroup",
-                                    "perm_granted_for_wiki",
-                                    "perm_granted_for_wikipage",
-                                    "perm_granted_for_wikiattachment",
-                                    "perm_granted_for_object");
-
-$projectSubEventsArray = array("rename_done", 
-                               "rename_with_error", 
-                               "approved",
-                               "deleted",
-                               "rename_request",
-                               "is_public",
-                               "group_type",
-                               "http_domain", 
-                               "unix_box",
-                               "changed_public_info",
-                               "changed_trove",
-                               "membership_request_updated",
-                               "import","mass_change");
-
-$userGroupSubEventsArray = array("upd_ug",
-                                 "del_ug",
-                                 "changed_member_perm");
-
-$usersSubEventsArray = array("changed_personal_email_notif",
-                             "added_user",
-                             "removed_user");
-
-$othersSubEventsArray = array("changed_bts_form_message",
-                              "changed_bts_allow_anon",
-                              "changed_patch_mgr_settings",
-                              "changed_task_mgr_other_settings",
-                              "changed_sr_settings");
-
-$validEvents = new Valid_WhiteList('events_box' ,array('Permissions',
-                                                   'Project',
-                                                   'Users',
-                                                   'User Group',
-                                                   'Others'));
-$event = $request->getValidated('events_box', $validEvents, null);
-
-$validSubEvents = new Valid_String('sub_events_box');
-if($request->validArray($validSubEvents)) {
-    $subEventsArray = $request->get('sub_events_box');
-    foreach ($subEventsArray as $element) {
-        $subEvents[$element] = true;
-    }
-} else {
-    switch ($event) {
-        case 'Permissions':
-            foreach ($permissionsSubEventsArray as $element) {
-                $subEvents[$element] = true;
-            }
-            break;
-
-        case 'Project':
-            foreach ($projectSubEventsArray as $element) {
-                $subEvents[$element] = true;
-            }
-            break;
-
-        case 'Users':
-            foreach ($usersSubEventsArray as $element) {
-                $subEvents[$element] = true;
-            }
-            break;
-
-        case 'User Group':
-            foreach ($permissionsSubEventsArray as $element) {
-                $subEvents[$element] = true;
-            }
-            break;
-
-        case 'Others':
-            foreach ($permissionsSubEventsArray as $element) {
-                $subEvents[$element] = true;
-            }
-            break;
-    }
-}
-
-$validValue = new Valid_String('value');
-if($request->valid($validValue)) {
-    $value = $request->get('value');
-} else {
-    $value = null;
-}
-
-$vStartDate = new Valid('start');
-$vStartDate->addRule(new Rule_Date());
-$vStartDate->required();
-$startDate = $request->get('start');
-if ($request->valid($vStartDate)) {
-    $startDate = $request->get('start');
-} elseif (!empty($startDate)) {
-    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_start_date'));
-    $startDate = null;
-}
-
-$vEndDate = new Valid('end');
-$vEndDate->addRule(new Rule_Date());
-$vEndDate->required();
-$endDate = $request->get('end');
-if ($request->valid($vEndDate)) {
-    $endDate = $request->get('end');
-} elseif (!empty($endDate)) {
-    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_end_date'));
-    $endDate = null;
-}
-
-if ($startDate && $endDate && (strtotime($startDate) >= strtotime($endDate))) {
-    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_dates'));
-    $startDate = null;
-    $endDate = null;
-}
-
-$validBy = new Valid_String('by');
-if($request->valid($validBy)) {
-    $by = $request->get('by');
-} else {
-    $by = null;
-}
-
-$offset = $request->getValidated('offset', 'uint', 0);
-if ( !$offset || $offset < 0 ) {
-    $offset = 0;
-}
-$limit  = 50;
 
 
 echo "<P><HR><P>";

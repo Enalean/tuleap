@@ -378,20 +378,19 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
             echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
             echo ($offset+$i-3).'/'.$res['numrows'];
             echo '</div>';
-        
+            echo '<BR><TABLE align="left"><TR><TD>
+                 <INPUT TYPE="SUBMIT" NAME="export" VALUE="'.$GLOBALS['Language']->getText('project_admin_utils', 'export_history').'">
+                 </TD></TR></TABLE></FORM><BR><P>';
     } else {
         echo '<H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';
     }
-    echo '<BR><TABLE align="left"><TR><TD>
-          <INPUT TYPE="SUBMIT" NAME="export" VALUE="'.$GLOBALS['Language']->getText('project_admin_utils', 'export_history').'">
-          </TD></TR></TABLE></FORM><BR><P>';
 
-        $translatedEvents = util_php_array_to_js_array($subEvents);
-        $translatedSelectedEvents = util_php_array_to_js_array($subEventsBox);
-        $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
+    $translatedEvents = util_php_array_to_js_array($subEvents);
+    $translatedSelectedEvents = util_php_array_to_js_array($subEventsBox);
+    $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
            new ProjectHistory(".$translatedEvents.", ".$translatedSelectedEvents.");";
-        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
-        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+    $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
+    $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
 }
 
 /**
