@@ -403,7 +403,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
  *
  * @return void
  */
-function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
+function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $all_sub_events = null) {
     global $Language;
 
     header ('Content-Type: text/csv');
@@ -418,7 +418,7 @@ function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $v
                               'by'    => $Language->getText('global','by'));
     echo build_csv_header($col_list, $documents_title).$eol;
 
-    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
+    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by, $all_sub_events);
     $res = group_get_history(0, 0, $group_id, $history_filter);
 
     $hp = Codendi_HTMLPurifier::instance();
