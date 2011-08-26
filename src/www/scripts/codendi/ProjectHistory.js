@@ -43,7 +43,6 @@ var ProjectHistory = Class.create({
     SelectSubEvent: function(selected_sub_events) {
         this.removeAllOptions($('sub_events_box'));
         this.addOption('choose_event', false, true);
-        //Try to use a loop instead
         //Permission section
         if ($('events_box').value == 'Permissions') {
             PermissionsSubEvents = this.getPermissionsSubEventsInArray();
