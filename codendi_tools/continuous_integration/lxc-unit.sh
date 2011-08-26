@@ -80,7 +80,7 @@ $remotecmd chown root:root -R /root/$src_dir
 
 # Build needed rpm to run UnitTests
 if [ "$on_create" = "true" ]; then
-    $remotecmd make -C /root/$src_dir/rpm/SPECS rpmprep jpgraph.codendi htmlpurifier
+    $remotecmd make -C /root/$src_dir/rpm/SPECS rpmprep jpgraph.codendi.src htmlpurifier.src
     $remotecmd rpmbuild --rebuild /root/$src_dir/rpm/SRPMS/*.src.rpm
 
     # Install those rpm
