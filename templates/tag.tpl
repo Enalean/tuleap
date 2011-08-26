@@ -16,7 +16,11 @@
  {assign var=object value=$tag->GetObject()}
  {assign var=objtype value=$tag->GetType()}
  <div class="title">
+   {if $objtype == 'blob'}
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob&amp;h={$object->GetHash()}" class="title">{$tag->GetName()}</a>
+   {else}
    <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$object->GetHash()}" class="title">{$tag->GetName()}</a>
+   {/if}
  </div>
  <div class="title_text">
    <table cellspacing="0">
