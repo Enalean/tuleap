@@ -60,11 +60,6 @@
           <description>The release (global version number) impacted by the artifact</description>
           <bind type="static" is_rank_alpha="0"/>
         </formElement>
-        <formElement type="lud" ID="F7" rank="6">
-          <name>last_update_date</name>
-          <label>Last Modified On</label>
-          <description>Date and time of the latest modification in an artifact</description>
-        </formElement>
         <formElement type="sb" ID="F8" rank="7">
           <name>category_id</name>
           <label>Category</label>

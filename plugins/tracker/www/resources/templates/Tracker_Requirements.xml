@@ -87,7 +87,7 @@
             <formElement type="sb" ID="F12" rank="0" required="1">
               <name>type</name>
               <label>Type</label>
-              <description>Requirement type (spec, design, organisation, ...)</description>
+              <description>Requirement type (specification, design, organization, ...)</description>
               <bind type="static" is_rank_alpha="0">
                 <items>
                   <item ID="F12-V0" label="specification"/>
@@ -105,8 +105,8 @@
           <label>col5</label>
           <formElements>
             <formElement type="art_link" ID="F14" rank="0" use_it="0">
-              <name>dependance</name>
-              <label>dependance</label>
+              <name>dependencies</name>
+              <label>Dependencies</label>
             </formElement>
             <formElement type="sb" ID="F15" rank="2" required="1">
               <name>nature</name>
@@ -155,7 +155,7 @@
             <formElement type="sb" ID="F19" rank="0">
               <name>priority</name>
               <label>Priority</label>
-              <description>Priority for satisfying this requiremen</description>
+              <description>Priority for satisfying this requirement</description>
               <bind type="static" is_rank_alpha="0">
                 <items>
                   <item ID="F19-V0" label="High"/>
@@ -188,33 +188,17 @@
           <formElements>
             <formElement type="art_link" ID="F24" rank="0">
               <name>satisfy</name>
-              <label>Satisfy</label>
+              <label>Satisfy Requirements</label>
               <description>Requirements list satisfied by this one</description>
             </formElement>
           </formElements>
-        </formElement>
-        <formElement type="sb" ID="F25" rank="49" use_it="0">
-          <name>resolution</name>
-          <label>Resolution</label>
-          <description>The resolution field indicates what happened to the bug.</description>
-          <bind type="static" is_rank_alpha="0">
-            <items>
-              <item ID="F25-V0" label="Fixed"/>
-              <item ID="F25-V1" label="Will not fix"/>
-              <item ID="F25-V2" label="Invalid"/>
-              <item ID="F25-V3" label="Later"/>
-              <item ID="F25-V4" label="Duplicate"/>
-              <item ID="F25-V5" label="Remind"/>
-              <item ID="F25-V6" label="Works for me"/>
-            </items>
-          </bind>
         </formElement>
       </formElements>
     </formElement>
     <formElement type="fieldset" ID="F26" rank="4">
       <name>fieldset1</name>
-      <label>Historic</label>
-      <description>Requirement historics</description>
+      <label>History</label>
+      <description>Requirement history</description>
       <formElements>
         <formElement type="column" ID="F27" rank="0">
           <name>column10</name>
@@ -234,7 +218,7 @@
             <formElement type="subon" ID="F30" rank="0">
               <name>open_date</name>
               <label>Creation date</label>
-              <description>Date and time for the initial requirement submission</description>
+              <description>Date and time of the initial requirement submission</description>
             </formElement>
           </formElements>
         </formElement>

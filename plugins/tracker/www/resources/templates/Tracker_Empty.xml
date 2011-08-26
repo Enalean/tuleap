@@ -27,16 +27,6 @@
       <properties hint="Type in a search term"/>
       <bind type="static" is_rank_alpha="0"/>
     </formElement>
-    <formElement type="subon" ID="F5" rank="8" use_it="0">
-      <name>open_date</name>
-      <label>Submitted on</label>
-      <description>Date and time for the initial artifact submission</description>
-    </formElement>
-    <formElement type="aid" ID="F6" rank="10" use_it="0">
-      <name>artifact_id</name>
-      <label>Artifact ID</label>
-      <description>Unique artifact identifier</description>
-    </formElement>
     <formElement type="sb" ID="F7" rank="12" use_it="0">
       <name>status_id</name>
       <label>Status</label>
@@ -61,16 +51,6 @@
           <item label="group_members"/>
         </items>
       </bind>
-    </formElement>
-    <formElement type="lud" ID="F9" rank="16" use_it="0">
-      <name>last_update_date</name>
-      <label>Last Modified On</label>
-      <description>Date and time of the latest modification in an artifact</description>
-    </formElement>
-    <formElement type="subby" ID="F10" rank="18" use_it="0">
-      <name>submitted_by</name>
-      <label>Submitted by</label>
-      <description>User who originally submitted the artifact</description>
     </formElement>
     <formElement type="sb" ID="F11" rank="20" use_it="0">
       <name>category_id</name>
