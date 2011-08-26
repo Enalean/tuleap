@@ -180,7 +180,7 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
  * @param Integer $startDate
  * @param Integer $endDate
  * @param String  $by
- * @param String   $allSubEvents
+ * @param String  $allSubEvents
  */
 function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $allSubEvents = null) {
     /*
@@ -246,7 +246,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
     echo '
         <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>';
     echo'<SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title"><img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="toggle_form_icon"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
-    echo '<FORM METHOD="POST" ACTION="'. $_SERVER['PHP_SELF'] .'?group_id='.$group_id.'" id="project_history_form" NAME="project_history_form" enctype="multipart/form-data">';
+    echo '<FORM METHOD="POST" ACTION="?group_id='.$group_id.'" id="project_history_form" name="project_history_form" enctype="multipart/form-data">';
 
     echo '<TABLE ID="project_history_search">';
     echo '<TH colspan="2" style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
@@ -295,17 +295,17 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
          <Option value="choose_event">'.$GLOBALS['Language']->getText('project_admin_utils', 'choose_event').'</Option>
          </select>';
 
-    echo '</TD><TD><INPUT TYPE="TEXT" NAME="value" VALUE="'.$value.'"></TD>
+    echo '</TD><TD><input type="text" name="value" value="'.$value.'"></TD>
               <TD>';
     echo html_field_date('start', $startDate, false, 10, 10, 'project_history_form', false);
     echo '</TD>
               <TD>';
     echo html_field_date('end', $endDate, false, 10, 10, 'project_history_form', false);
     echo '</TD>
-              <TD><INPUT TYPE="TEXT" NAME="by" ID="by" CLASS="by" VALUE="'.$by.'"></TD>
+              <TD><input type="text" name="by" id="by" value="'.$by.'"></TD>
               </TR>';
     echo '<TR><TD id="events_array"></TD></TR>';
-    echo '<TR><TD><INPUT TYPE="SUBMIT" NAME="filter"></TD></TR>
+    echo '<TR><TD><input type="submit" name="filter"></TD></TR>
               </TABLE>';
     echo'<P>';
     if ($res['numrows'] > 0) {
@@ -386,7 +386,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo ($offset+$i-3).'/'.$res['numrows'];
         echo '</div>';
         echo '<BR><TABLE align="left"><TR><TD>
-                 <INPUT TYPE="SUBMIT" NAME="export" VALUE="'.$GLOBALS['Language']->getText('project_admin_utils', 'export_history').'">
+                 <input type="submit" name="export" value="'.$GLOBALS['Language']->getText('project_admin_utils', 'export_history').'">
                  </TD></TR></TABLE></FORM><BR><P>';
     } else {
         echo '<H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';
