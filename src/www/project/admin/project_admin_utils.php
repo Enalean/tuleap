@@ -168,21 +168,28 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
     return $filter;
 }
 
-/*
+/**
  * Nicely html-formatted output of this group's audit trail
+ * 
  * @param Integer $group_id
  * @param Integer $offset  
  * @param Intager $limit
- * 
-*/
-function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $all_sub_events = null) {
+ * @param String  $event  
+ * @param Array   $subEventsBox
+ * @param String  $value
+ * @param Integer $startDate
+ * @param Integer $endDate
+ * @param String  $by
+ * @param String   $allSubEvents
+ */
+function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $allSubEvents = null) {
     /*
      show the group_history rows that are relevant to
      this group_id
      */
     global $Language;
 
-    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by, $all_sub_events);
+    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by, $allSubEvents);
     $res = group_get_history($offset, $limit, $group_id, $history_filter);
 
     $hp =& Codendi_HTMLPurifier::instance();
@@ -236,73 +243,72 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
                        'changed_sr_settings'            =>'changed_sr_settings',
                        'choose_event'                   =>'choose_event');
 
-    if ($res['numrows'] > 0) {
-
-        echo '
+    echo '
         <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>';
-        echo'<SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title"><img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="toggle_form_icon"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
-        echo '<FORM METHOD="POST" ACTION="'. $_SERVER['PHP_SELF'] .'?group_id='.$group_id.'" id="project_history_form" NAME="project_history_form" enctype="multipart/form-data">';
+    echo'<SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title"><img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="toggle_form_icon"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
+    echo '<FORM METHOD="POST" ACTION="'. $_SERVER['PHP_SELF'] .'?group_id='.$group_id.'" id="project_history_form" NAME="project_history_form" enctype="multipart/form-data">';
 
-        echo '<TABLE ID="project_history_search">';
-        echo '<TH colspan="2" style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
+    echo '<TABLE ID="project_history_search">';
+    echo '<TH colspan="2" style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
               <TH style="text-align:left">'.$Language->getText('project_admin_utils','val').'</TH>
               <TH style="text-align:left">'.$Language->getText('project_export_task_export', 'start_date').'</TH>
               <TH style="text-align:left">'.$Language->getText('project_export_task_export', 'end_date').'</TH>
               <TH style="text-align:left">'.$Language->getText('global','by').'</TH>
               <TR VALIGN="TOP"><TD>';
 
-        //Event select Box
-        echo '<select name="events_box" id="events_box">
+    //Event select Box
+    echo '<select name="events_box" id="events_box">
               <Option value="Any"';
-        if ($event == "Any") {
-            echo 'selected';
-        }
-        echo '>'.$Language->getText('global','any').'</Option>
+    if ($event == "Any") {
+        echo 'selected';
+    }
+    echo '>'.$Language->getText('global','any').'</Option>
               <Option value="Permissions"';
-        if ($event == "Permissions") {
-            echo 'selected';
-        }
-        echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_permission").'</Option>
+    if ($event == "Permissions") {
+        echo 'selected';
+    }
+    echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_permission").'</Option>
               <Option value="Project"';
-        if ($event == "Project") {
-            echo 'selected';
-        }
-        echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_project").'</Option>
+    if ($event == "Project") {
+        echo 'selected';
+    }
+    echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_project").'</Option>
               <Option value="Users"';
-        if ($event == "Users") {
-            echo 'selected';
-        }
-        echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_user").'</Option>
+    if ($event == "Users") {
+        echo 'selected';
+    }
+    echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_user").'</Option>
               <Option value="User Group"';
-        if ($event == "User Group") {
-            echo 'selected';
-        }
-        echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_ug").'</Option>
+    if ($event == "User Group") {
+        echo 'selected';
+    }
+    echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_ug").'</Option>
               <Option value="Others"';
-        if ($event == "Others") {
-            echo 'selected';
-        }
-        echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_others").'</Option>
+    if ($event == "Others") {
+        echo 'selected';
+    }
+    echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_others").'</Option>
               </select>';
 
-        //SubEvent select Box
-         echo '</TD><TD><select id="sub_events_box" name="sub_events_box[]" multiple>
+    //SubEvent select Box
+    echo '</TD><TD><select id="sub_events_box" name="sub_events_box[]" multiple>
          <Option value="choose_event">'.$GLOBALS['Language']->getText('project_admin_utils', 'choose_event').'</Option>
          </select>';
 
-        echo '</TD><TD><INPUT TYPE="TEXT" NAME="value" VALUE="'.$value.'"></TD>
+    echo '</TD><TD><INPUT TYPE="TEXT" NAME="value" VALUE="'.$value.'"></TD>
               <TD>';
-        echo html_field_date('start', $startDate, false, 10, 10, 'project_history_form', false);
-        echo '</TD>
+    echo html_field_date('start', $startDate, false, 10, 10, 'project_history_form', false);
+    echo '</TD>
               <TD>';
-        echo html_field_date('end', $endDate, false, 10, 10, 'project_history_form', false);
-        echo '</TD>
+    echo html_field_date('end', $endDate, false, 10, 10, 'project_history_form', false);
+    echo '</TD>
               <TD><INPUT TYPE="TEXT" NAME="by" ID="by" CLASS="by" VALUE="'.$by.'"></TD>
               </TR>';
-        echo '<TR><TD id="events_array"></TD></TR>';
-        echo '<TR><TD><INPUT TYPE="SUBMIT" NAME="filter"></TD></TR>
+    echo '<TR><TD id="events_array"></TD></TR>';
+    echo '<TR><TD><INPUT TYPE="SUBMIT" NAME="filter"></TD></TR>
               </TABLE>';
-        echo'<P>';
+    echo'<P>';
+    if ($res['numrows'] > 0) {
         $title_arr=array();
         $title_arr[]=$Language->getText('project_admin_utils','event');
         $title_arr[]=$Language->getText('project_admin_utils','val');
@@ -315,48 +321,48 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         while ($row = db_fetch_array($res['history'])) {
             $field = $row['field_name'];
 
-            // see if there are any arguments after the message key 
+            // see if there are any arguments after the message key
             // format is "msg_key ## arg1||arg2||...
             // If msg_key cannot be found in the localized message
             // catalog then display the msg has is because this is very
             // likely a legacy message (pre-localization version)
             if (strpos($field," %% ") !== false) {
-                                list($msg_key, $args) = explode(" %% ",$field);
-                                if ($args) {
-                                    $arr_args = explode('||',$args);
-                                }
-                        } else {
-                            $msg_key=$field;
-                            $arr_args="";
-                        }
-                        $msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
-                        if (!(strpos($msg,"*** Unkown msg") === false)) {
-                            $msg = $field;
-                        }
+                list($msg_key, $args) = explode(" %% ",$field);
+                if ($args) {
+                    $arr_args = explode('||',$args);
+                }
+            } else {
+                $msg_key=$field;
+                $arr_args="";
+            }
+            $msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
+            if (!(strpos($msg,"*** Unkown msg") === false)) {
+                $msg = $field;
+            }
 
-                        echo '<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
-                        $val = $row['old_value'];
-                        if ($msg_key == "perm_granted_for_field") {
-                            $pattern = '/ugroup_([^ ,]*)_name_key/';
-                            preg_match_all($pattern,$val,$matches);
+            echo '<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
+            $val = $row['old_value'];
+            if ($msg_key == "perm_granted_for_field") {
+                $pattern = '/ugroup_([^ ,]*)_name_key/';
+                preg_match_all($pattern,$val,$matches);
 
-                            if (!empty($matches[0])) {
-                                foreach ($matches[0] as $match) {
-                                    $val = str_replace($match,$Language->getText('project_ugroup', $match),$val);
-                                }
-                            }
-                        } else if ($msg_key == "group_type") {
-                            $template =& TemplateSingleton::instance();
-                            $val = $template->getLabel($val);
-                        }
+                if (!empty($matches[0])) {
+                    foreach ($matches[0] as $match) {
+                        $val = str_replace($match,$Language->getText('project_ugroup', $match),$val);
+                    }
+                }
+            } else if ($msg_key == "group_type") {
+                $template =& TemplateSingleton::instance();
+                $val = $template->getLabel($val);
+            }
 
-                        echo $hp->purify($val);
+            echo $hp->purify($val);
 
-                        echo '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
+            echo '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
                              '<TD>'.user_get_name_display_from_unix($row['user_name']).'</TD></TR>';
         }
 
-        echo '</TABLE>'; 
+        echo '</TABLE>';
 
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
 
@@ -364,22 +370,22 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
             $subEventsString = implode(",", array_keys($subEventsBox));
             $forwardSubEvents = '&event='.$event.'&subEventsBox='.$subEventsString;
         } else {
-            $forwardSubEvents = '&event='.$event.'&all_sub_events='.$all_sub_events;
+            $forwardSubEvents = '&event='.$event.'&all_sub_events='.$allSubEvents;
         }
 
         if ($offset > 0) {
             echo  '<a href="?group_id='.$group_id.'&offset='.($offset-$limit).$forwardSubEvents.'&value='.$value.'&start='.$startDate.'&end='.$endDate.'&by='.$by.'">[ '.$Language->getText('project_admin_utils', 'previous').' ]</a>';
             echo '&nbsp;';
-            }
-            if (($offset + $limit) < $res['numrows']) {
-                echo '&nbsp;';
-                echo '<a href="?group_id='.$group_id.'&offset='.($offset+$limit).$forwardSubEvents.'&value='.$value.'&start='.$startDate.'&end='.$endDate.'&by='.$by.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
-            }
-            echo '</div>';
-            echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-            echo ($offset+$i-3).'/'.$res['numrows'];
-            echo '</div>';
-            echo '<BR><TABLE align="left"><TR><TD>
+        }
+        if (($offset + $limit) < $res['numrows']) {
+            echo '&nbsp;';
+            echo '<a href="?group_id='.$group_id.'&offset='.($offset+$limit).$forwardSubEvents.'&value='.$value.'&start='.$startDate.'&end='.$endDate.'&by='.$by.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
+        }
+        echo '</div>';
+        echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+        echo ($offset+$i-3).'/'.$res['numrows'];
+        echo '</div>';
+        echo '<BR><TABLE align="left"><TR><TD>
                  <INPUT TYPE="SUBMIT" NAME="export" VALUE="'.$GLOBALS['Language']->getText('project_admin_utils', 'export_history').'">
                  </TD></TR></TABLE></FORM><BR><P>';
     } else {
@@ -388,12 +394,12 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 
     $translatedEvents = util_php_array_to_js_array($subEvents);
 
-            if(isset($subEventsString)) {
-                $selectedSubEvents = explode(",", $subEventsString);
-                foreach ($selectedSubEvents as $element) {
-                    $subEventsBox[$element] = $element;
-                }
-            }
+    if(isset($subEventsString)) {
+        $selectedSubEvents = explode(",", $subEventsString);
+        foreach ($selectedSubEvents as $element) {
+            $subEventsBox[$element] = $element;
+        }
+    }
     $translatedSelectedEvents = util_php_array_to_js_array($subEventsBox);
 
     $js = "new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true);
