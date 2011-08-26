@@ -93,6 +93,8 @@
  *	     Compatibility mode relies more on the git executable for loading
  *	     data, at the expense of performance.  Use if you are having
  *	     trouble loading data for this project.
+ *
+ * 'website': the website url for the project.
  */
 //$git_projects_settings['php/gitphp.git'] = array(
 //	'category' => 'PHP',
@@ -102,7 +104,8 @@
 //	'pushurl' => '',
 //	'bugpattern' => '/#([0-9]+)/',
 //	'bugurl' => 'http://mantis.xiphux.com/view.php?id=${1}',
-//	'compat' => false
+//	'compat' => false,
+//	'website' => 'http://xiphux.com/programming/gitphp/'
 //);
 //$git_projects_settings['gentoo.git'] = array(
 //	'description' => 'Gentoo portage overlay',

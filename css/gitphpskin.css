@@ -119,6 +119,16 @@ div.page_footer_text {
 	font-style: italic; 
 }
 
+div.page_footer_text a {
+	color: #555555;
+	font-style: italic;
+	text-decoration: none;
+}
+
+div.page_footer_text a:hover {
+	text-decoration: underline;
+}
+
 
 /*
  * Page body

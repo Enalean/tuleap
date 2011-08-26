@@ -27,6 +27,9 @@
    {if $project->GetPushUrl()}
      <tr><td>{t}push url{/t}</td><td><a href="{$project->GetPushUrl()}">{$project->GetPushUrl()}</a></td></tr>
    {/if}
+   {if $project->GetWebsite()}
+     <tr><td>{t}website{/t}</td><td><a href="{$project->GetWebsite()}">{$project->GetWebsite()}</a></td></tr>
+   {/if}
  </table>
 
  {if !$head}

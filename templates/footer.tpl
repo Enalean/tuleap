@@ -7,7 +7,13 @@
  *}
     <div class="page_footer">
       {if $project}
-        <div class="page_footer_text">{$project->GetDescription()}</div>
+        <div class="page_footer_text">
+	{if $project->GetWebsite()}
+	<a href="{$project->GetWebsite()}">{$project->GetDescription()}</a>
+	{else}
+	{$project->GetDescription()}
+	{/if}
+	</div>
         <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=rss" class="rss_logo">{t}RSS{/t}</a>
         <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=atom" class="rss_logo">{t}Atom{/t}</a>
       {else}

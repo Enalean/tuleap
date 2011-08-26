@@ -219,6 +219,15 @@ class GitPHP_Project
 /*}}}2*/
 
 	/**
+	 * website
+	 *
+	 * Stores the website url internally
+	 *
+	 * @access protected
+	 */
+	protected $website = null;
+
+	/**
 	 * commitCache
 	 *
 	 * Caches fetched commit objects in case of
@@ -724,6 +733,36 @@ class GitPHP_Project
 	public function SetBugPattern($bPat)
 	{
 		$this->bugPattern = $bPat;
+	}
+
+/*}}}2*/
+
+/* website accessors {{{2*/
+
+	/**
+	 * GetWebsite
+	 *
+	 * Gets the website for this repository, if specified
+	 *
+	 * @access public
+	 * @return string website
+	 */
+	public function GetWebsite()
+	{
+		return $this->website;
+	}
+
+	/**
+	 * SetWebsite
+	 *
+	 * Sets the website for this repository
+	 *
+	 * @access public
+	 * @param string $site website
+	 */
+	public function SetWebsite($site)
+	{
+		$this->website = $site;
 	}
 
 /*}}}2*/
