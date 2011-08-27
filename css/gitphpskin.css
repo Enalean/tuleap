@@ -364,6 +364,10 @@ span.latenight {
 	color: #cc0000;
 }
 
+span.signedOffBy {
+	color: gray;
+}
+
 
 /*
  * Diff display

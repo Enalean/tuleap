@@ -11,6 +11,11 @@
 {t}committer{/t}: {$commit->GetCommitter()} ({$commit->GetCommitterEpoch()|date_format:"%Y-%m-%d %H:%M:%S"})
 <br /><br />
 {foreach from=$commit->GetComment() item=line}
-{$line|escape}<br />
+{if strncasecmp(trim($line),'Signed-off-by:',14) == 0}
+<span class="signedOffBy">{$line|escape}</span>
+{else}
+{$line|escape}
+{/if}
+<br />
 {/foreach}
 </div>

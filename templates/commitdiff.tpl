@@ -28,7 +28,12 @@
    {assign var=bugpattern value=$project->GetBugPattern()}
    {assign var=bugurl value=$project->GetBugUrl()}
    {foreach from=$commit->GetComment() item=line}
-     {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}<br />
+     {if strncasecmp(trim($line),'Signed-off-by:',14) == 0}
+     <span class="signedOffBy">{$line|htmlspecialchars|buglink:$bugpattern:$bugurl}</span>
+     {else}
+     {$line|htmlspecialchars|buglink:$bugpattern:$bugurl}
+     {/if}
+     <br />
    {/foreach}
    <br />
 
