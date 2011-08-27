@@ -576,6 +576,10 @@ table.tagTable td.link {
 	text-align: right;
 }
 
+span.pgpSig {
+	color: gray;
+}
+
 
 /*
  * Search view
