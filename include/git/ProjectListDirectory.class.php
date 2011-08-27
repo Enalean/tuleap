@@ -91,7 +91,7 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 	 */
 	private function RecurseDir($dir)
 	{
-		if (!is_dir($dir))
+		if (!(is_dir($dir) && is_readable($dir)))
 			return;
 
 		GitPHP_Log::GetInstance()->Log(sprintf('Searching directory %1$s', $dir));
