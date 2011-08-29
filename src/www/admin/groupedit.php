@@ -184,9 +184,9 @@ if ( !$offset || $offset < 0 ) {
 }
 $limit  = 50;
 
-$all_sub_events = $request->get('all_sub_events');
+$allSubEvents = $request->get('all_sub_events');
 if ($request->exist('export')) {
-    export_grouphistory($group_id, $event, $subEvents, $value, $startDate, $endDate, $by, $all_sub_events);
+    export_grouphistory($group_id, $event, $subEvents, $value, $startDate, $endDate, $by, $allSubEvents);
     exit;
 }
 
@@ -284,7 +284,7 @@ print "<h3>".$Language->getText('admin_groupedit','built_from_template').':</h3>
 echo "<P><HR><P>";
 
 echo '
-<P>'.show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by, $all_sub_events);
+<P>'.show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by, $allSubEvents);
 
 site_admin_footer(array());
 

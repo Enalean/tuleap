@@ -446,7 +446,7 @@ project_admin_utils	history_search_title	Chercher dans l'historique du projet
 project_admin_utils	choose_event	--Choisissez un evènement--
 project_admin_utils	verify_start_date	Vérifiez la date de début
 project_admin_utils	verify_end_date	Vérifiez la date de fin
-project_admin_utils	verify_dates	La date de début doit etre inférieure a la date de fin
+project_admin_utils	verify_dates	La date de début doit être inférieure à la date de fin
 #... end of values
 #
 #-----------------------------------------------

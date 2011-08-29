@@ -78,7 +78,7 @@ function project_admin_footer($params) {
 
 */
 
-function group_get_history ($offset, $limit, $group_id=false, $history_filter) {
+function group_get_history ($offset, $limit, $group_id=false, $history_filter=null) {
 
     $sql='select SQL_CALC_FOUND_ROWS group_history.field_name,group_history.old_value,group_history.date,user.user_name '.
          'FROM group_history,user '.
