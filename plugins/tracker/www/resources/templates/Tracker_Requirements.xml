@@ -59,8 +59,8 @@
           <label>col1</label>
           <formElements>
             <formElement type="sb" ID="F9" rank="0" required="1">
-              <name>state</name>
-              <label>State</label>
+              <name>status</name>
+              <label>Status</label>
               <description>Requirement Status</description>
               <bind type="static" is_rank_alpha="0">
                 <items>
@@ -90,11 +90,11 @@
               <description>Requirement type (specification, design, organization, ...)</description>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="F12-V0" label="specification"/>
-                  <item ID="F12-V1" label="design"/>
-                  <item ID="F12-V2" label="development"/>
-                  <item ID="F12-V3" label="test"/>
-                  <item ID="F12-V4" label="organisation"/>
+                  <item ID="F12-V0" label="Specification"/>
+                  <item ID="F12-V1" label="Design"/>
+                  <item ID="F12-V2" label="Development"/>
+                  <item ID="F12-V3" label="Test"/>
+                  <item ID="F12-V4" label="Organization"/>
                 </items>
               </bind>
             </formElement>
