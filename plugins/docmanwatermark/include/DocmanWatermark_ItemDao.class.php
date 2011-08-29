@@ -26,14 +26,6 @@ require_once dirname(__FILE__).'/../../docman/include/Docman_ItemDao.class.php';
 
 class DocmanWatermark_ItemDao extends DataAccessObject {
 
-    /**
-     * Constructs DocmanWatermark_ItemDao
-     * @param DataAccess $da DataAccess class
-     */
-    public function __construct($da) {
-        parent::__construct($da);
-    }
-    
     public function searchAllItemsNotWatermarked($groupId) {
         $sql = 'SELECT i.item_id, i.title, excluded_log.time'.
                ' FROM plugin_docman_item i'.

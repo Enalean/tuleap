@@ -25,10 +25,6 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 
 class DocmanWatermark_LogDao extends DataAccessObject {
 
-    public function __construct($da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
     function searchByItemId($itemId) {
         $sql = 'SELECT * FROM plugin_docmanwatermark_item_excluded_log '.
                ' WHERE item_id = '.$itemId.
