@@ -67,7 +67,7 @@
                   <item ID="F9-V0" label="Accepted"/>
                   <item ID="F9-V1" label="Rejected"/>
                   <item ID="F9-V2" label="Need more info"/>
-                  <item ID="F9-V3" label="Satisfyed"/>
+                  <item ID="F9-V3" label="Satisfied"/>
                   <item ID="F9-V4" label="New"/>
                   <item ID="F9-V5" label="Closed"/>
                 </items>
@@ -104,10 +104,6 @@
           <name>column6</name>
           <label>col5</label>
           <formElements>
-            <formElement type="art_link" ID="F14" rank="0" use_it="0">
-              <name>dependencies</name>
-              <label>Dependencies</label>
-            </formElement>
             <formElement type="sb" ID="F15" rank="2" required="1">
               <name>nature</name>
               <label>Nature</label>
