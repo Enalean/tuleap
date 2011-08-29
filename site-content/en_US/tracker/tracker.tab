@@ -723,7 +723,7 @@ tracker_common_type	del_err	Error deleting dependencies $1: $2
 tracker_common_type	none_found	None Found 
 tracker_common_type	invalid_mail	"$1" is not a valid email address
 tracker_common_type	no_view_permission	You don't have the permissions to view this tracker.
-tracker_common_type	shortname_already_exists	The short name is already used. Please use another one. Press the "Back" button and update this information.
+tracker_common_type	shortname_already_exists	The short name "$1" is already used. Please use another one. Press the "Back" button and update this information.
 tracker_common_type	name_already_exists	The tracker name is already used. Please use another one. Press the "Back" button and update this information.
 
 #

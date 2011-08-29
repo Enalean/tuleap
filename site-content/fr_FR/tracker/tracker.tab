@@ -715,7 +715,7 @@ tracker_common_type	del_err	Erreur lors de la destruction des dépendances $1 : 
 tracker_common_type	none_found	Aucun trouvé 
 tracker_common_type	invalid_mail	"$1" n'est pas une adresse e-mail valide
 tracker_common_type	no_view_permission	Vous n'avez pas les permissions pour visualiser cet outil de suivi.
-tracker_common_type	shortname_already_exists	Le nom court est déjà utilisé. Veuillez en choisir un autre. Retournez à la page précédente et modifiez ce champ.
+tracker_common_type	shortname_already_exists	Le nom court "$1" est déjà utilisé. Veuillez en choisir un autre. Retournez à la page précédente et modifiez ce champ.
 tracker_common_type	name_already_exists	Le nom du tracker est déjà utilisé. Veuillez en choisir un autre. Retournez à la page précédente et modifiez ce champ.
 
 #
