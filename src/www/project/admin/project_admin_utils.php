@@ -149,6 +149,10 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
         $filter .= " AND group_history.date < '".$timestamp."'";
     }
     if(!empty($value)) {
+        //all_users need specific treatement
+        if(stristr($value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
+            $value =  'ugroup_anonymous_users_name_key';
+        }
         $filter .= " AND group_history.old_value LIKE '%".$value."%'";
     }
     if(!empty($event)) {
