@@ -169,6 +169,17 @@ class Service {
     protected function isAllowed($project) {
         return true;
     }
+    
+     /**
+     * Say if the service is restricted
+     *
+     * @param Project $project
+     *
+     * @return bool
+     */
+    public function isRestricted() {
+        return false;
+    }
 
 }
 
