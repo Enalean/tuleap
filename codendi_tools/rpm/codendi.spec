@@ -574,6 +574,9 @@ else
 
     # Re-generate language files
     %{APP_DIR}/src/utils/php-launcher.sh %{APP_DIR}/src/utils/generate_language_files.php
+
+    # Remove existing combined js
+    rm -f %{APP_DIR}/src/www/scripts/combined/codendi-*.js
 fi
 
 # In any cases fix the context
