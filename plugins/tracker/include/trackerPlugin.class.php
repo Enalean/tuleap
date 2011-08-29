@@ -275,9 +275,9 @@ class trackerPlugin extends Plugin {
                             break;
                     }
                 }
-            }
-            if (isset($this->_cached_permission_user_allowed_to_change[$type][$object_id])) {
-                $params['allowed'] = $this->_cached_permission_user_allowed_to_change[$type][$object_id];
+                if (isset($this->_cached_permission_user_allowed_to_change[$type][$object_id])) {
+                    $params['allowed'] = $this->_cached_permission_user_allowed_to_change[$type][$object_id];
+                }
             }
         }
     }
