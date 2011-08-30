@@ -29,14 +29,7 @@ require_once 'common/dao/include/DataAccessObject.class.php';
  *  Data Access Object for DocmanWatermark_MetataValueDao 
  */
 class DocmanWatermark_MetadataValueDao extends DataAccessObject {
-    /**
-    * Constructs the DocmanWatermark_MetadataValueDao
-    * @param $da instance of the DataAccess class
-    */
-    public function __construct($da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
+
     /**
     * Gets all values for field
     * @return DataAccessResult

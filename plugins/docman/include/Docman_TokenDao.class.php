@@ -25,14 +25,7 @@ require_once('common/dao/include/DataAccessObject.class.php');
  *  Data Access Object for Docman_Token 
  */
 class Docman_TokenDao extends DataAccessObject {
-    /**
-    * Constructs the Docman_TokenDao
-    * @param $da instance of the DataAccess class
-    */
-    function Docman_TokenDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
+
     /**
     * Searches Docman_Token by Url 
     * @return DataAccessResult

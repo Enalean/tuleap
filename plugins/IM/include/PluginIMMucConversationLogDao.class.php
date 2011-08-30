@@ -15,14 +15,6 @@ require_once('common/dao/include/DataAccessObject.class.php');
  */
 class PluginIMMucConversationLogDao extends DataAccessObject {
     /**
-    * Constructs the PluginIMMucConversationLogDao
-    * @param $da instance of the DataAccess class
-    */
-    function PluginIMMucConversationLogDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Gets all conversation logs in the db
     * @return DataAccessResult
     */

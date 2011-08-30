@@ -25,14 +25,6 @@ require_once('include/DataAccessObject.class.php');
  */
 class ServiceDao extends DataAccessObject {
     /**
-    * Constructs the ServiceDao
-    * @param $da instance of the DataAccess class
-    */
-    function ServiceDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Searches Service by Server Id 
     * @return DataAccessResult
     */

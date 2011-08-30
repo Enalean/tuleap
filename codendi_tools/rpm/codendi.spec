@@ -426,8 +426,6 @@ done
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/src/utils/DocmanLegacyDownloader.pl
 # Hard-coded perl include that breaks packging
 %{__rm} -f $RPM_BUILD_ROOT/%{APP_DIR}/plugins/forumml/bin/ml_arch_2_DB.pl
-# Remove salome plugin because not used and breaks SELinux postinstall fix (wrong symlink)
-%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/salome
 # No need of template
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/template
 
@@ -574,6 +572,9 @@ else
 
     # Re-generate language files
     %{APP_DIR}/src/utils/php-launcher.sh %{APP_DIR}/src/utils/generate_language_files.php
+
+    # Remove existing combined js
+    rm -f %{APP_DIR}/src/www/scripts/combined/codendi-*.js
 fi
 
 # In any cases fix the context

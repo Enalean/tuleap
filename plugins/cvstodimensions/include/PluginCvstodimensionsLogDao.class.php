@@ -25,14 +25,6 @@ require_once('common/dao/include/DataAccessObject.class.php');
  */
 class PluginCvstodimensionsLogDao extends DataAccessObject {
     /**
-    * Constructs the PluginCvstodimensionsLogDao
-    * @param $da instance of the DataAccess class
-    */
-    function PluginCvstodimensionsLogDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Gets all tables of the db
     * @return DataAccessResult
     */

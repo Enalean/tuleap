@@ -25,8 +25,8 @@ class FRSReleaseDao extends DataAccessObject {
 
     var $STATUS_DELETED;
 
-    function FRSReleaseDao(& $da, $status_deleted) {
-        DataAccessObject :: DataAccessObject($da);
+    function __construct($da, $status_deleted) {
+        parent::__construct($da);
         $this->STATUS_DELETED = $status_deleted;
     }
 

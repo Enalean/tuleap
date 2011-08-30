@@ -25,14 +25,6 @@
      *  Data Access Object for GraphOnTrackers_Report 
      */
     class GraphOnTrackers_ReportDao extends DataAccessObject {
-        /**
-         * Constructs the GraphOnTrackers_ReportDao
-         * @param $da instance of the DataAccess class
-         */
-        function GraphOnTrackers_ReportDao($da) {
-            DataAccessObject::DataAccessObject($da);
-        }
-        
         public function searchByTrackerIdAndScope($tracker_id, $scope) {
             $sql = "SELECT * FROM plugin_graphontrackers_report_graphic WHERE group_artifact_id = ";
             $sql .= $this->da->escapeInt($tracker_id);

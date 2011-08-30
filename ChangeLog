@@ -15,6 +15,7 @@ Version 4.0.21 - Not Released Yet
     * Tracker v5 plugin v0.1. See separated ChangeLog
     * Git plugin v1.15. See separated ChangeLog
     * IM plugin v1.2. See separated ChangeLog
+    * Remove Salome plugin (deprecated, never maintained, never used).
 
     == Development ==
     * Upgrade simpletest to 1.0.1

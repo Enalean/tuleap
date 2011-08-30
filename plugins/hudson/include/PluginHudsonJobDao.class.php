@@ -24,14 +24,6 @@ require_once('common/dao/include/DataAccessObject.class.php');
  */
 class PluginHudsonJobDao extends DataAccessObject {
     /**
-    * Constructs the PluginHudsonJobDao
-    * @param $da instance of the DataAccess class
-    */
-    function PluginHudsonJobDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Gets all jobs in the db
     * @return DataAccessResult
     */

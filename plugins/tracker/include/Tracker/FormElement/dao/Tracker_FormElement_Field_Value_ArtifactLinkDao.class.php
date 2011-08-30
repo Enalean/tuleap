@@ -58,10 +58,11 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         if ( $changeset_value_ids === false ) {
             return false;
         }
-         $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
-                 VALUES
-                  ( ".implode(' , NULL ),'."\n".' ( ', $changeset_value_ids).", NULL)";
-        return $this->update($sql);
+        // $sql = " INSERT INTO $this->table_name(changeset_value_id, value)
+        //         VALUES
+        //          ( ".implode(' , NULL ),'."\n".' ( ', $changeset_value_ids).", NULL)";
+        //return $this->update($sql);
+        return true;
     }
 
     public function updateItemName ($group_id, $oldKeyword, $keyword) {

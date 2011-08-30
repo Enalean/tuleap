@@ -25,14 +25,6 @@ require_once('include/DataAccessObject.class.php');
  */
 class DBTablesDao extends DataAccessObject {
     /**
-    * Constructs the DBTablesDao
-    * @param $da instance of the DataAccess class
-    */
-    function DBTablesDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
-    /**
     * Gets a log files
     * @return object a result object
     */

@@ -26,8 +26,8 @@ class Docman_MetadataDao extends DataAccessObject {
     var $deletedStmt;
     var $notDeletedStmt;
 
-    function Docman_MetadataDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
+    function __construct($da) {
+        parent::__construct($da);
         
         $this->deletedStmt    = 'special = 100';
         $this->notDeletedStmt = 'special != 100';

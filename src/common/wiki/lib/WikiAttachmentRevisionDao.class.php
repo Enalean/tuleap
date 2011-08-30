@@ -22,15 +22,6 @@
 require_once('common/dao/include/DataAccessObject.class.php');
 
 class WikiAttachmentRevisionDao extends DataAccessObject {
-
-    /**
-     * Constructs WikiAttachmentRevisionDao
-     * @param $da instance of the DataAccess class
-     */
-    function WikiAttachmentRevisionDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
     /**
      * Create a new attachment revision
      *

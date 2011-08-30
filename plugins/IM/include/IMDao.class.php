@@ -16,8 +16,8 @@ class IMDao extends DataAccessObject {
     * Constructs the IMDao
     * @param $da instance of the DataAccess class
     */
-    function IMDao(& $da ) {
-        DataAccessObject::DataAccessObject($da);
+    function __construct($da) {
+        parent::__construct($da);
         $this->openfire_db_name = $da->db_name;
         $this->codendi_db_name = $GLOBALS['sys_dbname'];
     }

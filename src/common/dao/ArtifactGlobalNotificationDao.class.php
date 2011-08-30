@@ -25,14 +25,6 @@ require_once('include/DataAccessObject.class.php');
  */
 class ArtifactGlobalNotificationDao extends DataAccessObject {
     /**
-    * Constructs the ArtifactGlobalNotificationDao
-    * @param $da instance of the DataAccess class
-    */
-    function ArtifactGlobalNotificationDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Gets all tables of the db
     * @return DataAccessResult
     */

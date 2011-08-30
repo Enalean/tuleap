@@ -105,7 +105,7 @@ class Widget_TwitterFollow extends Widget {
     function getInstallPreferences() {
         $prefs  = '';
         $prefs .= '<table>';
-        $prefs .= '<tr><td>Find tweets from the user:</td><td><input type="text" class="textfield_medium" name="twitterfollow[user]" value="codendi" /></td></tr>';
+        $prefs .= '<tr><td>Find tweets from the user:</td><td><input type="text" class="textfield_medium" name="twitterfollow[user]" value="" /></td></tr>';
         $prefs .= '</table>';
         return $prefs;
     }

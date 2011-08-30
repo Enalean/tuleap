@@ -37,7 +37,14 @@ if (user_isloggedin()) {
   $display_header_footer = viewvc_utils_display_header();
 
   if ($display_header_footer) {
-    svn_header(array ('title'=>$Language->getText('svn_utils','browse_tree'),'stylesheet'=>(array('/viewvc-static/styles.css'))));
+    $prefix_title = '';
+    if ($path = viewvc_utils_getfile("/svn/viewvc.php")) {
+        $prefix_title = basename($path) .' - ';
+    }
+    svn_header(array(
+        'title'      => $prefix_title . $Language->getText('svn_utils','browse_tree'),
+        'stylesheet' => array('/viewvc-static/styles.css')
+    ));
   }
 
   viewvc_utils_passcommand();

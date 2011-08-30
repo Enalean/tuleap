@@ -25,10 +25,6 @@ require_once('common/dao/include/DataAccessObject.class.php');
 class Docman_FilterDao
 extends DataAccessObject {
 
-    function Docman_FilterDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
     function searchByReportId($id) {
         $sql = sprintf('SELECT *'.
                        ' FROM plugin_docman_report_filter'.

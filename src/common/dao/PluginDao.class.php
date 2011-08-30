@@ -25,14 +25,6 @@ require_once('include/DataAccessObject.class.php');
  */
 class PluginDao extends DataAccessObject {
     /**
-    * Constructs the PluginDao
-    * @param $da instance of the DataAccess class
-    */
-    function PluginDao( $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Gets all tables of the db
     * @return DataAccessResult
     */

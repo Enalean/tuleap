@@ -62,5 +62,21 @@ class ServiceTracker extends Service {
         }
         return false;
     }
+    
+    /**
+     * Say if the service is restricted
+     *
+     * @param Project $project
+     *
+     * @return bool
+     */
+    public function isRestricted() {
+        $plugin_manager = PluginManager::instance();
+        $p = $plugin_manager->getPluginByName('tracker');
+        if ($p && $plugin_manager->isProjectPluginRestricted($p)) {
+            return true;
+        }
+        return false;
+    }
 }
 ?>

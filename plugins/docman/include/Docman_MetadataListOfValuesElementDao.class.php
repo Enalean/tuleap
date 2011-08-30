@@ -24,10 +24,6 @@ require_once('common/dao/include/DataAccessObject.class.php');
 
 class Docman_MetadataListOfValuesElementDao extends DataAccessObject {
 
-    function Docman_MetadataListOfValuesElementDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
     function serachByValueId($id) {
         $sql = sprintf('SELECT *'.
                        ' FROM plugin_docman_metadata_love AS love'.

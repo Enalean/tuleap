@@ -29,8 +29,8 @@
          * Constructs the GraphOnTrackers_ChartDao
          * @param $da instance of the DataAccess class
          */
-        function GraphOnTrackers_ChartDao($da) {
-            DataAccessObject::DataAccessObject($da);
+        function __construct($da) {
+            parent::__construct($da);
             $this->table_name = 'plugin_graphontrackers_chart';
         }
         

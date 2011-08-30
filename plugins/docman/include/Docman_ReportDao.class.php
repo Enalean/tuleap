@@ -26,10 +26,6 @@ require_once('Docman_ItemDao.class.php');
 class Docman_ReportDao
 extends DataAccessObject {
 
-    function Docman_ReportDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
     function searchById($id) {
         $sql = sprintf('SELECT *'.
                        ' FROM plugin_docman_report'.

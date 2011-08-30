@@ -25,14 +25,6 @@ require_once('include/DataAccessObject.class.php');
  */
 class ArtifactRuleDao extends DataAccessObject {
     /**
-    * Constructs the ArtifactRuleDao
-    * @param $da instance of the DataAccess class
-    */
-    function ArtifactRuleDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Gets all tables of the db
     * @return DataAccessResult
     */

@@ -25,10 +25,6 @@ require_once('Docman_ItemDao.class.php');
 
 /*abstract*/ class Docman_ApprovalTableDao extends DataAccessObject {
 
-    function Docman_ApprovalTableDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
     function getTableByTableId($tableId, $fields='*') {
         $sql = 'SELECT '.$fields.
             ' FROM plugin_docman_approval'.
@@ -165,10 +161,6 @@ require_once('Docman_ItemDao.class.php');
  */
 class Docman_ApprovalTableItemDao extends Docman_ApprovalTableDao {
 
-    function Docman_ApprovalTableItemDao(&$da) {
-        parent::Docman_ApprovalTableDao($da);
-    }
-
     function getTableById($itemId, $fields='*') {
         $sql = 'SELECT '.$fields.
             ' FROM plugin_docman_approval'.
@@ -185,10 +177,6 @@ class Docman_ApprovalTableItemDao extends Docman_ApprovalTableDao {
  *
  */
 class Docman_ApprovalTableFileDao extends Docman_ApprovalTableDao {
-
-    function Docman_ApprovalTableFileDao(&$da) {
-        parent::Docman_ApprovalTableDao($da);
-    }
 
     function getTableById($versionId, $fields='*') {
         $sql = 'SELECT '.$fields.
@@ -224,10 +212,6 @@ class Docman_ApprovalTableFileDao extends Docman_ApprovalTableDao {
  *
  */
 class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableDao {
-
-    function Docman_ApprovalTableWikiDao(&$da) {
-        parent::Docman_ApprovalTableDao($da);
-    }
 
     function getTableById($itemId, $wikiVersionId, $fields='*') {
         $sql = 'SELECT '.$fields.

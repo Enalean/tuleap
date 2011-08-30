@@ -10,14 +10,6 @@ require_once('common/dao/include/DataAccessObject.class.php');
  */
 class PluginSvntodimensionsLogDao extends DataAccessObject {
     /**
-    * Constructs the PluginSvntodimensionsLogDao
-    * @param $da instance of the DataAccess class
-    */
-    function PluginSvntodimensionsLogDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Gets all tables of the db
     * @return DataAccessResult
     */

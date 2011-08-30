@@ -25,14 +25,6 @@
 require_once('common/dao/include/DataAccessObject.class.php');
 
 class UserLogDao extends DataAccessObject {
-
-    /**
-     *
-     */
-    function UserLogDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
     /**
      *
      */

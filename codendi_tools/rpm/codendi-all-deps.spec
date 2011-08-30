@@ -13,7 +13,7 @@ Source0: README.all-deps
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 # Python
-Requires: python, python-devel, MySQL-python
+Requires: python, python-devel
 # FTP
 Requires: vsftpd
 # Mysql

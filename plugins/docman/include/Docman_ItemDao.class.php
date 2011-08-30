@@ -26,10 +26,6 @@ require_once('Docman_SqlReportColumn.class.php');
 
 class Docman_ItemDao extends DataAccessObject {
 
-    function Docman_ItemDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
     /**
      * Return the timestamp of the current day at 00:00
      */

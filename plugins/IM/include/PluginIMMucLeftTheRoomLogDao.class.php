@@ -15,14 +15,6 @@ require_once('common/dao/include/DataAccessObject.class.php');
  */
 class PluginIMMucLeftTheRoomLogDao extends DataAccessObject {
     /**
-    * Constructs the PluginIMMucLeftTheRoomLogDao
-    * @param $da instance of the DataAccess class
-    */
-    function PluginIMMucLeftTheRoomLogDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Searches 'left the room' event logs by muc room name 
     * @return DataAccessResult
     */
