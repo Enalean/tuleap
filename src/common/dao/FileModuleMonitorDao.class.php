@@ -21,11 +21,6 @@ require_once('include/DataAccessObject.class.php');
 require_once('common/user/UserManager.class.php');
 
 class FileModuleMonitorDao extends DataAccessObject {
-
-    function FileModuleMonitorDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
     function whoIsMonitoringPackageByID($group_id, $package_id){
 		
 		$_package_id = (int) $package_id;

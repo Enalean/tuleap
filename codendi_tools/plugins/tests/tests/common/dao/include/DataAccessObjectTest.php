@@ -13,13 +13,6 @@ Mock::generate('DataAccessResult');
  * Tests the class Dao
  */
 class DaoTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function DaoTest($name = 'Dao test') {
-        $this->UnitTestCase($name);
-    }
 
     function testDao() {
         $da = new MockDataAccess($this);

@@ -25,14 +25,6 @@ require_once('include/DataAccessObject.class.php');
  */
 class PermissionsDao extends DataAccessObject {
     /**
-    * Constructs the PermissionsDao
-    * @param $da instance of the DataAccess class
-    */
-    function PermissionsDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Gets all tables of the db
     * @return DataAccessResult
     */

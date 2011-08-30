@@ -25,16 +25,6 @@ require_once('include/DataAccessObject.class.php');
  */
 class FeedbackDao extends DataAccessObject {
     /**
-    * Constructs the FeedbackDao
-    * @param $da instance of the DataAccess class
-    */
-    function FeedbackDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    
-    
-    /**
     * Searches Feedback 
     * @return DataAccessResult
     */

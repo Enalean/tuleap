@@ -24,14 +24,6 @@ require_once('include/DataAccessObject.class.php');
  *  Data Access Object for Server 
  */
 class ServerDao extends DataAccessObject {
-    /**
-    * Constructs the ServerDao
-    * @param $da instance of the DataAccess class
-    */
-    function ServerDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
     function searchAll() {
         $sql = "SELECT * FROM server ORDER BY id";
         return $this->retrieve($sql);

@@ -21,11 +21,6 @@ require_once('include/DataAccessObject.class.php');
 require_once('www/file/file_utils.php');
 
 class FRSFileDao extends DataAccessObject {
-
-    function FRSFileDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
     /**
      * Return the array that match given id.
      *

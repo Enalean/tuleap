@@ -25,14 +25,6 @@ require_once('include/DataAccessObject.class.php');
  */
 class PriorityPluginHookDao extends DataAccessObject {
     /**
-    * Constructs the PriorityPluginHookDao
-    * @param $da instance of the DataAccess class
-    */
-    function PriorityPluginHookDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Gets all tables of the db
     * @return DataAccessResult
     */

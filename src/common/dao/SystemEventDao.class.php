@@ -25,15 +25,6 @@ require_once('common/system_event/SystemEvent.class.php');
  *  Data Access Object for SystemEvent 
  */
 class SystemEventDao extends DataAccessObject {
-    /**
-    * Constructs the SystemEventDao
-    * @param $da instance of the DataAccess class
-    */
-    function SystemEventDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-
     /** 
      * Create new SystemEvent and store it in the DB
      * @return true if there is no error

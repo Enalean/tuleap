@@ -14,8 +14,8 @@ class PluginSvntodimensionsP26CDao extends DataAccessObjectDbx {
     * Constructs the PluginSvntodimensionsP26CDao
     * @param $da instance of the DataAccess class
     */
-    function PluginSvntodimensionsP26CDao( & $da ) {
-        DataAccessObjectDbx::DataAccessObjectDbx($da);
+    function __construct($da) {
+        parent::__construct($da);
     }
     
     /**

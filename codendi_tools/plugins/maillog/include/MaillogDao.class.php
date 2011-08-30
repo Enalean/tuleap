@@ -32,11 +32,6 @@ define('PLUGIN_MAILLOG_CC', '6');
 define('PLUGIN_MAILLOG_BCC', '7');
 
 class MaillogDao extends DataAccessObject {
-
-    function MaillogDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
     function getAllMessages() {
         $qry = 'SELECT SQL_CALC_FOUND_ROWS * FROM plugin_maillog_message ORDER BY id_message DESC';
         return $this->retrieve($qry);

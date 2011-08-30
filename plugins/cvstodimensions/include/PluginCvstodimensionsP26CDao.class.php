@@ -28,8 +28,8 @@ class PluginCvstodimensionsP26CDao extends DataAccessObjectDbx {
     * Constructs the PluginCvstodimensionsP26CDao
     * @param $da instance of the DataAccess class
     */
-    function PluginCvstodimensionsP26CDao( & $da ) {
-        DataAccessObjectDbx::DataAccessObjectDbx($da);
+    function __construct($da ) {
+        parent::__construct($da);
     }
     
     /**

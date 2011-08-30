@@ -15,14 +15,6 @@ require_once('common/dao/include/DataAccessObject.class.php');
  */
 class PluginIMMucChangeTopicLogDao extends DataAccessObject {
     /**
-    * Constructs the PluginIMMucChangeTopicLogDao
-    * @param $da instance of the DataAccess class
-    */
-    function PluginIMMucChangeTopicLogDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    /**
     * Gets all 'change topic' event logs in the db
     * @return DataAccessResult
     */

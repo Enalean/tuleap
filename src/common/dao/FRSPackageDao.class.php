@@ -24,8 +24,8 @@ class FRSPackageDao extends DataAccessObject {
     
     var $STATUS_DELETED;
 
-    function FRSPackageDao(&$da, $status_deleted) {
-        DataAccessObject::DataAccessObject($da);
+    function __construct($da, $status_deleted) {
+        parent::__construct($da);
         $this->table_name = 'frs_package';
         $this->STATUS_DELETED = $status_deleted;
     }

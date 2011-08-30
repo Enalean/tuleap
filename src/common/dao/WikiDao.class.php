@@ -27,14 +27,6 @@ require_once('include/DataAccessObject.class.php');
  *  Data Access Object for wiki db access from other codendi components
  */
 class WikiDao extends DataAccessObject {
-    /**
-    * Constructs WikiDao
-    * @param $da instance of the DataAccess class
-    */
-    function WikiDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-
     /** 
     * This function retreives an id from wiki_page table using the pagename attribute   
     *   

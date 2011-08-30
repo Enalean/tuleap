@@ -25,8 +25,8 @@ require_once('common/permission/PermissionsManager.class.php');
 class Docman_PermissionsManagerDao extends DataAccessObject {
 
     var $groupId;
-    function Docman_PermissionsManagerDao(&$da, $groupId) {
-        DataAccessObject::DataAccessObject($da);
+    function __construct($da, $groupId) {
+        parent::__construct($da);
         $this->groupId = $groupId;
     }
 

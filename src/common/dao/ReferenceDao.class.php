@@ -25,14 +25,6 @@ require_once('include/DataAccessObject.class.php');
  */
 class ReferenceDao extends DataAccessObject {
     /**
-    * Constructs the ReferenceDao
-    * @param $da instance of the DataAccess class
-    */
-    function ReferenceDao($da = null) {
-        parent::__construct($da);
-    }
-    
-    /**
     * Gets all references for the given project ID, sorted for presentation
     * @return DataAccessResult
     */

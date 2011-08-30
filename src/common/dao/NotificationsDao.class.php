@@ -25,16 +25,6 @@ require_once('include/DataAccessObject.class.php');
  */
 class NotificationsDao extends DataAccessObject {
     /**
-    * Constructs the NotificationsDao
-    * @param $da instance of the DataAccess class
-    */
-    function NotificationsDao( & $da ) {
-        DataAccessObject::DataAccessObject($da);
-    }
-    
-    
-    
-    /**
     * Searches Notifications 
     * @return DataAccessResult
     */

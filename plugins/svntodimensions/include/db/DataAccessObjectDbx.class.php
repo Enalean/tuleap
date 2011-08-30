@@ -14,7 +14,7 @@ class DataAccessObjectDbx {
     * Constructs the Dao
     * @param $da instance of the DataAccessDbx class
     */
-    function DataAccessObjectDbx( & $da ) {
+    function __construct($da) {
         $this->da=$da;
     }
 

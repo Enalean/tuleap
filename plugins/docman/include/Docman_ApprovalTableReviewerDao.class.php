@@ -24,8 +24,8 @@ require_once('common/dao/include/DataAccessObject.class.php');
 
 class Docman_ApprovalTableReviewerDao extends DataAccessObject {
 
-    function Docman_ApprovalTableReviewerDao(&$da) {
-        DataAccessObject::DataAccessObject($da);
+    function __construct($da) {
+        parent::__construct($da);
         $this->table_name = 'plugin_docman_approval_user';
     }
 
