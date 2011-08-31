@@ -24,8 +24,8 @@ require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Chart_
 require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_Pie.class.php');
 require_once('common/html/HTML_Element_Input_Checkbox.class.php');
 require_once('common/html/HTML_Element_Selectbox_TrackerFields_Selectboxes.class.php');
-require_once('common/tracker/Tracker_FormElementFactory.class.php');
-require_once('common/tracker/Tracker_Report_Session.class.php');
+require_once(TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.class.php');
+require_once(TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Session.class.php');
 require_once('GraphOnTrackersV5_Chart_PieDao.class.php');
 
 class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart {

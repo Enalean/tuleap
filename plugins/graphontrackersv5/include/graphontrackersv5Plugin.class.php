@@ -167,7 +167,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
      * @param array types Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
     public function tracker_report_renderer_types($params) {
-        $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('tracker_report','charts');
+        $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_tracker_report','charts');
     }
     
      /**

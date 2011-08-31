@@ -21,7 +21,7 @@
  */
 require_once('DataBuilder.class.php');
 require_once('ChartDataBuilder.class.php');
-require_once('common/tracker/Tracker_ArtifactFactory.class.php');
+require_once(TRACKER_BASE_DIR .'/Tracker/Artifact/Tracker_ArtifactFactory.class.php');
 
 class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
 

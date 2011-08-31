@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('www/include/pre.php');
-require_once('common/tracker/Tracker_Artifact.class.php');
+require_once(TRACKER_BASE_DIR .'/Tracker/Artifact/Tracker_Artifact.class.php');
 
 class GraphicReportFactory extends Error{
 

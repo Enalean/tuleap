@@ -21,7 +21,7 @@
  */
 require_once('pre.php');
 require_once('common/plugin/PluginManager.class.php');
-require_once('common/tracker/dao/Tracker_Report_RendererDao.class.php');
+require_once(TRACKER_BASE_DIR .'/Tracker/Report/dao/Tracker_Report_RendererDao.class.php');
 require_once(dirname(__FILE__).'/../include/data-access/GraphOnTrackersV5_ChartDao.class.php');
 
 $plugin_manager = PluginManager::instance();
