@@ -136,7 +136,7 @@ class Tracker_Widget_MyArtifacts extends Widget {
                 $classname           = Toggler::getClassname($div_id);
                 $group_id            = $tracker->getGroupId();
                 $project             = ProjectManager::instance()->getProject($group_id);
-                $project_and_tracker = $project->getPublicName() . '-' . $tracker->getName();
+                $project_and_tracker = $project->getPublicName() . ' - ' . $tracker->getName();
                 
                 $html_my_artifacts .= '<div>';
                 $html_my_artifacts .= '<div class="' . $classname . '" id="' . $div_id . '">';
