@@ -80,7 +80,7 @@ require_once('common/widget/Widget_ProjectSvnStats.class.php');
         $prefs  = '';
         $prefs .= '<form method="POST" action="/widgets/widget.php?owner='. $owner_type.$owner_id .'&amp;action=update&amp;name['. $this->id .']='. $this->getInstanceId() .'&amp;content_id='. $this->getInstanceId() .'&amp;layout_id='. $layout_id .'">';
         $prefs .= '<fieldset><legend>'. $GLOBALS['Language']->getText('widget', 'preferences_title') .'</legend>';
-        $prefs .= $this->getPreferences();
+        $prefs .= $this->getPreferences($owner_id);
         $prefs .= '<br />';
         $prefs .= '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />&nbsp;';
         $prefs .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
@@ -94,10 +94,10 @@ require_once('common/widget/Widget_ProjectSvnStats.class.php');
     function getInstallNotAllowedMessage() {
         return '';
     }
-    function getInstallPreferences() {
+    function getInstallPreferences($owner_id) {
         return '';
     }
-    function getPreferences() {
+    function getPreferences($owner_id) {
         return '';
     }
     function hasPreferences() {
