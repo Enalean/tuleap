@@ -20,6 +20,7 @@
 require_once('common/plugin/Plugin.class.php');
 
 define('TRACKER_BASE_URL', '/plugins/tracker');
+define('TRACKER_BASE_DIR', dirname(__FILE__));
 
 /**
  * trackerPlugin
