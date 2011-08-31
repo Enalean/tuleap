@@ -141,6 +141,7 @@ project_admin_header(array('title'=>$Language->getText('project_admin_ugroup', '
 echo '
 <h2>'.$Language->getText('project_admin_index', 'member_request_delegation_title').'</h2>';
 
+echo '<table>';
 echo '<tr><td colspan="2"><p>';
 if (!$project->isPublic()) {
     echo $Language->getText('project_admin_index', 'member_request_delegation_desc_private_group');
@@ -196,6 +197,7 @@ echo '<form method="post" action="permission_request.php">
      </form>';
 
 echo '</td></tr>';
+echo '</table>';
 
 $em = EventManager::instance();
 $em->processEvent('permission_request_information', array('group_id' => $group_id));
