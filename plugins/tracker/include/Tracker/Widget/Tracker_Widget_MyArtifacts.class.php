@@ -31,11 +31,13 @@ require_once dirname(__FILE__).'/../Artifact/Tracker_Artifact.class.php';
  * Artifact assigned to or submitted by this person
  */
 class Tracker_Widget_MyArtifacts extends Widget {
-    const PREF_SHOW = 'plugin_tracker_my_artifacts_show';
+    const ID        = 'plugin_tracker_myartifacts';
+    const PREF_SHOW = 'plugin_tracker_myartifacts_show';
+    
     protected $artifact_show;
 
     function __construct() {
-        parent::__construct('plugin_tracker_myartifacts');
+        parent::__construct(self::ID);
         $this->artifact_show = user_get_preference(self::PREF_SHOW);
         if($this->artifact_show === false) {
             $this->artifact_show = 'AS';

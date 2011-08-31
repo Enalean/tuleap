@@ -323,17 +323,18 @@ class trackerPlugin extends Plugin {
      * @param Array $params
      */
     public function widget_instance($params) {
+        include_once 'Tracker/Widget/Tracker_Widget_MyArtifacts.class.php';
+        include_once 'Tracker/Widget/Tracker_Widget_MyRenderer.class.php';
+        include_once 'Tracker/Widget/Tracker_Widget_ProjectRenderer.class.php';
+        
         switch ($params['widget']) {
-            case 'plugin_tracker_myartifacts':
-                include_once 'Tracker/Widget/Tracker_Widget_MyArtifacts.class.php';
+            case Tracker_Widget_MyArtifacts::ID:
                 $params['instance'] = new Tracker_Widget_MyArtifacts();
                 break;
-            case 'plugin_tracker_myrenderer':
-                include_once 'Tracker/Widget/Tracker_Widget_MyRenderer.class.php';
+            case Tracker_Widget_MyRenderer::ID:
                 $params['instance'] = new Tracker_Widget_MyRenderer();
                 break;
-            case 'plugin_tracker_projectrenderer':
-                include_once 'Tracker/Widget/Tracker_Widget_ProjectRenderer.class.php';
+            case Tracker_Widget_ProjectRenderer::ID:
                 $params['instance'] = new Tracker_Widget_ProjectRenderer();
                 break;
         }
@@ -346,14 +347,18 @@ class trackerPlugin extends Plugin {
      */
     public function widgets($params) {
         include_once 'common/widget/WidgetLayoutManager.class.php';
+        include_once 'Tracker/Widget/Tracker_Widget_MyArtifacts.class.php';
+        include_once 'Tracker/Widget/Tracker_Widget_MyRenderer.class.php';
+        include_once 'Tracker/Widget/Tracker_Widget_ProjectRenderer.class.php';
+        
         switch ($params['owner_type']) {
             case WidgetLayoutManager::OWNER_TYPE_USER:
-                $params['codendi_widgets'][] = 'plugin_tracker_myartifacts';
-                $params['codendi_widgets'][] = 'plugin_tracker_myrenderer';
+                $params['codendi_widgets'][] = Tracker_Widget_MyArtifacts::ID;
+                $params['codendi_widgets'][] = Tracker_Widget_MyRenderer::ID;
                 break;
             
             case WidgetLayoutManager::OWNER_TYPE_GROUP:
-                $params['codendi_widgets'][] = 'plugin_tracker_projectrenderer';
+                $params['codendi_widgets'][] = Tracker_Widget_ProjectRenderer::ID;
                 break;
         }
     }

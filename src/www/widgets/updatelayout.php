@@ -37,7 +37,13 @@ if ($owner) {
             break;
     }
     if ($good) {
-        if (($layout_id = (int)$request->get('layout_id')) || $request->get('action') == 'preferences') {
+        if (!$request->exist('layout_id')) {
+            //Search the default one
+            $layout_id = $lm->getDefaultLayoutId($owner_id, $owner_type);
+        } else {
+            $layout_id = (int)$request->get('layout_id');
+        }
+        if ($layout_id || $request->get('action') == 'preferences') {
             $name = null;
             if ($request->exist('name')) {
                 $param = $request->get('name');
@@ -46,7 +52,7 @@ if ($owner) {
             }
             switch($request->get('action')) {
                 case 'widget':
-                    if ($name && $request->exist('layout_id')) {
+                    if ($name && $layout_id) {
                         if ($widget = Widget::getInstance($name)) {
                             if ($widget->isAvailable()) {
                                 $action = array_pop(array_keys($param[$name]));
@@ -57,7 +63,6 @@ if ($owner) {
                                         break;
                                     case 'add':
                                     default:
-                                        $redirect ='/widgets/widgets.php?owner='. $owner_type.$owner_id.'&layout_id='. $layout_id.'#filter-widget-categ-'.$widget->getCategory();
                                         $lm->addWidget($owner_id, $owner_type, $layout_id, $name, $widget, $request);
                                         break;
                                 }

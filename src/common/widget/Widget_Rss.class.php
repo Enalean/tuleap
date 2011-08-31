@@ -19,6 +19,7 @@
  */
 
 require_once('Widget.class.php');
+require_once('common/date/DateHelper.class.php');
 
 /**
 * Widget_Rss
@@ -53,11 +54,11 @@ require_once('Widget.class.php');
                 $content .= '<tr class="'. util_get_alt_row_color($i++) .'"><td WIDTH="99%">';
                 if ($image = $item->get_link(0, 'image')) {
                     //hack to display twitter avatar
-                    $content .= '<img src="'.  $hp->purify($image, CODENDI_PURIFIER_CONVERT_HTML)  .'" style="float:left; margin-right:1em;" />';
+                    $content .= '<img src="'.  $hp->purify($image, CODENDI_PURIFIER_CONVERT_HTML)  .'" width="48" height="48" style="float:left; margin-right:1em;" />';
                 }
                 $content .= '<a href="'. $item->get_link() .'">'. $item->get_title() .'</a>';  //Trust SimplePie for purifying
                 if ($item->get_date()) {
-                    $content .= '<span style="color:#999;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $item->get_date('U')) .'"> - '. util_time_ago_in_words($item->get_date('U')) .'</span>';
+                    $content .= '<span style="color:#999;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $item->get_date('U')) .'"> - '. DateHelper::timeAgoInWords($item->get_date('U')) .'</span>';
                 }
                 $content .= '</td></tr>';
             }

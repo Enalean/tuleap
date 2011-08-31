@@ -27,8 +27,10 @@ require_once 'Tracker_Widget_Renderer.class.php';
  * Personal tracker renderer
  */
 class Tracker_Widget_MyRenderer extends Tracker_Widget_Renderer {
+    const ID = 'plugin_tracker_myrenderer';
+
     function __construct() {
-        parent::__construct('plugin_tracker_myrenderer', UserManager::instance()->getCurrentUser()->getId(), WidgetLayoutManager::OWNER_TYPE_USER);
+        parent::__construct(self::ID, UserManager::instance()->getCurrentUser()->getId(), WidgetLayoutManager::OWNER_TYPE_USER);
     }
 }
 ?>

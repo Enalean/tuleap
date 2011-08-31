@@ -18,6 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../Widget/Tracker_Widget_MyRenderer.class.php';
+require_once dirname(__FILE__).'/../Widget/Tracker_Widget_ProjectRenderer.class.php';
+
 abstract class Tracker_Report_Renderer {
     
     public $id;
@@ -151,22 +154,21 @@ abstract class Tracker_Report_Renderer {
             $user = UserManager::instance()->getCurrentUser();
             if ($user->isLoggedIn()) {
                 $items['addto_my_dashboard'] = array(
-                    // 'url'    => '/widgets/updatelayout.php?'.http_build_query(
-                    //     array(
-                    //         'owner'    => 'u'. $user->getId(),
-                    //         'action'   => 'widget',
-                    //         'renderer' => array(
-                    //             'title'       => $this->name .' for '. $this->report->name,
-                    //             'renderer_id' => $this->id
-                    //         ),
-                    //         'name'     => array(
-                    //             'myrenderer' => array (
-                    //                 'add' => 1
-                    //             )
-                    //         )
-                    //     )
-                    // ),
-                    'url'   => 'javascript:alert(\'Not Yet Implemented!\');',
+                     'url'    => '/widgets/updatelayout.php?'.http_build_query(
+                         array(
+                             'owner'    => 'u'. $user->getId(),
+                             'action'   => 'widget',
+                             'renderer' => array(
+                                 'title'       => $this->name .' for '. $this->report->name,
+                                 'renderer_id' => $this->id
+                             ),
+                             'name'     => array(
+                                 Tracker_Widget_MyRenderer::ID => array (
+                                     'add' => 1
+                                 )
+                             )
+                         )
+                     ),
                     'icon'  => $GLOBALS['HTML']->getImage('ic/layout_user.png'),
                     'label' => $GLOBALS['Language']->getText('plugin_tracker_report','my_dashboard'),
                 );
@@ -175,22 +177,21 @@ abstract class Tracker_Report_Renderer {
                 $project = $this->report->getTracker()->getProject();
                 if ($project->userIsAdmin($user)) {
                     $items['addto_project_dashboard'] = array(
-                        //'url'    => '/widgets/updatelayout.php?'.http_build_query(
-                        //    array(
-                        //        'owner'    => 'g'. $project->getGroupId(),
-                        //        'action'   => 'widget',
-                        //        'renderer' => array(
-                        //            'title'       => $this->name .' for '. $this->report->name,
-                        //            'renderer_id' => $this->id
-                        //        ),
-                        //        'name'     => array(
-                        //            'projectrenderer' => array (
-                        //                'add' => 1
-                        //            )
-                        //        )
-                        //    )
-                        //),
-                        'url'   => 'javascript:alert(\'Not Yet Implemented!\');',
+                        'url'    => '/widgets/updatelayout.php?'.http_build_query(
+                            array(
+                                'owner'    => 'g'. $project->getGroupId(),
+                                'action'   => 'widget',
+                                'renderer' => array(
+                                    'title'       => $this->name .' for '. $this->report->name,
+                                    'renderer_id' => $this->id
+                                ),
+                                'name'     => array(
+                                    Tracker_Widget_ProjectRenderer::ID => array (
+                                        'add' => 1
+                                    )
+                                )
+                            )
+                        ),
                         'icon'  => $GLOBALS['HTML']->getImage('ic/layout_project.png'),
                         'label' => $GLOBALS['Language']->getText('plugin_tracker_report','project_dashboard'),
                     );
