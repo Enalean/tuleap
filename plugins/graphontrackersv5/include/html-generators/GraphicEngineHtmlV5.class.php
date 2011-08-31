@@ -20,8 +20,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__)."/../data-access/GraphicReportFactory.class.php");
-require_once(dirname(__FILE__)."/../common/GraphicEngineUserPrefs.class.php");
+require_once(dirname(__FILE__)."/../data-access/GraphicReportV5Factory.class.php");
+require_once(dirname(__FILE__)."/../common/GraphicEngineUserPrefsV5.class.php");
 require_once('common/tracker/ArtifactField.class.php');
 require_once('common/include/Error.class.php');
 

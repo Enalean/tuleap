@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class DataBuilder {
+class DataBuilderV5 {
 
     var $field_X;
     var $field_Y;

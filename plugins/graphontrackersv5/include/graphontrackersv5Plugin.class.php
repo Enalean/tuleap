@@ -65,7 +65,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
         $this->_addHook('widgets',                           'widgets',                           false);
         $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',     false);
         
-        $this->_addHook('graphontrackers_load_chart_factories', 'graphontrackers_load_chart_factories', false);
+        $this->_addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
         
         $this->_addHook('ArtifactTracker_created', 'copy_graphical_reports', false);
         $this->_addHook('ArtifactTracker_deleted', 'delete_graphical_reports', false);

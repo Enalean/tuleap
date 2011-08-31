@@ -330,7 +330,7 @@ function removeAllOptions(from) {
 		from.options[i] = null; 
 		} 
 	from.selectedIndex = -1; 
-	} 
+	}
 
 // -------------------------------------------------------------------
 // addOption(select_object,display_text,value,selected)

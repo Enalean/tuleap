@@ -19,7 +19,6 @@
  */
  
 require_once('GraphOnTrackersV5_ChartDao.class.php');
-
 require_once(TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Session.class.php');
 
 class GraphOnTrackersV5_ChartFactory {

@@ -20,10 +20,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('DataBuilder.class.php');
-require_once('ChartDataBuilder.class.php');
+require_once('DataBuilderV5.class.php');
+require_once('ChartDataBuilderV5.class.php');
 
-class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilder {
+class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
     /**
      * build pie chart properties
      *

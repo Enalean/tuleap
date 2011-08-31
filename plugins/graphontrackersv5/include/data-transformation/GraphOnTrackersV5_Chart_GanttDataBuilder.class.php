@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('DataBuilder.class.php');
-require_once('ChartDataBuilder.class.php');
+require_once('DataBuilderV5.class.php');
+require_once('ChartDataBuilderV5.class.php');
 require_once(TRACKER_BASE_DIR .'/Tracker/Artifact/Tracker_ArtifactFactory.class.php');
 
 class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {

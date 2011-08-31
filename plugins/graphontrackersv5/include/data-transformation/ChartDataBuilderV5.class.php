@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class ChartDataBuilder {
+abstract class ChartDataBuilderV5 {
     
     protected $chart;
     protected $artifacts;
