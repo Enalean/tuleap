@@ -1,3 +1,6 @@
+Version 1.7
+    * Fix issue after refactoring of DataAccessObject
+
 Version 1.6
 	* Add write access for docman
 
