@@ -941,6 +941,7 @@ class Layout extends Response {
                                  {
                                      onComplete: function() {
                                         codendi.Tooltip.load('$element_id-ajax');
+                                        codendi.Toggler.init($('$element_id-ajax'));
                                      }
                                  }
                 );
