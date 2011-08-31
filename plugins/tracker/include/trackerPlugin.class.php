@@ -38,24 +38,25 @@ class trackerPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         
-        $this->_addHook('cssfile', 'cssFile', false);
-        $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures', false);
-        $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
-        $this->_addHook(Event::SERVICE_CLASSNAMES, 'service_classnames', false);
-        $this->_addHook(Event::COMBINED_SCRIPTS,   'combined_scripts',   false);
-        $this->_addHook(Event::JAVASCRIPT,         'javascript',         false);
-        $this->_addHook(Event::TOGGLE,             'toggle',             false);
-        $this->_addHook('permission_get_name',               'permission_get_name',               false);
-        $this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
-        $this->_addHook('permission_get_object_name',        'permission_get_object_name',        false);
-        $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
-        $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
-        $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
+        $this->_addHook('cssfile',                             'cssFile',                           false);
+        $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
+        $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
+        $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
+        $this->_addHook(Event::COMBINED_SCRIPTS,               'combined_scripts',                  false);
+        $this->_addHook(Event::JAVASCRIPT,                     'javascript',                        false);
+        $this->_addHook(Event::TOGGLE,                         'toggle',                            false);
+        $this->_addHook(Event::SERVICE_PUBLIC_AREAS,           'service_public_areas',              false);
+        $this->_addHook('permission_get_name',                 'permission_get_name',               false);
+        $this->_addHook('permission_get_object_type',          'permission_get_object_type',        false);
+        $this->_addHook('permission_get_object_name',          'permission_get_object_name',        false);
+        $this->_addHook('permission_get_object_fullname',      'permission_get_object_fullname',    false);
+        $this->_addHook('permission_user_allowed_to_change',   'permission_user_allowed_to_change', false);
+        $this->_addHook('permissions_for_ugroup',              'permissions_for_ugroup',            false);
         
-        $this->_addHook('url_verification_instance', 'url_verification_instance', false);
+        $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
         
-        $this->_addHook('widget_instance',        'widget_instance',        false);
-        $this->_addHook('widgets',                'widgets',                false);
+        $this->_addHook('widget_instance',                     'widget_instance',                   false);
+        $this->_addHook('widgets',                             'widgets',                           false);
     }
     
     public function getPluginInfo() {
@@ -360,6 +361,34 @@ class trackerPlugin extends Plugin {
             case WidgetLayoutManager::OWNER_TYPE_GROUP:
                 $params['codendi_widgets'][] = Tracker_Widget_ProjectRenderer::ID;
                 break;
+        }
+    }
+    
+    function service_public_areas($params) {
+        if ($params['project']->usesService('plugin_tracker')) {
+            $tf = TrackerFactory::instance();
+            
+            // Get the artfact type list
+            $trackers = $tf->getTrackersByGroupId($params['project']->getGroupId());
+            
+            if ($trackers) {
+                $entries = array();
+                foreach($trackers as $t) {
+                    if ($t->userCanView()) {
+                        $entries[] = '<a href="'. TRACKER_BASE_URL .'/?tracker='. $t->id .'">'. $t->name .'</a>';
+                    }
+                }
+                if ($entries) {
+                    $area = '';
+                    $area .= '<a href="'. TRACKER_BASE_URL .'/?group_id='. $params['project']->getGroupId() .'">';
+                    $area .= $GLOBALS['HTML']->getImage('ic/clipboard-list.png');
+                    $area .= ' '. $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
+                    $area .= '</a>';
+                    
+                    $area .= '<ul><li>'. implode('</li><li>', $entries) .'</li></ul>';
+                    $params['areas'][] = $area;
+                }
+            }
         }
     }
 }

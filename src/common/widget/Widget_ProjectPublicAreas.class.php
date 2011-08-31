@@ -302,7 +302,7 @@ class Widget_ProjectPublicAreas extends Widget {
         $params = array('project' => &$project, 'areas' => &$areas);
         
         $em =& EventManager::instance();
-        $em->processEvent('service_public_areas', $params);
+        $em->processEvent(Event::SERVICE_PUBLIC_AREAS, $params);
         
         foreach($areas as $area) {
             print '<HR SIZE="1" width="99%" NoShade>';
