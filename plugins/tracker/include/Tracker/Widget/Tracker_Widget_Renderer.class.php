@@ -101,7 +101,7 @@ abstract class Tracker_Widget_Renderer extends Widget {
         $vId->required();
         if($request->validInArray('renderer', $vId)) {
             $renderer = $request->get('renderer');
-            $sql = 'INSERT INTO widget_renderer (owner_id, owner_type, title, renderer_id) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($renderer['title']) ."', ". db_escape_int($renderer['renderer_id']) .")";
+            $sql = 'INSERT INTO tracker_widget_renderer (owner_id, owner_type, title, renderer_id) VALUES ('. $this->owner_id .", '". $this->owner_type ."', '". db_escape_string($renderer['title']) ."', ". db_escape_int($renderer['renderer_id']) .")";
             $res = db_query($sql);
             $content_id = db_insertid($res);
         }
