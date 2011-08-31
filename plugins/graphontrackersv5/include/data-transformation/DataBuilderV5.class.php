@@ -39,7 +39,7 @@ class DataBuilderV5 {
 	*  @return null
     */
 
-    function DataBuilder($field_X,$field_Y,$atid,$artifacts) {
+    function DataBuilderV5($field_X,$field_Y,$atid,$artifacts) {
         $this->field_X = $field_X;
         $this->field_Y = $field_Y;
         $this->atid = $atid;

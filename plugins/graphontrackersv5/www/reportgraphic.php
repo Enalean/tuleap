@@ -37,7 +37,7 @@ if ($p && $plugin_manager->isPluginAvailable($p)) {
         if ($row = $dao->searchById($id)->getRow()) {
             $renderer_dao = new Tracker_Report_RendererDao();
             if ($renderer = $renderer_dao->searchById($row['report_graphic_id'])->getRow()) {
-                header('Location: /tracker/?'. http_build_query(array(
+                header('Location: '.TRACKER_BASE_URL.'/?'. http_build_query(array(
                     '_jpg_csimd'                              => 1,
                     'report'                                  => $renderer['report_id'],
                     'renderer'                                => $row['report_graphic_id'],

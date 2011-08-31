@@ -73,7 +73,7 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
                         'progress' => 0,
                         'right'    => '',
                         'hint'     => '#'. $aid,
-                        'links'    => '/tracker/?aid='. $aid,
+                        'links'    => TRACKER_BASE_URL.'/?aid='. $aid,
                     );
                     
                     if ($field_start) {

@@ -230,7 +230,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
             if (isset($renderer_parameters['add_chart'])) { 
                 $this->chart_to_edit = $this->getChartFactory()
                                             ->createChart($this, $renderer_parameters['add_chart']);
-                $GLOBALS['Response']->redirect('/tracker/?'. http_build_query(array(
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                     'report' => $this->report->id,
                     'renderer' => $this->id,
                     'func' => 'renderer',

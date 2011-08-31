@@ -123,7 +123,7 @@ abstract class GraphOnTrackersV5_Chart {
     }
     
     public function getStrokeUrl($store_in_session = true) {
-        return '/tracker/?' . http_build_query(array(
+        return TRACKER_BASE_URL.'/?' . http_build_query(array(
                      '_jpg_csimd' => '1',
                      'report'     => $this->renderer->report->id,
                      'renderer'   => $this->renderer->id,
