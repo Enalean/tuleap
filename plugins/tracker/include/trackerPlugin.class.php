@@ -53,6 +53,9 @@ class trackerPlugin extends Plugin {
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
         
         $this->_addHook('url_verification_instance', 'url_verification_instance', false);
+        
+        $this->_addHook('widget_instance',        'widget_instance',        false);
+        $this->_addHook('widgets',                'widgets',                false);
     }
     
     public function getPluginInfo() {
@@ -311,6 +314,47 @@ class trackerPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             include_once 'Tracker/Tracker_URLVerification.class.php';
             $params['url_verification'] = new Tracker_URLVerification();
+        }
+    }
+
+    /**
+     * Hook: event raised when widget are instanciated
+     * 
+     * @param Array $params
+     */
+    public function widget_instance($params) {
+        switch ($params['widget']) {
+            case 'plugin_tracker_myartifacts':
+                include_once 'Tracker/Widget/Tracker_Widget_MyArtifacts.class.php';
+                $params['instance'] = new Tracker_Widget_MyArtifacts();
+                break;
+            case 'plugin_tracker_myrenderer':
+                include_once 'Tracker/Widget/Tracker_Widget_MyRenderer.class.php';
+                $params['instance'] = new Tracker_Widget_MyRenderer();
+                break;
+            case 'plugin_tracker_projectrenderer':
+                include_once 'Tracker/Widget/Tracker_Widget_ProjectRenderer.class.php';
+                $params['instance'] = new Tracker_Widget_ProjectRenderer();
+                break;
+        }
+    }
+
+    /**
+     * Hook: event raised when user lists all available widget
+     *
+     * @param Array $params
+     */
+    public function widgets($params) {
+        include_once 'common/widget/WidgetLayoutManager.class.php';
+        switch ($params['owner_type']) {
+            case WidgetLayoutManager::OWNER_TYPE_USER:
+                $params['codendi_widgets'][] = 'plugin_tracker_myartifacts';
+                $params['codendi_widgets'][] = 'plugin_tracker_myrenderer';
+                break;
+            
+            case WidgetLayoutManager::OWNER_TYPE_GROUP:
+                $params['codendi_widgets'][] = 'plugin_tracker_projectrenderer';
+                break;
         }
     }
 }

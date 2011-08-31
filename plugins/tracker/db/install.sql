@@ -23,16 +23,16 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition (
   workflow_id int(11) NOT NULL,
   INDEX idx_wf_workflow_id( workflow_id )
 );
--- Not Yet Implemented
--- DROP TABLE IF EXISTS widget_renderer;
--- CREATE TABLE widget_renderer (
---   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
---   owner_id int(11) unsigned NOT NULL default '0',
---   owner_type varchar(1) NOT NULL default 'u',
---   title varchar(255) NOT NULL,
---   renderer_id INT(11) NOT NULL,
---   KEY (owner_id, owner_type)
--- );
+
+DROP TABLE IF EXISTS tracker_widget_renderer;
+CREATE TABLE tracker_widget_renderer (
+   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
+   owner_id int(11) unsigned NOT NULL default '0',
+   owner_type varchar(1) NOT NULL default 'u',
+   title varchar(255) NOT NULL,
+   renderer_id INT(11) NOT NULL,
+   KEY (owner_id, owner_type)
+);
 
 DROP TABLE IF EXISTS tracker;
 CREATE TABLE tracker(
