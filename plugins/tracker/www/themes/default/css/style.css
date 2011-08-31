@@ -808,7 +808,7 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 /* }}} */
 
 
-ul.my_artifacts_list {
+ul.plugin_tracker_my_artifacts_list {
     margin-top: 0.25em;
     padding-left: 1em;
     list-style-type: none;
