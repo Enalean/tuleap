@@ -203,7 +203,13 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 
 			if ($cache && !empty($cachefile)) {
 				// write cached file too
-				$tmpcachefile = 'tmp-' . $cachefile;
+				$pid = 0;
+				if (function_exists('posix_getpid'))
+					$pid = posix_getpid();
+				else
+					$pid = rand();
+
+				$tmpcachefile = 'tmp-' . $pid . '-' . $cachefile;
 				$cachehandle = fopen(GITPHP_CACHE . $tmpcachefile, 'wb');
 			}
 
