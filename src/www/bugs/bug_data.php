@@ -99,7 +99,7 @@ function cmp_place($ar1, $ar2)
     return 0;
 }
 
-function cmp_place_query($ar1, $ar2)
+function cmp_place_query_legacy($ar1, $ar2)
 {
     if ($ar1['place_query']< $ar2['place_query'])
 	return -1;
@@ -108,7 +108,7 @@ function cmp_place_query($ar1, $ar2)
     return 0;
 }
 
-function cmp_place_result($ar1, $ar2)
+function cmp_place_result_legacy($ar1, $ar2)
 {
     if ($ar1['place_result']< $ar2['place_result'])
 	return -1;
