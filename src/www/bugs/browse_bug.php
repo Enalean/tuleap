@@ -306,7 +306,7 @@ while (list($field,$value_id) = each($prefs)) {
   ================================================== */
 $ib=0;$is=0;
 $load_cal=false;
-while ( $field = bug_list_all_fields(cmp_place_query)) {
+while ( $field = bug_list_all_fields(cmp_place_query_legacy)) {
 
     if (!bug_data_is_used($field) || 
 	!bug_data_is_showed_on_query($field) ) { 
@@ -393,7 +393,7 @@ if ($labels) {
    Loop through the list of used fields to see what fields are in the 
    result table and complement the SQL query accordingly.
   ================================================== */
-while ( $field = bug_list_all_fields(cmp_place_result)) {
+while ( $field = bug_list_all_fields(cmp_place_result_legacy)) {
 
     if (!bug_data_is_used($field) || 
 	!bug_data_is_showed_on_result($field) ) { 
