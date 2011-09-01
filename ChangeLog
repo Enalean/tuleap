@@ -1,4 +1,4 @@
-Version 4.0.21 - Not Released Yet
+Version 4.0.21 - Thuesday, September 1st 2011
     == Enhancement ==
     * Improve rebuildability of Tuleap dependencies (contrib Christian Bayle).
     * One rpm package to install all the best of the platform (tuleap-all)
