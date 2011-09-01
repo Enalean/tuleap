@@ -257,8 +257,10 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     function getFileIdFromName($fileName) {
 
         $dao = new FRSFileDao(CodendiDataAccess::instance());
-        $res = $dao->searchFileByNameFromRelease($fileName, $this->getReleaseId());
-        return $res->_row['file_id'];
+        if ($row = $dao->searchFileByNameFromRelease($fileName, $this->getReleaseId())->getRow()) {
+            return $row['file_id'];
+        }
+        return 0;
 
     }
 
