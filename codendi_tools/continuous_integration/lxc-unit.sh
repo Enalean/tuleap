@@ -75,7 +75,7 @@ else
 fi
 
 # Upload tuleap src into /root
-rsync --rsh="$sshcmd" --archive $src_dir $build_host:/root
+rsync --rsh="$sshcmd" --archive --delete $src_dir $build_host:/root
 $remotecmd chown root:root -R /root/$src_dir
 
 # Build needed rpm to run UnitTests
