@@ -75,7 +75,7 @@ class Webdav_URLVerification extends URLVerification {
                 $this->forbiddenError();
             }
         } else {
-            parent::assertValidUrl($server);            
+            parent::assertValidUrl($server);
         }
     }
 

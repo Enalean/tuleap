@@ -68,7 +68,7 @@ class WebDAVAuthentication {
      */
     function setHeader() {
 
-        header('WWW-Authenticate: Basic realm="Codendi WebDAV Authentication"');
+        header('WWW-Authenticate: Basic realm="'.$GLOBALS['sys_name'].' WebDAV Authentication"');
         header('HTTP/1.0 401 Unauthorized');
 
         // text returned when user hit cancel
