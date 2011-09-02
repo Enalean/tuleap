@@ -23,7 +23,7 @@ $field_values = array(
 
 try {
     
-    $client = new SoapClient($test_server.'/soap/codendi.wsdl.php?wsdl', 
+    $client = new SoapClient($test_server.'/plugins/tracker/soap/tuleap_tracker_v5.wsdl.php?wsdl', 
                                 array(//'trace' => true,
                                       'trace'      => 1,
                                       'exceptions' => 0,

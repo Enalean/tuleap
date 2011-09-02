@@ -3,10 +3,10 @@
 
 ///////////////////////////////////////
 // Configuration part
-$test_server = 'http://' .$_SERVER['SERVER_ADDR'] .':'. $_SERVER['SERVER_PORT'];
+$test_server = 'http://' .$_SERVER['SERVER_ADDR'] /*.':'. $_SERVER['SERVER_PORT']*/;
 
-$login = 'marcus';
-$password = 'marcus';
+$login = 'sandrae ';
+$password = 'sandrae';
 ///////////////////////////////////////
 
 try {

@@ -20,29 +20,22 @@ $uri = $protocol.'://'.$sys_default_domain;
 $server = new soap_server();
 
 //configureWSDL($serviceName,$namespace = false,$endpoint = false,$style='rpc', $transport = 'http://schemas.xmlsoap.org/soap/http');
-$server->configureWSDL('CodendiAPI',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
+$server->configureWSDL('TuleapTrackerV5API',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
 
 //include the common TYPES API
-require_once('./common/types.php');
+require_once('www/soap/common/types.php');
 
 //include the common SESSION API
-require_once('./common/session.php');
+require_once('www/soap/common/session.php');
 
 // include the common GROUP API
-require_once('./common/group.php');
+require_once('www/soap/common/group.php');
 
 // include the common USERS API
-require_once('common/users.php');
+require_once('www/soap/common/users.php');
 
-// include the TRACKER API
-require_once('./tracker/tracker.php');
-
-// include the FRS API
-require_once('./frs/frs.php');
-
-// include the <Plugin> API (only if plugin is available), not tracker v5
-$em =& EventManager::instance();
-$em->processEvent('soap', array());
+// include the TRACKER v5 API
+require_once(dirname(__FILE__).'/../../include/soap.php');
 
 // Call the service method to initiate the transaction and send the response
 $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';

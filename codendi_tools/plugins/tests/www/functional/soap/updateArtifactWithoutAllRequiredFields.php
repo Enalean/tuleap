@@ -25,12 +25,12 @@ $follow_up_comment = 'Updated some fields from SOAP API';
 
 try {
     
-    $client = new SoapClient($test_server.'/soap/codendi.wsdl.php?wsdl', 
+    $client = new SoapClient($test_server.'/plugins/tracker/soap/tuleap_tracker_v5.wsdl.php?wsdl', 
                                 array(//'trace' => true,
                                       'trace'      => 1,
                                       'exceptions' => 0,
                                       'soap_version' => SOAP_1_1,
-                                      //'proxy_host' => 'localhost', 
+                                      //'proxy_host' => 'localhost',
                                       //'proxy_port' => 8008
                                 ));
     

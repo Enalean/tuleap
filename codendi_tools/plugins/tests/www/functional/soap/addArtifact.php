@@ -3,10 +3,10 @@
 
 ///////////////////////////////////////
 // Configuration part
-$test_server = 'http://' .$_SERVER['SERVER_ADDR'] .':'. $_SERVER['SERVER_PORT'];
+$test_server = 'http://' .$_SERVER['SERVER_ADDR'] /*.':'. $_SERVER['SERVER_PORT']*/;
 
-$login = 'marcus';
-$password = 'marcus';
+$login = 'sandrae';
+$password = 'sandrae';
 
 $group_id = 101;
 $tracker_id = 123;
@@ -59,7 +59,15 @@ $field_values = array(
 
 try {
     
-    $client = new SoapClient($test_server.'/soap/codendi.wsdl.php?wsdl', 
+    /*$client = new SoapClient($test_server.'/soap/codendi.wsdl.php?wsdl', 
+                                array(//'trace' => true,
+                                      'trace'      => 1,
+                                      'exceptions' => 0,
+                                      'soap_version' => SOAP_1_1,
+                                      //'proxy_host' => 'localhost', 
+                                      //'proxy_port' => 8008
+                                ));*/
+    $client = new SoapClient($test_server.'/plugins/tracker/soap/tuleap_tracker_v5.wsdl.php?wsdl',
                                 array(//'trace' => true,
                                       'trace'      => 1,
                                       'exceptions' => 0,
@@ -67,9 +75,9 @@ try {
                                       //'proxy_host' => 'localhost', 
                                       //'proxy_port' => 8008
                                 ));
-    
+    var_dump($client);
     $session =  $client->login($login, $password);
-    
+    var_dump('SESSION :',$session);
     $session_hash = $session->session_hash;
     $user_id = $session->user_id;
     
