@@ -1,13 +1,6 @@
-## Dependencies
-- PHP with GD
-install php-gd rpm from RHEL.
+GraphOnTracker display nice graphs (Bar, Pie & Gantt) on top of TrackersV5.
 
-- Jpgraph
-install jpgraph-1.20.5-1.codendi.noarch.rpm provided by codendi.
+Just install it and make it available, no extra step required.
 
-## Configuration
-- Copy /usr/share/codendi/plugins/graphontrackers/etc/graphontrackers.inc.dist to /etc/codendi/plugins/graphontrackers/etc/graphontrackers.inc
-- Customize your graphontrackers.inc with following variable:
-// Jpgraph Path
-$graphontrackers_jpgraph_prefix = "/usr/share/jpgraph";
+Note: those graphs only works with TrackerV5 and requires 'tracker' plugin to be installed
 
