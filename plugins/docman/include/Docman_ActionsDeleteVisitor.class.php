@@ -22,17 +22,30 @@
 require_once('Docman_FileStorage.class.php');
 require_once('Docman_VersionFactory.class.php');
 class Docman_ActionsDeleteVisitor /* implements Visitor */ {
-    
-    function Docman_ActionsDeleteVisitor(&$file_storage, &$docman) {
+    protected $user;
+    protected $response;
+
+    function __construct() {
         //More coherent to have only one delete date for a whole hierarchy.
-        $this->deleteDate   = time();
-        $this->docman       =& $docman;
+        $this->deleteDate = time();
+        $this->response   = $GLOBALS['Response'];
     }
     
+    /**
+     * 
+     * Enter description here ...
+     *
+     * @param Docman_Folder $item
+     * @param $params
+     */
     function visitFolder(&$item, $params = array()) {
         //delete all sub items before
         $items = $item->getAllItems();
-        $parent =& $params['parent'];
+        if (isset($params['parent'])) {
+            $parent = $params['parent'];
+        } else {
+            $parent = $this->_getItemFactory()->getItemFromDb($item->getParentId());
+        }
         $one_item_has_not_been_deleted = false;
         if ($items->size()) {
             $it =& $items->iterator();
@@ -47,7 +60,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
         }
         
         if ($one_item_has_not_been_deleted) {
-            $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_delete_notempty', $item->getTitle()));
+            $this->response->addFeedback('error', $GLOBALS['Language']->getText('plugin_docman', 'error_delete_notempty', $item->getTitle()));
             return false;
         } else {
             //Mark the folder as deleted;
@@ -81,9 +94,9 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
             } else { // User have choosen to delete wiki page from wiki service too
                 $dIF =& $this->_getItemFactory();
                 if($dIF->deleteWikiPage($item->getPageName(), $item->getGroupId())){
-                    $this->docman->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_success'));
+                    $this->response->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_success'));
                 } else {
-                    $this->docman->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_failed'));
+                    $this->response->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_failed'));
                 }
             }
         }
@@ -94,14 +107,14 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     }
 
     function visitFile($item, $params = array()) {
-        if ($this->docman->userCanWrite($item->getId())) {
+        if ($this->getPermissionManager($item->getGroupId())->userCanWrite($params['user'], $item->getId())) {
             if (isset($params['version']) && $params['version'] !== false) {
                 return $this->_deleteVersion($item, $params['version'], $params['user']);
             } else {
                 return $this->_deleteFile($item, $params);
             }
         } else {
-            $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
+            $this->response->addFeedback('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
             return false;
         }
     }
@@ -130,13 +143,12 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     }
 
     function _deleteItem($item, $params) {
-       if ($this->docman->userCanWrite($item->getId())) {
-
+       if ($this->getPermissionManager($item->getGroupId())->userCanWrite($params['user'], $item->getId())) {
             $dIF = $this->_getItemFactory();
             $dIF->delete($item);
             return true;
         } else {
-            $this->docman->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
+            $this->response->addFeedback('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_delete_item', $item->getTitle()));
             return false;
         }
     }
@@ -210,6 +222,9 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
     function &_getItemDao() {
         $dao = new Docman_ItemDao(CodendiDataAccess::instance());
         return $dao;
+    }
+    function getPermissionManager($groupId) {
+        return Docman_PermissionsManager::instance($groupId);
     }
 }
 ?>

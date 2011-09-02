@@ -40,19 +40,12 @@ Mock::generatePartial(
     'WebDAVProjectTestVersion',
 array('getGroupId', 'getProject', 'getUser', 'getUtils', 'getPackageList','getFRSPackageFromName', 'getWebDAVPackage', 'usesFile', 'userCanWrite')
 );
+Mock::generate('EventManager');
 
 /**
  * This is the unit test of WebDAVProject
  */
 class WebDAVProjectTest extends UnitTestCase {
-
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function WebDAVProjectTest($name = 'WebDAVProjectTest') {
-        $this->UnitTestCase($name);
-    }
 
     function setUp() {
 
@@ -70,8 +63,13 @@ class WebDAVProjectTest extends UnitTestCase {
      * Testing when The project have no active services
      */
     function testGetChildrenNoServices() {
-
         $webDAVProject = new WebDAVProjectTestVersion($this);
+        
+        $utils = new MockWebDAVUtils();
+        $webDAVProject->setReturnValue('getUtils', $utils);
+        $em = new MockEventManager();
+        $utils->setReturnValue('getEventManager', $em);
+        
         $webDAVProject->setReturnValue('usesFile', false);
         $this->assertEqual($webDAVProject->getChildren(), array());
 
@@ -91,8 +89,13 @@ class WebDAVProjectTest extends UnitTestCase {
      * Testing when the service doesn't exist
      */
     function testGetChildFailWithNotExist() {
-
         $webDAVProject = new WebDAVProjectTestVersion($this);
+        
+        $utils = new MockWebDAVUtils();
+        $webDAVProject->setReturnValue('getUtils', $utils);
+        $em = new MockEventManager();
+        $utils->setReturnValue('getEventManager', $em);
+        
         $webDAVProject->setReturnValue('usesFile', false);
         $this->expectException('Sabre_DAV_Exception_FileNotFound');
         $webDAVProject->getChild('Files');

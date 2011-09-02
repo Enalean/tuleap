@@ -403,50 +403,26 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_create'));
         }
     }
-
-    function deleteDirectoryContent($item) {
-        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            $itemFactory  = $this->getUtils()->getDocmanItemFactory();
-            $allChildrens = $itemFactory->getChildrenFromParent($item);
-            foreach($allChildrens as $child) {
-                if (get_class($child) == 'Docman_File' || get_class($child) == 'Docman_EmbeddedFile') {
-                    $docmanFile = $this->getWebDAVDocmanFile($child);
-                    $docmanFile->delete();
-                }
-                else if(get_class($child)=='Docman_Folder') {
-                    $this->deleteDirectoryContent($child);
-                    $docmanFolder= $this->getWebDAVDocmanFolder($child);
-                    $docmanFolder->delete();
-                }
-            }
-        } else {
-            throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
-        }
-    }
-
+    
     /**
-     * Deletes a docman folder and its content
+     * Delete the folder
      *
      * @return void
      */
     function delete() {
-        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-
-            if ($this->getUtils()->isWriteEnabled() && !$this->isDocmanRoot() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-                $item = $this->getItem();
-                $itemFactory  = $this->getUtils()->getDocmanItemFactory();
-                $subItemsWritable = $docmanPermissionManager->currentUserCanWriteSubItems($item->getId());
-                if($subItemsWritable) {
-                    $this->deleteDirectoryContent($item);
-                    $itemFactory->delete($item);
-                } else {
-                    throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'error_subitems_not_deleted_no_w'));
-                }
-            } else {
-                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
+        if ($this->getUtils()->isWriteEnabled()) {
+            try {
+                $GLOBALS['Response'] = new WebDAV_Response();
+                $itemFactory = $this->getUtils()->getDocmanItemFactory();
+                $itemFactory->deleteSubTree($this->getItem(), $this->getUser(), false);
+                $this->getUtils()->getEventManager()->processEvent('send_notifications', array());
+            } catch (Exception $e) {
+                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'error_subitems_not_deleted_no_w'));
             }
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
+    }
 }
 
 ?>

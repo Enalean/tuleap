@@ -33,6 +33,7 @@ Mock::generatePartial(
     'WebDAVDocmanDocumentTestVersion',
 array('getItem', 'getUtils')
 );
+Mock::generate('EventManager');
 
 /**
  * This is the unit test of WebDAVDocmanDocument
@@ -57,36 +58,23 @@ class WebDAVDocmanDocumentTest extends UnitTestCase {
         $webDAVDocmanDocument->delete();
     }
 
-    function testDeleteNoPermissions() {
-        $webDAVDocmanDocument = new WebDAVDocmanDocumentTestVersion();
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanWrite', false);
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
-        $item = new MockDocman_Item();
-        $webDAVDocmanDocument->setReturnValue('getItem', $item);
-        $dpm->expectOnce('userCanWrite');
-
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
-        $webDAVDocmanDocument->delete();
-    }
-
     function testDeleteSuccess() {
         $webDAVDocmanDocument = new WebDAVDocmanDocumentTestVersion();
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanWrite', true);
+
         $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $utils->setReturnValue('isWriteEnabled', true);
+        
         $dif = new MockDocman_ItemFactory();
         $utils->setReturnValue('getDocmanItemFactory', $dif);
+        
+        $em = new MockEventManager();
+        $em->expectOnce('processEvent', array('send_notifications', array()));
+        $utils->setReturnValue('getEventManager', $em);
+        
         $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
         $item = new MockDocman_Item();
         $webDAVDocmanDocument->setReturnValue('getItem', $item);
-        $dpm->expectOnce('userCanWrite');
-        $dif->expectOnce('delete');
+        $dif->expectOnce('deleteSubTree');
 
         $this->assertNoErrors();
         $webDAVDocmanDocument->delete();

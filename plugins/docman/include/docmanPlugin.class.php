@@ -737,7 +737,7 @@ class DocmanPlugin extends Plugin {
         return $this->getController('Docman_WikiController', $request);
     }
 
-    protected function getHTTPController($request) {
+    protected function getHTTPController($request=null) {
         if ($request == null) {
             $request = HTTPRequest::instance();
         }

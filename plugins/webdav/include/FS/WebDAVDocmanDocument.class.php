@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../WebDAV_Response.class.php';
+
 /**
  * This class Represents Docman documents in WebDAV
  *
@@ -179,11 +181,15 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      * @return void
      */
     function delete() {
-        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            $item = $this->getItem();
-            $itemFactory = $this->getUtils()->getDocmanItemFactory();
-            $itemFactory->delete($item);
+        if ($this->getUtils()->isWriteEnabled()) {
+            try {
+                $GLOBALS['Response'] = new WebDAV_Response();
+                $itemFactory = $this->getUtils()->getDocmanItemFactory();
+                $itemFactory->deleteSubTree($this->getItem(), $this->getUser(), false);
+                $this->getUtils()->getEventManager()->processEvent('send_notifications', array());
+            } catch (Exception $e) {
+                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'error_subitems_not_deleted_no_w'));
+            }
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }

@@ -199,6 +199,15 @@ class WebDAVUtils {
 
     }
 
+    /**
+     * Returns event manager instance
+     * 
+     * @return EventManager
+     */
+    function getEventManager() {
+        return EventManager::instance();
+    }
+
     function getIncomingFileSize($name) {
         return PHP_BigFile::getSize($GLOBALS['ftp_incoming_dir'].'/'.$name);
     }

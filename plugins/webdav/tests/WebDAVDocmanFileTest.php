@@ -254,58 +254,6 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $webDAVDocmanFile->put($data);
     }
 
-    function testDeleteNoWriteEnabled() {
-        $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', false);
-        $webDAVDocmanFile->setReturnValue('getUtils', $utils);
-
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
-        $webDAVDocmanFile->delete();
-    }
-
-    function testDeleteNoPermissions() {
-        $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
-        $item = new MockDocman_Item();
-        $webDAVDocmanFile->setReturnValue('getItem', $item);
-        $utils = new MockWebDAVUtils();
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanWrite', false);
-        $dif = new MockDocman_ItemFactory();
-        $utils->setReturnValue('getDocmanItemFactory', $dif);
-        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVDocmanFile->setReturnValue('getUtils', $utils);
-
-        $dif->expectNever('delete');
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
-        $webDAVDocmanFile->delete();
-    }
-
-    function testDeleteSucceede() {
-        $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
-        $item = new MockDocman_Item();
-        $webDAVDocmanFile->setReturnValue('getItem', $item);
-        $utils = new MockWebDAVUtils();
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanWrite', true);
-        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
-        $utils->setReturnValue('isWriteEnabled', true);
-        $dif = new MockDocman_ItemFactory();
-        $utils->setReturnValue('getDocmanItemFactory', $dif);
-        $vf = new MockDocman_VersionFactory();
-        $v1 = new MockDocman_Version();
-        $v2 = new MockDocman_Version();
-        $vf->setReturnValue('getAllVersionForItem', array($v1, $v2));
-        $utils->setReturnValue('getVersionFactory', $vf);
-        $webDAVDocmanFile->setReturnValue('getUtils', $utils);
-
-        $vf->expectCallCount('deleteSpecificVersion', 2);
-        $dif->expectOnce('delete');
-        $this->assertNoErrors();
-        $webDAVDocmanFile->delete();
-    }
-
     function testSetNameFile() {
         $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
         $item = new Docman_File();

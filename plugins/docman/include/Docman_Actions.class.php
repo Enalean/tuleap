@@ -1196,26 +1196,12 @@ class Docman_Actions extends Actions {
 
         $itemFactory = new Docman_ItemFactory($_sGroupId);
         $parentItem = $itemFactory->getItemFromDb($_sId);
-
-        // Cannot delete root.
-        if($parentItem && !$itemFactory->isRoot($parentItem)) {
-            // Cannot delete one folder if at least on of the document inside
-            // cannot be deleted
-            $dPm =& Docman_PermissionsManager::instance($_sGroupId);
-            $subItemsWritable = $dPm->currentUserCanWriteSubItems($parentItem->getId());
-            if($subItemsWritable) {
-                $item =& $itemFactory->getItemSubTree($parentItem, $user, false, true);
-                if ($item) {
-                    $deletor =& new Docman_ActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
-                    if ($item->accept($deletor, array('user'  => &$user, 
-                                                    'parent'  => $itemFactory->getItemFromDb($item->getParentId()),
-                                                    'cascadeWikiPageDeletion' => $cascade))) {
-                        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
-                    }
-                }
-            } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_no_w'));
+        try {
+            if ($itemFactory->deleteSubTree($parentItem, $user, $cascade)) {
+                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_deleted'));
             }
+        } catch (Exception $e) {
+            $this->_controler->feedback->log('error', $e->getMessage());
         }
         $this->event_manager->processEvent('send_notifications', array());
     }
@@ -1248,7 +1234,7 @@ class Docman_Actions extends Actions {
                     }
                     if ($version !== false) {
                         $user    = $this->_controler->getUser();
-                        $deletor = $this->_getActionsDeleteVisitor($this->_getFileStorage(), $this->_controler);
+                        $deletor = $this->_getActionsDeleteVisitor();
                         if ($item->accept($deletor, array('user' => $user, 'version' => $version))) {
                             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_item_version_deleted', array($version->getNumber(), $version->getLabel())));
                         }
@@ -1267,12 +1253,11 @@ class Docman_Actions extends Actions {
 
     /**
      * Wrapper for Docman_ActionsDeleteVisitor
-     * @param Docman_FileStorage $fs
-     * @param Docman_Controller  $ctrl
+     *
      * @return Docman_ActionsDeleteVisitor
      */
-    function _getActionsDeleteVisitor($fs, $ctrl) {
-        return new Docman_ActionsDeleteVisitor($fs, $ctrl);
+    function _getActionsDeleteVisitor() {
+        return new Docman_ActionsDeleteVisitor();
     }
 
     function admin_change_view() {
