@@ -28,9 +28,16 @@ require_once('Docman_ItemFactory.class.php');
 require_once('Docman_NotificationsManager.class.php');
 
 class DocmanPlugin extends Plugin {
-	
-	function DocmanPlugin($id) {
-		$this->Plugin($id);
+    /**
+     * Store docman root items indexed by groupId
+     * 
+     * @var array;
+     */
+    private $rootItems = array();
+
+    function __construct($id) {
+        parent::__construct($id);
+
         $this->_addHook('cssfile',                           'cssFile',                           false);
         $this->_addHook('javascript_file',                   'jsFile',                            false);
         $this->_addHook('logs_daily',                        'logsDaily',                         false);
@@ -60,7 +67,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('project_export',                    'project_export',                    false);
         $this->_addHook('SystemEvent_PROJECT_RENAME',        'renameProject',                     false);
         $this->_addHook('file_exists_in_data_dir',           'file_exists_in_data_dir',           false);
-        $this->_addHook('webdav_root_for_service',           'getRootItemForProject',             false);
+        $this->_addHook('webdav_root_for_service',           'webdav_root_for_service',           false);
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
         $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
@@ -452,19 +459,20 @@ class DocmanPlugin extends Plugin {
      *
      * @param Array $params
      */
-    function getRootItemForProject($params) {
-        if ($params['service'] == 'docman') {
+    function webdav_root_for_service($params) {
+        $groupId = $params['project']->getId();
+        if (!isset($this->rootItems[$groupId])) {
             // First, need to instanciate controller to register docman event listeners (actions logging, notification, etc)
             require_once('Docman_Controller.class.php');
-            $request   = new Codendi_Request(array('group_id' => $params['project']->getId()));
+            $request   = new Codendi_Request(array('group_id' => $groupId));
             $controler = new Docman_Controller($this, $this->getPluginPath(), $this->getThemePath(), $request);
             
             // Then return root object
             require_once('Docman_ItemFactory.class.php');
             $docmanItemFactory = new Docman_ItemFactory();
-            $root = $docmanItemFactory->getRoot($params['project']->getId());
-            $params['root']= $root;
+            $this->rootItems[$groupId] = $docmanItemFactory->getRoot($groupId);
         }
+        $params['roots']['docman'] = $this->rootItems[$groupId];
     }
 
     /**
