@@ -31,9 +31,16 @@ class DocmanPlugin extends Plugin {
     /**
      * Store docman root items indexed by groupId
      * 
-     * @var array;
+     * @var Array;
      */
     private $rootItems = array();
+
+    /**
+     * Store controller instances
+     * 
+     * @var Array
+     */
+    private $controller = array();
 
     function __construct($id) {
         parent::__construct($id);
@@ -164,8 +171,7 @@ class DocmanPlugin extends Plugin {
         if (!$params['allowed']) {
             if (!$this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
-                    require_once('Docman_HTTPController.class.php');
-                    $docman =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
+                    $docman = $this->getHTTPController();
                     switch($params['permission_type']) {
                         case 'PLUGIN_DOCMAN_READ':
                         case 'PLUGIN_DOCMAN_WRITE':
@@ -210,8 +216,7 @@ class DocmanPlugin extends Plugin {
     }
 
     function logsDaily($params) {
-        require_once('Docman_HTTPController.class.php');
-        $controler =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
+        $controler = $this->getHTTPController();
         $controler->logsDaily($params);
     }
     
@@ -233,8 +238,7 @@ class DocmanPlugin extends Plugin {
         }
     }
     function installNewDocman($params) {
-        require_once('Docman_HTTPController.class.php');
-        $controler =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
+        $controler = $this->getHTTPController();
         $controler->installDocman($params['ugroupsMapping'], $params['group_id']);
     }
     function service_is_used($params) {
@@ -295,26 +299,17 @@ class DocmanPlugin extends Plugin {
      * Hook: called by daily codendi script.
      */
     function codendiDaily() {
-        require_once('Docman_HTTPController.class.php');
-        $controler =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
+        $controler = $this->getHTTPController();
         $controler->notifyFuturObsoleteDocuments();
     }
 
     function process() {
-        require_once('Docman_HTTPController.class.php');
-        $controler =& new Docman_HTTPController($this, $this->getPluginPath(), $this->getThemePath());
+        $controler = $this->getHTTPController();
         $controler->process();
     }
     
-    protected $soapControler;
-    public function processSOAP(&$request) {
-        require_once('Docman_SOAPController.class.php');
-        if ($this->soapControler) {
-            $this->soapControler->setRequest($request);
-        } else {
-            $this->soapControler = new Docman_SOAPController($this, $this->getPluginPath(), $this->getThemePath(), $request);
-        }
-        return $this->soapControler->process();
+    public function processSOAP($request) {
+        return $this->getSOAPController($request)->process();
     }
      
     function wiki_page_updated($params) {
@@ -325,64 +320,51 @@ class DocmanPlugin extends Plugin {
                                                 'group_id'  => $params['group_id'],
                                                 'user'      => $params['user'],
                                                 'version'   => $params['version']));
-        $this->_getWikiController($request)->process(); 
+        $this->getWikiController($request)->process(); 
     }
 
     function wiki_before_content($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'wiki_before_content';
         $request = new Docman_WikiRequest($params);
-        $this->_getWikiController($request)->process(); 
+        $this->getWikiController($request)->process(); 
     }
 
     function isWikiPageReferenced($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'check_whether_wiki_page_is_referenced';
         $request = new Docman_WikiRequest($params);
-        $this->_getWikiController($request)->process(); 
+        $this->getWikiController($request)->process(); 
     }
 
     function isWikiPageEditable($params) {
         require_once('Docman_WikiRequest.class.php');
         $request = new Docman_WikiRequest($params);
-        $this->_getWikiController($request)->process();
+        $this->getWikiController($request)->process();
     }
 
     function userCanAccessWikiDocument($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'check_whether_user_can_access';
         $request = new Docman_WikiRequest($params);
-        $this->_getWikiController($request)->process(); 
+        $this->getWikiController($request)->process(); 
     }
 
     function getPermsLabelForWiki($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'getPermsLabelForWiki';
         $request = new Docman_WikiRequest($params);
-        $this->_getWikiController($request)->process(); 
+        $this->getWikiController($request)->process(); 
     }
-    
-    protected $_wiki_controller;
-    protected function _getWikiController($request) {
-        if (!$this->_wiki_controller) {
-            require_once('Docman_WikiController.class.php');
-            $this->_wiki_controller = new Docman_WikiController($this, $this->getPluginPath(), $this->getThemePath(), $request);
-            
-        } else {
-            $this->_wiki_controller->setRequest($request);
-        }
-        return $this->_wiki_controller;
-    }
-    
+
     function ajax_reference_tooltip($params) {
         if ($params['reference']->getServiceShortName() == 'docman') {
-            require_once('Docman_CoreController.class.php');
             $request = new Codendi_Request(array(
                 'id'       => $params['val'],
                 'group_id' => $params['group_id'],
                 'action'   => 'ajax_reference_tooltip'
             ));
-            $controler =& new Docman_CoreController($this, $this->getPluginPath(), $this->getThemePath(), $request);
+            $controler = $this->getCoreController($request);
             $controler->process();
         }
     }
@@ -463,12 +445,10 @@ class DocmanPlugin extends Plugin {
         $groupId = $params['project']->getId();
         if (!isset($this->rootItems[$groupId])) {
             // First, need to instanciate controller to register docman event listeners (actions logging, notification, etc)
-            require_once('Docman_Controller.class.php');
-            $request   = new Codendi_Request(array('group_id' => $groupId));
-            $controler = new Docman_Controller($this, $this->getPluginPath(), $this->getThemePath(), $request);
+            $this->getCoreController(new Codendi_Request(array('group_id' => $groupId)));
             
             // Then return root object
-            require_once('Docman_ItemFactory.class.php');
+            include_once 'Docman_ItemFactory.class.php';
             $docmanItemFactory = new Docman_ItemFactory();
             $this->rootItems[$groupId] = $docmanItemFactory->getRoot($groupId);
         }
@@ -753,6 +733,34 @@ class DocmanPlugin extends Plugin {
         echo "<p><h2>".$GLOBALS['Language']->getText('plugin_docman', 'permission_requests')."</h2>".$GLOBALS['Language']->getText('plugin_docman', 'permission_requests_information')."</p>";
     }
 
+    protected function getWikiController($request) {
+        return $this->getController('Docman_WikiController', $request);
+    }
+
+    protected function getHTTPController($request) {
+        if ($request == null) {
+            $request = HTTPRequest::instance();
+        }
+        return $this->getController('Docman_HTTPController', $request);
+    }
+    
+    protected function getCoreController($request) {
+        return $this->getController('Docman_CoreController', $request);
+    }
+    
+    protected function getSOAPController($request) {
+        return $this->getController('Docman_SOAPController', $request);
+    }
+
+    protected function getController($controller, $request) {
+        if (!isset($this->controller[$controller])) {
+            include_once $controller.'.class.php';
+            $this->controller[$controller] = new $controller($this, $this->getPluginPath(), $this->getThemePath(), $request);
+        } else {
+            $this->controller[$controller]->setRequest($request);
+        }
+        return $this->controller[$controller];
+    }
 }
 
 ?>
