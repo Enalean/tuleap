@@ -44,7 +44,11 @@
       {rdelim}
     </script>
     <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
+    {if $googlejs}
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    {else}
     <script type="text/javascript" src="js/ext/jquery-1.4.2.min.js"></script>
+    {/if}
     <script type="text/javascript" src="js/ext/jquery.qtip.min.js"></script>
     {if file_exists('js/tooltips.min.js')}
     <script type="text/javascript" src="js/tooltips.min.js"></script>

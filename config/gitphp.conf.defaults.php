@@ -133,6 +133,21 @@ $gitphp_conf['stylesheet'] = 'gitphpskin.css';
  */
 $gitphp_conf['javascript'] = true;
 
+/*
+ * googlejs
+ * Toggles whether to use the Google Libraries API to
+ * load javascript libraries, which takes advantage of the
+ * speed and caching of Google's servers and content
+ * delivery network.
+ * http://code.google.com/apis/libraries/
+ * The libraries are served from Google's servers, which
+ * means your users must have an internet connection,
+ * so this may not be appropriate for closed intranets.
+ * By enabling this you agree to Google's terms for their
+ * library API.
+ */
+$gitphp_conf['googlejs'] = false;
+
 
 
 /*********************************************************
