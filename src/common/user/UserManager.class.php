@@ -164,28 +164,23 @@ class UserManager {
     }
 
 /**
- * Returns filter according to the search pattern 
- *  * 
+ * Returns an array of user ids from that match the given string
+ * 
  * @param String $search 
  * 
- * @return String
+ * @return Array
  */
-function getUserFilter($search) {
-    $userArray = explode(',' , $search);
-    $users = array();
-    foreach ($userArray as $user) {
-        $user = $this->findUser($user);
-        if ($user) {
-            $users[] = $user->getId();
+    function getUserIdsBunch($search) {
+        $userArray = explode(',' , $search);
+        $users = array();
+        foreach ($userArray as $user) {
+            $user = $this->findUser($user);
+            if ($user) {
+                $users[] = $user->getId();
+            }
         }
+        return $users;
     }
-    if (count($users) > 0) {
-        $filter = ' AND user.user_id IN ('.implode (',', $users).')';
-    } else {
-        $filter = ' AND user.user_name LIKE "%'.db_es($search).'%"'; 
-    }
-    return $filter;
-}
 
     /**
      * Returns the user that have the given email address.

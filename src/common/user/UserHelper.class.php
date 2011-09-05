@@ -117,7 +117,28 @@ class UserHelper {
         }
         return $name;
     }
-    
+
+    /**
+     * getUserNamePatternSQLQuery
+     * 
+     * Get SQL statement for filtering according to users
+     *
+     * @param $by String
+     *
+     * @return String
+     */
+    function getUserNamePatternSQLQuery($by) {
+        $filter = '';
+        $um = $this->_getUserManager();
+        $usersIds = $um->getUserIdsBunch($by);
+        if (count($usersIds) > 0) {
+            $filter .= ' AND user.user_id IN ('.implode (',', $usersIds).')';
+        } else {
+            $filter .= ' AND user.user_name LIKE "%'.db_es($by).'%"';
+        }
+        return $filter;
+    }
+
     /**
      * getDisplayNameSQLOrder
      * 

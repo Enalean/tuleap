@@ -137,8 +137,8 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
 function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $allSubEvents = null) {
     $filter = '';
     if (!empty($by)) {
-        $um = UserManager::instance();
-        $filter .= $um->getUserFilter($by);
+        $uh = UserHelper::instance();
+        $filter .= $uh->getUserNamePatternSQLQuery($by);
     }
     if(!empty($startDate)) {
         list($timestamp,) = util_date_to_unixtime($startDate." 00:00:00");
