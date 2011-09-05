@@ -76,8 +76,9 @@ done
 set -x
 
 build_host=root@$lxc_ip
-sshcmd="ssh -n -o StrictHostKeyChecking=no"
-remotecmd="$sshcmd $build_host"
+sshcmd="ssh -o StrictHostKeyChecking=no"
+# -n to close standard input
+remotecmd="$sshcmd -n $build_host"
 
 on_create="false"
 
