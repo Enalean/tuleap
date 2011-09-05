@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+
 <!--
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -17,6 +18,8 @@
  * limitations under the License.
  */
 -->
+
+
 <!--
 * ====================================================================
 * wsdl-viewer.xsl
@@ -29,6 +32,8 @@
 * 		http://www-106.ibm.com/developerworks/library/ws-trans/index.html
 * ====================================================================
 -->
+
+
 <!--
 * ====================================================================
 * Description:
@@ -103,6 +108,8 @@
 * 		? Forum, Wiki
 * ====================================================================
 -->
+
+
 <!--
 * ====================================================================
 * History:
@@ -139,9 +146,21 @@
 * 	2008-08-20 - 3.1.02 - Woden-214: Anti-recursion bypassed in xsd:choice element
 * ====================================================================
 -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/xhtml" xmlns:ws="http://schemas.xmlsoap.org/wsdl/" xmlns:ws2="http://www.w3.org/ns/wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:local="http://tomi.vanek.sk/xml/wsdl-viewer" version="1.0" exclude-result-prefixes="ws ws2 xsd soap local">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ws="http://schemas.xmlsoap.org/wsdl/"
+                xmlns:ws2="http://www.w3.org/ns/wsdl"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                xmlns:local="http://tomi.vanek.sk/xml/wsdl-viewer"
+                version="1.0"
+                exclude-result-prefixes="ws ws2 xsd soap local">
 
-   <xsl:output method="xml" version="1.0" encoding="utf-8" indent="no" omit-xml-declaration="no" media-type="text/html" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"/>
+   <xsl:output method="xml" version="1.0" encoding="utf-8" indent="no"
+               omit-xml-declaration="no"
+               media-type="text/html"
+               doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+               doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"/>
 
    <xsl:strip-space elements="*"/>
 
@@ -176,12 +195,17 @@
    <xsl:variable name="OPERATIONS-PREFIX">op.</xsl:variable>
    <xsl:variable name="PORT-PREFIX">port.</xsl:variable>
    <xsl:variable name="IFACE-PREFIX">iface.</xsl:variable>
-   <xsl:variable name="global.wsdl-name" select="/*/*[(local-name() = 'import' or local-name() = 'include') and @location][1]/@location"/>
+   <xsl:variable name="global.wsdl-name"
+                 select="/*/*[(local-name() = 'import' or local-name() = 'include') and @location][1]/@location"/>
    <xsl:variable name="consolidated-wsdl" select="/* | document($global.wsdl-name)/*"/>
-   <xsl:variable name="global.xsd-name" select="($consolidated-wsdl/*[local-name() = 'types']//xsd:import[@schemaLocation] | $consolidated-wsdl/*[local-name() = 'types']//xsd:include[@schemaLocation])[1]/@schemaLocation"/>
-   <xsl:variable name="consolidated-xsd" select="(document($global.xsd-name)/xsd:schema/xsd:*|/*/*[local-name() = 'types']/xsd:schema/xsd:*)[local-name() = 'complexType' or local-name() = 'element' or local-name() = 'simpleType']"/>
-   <xsl:variable name="global.service-name" select="concat($consolidated-wsdl/ws:service/@name, $consolidated-wsdl/ws2:service/@name)"/>
-   <xsl:variable name="global.binding-name" select="concat($consolidated-wsdl/ws:binding/@name, $consolidated-wsdl/ws2:binding/@name)"/>
+   <xsl:variable name="global.xsd-name"
+                 select="($consolidated-wsdl/*[local-name() = 'types']//xsd:import[@schemaLocation] | $consolidated-wsdl/*[local-name() = 'types']//xsd:include[@schemaLocation])[1]/@schemaLocation"/>
+   <xsl:variable name="consolidated-xsd"
+                 select="(document($global.xsd-name)/xsd:schema/xsd:*|/*/*[local-name() = 'types']/xsd:schema/xsd:*)[local-name() = 'complexType' or local-name() = 'element' or local-name() = 'simpleType']"/>
+   <xsl:variable name="global.service-name"
+                 select="concat($consolidated-wsdl/ws:service/@name, $consolidated-wsdl/ws2:service/@name)"/>
+   <xsl:variable name="global.binding-name"
+                 select="concat($consolidated-wsdl/ws:binding/@name, $consolidated-wsdl/ws2:binding/@name)"/>
    <xsl:variable name="html-title">
 	     <xsl:apply-templates select="/*" mode="html-title.render"/>
    </xsl:variable>
@@ -777,7 +801,7 @@ h3 {
    </xsl:template>
    <xsl:template name="render.source-code-link">
 	     <xsl:if test="$ENABLE-SRC-CODE-PARAGRAPH and $ENABLE-LINK">
-		       <a class="local" href="https://partners.xrce.xerox.com/svn/viewvc.php/support/Codendi_4.0/src/www/soap/%7Bconcat(%27#%27,%20$SRC-PREFIX,%20generate-id(.))}">
+		       <a class="local" href="{concat('#', $SRC-PREFIX, generate-id(.))}">
             <xsl:value-of select="$SOURCE-CODE-TEXT"/>
          </a>
 	     </xsl:if>
@@ -800,7 +824,7 @@ h3 {
       <xsl:text>
 </xsl:text>
       <xsl:text>This document was generated by </xsl:text>
-      <a href="https://partners.xrce.xerox.com/svn/viewvc.php/support/Codendi_4.0/src/www/soap/%7Bsystem-property(%27xsl:vendor-url%27)%7D">
+      <a href="{system-property('xsl:vendor-url')}">
          <xsl:value-of select="system-property('xsl:vendor')"/>
       </a>
       <xsl:text> XSLT engine.
@@ -906,7 +930,8 @@ h3 {
          </div>
 	     </xsl:if>
 
-	     <xsl:variable name="base-iface" select="$consolidated-wsdl/ws2:interface[@name = $base-iface-name]"/>
+	     <xsl:variable name="base-iface"
+                    select="$consolidated-wsdl/ws2:interface[@name = $base-iface-name]"/>
 
 	     <div class="label">Operations:</div>
 	     <div class="value">
@@ -925,7 +950,8 @@ h3 {
 	     </xsl:variable>
 	     <xsl:variable name="binding" select="$consolidated-wsdl/ws:binding[@name = $binding-name]"/>
 
-	     <xsl:variable name="binding-uri" select="namespace-uri( $binding/*[local-name() = 'binding'] )"/>
+	     <xsl:variable name="binding-uri"
+                    select="namespace-uri( $binding/*[local-name() = 'binding'] )"/>
 	     <xsl:variable name="protocol">
 		       <xsl:choose>
 			         <xsl:when test="starts-with($binding-uri, 'http://schemas.xmlsoap.org/wsdl/soap')">SOAP</xsl:when>
@@ -939,7 +965,8 @@ h3 {
 		       <xsl:apply-templates select="$binding/@type" mode="qname.normalized"/>
 	     </xsl:variable>
 
-	     <xsl:variable name="port-type" select="$consolidated-wsdl/ws:portType[@name = $port-type-name]"/>
+	     <xsl:variable name="port-type"
+                    select="$consolidated-wsdl/ws:portType[@name = $port-type-name]"/>
 
 
 	     <h3>Port <b>
@@ -975,7 +1002,8 @@ h3 {
          <xsl:text>
 </xsl:text>
 		       <ol style="line-height: 180%;">
-			         <xsl:apply-templates select="$consolidated-wsdl/ws:portType[@name = $port-type-name]/ws:operation" mode="service">
+			         <xsl:apply-templates select="$consolidated-wsdl/ws:portType[@name = $port-type-name]/ws:operation"
+                                 mode="service">
 				           <xsl:sort select="@name"/>
 			         </xsl:apply-templates>
 		       </ol>
@@ -990,7 +1018,7 @@ h3 {
          </big>
          <xsl:if test="$ENABLE-LINK">
 		          <xsl:if test="$ENABLE-OPERATIONS-PARAGRAPH">
-               <a class="local" href="https://partners.xrce.xerox.com/svn/viewvc.php/support/Codendi_4.0/src/www/soap/%7Bconcat(%27#%27,%20$OPERATIONS-PREFIX,%20generate-id(.))}">Detail</a>
+               <a class="local" href="{concat('#', $OPERATIONS-PREFIX, generate-id(.))}">Detail</a>
             </xsl:if> 
             <xsl:call-template name="render.source-code-link"/>
          </xsl:if>
@@ -1008,7 +1036,8 @@ h3 {
 
 
 	     <xsl:if test="$real-binding/@transport|$real-binding/*[local-name() = 'protocol']">
-		       <xsl:variable name="protocol" select="concat($real-binding/@transport, $real-binding/*[local-name() = 'protocol'])"/>
+		       <xsl:variable name="protocol"
+                       select="concat($real-binding/@transport, $real-binding/*[local-name() = 'protocol'])"/>
 		       <div class="label">Transport protocol:</div>
 		       <div class="value">
 			         <xsl:choose>
@@ -1063,7 +1092,8 @@ h3 {
 	     </ol>
    </xsl:template>
    <xsl:template match="ws2:operation" mode="operations">
-	     <xsl:variable name="binding-info" select="$consolidated-wsdl/ws2:binding[@interface = current()/../@name or substring-after(@interface, ':') = current()/../@name]/ws2:operation[@ref = current()/@name or substring-after(@ref, ':') = current()/@name]"/>
+	     <xsl:variable name="binding-info"
+                    select="$consolidated-wsdl/ws2:binding[@interface = current()/../@name or substring-after(@interface, ':') = current()/../@name]/ws2:operation[@ref = current()/@name or substring-after(@ref, ':') = current()/@name]"/>
       <li>
          <xsl:if test="position() != last()">
             <xsl:attribute name="class">operation</xsl:attribute>
@@ -1085,7 +1115,8 @@ h3 {
 	        <xsl:if test="$ENABLE-STYLEOPTYPEPATH">
 		<!-- TODO: add the operation attributes - according the WSDL 2.0 spec. -->
 	</xsl:if>
-	        <xsl:apply-templates select="ws2:input|ws2:output|../ws2:fault[@name = ws2:infault/@ref or @name = ws2:outfault/@ref]" mode="operations.message">
+	        <xsl:apply-templates select="ws2:input|ws2:output|../ws2:fault[@name = ws2:infault/@ref or @name = ws2:outfault/@ref]"
+                              mode="operations.message">
 		          <xsl:with-param name="binding-data" select="$binding-info"/>
 	        </xsl:apply-templates>
       </li>
@@ -1108,7 +1139,8 @@ h3 {
 
 			         <xsl:call-template name="render.source-code-link"/>
 
-			         <xsl:variable name="type-tree" select="$consolidated-xsd[@name = $type-name and not(xsd:simpleType)][1]"/>
+			         <xsl:variable name="type-tree"
+                          select="$consolidated-xsd[@name = $type-name and not(xsd:simpleType)][1]"/>
 			         <xsl:apply-templates select="$type-tree" mode="operations.message.part"/>
 		       </div>
 	     </xsl:if>
@@ -1139,7 +1171,8 @@ h3 {
       </div>
    </xsl:template>
    <xsl:template match="ws:operation" mode="operations">
-	     <xsl:variable name="binding-info" select="$consolidated-wsdl/ws:binding[@type = current()/../@name or substring-after(@type, ':') = current()/../@name]/ws:operation[@name = current()/@name]"/>
+	     <xsl:variable name="binding-info"
+                    select="$consolidated-wsdl/ws:binding[@type = current()/../@name or substring-after(@type, ':') = current()/../@name]/ws:operation[@name = current()/@name]"/>
       <li>
          <xsl:if test="position() != last()">
             <xsl:attribute name="class">operation</xsl:attribute>
@@ -1230,7 +1263,8 @@ h3 {
 		       <xsl:choose>
 			         <xsl:when test="$msg">
 				           <xsl:apply-templates select="$msg" mode="operations.message">
-					             <xsl:with-param name="binding-data" select="$binding-data/ws:*[local-name(.) = local-name(current())]/*"/>
+					             <xsl:with-param name="binding-data"
+                                  select="$binding-data/ws:*[local-name(.) = local-name(current())]/*"/>
 				           </xsl:apply-templates>
 			         </xsl:when>
 			         <xsl:otherwise>
@@ -1266,7 +1300,7 @@ h3 {
 	     <xsl:apply-templates select="ws:part" mode="operations.message"/>
    </xsl:template>
    <xsl:template match="ws:part" mode="operations.message">
-	     <div class="value box" style="margin-bottom: 3px;">
+	     <div class="value box" style="margin-bottom: 3px">
 		       <xsl:choose>
 			         <xsl:when test="string-length(@name) &gt; 0">
 				           <b>
@@ -1301,7 +1335,8 @@ h3 {
 					             <xsl:with-param name="type-local-name" select="$type-name"/>
 				           </xsl:call-template>
 
-				           <xsl:variable name="part-type" select="$consolidated-xsd[@name = $type-name and not(xsd:simpleType)][1]"/>
+				           <xsl:variable name="part-type"
+                             select="$consolidated-xsd[@name = $type-name and not(xsd:simpleType)][1]"/>
 				           <xsl:apply-templates select="$part-type" mode="operations.message.part"/>
 
 			         </xsl:when>
@@ -1331,7 +1366,8 @@ h3 {
 	     <xsl:param name="recursion.label"/>
 	     <xsl:param name="recursion.count">1</xsl:param>
 	     <xsl:variable name="has.recursion" select="contains($anti.recursion, $recursion.label)"/>
-	     <xsl:variable name="anti.recursion.fragment" select="substring-after($anti.recursion, $recursion.label)"/>
+	     <xsl:variable name="anti.recursion.fragment"
+                    select="substring-after($anti.recursion, $recursion.label)"/>
 	     <xsl:choose>
 		       <xsl:when test="$recursion.count &gt; $ANTIRECURSION-DEPTH"/>
 
@@ -1366,7 +1402,7 @@ h3 {
 			         </xsl:apply-templates>
 		       </xsl:when>
 		       <xsl:otherwise>
-			         <small style="color: blue;">
+			         <small style="color:blue">
 				           <xsl:value-of select="$RECURSIVE"/>
 			         </small>
 		       </xsl:otherwise>
@@ -1380,7 +1416,8 @@ h3 {
 		       <xsl:with-param name="anti.recursion" select="$anti.recursion"/>
 	     </xsl:apply-templates>
    </xsl:template>
-   <xsl:template match="xsd:complexType[descendant::xsd:attribute[ not(@*[local-name() = 'arrayType']) ]]" mode="operations.message.part">
+   <xsl:template match="xsd:complexType[descendant::xsd:attribute[ not(@*[local-name() = 'arrayType']) ]]"
+                 mode="operations.message.part">
 	     <xsl:param name="anti.recursion"/>
 	     <xsl:variable name="recursion.label" select="concat('[', @name, ']')"/>
 	     <xsl:variable name="recursion.test">
@@ -1399,7 +1436,7 @@ h3 {
 			         </ul>
 		       </xsl:when>
 		       <xsl:otherwise>
-			         <small style="color: blue;">
+			         <small style="color:blue">
 				           <xsl:value-of select="$RECURSIVE"/>
 			         </small>
 		       </xsl:otherwise>
@@ -1506,7 +1543,8 @@ h3 {
 			         <xsl:variable name="type-name">
                <xsl:call-template name="xsd.element-type"/>
             </xsl:variable>
-			         <xsl:variable name="elem-type" select="$consolidated-xsd[generate-id() != generate-id(current()) and $type-name and @name=$type-name and contains(local-name(), 'Type')][1]"/>
+			         <xsl:variable name="elem-type"
+                          select="$consolidated-xsd[generate-id() != generate-id(current()) and $type-name and @name=$type-name and contains(local-name(), 'Type')][1]"/>
 	
 			         <xsl:if test="$type-name != @name">
 				           <xsl:apply-templates select="$elem-type" mode="operations.message.part">
@@ -1525,7 +1563,7 @@ h3 {
 			         </xsl:if>
 		       </xsl:when>
 		       <xsl:otherwise>
-			         <small style="color: blue;">
+			         <small style="color:blue">
 				           <xsl:value-of select="$RECURSIVE"/>
 			         </small>
 		       </xsl:otherwise>
@@ -1563,15 +1601,18 @@ h3 {
 			         <xsl:with-param name="type-local-name" select="$type-name"/>
 		       </xsl:call-template>
 
-		       <xsl:variable name="elem-type" select="$consolidated-xsd[@name = $type-name and contains(local-name(), 'Type')][1]"/>
+		       <xsl:variable name="elem-type"
+                       select="$consolidated-xsd[@name = $type-name and contains(local-name(), 'Type')][1]"/>
 		       <xsl:apply-templates select="$elem-type | *" mode="operations.message.part">
 			         <xsl:with-param name="anti.recursion" select="$anti.recursion"/>
 		       </xsl:apply-templates>
 	     </li>
    </xsl:template>
-   <xsl:template match="xsd:attribute[ @*[local-name() = 'arrayType'] ]" mode="operations.message.part">
+   <xsl:template match="xsd:attribute[ @*[local-name() = 'arrayType'] ]"
+                 mode="operations.message.part">
 	     <xsl:param name="anti.recursion"/>
-	     <xsl:variable name="array-local-name" select="substring-after(@*[local-name() = 'arrayType'], ':')"/>
+	     <xsl:variable name="array-local-name"
+                    select="substring-after(@*[local-name() = 'arrayType'], ':')"/>
 	     <xsl:variable name="type-local-name" select="substring-before($array-local-name, '[')"/>
 	     <xsl:variable name="array-type" select="$consolidated-xsd[@name = $type-local-name][1]"/>
 
@@ -1590,7 +1631,7 @@ h3 {
 			         </xsl:apply-templates>
 		       </xsl:when>
 		       <xsl:otherwise>
-			         <small style="color: blue;">
+			         <small style="color:blue">
 				           <xsl:value-of select="$RECURSIVE"/>
 			         </small>
 		       </xsl:otherwise>
@@ -1623,7 +1664,7 @@ h3 {
 	     <xsl:value-of select="$type-name"/>
    </xsl:template>
    <xsl:template match="xsd:documentation" mode="operations.message.part">
-	     <div style="color: green;">
+	     <div style="color:green">
          <xsl:value-of select="." disable-output-escaping="yes"/>
       </div>
    </xsl:template>
@@ -1674,9 +1715,10 @@ h3 {
 		       </xsl:variable>
 
 		       <xsl:if test="string-length($recursion.test) != 0">
-			         <small style="color: blue;">
+			         <small style="color:blue">
 				           <xsl:value-of select="$properties"/>
-				           <xsl:variable name="elem-type" select="$consolidated-xsd[@name = $type-local-name and (not(contains(local-name(current()), 'element')) or contains(local-name(), 'Type'))][1]"/>
+				           <xsl:variable name="elem-type"
+                             select="$consolidated-xsd[@name = $type-local-name and (not(contains(local-name(current()), 'element')) or contains(local-name(), 'Type'))][1]"/>
 				           <xsl:if test="string-length($type-local-name) &gt; 0">
 					             <xsl:call-template name="render-type.write-name">
 						               <xsl:with-param name="type-local-name" select="$type-local-name"/>
@@ -1716,7 +1758,8 @@ h3 {
       </big>
    </xsl:template>
    <xsl:template match="*" mode="render-type"/>
-   <xsl:template match="xsd:element | xsd:complexType | xsd:simpleType | xsd:complexContent" mode="render-type">
+   <xsl:template match="xsd:element | xsd:complexType | xsd:simpleType | xsd:complexContent"
+                 mode="render-type">
 	     <xsl:param name="anti.recursion"/>
 	     <xsl:apply-templates select="*" mode="render-type">
 		       <xsl:with-param name="anti.recursion" select="$anti.recursion"/>
@@ -1747,7 +1790,8 @@ h3 {
 		       <xsl:with-param name="anti.recursion" select="$anti.recursion"/>
 	     </xsl:apply-templates>
    </xsl:template>
-   <xsl:template match="xsd:simpleType/xsd:restriction/xsd:*[not(self::xsd:enumeration)]" mode="render-type">
+   <xsl:template match="xsd:simpleType/xsd:restriction/xsd:*[not(self::xsd:enumeration)]"
+                 mode="render-type">
 	     <xsl:text> </xsl:text>
 	     <xsl:value-of select="local-name()"/>
 	     <xsl:text>(</xsl:text>
@@ -1786,7 +1830,8 @@ h3 {
    </xsl:template>
    <xsl:template match="xsd:attribute[ @*[local-name() = 'arrayType'] ]" mode="render-type">
 	     <xsl:param name="anti.recursion"/>
-	     <xsl:variable name="array-local-name" select="substring-after(@*[local-name() = 'arrayType'], ':')"/>
+	     <xsl:variable name="array-local-name"
+                    select="substring-after(@*[local-name() = 'arrayType'], ':')"/>
 	     <xsl:variable name="type-local-name" select="substring-before($array-local-name, '[')"/>
 	     <xsl:variable name="array-type" select="$consolidated-xsd[@name = $type-local-name][1]"/>
 
@@ -1800,7 +1845,8 @@ h3 {
 	     </xsl:apply-templates>
    </xsl:template>
    <xsl:template match="xsd:enumeration" mode="render-type"/>
-   <xsl:template match="xsd:enumeration[not(preceding-sibling::xsd:enumeration)]" mode="render-type">
+   <xsl:template match="xsd:enumeration[not(preceding-sibling::xsd:enumeration)]"
+                 mode="render-type">
 	     <xsl:text> - enum { </xsl:text>
 	     <xsl:apply-templates select="self::* | following-sibling::xsd:enumeration" mode="render-type.enum"/>
 	     <xsl:text> }</xsl:text>
@@ -1834,7 +1880,7 @@ h3 {
 
 	     <xsl:choose>
 		       <xsl:when test="contains($src.import.stack, $recursion.label)">
-			         <h2 style="">
+			         <h2 style="red">
                <xsl:value-of select="concat('Cyclic include / import: ', $recursion.check)"/>
             </h2>
 		       </xsl:when>
@@ -1860,10 +1906,12 @@ h3 {
 				           <xsl:apply-templates select="document(string(.))" mode="src"/>
 			         </div>
 
-			         <xsl:apply-templates select="document(string(.))/*/*[local-name() = 'import'][@location]/@location" mode="src.import">
+			         <xsl:apply-templates select="document(string(.))/*/*[local-name() = 'import'][@location]/@location"
+                                 mode="src.import">
 				           <xsl:with-param name="src.import.stack" select="$recursion.check"/>
 			         </xsl:apply-templates>
-			         <xsl:apply-templates select="document(string(.))//xsd:import[@schemaLocation]/@schemaLocation" mode="src.import">
+			         <xsl:apply-templates select="document(string(.))//xsd:import[@schemaLocation]/@schemaLocation"
+                                 mode="src.import">
 				           <xsl:with-param name="src.import.stack" select="$recursion.check"/>
 			         </xsl:apply-templates>
 		       </xsl:otherwise>
@@ -1875,7 +1923,8 @@ h3 {
 			         <xsl:apply-templates select="." mode="src.link"/>
 			         <xsl:apply-templates select="." mode="src.start-tag"/>
 		       </a>
-		       <xsl:apply-templates select="*|comment()|processing-instruction()|text()[string-length(normalize-space(.)) &gt; 0]" mode="src"/>
+		       <xsl:apply-templates select="*|comment()|processing-instruction()|text()[string-length(normalize-space(.)) &gt; 0]"
+                              mode="src"/>
 		       <xsl:apply-templates select="." mode="src.end-tag"/>
 	     </div>
    </xsl:template>
@@ -1884,11 +1933,13 @@ h3 {
 		       <xsl:with-param name="src.elem.end-slash"> /</xsl:with-param>
 	     </xsl:call-template>
    </xsl:template>
-   <xsl:template match="*[*|comment()|processing-instruction()|text()[string-length(normalize-space(.)) &gt; 0]]" mode="src.start-tag">
+   <xsl:template match="*[*|comment()|processing-instruction()|text()[string-length(normalize-space(.)) &gt; 0]]"
+                 mode="src.start-tag">
 	     <xsl:call-template name="src.elem"/>
    </xsl:template>
    <xsl:template match="*" mode="src.end-tag"/>
-   <xsl:template match="*[*|comment()|processing-instruction()|text()[string-length(normalize-space(.)) &gt; 0]]" mode="src.end-tag">
+   <xsl:template match="*[*|comment()|processing-instruction()|text()[string-length(normalize-space(.)) &gt; 0]]"
+                 mode="src.end-tag">
 	     <xsl:call-template name="src.elem">
 		       <xsl:with-param name="src.elem.start-slash">/</xsl:with-param>
 	     </xsl:call-template>
@@ -1900,7 +1951,8 @@ h3 {
          </xsl:attribute>
       </xsl:if>
    </xsl:template>
-   <xsl:template match="*[local-name() = 'import' or local-name() = 'include'][@location or @schemaLocation]" mode="src.link">
+   <xsl:template match="*[local-name() = 'import' or local-name() = 'include'][@location or @schemaLocation]"
+                 mode="src.link">
       <xsl:if test="$ENABLE-LINK">
 	        <xsl:attribute name="href">
             <xsl:value-of select="concat('#', $SRC-FILE-PREFIX, generate-id(.))"/>
@@ -1912,37 +1964,47 @@ h3 {
 	     <xsl:variable name="iface-name">
 		       <xsl:apply-templates select="@interface" mode="qname.normalized"/>
 	     </xsl:variable>
-	     <xsl:apply-templates select="$consolidated-wsdl/ws2:interface[@name = $iface-name]" mode="src.link-attribute"/>
+	     <xsl:apply-templates select="$consolidated-wsdl/ws2:interface[@name = $iface-name]"
+                           mode="src.link-attribute"/>
    </xsl:template>
    <xsl:template match="ws2:endpoint" mode="src.link">
 	     <xsl:variable name="binding-name">
 		       <xsl:apply-templates select="@binding" mode="qname.normalized"/>
 	     </xsl:variable>
-	     <xsl:apply-templates select="$consolidated-wsdl/ws2:binding[@name = $binding-name]" mode="src.link-attribute"/>
+	     <xsl:apply-templates select="$consolidated-wsdl/ws2:binding[@name = $binding-name]"
+                           mode="src.link-attribute"/>
    </xsl:template>
    <xsl:template match="ws2:binding/ws2:operation" mode="src.link">
 	     <xsl:variable name="operation-name">
 		       <xsl:apply-templates select="@ref" mode="qname.normalized"/>
 	     </xsl:variable>
-	     <xsl:apply-templates select="$consolidated-wsdl/ws2:interface/ws2:operation[@name = $operation-name]" mode="src.link-attribute"/>
+	     <xsl:apply-templates select="$consolidated-wsdl/ws2:interface/ws2:operation[@name = $operation-name]"
+                           mode="src.link-attribute"/>
    </xsl:template>
-   <xsl:template match="ws2:binding/ws2:fault|ws2:interface/ws2:operation/ws2:infault|ws2:interface/ws2:operation/ws2:outfault" mode="src.link">
+   <xsl:template match="ws2:binding/ws2:fault|ws2:interface/ws2:operation/ws2:infault|ws2:interface/ws2:operation/ws2:outfault"
+                 mode="src.link">
 	     <xsl:variable name="operation-name">
 		       <xsl:apply-templates select="@ref" mode="qname.normalized"/>
 	     </xsl:variable>
-	     <xsl:apply-templates select="$consolidated-wsdl/ws2:interface/ws2:fault[@name = $operation-name]" mode="src.link-attribute"/>
+	     <xsl:apply-templates select="$consolidated-wsdl/ws2:interface/ws2:fault[@name = $operation-name]"
+                           mode="src.link-attribute"/>
    </xsl:template>
-   <xsl:template match="ws2:interface/ws2:operation/ws2:input|ws2:interface/ws2:operation/ws2:output|ws2:interface/ws2:fault" mode="src.link">
+   <xsl:template match="ws2:interface/ws2:operation/ws2:input|ws2:interface/ws2:operation/ws2:output|ws2:interface/ws2:fault"
+                 mode="src.link">
 	     <xsl:variable name="elem-name">
 		       <xsl:apply-templates select="@element" mode="qname.normalized"/>
 	     </xsl:variable>
 	     <xsl:apply-templates select="$consolidated-xsd[@name = $elem-name]" mode="src.link-attribute"/>
    </xsl:template>
-   <xsl:template match="ws:operation/ws:input[@message] | ws:operation/ws:output[@message] | ws:operation/ws:fault[@message] | soap:header[ancestor::ws:operation and @message]" mode="src.link">
-	     <xsl:apply-templates select="$consolidated-wsdl/ws:message[@name = substring-after( current()/@message, ':' )]" mode="src.link-attribute"/>
+   <xsl:template match="ws:operation/ws:input[@message] | ws:operation/ws:output[@message] | ws:operation/ws:fault[@message] | soap:header[ancestor::ws:operation and @message]"
+                 mode="src.link">
+	     <xsl:apply-templates select="$consolidated-wsdl/ws:message[@name = substring-after( current()/@message, ':' )]"
+                           mode="src.link-attribute"/>
    </xsl:template>
-   <xsl:template match="ws:operation/ws:input[@message] | ws:operation/ws:output[@message] | ws:operation/ws:fault[@message] | soap:header[ancestor::ws:operation and @message]" mode="src.link">
-	     <xsl:apply-templates select="$consolidated-wsdl/ws:message[@name = substring-after( current()/@message, ':' )]" mode="src.link-attribute"/>
+   <xsl:template match="ws:operation/ws:input[@message] | ws:operation/ws:output[@message] | ws:operation/ws:fault[@message] | soap:header[ancestor::ws:operation and @message]"
+                 mode="src.link">
+	     <xsl:apply-templates select="$consolidated-wsdl/ws:message[@name = substring-after( current()/@message, ':' )]"
+                           mode="src.link-attribute"/>
    </xsl:template>
    <xsl:template match="ws:message/ws:part[@element or @type]" mode="src.link">
 	     <xsl:variable name="elem-local-name" select="substring-after(@element, ':')"/>
@@ -1973,13 +2035,15 @@ h3 {
 	     <xsl:variable name="binding-name">
 		       <xsl:apply-templates select="@binding" mode="qname.normalized"/>
 	     </xsl:variable>
-	     <xsl:apply-templates select="$consolidated-wsdl/ws:binding[@name = $binding-name]" mode="src.link-attribute"/>
+	     <xsl:apply-templates select="$consolidated-wsdl/ws:binding[@name = $binding-name]"
+                           mode="src.link-attribute"/>
    </xsl:template>
    <xsl:template match="ws:operation[@name and parent::ws:binding/@type]" mode="src.link">
 	     <xsl:variable name="type-name">
 		       <xsl:apply-templates select="../@type" mode="qname.normalized"/>
 	     </xsl:variable>
-	     <xsl:apply-templates select="$consolidated-wsdl/ws:portType[@name = $type-name]/ws:operation[@name = current()/@name]" mode="src.link-attribute"/>
+	     <xsl:apply-templates select="$consolidated-wsdl/ws:portType[@name = $type-name]/ws:operation[@name = current()/@name]"
+                           mode="src.link-attribute"/>
    </xsl:template>
    <xsl:template match="xsd:element[@ref or @type]" mode="src.link">
 	     <xsl:variable name="ref-or-type">
@@ -2007,12 +2071,14 @@ h3 {
 	     </xsl:variable>
 
 	     <xsl:if test="$xsd-name">
-		       <xsl:variable name="msg" select="$consolidated-xsd[@name = $xsd-name and contains(local-name(), 'Type')][1]"/>
+		       <xsl:variable name="msg"
+                       select="$consolidated-xsd[@name = $xsd-name and contains(local-name(), 'Type')][1]"/>
 		       <xsl:apply-templates select="$msg" mode="src.link-attribute"/>
 	     </xsl:if>
    </xsl:template>
    <xsl:template match="xsd:attribute[contains(@ref, 'arrayType')]" mode="src.link">
-	     <xsl:variable name="att-array-type" select="substring-before(@*[local-name() = 'arrayType'], '[]')"/>
+	     <xsl:variable name="att-array-type"
+                    select="substring-before(@*[local-name() = 'arrayType'], '[]')"/>
 	     <xsl:variable name="xsd-local-name" select="substring-after($att-array-type, ':')"/>
 	     <xsl:variable name="xsd-name">
 		       <xsl:choose>
@@ -2048,7 +2114,8 @@ h3 {
 	     <xsl:param name="src.elem.start-slash"/>
 	     <xsl:param name="src.elem.end-slash"/>
 
-	     <xsl:value-of select="concat('&lt;', $src.elem.start-slash, name(.))" disable-output-escaping="no"/>
+	     <xsl:value-of select="concat('&lt;', $src.elem.start-slash, name(.))"
+                    disable-output-escaping="no"/>
 	     <xsl:if test="not($src.elem.start-slash)">
          <xsl:apply-templates select="@*" mode="src"/>
          <xsl:apply-templates select="." mode="src.namespace"/>
@@ -2060,7 +2127,7 @@ h3 {
 	     <span class="xml-att">
 		       <xsl:value-of select="concat(name(), '=')"/>
 		       <span class="xml-att-val">
-			         <xsl:value-of select="concat('&quot;', ., '&quot;')" disable-output-escaping="yes"/>
+			         <xsl:value-of select="concat('&#34;', ., '&#34;')" disable-output-escaping="yes"/>
 		       </span>
 	     </span>
    </xsl:template>
@@ -2084,7 +2151,7 @@ h3 {
 						               <xsl:if test="string-length(name())">:</xsl:if>
 						               <xsl:value-of select="concat(name(), '=')"/>
 						               <span class="xml-att-val">
-							                 <xsl:value-of select="concat('&quot;', ., '&quot;')" disable-output-escaping="yes"/>
+							                 <xsl:value-of select="concat('&#34;', ., '&#34;')" disable-output-escaping="yes"/>
 						               </span>
 					             </div>
 				           </xsl:if>
@@ -2108,7 +2175,7 @@ h3 {
 					             <xsl:value-of select="substring-before(name(),':')"/>
 					             <xsl:text>=</xsl:text>
 					             <span class="xml-att-val">
-						               <xsl:value-of select="concat('&quot;', namespace-uri(.), '&quot;')" disable-output-escaping="yes"/>
+						               <xsl:value-of select="concat('&#34;', namespace-uri(.), '&#34;')" disable-output-escaping="yes"/>
 					             </span>
 				           </span>
 			         </xsl:if>
@@ -2187,7 +2254,7 @@ h3 {
             <xsl:value-of select="$css" disable-output-escaping="yes"/>
          </style>
 
-	        <script src="wsdl-viewer_files/wsdl-viewer.htm" type="text/javascript" language="javascript"> 
+	        <script src="wsdl-viewer.js" type="text/javascript" language="javascript"> 
             <xsl:comment>
                <xsl:text>
 	// </xsl:text>
@@ -2309,7 +2376,7 @@ h3 {
 
 <xsl:template name="footer.render">
       <div id="footer">
-	This page was generated by wsdl-viewer.xsl (<a href="http://tomi.vanek.sk/">http://tomi.vanek.sk</a>)
+	This page was generated by wsdl-viewer.xsl (<a href="http://tomi.vanek.sk">http://tomi.vanek.sk</a>)
 </div>
    </xsl:template>
 
@@ -2328,8 +2395,10 @@ h3 {
                <xsl:value-of select="$html-title"/>
             </h2>
 	        </a>
-	        <xsl:apply-templates select="$consolidated-wsdl/*[local-name(.) = 'documentation']" mode="documentation.render"/>
-	        <xsl:apply-templates select="$consolidated-wsdl/ws:service|$consolidated-wsdl/ws2:service" mode="service-start"/>
+	        <xsl:apply-templates select="$consolidated-wsdl/*[local-name(.) = 'documentation']"
+                              mode="documentation.render"/>
+	        <xsl:apply-templates select="$consolidated-wsdl/ws:service|$consolidated-wsdl/ws2:service"
+                              mode="service-start"/>
 	        <xsl:if test="not($consolidated-wsdl/*[local-name() = 'service']/@name)">
 		
 
@@ -2362,9 +2431,11 @@ h3 {
 		          <xsl:choose>
 			            <xsl:when test="$consolidated-wsdl/*[local-name() = 'service']/@name">
 				              <xsl:variable name="iface-name">
-					                <xsl:apply-templates select="$consolidated-wsdl/*[local-name() = 'service']/@interface" mode="qname.normalized"/>
+					                <xsl:apply-templates select="$consolidated-wsdl/*[local-name() = 'service']/@interface"
+                                          mode="qname.normalized"/>
 				              </xsl:variable>
-				              <xsl:apply-templates select="$consolidated-wsdl/ws2:interface[@name = $iface-name]" mode="operations">
+				              <xsl:apply-templates select="$consolidated-wsdl/ws2:interface[@name = $iface-name]"
+                                       mode="operations">
 					                <xsl:sort select="@name"/>
 				              </xsl:apply-templates>
 			            </xsl:when>
@@ -2407,7 +2478,8 @@ h3 {
 	        </div>
 
 	        <xsl:apply-templates select="/*/*[local-name() = 'import'][@location]/@location" mode="src.import"/>
-	        <xsl:apply-templates select="$consolidated-wsdl/*[local-name() = 'types']//xsd:import[@schemaLocation]/@schemaLocation | $consolidated-wsdl/*[local-name() = 'types']//xsd:include[@schemaLocation]/@schemaLocation" mode="src.import"/>
+	        <xsl:apply-templates select="$consolidated-wsdl/*[local-name() = 'types']//xsd:import[@schemaLocation]/@schemaLocation | $consolidated-wsdl/*[local-name() = 'types']//xsd:include[@schemaLocation]/@schemaLocation"
+                              mode="src.import"/>
       </div>
    </xsl:template>
 
