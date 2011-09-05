@@ -57,6 +57,7 @@ extends Plugin {
         if($request->isPost() && $request->get("delete") == "Delete") {
             $dao = new MaillogDao(CodendiDataAccess::instance());
             $dao->deleteAllMessages();
+            $GLOBALS['Response']->redirect($this->getPluginPath().'/');
         }
     }
 
