@@ -260,6 +260,14 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
               <TH style="text-align:left">'.$Language->getText('global','by').'</TH>
               <TR VALIGN="TOP"><TD>';
 
+    $events = array(array('value' => 'Permissions', 'text' => $GLOBALS["Language"]->getText("project_admin_utils", "event_permission")), 
+                      array('value' => 'Project', 'text' => $GLOBALS["Language"]->getText("project_admin_utils", "event_project")), 
+                      array('value' => 'Users', 'text' => $GLOBALS["Language"]->getText("project_admin_utils", "event_user")),
+                      array('value' => 'User Group', 'text' => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug")),
+                      array('value' => 'Others', 'text' => $GLOBALS["Language"]->getText("project_admin_utils", "event_others"))
+                      );
+    //echo  html_build_multiple_select_box_from_array($events, 'events_box[]', $event, 6, false, '', true, '', false, '', false);
+
     //Event select Box
     echo '<select name="events_box" id="events_box">
               <Option value="Any"';
