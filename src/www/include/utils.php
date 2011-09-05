@@ -1585,11 +1585,11 @@ function util_php_array_to_js_array($array) {
             do {
                 if(list($key, $value) = each($array)) {
                     if (is_string($value)) {
-                        $output .= $comma . $key .': '.util_php_array_to_js_array($GLOBALS['Language']->getText('project_admin_utils', $value));
+                        $output .= $comma . $value .': '.util_php_array_to_js_array($GLOBALS['Language']->getText('project_admin_utils', $value));
                         $comma = ', ';
                     }
                 }
-            } while($key);
+            } while($value);
             $output .= '}';
         } else {
             $output = '{}';
