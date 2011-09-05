@@ -9,16 +9,19 @@ var AutoCompleter = Class.create({
         this.elementId = elementId;
         if(!options) {
             this.options = new Array();
+             // Default value acts as hint
+            this.options['defaultValueActsAsHint'] = true;
         } else {
             this.options = options;
+            if (options['defaultValueActsAsHint'] !== false) {
+                this.options['defaultValueActsAsHint'] = true;
+            }
         }
         this.options['imgPath']  = imgPath;
         this.options['multiple'] = multiple;
         // The url to call to get completion list
         this.url                 = '';
-        // Default value acts as hint
-        this.options['defaultValueActsAsHint'] = true;
-        
+
         this.registerOnLoadEvent = this.registerOnLoad.bindAsEventListener(this);
         document.observe('dom:loaded', this.registerOnLoadEvent);
     },
