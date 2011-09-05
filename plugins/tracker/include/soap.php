@@ -29,6 +29,7 @@ define('get_tracker_fault','3025');
 
 require_once ('pre.php');
 require_once ('session.php');
+require_once ('utils_soap.php');
 
 require_once ('Tracker/Tracker.class.php');
 require_once ('Tracker/TrackerFactory.class.php');

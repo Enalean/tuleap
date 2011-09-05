@@ -2,6 +2,7 @@
 
 require_once ('pre.php');
 require_once ('nusoap.php');
+require_once('utils_soap.php');
 
 define ('permission_denied_fault', '3016');
 

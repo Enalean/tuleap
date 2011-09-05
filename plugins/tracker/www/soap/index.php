@@ -2,7 +2,8 @@
 
 require_once('pre.php');
 
-define('TULEAP_WS_API_VERSION', '4.1');
+//define('TULEAP_WS_API_VERSION', '4.1');
+define('CODENDI_WS_API_VERSION', '4.1');
 
 define('LOG_SOAP_REQUESTS', false);
 
@@ -28,17 +29,6 @@ try {
     							));
     
     require_once(dirname(__FILE__).'/../../include/soap.php');
-    //include the common TYPES API
-    require_once('www/soap/common/types.php');
-
-    //include the common SESSION API
-    require_once('www/soap/common/session.php');
-
-    // include the common GROUP API
-    require_once('www/soap/common/group.php');
-
-    // include the common USERS API
-    require_once('www/soap/common/users.php');
     
 } catch (Exception $e) {
     echo $e;

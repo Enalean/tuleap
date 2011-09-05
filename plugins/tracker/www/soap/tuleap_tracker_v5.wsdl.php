@@ -22,18 +22,6 @@ $server = new soap_server();
 //configureWSDL($serviceName,$namespace = false,$endpoint = false,$style='rpc', $transport = 'http://schemas.xmlsoap.org/soap/http');
 $server->configureWSDL('TuleapTrackerV5API',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
 
-//include the common TYPES API
-require_once('www/soap/common/types.php');
-
-//include the common SESSION API
-require_once('www/soap/common/session.php');
-
-// include the common GROUP API
-require_once('www/soap/common/group.php');
-
-// include the common USERS API
-require_once('www/soap/common/users.php');
-
 // include the TRACKER v5 API
 require_once(dirname(__FILE__).'/../../include/soap.php');
 
