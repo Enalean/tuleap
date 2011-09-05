@@ -22,8 +22,20 @@ substitute() {
 lxc_start_wait() {
     ip=$1
 
+    # First check network
     maxwait=10
     until ping -q -W 2 -c 1 "$ip" 2>&1 >/dev/null; do
+	if [ "$maxwait" -eq "0" ]; then
+	    echo "*** Error: cannot reach $name ($ip) after 10 attempts";
+	    exit 1
+	fi
+	sleep 5;
+	maxwait=$(($maxwait-1))
+    done
+
+    # Then check ssh activation
+    maxwait=10
+    until $remotecmd true; do
 	if [ "$maxwait" -eq "0" ]; then
 	    echo "*** Error: cannot reach $name ($ip) after 10 attempts";
 	    exit 1
@@ -64,7 +76,7 @@ done
 set -x
 
 build_host=root@$lxc_ip
-sshcmd="ssh -o StrictHostKeyChecking=no"
+sshcmd="ssh -n -o StrictHostKeyChecking=no"
 remotecmd="$sshcmd $build_host"
 
 on_create="false"
