@@ -109,7 +109,7 @@ class Docman_NotificationsManager extends NotificationsManager {
             }
         }
         if (!$success) {
-            $this->_feedback->log('error', 'Error when sending some notifications.');
+            $this->_feedback->log('warning', 'Error when sending some notifications.');
         }
     }
 
