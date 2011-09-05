@@ -20,7 +20,7 @@
  */
 
 require_once dirname(__FILE__).'/../../../docman/include/Docman_Controller.class.php';
-require_once dirname(__FILE__).'/../../../docman/include/DocmanActions.class.php';
+require_once dirname(__FILE__).'/../../../docman/include/Docman_Actions.class.php';
 
 /**
  * WebDav / Docman interactions aims to be done through the standard MVC pattern.
@@ -38,36 +38,36 @@ class WebDAV_DocmanController extends Docman_Controller {
         parent::__construct($plugin, $plugin->getPluginPath(), $plugin->getThemePath(), $request);
     }
 
-    protected function actionsManagement() {
+    public function actionsManagement() {
         $action = new Docman_Actions($this);
         $action->process($this->action, $this->_actionParams);
     }
 
-    protected function _checkBrowserCompliance() {
+    public function _checkBrowserCompliance() {
     }
 
-    protected function _includeView() {
+    public function _includeView() {
     }
 
-    protected function _set_deleteView_errorPerms() {
+    public function _set_deleteView_errorPerms() {
     }
 
-    protected function _set_redirectView() {
+    public function _set_redirectView() {
     }
 
-    protected function _setView($view) {
+    public function _setView($view) {
     }
 
-    protected function _set_moveView_errorPerms() {
+    public function _set_moveView_errorPerms() {
     }
 
-    protected function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view) {
+    public function _set_createItemView_errorParentDoesNotExist(&$item, $get_show_view) {
     }
 
-    protected function _set_createItemView_afterCreate($view) {
+    public function _set_createItemView_afterCreate($view) {
     }
 
-    protected function _set_doesnot_belong_to_project_error($item, $group) {
+    public function _set_doesnot_belong_to_project_error($item, $group) {
     }
 }
 ?>

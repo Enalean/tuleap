@@ -182,14 +182,12 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
      */
     function delete() {
         if ($this->getUtils()->isWriteEnabled()) {
-            try {
-                $GLOBALS['Response'] = new WebDAV_Response();
-                $itemFactory = $this->getUtils()->getDocmanItemFactory();
-                $itemFactory->deleteSubTree($this->getItem(), $this->getUser(), false);
-                $this->getUtils()->getEventManager()->processEvent('send_notifications', array());
-            } catch (Exception $e) {
-                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'error_subitems_not_deleted_no_w'));
-            }
+            // Request
+            $params['action']   = 'delete';
+            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['confirm']  = true;
+            $params['id']       = $this->getItem()->getId();
+            $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }

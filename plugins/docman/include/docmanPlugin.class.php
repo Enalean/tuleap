@@ -445,7 +445,7 @@ class DocmanPlugin extends Plugin {
         $groupId = $params['project']->getId();
         if (!isset($this->rootItems[$groupId])) {
             // First, need to instanciate controller to register docman event listeners (actions logging, notification, etc)
-            $this->getCoreController(new Codendi_Request(array('group_id' => $groupId)));
+            //$this->getCoreController(new Codendi_Request(array('group_id' => $groupId)));
             
             // Then return root object
             include_once 'Docman_ItemFactory.class.php';
