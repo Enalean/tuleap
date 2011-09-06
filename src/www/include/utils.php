@@ -1574,10 +1574,16 @@ foreach($times as $key => $time) {
 }
 */
 /**
- * Convert a php array to JS
- * TODO : better comment & name for the function
+ * Convert a php array to JS for project history subevents
+ * It keeps the initial array as keys for the JS array
+ * Values are retrieved from i18n file
+ *
+ * @param Array $array Array containing the items
+ *
+ * @return String
  */
-function util_php_array_to_js_array($array) {
+function util_convert_project_history_subevents($array) {
+    $output = '{}';
     if (is_array($array)) {
         if (count($array)) {
             $output = '{';
@@ -1586,28 +1592,25 @@ function util_php_array_to_js_array($array) {
             do {
                 if(list($key, $value) = each($array)) {
                     if (is_string($value)) {
-                        $output .= $comma . "'" . $value . "'" . ': '.util_php_array_to_js_array($GLOBALS['Language']->getText('project_admin_utils', $value));
+                        $output .= $comma . "'" . $value . "'" . ': '. "'". $GLOBALS['Language']->getText('project_admin_utils', $value). "'";
                         $comma = ', ';
                     }
                 }
             } while($value);
             $output .= '}';
-        } else {
-            $output = '{}';
         }
-    } else if (is_bool($array)) {
-        $output = $array?'true':'false';
-    } else {
-        $output = "'". addslashes($array) ."'";
     }
     return $output;
 }
 
 /**
  * Convert a php array to JS
- * TODO : better comment & name for the function
+ * Keys contains events, values contain sub event array
+ *
+ * @return String
  */
-function util_php_array_to_js_array2($array) {
+function util_convert_project_history_events($array) {
+    $output = '{}';
     if (is_array($array)) {
         if (count($array)) {
             $output = '{';
@@ -1616,19 +1619,13 @@ function util_php_array_to_js_array2($array) {
             do {
                 if(list($key, $value) = each($array)) {
                     if (is_string($key)) {
-                        $output .= $comma . "'" . $key . "'" .': '.util_php_array_to_js_array($value);
+                        $output .= $comma . "'" . $key . "'" .': '.util_convert_project_history_subevents($value);
                         $comma = ', ';
                     }
                 }
             } while($key);
             $output .= '}';
-        } else {
-            $output = '{}';
         }
-    } else if (is_bool($array)) {
-        $output = $array?'true':'false';
-    } else {
-        $output = "'". addslashes($array) ."'";
     }
     return $output;
 }

@@ -123,14 +123,14 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
 
 /**
  * Builds the group history filter
- * 
- * @param String $event
- * @param Array  $subEventsBox
- * @param String $value
- * @param Date   $startDate
- * @param Date   $endDate
- * @param String $by
- * 
+ *
+ * @param String  $event        Events category used to filter results
+ * @param String  $subEventsBox Event used to filter results
+ * @param String  $value        Value used to filter results
+ * @param Integer $startDate    Start date used to filter results
+ * @param Integer $endDate      End date used to filter results
+ * @param String  $by           User name used to filter results
+ *
  * @return String
  */
 function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
@@ -171,6 +171,11 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
     return $filter;
 }
 
+/**
+ * Returns the events used in project history grouped by category
+ *
+ * @return Array
+ */
 function get_history_entries() {
     return array('Permissions' => array('perm_reset_for_field',
                                         'perm_reset_for_tracker',
@@ -224,16 +229,18 @@ function get_history_entries() {
 
 /**
  * Nicely html-formatted output of this group's audit trail
- * 
- * @param Integer $group_id
- * @param Integer $offset  
- * @param Intager $limit
- * @param String  $event  
- * @param Array   $subEventsBox
- * @param String  $value
- * @param Integer $startDate
- * @param Integer $endDate
- * @param String  $by
+ *
+ * @param Integer $group_id     Id of the project
+ * @param Integer $offset       Offset used for pagination
+ * @param Integer $limit        Number of events by page
+ * @param String  $event        Events category used to filter results
+ * @param String  $subEventsBox Event used to filter results
+ * @param String  $value        Value used to filter results
+ * @param Integer $startDate    Start date used to filter results
+ * @param Integer $endDate      End date used to filter results
+ * @param String  $by           User name used to filter results
+ *
+ * @return void
  */
 function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
     /*
@@ -371,7 +378,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo '<H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';
     }
 
-    $translatedEvents = util_php_array_to_js_array2(get_history_entries());
+    $translatedEvents = util_convert_project_history_events(get_history_entries());
 
     if(isset($subEventsString)) {
         $selectedSubEvents = explode(",", $subEventsString);
@@ -379,7 +386,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
             $subEventsBox[] = $element;
         }
     }
-    $translatedSelectedEvents = util_php_array_to_js_array($subEventsBox);
+    $translatedSelectedEvents = util_convert_project_history_subevents($subEventsBox);
 
     $js = "options = new Array();
            options['defaultValueActsAsHint'] = false;
@@ -392,9 +399,13 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 /**
  * Export project history to a csv file
  *
- * @param Integer $group_id
- * @param Integer $offset
- * @param Integer $limit
+ * @param Integer $group_id     Id of the project
+ * @param String  $event        Events category used to filter results
+ * @param String  $subEventsBox Event used to filter results
+ * @param String  $value        Value used to filter results
+ * @param Integer $startDate    Start date used to filter results
+ * @param Integer $endDate      End date used to filter results
+ * @param String  $by           User name used to filter results
  *
  * @return void
  */
