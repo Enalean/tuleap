@@ -164,13 +164,13 @@ class UserManager {
     }
 
 /**
- * Returns an array of user ids from that match the given string
+ * Returns an array of user ids that match the given string
  * 
  * @param String $search 
  * 
  * @return Array
  */
-    function getUserIdsBunch($search) {
+    function getUserIdsList($search) {
         $userArray = explode(',' , $search);
         $users = array();
         foreach ($userArray as $user) {

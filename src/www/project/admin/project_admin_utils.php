@@ -137,7 +137,7 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
     $filter = '';
     if (!empty($by)) {
         $uh = UserHelper::instance();
-        $filter .= $uh->getUserNamePatternSQLQuery($by);
+        $filter .= $uh->getUserFilter($by);
     }
     if(!empty($startDate)) {
         list($timestamp,) = util_date_to_unixtime($startDate." 00:00:00");

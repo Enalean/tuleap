@@ -119,7 +119,7 @@ class UserHelper {
     }
 
     /**
-     * getUserNamePatternSQLQuery
+     * getUserFilter
      * 
      * Get SQL statement for filtering according to users
      *
@@ -127,10 +127,10 @@ class UserHelper {
      *
      * @return String
      */
-    function getUserNamePatternSQLQuery($by) {
+    function getUserFilter($by) {
         $filter = '';
         $um = $this->_getUserManager();
-        $usersIds = $um->getUserIdsBunch($by);
+        $usersIds = $um->getUserIdsList($by);
         if (count($usersIds) > 0) {
             $filter .= ' AND user.user_id IN ('.implode (',', $usersIds).')';
         } else {
