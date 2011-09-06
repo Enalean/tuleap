@@ -1575,6 +1575,7 @@ foreach($times as $key => $time) {
 */
 /**
  * Convert a php array to JS
+ * TODO : better comment & name for the function
  */
 function util_php_array_to_js_array($array) {
     if (is_array($array)) {
@@ -1585,7 +1586,7 @@ function util_php_array_to_js_array($array) {
             do {
                 if(list($key, $value) = each($array)) {
                     if (is_string($value)) {
-                        $output .= $comma . $value .': '.util_php_array_to_js_array($GLOBALS['Language']->getText('project_admin_utils', $value));
+                        $output .= $comma . "'" . $value . "'" . ': '.util_php_array_to_js_array($GLOBALS['Language']->getText('project_admin_utils', $value));
                         $comma = ', ';
                     }
                 }
@@ -1601,4 +1602,35 @@ function util_php_array_to_js_array($array) {
     }
     return $output;
 }
+
+/**
+ * Convert a php array to JS
+ * TODO : better comment & name for the function
+ */
+function util_php_array_to_js_array2($array) {
+    if (is_array($array)) {
+        if (count($array)) {
+            $output = '{';
+            reset($array);
+            $comma = '';
+            do {
+                if(list($key, $value) = each($array)) {
+                    if (is_string($key)) {
+                        $output .= $comma . "'" . $key . "'" .': '.util_php_array_to_js_array($value);
+                        $comma = ', ';
+                    }
+                }
+            } while($key);
+            $output .= '}';
+        } else {
+            $output = '{}';
+        }
+    } else if (is_bool($array)) {
+        $output = $array?'true':'false';
+    } else {
+        $output = "'". addslashes($array) ."'";
+    }
+    return $output;
+}
+
 ?>

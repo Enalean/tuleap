@@ -130,11 +130,10 @@ function group_add_history ($field_name,$old_value,$group_id, $args=false) {
  * @param Date   $startDate
  * @param Date   $endDate
  * @param String $by
- * @param String $allSubEvents
  * 
  * @return String
  */
-function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $allSubEvents = null) {
+function build_grouphistory_filter ($event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
     $filter = '';
     if (!empty($by)) {
         $uh = UserHelper::instance();
@@ -162,14 +161,65 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
                 $filter .= " OR group_history.field_name LIKE '".$key."%'";
             }
         } else {
-            $subEventsBox = explode(",", $allSubEvents);
-            foreach ($subEventsBox as $key => $value) {
+            $subEventsList = get_history_entries();
+            foreach ($subEventsList[$event] as $key => $value) {
                 $filter .= " OR group_history.field_name LIKE '".$value."%'";
             }
         }
         $filter .= " ) ";
     }
     return $filter;
+}
+
+function get_history_entries() {
+    return array('Permissions' => array('perm_reset_for_field',
+                                        'perm_reset_for_tracker',
+                                        'perm_reset_for_package',
+                                        'perm_reset_for_release',
+                                        'perm_reset_for_document',
+                                        'perm_reset_for_folder',
+                                        'perm_reset_for_docgroup',
+                                        'perm_reset_for_wiki',
+                                        'perm_reset_for_wikipage',
+                                        'perm_reset_for_wikiattachment',
+                                        'perm_reset_for_object',
+                                        'perm_granted_for_field',
+                                        'perm_granted_for_tracker',
+                                        'perm_granted_for_package',
+                                        'perm_granted_for_release', 
+                                        'perm_granted_for_document',
+                                        'perm_granted_for_folder',
+                                        'perm_granted_for_docgroup',
+                                        'perm_granted_for_wiki',
+                                        'perm_granted_for_wikipage',
+                                        'perm_granted_for_wikiattachment',
+                                        'perm_granted_for_object'),
+                 'Project' =>     array('rename_done',
+                                        'rename_with_error',
+                                        'approved',
+                                        'deleted',
+                                        'rename_request',
+                                        'is_public',
+                                        'group_type',
+                                        'http_domain',
+                                        'unix_box',
+                                        'changed_public_info',
+                                        'changed_trove',
+                                        'membership_request_updated',
+                                        'import',
+                                        'mass_change'),
+                 'User Group' =>  array('upd_ug',
+                                        'del_ug',
+                                        'changed_member_perm'),
+                 'Users' =>       array('changed_personal_email_notif',
+                                        'added_user',
+                                        'removed_user'),
+                 'Others' =>      array('changed_bts_form_message',
+                                        'changed_bts_allow_anon',
+                                        'changed_patch_mgr_settings',
+                                        'changed_task_mgr_other_settings',
+                                        'changed_sr_settings'),
+                 'choose' =>      array('choose_event'));
 }
 
 /**
@@ -184,68 +234,18 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
  * @param Integer $startDate
  * @param Integer $endDate
  * @param String  $by
- * @param String  $allSubEvents
  */
-function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $allSubEvents = null) {
+function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
     /*
      show the group_history rows that are relevant to
      this group_id
      */
     global $Language;
 
-    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by, $allSubEvents);
+    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
     $res = group_get_history($offset, $limit, $group_id, $history_filter);
 
     $hp =& Codendi_HTMLPurifier::instance();
-
-    $subEvents = array('perm_reset_for_field',
-                       'perm_reset_for_tracker',
-                       'perm_reset_for_package',
-                       'perm_reset_for_release',
-                       'perm_reset_for_document',
-                       'perm_reset_for_folder',
-                       'perm_reset_for_docgroup',
-                       'perm_reset_for_wiki',
-                       'perm_reset_for_wikipage',
-                       'perm_reset_for_wikiattachment',
-                       'perm_reset_for_object',
-                       'perm_granted_for_field',
-                       'perm_granted_for_tracker',
-                       'perm_granted_for_package',
-                       'perm_granted_for_release', 
-                       'perm_granted_for_document',
-                       'perm_granted_for_folder',
-                       'perm_granted_for_docgroup',
-                       'perm_granted_for_wiki',
-                       'perm_granted_for_wikipage',
-                       'perm_granted_for_wikiattachment',
-                       'perm_granted_for_object',
-                       'rename_done',
-                       'rename_with_error',
-                       'approved',
-                       'deleted',
-                       'rename_request',
-                       'is_public',
-                       'group_type',
-                       'http_domain',
-                       'unix_box',
-                       'changed_public_info',
-                       'changed_trove',
-                       'membership_request_updated',
-                       'import',
-                       'mass_change',
-                       'upd_ug',
-                       'del_ug',
-                       'changed_member_perm',
-                       'changed_personal_email_notif',
-                       'added_user',
-                       'removed_user',
-                       'changed_bts_form_message',
-                       'changed_bts_allow_anon',
-                       'changed_patch_mgr_settings',
-                       'changed_task_mgr_other_settings',
-                       'changed_sr_settings',
-                       'choose_event');
 
     echo '
         <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>';
@@ -381,8 +381,6 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         if (isset($subEventsBox)) {
             $subEventsString = implode(",", array_keys($subEventsBox));
             $forwardSubEvents = '&event='.$event.'&subEventsBox='.$subEventsString;
-        } else {
-            $forwardSubEvents = '&event='.$event.'&all_sub_events='.$allSubEvents;
         }
 
         if ($offset > 0) {
@@ -404,7 +402,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo '<H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';
     }
 
-    $translatedEvents = util_php_array_to_js_array($subEvents);
+    $translatedEvents = util_php_array_to_js_array2(get_history_entries());
 
     if(isset($subEventsString)) {
         $selectedSubEvents = explode(",", $subEventsString);
@@ -431,7 +429,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
  *
  * @return void
  */
-function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null, $all_sub_events = null) {
+function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $value = null, $startDate = null, $endDate = null, $by = null) {
     global $Language;
 
     header ('Content-Type: text/csv');
@@ -446,7 +444,7 @@ function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $v
                               'by'    => $Language->getText('global','by'));
     echo build_csv_header($col_list, $documents_title).$eol;
 
-    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by, $all_sub_events);
+    $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
     $res = group_get_history(0, 0, $group_id, $history_filter);
 
     $hp = Codendi_HTMLPurifier::instance();

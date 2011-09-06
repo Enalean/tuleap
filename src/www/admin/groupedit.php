@@ -100,7 +100,7 @@ if (db_numrows($res_grp) < 1) {
 $row_grp = db_fetch_array($res_grp);
 
 if ($request->exist('export')) {
-    export_grouphistory($group_id, $event, $subEvents, $value, $startDate, $endDate, $by, $allSubEvents);
+    export_grouphistory($group_id, $event, $subEvents, $value, $startDate, $endDate, $by);
     exit;
 }
 
@@ -198,7 +198,7 @@ print "<h3>".$Language->getText('admin_groupedit','built_from_template').':</h3>
 echo "<P><HR><P>";
 
 echo '
-<P>'.show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by, $allSubEvents);
+<P>'.show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by);
 
 site_admin_footer(array());
 

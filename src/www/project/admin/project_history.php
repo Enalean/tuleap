@@ -38,10 +38,10 @@ if($request->valid($vGroupId)) {
 }
 
 $validEvents = new Valid_WhiteList('events_box' ,array('Permissions',
-                                                   'Project',
-                                                   'Users',
-                                                   'User Group',
-                                                   'Others'));
+                                                       'Project',
+                                                       'Users',
+                                                       'User Group',
+                                                       'Others'));
 $event = $request->getValidated('events_box', $validEvents, null);
 if(!$event) {
     $event = $request->get('event');
@@ -109,7 +109,5 @@ if ( !$offset || $offset < 0 ) {
     $offset = 0;
 }
 $limit  = 50;
-
-$allSubEvents = $request->get('all_sub_events');
 
 ?>
