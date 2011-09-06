@@ -247,6 +247,13 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 
     $hp =& Codendi_HTMLPurifier::instance();
 
+    if (isset($subEventsBox)) {
+        $subEventsString = implode(",", array_keys($subEventsBox));
+        $forwardSubEvents = '&event='.$event.'&subEventsBox='.$subEventsString;
+    } else {
+        $forwardSubEvents = '&event='.$event;
+    }
+
     echo '
         <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>';
     echo'<SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title"><img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="toggle_form_icon"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
@@ -344,13 +351,6 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo '</TABLE>';
 
         echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-
-        if (isset($subEventsBox)) {
-            $subEventsString = implode(",", array_keys($subEventsBox));
-            $forwardSubEvents = '&event='.$event.'&subEventsBox='.$subEventsString;
-        } else {
-            $forwardSubEvents = '&event='.$event;
-        }
 
         if ($offset > 0) {
             echo  '<a href="?group_id='.$group_id.'&offset='.($offset-$limit).$forwardSubEvents.'&value='.$value.'&start='.$startDate.'&end='.$endDate.'&by='.$by.'">[ '.$Language->getText('project_admin_utils', 'previous').' ]</a>';
