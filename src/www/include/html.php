@@ -135,7 +135,7 @@ function html_get_alt_row_color ($i) {
 	}
 }
 
-function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz',$samevals = 0) {
+function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz',$samevals = 0, $use_keys = null) {
 	/*
 		Takes one array, with the first array being the "id" or value
 		and the array being the text you want displayed
@@ -147,23 +147,32 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 
 	$return = '
 		<SELECT NAME="'.$select_name.'" id="'.$select_name.'">';
+    if ($use_keys) {
+        foreach ($vals as $key => $val) {
+            $return .= "\n\t\t<OPTION VALUE=\"" . $key . "\"";
+            if ($val == $checked_val) {
+                $return .= ' SELECTED';
+            }
+            $return .= '>'.$val.'</OPTION>';
+        }
+    } else {
+        $rows=count($vals);
 
-	$rows=count($vals);
-
-	for ($i=0; $i<$rows; $i++) {
-		if ( $samevals ) {
-			$return .= "\n\t\t<OPTION VALUE=\"" . $vals[$i] . "\"";
-			if ($vals[$i] == $checked_val) {
-				$return .= ' SELECTED';
-			}
-		} else {
-			$return .= "\n\t\t<OPTION VALUE=\"" . $i .'"';
-			if ($i == $checked_val) {
-				$return .= ' SELECTED';
-			}
-		}
-		$return .= '>'.$vals[$i].'</OPTION>';
-	}
+        for ($i=0; $i<$rows; $i++) {
+            if ( $samevals ) {
+                $return .= "\n\t\t<OPTION VALUE=\"" . $vals[$i] . "\"";
+                if ($vals[$i] == $checked_val) {
+                    $return .= ' SELECTED';
+                }
+            } else {
+                $return .= "\n\t\t<OPTION VALUE=\"" . $i .'"';
+                if ($i == $checked_val) {
+                    $return .= ' SELECTED';
+                }
+            }
+            $return .= '>'.$vals[$i].'</OPTION>';
+        }
+    }
 	$return .= '
 		</SELECT>';
 

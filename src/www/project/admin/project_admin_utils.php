@@ -260,51 +260,18 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
               <TH style="text-align:left">'.$Language->getText('global','by').'</TH>
               <TR VALIGN="TOP"><TD>';
 
-    $events = array(array('value' => 'Permissions', 'text' => $GLOBALS["Language"]->getText("project_admin_utils", "event_permission")), 
-                      array('value' => 'Project', 'text' => $GLOBALS["Language"]->getText("project_admin_utils", "event_project")), 
-                      array('value' => 'Users', 'text' => $GLOBALS["Language"]->getText("project_admin_utils", "event_user")),
-                      array('value' => 'User Group', 'text' => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug")),
-                      array('value' => 'Others', 'text' => $GLOBALS["Language"]->getText("project_admin_utils", "event_others"))
-                      );
-    //echo  html_build_multiple_select_box_from_array($events, 'events_box[]', $event, 6, false, '', true, '', false, '', false);
-
     //Event select Box
-    echo '<select name="events_box" id="events_box">
-              <Option value="Any"';
-    if ($event == "Any") {
-        echo 'selected';
-    }
-    echo '>'.$Language->getText('global','any').'</Option>
-              <Option value="Permissions"';
-    if ($event == "Permissions") {
-        echo 'selected';
-    }
-    echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_permission").'</Option>
-              <Option value="Project"';
-    if ($event == "Project") {
-        echo 'selected';
-    }
-    echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_project").'</Option>
-              <Option value="Users"';
-    if ($event == "Users") {
-        echo 'selected';
-    }
-    echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_user").'</Option>
-              <Option value="User Group"';
-    if ($event == "User Group") {
-        echo 'selected';
-    }
-    echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_ug").'</Option>
-              <Option value="Others"';
-    if ($event == "Others") {
-        echo 'selected';
-    }
-    echo '>'.$GLOBALS["Language"]->getText("project_admin_utils", "event_others").'</Option>
-              </select>';
+    $events = array('Any'         => $GLOBALS["Language"]->getText('global','any'),
+                    'Permissions' => $GLOBALS["Language"]->getText("project_admin_utils", "event_permission"), 
+                    'Project'     => $GLOBALS["Language"]->getText("project_admin_utils", "event_project"), 
+                    'Users'       => $GLOBALS["Language"]->getText("project_admin_utils", "event_user"),
+                    'User Group'  => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug"),
+                    'Others'      => $GLOBALS["Language"]->getText("project_admin_utils", "event_others"));
+    echo  html_build_select_box_from_array($events, 'events_box', $event, false, true);
 
     //SubEvent select Box
     echo '</TD><TD><select id="sub_events_box" name="sub_events_box[]" multiple>
-         <Option value="choose_event">'.$GLOBALS['Language']->getText('project_admin_utils', 'choose_event').'</Option>
+         <Option value="choose_event" disabled="disabled">'.$GLOBALS['Language']->getText('project_admin_utils', 'choose_event').'</Option>
          </select>';
 
     echo '</TD><TD><input type="text" name="value" value="'.$value.'"></TD>
