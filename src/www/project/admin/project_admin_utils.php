@@ -511,14 +511,15 @@ function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $v
             }
 
             $val = $row['old_value'];
-            if ($msg_key == "perm_granted_for_field") {
-                $pattern = '/ugroup_([^ ,]*)_name_key/';
-                preg_match_all($pattern,$val,$matches);
-
-                if (!empty($matches[0])) {
-                    foreach ($matches[0] as $match) {
-                        $val = str_replace($match,$Language->getText('project_ugroup', $match),$val);
+            //Translate dynamic ugroup name for permission entries
+            if (strstr($msg_key, "perm_granted_for_") || strstr($msg_key, "perm_reset_for_")) {
+                $ugroupList = explode(",", $val);
+                $val ='';
+                foreach ($ugroupList as $ugroup) {
+                    if ($val) {
+                        $val.=', ';
                     }
+                    $val .= util_translate_name_ugroup($ugroup);
                 }
             } else if ($msg_key == "group_type") {
                 $template =& TemplateSingleton::instance();
