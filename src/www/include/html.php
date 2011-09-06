@@ -150,7 +150,7 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
     if ($use_keys) {
         foreach ($vals as $key => $val) {
             $return .= "\n\t\t<OPTION VALUE=\"" . $key . "\"";
-            if ($val == $checked_val) {
+            if ($key == $checked_val) {
                 $return .= ' SELECTED';
             }
             $return .= '>'.$val.'</OPTION>';

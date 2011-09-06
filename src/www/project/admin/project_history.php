@@ -37,7 +37,7 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-$eventsList = array('Any', 'Permissions', 'Project', 'Users', 'User', 'Others');
+$eventsList = array('any', 'event_permission', 'event_project', 'event_ug', 'event_user', 'event_others');
 $validEvents = new Valid_WhiteList('events_box' , $eventsList);
 $event = $request->getValidated('events_box', $validEvents, null);
 if(!$event) {

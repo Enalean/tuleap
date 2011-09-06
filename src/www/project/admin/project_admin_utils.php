@@ -177,7 +177,7 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
  * @return Array
  */
 function get_history_entries() {
-    return array('Permissions' => array('perm_reset_for_field',
+    return array('event_permission' => array('perm_reset_for_field',
                                         'perm_reset_for_tracker',
                                         'perm_reset_for_package',
                                         'perm_reset_for_release',
@@ -199,7 +199,7 @@ function get_history_entries() {
                                         'perm_granted_for_wikipage',
                                         'perm_granted_for_wikiattachment',
                                         'perm_granted_for_object'),
-                 'Project' =>     array('rename_done',
+                 'event_project' =>     array('rename_done',
                                         'rename_with_error',
                                         'approved',
                                         'deleted',
@@ -213,13 +213,13 @@ function get_history_entries() {
                                         'membership_request_updated',
                                         'import',
                                         'mass_change'),
-                 'User Group' =>  array('upd_ug',
+                 'event_ug' =>  array('upd_ug',
                                         'del_ug',
                                         'changed_member_perm'),
-                 'Users' =>       array('changed_personal_email_notif',
+                 'event_user' =>       array('changed_personal_email_notif',
                                         'added_user',
                                         'removed_user'),
-                 'Others' =>      array('changed_bts_form_message',
+                 'event_others' =>      array('changed_bts_form_message',
                                         'changed_bts_allow_anon',
                                         'changed_patch_mgr_settings',
                                         'changed_task_mgr_other_settings',
@@ -332,12 +332,12 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
               <TR VALIGN="TOP"><TD>';
 
     //Event select Box
-    $events = array('Any'         => $GLOBALS["Language"]->getText('global','any'),
-                    'Permissions' => $GLOBALS["Language"]->getText("project_admin_utils", "event_permission"), 
-                    'Project'     => $GLOBALS["Language"]->getText("project_admin_utils", "event_project"), 
-                    'Users'       => $GLOBALS["Language"]->getText("project_admin_utils", "event_user"),
-                    'User Group'  => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug"),
-                    'Others'      => $GLOBALS["Language"]->getText("project_admin_utils", "event_others"));
+    $events = array('any'         => $GLOBALS["Language"]->getText('global','any'),
+                    'event_permission' => $GLOBALS["Language"]->getText("project_admin_utils", "event_permission"), 
+                    'event_project'     => $GLOBALS["Language"]->getText("project_admin_utils", "event_project"), 
+                    'event_user'       => $GLOBALS["Language"]->getText("project_admin_utils", "event_user"),
+                    'event_ug'  => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug"),
+                    'event_others'      => $GLOBALS["Language"]->getText("project_admin_utils", "event_others"));
     echo  html_build_select_box_from_array($events, 'events_box', $event, false, true);
 
     //SubEvent select Box
