@@ -13,7 +13,7 @@ $group_id = 112;
 
 try {
     
-    $client = new SoapClient($test_server.'/plugins/tracker/soap/tuleap_tracker_v5.wsdl.php?wsdl',
+    $client_tracker_v5 = new SoapClient($test_server.'/plugins/tracker/soap/wsdl?wsdl',
                                 array(//'trace' => true,
                                       'trace'      => 1,
                                       'exceptions' => 0,
@@ -23,7 +23,7 @@ try {
                                       //'proxy_port' => 8008
                                 ));
     
-    $client2 = new SoapClient($test_server.'/soap/codendi.wsdl.php?wsdl',
+    $client = new SoapClient($test_server.'/soap/codendi.wsdl.php?wsdl',
                                 array(//'trace' => true,
                                       'trace'      => 1,
                                       'exceptions' => 0,
@@ -33,7 +33,7 @@ try {
                                       //'proxy_port' => 8008
                                 ));
     
-    $session =  $client2->login($login, $password);
+    $session =  $client->login($login, $password);
 
     $session_hash = (string)$session->session_hash;
     $user_id = $session->user_id;
@@ -42,11 +42,9 @@ try {
     
     echo '<h1>Get list of trackers in project ' . $group_id . '</h1>';
     echo '<h3>function getTrackerList</h3>';
-    $trackerlist = $client->getTrackerList($session_hash, $group_id);
+    $trackerlist = $client_tracker_v5->getTrackerList($session_hash, $group_id);
     var_dump($trackerlist);
     
 } catch (SoapFault $fault) {
     var_dump($fault);
 }
-
-?>

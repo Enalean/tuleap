@@ -5,8 +5,8 @@
 // Configuration part
 $test_server = 'http://' .$_SERVER['SERVER_ADDR'] .':'. $_SERVER['SERVER_PORT'];
 
-$login = 'marcus';
-$password = 'marcus';
+$login = 'sandrae';
+$password = 'sandrae';
 
 $group_id = 101;
 $tracker_id = 123;
@@ -23,11 +23,22 @@ $field_values = array(
 
 try {
     
-    $client = new SoapClient($test_server.'/plugins/tracker/soap/tuleap_tracker_v5.wsdl.php?wsdl', 
+    $client_tracker_v5 = new SoapClient($test_server.'/plugins/tracker/soap/wsdl?wsdl',
                                 array(//'trace' => true,
                                       'trace'      => 1,
                                       'exceptions' => 0,
                                       'soap_version' => SOAP_1_1,
+                                      'cache_wsdl' => 0,
+                                      //'proxy_host' => 'localhost',
+                                      //'proxy_port' => 8008
+                                ));
+    
+    $client = new SoapClient($test_server.'/soap/codendi.wsdl.php?wsdl',
+                                array(//'trace' => true,
+                                      'trace'      => 1,
+                                      'exceptions' => 0,
+                                      'soap_version' => SOAP_1_1,
+                                      'cache_wsdl' => 0, 
                                       //'proxy_host' => 'localhost', 
                                       //'proxy_port' => 8008
                                 ));
@@ -41,7 +52,7 @@ try {
     
     echo '<h1>Add an new artifact in tracker ' . $tracker_id . ' in project ' . $group_id . '</h1>';
     echo '<h3>function addArtifact</h3>';
-    $art_id = $client->addArtifact($session_hash, $group_id, $tracker_id, $field_values);
+    $art_id = $client_tracker_v5->addArtifact($session_hash, $group_id, $tracker_id, $field_values);
     var_dump($art_id);
     
 } catch (SoapFault $fault) {
