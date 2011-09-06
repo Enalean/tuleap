@@ -154,7 +154,7 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
         }
         $filter .= " AND group_history.old_value LIKE '%".$value."%'";
     }
-    if(!empty($event) && strcmp($event, 'Any')) {
+    if(!empty($event) && strcmp($event, 'any')) {
         $filter .= " AND ( 0 ";
         if(!empty($subEventsBox)) {
             foreach ($subEventsBox as $key => $value) {
