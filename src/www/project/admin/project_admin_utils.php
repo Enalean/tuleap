@@ -228,6 +228,63 @@ function get_history_entries() {
 }
 
 /**
+ * Convert a php array to JS for project history subevents
+ * It keeps the initial array as keys for the JS array
+ * Values are retrieved from i18n file
+ *
+ * @param Array $array Array containing the items
+ *
+ * @return String
+ */
+function convert_project_history_subevents($array) {
+    $output = '{}';
+    if (is_array($array)) {
+        if (count($array)) {
+            $output = '{';
+            reset($array);
+            $comma = '';
+            do {
+                if(list($key, $value) = each($array)) {
+                    if (is_string($value)) {
+                        $output .= $comma . "'" . $value . "'" . ': '. "'". $GLOBALS['Language']->getText('project_admin_utils', $value). "'";
+                        $comma = ', ';
+                    }
+                }
+            } while($value);
+            $output .= '}';
+        }
+    }
+    return $output;
+}
+
+/**
+ * Convert a php array to JS
+ * Keys contains events, values contain sub event array
+ *
+ * @return String
+ */
+function convert_project_history_events($array) {
+    $output = '{}';
+    if (is_array($array)) {
+        if (count($array)) {
+            $output = '{';
+            reset($array);
+            $comma = '';
+            do {
+                if(list($key, $value) = each($array)) {
+                    if (is_string($key)) {
+                        $output .= $comma . "'" . $key . "'" .': '.convert_project_history_subevents($value);
+                        $comma = ', ';
+                    }
+                }
+            } while($key);
+            $output .= '}';
+        }
+    }
+    return $output;
+}
+
+/**
  * Nicely html-formatted output of this group's audit trail
  *
  * @param Integer $group_id     Id of the project
@@ -378,7 +435,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo '<H3>'.$Language->getText('project_admin_utils','no_g_change').'</H3>';
     }
 
-    $translatedEvents = util_convert_project_history_events(get_history_entries());
+    $translatedEvents = convert_project_history_events(get_history_entries());
 
     if(isset($subEventsString)) {
         $selectedSubEvents = explode(",", $subEventsString);
@@ -386,7 +443,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
             $subEventsBox[] = $element;
         }
     }
-    $translatedSelectedEvents = util_convert_project_history_subevents($subEventsBox);
+    $translatedSelectedEvents = convert_project_history_subevents($subEventsBox);
 
     $js = "options = new Array();
            options['defaultValueActsAsHint'] = false;
