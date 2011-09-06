@@ -447,6 +447,7 @@ project_admin_utils	choose_event	--Choisissez un evènement--
 project_admin_utils	verify_start_date	Vérifiez la date de début
 project_admin_utils	verify_end_date	Vérifiez la date de fin
 project_admin_utils	verify_dates	La date de début doit être inférieure à la date de fin
+project_admin_utils	verify_event_within_pagination	Impossible de récupérer le filtre pour les événements dans la pagination des résultats
 #... end of values
 #
 #-----------------------------------------------
