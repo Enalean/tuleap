@@ -451,7 +451,6 @@ project_admin_utils	choose_event	--Choose an event--
 project_admin_utils	verify_start_date	Verify start date
 project_admin_utils	verify_end_date	Verify end date
 project_admin_utils	verify_dates	Start date must be inferior to end date
-project_admin_utils	verify_event_within_pagination	Unable to retrieve filter for events within results pagination
 #... end of values
 #
 #-----------------------------------------------

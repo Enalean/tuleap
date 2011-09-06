@@ -40,13 +40,10 @@ if($request->valid($vGroupId)) {
 $eventsList = array('any', 'event_permission', 'event_project', 'event_ug', 'event_user', 'event_others');
 $validEvents = new Valid_WhiteList('events_box' , $eventsList);
 $event = $request->getValidated('events_box', $validEvents, null);
-if(!$event) {
+if(!$event ) {
 //Check event value within pagination process
 $validPaginationEvents = new Valid_WhiteList('event' , $eventsList);
 $event = $request->getValidated('event', $validPaginationEvents, null);
-if(!$event) {
-    $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_utils','verify_event_within_pagination'));
-}
 }
 
 $validSubEvents = new Valid_String('sub_events_box');
