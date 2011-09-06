@@ -15,6 +15,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Manage the form that filters project history
+ */
 var ProjectHistory = Class.create({
     initialize: function (sub_events_array, selected_sub_events) {
         if (!sub_events_array) {
