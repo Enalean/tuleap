@@ -448,7 +448,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 
     $js = "options = new Array();
            options['defaultValueActsAsHint'] = false;
-           new UserAutoCompleter('by', '".util_get_dir_image_theme()."', false, options);
+           new UserAutoCompleter('by', '".util_get_dir_image_theme()."', true, options);
            new ProjectHistory(".$translatedEvents.", ".$translatedSelectedEvents.");";
     $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/codendi/ProjectHistory.js');
     $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
