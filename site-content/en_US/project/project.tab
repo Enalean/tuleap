@@ -362,11 +362,11 @@ project_admin_utils	ug_admin	User Groups Admin
 project_admin_utils	project_data_export	Project Data Export
 project_admin_utils	tracker_import	Tracker Import
 project_admin_utils	access_logs	Access Logs
-project_admin_utils	g_change_history	Group Change History
+project_admin_utils	g_change_history	Project Change History
 project_admin_utils	event	Event
 project_admin_utils	val	Value
 project_admin_utils	date	Date
-project_admin_utils	no_g_change	No changes, that corresponds to the filter, have been made to this group
+project_admin_utils	no_g_change	No changes, that corresponds to the filter, have been made to this project
 project_admin_utils	permission_request	Update Selected groups and message
 project_admin_utils	selected_ugroups_title	User group(s) to be notified for admin delegation:
 project_admin_utils	notif_message_title	Default notification message:
