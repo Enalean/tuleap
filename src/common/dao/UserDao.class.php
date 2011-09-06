@@ -706,8 +706,8 @@ class UserDao extends DataAccessObject {
                WHERE user.user_id=user_group.user_id 
                AND user_group.group_id='.$this->da->escapeInt($groupId).' 
                ORDER BY user.user_name'.$stm;
-               
-        $res = db_query($sql);
+
+        $res = $this->retrieve($sql);
         return array('users' => $res, 'numrows' => $this->foundRows());
     }
 
