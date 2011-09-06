@@ -177,8 +177,8 @@ $sql['where'] = " WHERE user.user_id = user_group.user_id
                     AND user_group.group_id = ". db_ei($group_id);
 
 if ($request->exist('search') && $request->get('search') != null) {
-    $um = UserManager::instance();
-    $sql['filter'] = $um->getUserFilter($search);
+    $uh = UserHelper::instance();
+    $sql['filter'] = $uh->getUserNamePatternSQLQuery($search);
 } else {
     $sql['filter'] = '';
 
