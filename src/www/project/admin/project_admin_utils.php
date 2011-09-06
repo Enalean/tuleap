@@ -245,7 +245,7 @@ function convert_project_history_subevents($array) {
             $comma = '';
             do {
                 if(list($key, $value) = each($array)) {
-                    if (is_string($value)) {
+                    if (is_string($value) && !empty($value)) {
                         $output .= $comma . "'" . $value . "'" . ': '. "'". $GLOBALS['Language']->getText('project_admin_utils', $value). "'";
                         $comma = ', ';
                     }

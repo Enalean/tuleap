@@ -48,10 +48,14 @@ if($request->validArray($validSubEvents)) {
     foreach ($subEventsArray as $element) {
         $subEvents[$element] = true;
     }
-} elseif ( $subEventsArray = $request->get('subEventsBox')) {
-    $subEventsBox = explode(",", $subEventsArray);
-    foreach ($subEventsBox as $element) {
-        $subEvents[$element] = true;
+} elseif ($request->exist('subEventsBox')) {
+    $validPaginationSubEvents = new Valid_String('subEventsBox');
+    if ($request->valid($validPaginationSubEvents)) {
+        $subEventsString = $request->get('subEventsBox');
+        $subEventsBox = explode(",", $subEventsString);
+        foreach ($subEventsBox as $element) {
+            $subEvents[$element] = true;
+        }
     }
 } else {
     $subEvents = null;
