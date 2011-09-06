@@ -393,7 +393,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
             echo '<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
             $val = $row['old_value'];
             //Translate dynamic ugroup name for permission entries
-            if (strstr($msg_key, "perm_granted_for_") || strstr($msg_key, "perm_reset_for_")) {
+            if (strstr($msg_key, "perm_granted_for_") || strstr($msg_key, "perm_reset_for_") || strstr($msg_key, "membership_request_updated")) {
                 $ugroupList = explode(",", $val);
                 $val ='';
                 foreach ($ugroupList as $ugroup) {
@@ -512,7 +512,7 @@ function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $v
 
             $val = $row['old_value'];
             //Translate dynamic ugroup name for permission entries
-            if (strstr($msg_key, "perm_granted_for_") || strstr($msg_key, "perm_reset_for_")) {
+            if (strstr($msg_key, "perm_granted_for_") || strstr($msg_key, "perm_reset_for_") || strstr($msg_key, "membership_request_updated")) {
                 $ugroupList = explode(",", $val);
                 $val ='';
                 foreach ($ugroupList as $ugroup) {
