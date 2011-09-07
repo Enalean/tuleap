@@ -1,6 +1,5 @@
 <?php
 
-
 ///////////////////////////////////////
 // Configuration part
 $test_server = 'http://' .$_SERVER['SERVER_ADDR'] /*.':'. $_SERVER['SERVER_PORT']*/;
@@ -48,3 +47,5 @@ try {
 } catch (SoapFault $fault) {
     var_dump($fault);
 }
+
+?>
