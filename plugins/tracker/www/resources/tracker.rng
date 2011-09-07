@@ -648,7 +648,7 @@
       </group>
       <group>
         <attribute name="type">
-          <value>plugin_graphontrackers</value>
+          <value>plugin_graphontrackersv5</value>
         </attribute>
         <optional>
           <element name="charts">
