@@ -166,7 +166,7 @@ class UserManager {
 /**
  * Returns an array of user ids that match the given string
  * 
- * @param String $search 
+ * @param String $search comma-separated users' names.
  * 
  * @return Array
  */

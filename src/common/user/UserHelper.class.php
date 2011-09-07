@@ -119,13 +119,11 @@ class UserHelper {
     }
 
     /**
-     * getUserFilter
-     * 
-     * Get SQL statement for filtering according to users
+     * Get SQL statement for filtering according to users' names
      *
-     * @param $by String
+     * @param string $by a string containing comma-separated users' names or a pattern of user name.
      *
-     * @return String
+     * @return string
      */
     function getUserFilter($by) {
         $filter = '';
