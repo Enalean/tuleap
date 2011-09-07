@@ -135,47 +135,35 @@ function html_get_alt_row_color ($i) {
 	}
 }
 
-/**
- * Build an HTML select box from a given array
- *
- * @param Array $vals         Array containing text of options and optionally values as keys
- * @param String $select_name Name assigned to this form element
- * @param String $checked_val Optional. Pass the value of the item that should be checked
- * @param Boolean $samevals   Optional. Set the value the same as displayed text
- * @param Boolean $use_keys   Optional. Use array keys as values of the options
- *
- * @return String
- */
-function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz',$samevals = 0, $use_keys = null) {
+function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz',$samevals = 0) {
+	/*
+		Takes one array, with the first array being the "id" or value
+		and the array being the text you want displayed
+
+		The second parameter is the name you want assigned to this form element
+
+		The third parameter is optional. Pass the value of the item that should be checked
+	*/
 
 	$return = '
 		<SELECT NAME="'.$select_name.'" id="'.$select_name.'">';
-    if ($use_keys) {
-        foreach ($vals as $key => $val) {
-            $return .= "\n\t\t<OPTION VALUE=\"" . $key . "\"";
-            if ($key == $checked_val) {
-                $return .= ' SELECTED';
-            }
-            $return .= '>'.$val.'</OPTION>';
-        }
-    } else {
-        $rows=count($vals);
 
-        for ($i=0; $i<$rows; $i++) {
-            if ( $samevals ) {
-                $return .= "\n\t\t<OPTION VALUE=\"" . $vals[$i] . "\"";
-                if ($vals[$i] == $checked_val) {
-                    $return .= ' SELECTED';
-                }
-            } else {
-                $return .= "\n\t\t<OPTION VALUE=\"" . $i .'"';
-                if ($i == $checked_val) {
-                    $return .= ' SELECTED';
-                }
-            }
-            $return .= '>'.$vals[$i].'</OPTION>';
-        }
-    }
+	$rows=count($vals);
+
+	for ($i=0; $i<$rows; $i++) {
+		if ( $samevals ) {
+			$return .= "\n\t\t<OPTION VALUE=\"" . $vals[$i] . "\"";
+			if ($vals[$i] == $checked_val) {
+				$return .= ' SELECTED';
+			}
+		} else {
+			$return .= "\n\t\t<OPTION VALUE=\"" . $i .'"';
+			if ($i == $checked_val) {
+				$return .= ' SELECTED';
+			}
+		}
+		$return .= '>'.$vals[$i].'</OPTION>';
+	}
 	$return .= '
 		</SELECT>';
 
