@@ -12,6 +12,7 @@
 
 */
 require_once('common/include/TemplateSingleton.class.php');
+require_once('common/html/HTML_Element_Selectbox_Array.class.php');
 
 
 function project_admin_header($params) {
@@ -338,7 +339,8 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
                     'event_user'       => $GLOBALS["Language"]->getText("project_admin_utils", "event_user"),
                     'event_ug'  => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug"),
                     'event_others'      => $GLOBALS["Language"]->getText("project_admin_utils", "event_others"));
-    echo  html_build_select_box_from_array($events, 'events_box', $event, false, true);
+    $select = new HTML_Element_Selectbox_Array($events, 'events_box', '', 'events_box', 'events_box', false, '', '', $event);
+    echo $select->renderValue();
 
     //SubEvent select Box
     echo '</TD><TD><select id="sub_events_box" name="sub_events_box[]" multiple>
