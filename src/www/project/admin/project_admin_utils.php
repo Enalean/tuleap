@@ -146,7 +146,7 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
     }
     if(!empty($endDate)) {
         list($timestamp,) = util_date_to_unixtime($endDate);
-        // Add 23:59:59 to to timestamp
+        // Add 23:59:59 to timestamp
         $timestamp = $timestamp + 86399;
         $filter .= " AND group_history.date < '".$timestamp."'";
     }
