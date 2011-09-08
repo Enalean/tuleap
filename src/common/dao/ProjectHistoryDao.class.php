@@ -26,7 +26,7 @@ class ProjectHistoryDao extends DataAccessObject {
     /**
      * Constructor of the class
      *
-     * @param DataAccess $da
+     * @param DataAccess $da instance of the DataAccess class
      *
      * @return void
      */
@@ -89,7 +89,7 @@ class ProjectHistoryDao extends DataAccessObject {
                VALUES ('.$this->da->escapeInt($groupId).' , '.$this->da->quoteSmart($fieldName). ', '.
                $this->da->quoteSmart($oldValue).' , '.$this->da->escapeInt($userId).' , '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).')';
         $this->retrieve($sql);
-}
+    }
 
 }
 ?>
