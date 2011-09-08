@@ -866,7 +866,6 @@ fi
 %files plugin-graphontrackers
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/graphontrackersv5
-%dir %{APP_DATA_DIR}/graphontrackersv5
 
 #
 # Themes
