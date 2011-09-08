@@ -46,9 +46,7 @@ class HTML_Element_SelectboxTest extends UnitTestCase {
     function testAddMultipleOptions() {
         $selectbox = new HTML_Element_Selectbox('label', 'name', 'value', false);
         $selectbox->addMultipleOptions(array('one' => '1', 'two' => '2'), 'two');
-
-        // Just to make tests fail will be reverted soon.
-        syntax error :p
+         $this->assertEqual('<select id="customfield_3" name="name" ><option value="one" >1</option><option value="two" selected="selected">2</option></select>', $selectbox->renderValue());
     }
 
 }
