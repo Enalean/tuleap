@@ -11,7 +11,7 @@
 	Standard header to be used on all /project/admin/* pages
 
 */
-require_once('../../../common/dao/ProjectHistoryDao.class.php');
+require_once('common/dao/ProjectHistoryDao.class.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/html/HTML_Element_Selectbox.class.php');
 require_once('common/include/Toggler.class.php');
