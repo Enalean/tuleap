@@ -11,6 +11,7 @@
 	Standard header to be used on all /project/admin/* pages
 
 */
+require_once('../../../common/dao/ProjectHistoryDao.class.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/html/HTML_Element_Selectbox.class.php');
 require_once('common/include/Toggler.class.php');
@@ -70,7 +71,7 @@ function project_admin_footer($params) {
 
 /*
 
-	The following three functions are for group
+	The following functions are for group
 	audit trail
 
 	When changes like adduser/rmuser/change status
@@ -78,27 +79,6 @@ function project_admin_footer($params) {
 	using group_add_history()
 
 */
-
-function group_get_history ($offset, $limit, $group_id=false, $history_filter=null) {
-
-    $sql='select SQL_CALC_FOUND_ROWS group_history.field_name,group_history.old_value,group_history.date,user.user_name '.
-         'FROM group_history,user '.
-         'WHERE group_history.mod_by=user.user_id ';
-    if ($history_filter) {
-        $sql .= $history_filter;
-    }
-    $sql.=' AND group_id='.db_ei($group_id).' ORDER BY group_history.date DESC';
-    if ($offset > 0 || $limit > 0) {
-         $sql .= ' LIMIT '.db_ei($offset).', '.db_ei($limit);
-    }
-
-    $res = db_query($sql);
-    $sql = 'SELECT FOUND_ROWS() as nb';
-    $res_numrows = db_query($sql);
-    $row = db_fetch_array($res_numrows);
-    
-    return array('history' => $res, 'numrows' => $row['nb']);
-}       
 
 function group_add_history ($field_name,$old_value,$group_id, $args=false) {
     /*
@@ -285,7 +265,7 @@ function displayProjectHistoryResults($group_id, $res, $export = false, $i = 1) 
 
     $hp = Codendi_HTMLPurifier::instance();
 
-    while ($row = db_fetch_array($res['history'])) {
+    while ($row = $res['history']->getRow()) {
         $field = $row['field_name'];
 
         // see if there are any arguments after the message key
@@ -363,8 +343,9 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
      */
     global $Language;
 
+    $dao = new ProjectHistoryDao(CodendiDataAccess::instance());
     $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
-    $res = group_get_history($offset, $limit, $group_id, $history_filter);
+    $res = $dao->groupGetHistory($offset, $limit, $group_id, $history_filter);
 
     if (isset($subEventsBox)) {
         $subEventsString = implode(",", array_keys($subEventsBox));
@@ -498,8 +479,9 @@ function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $v
                               'by'    => $Language->getText('global','by'));
     echo build_csv_header($col_list, $documents_title).$eol;
 
+    $dao = new ProjectHistoryDao(CodendiDataAccess::instance());
     $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
-    $res = group_get_history(0, 0, $group_id, $history_filter);
+    $res = $dao->groupGetHistory(0, 0, $group_id, $history_filter);
 
     if ($res['numrows'] > 0) {
         displayProjectHistoryResults($group_id, $res, true);
