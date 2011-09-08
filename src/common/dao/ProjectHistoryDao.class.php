@@ -46,15 +46,22 @@ class ProjectHistoryDao extends DataAccessObject {
         return array('history' => $this->retrieve($sql), 'numrows' => $this->foundRows());
 }
 
+/**
+ * handle the insertion of history for corresponding  parameters
+ * $args is an array containing a list of parameters to use when
+ * the message is to be displayed by the history.php script
+ * The array is stored as a string at the end of the field_name
+ * with the following format:
+ * field_name %% [arg1, arg2...]
+ *
+ * @param String  $fieldName Event category
+ * @param String  $oldValue  Event value
+ * @param Integer $groupId   Project ID
+ * @param Array   $args      list of parameters used for message display
+ *
+ * @return DataAccessResult
+ */
 function groupAddHistory ($fieldName,$oldValue,$groupId, $args=false) {
-    /*
-     handle the insertion of history for these parameters
-     $args is an array containing a list of parameters to use when
-     the message is to be displayed by the history.php script
-     The array is stored as a string at the end of the field_name
-     with the following format:
-     field_name %% [arg1, arg2...]
-     */
     if ($args) {
         $fieldName .= " %% ".implode("||", $args);
     }

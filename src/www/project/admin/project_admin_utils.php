@@ -67,8 +67,6 @@ function project_admin_footer($params) {
     site_project_footer($params);
 }
 
-
-
 /*
 
 	The following functions are for group
@@ -80,6 +78,23 @@ function project_admin_footer($params) {
 
 */
 
+/**
+ * @deprecated
+ *
+ * handle the insertion of history for corresponding  parameters
+ * $args is an array containing a list of parameters to use when
+ * the message is to be displayed by the history.php script
+ * The array is stored as a string at the end of the field_name
+ * with the following format:
+ * field_name %% [arg1, arg2...]
+ * 
+ * @param String  $fieldName Event category
+ * @param String  $oldValue  Event value
+ * @param Integer $groupId   Project ID
+ * @param Array   $args      list of parameters used for message display
+ *
+ * @return DataAccessResult
+ */
 function group_add_history ($field_name,$old_value,$group_id, $args=false) {
     $dao = new ProjectHistoryDao(CodendiDataAccess::instance());
     return $dao->groupAddHistory($field_name,$old_value,$group_id, $args);
