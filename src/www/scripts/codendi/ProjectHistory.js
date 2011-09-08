@@ -34,10 +34,10 @@ var ProjectHistory = Class.create({
         this.removeAllOptions($('sub_events_box'));
         this.addOption('choose', 'choose_event', false, true);
 
-        event = $('events_box').value;
-        SubEvents = this.sub_events_array[event];
+        history_event = $('events_box').value;
+        SubEvents = this.sub_events_array[history_event];
         for (key in SubEvents) {
-            this.addOption(event, key, selected_sub_events[key]);
+            this.addOption(history_event, key, selected_sub_events[key]);
         }
     },
     removeAllOptions: function(selectbox) {
@@ -46,8 +46,8 @@ var ProjectHistory = Class.create({
             selectbox.remove(i);
         }
     },
-    addOption: function(event, value, selected, disabled) {
-        var optn = Builder.node('option', {'value' : value}, this.sub_events_array[event][value]);
+    addOption: function(history_event, value, selected, disabled) {
+        var optn = Builder.node('option', {'value' : value}, this.sub_events_array[history_event][value]);
         $('sub_events_box').appendChild(optn);
         if (selected) {
             optn.selected = true;
