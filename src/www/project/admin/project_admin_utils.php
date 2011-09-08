@@ -141,11 +141,13 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
         $filter .= $uh->getUserFilter($by);
     }
     if(!empty($startDate)) {
-        list($timestamp,) = util_date_to_unixtime($startDate." 00:00:00");
+        list($timestamp,) = util_date_to_unixtime($startDate);
         $filter .= " AND group_history.date > '".$timestamp."'";
     }
     if(!empty($endDate)) {
-        list($timestamp,) = util_date_to_unixtime($endDate." 23:59:59");
+        list($timestamp,) = util_date_to_unixtime($endDate);
+        // Add 23:59:59 to to timestamp
+        $timestamp = $timestamp + 86399;
         $filter .= " AND group_history.date < '".$timestamp."'";
     }
     if(!empty($value)) {

@@ -90,7 +90,7 @@ if ($request->valid($vEndDate)) {
     $endDate = null;
 }
 
-if ($startDate && $endDate && (strtotime($startDate) >= strtotime($endDate))) {
+if ($startDate && $endDate && (strtotime($startDate) > strtotime($endDate))) {
     $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_dates'));
     $startDate = null;
     $endDate = null;
