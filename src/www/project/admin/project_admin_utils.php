@@ -81,25 +81,8 @@ function project_admin_footer($params) {
 */
 
 function group_add_history ($field_name,$old_value,$group_id, $args=false) {
-    /*
-     handle the insertion of history for these parameters
-     $args is an array containing a list of parameters to use when
-     the message is to be displayed by the history.php script
-     The array is stored as a string at the end of the field_name
-     with the following format:
-     field_name %% [arg1, arg2...]
-     */
-
-    if ($args) {
-        $field_name .= " %% ".implode("||", $args);
-    }
-    $user_id = user_getid();
-    if ($user_id == 0){
-        $user_id = 100;
-    }
-    $sql= 'insert into group_history(group_id,field_name,old_value,mod_by,date) '.
-		'VALUES ('.db_ei($group_id).' , "'.db_es($field_name). '", "'.db_es($old_value).'" , '.db_ei($user_id).' , '.db_ei(time()).')';
-    return db_query($sql);
+    $dao = new ProjectHistoryDao(CodendiDataAccess::instance());
+    return $dao->groupAddHistory($field_name,$old_value,$group_id, $args);
 }
 
 /**

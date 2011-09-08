@@ -29,21 +29,42 @@ class ProjectHistoryDao extends DataAccessObject {
         $this->table_name = 'group_history';
     }
 
-    public function groupGetHistory ($offset, $limit, $group_id=false, $history_filter=null) {
+    public function groupGetHistory ($offset, $limit, $groupId=false, $historyFilter=null) {
         $sql='select SQL_CALC_FOUND_ROWS group_history.field_name,
               group_history.old_value,
               group_history.date,
               user.user_name 
               FROM '.$this->table_name.',user
               WHERE group_history.mod_by=user.user_id ';
-        if ($history_filter) {
-            $sql .= $history_filter;
+        if ($historyFilter) {
+            $sql .= $historyFilter;
         }
-        $sql.=' AND group_id='.$this->da->escapeInt($group_id).' ORDER BY group_history.date DESC';
+        $sql.=' AND group_id='.$this->da->escapeInt($groupId).' ORDER BY group_history.date DESC';
         if ($offset > 0 || $limit > 0) {
             $sql .= ' LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
         }
         return array('history' => $this->retrieve($sql), 'numrows' => $this->foundRows());
+}
+
+function groupAddHistory ($fieldName,$oldValue,$groupId, $args=false) {
+    /*
+     handle the insertion of history for these parameters
+     $args is an array containing a list of parameters to use when
+     the message is to be displayed by the history.php script
+     The array is stored as a string at the end of the field_name
+     with the following format:
+     field_name %% [arg1, arg2...]
+     */
+    if ($args) {
+        $fieldName .= " %% ".implode("||", $args);
+    }
+    $userId = user_getid();
+    if ($userId == 0){
+        $userId = 100;
+    }
+    $sql= 'insert into '.$this->table_name.'(group_id,field_name,old_value,mod_by,date)
+           VALUES ('.$this->da->escapeInt($groupId).' , '.$this->da->quoteSmart($fieldName). ', '.$this->da->quoteSmart($oldValue).' , '.$this->da->escapeInt($userId).' , '.$this->da->escapeInt(time()).')';
+      $this->retrieve($sql);
 }
 
 }
