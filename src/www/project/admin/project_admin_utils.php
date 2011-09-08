@@ -270,6 +270,16 @@ function convert_project_history_events($array, $subevents) {
     return $output;
 }
 
+/**
+ * Display the retrieved reult set
+ *
+ * @param Integer $group_id Id of the project
+ * @param Array   $res      Contains the retrieved results
+ * @param Boolean $export   Switch CSV export mode or HTML display
+ * @param unknown_type $i   Line number indicator
+ *
+ * @return void
+ */
 function displayProjectHistoryResults($group_id, $res, $export = false, $i = 1) {
     global $Language;
 
