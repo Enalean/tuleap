@@ -27,23 +27,23 @@ $request = HTTPRequest::instance();
 // Check if group_id is valid
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if($request->valid($vGroupId)) {
+if ($request->valid($vGroupId)) {
     $group_id = $request->get('group_id');
 } else {
     exit_no_group();
 }
 
 $eventsList = array('any', 'event_permission', 'event_project', 'event_ug', 'event_user', 'event_others');
-$validEvents = new Valid_WhiteList('events_box' , $eventsList);
+$validEvents = new Valid_WhiteList('events_box', $eventsList);
 $event = $request->getValidated('events_box', $validEvents, null);
-if(!$event ) {
-//Check event value within pagination process
-$validPaginationEvents = new Valid_WhiteList('event' , $eventsList);
-$event = $request->getValidated('event', $validPaginationEvents, null);
+if (!$event ) {
+    //Check event value within pagination process
+    $validPaginationEvents = new Valid_WhiteList('event', $eventsList);
+    $event = $request->getValidated('event', $validPaginationEvents, null);
 }
 
 $validSubEvents = new Valid_String('sub_events_box');
-if($request->validArray($validSubEvents)) {
+if ($request->validArray($validSubEvents)) {
     $subEventsArray = $request->get('sub_events_box');
     foreach ($subEventsArray as $element) {
         $subEvents[$element] = true;
@@ -62,7 +62,7 @@ if($request->validArray($validSubEvents)) {
 }
 
 $validValue = new Valid_String('value');
-if($request->valid($validValue)) {
+if ($request->valid($validValue)) {
     $value = $request->get('value');
 } else {
     $value = null;
@@ -75,7 +75,7 @@ $startDate = $request->get('start');
 if ($request->valid($vStartDate)) {
     $startDate = $request->get('start');
 } elseif (!empty($startDate)) {
-    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_start_date'));
+    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils', 'verify_start_date'));
     $startDate = null;
 }
 
@@ -86,18 +86,18 @@ $endDate = $request->get('end');
 if ($request->valid($vEndDate)) {
     $endDate = $request->get('end');
 } elseif (!empty($endDate)) {
-    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_end_date'));
+    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils', 'verify_end_date'));
     $endDate = null;
 }
 
 if ($startDate && $endDate && (strtotime($startDate) > strtotime($endDate))) {
-    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils','verify_dates'));
+    $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils', 'verify_dates'));
     $startDate = null;
     $endDate = null;
 }
 
 $validBy = new Valid_String('by');
-if($request->valid($validBy)) {
+if ($request->valid($validBy)) {
     $by = $request->get('by');
 } else {
     $by = null;
