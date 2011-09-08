@@ -29,6 +29,16 @@ class ProjectHistoryDao extends DataAccessObject {
         $this->table_name = 'group_history';
     }
 
+    /**
+     * Returns an array containing project history elements and their count
+     *
+     * @param Integer $offset        OFFSET keyword for the LIMIT clause
+     * @param Integer $limit         Number of results to be returned
+     * @param Integer $groupId       Project ID
+     * @param String  $historyFilter filtering statement
+     *
+     * @return Array
+     */
     public function groupGetHistory ($offset, $limit, $groupId=false, $historyFilter=null) {
         $sql='select SQL_CALC_FOUND_ROWS group_history.field_name,
               group_history.old_value,
@@ -44,7 +54,7 @@ class ProjectHistoryDao extends DataAccessObject {
             $sql .= ' LIMIT '.$this->da->escapeInt($offset).', '.$this->da->escapeInt($limit);
         }
         return array('history' => $this->retrieve($sql), 'numrows' => $this->foundRows());
-}
+    }
 
 /**
  * handle the insertion of history for corresponding  parameters
@@ -70,8 +80,9 @@ function groupAddHistory ($fieldName,$oldValue,$groupId, $args=false) {
         $userId = 100;
     }
     $sql= 'insert into '.$this->table_name.'(group_id,field_name,old_value,mod_by,date)
-           VALUES ('.$this->da->escapeInt($groupId).' , '.$this->da->quoteSmart($fieldName). ', '.$this->da->quoteSmart($oldValue).' , '.$this->da->escapeInt($userId).' , '.$this->da->escapeInt(time()).')';
-      $this->retrieve($sql);
+           VALUES ('.$this->da->escapeInt($groupId).' , '.$this->da->quoteSmart($fieldName). ', '.
+           $this->da->quoteSmart($oldValue).' , '.$this->da->escapeInt($userId).' , '.$this->da->escapeInt($_SERVER['REQUEST_TIME']).')';
+    $this->retrieve($sql);
 }
 
 }
