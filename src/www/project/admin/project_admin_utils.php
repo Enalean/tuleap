@@ -381,8 +381,8 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
     echo '<TABLE ID="project_history_search">';
     echo '<TH colspan="2" style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
               <TH style="text-align:left">'.$Language->getText('project_admin_utils','val').'</TH>
-              <TH style="text-align:left">'.$Language->getText('project_export_task_export', 'start_date').'</TH>
-              <TH style="text-align:left">'.$Language->getText('project_export_task_export', 'end_date').'</TH>
+              <TH style="text-align:left">'.$Language->getText('project_admin_utils', 'from').'</TH>
+              <TH style="text-align:left">'.$Language->getText('project_admin_utils', 'to').'</TH>
               <TH style="text-align:left">'.$Language->getText('global','by').'</TH>
               <TR VALIGN="TOP"><TD>';
 
