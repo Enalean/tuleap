@@ -5,6 +5,7 @@
 // http://sourceforge.net
 //
 // 
+
 require_once('pre.php');
 require_once('vars.php');
 require_once('www/admin/admin_utils.php');
@@ -13,8 +14,6 @@ require_once('www/project/export/project_export_utils.php');
 require_once('www/project/admin/project_history.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/event/EventManager.class.php');
-
-
 
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
