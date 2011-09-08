@@ -749,9 +749,7 @@ class DocmanPlugin extends Plugin {
         array_push($params['subEvents']['event_permission'], 'perm_reset_for_document',
                                                              'perm_granted_for_document',
                                                              'perm_reset_for_folder',
-                                                             'perm_granted_for_folder',
-                                                             'perm_reset_for_docgroup',
-                                                             'perm_granted_for_docgroup'
+                                                             'perm_granted_for_folder'
         );
     }
 
