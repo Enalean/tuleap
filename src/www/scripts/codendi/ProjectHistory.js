@@ -24,25 +24,12 @@ var ProjectHistory = Class.create({
             throw 'sub_events_array is mandatory!';
         }
         this.sub_events_array = sub_events_array;
-        var title = $('history_search_title');
-        title.observe('click', this.toggleForm);
         // We may make the form hidden by default
         //$('project_history_search').hide();
         Event.observe($('events_box'), 'change', this.SelectSubEvent.bindAsEventListener(this));
         // Load sub events content when page loads
         this.SelectSubEvent(selected_sub_events);
      },
-    toggleForm: function() {
-        // Toggle search form
-        $('project_history_search').toggle();
-        // Switch icon plus/minus
-        var icon = $('toggle_form_icon');
-        if (icon.src.indexOf('toggle_plus.png') != -1) {
-            icon.src = icon.src.replace('toggle_plus.png', 'toggle_minus.png');
-        } else {
-            icon.src = icon.src.replace('toggle_minus.png', 'toggle_plus.png');
-        }
-    },
     SelectSubEvent: function(selected_sub_events) {
         this.removeAllOptions($('sub_events_box'));
         this.addOption('choose', 'choose_event', false, true);

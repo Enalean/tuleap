@@ -36,9 +36,9 @@ class HTML_Element_Selectbox extends HTML_Element {
             $this->addOption(new HTML_Element_Option($GLOBALS['Language']->getText('global', 'none_dashed'), "", ($this->value === "" || $this->value === null)));
         }
     }
-    protected function renderValue() {
+    public function renderValue() {
         $hp = Codendi_HTMLPurifier::instance();
-        $html = '<select id="'. $this->id .'" name='.  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) .'" ';
+        $html = '<select id="'. $this->id .'" name="'.  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) .'" ';
         if ($this->onchange) {
             $html .= 'onchange="'. $this->onchange .'" ';
         }
@@ -51,6 +51,31 @@ class HTML_Element_Selectbox extends HTML_Element {
     }
     public function addOption(HTML_Element_Option $option) {
         $this->options[] = $option;
+    }
+
+    /**
+     * Set the id
+     *
+     * @param String $id
+     *
+     * @return void
+     */
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    /**
+     * Add multiple options from an array
+     *
+     * @param Array  $options  List of options to add
+     * @param String $selected The option to be selected by default
+     *
+     * @return void
+     */
+    public function addMultipleOptions($options, $selected) {
+        foreach ($options as $value => $label) {
+            $this->addOption(new HTML_Element_Option($label, $value, $value == $selected));
+        }
     }
 }
 

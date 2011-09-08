@@ -12,8 +12,8 @@
 
 */
 require_once('common/include/TemplateSingleton.class.php');
-require_once('common/html/HTML_Element_Selectbox_Array.class.php');
-
+require_once('common/html/HTML_Element_Selectbox.class.php');
+require_once('common/include/Toggler.class.php');
 
 function project_admin_header($params) {
     global $group_id,$feedback,$Language;
@@ -238,7 +238,7 @@ function get_history_entries() {
  * @return String
  */
 function convert_project_history_subevents($array) {
-    $output = '{}';
+    $output = '{ }';
     if (is_array($array)) {
         if (count($array)) {
             $output = '{';
@@ -265,7 +265,7 @@ function convert_project_history_subevents($array) {
  * @return String
  */
 function convert_project_history_events($array) {
-    $output = '{}';
+    $output = '{ }';
     if (is_array($array)) {
         if (count($array)) {
             $output = '{';
@@ -321,9 +321,9 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 
     echo '
         <H2>'.$Language->getText('project_admin_utils','g_change_history').'</H2>';
-    echo'<SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title"><img src="'.util_get_image_theme("ic/toggle_minus.png").'" id="toggle_form_icon"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
-    echo '<FORM METHOD="POST" ACTION="?group_id='.$group_id.'" id="project_history_form" name="project_history_form" enctype="multipart/form-data">';
-
+    echo '<FORM METHOD="POST" ACTION="?group_id='.$group_id.'" id="project_history_form" name="project_history_form">';
+    echo '<div>';
+    echo'<SPAN title="'.$Language->getText('project_admin_utils','toggle_search').'" id="history_search_title" class="'. Toggler::getClassname('history_search_title') .'"><B>'.$Language->getText('project_admin_utils','history_search_title').'</B></SPAN>';
     echo '<TABLE ID="project_history_search">';
     echo '<TH colspan="2" style="text-align:left">'.$Language->getText('project_admin_utils','event').'</TH>
               <TH style="text-align:left">'.$Language->getText('project_admin_utils','val').'</TH>
@@ -339,7 +339,9 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
                     'event_user'       => $GLOBALS["Language"]->getText("project_admin_utils", "event_user"),
                     'event_ug'  => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug"),
                     'event_others'      => $GLOBALS["Language"]->getText("project_admin_utils", "event_others"));
-    $select = new HTML_Element_Selectbox_Array($events, 'events_box', '', 'events_box', 'events_box', false, '', '', $event);
+    $select = new HTML_Element_Selectbox('', 'events_box', '');
+    $select->setId('events_box');
+    $select->addMultipleOptions($events, $event);
     echo $select->renderValue();
 
     //SubEvent select Box
@@ -359,6 +361,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
     echo '<TR><TD id="events_array"></TD></TR>';
     echo '<TR><TD><input type="submit" name="filter"></TD></TR>
               </TABLE>';
+    echo '</div>';
     echo'<P>';
     if ($res['numrows'] > 0) {
         $title_arr=array();
