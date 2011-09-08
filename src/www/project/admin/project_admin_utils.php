@@ -143,27 +143,21 @@ function build_grouphistory_filter ($event = null, $subEventsBox = null, $value 
  * @return Array
  */
 function get_history_entries() {
-    return array('event_permission' => array('perm_reset_for_field',
-                                        'perm_reset_for_tracker',
-                                        'perm_reset_for_package',
-                                        'perm_reset_for_release',
-                                        'perm_reset_for_document',
-                                        'perm_reset_for_folder',
-                                        'perm_reset_for_docgroup',
-                                        'perm_reset_for_wiki',
-                                        'perm_reset_for_wikipage',
-                                        'perm_reset_for_wikiattachment',
-                                        'perm_reset_for_object',
+    $subEvents = array('event_permission' => array('perm_reset_for_field',
                                         'perm_granted_for_field',
+                                        'perm_reset_for_tracker',
                                         'perm_granted_for_tracker',
+                                        'perm_reset_for_package',
                                         'perm_granted_for_package',
+                                        'perm_reset_for_release',
                                         'perm_granted_for_release', 
-                                        'perm_granted_for_document',
-                                        'perm_granted_for_folder',
-                                        'perm_granted_for_docgroup',
+                                        'perm_reset_for_wiki',
                                         'perm_granted_for_wiki',
+                                        'perm_reset_for_wikipage',
                                         'perm_granted_for_wikipage',
+                                        'perm_reset_for_wikiattachment',
                                         'perm_granted_for_wikiattachment',
+                                        'perm_reset_for_object',
                                         'perm_granted_for_object'),
                  'event_project' =>     array('rename_done',
                                         'rename_with_error',
@@ -191,6 +185,12 @@ function get_history_entries() {
                                         'changed_task_mgr_other_settings',
                                         'changed_sr_settings'),
                  'choose' =>      array('choose_event'));
+
+    //Plugins related events should be filled using the hook
+    $params = array('subEvents' => &$subEvents);
+    $em = EventManager::instance();
+    $em->processEvent('fill_project_history_sub_events', $params);
+    return $subEvents;
 }
 
 /**
