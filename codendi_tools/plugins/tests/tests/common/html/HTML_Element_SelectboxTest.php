@@ -48,7 +48,7 @@ class HTML_Element_SelectboxTest extends UnitTestCase {
         $selectbox->addMultipleOptions(array('one' => '1', 'two' => '2'), 'two');
 
         // Just to make tests fail will be reverted soon.
-        $this->assertTrue(false);
+        syntax error :p
     }
 
 }
