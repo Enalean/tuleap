@@ -268,6 +268,67 @@ function convert_project_history_events($array, $subevents) {
     return $output;
 }
 
+function displayProjectHistoryResults($group_id, $res, $export = false, $i = 1) {
+    global $Language;
+
+    $hp = Codendi_HTMLPurifier::instance();
+
+    while ($row = db_fetch_array($res['history'])) {
+        $field = $row['field_name'];
+
+        // see if there are any arguments after the message key
+        // format is "msg_key ## arg1||arg2||...
+        // If msg_key cannot be found in the localized message
+        // catalog then display the msg has is because this is very
+        // likely a legacy message (pre-localization version)
+        if (strpos($field," %% ") !== false) {
+            list($msg_key, $args) = explode(" %% ",$field);
+            if ($args) {
+                $arr_args = explode('||',$args);
+            }
+        } else {
+            $msg_key=$field;
+            $arr_args="";
+        }
+        $msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
+        if (!(strpos($msg,"*** Unkown msg") === false)) {
+            $msg = $field;
+        }
+
+        if (!$export) {
+            echo '<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
+        }
+        $val = $row['old_value'];
+        //Translate dynamic ugroup name for permission entries
+        if (strstr($msg_key, "perm_granted_for_") || strstr($msg_key, "perm_reset_for_") || strstr($msg_key, "membership_request_updated")) {
+            $ugroupList = explode(",", $val);
+            $val ='';
+            foreach ($ugroupList as $ugroup) {
+                if ($val) {
+                    $val.=', ';
+                }
+                $val .= util_translate_name_ugroup($ugroup);
+            }
+        } else if ($msg_key == "group_type") {
+            $template =& TemplateSingleton::instance();
+            $val = $template->getLabel($val);
+        }
+
+        if ($export) {
+            $documents_body = array ('event' => $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id),
+                                     'val'   => $hp->purify($val),
+                                     'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']),
+                                     'by'    => user_get_name_display_from_unix($row['user_name']));
+            echo build_csv_record(array('event', 'val', 'date', 'by'), $documents_body)."\n";
+        } else {
+            echo $hp->purify($val);
+
+            echo '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).
+            '</TD><TD>'.user_get_name_display_from_unix($row['user_name']).'</TD></TR>';
+        }
+    }
+}
+
 /**
  * Nicely html-formatted output of this group's audit trail
  *
@@ -292,8 +353,6 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
 
     $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
     $res = group_get_history($offset, $limit, $group_id, $history_filter);
-
-    $hp =& Codendi_HTMLPurifier::instance();
 
     if (isset($subEventsBox)) {
         $subEventsString = implode(",", array_keys($subEventsBox));
@@ -356,50 +415,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo html_build_list_table_top ($title_arr);
         $i=1;
 
-        while ($row = db_fetch_array($res['history'])) {
-            $field = $row['field_name'];
-
-            // see if there are any arguments after the message key
-            // format is "msg_key ## arg1||arg2||...
-            // If msg_key cannot be found in the localized message
-            // catalog then display the msg has is because this is very
-            // likely a legacy message (pre-localization version)
-            if (strpos($field," %% ") !== false) {
-                list($msg_key, $args) = explode(" %% ",$field);
-                if ($args) {
-                    $arr_args = explode('||',$args);
-                }
-            } else {
-                $msg_key=$field;
-                $arr_args="";
-            }
-            $msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
-            if (!(strpos($msg,"*** Unkown msg") === false)) {
-                $msg = $field;
-            }
-
-            echo '<TR class="'. html_get_alt_row_color($i++) .'"><TD>'. $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id).'</TD><TD>';
-            $val = $row['old_value'];
-            //Translate dynamic ugroup name for permission entries
-            if (strstr($msg_key, "perm_granted_for_") || strstr($msg_key, "perm_reset_for_") || strstr($msg_key, "membership_request_updated")) {
-                $ugroupList = explode(",", $val);
-                $val ='';
-                foreach ($ugroupList as $ugroup) {
-                    if ($val) {
-                        $val.=', ';
-                    }
-                    $val .= util_translate_name_ugroup($ugroup);
-                }
-            } else if ($msg_key == "group_type") {
-                $template =& TemplateSingleton::instance();
-                $val = $template->getLabel($val);
-            }
-
-            echo $hp->purify($val);
-
-            echo '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).'</TD>'.
-                             '<TD>'.user_get_name_display_from_unix($row['user_name']).'</TD></TR>';
-        }
+        displayProjectHistoryResults($group_id, $res, false, &$i);
 
         echo '</TABLE>';
 
@@ -473,54 +489,8 @@ function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $v
     $history_filter = build_grouphistory_filter($event, $subEventsBox, $value, $startDate, $endDate, $by);
     $res = group_get_history(0, 0, $group_id, $history_filter);
 
-    $hp = Codendi_HTMLPurifier::instance();
-
     if ($res['numrows'] > 0) {
-        while ($row = db_fetch_array($res['history'])) {
-            $field = $row['field_name'];
-
-            // see if there are any arguments after the message key
-            // format is "msg_key ## arg1||arg2||...
-            // If msg_key cannot be found in the localized message
-            // catalog then display the msg has is because this is very
-            // likely a legacy message (pre-localization version)
-            if (strpos($field," %% ") !== false) {
-                list($msg_key, $args) = explode(" %% ",$field);
-                if ($args) {
-                    $arr_args = explode('||',$args);
-                }
-            } else {
-                $msg_key=$field;
-                $arr_args="";
-            }
-            $msg = $Language->getText('project_admin_utils', $msg_key, $arr_args);
-            if (!(strpos($msg,"*** Unkown msg") === false)) {
-                $msg = $field;
-            }
-
-            $val = $row['old_value'];
-            //Translate dynamic ugroup name for permission entries
-            if (strstr($msg_key, "perm_granted_for_") || strstr($msg_key, "perm_reset_for_") || strstr($msg_key, "membership_request_updated")) {
-                $ugroupList = explode(",", $val);
-                $val ='';
-                foreach ($ugroupList as $ugroup) {
-                    if ($val) {
-                        $val.=', ';
-                    }
-                    $val .= util_translate_name_ugroup($ugroup);
-                }
-            } else if ($msg_key == "group_type") {
-                $template =& TemplateSingleton::instance();
-                $val = $template->getLabel($val);
-            }
-
-            $documents_body = array ('event' => $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id),
-                                     'val'   => $hp->purify($val),
-                                     'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']),
-                                     'by'    => user_get_name_display_from_unix($row['user_name']));
-            echo build_csv_record($col_list, $documents_body).$eol;
-        }
-
+        displayProjectHistoryResults($group_id, $res, true);
     }
     echo build_csv_header($col_list, array()).$eol;
 }
