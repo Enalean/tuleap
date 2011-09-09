@@ -263,18 +263,19 @@ class WebDAVDocmanFileTest extends UnitTestCase {
     }
 
     function testSetNameEmbeddedFile() {
-        $webDAVDocmanFile = new WebDAVDocmanFileTestVersion();
-        $item = new Docman_EmbeddedFile();
-        $webDAVDocmanFile->setReturnValue('getItem', $item);
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanWrite', true);
+        $webDAVDocmanFile = new WebDAVDocmanDocumentTestVersion();
+
         $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $utils->setReturnValue('isWriteEnabled', true);
-        $dif = new MockDocman_ItemFactory();
-        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanFile->setReturnValue('getUtils', $utils);
-        $dpm->expectOnce('userCanWrite');
+        
+        $project = new MockProject();
+        $webDAVDocmanFile->setReturnValue('getProject', $project);
+        
+        $item = new MockDocman_Item();
+        $webDAVDocmanFile->setReturnValue('getItem', $item);
+        
         $this->assertNoErrors();
         $webDAVDocmanFile->setName('newName');
     }
