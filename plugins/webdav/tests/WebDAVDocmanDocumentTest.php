@@ -31,7 +31,7 @@ require_once (dirname(__FILE__).'/../include/FS/WebDAVDocmanDocument.class.php')
 Mock::generatePartial(
     'WebDAVDocmanDocument',
     'WebDAVDocmanDocumentTestVersion',
-array('getItem', 'getUtils')
+array('getItem', 'getUtils', 'getProject')
 );
 Mock::generate('EventManager');
 
@@ -63,19 +63,15 @@ class WebDAVDocmanDocumentTest extends UnitTestCase {
 
         $utils = new MockWebDAVUtils();
         $utils->setReturnValue('isWriteEnabled', true);
-        
-        $dif = new MockDocman_ItemFactory();
-        $utils->setReturnValue('getDocmanItemFactory', $dif);
-        
-        $em = new MockEventManager();
-        $em->expectOnce('processEvent', array('send_notifications', array()));
-        $utils->setReturnValue('getEventManager', $em);
-        
+        $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
+        
+        $project = new MockProject();
+        $webDAVDocmanDocument->setReturnValue('getProject', $project);
+        
         $item = new MockDocman_Item();
         $webDAVDocmanDocument->setReturnValue('getItem', $item);
-        $dif->expectOnce('deleteSubTree');
-
+        
         $this->assertNoErrors();
         $webDAVDocmanDocument->delete();
     }
