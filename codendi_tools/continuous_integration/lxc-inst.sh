@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ip_address=$1
+ip_address=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
 
 # Take the local centos mirror
 perl -pi -e 's%baseurl=http://mirror.bytemark.co.uk/centos%baseurl=ftp://degaine.cro.enalean.com/ftp.centos.org%' /etc/yum.repos.d/CentOS-Base.repo
