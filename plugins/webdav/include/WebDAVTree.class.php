@@ -69,14 +69,19 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      * We don't allow copying docman items from a project to another
      * We don't allow copying FRS items
      *
+     * Copy or move of items is disabled as of today, because we need more feedback on
+     * how basic (create/update/delete) features works before allowing it.
+     *
      * @param String $sourcePath
      * @param String $destinationPath
      *
      * @return void
      */
     public function copy($sourcePath, $destinationPath) {
+        throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
+        
         // Check that write access is enabled for WebDAV
-        if ($this->getUtils()->isWriteEnabled()) {
+        /*if ($this->getUtils()->isWriteEnabled()) {
             list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
             $destination = $this->getNodeForPath($destinationDir);
             $source = $this->getNodeForPath($sourcePath);
@@ -114,7 +119,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
             }
         } else {
             throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
-        }
+        }*/
     }
 
     /**
@@ -129,7 +134,8 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      * @see lib/Sabre/DAV/Sabre_DAV_Tree#move($sourcePath, $destinationPath)
      */
     public function move($sourcePath, $destinationPath) {
-
+        throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
+        /*
         list($sourceDir, $sourceName) = Sabre_DAV_URLUtil::splitPath($sourcePath);
         list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
 
@@ -169,9 +175,8 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
             }
         } else {
             throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
-        }
-
-}
+        }*/
+    }
 
     /**
      * Returns an instance of WebDAVUtils
