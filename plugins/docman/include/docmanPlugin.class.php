@@ -443,16 +443,18 @@ class DocmanPlugin extends Plugin {
      */
     function webdav_root_for_service($params) {
         $groupId = $params['project']->getId();
-        if (!isset($this->rootItems[$groupId])) {
-            // First, need to instanciate controller to register docman event listeners (actions logging, notification, etc)
-            //$this->getCoreController(new Codendi_Request(array('group_id' => $groupId)));
-            
-            // Then return root object
-            include_once 'Docman_ItemFactory.class.php';
-            $docmanItemFactory = new Docman_ItemFactory();
-            $this->rootItems[$groupId] = $docmanItemFactory->getRoot($groupId);
+        if ($params['project']->usesService('docman')) {
+            if (!isset($this->rootItems[$groupId])) {
+                // First, need to instanciate controller to register docman event listeners (actions logging, notification, etc)
+                //$this->getCoreController(new Codendi_Request(array('group_id' => $groupId)));
+
+                // Then return root object
+                include_once 'Docman_ItemFactory.class.php';
+                $docmanItemFactory = new Docman_ItemFactory();
+                $this->rootItems[$groupId] = $docmanItemFactory->getRoot($groupId);
+            }
+            $params['roots']['docman'] = $this->rootItems[$groupId];
         }
-        $params['roots']['docman'] = $this->rootItems[$groupId];
     }
 
     /**
