@@ -30,7 +30,7 @@ Then install PHPUnit:
     pear channel-discover pear.phpunit.de
     pear channel-discover components.ez.no
     pear channel-discover pear.symfony-project.com
-    pear install phpunit/PHPUnit-3.5.6
+    pear install phpunit/PHPUnit
     
 this would install Selenium extention with it.
 
