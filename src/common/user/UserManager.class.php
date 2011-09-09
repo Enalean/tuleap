@@ -173,7 +173,26 @@ class UserManager {
         
         return $user;
     }
-    
+
+/**
+ * Returns an array of user ids that match the given string
+ * 
+ * @param String $search comma-separated users' names.
+ * 
+ * @return Array
+ */
+    function getUserIdsList($search) {
+        $userArray = explode(',' , $search);
+        $users = array();
+        foreach ($userArray as $user) {
+            $user = $this->findUser($user);
+            if ($user) {
+                $users[] = $user->getId();
+            }
+        }
+        return $users;
+    }
+
     /**
      * Returns the user that have the given email address.
      * Returns null if no account is found.

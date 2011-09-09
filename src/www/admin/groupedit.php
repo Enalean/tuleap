@@ -6,10 +6,12 @@
 //
 // 
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('vars.php');
 require_once('www/admin/admin_utils.php');
 require_once('www/project/admin/project_admin_utils.php');
+require_once('www/project/export/project_export_utils.php');
+require_once('www/project/admin/project_history.php');
 require_once('common/include/TemplateSingleton.class.php');
 require_once('common/event/EventManager.class.php');
 
@@ -17,7 +19,6 @@ require_once('common/event/EventManager.class.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id,false,true);
-$request = HTTPRequest::instance();
 $currentproject= new project($group_id);
 
 $em = EventManager::instance();
@@ -100,6 +101,11 @@ if (db_numrows($res_grp) < 1) {
 }
 
 $row_grp = db_fetch_array($res_grp);
+
+if ($request->exist('export')) {
+    export_grouphistory($group_id, $event, $subEvents, $value, $startDate, $endDate, $by);
+    exit;
+}
 
 site_admin_header(array('title'=>$Language->getText('admin_groupedit','title')));
 
@@ -191,26 +197,11 @@ print "<h3>".$Language->getText('admin_groupedit','license_other')."</h3> $row_g
 $template_group = $pm->getProject($group->getTemplate());
 print "<h3>".$Language->getText('admin_groupedit','built_from_template').':</h3> <a href="/projects/'.$template_group->getUnixName().'"> <B> '.$template_group->getPublicname().' </B></A>';
 
-// Check if group_id is valid
-$vGroupId = new Valid_GroupId();
-$vGroupId->required();
-if($request->valid($vGroupId)) {
-    $group_id = $request->get('group_id');
-} else {
-    exit_no_group();
-}
-
-$offset = $request->getValidated('offset', 'uint', 0);
-if ( !$offset || $offset < 0 ) {
-    $offset = 0;
-}
-$limit  = 50;
-
 
 echo "<P><HR><P>";
 
 echo '
-<P>'.show_grouphistory ($group_id, $offset, $limit);
+<P>'.show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by);
 
 site_admin_footer(array());
 

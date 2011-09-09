@@ -6,35 +6,25 @@
 //
 // 
 
-require_once('pre.php');    
+require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
-
+require_once('www/project/export/project_export_utils.php');
+require_once('www/project/admin/project_history.php');
 
 session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+
+
+if ($request->exist('export')) {
+    export_grouphistory($group_id, $event, $subEvents, $value, $startDate, $endDate, $by);
+    exit;
+}
 
 project_admin_header(array('title'=>$Language->getText('project_admin_history','proj_history'),'group'=>$group_id));
 
 echo $Language->getText('project_admin_history','proj_change_log_msg');
 
-$request = HTTPRequest::instance();
-
-// Check if group_id is valid
-$vGroupId = new Valid_GroupId();
-$vGroupId->required();
-if($request->valid($vGroupId)) {
-    $group_id = $request->get('group_id');
-} else {
-    exit_no_group();
-}
-
-$offset = $request->getValidated('offset', 'uint', 0);
-if ( !$offset || $offset < 0 ) {
-    $offset = 0;
-}
-$limit  = 50;
-
 //for pagination
-echo show_grouphistory($group_id, $offset, $limit);
+echo show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by);
 
 project_admin_footer(array());
 ?>

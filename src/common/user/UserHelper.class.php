@@ -117,7 +117,26 @@ class UserHelper {
         }
         return $name;
     }
-    
+
+    /**
+     * Get SQL statement for filtering according to users' names
+     *
+     * @param string $by a string containing comma-separated users' names or a pattern of user name.
+     *
+     * @return string
+     */
+    function getUserFilter($by) {
+        $filter = '';
+        $um = $this->_getUserManager();
+        $usersIds = $um->getUserIdsList($by);
+        if (count($usersIds) > 0) {
+            $filter .= ' AND user.user_id IN ('.implode (',', $usersIds).')';
+        } else {
+            $filter .= ' AND user.user_name LIKE "%'.db_es($by).'%"';
+        }
+        return $filter;
+    }
+
     /**
      * getDisplayNameSQLOrder
      * 

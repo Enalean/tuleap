@@ -7,18 +7,14 @@ var AutoCompleter = Class.create({
      */
     initialize: function(elementId, imgPath, multiple, options) {
         this.elementId = elementId;
-        if(!options) {
-            this.options = new Array();
-        } else {
-            this.options = options;
-        }
-        this.options['imgPath']  = imgPath;
-        this.options['multiple'] = multiple;
+        this.options = Object.extend({
+            defaultValueActsAsHint: true,
+            imgPath: imgPath,
+            multiple: multiple
+        }, options || { });
         // The url to call to get completion list
-        this.url                 = '';
-        // Default value acts as hint
-        this.options['defaultValueActsAsHint'] = true;
-        
+        this.url = '';
+
         this.registerOnLoadEvent = this.registerOnLoad.bindAsEventListener(this);
         document.observe('dom:loaded', this.registerOnLoadEvent);
     },

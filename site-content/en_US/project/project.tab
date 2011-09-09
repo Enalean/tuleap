@@ -362,11 +362,11 @@ project_admin_utils	ug_admin	User Groups Admin
 project_admin_utils	project_data_export	Project Data Export
 project_admin_utils	tracker_import	Tracker Import
 project_admin_utils	access_logs	Access Logs
-project_admin_utils	g_change_history	Group Change History
+project_admin_utils	g_change_history	Project Change History
 project_admin_utils	event	Event
 project_admin_utils	val	Value
 project_admin_utils	date	Date
-project_admin_utils	no_g_change	No Changes Have Been Made to This Group
+project_admin_utils	no_g_change	No changes, that corresponds to the filter, have been made to this project
 project_admin_utils	permission_request	Update Selected groups and message
 project_admin_utils	selected_ugroups_title	User group(s) to be notified for admin delegation:
 project_admin_utils	notif_message_title	Default notification message:
@@ -382,7 +382,7 @@ project_admin_utils	approved	Approved
 project_admin_utils	deleted	Deleted
 project_admin_utils	is_public	Is public
 project_admin_utils	type	Type
-project_admin_utils	http_domain	http_domain
+project_admin_utils	http_domain	HTTP domain
 project_admin_utils	unix_box	Unix box
 project_admin_utils	feedback_history	feedback history
 project_admin_utils	changed_personal_email_notif	Changed Personal Notification Email Settings
@@ -421,6 +421,7 @@ project_admin_utils	perm_reset_for_folder	Permission reset for folder $1
 project_admin_utils	perm_reset_for_docgroup	Permission reset for document group $1
 project_admin_utils	perm_reset_for_wiki	Permission reset for wiki $1
 project_admin_utils	perm_reset_for_wikipage	Permission reset for wiki page $1
+project_admin_utils	perm_reset_for_wikiattachment	Permission reset for wiki attachment $1
 project_admin_utils	perm_reset_for_object	Permission reset for object $1
 project_admin_utils	perm_granted_for_field	Permission granted for field $1
 project_admin_utils	perm_granted_for_tracker	Permission granted for tracker $1
@@ -431,12 +432,27 @@ project_admin_utils	perm_granted_for_folder	Permission granted for folder $1
 project_admin_utils	perm_granted_for_docgroup	Permission granted for document group  $1
 project_admin_utils	perm_granted_for_wiki	Permission granted for wiki  $1
 project_admin_utils	perm_granted_for_wikipage	Permission granted for wiki page  $1
+project_admin_utils	perm_granted_for_wikiattachment	Permission granted for wiki attachment $1
 project_admin_utils	perm_granted_for_object	Permission granted for object $1 
 project_admin_utils	menu_config	Configuration: 
 project_admin_utils	menu_permissions	Permissions: 
 project_admin_utils	menu_data	Data: 
 project_admin_utils	group_type	Changed Project Type
 project_admin_utils	action	Action
+project_admin_utils	event_permission	Permissions
+project_admin_utils	event_user	Users
+project_admin_utils	event_ug	User Group
+project_admin_utils	event_project	Project
+project_admin_utils	event_others	Others
+project_admin_utils	export_history	Export project history
+project_admin_utils	toggle_search	Toggle search
+project_admin_utils	history_search_title	Search within project history
+project_admin_utils	choose_event	--Choose an event--
+project_admin_utils	verify_start_date	Verify start date
+project_admin_utils	verify_end_date	Verify end date
+project_admin_utils	verify_dates	Start date must be inferior to end date
+project_admin_utils	from	From
+project_admin_utils	to	To
 #... end of values
 #
 #-----------------------------------------------

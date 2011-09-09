@@ -365,7 +365,7 @@ project_admin_utils	g_change_history	Historique du projet
 project_admin_utils	event	Evènement
 project_admin_utils	val	Valeur
 project_admin_utils	date	Date
-project_admin_utils	no_g_change	Aucun changement effectué sur ce projet
+project_admin_utils	no_g_change	Aucun changement, correspondant au filtre, n'a été effectué sur ce projet
 project_admin_utils	previous	Précédent
 project_admin_utils	next	Suivant
 project_admin_utils	permission_request	Mettre a jour les groupes et le message
@@ -416,6 +416,7 @@ project_admin_utils	perm_reset_for_folder	Réinitialisation des permissions pour
 project_admin_utils	perm_reset_for_docgroup	Réinitialisation des permissions pour le groupe de documents $1
 project_admin_utils	perm_reset_for_wiki	Réinitialisation des permissions pour le wiki $1
 project_admin_utils	perm_reset_for_wikipage	Réinitialisation des permissions pour la page wiki $1
+project_admin_utils	perm_reset_for_wikiattachment	Réinitialisation des permissions pour le fichier joint wiki $1
 project_admin_utils	perm_reset_for_object	Réinitialisation des permissions pour l'objet $1
 project_admin_utils	perm_granted_for_field	Permission accordée pour le champ $1
 project_admin_utils	perm_granted_for_tracker	Permission accordée pour l'outil de suivi $1
@@ -426,14 +427,28 @@ project_admin_utils	perm_granted_for_folder	Permission accordée pour le dossier
 project_admin_utils	perm_granted_for_docgroup	Permission accordée pour le groupe de documents  $1
 project_admin_utils	perm_granted_for_wiki	Permission accordée pour le wiki $1
 project_admin_utils	perm_granted_for_wikipage	Permission accordée pour la page wiki $1
+project_admin_utils	perm_granted_for_wikiattachment	Permission accordée pour le fichier joint wiki $1
 project_admin_utils	perm_granted_for_object	Permission accordée pour l'objet $1 
 project_admin_utils	menu_config	Configuration&nbsp;: 
 project_admin_utils	menu_permissions	Permissions&nbsp;: 
 project_admin_utils	menu_data	Données&nbsp;: 
 project_admin_utils	group_type	Type de projet modifié
 project_admin_utils	action	Action
+project_admin_utils	event_permission	Permissions
+project_admin_utils	event_user	Utilisateurs
+project_admin_utils	event_ug	Groupe d'utilisateur
+project_admin_utils	event_project	Projet
+project_admin_utils	event_others	Autres
 project_admin_utils	search_user	Chercher par nom d'utilisateur :
-
+project_admin_utils	export_history	Exporter l'historique du projet
+project_admin_utils	toggle_search	Basculer l'affichage de la recherche
+project_admin_utils	history_search_title	Chercher dans l'historique du projet
+project_admin_utils	choose_event	--Choisissez un evènement--
+project_admin_utils	verify_start_date	Vérifiez la date de début
+project_admin_utils	verify_end_date	Vérifiez la date de fin
+project_admin_utils	verify_dates	La date de début doit être inférieure à la date de fin
+project_admin_utils	from	Depuis
+project_admin_utils	to	Jusqu'a
 #... end of values
 #
 #-----------------------------------------------

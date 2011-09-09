@@ -73,6 +73,8 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('project_is_private', 'projectIsPrivate', false);
 
         $this->_addHook('permission_request_information', 'permissionRequestInformation', false);
+
+        $this->_addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
 	}
 
     function permission_get_name($params) {
@@ -743,6 +745,18 @@ class DocmanPlugin extends Plugin {
      */
     function permissionRequestInformation($params) {
         echo "<p><h2>".$GLOBALS['Language']->getText('plugin_docman', 'permission_requests')."</h2>".$GLOBALS['Language']->getText('plugin_docman', 'permission_requests_information')."</p>";
+    }
+
+    /**
+     * Fill the list of subEvents related to docman in the project history interface
+     *
+     */
+    function fillProjectHistorySubEvents($params) {
+        array_push($params['subEvents']['event_permission'], 'perm_reset_for_document',
+                                                             'perm_granted_for_document',
+                                                             'perm_reset_for_folder',
+                                                             'perm_granted_for_folder'
+        );
     }
 
 }
