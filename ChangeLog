@@ -1,3 +1,10 @@
+Version 4.0.22 - (Not Released Yet)
+    == Enhancement ==
+    * Improve usability of project history: (contrib STMicroelectronics)
+      * Add the possibility to search into project history by: Event, Date, Value and User.
+      * The result of the search could be exported in a CSV file without an offset.
+
+
 Version 4.0.21 - Thuesday, September 1st 2011
     == Enhancement ==
     * Improve rebuildability of Tuleap dependencies (contrib Christian Bayle).
