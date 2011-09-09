@@ -17,7 +17,7 @@
  */
 
 // Hostname/ip address of the server to be tested
-$GLOBALS['host'] = 'http://crampons';
+$GLOBALS['host'] = '%host%';
 
 // Hostname/ip address of the client holding Selenium RC & the controlled browser
 $GLOBALS['client'] = 'lxc-selenium-server';

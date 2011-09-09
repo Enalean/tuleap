@@ -117,5 +117,6 @@ rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.
 $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
 
 # And test!
+substitute "$src_dir/codendi_tools/plugins/tests/functional/set.php" "%host%" "http://$lxc_ip"
 phpunit $src_dir/codendi_tools/plugins/tests/functional/
 
