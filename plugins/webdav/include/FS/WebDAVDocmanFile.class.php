@@ -157,14 +157,11 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
             $params['group_id'] = $this->getProject()->getGroupId();
             $params['confirm']  = true;
 
-            // File stuff
-            $name                     = $this->getName();
-            $params['file_name']      = $name;
-            $params['upload_content'] = stream_get_contents($data);
-            if (strlen($params['upload_content']) <= $this->getMaxFileSize()) {
-                $params['item']['item_type']      = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
-                $params['item']['parent_id']      = $this->getItem()->getId();
-                $params['item']['title']          = $name;
+            if (strlen($data) <= $this->getMaxFileSize()) {
+                // File stuff
+                $params['id']             = $this->getItem()->getId();
+                $params['file_name']      = $this->getName();
+                $params['upload_content'] = stream_get_contents($data);
 
                 $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
             } else {
