@@ -323,7 +323,7 @@ EOF
     echo $LIST_OWNER | /usr/lib/mailman/bin/add_members -r - mailman
 
     $CHKCONFIG mailman on
-    $SERVICE mailman start
+    $SERVICE mailman start </dev/null >/dev/null 2>/dev/null &
 }
 
 ###############################################################################
