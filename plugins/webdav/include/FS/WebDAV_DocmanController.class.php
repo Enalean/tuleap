@@ -43,6 +43,9 @@ class WebDAV_DocmanController extends Docman_Controller {
         $action->process($this->action, $this->_actionParams);
     }
 
+    public function viewsManagement() {
+    }
+
     public function _checkBrowserCompliance() {
     }
 

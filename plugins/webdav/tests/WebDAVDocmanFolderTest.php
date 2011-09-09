@@ -373,48 +373,19 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $webDAVDocmanFolder->setName('newName');
     }
 
-    function testSetNameDocmanRoot() {
-        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('isWriteEnabled', false);
-        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
-        $webDAVDocmanFolder->setReturnValue('isDocmanRoot', true);
-
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
-        $webDAVDocmanFolder->setName('newName');
-    }
-
-    function testSetNameNoPermissions() {
-        $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanWrite', false);
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
-        $webDAVDocmanFolder->setReturnValue('isDocmanRoot', false);
-        $item = new MockDocman_Item();
-        $webDAVDocmanFolder->setReturnValue('getItem', $item);
-        $dpm->expectOnce('userCanWrite');
-
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
-        $webDAVDocmanFolder->setName('newName');
-    }
-
     function testSetNameSuccess() {
         $webDAVDocmanFolder = new WebDAVDocmanFolderTestVersion();
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanWrite', true);
+        
         $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $utils->setReturnValue('isWriteEnabled', true);
-        $dif = new MockDocman_ItemFactory();
-        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
-        $webDAVDocmanFolder->setReturnValue('isDocmanRoot', false);
+        
+        $project = new MockProject();
+        $webDAVDocmanFolder->setReturnValue('getProject', $project);
+        
         $item = new MockDocman_Item();
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
-        $dpm->expectOnce('userCanWrite');
 
         $this->assertNoErrors();
         $webDAVDocmanFolder->setName('newName');

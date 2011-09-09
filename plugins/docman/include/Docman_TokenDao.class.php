@@ -30,7 +30,7 @@ class Docman_TokenDao extends DataAccessObject {
     * Searches Docman_Token by Url 
     * @return DataAccessResult
     */
-    function & searchUrl($user_id, $token) {
+    function searchUrl($user_id, $token) {
         $sql = sprintf("SELECT url FROM plugin_docman_tokens WHERE user_id = %s AND token = %s",
 				$this->da->quoteSmart($user_id),
 				$this->da->quoteSmart($token));
