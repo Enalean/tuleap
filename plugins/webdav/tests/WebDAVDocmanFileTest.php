@@ -53,14 +53,6 @@ array('getSize', 'getMaxFileSize', 'getItem', 'getUser', 'logDownload', 'downloa
  */
 class WebDAVDocmanFileTest extends UnitTestCase {
 
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function WebDAVDocmanFileTest($name = 'WebDAVDocmanFileTest') {
-        $this->UnitTestCase($name);
-    }
-
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
     }

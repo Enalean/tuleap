@@ -157,12 +157,11 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
             $params['group_id'] = $this->getProject()->getGroupId();
             $params['confirm']  = true;
 
-            if (strlen($data) <= $this->getMaxFileSize()) {
-                // File stuff
-                $params['id']             = $this->getItem()->getId();
-                $params['file_name']      = $this->getName();
-                $params['upload_content'] = stream_get_contents($data);
-
+            // File stuff
+            $params['id']             = $this->getItem()->getId();
+            $params['file_name']      = $this->getName();
+            $params['upload_content'] = stream_get_contents($data);
+            if (strlen($params['upload_content']) <= $this->getMaxFileSize()) {
                 $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
             } else {
                 throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
