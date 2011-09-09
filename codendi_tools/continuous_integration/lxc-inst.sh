@@ -1,6 +1,7 @@
 #!/bin/sh
 
 ip_address=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
+repo_base_url=$1
 
 # Take the local centos mirror
 perl -pi -e 's%baseurl=http://mirror.bytemark.co.uk/centos%baseurl=ftp://degaine.cro.enalean.com/ftp.centos.org%' /etc/yum.repos.d/CentOS-Base.repo
@@ -18,7 +19,7 @@ exclude=tuleap*
 
 [Tuleap-dev]
 name=Tuleap-dev
-baseurl=$repo_base_dir
+baseurl=$repo_base_url
 enabled=1
 gpgcheck=0
 EOF

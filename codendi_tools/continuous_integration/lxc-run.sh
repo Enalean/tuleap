@@ -108,9 +108,9 @@ lxc_start_wait $lxc_ip
 
 # Upload installation script into /root
 $remotecmd /bin/rm -fr /root/lxc-inst.sh
-rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.sh $build_host:/root $repo_base_dir
+rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.sh $build_host:/root
 
 # Install
-$remotecmd /bin/sh -x /root/lxc-inst.sh $lxc_ip
+$remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
 
 
