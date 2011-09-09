@@ -49,7 +49,7 @@ lxc_start_wait() {
 ##
 ## Parse options
 ##
-options=`getopt -o h -l help,srcdir:,lxc-name:,lxc-ip,repo-base-url: -- "$@"`
+options=`getopt -o h -l help,srcdir:,lxc-name:,lxc-ip:,repo-base-url: -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
 eval set -- "$options"
 while true
