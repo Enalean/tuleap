@@ -113,4 +113,6 @@ rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.
 # Install
 $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
 
+# And test!
+phpunit $src_dir/codendi_tools/plugins/tests/functional/
 
