@@ -411,7 +411,8 @@ class WebDAVTreeTest extends UnitTestCase {
         $dif = new MockDocman_ItemFactory();
         $utils->setReturnValue('getDocmanItemFactory', $dif);
 
-        $this->assertNoErrors();
+        //$this->assertNoErrors();
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
         $tree->copy('source', 'destination/item');
     }
 
@@ -441,10 +442,11 @@ class WebDAVTreeTest extends UnitTestCase {
         $dif = new MockDocman_ItemFactory();
         $utils->setReturnValue('getDocmanItemFactory', $dif);
 
-        $dif->expectOnce('setNewParent', array(128, 256, 'beginning'));
-        $sourceItem->expectOnce('fireEvent', array('plugin_docman_event_move', $source->getUser(), $destinationItem));
+        //$dif->expectOnce('setNewParent', array(128, 256, 'beginning'));
+        //$sourceItem->expectOnce('fireEvent', array('plugin_docman_event_move', $source->getUser(), $destinationItem));
 
-        $this->assertNoErrors();
+        //$this->assertNoErrors();
+        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
         $tree->move('source', 'destination/item');
     }
 
