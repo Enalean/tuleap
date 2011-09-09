@@ -46,10 +46,6 @@ Mock::generate('NotificationsDao');
 
 class Docman_NotificationsManagerTest extends UnitTestCase {
 
-    function __construct($name = 'Docman_NotificationsManager test') {
-        parent::__construct($name);
-    }
-
     function setUp() {
         $GLOBALS['sys_noreply'] = 'norelpy@codendi.org';
     }
@@ -93,7 +89,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $mail2->setReturnValue('send', true);
 
         // Raises an error 
-        $feedback->expectOnce('log', array('error', '*'));
+        $feedback->expectOnce('log', array('warning', '*'));
 
         $project  = new MockProject($this);
         $project->setReturnValue('getPublicName', 'Guinea Pig');
