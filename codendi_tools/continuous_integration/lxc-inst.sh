@@ -19,10 +19,15 @@ exclude=tuleap*
 
 [Tuleap-dev]
 name=Tuleap-dev
-baseurl=$repo_base_url
+EOF
+
+echo "baseurl=$repo_base_url" >> /etc/yum.repos.d/Tuleap.repo
+
+cat <<'EOF' >>/etc/yum.repos.d/Tuleap.repo
 enabled=1
 gpgcheck=0
 EOF
+
 
 # install rpms
 # local centos mirror may produce ftp io errors
