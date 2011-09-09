@@ -9,6 +9,7 @@ Options
   --lxc-name=<value>  Name of lxc container (eg. lxc-aci-105)
   --lxc-ip=<value>    IP address of lxc container (eg. 192.168.1.105)
   --srcdir=<value>    Source dir
+  --repo-base-url=<value>   Base url (eg. http://degaine:8080/job/build_101_graphs_on_tracker_v5/ws/yum/)
 EOF
 }
 
@@ -66,6 +67,9 @@ do
 	--lxc-ip)
 	    lxc_ip=$2; 
 	    shift 2;;
+	--repo-base-url)
+	    repo_base_url=$2
+	    shift 2;;
 	 *)
 	    break;;
     esac
@@ -104,7 +108,7 @@ lxc_start_wait $lxc_ip
 
 # Upload installation script into /root
 $remotecmd /bin/rm -fr /root/lxc-inst.sh
-rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.sh $build_host:/root
+rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.sh $build_host:/root $repo_base_dir
 
 # Install
 $remotecmd /bin/sh -x /root/lxc-inst.sh $lxc_ip

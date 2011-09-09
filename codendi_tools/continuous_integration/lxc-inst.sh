@@ -18,7 +18,7 @@ exclude=tuleap*
 
 [Tuleap-dev]
 name=Tuleap-dev
-baseurl=http://degaine:8080/job/build_101_graphs_on_tracker_v5/ws/yum/
+baseurl=$repo_base_dir
 enabled=1
 gpgcheck=0
 EOF
