@@ -151,42 +151,24 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument {
      * @return void
      */
     function put($data) {
-        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            $versionFactory = $this->getUtils()->getVersionFactory();
-            $nextNb         = $versionFactory->getNextVersionNumber($this->getItem());
-            if($nextNb === false) {
-                $number     = 1;
-                $_changelog = 'Initial version';
+        if ($this->getUtils()->isWriteEnabled()) {
+            // Request
+            $params['action']   = 'new_version';
+            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['confirm']  = true;
+
+            // File stuff
+            $name                     = $this->getName();
+            $params['file_name']      = $name;
+            $params['upload_content'] = stream_get_contents($data);
+            if (strlen($params['upload_content']) <= $this->getMaxFileSize()) {
+                $params['item']['item_type']      = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
+                $params['item']['parent_id']      = $this->getItem()->getId();
+                $params['item']['title']          = $name;
+
+                $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
             } else {
-                $number     = $nextNb;
-                $_changelog = '';
-            }
-            $fs   = $this->getUtils()->getFileStorage();
-            $path = $fs->store(stream_get_contents($data), $this->getProject()->getGroupId(), $this->getItem()->getId(), $number);
-            if ($path) {
-                $_filesize = PHP_BigFile::getSize($path);
-                if ($_filesize <= $this->getMaxFileSize()) {
-                    $_filename = $this->getName();
-                    $_filetype = mime_content_type($path);
-                    $vArray    = array('item_id'   => $this->getItem()->getId(),
-                                       'number'    => $number,
-                                       'user_id'   => $this->getUser()->getId(),
-                                       'label'     => '',
-                                       'changelog' => $_changelog,
-                                       'filename'  => $_filename,
-                                       'filesize'  => $_filesize,
-                                       'filetype'  => $_filetype, 
-                                       'path'      => $path,
-                                       'date'      => '');
-                    if (!$versionFactory->create($vArray)) {
-                        throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
-                    }
-                } else {
-                    throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
-                }
-            } else {
-                throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));
+                throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
             }
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_new_version'));
