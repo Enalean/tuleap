@@ -29,3 +29,7 @@ plugin_requesthelp	requesthelp_explain_label	Merci d'utiliser ce formulaire au d
 plugin_requesthelp	requesthelp_default_description	<Veuillez entrer une déscription détaillée pour votre demande.\nn'oubliez pas de fournir l'URL du projet si c'est a propos d'un projet.\nDétaillez les étapes pour reproduire le problème si ça en est un.>
 plugin_requesthelp	requesthelp_lab_feature_title	Soumettre un ticket Remedy directement depuis Codex
 plugin_requesthelp	requesthelp_lab_feature_description	Permet la soumission en deux clicks des tickets Remedy relatives a Codex depuis l'interface même de Codex.
+plugin_requesthelp	tooltip_description	Une description complète de la requête
+plugin_requesthelp	tooltip_summary	Une description de la requête en une seule ligne.
+plugin_requesthelp	tooltip_type	Nature de la demande.
+plugin_requesthelp	tooltip_severity	Impact de la demande sur le système (Critique, majeur...).

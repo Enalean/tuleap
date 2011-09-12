@@ -29,3 +29,7 @@ plugin_requesthelp	requesthelp_explain_label	For any Codex help, please use this
 plugin_requesthelp	requesthelp_default_description	<Please enter the detailed description of your request.\nDon't forget to provide the project URL if it is about a project.\nWrite the steps required to reproduce it if it's a problem.>
 plugin_requesthelp	requesthelp_lab_feature_title	To submit Remedy requests directly from Codex
 plugin_requesthelp	requesthelp_lab_feature_description	Allow to submit in two clicks Remedy requests related to Codex from Codex's web interface.
+plugin_requesthelp	tooltip_description	A full description of the request.
+plugin_requesthelp	tooltip_summary	One line description of the request.
+plugin_requesthelp	tooltip_type	Request type.
+plugin_requesthelp	tooltip_severity	Impact of the request on the system(Critical, major,...).

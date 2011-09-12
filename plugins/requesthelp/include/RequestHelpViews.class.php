@@ -106,9 +106,8 @@ class RequestHelpViews extends PluginView {
              <form name="request" class="requesthelp_cssform" action="'.$p->getPluginPath().'/" method="post" enctype="multipart/form-data">
                  <table>
                      <tr>';
-            echo '<td><b><a class="tooltip" href="#" title=" ">Type:</a></b>&nbsp;<span class="highlight"><big>*</big></b></span></td>
-                     <td><select name="type">
-                      <option value="'.RequestHelp::TYPE_SUPPORT.'" ';
+            echo '<td><b><a class="tooltip" href="#" title="'.$GLOBALS['Language']->getText('plugin_requesthelp', 'tooltip_type').
+                 '">Type:</a></b>&nbsp;<span class="highlight"><big>*</big></b></span></td><td><select name="type"><option value="'.RequestHelp::TYPE_SUPPORT.'" ';
             if ($type == RequestHelp::TYPE_SUPPORT) {
                 echo 'selected';
             }
@@ -119,7 +118,7 @@ class RequestHelpViews extends PluginView {
             }
             echo '>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'Enhancement_request').'</option>
                      </select>';
-            echo '</td><td align="right"><b><a class="tooltip" href="#" title=" ">'.
+            echo '</td><td align="right"><b><a class="tooltip" href="#" title="'.$GLOBALS['Language']->getText('plugin_requesthelp', 'tooltip_severity').'">'.
                  $GLOBALS['Language']->getText('plugin_requesthelp', 'severity').':</a></b>&nbsp;<span class="highlight"><big>*</big></b></span>
                              <select name="severity">
                              <option value="'.RequestHelp::SEVERITY_MINOR.'" ';
@@ -140,10 +139,10 @@ class RequestHelpViews extends PluginView {
                              </select>
                          </td>
                      </tr>';
-            echo '<tr><td><b><a class="tooltip" href="#" title=" ">'.$GLOBALS['Language']->getText('plugin_requesthelp', 'summary').
+            echo '<tr><td><b><a class="tooltip" href="#" title="'.$GLOBALS['Language']->getText('plugin_requesthelp', 'tooltip_summary').'">'.$GLOBALS['Language']->getText('plugin_requesthelp', 'summary').
                  ':</a></b>&nbsp;<span class="highlight"><big>*</big></span></td>
                      <td colspan="3"><input type="text" name="request_summary" value="'.$summary.'" /></td></tr>';
-            echo '<tr><td><b><a class="tooltip" href="#" title=" "><span class="requesthelp_totop">Description:</span></a></b>&nbsp;<span class="highlight"><span class="requesthelp_totop"><big>*</big></b></span></span></td><td  colspan="3"><textarea name="request_description">'.$description.'</textarea></td></tr>
+            echo '<tr><td><b><a class="tooltip" href="#" title="'.$GLOBALS['Language']->getText('plugin_requesthelp', 'tooltip_description').'"><span class="requesthelp_totop">Description:</span></a></b>&nbsp;<span class="highlight"><span class="requesthelp_totop"><big>*</big></b></span></span></td><td  colspan="3"><textarea name="request_description">'.$description.'</textarea></td></tr>
             <tr><td></td><td colspan="3"><i><b><u>Note</u>: </b>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_cc_note').'</i></td></tr>
             <tr><td><label>CC :</label></td><td  colspan="3"><input id="requesthelp_cc" type="text" name="cc" /></td></tr>
             <tr><td><input name="action" type="hidden" value="submit_ticket" /></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
