@@ -116,6 +116,19 @@ rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.
 # Install
 $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
 
+# Make sure that selenium server is up
+if lxc-ls | egrep -q "^lxc-selenium-server$"; then
+    if sudo lxc-info -q --name lxc-selenium-server | grep -q "RUNNING"; then
+        echo "Selenium server is running"
+    else
+        echo "Starting Selenium server"
+        sudo lxc-start -n lxc-selenium-server -d
+    fi
+else
+    echo "ERROR: There is no selenium server installed"
+    exit 1
+fi
+
 # And test!
 substitute "$src_dir/codendi_tools/plugins/tests/functional/set.php" "%host%" "http://$lxc_ip"
 phpunit $src_dir/codendi_tools/plugins/tests/functional/
