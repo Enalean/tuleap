@@ -52,7 +52,9 @@ class SVNAccessFile {
      * @var String
      */
     private $ugroupOldName = null;
-
+    
+    private $platformBlock = '';
+    
     /**
      * Detect if a line is correctly formatted and
      * corresponds to a defined group
@@ -263,7 +265,19 @@ class SVNAccessFile {
      * @return String
      */
     protected function getPlatformBlock($projectName) {
-        return svn_utils_read_svn_access_file_defaults($projectName, true);
+        if (!$this->platformBlock) {
+            $this->platformBlock = svn_utils_read_svn_access_file_defaults($projectName, true);
+        }
+        return $this->platformBlock;
+    }
+    
+    /**
+     * Define the platform default groups & root perms
+     *
+     * @param String $block Default SVN block
+     */
+    public function setPlatformBlock($block) {
+        $this->platformBlock = $block;
     }
 }
 

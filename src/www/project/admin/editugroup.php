@@ -14,7 +14,9 @@ require_once('www/project/admin/permissions.php');
 require_once('www/file/file_utils.php');
 require_once('www/docman/doc_utils.php');
 
-$hp = Codendi_HTMLPurifier::instance();
+$hp      = Codendi_HTMLPurifier::instance();
+$request = HTTPRequest::instance();
+
 function display_name_and_desc_form($ugroup_name,$ugroup_description) {
   global $Language;
 
@@ -36,18 +38,19 @@ function display_name_and_desc_form($ugroup_name,$ugroup_description) {
 
 
 
+$group_id = $request->getValidated('group_id', 'GroupId', 0);
+session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
+$vFunc = new Valid_WhiteList('func', array('create', 'do_create', 'edit'));
+$func = $request->getValidated('func', $vFunc, 'create');
 
-
-if (!$func) $func='create';
-
-
-if ($func=='do_create') {
-    $ugroup_id=ugroup_create($_POST['group_id'], $_POST['ugroup_name'], $_POST['ugroup_description'], $_POST['group_templates']);
+if ($request->isPost() && $func == 'do_create') {
+    $name = $request->getValidated('ugroup_name', 'String', '');
+    $desc = $request->getValidated('ugroup_description', 'String', '');
+    $tmpl = $request->getValidated('group_templates', 'String', '');
+    $ugroup_id = ugroup_create($group_id, $name, $desc, $tmpl);
+    $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit');
 }
-
-
 
 if ($func=='create') {
     project_admin_header(array('title'=>$Language->getText('project_admin_editugroup','create_ug'),'group'=>$group_id,

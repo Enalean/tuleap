@@ -259,6 +259,10 @@ class BackendSVN extends Backend {
         $custom_perms='';
         $public_svn = 1; // TODO
         
+        $defaultBlock = '';
+        $defaultBlock .= $this->getSVNAccessGroups($project);
+        $defaultBlock .= $this->getSVNAccessRootPathDef($project);
+        
         // Retrieve custom permissions, if any
         if (is_file("$svnaccess_file")) {
             $svnaccess_array = file($svnaccess_file);
@@ -274,6 +278,7 @@ class BackendSVN extends Backend {
             }
             $saf = $this->_getSVNAccessFile();
             $saf->setRenamedGroup($ugroup_name, $ugroup_old_name);
+            $saf->setPlatformBlock($defaultBlock);
             $custom_perms .= $saf->parseGroupLines($project, $contents);
         }
 
@@ -281,8 +286,7 @@ class BackendSVN extends Backend {
 
         // Codendi specifc
         fwrite($fp, "$default_block_start");
-        fwrite($fp, $this->getSVNAccessGroups($project));
-        fwrite($fp, $this->getSVNAccessRootPathDef($project));
+        fwrite($fp, $defaultBlock);
         fwrite($fp, "$default_block_end");
 
         // Custom permissions

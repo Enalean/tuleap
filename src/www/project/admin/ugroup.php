@@ -34,19 +34,27 @@ function format_html_row($row, &$row_num) {
     echo "</tr>\n";
 }
 
-$em =& EventManager::instance();
+$em      = EventManager::instance();
+$request = HTTPRequest::instance();
 
-session_require(array('group'=>$group_id,'admin_flags'=>'A'));
-if (!isset($func)) $func="";
-if ($func=='delete') {
-    ugroup_delete($group_id, $ugroup_id);
+$group_id = $request->getValidated('group_id', 'GroupId', 0);
+
+session_require(array('group' => $group_id, 'admin_flags' => 'A'));
+
+if ($request->isPost() && $request->existAndNonEmpty('func')) {
+    $ugroup_id   = $request->getValidated('ugroup_id', 'UInt', 0);
+    switch($request->get('func')) {
+        case 'delete':
+            ugroup_delete($group_id, $ugroup_id);
+            break;
+        case 'do_update':
+            $name = $request->getValidated('ugroup_name', 'String', '');
+            $desc = $request->getValidated('ugroup_description', 'String', '');
+            ugroup_update($group_id, $ugroup_id, $name, $desc);
+            break;
+    }
+    $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='.$group_id);
 }
-
-if ($func=='do_update') {
-    ugroup_update($_POST['group_id'], $_POST['ugroup_id'], $_POST['ugroup_name'], $_POST['ugroup_description']);
-}
-
-
 
 //
 // Now display main page
