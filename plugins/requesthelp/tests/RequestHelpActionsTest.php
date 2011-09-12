@@ -64,7 +64,7 @@ class RequestHelpActionsTest extends UnitTestCase {
                              'params' => array('summary'       => 'valid summary',
                                                'description'   => 'valid description',
                                                'type'          => 1,
-                                               'text_type'     => 'SUPPORT REQUEST',
+                                               'text_type'     => 'ASSISTANCE REQUEST',
                                                'severity'      => 1,
                                                'text_severity' => 'Minor',
                                                'cc'            => 'john.doe@example.com'),
@@ -106,7 +106,7 @@ class RequestHelpActionsTest extends UnitTestCase {
         $validParams = array('status' => false,
                              'params' => array('description'   => 'valid description',
                                                'type'          => 1,
-                                               'text_type'     => 'SUPPORT REQUEST',
+                                               'text_type'     => 'ASSISTANCE REQUEST',
                                                'severity'      => 1,
                                                'text_severity' => 'Minor',
                                                'cc'            => 'john.doe@example.com'),
@@ -131,7 +131,7 @@ class RequestHelpActionsTest extends UnitTestCase {
         $validParams = array('status' => false,
                              'params' => array('summary'       => 'valid summary',
                                                'type'          => 1,
-                                               'text_type'     => 'SUPPORT REQUEST',
+                                               'text_type'     => 'ASSISTANCE REQUEST',
                                                'severity'      => 1,
                                                'text_severity' => 'Minor',
                                                'cc'            => 'john.doe@example.com'),
@@ -203,7 +203,7 @@ class RequestHelpActionsTest extends UnitTestCase {
                              'params' => array('summary'     => 'valid summary',
                                                'description' => 'valid description',
                                                'type'        => 1,
-                                               'text_type'   => 'SUPPORT REQUEST',
+                                               'text_type'   => 'ASSISTANCE REQUEST',
                                                'cc'          => 'john.doe@example.com'),
                              'invalid' => array(''));
         $this->assertEqual($params, $validParams);
@@ -224,7 +224,7 @@ class RequestHelpActionsTest extends UnitTestCase {
                              'params' => array('summary'     => 'valid summary',
                                                'description' => 'valid description',
                                                'type'        => 1,
-                                               'text_type'   => 'SUPPORT REQUEST',
+                                               'text_type'   => 'ASSISTANCE REQUEST',
                                                'severity'    => 4,
                                                'cc'          => 'john.doe@example.com'),
                              'invalid' => array(''));
@@ -243,7 +243,7 @@ class RequestHelpActionsTest extends UnitTestCase {
                         'params' => array('summary'       => 'valid summary',
                                           'description'   => 'valid description',
                                           'type'          => 1,
-                                          'text_type'     => 'SUPPORT REQUEST',
+                                          'text_type'     => 'ASSISTANCE REQUEST',
                                           'severity'      => 1,
                                           'text_severity' => 'Minor',
                                           'cc'            => 'john.doe@example.com'));
@@ -268,7 +268,7 @@ class RequestHelpActionsTest extends UnitTestCase {
                         'params' => array('summary'       => 'valid summary',
                                           'description'   => 'valid description',
                                           'type'          => 1,
-                                          'text_type'     => 'SUPPORT REQUEST',
+                                          'text_type'     => 'ASSISTANCE REQUEST',
                                           'severity'      => 1,
                                           'text_severity' => 'Minor',
                                           'cc'            => 'john.doe@example.com'));
@@ -294,7 +294,7 @@ class RequestHelpActionsTest extends UnitTestCase {
                         'params' => array('summary'       => 'valid summary',
                                           'description'   => 'valid description',
                                           'type'          => 1,
-                                          'text_type'     => 'SUPPORT REQUEST',
+                                          'text_type'     => 'ASSISTANCE REQUEST',
                                           'severity'      => 1,
                                           'text_severity' => 'Minor',
                                           'cc'            => 'john.doe@example.com'));
@@ -318,7 +318,7 @@ class RequestHelpActionsTest extends UnitTestCase {
                              'summary'       => 'valid summary',
                              'description'   => 'valid description',
                              'type'          => 1,
-                             'text_type'     => 'SUPPORT REQUEST',
+                             'text_type'     => 'ASSISTANCE REQUEST',
                              'severity'      => 1,
                              'text_severity' => 'Minor',
                              'cc'            => 'john.doe@example.com');
