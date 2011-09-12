@@ -57,9 +57,11 @@ edit /etc/rc.d/rc.local
 
     Xvfb :99 -ac -noreset &
 
-And reboot. Now you can run 
- 
-    DISPLAY=:99 java -jar selenium-server-standalone-2.5.0.jar -singlewindow -trustAllSSLCertificates
+install `selenium` service by copying the file ./selenium in /etc/init.d/ folder. Then issue the command:
+
+    chkconfig --add selenium
+    
+And reboot. You're done!
     
 
 
