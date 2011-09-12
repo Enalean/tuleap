@@ -101,7 +101,7 @@ class RequestHelpViews extends PluginView {
                 }
             }
             $p = PluginManager::instance()->getPluginByName('requesthelp');
-             echo '<fieldset>
+             echo '<fieldset class="requesthelp_fieldset">
              <legend><b>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_explain_label').'</b></legend>
              <form name="request" class="requesthelp_cssform" action="'.$p->getPluginPath().'/" method="post" enctype="multipart/form-data">
                  <table>

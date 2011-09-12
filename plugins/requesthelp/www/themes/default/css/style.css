@@ -1,5 +1,9 @@
+.requesthelp_fieldset {
+    width: 700px;
+}
+
 .requesthelp_cssform {
-    width: 900px;
+    width: 700px;
 }
 
 .requesthelp_cssform label {
