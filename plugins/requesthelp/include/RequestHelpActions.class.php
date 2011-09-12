@@ -67,10 +67,10 @@ class RequestHelpActions extends PluginAction {
             $params['type'] = $requestType;
             switch ($requestType) {
                 case RequestHelp::TYPE_SUPPORT :
-                    $params['text_type'] = 'SUPPORT REQUEST';
+                    $params['text_type'] = 'ASSISTANCE REQUEST';
                     break;
                 case RequestHelp::TYPE_ENHANCEMENT :
-                    $params['text_type'] = 'ENHANCEMENT REQUEST';
+                    $params['text_type'] = 'FUNCTIONALITY ENHANCEMENT';
                     break;
                 default:
                     $status = false;
