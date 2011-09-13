@@ -83,6 +83,7 @@ class RequestHelpViews extends PluginView {
             $severity    = RequestHelp::SEVERITY_MINOR;
             $summary     = '';
             $description =  $GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_default_description');
+            $cc = '';
             if (is_array($params)) {
                 $valid = new Valid_UInt();
                 if (isset($params['type']) && $valid->validate($params['type'])) {
