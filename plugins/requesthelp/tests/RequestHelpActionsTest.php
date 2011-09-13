@@ -42,7 +42,8 @@ Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion3', ar
 class RequestHelpActionsTest extends UnitTestCase {
 
     function setUp() {
-        $GLOBALS['Language']           = new MockBaseLanguage($this);
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+        $GLOBALS['Language']->setReturnValue('getText', 'default description', array('plugin_requesthelp', 'requesthelp_default_description'));
     }
 
     function tearDown() {
@@ -127,6 +128,29 @@ class RequestHelpActionsTest extends UnitTestCase {
         $request->setReturnValueAt(1, 'valid', false);
         $request->setReturnValueAt(2, 'valid', true);
         $request->setReturnValueAt(3, 'valid', true);
+        $request->expectCallCount('valid', 4);
+        $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
+        $params = $actions->validateRequest($request);
+        $validParams = array('status' => false,
+                             'params' => array('summary'       => 'valid summary',
+                                               'type'          => 1,
+                                               'text_type'     => 'ASSISTANCE REQUEST',
+                                               'severity'      => 1,
+                                               'text_severity' => 'Minor',
+                                               'cc'            => 'john.doe@example.com'),
+                             'invalid' => array('Description'));
+        $this->assertEqual($params, $validParams);
+    }
+
+    function testValidateRequestDefaultDescription() {
+        $request = new MockHTTPRequest();
+        $request->setReturnValue('get', 'valid summary', array('request_summary'));
+        $request->setReturnValue('get', 'default description', array('request_description'));
+        $request->setReturnValue('get', 1, array('type'));
+        $request->setReturnValue('get', 1, array('severity'));
+        $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
+        $request->setReturnValue('valid', true);
         $request->expectCallCount('valid', 4);
         $actions = new RequestHelpActionsTestVersion();
         $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
