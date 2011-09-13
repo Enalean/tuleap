@@ -28,7 +28,6 @@ require_once('RequestHelpDBDriver.class.php');
 /**
  * RequestHelpActions
  */
-
 class RequestHelpActions extends PluginAction {
 
     // {{{ Actions
@@ -54,7 +53,8 @@ class RequestHelpActions extends PluginAction {
         $valid = new Valid_Text('request_description');
         $valid->required();
         $description = trim($request->get('request_description'));
-        if ($request->valid($valid) && strlen($description) < 4000 && $description != '') {
+        $defaultDescription = $GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_default_description');
+        if ($request->valid($valid) && strlen($description) < 4000 && $description != '' && $description != $defaultDescription) {
             $params['description'] = $description;
         } else {
             $status = false;

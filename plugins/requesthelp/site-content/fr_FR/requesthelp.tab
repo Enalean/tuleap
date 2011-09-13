@@ -26,7 +26,7 @@ plugin_requesthelp	requesthelp_mail_user	Cher $1 (<em>$2</em>),<br /><br />Vous 
 plugin_requesthelp	requesthelp_mail_error	Chere équipe de support,<br /><br />Un nouveau ticket a été ajouté mais son insertion dans Remedy a échoué
 plugin_requesthelp	requesthelp_cc_note	Pour le champ CC utilisez les logins des utilisateurs au lieu de leurs adresses e-mail.<br />Veuillez remplir la liste en utilisant comme séparateurs les virgules ou les point-virgules.
 plugin_requesthelp	requesthelp_explain_label	Merci d'utiliser ce formulaire au dessous pour toute demande d'aide liée a la plateforme Codex
-plugin_requesthelp	requesthelp_default_description	<Veuillez entrer une déscription détaillée pour votre demande.\nn'oubliez pas de fournir l'URL du projet si c'est a propos d'un projet.\nDétaillez les étapes pour reproduire le problème si ça en est un.>
+plugin_requesthelp	requesthelp_default_description	<Veuillez entrer une déscription détaillée pour votre demande. N'oubliez pas de fournir l'URL du projet si c'est a propos d'un projet. Détaillez les étapes pour reproduire le problème si ça en est un.>
 plugin_requesthelp	requesthelp_lab_feature_title	Soumettre un ticket Remedy directement depuis Codex
 plugin_requesthelp	requesthelp_lab_feature_description	Permet la soumission en deux clicks des tickets Remedy relatives a Codex depuis l'interface même de Codex.
 plugin_requesthelp	tooltip_description	Une description complète de la requête

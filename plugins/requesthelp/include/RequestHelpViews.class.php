@@ -99,6 +99,10 @@ class RequestHelpViews extends PluginView {
                 if (isset($params['description']) && $valid->validate($params['description'])) {
                     $description = $params['description'];
                 }
+                $valid = new Valid_String();
+                if (isset($params['cc']) && $valid->validate($params['cc'])) {
+                    $cc = $params['cc'];
+                }
             }
             $p = PluginManager::instance()->getPluginByName('requesthelp');
              echo '<fieldset class="requesthelp_fieldset">
@@ -142,14 +146,17 @@ class RequestHelpViews extends PluginView {
             echo '<tr><td><b><a class="tooltip" href="#" title="'.$GLOBALS['Language']->getText('plugin_requesthelp', 'tooltip_summary').'">'.$GLOBALS['Language']->getText('plugin_requesthelp', 'summary').
                  ':</a></b>&nbsp;<span class="highlight"><big>*</big></span></td>
                      <td colspan="3"><input type="text" name="request_summary" value="'.$summary.'" /></td></tr>';
-            echo '<tr><td><b><a class="tooltip" href="#" title="'.$GLOBALS['Language']->getText('plugin_requesthelp', 'tooltip_description').'"><span class="requesthelp_totop">Description:</span></a></b>&nbsp;<span class="highlight"><span class="requesthelp_totop"><big>*</big></b></span></span></td><td  colspan="3"><textarea name="request_description">'.$description.'</textarea></td></tr>
+            echo '<tr><td><b><a class="tooltip" href="#" title="'.$GLOBALS['Language']->getText('plugin_requesthelp', 'tooltip_description').'"><span class="requesthelp_totop">Description:</span></a></b>&nbsp;<span class="highlight"><span class="requesthelp_totop"><big>*</big></b></span></span></td><td  colspan="3"><textarea id="request_description" name="request_description">'.$description.'</textarea></td></tr>
             <tr><td></td><td colspan="3"><i><b><u>Note</u>: </b>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_cc_note').'</i></td></tr>
-            <tr><td><label>CC :</label></td><td  colspan="3"><input id="requesthelp_cc" type="text" name="cc" /></td></tr>
+            <tr><td><label>CC :</label></td><td  colspan="3"><input id="requesthelp_cc" type="text" name="cc" value="'.$cc.'" /></td></tr>
             <tr><td><input name="action" type="hidden" value="submit_ticket" /></td><td><input name="submit" type="submit" value="Submit" /></td></tr>
                 </table>
             </form>
         </fieldset>';
-            $js = "new UserAutoCompleter('requesthelp_cc', '".util_get_dir_image_theme()."', true);";
+            $js = "$('request_description').defaultValueActsAsHint();
+                   options = new Array();
+                   options['defaultValueActsAsHint'] = false;
+                   new UserAutoCompleter('requesthelp_cc', '".util_get_dir_image_theme()."', true, options);";
             $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         }
     }
