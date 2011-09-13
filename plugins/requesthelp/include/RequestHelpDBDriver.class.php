@@ -112,7 +112,7 @@ class RequestHelpDBDriver {
                             '".$item."',
                             '".$requester."',
                             '".$this->escapeString($summary)."',
-                            '".$this->escapeString($description)."',
+                            '".$this->escapeString($description).$GLOBALS['Language']->getText('plugin_requesthelp', 'description_footer')."',
                             '".$severity."',
                             '".$this->escapeString($cc)."',
                             '".$requester."',

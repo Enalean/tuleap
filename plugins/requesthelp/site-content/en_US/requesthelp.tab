@@ -33,3 +33,4 @@ plugin_requesthelp	tooltip_description	A full description of the request.
 plugin_requesthelp	tooltip_summary	One line description of the request.
 plugin_requesthelp	tooltip_type	Request type.
 plugin_requesthelp	tooltip_severity	Impact of the request on the system(Critical, major,...).
+plugin_requesthelp	description_footer	\n\n*****\nThis ticket was added using Codex web interface.
