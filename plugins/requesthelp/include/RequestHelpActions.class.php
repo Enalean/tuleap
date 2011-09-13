@@ -67,10 +67,10 @@ class RequestHelpActions extends PluginAction {
             $params['type'] = $requestType;
             switch ($requestType) {
                 case RequestHelp::TYPE_SUPPORT :
-                    $params['text_type'] = 'ASSISTANCE REQUEST';
+                    $params['text_type'] = $this->_getPluginProperty('support_request');
                     break;
                 case RequestHelp::TYPE_ENHANCEMENT :
-                    $params['text_type'] = 'FUNCTIONALITY ENHANCEMENT';
+                    $params['text_type'] = $this->_getPluginProperty('enhancement_request');
                     break;
                 default:
                     $status = false;
@@ -321,24 +321,24 @@ class RequestHelpActions extends PluginAction {
                 $ldapLoginArray = $ldapLogin->getRow();
                 $requester = $ldapLoginArray['ldap_uid'];
             } else {
-                $requester = $this->_getDefaultRequesterLogin();
+                $requester = $this->_getPluginProperty('requesthelp_submitter');
             }
         } else {
-            $requester = $this->_getDefaultRequesterLogin();
+            $requester = $this->_getPluginProperty('requesthelp_submitter');
         }
         return $requester;
     }
 
     /**
-     * Retrieve the default Requester Login from plugin conf
+     * Retrieve request help plugin settings value
      *
-     * @return Codendi_Mail
+     * @return String
      */
-    function _getDefaultRequesterLogin() {
+    function _getPluginProperty($property) {
         $pluginManager = $this->_getPluginManager();
         $requestHelpPlugin = $pluginManager->getPluginByName('requesthelp');
-        $requester = $requestHelpPlugin->getProperty('requesthelp_submitter');
-        return $requester;
+        $value = $requestHelpPlugin->getProperty($property);
+        return $value;
     }
 
     /**

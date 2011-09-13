@@ -23,6 +23,10 @@ $remedy_category = 'COLLABORATION PLATFORM';
 
 $remedy_type = 'CODEXSTN';
 
+$support_request = 'ASSISTANCE REQUEST';
+
+$enhancement_request = 'FUNCTIONALITY ENHANCEMENT';
+
 // By default only users which enabled labs mode can use this feature, this property can disable that check
 $ignore_labs = false;
 

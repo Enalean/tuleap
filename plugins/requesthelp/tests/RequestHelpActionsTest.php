@@ -35,7 +35,7 @@ Mock::generate('Properties');
 require_once(dirname(__FILE__).'/../include/RequestHelp.class.php');
 Mock::generate('RequestHelp');
 require_once(dirname(__FILE__).'/../include/RequestHelpActions.class.php');
-Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion', array('_getUserManager'));
+Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion', array('_getUserManager', '_getPluginProperty'));
 Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion2', array('_getUserManager', 'insertTicketInCodexDB', 'sendMail', 'insertTicketInRIFDB', 'getController', 'validateRequest'));
 Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion3', array('_getUserManager', '_getCodendiMail', '_getPluginManager', 'validateRequest'));
 
@@ -59,6 +59,7 @@ class RequestHelpActionsTest extends UnitTestCase {
         $request->setReturnValue('valid', true);
         $request->expectCallCount('valid', 4);
         $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
         $params = $actions->validateRequest($request);
         $validParams = array('status' => true,
                              'params' => array('summary'       => 'valid summary',
@@ -102,6 +103,7 @@ class RequestHelpActionsTest extends UnitTestCase {
         $request->setReturnValueAt(3, 'valid', true);
         $request->expectCallCount('valid', 4);
         $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('description'   => 'valid description',
@@ -127,6 +129,7 @@ class RequestHelpActionsTest extends UnitTestCase {
         $request->setReturnValueAt(3, 'valid', true);
         $request->expectCallCount('valid', 4);
         $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('summary'       => 'valid summary',
@@ -198,6 +201,7 @@ class RequestHelpActionsTest extends UnitTestCase {
         $request->setReturnValueAt(3, 'valid', false);
         $request->expectCallCount('valid', 4);
         $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('summary'     => 'valid summary',
@@ -219,6 +223,7 @@ class RequestHelpActionsTest extends UnitTestCase {
         $request->setReturnValue('valid', true);
         $request->expectCallCount('valid', 4);
         $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('summary'     => 'valid summary',
