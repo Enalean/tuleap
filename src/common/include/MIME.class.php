@@ -38,6 +38,7 @@ class MIME {
     
     /**
      * Singleton
+     * @return MIME
      */
     public static function instance() {
         if (!isset(self::$_instance)) {

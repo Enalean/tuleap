@@ -56,20 +56,23 @@ class WebDAVProject extends Sabre_DAV_Directory {
      * @return array
      */
     function getChildren() {
-
         $children = array();
         if ($this->usesFile()) {
             $children[$GLOBALS['Language']->getText('plugin_webdav_common', 'files')] = $this->getWebDAFRS();
         }
-        // Look for another services to add to the project
-        $params = array('user'        => $this->getUser(),
-                        'project'     => $this->getProject(),
-                        'maxFileSize' => $this->getMaxFileSize(),
-                        'children'    => &$children);
-        $em = EventManager::instance();
-        $em->processEvent('WebDAVService', $params);
+        
+        $em    = $this->getUtils()->getEventManager();
+        $roots = array();
+        $em->processEvent('webdav_root_for_service', array('project' => $this->getProject(),
+                                                           'roots'    => &$roots));
+        foreach ($roots as $service => $root) {
+            if ($service == 'docman') {
+                include_once 'WebDAVDocmanFolder.class.php';
+                $docman = new WebDAVDocmanFolder($this->getUser() , $this->getProject(), $root, $this->getMaxFileSize());
+                $children[$docman->getName()] = $docman;
+            }
+        }
         return $children;
-
     }
 
     /**

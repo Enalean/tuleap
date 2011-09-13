@@ -26,6 +26,13 @@ class WebDAVUtils {
     protected static $instance;
 
     /**
+     * Instance of docman plugin
+     * 
+     * @var DocmanPlugin
+     */
+    protected $docmanPlugin;
+
+    /**
      * We don't permit an explicit call of the constructor! (like $utils = new WebDAVUtils())
      *
      * @return void
@@ -199,6 +206,15 @@ class WebDAVUtils {
 
     }
 
+    /**
+     * Returns event manager instance
+     * 
+     * @return EventManager
+     */
+    function getEventManager() {
+        return EventManager::instance();
+    }
+
     function getIncomingFileSize($name) {
         return PHP_BigFile::getSize($GLOBALS['ftp_incoming_dir'].'/'.$name);
     }
@@ -269,6 +285,28 @@ class WebDAVUtils {
         return $info->getPropertyValueForName('write_access_enabled');
     }
 
+    /**
+     * Use Docman MVC model to perform webdav actions
+     * 
+     * @param WebDAV_Request $request
+     */
+    function processDocmanRequest(WebDAV_Request $request) {
+        if (!$this->docmanPlugin) {
+            $pluginMgr = PluginManager::instance();
+            $this->docmanPlugin = $pluginMgr->getPluginByName('docman');
+            if (!$this->docmanPlugin || ($this->docmanPlugin && !$pluginMgr->isPluginAvailable($this->docmanPlugin))) {
+                throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_common', 'plugin_not_available'));
+            }
+        }
+        $GLOBALS['Response'] = new WebDAV_Response();
+        $controller = new WebDAV_DocmanController($this->docmanPlugin, $request);
+        $controller->process();
+
+        if ($GLOBALS['Response']->feedbackHasErrors()) {
+            //file_put_contents('/tmp/webdav.log', $GLOBALS['Response']->getRawFeedback());
+            throw new WebDAVExceptionServerError($GLOBALS['Response']->getRawFeedback());
+        }
+    }
 }
 
 ?>

@@ -1144,6 +1144,38 @@ class Docman_ItemFactory {
     }
 
     /**
+     * Manage deletion of a entire item hierarchy.
+     * 
+     * It's the recommended and official way to delete a file in the docman
+     *
+     * @param Docman_Item $item        Item to delete
+     * @param User        $user        User who performs the delete
+     * @param Boolean     $cascadeWiki If there are wiki documents, do we delete corresponding in wiki page too ?
+     * 
+     * @return Boolean success
+     */
+    public function deleteSubTree(Docman_Item $item, User $user, $cascadeWiki) {
+        if($item && !$this->isRoot($item)) {
+            // Cannot delete one folder if at least on of the document inside
+            // cannot be deleted
+            $dPm = Docman_PermissionsManager::instance($item->getGroupId());
+            $subItemsWritable = $dPm->currentUserCanWriteSubItems($item->getId());
+            if($subItemsWritable) {
+                $itemSubTree = $this->getItemSubTree($item, $user, false, true);
+                if ($itemSubTree) {
+                    $deletor = new Docman_ActionsDeleteVisitor();
+                    if ($itemSubTree->accept($deletor, array('user'  => $user, 'cascadeWikiPageDeletion' => $cascadeWiki))) {
+                        return true;
+                    }
+                }
+            } else {
+                throw new RuntimeException($GLOBALS['Language']->getText('plugin_docman', 'error_item_not_deleted_no_w'));
+            }
+        }
+        return false;
+    }
+    
+    /**
      * List pending items
      *
      * @param Integer $groupId

@@ -22,6 +22,8 @@ require_once (dirname(__FILE__).'/../../../docman/include/Docman_ItemFactory.cla
 require_once (dirname(__FILE__).'/../../../docman/include/Docman_FileStorage.class.php');
 require_once ('WebDAVDocmanDocument.class.php');
 require_once ('WebDAVDocmanFile.class.php');
+require_once (dirname(__FILE__).'/../WebDAV_Request.class.php');
+require_once ('WebDAV_DocmanController.class.php');
 
 /**
  * This class Represents Docman folders in WebDAV
@@ -33,8 +35,9 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
     private $user;
     private $project;
     private $item;
-    private static $maxFileSize;
-
+    private $maxFileSize;
+    private $plugin;
+    
     /**
      * Constructor of the class
      *
@@ -44,10 +47,11 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function __construct($user, $project, $item) {
+    function __construct($user, $project, $item, $maxFileSize) {
         $this->user = $user;
         $this->project = $project;
         $this->item = $item;
+        $this->maxFileSize = $maxFileSize;
     }
 
     /**
@@ -55,8 +59,8 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return Integer
      */
-    function getMaxFileSize() {
-        return self::$maxFileSize;
+    public function getMaxFileSize() {
+        return $this->maxFileSize;
     }
 
     /**
@@ -66,10 +70,10 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      *
      * @return void
      */
-    function setMaxFileSize($maxFileSize) {
-        self::$maxFileSize = $maxFileSize;
+    public function setMaxFileSize($maxFileSize) {
+        $this->maxFileSize = $maxFileSize;
     }
-
+    
     /**
      * Returns the content of the folder
      * including indication about duplicate entries
@@ -244,7 +248,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return WebDAVDocmanFile
      */
     function getWebDAVDocmanFile($item) {
-        return new WebDAVDocmanFile($this->user, $this->getProject(), $item);
+        return new WebDAVDocmanFile($this->user, $this->getProject(), $item, $this->maxFileSize);
     }
 
     /**
@@ -266,7 +270,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return WebDAVDocmanFolder
      */
     function getWebDAVDocmanFolder($folder) {
-        return new WebDAVDocmanFolder($this->user, $this->getProject(), $folder);
+        return new WebDAVDocmanFolder($this->user, $this->getProject(), $folder, $this->maxFileSize);
     }
 
     /**
@@ -277,38 +281,55 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return void
      */
     function createDirectory($name) {
-        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            $item['item_type']         = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
-            $item['user_id']           = $this->getUser()->getId();
-            $item['group_id']          = $this->getProject()->getGroupId();
-            $item['parent_id']         = $this->getItem()->getId();
-            $item['title']             = htmlspecialchars($name);
-            $itemFactory               = $this->getUtils()->getDocmanItemFactory();
-            $id                        = $itemFactory->create($item, 'beginning');
-            if ($id) {
-                $newItem  = $itemFactory->getItemFromDb($id);
-                $parent   = $itemFactory->getItemFromDb($item['parent_id']);
-                $event    = 'plugin_docman_event_add';
-                $newItem->fireEvent($event, $this->getUser(), $parent);
-                $this->cloneItemPermissions($item['parent_id'], $id);
-            }
+        if ($this->getUtils()->isWriteEnabled()) {
+            // Request
+            $params['action']   = 'createItem';
+            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['ordering'] = 'beginning';
+            $params['confirm']  = true;
+            
+            // Item details
+            $params['item']['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FOLDER;
+            $params['item']['parent_id'] = $this->getItem()->getId();
+            $params['item']['title']     = $name;
+            
+            $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_create'));
         }
     }
-
+    
     /**
-     * Inherit permissions from parent
+     * Creates a new document under the folder
      *
-     * @param Integer $parentId Id of the parent item
-     * @param Integer $itemId   Id of the new item
+     * @param String $name Name of the document
+     * @param Binary $data Content of the document
      *
      * @return void
      */
-    function cloneItemPermissions($parentId, $itemId) {
-        $pm = $this->getUtils()->getPermissionsManager();
-        $pm->clonePermissions($parentId, $itemId, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
+    function createFile($name, $data = null) {
+        if ($this->getUtils()->isWriteEnabled()) {
+            // Request
+            $params['action']   = 'createItem';
+            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['ordering'] = 'beginning';
+            $params['confirm']  = true;
+
+            // File stuff
+            $params['file_name']      = $name;
+            $params['upload_content'] = stream_get_contents($data);
+            if (strlen($params['upload_content']) <= $this->getMaxFileSize()) {
+                $params['item']['item_type']      = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
+                $params['item']['parent_id']      = $this->getItem()->getId();
+                $params['item']['title']          = $name;
+                
+                $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
+            } else {
+                throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
+            }
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_create'));
+        }
     }
 
     /**
@@ -324,129 +345,39 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
      * @return void
      */
     function setName($name) {
-        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($this->getUtils()->isWriteEnabled() && !$this->isDocmanRoot() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            $row          = $this->getItem()->toRow();
-            $row['title'] = htmlspecialchars($name);
-            $row['id']    = $this->getItem()->getId();
-            $itemFactory  = $this->getUtils()->getDocmanItemFactory();
-            $itemFactory->update($row);
+        if ($this->getUtils()->isWriteEnabled()) {
+            // Request
+            $params['action']   = 'update';
+            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['confirm']  = true;
+            
+            // Item details
+            $params['item']['id']    = $this->getItem()->getId();
+            $params['item']['title'] = $name;
+            
+            $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
         } else {
             throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'folder_denied_rename'));
         }
     }
 
     /**
-     * Creates a new document under the folder
-     *
-     * @param String $name Name of the document
-     * @param Binary $data Content of the document
-     *
-     * @return void
-     */
-    function createFile($name, $data = null) {
-        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($this->getUtils()->isWriteEnabled() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            $content = stream_get_contents($data);
-            if (strlen($content) <= $this->getMaxFileSize()) {
-                $item['item_type'] = PLUGIN_DOCMAN_ITEM_TYPE_FILE;
-                $item['user_id']   = $this->getUser()->getId();
-                $item['group_id']  = $this->getProject()->getGroupId();
-                $item['parent_id'] = $this->getItem()->getId();
-                $item['title']     = htmlspecialchars($name);
-                $itemFactory       = $this->getUtils()->getDocmanItemFactory();
-                $id                = $itemFactory->create($item, 'beginning');
-                if ($id) {
-                    $newItem           = $itemFactory->getItemFromDb($id);
-                    $parent           = $itemFactory->getItemFromDb($item['parent_id']);
-                    $event    = 'plugin_docman_event_add';
-                    $newItem->fireEvent($event, $this->getUser(), $parent);
-                    $versionFactory    = $this->getUtils()->getVersionFactory();
-                    $nextNb            = $versionFactory->getNextVersionNumber($newItem);
-                    if($nextNb === false) {
-                        $number       = 1;
-                        $_changelog   = 'Initial version';
-                    } else {
-                        $number       = $nextNb;
-                        $_changelog   = '';
-                    }
-                    $this->cloneItemPermissions($item['parent_id'], $id);
-                    $fs   = $this->getUtils()->getFileStorage();
-                    $path = $fs->store($content, $this->getProject()->getGroupId(), $newItem->getId(), $number);
-                    if ($path) {
-                        $_filesize      = PHP_BigFile::getSize($path);
-                        $_filename      = htmlspecialchars($name);
-                        $_filetype      = mime_content_type($path);
-                        $vArray         = array('item_id'   => $newItem->getId(),
-                                                'number'    => $number,
-                                                'user_id'   => $this->getUser()->getId(),
-                                                'label'     => '',
-                                                'changelog' => $_changelog,
-                                                'filename'  => $_filename,
-                                                'filesize'  => $_filesize,
-                                                'filetype'  => $_filetype, 
-                                                'path'      => $path,
-                                                'date'      => '');
-                        if (!$versionFactory->create($vArray)) {
-                            throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
-                        }
-                    } else {
-                        throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_upload', 'write_file_fail'));
-                    }
-                } else {
-                    throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_upload', 'create_file_fail'));
-                }
-            } else {
-                throw new Sabre_DAV_Exception_RequestedRangeNotSatisfiable($GLOBALS['Language']->getText('plugin_webdav_download', 'error_file_size'));
-            }
-        } else {
-            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_create'));
-        }
-    }
-
-    function deleteDirectoryContent($item) {
-        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-        if ($docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-            $itemFactory  = $this->getUtils()->getDocmanItemFactory();
-            $allChildrens = $itemFactory->getChildrenFromParent($item);
-            foreach($allChildrens as $child) {
-                if (get_class($child) == 'Docman_File' || get_class($child) == 'Docman_EmbeddedFile') {
-                    $docmanFile = $this->getWebDAVDocmanFile($child);
-                    $docmanFile->delete();
-                }
-                else if(get_class($child)=='Docman_Folder') {
-                    $this->deleteDirectoryContent($child);
-                    $docmanFolder= $this->getWebDAVDocmanFolder($child);
-                    $docmanFolder->delete();
-                }
-            }
-        } else {
-            throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
-        }
-    }
-
-    /**
-     * Deletes a docman folder and its content
+     * Delete the folder
      *
      * @return void
      */
     function delete() {
-        $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($this->getProject());
-
-            if ($this->getUtils()->isWriteEnabled() && !$this->isDocmanRoot() && $docmanPermissionManager->userCanWrite($this->getUser(), $this->getItem()->getId())) {
-                $item = $this->getItem();
-                $itemFactory  = $this->getUtils()->getDocmanItemFactory();
-                $subItemsWritable = $docmanPermissionManager->currentUserCanWriteSubItems($item->getId());
-                if($subItemsWritable) {
-                    $this->deleteDirectoryContent($item);
-                    $itemFactory->delete($item);
-                } else {
-                    throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'error_subitems_not_deleted_no_w'));
-                }
-            } else {
-                throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
-            }
+        if ($this->getUtils()->isWriteEnabled()) {
+            // Request
+            $params['action']   = 'delete';
+            $params['group_id'] = $this->getProject()->getGroupId();
+            $params['confirm']  = true;
+            $params['id']       = $this->getItem()->getId();
+            $this->getUtils()->processRequest(new WebDAV_Request($params));
+        } else {
+            throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }
+    }
 }
 
 ?>

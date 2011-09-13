@@ -1,5 +1,8 @@
+Version 1.8
+	* Refactor docman write support + fix bugs
+
 Version 1.7
-    * Fix issue after refactoring of DataAccessObject
+	* Fix issue after refactoring of DataAccessObject
 
 Version 1.6
 	* Add write access for docman

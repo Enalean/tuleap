@@ -69,14 +69,19 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      * We don't allow copying docman items from a project to another
      * We don't allow copying FRS items
      *
+     * Copy or move of items is disabled as of today, because we need more feedback on
+     * how basic (create/update/delete) features works before allowing it.
+     *
      * @param String $sourcePath
      * @param String $destinationPath
      *
      * @return void
      */
     public function copy($sourcePath, $destinationPath) {
+        throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
+        
         // Check that write access is enabled for WebDAV
-        if ($this->getUtils()->isWriteEnabled()) {
+        /*if ($this->getUtils()->isWriteEnabled()) {
             list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
             $destination = $this->getNodeForPath($destinationDir);
             $source = $this->getNodeForPath($sourcePath);
@@ -114,7 +119,7 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
             }
         } else {
             throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
-        }
+        }*/
     }
 
     /**
@@ -129,7 +134,6 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
      * @see lib/Sabre/DAV/Sabre_DAV_Tree#move($sourcePath, $destinationPath)
      */
     public function move($sourcePath, $destinationPath) {
-
         list($sourceDir, $sourceName) = Sabre_DAV_URLUtil::splitPath($sourcePath);
         list($destinationDir, $destinationName) = Sabre_DAV_URLUtil::splitPath($destinationPath);
 
@@ -140,8 +144,10 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
         if ($this->getUtils()->isWriteEnabled()) {
             if ($sourceDir === $destinationDir) {
                 $source->setName($destinationName);
-            } else if ($destination instanceof WebDAVDocmanFolder
-                && ($source instanceof WebDAVDocmanFolder || $source instanceof WebDAVDocmanDocument)) {
+            /*} else if ($destination instanceof WebDAVDocmanFolder
+            && ($source instanceof WebDAVDocmanFolder || $source instanceof WebDAVDocmanDocument)) {
+                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
+                
                 $sourceItem = $source->getItem();
                 $destinationItem = $destination->getItem();
                 $user = $source->getUser();
@@ -149,31 +155,30 @@ class WebDAVTree extends Sabre_DAV_ObjectTree {
                 if ($sourceItem->getGroupId() == $destinationItem->getGroupId()) {
                     $docmanPermissionManager = $this->getUtils()->getDocmanPermissionsManager($source->getProject());
                     if ($docmanPermissionManager->userCanAccess($user, $sourceItem->getId())
-                        && $docmanPermissionManager->userCanWrite($user, $destinationItem->getId())) {
-                            $subItemsWritable = $docmanPermissionManager->currentUserCanWriteSubItems($sourceItem->getId());
-                            if($subItemsWritable) {
-                                $itemFactory->setNewParent($sourceItem->getId(), $destinationItem->getId(), $ordering);
-                                $event = 'plugin_docman_event_move';
-                                $sourceItem->fireEvent($event, $user, $destinationItem);
-                            } else {
-                                throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'error_subitems_not_moved_no_w'));
-                            }
+                    && $docmanPermissionManager->userCanWrite($user, $destinationItem->getId())) {
+                        $subItemsWritable = $docmanPermissionManager->currentUserCanWriteSubItems($sourceItem->getId());
+                        if($subItemsWritable) {
+                            $itemFactory->setNewParent($sourceItem->getId(), $destinationItem->getId(), $ordering);
+                            $event = 'plugin_docman_event_move';
+                            $sourceItem->fireEvent($event, $user, $destinationItem);
                         } else {
+                            throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'error_subitems_not_moved_no_w'));
+                        }
+                    } else {
                         throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_denied_move'));
                     }
                 } else {
                     throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_projects_move'));
-                }
+                }*/
             } else {
                 throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'move_error'));
             }
         } else {
             throw new Sabre_DAV_Exception_MethodNotAllowed($GLOBALS['Language']->getText('plugin_webdav_common', 'write_access_disabled'));
         }
+    }
 
-}
-
-    /**
+/**
      * Returns an instance of WebDAVUtils
      *
      * @return WebDAVUtils

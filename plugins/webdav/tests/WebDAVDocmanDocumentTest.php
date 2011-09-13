@@ -31,8 +31,9 @@ require_once (dirname(__FILE__).'/../include/FS/WebDAVDocmanDocument.class.php')
 Mock::generatePartial(
     'WebDAVDocmanDocument',
     'WebDAVDocmanDocumentTestVersion',
-array('getItem', 'getUtils')
+array('getItem', 'getUtils', 'getProject')
 );
+Mock::generate('EventManager');
 
 /**
  * This is the unit test of WebDAVDocmanDocument
@@ -57,37 +58,20 @@ class WebDAVDocmanDocumentTest extends UnitTestCase {
         $webDAVDocmanDocument->delete();
     }
 
-    function testDeleteNoPermissions() {
-        $webDAVDocmanDocument = new WebDAVDocmanDocumentTestVersion();
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanWrite', false);
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
-        $item = new MockDocman_Item();
-        $webDAVDocmanDocument->setReturnValue('getItem', $item);
-        $dpm->expectOnce('userCanWrite');
-
-        $this->expectException('Sabre_DAV_Exception_Forbidden');
-        $webDAVDocmanDocument->delete();
-    }
-
     function testDeleteSuccess() {
         $webDAVDocmanDocument = new WebDAVDocmanDocumentTestVersion();
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanWrite', true);
+
         $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $utils->setReturnValue('isWriteEnabled', true);
-        $dif = new MockDocman_ItemFactory();
-        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
+        
+        $project = new MockProject();
+        $webDAVDocmanDocument->setReturnValue('getProject', $project);
+        
         $item = new MockDocman_Item();
         $webDAVDocmanDocument->setReturnValue('getItem', $item);
-        $dpm->expectOnce('userCanWrite');
-        $dif->expectOnce('delete');
-
+        
         $this->assertNoErrors();
         $webDAVDocmanDocument->delete();
     }
@@ -102,35 +86,20 @@ class WebDAVDocmanDocumentTest extends UnitTestCase {
         $webDAVDocmanDocument->setName('newName');
     }
 
-    function testSetNameNoPermissions() {
-        $webDAVDocmanDocument = new WebDAVDocmanDocumentTestVersion();
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanWrite', false);
-        $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
-        $utils->setReturnValue('isWriteEnabled', true);
-        $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
-        $item = new MockDocman_Item();
-        $webDAVDocmanDocument->setReturnValue('getItem', $item);
-        $dpm->expectOnce('userCanWrite');
-
-        $this->expectException('Sabre_DAV_Exception_MethodNotAllowed');
-        $webDAVDocmanDocument->setName('newName');
-    }
-
     function testSetNameSuccess() {
         $webDAVDocmanDocument = new WebDAVDocmanDocumentTestVersion();
-        $dpm = new MockDocman_PermissionsManager();
-        $dpm->setReturnValue('userCanWrite', true);
+
         $utils = new MockWebDAVUtils();
-        $utils->setReturnValue('getDocmanPermissionsManager', $dpm);
         $utils->setReturnValue('isWriteEnabled', true);
-        $dif = new MockDocman_ItemFactory();
-        $utils->setReturnValue('getDocmanItemFactory', $dif);
+        $utils->expectOnce('processDocmanRequest');
         $webDAVDocmanDocument->setReturnValue('getUtils', $utils);
+        
+        $project = new MockProject();
+        $webDAVDocmanDocument->setReturnValue('getProject', $project);
+        
         $item = new MockDocman_Item();
         $webDAVDocmanDocument->setReturnValue('getItem', $item);
-        $dpm->expectOnce('userCanWrite');
+        
 
         $this->assertNoErrors();
         $webDAVDocmanDocument->setName('newName');
