@@ -30,6 +30,8 @@ require_once('RequestHelpDBDriver.class.php');
  */
 class RequestHelpActions extends PluginAction {
 
+    const MAX_SUMMARY_LENGTH     = 128;
+    const MAX_DESCRIPTION_LENGTH = 4000;
     // {{{ Actions
     /**
     * Validate request values
@@ -44,7 +46,7 @@ class RequestHelpActions extends PluginAction {
         $valid = new Valid_String('request_summary');
         $valid->required();
         $summary = trim($request->get('request_summary'));
-        if ($request->valid($valid) && strlen($summary) < 128 && $summary != '') {
+        if ($request->valid($valid) && strlen($summary) < self::MAX_SUMMARY_LENGTH && $summary != '') {
             $params['summary'] = $summary;
         } else {
             $status = false;
@@ -54,7 +56,7 @@ class RequestHelpActions extends PluginAction {
         $valid->required();
         $description = trim($request->get('request_description'));
         $defaultDescription = $GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_default_description');
-        if ($request->valid($valid) && strlen($description) < 4000 && $description != '' && $description != $defaultDescription) {
+        if ($request->valid($valid) && strlen($description) < self::MAX_DESCRIPTION_LENGTH && $description != '' && $description != $defaultDescription) {
             $params['description'] = $description;
         } else {
             $status = false;
