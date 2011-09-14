@@ -68,7 +68,6 @@ echo '<h3>'. $Language->getText('account_options', 'preferences') .'</h3>';
                           echo '<p class="account_preferences_lab_feature_description">'. $lab['description'] .'</p>';
                           echo '</td>';
                           echo '</tr>';
-                          echo '<tr><td>&nbsp;</td></tr>';
                       }
                       echo '</table>';
                   }
