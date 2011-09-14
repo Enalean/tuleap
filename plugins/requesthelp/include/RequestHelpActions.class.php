@@ -161,7 +161,7 @@ class RequestHelpActions extends PluginAction {
     function insertTicketInRIFDB($params) {
         try {
             $requester = strtoupper($this->_getRequesterLdapLogin());
-            $oci = new RequestHelpDBDriver();
+            $oci = new RequestHelpDBDriver($this->getController()->getPlugin());
             $oci->getdbh();
             $ccMails = array_map('trim', preg_split('/[;]/', $params['cc']));
             $cc = '';
@@ -337,10 +337,7 @@ class RequestHelpActions extends PluginAction {
      * @return String
      */
     function _getPluginProperty($property) {
-        $pluginManager = $this->_getPluginManager();
-        $requestHelpPlugin = $pluginManager->getPluginByName('requesthelp');
-        $value = $requestHelpPlugin->getProperty($property);
-        return $value;
+        return $this->getController()->getPlugin()->getProperty($property);
     }
 
     /**

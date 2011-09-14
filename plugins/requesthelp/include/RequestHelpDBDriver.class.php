@@ -23,6 +23,8 @@ class RequestHelpDBDriver {
     protected $dsn;
     protected $user;
     protected $password;
+    protected $category;
+    protected $type;
 
     /**
      * Constructor
@@ -31,13 +33,13 @@ class RequestHelpDBDriver {
      *
      * @return void
      */
-    public function __construct() {
-        $pluginManager = PluginManager::instance();
-        $p = $pluginManager->getPluginByName('requesthelp');
-        if ($p->getProperty('db_host') && $p->getProperty('db_name')&& $p->getProperty('db_port') && $p->getProperty('db_user') && $p->getProperty('db_passwd')) {
-            $this->dsn      = '//'.$p->getProperty('db_host').':'.$p->getProperty('db_port').'/'.$p->getProperty('db_name');
-            $this->user     = $p->getProperty('db_user');
-            $this->password = $p->getProperty('db_passwd');
+    public function __construct($plugin) {
+        if ($plugin->getProperty('db_host') && $plugin->getProperty('db_name')&& $plugin->getProperty('db_port') && $plugin->getProperty('db_user') && $plugin->getProperty('db_passwd')) {
+            $this->dsn      = '//'.$plugin->getProperty('db_host').':'.$plugin->getProperty('db_port').'/'.$plugin->getProperty('db_name');
+            $this->user     = $plugin->getProperty('db_user');
+            $this->password = $plugin->getProperty('db_passwd');
+            $this->category = $plugin->getProperty('remedy_category');
+            $this->type     = $plugin->getProperty('remedy_type');
         } else {
             throw new Exception('Unable to find valid connexion parameters, please check requesthelp conf file');
         }
@@ -70,12 +72,7 @@ class RequestHelpDBDriver {
      * @return String Remedy ticket id
      */
     public function createTicket($summary, $description, $item, $severity, $cc, $requester) {
-        $pluginManager = PluginManager::instance();
-        $p = $pluginManager->getPluginByName('requesthelp');
-        $category  = $p->getProperty('remedy_category');
-        $type      = $p->getProperty('remedy_type');
-
-        if ($requester && $category && $type) {
+        if ($requester && $this->category && $this->type) {
             // This is the old way of using RIF table use it in case the procedure wont work
             /*$sql = "INSERT INTO RIF_REQUEST
                    (
@@ -92,8 +89,8 @@ class RequestHelpDBDriver {
                    CC_MAIL_IDS,
                    RIF_ID
                    ) VALUES (
-                   '".$category."',
-                   '".$type."',
+                   '".$this->category."',
+                   '".$this->type."',
                    '".$item."',
                    '".$requester."',
                    '".$this->escapeString($summary)."',
@@ -107,8 +104,8 @@ class RequestHelpDBDriver {
                    )";*/
             $sql = "BEGIN
                         INSERT_RIF_ENTRY(
-                            '".$category."',
-                            '".$type."',
+                            '".$this->category."',
+                            '".$this->type."',
                             '".$item."',
                             '".$requester."',
                             '".$this->escapeString($summary)."',

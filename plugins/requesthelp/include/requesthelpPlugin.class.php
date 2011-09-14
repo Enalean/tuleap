@@ -60,7 +60,7 @@ class requesthelpPlugin extends Plugin {
      * @return void
      */
     function process() {
-        $controler = new RequestHelp();
+        $controler = new RequestHelp($this);
         $controler->process();
     }
 
