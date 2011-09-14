@@ -1,4 +1,3 @@
-
 --  
 --  Table structure for workflow_tracker
 --  
@@ -534,12 +533,6 @@ INSERT INTO service(group_id, label, description, short_name, link, is_active, i
 SELECT DISTINCT group_id , 'plugin_tracker:service_lbl_key' , 'plugin_tracker:service_desc_key' , 'plugin_tracker', CONCAT('/plugins/tracker/?group_id=', group_id), 1 , 0 , 'system',  151
 FROM service
 WHERE group_id != 100;
-
--- Disable for all templates
-UPDATE service INNER JOIN groups USING(group_id) 
-SET service.is_active = 0 
-WHERE groups.type = 2 
-  AND service.short_name = 'plugin_tracker';
 
 
 INSERT INTO permissions_values (permission_type,ugroup_id,is_default) VALUES ('PLUGIN_TRACKER_ACCESS_FULL',1,1);
