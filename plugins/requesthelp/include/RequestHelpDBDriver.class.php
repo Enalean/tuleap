@@ -29,6 +29,8 @@ class RequestHelpDBDriver {
     /**
      * Constructor
      *
+     * @param requesthelpPlugin $plugin The plugin instance
+     *
      * @throws Exception
      *
      * @return void

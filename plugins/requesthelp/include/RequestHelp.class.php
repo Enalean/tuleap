@@ -41,6 +41,8 @@ class RequestHelp extends PluginControler {
     /**
      * Constructor of the class
      *
+     * @param requesthelpPlugin $plugin The plugin instance
+     *
      * @return void
      */
     function __construct($plugin) {
