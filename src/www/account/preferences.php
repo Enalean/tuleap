@@ -34,6 +34,32 @@ echo '<h3>'. $Language->getText('account_options', 'preferences') .'</h3>';
   <INPUT type="checkbox" name="form_mail_va" value="1"   <?= $user->getMailVA() ? 'checked="checked"' : '' ?> />
   <?= $Language->getText('account_register', 'communitymail'); ?>
 </p>
+<?php
+if ($u_trackermailformat = user_get_preference("user_tracker_mailformat")) {
+} else {
+    $u_trackermailformat = DEFAULT_TRACKER_MAILFORMAT;
+}
+
+// build the tracker Mail format select box
+?>
+<p>
+
+<?php echo $Language->getText('account_preferences','tracker_mail_format'); ?>
+
+<select name="user_tracker_mailformat">
+
+<?php
+// $tracker_mailformats is defined in /www/include/utils.php
+foreach ($tracker_mailformats as $format) {
+    print '<option value="'.$format.'"';
+    if ($u_trackermailformat == $format) {
+        print ' selected="selected"';
+    }
+    print '>'.$format.'</option>\n';
+}
+print "</select>\n";
+?>
+</p>
 
             </fieldset>
             <fieldset>

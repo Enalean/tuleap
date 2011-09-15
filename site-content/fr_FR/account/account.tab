@@ -63,6 +63,7 @@ account_preferences	day_month_year	jour/mois/année
 account_preferences	lab_features_title	$1 Lab
 account_preferences	lab_features_description	Fonctionnalités expérimentales $1 en avant première pour les intrépides. N'activez ce mode que si vous savez ce que vous faites. Les fonctionnalités sont listés ci-dessous.
 account_preferences	lab_features_cblabel	Activer $1 Lab
+account_preferences	tracker_mail_format	Format des notifications de l'outil de suivi :
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php
