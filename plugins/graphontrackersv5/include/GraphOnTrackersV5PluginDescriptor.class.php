@@ -25,8 +25,9 @@ require_once('common/plugin/PluginDescriptor.class.php');
 
 class GraphOnTrackersV5PluginDescriptor extends PluginDescriptor {
     
-    function GraphOnTrackersV5PluginDescriptor() {
-        $this->PluginDescriptor($GLOBALS['Language']->getText('plugin_graphontrackersv5', 'descriptor_name'), 'v1.0', $GLOBALS['Language']->getText('plugin_graphontrackersv5', 'descriptor_description'));
+    function __construct() {
+        parent::__construct($GLOBALS['Language']->getText('plugin_graphontrackersv5', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_graphontrackersv5', 'descriptor_description'));
+        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
     
 }
