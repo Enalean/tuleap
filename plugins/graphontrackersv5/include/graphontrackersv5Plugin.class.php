@@ -19,11 +19,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+
+// Do not load the plugin if tracker is not installed & active
+if (defined('TRACKER_BASE_URL')) {
+
 require_once('common/include/HTTPRequest.class.php');
 require_once('common/plugin/Plugin.class.php');
 require_once('GraphOnTrackersV5_Renderer.class.php');
-
-
 
 class GraphOnTrackersV5Plugin extends Plugin {
 
@@ -46,8 +48,8 @@ class GraphOnTrackersV5Plugin extends Plugin {
      *
      * @param integer $id plugin id
      */
-    function GraphOnTrackersV5Plugin($id) {
-        $this->Plugin($id);
+    function __construct($id) {
+        parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         
         $this->_addHook('cssfile',                           'cssFile',                           false);
@@ -450,5 +452,5 @@ class GraphOnTrackersV5Plugin extends Plugin {
         }
     }
 }
-
+}
 ?>
