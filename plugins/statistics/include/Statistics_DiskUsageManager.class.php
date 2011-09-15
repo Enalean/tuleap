@@ -476,15 +476,15 @@ class Statistics_DiskUsageManager {
      * 'SVN', 'CVS', 'FRS', 'FTP', 'HOME', 'WIKI', 'MAILMAN', 'DOCMAN', 'FORUMML', 'WEBDAV',
      */
     public function collectProjects() {
-        //We start the transaction, it is not stored in the DB unless we COMMIT
-        //With START TRANSACTION, autocommit remains disabled until we end the transaction with COMMIT or ROLLBACK. 
-        $sql = db_query('START TRANSACTION');
-
+        
         $em  = EventManager::instance();
 
         $dao = $this->_getDao();
         $dar = $dao->searchAllGroups();
         foreach($dar as $row) {
+            //We start the transaction, it is not stored in the DB unless we COMMIT
+            //With START TRANSACTION, autocommit remains disabled until we end the transaction with COMMIT or ROLLBACK. 
+            $sql = db_query('START TRANSACTION');
             $this->storeForGroup($row['group_id'], 'svn', $GLOBALS['svn_prefix']."/".$row['unix_group_name']);
             $this->storeForGroup($row['group_id'], 'cvs', $GLOBALS['cvs_prefix']."/".$row['unix_group_name']);
             $this->storeForGroup($row['group_id'], 'frs', $GLOBALS['ftp_frs_dir_prefix']."/".$row['unix_group_name']);
@@ -496,13 +496,15 @@ class Statistics_DiskUsageManager {
             
             $params = array('DiskUsageManager' => $this, 'project_row' => $row);
             $em->processEvent('plugin_statistics_disk_usage_collect_project', $params);
+            
+            $sql = db_query('COMMIT');
         }
         $this->collectMailingLists();
     }
 
     public function collectMailingLists() {
         $mmArchivesPath = '/var/lib/mailman/archives/private';
-
+        $sql = db_query('START TRANSACTION');
         $dao = $this->_getDao();
         $dar = $dao->searchAllLists();
         $previous = -1;

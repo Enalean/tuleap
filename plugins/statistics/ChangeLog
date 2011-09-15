@@ -1,3 +1,9 @@
+Version 0.7
+	== Bug fix ==
+	* Fix sla #116: incoherent disk statistics. Reduce risk of incomplete data collection.
+	** DB Transaction per project instead of "all projects at once"
+	** Do not collect on sunday (while DB is down).
+
 Version 0.6
 	== Bug fix ==
 	* Display a nice error message instead of default jpgraph one when no data are available.

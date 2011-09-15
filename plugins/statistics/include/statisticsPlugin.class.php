@@ -89,8 +89,12 @@ class StatisticsPlugin extends Plugin {
      * @return void
      */
     function root_daily_start($params) {
-        $this->_archiveSessions();
-        $this->_diskUsage();
+        //We do not collect datas on Sundays, since the db is stopped (backup script)
+        $day = date("N");
+        if ($day != "7") {
+            $this->_archiveSessions();
+            $this->_diskUsage();
+        }
     }
 
     /**
