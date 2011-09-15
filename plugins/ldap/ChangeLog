@@ -1,7 +1,7 @@
 Version 3.5 (Tuleap 4.0.22)
     == Bug Fix ==
-    Add CSRF countermeasures
-    
+    * Add CSRF countermeasures
+    * Fix LDAP options settings (for better compat with LDAPv3 directories, hence AD)
 
 Version 3.4 (Codendi_ST 4.0.17) 
 	
