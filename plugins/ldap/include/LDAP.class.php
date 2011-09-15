@@ -86,15 +86,11 @@ class LDAP {
             foreach (split('[,;]', $this->ldapParams['server']) as $ldap_server) {  	    
                 $this->ds = ldap_connect($ldap_server);
                 if($this->ds) {
-                    // Force protocol to LDAPv3 (for AD & recent version of OpenLDAP)
-                    ldap_set_option($this->ds, LDAP_OPT_PROTOCOL_VERSION, 3);
-                    ldap_set_option($this->ds, LDAP_OPT_REFERRALS, 0);
-
-                    // Since ldap_connect always return a resource with
+                    // MV:
+                    // Since ldap_connect allways return a resource with
                     // OpenLdap 2.2.x, we have to check that this ressource is
                     // valid with a bind, If bind success: that's great, if
                     // not, this is a connexion failure.
-                    // For active directory...
                     if(@ldap_bind($this->ds)) {
                         return true;
                     }
@@ -120,6 +116,10 @@ class LDAP {
      */
     function bind($binddn=null, $bindpw=null) {
         if(!$this->bound) {
+            // For active directory...
+            ldap_set_option($this->ds, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($this->ds, LDAP_OPT_REFERRALS, 0);
+
             if (!$binddn) {
                 $binddn=isset($this->ldapParams['bind_dn']) ? $this->ldapParams['bind_dn'] : null;
                 $bindpw=isset($this->ldapParams['bind_passwd']) ? $this->ldapParams['bind_passwd'] : null;
