@@ -6,6 +6,7 @@ Version 4.0.22 - (Not Released Yet)
 
     == Bug Fix ==
     * backlog #112: SVNAccessFile not properly updated after user removal
+    * Add CSRF countermeasures
 
     == Plugins ==
     * WebDAV plugin v1.8. See separated ChangeLog

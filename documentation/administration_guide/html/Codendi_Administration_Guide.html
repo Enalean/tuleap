@@ -70,6 +70,7 @@ See the file COPYING.
 <dt><a href="#HowTo_passwords">Set up a validator for users' password</a></dt>
 <dt><a href="#HowTo_expiration_date">How to add an expiration date on a user account</a></dt>
 <dt><a href="#HowTo_change_wiki_language">How to change wiki language for a project</a></dt>
+<dt><a href="#HowTo_reset_sessions">How to reset sessions</a></dt>
 </dl></dd>
 </dl>
 <p></p>
@@ -2935,7 +2936,7 @@ Please note that the default template does not allow selection of satellite serv
 <p>See site-content/*/account/password_strategy.txt for details.</p>
 
 <hr>
-<h2 id="HowTo_expiration_date"">Add an expiration date on a user account</h2>
+<h2 id="HowTo_expiration_date">Add an expiration date on a user account</h2>
 <p>As an administrator you can add an expiration date to a user account in several ways:</p>
 <ul>
 	<li>When creating a new user account, in the field expiration date. If you leave it blank, then no expiration date will be set.</li>
@@ -2961,6 +2962,12 @@ Please note that the default template does not allow selection of satellite serv
 	</li>
 	<li>The wiki of the project has been removed. You can now activate it again with the right language.</li>
 </ol>
+
+<hr>
+<h2 id="HowTo_reset_sessions">How to reset sessions</h2>
+<p>If you switch <code>sys_force_ssl</code> from 1 to 0 while users have exisiting sessions
+     they may encounter strange behaviors like infinite redirections. 
+     You will have to purge sessions in site admin > all users.</p>
 
 <hr width="100%" size="2" noshade="noshade"> End of Document<br>
 <br>

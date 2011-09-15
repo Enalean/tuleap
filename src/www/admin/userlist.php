@@ -11,7 +11,8 @@ require_once('account.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/dao/UserDao.class.php');
-
+require_once('common/dao/SessionDao.class.php');
+require_once('common/include/CSRFSynchronizerToken.class.php');
 
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
@@ -138,6 +139,14 @@ echo "<p>";
 echo $Language->getText('admin_userlist','user_list').":  ";
 if (!$group_id) {
     echo "<strong>".$Language->getText('admin_userlist','all_groups')."</strong>";
+    echo '</p>';
+    $session_dao = new SessionDao();
+    echo '<p>';
+    echo '<form action="/admin/sessions.php" method="post">';
+    $csrf = new CSRFSynchronizerToken('/admin/sessions.php');
+    echo $csrf->fetchHTMLInput();
+    echo $Language->getText('admin_userlist','active_sessions', $session_dao->count());
+    echo '</form>';
 } else {
     $pm = ProjectManager::instance();
     echo "<strong>".$Language->getText('admin_userlist', 'group', array($pm->getProject($group_id)->getPublicName()))."</strong>";

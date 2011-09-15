@@ -39,6 +39,8 @@ require_once('account.php');
 require_once('../include/LDAP_UserManager.class.php');
 require_once('common/valid/ValidFactory.class.php');
 
+$hp = Codendi_HTMLPurifier::instance();
+
 function welcome_exit_error($title,$text) {
     global $HTML,$Language,$pv;
     $GLOBALS['feedback'] .= $title;
@@ -134,13 +136,15 @@ else {
     print '<legend>'.$Language->getText('plugin_ldap', 'welcome_preferences').'</legend>';
 
     $return_to = '';
-    if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
-        $return_to = $_REQUEST['return_to'];
+    $vReturnTo = new Valid_String('return_to');
+    $vReturnTo->required();
+    if($request->valid($vReturnTo)) {
+        $return_to = trim($request->get('return_to'));
     }
    
     print '
 <form name="welcome" action="'.$ldapPlugin->getPluginPath().'/welcome.php" method="post">
-<input type="hidden" name="return_to" value="'.$return_to.'">
+<input type="hidden" name="return_to" value="'. $hp->purify($return_to, CODENDI_PURIFIER_CONVERT_HTML) .'">
 <input type="hidden" name="action" value="update_reg">
 <input type="hidden" name="pv" value="'.$pv.'">
 

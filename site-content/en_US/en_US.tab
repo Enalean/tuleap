@@ -81,4 +81,5 @@ global	service_conf_not_inherited	The configuration of this service will not be 
 global	pick_date	Pick up a date
 global	show_frame	Show only this frame
 global	null	NULL
+global	error_synchronizertoken	Your request doesn't appear to be valid. Please retry.
 

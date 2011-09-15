@@ -43,7 +43,8 @@ class CookieManager {
         } else {
             $cookie_host=".".$host;
         }
-        return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host);
+        $secure = (bool)Config::get('sys_force_ssl');
+        return setcookie($this->getInternalCookieName($name), $value, $expire, '/', $cookie_host, $secure);
     }
     
     function getCookie($name) {

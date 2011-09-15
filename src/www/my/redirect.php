@@ -25,6 +25,7 @@
 
 require('pre.php');
 
+$hp = Codendi_HTMLPurifier::instance();
 
 $vPv = new Valid_Pv();
 if ($request->valid($vPv) && $request->get('pv') == 2) {
@@ -60,14 +61,13 @@ if($request->valid($vReturnTo)) {
         $return_url = $server_url.$return_to;		
     }
     
-        	 
-    $redirect = $Language->getText('my_redirect', 'return_to', array($return_url));
+    $redirect = $Language->getText('my_redirect', 'return_to', array($hp->purify($return_url, CODENDI_PURIFIER_CONVERT_HTML)));
     
     print '
 <script language="JavaScript"> 
 <!--
 function return_to_url() {
-  window.location="'.$return_url.'";
+  window.location="'.$hp->purify($return_url, CODENDI_PURIFIER_JS_QUOTE).'";
 }
 
 setTimeout("return_to_url()",1000);

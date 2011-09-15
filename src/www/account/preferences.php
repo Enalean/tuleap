@@ -3,6 +3,7 @@
 require_once('pre.php');
 require_once('common/event/EventManager.class.php');
 require_once('www/my/my_utils.php');
+require_once('common/include/CSRFSynchronizerToken.class.php');
 
 session_require(array('isloggedin'=>'1'));
 
@@ -19,6 +20,10 @@ $row_user = db_fetch_array($res_user);
 echo '<h3>'. $Language->getText('account_options', 'preferences') .'</h3>';
 ?>
 <FORM action="updateprefs.php" method="post">
+<?php 
+    $csrf = new CSRFSynchronizerToken('/account/preferences.php');
+    echo $csrf->fetchHTMLInput();
+?>
 <table>
     <tr><td width="50%"></td><td></td></tr>
     <tr valign="top">

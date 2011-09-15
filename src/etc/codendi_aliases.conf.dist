@@ -92,7 +92,7 @@ ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/usr/share/codendi/plugins/$1"
 # 2- plugins web/php pages 
 AliasMatch ^/plugins/([^/]*)/(.*) /usr/share/codendi/plugins/$1/www/$2
 <DirectoryMatch "/usr/share/codendi/plugins/([^/]*)/www/">
-    Options Indexes MultiViews
+    Options MultiViews
     AllowOverride None
     Order allow,deny
     Allow from all
@@ -110,7 +110,7 @@ ScriptAliasMatch /customplugins/([^/]*/cgi-bin/.*) "/etc/codendi/plugins/$1"
 # 4- Custom plugins web/php pages
 AliasMatch ^/customplugins/([^/]*)/(.*) /etc/codendi/plugins/$1/www/$2
 <DirectoryMatch "/etc/codendi/plugins/([^/]*)/www/">
-    Options Indexes MultiViews
+    Options MultiViews
     AllowOverride None
     Order allow,deny
     Allow from all

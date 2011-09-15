@@ -75,4 +75,5 @@ global	service_conf_not_inherited	La configuration de ce service ne sera pas hé
 global	pick_date	Choisir une date
 global	show_frame	Montrer seulement ce cadre
 global	null	NULL
+global	error_synchronizertoken	Votre requête ne semble pas être valide. Merci de recommencer.
 

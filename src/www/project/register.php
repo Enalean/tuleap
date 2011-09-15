@@ -3,6 +3,7 @@ require_once('pre.php');
 session_require(array('isloggedin'=>1));
 
 require_once('common/include/HTTPRequest.class.php');
+require_once('common/include/CSRFSynchronizerToken.class.php');
 
 require_once('common/project/RegisterProjectStep_Intro.class.php');
 require_once('common/project/RegisterProjectStep_Settings.class.php');
@@ -15,7 +16,7 @@ require_once('common/project/RegisterProjectStep_Confirmation.class.php');
 require_once('common/project/RegisterProjectStep_Services.class.php');
 
 
-$request =& HTTPRequest::instance();
+$request      = HTTPRequest::instance();
 $current_step = $request->exist('current_step') ? $request->get('current_step') : 0;
 $data         = $request->exist('data') ? unserialize($request->get('data')) : array();
 
@@ -45,6 +46,8 @@ if ($GLOBALS['sys_use_trove'] != 0) {
     );
 }
 
+$csrf = new CSRFSynchronizerToken('/project/register.php');
+
 //Process request
 if ($request->exist('cancel')) {
     $HTML->addFeedback('info', $GLOBALS['Language']->getText('register_form', 'cancelled'));
@@ -62,6 +65,8 @@ if ($request->exist('next') && $steps[$current_step]->onLeave($request, $data) &
         if (!$is_valid) {
             $current_step--;
         } else {
+            $csrf->check();
+            
             require_once('create_project.php');
             create_project($data);
         }
@@ -82,6 +87,7 @@ echo '<style>
 }
 </style>';
 echo '<form action="" method="POST">';
+echo $csrf->fetchHTMLInput();
 echo '<table>';
 echo '<tr style="vertical-align:top;">';
 

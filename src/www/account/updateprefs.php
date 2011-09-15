@@ -8,7 +8,9 @@
 
 require_once('pre.php');
 require_once('common/include/CookieManager.class.php');
-$cookie_manager =& new CookieManager();
+require_once('common/include/CSRFSynchronizerToken.class.php');
+
+$cookie_manager = new CookieManager();
 
 //
 // Validate params
@@ -16,7 +18,10 @@ $cookie_manager =& new CookieManager();
 
 session_require(array('isloggedin'=>1));
 
-$request =& HTTPRequest::instance();
+$request = HTTPRequest::instance();
+
+$csrf = new CSRFSynchronizerToken('/account/preferences.php');
+$csrf->check();
 
 $form_mail_site = 0;
 if($request->existAndNonEmpty('form_mail_site')) {

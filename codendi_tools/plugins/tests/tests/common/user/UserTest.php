@@ -52,7 +52,7 @@ class UserTestVersion_MockPreferences extends UserTestVersion {
  * Tests the class User
  */
 class UserTest extends UnitTestCase {
-
+    
     function testStatus() {
         $u1 =& new UserTestVersion($this);
         $u1->setReturnValue('getStatus', 'A');
