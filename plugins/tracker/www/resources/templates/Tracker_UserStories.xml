@@ -340,7 +340,7 @@
             <field REF="F23"/>
           </columns>
         </renderer>
-        <renderer type="plugin_graphontrackers" rank="1">
+        <renderer type="plugin_graphontrackersv5" rank="1">
           <name>Graphs</name>
           <charts>
             <chart type="bar" width="600" height="400" rank="0" base="F20" group="F26">

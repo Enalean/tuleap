@@ -363,7 +363,7 @@
             <field REF="F3"/>
           </columns>
         </renderer>
-        <renderer type="plugin_graphontrackers" rank="1">
+        <renderer type="plugin_graphontrackersv5" rank="1">
             <name>Charts</name>
             <description>Graphic Report</description>
             <charts>

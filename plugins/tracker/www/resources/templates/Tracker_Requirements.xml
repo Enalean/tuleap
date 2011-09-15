@@ -429,7 +429,7 @@
             <field REF="F17"/>
           </columns>
         </renderer>
-        <renderer type="plugin_graphontrackers" rank="1">
+        <renderer type="plugin_graphontrackersv5" rank="1">
           <name>Req statistics</name>
           <description>Requirements statistics</description>
           <charts>
