@@ -52,7 +52,6 @@ class trackerPlugin extends Plugin {
         $this->_addHook('permission_get_object_fullname',      'permission_get_object_fullname',    false);
         $this->_addHook('permission_user_allowed_to_change',   'permission_user_allowed_to_change', false);
         $this->_addHook('permissions_for_ugroup',              'permissions_for_ugroup',            false);
-        //$this->_addHook('soap',                                 'soap',                             false);
 
         $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
         
@@ -395,10 +394,6 @@ class trackerPlugin extends Plugin {
             }
         }
     }
-    
-    /*function soap($arams) {
-        require_once('soap.php');
-    }*/
 }
 
 ?>

@@ -1,7 +1,6 @@
 DROP TABLE IF EXISTS tracker_workflow;
 DROP TABLE IF EXISTS tracker_workflow_transition;
 
--- Not Yet Implemented
 DROP TABLE IF EXISTS widget_renderer;
 
 DROP TABLE IF EXISTS tracker;
