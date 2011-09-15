@@ -28,9 +28,9 @@ require_once('WidgetLayoutManager.class.php');
 * 
 */
 class Widget_ProjectImageViewer extends Widget_ImageViewer {
-    function Widget_ProjectImageViewer() {
+    function __construct() {
         $request = HTTPRequest::instance();
-        $this->Widget_ImageViewer('projectimageviewer', $request->get('group_id'), WidgetLayoutManager::OWNER_TYPE_GROUP);
+        parent::__construct('projectimageviewer', $request->get('group_id'), WidgetLayoutManager::OWNER_TYPE_GROUP);
     }
     function canBeUsedByProject($project) {
         return true;

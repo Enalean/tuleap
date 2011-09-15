@@ -29,8 +29,8 @@ require_once('Widget.class.php');
 class Widget_ImageViewer extends Widget {
     var $image_title;
     var $image_url;
-    function Widget_ImageViewer($id, $owner_id, $owner_type) {
-        $this->Widget($id);
+    function __construct($id, $owner_id, $owner_type) {
+        parent::__construct($id);
         $this->setOwner($owner_id, $owner_type);
     }
     function getTitle() {

@@ -28,8 +28,8 @@ require_once('WidgetLayoutManager.class.php');
 * 
 */
 class Widget_MyImageViewer extends Widget_ImageViewer {
-    function Widget_MyImageViewer() {
-        $this->Widget_ImageViewer('myimageviewer', user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
+    function __construct() {
+        parent::__construct('myimageviewer', user_getid(), WidgetLayoutManager::OWNER_TYPE_USER);
     }
 }
 ?>
