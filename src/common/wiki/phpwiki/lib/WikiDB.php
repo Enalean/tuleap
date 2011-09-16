@@ -933,65 +933,72 @@ class WikiDB_Page
         foreach ($notify as $page => $users) {
             if (glob_match($page, $this->_pagename)) {
                 foreach ($users as $userid => $user) {
-                    if (!$user) { // handle the case for ModeratePage: no prefs, just userid's.
-                        global $request;
-                        $u = $request->getUser();
-                        if ($u->UserName() == $userid) {
-                            $prefs = $u->getPreferences();
-                        } else {
-                            // not current user
-                            if (ENABLE_USER_NEW) {
-                                $u = WikiUser($userid);
-                                $u->getPreferences();
-                                $prefs = &$u->_prefs;
-                            } else {
-                                $u = new WikiUser($GLOBALS['request'], $userid);
+                    $um = UserManager::instance();
+                    $dbUser = $um->getUserByUserName($userid);
+                    $wiki = new Wiki($_REQUEST['group_id']);
+                    $wp = new WikiPage($_REQUEST['group_id'], $_REQUEST['pagename']);
+                    if ($dbUser && ($dbUser->isActive() || $dbUser->isRestricted()) &&
+                        $wiki->isAutorized($dbUser->getId()) && $wp->isAutorized($dbUser->getId())) {
+                        if (!$user) { // handle the case for ModeratePage: no prefs, just userid's.
+                            global $request;
+                            $u = $request->getUser();
+                            if ($u->UserName() == $userid) {
                                 $prefs = $u->getPreferences();
-                            }
-                        }
-                        $emails[] = user_getemail_from_unix($userid);
-                        $userids[] = $userid;
-                    } else {
-                      if (!empty($user['verified']) and !empty($user['email'])) {
-                        $emails[]  = user_getemail_from_unix($userid);
-                        $userids[] = $userid;
-                      } elseif (!empty($user['email'])) {
-                        global $request;
-                        // do a dynamic emailVerified check update
-                        $u = $request->getUser();
-                        if ($u->UserName() == $userid) {
-                            if ($request->_prefs->get('emailVerified')) {
-                                $emails[] =  user_getemail_from_unix($userid);
-                                $userids[] = $userid;
-                                $notify[$page][$userid]['verified'] = 1;
-                                $request->_dbi->set('notify', $notify);
-                            }
-                        } else {
-                            // not current user
-                            if (ENABLE_USER_NEW) {
-                                $u = WikiUser($userid);
-                                $u->getPreferences();
-                                $prefs = &$u->_prefs;
                             } else {
-                                $u = new WikiUser($GLOBALS['request'], $userid);
-                                $prefs = $u->getPreferences();
+                                // not current user
+                                if (ENABLE_USER_NEW) {
+                                    $u = WikiUser($userid);
+                                    $u->getPreferences();
+                                    $prefs = &$u->_prefs;
+                                } else {
+                                    $u = new WikiUser($GLOBALS['request'], $userid);
+                                    $prefs = $u->getPreferences();
+                                }
                             }
-                            if ($prefs->get('emailVerified')) {
-                                $emails[] = user_getemail_from_unix($userid);
+                            $emails[] = user_getemail_from_unix($userid);
+                            $userids[] = $userid;
+                        } else {
+                            if (!empty($user['verified']) and !empty($user['email'])) {
+                                $emails[]  = user_getemail_from_unix($userid);
                                 $userids[] = $userid;
-                                $notify[$page][$userid]['verified'] = 1;
-                                $request->_dbi->set('notify', $notify);
+                            } elseif (!empty($user['email'])) {
+                                global $request;
+                                // do a dynamic emailVerified check update
+                                $u = $request->getUser();
+                                if ($u->UserName() == $userid) {
+                                    if ($request->_prefs->get('emailVerified')) {
+                                        $emails[] =  user_getemail_from_unix($userid);
+                                        $userids[] = $userid;
+                                        $notify[$page][$userid]['verified'] = 1;
+                                        $request->_dbi->set('notify', $notify);
+                                    }
+                                } else {
+                                    // not current user
+                                    if (ENABLE_USER_NEW) {
+                                        $u = WikiUser($userid);
+                                        $u->getPreferences();
+                                        $prefs = &$u->_prefs;
+                                    } else {
+                                        $u = new WikiUser($GLOBALS['request'], $userid);
+                                        $prefs = $u->getPreferences();
+                                    }
+                                    if ($prefs->get('emailVerified')) {
+                                        $emails[] = user_getemail_from_unix($userid);
+                                        $userids[] = $userid;
+                                        $notify[$page][$userid]['verified'] = 1;
+                                        $request->_dbi->set('notify', $notify);
+                                    }
+                                }
+                                // ignore verification
+                                /*
+                                if (DEBUG) {
+                                    if (!in_array($user['email'],$emails))
+                                        $emails[] = $user['email'];
+                                }
+                                */
                             }
                         }
-                        // ignore verification
-                        /*
-                        if (DEBUG) {
-                            if (!in_array($user['email'],$emails))
-                                $emails[] = $user['email'];
-                        }
-                        */
                     }
-                  }
                 }
             }
         }
