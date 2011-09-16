@@ -24,6 +24,7 @@
 
 require_once('common/tracker/ArtifactFile.class.php');
 require_once('common/mail/Mail.class.php');
+require_once('common/mail/Codendi_Mail.class.php');
 
 /**
  *
@@ -2426,36 +2427,26 @@ class Artifact extends Error {
         //withoutpermissions_concerned_addresses contains emails for which there is no permissions check
         
         //Prepare e-mail
-        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-        $mail =& new Mail();
-        $mail->setFrom($GLOBALS['sys_noreply']);
-        $pm = ProjectManager::instance();
-        $mail->addAdditionalHeader("X-Codendi-Project",     $pm->getProject($group_id)->getUnixName());
-        $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
-        $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
+        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);        
+
         
-         //treat anonymous users
+        //treat anonymous users
 	    $body = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
-	    
-	    if ($ok) { //don't send the mail if nothing permitted for this user group
-            $to = join(',',array_keys($concerned_addresses));
-            if ($to) { 
-                $mail->setTo($to);
-                $mail->setSubject($subject);
-                $mail->setBody($body);
-                $mail->send();
-            }
-	    }
-        
+	    $body_html = $this->createHTMLMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
+
+	    if ($ok) {
+	        $this->sendNotification(array_keys($concerned_addresses), $subject, $body, $body_html);
+        }
+            
         //treat 'without permissions' emails
         if (count($withoutpermissions_concerned_addresses)) {
             $body = $this->createMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
+            $body_html = $this->createHTMLMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
+       
             if ($ok) {
-                $mail->setTo(join(',', array_keys($withoutpermissions_concerned_addresses)));
-                $mail->setSubject($subject);
-                $mail->setBody($body);
-                $mail->send();
+                $this->sendNotification(array_keys($withoutpermissions_concerned_addresses), $subject, $body, $body_html);
             }
+
         }
         
         //now group other registered users
@@ -2472,24 +2463,121 @@ class Artifact extends Error {
             $user_ids = $user_sets[$x];
             //echo "<br>--->  preparing mail $x for ";print_r($user_ids);
             $body = $this->createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
-            
+            $body_html = $this->createHTMLMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
             if (!$ok) continue; //don't send the mail if nothing permitted for this user group
 
             foreach ($user_ids as $user_id) {
                 $arr_addresses[] = user_getemail($user_id);
             }
-
-            $to = join(',',$arr_addresses);
-            if ($to) { 
-                $mail->setTo($to);
-                $mail->setSubject($subject);
-                $mail->setBody($body);
-                $mail->send();
+       
+            if ($arr_addresses) {
+                $this->sendNotification($arr_addresses, $subject, $body, $body_html);
             }
 	    }
       }
     }
+    
+    function sendNotification($addresses, $subject, $body, $body_html) {
+        $to_text = $this->getUserTxtPrefs($addresses);
+        $to_html = $this->getUserHtmlPrefs($addresses);
 
+        //TODO: check if $to_xxx not empty
+        if ($to_text) {
+            $this->sendNotificationTxt($to_text, $subject, $body);
+        }
+        if ($to_html) {
+            $this->sendNotificationHtml($to_html, $subject, $body_html);
+        }
+    }
+    
+   /**
+    *Sends text format notification
+    *
+    * @param $mail
+    * @param $to
+    * @param $subject
+    * @param $body
+    */
+    function sendNotificationTxt($to, $subject, $body) {
+        $mail = new Mail();
+        $pm = ProjectManager::instance();
+        //$mail->addAdditionalHeader("X-Codendi-Project",     $pm->getProject($group_id)->getUnixName());
+        $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
+        $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
+        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setTo($to);
+        $mail->setSubject($subject);
+        $mail->setBody($body);
+        $mail->send();
+    }
+    
+   /**
+    *Sends html notification
+    *
+    * @param $mail
+    * @param $to
+    * @param $subject
+    * @param $body_html
+    */
+    function sendNotificationHtml($to, $subject, $body_html) {
+        $mail = new Codendi_Mail();
+        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setTo($to);
+        $mail->setSubject($subject);
+        $mail->setBodyHtml($body_html);
+        $mail->send();
+    }
+    
+   /**
+    * Returns the addresses of the users who prefer (or have not set the format preference) receiving text format emails
+    *
+    * @param $addresses, an array of emails
+    *
+    * @return String
+    */
+    function getUserTxtPrefs($addresses) {
+        $txt_addresses = array();
+        foreach ($addresses as $address) {
+            //TODO : several accounts with the same email
+            $user = UserManager::instance()->getUserByEmail($address);
+            $pref = $user->getPreference('user_tracker_mailformat');
+            if (!$pref || $pref == 'text') {
+                $txt_addresses[] = $address;
+            }
+        }
+        return join(',',$txt_addresses);
+    }
+    
+    /**
+    *Returns the addresses of the users who prefer receiving html format emails
+    *
+    *@params $addresses, an array of emails
+    *
+    *@return String
+    */
+    function getUserHtmlPrefs($addresses) {
+        $html_addresses = array();
+        foreach ($addresses as $address) {
+            //TODO : several accounts with the same email
+            $user = UserManager::instance()->getUserByEmail($address);
+            $pref = $user->getPreference('user_tracker_mailformat');
+            $pref = 'html';
+            if ($pref && $pref == 'html') {
+                $html_addresses[] = $address;
+            }
+        }
+        return join(',',$html_addresses);
+    }
+    
+	/** for a certain set of users being part of the same ugroups
+	 * create the mail body containing only fields that they have the permission to read
+	 */
+	function createHTMLMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,&$ok,&$subject) {
+
+	  $body = 'HTML';
+	  return $body;
+	  
+	}
 
 	/** for a certain set of users being part of the same ugroups
 	 * create the mail body containing only fields that they have the permission to read
