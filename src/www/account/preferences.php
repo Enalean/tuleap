@@ -35,8 +35,9 @@ echo '<h3>'. $Language->getText('account_options', 'preferences') .'</h3>';
   <?= $Language->getText('account_register', 'communitymail'); ?>
 </p>
 <?php
-if ($u_trackermailformat = user_get_preference("user_tracker_mailformat")) {
-} else {
+
+$u_trackermailformat = user_get_preference("user_tracker_mailformat");
+if (!$u_trackermailformat) {
     $u_trackermailformat = DEFAULT_TRACKER_MAILFORMAT;
 }
 

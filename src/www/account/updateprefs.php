@@ -71,7 +71,9 @@ if ($request->existAndNonEmpty('username_display')) {
 
 $user_tracker_mailformat = DEFAULT_TRACKER_MAILFORMAT;
 if ($request->existAndNonEmpty('user_tracker_mailformat')) {
-    $user_tracker_mailformat = $request->get('user_tracker_mailformat');
+    if($request->valid(new Valid_WhiteList('user_tracker_mailformat', $tracker_mailformats))) {
+        $user_tracker_mailformat = $request->get('user_tracker_mailformat');
+    }
 }
 //
 // Perform the update
