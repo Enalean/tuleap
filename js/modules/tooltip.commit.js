@@ -9,15 +9,18 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "ext/jquery.qtip.min"],
-	function($) {
+define(["jquery", "modules/geturl", "modules/getproject", "ext/jquery.qtip.min"],
+	function($, getUrl, getProject) {
+
+		var url = null;
+		var project = null;
 
 		function getCommitHash(element) {
 			var hash = element.attr('href').match(/h=([0-9a-fA-F]{40}|HEAD)/);
 			return hash ? hash[1] : null;
 		}
 
-		function buildTipConfig(url, project, hash) {
+		function buildTipConfig(hash) {
 			return {
 				content: {
 					text: '<img src="' + url + 'images/tooltip-loader.gif" alt="' + GITPHP_RES_LOADING + '" />',
@@ -43,14 +46,16 @@ define(["jquery", "ext/jquery.qtip.min"],
 			}
 		}
 
-		return function(elements, project, href) {
+		return function(elements) {
+			url = getUrl();
+			project = getProject();
 			elements.each(function(){
 				var jThis = $(this);
 				var hash = getCommitHash(jThis);
 				if (!hash) {
 					return;
 				}
-				var config = buildTipConfig(href, project, hash);
+				var config = buildTipConfig(hash);
 				jThis.qtip(config);
 			});
 		}

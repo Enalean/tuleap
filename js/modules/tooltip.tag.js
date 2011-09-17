@@ -9,15 +9,18 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "ext/jquery.qtip.min"],
-	function($) {
+define(["jquery", "modules/geturl", "modules/getproject", "ext/jquery.qtip.min"],
+	function($, getUrl, getProject) {
+
+		var url = null;
+		var project = null;
 
 		function getTagName(element) {
 			var tag = element.attr('href').match(/h=([^&]+)/);
 			return tag ? tag[1] : null;
 		}
 
-		function buildTipConfig(url, project, tag) {
+		function buildTipConfig(tag) {
 			return {
 				content: {
 					text: '<img src="' + url + 'images/tooltip-loader.gif" alt="' + GITPHP_RES_LOADING + '" />',
@@ -43,14 +46,16 @@ define(["jquery", "ext/jquery.qtip.min"],
 			}
 		}
 
-		return function(elements, project, href) {
+		return function(elements) {
+			url = getUrl();
+			project = getProject();
 			elements.each(function(){
 				var jThis = $(this);
 				var tag = getTagName(jThis);
 				if (!tag) {
 					return;
 				}
-				var config = buildTipConfig(href, project, tag);
+				var config = buildTipConfig(tag);
 				jThis.qtip(config);
 			});
 		}

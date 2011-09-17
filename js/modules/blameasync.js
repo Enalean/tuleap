@@ -9,14 +9,12 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/tooltip.commit"],
-	function($, tooltipCommit) {
+define(["jquery", "modules/geturl", "modules/tooltip.commit"],
+	function($, getUrl, tooltipCommit) {
 
 		var blobTable = null;
 		var blameLink = null;
 		var blameCol = null;
-
-		var url = null;
 
 		function buildContainer() {
 			var col = $(document.createElement('td'));
@@ -31,7 +29,7 @@ define(["jquery", "modules/tooltip.commit"],
 			div.css('text-align', 'center');
 
 			var img = $(document.createElement('img'));
-			img.attr('src', url + 'images/blame-loader.gif');
+			img.attr('src', getUrl() + 'images/blame-loader.gif');
 			img.attr('alt', GITPHP_RES_LOADING);
 			img.appendTo(div);
 
@@ -43,19 +41,7 @@ define(["jquery", "modules/tooltip.commit"],
 		function insertBlame(data) {
 			blameCol.html(data).addClass('de1');
 
-			var project = window.location.href.match(/p=([^&]+)/);
-			if (!project) {
-				return;
-			}
-			project = unescape(project[1]);
-
-			var url = window.location.href.match(/^([^\?]+\/)/);
-			if (!url) {
-				return;
-			}
-			url = url[1];
-
-			tooltipCommit($('a.commitTip'), project, url);
+			tooltipCommit($('a.commitTip'));
 		}
 
 		var showBlame = function() {
@@ -88,10 +74,9 @@ define(["jquery", "modules/tooltip.commit"],
 			return false;
 		};
 
-		var init = function(blobTableElem, blameLinkElem, pageUrl) {
+		var init = function(blobTableElem, blameLinkElem) {
 			blobTable = blobTableElem;
 			blameLink = blameLinkElem;
-			url = pageUrl;
 
 			blameLink.toggle(showBlame, hideBlame);
 		};

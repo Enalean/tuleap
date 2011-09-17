@@ -9,28 +9,24 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "modules/lang", "modules/tooltip.snapshot"], function($, lang, tooltipSnapshot) {
-	$(function() {
-		lang($('div.lang_select'));
-		tooltipSnapshot($('a.snapshotTip'));
-	});
-
-	var project = window.location.href.match(/p=([^&]+)/);
-	if (!project) {
-		return;
-	}
-	project = unescape(project[1]);
-
-	var url = window.location.href.match(/^([^\?]+\/)/);
-	if (!url) {
-		return;
-	}
-	url = url[1];
-
-	require(["jquery", "modules/tooltip.commit", "modules/tooltip.tag"], function($, tooltipCommit, tooltipTag) {
+define(["jquery", "modules/getproject", "modules/lang", "modules/tooltip.snapshot"],
+	function($, getProject, lang, tooltipSnapshot) {
 		$(function() {
-			tooltipCommit($('a.commitTip'), project, url);
-			tooltipTag($('a.tagTip'), project, url);
+			lang($('div.lang_select'));
+			tooltipSnapshot($('a.snapshotTip'));
 		});
-	});
-});
+
+		if (getProject()) {
+
+			require(["jquery", "modules/tooltip.commit", "modules/tooltip.tag"],
+				function($, tooltipCommit, tooltipTag) {
+					$(function() {
+						tooltipCommit($('a.commitTip'));
+						tooltipTag($('a.tagTip'));
+					});
+				}
+			);
+
+		}
+	}
+);
