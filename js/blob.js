@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["blameasync"], function(blameAsync) {
+define(["modules/blameasync"], function(blameAsync) {
 	$(function() {
 		var url = window.location.href.match(/^([^\?]+\/)/);
 		if (!url) {

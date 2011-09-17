@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "tooltip.commit"],
+define(["jquery", "modules/tooltip.commit"],
 	function($, tooltipCommit) {
 
 		var blobTable = null;

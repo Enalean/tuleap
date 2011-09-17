@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["jquery", "lang", "tooltip.snapshot"], function($, lang, tooltipSnapshot) {
+define(["jquery", "modules/lang", "modules/tooltip.snapshot"], function($, lang, tooltipSnapshot) {
 	$(function() {
 		lang($('div.lang_select'));
 		tooltipSnapshot($('a.snapshotTip'));
@@ -27,7 +27,7 @@ define(["jquery", "lang", "tooltip.snapshot"], function($, lang, tooltipSnapshot
 	}
 	url = url[1];
 
-	require(["jquery", "tooltip.commit", "tooltip.tag"], function($, tooltipCommit, tooltipTag) {
+	require(["jquery", "modules/tooltip.commit", "modules/tooltip.tag"], function($, tooltipCommit, tooltipTag) {
 		$(function() {
 			tooltipCommit($('a.commitTip'), project, url);
 			tooltipTag($('a.tagTip'), project, url);
