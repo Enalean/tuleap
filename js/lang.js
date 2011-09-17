@@ -5,17 +5,20 @@
  * rather than requiring a submit
  * 
  * @author Christopher Han <xiphux@gmail.com>
- * @copyright Copyright (c) 2010 Christopher Han
+ * @copyright Copyright (c) 2011 Christopher Han
  * @package GitPHP
+ * @subpackage Javascript
  */
 
-function initLangSelector() {
-	$("#selLang").change(function() {
-		$("#frmLangSelect").submit();
-	});
-	$("#btnLangSet").remove();
-};
-
-$(document).ready(function() {
-	initLangSelector();
-});
+define(["jquery"],
+	function($) {
+		return function(langSelContainer) {
+			langSelContainer.find('select').change(
+				function() {
+					langSelContainer.find('form').submit();
+				}
+			);
+			langSelContainer.find('input[type="submit"]').remove();
+		}
+	}
+);
