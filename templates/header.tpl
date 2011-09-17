@@ -56,15 +56,8 @@
 	{/if}
 	{rdelim},
 	priority: ['jquery']
-    {rdelim}, ['common']);
+    {rdelim}, ['common'{if $extrascripts},'{$extrascripts}'{/if}]);
     </script>
-    {foreach from=$extrascripts item=script}
-    {if file_exists("js/$script.min.js")}
-    <script type="text/javascript" src="js/{$script}.min.js"></script>
-    {else}
-    <script type="text/javascript" src="js/{$script}.js"></script>
-    {/if}
-    {/foreach}
     {/if}
     {$smarty.capture.header}
   </head>

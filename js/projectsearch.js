@@ -9,163 +9,174 @@
  * @subpackage Javascript
  */
 
-var oldSearchValue = '';
-var searchTimeout = null;
+define(["jquery"],
+	function($) {
 
-function runSearch() {
-	var search = $('input.projectSearchBox').val().toLowerCase();
-	oldSearchValue = search;
-	clearTimeout(searchTimeout);
-	searchTimeout = null;
-	
-	if (search.length == 0) {
-		$('a.clearSearch').hide();
-	} else {
-		$('a.clearSearch').show();
-	}
+		var table = null;
+		var searchPanel = null;
+		var msgContainer = null;
 
-	var visibleCats = [];
+		var currentSearch = '';
+		var searchTimer = null;
 
-	var hasmatch = false;
+		var self = null;
 
-	$('table.projectList tr.projectRow').each(function() {
-		if (search.length < 1) {
-			$(this).show();
-			hasmatch = true;
-			return;
-		}
+		var clearSearch = function() {
+			searchPanel.find('img searchSpinner').show();
+			searchPanel.find('input.projectSearchBox').val('');
+			currentSearch = '';
+			search('');
+			searchPanel.find('img.searchSpinner').hide();
+			return false;
+		};
 
-		var category = '';
-
-		var projectName = $(this).find('td.projectName a').text();
-		if (projectName.length > 0) {
-			if (projectName.toLowerCase().indexOf(search) != -1) {
-				$(this).show();
-				hasmatch = true;
-				category = $(this).data('category');
-				if (category) {
-					if (jQuery.inArray(category, visibleCats) == -1) {
-						visibleCats.push(category);
-					}
+		var doSearch = function() {
+			var newSearch = searchPanel.find('input.projectSearchBox').val().toLowerCase();
+			if (newSearch != currentSearch) {
+				searchPanel.find('img.searchSpinner').show();
+				if (searchTimer != null) {
+					clearTimeout(searchTimer);
 				}
-				return;
+				currentSearch = newSearch;
+				searchTimer = setTimeout(function() {
+					self.search(newSearch);
+					searchPanel.find('img.searchSpinner').hide();
+				}, 500);
 			}
-		}
-		var projectDesc = $(this).find('td.projectDescription a').text();
-		if (projectDesc.length > 0) {
-			if (projectDesc.toLowerCase().indexOf(search) != -1) {
-				$(this).show();
-				hasmatch = true;
-				category = $(this).data('category');
-				if (category) {
-					if (jQuery.inArray(category, visibleCats) == -1) {
-						visibleCats.push(category);
-					}
+		};
+
+		function bindEvents() {
+			searchPanel.find('form').keypress(function(e) {
+				if (e.which == 13) {
+					return false;
 				}
-				return;
+			});
+			if (table.find('tr.projectRow').size() > 0) {
+				searchPanel.find('a.clearSearch').click(clearSearch);
+				searchPanel.find('input.projectSearchBox').keyup(doSearch).bind('input paste', doSearch);
 			}
 		}
-		var projectOwner = $(this).find('td.projectOwner em').text();
-		if (projectOwner.length > 0) {
-			if (projectOwner.toLowerCase().indexOf(search) != -1) {
-				$(this).show();
-				hasmatch = true;
-				category = $(this).data('category');
-				if (category) {
-					if (jQuery.inArray(category, visibleCats) == -1) {
-						visibleCats.push(category);
-					}
-				}
-				return;
+
+		function searchRow(row, searchString) {
+			var projectName = row.find('td.projectName a').text();
+			if ((projectName.length > 0) && (projectName.toLowerCase().indexOf(searchString) != -1)) {
+				return true;
 			}
-		}
-		$(this).hide();
-	});
 
-	$('table.projectList tr.categoryRow').each(function() {
-		if (search.length < 1) {
-			$(this).show();
-			return;
-		}
-
-		var category = $(this).children('th.categoryName').text();
-		if (category.length > 0) {
-			if (jQuery.inArray(category, visibleCats) !== -1) {
-				$(this).show();
-			} else {
-				$(this).hide();
+			var projectDesc = row.find('td.projectDescription a').text();
+			if ((projectDesc.length > 0) && (projectDesc.toLowerCase().indexOf(searchString) != -1)) {
+				return true;
 			}
-		}
-	});
 
-	var msgDiv = $('div.message');
-	if (hasmatch) {
-		msgDiv.hide();
-		$('tr.projectHeader').show();
-	} else {
-		if (msgDiv.length == 0) {
-			msgDiv = jQuery(document.createElement('div'));
-			msgDiv.addClass('message');
-			msgDiv.appendTo($('table.projectList'));
-		}
+			var projectOwner = row.find('td.projectOwner em').text();
+			if ((projectOwner.length > 0) && (projectOwner.toLowerCase().indexOf(searchString) != -1)) {
+				return true;
+			}
 
-		var msg = GITPHP_RES_NO_MATCHES_FOUND.replace(new RegExp('%1'), $('input.projectSearchBox').val());
-		msgDiv.text(msg);
-
-		msgDiv.show();
-		$('tr.projectHeader').hide();
-	}
-
-	$('img.searchSpinner').hide();
-};
-
-function initProjectSearch() {
-	$('#projectSearchForm').keypress(function(e) {
-		if (e.which == 13) {
 			return false;
 		}
-	});
 
-	var rows = $('table.projectList tr');
+		function noMatchesMessage(show, searchString) {
+			if (show) {
+				if (!msgContainer) {
+					msgContainer = jQuery(document.createElement('div'));
+					msgContainer.addClass('message');
+					msgContainer.appendTo(table);
+				}
 
-	if (rows.length == 0) {
-		// No projects, just stop
-		return;
+				var msg = GITPHP_RES_NO_MATCHES_FOUND.replace(new RegExp('%1'), searchString);
+				msgContainer.text(msg);
+
+				msgContainer.show();
+			} else {
+				if (msgContainer) {
+					msgContainer.hide();
+				}
+			}
+		}
+
+		var search = function(searchString) {
+			clearTimeout(searchTimer);
+			searchTimer = null;
+
+			if (searchString.length == 0) {
+				searchPanel.find('a.clearSearch').hide();
+			} else {
+				searchPanel.find('a.clearSearch').show();
+			}
+
+			var hasMatch = false;
+			var visibleCategories = [];
+
+			// search each project
+			table.find('tr.projectRow').each(function() {
+				var jThis = $(this);
+				if (searchString.length < 1) {
+					jThis.show();
+					hasMatch = true;
+					return;
+				}
+				if (searchRow(jThis, searchString)) {
+					jThis.show();
+					hasMatch = true;
+					var category = jThis.data('category');
+					if (category && (jQuery.inArray(category, visibleCategories) == -1)) {
+						visibleCategories.push(category);
+					}
+				} else {
+					jThis.hide();
+				}
+			});
+
+			// show categories that have matching projects
+			table.find('tr.categoryRow').each(function() {
+				var jThis = $(this);
+				if (searchString.length < 1) {
+					jThis.show();
+					return;
+				}
+				var category = jThis.children('th.categoryName').text();
+				if (category.length > 0) {
+					if (jQuery.inArray(category, visibleCategories) !== -1) {
+						jThis.show();
+					} else {
+						jThis.hide();
+					}
+				}
+			});
+
+			if (hasMatch) {
+				noMatchesMessage(false);
+				table.find('tr.projectHeader').show();
+			} else {
+				noMatchesMessage(true, searchString)
+				table.find('tr.projectHeader').hide();
+			}
+		};
+
+		var init = function(tableElem, searchPanelElem) {
+			table = tableElem;
+			searchPanel = searchPanelElem;
+			self = this;
+
+			// store project categories
+			var category = "";
+			table.find('tr').each(function() {
+				var jThis = $(this);
+				if (jThis.hasClass('categoryRow')) {
+					category = jThis.children('th.categoryName').text();
+				} else if (jThis.hasClass('projectRow')) {
+					if (category.length > 0) {
+						jThis.data('category', category);
+					}
+				}
+			});
+			bindEvents();
+		};
+
+		return {
+			init: init,
+			search: search
+		}
 	}
-
-	// Store project categories
-	var category = '';
-	rows.each(function() {
-		if ($(this).hasClass('categoryRow')) {
-			category = $(this).children('th.categoryName').text();
-		} else if ($(this).hasClass('projectRow')) {
-			if (category.length > 0) {
-				$(this).data('category', category);
-			}
-		}
-	});
-
-	$('a.clearSearch').click(function() {
-		$('img.searchSpinner').show();
-		$('input.projectSearchBox').val('');
-		oldSearchValue = '';
-		runSearch();
-		return false;
-	});
-
-	var typeEvent = function() {
-		if ($('input.projectSearchBox').val() != oldSearchValue) {
-			$('img.searchSpinner').show();
-			if (searchTimeout != null) {
-				clearTimeout(searchTimeout);
-			}
-			setTimeout("runSearch()", 500);
-		}
-	};
-
-	$('input.projectSearchBox').keyup(typeEvent).bind('input paste', typeEvent);
-};
-
-$(document).ready(function() {
-	initProjectSearch();
-});
+);
