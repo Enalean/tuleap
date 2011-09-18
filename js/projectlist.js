@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["modules/projectsearch"], function(projectSearch) {
+define(["jquery", "modules/projectsearch"], function($, projectSearch) {
 	$(function() {
 		projectSearch.init($('table.projectList'), $('div.projectSearch'));
 	});
