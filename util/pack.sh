@@ -46,8 +46,10 @@ rm -rf ./locale/zz_Debug
 # Minify javascript
 ./util/minify.sh
 
-# Remove yuicompressor after we've used it, no need to redistribute it
-rm -Rf lib/yuicompressor
+# Remove requirejs compressor after we've used it, no need to redistribute it
+rm -Rf lib/requirejs
+rm -Rf lib/closure
+rm -Rf lib/rhino
 
 # Remove the utility scripts
 rm -rf ./util
