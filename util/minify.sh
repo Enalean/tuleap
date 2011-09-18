@@ -34,5 +34,6 @@ rm -f ${CSSDIR}/*${MINCSSEXT}
 
 for i in ${CSSDIR}/*${CSSEXT}; do
 	echo "Minifying ${i}..."
-	java -jar "${COMPRESSORDIR}/${COMPRESSORJAR}" --charset utf-8 -o "${i%$CSSEXT}${MINCSSEXT}" "${i}"
+	#java -jar "${COMPRESSORDIR}/${COMPRESSORJAR}" --charset utf-8 -o "${i%$CSSEXT}${MINCSSEXT}" "${i}"
+	java -classpath lib/rhino/js.jar org.mozilla.javascript.tools.shell.Main lib/requirejs/r.js -o cssIn=${i} out=${i%$CSSEXT}${MINCSSEXT} optimizeCss="standard"
 done
