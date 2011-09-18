@@ -49,6 +49,15 @@
     require({ldelim}
     	baseUrl: 'js',
 	paths: {ldelim}
+	{if $extrascripts}
+	  {if file_exists("js/$extrascripts.min.js")}
+	  	{$extrascripts}: "{$extrascripts}.min",
+	  {/if}
+	{else}
+	  {if file_exists('js/common.min.js')}
+	  	common: "common.min",
+	  {/if}
+	{/if}
 	{if $googlejs}
 		jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min'
 	{else}
