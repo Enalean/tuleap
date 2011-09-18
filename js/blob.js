@@ -11,11 +11,6 @@
 
 define(["jquery", "modules/blameasync", "common"], function($, blameAsync) {
 	$(function() {
-		var url = window.location.href.match(/^([^\?]+\/)/);
-		if (!url) {
-			return;
-		}
-		url = url[1];
-		blameAsync.init($('table#blobData'), $('a#blameLink'), url);
+		blameAsync.init($('table#blobData'), $('a#blameLink'));
 	});
 });
