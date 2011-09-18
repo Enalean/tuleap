@@ -9,7 +9,7 @@
  * @subpackage Javascript
  */
 
-define(["jquery"], function($) {
+define(["jquery", "common"], function($) {
 	$(function(){
 		var toc = $('div.commitDiffSBS div.SBSTOC');
 		var content = $('div.SBSContent');

@@ -56,7 +56,13 @@
 	{/if}
 	{rdelim},
 	priority: ['jquery']
-    {rdelim}, ['common'{if $extrascripts},'{$extrascripts}'{/if}]);
+    {rdelim}, [
+    	{if $extrascripts}
+	  '{$extrascripts}'
+	{else}
+	  'common'
+	{/if}
+      ]);
     </script>
     {/if}
     {$smarty.capture.header}
