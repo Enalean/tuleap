@@ -2936,8 +2936,6 @@ class Artifact extends Error {
         //Process special cases first: follow-up comment
         if (!empty($changes['comment'])) {
             $visible_change = true;
-            //$out_com = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------   ".$Language->getText('tracker_include_artifact','add_flup_comment')."   ----------------". $GLOBALS['sys_lf'] ."";
-
             if (!empty($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none')) {
                 $out_com .= "[".$changes['comment']['type']."]<br />";
             }
