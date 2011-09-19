@@ -25,6 +25,7 @@
 require_once('common/tracker/ArtifactFile.class.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/mail/Codendi_Mail.class.php');
+require_once('common/include/Template.class.php');
 
 /**
  *
@@ -2524,21 +2525,12 @@ class Artifact extends Error {
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setTo($to);
         $mail->setSubject($subject);
-        $body = '<html>
-                    <head>
-                      <style>
-                      h1, h2, h3 { font-family: Verdana, sans-serif; margin: 0px; }
-                      h1 { font-size: 1.2em; }
-                      h2, h3 { font-size: 1.1em; }
-                      .artifact_change, .artifact_change tr, .artifact_change td, .artifact_change th  {
-                          border: 1px solid grey;
-                      }
-                      </style>
-                    </head>
-                    <body>
-                    '.$body_html.'
-                    </body>
-                  </html>';
+        $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', null, null, '.php'));
+        $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
+        $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
+        $tpl->set('title', $subject);
+        $tpl->set('body', $body_html);
+        $body = $tpl->fetch();
         $mail->setBodyHtml($body);
         $mail->send();
     }
@@ -2617,15 +2609,13 @@ class Artifact extends Error {
         // artifact fields
         // Generate the message preamble with all required
         // artifact fields - Changes first if there are some.
+        $body .= '<h1><a href="'.$artifact_href.'">'.$hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())).' #'.$this->getID().'</a>: '.$summ.'</h1>'; 
         if ($changes) {
-            $body .= '<h1><a href="'.$artifact_href.'">'.$hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())).' #'.$this->getID().': '.$summ.'</a></h1>'; 
             $body .= $this->formatChangesHTML($changes, $field_perm, $visible_change).'<br />';
             if (!$visible_change) return;
         }
         
-        
-        $body .= '<hr style="width: 100%; height: 1px; background: #ccc; border: 0;" />';
-        $body .= '<h1 style="text-align: center;">Snapshot</h1>';
+        $body .= '<h2>Snapshot</h2>';
 
         // Snapshot
         $fields_per_line=2;
@@ -2680,8 +2670,7 @@ class Artifact extends Error {
         }
         $body .= '</table>';
         
-        $body .= '<hr style="width: 100%; height: 1px; background: #ccc; border: 0;" />';
-        $body .= '<h1 style="text-align: center;">Comments</h1>';
+        $body .= '<h2>Comments</h2>';
         
         $result = $this->getFollowups ();
         $body .= '<table cellspacing="0" cellpadding="2" border="0">';
@@ -3038,7 +3027,7 @@ class Artifact extends Error {
 
         global $art_field_fact,$Language;
         $visible_change = false;
-        $out_hdr = '';
+        $out_hdr = '<h2>Latest modifications</h2>';
         $out = '';
         $out_com = '';
         $out_att = '';
@@ -3067,7 +3056,23 @@ class Artifact extends Error {
             if (!empty($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none')) {
                 $out_com .= "[".$changes['comment']['type']."]<br />";
             }
-            $out_com .= '<p>'.$this->formatFollowUp(null, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_BROWSER).'</p>';
+            $out_com .= '
+            <div class="tracker_artifact_followup_header">
+                <div class="tracker_artifact_followup_title">
+                    <span class="tracker_artifact_followup_title_user"><a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()).')</a></span>
+                </div>
+                <div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).' ('.$user->getTimezone().')</div>
+            </div>
+            <div class="tracker_artifact_followup_avatar">
+                <div class="avatar"></div>
+            </div>
+            <div class="tracker_artifact_followup_content">
+                <div class="tracker_artifact_followup_comment">
+                    <div class="tracker_artifact_followup_comment_body">'.$this->formatFollowUp(null, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_BROWSER).'</div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+            ';
             unset($changes['comment']);
         }
 
@@ -3107,7 +3112,7 @@ class Artifact extends Error {
         }
 
         if ($out) {
-            $out = '<table cellpadding="0" cellspacing="0" class="artifact_change">'.
+            $out = '<table cellpadding="4" border="1" cellspacing="0" class="artifact_change">'.
             '  <tr>'.
             '    <th>'.$Language->getText('tracker_include_artifact','what').'</th>'.
             '    <th>'.$Language->getText('tracker_include_artifact','removed').'</th>'.
@@ -3117,7 +3122,7 @@ class Artifact extends Error {
             '</table>';
         }
 
-        return($out_hdr.$out.$out_com.$out_att);
+        return($out_hdr.$out_com.$out.$out_att);
     }
 
         
