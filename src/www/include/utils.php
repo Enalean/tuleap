@@ -1012,6 +1012,52 @@ function formatByteToMb($size_byte) {
     return intval($size_byte/(1024*1024));
 }
 
+/**
+ * Return human readable sizes
+ *
+ * @author      Aidan Lister <aidan@php.net>
+ * @version     1.3.0
+ * @link        http://aidanlister.com/repos/v/function.size_readable.php
+ * @param       int     $size        size in bytes
+ * @param       string  $max         maximum unit
+ * @param       string  $system      'si' for SI, 'bi' for binary prefixes
+ * @param       string  $retstring   return string format
+ */
+function size_readable($size, $max = null, $system = 'bi', $retstring = 'auto') {
+    // Pick units
+    $systems['si']['prefix'] = array('B', 'K', 'MB', 'GB', 'TB', 'PB');
+    $systems['si']['size']   = 1000;
+    $systems['bi']['prefix'] = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
+    $systems['bi']['size']   = 1024;
+    $sys = isset($systems[$system]) ? $systems[$system] : $systems['si'];
+
+    // Max unit to display
+    $depth = count($sys['prefix']) - 1;
+    if ($max && false !== $d = array_search($max, $sys['prefix'])) {
+        $depth = $d;
+    }
+
+    // Loop
+    $i = 0;
+    while (abs($size) >= $sys['size'] && $i < $depth) {
+        $size /= $sys['size'];
+        $i++;
+    }
+
+    // Adapt the decimal places to the number of digit:
+    // 1.24 / 12.3 / 123
+    if ($retstring == 'auto') {
+        $nbDigit = (int)(log(abs($size))/log(10)) + 1;
+        switch ($nbDigit) {
+            case 1:  $retstring = '%.2f %s'; break;
+            case 2:  $retstring = '%.1f %s'; break;
+            default: $retstring = '%d %s'; break;
+        }
+    }
+
+    return sprintf($retstring, $size, $sys['prefix'][$i]);
+}
+
 
 // Return a HTTP URL to a resource on the local host.
 function make_local_url($path) {
@@ -1382,4 +1428,5 @@ foreach($times as $key => $time) {
     echo $key ."\t\t\t". util_time_ago_in_words($time, false) ."\t\t\t". util_time_ago_in_words($time, true) ."\n";
 }
 */
+
 ?>
