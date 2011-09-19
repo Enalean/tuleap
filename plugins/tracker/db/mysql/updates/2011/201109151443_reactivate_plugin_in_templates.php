@@ -35,7 +35,7 @@ EOT;
     }
 
     public function up() {
-        $sql = "UPDATE service SET is_active = 0 WHERE short_name = 'plugin_tracker'";
+        $sql = "UPDATE service SET is_active = 1 WHERE short_name = 'plugin_tracker'";
         $res = $this->db->dbh->exec($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('Unable to activate plugin tracker service for all projects. '.implode(', ', $this->db->dbh->errorInfo()));
