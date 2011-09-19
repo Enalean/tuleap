@@ -2682,6 +2682,35 @@ class Artifact extends Error {
         }
         $body .= '</table>';
         
+        $body .= '<hr style="width: 100%; height: 1px; background: #ccc; border: 0;" />';
+        $body .= '<h1>Comments</h1>';
+        
+        $result=$this->getFollowups ();
+        while ($row = db_fetch_array($result)) {
+            /*$comment_type = db_result($result, $i, 'comment_type');
+            $comment_type_id = db_result($result, $i, 'comment_type_id');
+            $comment_id = db_result($result, $i, 'artifact_history_id');
+            $field_name = db_result($result, $i, 'field_name');
+            $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
+            $orig_date = $this->getOriginalCommentDate($comment_id);
+            $value = db_result($result, $i, 'new_value');
+            $isHtml = db_result($result, $i, 'format');*/
+            
+            $orig_subm = $this->getOriginalCommentSubmitter($row['artifact_history_id']);
+            $submitter = UserManager::instance()->getUserById(db_result($orig_subm, 0, 'mod_by'));
+            
+            $orig_date = $this->getOriginalCommentDate($row['artifact_history_id']);
+            $subm_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($orig_date, 0, 'date'));
+            
+            $body .= '<p>';
+            $body .= '<strong>'.$submitter->getRealName().' on '.$subm_date.'</strong><br />';
+            $body .= $this->formatFollowUp($group_id, $row['format'], $row['new_value'], self::OUTPUT_BROWSER);
+            $body .= '</p>';
+        }
+        
+        // I'm Nicolas Terray and I approve this hack.
+        $body = preg_replace('%<a href="/%', '<a href="'.get_server_url().'/', $body);
+        
         $ok = true;
         return $body;
     }
