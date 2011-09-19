@@ -2734,7 +2734,8 @@ class Artifact extends Error {
             }
 
             $field_html  = new ArtifactFieldHtml($field);
-            $label       = $field_html->labelDisplay(false,false,false);
+            $field_html->disableJavascript();
+            $label = $field_html->labelDisplay(false,false,false);
 
             if ($field->getName() == 'submitted_by') {
                 $value = util_user_link(user_getname($field_value));
