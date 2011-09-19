@@ -1983,6 +1983,7 @@ a#lightwindow_title_bar_close_link:hover {
     -webkit-box-shadow: 0 0  8px 0px #888;
     box-shadow: 0 0  8px 0px #888;
     margin-right: 1em;
+    margin-bottom: 1em;
 }
 /* }}} */
 

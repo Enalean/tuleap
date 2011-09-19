@@ -36,6 +36,29 @@ class RequestHelp extends PluginControler {
     const TYPE_SUPPORT      = 1;
     const TYPE_ENHANCEMENT  = 2;
 
+    protected $plugin;
+
+    /**
+     * Constructor of the class
+     *
+     * @param requesthelpPlugin $plugin The plugin instance
+     *
+     * @return void
+     */
+    function __construct($plugin) {
+        parent::__construct();
+        $this->plugin = $plugin;
+    }
+
+    /**
+     * Get the plugin
+     *
+     * @return requesthelpPlugin
+     */
+    function getPlugin() {
+        return $this->plugin;
+    }
+
     /**
      * Compute the request
      *

@@ -28,9 +28,10 @@ require_once('RequestHelpDBDriver.class.php');
 /**
  * RequestHelpActions
  */
-
 class RequestHelpActions extends PluginAction {
 
+    const MAX_SUMMARY_LENGTH     = 128;
+    const MAX_DESCRIPTION_LENGTH = 4000;
     // {{{ Actions
     /**
     * Validate request values
@@ -45,7 +46,7 @@ class RequestHelpActions extends PluginAction {
         $valid = new Valid_String('request_summary');
         $valid->required();
         $summary = trim($request->get('request_summary'));
-        if ($request->valid($valid) && strlen($summary) < 128 && $summary != '') {
+        if ($request->valid($valid) && strlen($summary) < self::MAX_SUMMARY_LENGTH && $summary != '') {
             $params['summary'] = $summary;
         } else {
             $status = false;
@@ -54,7 +55,8 @@ class RequestHelpActions extends PluginAction {
         $valid = new Valid_Text('request_description');
         $valid->required();
         $description = trim($request->get('request_description'));
-        if ($request->valid($valid) && strlen($description) < 4000 && $description != '') {
+        $defaultDescription = $GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_default_description');
+        if ($request->valid($valid) && strlen($description) < self::MAX_DESCRIPTION_LENGTH && $description != '' && $description != $defaultDescription) {
             $params['description'] = $description;
         } else {
             $status = false;
@@ -67,10 +69,10 @@ class RequestHelpActions extends PluginAction {
             $params['type'] = $requestType;
             switch ($requestType) {
                 case RequestHelp::TYPE_SUPPORT :
-                    $params['text_type'] = 'SUPPORT REQUEST';
+                    $params['text_type'] = $this->_getPluginProperty('support_request');
                     break;
                 case RequestHelp::TYPE_ENHANCEMENT :
-                    $params['text_type'] = 'ENHANCEMENT REQUEST';
+                    $params['text_type'] = $this->_getPluginProperty('enhancement_request');
                     break;
                 default:
                     $status = false;
@@ -159,7 +161,7 @@ class RequestHelpActions extends PluginAction {
     function insertTicketInRIFDB($params) {
         try {
             $requester = strtoupper($this->_getRequesterLdapLogin());
-            $oci = new RequestHelpDBDriver();
+            $oci = new RequestHelpDBDriver($this->getController()->getPlugin());
             $oci->getdbh();
             $ccMails = array_map('trim', preg_split('/[;]/', $params['cc']));
             $cc = '';
@@ -321,24 +323,21 @@ class RequestHelpActions extends PluginAction {
                 $ldapLoginArray = $ldapLogin->getRow();
                 $requester = $ldapLoginArray['ldap_uid'];
             } else {
-                $requester = $this->_getDefaultRequesterLogin();
+                $requester = $this->_getPluginProperty('requesthelp_submitter');
             }
         } else {
-            $requester = $this->_getDefaultRequesterLogin();
+            $requester = $this->_getPluginProperty('requesthelp_submitter');
         }
         return $requester;
     }
 
     /**
-     * Retrieve the default Requester Login from plugin conf
+     * Retrieve request help plugin settings value
      *
-     * @return Codendi_Mail
+     * @return String
      */
-    function _getDefaultRequesterLogin() {
-        $pluginManager = $this->_getPluginManager();
-        $requestHelpPlugin = $pluginManager->getPluginByName('requesthelp');
-        $requester = $requestHelpPlugin->getProperty('requesthelp_submitter');
-        return $requester;
+    function _getPluginProperty($property) {
+        return $this->getController()->getPlugin()->getProperty($property);
     }
 
     /**

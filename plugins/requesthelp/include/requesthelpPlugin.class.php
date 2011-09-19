@@ -37,6 +37,7 @@ class requesthelpPlugin extends Plugin {
         if (extension_loaded('oci8')) {
             $this->_addHook('cssfile', 'cssFile', false);
             $this->_addHook('site_help', 'redirectToPlugin', false);
+            $this->_addHook(Event::LAB_FEATURES_DEFINITION_LIST, 'lab_features_definition_list', false);
         }
     }
 
@@ -59,7 +60,7 @@ class requesthelpPlugin extends Plugin {
      * @return void
      */
     function process() {
-        $controler = new RequestHelp();
+        $controler = new RequestHelp($this);
         $controler->process();
     }
 
@@ -96,5 +97,14 @@ class requesthelpPlugin extends Plugin {
         $info =$this->getPluginInfo();
         return $info->getPropertyValueForName($name);
     }
+
+    public function lab_features_definition_list($params) {
+        $params['lab_features'][] = array(
+            'title'       => $GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_lab_feature_title'),
+            'description' => $GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_lab_feature_description'),
+            'image'       => $this->getPluginPath().'/lab_feature.png',
+        );
+    }
+
 }
 ?>

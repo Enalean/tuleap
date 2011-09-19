@@ -26,3 +26,11 @@ plugin_requesthelp	requesthelp_mail_user	Dear $1 (<em>$2</em>),<br /><br />You h
 plugin_requesthelp	requesthelp_mail_error	Dear support team,<br /><br />A new ticket was added but its insertion in Remedy failed
 plugin_requesthelp	requesthelp_cc_note	For CC field please use login name rather than email addresses.<br />Fill your list using comma or semi-column as separator.
 plugin_requesthelp	requesthelp_explain_label	For any Codex help, please use this form below
+plugin_requesthelp	requesthelp_default_description	<Please enter the detailed description of your request. Don't forget to provide the project URL if it is about a project. Write the steps required to reproduce it if it's a problem.>
+plugin_requesthelp	requesthelp_lab_feature_title	To submit Remedy requests directly from Codex
+plugin_requesthelp	requesthelp_lab_feature_description	Allow to submit in two clicks Remedy requests related to Codex from Codex's web interface.
+plugin_requesthelp	tooltip_description	A full description of the request.
+plugin_requesthelp	tooltip_summary	One line description of the request.
+plugin_requesthelp	tooltip_type	Request type.
+plugin_requesthelp	tooltip_severity	Impact of the request on the system(Critical, major,...).
+plugin_requesthelp	description_footer	\n\n*****\nThis ticket was added using Codex web interface.

@@ -35,14 +35,15 @@ Mock::generate('Properties');
 require_once(dirname(__FILE__).'/../include/RequestHelp.class.php');
 Mock::generate('RequestHelp');
 require_once(dirname(__FILE__).'/../include/RequestHelpActions.class.php');
-Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion', array('_getUserManager'));
+Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion', array('_getUserManager', '_getPluginProperty'));
 Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion2', array('_getUserManager', 'insertTicketInCodexDB', 'sendMail', 'insertTicketInRIFDB', 'getController', 'validateRequest'));
 Mock::generatePartial('RequestHelpActions', 'RequestHelpActionsTestVersion3', array('_getUserManager', '_getCodendiMail', '_getPluginManager', 'validateRequest'));
 
 class RequestHelpActionsTest extends UnitTestCase {
 
     function setUp() {
-        $GLOBALS['Language']           = new MockBaseLanguage($this);
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+        $GLOBALS['Language']->setReturnValue('getText', 'default description', array('plugin_requesthelp', 'requesthelp_default_description'));
     }
 
     function tearDown() {
@@ -59,12 +60,13 @@ class RequestHelpActionsTest extends UnitTestCase {
         $request->setReturnValue('valid', true);
         $request->expectCallCount('valid', 4);
         $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
         $params = $actions->validateRequest($request);
         $validParams = array('status' => true,
                              'params' => array('summary'       => 'valid summary',
                                                'description'   => 'valid description',
                                                'type'          => 1,
-                                               'text_type'     => 'SUPPORT REQUEST',
+                                               'text_type'     => 'ASSISTANCE REQUEST',
                                                'severity'      => 1,
                                                'text_severity' => 'Minor',
                                                'cc'            => 'john.doe@example.com'),
@@ -102,11 +104,12 @@ class RequestHelpActionsTest extends UnitTestCase {
         $request->setReturnValueAt(3, 'valid', true);
         $request->expectCallCount('valid', 4);
         $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('description'   => 'valid description',
                                                'type'          => 1,
-                                               'text_type'     => 'SUPPORT REQUEST',
+                                               'text_type'     => 'ASSISTANCE REQUEST',
                                                'severity'      => 1,
                                                'text_severity' => 'Minor',
                                                'cc'            => 'john.doe@example.com'),
@@ -127,11 +130,35 @@ class RequestHelpActionsTest extends UnitTestCase {
         $request->setReturnValueAt(3, 'valid', true);
         $request->expectCallCount('valid', 4);
         $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('summary'       => 'valid summary',
                                                'type'          => 1,
-                                               'text_type'     => 'SUPPORT REQUEST',
+                                               'text_type'     => 'ASSISTANCE REQUEST',
+                                               'severity'      => 1,
+                                               'text_severity' => 'Minor',
+                                               'cc'            => 'john.doe@example.com'),
+                             'invalid' => array('Description'));
+        $this->assertEqual($params, $validParams);
+    }
+
+    function testValidateRequestDefaultDescription() {
+        $request = new MockHTTPRequest();
+        $request->setReturnValue('get', 'valid summary', array('request_summary'));
+        $request->setReturnValue('get', 'default description', array('request_description'));
+        $request->setReturnValue('get', 1, array('type'));
+        $request->setReturnValue('get', 1, array('severity'));
+        $request->setReturnValue('get', 'john.doe@example.com', array('cc'));
+        $request->setReturnValue('valid', true);
+        $request->expectCallCount('valid', 4);
+        $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
+        $params = $actions->validateRequest($request);
+        $validParams = array('status' => false,
+                             'params' => array('summary'       => 'valid summary',
+                                               'type'          => 1,
+                                               'text_type'     => 'ASSISTANCE REQUEST',
                                                'severity'      => 1,
                                                'text_severity' => 'Minor',
                                                'cc'            => 'john.doe@example.com'),
@@ -198,12 +225,13 @@ class RequestHelpActionsTest extends UnitTestCase {
         $request->setReturnValueAt(3, 'valid', false);
         $request->expectCallCount('valid', 4);
         $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('summary'     => 'valid summary',
                                                'description' => 'valid description',
                                                'type'        => 1,
-                                               'text_type'   => 'SUPPORT REQUEST',
+                                               'text_type'   => 'ASSISTANCE REQUEST',
                                                'cc'          => 'john.doe@example.com'),
                              'invalid' => array(''));
         $this->assertEqual($params, $validParams);
@@ -219,12 +247,13 @@ class RequestHelpActionsTest extends UnitTestCase {
         $request->setReturnValue('valid', true);
         $request->expectCallCount('valid', 4);
         $actions = new RequestHelpActionsTestVersion();
+        $actions->setReturnValue('_getPluginProperty', 'ASSISTANCE REQUEST', array('support_request'));
         $params = $actions->validateRequest($request);
         $validParams = array('status' => false,
                              'params' => array('summary'     => 'valid summary',
                                                'description' => 'valid description',
                                                'type'        => 1,
-                                               'text_type'   => 'SUPPORT REQUEST',
+                                               'text_type'   => 'ASSISTANCE REQUEST',
                                                'severity'    => 4,
                                                'cc'          => 'john.doe@example.com'),
                              'invalid' => array(''));
@@ -243,7 +272,7 @@ class RequestHelpActionsTest extends UnitTestCase {
                         'params' => array('summary'       => 'valid summary',
                                           'description'   => 'valid description',
                                           'type'          => 1,
-                                          'text_type'     => 'SUPPORT REQUEST',
+                                          'text_type'     => 'ASSISTANCE REQUEST',
                                           'severity'      => 1,
                                           'text_severity' => 'Minor',
                                           'cc'            => 'john.doe@example.com'));
@@ -268,7 +297,7 @@ class RequestHelpActionsTest extends UnitTestCase {
                         'params' => array('summary'       => 'valid summary',
                                           'description'   => 'valid description',
                                           'type'          => 1,
-                                          'text_type'     => 'SUPPORT REQUEST',
+                                          'text_type'     => 'ASSISTANCE REQUEST',
                                           'severity'      => 1,
                                           'text_severity' => 'Minor',
                                           'cc'            => 'john.doe@example.com'));
@@ -294,7 +323,7 @@ class RequestHelpActionsTest extends UnitTestCase {
                         'params' => array('summary'       => 'valid summary',
                                           'description'   => 'valid description',
                                           'type'          => 1,
-                                          'text_type'     => 'SUPPORT REQUEST',
+                                          'text_type'     => 'ASSISTANCE REQUEST',
                                           'severity'      => 1,
                                           'text_severity' => 'Minor',
                                           'cc'            => 'john.doe@example.com'));
@@ -318,7 +347,7 @@ class RequestHelpActionsTest extends UnitTestCase {
                              'summary'       => 'valid summary',
                              'description'   => 'valid description',
                              'type'          => 1,
-                             'text_type'     => 'SUPPORT REQUEST',
+                             'text_type'     => 'ASSISTANCE REQUEST',
                              'severity'      => 1,
                              'text_severity' => 'Minor',
                              'cc'            => 'john.doe@example.com');
