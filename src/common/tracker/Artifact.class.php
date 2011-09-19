@@ -2427,7 +2427,7 @@ class Artifact extends Error {
         //withoutpermissions_concerned_addresses contains emails for which there is no permissions check
         
         //Prepare e-mail
-        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);        
+        list($host,) = explode(':',$GLOBALS['sys_default_domain']);
 
         
         //treat anonymous users
@@ -2625,9 +2625,101 @@ class Artifact extends Error {
             if (!$visible_change) return;
         }
         
-        $ok = true;
         
+        $body .= '<hr style="width: 100%; height: 1px; background: #ccc; border: 0;" />';
+        $body .= '<h1>Snapshot</h1>';
+
+        // Snapshot
+        $fields_per_line=2;
+        // the column number is the number of field per line * 2 (label + value)
+        // + the number of field per line -1 (a blank column between each pair "label-value" to give more space)
+        $columns_number = ($fields_per_line * 2) + ($fields_per_line - 1);
+        $max_size=40;
+        $body .= '<table>';
+        foreach($used_fieldsets as $fieldset_id => $result_fieldset) {
+
+            // this variable will tell us if we have to display the fieldset or not (if there is at least one field to display or not)
+            $display_fieldset = false;
+
+            $fieldset_html = '';
+
+            $i = 0;
+            $fields_in_fieldset = $result_fieldset->getAllUsedFields();
+            foreach ($fields_in_fieldset as $key => $field) {
+                if ($field->getName() != 'comment_type_id' && $field->getName() != 'artifact_id') {
+                    $field_html = $this->_getFieldLabelAndValueForHTMLMail($group_id, $group_artifact_id, $field, $field_perm);
+                    if ($field_html) {
+
+                        // if the user can read at least one field, we can display the fieldset this field is within
+                        $display_fieldset = true;
+
+                        list($sz,) = explode("/",$field->getDisplaySize());
+
+                        // Details field must be on one row
+                        if ($sz > $max_size || $field->getName()=='details') {
+                            $fieldset_html .= "\n<TR>".
+                                  '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $field_html['label'] .'</td>'.
+                                  '<TD valign="top" width="90%" colspan="'.($columns_number-1).'">'. $field_html['value'] .'</TD>'.                     
+                                  "\n</TR>";
+                            $i=0;
+                        } else {
+                            $fieldset_html .= ($i % $fields_per_line ? '':"\n<TR>");
+                            $fieldset_html .= '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $field_html['label'] .'</td>'.
+                                '<TD width="38%" valign="top">'. $field_html['value'] .'</TD>';
+                            $i++;
+                            // if the line is not full, we add a additional column to give more space
+                            $fieldset_html .= ($i % $fields_per_line) ? '<td class="artifact_spacer" width="4%">&nbsp;</td>':"\n</TR>";
+                        }
+                    }
+                }
+            }
+
+            // We display the fieldset only if there is at least one field inside that we can display
+            if ($display_fieldset) {
+                $body .= '<TR class="boxtitle artifact_fieldset"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
+                $body .= $fieldset_html;
+            }
+        }
+        $body .= '</table>';
+        
+        $ok = true;
         return $body;
+    }
+
+    /**
+     * return a field for the given user.
+     *
+     * @protected
+     **/
+    function _getFieldLabelAndValueForHTMLMail($group_id, $group_artifact_id, $field, $field_perm) {
+        $html = false;
+        $read_only = true;
+        $field_name = $field->getName();
+        if ($field_perm === false || (isset($field_perm[$field_name]) && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name]))) {
+
+            // For multi select box, we need to retrieve all the values
+            if ( $field->isMultiSelectBox() ) {
+                $field_value = $field->getValues($this->getID());
+            } else {
+                $field_value = $this->getValue($field->getName());
+            }
+
+            $field_html  = new ArtifactFieldHtml($field);
+            $label       = $field_html->labelDisplay(false,false,false);
+
+            if ($field->getName() == 'submitted_by') {
+                $value = util_user_link(user_getname($field_value));
+            } else if ($field->getName() == 'open_date') {
+                $value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);
+            } else if ($field->getName() == 'last_update_date') {
+                $value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);
+            } else {
+                $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
+                $value = util_make_links($value, $group_id, $group_artifact_id);
+            }
+            $html = array('label' => $label, 'value' => $value);
+        }
+        return $html;
     }
 
 	/** for a certain set of users being part of the same ugroups
