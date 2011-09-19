@@ -2683,7 +2683,8 @@ class Artifact extends Error {
         $body .= '<hr style="width: 100%; height: 1px; background: #ccc; border: 0;" />';
         $body .= '<h1 style="text-align: center;">Comments</h1>';
         
-        $result=$this->getFollowups ();
+        $result = $this->getFollowups ();
+        $body .= '<table cellspacing="0" cellpadding="2" border="0">';
         while ($row = db_fetch_array($result)) {
             /*$comment_type = db_result($result, $i, 'comment_type');
             $comment_type_id = db_result($result, $i, 'comment_type_id');
@@ -2700,15 +2701,21 @@ class Artifact extends Error {
             $orig_date = $this->getOriginalCommentDate($row['artifact_history_id']);
             $subm_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($orig_date, 0, 'date'));
             
-            $body .= '<p>';
-            $body .= '<strong>'.$submitter->getRealName().' on '.$subm_date.'</strong><br />';
-            $body .= $this->formatFollowUp($group_id, $row['format'], $row['new_value'], self::OUTPUT_BROWSER);
-            $body .= '</p>';
+            $body .= '<tr><td colspan="2"><strong>'.$submitter->getRealName().' on '.$subm_date.'</strong></td></tr>';
+            $body .= '<tr>';
+            $body .= '<td width="20px;">&nbsp;</td>';
+            $body .= '<td>'.$this->formatFollowUp($group_id, $row['format'], $row['new_value'], self::OUTPUT_BROWSER).'</td>';
+            $body .= '</tr>';
         }
+        $body .= '</table>';
         
         // Finaly, transform relatives URLs to absolute 
         // I'm Nicolas Terray and I approve this hack.
         $body = preg_replace('%<a href="/%', '<a href="'.get_server_url().'/', $body);
+        
+        // Footer
+        $body .= '<hr style="width: 100%; height: 1px; background: #ccc; border: 0;" />';
+        $body .= '<p style="font-size: 0.8em; font-style: italic;">You can change your email preferences at <a href="'.get_server_url().'/account/preferences.php">'.get_server_url().'/account/preferences.php</a></p>';
         
         $ok = true;
         return $body;
