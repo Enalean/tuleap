@@ -75,9 +75,7 @@ class RequestHelpViews extends PluginView {
     function displayForm($params = null) {
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
-        $pluginManager = PluginManager::instance();
-        $p = $pluginManager->getPluginByName('requesthelp');
-        $ignoreLabs = $p->getProperty('ignore_labs');
+        $ignoreLabs = $this->getController()->getPlugin()->getProperty('ignore_labs');
         if ($user->isLoggedIn() && ($ignoreLabs || $user->useLabFeatures())) {
             $type        = RequestHelp::TYPE_SUPPORT;
             $severity    = RequestHelp::SEVERITY_MINOR;
