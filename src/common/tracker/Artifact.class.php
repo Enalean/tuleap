@@ -2614,8 +2614,6 @@ class Artifact extends Error {
         $subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.$summ;
          
 
-        //echo "<br>......... field_perm for "; print_r($ugroups); echo " = "; print_r($field_perm);
-
         // artifact fields
         // Generate the message preamble with all required
         // artifact fields - Changes first if there are some.
@@ -2627,7 +2625,7 @@ class Artifact extends Error {
         
         
         $body .= '<hr style="width: 100%; height: 1px; background: #ccc; border: 0;" />';
-        $body .= '<h1>Snapshot</h1>';
+        $body .= '<h1 style="text-align: center;">Snapshot</h1>';
 
         // Snapshot
         $fields_per_line=2;
@@ -2659,13 +2657,13 @@ class Artifact extends Error {
                         if ($sz > $max_size || $field->getName()=='details') {
                             $fieldset_html .= "\n<TR>".
                                   '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $field_html['label'] .'</td>'.
-                                  '<TD valign="top" width="90%" colspan="'.($columns_number-1).'">'. $field_html['value'] .'</TD>'.                     
+                                  '<TD valign="top" width="90%" colspan="'.($columns_number-1).'">'.$field_html['value'].'</TD>'.
                                   "\n</TR>";
                             $i=0;
                         } else {
                             $fieldset_html .= ($i % $fields_per_line ? '':"\n<TR>");
                             $fieldset_html .= '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $field_html['label'] .'</td>'.
-                                '<TD width="38%" valign="top">'. $field_html['value'] .'</TD>';
+                                              '<TD width="38%" valign="top">'. $field_html['value'] .'</TD>';
                             $i++;
                             // if the line is not full, we add a additional column to give more space
                             $fieldset_html .= ($i % $fields_per_line) ? '<td class="artifact_spacer" width="4%">&nbsp;</td>':"\n</TR>";
@@ -2676,14 +2674,14 @@ class Artifact extends Error {
 
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
-                $body .= '<TR class="boxtitle artifact_fieldset"><TD class="left" COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
+                $body .= '<TR style="color: #444444; background-color: #E9E9E9;"><TD COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
                 $body .= $fieldset_html;
             }
         }
         $body .= '</table>';
         
         $body .= '<hr style="width: 100%; height: 1px; background: #ccc; border: 0;" />';
-        $body .= '<h1>Comments</h1>';
+        $body .= '<h1 style="text-align: center;">Comments</h1>';
         
         $result=$this->getFollowups ();
         while ($row = db_fetch_array($result)) {
@@ -2708,6 +2706,7 @@ class Artifact extends Error {
             $body .= '</p>';
         }
         
+        // Finaly, transform relatives URLs to absolute 
         // I'm Nicolas Terray and I approve this hack.
         $body = preg_replace('%<a href="/%', '<a href="'.get_server_url().'/', $body);
         
