@@ -2569,15 +2569,53 @@ class Artifact extends Error {
         return join(',',$html_addresses);
     }
     
-	/** for a certain set of users being part of the same ugroups
-	 * create the mail body containing only fields that they have the permission to read
-	 */
-	function createHTMLMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,&$ok,&$subject) {
+    /** for a certain set of users being part of the same ugroups
+     * create the mail body containing only fields that they have the permission to read
+     */
+    function createHTMLMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,&$ok,&$subject) {
+        global $art_field_fact,$art_fieldset_fact,$Language;
 
-	  $body = 'HTML';
-	  return $body;
-	  
-	}
+        $artifact_href = get_server_url()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
+        $used_fields = $art_field_fact->getAllUsedFields();
+        $art_fieldset_fact = new ArtifactFieldsetFactory($this->ArtifactType);
+        $used_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
+        $ok = false;
+
+        $hp = $this->getHTMLPurifier();
+        
+        $body = '';
+         
+        //generate the field permissions (TRACKER_FIELD_READ, TRACKER_FIEDL_UPDATE or nothing)
+        //for all fields of this tracker given the $ugroups the user is part of
+        $field_perm = false;
+        if ($ugroups) {
+            $field_perm = $this->ArtifactType->getFieldPermissions($ugroups);
+        }
+
+        $summ = "";
+        if ($field_perm === false || (isset($field_perm['summary']) && $field_perm['summary'] && permission_can_read_field($field_perm['summary']))) {
+            $summ = util_unconvert_htmlspecialchars($this->getValue('summary'));
+        }
+        $subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.$summ;
+         
+
+        //echo "<br>......... field_perm for "; print_r($ugroups); echo " = "; print_r($field_perm);
+
+        // artifact fields
+        // Generate the message preamble with all required
+        // artifact fields - Changes first if there are some.
+        if ($changes) {
+            $body .= '<h1><a href="'.$artifact_href.'">'.$hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())).' #'.$this->getID().': '.$summ.'</a></h1>';
+                /*": ".$Language->getText('tracker_include_artifact','latest_modif')."   =============". $GLOBALS['sys_lf'] . $artifact_href . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] .*/ 
+            $body .= $this->formatChangesHTML($changes, $field_perm, $visible_change).'<br />';
+
+            if (!$visible_change) return;
+        }
+        
+        $ok = true;
+        
+        return $body;
+    }
 
 	/** for a certain set of users being part of the same ugroups
 	 * create the mail body containing only fields that they have the permission to read
@@ -2843,6 +2881,109 @@ class Artifact extends Error {
             }
     
         return($out_hdr.$out.$out_com.$out_att);	    
+    }
+
+    /**
+     * Format the changes
+     *
+     * @param changes: array of changes
+     * @param $field_perm an array with the permission associated to each field. false to no check perms
+     * @param $visible_change only needed when using permissions. Returns true if there is any change
+     * that the user has permission to see
+     *
+     * @return string
+     */
+    function formatChangesHTML($changes,$field_perm,&$visible_change) {
+
+        global $art_field_fact,$Language;
+        $visible_change = false;
+        $out_hdr = '';
+        $out = '';
+        $out_com = '';
+        $out_att = '';
+        reset($changes);
+        $fmt = "%20s | %-25s | %s".$GLOBALS['sys_lf'];
+
+        $hp = $this->getHTMLPurifier();
+
+        if ($this->hasFieldPermission($field_perm, 'assigned_to') || 
+            $this->hasFieldPermission($field_perm, 'multi_assigned_to') || 
+            (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))) {
+            $user = UserManager::instance()->getCurrentUser();
+            if ($user->isLoggedIn()) {
+                $out_hdr .= $Language->getText('tracker_include_artifact','changes_by');
+                $out_hdr .= ' <a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()).")</a><br/ >";
+                $out_hdr .= $Language->getText('tracker_import_utils','date').': ';
+                $out_hdr .= format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).' ('.$user->getTimezone().')<br />';
+            } else {
+                // TODO HTML
+                $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
+            }
+        }
+        //Process special cases first: follow-up comment
+        if (!empty($changes['comment'])) {
+            $visible_change = true;
+            //$out_com = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------   ".$Language->getText('tracker_include_artifact','add_flup_comment')."   ----------------". $GLOBALS['sys_lf'] ."";
+
+            if (!empty($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none')) {
+                $out_com .= "[".$changes['comment']['type']."]<br />";
+            }
+            $out_com .= $this->formatFollowUp(null, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_BROWSER);
+            unset($changes['comment']);
+        }
+
+        //Process special cases first: file attachment
+        if (!empty($changes['attach'])) {
+            // TODO HTML
+            $visible_change = true;
+            $out_att = "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] ."---------------    ".$Language->getText('tracker_include_artifact','add_attachment')."     -----------------". $GLOBALS['sys_lf'] ."";
+            $out_att .= sprintf($Language->getText('tracker_include_artifact','file_name')." %-30s ".$Language->getText('tracker_include_artifact','size').":%d KB". $GLOBALS['sys_lf'] ."",$changes['attach']['name'],
+            intval($changes['attach']['size']/1024) );
+            $out_att .= $changes['attach']['description'] . $GLOBALS['sys_lf'] . $changes['attach']['href'];
+            unset($changes['attach']);
+        }
+
+        // All the rest of the fields now
+        reset($changes);
+
+        while ( list($field_name,$h) = each($changes)) {
+            // If both removed and added items are empty skip - Sanity check
+            if (((isset($h['del']) && $h['del']) || (isset($h['add']) && $h['add']))
+            && $this->hasFieldPermission($field_perm, $field_name)) {
+
+                $visible_change = true;
+                $label = $field_name;
+                $field = $art_field_fact->getFieldFromName($field_name);
+                if ( $field ) {
+                    $label = $field->getLabel();
+                    if (isset($h['del'])) {
+                        $h['del'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']));
+                    }
+                    if (isset($h['add'])) {
+                        $h['add'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['add']));
+                    }
+                }
+                $out .= '<tr>';
+                $out .= '  <td>'.$hp->purify(SimpleSanitizer::unsanitize($label)).'</td>';
+                $out .= '  <td>'.$hp->purify(isset($h['del'])?$h['del']:"").'</td>';
+                $out .= '  <td>'.$hp->purify(isset($h['add'])?$h['add']:"").'</td>';
+                $out .= '</tr>';
+                //$out .= sprintf($fmt, SimpleSanitizer::unsanitize($label), isset($h['del'])?$h['del']:"",isset($h['add'])?$h['add']:"");
+            }
+        } // while
+
+        if ($out) {
+            $out = '<table>'.
+            '  <tr>'.
+            '    <th>'.$Language->getText('tracker_include_artifact','what').'</th>'.
+            '    <th>'.$Language->getText('tracker_include_artifact','removed').'</th>'.
+            '    <th>'.$Language->getText('tracker_include_artifact','added').'</th>'.
+            '  </tr>'.
+            $out.
+            '</table>';
+        }
+
+        return($out_hdr.$out.$out_com.$out_att);
     }
 
         
