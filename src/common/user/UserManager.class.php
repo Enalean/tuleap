@@ -205,16 +205,12 @@ class UserManager {
      * @return User or null if no user found
      */
     public function getUserByEmail($email) {
-        $user_result = $this->getDao()->searchByEmail($email);
+        $users = $this->getDao()->searchByEmail($email);
 
-        if ($user_result->rowCount() == 1) {
-            return $this->getUserInstanceFromRow($user_result->getRow());
+        if (count($users)) {
+            return $this->getUserInstanceFromRow($users->getRow());
         } else {
-            if ($user_result->rowCount() > 1) {
-                throw new Exception("Several accounts share the same email address '$email'");
-            } else {
-                return null; // No account found
-            }
+            return null; // No account found
         }
     }
     
