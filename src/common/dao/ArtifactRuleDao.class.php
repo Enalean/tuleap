@@ -28,7 +28,7 @@ class ArtifactRuleDao extends DataAccessObject {
     * Gets all tables of the db
     * @return DataAccessResult
     */
-    function & searchAll() {
+    function searchAll() {
         $sql = "SELECT * FROM artifact_rule";
         return $this->retrieve($sql);
     }
@@ -37,7 +37,7 @@ class ArtifactRuleDao extends DataAccessObject {
     * Searches ArtifactRule by Id 
     * @return DataAccessResult
     */
-    function & searchById($id) {
+    function searchById($id) {
         $sql = sprintf("SELECT group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE id = %s",
 				$this->da->quoteSmart($id));
         return $this->retrieve($sql);
@@ -47,7 +47,7 @@ class ArtifactRuleDao extends DataAccessObject {
     * Searches ArtifactRule by GroupArtifactId 
     * @return DataAccessResult
     */
-    function & searchByGroupArtifactId($groupArtifactId) {
+    function searchByGroupArtifactId($groupArtifactId) {
         $sql = sprintf("SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE group_artifact_id = %s",
 				$this->da->quoteSmart($groupArtifactId));
         return $this->retrieve($sql);
@@ -57,7 +57,7 @@ class ArtifactRuleDao extends DataAccessObject {
     * Searches ArtifactRule by SourceFieldId 
     * @return DataAccessResult
     */
-    function & searchBySourceFieldId($sourceFieldId) {
+    function searchBySourceFieldId($sourceFieldId) {
         $sql = sprintf("SELECT id, group_artifact_id, source_value_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE source_field_id = %s",
 				$this->da->quoteSmart($sourceFieldId));
         return $this->retrieve($sql);
@@ -67,7 +67,7 @@ class ArtifactRuleDao extends DataAccessObject {
     * Searches ArtifactRule by SourceValueId 
     * @return DataAccessResult
     */
-    function & searchBySourceValueId($sourceValueId) {
+    function searchBySourceValueId($sourceValueId) {
         $sql = sprintf("SELECT id, group_artifact_id, source_field_id, target_field_id, rule_type, target_value_id FROM artifact_rule WHERE source_value_id = %s",
 				$this->da->quoteSmart($sourceValueId));
         return $this->retrieve($sql);
@@ -77,7 +77,7 @@ class ArtifactRuleDao extends DataAccessObject {
     * Searches ArtifactRule by TargetFieldId 
     * @return DataAccessResult
     */
-    function & searchByTargetFieldId($targetFieldId) {
+    function searchByTargetFieldId($targetFieldId) {
         $sql = sprintf("SELECT id, group_artifact_id, source_field_id, source_value_id, rule_type, target_value_id FROM artifact_rule WHERE target_field_id = %s",
 				$this->da->quoteSmart($targetFieldId));
         return $this->retrieve($sql);
@@ -87,7 +87,7 @@ class ArtifactRuleDao extends DataAccessObject {
     * Searches ArtifactRule by RuleType 
     * @return DataAccessResult
     */
-    function & searchByRuleType($ruleType) {
+    function searchByRuleType($ruleType) {
         $sql = sprintf("SELECT id, group_artifact_id, source_field_id, source_value_id, target_field_id, target_value_id FROM artifact_rule WHERE rule_type = %s",
 				$this->da->quoteSmart($ruleType));
         return $this->retrieve($sql);
@@ -97,7 +97,7 @@ class ArtifactRuleDao extends DataAccessObject {
     * Searches ArtifactRule by TargetValueId 
     * @return DataAccessResult
     */
-    function & searchByTargetValueId($targetValueId) {
+    function searchByTargetValueId($targetValueId) {
         $sql = sprintf("SELECT id, group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type FROM artifact_rule WHERE target_value_id = %s",
 				$this->da->quoteSmart($targetValueId));
         return $this->retrieve($sql);
@@ -133,7 +133,7 @@ class ArtifactRuleDao extends DataAccessObject {
     * Searches ArtifactRule by GroupArtifactId 
     * @return DataAccessResult
     */
-    function & searchByGroupArtifactIdWithOrder($groupArtifactId) {
+    function searchByGroupArtifactIdWithOrder($groupArtifactId) {
         $sql = sprintf("SELECT ar.id, ar.source_field_id, ar.source_value_id, ar.target_field_id, ar.rule_type, ar.target_value_id ".
                        " FROM artifact_rule AS ar ".
                        "   INNER JOIN artifact_field_usage AS afu1 ON (ar.source_field_id = afu1.field_id AND ar.group_artifact_id = afu1.group_artifact_id) ".
