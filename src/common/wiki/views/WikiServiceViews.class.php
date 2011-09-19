@@ -260,8 +260,8 @@ class WikiServiceViews extends WikiViews {
       <li><a href="'.$this->wikiLink.'&view=browsePages">'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menupages').'</a>&nbsp;|&nbsp;</li>';
     if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
         print '<li><a href="javascript:help_window(\''.$this->wikiLink.'&pagename='. $attatch_page .'&pv=1\')">'.$attatch_menu.'</a>&nbsp;|&nbsp;</li>';
+        print '<li><a href="'.$this->wikiLink.'&pagename='. $preferences_page .'">'.$preferences_menu.'</a>&nbsp;|&nbsp;</li>';
     }
-    print '<li><a href="'.$this->wikiLink.'&pagename='. $preferences_page .'">'.$preferences_menu.'</a>&nbsp;|&nbsp;</li>';
     if(user_ismember($this->gid, 'W2')) {
         print '<li><a href="'.$this->wikiAdminLink.'">'.$GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'menuadmin').'</a>&nbsp;|&nbsp;</li>';
     }
