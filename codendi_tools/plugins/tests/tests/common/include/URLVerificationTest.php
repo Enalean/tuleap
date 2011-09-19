@@ -115,6 +115,10 @@ class URLVerificationTest extends UnitTestCase {
 
         $this->assertTrue($urlVerification->isException(array('SERVER_NAME'  => 'codendi.org',  'SCRIPT_NAME' => '/api/reference/extractCross')));
         $this->assertTrue($urlVerification->isException(array('SERVER_NAME'  => 'codendi.org',  'SCRIPT_NAME' => '/soap/index.php')));
+        $this->assertFalse($urlVerification->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME'  => '/plugins/tracker')));
+        $this->assertTrue($urlVerification->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME'  => '/plugins/tracker/soap/')));
+        $this->assertFalse($urlVerification->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME'  => '/forged/url?q=/plugins/tracker/soap/')));
+        $this->assertTrue($urlVerification->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME'  => '/plugins/docman/soap/')));
         $this->assertFalse($urlVerification->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME'  => '/projects/foobar')));
     }
 

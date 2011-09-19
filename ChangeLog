@@ -3,6 +3,7 @@ Version 4.0.22 - (Not Released Yet)
     * Improve usability of project history: (contrib STMicroelectronics)
       * Add the possibility to search into project history by: Event, Date, Value and User.
       * The result of the search could be exported in a CSV file without an offset.
+    * Add a new wiget to display an image in a dashboard.
 
     == Bug Fix ==
     * backlog #112: SVNAccessFile not properly updated after user removal
@@ -12,6 +13,12 @@ Version 4.0.22 - (Not Released Yet)
     == Plugins ==
     * WebDAV plugin v1.8. See separated ChangeLog
     * Statistics plugin v0.7. See separated ChangeLog
+    * Tracker v5 plugin v0.2. See separated ChangeLog
+    * GraphOnTracker v5 plugin v0.1. See separated ChangeLog
+    
+    == Development ==
+    * Add lxc script utilities to unit-test, build, install and functional-test a Tuleap (thanks to Christian Bayle).
+    * First boostrap of a Selenium test suite (thanks to STMicroelectronics)
 
 Version 4.0.21 - Thuesday, September 1st 2011
     == Enhancement ==

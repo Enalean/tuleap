@@ -2,6 +2,7 @@
 
 require_once ('pre.php');
 require_once ('nusoap.php');
+require_once('utils_soap.php');
 
 define ('permission_denied_fault', '3016');
 
@@ -22,7 +23,6 @@ $server = new soap_server();
 //configureWSDL($serviceName,$namespace = false,$endpoint = false,$style='rpc', $transport = 'http://schemas.xmlsoap.org/soap/http');
 $server->configureWSDL('CodendiAPI',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
 
-
 //include the common TYPES API
 require_once('./common/types.php');
 
@@ -41,7 +41,7 @@ require_once('./tracker/tracker.php');
 // include the FRS API
 require_once('./frs/frs.php');
 
-// include the <Plugin> API (only if plugin is available)
+// include the <Plugin> API (only if plugin is available), not tracker v5
 $em =& EventManager::instance();
 $em->processEvent('soap', array());
 

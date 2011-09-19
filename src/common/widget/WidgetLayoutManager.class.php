@@ -32,6 +32,23 @@ class WidgetLayoutManager {
     const OWNER_TYPE_HOME  = 'h';
     
     /**
+     * @return int
+     */
+    function getDefaultLayoutId($owner_id, $owner_type) {
+        $sql = "SELECT l.* 
+            FROM layouts AS l INNER JOIN owner_layouts AS o ON(l.id = o.layout_id) 
+            WHERE o.owner_type = '". $owner_type ."' 
+              AND o.owner_id = ". $owner_id ." 
+              AND o.is_default = 1
+        ";
+        $req = db_query($sql);
+        if ($data = db_fetch_array($req)) {
+            return $data['id'];
+        }
+        return null;
+    }
+    
+    /**
     * displayLayout
     * 
     * Display the default layout for the "owner". It my be the home page, the project summary page or /my/ page.
@@ -50,7 +67,7 @@ class WidgetLayoutManager {
         if ($data = db_fetch_array($req)) {
             $readonly = !$this->_currentUserCanUpdateLayout($owner_id, $owner_type);
             if (!$readonly) {
-                echo '<a href="/widgets/widgets.php?owner='. $owner_type.$owner_id .'&amp;layout_id='. $data['id'] .'">['. $GLOBALS['Language']->getText('widget_add', 'link_add') .']</a>';
+                echo '<a href="/widgets/widgets.php?owner='. $owner_type.$owner_id .'&amp;layout_id='. $data['id'] .'" class="layout_manager_customize">'. $GLOBALS['Language']->getText('widget_add', 'link_add') .'</a>';
             } else if ($owner_type === self::OWNER_TYPE_GROUP) {
                 echo '<br />';
             }
@@ -299,7 +316,7 @@ class WidgetLayoutManager {
                             <td>';
                             echo '<table cellpadding="2" cellspacing="0">
                                     <tbody>';
-                                    $after .= $this->_displayWidgetsSelectionForm($GLOBALS['Language']->getText('widget_add', 'codendi_widgets', $GLOBALS['sys_name']), Widget::getCodendiWidgets($owner_type), $used_widgets);
+                                    $after .= $this->_displayWidgetsSelectionForm($owner_id, $GLOBALS['Language']->getText('widget_add', 'codendi_widgets', $GLOBALS['sys_name']), Widget::getCodendiWidgets($owner_type), $used_widgets);
                                     echo '</tbody>
                                 </table>';
                             echo '</td>
@@ -450,7 +467,7 @@ class WidgetLayoutManager {
     * @param  widgets  
     * @param  used_widgets  
     */
-    function _displayWidgetsSelectionForm($title, $widgets, $used_widgets) {
+    function _displayWidgetsSelectionForm($owner_id, $title, $widgets, $used_widgets) {
         $hp = Codendi_HTMLPurifier::instance();
         $additionnal_html = '';
         if (count($widgets)) {
@@ -501,16 +518,16 @@ class WidgetLayoutManager {
                         $row .= '<strong>'. $widget->getTitle()  .'</strong>';
                         $row .= '<p>'. $widget->getDescription() .'</p>';
                         if ($widget->isInstallAllowed()) {
-	                        $row .= $widget->getInstallPreferences();
-	                        $row .= '</div><div style="text-align:right; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:20px;">';
-	                        if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
-	                            $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
-	                        } else {
-	                            $row .= '<input type="submit" name="name['. $widget_name .'][add]" value="'. $GLOBALS['Language']->getText('widget_add', 'add') .'" />';
-	                        }
-	                        $row .= '</div>';
+                            $row .= $widget->getInstallPreferences($owner_id);
+                            $row .= '</div><div style="text-align:right; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:20px;">';
+                            if ($widget->isUnique() && in_array($widget_name, $used_widgets)) {
+                                $row .= '<em>'. $GLOBALS['Language']->getText('widget_add', 'already_used') .'</em>';
+                            } else {
+                                $row .= '<input type="submit" name="name['. $widget_name .'][add]" value="'. $GLOBALS['Language']->getText('widget_add', 'add') .'" />';
+                            }
+                            $row .= '</div>';
                         } else {
-                        	$row .= $widget->getInstallNotAllowedMessage();
+                            $row .= $widget->getInstallNotAllowedMessage();
                             $row .= '</div><div style="text-align:right; border-bottom:1px solid #ddd; padding-bottom:10px; margin-bottom:20px;"></div>';
                         }
                         $widget_rows[$widget->getTitle()] = $row;

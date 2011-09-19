@@ -20,6 +20,7 @@
 require_once('common/plugin/Plugin.class.php');
 
 define('TRACKER_BASE_URL', '/plugins/tracker');
+define('TRACKER_BASE_DIR', dirname(__FILE__));
 
 /**
  * trackerPlugin
@@ -37,21 +38,25 @@ class trackerPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         
-        $this->_addHook('cssfile', 'cssFile', false);
-        $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures', false);
-        $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
-        $this->_addHook(Event::SERVICE_CLASSNAMES, 'service_classnames', false);
-        $this->_addHook(Event::COMBINED_SCRIPTS,   'combined_scripts',   false);
-        $this->_addHook(Event::JAVASCRIPT,         'javascript',         false);
-        $this->_addHook(Event::TOGGLE,             'toggle',             false);
-        $this->_addHook('permission_get_name',               'permission_get_name',               false);
-        $this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
-        $this->_addHook('permission_get_object_name',        'permission_get_object_name',        false);
-        $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
-        $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
-        $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
+        $this->_addHook('cssfile',                             'cssFile',                           false);
+        $this->_addHook(Event::GET_AVAILABLE_REFERENCE_NATURE, 'get_available_reference_natures',   false);
+        $this->_addHook('ajax_reference_tooltip',              'ajax_reference_tooltip',            false);
+        $this->_addHook(Event::SERVICE_CLASSNAMES,             'service_classnames',                false);
+        $this->_addHook(Event::COMBINED_SCRIPTS,               'combined_scripts',                  false);
+        $this->_addHook(Event::JAVASCRIPT,                     'javascript',                        false);
+        $this->_addHook(Event::TOGGLE,                         'toggle',                            false);
+        $this->_addHook(Event::SERVICE_PUBLIC_AREAS,           'service_public_areas',              false);
+        $this->_addHook('permission_get_name',                 'permission_get_name',               false);
+        $this->_addHook('permission_get_object_type',          'permission_get_object_type',        false);
+        $this->_addHook('permission_get_object_name',          'permission_get_object_name',        false);
+        $this->_addHook('permission_get_object_fullname',      'permission_get_object_fullname',    false);
+        $this->_addHook('permission_user_allowed_to_change',   'permission_user_allowed_to_change', false);
+        $this->_addHook('permissions_for_ugroup',              'permissions_for_ugroup',            false);
+
+        $this->_addHook('url_verification_instance',           'url_verification_instance',         false);
         
-        $this->_addHook('url_verification_instance', 'url_verification_instance', false);
+        $this->_addHook('widget_instance',                     'widget_instance',                   false);
+        $this->_addHook('widgets',                             'widgets',                           false);
     }
     
     public function getPluginInfo() {
@@ -65,7 +70,10 @@ class trackerPlugin extends Plugin {
     public function cssFile($params) {
         // Only show the stylesheet if we're actually in the tracker pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/print.css" media="print" />';
         }
@@ -310,6 +318,80 @@ class trackerPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             include_once 'Tracker/Tracker_URLVerification.class.php';
             $params['url_verification'] = new Tracker_URLVerification();
+        }
+    }
+
+    /**
+     * Hook: event raised when widget are instanciated
+     * 
+     * @param Array $params
+     */
+    public function widget_instance($params) {
+        include_once 'Tracker/Widget/Tracker_Widget_MyArtifacts.class.php';
+        include_once 'Tracker/Widget/Tracker_Widget_MyRenderer.class.php';
+        include_once 'Tracker/Widget/Tracker_Widget_ProjectRenderer.class.php';
+        
+        switch ($params['widget']) {
+            case Tracker_Widget_MyArtifacts::ID:
+                $params['instance'] = new Tracker_Widget_MyArtifacts();
+                break;
+            case Tracker_Widget_MyRenderer::ID:
+                $params['instance'] = new Tracker_Widget_MyRenderer();
+                break;
+            case Tracker_Widget_ProjectRenderer::ID:
+                $params['instance'] = new Tracker_Widget_ProjectRenderer();
+                break;
+        }
+    }
+
+    /**
+     * Hook: event raised when user lists all available widget
+     *
+     * @param Array $params
+     */
+    public function widgets($params) {
+        include_once 'common/widget/WidgetLayoutManager.class.php';
+        include_once 'Tracker/Widget/Tracker_Widget_MyArtifacts.class.php';
+        include_once 'Tracker/Widget/Tracker_Widget_MyRenderer.class.php';
+        include_once 'Tracker/Widget/Tracker_Widget_ProjectRenderer.class.php';
+        
+        switch ($params['owner_type']) {
+            case WidgetLayoutManager::OWNER_TYPE_USER:
+                $params['codendi_widgets'][] = Tracker_Widget_MyArtifacts::ID;
+                $params['codendi_widgets'][] = Tracker_Widget_MyRenderer::ID;
+                break;
+            
+            case WidgetLayoutManager::OWNER_TYPE_GROUP:
+                $params['codendi_widgets'][] = Tracker_Widget_ProjectRenderer::ID;
+                break;
+        }
+    }
+    
+    function service_public_areas($params) {
+        if ($params['project']->usesService('plugin_tracker')) {
+            $tf = TrackerFactory::instance();
+            
+            // Get the artfact type list
+            $trackers = $tf->getTrackersByGroupId($params['project']->getGroupId());
+            
+            if ($trackers) {
+                $entries = array();
+                foreach($trackers as $t) {
+                    if ($t->userCanView()) {
+                        $entries[] = '<a href="'. TRACKER_BASE_URL .'/?tracker='. $t->id .'">'. $t->name .'</a>';
+                    }
+                }
+                if ($entries) {
+                    $area = '';
+                    $area .= '<a href="'. TRACKER_BASE_URL .'/?group_id='. $params['project']->getGroupId() .'">';
+                    $area .= $GLOBALS['HTML']->getImage('ic/clipboard-list.png');
+                    $area .= ' '. $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
+                    $area .= '</a>';
+                    
+                    $area .= '<ul><li>'. implode('</li><li>', $entries) .'</li></ul>';
+                    $params['areas'][] = $area;
+                }
+            }
         }
     }
 }

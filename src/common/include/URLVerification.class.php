@@ -152,10 +152,10 @@ class URLVerification {
      * @return Boolean
      */
     function isException($server) {
-
         return (($server['SERVER_NAME'] == 'localhost')
              || (strcmp(substr($server['SCRIPT_NAME'], 0, 5), '/api/') == 0)
-             || (strcmp(substr($server['SCRIPT_NAME'], 0, 6), '/soap/') == 0));
+             || (strcmp(substr($server['SCRIPT_NAME'], 0, 6), '/soap/') == 0))
+             || preg_match('`^/plugins/[^/]+/soap/`', $server['SCRIPT_NAME']);
 
     }
 

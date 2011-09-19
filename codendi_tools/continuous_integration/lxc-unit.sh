@@ -19,6 +19,31 @@ substitute() {
   perl -pi -e "s/$2/$replacement/g" $1
 }
 
+lxc_start_wait() {
+    ip=$1
+
+    # First check network
+    maxwait=10
+    until ping -q -W 2 -c 1 "$ip" 2>&1 >/dev/null; do
+	if [ "$maxwait" -eq "0" ]; then
+	    echo "*** Error: cannot reach $name ($ip) after 10 attempts";
+	    exit 1
+	fi
+	sleep 5;
+	maxwait=$(($maxwait-1))
+    done
+
+    # Then check ssh activation
+    maxwait=10
+    until $remotecmd true; do
+	if [ "$maxwait" -eq "0" ]; then
+	    echo "*** Error: cannot reach $name ($ip) after 10 attempts";
+	    exit 1
+	fi
+	sleep 5;
+	maxwait=$(($maxwait-1))
+    done
+}
 
 ##
 ## Parse options
@@ -52,7 +77,8 @@ set -x
 
 build_host=root@$lxc_ip
 sshcmd="ssh -o StrictHostKeyChecking=no"
-remotecmd="$sshcmd $build_host"
+# -n to close standard input
+remotecmd="$sshcmd -n $build_host"
 
 on_create="false"
 
@@ -71,7 +97,7 @@ if sudo lxc-info -q --name $lxc_name | grep -q "RUNNING"; then
     echo "LXC container is already running"
 else
     sudo lxc-start -n $lxc_name -d
-    sleep 5
+    lxc_start_wait $lxc_ip
 fi
 
 # Upload tuleap src into /root

@@ -323,7 +323,7 @@
             <field REF="F5"/>
           </columns>
         </renderer>
-        <renderer type="plugin_graphontrackers" rank="1">
+        <renderer type="plugin_graphontrackersv5" rank="1">
           <name>Risk Statistics</name>
           <charts>
             <chart type="pie" width="600" height="400" rank="0" base="F11">

@@ -244,5 +244,16 @@ class Event {
      *  'done' => set to true if the element has been toggled
      */
     const TOGGLE = 'toggle';
+    
+    /**
+     * Display stuff in the widget public_areas (displays entries for the project services)
+     *
+     * Parameters:
+     *   'project' => The project
+     *
+     * Expected result
+     *   'areas'   => array of string(html)
+     */
+    const SERVICE_PUBLIC_AREAS = 'service_public_areas';
 }
 ?>

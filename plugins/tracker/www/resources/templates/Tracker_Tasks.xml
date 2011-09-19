@@ -445,7 +445,7 @@
             <field REF="F27"/>
           </columns>
         </renderer>
-        <renderer type="plugin_graphontrackers" rank="1">
+        <renderer type="plugin_graphontrackersv5" rank="1">
           <name>Graphs</name>
           <charts>
             <chart type="bar" width="600" height="400" rank="0" base="F14">
@@ -462,7 +462,7 @@
             </chart>
           </charts>
         </renderer>
-        <renderer type="plugin_graphontrackers" rank="2">
+        <renderer type="plugin_graphontrackersv5" rank="2">
           <name>Gantt</name>
           <description>Gantt Chart for Task Management</description>
           <charts>

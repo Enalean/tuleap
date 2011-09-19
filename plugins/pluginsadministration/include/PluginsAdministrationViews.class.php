@@ -298,6 +298,12 @@ EOS;
                 $output .= '</table>';
                 $output .= '</form>';
                 
+                $readme = $plugin->getReadme();
+                if ($readme) {
+                    $output .= '<h3>Readme</h3>';
+                    $output .= '<pre>'.$readme.'</pre>';
+                }
+                
                 $output .= '<div><a href="'.$link_to_plugins.'">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return').'</a></div>';
                 echo $output;
             }

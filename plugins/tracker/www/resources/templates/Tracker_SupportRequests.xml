@@ -227,7 +227,7 @@
             <field REF="F15"/>
           </columns>
         </renderer>
-        <renderer type="plugin_graphontrackers" rank="1">
+        <renderer type="plugin_graphontrackersv5" rank="1">
             <name>Default</name>
             <description>Graphic Report By Default For Support Requests</description>
             <charts>

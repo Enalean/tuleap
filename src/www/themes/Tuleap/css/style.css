@@ -561,7 +561,7 @@ img {
 }
 
 .widget_preferences {
-    background: #E0DDD2;
+    background: #FFC;
     border-bottom:1px solid #bcbcad;
 }
 .widget_preferences form {
@@ -601,7 +601,7 @@ img {
 }
 .widget_titlebar_rss a, .widget_titlebar_rss a:link, .widget_titlebar_rss a:visited, .widget_titlebar_rss a:hover,
 .widget_titlebar_prefs a, .widget_titlebar_prefs a:link, .widget_titlebar_prefs a:visited, .widget_titlebar_prefs a:hover {
-    color: lightgray;
+    color: gray;
     font-weight:normal;
     font-size:0.8em;
     text-decoration:none;

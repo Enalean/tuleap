@@ -908,7 +908,7 @@ class Layout extends Response {
             } else {
                 echo '<div class="widget_titlebar_minimize"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=minimize&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;column_id='. $column_id .'&amp;layout_id='. $layout_id .'">'. $this->getImage($this->_getToggleMinusForWidgets(), array('alt' => 'Minimize', 'title' =>'Minimize')) .'</a></div>';
             }
-            if (strlen($widget->hasPreferences())) {
+            if (strlen($widget->getPreferences($owner_id))) {
                 echo '<div class="widget_titlebar_prefs"><a href="/widgets/updatelayout.php?owner='. $owner_type.$owner_id .'&amp;action=preferences&amp;name['. $widget->id .']='. $widget->getInstanceId() .'&amp;layout_id='. $layout_id .'">'. $GLOBALS['Language']->getText('widget', 'preferences_title') .'</a></div>';
             }
         }
@@ -941,6 +941,7 @@ class Layout extends Response {
                                  {
                                      onComplete: function() {
                                         codendi.Tooltip.load('$element_id-ajax');
+                                        codendi.Toggler.init($('$element_id-ajax'));
                                      }
                                  }
                 );
@@ -1037,7 +1038,7 @@ class Layout extends Response {
         echo '<html xmlns="http://www.w3.org/1999/xhtml">
                 <head>
                     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-                    <title>'. $GLOBALS['sys_name'] . ($params['title'] ? ':' : '') . $params['title'] .'</title>
+                    <title>'. ($params['title'] ? $params['title'] . ' - ' : '') . $GLOBALS['sys_name'] .'</title>
                     <link rel="SHORTCUT ICON" href="'. $this->imgroot . 'favicon.ico' .'">';
         echo $this->displayJavascriptElements();
         echo $this->displayStylesheetElements($params);

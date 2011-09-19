@@ -325,6 +325,15 @@ Requires: %{PKG_NAME}, libxslt
 %description plugin-tracker
 New tracker generation for Tuleap.
 
+%package plugin-graphontrackers
+Summary: Graphs for Tracker v5
+Group: Development/Tools
+Version: @@PLUGIN_GRAPHONTRACKERS_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}, %{PKG_NAME}-plugin-tracker
+%description plugin-graphontrackers
+Graphs for new tracker generation
+
 #
 ## Themes
 #
@@ -854,6 +863,10 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/tracker
 %dir %{APP_DATA_DIR}/tracker
+
+%files plugin-graphontrackers
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/graphontrackersv5
 
 #
 # Themes

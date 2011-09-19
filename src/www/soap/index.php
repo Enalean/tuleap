@@ -27,7 +27,8 @@ try {
     								  'soap_version' => SOAP_1_1
     							));
 
-	require_once('common/session.php');
+    require_once('utils_soap.php');
+    require_once('common/session.php');
     require_once('common/group.php');
     require_once('common/users.php');
     require_once('tracker/tracker.php');

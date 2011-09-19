@@ -22,6 +22,7 @@
 
 require_once('Widget_TwitterFollow.class.php');
 require_once('Widget.class.php');
+require_once('common/date/DateHelper.class.php');
 
 /**
 * Widget_TwitterFollow
@@ -70,7 +71,7 @@ class Widget_TwitterFollow extends Widget {
                         //hack to display twitter avatar
                         $image = preg_replace('/_normal\.(jpg|png|gif)$/i', '_bigger.$1', $image);
                         $content .= '<a href="http://twitter.com/'. urlencode($this->twitterfollow_user) .'">';
-                        $content .= '<img src="'.  $hp->purify($image, CODENDI_PURIFIER_CONVERT_HTML)  .'" style="float:left; margin-right:1em;" />';
+                        $content .= '<img src="'.  $hp->purify($image, CODENDI_PURIFIER_CONVERT_HTML)  .'" width="48" height="48" style="float:left; margin-right:1em;" />';
                         $content .= '</a>';
                     }
                 } else {
@@ -78,7 +79,7 @@ class Widget_TwitterFollow extends Widget {
                 }
                 $content .=  $item->get_title(); //Trust SimplePie for purifying
                 if ($item->get_date()) {
-                    $content .= ' <span style="color:#999; white-space:nowrap;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $item->get_date('U')) .'">- '. util_time_ago_in_words($item->get_date('U')) .'</span>';
+                    $content .= ' <span style="color:#999; white-space:nowrap;" title="'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $item->get_date('U')) .'">- '. DateHelper::timeAgoInWords($item->get_date('U')) .'</span>';
                 }
                 $content .= '</span>';
                 
@@ -189,7 +190,7 @@ class Widget_TwitterFollow extends Widget {
         return 'general';
     }
     function getFeedUrl($user) {
-        return 'http://search.twitter.com/search.atom?q=+from%3A'. $user;
+        return 'http://search.twitter.com/search.atom?q=+from:'. $user;
     }
     function getReplyToUrl($user, $status_id) {
         return 'http://twitter.com/home?status=@'. urlencode($user) .'%20&in_reply_to_status_id='. urlencode($status_id) .'&in_reply_to='. urlencode($user);

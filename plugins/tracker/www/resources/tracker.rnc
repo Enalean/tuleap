@@ -259,7 +259,7 @@ grammar {
             )
         | 
             (
-                attribute type { "plugin_graphontrackers" },
+                attribute type { "plugin_graphontrackersv5" },
                 element charts { 
                     element chart {
                         attribute width { xsd:int },

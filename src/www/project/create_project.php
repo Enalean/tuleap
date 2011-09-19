@@ -175,7 +175,16 @@ function create_project($data, $do_not_exit = false) {
         $sql="SELECT * FROM service WHERE group_id=$template_id AND is_active=1";
         $result=db_query($sql);
         while ($arr = db_fetch_array($result)) {
-            $is_used   = isset($data['project']['services'][$arr['service_id']]['is_used'])   ? $data['project']['services'][$arr['service_id']]['is_used']   : '1';
+            
+            if (isset($data['project']['services'][$arr['service_id']]['is_used'])) {
+                 $is_used = $data['project']['services'][$arr['service_id']]['is_used'];
+            } else {
+               $is_used = '0';
+               if ($arr['short_name'] == 'admin' || $arr['short_name'] == 'summary') {
+                   $is_used = '1';
+               }
+            }
+            
             $server_id = 
                 isset($data['project']['services'][$arr['service_id']]['server_id']) &&
                 $data['project']['services'][$arr['service_id']]['server_id'] ? 

@@ -1,0 +1,129 @@
+#!/bin/sh
+#
+# Selenium    This shell script starts and stops Selenium server
+#
+#   Linux chkconfig stuff:
+#
+#   chkconfig: 3 56 10
+#   description: Startup/shutdown script for the Selenium server
+#
+# This file is a copy/modify/paste of mailman equivalent. Thanks to
+# them!
+#
+# Copyright (C) 2001-2003 by the Free Software Foundation, Inc.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+# Copy this file to /etc/init.d/ (or /etc/rc.d/init.d/ depending on
+# your system) and activate it as such:
+#
+# On Debian, type "update-rc.d selenium defaults"
+# On RedHat, and derivatives, install with "chkconfig --add selenium"
+
+
+SELENIUM_HOME=/usr/share/selenium
+
+function start_selenium()
+{
+    DISPLAY=:99 java -jar /root/selenium-server-standalone-2.5.0.jar -singlewindow -trustAllSSLCertificates
+}
+
+function stop_selenium()
+{
+    ps -fe | grep selenium-server-standalone | grep -v grep | awk -F ' ' '{ print $2 }' | xargs kill -15
+}
+
+# Source function library.
+#. /etc/rc.d/init.d/functions
+
+RETVAL=0
+prog="selenium"
+
+function start()
+{
+    echo -n $"Starting $prog: "
+    start_selenium
+    echo "[OK]"
+    RETVAL=$?
+    return $RETVAL
+}
+
+function stop()
+{
+    echo -n $"Shutting down $prog: "
+    stop_selenium
+    echo "[OK]"
+    RETVAL=$?
+    return $RETVAL
+}
+
+function restart()
+{
+    stop
+    start
+    RETVAL=$?
+    return $RETVAL
+}
+
+function status()
+{
+    if ps -fe | grep selenium-server-standalone | grep -v grep 2>&1 >/dev/null; then
+        RETVAL=1
+        echo "Selenium server is running"
+    else
+        RETVAL=0
+        echo "Selenium server is stopped"
+    fi
+    return $RETVAL
+}
+
+case "$1" in
+'start')
+    start
+    RETVAL=$?
+    ;;
+
+'stop')
+    stop
+    RETVAL=$?
+    ;;
+
+'restart')
+    restart
+    RETVAL=$?
+    ;;
+
+'condrestart')
+    status
+    retval=$?
+    if [ $retval -eq 0 ]
+    then
+        restart
+        RETVAL=$?
+    fi
+    ;;
+
+'status')
+    status
+    RETVAL=$?
+    ;;
+
+*)
+    echo $"Usage: $prog {start|stop|restart|condrestart}"
+    RETVAL=3
+    ;;
+
+esac
+exit $RETVAL

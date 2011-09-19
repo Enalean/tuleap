@@ -591,6 +591,12 @@ table.release tr td img {
 .widget-preview-projecttwitterfollow-fr_FR {
     background-image:url('../images/widget-preview-twitterfollow.png');
 }
+.widget-preview-myimageviewer-en_US,
+.widget-preview-projectimageviewer-en_US,
+.widget-preview-myimageviewer-fr_FR,
+.widget-preview-projectimageviewer-fr_FR {
+    background-image:url('../images/widget-preview-imageviewer.png');
+}
 .widget-preview-myrss-en_US,
 .widget-preview-projectrss-en_US,
 .widget-preview-myrss-fr_FR,
