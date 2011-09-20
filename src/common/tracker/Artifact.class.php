@@ -2432,20 +2432,19 @@ class Artifact extends Error {
 
         
         //treat anonymous users
-	    $body = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
-	    //$body_html = $this->createHTMLMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
+        $text_mail = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
 
-	    if ($ok) {
-	        $this->sendNotification(array_keys($concerned_addresses), $subject, $body, '', $group_id, $group_artifact_id);
+        if ($ok) {
+            $this->sendNotification(array_keys($concerned_addresses), $subject, $text_mail, null);
         }
-            
+
         //treat 'without permissions' emails
         if (count($withoutpermissions_concerned_addresses)) {
-            $body = $this->createMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
-            $body_html = $this->createHTMLMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
+            $text_mail = $this->createMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
+            $html_mail = $this->createHTMLMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
        
             if ($ok) {
-                $this->sendNotification(array_keys($withoutpermissions_concerned_addresses), $subject, $body, $body_html, $group_id, $group_artifact_id);
+                $this->sendNotification(array_keys($withoutpermissions_concerned_addresses), $subject, $text_mail, $html_mail);
             }
 
         }
@@ -2463,8 +2462,8 @@ class Artifact extends Error {
             
             $user_ids = $user_sets[$x];
             //echo "<br>--->  preparing mail $x for ";print_r($user_ids);
-            $body = $this->createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
-            $body_html = $this->createHTMLMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
+            $text_mail = $this->createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
+            $html_mail = $this->createHTMLMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
             if (!$ok) continue; //don't send the mail if nothing permitted for this user group
 
             foreach ($user_ids as $user_id) {
@@ -2472,13 +2471,13 @@ class Artifact extends Error {
             }
        
             if ($arr_addresses) {
-                $this->sendNotification($arr_addresses, $subject, $body, $body_html, $group_id, $group_artifact_id);
+                $this->sendNotification($arr_addresses, $subject, $text_mail, $html_mail);
             }
 	    }
       }
     }
     
-    function sendNotification($addresses, $subject, $body_text, $body_html, $group_id, $group_artifact_id) {
+    function sendNotification($addresses, $subject, $text_mail, $html_mail) {
         $um             = UserManager::instance();
         $html_addresses = array();
         $text_addresses = array();
@@ -2493,55 +2492,23 @@ class Artifact extends Error {
         }
 
         $mail = null;
-        if ($body_text && count($text_addresses)) {
-            $mail = $this->getNotificationTxt($body_text);
-            $mail->setTo(join(',', $text_addresses));
+        if ($text_mail && count($text_addresses)) {
+            $this->sendMail($text_mail, $subject, $text_addresses);
         }
-        if ($body_html && count($html_addresses)) {
-            $mail = $this->getNotificationHtml($body_html, $subject, $group_id, $group_artifact_id);
-            $mail->setTo(join(',', $html_addresses));
-        }
-        if ($mail) {
-            $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
-            $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
-            $mail->setFrom($GLOBALS['sys_noreply']);
-            $mail->setSubject($subject);
-            $mail->send();
+        if ($html_mail && count($html_addresses)) {
+            $this->sendMail($html_mail, $subject, $html_addresses);
         }
     }
     
-   /**
-    * Get text format notification
-    *
-    * @param $body
-    */
-    function getNotificationTxt($body) {
-        $mail = new Mail();
-        $mail->setBody($body);
-        return $mail;
+    function sendMail(Codendi_Mail_Interface $mail, $subject, array $to) {
+        $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
+        $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
+        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setTo(join(',', $to));
+        $mail->setSubject($subject);
+        $mail->send();
     }
     
-   /**
-    * Get html notification
-    *
-    * @param $mail
-    * @param $to
-    * @param $subject
-    * @param $body_html
-    */
-    function getNotificationHtml($body, $subject, $group_id, $group_artifact_id) {
-        $mail = new Codendi_Mail();
-        $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', null, null, '.php'));
-        $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
-        $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
-        $tpl->set('title', $subject);
-        $tpl->set('body', $body);
-        $href = get_server_url()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
-        $tpl->set('additional_footer_link', '<a href="'. $href .'">Direct link to the artifact</a>');
-        $mail->setBodyHtml($tpl->fetch());
-        return $mail;
-    }
-
     /** for a certain set of users being part of the same ugroups
      * create the mail body containing only fields that they have the permission to read
      */
@@ -2672,8 +2639,22 @@ class Artifact extends Error {
         // I'm Nicolas Terray and I approve this hack.
         $body = preg_replace('%<a href="/%', '<a href="'.get_server_url().'/', $body);
         
+        // Mail is ready, we can create it
         $ok = true;
-        return $body;
+        if ($ok) {
+            $mail = new Codendi_Mail();
+            $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', null, null, '.php'));
+            $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
+            $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
+            $tpl->set('title', $subject);
+            $tpl->set('body', $body);
+            $href = get_server_url()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
+            $tpl->set('additional_footer_link', '<a href="'. $href .'">Direct link to the artifact</a>');
+            $mail->setBodyHtml($tpl->fetch());
+            return $mail;
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -2861,12 +2842,18 @@ class Artifact extends Error {
                 $body .= ' '.$ref_instance->getMatch().': '.$ref_instance->getFullGotoLink().$GLOBALS['sys_lf'];
             }
         }
-        
-	    // Finally output the message trailer
-	    $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $Language->getText('tracker_include_artifact','follow_link');
-	    $body .= "". $GLOBALS['sys_lf'] . $artifact_href;
 
-	    return $body;
+        // Finally output the message trailer
+        $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $Language->getText('tracker_include_artifact','follow_link');
+        $body .= "". $GLOBALS['sys_lf'] . $artifact_href;
+
+        if ($ok) {
+            $mail = new Mail();
+            $mail->setBody($body);
+            return $mail;
+        } else {
+            return null;
+        }
 	}
 
     /**
