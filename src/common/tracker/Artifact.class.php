@@ -2547,6 +2547,7 @@ class Artifact extends Error {
             $body .= $this->formatChangesHTML($changes, $field_perm, $artifact_href, $visible_change);
             if (!$visible_change) return;
         }
+        $ok = true;
         
         // Snapshot
         $fields_per_line=2;
@@ -2612,15 +2613,6 @@ class Artifact extends Error {
 
             $body .= '<table cellspacing="0" cellpadding="2" border="0">';
             while ($row = db_fetch_array($result)) {
-                /*$comment_type = db_result($result, $i, 'comment_type');
-                 $comment_type_id = db_result($result, $i, 'comment_type_id');
-                 $comment_id = db_result($result, $i, 'artifact_history_id');
-                 $field_name = db_result($result, $i, 'field_name');
-                 $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
-                 $orig_date = $this->getOriginalCommentDate($comment_id);
-                 $value = db_result($result, $i, 'new_value');
-                 $isHtml = db_result($result, $i, 'format');*/
-
                 $orig_subm = $this->getOriginalCommentSubmitter($row['artifact_history_id']);
                 $submitter = UserManager::instance()->getUserById(db_result($orig_subm, 0, 'mod_by'));
 
@@ -2640,7 +2632,6 @@ class Artifact extends Error {
         $body = preg_replace('%<a href="/%', '<a href="'.get_server_url().'/', $body);
         
         // Mail is ready, we can create it
-        $ok = true;
         if ($ok) {
             $mail = new Codendi_Mail();
             $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', null, null, '.php'));
