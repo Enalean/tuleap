@@ -2558,7 +2558,8 @@ class Artifact extends Error {
         // artifact fields
         // Generate the message preamble with all required
         // artifact fields - Changes first if there are some.
-        $body .= '<h1><a href="'.$artifact_href.'">'.$hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())).' #'.$this->getID().'</a>: '.$summ.'</h1>'; 
+        $body .= '<a href="'.$artifact_href.'" style="float:right; font-size:1.2em;">'.$hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())).' #'.$this->getID().'</a>'
+        $body .= '<h1>'. $summ .'</h1>'; 
         if ($changes) {
             $body .= $this->formatChangesHTML($changes, $field_perm, $artifact_href, $visible_change);
             if (!$visible_change) return;
