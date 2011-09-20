@@ -415,11 +415,11 @@ max-width:190px;
                                 <td valign="top" class="preheaderContent">
                                 
                                  <!-- // Begin Module: Standard Preheader \ -->
-                                    <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                        <tr>
                                           <td valign="bottom">
                                              <div>
-                                                 <img src="<?= $img_path ?>/organization_logo.png" alt="<?= $GLOBALS['sys_name'] ?>" />
+                                                 <img src="<?= $img_path ?>/organization_logo_mail.png" alt="<?= $GLOBALS['sys_name'] ?>" />
                                              </div>
                                           </td>
                                           <td valign="bottom" width="190">
