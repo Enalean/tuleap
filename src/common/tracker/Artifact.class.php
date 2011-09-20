@@ -2479,36 +2479,40 @@ class Artifact extends Error {
     }
     
     function sendNotification($addresses, $subject, $body_text, $body_html, $group_id, $group_artifact_id) {
-        $to_text = $this->getUserTxtPrefs($addresses);
-        $to_html = $this->getUserHtmlPrefs($addresses);
-
-        //TODO: check if $to_xxx not empty
-        if ($body_text && $to_text) {
-            $mail = $this->getNotificationTxt($body_text);
-            $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
-            $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
-            $mail->setFrom($GLOBALS['sys_noreply']);
-            $mail->setTo($to_text);
-            $mail->setSubject($subject);
-            $mail->send();
+        $um             = UserManager::instance();
+        $html_addresses = array();
+        $text_addresses = array();
+        foreach ($addresses as $address) {
+            $user = $um->getUserByEmail($address);
+            $pref = $user ? $user->getPreference('user_tracker_mailformat') : false;
+            if ($pref === 'html') {
+                $html_addresses[] = $address;
+            } else {
+                $text_addresses[] = $address;
+            }
         }
-        if ($body_html && $to_html) {
-            $mail = $this->getNotificationHtml($subject, $body_html, $group_id, $group_artifact_id);
+
+        $mail = null;
+        if ($body_text && count($text_addresses)) {
+            $mail = $this->getNotificationTxt($body_text);
+            $mail->setTo(join(',', $text_addresses));
+        }
+        if ($body_html && count($html_addresses)) {
+            $mail = $this->getNotificationHtml($body_html, $subject, $group_id, $group_artifact_id);
+            $mail->setTo(join(',', $html_addresses));
+        }
+        if ($mail) {
             $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
             $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
             $mail->setFrom($GLOBALS['sys_noreply']);
-            $mail->setTo($to_html);
             $mail->setSubject($subject);
             $mail->send();
         }
     }
     
    /**
-    *Sends text format notification
+    * Get text format notification
     *
-    * @param $mail
-    * @param $to
-    * @param $subject
     * @param $body
     */
     function getNotificationTxt($body) {
@@ -2518,14 +2522,14 @@ class Artifact extends Error {
     }
     
    /**
-    *Sends html notification
+    * Get html notification
     *
     * @param $mail
     * @param $to
     * @param $subject
     * @param $body_html
     */
-    function getNotificationHtml($subject, $body, $group_id, $group_artifact_id) {
+    function getNotificationHtml($body, $subject, $group_id, $group_artifact_id) {
         $mail = new Codendi_Mail();
         $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', null, null, '.php'));
         $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
@@ -2537,48 +2541,7 @@ class Artifact extends Error {
         $mail->setBodyHtml($tpl->fetch());
         return $mail;
     }
-    
-   /**
-    * Returns the addresses of the users who prefer (or have not set the format preference) receiving text format emails
-    *
-    * @param $addresses, an array of emails
-    *
-    * @return String
-    */
-    function getUserTxtPrefs($addresses) {
-        $txt_addresses = array();
-        foreach ($addresses as $address) {
-            //TODO : several accounts with the same email
-            $user = UserManager::instance()->getUserByEmail($address);
-            $pref = $user ? $user->getPreference('user_tracker_mailformat') : false;
-            if (!$pref || $pref == 'text') {
-                $txt_addresses[] = $address;
-            }
-        }
-        return join(',',$txt_addresses);
-    }
-    
-    /**
-    *Returns the addresses of the users who prefer receiving html format emails
-    *
-    *@params $addresses, an array of emails
-    *
-    *@return String
-    */
-    function getUserHtmlPrefs($addresses) {
-        $html_addresses = array();
-        foreach ($addresses as $address) {
-            //TODO : several accounts with the same email
-            $user = UserManager::instance()->getUserByEmail($address);
-            $pref = $user ? $user->getPreference('user_tracker_mailformat') : false;
-            $pref = 'html';
-            if ($pref && $pref == 'html') {
-                $html_addresses[] = $address;
-            }
-        }
-        return join(',',$html_addresses);
-    }
-    
+
     /** for a certain set of users being part of the same ugroups
      * create the mail body containing only fields that they have the permission to read
      */

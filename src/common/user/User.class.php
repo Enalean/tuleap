@@ -1013,7 +1013,7 @@ class User {
     function getPreference($preference_name) {
         if (!isset($this->_preferences[$preference_name])) {
             $this->_preferences[$preference_name] = false;
-            if ($this->isLoggedIn()) {
+            if (!$this->isAnonymous()) {
                 $dao =& $this->getPreferencesDao();
                 $dar =& $dao->search($this->getId(), $preference_name);
                 if ($row = $dar->getRow()) {
@@ -1033,7 +1033,7 @@ class User {
      */
     function setPreference($preference_name, $preference_value) {
         $this->_preferences[$preference_name] = false;
-        if ($this->isLoggedIn()) {
+        if (!$this->isAnonymous()) {
             $dao =& $this->getPreferencesDao();
             if ($dao->set($this->getId(), $preference_name, $preference_value)) {
                 $this->_preferences[$preference_name] = $preference_value;
