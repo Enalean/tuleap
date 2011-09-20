@@ -2505,6 +2505,9 @@ class Artifact extends Error {
             $this->sendMail($text_mail, $subject, $text_addresses);
         }
         if ($html_mail && count($html_addresses)) {
+            if ($text_mail) {
+                $html_mail->setBodyText($text_mail->getBody());
+            }
             $this->sendMail($html_mail, $subject, $html_addresses);
         }
     }
