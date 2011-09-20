@@ -3078,7 +3078,7 @@ class Artifact extends Error {
                         array_map($callback, $before, array_fill(0, count($before), CODENDI_PURIFIER_CONVERT_HTML)),
                         array_map($callback, $after,  array_fill(0, count($after),  CODENDI_PURIFIER_CONVERT_HTML))
                     );
-                    $f = new Codendi_HtmlUnifiedDiffFormatter();
+                    $f = new Codendi_HtmlUnifiedDiffFormatter(2);
                     $diff = $f->format($d);
                     if ($diff) {
                         $out_ch .= '<div class="diff">'. $diff .'</div>';
