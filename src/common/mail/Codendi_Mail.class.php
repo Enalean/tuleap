@@ -347,6 +347,10 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         $this->mail->clearRecipients();
         return $status;
     }
+    
+    public function addAdditionalHeader($name, $value) {
+        $this->mail->addHeader($name, $value);
+    }
 }
 
 ?>

@@ -473,7 +473,7 @@ max-width:190px;
                                                     <tr>
                                                         <td colspan="2" valign="middle" id="social">
                                                             <div>
-                                                                &nbsp;<a href="<?= get_server_url() ?>/account/preferences.php" target="_blank">update email preferences</a>&nbsp;
+                                                                &nbsp;You can change your email preferences at <a href="<?= get_server_url() ?>/account/preferences.php" target="_blank"><?= get_server_url() ?>/account/preferences.php</a>&nbsp;
                                                             </div>
                                                         </td>
                                                     </tr>

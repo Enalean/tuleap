@@ -2482,12 +2482,26 @@ class Artifact extends Error {
         $to_text = $this->getUserTxtPrefs($addresses);
         $to_html = $this->getUserHtmlPrefs($addresses);
 
+        var_dump($to_text, $to_html);
+        
         //TODO: check if $to_xxx not empty
         if ($to_text) {
-            $this->sendNotificationTxt($to_text, $subject, $body);
+            $mail = $this->getNotificationTxt($body);
+            $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
+            $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
+            $mail->setFrom($GLOBALS['sys_noreply']);
+            $mail->setTo($to_text);
+            $mail->setSubject($subject);
+            $mail->send();
         }
         if ($to_html) {
-            $this->sendNotificationHtml($to_html, $subject, $body_html);
+            $mail = $this->getNotificationHtml($body_html);
+            $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
+            $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
+            $mail->setFrom($GLOBALS['sys_noreply']);
+            $mail->setTo($to_html);
+            $mail->setSubject($subject);
+            $mail->send();
         }
     }
     
@@ -2499,17 +2513,10 @@ class Artifact extends Error {
     * @param $subject
     * @param $body
     */
-    function sendNotificationTxt($to, $subject, $body) {
+    function getNotificationTxt($body) {
         $mail = new Mail();
-        $pm = ProjectManager::instance();
-        //$mail->addAdditionalHeader("X-Codendi-Project",     $pm->getProject($group_id)->getUnixName());
-        $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
-        $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
-        $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->setTo($to);
-        $mail->setSubject($subject);
         $mail->setBody($body);
-        $mail->send();
+        return $mail;
     }
     
    /**
@@ -2520,19 +2527,15 @@ class Artifact extends Error {
     * @param $subject
     * @param $body_html
     */
-    function sendNotificationHtml($to, $subject, $body_html) {
+    function getNotificationHtml($body) {
         $mail = new Codendi_Mail();
-        $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->setTo($to);
-        $mail->setSubject($subject);
         $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', null, null, '.php'));
         $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
         $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
         $tpl->set('title', $subject);
-        $tpl->set('body', $body_html);
-        $body = $tpl->fetch();
-        $mail->setBodyHtml($body);
-        $mail->send();
+        $tpl->set('body', $body);
+        $mail->setBodyHtml($tpl->fetch());
+        return $mail;
     }
     
    /**
@@ -2705,10 +2708,6 @@ class Artifact extends Error {
         // Finaly, transform relatives URLs to absolute 
         // I'm Nicolas Terray and I approve this hack.
         $body = preg_replace('%<a href="/%', '<a href="'.get_server_url().'/', $body);
-        
-        // Footer
-        $body .= '<hr style="width: 100%; height: 1px; background: #ccc; border: 0;" />';
-        $body .= '<p style="font-size: 0.8em; font-style: italic;">You can change your email preferences at <a href="'.get_server_url().'/account/preferences.php">'.get_server_url().'/account/preferences.php</a></p>';
         
         $ok = true;
         return $body;
