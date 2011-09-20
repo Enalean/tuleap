@@ -75,7 +75,7 @@ h1, .h1{
 /*@editable*/ color:#202020;
 display:block;
 /*@editable*/ font-family:Arial;
-/*@editable*/ font-size:34px;
+/*@editable*/ font-size:26px;
 /*@editable*/ font-weight:bold;
 /*@editable*/ line-height:100%;
 margin-top:0;
@@ -95,7 +95,7 @@ h2, .h2{
 /*@editable*/ color:#202020;
 display:block;
 /*@editable*/ font-family:Arial;
-/*@editable*/ font-size:30px;
+/*@editable*/ font-size:22px;
 /*@editable*/ font-weight:bold;
 /*@editable*/ line-height:100%;
 margin-top:20px;
@@ -117,7 +117,7 @@ h3, .h3{
 /*@editable*/ color:#202020;
 display:block;
 /*@editable*/ font-family:Arial;
-/*@editable*/ font-size:26px;
+/*@editable*/ font-size:18px;
 /*@editable*/ font-weight:bold;
 /*@editable*/ line-height:100%;
 margin-top:0;
@@ -137,7 +137,7 @@ h4, .h4{
 /*@editable*/ color:#202020;
 display:block;
 /*@editable*/ font-family:Arial;
-/*@editable*/ font-size:22px;
+/*@editable*/ font-size:14px;
 /*@editable*/ font-weight:bold;
 /*@editable*/ line-height:100%;
 margin-top:0;
