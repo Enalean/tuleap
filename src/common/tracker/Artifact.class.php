@@ -3028,7 +3028,6 @@ class Artifact extends Error {
         global $art_field_fact,$Language;
         $visible_change = false;
         $out = '';
-        $out_att = '';
         $out_ch  = '';
         reset($changes);
         $fmt = "%20s | %-25s | %s".$GLOBALS['sys_lf'];
@@ -3077,9 +3076,11 @@ class Artifact extends Error {
         //Process special cases first: file attachment
         if (!empty($changes['attach'])) {
             $visible_change = true;
-            $out_att .= '<ul>';
-            $out_att .= '<li><a href="'.$changes['attach']['href'].'">'.$hp->purify($changes['attach']['name']).' ('.size_readable($changes['attach']['size']).')</a></li>';
-            $out_att .= '</ul>';
+            $out_ch .= '<tr>';
+            $out_ch .= '<td><strong>'. $Language->getText('tracker_include_artifact','add_attachment') .'</strong></td>';
+            $out_ch .= '<td>&nbsp;</td>';
+            $out_ch .= '<td><a href="'.$changes['attach']['href'].'">'.$hp->purify($changes['attach']['name']).'</a> ('.size_readable($changes['attach']['size']).')</td>';
+            $out_ch .= '</tr>';
             unset($changes['attach']);
         }
 
@@ -3118,7 +3119,7 @@ class Artifact extends Error {
             '</table>';
         }
         
-        $out .= '<br/><center>'. $out_ch . $out_att .'</center>';
+        $out .= '<br/><br/><center>'. $out_ch .'</center>';
         
         $out .= '
                     </div>
