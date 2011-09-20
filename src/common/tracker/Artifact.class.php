@@ -2615,15 +2615,13 @@ class Artifact extends Error {
             if (!$visible_change) return;
         }
         
-        $body .= '<h2>Snapshot</h2>';
-
         // Snapshot
         $fields_per_line=2;
         // the column number is the number of field per line * 2 (label + value)
         // + the number of field per line -1 (a blank column between each pair "label-value" to give more space)
         $columns_number = ($fields_per_line * 2) + ($fields_per_line - 1);
         $max_size=40;
-        $body .= '<table>';
+        $snapshot = '';
         foreach($used_fieldsets as $fieldset_id => $result_fieldset) {
 
             // this variable will tell us if we have to display the fieldset or not (if there is at least one field to display or not)
@@ -2664,40 +2662,46 @@ class Artifact extends Error {
 
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
-                $body .= '<TR style="color: #444444; background-color: #F6F6F6;"><TD COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
-                $body .= $fieldset_html;
+                $snapshot .= '<TR style="color: #444444; background-color: #F6F6F6;"><TD COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
+                $snapshot .= $fieldset_html;
             }
         }
-        $body .= '</table>';
-        
-        $body .= '<h2>Comments</h2>';
-        
-        $result = $this->getFollowups ();
-        $body .= '<table cellspacing="0" cellpadding="2" border="0">';
-        while ($row = db_fetch_array($result)) {
-            /*$comment_type = db_result($result, $i, 'comment_type');
-            $comment_type_id = db_result($result, $i, 'comment_type_id');
-            $comment_id = db_result($result, $i, 'artifact_history_id');
-            $field_name = db_result($result, $i, 'field_name');
-            $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
-            $orig_date = $this->getOriginalCommentDate($comment_id);
-            $value = db_result($result, $i, 'new_value');
-            $isHtml = db_result($result, $i, 'format');*/
-            
-            $orig_subm = $this->getOriginalCommentSubmitter($row['artifact_history_id']);
-            $submitter = UserManager::instance()->getUserById(db_result($orig_subm, 0, 'mod_by'));
-            
-            $orig_date = $this->getOriginalCommentDate($row['artifact_history_id']);
-            $subm_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($orig_date, 0, 'date'));
-            
-            $body .= '<tr><td colspan="2"><strong>'.$submitter->getRealName().' on '.$subm_date.'</strong></td></tr>';
-            $body .= '<tr>';
-            $body .= '<td width="20px;">&nbsp;</td>';
-            $body .= '<td>'.$this->formatFollowUp($group_id, $row['format'], $row['new_value'], self::OUTPUT_BROWSER).'</td>';
-            $body .= '</tr>';
+        if ($snapshot) {
+            $body .= '<table>';
+            $body .= '<h2>Snapshot</h2>';
+            $body .= $snapshot;
+            $body .= '</table>';
         }
-        $body .= '</table>';
         
+        $result = $this->getFollowups();
+        if (db_numrows($result)) {
+            $body .= '<h2>Comments</h2>';
+
+            $body .= '<table cellspacing="0" cellpadding="2" border="0">';
+            while ($row = db_fetch_array($result)) {
+                /*$comment_type = db_result($result, $i, 'comment_type');
+                 $comment_type_id = db_result($result, $i, 'comment_type_id');
+                 $comment_id = db_result($result, $i, 'artifact_history_id');
+                 $field_name = db_result($result, $i, 'field_name');
+                 $orig_subm = $this->getOriginalCommentSubmitter($comment_id);
+                 $orig_date = $this->getOriginalCommentDate($comment_id);
+                 $value = db_result($result, $i, 'new_value');
+                 $isHtml = db_result($result, $i, 'format');*/
+
+                $orig_subm = $this->getOriginalCommentSubmitter($row['artifact_history_id']);
+                $submitter = UserManager::instance()->getUserById(db_result($orig_subm, 0, 'mod_by'));
+
+                $orig_date = $this->getOriginalCommentDate($row['artifact_history_id']);
+                $subm_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($orig_date, 0, 'date'));
+
+                $body .= '<tr><td colspan="2"><strong>'.$submitter->getRealName().' on '.$subm_date.'</strong></td></tr>';
+                $body .= '<tr>';
+                $body .= '<td width="20px;">&nbsp;</td>';
+                $body .= '<td>'.$this->formatFollowUp($group_id, $row['format'], $row['new_value'], self::OUTPUT_BROWSER).'</td>';
+                $body .= '</tr>';
+            }
+            $body .= '</table>';
+        }
         // Finaly, transform relatives URLs to absolute 
         // I'm Nicolas Terray and I approve this hack.
         $body = preg_replace('%<a href="/%', '<a href="'.get_server_url().'/', $body);
