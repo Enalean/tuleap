@@ -3068,7 +3068,7 @@ class Artifact extends Error {
                     }
                 }
                 $out_ch .= '<tr>';
-                $out_ch .= '  <td valign="top" nowrap="nowrap"><ul style="margin:0; padding:0; margin-left:3em;"><li><strong>'.$hp->purify(SimpleSanitizer::unsanitize($label)).':&nbsp;</strong></li></ul></td>';
+                $out_ch .= '  <td valign="top" nowrap="nowrap"><ul style="margin:0; padding:0; margin-left:1.5em; "><li><strong>'.$hp->purify(SimpleSanitizer::unsanitize($label)).':&nbsp;</strong></li></ul></td>';
                 $out_ch .= '  <td valign="top">';
                 if ($field->getDisplayType() == 'TA' || $field->getDisplayType() == 'TF') {
                     $before = explode("\n", $h['del']);
@@ -3084,16 +3084,30 @@ class Artifact extends Error {
                         $out_ch .= '<div class="diff">'. $diff .'</div>';
                     }
                 } else {
-                    $out_ch .= '<span style="text-decoration:line-through; background: #fdd;">'.$hp->purify($h['del']).'</span> ';
-                    $out_ch .= '&rarr; ';
-                    $out_ch .= '<span style="background: #dfd;">'.$hp->purify($h['add']).'</span>';
+                    $before = '<del>'.$hp->purify($h['del']).'</del>';
+                    $after  = '<ins>'.$hp->purify($h['add']).'</ins>';
+                    if ($field->getDisplayType() == 'MB') {
+                        if (strlen($before) != 11) { //'<del></del>' => empty
+                            $out_ch .= $before;
+                        }
+                        if (strlen($before) != 11 && strlen($after) != 11) { //'<ins></ins>' => empty
+                            $out_ch .= ' &plusmn; ';
+                        }
+                        if (strlen($after) != 11) { //'<ins></ins>' => empty
+                            $out_ch .= $after;
+                        }
+                    } else {
+                        $out_ch .= $before;
+                        $out_ch .= ' &rarr; ';
+                        $out_ch .= $after;
+                    }
                 }
                 $out_ch .= '</td>';
                 $out_ch .= '</tr>';
             }
         }
         if ($out_ch) {
-            $out_ch = 'Changes:<table cellpadding="0" border="0" cellspacing="0">'.
+            $out_ch = 'Changes:<table cellpadding="0" border="0" cellspacing="0" class="artifact_changes">'.
             $out_ch .
             '</table>';
         }

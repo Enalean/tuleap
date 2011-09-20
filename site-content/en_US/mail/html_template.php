@@ -276,6 +276,8 @@ height:auto;
     -webkit-border-top-left-radius:20px;
     -moz-border-radius-topleft:20px;
     border-top-left-radius:20px;
+    border: 1px solid #f6f6f6;
+    border-bottom: none;
     margin-left:75px;
     padding:10px 10px 2px 10px;
 }
@@ -309,6 +311,8 @@ height:auto;
     -webkit-border-bottom-left-radius:20px;
     -moz-border-radius-bottomleft:20px;
     border-bottom-left-radius:20px;
+    border: 1px solid #f6f6f6;
+    border-top: none;
     margin-left:75px;
     padding-left: 1em;
     padding-bottom:20px;
@@ -366,20 +370,24 @@ height:auto;
 .diff .context {
     color:#666;
 }
+.artifact_changes ins,
 .diff .added,
 .diff .final {
     background: #dfd;
 }
+.artifact_changes del,
 .diff .deleted,
 .diff .original {
     background: #fdd;
 }
+.artifact_changes ins,
 .diff .added ins,
 .diff .final ins {
     color: #090;
     text-decoration: none;
     font-weight:bold;
 }
+.artifact_changes del,
 .diff .deleted del,
 .diff .original del {
     color: #c00;
