@@ -2670,8 +2670,8 @@ class Artifact extends Error {
             }
         }
         if ($snapshot) {
-            $body .= '<table>';
             $body .= '<h2>Snapshot</h2>';
+            $body .= '<table>';
             $body .= $snapshot;
             $body .= '</table>';
         }
