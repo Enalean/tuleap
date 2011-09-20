@@ -473,7 +473,8 @@ max-width:190px;
                                                     <tr>
                                                         <td colspan="2" valign="middle" id="social">
                                                             <div>
-                                                                &nbsp;You can change your email preferences at <a href="<?= get_server_url() ?>/account/preferences.php" target="_blank"><?= get_server_url() ?>/account/preferences.php</a>&nbsp;
+                                                                <?= !empty($additional_footer_link) ? '&nbsp;'. $additional_footer_link . '&nbsp; |' : '' ?>
+                                                                &nbsp;You can <a href="<?= get_server_url() ?>/account/preferences.php" target="_blank">change your email preferences</a>&nbsp;
                                                             </div>
                                                         </td>
                                                     </tr>
