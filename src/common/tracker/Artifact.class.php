@@ -2656,6 +2656,8 @@ class Artifact extends Error {
         if ($ok) {
             $mail = new Codendi_Mail();
             $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
+            $tpl->set('txt_display_not_correct', $GLOBALS['Language']->getText('mail_html_template', 'display_not_correct'));
+            $tpl->set('txt_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'update_prefs'));
             $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
             $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
             $tpl->set('title', $subject);

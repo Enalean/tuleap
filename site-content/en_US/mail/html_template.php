@@ -499,7 +499,7 @@ display:inline;
                                           </td>
                                           <td valign="bottom" width="190">
                                              <div>
-                                                 Is this email not displaying correctly?<br /><a href="<?= get_server_url() ?>/account/preferences.php" target="_blank">update email preferences</a>.
+                                                 <?= $txt_display_not_correct ?><br /><a href="<?= get_server_url() ?>/account/preferences.php" target="_blank"><?= $txt_update_prefs ?></a>.
                                              </div>
                                           </td>
                                         </tr>
