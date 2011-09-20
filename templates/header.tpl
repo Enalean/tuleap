@@ -34,17 +34,8 @@
     {/if}
     {if $javascript}
     <script src="js/ext/require.js"></script>
+    {include file='jsconst.tpl'}
     <script type="text/javascript">
-      var GITPHP_RES_LOADING="{t escape='js'}Loading…{/t}";
-      var GITPHP_RES_LOADING_BLAME_DATA="{t escape='js'}Loading blame data…{/t}";
-      var GITPHP_RES_SNAPSHOT="{t escape='js'}snapshot{/t}";
-      var GITPHP_RES_NO_MATCHES_FOUND='{t escape=no}No matches found for "%1"{/t}';
-      var GITPHP_SNAPSHOT_FORMATS = {ldelim}
-      {foreach from=$snapshotformats key=format item=extension name=formats}
-        "{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}
-      {/foreach}
-      {rdelim}
-
     require({ldelim}
     	baseUrl: 'js',
 	paths: {ldelim}
