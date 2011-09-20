@@ -2655,7 +2655,7 @@ class Artifact extends Error {
         // Mail is ready, we can create it
         if ($ok) {
             $mail = new Codendi_Mail();
-            $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', null, null, '.php'));
+            $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
             $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
             $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
             $tpl->set('title', $subject);
