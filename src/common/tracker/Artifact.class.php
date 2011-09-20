@@ -2622,7 +2622,7 @@ class Artifact extends Error {
             }
         }
         if ($snapshot) {
-            $body .= '<h2>Snapshot</h2>';
+            $body .= '<h2>'.$GLOBALS['Language']->getText('tracker_include_artifact', 'mail_snapshot_title').'</h2>';
             $body .= '<table>';
             $body .= $snapshot;
             $body .= '</table>';
@@ -2630,7 +2630,7 @@ class Artifact extends Error {
         
         $result = $this->getFollowups();
         if (db_numrows($result)) {
-            $body .= '<h2>Comments</h2>';
+            $body .= '<h2>'.$GLOBALS['Language']->getText('tracker_include_artifact', 'mail_comment_title').'</h2>';
 
             $body .= '<table cellspacing="0" cellpadding="2" border="0">';
             while ($row = db_fetch_array($result)) {
@@ -2660,8 +2660,7 @@ class Artifact extends Error {
             $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
             $tpl->set('title', $subject);
             $tpl->set('body', $body);
-            $href = get_server_url()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
-            $tpl->set('additional_footer_link', '<a href="'. $href .'">Direct link to the artifact</a>');
+            $tpl->set('additional_footer_link', '<a href="'. $artifact_href .'">'.$GLOBALS['Language']->getText('tracker_include_artifact', 'mail_direct_link').'</a>');
             $mail->setBodyHtml($tpl->fetch());
             return $mail;
         } else {

@@ -342,6 +342,9 @@ tracker_include_artifact	permissions	Permissions
 tracker_include_artifact	permissions_label	Restreindre l'accès à cet artefact pour les groupes d'utilisateurs suivants :
 tracker_include_artifact	permissions_not_restricted	Les permissions ne sont pas restreintes pour cet artefact
 tracker_include_artifact	permissions_use_default	Utiliser les permissions par défaut de l'outil de suivi
+tracker_include_artifact	mail_direct_link	Lien direct vers l'artefact
+tracker_include_artifact	mail_comment_title	Commentaires
+tracker_include_artifact	mail_snapshot_title	État
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php
