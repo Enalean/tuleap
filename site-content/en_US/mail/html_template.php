@@ -355,6 +355,13 @@ height:auto;
     text-decoration: none;
     text-shadow:1px 1px 1px darkorange;
 }
+.bodyContent hr {
+  width: 100%;
+  height: 1px;
+  background: #ccc;
+  border: 0;
+}
+
 /* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: FOOTER /\/\/\/\/\/\/\/\/\/\ */
 
 /**
@@ -437,9 +444,6 @@ display:inline;
 /*@editable*/ text-align:center;
 }
 
-#monkeyRewards img{
-max-width:190px;
-}
 </style>
 </head>
     <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">

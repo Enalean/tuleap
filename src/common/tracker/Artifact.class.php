@@ -2993,6 +2993,7 @@ class Artifact extends Error {
         global $art_field_fact,$Language;
         $visible_change = false;
         $out = '';
+        $out_com = '';
         $out_ch  = '';
         reset($changes);
         $fmt = "%20s | %-25s | %s".$GLOBALS['sys_lf'];
@@ -3033,18 +3034,17 @@ class Artifact extends Error {
         if (!empty($changes['comment'])) {
             $visible_change = true;
             if (!empty($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none')) {
-                $out .= "<strong>[". $changes['comment']['type'] ."]</strong><br />";
+                $out_com .= "<strong>[". $changes['comment']['type'] ."]</strong><br />";
             }
-            $out .= $this->formatFollowUp(null, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_BROWSER);
+            $out_com .= $this->formatFollowUp(null, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_BROWSER);
             unset($changes['comment']);
         }
         //Process special cases first: file attachment
         if (!empty($changes['attach'])) {
             $visible_change = true;
             $out_ch .= '<tr>';
-            $out_ch .= '<td><strong>'. $Language->getText('tracker_include_artifact','add_attachment') .'</strong></td>';
-            $out_ch .= '<td>&nbsp;</td>';
-            $out_ch .= '<td><a href="'.$changes['attach']['href'].'">'.$hp->purify($changes['attach']['name']).'</a> ('.size_readable($changes['attach']['size']).')</td>';
+            $out_ch .= '<td valign="top"><strong>'. $Language->getText('tracker_include_artifact','add_attachment') .'</strong></td>';
+            $out_ch .= '<td valign="top"><a href="'.$changes['attach']['href'].'">'.$hp->purify($changes['attach']['name']).'</a> ('.size_readable($changes['attach']['size']).')</td>';
             $out_ch .= '</tr>';
             unset($changes['attach']);
         }
@@ -3067,24 +3067,24 @@ class Artifact extends Error {
                     }
                 }
                 $out_ch .= '<tr>';
-                $out_ch .= '  <td><strong>'.$hp->purify(SimpleSanitizer::unsanitize($label)).'</strong></td>';
-                $out_ch .= '  <td>'.$hp->purify($h['del']).'</td>';
-                $out_ch .= '  <td>'.$hp->purify($h['add']).'</td>';
+                $out_ch .= '  <td valign="top"><ul style="margin:0; padding:0; margin-left:3em;"><li><strong>'.$hp->purify(SimpleSanitizer::unsanitize($label)).':&nbsp;</strong></li></ul></td>';
+                $out_ch .= '  <td valign="top"><span style="text-decoration:line-through; background: #fdd;">'.$hp->purify($h['del']).'</span> ';
+                $out_ch .= '&rarr; ';
+                $out_ch .= '<span style="background: #dfd;">'.$hp->purify($h['add']).'</span></td>';
                 $out_ch .= '</tr>';
             }
         }
         if ($out_ch) {
-            $out_ch = '<table cellpadding="4" border="1" cellspacing="0" bordercolor="#ccc">'.
-            '  <tr>'.
-            '    <th>'.$Language->getText('tracker_include_artifact','what').'</th>'.
-            '    <th>'.$Language->getText('tracker_include_artifact','removed').'</th>'.
-            '    <th>'.$Language->getText('tracker_include_artifact','added').'</th>'.
-            '  </tr>'.
+            $out_ch = 'Changes:<table cellpadding="0" border="0" cellspacing="0">'.
             $out_ch .
             '</table>';
         }
         
-        $out .= '<br/><br/><center>'. $out_ch .'</center>';
+        $out .= $out_com;
+        if ($out_com && $out_ch) {
+            $out .= '<hr>';
+        }
+        $out .= $out_ch;
         
         $out .= '
                     </div>
