@@ -2433,9 +2433,10 @@ class Artifact extends Error {
         
         //treat anonymous users
         $text_mail = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
+        $html_mail = $this->createHTMLMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
 
         if ($ok) {
-            $this->sendNotification(array_keys($concerned_addresses), $subject, $text_mail, null);
+            $this->sendNotification(array_keys($concerned_addresses), $subject, $text_mail, $html_mail);
         }
 
         //treat 'without permissions' emails
@@ -2477,6 +2478,14 @@ class Artifact extends Error {
       }
     }
     
+    /**
+     * Build notification list based on user preferences
+     *
+     * @param Array                  $addresses
+     * @param String                 $subject
+     * @param Codendi_Mail_Interface $text_mail
+     * @param Codendi_Mail_Interface $html_mail
+     */
     function sendNotification($addresses, $subject, $text_mail, $html_mail) {
         $um             = UserManager::instance();
         $html_addresses = array();
@@ -2500,6 +2509,13 @@ class Artifact extends Error {
         }
     }
     
+    /**
+     * Finalize & send mail to peple
+     *
+     * @param Codendi_Mail_Interface $mail
+     * @param String                 $subject
+     * @param Array                  $to
+     */
     function sendMail(Codendi_Mail_Interface $mail, $subject, array $to) {
         $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
         $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
