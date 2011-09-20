@@ -32,12 +32,12 @@ class Codendi_MailTest extends UnitTestCase {
 
         $user1 = new MockUser();
         $user1->setReturnValue('getRealName', 'user 1');
-        $user1->setReturnValue('getEmail', 'user_1@codendi.org');
+        $user1->setReturnValue('getEmail', 'user_1@tuleap.net');
         $user1->setReturnValue('getStatus', 'A');
 
         $user2 = new MockUser();
         $user2->setReturnValue('getRealName', 'user 2');
-        $user2->setReturnValue('getEmail', 'user_2@codendi.org');
+        $user2->setReturnValue('getEmail', 'user_2@tuleap.net');
         $user2->setReturnValue('getStatus', 'S');
 
         $recipArray = array($user1, $user2);
@@ -49,10 +49,11 @@ class Codendi_MailTest extends UnitTestCase {
 
     function testCleanupMailFormat() {
         $mail = new Codendi_MailTestVersion();
-        $this->assertEqual('john.doe@example.com', $mail->_cleanupMailFormat('"Codendi" <john.doe@example.com>'));
-        $this->assertEqual('"Codendi" john.doe@example.com', $mail->_cleanupMailFormat('"Codendi" john.doe@example.com'));
-        $this->assertEqual('"Codendi" <john.doe@example.com', $mail->_cleanupMailFormat('"Codendi" <john.doe@example.com'));
-        $this->assertEqual('"Codendi" john.doe@example.com>', $mail->_cleanupMailFormat('"Codendi" john.doe@example.com>'));
+        $this->assertEqual(array('john.doe@example.com', 'Tuleap'), $mail->_cleanupMailFormat('"Tuleap" <john.doe@example.com>'));
+        $this->assertEqual(array('john.doe@example.com', 'Tuleap'), $mail->_cleanupMailFormat('Tuleap <john.doe@example.com>'));
+        $this->assertEqual(array('"Tuleap" john.doe@example.com'), $mail->_cleanupMailFormat('"Tuleap" john.doe@example.com'));
+        $this->assertEqual(array('"Tuleap" <john.doe@example.com'), $mail->_cleanupMailFormat('"Tuleap" <john.doe@example.com'));
+        $this->assertEqual(array('"Tuleap" john.doe@example.com>'), $mail->_cleanupMailFormat('"Tuleap" john.doe@example.com>'));
     }
 }
 ?>

@@ -79,19 +79,23 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
-     * Remove extra < > if any
+     * Given a standard email definition, split the name and the email address
+     * 
+     * "name" <email> gives array(email, name).
+     * if doesn't match, assume it's only email.
      *
      * @param String $mail
      *
-     * @return String
+     * @return Array
      */
     function _cleanupMailFormat($mail) {
-        $pattern = '/<(.*)>/';
-        preg_match ($pattern, $mail, $matches);
-        if (!empty($matches)) {
-            return $matches[1];
+        $pattern = '/(.*)<(.*)>/';
+        if (preg_match ($pattern, $mail, $matches)) {
+            // Remove extra spaces and quotes
+            $name = trim(trim($matches[1]), '"\'');
+            return array($matches[2], $name);
         } else {
-            return $mail;
+            return array($mail);
         }
     }
 
@@ -137,8 +141,8 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     function setFrom($email) {
-        $email = $this->_cleanupMailFormat($email);
-        $this->mail->setFrom($email);
+        list($email, $name) = $this->_cleanupMailFormat($email);
+        $this->mail->setFrom($email, $name);
     }
 
     function setSubject($subject) {
@@ -155,7 +159,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @param Boolean $raw
      */
     function setTo($to, $raw=false) {
-        $to = $this->_cleanupMailFormat($to);
+        list($to,) = $this->_cleanupMailFormat($to);
         if(!$raw) {
             $to = $this->_validateRecipientMail($to);
             if (!empty($to)) {
