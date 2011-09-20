@@ -342,7 +342,19 @@ height:auto;
     border:1px solid #ccc;
     padding: 1px;
 }
-
+.bodyContent p.cta a, 
+.bodyContent p.cta a:link, 
+.bodyContent p.cta a:visited, 
+.bodyContent p.cta a:hover, 
+.bodyContent p.cta a:active {
+    background: orange;
+    font-weight: bold;
+    line-height: 150%;
+    color: white;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    text-shadow:1px 1px 1px darkorange;
+}
 /* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: FOOTER /\/\/\/\/\/\/\/\/\/\ */
 
 /**

@@ -2614,7 +2614,7 @@ class Artifact extends Error {
         // artifact fields - Changes first if there are some.
         $body .= '<h1><a href="'.$artifact_href.'">'.$hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())).' #'.$this->getID().'</a>: '.$summ.'</h1>'; 
         if ($changes) {
-            $body .= $this->formatChangesHTML($changes, $field_perm, $visible_change).'<br />';
+            $body .= $this->formatChangesHTML($changes, $field_perm, $artifact_href, $visible_change);
             if (!$visible_change) return;
         }
         
@@ -3021,12 +3021,13 @@ class Artifact extends Error {
      *
      * @param changes: array of changes
      * @param $field_perm an array with the permission associated to each field. false to no check perms
+     * @param string $artifact_href The direct link to the artifact
      * @param $visible_change only needed when using permissions. Returns true if there is any change
      * that the user has permission to see
      *
      * @return string
      */
-    function formatChangesHTML($changes,$field_perm,&$visible_change) {
+    function formatChangesHTML($changes, $field_perm, $artifact_href, &$visible_change) {
 
         global $art_field_fact,$Language;
         $visible_change = false;
@@ -3129,6 +3130,7 @@ class Artifact extends Error {
                 </div>
             </div>
             <div style="clear:both;"></div>
+            <p align="right" class="cta"><a href="'. $artifact_href .'" target="_blank">Answer now</a></p>
             ';
         return $out;
     }
