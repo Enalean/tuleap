@@ -2550,7 +2550,7 @@ class Artifact extends Error {
         foreach ($addresses as $address) {
             //TODO : several accounts with the same email
             $user = UserManager::instance()->getUserByEmail($address);
-            $pref = $user->getPreference('user_tracker_mailformat');
+            $pref = $user ? $user->getPreference('user_tracker_mailformat') : false;
             if (!$pref || $pref == 'text') {
                 $txt_addresses[] = $address;
             }
@@ -2570,7 +2570,7 @@ class Artifact extends Error {
         foreach ($addresses as $address) {
             //TODO : several accounts with the same email
             $user = UserManager::instance()->getUserByEmail($address);
-            $pref = $user->getPreference('user_tracker_mailformat');
+            $pref = $user ? $user->getPreference('user_tracker_mailformat') : false;
             $pref = 'html';
             if ($pref && $pref == 'html') {
                 $html_addresses[] = $address;
