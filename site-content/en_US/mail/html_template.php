@@ -199,7 +199,7 @@ margin-left:0;
 
 #headerImage{
 height:auto;
-max-width:600px !important;
+max-width:750px !important;
 }
 
 /* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: MAIN BODY /\/\/\/\/\/\/\/\/\/\ */
@@ -243,7 +243,7 @@ display:inline;
 height:auto;
 }
 
-.tracker_artifact_followup_header {
+.bodyContent .tracker_artifact_followup_header {
     -webkit-border-top-right-radius:20px;
     -moz-border-radius-topright:20px;
     border-top-right-radius:20px;
@@ -253,30 +253,30 @@ height:auto;
     margin-left:75px;
     padding:10px 10px 2px 10px;
 }
-.tracker_artifact_followup_title {
+.bodyContent .tracker_artifact_followup_title {
     float:left;
 }
-.tracker_artifact_followup_title_user {
+.bodyContent .tracker_artifact_followup_title_user {
     font-size:1.1em; 
     font-weight:bold; 
     color:#999;
 }
-.tracker_artifact_followup_comment_edited_by {    
+.bodyContent .tracker_artifact_followup_comment_edited_by {    
     font-size:0.8em;
     color:#999;
 }
-.tracker_artifact_followup_date {
+.bodyContent .tracker_artifact_followup_date {
     text-align:right;
     font-size:0.95em;
     color:#666;
 }
-.tracker_artifact_followup_avatar {
+.bodyContent .tracker_artifact_followup_avatar {
     width: 75px;
     clear: both;
     float: left;
     text-align: center;
 }
-.tracker_artifact_followup_content {
+.bodyContent .tracker_artifact_followup_content {
     -webkit-border-bottom-right-radius:20px;
     -moz-border-radius-bottomright:20px;
     border-bottom-right-radius:20px;
@@ -292,24 +292,24 @@ height:auto;
     margin-bottom:1em;
 }
 
-.tracker_artifact_followup_avatar,
-.tracker_artifact_followup.boxitemalt .tracker_artifact_followup_avatar {
+.bodyContent .tracker_artifact_followup_avatar,
+.bodyContent .tracker_artifact_followup.boxitemalt .tracker_artifact_followup_avatar {
     background: url(<?= $http_url ?>/plugins/tracker/themes/default/images/tracker_artifact_comment_alt.png) right top no-repeat;
 }
-.tracker_artifact_followup.boxitem .tracker_artifact_followup_avatar {
+.bodyContent .tracker_artifact_followup.boxitem .tracker_artifact_followup_avatar {
     background: url(<?= $http_url ?>/plugins/tracker/themes/default/images/tracker_artifact_comment.png) right top no-repeat;
 }
-.tracker_artifact_followup_header,
-.tracker_artifact_followup_content,
-.tracker_artifact_followup.boxitemalt .tracker_artifact_followup_header, 
-.tracker_artifact_followup.boxitemalt .tracker_artifact_followup_content{
-    background-color: #f6f6f6;
+.bodyContent .tracker_artifact_followup_header,
+.bodyContent .tracker_artifact_followup_content,
+.bodyContent .tracker_artifact_followup.boxitemalt .tracker_artifact_followup_header, 
+.bodyContent .tracker_artifact_followup.boxitemalt .tracker_artifact_followup_content{
+     background-color: #f6f6f6;
 }
-.tracker_artifact_followup.boxitem .tracker_artifact_followup_header, 
-.tracker_artifact_followup.boxitem .tracker_artifact_followup_content{
+.bodyContent .tracker_artifact_followup.boxitem .tracker_artifact_followup_header, 
+.bodyContent .tracker_artifact_followup.boxitem .tracker_artifact_followup_content{
     background-color: #f0f0f0;
 }
-div.avatar {
+.bodyContent div.avatar {
     background: transparent url(<?= $img_path ?>/avatar_default.png) 1px 1px no-repeat;
     width:50px;
     height:50px;
@@ -410,7 +410,7 @@ max-width:190px;
              <tr>
                  <td align="center" valign="top">
                         <!-- // Begin Template Preheader \\ -->
-                        <table border="0" cellpadding="10" cellspacing="0" width="600" id="templatePreheader">
+                        <table border="0" cellpadding="10" cellspacing="0" width="750" id="templatePreheader">
                             <tr>
                                 <td valign="top" class="preheaderContent">
                                 
@@ -435,11 +435,11 @@ max-width:190px;
                             </tr>
                         </table>
                         <!-- // End Template Preheader \\ -->
-                     <table border="0" cellpadding="0" cellspacing="0" width="600" id="templateContainer">
+                     <table border="0" cellpadding="0" cellspacing="0" width="750" id="templateContainer">
                          <tr>
                              <td align="center" valign="top">
                                     <!-- // Begin Template Body \\ -->
-                                 <table border="0" cellpadding="0" cellspacing="0" width="600" id="templateBody">
+                                 <table border="0" cellpadding="0" cellspacing="0" width="750" id="templateBody">
                                      <tr>
                                             <td valign="top" class="bodyContent">
                                 
@@ -464,7 +464,7 @@ max-width:190px;
                          <tr>
                              <td align="center" valign="top">
                                     <!-- // Begin Template Footer \\ -->
-                                 <table border="0" cellpadding="10" cellspacing="0" width="600" id="templateFooter">
+                                 <table border="0" cellpadding="10" cellspacing="0" width="750" id="templateFooter">
                                      <tr>
                                          <td valign="top" class="footerContent">
                                             

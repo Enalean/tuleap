@@ -2664,7 +2664,7 @@ class Artifact extends Error {
 
             // We display the fieldset only if there is at least one field inside that we can display
             if ($display_fieldset) {
-                $body .= '<TR style="color: #444444; background-color: #E9E9E9;"><TD COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
+                $body .= '<TR style="color: #444444; background-color: #F6F6F6;"><TD COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
                 $body .= $fieldset_html;
             }
         }
@@ -3027,39 +3027,34 @@ class Artifact extends Error {
 
         global $art_field_fact,$Language;
         $visible_change = false;
-        $out_hdr = '<h2>Latest modifications</h2>';
         $out = '';
-        $out_com = '';
         $out_att = '';
+        $out_ch  = '';
         reset($changes);
         $fmt = "%20s | %-25s | %s".$GLOBALS['sys_lf'];
 
         $hp = $this->getHTMLPurifier();
 
+        
+        $out .= '<h2>Latest modifications</h2>';
+        $out .= '
+            <div class="tracker_artifact_followup_header">
+                <div class="tracker_artifact_followup_title">
+                    <span class="tracker_artifact_followup_title_user">';
+        
         if ($this->hasFieldPermission($field_perm, 'assigned_to') || 
             $this->hasFieldPermission($field_perm, 'multi_assigned_to') || 
             (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))) {
             $user = UserManager::instance()->getCurrentUser();
             if ($user->isLoggedIn()) {
-                $out_hdr .= '<p>'.$Language->getText('tracker_include_artifact','changes_by');
-                $out_hdr .= ' <a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()).")</a>";
-                $out_hdr .= ' on ';
-                $out_hdr .= format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).' ('.$user->getTimezone().')</p>';
+                $out .= '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')</a>';
             } else {
-                // TODO HTML
-                $out_hdr = $Language->getText('tracker_include_artifact','changes_by').' '.$Language->getText('tracker_include_artifact','anon_user').'        '.$Language->getText('tracker_import_utils','date').': '.format_date($GLOBALS['Language']->getText('system', 'datefmt'),time());
+                $out = $Language->getText('tracker_include_artifact','anon_user');
             }
         }
-        //Process special cases first: follow-up comment
-        if (!empty($changes['comment'])) {
-            $visible_change = true;
-            if (!empty($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none')) {
-                $out_com .= "[".$changes['comment']['type']."]<br />";
-            }
-            $out_com .= '
-            <div class="tracker_artifact_followup_header">
-                <div class="tracker_artifact_followup_title">
-                    <span class="tracker_artifact_followup_title_user"><a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()).')</a></span>
+        
+        $out .= '
+                    </span>
                 </div>
                 <div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).' ('.$user->getTimezone().')</div>
             </div>
@@ -3068,14 +3063,17 @@ class Artifact extends Error {
             </div>
             <div class="tracker_artifact_followup_content">
                 <div class="tracker_artifact_followup_comment">
-                    <div class="tracker_artifact_followup_comment_body">'.$this->formatFollowUp(null, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_BROWSER).'</div>
-                </div>
-            </div>
-            <div style="clear:both;"></div>
-            ';
+                    <div class="tracker_artifact_followup_comment_body">';
+        
+        //Process special cases first: follow-up comment
+        if (!empty($changes['comment'])) {
+            $visible_change = true;
+            if (!empty($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none')) {
+                $out .= "<strong>[". $changes['comment']['type'] ."]</strong><br />";
+            }
+            $out .= $this->formatFollowUp(null, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_BROWSER);
             unset($changes['comment']);
         }
-
         //Process special cases first: file attachment
         if (!empty($changes['attach'])) {
             $visible_change = true;
@@ -3087,7 +3085,6 @@ class Artifact extends Error {
 
         // All the rest of the fields now
         reset($changes);
-
         foreach ($changes as $field_name => $h) {
             // If both removed and added items are empty skip - Sanity check
             if ((!empty($h['del']) || !empty($h['add'])) && $this->hasFieldPermission($field_perm, $field_name)) {
@@ -3103,26 +3100,33 @@ class Artifact extends Error {
                         $h['add'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['add']));
                     }
                 }
-                $out .= '<tr>';
-                $out .= '  <td><strong>'.$hp->purify(SimpleSanitizer::unsanitize($label)).'</strong></td>';
-                $out .= '  <td>'.$hp->purify($h['del']).'</td>';
-                $out .= '  <td>'.$hp->purify($h['add']).'</td>';
-                $out .= '</tr>';
+                $out_ch .= '<tr>';
+                $out_ch .= '  <td><strong>'.$hp->purify(SimpleSanitizer::unsanitize($label)).'</strong></td>';
+                $out_ch .= '  <td>'.$hp->purify($h['del']).'</td>';
+                $out_ch .= '  <td>'.$hp->purify($h['add']).'</td>';
+                $out_ch .= '</tr>';
             }
         }
-
-        if ($out) {
-            $out = '<table cellpadding="4" border="1" cellspacing="0" class="artifact_change">'.
+        if ($out_ch) {
+            $out_ch = '<table cellpadding="4" border="1" cellspacing="0" bordercolor="#ccc">'.
             '  <tr>'.
             '    <th>'.$Language->getText('tracker_include_artifact','what').'</th>'.
             '    <th>'.$Language->getText('tracker_include_artifact','removed').'</th>'.
             '    <th>'.$Language->getText('tracker_include_artifact','added').'</th>'.
             '  </tr>'.
-            $out.
+            $out_ch .
             '</table>';
         }
-
-        return($out_hdr.$out_com.$out.$out_att);
+        
+        $out .= '<br/><center>'. $out_ch . $out_att .'</center>';
+        
+        $out .= '
+                    </div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+            ';
+        return $out;
     }
 
         
