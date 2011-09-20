@@ -26,12 +26,14 @@
     {else}
     <link rel="stylesheet" href="css/{$stylesheet}.css" type="text/css" />
     {/if}
+    <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
     {if $extracss}
     <style type="text/css">
     {$extracss}
     </style>
     {/if}
     {if $javascript}
+    <script src="js/ext/require.js"></script>
     <script type="text/javascript">
       var GITPHP_RES_LOADING="{t escape='js'}Loading…{/t}";
       var GITPHP_RES_LOADING_BLAME_DATA="{t escape='js'}Loading blame data…{/t}";
@@ -42,10 +44,7 @@
         "{$format}": "{$extension}"{if !$smarty.foreach.formats.last},{/if}
       {/foreach}
       {rdelim}
-    </script>
-    <link rel="stylesheet" href="css/ext/jquery.qtip.css" type="text/css" />
-    <script src="js/ext/require.js"></script>
-    <script>
+
     require({ldelim}
     	baseUrl: 'js',
 	paths: {ldelim}
