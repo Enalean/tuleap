@@ -2433,10 +2433,10 @@ class Artifact extends Error {
         
         //treat anonymous users
 	    $body = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
-	    $body_html = $this->createHTMLMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
+	    //$body_html = $this->createHTMLMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
 
 	    if ($ok) {
-	        $this->sendNotification(array_keys($concerned_addresses), $subject, $body, $body_html);
+	        $this->sendNotification(array_keys($concerned_addresses), $subject, $body, '');
         }
             
         //treat 'without permissions' emails
@@ -2478,15 +2478,13 @@ class Artifact extends Error {
       }
     }
     
-    function sendNotification($addresses, $subject, $body, $body_html) {
+    function sendNotification($addresses, $subject, $body_text, $body_html) {
         $to_text = $this->getUserTxtPrefs($addresses);
         $to_html = $this->getUserHtmlPrefs($addresses);
 
-        var_dump($to_text, $to_html);
-        
         //TODO: check if $to_xxx not empty
-        if ($to_text) {
-            $mail = $this->getNotificationTxt($body);
+        if ($body_text && $to_text) {
+            $mail = $this->getNotificationTxt($body_text);
             $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
             $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
             $mail->setFrom($GLOBALS['sys_noreply']);
@@ -2494,7 +2492,7 @@ class Artifact extends Error {
             $mail->setSubject($subject);
             $mail->send();
         }
-        if ($to_html) {
+        if ($body_html && $to_html) {
             $mail = $this->getNotificationHtml($body_html);
             $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
             $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
