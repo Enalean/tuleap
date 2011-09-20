@@ -61,7 +61,7 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
 ?>
 <html>
     <head>
-        <title>Codendi Unit Tests</title>
+        <title>Tuleap Unit Tests</title>
         <style type="text/css">
         body {
             margin:0;
