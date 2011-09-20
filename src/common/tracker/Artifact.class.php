@@ -26,6 +26,7 @@ require_once('common/tracker/ArtifactFile.class.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/mail/Codendi_Mail.class.php');
 require_once('common/include/Template.class.php');
+require_once('common/include/Codendi_Diff.class.php');
 
 /**
  *
@@ -3067,10 +3068,27 @@ class Artifact extends Error {
                     }
                 }
                 $out_ch .= '<tr>';
-                $out_ch .= '  <td valign="top"><ul style="margin:0; padding:0; margin-left:3em;"><li><strong>'.$hp->purify(SimpleSanitizer::unsanitize($label)).':&nbsp;</strong></li></ul></td>';
-                $out_ch .= '  <td valign="top"><span style="text-decoration:line-through; background: #fdd;">'.$hp->purify($h['del']).'</span> ';
-                $out_ch .= '&rarr; ';
-                $out_ch .= '<span style="background: #dfd;">'.$hp->purify($h['add']).'</span></td>';
+                $out_ch .= '  <td valign="top" nowrap="nowrap"><ul style="margin:0; padding:0; margin-left:3em;"><li><strong>'.$hp->purify(SimpleSanitizer::unsanitize($label)).':&nbsp;</strong></li></ul></td>';
+                $out_ch .= '  <td valign="top">';
+                if ($field->getDisplayType() == 'TA' || $field->getDisplayType() == 'TF') {
+                    $before = explode("\n", $h['del']);
+                    $after  = explode("\n", $h['add']);
+                    $callback = array(Codendi_HTMLPurifier::instance(), 'purify');
+                    $d = new Codendi_Diff(
+                        array_map($callback, $before, array_fill(0, count($before), CODENDI_PURIFIER_CONVERT_HTML)),
+                        array_map($callback, $after,  array_fill(0, count($after),  CODENDI_PURIFIER_CONVERT_HTML))
+                    );
+                    $f = new Codendi_HtmlUnifiedDiffFormatter();
+                    $diff = $f->format($d);
+                    if ($diff) {
+                        $out_ch .= '<div class="diff">'. $diff .'</div>';
+                    }
+                } else {
+                    $out_ch .= '<span style="text-decoration:line-through; background: #fdd;">'.$hp->purify($h['del']).'</span> ';
+                    $out_ch .= '&rarr; ';
+                    $out_ch .= '<span style="background: #dfd;">'.$hp->purify($h['add']).'</span>';
+                }
+                $out_ch .= '</td>';
                 $out_ch .= '</tr>';
             }
         }
