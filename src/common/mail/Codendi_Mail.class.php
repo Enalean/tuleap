@@ -343,7 +343,11 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         $em = EventManager::instance();
         $em->processEvent('mail_sendmail', $params);
 
-        $status = $this->mail->send();
+        try {
+            $status = $this->mail->send();
+        } catch (Exception $e) {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'mail_failed', Config::get('sys_email_admin')), CODENDI_PURIFIER_DISABLED);
+        }
         $this->mail->clearRecipients();
         return $status;
     }

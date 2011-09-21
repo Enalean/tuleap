@@ -2526,11 +2526,7 @@ class Artifact extends Error {
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->setTo(join(',', $to));
         $mail->setSubject($subject);
-        try {
-            $mail->send();
-        } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'mail_failed', Config::get('sys_email_admin')), CODENDI_PURIFIER_DISABLED);
-        }
+        $mail->send();
     }
     
     /** for a certain set of users being part of the same ugroups
