@@ -2634,12 +2634,18 @@ class Artifact extends Error {
             $body .= '<table cellspacing="0" cellpadding="2" border="0">';
             while ($row = db_fetch_array($result)) {
                 $orig_subm = $this->getOriginalCommentSubmitter($row['artifact_history_id']);
-                $submitter = UserManager::instance()->getUserById(db_result($orig_subm, 0, 'mod_by'));
-
+                $orig_sub_mod_by = db_result($orig_subm, 0, 'mod_by');
+                if ($orig_sub_mod_by == 100) {
+                    $submitter_real_name = db_result($orig_subm, 0, 'email');
+                } else {
+                    $submitter = UserManager::instance()->getUserById($orig_sub_mod_by);
+                    $submitter_real_name = $submitter->getRealName();
+                }
+                
                 $orig_date = $this->getOriginalCommentDate($row['artifact_history_id']);
-                $subm_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($orig_date, 0, 'date'));
-
-                $body .= '<tr><td colspan="2"><strong>'.$submitter->getRealName().' on '.$subm_date.'</strong></td></tr>';
+                $subm_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($orig_date, 0, 'date'));               
+                
+                $body .= '<tr><td colspan="2"><strong>'.$submitter_real_name.' on '.$subm_date.'</strong></td></tr>';
                 $body .= '<tr>';
                 $body .= '<td width="20px;">&nbsp;</td>';
                 $body .= '<td>'.$this->formatFollowUp($group_id, $row['format'], $row['new_value'], self::OUTPUT_BROWSER).'</td>';
