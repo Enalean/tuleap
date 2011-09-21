@@ -2645,7 +2645,7 @@ class Artifact extends Error {
                 $orig_date = $this->getOriginalCommentDate($row['artifact_history_id']);
                 $subm_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($orig_date, 0, 'date'));
                 
-                $body .= '<dt><strong>'$submitter_real_name.'</strong> <span style="color:#bbb">'.$subm_date.'</span></dt>';
+                $body .= '<dt><strong>'. $submitter_real_name .'</strong> <span style="color:#bbb">'. $subm_date .'</span></dt>';
                 $body .= '<dd>'.$this->formatFollowUp($group_id, $row['format'], $row['new_value'], self::OUTPUT_BROWSER).'</dd>';
             }
             $body .= '</dl>';
@@ -3003,6 +3003,7 @@ class Artifact extends Error {
     function formatChangesHTML($changes, $field_perm, $artifact_href, &$visible_change) {
 
         global $art_field_fact,$Language;
+        $group_id = $this->ArtifactType->getGroupID();
         $visible_change = false;
         $out = '';
         $out_com = '';
@@ -3048,7 +3049,7 @@ class Artifact extends Error {
             if (!empty($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none')) {
                 $out_com .= "<strong>[". $changes['comment']['type'] ."]</strong><br />";
             }
-            $out_com .= $this->formatFollowUp(null, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_BROWSER);
+            $out_com .= $this->formatFollowUp($group_id, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_BROWSER);
             unset($changes['comment']);
         }
         //Process special cases first: file attachment
