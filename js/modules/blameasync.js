@@ -22,7 +22,7 @@ define(["jquery", "modules/geturl", "modules/tooltip.commit"],
 			col.css('display', 'none');
 
 			var p = $(document.createElement('p'));
-			p.text(GITPHP_RES_LOADING_BLAME_DATA);
+			p.text(GitPHP.Resources.LoadingBlameData);
 			p.appendTo(col);
 
 			var div = $(document.createElement('div'));
@@ -30,7 +30,7 @@ define(["jquery", "modules/geturl", "modules/tooltip.commit"],
 
 			var img = $(document.createElement('img'));
 			img.attr('src', getUrl() + 'images/blame-loader.gif');
-			img.attr('alt', GITPHP_RES_LOADING);
+			img.attr('alt', GitPHP.Resources.Loading);
 			img.appendTo(div);
 
 			div.appendTo(col);

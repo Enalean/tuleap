@@ -23,7 +23,7 @@ define(["jquery", "modules/geturl", "modules/getproject", "ext/jquery.qtip.min"]
 		function buildTipConfig(tag) {
 			return {
 				content: {
-					text: '<img src="' + url + 'images/tooltip-loader.gif" alt="' + GITPHP_RES_LOADING + '" />',
+					text: '<img src="' + url + 'images/tooltip-loader.gif" alt="' + GitPHP.Resources.Loading + '" />',
 					ajax: {
 						url: 'index.php',
 						data: {

@@ -13,14 +13,17 @@ define(["jquery", "ext/jquery.qtip.min"],
 	function($) {
 		
 		function buildTipContent(href) {
-			var content = '<div>' + GITPHP_RES_SNAPSHOT + ': ';
+			var content = '<div>' + GitPHP.Resources.Snapshot + ': ';
 			var first = true;
-			for (var type in GITPHP_SNAPSHOT_FORMATS) {
-				if (!first) {
-					content += ' | ';
+			var formats = GitPHP.Snapshot.Formats
+			for (var type in formats) {
+				if (formats.hasOwnProperty(type)) {
+					if (!first) {
+						content += ' | ';
+					}
+					content += '<a href="' + href + '&fmt=' + type + '">' + formats[type] + '</a>';
+					first = false;
 				}
-				content += '<a href="' + href + '&fmt=' + type + '">' + GITPHP_SNAPSHOT_FORMATS[type] + '</a>';
-				first = false;
 			}
 			content += '</div>';
 			return content;

@@ -65,7 +65,7 @@ define(["jquery", "modules/geturl"],
 
 			var img = $(document.createElement('img'));
 			img.attr('src', url + "images/tree-loader.gif");
-			img.attr('alt', GITPHP_RES_LOADING);
+			img.attr('alt', GitPHP.Resources.Loading);
 			img.addClass('treeSpinner');
 			parentRow.find('a.treeLink').after(img);
 

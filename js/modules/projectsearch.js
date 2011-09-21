@@ -84,7 +84,7 @@ define(["jquery"],
 					msgContainer.appendTo(table);
 				}
 
-				var msg = GITPHP_RES_NO_MATCHES_FOUND.replace(new RegExp('%1'), searchString);
+				var msg = GitPHP.Resources.NoMatchesFound.replace(new RegExp('%1'), searchString);
 				msgContainer.text(msg);
 
 				msgContainer.show();
