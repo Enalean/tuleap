@@ -2562,7 +2562,6 @@ class Artifact extends Error {
         // artifact fields
         // Generate the message preamble with all required
         // artifact fields - Changes first if there are some.
-        $body .= '<a href="'.$artifact_href.'" style="float:right; font-size:1.2em;">'.$hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())).' #'.$this->getID().'</a>';
         $body .= '<h1>'. $summ .'</h1>'; 
         if ($changes) {
             $body .= $this->formatChangesHTML($changes, $field_perm, $artifact_href, $visible_change);
@@ -2654,6 +2653,12 @@ class Artifact extends Error {
         
         // Mail is ready, we can create it
         if ($ok) {
+            $project = ProjectManager::instance()->getProject($group_id);
+            $breadcrumbs = array();
+            $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project->getUnixName($tolower = true) .'" />'. $project->getPublicName() .'</a>';
+            $breadcrumbs[] = '<a href="'. get_server_url() .'/tracker/?group_id='. (int)$group_id .'&amp;atid='. (int)$group_artifact_id .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())) .'</a>';
+            $breadcrumbs[] = '<a href="'. $artifact_href .'" />'. $hp->purify($this->ArtifactType->getItemName().' #'.$this->getID()) .'</a>';
+            
             $mail = new Codendi_Mail();
             $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
             $tpl->set('txt_display_not_correct', $GLOBALS['Language']->getText('mail_html_template', 'display_not_correct'));
@@ -2661,6 +2666,7 @@ class Artifact extends Error {
             $tpl->set('txt_can_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'can_update_prefs'));
             $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
             $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
+            $tpl->set('breadcrumbs', $breadcrumbs);
             $tpl->set('title', $subject);
             $tpl->set('body', $body);
             $tpl->set('additional_footer_link', '<a href="'. $artifact_href .'">'.$GLOBALS['Language']->getText('tracker_include_artifact', 'mail_direct_link').'</a>');

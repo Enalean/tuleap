@@ -395,6 +395,13 @@ height:auto;
 }
 /* }}} */
 
+.bodyContent div.breadcrumbs {
+/*@editable*/ color:#707070;
+/*@editable*/ font-family:Arial;
+/*@editable*/ font-size:10px;
+/*@editable*/ text-align:left;
+/*@editable*/ margin-bottom: 0.5em;;
+}
 /* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: FOOTER /\/\/\/\/\/\/\/\/\/\ */
 
 /**
@@ -505,7 +512,6 @@ display:inline;
                                         </tr>
                                     </table>
                                  <!-- // End Module: Standard Preheader \ -->
-                                
                                 </td>
                             </tr>
                         </table>
@@ -522,6 +528,7 @@ display:inline;
                                                 <table border="0" cellpadding="20" cellspacing="0" width="100%">
                                                     <tr>
                                                         <td valign="top">
+                                                            <?= !empty($breadcrumbs) ? '<div class="breadcrumbs">'. implode(' &raquo; ', $breadcrumbs) .'</div>' : ''; ?>
                                                             <div>
                                                             <?= $body ?>
                                                             </div>
