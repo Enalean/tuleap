@@ -549,7 +549,7 @@ display:inline;
                                                         <td colspan="2" valign="middle" id="social">
                                                             <div>
                                                                 <?= !empty($additional_footer_link) ? '&nbsp;'. $additional_footer_link . '&nbsp; |' : '' ?>
-                                                                &nbsp;You can <a href="<?= get_server_url() ?>/account/preferences.php" target="_blank">change your email preferences</a>&nbsp;
+                                                                &nbsp;<a href="<?= get_server_url() ?>/account/preferences.php" target="_blank"><?= $txt_can_update_prefs ?></a>&nbsp;
                                                             </div>
                                                         </td>
                                                     </tr>

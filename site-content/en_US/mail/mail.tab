@@ -89,3 +89,4 @@ mail_system_event	md5_compare_error	Dear Files service user, \n\nThe entered ref
 #
 mail_html_template	display_not_correct	Is this email not displaying correctly?
 mail_html_template	update_prefs	update email preferences
+mail_html_template	can_update_prefs	Update your email preferences

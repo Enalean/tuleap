@@ -355,7 +355,7 @@ tracker_include_artifact	mail_comment_title	Comments
 tracker_include_artifact	mail_snapshot_title	Snapshot
 tracker_include_artifact	mail_latest_modifications	Latest modifications
 tracker_include_artifact	mail_changes	Changes:
-
+tracker_include_artifact	mail_answer_now	Answer now
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php

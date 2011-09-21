@@ -346,8 +346,8 @@ tracker_include_artifact	mail_direct_link	Lien direct vers l'artefact
 tracker_include_artifact	mail_comment_title	Commentaires
 tracker_include_artifact	mail_snapshot_title	État
 tracker_include_artifact	mail_latest_modifications	Dernières modifications
-tracker_include_artifact	mail_changes	Changements:
-
+tracker_include_artifact	mail_changes	Changements :
+tracker_include_artifact	mail_answer_now	Répondre
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/include/ArtifactReportHtml.class.php

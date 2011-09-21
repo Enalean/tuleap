@@ -2658,6 +2658,7 @@ class Artifact extends Error {
             $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
             $tpl->set('txt_display_not_correct', $GLOBALS['Language']->getText('mail_html_template', 'display_not_correct'));
             $tpl->set('txt_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'update_prefs'));
+            $tpl->set('txt_can_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'can_update_prefs'));
             $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
             $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
             $tpl->set('title', $subject);
@@ -3124,7 +3125,7 @@ class Artifact extends Error {
                 </div>
             </div>
             <div style="clear:both;"></div>
-            <p align="right" class="cta"><a href="'. $artifact_href .'" target="_blank">Answer now</a></p>
+            <p align="right" class="cta"><a href="'. $artifact_href .'" target="_blank">'.$Language->getText('tracker_include_artifact','mail_answer_now').'</a></p>
             ';
         return $out;
     }

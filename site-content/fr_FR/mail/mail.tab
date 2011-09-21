@@ -82,3 +82,4 @@ mail_system_event	md5_compare_error	Cher utilisateur du servcie Fichiers, \n\nLa
 #
 mail_html_template	display_not_correct	Ce message ne s'affiche pas correctement?
 mail_html_template	update_prefs	mettez à jour vos préférences utilisateur
+mail_html_template	can_update_prefs	Mettre à jour vos préférences
