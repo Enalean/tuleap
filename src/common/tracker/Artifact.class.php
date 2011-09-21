@@ -3031,10 +3031,15 @@ class Artifact extends Error {
             }
         }
         
+        $timezone = '';
+        if ($user->getId() != 0) {
+            $timezone = ' ('.$user->getTimezone().')';
+        }
+        
         $out .= '
                     </span>
                 </div>
-                <div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).' ('.$user->getTimezone().')</div>
+                <div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).$timezone.'</div>
             </div>
             <div class="tracker_artifact_followup_avatar">
                 <div class="avatar"></div>
