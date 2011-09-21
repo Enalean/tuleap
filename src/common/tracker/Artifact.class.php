@@ -2631,7 +2631,7 @@ class Artifact extends Error {
         if (db_numrows($result)) {
             $body .= '<h2>'.$GLOBALS['Language']->getText('tracker_include_artifact', 'mail_comment_title').'</h2>';
 
-            $body .= '<table cellspacing="0" cellpadding="2" border="0">';
+            $body .= '<dl>';
             while ($row = db_fetch_array($result)) {
                 $orig_subm = $this->getOriginalCommentSubmitter($row['artifact_history_id']);
                 $orig_sub_mod_by = db_result($orig_subm, 0, 'mod_by');
@@ -2643,15 +2643,12 @@ class Artifact extends Error {
                 }
                 
                 $orig_date = $this->getOriginalCommentDate($row['artifact_history_id']);
-                $subm_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($orig_date, 0, 'date'));               
+                $subm_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($orig_date, 0, 'date'));
                 
-                $body .= '<tr><td colspan="2"><strong>'.$submitter_real_name.' on '.$subm_date.'</strong></td></tr>';
-                $body .= '<tr>';
-                $body .= '<td width="20px;">&nbsp;</td>';
-                $body .= '<td>'.$this->formatFollowUp($group_id, $row['format'], $row['new_value'], self::OUTPUT_BROWSER).'</td>';
-                $body .= '</tr>';
+                $body .= '<dt><strong>'$submitter_real_name.'</strong> <span style="color:#bbb">'.$subm_date.'</span></dt>';
+                $body .= '<dd>'.$this->formatFollowUp($group_id, $row['format'], $row['new_value'], self::OUTPUT_BROWSER).'</dd>';
             }
-            $body .= '</table>';
+            $body .= '</dl>';
         }
         // Finaly, transform relatives URLs to absolute 
         // I'm Nicolas Terray and I approve this hack.

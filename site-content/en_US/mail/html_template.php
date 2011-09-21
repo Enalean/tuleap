@@ -402,6 +402,10 @@ height:auto;
 /*@editable*/ text-align:left;
 /*@editable*/ margin-bottom: 0.5em;;
 }
+
+dd {
+    margin-left:1.5em;
+}
 /* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: FOOTER /\/\/\/\/\/\/\/\/\/\ */
 
 /**
@@ -504,8 +508,8 @@ display:inline;
                                                  <img src="<?= $img_path ?>/organization_logo_mail.png" alt="<?= $GLOBALS['sys_name'] ?>" />
                                              </div>
                                           </td>
-                                          <td valign="bottom" width="190">
-                                             <div>
+                                          <td valign="bottom" width="300">
+                                             <div style="float:right;">
                                                  <?= $txt_display_not_correct ?><br /><a href="<?= get_server_url() ?>/account/preferences.php" target="_blank"><?= $txt_update_prefs ?></a>.
                                              </div>
                                           </td>
