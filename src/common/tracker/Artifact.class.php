@@ -3003,7 +3003,7 @@ class Artifact extends Error {
         $hp = $this->getHTMLPurifier();
 
         
-        $out .= '<h2>Latest modifications</h2>';
+        $out .= '<h2>'.$Language->getText('tracker_include_artifact','mail_latest_modifications').'</h2>';
         $out .= '
             <div class="tracker_artifact_followup_header">
                 <div class="tracker_artifact_followup_title">
@@ -3108,7 +3108,7 @@ class Artifact extends Error {
             }
         }
         if ($out_ch) {
-            $out_ch = 'Changes:<table cellpadding="0" border="0" cellspacing="0" class="artifact_changes">'.
+            $out_ch = $Language->getText('tracker_include_artifact','mail_changes').'<table cellpadding="0" border="0" cellspacing="0" class="artifact_changes">'.
             $out_ch .
             '</table>';
         }
