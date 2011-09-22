@@ -17,6 +17,7 @@ Version 4.0.22 - (Not Released Yet)
     * Tracker v5 plugin v0.2. See separated ChangeLog
     * GraphOnTracker v5 plugin v0.1. See separated ChangeLog
     * Request Help plugin v1.1. See separated ChangeLog
+    * Docman v2.14. See separated ChangeLog
     
     == Development ==
     * Add lxc script utilities to unit-test, build, install and functional-test a Tuleap (thanks to Christian Bayle).

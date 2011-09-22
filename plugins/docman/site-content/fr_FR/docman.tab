@@ -196,6 +196,7 @@ plugin_docman	details_actions_cut	Couper
 plugin_docman	details_actions_copy	Copier
 plugin_docman	details_actions_cut_cancut_document	Vous pouvez <a href="$1">couper ce document</a>.
 plugin_docman	details_actions_cut_cancut_folder	Vous pouvez <a href="$1">couper ce dossier</a>.
+plugin_docman	details_actions_cut_cannotcut_folder	Vous ne pouvez pas couper ce document.
 plugin_docman	details_actions_copy_cancopy_document	Vous pouvez <a href="$1">copier ce document</a>.
 plugin_docman	details_actions_copy_cancopy_folder	Vous pouvez <a href="$1">copier ce dossier</a>.
 plugin_docman	details_actions_delete	Suppression
@@ -428,6 +429,7 @@ plugin_docman	error_item_deleted	Impossible de récupérer l'élément. Il a peu
 plugin_docman	error_md_or_love	Il y a une erreur dans les paramètres. Retour vers l'écran précédent.
 plugin_docman	error_no_perm_install	Vous devez être un administrateur projet pour initaliser ce service.
 plugin_docman	error_paste_in_document	Vous ne pouvez pas coller un élément dans un document
+plugin_docman	error_cut_paste_in_subItem	Vous ne pouvez pas couper un élément et le coller ensuite dans l'un de ses enfants.
 plugin_docman	error_paste_no_valid_item	Pas d'élément valide à coller. L'élément n'a pas été copié ou n'existe plus.
 plugin_docman	error_paste_same_Item	Vous ne pouvez pas coller l'élément en lui même.
 plugin_docman	error_perms_admin	Vous n'avez pas les droits suffisants pour administrer le gestionnaire de documents.

@@ -60,8 +60,13 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
 
         //{{{ Cut
         $content .= '<dt>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_cut').'</dt><dd>';
-        $cuturl = Docman_View_View::buildUrl($this->url, array('action' => 'action_cut', 'id' => $this->item->getId(), 'orig_action' => 'details', 'orig_id' => $this->item->getId()));
-        $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_cut_cancut_'.$folder_or_document, $cuturl);
+        $itemFactory = Docman_ItemFactory::instance($this->item->getGroupId());
+        if ($itemFactory->isRoot($this->item)) {
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_cut_cannotcut_'.$folder_or_document);
+        } else {
+            $cuturl = Docman_View_View::buildUrl($this->url, array('action' => 'action_cut', 'id' => $this->item->getId(), 'orig_action' => 'details', 'orig_id' => $this->item->getId()));
+            $content .= $GLOBALS['Language']->getText('plugin_docman', 'details_actions_cut_cancut_'.$folder_or_document, $cuturl);
+        }
         $content .= '</dd>';
         //}}}
         
@@ -114,7 +119,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             elseif ($copiedItemId === false && $cutItemId !== false && $item->getId() != $cutItemId) {
                 $srcItem = $itemFactory->getItemFromDb($cutItemId);
             }
-            if($srcItem) {
+            if($srcItem && !$itemFactory->isInSubTree($this->item->getId(), $srcItem->getId())) {
                 $content .= '</dd>';
                 $content .= '<dt>'.$GLOBALS['Language']->getText('plugin_docman', 'details_actions_paste').'</dt><dd>';
                 $copyurl = Docman_View_View::buildUrl($this->url, array('action' => 'action_paste', 'id' => $this->item->getId()));

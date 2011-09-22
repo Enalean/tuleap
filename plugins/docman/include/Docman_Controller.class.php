@@ -1654,6 +1654,10 @@ class Docman_Controller extends Controler {
                 return false;
             }
             elseif ($copiedItemId === false && $cutItemId !== false) {
+                if ($itemFactory->isInSubTree($item->getId(), $cutItemId)) {
+                    $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_cut_paste_in_subItem'));
+                    return false;
+                }
                 $itemToPaste = $itemFactory->getItemFromDb($cutItemId);
                 $mode        = 'cut';
             } 

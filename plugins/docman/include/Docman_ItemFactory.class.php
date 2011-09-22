@@ -329,6 +329,45 @@ class Docman_ItemFactory {
     }
 
     /**
+     * Check if a given item is into the subtree of another given item or not.
+     *
+     * @param Integer $childId  Id of the potential child.
+     * @param Integer $parentId Id of the potential parent.
+     *
+     * @return Boolean
+     */
+    function isInSubTree($childId, $parentId) {
+        $child = $this->getItemFromDb($childId);
+        if ($this->isRoot($child)) {
+            return false;
+        }
+        $directParentId = $child->getParentId();
+        if ($parentId == $directParentId) {
+            return true;
+        } else {
+            return $this->isInSubTree($directParentId, $parentId);
+        }
+    }
+
+    /**
+     * Give the list of parents of an item
+     *
+     * @param Integer $childId  Id of the child.
+     *
+     * @return Array
+     */
+    function getParents($childId) {
+        $child = $this->getItemFromDb($childId);
+        if ($this->isRoot($child)) {
+            return array();
+        }
+        $directParentId = $child->getParentId();
+        $parents = $this->getParents($directParentId);
+        $parents[$directParentId] = true;
+        return $parents;
+    }
+
+    /**
      * Build a subtree from the given item id.
      *
      * Build the list in depth, level per level, from root to leaves.

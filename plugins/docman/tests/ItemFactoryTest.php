@@ -34,7 +34,7 @@ Mock::generate('Docman_Version');
 Mock::generate('Docman_VersionFactory');
 Mock::generate('User');
 Mock::generate('UserManager');
-Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestVersion', array('_getItemDao', 'purgeDeletedItem'));
+Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestVersion', array('_getItemDao', 'purgeDeletedItem','getItemFromDb','isRoot'));
 Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestRestore', array('_getItemDao', '_getVersionFactory', 'getItemTypeForItem', '_getUserManager', '_getEventManager'));
 
 class Docman_ItemFactoryTest extends UnitTestCase {
@@ -179,6 +179,164 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $this->assertEqual($orphans, array(150 => 150, 112 => 112));
         $this->assertEqual($itemList, array(150 => false, 112 => $c_fld112, 113 => $c_fld113));
         $this->assertFalse($rootId);
+    }
+
+    /**
+     * 100
+     * |-- 110
+     *     |-- 111
+     *         |-- 112
+     *             |-- 113
+     */
+    function testIsInSubTreeSuccess() {
+        $itemFactory = new Docman_ItemFactoryTestVersion($this);
+
+        $fld110 = new MockDocman_Folder($this);
+        $fld110->setReturnValue('getParentId', 100);
+
+        $fld111 = new MockDocman_Folder($this);
+        $fld111->setReturnValue('getParentId', 110);
+
+        $fld112 = new MockDocman_Folder($this);
+        $fld112->setReturnValue('getParentId', 111);
+
+        $fld113 = new MockDocman_Folder($this);
+        $fld113->setReturnValue('getParentId', 112);
+
+        $itemFactory->setReturnValue('getItemFromDb', $fld113, array(113));
+        $itemFactory->setReturnValue('getItemFromDb', $fld112, array(112));
+        $itemFactory->setReturnValue('getItemFromDb', $fld111, array(111));
+        $itemFactory->setReturnValue('getItemFromDb', $fld110, array(110));
+
+        $itemFactory->setReturnValue('isRoot', false, array($fld113));
+        $itemFactory->setReturnValue('isRoot', false, array($fld112));
+        $itemFactory->setReturnValue('isRoot', false, array($fld111));
+        $itemFactory->setReturnValue('isRoot', true, array($fld110));
+
+        $itemFactory->expectCallCount('getItemFromDb',2);
+        $itemFactory->expectCallCount('isRoot',2);
+        $fld110->expectNever('getParentId');
+        $fld111->expectNever('getParentId');
+        $fld112->expectOnce('getParentId');
+        $fld113->expectOnce('getParentId');
+
+        $this->assertTrue($itemFactory->isInSubTree(113, 111));
+    }
+
+    function testIsInSubTreeFalse() {
+        $itemFactory = new Docman_ItemFactoryTestVersion($this);
+
+        $fld110 = new MockDocman_Folder($this);
+        $fld110->setReturnValue('getParentId', 100);
+
+        $fld111 = new MockDocman_Folder($this);
+        $fld111->setReturnValue('getParentId', 110);
+
+        $fld112 = new MockDocman_Folder($this);
+        $fld112->setReturnValue('getParentId', 111);
+
+        $fld113 = new MockDocman_Folder($this);
+        $fld113->setReturnValue('getParentId', 112);
+
+        $itemFactory->setReturnValue('getItemFromDb', $fld113, array(113));
+        $itemFactory->setReturnValue('getItemFromDb', $fld112, array(112));
+        $itemFactory->setReturnValue('getItemFromDb', $fld111, array(111));
+        $itemFactory->setReturnValue('getItemFromDb', $fld110, array(110));
+
+        $itemFactory->setReturnValue('isRoot', false, array($fld113));
+        $itemFactory->setReturnValue('isRoot', false, array($fld112));
+        $itemFactory->setReturnValue('isRoot', false, array($fld111));
+        $itemFactory->setReturnValue('isRoot', true, array($fld110));
+
+        $itemFactory->expectCallCount('getItemFromDb',3);
+        $itemFactory->expectCallCount('isRoot',3);
+        $fld110->expectNever('getParentId');
+        $fld111->expectOnce('getParentId');
+        $fld112->expectOnce('getParentId');
+        $fld113->expectNever('getParentId');
+
+        $this->assertFalse($itemFactory->isInSubTree(112, 113));
+    }
+
+    /**
+     * 100
+     * |-- 110
+     *     |-- 111
+     *         |-- 112
+     *             |-- 113
+     */
+    function testIsInSubTreeFailWithRootItem() {
+        $itemFactory = new Docman_ItemFactoryTestVersion($this);
+
+        $fld110 = new MockDocman_Folder($this);
+        $fld110->setReturnValue('getParentId', 0);
+
+        $itemFactory->setReturnValue('getItemFromDb', $fld110, array(110));
+
+        $itemFactory->setReturnValue('isRoot', true, array($fld110));
+
+        $itemFactory->expectOnce('getItemFromDb');
+        $itemFactory->expectOnce('isRoot');
+        $fld110->expectNever('getParentId');
+
+        $this->assertFalse($itemFactory->isInSubTree(110, 113));
+    }
+
+    /**
+     * 100
+     * |-- 110
+     *     |-- 111
+     *         |-- 112
+     *             |-- 113
+     */
+    function testGetParents() {
+        $itemFactory = new Docman_ItemFactoryTestVersion();
+
+        $fld110 = new MockDocman_Folder();
+        $fld110->setReturnValue('getParentId', 0);
+
+        $fld111 = new MockDocman_Folder();
+        $fld111->setReturnValue('getParentId', 110);
+
+        $fld112 = new MockDocman_Folder();
+        $fld112->setReturnValue('getParentId', 111);
+
+        $fld113 = new MockDocman_Folder();
+        $fld113->setReturnValue('getParentId', 112);
+
+        $itemFactory->setReturnValue('getItemFromDb', $fld113, array(113));
+        $itemFactory->setReturnValue('getItemFromDb', $fld112, array(112));
+        $itemFactory->setReturnValue('getItemFromDb', $fld111, array(111));
+        $itemFactory->setReturnValue('getItemFromDb', $fld110, array(110));
+
+        $itemFactory->setReturnValue('isRoot', false, array($fld113));
+        $itemFactory->setReturnValue('isRoot', false, array($fld112));
+        $itemFactory->setReturnValue('isRoot', false, array($fld111));
+        $itemFactory->setReturnValue('isRoot', true, array($fld110));
+
+        $itemFactory->expectCallCount('getItemFromDb',3);
+        $itemFactory->expectCallCount('isRoot',3);
+        $fld110->expectNever('getParentId');
+        $fld111->expectOnce('getParentId');
+        $fld112->expectOnce('getParentId');
+        $fld113->expectNever('getParentId');
+
+        $this->assertEqual(array(111 => true, 110 => true), $itemFactory->getParents(112));
+    }
+
+    function testGetParentsForRoot() {
+        $itemFactory = new Docman_ItemFactoryTestVersion();
+
+        $fld110 = new MockDocman_Folder();
+        $fld110->setReturnValue('getParentId', 0);
+        $itemFactory->setReturnValue('getItemFromDb', $fld110, array(110));
+        $itemFactory->setReturnValue('isRoot', true, array($fld110));
+
+        $itemFactory->expectOnce('getItemFromDb');
+        $itemFactory->expectOnce('isRoot');
+        $fld110->expectNever('getParentId');
+
+        $this->assertEqual(array(), $itemFactory->getParents(110));
     }
 
     /**
