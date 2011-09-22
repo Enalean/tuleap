@@ -20,35 +20,63 @@
 
 /**
  * Basic Template mechanism
+ *
+ * Usage:
+ * <pre>
+ * $t = new Tuleap_Template('/path/to/my_template.tpl');
+ * $t->set('title', $title);
+ * $t->set('description', $desc);
+ * echo $t->fetch();
+ * </pre>
  */
-class Template {
-    var $vars;
+class Tuleap_Template {
+    
+    /**
+     * @var The variables to pass to the template
+     */
+    protected $vars;
+
+    /**
+     * @var The file name of the template
+     */
+    protected $file;
 
     /**
      * Constructor
      *
      * @param $file string the file name you want to load
      */
-    function Template($file = null) {
+    public function __construct($file = null) {
         $this->file = $file;
         $this->vars = array();
     }
 
     /**
      * Set a template variable.
+     *
+     * @return Tuleap_Template
      */
-    function set($name, $value) {
+    public function set($name, $value) {
         $this->vars[$name] = is_object($value) ? $value->fetch() : $value;
     }
 
     /**
      * Open, parse, and return the template file.
      *
-     * @param $file string the template file name
+     * @param $file string the template file name, by default use the 
+     *
+     * @throws Exception if there is no file to load
+     *
+     * @return string
      */
-    function fetch($file = null) {
-        if(!$file) $file = $this->file;
-
+    public function fetch($file = null) {
+        if (!$file) {
+            $file = $this->file;
+        }
+        if (!$file) {
+            throw Exception('A template file name is required');
+        }
+            
         extract($this->vars);          // Extract the vars to local namespace
         ob_start();                    // Start output buffering
         include($file);                // Include the file

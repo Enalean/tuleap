@@ -25,7 +25,7 @@
 require_once('common/tracker/ArtifactFile.class.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/mail/Codendi_Mail.class.php');
-require_once('common/include/Template.class.php');
+require_once('common/include/Tuleap_Template.class.php');
 require_once('common/include/Codendi_Diff.class.php');
 
 /**
@@ -2663,7 +2663,7 @@ class Artifact extends Error {
             $breadcrumbs[] = '<a href="'. $artifact_href .'" />'. $hp->purify($this->ArtifactType->getItemName().' #'.$this->getID()) .'</a>';
             
             $mail = new Codendi_Mail();
-            $tpl = new Template($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
+            $tpl = new Tuleap_Template($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
             $tpl->set('txt_display_not_correct', $GLOBALS['Language']->getText('mail_html_template', 'display_not_correct'));
             $tpl->set('txt_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'update_prefs'));
             $tpl->set('txt_can_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'can_update_prefs'));
