@@ -344,17 +344,28 @@ class FRSReleaseFactory {
     /**
      * Set default permission on given release
      *
-     * By default, release inherits it's permissions from the parent package.
+     * By default, release inherits its permissions from the parent package.
+     * If no permission is set "explicitly" to package, release should be set to default one
      *
      * @param FRSRelease $release Release on which to apply permissions
+     * 
+     * @return Boolean
      */
     function setDefaultPermissions(FRSRelease $release) {
         $pm = $this->getPermissionsManager();
-        $ugroupsId = $pm->getUgroupIdByObjectIdAndPermissionType($release->getPackageID(), FRSPackage::PERM_READ);
-        foreach ($ugroupsId as $row) {
-            $pm->addPermission(FRSRelease::PERM_READ, $release->getReleaseID(), $row['ugroup_id']);
+        // Reset permissions for this release, before setting the new ones
+        if ($pm->clearPermission(FRSRelease::PERM_READ, $release->getReleaseID())) {
+            $dar = $pm->getAuthorizedUgroups($release->getPackageID(), FRSPackage::PERM_READ, false);
+            if ($dar && !$dar->isError() && $dar->rowCount()>0) {
+                foreach($dar as $row) {
+                    // Set new permissions
+                    $pm->addPermission(FRSRelease::PERM_READ, $release->getReleaseID(), $row['ugroup_id']);
+                }
+                permission_add_history($release->getGroupID(), FRSRelease::PERM_READ, $release->getReleaseID());
+                return true;
+            }
         }
-        permission_add_history($release->getGroupID(), FRSRelease::PERM_READ, $release->getReleaseID());
+        return false;
     }
 
     /**

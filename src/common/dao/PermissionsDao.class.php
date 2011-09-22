@@ -170,6 +170,21 @@ class PermissionsDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    /**
+     * Removes a given permission to a given object
+     *
+     * @param String $permissionType Permission
+     * @param String $objectId       Affected object's id
+     * 
+     * @return Boolean
+     */
+    function clearPermission($permissionType, $objectId) {
+        $sql = ' DELETE FROM permissions '.
+               ' WHERE object_id = '.$this->da->quoteSmart($objectId).
+               ' AND permission_type = '.$this->da->quoteSmart($permissionType);
+        return $this->update($sql);
+    }
+
 }
 
 

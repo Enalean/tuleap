@@ -639,9 +639,11 @@ function addRelease($sessionKey,$group_id,$package_id,$name,$notes,$changes,$sta
                     //we can modify it from web UI
                     $release_array['release_id'] = $dar;
                     $release = new FRSRelease($release_array);
-                    $release_fact->setDefaultPermissions($release);
-
-                    return $dar;
+                    if ($release_fact->setDefaultPermissions($release)) {
+                        return $dar;
+                    } else {
+                        return new SoapFault(invalid_release_fault, 'Could not retrieve parent package permission', 'addRelease');
+                    }
                 }
             }
         } else {

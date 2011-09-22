@@ -11,6 +11,7 @@ Version 4.0.22 - (Not Released Yet)
     * backlog #112: SVNAccessFile not properly updated after user removal
     * Add CSRF countermeasures
     * Don't send email notification to deleted & suspended users when change occurs on a wiki page. (contrib STMicroelectronics)
+    * Fix bug with default permissions on FRS release creation through CLI (contrib STMicroelectronics)
 
     == Plugins ==
     * WebDAV plugin v1.8. See separated ChangeLog

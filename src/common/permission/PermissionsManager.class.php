@@ -145,7 +145,7 @@ class PermissionsManager {
      * @param  string  $permission_type The type of permission asked
      */
      function getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type){
-         $dar =& $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type);
+         $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type, false);
          if ($dar->isError() || !$dar->valid()) {
             return;
          } else {
@@ -255,5 +255,18 @@ class PermissionsManager {
     function addPermission($permission_type, $object_id, $ugroup_id){
         return $this->_permission_dao->addPermission($permission_type, $object_id, $ugroup_id);
     }
+
+    /**
+     * Clears permission for a given object
+     * 
+     * @param String $permissionType Permission
+     * @param String $objectId       Affected object's id
+     * 
+     * @return Boolean
+     */
+    function clearPermission($permissionType, $objectId) {
+        return $this->_permission_dao->clearPermission($permissionType, $objectId);
+    }
+
 }
 ?>
