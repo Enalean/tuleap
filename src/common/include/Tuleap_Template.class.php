@@ -53,8 +53,6 @@ class Tuleap_Template {
 
     /**
      * Set a template variable.
-     *
-     * @return Tuleap_Template
      */
     public function set($name, $value) {
         $this->vars[$name] = is_object($value) ? $value->fetch() : $value;
