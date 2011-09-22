@@ -45,7 +45,6 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'plugins/IM/include/jabbex_api/installation/install.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/docman/bin/DocmanImport/FSDocmanUploader.class.php',
-            'site-content/en_US/mail/html_template.php',
         );
         
         //Those files are allowed to contain something after closing tag
@@ -68,7 +67,8 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'plugins/tracker/www/scripts/codendi/TrackerReports.js.php',
             'plugins/tracker/www/scripts/codendi/TrackerAdminFields.js.php',
             'site-content/en_US/others/default_page.php',
-            'site-content/fr_FR/others/default_page.php'
+            'site-content/fr_FR/others/default_page.php',
+            'site-content/en_US/mail/html_template.php',
         );
     }
     
