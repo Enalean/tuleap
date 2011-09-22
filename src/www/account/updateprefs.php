@@ -74,6 +74,12 @@ if ($request->existAndNonEmpty('username_display')) {
     $username_display = $request->get('username_display');
 }
 
+$user_tracker_mailformat = DEFAULT_TRACKER_MAILFORMAT;
+if ($request->existAndNonEmpty('user_tracker_mailformat')) {
+    if($request->valid(new Valid_WhiteList('user_tracker_mailformat', $tracker_mailformats))) {
+        $user_tracker_mailformat = $request->get('user_tracker_mailformat');
+    }
+}
 //
 // Perform the update
 //
@@ -91,6 +97,8 @@ db_query("UPDATE user SET "
 // Preferences
 user_set_preference("user_csv_separator", $user_csv_separator);
 user_set_preference("user_csv_dateformat", $user_csv_dateformat);
+user_set_preference("user_tracker_mailformat", $user_tracker_mailformat);
+
 if($username_display !== null) {
     user_set_preference("username_display", $username_display);
 }

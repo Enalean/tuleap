@@ -24,6 +24,9 @@
 
 require_once('common/tracker/ArtifactFile.class.php');
 require_once('common/mail/Mail.class.php');
+require_once('common/mail/Codendi_Mail.class.php');
+require_once('common/include/Tuleap_Template.class.php');
+require_once('common/include/Codendi_Diff.class.php');
 
 /**
  *
@@ -2426,36 +2429,26 @@ class Artifact extends Error {
         //withoutpermissions_concerned_addresses contains emails for which there is no permissions check
         
         //Prepare e-mail
-        list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-        $mail =& new Mail();
-        $mail->setFrom($GLOBALS['sys_noreply']);
-        $pm = ProjectManager::instance();
-        $mail->addAdditionalHeader("X-Codendi-Project",     $pm->getProject($group_id)->getUnixName());
-        $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
-        $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
+        list($host,) = explode(':',$GLOBALS['sys_default_domain']);
+
         
-         //treat anonymous users
-	    $body = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
-	    
-	    if ($ok) { //don't send the mail if nothing permitted for this user group
-            $to = join(',',array_keys($concerned_addresses));
-            if ($to) { 
-                $mail->setTo($to);
-                $mail->setSubject($subject);
-                $mail->setBody($body);
-                $mail->send();
-            }
-	    }
-        
+        //treat anonymous users
+        $text_mail = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
+        $html_mail = $this->createHTMLMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']),$changes,$group_id,$group_artifact_id,$ok,$subject);
+
+        if ($ok) {
+            $this->sendNotification(array_keys($concerned_addresses), $subject, $text_mail, $html_mail);
+        }
+
         //treat 'without permissions' emails
         if (count($withoutpermissions_concerned_addresses)) {
-            $body = $this->createMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
+            $text_mail = $this->createMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
+            $html_mail = $this->createHTMLMailForUsers(false,$changes,$group_id,$group_artifact_id,$ok,$subject);
+       
             if ($ok) {
-                $mail->setTo(join(',', array_keys($withoutpermissions_concerned_addresses)));
-                $mail->setSubject($subject);
-                $mail->setBody($body);
-                $mail->send();
+                $this->sendNotification(array_keys($withoutpermissions_concerned_addresses), $subject, $text_mail, $html_mail);
             }
+
         }
         
         //now group other registered users
@@ -2471,25 +2464,258 @@ class Artifact extends Error {
             
             $user_ids = $user_sets[$x];
             //echo "<br>--->  preparing mail $x for ";print_r($user_ids);
-            $body = $this->createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
-            
+            $text_mail = $this->createMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
+            $html_mail = $this->createHTMLMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,$ok,$subject);
             if (!$ok) continue; //don't send the mail if nothing permitted for this user group
 
             foreach ($user_ids as $user_id) {
                 $arr_addresses[] = user_getemail($user_id);
             }
-
-            $to = join(',',$arr_addresses);
-            if ($to) { 
-                $mail->setTo($to);
-                $mail->setSubject($subject);
-                $mail->setBody($body);
-                $mail->send();
+       
+            if ($arr_addresses) {
+                $this->sendNotification($arr_addresses, $subject, $text_mail, $html_mail);
             }
 	    }
       }
     }
+    
+    /**
+     * Build notification list based on user preferences
+     *
+     * @param Array                  $addresses
+     * @param String                 $subject
+     * @param Codendi_Mail_Interface $text_mail
+     * @param Codendi_Mail_Interface $html_mail
+     */
+    function sendNotification($addresses, $subject, $text_mail, $html_mail) {
+        $um             = UserManager::instance();
+        $html_addresses = array();
+        $text_addresses = array();
+        foreach ($addresses as $address) {
+            $user = $um->getUserByEmail($address);
+            $pref = $user ? $user->getPreference('user_tracker_mailformat') : false;
+            if ($pref === 'html') {
+                $html_addresses[] = $address;
+            } else {
+                $text_addresses[] = $address;
+            }
+        }
 
+        $mail = null;
+        if ($text_mail && count($text_addresses)) {
+            $this->sendMail($text_mail, $subject, $text_addresses);
+        }
+        if ($html_mail && count($html_addresses)) {
+            if ($text_mail) {
+                $html_mail->setBodyText($text_mail->getBody());
+            }
+            $this->sendMail($html_mail, $subject, $html_addresses);
+        }
+    }
+    
+    /**
+     * Finalize & send mail to peple
+     *
+     * @param Codendi_Mail_Interface $mail
+     * @param String                 $subject
+     * @param Array                  $to
+     */
+    function sendMail(Codendi_Mail_Interface $mail, $subject, array $to) {
+        $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
+        $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
+        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setTo(join(',', $to));
+        $mail->setSubject($subject);
+        $mail->send();
+    }
+    
+    /** for a certain set of users being part of the same ugroups
+     * create the mail body containing only fields that they have the permission to read
+     */
+    function createHTMLMailForUsers($ugroups,$changes,$group_id,$group_artifact_id,&$ok,&$subject) {
+        global $art_field_fact,$art_fieldset_fact,$Language;
+
+        $artifact_href = get_server_url()."/tracker/?func=detail&aid=".$this->getID()."&atid=$group_artifact_id&group_id=$group_id";
+        $used_fields = $art_field_fact->getAllUsedFields();
+        $art_fieldset_fact = new ArtifactFieldsetFactory($this->ArtifactType);
+        $used_fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
+        $ok = false;
+
+        $hp = $this->getHTMLPurifier();
+        
+        $body = '';
+         
+        //generate the field permissions (TRACKER_FIELD_READ, TRACKER_FIEDL_UPDATE or nothing)
+        //for all fields of this tracker given the $ugroups the user is part of
+        $field_perm = false;
+        if ($ugroups) {
+            $field_perm = $this->ArtifactType->getFieldPermissions($ugroups);
+        }
+
+        $summ = "";
+        if ($field_perm === false || (isset($field_perm['summary']) && $field_perm['summary'] && permission_can_read_field($field_perm['summary']))) {
+            $summ = util_unconvert_htmlspecialchars($this->getValue('summary'));
+        }
+        $subject='['.$this->ArtifactType->getCapsItemName().' #'.$this->getID().'] '.$summ;
+         
+
+        // artifact fields
+        // Generate the message preamble with all required
+        // artifact fields - Changes first if there are some.
+        $body .= '<h1>'. $summ .'</h1>'; 
+        if ($changes) {
+            $body .= $this->formatChangesHTML($changes, $field_perm, $artifact_href, $visible_change);
+            if (!$visible_change) return;
+        }
+        $ok = true;
+        
+        // Snapshot
+        $fields_per_line=2;
+        // the column number is the number of field per line * 2 (label + value)
+        // + the number of field per line -1 (a blank column between each pair "label-value" to give more space)
+        $columns_number = ($fields_per_line * 2) + ($fields_per_line - 1);
+        $max_size=40;
+        $snapshot = '';
+        foreach($used_fieldsets as $fieldset_id => $result_fieldset) {
+
+            // this variable will tell us if we have to display the fieldset or not (if there is at least one field to display or not)
+            $display_fieldset = false;
+
+            $fieldset_html = '';
+
+            $i = 0;
+            $fields_in_fieldset = $result_fieldset->getAllUsedFields();
+            foreach ($fields_in_fieldset as $key => $field) {
+                if ($field->getName() != 'comment_type_id' && $field->getName() != 'artifact_id') {
+                    $field_html = $this->_getFieldLabelAndValueForHTMLMail($group_id, $group_artifact_id, $field, $field_perm);
+                    if ($field_html) {
+
+                        // if the user can read at least one field, we can display the fieldset this field is within
+                        $display_fieldset = true;
+
+                        list($sz,) = explode("/",$field->getDisplaySize());
+
+                        // Details field must be on one row
+                        if ($sz > $max_size || $field->getName()=='details') {
+                            $fieldset_html .= "\n<TR>".
+                                  '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $field_html['label'] .'</td>'.
+                                  '<TD valign="top" width="90%" colspan="'.($columns_number-1).'">'.$field_html['value'].'</TD>'.
+                                  "\n</TR>";
+                            $i=0;
+                        } else {
+                            $fieldset_html .= ($i % $fields_per_line ? '':"\n<TR>");
+                            $fieldset_html .= '<TD align="left" valign="top" width="10%" nowrap="nowrap">'. $field_html['label'] .'</td>'.
+                                              '<TD width="38%" valign="top">'. $field_html['value'] .'</TD>';
+                            $i++;
+                            // if the line is not full, we add a additional column to give more space
+                            $fieldset_html .= ($i % $fields_per_line) ? '<td class="artifact_spacer" width="4%">&nbsp;</td>':"\n</TR>";
+                        }
+                    }
+                }
+            }
+
+            // We display the fieldset only if there is at least one field inside that we can display
+            if ($display_fieldset) {
+                $snapshot .= '<TR style="color: #444444; background-color: #F6F6F6;"><TD COLSPAN="'.(int)$columns_number.'">&nbsp;<span title="'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getDescriptionText()), CODENDI_PURIFIER_CONVERT_HTML) .'">'. $hp->purify(SimpleSanitizer::unsanitize($result_fieldset->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
+                $snapshot .= $fieldset_html;
+            }
+        }
+        if ($snapshot) {
+            $body .= '<h2>'.$GLOBALS['Language']->getText('tracker_include_artifact', 'mail_snapshot_title').'</h2>';
+            $body .= '<table>';
+            $body .= $snapshot;
+            $body .= '</table>';
+        }
+        
+        $result = $this->getFollowups();
+        if (db_numrows($result)) {
+            $body .= '<h2>'.$GLOBALS['Language']->getText('tracker_include_artifact', 'mail_comment_title').'</h2>';
+
+            $body .= '<dl>';
+            while ($row = db_fetch_array($result)) {
+                $orig_subm = $this->getOriginalCommentSubmitter($row['artifact_history_id']);
+                $orig_sub_mod_by = db_result($orig_subm, 0, 'mod_by');
+                if ($orig_sub_mod_by == 100) {
+                    $submitter_real_name = db_result($orig_subm, 0, 'email');
+                } else {
+                    $submitter = UserManager::instance()->getUserById($orig_sub_mod_by);
+                    $submitter_real_name = $submitter->getRealName();
+                }
+                
+                $orig_date = $this->getOriginalCommentDate($row['artifact_history_id']);
+                $subm_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($orig_date, 0, 'date'));
+                
+                $body .= '<dt><strong>'. $submitter_real_name .'</strong> <span style="color:#bbb">'. $subm_date .'</span></dt>';
+                $body .= '<dd>'.$this->formatFollowUp($group_id, $row['format'], $row['new_value'], self::OUTPUT_BROWSER).'</dd>';
+            }
+            $body .= '</dl>';
+        }
+        // Finaly, transform relatives URLs to absolute 
+        // I'm Nicolas Terray and I approve this hack.
+        $body = preg_replace('%<a href="/%', '<a href="'.get_server_url().'/', $body);
+        
+        // Mail is ready, we can create it
+        if ($ok) {
+            $project = ProjectManager::instance()->getProject($group_id);
+            $breadcrumbs = array();
+            $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project->getUnixName($tolower = true) .'" />'. $project->getPublicName() .'</a>';
+            $breadcrumbs[] = '<a href="'. get_server_url() .'/tracker/?group_id='. (int)$group_id .'&amp;atid='. (int)$group_artifact_id .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->ArtifactType->getName())) .'</a>';
+            $breadcrumbs[] = '<a href="'. $artifact_href .'" />'. $hp->purify($this->ArtifactType->getItemName().' #'.$this->getID()) .'</a>';
+            
+            $mail = new Codendi_Mail();
+            $tpl = new Tuleap_Template($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
+            $tpl->set('txt_display_not_correct', $GLOBALS['Language']->getText('mail_html_template', 'display_not_correct'));
+            $tpl->set('txt_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'update_prefs'));
+            $tpl->set('txt_can_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'can_update_prefs'));
+            $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
+            $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
+            $tpl->set('breadcrumbs', $breadcrumbs);
+            $tpl->set('title', $hp->purify($subject, CODENDI_PURIFY_CONVERT_HTML));
+            $tpl->set('body', $body);
+            $tpl->set('additional_footer_link', '<a href="'. $artifact_href .'">'.$GLOBALS['Language']->getText('tracker_include_artifact', 'mail_direct_link').'</a>');
+            $mail->setBodyHtml($tpl->fetch());
+            return $mail;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * return a field for the given user.
+     *
+     * @protected
+     **/
+    function _getFieldLabelAndValueForHTMLMail($group_id, $group_artifact_id, $field, $field_perm) {
+        $html = false;
+        $read_only = true;
+        $field_name = $field->getName();
+        if ($field_perm === false || (isset($field_perm[$field_name]) && $field_perm[$field_name] && permission_can_read_field($field_perm[$field_name]))) {
+
+            // For multi select box, we need to retrieve all the values
+            if ( $field->isMultiSelectBox() ) {
+                $field_value = $field->getValues($this->getID());
+            } else {
+                $field_value = $this->getValue($field->getName());
+            }
+
+            $field_html  = new ArtifactFieldHtml($field);
+            $field_html->disableJavascript();
+            $label = $field_html->labelDisplay(false,false,false);
+
+            if ($field->getName() == 'submitted_by') {
+                $value = util_user_link(user_getname($field_value));
+            } else if ($field->getName() == 'open_date') {
+                $value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);
+            } else if ($field->getName() == 'last_update_date') {
+                $value = format_date($GLOBALS['Language']->getText('system', 'datefmt'),$field_value);
+            } else {
+                $value = $field_html->display($this->ArtifactType->getID(),$field_value,false,false,$read_only);
+                $value = util_make_links($value, $group_id, $group_artifact_id);
+            }
+            $html = array('label' => $label, 'value' => $value);
+        }
+        return $html;
+    }
 
 	/** for a certain set of users being part of the same ugroups
 	 * create the mail body containing only fields that they have the permission to read
@@ -2639,12 +2865,18 @@ class Artifact extends Error {
                 $body .= ' '.$ref_instance->getMatch().': '.$ref_instance->getFullGotoLink().$GLOBALS['sys_lf'];
             }
         }
-        
-	    // Finally output the message trailer
-	    $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $Language->getText('tracker_include_artifact','follow_link');
-	    $body .= "". $GLOBALS['sys_lf'] . $artifact_href;
 
-	    return $body;
+        // Finally output the message trailer
+        $body .= "". $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $Language->getText('tracker_include_artifact','follow_link');
+        $body .= "". $GLOBALS['sys_lf'] . $artifact_href;
+
+        if ($ok) {
+            $mail = new Mail();
+            $mail->setBody($body);
+            return $mail;
+        } else {
+            return null;
+        }
 	}
 
     /**
@@ -2755,6 +2987,162 @@ class Artifact extends Error {
             }
     
         return($out_hdr.$out.$out_com.$out_att);	    
+    }
+
+    /**
+     * Format the changes
+     *
+     * @param changes: array of changes
+     * @param $field_perm an array with the permission associated to each field. false to no check perms
+     * @param string $artifact_href The direct link to the artifact
+     * @param $visible_change only needed when using permissions. Returns true if there is any change
+     * that the user has permission to see
+     *
+     * @return string
+     */
+    function formatChangesHTML($changes, $field_perm, $artifact_href, &$visible_change) {
+
+        global $art_field_fact,$Language;
+        $group_id = $this->ArtifactType->getGroupID();
+        $visible_change = false;
+        $out = '';
+        $out_com = '';
+        $out_ch  = '';
+        reset($changes);
+        $fmt = "%20s | %-25s | %s".$GLOBALS['sys_lf'];
+
+        $hp = $this->getHTMLPurifier();
+
+        
+        $out .= '<h2>'.$Language->getText('tracker_include_artifact','mail_latest_modifications').'</h2>';
+        $out .= '
+            <div class="tracker_artifact_followup_header">
+                <div class="tracker_artifact_followup_title">
+                    <span class="tracker_artifact_followup_title_user">';
+        
+        if ($this->hasFieldPermission($field_perm, 'assigned_to') || 
+            $this->hasFieldPermission($field_perm, 'multi_assigned_to') || 
+            (!isset($field_perm['assigned_to']) && !isset($field_perm['multi_assigned_to']))) {
+            $user = UserManager::instance()->getCurrentUser();
+            if ($user->isLoggedIn()) {
+                $out .= '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')</a>';
+            } else {
+                $out = $Language->getText('tracker_include_artifact','anon_user');
+            }
+        }
+        
+        $timezone = '';
+        if ($user->getId() != 0) {
+            $timezone = ' ('.$user->getTimezone().')';
+        }
+        
+        $out .= '
+                    </span>
+                </div>
+                <div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).$timezone.'</div>
+            </div>
+            <div class="tracker_artifact_followup_avatar">
+                <div class="avatar"></div>
+            </div>
+            <div class="tracker_artifact_followup_content">
+                <div class="tracker_artifact_followup_comment">
+                    <div class="tracker_artifact_followup_comment_body">';
+        
+        //Process special cases first: follow-up comment
+        if (!empty($changes['comment'])) {
+            $visible_change = true;
+            if (!empty($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none')) {
+                $out_com .= "<strong>[". $changes['comment']['type'] ."]</strong><br />";
+            }
+            $out_com .= $this->formatFollowUp($group_id, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_BROWSER);
+            unset($changes['comment']);
+        }
+        //Process special cases first: file attachment
+        if (!empty($changes['attach'])) {
+            $visible_change = true;
+            $out_ch .= '<tr>';
+            $out_ch .= '<td valign="top"><strong>'. $Language->getText('tracker_include_artifact','add_attachment') .'</strong></td>';
+            $out_ch .= '<td valign="top"><a href="'.$changes['attach']['href'].'">'.$hp->purify($changes['attach']['name']).'</a> ('.size_readable($changes['attach']['size']).')</td>';
+            $out_ch .= '</tr>';
+            unset($changes['attach']);
+        }
+
+        // All the rest of the fields now
+        reset($changes);
+        foreach ($changes as $field_name => $h) {
+            // If both removed and added items are empty skip - Sanity check
+            if ((!empty($h['del']) || !empty($h['add'])) && $this->hasFieldPermission($field_perm, $field_name)) {
+                $visible_change = true;
+                $label          = $field_name;
+                $field          = $art_field_fact->getFieldFromName($field_name);
+                if ( $field ) {
+                    $label = $field->getLabel();
+                    if (isset($h['del'])) {
+                        $h['del'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['del']));
+                    }
+                    if (isset($h['add'])) {
+                        $h['add'] = SimpleSanitizer::unsanitize(util_unconvert_htmlspecialchars($h['add']));
+                    }
+                }
+                $out_ch .= '<tr>';
+                $out_ch .= '  <td valign="top" nowrap="nowrap"><ul style="margin:0; padding:0; margin-left:1.5em; "><li><strong>'.$hp->purify(SimpleSanitizer::unsanitize($label)).':&nbsp;</strong></li></ul></td>';
+                $out_ch .= '  <td valign="top">';
+                if ($field->getDisplayType() == 'TA' || $field->getDisplayType() == 'TF') {
+                    $before = explode("\n", $h['del']);
+                    $after  = explode("\n", $h['add']);
+                    $callback = array(Codendi_HTMLPurifier::instance(), 'purify');
+                    $d = new Codendi_Diff(
+                        array_map($callback, $before, array_fill(0, count($before), CODENDI_PURIFIER_CONVERT_HTML)),
+                        array_map($callback, $after,  array_fill(0, count($after),  CODENDI_PURIFIER_CONVERT_HTML))
+                    );
+                    $f = new Codendi_HtmlUnifiedDiffFormatter(2);
+                    $diff = $f->format($d);
+                    if ($diff) {
+                        $out_ch .= '<div class="diff">'. $diff .'</div>';
+                    }
+                } else {
+                    $before = '<del>'.$hp->purify($h['del']).'</del>';
+                    $after  = '<ins>'.$hp->purify($h['add']).'</ins>';
+                    if ($field->getDisplayType() == 'MB') {
+                        if (strlen($before) != 11) { //'<del></del>' => empty
+                            $out_ch .= $before;
+                        }
+                        if (strlen($before) != 11 && strlen($after) != 11) { //'<ins></ins>' => empty
+                            $out_ch .= ' &plusmn; ';
+                        }
+                        if (strlen($after) != 11) { //'<ins></ins>' => empty
+                            $out_ch .= $after;
+                        }
+                    } else {
+                        $out_ch .= $before;
+                        $out_ch .= ' &rarr; ';
+                        $out_ch .= $after;
+                    }
+                }
+                $out_ch .= '</td>';
+                $out_ch .= '</tr>';
+            }
+        }
+        if ($out_ch) {
+            $out_ch = $Language->getText('tracker_include_artifact','mail_changes').'<table cellpadding="0" border="0" cellspacing="0" class="artifact_changes">'.
+            $out_ch .
+            '</table>';
+        }
+        
+        $out .= $out_com;
+        if ($out_com && $out_ch) {
+            $out .= '<hr>';
+        }
+        $out .= $out_ch;
+        
+        $out .= '
+                    </div>
+                </div>
+            </div>
+            <div style="clear:both;"></div>
+            <p align="right" class="cta"><a href="'. $artifact_href .'" target="_blank">'.$Language->getText('tracker_include_artifact','mail_answer_now').'</a></p>
+            ';
+        return $out;
     }
 
         

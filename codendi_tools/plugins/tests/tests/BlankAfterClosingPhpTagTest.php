@@ -67,7 +67,8 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'plugins/tracker/www/scripts/codendi/TrackerReports.js.php',
             'plugins/tracker/www/scripts/codendi/TrackerAdminFields.js.php',
             'site-content/en_US/others/default_page.php',
-            'site-content/fr_FR/others/default_page.php'
+            'site-content/fr_FR/others/default_page.php',
+            'site-content/en_US/mail/html_template.php',
         );
     }
     

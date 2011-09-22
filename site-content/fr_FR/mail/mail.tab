@@ -77,3 +77,9 @@ mail_utils	update_list	Modifier une liste
 #
 mail_system_event	md5_compute_error	Cher utilisateur du servcie Fichiers,\n\n Une erreur est survenue lors du calcul du md5sum de votre fichier $1.\nVeuillez le télécharger une autre fois.   
 mail_system_event	md5_compare_error	Cher utilisateur du servcie Fichiers, \n\nLa référence md5sum donnée pour le fichier $1 diffère de celle calculée sur le serveur qui est équale = $2.\n Il est à noter qu'un message d'erreur sera affiché chaque fois  que vous tenterez d'accéder à partir du web au contenu de la release en question. \nSi vous considérez que l'upload du fichier s'est bien passé, vous pouvez modifier la valeur du champ md5sum en soumettant la bonne valeur.
+#
+#
+#
+mail_html_template	display_not_correct	Ce message ne s'affiche pas correctement?
+mail_html_template	update_prefs	mettez à jour vos préférences utilisateur
+mail_html_template	can_update_prefs	Mettre à jour vos préférences

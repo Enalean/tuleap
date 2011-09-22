@@ -15,6 +15,12 @@
 require_once('common/include/HTTPRequest.class.php');
 
 class ArtifactFieldHtml extends ArtifactField {
+    /**
+     * If set to false, no JS will be generated in Read Only mode.
+     * 
+     * @var Boolean
+     */
+    protected $isJavascriptEnabled = true;
 
 	/**
      *  Copy constructor
@@ -38,8 +44,17 @@ class ArtifactFieldHtml extends ArtifactField {
 		$this->place = $art_field->place;
 		
 	}
-	
-	/**
+
+    /**
+     * Allow to disable JS generation in Read Only mode.
+     * 
+     * Usefull in HTML Mail context when we need (read) HTML but no Javascript
+     */
+    function disableJavascript() {
+        $this->isJavascriptEnabled = false;
+    }
+
+    /**
      * 
      *  Returns the label display for this field (HTML code)
      * 
@@ -111,11 +126,13 @@ class ArtifactFieldHtml extends ArtifactField {
             if ($display) {
                 $output  .= html_build_multiple_select_box($result,$box_name,$checked,($this->getDisplaySize()!=""?$this->getDisplaySize():"6"),$show_none,$text_none, $show_any,$text_any,$show_unchanged,$text_unchanged,$show_value);
             }
-            $output .= '<script type="text/javascript">';
-            $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
-            $output .= $this->_getValuesAsJavascript($array_values,$checked);
-            $output .= ";\n";
-            $output .= "</script>";
+            if ($this->isJavascriptEnabled) {
+                $output .= '<script type="text/javascript">';
+                $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
+                $output .= $this->_getValuesAsJavascript($array_values,$checked);
+                $output .= ";\n";
+                $output .= "</script>";
+            }
             return $output;
 	    }
 	}
@@ -207,11 +224,13 @@ class ArtifactFieldHtml extends ArtifactField {
             if ($display) {
                 $output  .= html_build_select_box ($result,$box_name,$checked,$show_none,$text_none,$show_any, $text_any,$show_unchanged,$text_unchanged);
             }
-            $output .= '<script type="text/javascript">';
-            $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
-             $output .= $this->_getValuesAsJavascript($array_values,$checked, $text_unchanged);
-            $output .= ';';
-            $output .= "\n</script>";
+            if ($this->isJavascriptEnabled) {
+                $output .= '<script type="text/javascript">';
+                $output .= "\ncodendi.tracker.fields.add('".(int)$this->getID()."', '".$hp->purify($this->getName(), CODENDI_PURIFIER_JS_QUOTE)."', '".$hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_JS_QUOTE)."')";
+                $output .= $this->_getValuesAsJavascript($array_values,$checked, $text_unchanged);
+                $output .= ';';
+                $output .= "\n</script>";
+            }
            return $output;
 	    }
 	}

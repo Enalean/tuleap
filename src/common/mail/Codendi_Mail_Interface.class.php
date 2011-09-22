@@ -34,5 +34,7 @@ interface Codendi_Mail_Interface {
     public function getBody();
     public function getTo();
     public function getSubject();
+
+    public function addAdditionalHeader($name, $value);
 }
 ?>

@@ -55,6 +55,7 @@ Provides: tuleap
 Requires: php-pecl-apc
 Requires: htmlpurifier
 Requires: curl
+Requires: php-zendframework = 1.8.1
 # Perl
 Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip
 # Apache
@@ -207,7 +208,7 @@ Summary: Codendi plugin for PDF watermarking
 Group: Development/Tools
 Version: @@PLUGIN_DOCMANWATERMARK_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, php-zendframework = 1.8.1
+Requires: %{PKG_NAME}
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-docmanwatermark = %{version}
 %else

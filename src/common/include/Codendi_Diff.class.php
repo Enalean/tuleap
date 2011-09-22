@@ -932,6 +932,13 @@ class Codendi_HtmlUnifiedDiffFormatter extends Codendi_UnifiedDiffFormatter
         $this->_html = '';
     }
 
+    function _block_header($xbeg, $xlen, $ybeg, $ylen) {
+        if ($xbeg > 1) {
+            return '[...]';
+        }
+        return "";
+    }
+    
     function _start_diff() {
         $this->_html .= '';
     }
@@ -941,7 +948,10 @@ class Codendi_HtmlUnifiedDiffFormatter extends Codendi_UnifiedDiffFormatter
     }
 
     function _start_block($header) {
-        $this->_html .= '<div class="block"><tt>'. $header .'</tt>';
+        $this->_html .= '<div class="block">';
+        if ($header) {
+            $this->_html .= '<tt>'. $header .'</tt>';
+        }
     }
 
     function _end_block() {

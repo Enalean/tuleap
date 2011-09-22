@@ -44,11 +44,11 @@ account_options	codendi_name_and_login	Nom complet (login)
 account_options	codendi_login	Login
 account_options	realname	Nom complet
 account_options	auth_attempt_title	Détails d'authentification
-account_options	auth_attempt_last_success	Dernière connexion:
-account_options	auth_attempt_prev_success	Connexion précédente:
-account_options	auth_attempt_last_failure	Dernier echec de connexion:
-account_options	auth_attempt_nb_failure	Nombre de connexions échouées:
-account_options	auth_attempt_sessions	Sessions ouvertes:
+account_options	auth_attempt_last_success	Dernière connexion :
+account_options	auth_attempt_prev_success	Connexion précédente :
+account_options	auth_attempt_last_failure	Dernier echec de connexion :
+account_options	auth_attempt_nb_failure	Nombre de connexions échouées :
+account_options	auth_attempt_sessions	Sessions ouvertes :
 #
 #-----------------------------------------------
 # Script: SF/www/account/preferences.php
@@ -61,8 +61,9 @@ account_preferences	csv_dateformat	Format de date CSV
 account_preferences	month_day_year	mois/jour/année
 account_preferences	day_month_year	jour/mois/année
 account_preferences	lab_features_title	$1 Lab
-account_preferences	lab_features_description	Fonctionnalités expérimentales $1 en avant première pour les intrépides. N'activez ce mode que si vous savez ce que vous faites. Les fonctionnalités sont listés ci-dessous.
+account_preferences	lab_features_description	Fonctionnalités expérimentales $1 en avant première pour les intrépides. N'activez ce mode que si vous savez ce que vous faites. Les fonctionnalités sont listées ci-dessous.
 account_preferences	lab_features_cblabel	Activer $1 Lab
+account_preferences	tracker_mail_format	Format des notifications de l'outil de suivi :
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php

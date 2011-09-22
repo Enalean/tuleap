@@ -5,6 +5,7 @@ Version 4.0.22 - (Not Released Yet)
       * The result of the search could be exported in a CSV file without an offset.
     * Add a new wiget to display an image in a dashboard.
     * backlog #139: Wiki can be read by anonymous (if configured explicitely) but can never by written by anonymous.
+    * backlog #11: HTML email notifications in Trackers (need to be activated in user preferences).
 
     == Bug Fix ==
     * backlog #112: SVNAccessFile not properly updated after user removal

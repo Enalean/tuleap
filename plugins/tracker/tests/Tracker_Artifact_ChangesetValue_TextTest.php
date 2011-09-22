@@ -57,7 +57,6 @@ class Tracker_Artifact_ChangesetValue_TextTest extends UnitTestCase {
         $text_2 = new Tracker_Artifact_ChangesetValue_Text(111, $field, false, 'FullTextSearch does not work on Wiki pages');
         $this->assertEqual($text_1->diff($text_2), '<div class="diff">'.
                                                     '<div class="block">'.
-                                                        '<tt>@@ -1 +1 @@'. PHP_EOL .'</tt>'.
                                                         '<div class="difftext">'.
                                                             '<div class="original">'.
                                                                 '<tt class="prefix">-</tt>'.
@@ -74,7 +73,6 @@ class Tracker_Artifact_ChangesetValue_TextTest extends UnitTestCase {
                                                     '</div>');
         $this->assertEqual($text_2->diff($text_1), '<div class="diff">'.
                                                     '<div class="block">'.
-                                                        '<tt>@@ -1 +1 @@'. PHP_EOL .'</tt>'.
                                                         '<div class="difftext">'.
                                                             '<div class="original">'.
                                                                 '<tt class="prefix">-</tt>'.
