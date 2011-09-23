@@ -11,24 +11,25 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once('PluginHudsonJobDao.class.php');
+require_once('HudsonJobFactory.class.php');
 
 class hudsonPlugin extends Plugin {
-	
-	function hudsonPlugin($id) {
-		$this->Plugin($id);
+
+    function __construct($id) {
+        parent::__construct($id);
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook('cssfile', 'cssFile', false);
         
         $this->_addHook('project_is_deleted', 'projectIsDeleted', false);
         
-        $this->_addHook('widget_instance', 'myPageBox', false);
+        $this->_addHook('widget_instance', 'widget_instance', false);
         $this->_addHook('widgets', 'widgets', false);
         
         $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
         $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
-	}
-	
-    function &getPluginInfo() {
+    }
+
+    function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'hudsonPluginInfo')) {
             require_once('hudsonPluginInfo.class.php');
             $this->pluginInfo =& new hudsonPluginInfo($this);
@@ -68,62 +69,72 @@ class hudsonPlugin extends Plugin {
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->deleteHudsonJobsByGroupID($group_id);
     }
+
     
-    function myPageBox($params) {
+    protected $hudsonJobFactory = null;
+    
+    protected function getHudsonJobFactory() {
+        if (!$this->hudsonJobFactory) {
+            $this->hudsonJobFactory = new HudsonJobFactory();
+        }
+        return $this->hudsonJobFactory;
+    }
+    
+    function widget_instance($params) {
         require_once('common/widget/WidgetLayoutManager.class.php');
         
         $user = UserManager::instance()->getCurrentUser();
-        
+        $hf   = $this->getHudsonJobFactory();
         // MY
         if ($params['widget'] == 'plugin_hudson_my_jobs') {
             require_once('hudson_Widget_MyMonitoredJobs.class.php');
-            $params['instance'] = new hudson_Widget_MyMonitoredJobs($this);
+            $params['instance'] = new hudson_Widget_MyMonitoredJobs($user->getId(), $this, $hf);
         }
         if ($params['widget'] == 'plugin_hudson_my_joblastbuilds') {
             require_once('hudson_Widget_JobLastBuilds.class.php');
-            $params['instance'] = new hudson_Widget_JobLastBuilds(WidgetLayoutManager::OWNER_TYPE_USER, $user->getId());
+            $params['instance'] = new hudson_Widget_JobLastBuilds(WidgetLayoutManager::OWNER_TYPE_USER, $user->getId(), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_my_jobtestresults') {
             require_once('hudson_Widget_JobTestResults.class.php');
-            $params['instance'] = new hudson_Widget_JobTestResults(WidgetLayoutManager::OWNER_TYPE_USER, $user->getId());
+            $params['instance'] = new hudson_Widget_JobTestResults(WidgetLayoutManager::OWNER_TYPE_USER, $user->getId(), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_my_jobtesttrend') {
             require_once('hudson_Widget_JobTestTrend.class.php');
-            $params['instance'] = new hudson_Widget_JobTestTrend(WidgetLayoutManager::OWNER_TYPE_USER, $user->getId());
+            $params['instance'] = new hudson_Widget_JobTestTrend(WidgetLayoutManager::OWNER_TYPE_USER, $user->getId(), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_my_jobbuildhistory') {
             require_once('hudson_Widget_JobBuildHistory.class.php');
-            $params['instance'] = new hudson_Widget_JobBuildHistory(WidgetLayoutManager::OWNER_TYPE_USER, $user->getId());
+            $params['instance'] = new hudson_Widget_JobBuildHistory(WidgetLayoutManager::OWNER_TYPE_USER, $user->getId(), $hf);
         }
         if ($params['widget'] == 'plugin_hudson_my_joblastartifacts') {
             require_once('hudson_Widget_JobLastArtifacts.class.php');
-            $params['instance'] = new hudson_Widget_JobLastArtifacts(WidgetLayoutManager::OWNER_TYPE_USER, $user->getId());
+            $params['instance'] = new hudson_Widget_JobLastArtifacts(WidgetLayoutManager::OWNER_TYPE_USER, $user->getId(), $hf);
         }
         
         // PROJECT
         if ($params['widget'] == 'plugin_hudson_project_jobsoverview') {
             require_once('hudson_Widget_ProjectJobsOverview.class.php');
-            $params['instance'] = new hudson_Widget_ProjectJobsOverview($this);
+            $params['instance'] = new hudson_Widget_ProjectJobsOverview($GLOBALS['group_id'], $this, $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_joblastbuilds') {
             require_once('hudson_Widget_JobLastBuilds.class.php');
-            $params['instance'] = new hudson_Widget_JobLastBuilds(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id']);
+            $params['instance'] = new hudson_Widget_JobLastBuilds(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id'], $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_jobtestresults') {
             require_once('hudson_Widget_JobTestResults.class.php');
-            $params['instance'] = new hudson_Widget_JobTestResults(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id']);
+            $params['instance'] = new hudson_Widget_JobTestResults(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id'], $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_jobtesttrend') {
             require_once('hudson_Widget_JobTestTrend.class.php');
-            $params['instance'] = new hudson_Widget_JobTestTrend(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id']);
+            $params['instance'] = new hudson_Widget_JobTestTrend(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id'], $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_jobbuildhistory') {
             require_once('hudson_Widget_JobBuildHistory.class.php');
-            $params['instance'] = new hudson_Widget_JobBuildHistory(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id']);
+            $params['instance'] = new hudson_Widget_JobBuildHistory(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id'], $hf);
         }
         if ($params['widget'] == 'plugin_hudson_project_joblastartifacts') {
             require_once('hudson_Widget_JobLastArtifacts.class.php');
-            $params['instance'] = new hudson_Widget_JobLastArtifacts(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id']);
+            $params['instance'] = new hudson_Widget_JobLastArtifacts(WidgetLayoutManager::OWNER_TYPE_GROUP, $GLOBALS['group_id'], $hf);
         }
     }
     function widgets($params) {

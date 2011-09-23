@@ -23,11 +23,12 @@ require_once('common/dao/include/DataAccessObject.class.php');
  *  Data Access Object for PluginHudsonJob 
  */
 class PluginHudsonJobDao extends DataAccessObject {
+
     /**
     * Gets all jobs in the db
     * @return DataAccessResult
     */
-    function & searchAll() {
+    function searchAll() {
         $sql = "SELECT * FROM plugin_hudson_job";
         return $this->retrieve($sql);
     }
@@ -36,7 +37,7 @@ class PluginHudsonJobDao extends DataAccessObject {
     * Searches PluginHudsonJob by Codendi group ID 
     * @return DataAccessResult
     */
-    function & searchByGroupID($group_id) {
+    function searchByGroupID($group_id) {
         $sql = sprintf("SELECT *  
                         FROM plugin_hudson_job
                         WHERE group_id = %s",
@@ -48,7 +49,7 @@ class PluginHudsonJobDao extends DataAccessObject {
     * Searches PluginHudsonJob by job ID 
     * @return DataAccessResult
     */
-    function & searchByJobID($job_id) {
+    function searchByJobID($job_id) {
         $sql = sprintf("SELECT *  
                         FROM plugin_hudson_job
                         WHERE job_id = %s",
@@ -60,7 +61,7 @@ class PluginHudsonJobDao extends DataAccessObject {
     * Searches PluginHudsonJob by job name 
     * @return DataAccessResult
     */
-    function & searchByJobName($job_name) {
+    function searchByJobName($job_name) {
         $sql = sprintf("SELECT *  
                         FROM plugin_hudson_job
                         WHERE name = %s",
@@ -73,7 +74,7 @@ class PluginHudsonJobDao extends DataAccessObject {
     * means "all the jobs of all projects the user is member of" 
     * @return DataAccessResult
     */
-    function & searchByUserID($user_id) {
+    function searchByUserID($user_id) {
         $sql = sprintf("SELECT j.*  
                         FROM plugin_hudson_job j, user u, user_group ug
                         WHERE ug.group_id = j.group_id AND

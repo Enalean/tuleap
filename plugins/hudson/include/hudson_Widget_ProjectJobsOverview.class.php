@@ -35,8 +35,18 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
     var $_global_status;
     var $_global_status_icon;
     
-    function hudson_Widget_ProjectJobsOverview($plugin) {
-        $this->Widget('plugin_hudson_project_jobsoverview');
+    /**
+     * Constructor
+     *
+     * @param Int              $group_id   The owner id
+     * @param hudsonPlugin     $plugin     The plugin
+     * @param HudsonJobFactory $factory    The HudsonJob factory
+     * 
+     * @return void
+     */
+    function __construct($group_id, hudsonPlugin $plugin, HudsonJobFactory $factory) {
+        parent::__construct('plugin_hudson_project_jobsoverview', $factory);
+        $this->setOwner($group_id, WidgetLayoutManager::OWNER_TYPE_GROUP);
         $this->plugin = $plugin;
         
         $request =& HTTPRequest::instance();
@@ -55,15 +65,18 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
                 'yellow' => 0,
                 'red' => 0,
             );
-            $this->computeGlobalStatus();
         }
         
     }
-    
+
     function computeGlobalStatus() {
         $jobs = $this->getJobsByGroup($this->group_id);
         foreach ($jobs as $job) {
-            $this->_all_status[(string)$job->getColorNoAnime()] = $this->_all_status[(string)$job->getColorNoAnime()] + 1;    
+            try {
+                $this->_all_status[(string)$job->getColorNoAnime()] = $this->_all_status[(string)$job->getColorNoAnime()] + 1;
+            } catch(Exception $e) {
+                // Do not display error if some jobs fails
+            }
         }
         if ($this->_all_status['grey'] > 0 || $this->_all_status['red'] > 0) {
             $this->_global_status = $GLOBALS['Language']->getText('plugin_hudson','global_status_red');
@@ -74,20 +87,6 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
         } else {
             $this->_global_status = $GLOBALS['Language']->getText('plugin_hudson','global_status_blue');
             $this->_global_status_icon = $this->plugin->getThemePath() . "/images/ic/" . "status_blue.png";
-        }
-    }
-    
-    function isInstallAllowed() {
-        $jobs = $this->getJobsByGroup($this->group_id);
-        return count($jobs) > 0;
-    }
-    function getInstallNotAllowedMessage() {
-        $jobs = $this->getJobsByGroup($this->group_id);
-        if (count($jobs) <= 0) {
-            // no hudson jobs available
-            return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id)) . '</span>'; 
-        } else {
-            return '';
         }
     }
     
@@ -112,12 +111,7 @@ class hudson_Widget_ProjectJobsOverview extends HudsonOverviewWidget {
     }
     
     function getTitle() {
-        $title = '';
-        if ($this->_use_global_status == "true") {
-            $title = '<img src="'.$this->_global_status_icon.'" title="'.$this->_global_status.'" alt="'.$this->_global_status.'" /> ';
-        }
-        $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_jobs'); 
-        return  $title;
+        return parent::getTitle($GLOBALS['Language']->getText('plugin_hudson', 'project_jobs'));
     }
     
     function getDescription() {

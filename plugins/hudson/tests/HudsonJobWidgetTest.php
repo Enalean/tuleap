@@ -30,21 +30,20 @@ require_once(dirname(__FILE__).'/../include/HudsonJob.class.php');
 Mock::generate('HudsonJob');
 
 class HudsonJobWidgetTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function HudsonJobWidgetTest($name = 'HudsonJobWidget test') {
-        $this->UnitTestCase($name);
+    function setUp() {
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+    }
+    function tearDown() {
+        unset($GLOBALS['Language']);
     }
     
-	function testNoJobAvailable() {
+    function testNoJobAvailable() {
         $hjw = new HudsonJobWidgetTestVersion($this);
         $hjw->setReturnValue('getAvailableJobs', array());
         $this->assertFalse($hjw->isInstallAllowed());
         $this->assertFalse($hjw->getInstallNotAllowedMessage() == '');
-	}
-	
+    }
+
     function testJobsAvailable() {
         $hjw = new HudsonJobWidgetTestVersion($this);
         $job1 = new MockHudsonJob();

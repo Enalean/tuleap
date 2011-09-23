@@ -1,2 +1,4 @@
 1.2 - Tuleap 4.0.21
 	* Refactoring on DAO
+	* backlog #138: Heavy refactoring - tries to avoid to load remote hudson/jenkins job when not needed
+	* Desactivate Global State in "My Jobs" and "Project Jobs" widget (make widgets unusable when at least one job no longer exist)

@@ -30,7 +30,16 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
     var $build;
     var $last_build_url;
     
-    function hudson_Widget_JobLastArtifacts($owner_type, $owner_id) {
+    /**
+     * Constructor
+     *
+     * @param String           $owner_type The owner type
+     * @param Int              $owner_id   The owner id
+     * @param HudsonJobFactory $factory    The HudsonJob factory
+     * 
+     * @return void
+     */
+    function __construct($owner_type, $owner_id, HudsonJobFactory $factory) {
         $request =& HTTPRequest::instance();
         if ($owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
             $this->widget_id = 'plugin_hudson_my_joblastartifacts';
@@ -39,7 +48,7 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
             $this->widget_id = 'plugin_hudson_project_joblastartifacts';
             $this->group_id = $request->get('group_id');
         }
-        $this->Widget($this->widget_id);
+        parent::__construct($this->widget_id, $factory);
         
         $this->setOwner($owner_id, $owner_type);
     }

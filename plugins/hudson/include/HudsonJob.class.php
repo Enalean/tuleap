@@ -30,34 +30,38 @@ class HudsonJob {
     private $icons_path;
     
     private $context;
-        
+
     /**
      * Construct an Hudson job from a job URL
      */
-    function HudsonJob($hudson_job_url) {
+    function __construct($hudson_job_url, $name = null) {
         $parsed_url = parse_url($hudson_job_url);
         
         if ( ! $parsed_url || ! array_key_exists('scheme', $parsed_url) ) {
             throw new HudsonJobURLMalformedException($GLOBALS['Language']->getText('plugin_hudson','wrong_job_url', array($hudson_job_url)));
         }
                 
-        $this->hudson_job_url = $hudson_job_url . "/api/xml";
+        $this->hudson_job_url     = $hudson_job_url . "/api/xml";
         $this->hudson_dobuild_url = $hudson_job_url . "/build";
+        $this->name               = $name;
         
         $controler = $this->getHudsonControler(); 
         $this->icons_path = $controler->getIconsPath();
-        
-        $this->_setStreamContext();
-        
-        $this->buildJobObject();
-        
     }
     function getHudsonControler() {
         return new hudson();
     }
-    
+
+    protected function getDomJob() {
+        if (!$this->dom_job) {
+            $this->_setStreamContext();
+            $this->buildJobObject();
+        }
+        return $this->dom_job;
+    }
+
     public function buildJobObject() {
-        $this->dom_job = $this->_getXMLObject($this->hudson_job_url);
+         $this->dom_job = $this->_getXMLObject($this->hudson_job_url);
     }
     
     protected function _getXMLObject($hudson_job_url) {
@@ -75,32 +79,33 @@ class HudsonJob {
     }
     
     private function _setStreamContext() {
-        if (array_key_exists('sys_proxy', $GLOBALS) && $GLOBALS['sys_proxy']) {
-            $context_opt = array(
-                'http' => array(
-                    'method' => 'GET',
-                    'proxy' => $GLOBALS['sys_proxy'],
-                    'request_fulluri' => True,
-                    'timeout' => 5.0,
-                ),
-            );
-            $this->context = stream_context_create($context_opt);
-        } else {
-            $this->context = null;
+        $context_opt = array(
+            'http' => array(
+                'method' => 'GET',
+                'timeout' => 5.0,
+            ),
+        );
+        if (!empty($GLOBALS['sys_proxy'])) {
+            $context_opt['http']['proxy']           = $GLOBALS['sys_proxy'];
+            $context_opt['http']['request_fulluri'] = true;
         }
+        $this->context = stream_context_create($context_opt);
     }
     
     function getProjectStyle() {
-        return $this->dom_job->getName();
+        return $this->getDomJob()->getName();
     }
     function getName() {
-        return $this->dom_job->name;
+        if (!$this->name) {
+            $this->name = $this->getDomJob()->name;
+        }
+        return $this->name;
     }
     function getUrl() {
-        return $this->dom_job->url;
+        return $this->getDomJob()->url;
     }
     function getColor() {
-        return $this->dom_job->color;
+        return $this->getDomJob()->color;
     }
     function getColorNoAnime() {
         $color = $this->getColor();
@@ -195,7 +200,7 @@ class HudsonJob {
     }
     
     function isBuildable() {
-        return ($this->dom_job->buildable == "true");
+        return ($this->getDomJob()->buildable == "true");
     }
     
     function hasBuilds() {
@@ -203,40 +208,40 @@ class HudsonJob {
     }
     
     function getLastBuildNumber() {
-        return $this->dom_job->lastBuild->number;
+        return $this->getDomJob()->lastBuild->number;
     }
     function getLastBuildUrl() {
-        return $this->dom_job->lastBuild->url;
+        return $this->getDomJob()->lastBuild->url;
     }
     
     function getLastSuccessfulBuildNumber() {
-        return $this->dom_job->lastSuccessfulBuild->number;
+        return $this->getDomJob()->lastSuccessfulBuild->number;
     }
     function getLastSuccessfulBuildUrl() {
-        return $this->dom_job->lastSuccessfulBuild->url;
+        return $this->getDomJob()->lastSuccessfulBuild->url;
     }
     
     function getLastFailedBuildNumber() {
-        return $this->dom_job->lastFailedBuild->number;
+        return $this->getDomJob()->lastFailedBuild->number;
     }
     function getLastFailedBuildUrl() {
-        return $this->dom_job->lastFailedBuild->url;
+        return $this->getDomJob()->lastFailedBuild->url;
     }
     
     function getNextBuildNumber() {
-        return $this->dom_job->nextBuildNumber;
+        return $this->getDomJob()->nextBuildNumber;
     }
     
     function getHealthScores() {
         $scores = array();
-        foreach ($this->dom_job->healthReport as $health_report) {
+        foreach ($this->getDomJob()->healthReport as $health_report) {
             $scores[] = $health_report->score;
         }
         return $scores;
     }
     function getHealthDescriptions() {
         $descs = array();
-        foreach ($this->dom_job->healthReport as $health_report) {
+        foreach ($this->getDomJob()->healthReport as $health_report) {
             $scores[] = $health_report->description;
         }
         return $descs;

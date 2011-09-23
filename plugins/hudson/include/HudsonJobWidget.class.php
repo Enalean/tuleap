@@ -53,24 +53,6 @@ abstract class HudsonJobWidget extends HudsonWidget {
         db_query($sql);
     }
     
-    function isInstallAllowed() {
-    	$jobs = $this->getAvailableJobs();
-        return count($jobs) > 0;
-    }
-    function getInstallNotAllowedMessage() {
-    	$jobs = $this->getAvailableJobs();
-        if (count($jobs) <= 0) {
-    	    // no hudson jobs available
-    	    if ($this->owner_type == WidgetLayoutManager::OWNER_TYPE_GROUP) {
-    	    	return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id)) . '</span>'; 
-    	    } else {
-                return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my') . '</span>';
-    	    }
-        } else {
-            return '';
-        }
-    }
-    
     function getInstallPreferences() {
         $prefs  = '';
         $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'monitored_job').'</strong><br />';

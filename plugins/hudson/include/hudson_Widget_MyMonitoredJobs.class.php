@@ -35,8 +35,18 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
     var $_global_status;
     var $_global_status_icon;
     
-    function hudson_Widget_MyMonitoredJobs($plugin) {
-        $this->Widget('plugin_hudson_my_jobs');
+    /**
+     * Constructor
+     *
+     * @param Int              $user_id    The owner id
+     * @param hudsonPlugin     $plugin     The plugin
+     * @param HudsonJobFactory $factory    The HudsonJob factory
+     * 
+     * @return void
+     */
+    function __construct($user_id, hudsonPlugin $plugin, HudsonJobFactory $factory) {
+        parent::__construct('plugin_hudson_my_jobs', $factory);
+        $this->setOwner($user_id, WidgetLayoutManager::OWNER_TYPE_USER);
         $this->plugin = $plugin;
         
         $this->_not_monitored_jobs = user_get_preference('plugin_hudson_my_not_monitored_jobs');
@@ -59,9 +69,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
                 'yellow' => 0,
                 'red' => 0,
             );
-            $this->computeGlobalStatus();
         }
-        
     }
     
     function computeGlobalStatus() {
@@ -93,9 +101,12 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
     }
     
     function isInstallAllowed() {
-        $jobs = $this->getJobsByGroup($this->group_id);
-        return count($jobs) > 0;
+        $user    = UserManager::instance()->getCurrentUser();
+        $job_dao = new PluginHudsonJobDao();
+        $dar     = $job_dao->searchByUserID($user->getId());
+        return ($dar->rowCount() > 0);
     }
+
     function getInstallNotAllowedMessage() {
     	$user = UserManager::instance()->getCurrentUser();
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
@@ -109,12 +120,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
     }
     
     function getTitle() {
-        $title = '';
-        if ($this->_use_global_status == "true") {
-            $title = '<img src="'.$this->_global_status_icon.'" title="'.$this->_global_status.'" alt="'.$this->_global_status.'" /> ';
-        }
-        $title .= $GLOBALS['Language']->getText('plugin_hudson', 'my_jobs'); 
-        return  $title;
+        return parent::getTitle($GLOBALS['Language']->getText('plugin_hudson', 'my_jobs'));
     }
     
     function getDescription() {
@@ -151,6 +157,14 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
     function hasPreferences() {
         return true;
     }
+    
+    /**
+     * Returns user preferences for given widget
+     * 
+     * Do not attempt to load remote jenkins job otherwise, user might be stuck if there are a lot of "not responding jobs".
+     * 
+     * @see src/common/widget/Widget::getPreferences()
+     */
     function getPreferences() {
         $prefs  = '';
         // Monitored jobs
@@ -158,17 +172,9 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget {
         $user = UserManager::instance()->getCurrentUser();
         $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
         $dar = $job_dao->searchByUserID($user->getId());
-        while ($dar->valid()) {
-            $row = $dar->current();
-            try {
-                $job = new Hudsonjob($row['job_url']);
-                $prefs .= '<input type="checkbox" name="myhudsonjobs[]" value="'.$row['job_id'].'" '.(in_array($row['job_id'], $this->_not_monitored_jobs)?'':'checked="checked"').'> '.$job->getName().'<br />';
-            } catch (Exception $e) {
-                // Do not display wrong jobs
-            }
-            $dar->next();
+        foreach ($dar as $row) {
+            $prefs .= '<input type="checkbox" name="myhudsonjobs[]" value="'.$row['job_id'].'" '.(in_array($row['job_id'], $this->_not_monitored_jobs)?'':'checked="checked"').'> '.$row['name'].'<br />';
         }
-        
         // Use global status
         $prefs .= '<strong>'.$GLOBALS['Language']->getText('plugin_hudson', 'use_global_status').'</strong>';
         $prefs .= '<input type="checkbox" name="use_global_status" value="use_global" '.(($this->_use_global_status == "true")?'checked="checked"':'').'><br />';

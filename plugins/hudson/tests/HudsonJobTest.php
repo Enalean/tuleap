@@ -37,18 +37,14 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class HudsonJobTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function HudsonJobTest($name = 'HudsonJob test') {
-        $this->UnitTestCase($name);
-    }
-    
+
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
     }
-    
+    function tearDown() {
+        unset($GLOBALS['Language']);
+    }
+
     function testMalformedURL() {
         $this->expectException('HudsonJobURLMalformedException');
         $j = new HudsonJob("toto");
@@ -120,7 +116,7 @@ XML;
         $j->setReturnValue('getHudsonControler', $mh);
         $j->setReturnValue('getIconsPath', '');
         
-        $j->HudsonJob("http://myCIserver/jobs/myCIjob");
+        $j->__construct("http://myCIserver/jobs/myCIjob");
         
         $this->assertEqual($j->getProjectStyle(), "freeStyleProject");
         $this->assertEqual($j->getName(), "Codendi");
@@ -188,7 +184,7 @@ XML;
         $j->setReturnValue('getHudsonControler', $mh);
         $j->setReturnValue('getIconsPath', '');
         
-        $j->HudsonJob("http://myCIserver/jobs/myCIjob");
+        $j->__construct("http://myCIserver/jobs/myCIjob");
         
         $this->assertEqual($j->getProjectStyle(), "freeStyleProject");
         $this->assertEqual($j->getName(), "TestProjectExistingJob");
@@ -233,7 +229,7 @@ XML;
         $j->setReturnValue('getHudsonControler', $mh);
         $j->setReturnValue('getIconsPath', '');
         
-        $j->HudsonJob("http://myCIserver/jobs/myCIjob");
+        $j->__construct("http://myCIserver/jobs/myCIjob");
         
         $this->assertEqual($j->getProjectStyle(), "externalJob");
         $this->assertEqual($j->getName(), "TestProjectExternalJob");
@@ -277,7 +273,7 @@ XML;
         $j->setReturnValue('getHudsonControler', $mh);
         $j->setReturnValue('getIconsPath', '');
         
-        $j->HudsonJob("http://myCIserver/jobs/myCIjob");
+        $j->__construct("http://myCIserver/jobs/myCIjob");
         
         $this->assertEqual($j->getProjectStyle(), "mavenModuleSet");
         $this->assertEqual($j->getName(), "TestProjectMaven2");
@@ -321,7 +317,7 @@ XML;
         $j->setReturnValue('getHudsonControler', $mh);
         $j->setReturnValue('getIconsPath', '');
         
-        $j->HudsonJob("http://myCIserver/jobs/myCIjob");
+        $j->__construct("http://myCIserver/jobs/myCIjob");
         
         $this->assertEqual($j->getProjectStyle(), "matrixProject");
         $this->assertEqual($j->getName(), "TestProjectMultiConfiguration");

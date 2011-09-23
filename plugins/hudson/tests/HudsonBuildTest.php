@@ -29,16 +29,11 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class HudsonBuildTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function HudsonBuildTest($name = 'HudsonBuild test') {
-        $this->UnitTestCase($name);
-    }
-    
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
+    }
+    function tearDown() {
+        unset($GLOBALS['Language']);
     }
     
     function testMalformedURL() {

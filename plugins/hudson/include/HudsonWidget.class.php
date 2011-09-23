@@ -19,62 +19,75 @@
  */
 require_once('common/widget/Widget.class.php');
 require_once('PluginHudsonJobDao.class.php');
+require_once('HudsonJobFactory.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 
 abstract class HudsonWidget extends Widget {
+    
+    /**
+     * @var HudsonJobFactory
+     */
+    protected $hudsonJobFactory;
+    
+    public function __construct($widget_id, HudsonJobFactory $factory) {
+        parent::__construct($widget_id);
+        $this->hudsonJobFactory = $factory;
+    }
     
     function getCategory() {
         return 'ci';
     }
     
     protected function getAvailableJobs() {
-        $jobs = array();
         if ($this->owner_type == WidgetLayoutManager::OWNER_TYPE_USER) {
-            $jobs = $this->getJobsByUser($user = UserManager::instance()->getCurrentUser()->getId());
+            $owner_id = UserManager::instance()->getCurrentUser()->getId();
         } else {
-            $jobs = $this->getJobsByGroup($this->group_id);
+            $owner_id = $this->group_id;
         }
-        return $jobs;
+        return $this->getHudsonJobFactory()->getAvailableJobs($this->owner_type, $owner_id);
     }
     
     protected function getJobsByGroup($group_id) {
-        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->searchByGroupID($group_id);
-        $jobs = array();
-        while ($dar->valid()) {
-            $row = $dar->current();
-            try {
-                $job = new Hudsonjob($row['job_url']);
-                $jobs[$row['job_id']] = $job;
-            } catch (exception $e) {
-                // Do not add unvalid jobs
-            }
-            $dar->next();
-        }
-        return $jobs;
+        return $this->getHudsonJobFactory()->getAvailableJobs(WidgetLayoutManager::OWNER_TYPE_GROUP, $group_id);
     }
     
     protected function getJobsByUser($user_id) {
-        $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-        $dar = $job_dao->searchByUserID($user_id);
-        $jobs = array();
-        while ($dar->valid()) {
-            $row = $dar->current();
-            try {
-                $job = new Hudsonjob($row['job_url']);
-                $jobs[$row['job_id']] = $job;
-            } catch (exception $e) {
-                // Do not add unvalid jobs
-            }
-            $dar->next();
+        return $this->getHudsonJobFactory()->getAvailableJobs(WidgetLayoutManager::OWNER_TYPE_GROUP, $user_id);
+    }
+
+    protected function getHudsonJobFactory() {
+        if (!$this->hudsonJobFactory) {
+            $this->hudsonJobFactory = new HudsonJobFactory();
         }
-        return $jobs;
+        return $this->hudsonJobFactory;
+    }
+    
+    public function setHudsonJobFactory(HudsonJobFactory $factory) {
+        $this->hudsonJobFactory = $factory;
     }
     
     function isAjax() {
         return true;
     }
-    
+
+    function isInstallAllowed() {
+        $jobs = $this->getAvailableJobs();
+        return count($jobs) > 0;
+    }
+
+    function getInstallNotAllowedMessage() {
+        $jobs = $this->getAvailableJobs();
+        if (count($jobs) <= 0) {
+            // no hudson jobs available
+            if ($this->owner_type == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+                return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id)) . '</span>';
+            } else {
+                return '<span class="feedback_warning">' . $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my') . '</span>';
+            }
+        } else {
+            return '';
+        }
+    }
 }
 
 ?>
