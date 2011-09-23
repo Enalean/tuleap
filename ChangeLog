@@ -12,6 +12,7 @@ Version 4.0.22 - (Not Released Yet)
     * Add CSRF countermeasures
     * Don't send email notification to deleted & suspended users when change occurs on a wiki page. (contrib STMicroelectronics)
     * Fix bug with default permissions on FRS release creation through CLI (contrib STMicroelectronics)
+    * Add the missing backlink to tuleap.net in the footer
 
     == Plugins ==
     * WebDAV plugin v1.8. See separated ChangeLog

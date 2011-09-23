@@ -1,5 +1,5 @@
 <div class="footer">
-Powered by Tuleap&trade; version <?php echo $version; ?>. Copyright &copy; 2011 Enalean.
+Powered by <a href="https://tuleap.net/">Tuleap&trade;</a> version <?php echo $version; ?>. Copyright &copy; 2011 Enalean.
 &nbsp;/&nbsp;
 <a href="/tos/tos.php">[tos]</a> - <a href="/tos/privacy.php">[privacy]</a>
 </div>
