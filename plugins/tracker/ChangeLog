@@ -1,3 +1,9 @@
+Version 0.3 - (Tuleap 4.0.22)
+  DISCLAIMER: plugin still in beta, do not use it on production servers.
+  DISCLAIMER: Your data might be trashed in a future update.
+
+  * Improve tracker templates
+
 Version 0.2 - (Tuleap 4.0.22)
   DISCLAIMER: plugin still in beta, do not use it on production servers.
   DISCLAIMER: Your data might be trashed in a future update.
@@ -6,7 +12,6 @@ Version 0.2 - (Tuleap 4.0.22)
   * Add a widget "MyArtifact" to display the open artifacts the user is belonging to.
   * Display tracker entries in PublicAreas widget.
   * Add SOAP api.
-  * Improve tracker templates
   
   * Fix issue with project templates initialisation.
 
