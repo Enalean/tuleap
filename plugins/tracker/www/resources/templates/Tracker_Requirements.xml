@@ -59,15 +59,15 @@
           <label>col1</label>
           <formElements>
             <formElement type="sb" ID="F9" rank="0" required="1">
-              <name>state</name>
-              <label>State</label>
+              <name>status</name>
+              <label>Status</label>
               <description>Requirement Status</description>
               <bind type="static" is_rank_alpha="0">
                 <items>
                   <item ID="F9-V0" label="Accepted"/>
                   <item ID="F9-V1" label="Rejected"/>
                   <item ID="F9-V2" label="Need more info"/>
-                  <item ID="F9-V3" label="Satisfyed"/>
+                  <item ID="F9-V3" label="Satisfied"/>
                   <item ID="F9-V4" label="New"/>
                   <item ID="F9-V5" label="Closed"/>
                 </items>
@@ -87,14 +87,14 @@
             <formElement type="sb" ID="F12" rank="0" required="1">
               <name>type</name>
               <label>Type</label>
-              <description>Requirement type (spec, design, organisation, ...)</description>
+              <description>Requirement type (specification, design, organization, ...)</description>
               <bind type="static" is_rank_alpha="0">
                 <items>
-                  <item ID="F12-V0" label="specification"/>
-                  <item ID="F12-V1" label="design"/>
-                  <item ID="F12-V2" label="development"/>
-                  <item ID="F12-V3" label="test"/>
-                  <item ID="F12-V4" label="organisation"/>
+                  <item ID="F12-V0" label="Specification"/>
+                  <item ID="F12-V1" label="Design"/>
+                  <item ID="F12-V2" label="Development"/>
+                  <item ID="F12-V3" label="Test"/>
+                  <item ID="F12-V4" label="Organization"/>
                 </items>
               </bind>
             </formElement>
@@ -104,10 +104,6 @@
           <name>column6</name>
           <label>col5</label>
           <formElements>
-            <formElement type="art_link" ID="F14" rank="0" use_it="0">
-              <name>dependance</name>
-              <label>dependance</label>
-            </formElement>
             <formElement type="sb" ID="F15" rank="2" required="1">
               <name>nature</name>
               <label>Nature</label>
@@ -155,7 +151,7 @@
             <formElement type="sb" ID="F19" rank="0">
               <name>priority</name>
               <label>Priority</label>
-              <description>Priority for satisfying this requiremen</description>
+              <description>Priority to satisfy this requirement</description>
               <bind type="static" is_rank_alpha="0">
                 <items>
                   <item ID="F19-V0" label="High"/>
@@ -188,33 +184,17 @@
           <formElements>
             <formElement type="art_link" ID="F24" rank="0">
               <name>satisfy</name>
-              <label>Satisfy</label>
+              <label>Satisfy Requirements</label>
               <description>Requirements list satisfied by this one</description>
             </formElement>
           </formElements>
-        </formElement>
-        <formElement type="sb" ID="F25" rank="49" use_it="0">
-          <name>resolution</name>
-          <label>Resolution</label>
-          <description>The resolution field indicates what happened to the bug.</description>
-          <bind type="static" is_rank_alpha="0">
-            <items>
-              <item ID="F25-V0" label="Fixed"/>
-              <item ID="F25-V1" label="Will not fix"/>
-              <item ID="F25-V2" label="Invalid"/>
-              <item ID="F25-V3" label="Later"/>
-              <item ID="F25-V4" label="Duplicate"/>
-              <item ID="F25-V5" label="Remind"/>
-              <item ID="F25-V6" label="Works for me"/>
-            </items>
-          </bind>
         </formElement>
       </formElements>
     </formElement>
     <formElement type="fieldset" ID="F26" rank="4">
       <name>fieldset1</name>
-      <label>Historic</label>
-      <description>Requirement historics</description>
+      <label>History</label>
+      <description>Requirement history</description>
       <formElements>
         <formElement type="column" ID="F27" rank="0">
           <name>column10</name>
@@ -234,7 +214,7 @@
             <formElement type="subon" ID="F30" rank="0">
               <name>open_date</name>
               <label>Creation date</label>
-              <description>Date and time for the initial requirement submission</description>
+              <description>Date and time of the initial requirement submission</description>
             </formElement>
           </formElements>
         </formElement>
@@ -430,15 +410,15 @@
           </columns>
         </renderer>
         <renderer type="plugin_graphontrackersv5" rank="1">
-          <name>Req statistics</name>
+          <name>Requirements statistics</name>
           <description>Requirements statistics</description>
           <charts>
             <chart type="bar" width="600" height="400" rank="0" base="F19" group="F12">
-              <title>Requirement priority</title>
+              <title>Requirements priority</title>
               <description>Group by requirement type.</description>
             </chart>
             <chart type="bar" width="600" height="400" rank="1" base="F15" group="F9">
-              <title>Requirement nature order by state</title>
+              <title>Requirements nature order by status</title>
             </chart>
           </charts>
         </renderer>

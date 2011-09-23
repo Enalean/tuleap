@@ -100,11 +100,6 @@
           <name>column3</name>
           <label>Column Details 1</label>
           <formElements>
-            <formElement type="string" ID="F18" rank="0" use_it="0">
-              <name>epic_string</name>
-              <label>Epic</label>
-              <properties size="30"/>
-            </formElement>
             <formElement type="sb" ID="F19" rank="1">
               <name>epic_select_box</name>
               <label>Epic</label>
@@ -383,7 +378,7 @@
             <field REF="F27"/>
           </columns>
         </renderer>
-        <renderer type="plugin_graphontrackers" rank="1">
+        <renderer type="plugin_graphontrackersv5" rank="1">
           <name>Graphs</name>
           <charts>
             <chart type="bar" width="600" height="400" rank="0" base="F20" group="F26">

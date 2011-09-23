@@ -995,7 +995,7 @@ plugin_tracker_formelement_admin	fields	Champs
 plugin_tracker_formelement_admin	dynamic_fields	Champs dynamiques
 plugin_tracker_formelement_admin	structural_elements	Elements structurels
 plugin_tracker_formelement_admin	unused_elements	Elements inutilisés
-plugin_tracker_formelement_admin	unused_elements_desc	Ci-dessous est un catalogue d'éléments préconfigurés prêts à être utilisés.
+plugin_tracker_formelement_admin	unused_elements_desc	Ci-dessous se trouve un catalogue d'éléments préconfigurés prêts à être utilisés.
 plugin_tracker_formelement_admin	fieldset	Groupe de champs
 plugin_tracker_formelement_admin	fieldset_description	Marque un groupe de champs
 plugin_tracker_formelement_admin	column	Colonne

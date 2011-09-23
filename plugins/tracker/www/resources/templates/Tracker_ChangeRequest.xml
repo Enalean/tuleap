@@ -139,16 +139,6 @@
           <label>Impact if not making the change</label>
           <properties rows="10" cols="80"/>
         </formElement>
-        <formElement type="column" ID="F18" rank="14" use_it="0">
-          <name>column10</name>
-          <label>Column Details 1</label>
-          <formElements/>
-        </formElement>
-        <formElement type="column" ID="F19" rank="21" use_it="0">
-          <name>column10</name>
-          <label>Column Details 2</label>
-          <formElements/>
-        </formElement>
         <formElement type="date" ID="F20" rank="32" use_it="0">
           <name>close_date</name>
           <label>End Date</label>
@@ -363,7 +353,7 @@
             <field REF="F14"/>
           </columns>
         </renderer>
-        <renderer type="plugin_graphontrackers" rank="1">
+        <renderer type="plugin_graphontrackersv5" rank="1">
           <name>Graphs</name>
           <charts>
             <chart type="bar" width="600" height="400" rank="0" base="F16" group="F23">
