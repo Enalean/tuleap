@@ -415,10 +415,8 @@ class GitPHP_Project
 	 */
 	protected function ReadOwner()
 	{
-		if ($this->GetCompat()) {
-			$this->ReadOwnerGit();
-		} else {
-			$this->ReadOwnerRaw();
+		if ($this->GetConfig()->HasValue('gitweb.owner')) {
+			$this->owner = $this->GetConfig()->GetValue('gitweb.owner');
 		}
 
 		if (empty($this->owner) && function_exists('posix_getpwuid')) {
@@ -434,63 +432,6 @@ class GitPHP_Project
 		}
 
 		$this->ownerRead = true;
-	}
-
-	/**
-	 * ReadOwnerGit
-	 *
-	 * Reads the project owner using the git executable
-	 *
-	 * @access private
-	 */
-	private function ReadOwnerGit()
-	{
-		$exe = new GitPHP_GitExe($this);
-		$args = array();
-		$args[] = 'gitweb.owner';
-		$this->owner = $exe->Execute(GIT_CONFIG, $args);
-		unset($exe);
-	}
-
-	/**
-	 * ReadOwnerRaw
-	 *
-	 * Reads the project owner using the raw config file
-	 *
-	 * @access private
-	 */
-	private function ReadOwnerRaw()
-	{
-		// not worth writing a full config parser right now
-
-		if (!file_exists($this->GetPath() . '/config'))
-			return;
-
-		$configData = explode("\n", file_get_contents($this->GetPath() . '/config'));
-
-		$gitwebSection = false;
-		foreach ($configData as $configLine) {
-			$trimmed = trim($configLine);
-			if (empty($trimmed)) {
-				continue;
-			}
-
-			if (preg_match('/^\[(.+)\]$/', $trimmed, $regs)) {
-				// section header
-				$gitwebSection = ($regs[1] == 'gitweb');
-			} else if ($gitwebSection) {
-				$eq = strpos($trimmed, '=');
-				if ($eq === false) {
-					continue;
-				}
-
-				$key = trim(substr($trimmed, 0, $eq));
-				if ($key == 'owner') {
-					$this->owner = trim(substr($trimmed, $eq+1));
-					break;
-				}
-			}
-		}
 	}
 
 	/**
