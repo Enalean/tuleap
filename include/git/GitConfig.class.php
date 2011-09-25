@@ -207,7 +207,7 @@ class GitPHP_GitConfig
 				$currentSetting = '';
 				$trimmedSection = trim($regs[1]);
 				if (preg_match('/^([0-9A-Za-z\.\-]+)( "(.+)")?$/', $trimmedSection, $subRegs)) {
-					$currentSection = $subRegs[1];
+					$currentSection = strtolower($subRegs[1]);
 					if (!empty($subRegs[3])) {
 						// subsection
 						$currentSection .= '.' . $subRegs[3];
@@ -238,7 +238,7 @@ class GitPHP_GitConfig
 				}
 
 				if (!empty($key)) {
-					$fullSetting = $currentSection . '.' . $key;
+					$fullSetting = $currentSection . '.' . strtolower($key);
 
 					$this->config[$fullSetting][] = $value;
 				}
