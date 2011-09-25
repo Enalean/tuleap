@@ -579,6 +579,9 @@ class GitPHP_Project
 		if ($this->cloneUrl !== null)
 			return $this->cloneUrl;
 
+		if ($this->GetConfig()->HasValue('gitphp.cloneurl'))
+			return $this->GetConfig()->GetValue('gitphp.cloneurl');
+
 		$cloneurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('cloneurl', ''), false);
 		if (!empty($cloneurl))
 			$cloneurl .= $this->project;
@@ -615,6 +618,9 @@ class GitPHP_Project
 	{
 		if ($this->pushUrl !== null)
 			return $this->pushUrl;
+
+		if ($this->GetConfig()->HasValue('gitphp.pushurl'))
+			return $this->GetConfig()->GetValue('gitphp.pushurl');
 
 		$pushurl = GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('pushurl', ''), false);
 		if (!empty($pushurl))
