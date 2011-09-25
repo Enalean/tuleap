@@ -956,6 +956,10 @@ class GitPHP_Project
 			return $this->compat;
 		}
 
+		if ($this->GetConfig()->HasValue('gitphp.compat')) {
+			return $this->GetConfig()->GetValue('gitphp.compat');
+		}
+
 		return GitPHP_Config::GetInstance()->GetValue('compat', false);
 	}
 

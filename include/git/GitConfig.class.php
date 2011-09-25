@@ -260,9 +260,9 @@ class GitPHP_GitConfig
 	 */
 	protected static function GetType($key)
 	{
-		switch ($key)
-		{
-		
+		switch ($key) {
+			case 'gitphp.compat':
+				return GitPHP_GitConfig::TypeBoolean;
 		}
 
 		return GitPHP_GitConfig::TypeDefault;
