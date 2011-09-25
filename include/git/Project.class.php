@@ -482,7 +482,9 @@ class GitPHP_Project
 	public function GetDescription($trim = 0)
 	{
 		if (!$this->readDescription) {
-			if (file_exists($this->GetPath() . '/description')) {
+			if ($this->GetConfig()->HasValue('gitphp.description')) {
+				$this->description = $this->GetConfig()->GetValue('gitphp.description');
+			} else if (file_exists($this->GetPath() . '/description')) {
 				$this->description = file_get_contents($this->GetPath() . '/description');
 			}
 			$this->readDescription = true;
