@@ -415,7 +415,9 @@ class GitPHP_Project
 	 */
 	protected function ReadOwner()
 	{
-		if ($this->GetConfig()->HasValue('gitweb.owner')) {
+		if ($this->GetConfig()->HasValue('gitphp.owner')) {
+			$this->owner = $this->GetConfig()->GetValue('gitphp.owner');
+		} else if ($this->GetConfig()->HasValue('gitweb.owner')) {
 			$this->owner = $this->GetConfig()->GetValue('gitweb.owner');
 		}
 
