@@ -58,7 +58,11 @@
  * array of settings.  This can be used with any of the project list
  * methods above.
  *
- * The settings array can have the following key/value settings:
+ * These config values can also be specified in the project's git config file,
+ * under the section [gitphp].  A setting set in this file will override
+ * the setting set in the project's config file.
+ *
+ * The following settings can be used:
  *
  * 'category': the category for the project.
  *
@@ -121,3 +125,18 @@
 //	'cloneurl' => '',
 //	'pushurl' => ''
 //);
+
+/*
+ * Or, in your project's config file (for example gitphp.git/config):
+ *
+ * [gitphp]
+ * 	category = PHP
+ *	description = GitPHP, a web-based git repository browser in PHP
+ *	owner = Chris Han
+ *	cloneurl = http://git.xiphux.com/php/gitphp.git
+ *	pushurl =
+ *	bugpattern = /#([0-9]+)/
+ *	bugurl = http://mantis.xiphux.com/view.php?id=${1}
+ *	compat = false
+ *	website = http://xiphux.com/programming/gitphp/
+ */
