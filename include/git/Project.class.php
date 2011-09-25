@@ -726,7 +726,15 @@ class GitPHP_Project
 	 */
 	public function GetWebsite()
 	{
-		return $this->website;
+		if (!empty($this->website)) {
+			return $this->website;
+		}
+
+		if ($this->GetConfig()->HasValue('gitphp.website')) {
+			return $this->GetConfig()->GetValue('gitphp.website');
+		}
+
+		return null;
 	}
 
 	/**
