@@ -534,7 +534,15 @@ class GitPHP_Project
 	 */
 	public function GetCategory()
 	{
-		return $this->category;
+		if (!empty($this->category)) {
+			return $this->category;
+		}
+
+		if ($this->GetConfig()->HasValue('gitphp.category')) {
+			return $this->GetConfig()->GetValue('gitphp.category');
+		}
+
+		return '';
 	}
 
 	/**
