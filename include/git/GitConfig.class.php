@@ -140,11 +140,32 @@ class GitPHP_GitConfig
 
 		if ((count($values) == 1) || (!$multiValue)) {
 			// single value
-			return $values[1];
+			return $values[0];
 		} else {
 			// multivalue
 			return $values;
 		}
+	}
+
+	/**
+	 * HasValue
+	 *
+	 * Tests if a config value exists
+	 *
+	 * @access public
+	 * @param string $key config key
+	 * @return boolean true if value exists
+	 */
+	public function HasValue($key)
+	{
+		if (empty($key)) {
+			return false;
+		}
+
+		if (!$this->configRead)
+			$this->LoadConfig();
+
+		return isset($this->config[$key]);
 	}
 
 	/**
@@ -169,7 +190,7 @@ class GitPHP_GitConfig
 		$currentSection = '';
 		$currentSetting = '';
 		foreach ($data as $line) {
-			$trimmed = $trim($line);
+			$trimmed = trim($line);
 			if (empty($trimmed)) {
 				continue;
 			}
