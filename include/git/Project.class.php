@@ -15,6 +15,7 @@ require_once(GITPHP_GITOBJECTDIR . 'Commit.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Head.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
+require_once(GITPHP_GITOBJECTDIR . 'GitConfig.class.php');
 
 /**
  * Project class
@@ -268,6 +269,15 @@ class GitPHP_Project
 	 * @access protected
 	 */
 	protected $compat = null;
+
+	/**
+	 * config
+	 *
+	 * Stores the config reader internally
+	 *
+	 * @access protected
+	 */
+	protected $config = null;
 
 /*}}}1*/
 
@@ -988,6 +998,23 @@ class GitPHP_Project
 	}
 
 /*}}}2*/
+
+	/**
+	 * GetConfig
+	 *
+	 * Gets the config reader instance
+	 *
+	 * @access public
+	 * @return mixed config class
+	 */
+	public function GetConfig()
+	{
+		if (!$this->config) {
+			$this->config = new GitPHP_GitConfig($this);
+		}
+
+		return $this->config;
+	}
 
 /*}}}1*/
 
