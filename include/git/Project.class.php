@@ -659,6 +659,10 @@ class GitPHP_Project
 		if ($this->bugUrl != null)
 			return $this->bugUrl;
 
+		if ($this->GetConfig()->HasValue('gitphp.bugurl')) {
+			return $this->GetConfig()->GetValue('gitphp.bugurl');
+		}
+
 		return GitPHP_Config::GetInstance()->GetValue('bugurl', '');
 	}
 
@@ -687,6 +691,10 @@ class GitPHP_Project
 	{
 		if ($this->bugPattern != null)
 			return $this->bugPattern;
+
+		if ($this->GetConfig()->HasValue('gitphp.bugpattern')) {
+			return $this->GetConfig()->GetValue('gitphp.bugpattern');
+		}
 
 		return GitPHP_Config::GetInstance()->GetValue('bugpattern', '');
 	}
