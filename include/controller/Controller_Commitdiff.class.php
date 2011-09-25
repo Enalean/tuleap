@@ -138,7 +138,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 
 		if (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true)) {
 			$this->tpl->assign('sidebyside', true);
-			$this->tpl->assign('extrascripts', array('commitdiff'));
+			$this->tpl->assign('extrascripts', 'commitdiff');
 		}
 
 		$treediff = new GitPHP_TreeDiff($this->project, $this->params['hash'], (isset($this->params['hashparent']) ? $this->params['hashparent'] : ''));

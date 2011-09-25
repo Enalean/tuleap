@@ -25,12 +25,15 @@ rm -f ${JSDIR}/*${MINEXT}
 
 for i in ${JSDIR}/*${JSEXT}; do
 	echo "Minifying ${i}..."
-	java -jar "${COMPRESSORDIR}/${COMPRESSORJAR}" --charset utf-8 -o "${i%$JSEXT}${MINEXT}" "${i}"
+	JSMODULE="`basename ${i%$JSEXT}`"
+	#java -jar "${COMPRESSORDIR}/${COMPRESSORJAR}" --charset utf-8 -o "${i%$JSEXT}${MINEXT}" "${i}"
+	java -classpath lib/rhino/js.jar:lib/closure/compiler.jar org.mozilla.javascript.tools.shell.Main lib/requirejs/r.js -o name=${JSMODULE} out=${JSDIR}/${JSMODULE}${MINEXT} baseUrl=${JSDIR} paths.jquery="empty:" exclude="jquery" optimize="closure"
 done
 
 rm -f ${CSSDIR}/*${MINCSSEXT}
 
 for i in ${CSSDIR}/*${CSSEXT}; do
 	echo "Minifying ${i}..."
-	java -jar "${COMPRESSORDIR}/${COMPRESSORJAR}" --charset utf-8 -o "${i%$CSSEXT}${MINCSSEXT}" "${i}"
+	#java -jar "${COMPRESSORDIR}/${COMPRESSORJAR}" --charset utf-8 -o "${i%$CSSEXT}${MINCSSEXT}" "${i}"
+	java -classpath lib/rhino/js.jar org.mozilla.javascript.tools.shell.Main lib/requirejs/r.js -o cssIn=${i} out=${i%$CSSEXT}${MINCSSEXT} optimizeCss="standard"
 done
