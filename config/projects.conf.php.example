@@ -135,7 +135,7 @@
  *	owner = Chris Han
  *	cloneurl = http://git.xiphux.com/php/gitphp.git
  *	pushurl =
- *	bugpattern = /#([0-9]+)/
+ *	bugpattern = "/#([0-9]+)/"
  *	bugurl = http://mantis.xiphux.com/view.php?id=${1}
  *	compat = false
  *	website = http://xiphux.com/programming/gitphp/

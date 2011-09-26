@@ -195,11 +195,6 @@ class GitPHP_GitConfig
 				continue;
 			}
 
-			if ((substr_compare($trimmed, '#', 0, 1) === 0) || (substr_compare($trimmed, ';', 0, 1) === 0)) {
-				// comment
-				continue;
-			}
-
 			if (preg_match('/^\[(.+)\]$/', $trimmed, $regs)) {
 				// section
 
@@ -229,11 +224,11 @@ class GitPHP_GitConfig
 				$eq = strpos($currentSetting, '=');
 				if ($eq !== false) {
 					// key value pair
-					$key = trim(substr($currentSetting, 0, $eq));
-					$value = trim(substr($currentSetting, $eq+1));
+					$key = GitPHP_GitConfig::Unescape(trim(substr($currentSetting, 0, $eq)));
+					$value = GitPHP_GitConfig::Unescape(trim(substr($currentSetting, $eq+1)));
 				} else {
 					// no equals is assumed true
-					$key = $currentSetting;
+					$key = GitPHP_GitConfig::Unescape($currentSetting);
 					$value = "true";
 				}
 
@@ -298,6 +293,36 @@ class GitPHP_GitConfig
 
 		// 1/0 is handled by normal type conversion
 		return (bool)$value;
+	}
+
+	/**
+	 * Unescape
+	 *
+	 * Parses escaped values and comments from git configs
+	 *
+	 * @access protected
+	 * @static
+	 * @param string $value value
+	 * @return string unescaped value
+	 */
+	protected static function Unescape($value)
+	{
+		if (strlen($value) == 0) {
+			return '';
+		}
+
+		if ((substr($value, 0, 1) === '"') && (substr($value, -1) === '"')) {
+			// escaped with quotes
+			$value = substr($value, 1, -1);
+		} else {
+			// not quoted, strip comments
+			$value = preg_replace('/(#|;).*$/', '', $value);
+		}
+
+		// replace backslashed chars
+		$value = str_replace(array('\\\\', '\\"'), array('\\', '"'), $value);
+
+		return $value;
 	}
 
 }
