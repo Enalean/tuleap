@@ -33,9 +33,15 @@ Mock::generate('Response');
 abstract class TuleapTestCase extends UnitTestCase {
     
     /**
+     * @var Save/restore the GLOBALS
+     */
+    private $globals;
+    
+    /**
      * SetUp a test (called before each test)
      */
     public function setUp() {
+        $this->globals = $GLOBALS;
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
     }
@@ -46,6 +52,7 @@ abstract class TuleapTestCase extends UnitTestCase {
     function tearDown() {
         unset($GLOBALS['Response']);
         unset($GLOBALS['Language']);
+        $GLOBALS = $this->globals;
     }
     
 }
