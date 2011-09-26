@@ -1608,6 +1608,7 @@ class GitPHP_Project
 		if ($skip > 0) {
 			$log = array_slice($log, $skip, $count);
 		}
+		usort($log, array('GitPHP_Commit', 'CompareAge'));
 		return $log;
 	}
 

@@ -1093,9 +1093,30 @@ class GitPHP_Commit extends GitPHP_GitObject
 	 */
 	public static function CompareAge($a, $b)
 	{
-		if ($a->GetAge() === $b->GetAge())
-			return 0;
+		if ($a->GetAge() === $b->GetAge()) {
+			// fall back on author epoch
+			return GitPHP_Commit::CompareAuthorEpoch($a, $b);
+		}
 		return ($a->GetAge() < $b->GetAge() ? -1 : 1);
+	}
+
+	/**
+	 * CompareAuthorEpoch
+	 *
+	 * Compares two commits by author epoch
+	 *
+	 * @access public
+	 * @static
+	 * @param mixed $a first commit
+	 * @param mixed $b second commit
+	 * @return integer comparison result
+	 */
+	public static function CompareAuthorEpoch($a, $b)
+	{
+		if ($a->GetAuthorEpoch() === $b->GetAuthorEpoch()) {
+			return 0;
+		}
+		return ($a->GetAuthorEpoch() > $b->GetAuthorEpoch() ? -1 : 1);
 	}
 
 }
