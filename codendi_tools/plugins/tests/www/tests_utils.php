@@ -10,6 +10,7 @@ require_once('../include/simpletest/expectation.php');
 require_once('../include/TestHelper.class.php');
 
 require_once('CodendiReporter.class.php');
+require_once('TuleapTestCase.class.php');
 
 // It seems that runkit doesn't work properly on x86_64, at least with
 // PHP 5.1.6

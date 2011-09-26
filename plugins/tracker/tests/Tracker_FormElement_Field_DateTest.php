@@ -56,17 +56,7 @@ Mock::generate('DataAccessResult');
 
 require_once('common/valid/Rule.class.php');    // unit test not really unit...
 
-require_once('common/include/Response.class.php');
-Mock::generate('Response');
-
-class Tracker_FormElement_Field_DateTest extends UnitTestCase {
-    
-    function setUp() {
-        $GLOBALS['Response'] = new MockResponse();
-    }
-    function tearDrop() {
-        unset($GLOBALS['Response']);
-    }
+class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
     
     function testNoDefaultValue() {
         $date_field = new Tracker_FormElement_Field_DateTestVersion();

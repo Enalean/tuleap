@@ -24,10 +24,8 @@ Mock::generate('Tracker_Artifact');
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Integer.class.php');
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Integer.class.php');
 Mock::generate('Tracker_FormElement_Field_Integer');
-require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
 
-class Tracker_Artifact_ChangesetValue_IntegerTest extends UnitTestCase {
+class Tracker_Artifact_ChangesetValue_IntegerTest extends TuleapTestCase {
     
     function testIntegers() {
         $field = new MockTracker_FormElement_Field_Integer();
@@ -61,6 +59,9 @@ class Tracker_Artifact_ChangesetValue_IntegerTest extends UnitTestCase {
     }
     
     function testDiff() {
+        $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('plugin_tracker_artifact','changed_from'));
+        $GLOBALS['Language']->setReturnValue('getText', 'to', array('plugin_tracker_artifact','to'));
+        
         $field = new MockTracker_FormElement_Field_Integer();
         $int_1 = new Tracker_Artifact_ChangesetValue_Integer(111, $field, false, 66);
         $int_2 = new Tracker_Artifact_ChangesetValue_Integer(111, $field, false, 666);
