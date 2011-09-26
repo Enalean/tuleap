@@ -190,6 +190,7 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                             <legend>Options</legend>
                             <input type="checkbox" id="show_pass" name="show_pass" value="1" <?= isset($_REQUEST['show_pass']) ? 'checked="checked"' : '' ?> /><label for="show_pass">Show pass</label>
                             <input type="checkbox" id="cover_code" name="cover_code" value="1" <?= $coverCode ? 'checked="checked"' : '' ?> /><label for="cover_code">Code coverage</label>
+                            <input type="checkbox" id="random" name="random" value="1" <?= !empty($_REQUEST['random']) ? 'checked="checked"' : '' ?> /><label for="random">Random</label>
                         </fieldset>
                         <fieldset>
                             <legend>Tests</legend>
@@ -232,7 +233,9 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                         <?php
                         flush();
                         if (isset($_REQUEST['tests_to_run'])) {
+                            $random = array();
                             function add_test_to_group($test, $categ, $params) {
+                                global $random;
                                 if ($categ != '_do_all') {
                                     if (is_array($test)) {
                                         $g = new TestSuite($categ .' Results');
@@ -241,6 +244,7 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                                         }
                                         $params['group']->addTestCase($g);
                                     } else if ($test) {
+                                        $random[] = $params['path'] . $categ;
                                         $params['group']->addTestFile($params['path'] . $categ);
                                     }
                                 }
@@ -249,6 +253,13 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                             $reporter = CodendiReporterFactory::reporter('html', $coverCode);
 
                             $g = get_group_tests($_REQUEST['tests_to_run']);
+                            if (isset($_REQUEST['random']) && $_REQUEST['random']) {
+                                shuffle($random);
+                                $g = new TestSuite("All Tests (Random)");
+                                foreach($random as $file) {
+                                    $g->addTestFile($file);
+                                }
+                            }
                             $g->run($reporter);
 
                             if ($reporter->generateCoverage(dirname(__FILE__).'/code-coverage-report')) {
