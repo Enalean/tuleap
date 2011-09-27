@@ -115,10 +115,13 @@ class HudsonBuild {
         return format_date($GLOBALS['Language']->getText('system', 'datefmt'), substr($this->getTimestamp(), 0, -3));
     }
     function getStatusIcon() {
+        $color = 'red';
         if ($this->getResult() == 'SUCCESS') {
-            return $this->icons_path .'status_blue.png';
+            $color = 'blue';
+        } else if ($this->getResult() == 'UNSTABLE') {
+            $color = 'yellow';
         }
-        return $this->icons_path .'status_red.png';
+        return $this->icons_path .'status_'. $color .'.png';
     }
 }
 
