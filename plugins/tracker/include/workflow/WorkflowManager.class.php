@@ -219,7 +219,7 @@ class WorkflowManager {
         echo $GLOBALS['Language']->getText('workflow_admin','label_define_transition_permissions');
         echo '</p>';
         echo '<p>';
-        echo permission_fetch_selection_field('PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), $this->tracker->group_id); 
+        echo plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), $this->tracker->group_id); 
         echo '</p>';
         echo '<input type="submit" name="workflow_details" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         echo '</form>';
