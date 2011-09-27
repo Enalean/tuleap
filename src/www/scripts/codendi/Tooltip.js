@@ -111,6 +111,20 @@ codendi.Tooltip.selectors = ['a[class=cross-reference]'];
 codendi.Tooltip.load = function (element) {
     $(element).select.apply($(element), codendi.Tooltip.selectors).each(function (a) {
         codendi.Tooltips.push(new codendi.Tooltip(a, a.href));
+        
+        //load sparklines
+        new Ajax.Request(a.href + '&sparkline=1', {
+            onSuccess: function (transport) {
+                if (transport.status == 200) {
+                    $(a).insert({
+                        top: new Element('img', {
+                            src: transport.responseText,
+                            style: 'vertical-align: middle; padding-right: 2px;'
+                        })
+                    });
+                }
+            }
+        });
     });
 };
 

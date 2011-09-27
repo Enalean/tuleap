@@ -255,5 +255,19 @@ class Event {
      *   'areas'   => array of string(html)
      */
     const SERVICE_PUBLIC_AREAS = 'service_public_areas';
+    
+    /**
+     * Let display a sparkline next to a cross reference
+     *
+     * Parameters:
+     *   'reference' => the Reference
+     *   'keyword'   => the keyword used
+     *   'group_id'  => the group_id
+     *   'val'       => the val of the cross ref
+     *
+     * Expected result
+     *   'sparkline' => The url to the sparkline image
+     */
+    const AJAX_REFERENCE_SPARKLINE = 'ajax_reference_sparkline';
 }
 ?>
