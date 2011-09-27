@@ -22,8 +22,11 @@ require_once(dirname(__FILE__).'/../include/HudsonBuild.class.php');
 Mock::generatePartial(
     'HudsonBuild',
     'HudsonBuildTestVersion',
-    array('_getXMLObject')
+    array('_getXMLObject', 'getHudsonControler')
 );
+
+require_once(dirname(__FILE__).'/../include/hudson.class.php');
+Mock::generate('hudson');
 
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
@@ -55,8 +58,11 @@ class HudsonBuildTest extends UnitTestCase {
         $build_file = dirname(__FILE__).'/resources/jobbuild.xml';
         $xmldom = simplexml_load_file($build_file);
         
+        $h = new Mockhudson($this);
+        
         $b = new HudsonBuildTestVersion($this);
         $b->setReturnValue('_getXMLObject', $xmldom);
+        $b->setReturnValue('getHudsonControler', $h);
         
         $b->HudsonBuild("http://myCIserver/jobs/myCIjob/lastBuild/");
         
