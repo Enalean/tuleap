@@ -248,6 +248,31 @@ class hudsonPlugin extends Plugin {
         
         $ref = $params['reference'];
         switch ($ref->getNature()) {
+            case 'hudson_build':
+                $val = $params['val'];
+                $group_id = $params['group_id'];
+                $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+                if (strpos($val, "/") !== false) {
+                    $arr = explode("/", $val);
+                    $job_name = $arr[0];
+                    $build_id = $arr[1];
+                    $dar = $job_dao->searchByJobName($job_name, $group_id);
+                } else {
+                    $build_id = $val; 
+                    $dar = $job_dao->searchByGroupID($group_id);
+                    if ($dar->rowCount() != 1) {
+                        $dar = null;
+                    }
+                }
+                if ($dar && $dar->valid()) {
+                    $row = $dar->current();
+                    try {
+                        $build = new HudsonBuild($row['job_url'].'/'.$build_id.'/');
+                        $params['sparkline'] = $build->getStatusIcon();
+                    } catch (Exception $e) {
+                    }
+                }
+                break;
             case 'hudson_job':
                 $job_dao = new PluginHudsonJobDao(CodendiDataAccess::instance());
                 $job_name = $params['val'];
