@@ -41,7 +41,10 @@ abstract class TuleapTestCase extends UnitTestCase {
      * SetUp a test (called before each test)
      */
     public function setUp() {
-        $this->globals = $GLOBALS;
+        $this->globals = array();  // it is too simple to do a $g = $GLOBALS;
+        foreach ($GLOBALS as $key => $value) {
+            $this->globals[$key] = $value;
+        }
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
     }
