@@ -45,10 +45,6 @@ require_once('common/include/Codendi_Request.class.php');
 Mock::generate('Codendi_Request');
 require_once('common/user/User.class.php');
 Mock::generate('User');
-require_once('common/include/Response.class.php');
-Mock::generate('Response');
-require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
 require_once('common/layout/Layout.class.php');
 Mock::generate('Layout');
 require_once('common/project/Project.class.php');
@@ -58,9 +54,10 @@ if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/coin');
 }
 
-class TrackerManagerTest extends UnitTestCase {
+class TrackerManagerTest extends TuleapTestCase {
     
     public function setup() {
+        parent::setUp();
         $this->user = new MockUser($this);
         $this->user->setReturnValue('getId', 666);
         
@@ -100,8 +97,6 @@ class TrackerManagerTest extends UnitTestCase {
         $this->tm->setReturnReference('getArtifactReportFactory', $rf);
         $this->tm->setReturnValue('checkServiceEnabled', true);
         
-        $GLOBALS['Language'] = new MockBaseLanguage();
-        $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['HTML'] = new MockLayout();
     }
     public function tearDown() {
@@ -112,6 +107,7 @@ class TrackerManagerTest extends UnitTestCase {
         unset($this->formElement);
         unset($this->report);
         unset($this->tm);
+        parent::tearDown();
     }
     
     public function testProcessArtifact() {

@@ -159,12 +159,10 @@ class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_I
 require_once('common/layout/Layout.class.php');
 Mock::generate('Layout');
 
-require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
-
-class TrackerTest extends UnitTestCase {
+class TrackerTest extends TuleapTestCase {
     
     public function setup() {
+        parent::setUp();
         $this->tracker = new TrackerTestVersion();
         $this->tracker1 = new TrackerTestVersion();
         $this->tracker2 = new TrackerTestVersion();
@@ -398,7 +396,6 @@ class TrackerTest extends UnitTestCase {
         $this->tracker->setReturnReference('getCannedResponseFactory', $this->canned_response_factory);
 
         $GLOBALS['Response'] = new MockLayout();
-        $GLOBALS['Language'] = new MockBaseLanguage();
 
         $GLOBALS['UGROUPS'] = array(
             'UGROUP_1' => 1,
@@ -425,9 +422,7 @@ class TrackerTest extends UnitTestCase {
         unset($this->tracker_assignee);
         unset($this->tracker_submitterassignee);
         unset($this->tracker_admin);
-        
-        unset($GLOBALS['Response']);
-        unset($GLOBALS['Language']);
+        parent::tearDown();
     }
     
     //

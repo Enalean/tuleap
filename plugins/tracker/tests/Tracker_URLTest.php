@@ -42,12 +42,11 @@ require_once('common/include/Codendi_Request.class.php');
 Mock::generate('Codendi_Request');
 require_once('common/user/User.class.php');
 Mock::generate('User');
-require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
 
-class Tracker_URLTest extends UnitTestCase {
+class Tracker_URLTest extends TuleapTestCase {
     
     public function setUp() {
+        parent::setUp();
         $this->user = new MockUser($this);
         $this->user->setReturnValue('getId', 666);
         
@@ -78,17 +77,15 @@ class Tracker_URLTest extends UnitTestCase {
         $this->url->setReturnReference('getTracker_FormElementFactory', $ff);
         $this->url->setReturnReference('getArtifactFactory', $af);
         $this->url->setReturnReference('getArtifactReportFactory', $rf);
-        
-        $GLOBALS['Language'] = new MockBaseLanguage();
     }
     public function tearDown() {
-        unset($GLOBALS['Language']);
         unset($this->user);
         unset($this->artifact);
         unset($this->tracker);
         unset($this->formElement);
         unset($this->report);
         unset($this->url);
+        parent::tearDown();
     }
     
     public function testGetArtifact() {
