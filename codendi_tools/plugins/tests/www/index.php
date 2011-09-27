@@ -190,7 +190,11 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                             <legend>Options</legend>
                             <input type="checkbox" id="show_pass" name="show_pass" value="1" <?= isset($_REQUEST['show_pass']) ? 'checked="checked"' : '' ?> /><label for="show_pass">Show pass</label>
                             <input type="checkbox" id="cover_code" name="cover_code" value="1" <?= $coverCode ? 'checked="checked"' : '' ?> /><label for="cover_code">Code coverage</label>
-                            <input type="checkbox" id="random" name="random" value="1" <?= !empty($_REQUEST['random']) ? 'checked="checked"' : '' ?> /><label for="random">Random</label>
+                            <br />
+                            Order: 
+                            <input type="radio" id="order_normal" name="order" value="normal" <?= empty($_REQUEST['order']) || $_REQUEST['order'] == 'normal' ? 'checked="checked"' : '' ?> /><label for="order_normal">Normal</label>
+                            <input type="radio" id="order_random" name="order" value="random" <?= !empty($_REQUEST['order']) &&  $_REQUEST['order'] == 'random' ? 'checked="checked"' : '' ?> /><label for="order_random">Random</label>
+                            <input type="radio" id="order_invert" name="order" value="invert" <?= !empty($_REQUEST['order']) &&  $_REQUEST['order'] == 'invert' ? 'checked="checked"' : '' ?> /><label for="order_invert">Revert</label>
                         </fieldset>
                         <fieldset>
                             <legend>Tests</legend>
@@ -253,9 +257,14 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                             $reporter = CodendiReporterFactory::reporter('html', $coverCode);
 
                             $g = get_group_tests($_REQUEST['tests_to_run']);
-                            if (isset($_REQUEST['random']) && $_REQUEST['random']) {
-                                shuffle($random);
-                                $g = new TestSuite("All Tests (Random)");
+                            if (isset($_REQUEST['order']) && $_REQUEST['order'] != 'normal') {
+                                if ($_REQUEST['order'] == 'random') {
+                                    shuffle($random);
+                                    $g = new TestSuite("All Tests (random order)");
+                                } else if ($_REQUEST['order'] == 'invert') {
+                                    rsort($random);
+                                    $g = new TestSuite("All Tests (invert order)");
+                                }
                                 foreach($random as $file) {
                                     $g->addTestFile($file);
                                 }
