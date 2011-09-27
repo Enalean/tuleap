@@ -2670,7 +2670,7 @@ class Artifact extends Error {
             $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
             $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
             $tpl->set('breadcrumbs', $breadcrumbs);
-            $tpl->set('title', $hp->purify($subject, CODENDI_PURIFY_CONVERT_HTML));
+            $tpl->set('title', $hp->purify($subject, CODENDI_PURIFIER_CONVERT_HTML));
             $tpl->set('body', $body);
             $tpl->set('additional_footer_link', '<a href="'. $artifact_href .'">'.$GLOBALS['Language']->getText('tracker_include_artifact', 'mail_direct_link').'</a>');
             $mail->setBodyHtml($tpl->fetch());
