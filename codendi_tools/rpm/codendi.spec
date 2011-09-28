@@ -320,7 +320,7 @@ Plugin to insert Remedy tickets using Codex (used for ST only)
 Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
-Release: 1%{?dist}
+Release: 2%{?dist}
 Requires: %{PKG_NAME}, libxslt
 %description plugin-tracker
 New tracker generation for Tuleap.
@@ -583,6 +583,7 @@ else
 
     # Re-generate language files
     %{APP_DIR}/src/utils/php-launcher.sh %{APP_DIR}/src/utils/generate_language_files.php
+    %{__chown} %{APP_USER}:%{APP_USER} %{APP_CACHE_DIR}/lang/*.php
 fi
 
 # In any cases fix the context
@@ -642,6 +643,11 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
 	usermod -a -G gitolite codendiadm
     fi
 fi
+
+#
+# Post install of tracker plugin (clean combined js)
+%post plugin-tracker
+%{__rm} -f %{APP_DIR}/src/www/scripts/combined/*.js
 
 ##
 ## On package un-install
