@@ -1,3 +1,9 @@
+Version 0.4 - (Tuleap 4.0.22)
+  DISCLAIMER: plugin still in beta, do not use it on production servers.
+  DISCLAIMER: Your data might be trashed in a future update.
+  
+  * Fix bug on permissions on artifact field upon update.
+  
 Version 0.3 - (Tuleap 4.0.22)
   DISCLAIMER: plugin still in beta, do not use it on production servers.
   DISCLAIMER: Your data might be trashed in a future update.

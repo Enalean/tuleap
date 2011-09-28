@@ -998,7 +998,83 @@ function plugin_tracker_permission_get_field_tracker_ugroups_permissions($group_
     return $ugroups_permissions;
 }
 
+function plugin_tracker_permission_fetch_selection_field($permission_type, $object_id, $group_id, $html_name = "ugroups[]", $html_disabled = false, $selected = array()) {
+    
+    $html = '';
+    // Get ugroups already defined for this permission_type
+    if (empty($selected)) {
+        $res_ugroups=permission_db_authorized_ugroups($permission_type, $object_id);
+        $nb_set=db_numrows($res_ugroups);
+    } else {
+        $res_ugroups = $selected;
+        $nb_set = count($res_ugroups);
+    }
+    // Now retrieve all possible ugroups for this project, as well as the default values
+    $sql="SELECT ugroup_id,is_default FROM permissions_values WHERE permission_type='$permission_type'";
 
+    $res=db_query($sql);
+    $predefined_ugroups='';
+    $default_values=array();
+    if (db_numrows($res)<1) {
+        $html .= "<p><b>".$GLOBALS['Language']->getText('global','error')."</b>: ".$GLOBALS['Language']->getText('project_admin_permissions','perm_type_not_def',$permission_type);
+        return $html;
+    } else {
+        while ($row = db_fetch_array($res)) {
+            if ($predefined_ugroups) { $predefined_ugroups.= ' ,';}
+            $predefined_ugroups .= $row['ugroup_id'] ;
+            if ($row['is_default']) $default_values[]=$row['ugroup_id'];
+        }
+    }
+    $sql="SELECT * FROM ugroup WHERE group_id=".$group_id." OR ugroup_id IN (".$predefined_ugroups.") ORDER BY ugroup_id";
+    $res=db_query($sql);
+
+    $array = array();
+    while($row = db_fetch_array($res)) {
+        $name = util_translate_name_ugroup($row[1]);
+        $array[] = array(
+            'value' => $row[0],
+            'text' => $name
+        );
+    }
+    
+    if (empty($selected)) {
+        if ($nb_set) {
+            $res_ugroups = util_result_column_to_array($res_ugroups);
+        } else {
+            $res_ugroups = $default_values;
+        }
+    }
+    $html .= html_build_multiple_select_box(
+        //result
+        $array,
+        //name
+        $html_name,
+        //checked_array
+        //($nb_set?util_result_column_to_array($res_ugroups):$default_values),
+        $res_ugroups,
+        //size
+        8, 
+        //show_100
+        true, 
+        //text_100
+        util_translate_name_ugroup('ugroup_nobody_name_key'),
+        //show_any
+        false, 
+        //text_any
+        '', 
+        //show_unchanged
+        false, 
+        //text_unchanged
+        '',
+        //show_value=true
+        false,
+        //purify_level
+        CODENDI_PURIFIER_CONVERT_HTML, 
+        //html_disabled
+        $html_disabled
+    );
+    return $html;
+}
 
 
 ?>

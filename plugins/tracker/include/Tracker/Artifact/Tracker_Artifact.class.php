@@ -454,7 +454,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $html_submit_button = '<p style="text-align:center;">';
         $html_submit_button .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         $html_submit_button .= ' ';
-        $html_submit_button .= '<input type="submit" name="submit_and_continue" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_continue') .'" />';
+        $html_submit_button .= '<input type="submit" name="submit_and_stay" value="'. $GLOBALS['Language']->getText('global', 'btn_submit_and_stay') .'" />';
         $html_submit_button .= '</p>';
         
         $html .= $html_submit_button;
@@ -576,7 +576,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
                     
                     $url_redirection = TRACKER_BASE_URL.'/?tracker='. $this->tracker_id;
-                    if ($request->get('submit_and_continue')) {
+                    if ($request->get('submit_and_stay')) {
                         $url_redirection = TRACKER_BASE_URL.'/?aid=' . $this->getId();
                     }
                     
