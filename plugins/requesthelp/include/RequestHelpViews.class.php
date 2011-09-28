@@ -34,7 +34,7 @@ class RequestHelpViews extends PluginView {
      */
     function header() {
         $title = $GLOBALS['Language']->getText('plugin_requesthelp', 'title');
-        $GLOBALS['HTML']->header(array('title'=>$title));
+        $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'site'));
         include($GLOBALS['Language']->getContent('help/site'));
     }
 
