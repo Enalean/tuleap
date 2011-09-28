@@ -321,7 +321,7 @@ Plugin to insert Remedy tickets using Codex (used for ST only)
 Summary: Tracker v5 for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_TRACKER_VERSION@@
-Release: 2%{?dist}
+Release: 1%{?dist}
 Requires: %{PKG_NAME}, libxslt
 %description plugin-tracker
 New tracker generation for Tuleap.
