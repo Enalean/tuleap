@@ -349,7 +349,7 @@ echo $this->outerTabs($params);
                                                    ,'selected'=>$selected)));
 		}
 
-        $selected = (boolean) (strstr(getStringFromServer('REQUEST_URI'),'/site/'));
+        $selected = (boolean) (strstr(getStringFromServer('REQUEST_URI'),'/site/') || $selected_top_tab === 'site');
         $sthSelected = ($sthSelected || $selected);
         $menuTree->addChild(new TreeNode(array('link'=>'/site/'
                                                ,'title'=>$Language->getText('include_layout','Help')

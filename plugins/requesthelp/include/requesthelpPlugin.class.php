@@ -81,9 +81,14 @@ class requesthelpPlugin extends Plugin {
      * @return void
      */
     function redirectToPlugin() {
-        $c = new RequestHelp();
-        $c->redirect($this->getPluginPath().'/');
-        exit();
+        $c = new RequestHelp($this);
+        $um = UserManager::instance();
+        $user = $um->getCurrentUser();
+        $ignoreLabs = $this->getProperty('ignore_labs');
+        if ($user->isLoggedIn() && ($ignoreLabs || $user->useLabFeatures())) {
+            $c->redirect($this->getPluginPath().'/');
+            exit();
+        }
     }
 
     /**
