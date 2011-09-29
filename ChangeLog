@@ -19,10 +19,11 @@ Version 4.0.22 - (Not Released Yet)
     * Statistics plugin v0.7. See separated ChangeLog
     * Tracker v5 plugin v0.4. See separated ChangeLog
     * GraphOnTracker v5 plugin v0.1. See separated ChangeLog
+    * GraphOnTracker plugin v1.3. See separated ChangeLog
     * Request Help plugin v1.2. See separated ChangeLog
     * Docman v2.14. See separated ChangeLog
-    * Hudson v1.2. See separated Changelog
-    
+    * Hudson v1.3. See separated Changelog
+   
     == Development ==
     * Add lxc script utilities to unit-test, build, install and functional-test a Tuleap (thanks to Christian Bayle).
     * First boostrap of a Selenium test suite (thanks to STMicroelectronics)

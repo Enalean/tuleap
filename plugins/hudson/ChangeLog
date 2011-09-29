@@ -1,3 +1,7 @@
+1.3 - Tuleap 4.0.22
+	* backlog #133: Fix Hudson "My" widget
+	* backlog #137:	fix 4.0.20 hudson slowness
+
 1.2 - Tuleap 4.0.21
 	* Refactoring on DAO
 	* backlog #138: Heavy refactoring - tries to avoid to load remote hudson/jenkins job when not needed
