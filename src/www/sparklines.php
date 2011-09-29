@@ -26,13 +26,8 @@ $json = array();
 foreach ($request->get('sparklines') as $url) {
     //Get sparkline parameters via the url
     $parameters = parse_url($url, PHP_URL_QUERY);
-    $parameters = explode('&', $parameters);
-    $sparkline = array();
-    foreach ($parameters as $parameter) {
-        $parameter = explode('=', $parameter);
-        $sparkline[$parameter[0]] = $parameter[1];
-    }
-   
+    parse_str($parameters, $sparkline);
+    
     if ($sparkline['key'] == 'wiki') {
         $args[]= $sparkline['val'];
     } else {
@@ -41,6 +36,7 @@ foreach ($request->get('sparklines') as $url) {
     
     //Get the reference
     $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($sparkline['key'], $sparkline['group_id'], count($args));
+
     switch($ref->getServiceShortName()) {
         case 'tracker':
         case 'svn':
