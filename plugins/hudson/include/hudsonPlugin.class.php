@@ -211,7 +211,7 @@ class hudsonPlugin extends Plugin {
                         $html .= '<table>';
                         $html .= ' <tr>';
                         $html .= '  <td colspan="2">';
-                        $html .= '   '.$job->getName().': <img src="'.$job->getStatusIcon().'" />';
+                        $html .= '   <img src="'.$job->getStatusIcon().'" width="10" height="10" /> '.$job->getName().':';
                         $html .= '  </td>';
                         $html .= ' </tr>';
                         $html .= ' <tr>';
