@@ -135,7 +135,9 @@ codendi.Tooltip.load = function (element) {
                             a.insert({
                                 top: new Element('img', {
                                     src: sparkline,
-                                    style: 'vertical-align: middle; padding-right: 2px;'
+                                    style: 'vertical-align: middle; padding-right: 2px;',
+                                    width: '10',
+                                    height: '10'
                                 })
                             });
                     });
