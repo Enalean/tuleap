@@ -91,6 +91,7 @@ Object.extend(com.xerox.codendi.FieldEditor.prototype, {
                         new Insertion.After(this.edit_cancel, ' <em>'+this.options.warning+'</em>');
                         this.warning_displayed = true;
                     }
+                    codendi.Tooltip.load(this.preview);
                 }).bind(this)
         });
     }
