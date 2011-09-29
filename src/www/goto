@@ -186,30 +186,12 @@ if ($request->isAjax()) {
             break;
         default:
             $em = EventManager::instance();
-            if ($request->exist('sparkline')) {
-                $sparkline = '';
-                $em->processEvent(Event::AJAX_REFERENCE_SPARKLINE, array(
-                    'reference'=> $ref,
-                    'keyword'  => $keyword,
-                    'group_id' => $group_id,
-                    'val'      => $request->get('val'),
-                    'sparkline'=> &$sparkline,
-                ));
-                if ($sparkline) {
-                    echo $sparkline;
-                } else {
-                    header('HTTP/1.0 204 No Content');
-                    header('Status: 204');
-                    exit;
-                }
-            } else {
                 $em->processEvent('ajax_reference_tooltip', array(
                     'reference'=> $ref,
                     'keyword'  => $keyword,
                     'group_id' => $group_id,
                     'val'      => $request->get('val')
                 ));
-            }
             break;
     }
 } else {
