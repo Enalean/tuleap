@@ -113,7 +113,7 @@ codendi.Tooltip.load = function (element) {
     
     $(element).select.apply($(element), codendi.Tooltip.selectors).each(function (a) {
         codendi.Tooltips.push(new codendi.Tooltip(a, a.href));
-        
+        //Create an array by hrefs : several 'a' for one href in order to reduce the requests
         if (sparkline_hrefs[a.href]) {
             sparkline_hrefs[a.href].push(a);
         } else {
@@ -131,6 +131,7 @@ codendi.Tooltip.load = function (element) {
                 $H(transport.responseJSON).each(function (element) {
                     var href      = element[0];
                     var sparkline = element[1];
+                    //add the sparkline to each link
                     sparkline_hrefs[href].each(function(a) {
                             a.insert({
                                 top: new Element('img', {

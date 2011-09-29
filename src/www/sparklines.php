@@ -24,20 +24,22 @@ $reference_manager = ReferenceManager::instance();
 $json = array();
 
 foreach ($request->get('sparklines') as $url) {
-   $parameters = parse_url($url, PHP_URL_QUERY);
-   $parameters = explode('&', $parameters);
-   $sparkline = array();
-   foreach ($parameters as $parameter) {
-       $parameter = explode('=', $parameter);
-       $sparkline[$parameter[0]] = $parameter[1];
-   }
+    //Get sparkline parameters via the url
+    $parameters = parse_url($url, PHP_URL_QUERY);
+    $parameters = explode('&', $parameters);
+    $sparkline = array();
+    foreach ($parameters as $parameter) {
+        $parameter = explode('=', $parameter);
+        $sparkline[$parameter[0]] = $parameter[1];
+    }
    
-   if ($sparkline['key'] == 'wiki') {
+    if ($sparkline['key'] == 'wiki') {
         $args[]= $sparkline['val'];
     } else {
         $args = explode("/", $sparkline['val']);
     }
     
+    //Get the reference
     $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($sparkline['key'], $sparkline['group_id'], count($args));
     switch($ref->getServiceShortName()) {
         case 'tracker':
@@ -45,20 +47,23 @@ foreach ($request->get('sparklines') as $url) {
         case 'cvs':
         case 'file':
             break;
+        
         default:
             $res = '';
+            //Process to display the reference sparkline (ex: Hudson jobs)
             $em->processEvent(Event::AJAX_REFERENCE_SPARKLINE, array(
                 'reference'=> $ref,
                 'keyword'  => $sparkline['key'],
                 'group_id' => $sparkline['group_id'],
                 'val'      => $sparkline['val'],
-                'sparkline'=> &$res,
+                'sparkline'=> &$res
             ));
-            $json[$url] = $res;            
+            $json[$url] = $res;
     }
 }
 
 if (count($json)) {
+    //handle JSON request if content
     header('Content-type: application/json');
     echo json_encode($json);
 } else {
