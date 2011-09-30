@@ -82,6 +82,9 @@ Mock::generate('Workflow');
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
 Mock::generate('Tracker_Artifact_Changeset');
 
+require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset_Null.class.php');
+Mock::generate('Tracker_Artifact_Changeset_Null');
+
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue');
 
@@ -291,6 +294,88 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $this->assertTrue($field_list->isValid($artifact, $submitted_value_3));
         // We try to change the field from v2 to none => invalid
         $this->assertFalse($field_list->isValid($artifact, null));
+    }
+    
+    function testTransitionIsValidOnSubmit() {
+        $artifact             = new MockTracker_Artifact();
+        $changeset            = new MockTracker_Artifact_Changeset_Null();
+        $bind                 = new MockTracker_FormElement_Field_List_Bind();
+        $workflow             = new MockWorkflow();
+        $tracker              = new MockTracker();
+        $user                 = new MockUser();
+        
+        $v1 = new MockTracker_FormElement_Field_List_BindValue();
+        $v1->setReturnValue('__toString', '# 123');
+        $v1->setReturnValue('getLabel','label1');
+        $submitted_value_1 = '123'; // $v1
+        
+        $artifact->setReturnReference('getLastChangeset', $changeset);
+        
+        $bind->setReturnReference('getValue', $v1, array($submitted_value_1));
+        
+        // null -> v1
+        // other are invalid
+        $workflow->setReturnValue('isTransitionExist', true, array(null, $v1));
+        $workflow->setReturnValue('isTransitionExist', false);
+        
+        $field_list = new $this->field_class();
+        $field_list->setReturnReference('getBind', $bind);
+        $field_list->setReturnValue('fieldHasEnableWorkflow', true);
+        $field_list->setReturnReference('getWorkflow', $workflow);
+        $field_list->setReturnReference('getTracker', $tracker);
+        $field_list->setReturnValue('permission_is_authorized', true); 
+        $field_list->setReturnValue('getCurrentUser', $user);
+        $field_list->setReturnValue('getTransitionId', 1);
+        $field_list->setReturnValue('isNone', false);
+        $field_list->setReturnValue('isRequired', false);
+        $changeset->setReturnReference('getValue', $changeset_value_list, array($field_list));
+        
+        // We try to change the field from null to v1 => valid
+        $this->assertTrue($field_list->isValid($artifact, $submitted_value_1));
+    }
+    
+    function testTransitionIsInvalidOnSubmit() {
+        $artifact             = new MockTracker_Artifact();
+        $changeset            = new MockTracker_Artifact_Changeset_Null();
+        $bind                 = new MockTracker_FormElement_Field_List_Bind();
+        $workflow             = new MockWorkflow();
+        $tracker              = new MockTracker();
+        $user                 = new MockUser();
+        
+        $v1 = new MockTracker_FormElement_Field_List_BindValue();
+        $v1->setReturnValue('__toString', '# 123');
+        $v1->setReturnValue('getLabel','label1');
+        $submitted_value_1 = '123'; // $v1
+        $v2 = new MockTracker_FormElement_Field_List_BindValue();
+        $v2->setReturnValue('__toString', '# 456');
+        $v2->setReturnValue('getLabel','label2');
+        $submitted_value_2 = '456'; // $v2
+        
+        $artifact->setReturnReference('getLastChangeset', $changeset);
+        
+        $bind->setReturnReference('getValue', $v2, array($submitted_value_2));
+        
+        // null -> v1
+        // v1 -> v2
+        // other are invalid
+        $workflow->setReturnValue('isTransitionExist', true, array(null, $v1));
+        $workflow->setReturnValue('isTransitionExist', true, array($v1, $v2));
+        $workflow->setReturnValue('isTransitionExist', false);
+        
+        $field_list = new $this->field_class();
+        $field_list->setReturnReference('getBind', $bind);
+        $field_list->setReturnValue('fieldHasEnableWorkflow', true);
+        $field_list->setReturnReference('getWorkflow', $workflow);
+        $field_list->setReturnReference('getTracker', $tracker);
+        $field_list->setReturnValue('permission_is_authorized', true); 
+        $field_list->setReturnValue('getCurrentUser', $user);
+        $field_list->setReturnValue('getTransitionId', 1);
+        $field_list->setReturnValue('isNone', false);
+        $field_list->setReturnValue('isRequired', false);
+        $changeset->setReturnReference('getValue', $changeset_value_list, array($field_list));
+        
+        // We try to change the field from null to v2 => invalid
+        $this->assertFalse($field_list->isValid($artifact, $submitted_value_2));
     }
     
     function testSoapAvailableValues() {

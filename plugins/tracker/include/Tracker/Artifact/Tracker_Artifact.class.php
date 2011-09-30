@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../Tracker_History.class.php');
 require_once(dirname(__FILE__).'/../TrackerFactory.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
-require_once('Tracker_Artifact_Changeset.class.php');
+require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 require_once('www/project/admin/permissions.php');
@@ -407,6 +407,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $output = '';
         if ( $title_field = Tracker_Semantic_Title::load($this->getTracker())->getField() ) {
             if ( $ignore_perms || $title_field->userCanRead($recipient) ) {
+                var_dump('+++ TITLE START');
+                var_dump($this->getLastChangeset()->getValues());
+                var_dump('+++ TITLE END');
                 if ($value = $this->getLastChangeset()->getValue($title_field)) {
                     if ($title = $value->getText() ) {
                         $output .= $title;
@@ -643,6 +646,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ( ! $submitter->isAnonymous() || $email != null) {
             if ($this->validateFields($fields_data, true)) {
                 if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
+                    // Initialize a fake Changeset to ensure List & Workflow works with an "initial" thus empty state
+                    $this->changesets = array(new Tracker_Artifact_Changeset_Null());
+
                     //Store the value(s) of the fields
                     $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
                     foreach ($used_fields as $field) {
@@ -655,6 +661,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     }
                     //Save the artifact
                     $this->getArtifactFactory()->save($this);
+                    
+                    // Clear fake changeset so subsequent call to getChangesets will load a fresh & complete one from the DB
+                    $this->changesets = null;
                 }
             }
         } else {
