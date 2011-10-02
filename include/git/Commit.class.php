@@ -581,7 +581,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 			/* In case we returned something unexpected */
 			$tok = strtok($lines[0], ' ');
-			if (substr_compare($this->hash, $tok, 0, strlen($tok)) !== 0) {
+			if ((strlen($tok) == 0) || (substr_compare($this->hash, $tok, 0, strlen($tok)) !== 0)) {
 				return;
 			}
 			$this->abbreviatedHash = $tok;
