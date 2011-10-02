@@ -212,6 +212,26 @@ class GitPHP_Commit extends GitPHP_GitObject
 	}
 
 	/**
+	 * GetHash
+	 *
+	 * Gets the hash for this commit (overrides base)
+	 *
+	 * @access public
+	 * @param boolean $abbreviate true to abbreviate hash
+	 * @return string object hash
+	 */
+	public function GetHash($abbreviate = false)
+	{
+		if ($this->GetProject()->GetCompat() && $abbreviate) {
+			// abbreviated hash is loaded as part of commit data in compat mode
+			if (!$this->dataRead)
+				$this->ReadData();
+		}
+
+		return parent::GetHash($abbreviate);
+	}
+
+	/**
 	 * GetParent
 	 *
 	 * Gets the main parent of this commit
@@ -549,6 +569,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 			$args[] = '--header';
 			$args[] = '--parents';
 			$args[] = '--max-count=1';
+			$args[] = '--abbrev-commit';
 			$args[] = $this->hash;
 			$ret = $exe->Execute(GIT_REV_LIST, $args);
 			unset($exe);
@@ -560,8 +581,11 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 			/* In case we returned something unexpected */
 			$tok = strtok($lines[0], ' ');
-			if ($tok != $this->hash)
+			if (substr_compare($this->hash, $tok, 0, strlen($tok)) !== 0) {
 				return;
+			}
+			$this->abbreviatedHash = $tok;
+			$this->abbreviatedHashLoaded = true;
 
 			array_shift($lines);
 
