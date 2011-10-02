@@ -38,6 +38,24 @@ abstract class GitPHP_GitObject
 	protected $hash;
 
 	/**
+	 * abbreviatedHash
+	 *
+	 * Stores the abbreviated hash of the object internally
+	 *
+	 * @access protected
+	 */
+	protected $abbreviatedHash;
+
+	/**
+	 * abbreviatedHashLoaded
+	 *
+	 * Stores whether the abbreviated hash has been loaded
+	 *
+	 * @access protected
+	 */
+	protected $abbreviatedHashLoaded = false;
+
+	/**
 	 * projectReferenced
 	 *
 	 * Stores whether the project has been referenced into a pointer
@@ -85,10 +103,22 @@ abstract class GitPHP_GitObject
 	 * Gets the hash
 	 *
 	 * @access public
+	 * @param boolean $abbreviate true to abbreviate hash
 	 * @return string object hash
 	 */
-	public function GetHash()
+	public function GetHash($abbreviate = false)
 	{
+		if ($abbreviate) {
+			if (!$this->abbreviatedHashLoaded) {
+				$this->abbreviatedHash = $this->GetProject()->AbbreviateHash($this->hash);
+				$this->abbreviatedHashLoaded = true;
+			}
+
+			if (!empty($this->abbreviatedHash)) {
+				return $this->abbreviatedHash;
+			}
+		}
+
 		return $this->hash;
 	}
 

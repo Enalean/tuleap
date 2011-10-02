@@ -68,14 +68,15 @@ abstract class GitPHP_Ref extends GitPHP_GitObject
 	 * Gets the hash for this ref (overrides base)
 	 *
 	 * @access public
+	 * @param boolean $abbreviate true to abbreviate hash
 	 * @return string object hash
 	 */
-	public function GetHash()
+	public function GetHash($abbreviate = false)
 	{
 		if (empty($this->hash))
 			$this->FindHash();
 
-		return parent::GetHash();
+		return parent::GetHash($abbreviate);
 	}
 
 	/**

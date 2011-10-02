@@ -1740,6 +1740,138 @@ class GitPHP_Project
 
 /*}}}2*/
 
+/* hash management methods {{{2*/
+
+	/**
+	 * AbbreviateHash
+	 *
+	 * Calculates the unique abbreviated hash for a full hash
+	 *
+	 * @param string $hash hash to abbreviate
+	 * @return string abbreviated hash
+	 */
+	public function AbbreviateHash($hash)
+	{
+		if (!(preg_match('/[0-9A-Fa-f]{40}/', $hash))) {
+			return $hash;
+		}
+
+		//if ($this->GetCompat()) {
+			return $this->AbbreviateHashGit($hash);
+		//} else {
+		//	return $this->AbbreviateHashRaw($hash);
+		//}
+	}
+
+	/**
+	 * AbbreviateHashGit
+	 *
+	 * Abbreviates a hash using the git executable
+	 *
+	 * @param string $hash hash to abbreviate
+	 * @return string abbreviated hash
+	 */
+	private function AbbreviateHashGit($hash)
+	{
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '-1';
+		$args[] = '--format=format:%h';
+		$args[] = $hash;
+
+		$abbrevData = explode($this->Execute(GIT_REV_LIST, $args), "\n");
+		if (empty($abbrevData[0])) {
+			return $hash;
+		}
+		if (substr_compare(trim($abbrevData[0]), 'commit', 0, 6) !== 0) {
+			return $hash;
+		}
+
+		if (empty($abbrevData[1])) {
+			return $hash;
+		}
+
+		return trim($abbrevData[1]);
+	}
+
+	/**
+	 * AbbreviateHashRaw
+	 *
+	 * Abbreviates a hash using raw git objects
+	 *
+	 * @param string $hash hash to abbreviate
+	 * @return string abbreviated hash
+	 */
+	private function AbbreviateHashRaw($hash)
+	{
+	}
+
+	/**
+	 * ExpandHash
+	 *
+	 * Finds the full hash for an abbreviated hash
+	 *
+	 * @param string $abbrevHash abbreviated hash
+	 * @return string full hash
+	 */
+	public function ExpandHash($abbrevHash)
+	{
+		if (!(preg_match('/[0-9A-Fa-f]{4,39}/', $abbrevHash))) {
+			return $abbrevHash;
+		}
+
+		//if ($this->GetCompat()) {
+			return $this->ExpandHashGit($hash);
+		//} else {
+		//	return $this->ExpandHashRaw($hash);
+		//}
+	}
+
+	/**
+	 * ExpandHashGit
+	 *
+	 * Expands a hash using the git executable
+	 *
+	 * @param string $abbrevHash
+	 * @return string full hash
+	 */
+	private function ExpandHashGit($abbrevHash)
+	{
+		$exe = new GitPHP_GitExe($this);
+		$args = array();
+		$args[] = '-1';
+		$args[] = '--format=format:%H';
+		$args[] = $abbrevHash;
+
+		$fullData = explode($this->Execute(GIT_REV_LIST, $args), "\n");
+		if (empty($fullData[0])) {
+			return $abbrevHash;
+		}
+		if (substr_compare(trim($fullData[0]), 'commit', 0, 6) !== 0) {
+			return $abbrevHash;
+		}
+
+		if (empty($fullData[1])) {
+			return $abbrevHash;
+		}
+
+		return trim($fullData[1]);
+	}
+
+	/**
+	 * ExpandGitRaw
+	 *
+	 * Expands a hash using raw git objects
+	 *
+	 * @param string $abbrevHash abbreviated hash
+	 * @return string full hash
+	 */
+	private function ExpandHashRaw($abbrevHash)
+	{
+	}
+
+/*}}}2*/
+
 /*}}}1*/
 
 /* search methods {{{1*/
