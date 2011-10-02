@@ -1779,7 +1779,7 @@ class GitPHP_Project
 		$args[] = '--format=format:%h';
 		$args[] = $hash;
 
-		$abbrevData = explode($this->Execute(GIT_REV_LIST, $args), "\n");
+		$abbrevData = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
 		if (empty($abbrevData[0])) {
 			return $hash;
 		}
@@ -1843,7 +1843,7 @@ class GitPHP_Project
 		$args[] = '--format=format:%H';
 		$args[] = $abbrevHash;
 
-		$fullData = explode($this->Execute(GIT_REV_LIST, $args), "\n");
+		$fullData = explode("\n", $exe->Execute(GIT_REV_LIST, $args));
 		if (empty($fullData[0])) {
 			return $abbrevHash;
 		}
