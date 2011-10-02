@@ -511,6 +511,125 @@ class GitPHP_Pack
 	}
 
 	/**
+	 * FindHashes
+	 *
+	 * Find hashes in packfile matching a prefix
+	 *
+	 * @access public
+	 * @param string $prefix hash prefix
+	 * @return array matching hashes
+	 */
+	public function FindHashes($prefix)
+	{
+		if (empty($prefix)) {
+			return array();
+		}
+
+		if (strlen($prefix) >= 40) {
+			return array($prefix);
+		}
+
+		$indexFile = $this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
+		$mTime = filemtime($indexFile);
+		if ($mTime > $this->indexModified) {
+			$this->offsetCache = array();
+			$this->indexModified = $mTime;
+		}
+
+		$matches = array();
+
+		$index = fopen($indexFile, 'rb');
+		flock($index, LOCK_SH);
+
+		$magic = fread($index, 4);
+		if ($magic == "\xFFtOc") {
+			$version = GitPHP_Pack::fuint32($index);
+			if ($version == 2) {
+				$matches = $this->FindHashesV2($index, $prefix);
+			}
+		} else {
+			$matches = $this->FindHashesV1($index, $prefix);
+		}
+		flock($index, LOCK_UN);
+		fclose($index);
+		return $matches;
+	}
+
+	/**
+	 * FindHashesV1
+	 *
+	 * Find hashes in v1 index matching a prefix
+	 *
+	 * @access private
+	 * @param resource $index file pointer to index
+	 * @param string $prefix hash prefix
+	 * @return array matching hashes
+	 */
+	private function FindHashesV1($index, $prefix)
+	{
+		$matches = array();
+
+		$binaryPrefix = pack('H' . strlen($prefix), $prefix);
+		list($low, $high) = $this->ReadFanout($index, $binaryPrefix, 0);
+
+		$range = $high - $low;
+		$prefixlen = strlen($prefix);
+
+		fseek($index, 4*256 + 24*$low);
+		for ($i = 0; $i < $range; $i++) {
+			$off = GitPHP_Pack::fuint32($index);
+			$binName = fread($index, 20);
+			$name = bin2hex($binName);
+
+			$this->offsetCache[$name] = $off;
+
+			$cmp = substr_compare($name, $prefix, 0, $prefixlen);
+			if ($cmp === 0) {
+				$matches[] = $name;
+			} else if ($cmp > 0) {
+				break;
+			}
+		}
+
+		return $matches;
+	}
+
+	/**
+	 * FindHashesV2
+	 *
+	 * Find hashes in v2 index matching a prefix
+	 *
+	 * @access private
+	 * @param resource $index file pointer to index
+	 * @param string $prefix hash prefix
+	 * @return array matching hashes
+	 */
+	private function FindHashesV2($index, $prefix)
+	{
+		$matches = array();
+
+		$binaryPrefix = pack('H' . strlen($prefix), $prefix);
+		list($low, $high) = $this->ReadFanout($index, $binaryPrefix, 8);
+
+		$prefixlen = strlen($prefix);
+
+		fseek($index, 8 + 4*256 + 20*$low);
+		for ($i = $low; $i < $high; $i++) {
+			$binName = fread($index, 20);
+			$name = bin2hex($binName);
+
+			$cmp = substr_compare($name, $prefix, 0, $prefixlen);
+			if ($cmp === 0) {
+				$matches[] = $name;
+			} else if ($cmp > 0) {
+				break;
+			}
+		}
+
+		return $matches;
+	}
+
+	/**
 	 * ParseVarInt
 	 *
 	 * Reads a git-style packed variable length integer

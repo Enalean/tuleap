@@ -17,6 +17,8 @@ require_once(GITPHP_GITOBJECTDIR . 'Tag.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'Pack.class.php');
 require_once(GITPHP_GITOBJECTDIR . 'GitConfig.class.php');
 
+define('GITPHP_ABBREV_HASH_MIN', 7);
+
 /**
  * Project class
  *
@@ -1756,11 +1758,11 @@ class GitPHP_Project
 			return $hash;
 		}
 
-		//if ($this->GetCompat()) {
+		if ($this->GetCompat()) {
 			return $this->AbbreviateHashGit($hash);
-		//} else {
-		//	return $this->AbbreviateHashRaw($hash);
-		//}
+		} else {
+			return $this->AbbreviateHashRaw($hash);
+		}
 	}
 
 	/**
@@ -1804,6 +1806,49 @@ class GitPHP_Project
 	 */
 	private function AbbreviateHashRaw($hash)
 	{
+		$prefix = substr($hash, 0, GITPHP_ABBREV_HASH_MIN);
+
+		$hashMap = array();
+
+		$matches = $this->FindHashObjects($prefix);
+		foreach ($matches as $matchingHash) {
+			$hashMap[$matchingHash] = 1;
+		}
+
+		if (!$this->packsRead) {
+			$this->ReadPacks();
+		}
+
+		foreach ($this->packs as $pack) {
+			$matches = $pack->FindHashes($prefix);
+			foreach ($matches as $matchingHash) {
+				$hashMap[$matchingHash] = 1;
+			}
+		}
+
+		if (count($hashMap) == 0) {
+			return $hash;
+		}
+
+		if (count($hashMap) == 1) {
+			return $prefix;
+		}
+
+		for ($len = GITPHP_ABBREV_HASH_MIN+1; $len < 40; $len++) {
+			$prefix = substr($hash, 0, $len);
+
+			foreach ($hashMap as $matchingHash => $val) {
+				if (substr_compare($matchingHash, $prefix, 0, $len) !== 0) {
+					unset($hashMap[$matchingHash]);
+				}
+			}
+
+			if (count($hashMap) == 1) {
+				return $prefix;
+			}
+		}
+
+		return $hash;
 	}
 
 	/**
@@ -1820,11 +1865,11 @@ class GitPHP_Project
 			return $abbrevHash;
 		}
 
-		//if ($this->GetCompat()) {
+		if ($this->GetCompat()) {
 			return $this->ExpandHashGit($hash);
-		//} else {
-		//	return $this->ExpandHashRaw($hash);
-		//}
+		}  else {
+			return $this->ExpandHashRaw($hash);
+		}
 	}
 
 	/**
@@ -1868,6 +1913,58 @@ class GitPHP_Project
 	 */
 	private function ExpandHashRaw($abbrevHash)
 	{
+		$matches = $this->FindHashObjects($abbrevHash);
+		if (count($matches) > 0) {
+			return $matches[0];
+		}
+
+		if (!$this->packsRead) {
+			$this->ReadPacks();
+		}
+
+		foreach ($this->packs as $pack) {
+			$matches = $pack->FindHashes($abbrevHash);
+			if (count($matches) > 0) {
+				return $matches[0];
+			}
+		}
+
+		return $abbrevHash;
+	}
+
+	/**
+	 * FindHashObjects
+	 *
+	 * Finds loose hash files matching a given prefix
+	 *
+	 * @access private
+	 * @param string $prefix hash prefix
+	 * @return array array of hash objects
+	 */
+	private function FindHashObjects($prefix)
+	{
+		$matches = array();
+		if (empty($prefix)) {
+			return $matches;
+		}
+
+		$subdir = substr($prefix, 0, 2);
+		$fulldir = $this->GetPath() . '/objects/' . $subdir;
+		if (!is_dir($fulldir)) {
+			return $matches;
+		}
+
+		$prefixlen = strlen($prefix);
+		$dh = opendir($fulldir);
+		if ($dh !== false) {
+			while (($file = readdir($dh)) !== false) {
+				$fullhash = $subdir . $file;
+				if (substr_compare($fullhash, $prefix, 0, $prefixlen) === 0) {
+					$matches[] = $fullhash;
+				}
+			}
+		}
+		return $matches;
 	}
 
 /*}}}2*/
