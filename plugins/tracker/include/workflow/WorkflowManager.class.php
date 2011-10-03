@@ -205,24 +205,53 @@ class WorkflowManager {
             $from_label = $transition->from->getLabel();
         }
         
-        //Permissions on transition
         echo '<p>';
         echo $GLOBALS['Language']->getText('workflow_admin','title_define_transition_details', array($from_label, $transition->to->getLabel()));
-        echo $this->displayWorkflowPermissions($transition);
         echo '</p>';
+        
+        $form_action = TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker'    => (int)$this->tracker->id, 
+                'func'       => 'admin-workflow', 
+                'transition' => $transition->getTransitionId()
+            )
+        );
+        echo '<form action="'. $form_action .'" method="POST">';
+        echo '<table><tr><td>';
+        
+        $section_conditions = new Widget_Static('Under the following condition:');
+        $section_conditions->setContent($this->fetchWorkflowPermissions($transition));
+        $section_conditions->display();
+        
+        $actions = '<p><i>None for now</i></p>';
+        $actions .= '<p>Add a new actions: <select><option selected>--<option>Change the value of a field</select></p>';
+        $section_postactions = new Widget_Static('The following action will be automatically performed:');
+        $section_postactions->setContent($actions);
+        $section_postactions->display();
+        
+        echo '<p><input type="submit" name="workflow_details" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
+        echo '</td></tr></table>';
+        echo '</form>';
+        
         $this->tracker->displayFooter($engine);
     }
     
-    protected function displayWorkflowPermissions($transition) {
-        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow', 'transition' => $transition->getTransitionId())) .'" method="POST">';
-        echo '<p>';
-        echo $GLOBALS['Language']->getText('workflow_admin','label_define_transition_permissions');
-        echo '</p>';
-        echo '<p>';
-        echo plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), $this->tracker->group_id); 
-        echo '</p>';
-        echo '<input type="submit" name="workflow_details" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        echo '</form>';
+    /**
+     * Return permission form for the transition
+     *
+     * @param Transition $transition The transition
+     *
+     * @return string html
+     */
+    protected function fetchWorkflowPermissions($transition) {
+        $html = '';
+        $html .= '<p>';
+        $html .= $GLOBALS['Language']->getText('workflow_admin','label_define_transition_permissions');
+        $html .= '</p>';
+        $html .= '<p>';
+        $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), $this->tracker->group_id); 
+        $html .= '</p>';
+        return $html;
     }
     
     protected function displayAdminWorkflow($engine, $request, $current_user, $workflow) {
