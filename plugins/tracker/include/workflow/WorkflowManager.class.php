@@ -223,8 +223,8 @@ class WorkflowManager {
         $section_conditions->setContent($this->fetchWorkflowPermissions($transition));
         $section_conditions->display();
         
-        $actions = '<p><i>None for now</i></p>';
-        $actions .= '<p>Add a new actions: <select><option selected>--<option>Change the value of a field</select></p>';
+        $actions = '<p><i><img src="/plugins/tracker/themes/default/images/ic/ui-text-field-change.png" style="vertical-align:middle;" />Change the value of a field</i></p>';
+        $actions .= '<p>Add a new action: <select><option selected>--<option>Change the value of a field</select></p>';
         $section_postactions = new Widget_Static('The following action will be automatically performed:');
         $section_postactions->setContent($actions);
         $section_postactions->display();
