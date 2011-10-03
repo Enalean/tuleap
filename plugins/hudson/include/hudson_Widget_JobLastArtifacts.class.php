@@ -68,12 +68,13 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
     }
     
     function loadContent($id) {
+        $this->content_id = $id;
+
         $sql = "SELECT * FROM plugin_hudson_widget WHERE widget_name='" . $this->widget_id . "' AND owner_id = ". $this->owner_id ." AND owner_type = '". $this->owner_type ."' AND id = ". $id;
         $res = db_query($sql);
         if ($res && db_numrows($res)) {
             $data = db_fetch_array($res);
             $this->job_id    = $data['job_id'];
-            $this->content_id = $id;
             
             $jobs = $this->getAvailableJobs();
             

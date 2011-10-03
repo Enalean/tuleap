@@ -45,6 +45,11 @@ class HudsonBuild {
         
         $this->buildBuildObject();
         
+        $controler = $this->getHudsonControler(); 
+        $this->icons_path = $controler->getIconsPath();
+    }
+    function getHudsonControler() {
+        return new hudson();
     }
     
     public function buildBuildObject() {
@@ -108,6 +113,15 @@ class HudsonBuild {
     }
     function getBuildTime() {
         return format_date($GLOBALS['Language']->getText('system', 'datefmt'), substr($this->getTimestamp(), 0, -3));
+    }
+    function getStatusIcon() {
+        $color = 'red';
+        if ($this->getResult() == 'SUCCESS') {
+            $color = 'blue';
+        } else if ($this->getResult() == 'UNSTABLE') {
+            $color = 'yellow';
+        }
+        return $this->icons_path .'status_'. $color .'.png';
     }
 }
 

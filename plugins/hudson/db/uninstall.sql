@@ -8,3 +8,5 @@ WHERE reference_id IN (SELECT id FROM reference WHERE service_short_name='hudson
 
 DELETE FROM reference WHERE service_short_name='hudson';
 DELETE FROM service WHERE short_name='hudson';
+
+DELETE FROM layouts_contents WHERE name like 'plugin_hudson_%';

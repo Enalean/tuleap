@@ -109,8 +109,44 @@ codendi.Tooltip = Class.create({
 codendi.Tooltip.selectors = ['a[class=cross-reference]'];
 
 codendi.Tooltip.load = function (element) {
+    var sparkline_hrefs = { };
+    
     $(element).select.apply($(element), codendi.Tooltip.selectors).each(function (a) {
         codendi.Tooltips.push(new codendi.Tooltip(a, a.href));
+        //Create an array by hrefs : several 'a' for one href in order to reduce the requests
+        if (sparkline_hrefs[a.href]) {
+            sparkline_hrefs[a.href].push(a);
+        } else {
+            sparkline_hrefs[a.href] = [a];
+        }        
+    });
+    
+    //load sparklines
+    new Ajax.Request('/sparklines.php', {
+        parameters: { 
+            'sparklines[]': $H(sparkline_hrefs).keys()
+        },
+        onSuccess: function (transport) {
+            if (transport.status == 200) {
+                $H(transport.responseJSON).each(function (element) {
+                    var href      = element[0];
+                    var sparkline = element[1];
+                    //add the sparkline to each link
+                    sparkline_hrefs[href].each(function(a) {
+                            a.insert({
+                                top: new Element('img', {
+                                    src: sparkline,
+                                    style: 'vertical-align: middle; padding-right: 2px;',
+                                    width: '10',
+                                    height: '10'
+                                })
+                            });
+                    });
+                });
+                
+                
+            }
+        }
     });
 };
 
