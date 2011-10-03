@@ -407,9 +407,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $output = '';
         if ( $title_field = Tracker_Semantic_Title::load($this->getTracker())->getField() ) {
             if ( $ignore_perms || $title_field->userCanRead($recipient) ) {
-                var_dump('+++ TITLE START');
-                var_dump($this->getLastChangeset()->getValues());
-                var_dump('+++ TITLE END');
                 if ($value = $this->getLastChangeset()->getValue($title_field)) {
                     if ($title = $value->getText() ) {
                         $output .= $title;
