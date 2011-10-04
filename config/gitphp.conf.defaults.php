@@ -180,6 +180,18 @@ $gitphp_conf['compat'] = false;
 $gitphp_conf['largeskip'] = 200;
 
 /*
+ * uniqueabbrev
+ * If this is turned on, when GitPHP abbreviates hashes, it will ensure
+ * that the abbreviated hash is unique for the project, extending the
+ * abbreviated hash if necessary until it becomes unique.
+ * Searching through every single pack in the repository for collisions is a
+ * performance intensive process that can slow down page loads.  If you turn
+ * this on, it's highly recommended to merge all of your existing packs into
+ * a single pack using git gc --aggressive (or git repack -a -d).
+ */
+$gitphp_conf['uniqueabbrev'] = false;
+
+/*
  * compressformat
  * Indicates what kind of compression will be done on the
  * snapshot archive.  Recognized settings are:

@@ -1814,6 +1814,10 @@ class GitPHP_Project
 
 		$prefix = substr($hash, 0, $abbrevLen);
 
+		if (!GitPHP_Config::GetInstance()->GetValue('uniqueabbrev', false)) {
+			return $prefix;
+		}
+
 		$hashMap = array();
 
 		$matches = $this->FindHashObjects($prefix);
