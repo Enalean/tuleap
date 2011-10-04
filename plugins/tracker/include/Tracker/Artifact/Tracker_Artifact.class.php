@@ -734,9 +734,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $comment = trim($comment);
                 $last_changeset = $this->getLastChangeset();
                 if ($comment || $last_changeset->hasChanges($fields_data)) {
+                    $workflow = $this->getWorkflow();
+                    if ($workflow) {
+                        $workflow->before($fields_data);
+                    }
+                    
                     //There is a comment or some change in fields: create a changeset
                     if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
-                        
                         //Store the comment
                         $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0);
                         
@@ -1003,6 +1007,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     function getSubmittedBy() {
         return $this->submitted_by;
+    }
+    
+    /**
+     * Return Workflow the artifact should respect
+     * 
+     * @return Workflow
+     */
+    public function getWorkflow() {
+        return WorkflowFactory::instance()->getWorkflowField($this->getTrackerId());
     }
     
     /**

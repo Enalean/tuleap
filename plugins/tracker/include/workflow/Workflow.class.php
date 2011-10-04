@@ -149,5 +149,16 @@ class Workflow {
                $grand_child->addChild('to_id')->addAttribute('REF', array_search($transition->getFieldValueTo()->getId(), $xmlMapping['values']));
            }
     }
+    
+    /**
+     * Execute actions before transition happens (if there is one)
+     * 
+     * @param Array $fields_data Request field data (array[field_id] => data)
+     * 
+     * @return void
+     */
+    public function before(array &$fields_data) {
+        
+    }
 }
 ?>
