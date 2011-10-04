@@ -28,33 +28,69 @@ class Workflow {
     public $transitions;
     public $is_used;
     
+    /**
+     * @var Tracker_Artifact
+     */
+    protected $artifact = null;
+    
+    /**
+     * @var Tracker_FormElement_Field
+     */
+    protected $field = null;
+    
     public function __construct($workflow_id, $tracker_id, $field_id, $is_used, $transitions = null) {
         $this->workflow_id      = $workflow_id;
         $this->tracker_id = $tracker_id;
         $this->field_id   = $field_id;
         $this->is_used = $is_used;
-        $this->transitions   = $transitions;        
+        $this->transitions   = $transitions;
     }
     
-     /**
+    /**
+     * Set artifact
+     *
+     * @param Tracker_Artifact $artifact artifact the workflow control
+     */
+    public function setArtifact(Tracker_Artifact $artifact) {
+        $this->artifact = $artifact;
+    }
+    
+    /**
+     * Set field
+     *
+     * @param Tracker_FormElement_Field $field Field
+     */
+    public function setField(Tracker_FormElement_Field $field) {
+        $this->field    = $field;
+        $this->field_id = $field->getId();
+    }
+    
+    /**
      * @return string
      */
     public function getId() {
         return $this->workflow_id;
     }
     
-     /**
+    /**
      * @return string
      */
     public function getTrackerId() {
         return $this->tracker_id;
     }
     
-     /**
+    /**
      * @return string
      */
     public function getFieldId() {
         return $this->field_id;
+    }
+    
+    /**
+     * @return Tracker_FormElement_Field
+     */
+    public function getField() {
+        return Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
     }
     
     /**
@@ -74,6 +110,22 @@ class Workflow {
             $this->transitions = WorkflowFactory::instance()->getTransitions($this);
         }
         return $this->transitions;
+    }
+    
+    /**
+     * Return transition corresponding to parameters
+     *
+     * @param Integer $field_value_from
+     * @param Integer $field_value_to
+     * 
+     * @return Transition
+     */
+    public function getTransition($field_value_from, $field_value_to) {
+        foreach ($this->getTransitions() as $transition) {
+            if ($transition->equals(new Transition(0, $this->workflow_id, $field_value_from, $field_value_to))) {
+                return $transition;
+            }
+        }
     }
     
      /**
@@ -158,7 +210,18 @@ class Workflow {
      * @return void
      */
     public function before(array &$fields_data) {
-        
+        if (isset($fields_data[$this->getFieldId()])) {
+            $oldValues = $this->artifact->getLastChangeset()->getValue($this->getField());
+            $from      = null;
+            if ($oldValues) {
+                $from = $oldValues[0];
+            }
+            $to         = $fields_data[$this->getFieldId()];
+            $transition = $this->getTransition($from, $to);
+            if ($transition) {
+                $transition->before();
+            }
+        }
     }
 }
 ?>

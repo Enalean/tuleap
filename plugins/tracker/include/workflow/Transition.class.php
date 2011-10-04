@@ -24,12 +24,33 @@ class Transition {
     public $from;
     public $to;
     
+    /**
+     * @var Workflow
+     */
+    protected $workflow = null;
     
+    /**
+     * Constructor
+     * 
+     * @param Integer                              $transition_id Id of the transition
+     * @param Integer                              $workflow_id   Id of the workflow
+     * @param Tracker_FormElement_Field_List_Value $from          Source value
+     * @param Tracker_FormElement_Field_List_Value $to            Destination value
+     */
     public function __construct($transition_id, $workflow_id, $from, $to) {
         $this->transition_id = $transition_id;
-        $this->workflow_id      = $workflow_id;
-        $this->from = $from;
-        $this->to   = $to;
+        $this->workflow_id   = $workflow_id;
+        $this->from          = $from;
+        $this->to            = $to;
+    }
+    
+    /**
+     * Set workflow
+     *
+     * @param Workflow $workflow Workflow
+     */
+    public function setWorkflow(Workflow $workflow) {
+        $this->workflow = $workflow;
     }
     
     public function getFieldValueFrom() {
@@ -48,11 +69,31 @@ class Transition {
         return $this->transition_id;
     }
     
+    /**
+     * Get parent workflow
+     *
+     * @return Workflow
+     */
     public function getWorkflow() {
-        return WorkflowFactory::instance()->getWorkflow($this->workflow_id);
+        if (!$this->workflow) {
+            $this->workflow = WorkflowFactory::instance()->getWorkflow($this->workflow_id);
+        }
+        return $this->workflow;
     }
     
     public function displayTransitionDetails() {
+    }
+    
+    
+    /**
+     * Execute actions before transition happens
+     * 
+     * @param Array $fields_data Request field data (array[field_id] => data)
+     * 
+     * @return void
+     */
+    public function before(&$fields_data) {
+        
     }
 }
 ?>
