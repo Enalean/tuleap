@@ -55,15 +55,6 @@ class GitPHP_Pack
 	protected $offsetCache = array();
 
 	/**
-	 * indexModified
-	 *
-	 * Stores the index file last modified time
-	 *
-	 * @access protected
-	 */
-	protected $indexModified = 0;
-
-	/**
 	 * __construct
 	 *
 	 * Instantiates object
@@ -137,11 +128,6 @@ class GitPHP_Pack
 		}
 
 		$indexFile = $this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
-		$mTime = filemtime($indexFile);
-		if ($mTime > $this->indexModified) {
-			$this->offsetCache = array();
-			$this->indexModified = $mTime;
-		}
 
 		if (isset($this->offsetCache[$hash])) {
 			return $this->offsetCache[$hash];
@@ -530,11 +516,6 @@ class GitPHP_Pack
 		}
 
 		$indexFile = $this->project->GetPath() . '/objects/pack/pack-' . $this->hash . '.idx';
-		$mTime = filemtime($indexFile);
-		if ($mTime > $this->indexModified) {
-			$this->offsetCache = array();
-			$this->indexModified = $mTime;
-		}
 
 		$matches = array();
 
