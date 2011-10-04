@@ -1806,7 +1806,13 @@ class GitPHP_Project
 	 */
 	private function AbbreviateHashRaw($hash)
 	{
-		$prefix = substr($hash, 0, GITPHP_ABBREV_HASH_MIN);
+		$abbrevLen = GITPHP_ABBREV_HASH_MIN;
+
+		if ($this->GetConfig()->HasValue('core.abbrev')) {
+			$abbrevLen = max(4, min($this->GetConfig()->GetValue('core.abbrev'), 40));
+		}
+
+		$prefix = substr($hash, 0, $abbrevLen);
 
 		$hashMap = array();
 
@@ -1834,7 +1840,7 @@ class GitPHP_Project
 			return $prefix;
 		}
 
-		for ($len = GITPHP_ABBREV_HASH_MIN+1; $len < 40; $len++) {
+		for ($len = $abbrevLen+1; $len < 40; $len++) {
 			$prefix = substr($hash, 0, $len);
 
 			foreach ($hashMap as $matchingHash => $val) {

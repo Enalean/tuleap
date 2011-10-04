@@ -258,6 +258,8 @@ class GitPHP_GitConfig
 		switch ($key) {
 			case 'gitphp.compat':
 				return GitPHP_GitConfig::TypeBoolean;
+			case 'core.abbrev':
+				return GitPHP_GitConfig::TypeInteger;
 		}
 
 		return GitPHP_GitConfig::TypeDefault;
