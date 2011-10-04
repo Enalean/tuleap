@@ -223,7 +223,11 @@ class WorkflowManager {
         $section_conditions->setContent($this->fetchWorkflowPermissions($transition));
         $section_conditions->display();
         
-        $actions = '<p><i><img src="/plugins/tracker/themes/default/images/ic/ui-text-field-change.png" style="vertical-align:middle;" />Change the value of a field</i></p>';
+        $actions = '';
+        $actions .= '<p><i>Nothing for now</i></p>';
+        // {{{ example
+        $actions .= '<ul class="workflow_actions"><li class="workflow_actions_fieldchange">Change the value of the field <!-- select><option>Close date</select> to <select><option>Empty</select --></li></ul>';
+        // }}}
         $actions .= '<p>Add a new action: <select><option selected>--<option>Change the value of a field</select></p>';
         $section_postactions = new Widget_Static('The following action will be automatically performed:');
         $section_postactions->setContent($actions);
@@ -245,12 +249,14 @@ class WorkflowManager {
      */
     protected function fetchWorkflowPermissions($transition) {
         $html = '';
-        $html .= '<p>';
+        $html .= '<ul class="workflow_conditions">';
+        $html .= '<li class="workflow_conditions_perms">';
         $html .= $GLOBALS['Language']->getText('workflow_admin','label_define_transition_permissions');
-        $html .= '</p>';
+        $html .= '<br />';
         $html .= '<p>';
         $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), $this->tracker->group_id); 
         $html .= '</p>';
+        $html .= '</li></ul>';
         return $html;
     }
     

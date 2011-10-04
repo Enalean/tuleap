@@ -857,3 +857,13 @@ ul.plugin_tracker_my_artifacts_list {
 .widget-preview-plugin_tracker_projectrenderer-fr_FR {
     background-image: url(../images/widget-preview-renderer.png);
 }
+
+ul.workflow_actions, ul.workflow_conditions  {
+    list-style-type: none;
+}
+li.workflow_actions_fieldchange {
+    list-style-image: url(../images/ic/ui-text-field-change.png);
+}
+li.workflow_conditions_perms {
+    list-style-image: url(/themes/common/images/ic/lock.png);
+}
