@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Transition_PostAction.class.php');
+require_once('PostAction/Transition_PostAction.class.php');
 
 class Transition {
     public $transition_id;

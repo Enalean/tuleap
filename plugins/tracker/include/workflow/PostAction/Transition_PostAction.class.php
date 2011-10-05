@@ -22,7 +22,7 @@
  * class Transition_PostAction
  * Post action occuring when transition is run
  */
-class Transition_PostAction {
+abstract class Transition_PostAction {
     
     /**
      * Execute actions before transition happens
