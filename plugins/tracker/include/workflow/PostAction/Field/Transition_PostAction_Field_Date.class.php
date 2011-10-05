@@ -45,12 +45,19 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     protected $field_id;
     
     /**
+     * @var Transition the transition
+     */
+    protected $transition;
+    
+    /**
      * Constructor
      *
-     * @param int $field_id   The field id
-     * @param int $value_type The type of the value to set
+     * @param Transition $transition The transition the post action belongs to
+     * @param int        $field_id   The field id
+     * @param int        $value_type The type of the value to set
      */
-    public function __construct($field_id, $value_type) {
+    public function __construct($transition, $field_id, $value_type) {
+        $this->transition = $transition;
         $this->field_id   = $field_id;
         $this->value_type = $value_type;
     }
@@ -73,7 +80,18 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $select .= '<option value="'. (int)self::CLEAR_DATE .'" '. ($this->value_type === self::CLEAR_DATE ? 'selected="selected"' : '') .'>empty</option>';
         $select .= '<option value="'. (int)self::FILL_CURRENT_TIME .'" '. ($this->value_type === self::FILL_CURRENT_TIME ? 'selected="selected"' : '') .'>the current date</option>';
         $select .= '</select>';
-        $html .= 'Change the value of the field '. $this->field_id .' to '. $select;
+        
+        $tracker = $this->transition->getWorkflow()->getTracker();
+        $tff = Tracker_FormElementFactory::instance();
+        $fields_date = $tff->getUsedFormElementsByType($tracker, array('date'));
+        
+        $select_field = '<select>';
+        foreach ($fields_date as $field_date) {
+            $selected = $this->field_id == $field_date->getId() ? 'selected="selected"' : '';
+            $select_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';
+        }
+        $select_field .= '</select>';
+        $html .= 'Change the value of the field '. $select_field .' to '. $select;
         return $html;
     }
     
