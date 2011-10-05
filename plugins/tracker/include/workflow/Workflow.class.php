@@ -220,12 +220,13 @@ class Workflow {
             $oldValues = $this->artifact->getLastChangeset()->getValue($this->getField());
             $from      = null;
             if ($oldValues) {
+                // Todo: what about multiple values in the changeset?
                 $from = $oldValues[0];
             }
             $to         = (int)$fields_data[$this->getFieldId()];
             $transition = $this->getTransition($from, $to);
             if ($transition) {
-                $transition->before();
+                $transition->before($fields_data);
             }
         }
     }

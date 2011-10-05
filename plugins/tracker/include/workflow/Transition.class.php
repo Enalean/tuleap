@@ -18,11 +18,17 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('Transition_PostAction.class.php');
+
 class Transition {
     public $transition_id;
     public $workflow_id;
     public $from;
     public $to;
+    /**
+     * @var Array of Transition_PostAction
+     */
+    protected $post_actions = array();
     
     /**
      * @var Workflow
@@ -93,7 +99,32 @@ class Transition {
      * @return void
      */
     public function before(&$fields_data) {
-        
+        $post_actions = $this->getPostActions();
+        foreach ($post_actions as $post_action) {
+            $post_action->before();
+        }
     }
+    
+    /**
+     * Set Post Actions for the transition
+     * 
+     * @param Array $post_actions array of Transition_PostAction
+     * 
+     * @return void
+     */
+    public function setPostActions($post_actions) {
+        $this->post_actions = $post_actions;
+    }
+    
+    /**
+     * Get Post Actions for the transition
+     *
+     * @return Array
+     */
+    public function getPostActions() {
+        return $this->post_actions;
+    }
+    
+    
 }
 ?>

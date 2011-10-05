@@ -20,6 +20,7 @@
 
 require_once(dirname(__FILE__).'/../../include/workflow/Transition.class.php');
 
+Mock::generate('Transition_PostAction');
 
 class TransitionTest extends UnitTestCase {
     
@@ -44,10 +45,10 @@ class TransitionTest extends UnitTestCase {
                                                            'description' => 'The bug is accepted',
                                                            'rank' => '30');
         
-        $t1 = new Transition (1, 2, $field_value_new, $field_value_analyzed);
-        $t2 = new Transition (1, 2, $field_value_analyzed, $field_value_accepted);
-        $t3 = new Transition (1, 2, $field_value_analyzed, $field_value_new);
-        $t4 = new Transition (1, 2, $field_value_new, $field_value_analyzed); // equals $t1
+        $t1 = new Transition(1, 2, $field_value_new, $field_value_analyzed);
+        $t2 = new Transition(1, 2, $field_value_analyzed, $field_value_accepted);
+        $t3 = new Transition(1, 2, $field_value_analyzed, $field_value_new);
+        $t4 = new Transition(1, 2, $field_value_new, $field_value_analyzed); // equals $t1
         
         $this->assertTrue($t1->equals($t1));
         $this->assertTrue($t2->equals($t2));
@@ -59,5 +60,33 @@ class TransitionTest extends UnitTestCase {
         
     }
     
+    function testBeforeShouldTriggerActions() {
+        $field_value_new = array('id' => 2066,
+                                                           'old_id' => null,
+                                                           'field_id' => 2707,
+                                                           'value' => 'New',
+                                                           'description' => 'The bug has been submitted',
+                                                           'rank' => '10');
+        $field_value_analyzed = array('id' => 2067,
+                                                           'old_id' => null,
+                                                           'field_id' => 2707,
+                                                           'value' => 'Analyzed',
+                                                           'description' => 'The bug is analyzed',
+                                                           'rank' => '20');
+        
+        $fields_data = array('field_id' => 'value');
+        
+        $t1 = new Transition(1, 2, $field_value_new, $field_value_analyzed);
+        
+        $a1 = new MockTransition_PostAction();
+        $a2 = new MockTransition_PostAction();
+        
+        $t1->setPostActions(array($a1, $a2));
+        
+        $a1->expectOnce('before');
+        $a2->expectOnce('before');
+        
+        $t1->before($fields_data);
+    }
 }
 ?>
