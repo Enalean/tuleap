@@ -32,7 +32,6 @@ abstract class Transition_PostAction {
      * @return void
      */
     public function before(array &$fields_data) {
-        
     }
     
     /**
@@ -41,10 +40,16 @@ abstract class Transition_PostAction {
     public abstract function getShortName();
     
     /**
+     * @return string The label of the post action
+     */
+    public abstract function getLabel();
+    
+    /**
      * Get the html code needed to display the post action in workflow admin
      *
      * @return string html
      */
     public abstract function fetch();
+    
 }
 ?>

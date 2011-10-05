@@ -70,6 +70,14 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     }
     
     /**
+     * @return string The label of the post action
+     */
+    public function getLabel() {
+        //TODO: i18n
+        return 'Change the value of a date field';
+    }
+    
+    /**
      * Get the html code needed to display the post action in workflow admin
      *
      * @return string html
@@ -91,7 +99,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
             $select_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';
         }
         $select_field .= '</select>';
-        $html .= 'Change the value of the field '. $select_field .' to '. $select;
+        $html .= 'Change the value of the date field '. $select_field .' to '. $select;
         return $html;
     }
     

@@ -23,6 +23,7 @@ require_once('Workflow_TransitionDao.class.php');
 require_once('Workflow.class.php');
 require_once('WorkflowFactory.class.php');
 require_once('PostAction/Field/Transition_PostAction_Field_Date.class.php');
+require_once('PostAction/Transition_PostActionFactory.class.php');
 
 class WorkflowManager {
     protected $tracker;
@@ -224,9 +225,10 @@ class WorkflowManager {
         $section_conditions->setContent($this->fetchWorkflowPermissions($transition));
         $section_conditions->display();
         
+        $tpaf = new Transition_PostActionFactory();
         $actions = '';
         $actions .= $transition->fetchPostActions();
-        $actions .= '<p>Add a new action: <select><option selected>--<option>Change the value of a field</select></p>';
+        $actions .= $tpaf->fetchPostActions();
         $section_postactions = new Widget_Static('The following action will be automatically performed:');
         $section_postactions->setContent($actions);
         $section_postactions->display();
