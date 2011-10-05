@@ -90,7 +90,10 @@ class Workflow {
      * @return Tracker_FormElement_Field
      */
     public function getField() {
-        return Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
+        if (!$this->field) {
+            $this->field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
+        }
+        return $this->field;
     }
     
     /**
@@ -115,15 +118,18 @@ class Workflow {
     /**
      * Return transition corresponding to parameters
      *
-     * @param Integer $field_value_from
-     * @param Integer $field_value_to
+     * @param Integer $field_value_id_from
+     * @param Integer $field_value_id_to
      * 
-     * @return Transition
+     * @return Transition or null if no transition match
      */
-    public function getTransition($field_value_from, $field_value_to) {
+    public function getTransition($field_value_id_from, $field_value_id_to) {
         foreach ($this->getTransitions() as $transition) {
-            if ($transition->equals(new Transition(0, $this->workflow_id, $field_value_from, $field_value_to))) {
-                return $transition;
+            $from = $transition->getFieldValueFrom();
+            if ($from === null && $field_value_id_from === null || $from !== null && $from->getId() === $field_value_id_from) {
+                if ($transition->getFieldValueTo()->getId() === $field_value_id_to) {
+                    return $transition;
+                }
             }
         }
     }
@@ -216,7 +222,7 @@ class Workflow {
             if ($oldValues) {
                 $from = $oldValues[0];
             }
-            $to         = $fields_data[$this->getFieldId()];
+            $to         = (int)$fields_data[$this->getFieldId()];
             $transition = $this->getTransition($from, $to);
             if ($transition) {
                 $transition->before();

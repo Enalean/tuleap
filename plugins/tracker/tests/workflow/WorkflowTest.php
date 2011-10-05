@@ -24,7 +24,7 @@ Mock::generate('Transition');
 require_once(dirname(__FILE__).'/../../include/workflow/WorkflowManager.class.php');
 require_once(dirname(__FILE__).'/../../include/workflow/WorkflowFactory.class.php');
 
-Mock::generatePartial('Workflow', 'WorkflowTestVersion', array('getTransitions', 'getTransition'));
+Mock::generatePartial('Workflow', 'WorkflowTestVersion', array('getTransitions'));
 require_once(dirname(__FILE__).'/../../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
@@ -204,6 +204,12 @@ class WorkflowTest extends UnitTestCase {
         $t2->setReturnReference('getFieldValueFrom', $v1);
         $t2->setReturnReference('getFieldValueTo',   $v2);
         
+        $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('getValue', array(801), array($f));
+        
+        $a = new MockTracker_Artifact();
+        $a->setReturnValue('getLastChangeset', $changeset);
+        
         $workflow_id = 1;
         $tracker_id  = 2;
         $field_id    = 103;
@@ -212,16 +218,7 @@ class WorkflowTest extends UnitTestCase {
         $workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
         
         $workflow->setField($f);
-        
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('getValue', array(801), array($f));
-        
-        $a = new MockTracker_Artifact();
-        $a->setReturnValue('getLastChangeset', $changeset);
         $workflow->setArtifact($a);
-        
-        $workflow->setReturnValue('getTransition', $t1, array(null, 801));
-        $workflow->setReturnValue('getTransition', $t2, array(801, 802));
         
         $fields_data = array(
             '103' => '802',
