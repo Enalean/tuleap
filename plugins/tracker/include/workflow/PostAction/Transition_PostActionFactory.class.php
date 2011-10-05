@@ -19,6 +19,7 @@
  */
 
 require_once('Field/Transition_PostAction_Field_Date.class.php');
+require_once('Field/dao/Transition_PostAction_Field_DateDao.class.php');
 
 /**
  * class Transition_PostActionFactory
@@ -56,5 +57,30 @@ class Transition_PostActionFactory {
         return $html;
     }
     
+    /**
+     * Create a new post action for the transition
+     *
+     * @param Transition $transition           On wich transition we should add the post action
+     * @param string     $requested_postaction The type of post action
+     *
+     * @return void
+     */
+    public function addPostAction(Transition $transition, $requested_postaction) {
+        if (isset($this->post_actions_classes[$requested_postaction])) {
+            $this->getDao()->create($transition->getTransitionId());
+        }
+    }
+    
+    protected function getDao() {
+        return new Transition_PostAction_Field_DateDao();
+    }
+    
+    public function loadPostActions($transition) {
+        $post_actions = array();
+        foreach ($this->getDao()->searchByTransitionId($transition->getTransitionId()) as $row) {
+            $post_actions[] = new Transition_PostAction_Field_Date($transition, (int)$row['field_id'], (int)$row['value_type']);
+        }
+        $transition->setPostActions($post_actions);
+    }
 }
 ?>

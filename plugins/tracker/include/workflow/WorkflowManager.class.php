@@ -65,6 +65,7 @@ class WorkflowManager {
             $field_value_to = $field_values[$row['to_id']];
             
             $transition = new Transition($row['transition_id'], $workflow->workflow_id, $field_value_from, $field_value_to);
+            $this->getPostActionFactory()->loadPostActions($transition);
             $this->displayTransitionDetails($engine, $request, $current_user, $transition);
             
         }else if ($request->get('delete')) {
@@ -165,8 +166,10 @@ class WorkflowManager {
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin','permissions_not_updated'));
             }
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));                 
-            
+            if ($request->existAndNonEmpty('add_postaction')) {
+                $this->getPostActionFactory()->addPostAction(TransitionFactory::instance()->getTransition($transition), $request->get('add_postaction'));
+            }
+            //$GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
         }else {        
             $this->displayAdminDefineWorkflow($engine, $request, $current_user);
         }
@@ -225,7 +228,8 @@ class WorkflowManager {
         $section_conditions->setContent($this->fetchWorkflowPermissions($transition));
         $section_conditions->display();
         
-        $tpaf = new Transition_PostActionFactory();
+        $tpaf = $this->getPostActionFactory();
+        
         $actions = '';
         $actions .= $transition->fetchPostActions();
         $actions .= $tpaf->fetchPostActions();
@@ -238,6 +242,13 @@ class WorkflowManager {
         echo '</form>';
         
         $this->tracker->displayFooter($engine);
+    }
+    
+    /**
+     * @return Transition_PostActionFactory
+     */
+    public function getPostActionFactory() {
+        return new Transition_PostActionFactory();
     }
     
     /**

@@ -39,7 +39,7 @@ EOT;
                   id int(11) NOT NULL auto_increment PRIMARY KEY,
                   transition_id int(11) NOT NULL,
                   field_id int(11) UNSIGNED default NULL,
-                  value_type tinyint(2) NOT NULL,
+                  value_type tinyint(2) default NULL,
                   INDEX idx_wf_transition_id( transition_id )
                 );";
         $this->db->createTable('tracker_workflow_transition_postactions_field_date', $sql);
