@@ -125,6 +125,26 @@ class Transition {
         return $this->post_actions;
     }
     
-    
+    /**
+     * Get the html code needed to display the post actions in workflow admin
+     *
+     * @return string html
+     */
+    public function fetchPostActions() {
+        $html = '';
+        if ($post_actions = $this->getPostActions()) {
+            $html .= '<ul class="workflow_actions">';
+            foreach ($post_actions as $pa) {
+                $classname = 'workflow_actions_'. $pa->getShortName();
+                $html .= '<li class="'. $classname .'">';
+                $html .= $pa->fetch();
+                $html .= '</li>';
+            }
+            $html .= '</ul>';
+        } else {
+            $html .= '<p><i>Nothing for now</i></p>';
+        }
+        return $html;
+    }
 }
 ?>

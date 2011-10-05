@@ -22,6 +22,7 @@ require_once('Workflow_Dao.class.php');
 require_once('Workflow_TransitionDao.class.php');
 require_once('Workflow.class.php');
 require_once('WorkflowFactory.class.php');
+require_once('PostAction/Field/Transition_PostAction_Field_Date.class.php');
 
 class WorkflowManager {
     protected $tracker;
@@ -224,10 +225,7 @@ class WorkflowManager {
         $section_conditions->display();
         
         $actions = '';
-        $actions .= '<p><i>Nothing for now</i></p>';
-        // {{{ example
-        $actions .= '<ul class="workflow_actions"><li class="workflow_actions_fieldchange">Change the value of the field <!-- select><option>Close date</select> to <select><option>Empty</select --></li></ul>';
-        // }}}
+        $actions .= $transition->fetchPostActions();
         $actions .= '<p>Add a new action: <select><option selected>--<option>Change the value of a field</select></p>';
         $section_postactions = new Widget_Static('The following action will be automatically performed:');
         $section_postactions->setContent($actions);

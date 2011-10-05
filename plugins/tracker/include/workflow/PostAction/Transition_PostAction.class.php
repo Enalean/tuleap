@@ -34,5 +34,17 @@ abstract class Transition_PostAction {
     public function before(array &$fields_data) {
         
     }
+    
+    /**
+     * @return string The shortname of the post action
+     */
+    public abstract function getShortName();
+    
+    /**
+     * Get the html code needed to display the post action in workflow admin
+     *
+     * @return string html
+     */
+    public abstract function fetch();
 }
 ?>

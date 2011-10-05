@@ -861,7 +861,7 @@ ul.plugin_tracker_my_artifacts_list {
 ul.workflow_actions, ul.workflow_conditions  {
     list-style-type: none;
 }
-li.workflow_actions_fieldchange {
+li.workflow_actions_field_date {
     list-style-image: url(../images/ic/ui-text-field-change.png);
 }
 li.workflow_conditions_perms {

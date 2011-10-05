@@ -27,12 +27,12 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     /**
      * @const Clear the date.
      */
-    const CLEAR_DATE = 0;
+    const CLEAR_DATE = 1;
     
     /**
      * @const Fille the date to the current time
      */
-    const FILL_CURRENT_TIME = 1;
+    const FILL_CURRENT_TIME = 2;
     
     /**
      * @var int the type of the value. CLEAR_DATE | FILL_CURRENT_TIME
@@ -43,8 +43,6 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * @var int the field id
      */
     protected $field_id;
-    
-    
     
     /**
      * Constructor
@@ -58,6 +56,28 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     }
     
     /**
+     * @return string The shortname of the post action
+     */
+    public function getShortName() {
+        return 'field_date';
+    }
+    
+    /**
+     * Get the html code needed to display the post action in workflow admin
+     *
+     * @return string html
+     */
+    public function fetch() {
+        $html = '';
+        $select = '<select>';
+        $select .= '<option value="'. (int)self::CLEAR_DATE .'" '. ($this->value_type === self::CLEAR_DATE ? 'selected="selected"' : '') .'>empty</option>';
+        $select .= '<option value="'. (int)self::FILL_CURRENT_TIME .'" '. ($this->value_type === self::FILL_CURRENT_TIME ? 'selected="selected"' : '') .'>the current date</option>';
+        $select .= '</select>';
+        $html .= 'Change the value of the field '. $this->field_id .' to '. $select;
+        return $html;
+    }
+    
+    /**
      * Execute actions before transition happens
      * 
      * @param Array $fields_data Request field data (array[field_id] => data)
@@ -65,7 +85,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * @return void
      */
     public function before(array &$fields_data) {
-        if ($this->value_type == self::FILL_CURRENT_TIME) {
+        if ($this->value_type === self::FILL_CURRENT_TIME) {
             $fields_data[$this->field_id] = $_SERVER['REQUEST_TIME'];
         } else {
             //case : CLEAR_DATE
