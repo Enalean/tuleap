@@ -151,12 +151,11 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * @return void
      */
     public function before(array &$fields_data) {
+        $new_date_timestamp = null;
         if ($this->value_type === self::FILL_CURRENT_TIME) {
-            $fields_data[$this->field_id] = $_SERVER['REQUEST_TIME'];
-        } else {
-            //case : CLEAR_DATE
-            $fields_data[$this->field_id] = '';
+            $new_date_timestamp = $_SERVER['REQUEST_TIME'];
         }
+        $fields_data[$this->field_id] = Tracker_Artifact_ChangesetValue_Date::formatDate($new_date_timestamp);
     }
     
     /**

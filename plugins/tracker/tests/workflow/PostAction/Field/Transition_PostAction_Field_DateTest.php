@@ -20,9 +20,17 @@
 
 require_once(dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/Transition_PostAction_Field_Date.class.php');
 Mock::generate('Transition');
+Mock::generate('BaseLanguage');
 
 class Transition_PostAction_Field_DateTest extends UnitTestCase {
     
+    public function setUp() {
+        $GLOBALS['Language'] = new MockBaseLanguage();
+        $GLOBALS['Language']->setReturnValue('getText', 'Y-m-d', array('system', 'datefmt_short'));
+    }
+    public function tearDown() {
+        unset($GLOBALS['Language']);
+    }
     public function testBeforeShouldSetTheDate() {
         $fields_data = array('field_id' => 'value');
         $transition  = new MockTransition();
@@ -31,7 +39,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $value_type  = Transition_PostAction_Field_Date::FILL_CURRENT_TIME;
         $post_action = new Transition_PostAction_Field_Date($transition, $id, $field_id, $value_type);
         $post_action->before($fields_data);
-        $this->assertEqual($_SERVER['REQUEST_TIME'], $fields_data[$field_id]);
+        $this->assertEqual(date('Y-m-d', $_SERVER['REQUEST_TIME']), $fields_data[$field_id]);
     }
     
     public function testBeforeShouldClearTheDate() {

@@ -216,7 +216,6 @@ class Workflow {
      * @return void
      */
     public function before(array &$fields_data) {
-        //var_dump($fields_data);
         if (isset($fields_data[$this->getFieldId()])) {
             $oldValues = $this->artifact->getLastChangeset()->getValue($this->getField());
             $from      = null;
@@ -233,8 +232,6 @@ class Workflow {
                 $transition->before($fields_data);
             }
         }
-        //var_dump($fields_data);
-        //die();
     }
 }
 ?>

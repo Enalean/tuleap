@@ -56,7 +56,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      * @return string the human-readable representation of the date, or '' if date is null(none)
      */
     public function getDate() {
-        return $this->formatDate($this->timestamp);
+        return self::formatDate($this->timestamp);
     }
     
     /**
@@ -66,7 +66,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @return string the date in the format Y-m-d (user pref?), or '' if date is null (none)
      */
-    protected function formatDate($timestamp) {
+    public static function formatDate($timestamp) {
         if ($timestamp === null) {
             return '';
         } else {
