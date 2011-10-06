@@ -642,9 +642,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $changeset_id = null;
         if ( ! $submitter->isAnonymous() || $email != null) {
             if ($this->validateFields($fields_data, true)) {
+                
+                // Initialize a fake Changeset to ensure List & Workflow works with an "initial" thus empty state
+                $this->changesets = array(new Tracker_Artifact_Changeset_Null());
+                
+                $workflow = $this->getWorkflow();
+                if ($workflow) {
+                    $workflow->before($fields_data);
+                }
                 if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
-                    // Initialize a fake Changeset to ensure List & Workflow works with an "initial" thus empty state
-                    $this->changesets = array(new Tracker_Artifact_Changeset_Null());
 
                     //Store the value(s) of the fields
                     $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
