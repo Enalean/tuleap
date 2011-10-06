@@ -126,8 +126,8 @@ class Workflow {
     public function getTransition($field_value_id_from, $field_value_id_to) {
         foreach ($this->getTransitions() as $transition) {
             $from = $transition->getFieldValueFrom();
-            if ($from === null && $field_value_id_from === null || $from !== null && $from->getId() === $field_value_id_from) {
-                if ($transition->getFieldValueTo()->getId() === $field_value_id_to) {
+            if ($from === null && $field_value_id_from === null || $from !== null && $from->getId() == $field_value_id_from) {
+                if ($transition->getFieldValueTo()->getId() == $field_value_id_to) {
                     return $transition;
                 }
             }
@@ -216,12 +216,16 @@ class Workflow {
      * @return void
      */
     public function before(array &$fields_data) {
+        //var_dump($fields_data);
         if (isset($fields_data[$this->getFieldId()])) {
             $oldValues = $this->artifact->getLastChangeset()->getValue($this->getField());
             $from      = null;
             if ($oldValues) {
-                // Todo: what about multiple values in the changeset?
-                $from = $oldValues[0];
+                if ($v = $oldValues->getValue()) {
+                    // Todo: what about multiple values in the changeset?
+                    list(,$from) = each($v);
+                    $from = (int)$from;
+                }
             }
             $to         = (int)$fields_data[$this->getFieldId()];
             $transition = $this->getTransition($from, $to);
@@ -229,6 +233,8 @@ class Workflow {
                 $transition->before($fields_data);
             }
         }
+        //var_dump($fields_data);
+        //die();
     }
 }
 ?>

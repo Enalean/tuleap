@@ -101,7 +101,7 @@ class Transition {
     public function before(&$fields_data) {
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
-            $post_action->before();
+            $post_action->before($fields_data);
         }
     }
     

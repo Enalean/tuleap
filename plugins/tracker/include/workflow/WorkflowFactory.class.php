@@ -217,13 +217,18 @@ class WorkflowFactory {
                 $field_value_from =null;
             }
             $field_value_to = $field_values[$row['to_id']];
-            $transition= new Transition($row['transition_id'], $row['workflow_id'], $field_value_from, $field_value_to);
-            $transitions[] =$transition;
+            $transition = new Transition($row['transition_id'], $row['workflow_id'], $field_value_from, $field_value_to);
+            $this->getPostActionFactory()->loadPostActions($transition);
+            $transitions[] = $transition;
         }
         return $transitions;
     }
+    
+    protected function getPostActionFactory() {
+        return new Transition_PostActionFactory();
+    }
 
-     /**
+    /**
      * Duplicate the workflow
      * 
      * @param $workflow_id the workflow id

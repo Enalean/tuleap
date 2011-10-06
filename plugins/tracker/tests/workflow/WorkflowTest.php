@@ -33,6 +33,7 @@ Mock::generate('Tracker_FormElement_Field_List_Value');
 
 Mock::generate('Tracker_Artifact_Changeset');
 Mock::generate('Tracker_Artifact');
+Mock::generate('Tracker_Artifact_ChangesetValue_List');
 
 class WorkflowTest extends UnitTestCase {
     
@@ -204,8 +205,11 @@ class WorkflowTest extends UnitTestCase {
         $t2->setReturnReference('getFieldValueFrom', $v1);
         $t2->setReturnReference('getFieldValueTo',   $v2);
         
+        $cvl = new MockTracker_Artifact_ChangesetValue_List();
+        $cvl->setReturnValue('getValue', array(801));
+        
         $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('getValue', array(801), array($f));
+        $changeset->setReturnValue('getValue', $cvl, array($f));
         
         $a = new MockTracker_Artifact();
         $a->setReturnValue('getLastChangeset', $changeset);

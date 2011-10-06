@@ -54,10 +54,19 @@ class TransitionFactory {
      * @return Transition
      */
     public function getInstanceFromRow($row) {
-        return new Transition($row['transition_id'],
+        $transition = new Transition($row['transition_id'],
                                           $row['workflow_id'],
                                           $row['from_id'],
                                           $row['to_id']);
+        $this->getPostActionFactory()->loadPostActions($transition);
+        return $transition;
+    }
+    
+    /**
+     * @return Transition_PostActionFactory
+     */
+    public function getPostActionFactory() {
+        return new Transition_PostActionFactory();
     }
     
     /**
