@@ -32,16 +32,6 @@ class Transition_PostActionManager {
         // Loop over defined actions and update them if relevant
         foreach ($transition->getPostActions() as $post_action) {
             $post_action->process($request);
-            /*if ($post_action instanceof Transition_PostAction_Field_Date) {
-                if ($request->existAndNonEmpty('workflow_postaction_field_date')) {
-                    $field_id   = $request->getValidated('workflow_postaction_field_date', 'UInt', false);
-                    if ($field_id !== false && $field_id != $post_action->getFieldId()) {
-                        $field = Tracker_FormElementFactory::instance()->getUsedFormElementById($field_id);
-                    }
-                    $vValueType = 
-                    $value_type = $request->getValidated('workflow_postaction_field_date_value_type', 'UInt', Transition_PostAction_Field_Date::FILL_CURRENT_TIME);
-                }
-            }*/
         }
     }
     

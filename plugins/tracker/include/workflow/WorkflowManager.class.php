@@ -159,8 +159,10 @@ class WorkflowManager {
                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));                 
            }          
         } else if ($request->get('workflow_details')) {
-            $ugroups = $request->get('ugroups');
             $transition = $request->get('transition');
+            
+            // Permissions
+            $ugroups = $request->get('ugroups');
             permission_clear_all($this->tracker->group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition, false); 
             if (WorkflowFactory::instance()->addPermissions($ugroups, $transition)) {
                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','permissions_updated'));
@@ -171,7 +173,8 @@ class WorkflowManager {
             // Post actions
             $tpam = new Transition_PostActionManager();
             $tpam->process(TransitionFactory::instance()->getTransition($transition), $request, $current_user);
-            //$GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
+            
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
         }else {        
             $this->displayAdminDefineWorkflow($engine, $request, $current_user);
         }

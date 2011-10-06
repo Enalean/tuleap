@@ -100,7 +100,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      */
     public function fetch() {
         $html = '';
-        $select = '<select name="workflow_postaction_field_date_value_type">';
+        $select = '<select name="workflow_postaction_field_date_value_type['.$this->id.']">';
         $select .= '<option value="'. (int)self::CLEAR_DATE .'" '. ($this->value_type === self::CLEAR_DATE ? 'selected="selected"' : '') .'>empty</option>';
         $select .= '<option value="'. (int)self::FILL_CURRENT_TIME .'" '. ($this->value_type === self::FILL_CURRENT_TIME ? 'selected="selected"' : '') .'>the current date</option>';
         $select .= '</select>';
@@ -109,7 +109,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $tff = Tracker_FormElementFactory::instance();
         $fields_date = $tff->getUsedFormElementsByType($tracker, array('date'));
         
-        $select_field = '<select name="workflow_postaction_field_date">';
+        $select_field = '<select name="workflow_postaction_field_date['.$this->id.']">';
         foreach ($fields_date as $field_date) {
             $selected = $this->field_id == $field_date->getId() ? 'selected="selected"' : '';
             $select_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';
@@ -119,23 +119,32 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         return $html;
     }
     
+    /**
+     * Update/Delete actions on the post-action
+     *
+     * @param Codendi_Request $request
+     */
     public function process(Codendi_Request $request) {
-        if ($request->existAndNonEmpty('workflow_postaction_field_date')) {
+        if ($request->getInArray('workflow_postaction_field_date', $this->id)) {
             $field_id   = $this->field_id;
             $value_type = $this->value_type;
             
             // Target field
-            $new_field_id   = $request->getValidated('workflow_postaction_field_date', 'UInt', false);
-            if ($new_field_id !== false && $new_field_id != $field_id) {
-                $field = Tracker_FormElementFactory::instance()->getUsedFormElementById($new_field_id);
-                if ($field) {
-                    $field_id = $field->getId();
+            if ($request->validInArray('workflow_postaction_field_date', new Valid_UInt($this->id))) {
+                $new_field_id = $request->getInArray('workflow_postaction_field_date', $this->id);
+                if ($new_field_id != $field_id) {
+                    $field = Tracker_FormElementFactory::instance()->getUsedFormElementById($new_field_id);
+                    if ($field) {
+                        $field_id = $field->getId();
+                    }
                 }
             }
             
             // Value Type
-            $valid_value_type = new Valid_WhiteList('', array(self::CLEAR_DATE, self::FILL_CURRENT_TIME));
-            $value_type       = $request->getValidated('workflow_postaction_field_date_value_type', $valid_value_type, Transition_PostAction_Field_Date::FILL_CURRENT_TIME);
+            $valid_value_type = new Valid_WhiteList($this->id, array(self::CLEAR_DATE, self::FILL_CURRENT_TIME));
+            if ($request->validInArray('workflow_postaction_field_date_value_type', $valid_value_type)) {
+                $value_type = $request->getInArray('workflow_postaction_field_date_value_type', $this->id);
+            }
             
             if ($field_id != $this->field_id || $value_type != $this->value_type) {
                 $this->getDao()->updatePostAction($this->id, $field_id, $value_type);
