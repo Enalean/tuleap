@@ -24,6 +24,7 @@ require_once('Workflow.class.php');
 require_once('WorkflowFactory.class.php');
 require_once('PostAction/Field/Transition_PostAction_Field_Date.class.php');
 require_once('PostAction/Transition_PostActionFactory.class.php');
+require_once('PostAction/Transition_PostActionManager.class.php');
 
 class WorkflowManager {
     protected $tracker;
@@ -35,7 +36,7 @@ class WorkflowManager {
         return $tracker;
     }
     
-    public function process($engine, $request, $current_user) {
+    public function process(TrackerManager $engine, Codendi_Request $request, User $current_user) {
         
         if ($request->get('create')) {
             
@@ -166,9 +167,10 @@ class WorkflowManager {
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin','permissions_not_updated'));
             }
-            if ($request->existAndNonEmpty('add_postaction')) {
-                $this->getPostActionFactory()->addPostAction(TransitionFactory::instance()->getTransition($transition), $request->get('add_postaction'));
-            }
+            
+            // Post actions
+            $tpam = new Transition_PostActionManager();
+            $tpam->process(TransitionFactory::instance()->getTransition($transition), $request, $current_user);
             //$GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
         }else {        
             $this->displayAdminDefineWorkflow($engine, $request, $current_user);

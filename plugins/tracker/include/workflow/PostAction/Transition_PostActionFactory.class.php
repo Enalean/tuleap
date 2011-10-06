@@ -78,7 +78,7 @@ class Transition_PostActionFactory {
     public function loadPostActions($transition) {
         $post_actions = array();
         foreach ($this->getDao()->searchByTransitionId($transition->getTransitionId()) as $row) {
-            $post_actions[] = new Transition_PostAction_Field_Date($transition, (int)$row['field_id'], (int)$row['value_type']);
+            $post_actions[] = new Transition_PostAction_Field_Date($transition, (int)$row['id'], (int)$row['field_id'], (int)$row['value_type']);
         }
         $transition->setPostActions($post_actions);
     }

@@ -30,17 +30,17 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     const CLEAR_DATE = 1;
     
     /**
-     * @const Fille the date to the current time
+     * @const Fill the date to the current time
      */
     const FILL_CURRENT_TIME = 2;
     
     /**
-     * @var int the type of the value. CLEAR_DATE | FILL_CURRENT_TIME
+     * @var Integer the type of the value. CLEAR_DATE | FILL_CURRENT_TIME
      */
     protected $value_type;
     
     /**
-     * @var int the field id
+     * @var Integer Id of the field the post action should modify
      */
     protected $field_id;
     
@@ -50,14 +50,21 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     protected $transition;
     
     /**
+     * @var Integer Id of the post action
+     */
+    protected $id;
+    
+    /**
      * Constructor
      *
      * @param Transition $transition The transition the post action belongs to
-     * @param int        $field_id   The field id
-     * @param int        $value_type The type of the value to set
+     * @param Integer    $id         Id of the post action
+     * @param Integer    $field_id   Id of the field the post action should modify
+     * @param Integer    $value_type The type of the value to set
      */
-    public function __construct($transition, $field_id, $value_type) {
+    public function __construct(Transition $transition, $id, $field_id, $value_type) {
         $this->transition = $transition;
+        $this->id         = $id;
         $this->field_id   = $field_id;
         $this->value_type = $value_type;
     }
@@ -78,13 +85,22 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     }
     
     /**
+     * Return ID of the field updated by the post-action
+     *
+     * @return Integer
+     */
+    public function getFieldId() {
+        return $this->field_id;
+    }
+    
+    /**
      * Get the html code needed to display the post action in workflow admin
      *
      * @return string html
      */
     public function fetch() {
         $html = '';
-        $select = '<select>';
+        $select = '<select name="workflow_postaction_field_date_value_type">';
         $select .= '<option value="'. (int)self::CLEAR_DATE .'" '. ($this->value_type === self::CLEAR_DATE ? 'selected="selected"' : '') .'>empty</option>';
         $select .= '<option value="'. (int)self::FILL_CURRENT_TIME .'" '. ($this->value_type === self::FILL_CURRENT_TIME ? 'selected="selected"' : '') .'>the current date</option>';
         $select .= '</select>';
@@ -93,7 +109,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $tff = Tracker_FormElementFactory::instance();
         $fields_date = $tff->getUsedFormElementsByType($tracker, array('date'));
         
-        $select_field = '<select>';
+        $select_field = '<select name="workflow_postaction_field_date">';
         foreach ($fields_date as $field_date) {
             $selected = $this->field_id == $field_date->getId() ? 'selected="selected"' : '';
             $select_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';
@@ -101,6 +117,30 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $select_field .= '</select>';
         $html .= 'Change the value of the date field '. $select_field .' to '. $select;
         return $html;
+    }
+    
+    public function process(Codendi_Request $request) {
+        if ($request->existAndNonEmpty('workflow_postaction_field_date')) {
+            $field_id   = $this->field_id;
+            $value_type = $this->value_type;
+            
+            // Target field
+            $new_field_id   = $request->getValidated('workflow_postaction_field_date', 'UInt', false);
+            if ($new_field_id !== false && $new_field_id != $field_id) {
+                $field = Tracker_FormElementFactory::instance()->getUsedFormElementById($new_field_id);
+                if ($field) {
+                    $field_id = $field->getId();
+                }
+            }
+            
+            // Value Type
+            $valid_value_type = new Valid_WhiteList('', array(self::CLEAR_DATE, self::FILL_CURRENT_TIME));
+            $value_type       = $request->getValidated('workflow_postaction_field_date_value_type', $valid_value_type, Transition_PostAction_Field_Date::FILL_CURRENT_TIME);
+            
+            if ($field_id != $this->field_id || $value_type != $this->value_type) {
+                $this->getDao()->updatePostAction($this->id, $field_id, $value_type);
+            }
+        }
     }
     
     /**
@@ -117,6 +157,15 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
             //case : CLEAR_DATE
             $fields_data[$this->field_id] = '';
         }
+    }
+    
+    /**
+     * Wrapper for Transition_PostAction_Field_DateDao
+     * 
+     * @return Transition_PostAction_Field_DateDao
+     */
+    protected function getDao() {
+        return new Transition_PostAction_Field_DateDao();
     }
 }
 ?>

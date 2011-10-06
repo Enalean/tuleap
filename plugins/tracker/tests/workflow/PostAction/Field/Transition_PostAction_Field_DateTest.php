@@ -26,22 +26,24 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     public function testBeforeShouldSetTheDate() {
         $fields_data = array('field_id' => 'value');
         $transition  = new MockTransition();
-        $field_id   = 102;
-        $value_type = Transition_PostAction_Field_Date::FILL_CURRENT_TIME;
-        $post_action = new Transition_PostAction_Field_Date($transition, $field_id, $value_type);
+        $field_id    = 102;
+        $id          = 1;
+        $value_type  = Transition_PostAction_Field_Date::FILL_CURRENT_TIME;
+        $post_action = new Transition_PostAction_Field_Date($transition, $id, $field_id, $value_type);
         $post_action->before($fields_data);
         $this->assertEqual($_SERVER['REQUEST_TIME'], $fields_data[$field_id]);
     }
     
     public function testBeforeShouldClearTheDate() {
         $transition  = new MockTransition();
-        $field_id   = 102;
+        $field_id    = 102;
+        $id          = 1;
         $fields_data = array(
             'field_id' => 'value',
             $field_id  => '1317817376',
         );
         $value_type = Transition_PostAction_Field_Date::CLEAR_DATE;
-        $post_action = new Transition_PostAction_Field_Date($transition, $field_id, $value_type);
+        $post_action = new Transition_PostAction_Field_Date($transition, $id, $field_id, $value_type);
         $post_action->before($fields_data);
         $this->assertEqual('', $fields_data[$field_id]);
     }
