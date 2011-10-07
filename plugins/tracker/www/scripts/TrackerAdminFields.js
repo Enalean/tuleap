@@ -291,5 +291,15 @@ document.observe('dom:loaded', function () {
         var r = new codendi.RTE(elem);
     });
     
+    $$("input[name^=remove_postaction]").each(function (elem) {
+            elem.observe('change', function (evt) {
+                    if (elem.checked) {
+                        elem.up('li').addClassName('workflow_action_deleted');
+                    } else {
+                        elem.up('li').removeClassName('workflow_action_deleted');
+                    }
+            });
+    });
+    
 });
 

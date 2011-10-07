@@ -743,6 +743,17 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
    background-image: url(../images/ic/arrow-turn-090-left.png);
 }
 
+.workflow_actions .pc_check_unchecked {
+   background-image: url(/themes/common/images/ic/bin_closed.png);
+}
+
+.workflow_actions .pc_check_checked {
+   background-image: url(/themes/common/images/ic/bin.png);
+}
+
+.workflow_action_deleted {
+   text-decoration: line-through;
+}
 /* }}} */
 
 /* {{{ Palette */

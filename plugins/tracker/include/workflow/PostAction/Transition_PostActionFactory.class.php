@@ -65,7 +65,9 @@ class Transition_PostActionFactory {
     public function fetchDeletePostActions($postaction_id) {
         $html = '';
         $html .= '<input type="hidden" name="remove_postaction['.$postaction_id.']" value="0" />';
+        $html .= '<label class="pc_checkbox">';
         $html .= '<input type="checkbox" title="'.$GLOBALS['Language']->getText('workflow_admin','remove_postaction').'" name="remove_postaction['.$postaction_id.']" value="1" />';
+        $html .= '&nbsp</label>';
         return $html;
     }
     
