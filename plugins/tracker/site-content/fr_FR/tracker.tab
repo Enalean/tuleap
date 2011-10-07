@@ -1244,7 +1244,7 @@ workflow_admin	add_new_action	Ajouter une nouvelle action :
 workflow_admin	remove_postaction	Supprimer cette action
 
 workflow_postaction	field_date_current_time	Le champs $1 a été automatiquement valué à $2
-workflow_postaction	field_date_current_time	Le valeur du champs $1 a été automatiquement effacée
+workflow_postaction	field_date_clear	Le valeur du champs $1 a été automatiquement effacée
 
 plugin_tracker_permissions	plugin_tracker_artifact_access	Accès à un artefact
 plugin_tracker_permissions	plugin_tracker_full_access	Accès à tous les artefacts du tracker
