@@ -93,6 +93,15 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     }
     
     /**
+     * Return ID of the post-action
+     *
+     * @return Integer
+     */
+    public function getId() {
+        return $this->id;
+    }
+    
+    /**
      * Get the html code needed to display the post action in workflow admin
      *
      * @return string html
@@ -117,6 +126,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         }
         $select_field .= '</select>';
         $html .= $GLOBALS['Language']->getText('workflow_admin','change_value_date_field_to', array($select_field, $select));
+        //Delete
+        $html .= '<input type="checkbox" title="'.$GLOBALS['Language']->getText('workflow_admin','remove_postaction').'" name="remove_postaction['.$this->getId().']"/>';
         return $html;
     }
     
@@ -150,6 +161,10 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
             if ($field_id != $this->field_id || $value_type != $this->value_type) {
                 $this->getDao()->updatePostAction($this->id, $field_id, $value_type);
             }
+        }
+        
+        if ($request->getInArray('remove_postaction', $this->id)) {
+            $this->getDao()->deletePostAction($this->id);
         }
     }
     

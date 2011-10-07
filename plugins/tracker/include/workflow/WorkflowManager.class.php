@@ -49,7 +49,7 @@ class WorkflowManager {
                                                         'func'    => 'admin-workflow')));
                 }
             }
-        }else if ($request->get('edit_transition')) {
+        } else if ($request->get('edit_transition')) {
             $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
             $t = $request->get('edit_transition');
             $res = WorkflowFactory::instance()->getTransitionId($workflow->workflow_id , $t);
@@ -69,7 +69,7 @@ class WorkflowManager {
             $this->getPostActionFactory()->loadPostActions($transition);
             $this->displayTransitionDetails($engine, $request, $current_user, $transition);
             
-        }else if ($request->get('delete')) {
+        } else if ($request->get('delete')) {
             
             if (WorkflowFactory::instance()->delete($request->get('delete'))) {
                 if(WorkflowFactory::instance()->deleteWorkflowTransitions($request->get('delete'))) {
@@ -79,7 +79,7 @@ class WorkflowManager {
                                                     'func'    => 'admin-workflow')));
                 }
             }            
-        }else if ($request->get('create_matrix')) {
+        } else if ($request->get('create_matrix')) {
             
             $k=0;
             $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
@@ -141,7 +141,7 @@ class WorkflowManager {
             }
 
             
-        }else if ($request->get('enable_workflow')) {
+        } else if ($request->get('enable_workflow')) {
 
             $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
             $is_used = $request->get('is_used');
@@ -157,7 +157,7 @@ class WorkflowManager {
            if (WorkflowFactory::instance()->updateActivation((int)$workflow->workflow_id, $is_used)) {
                $GLOBALS['Response']->addFeedback('info', $feedback);
                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));                 
-           }          
+           }
         } else if ($request->get('workflow_details')) {
             $transition = $request->get('transition');
             
@@ -175,7 +175,7 @@ class WorkflowManager {
             $tpam->process(TransitionFactory::instance()->getTransition($transition), $request, $current_user);
             
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
-        }else {        
+        } else {
             $this->displayAdminDefineWorkflow($engine, $request, $current_user);
         }
     }

@@ -1242,7 +1242,7 @@ workflow_admin	change_value_date_field_to	Change the value of the date field $1 
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
 workflow_admin	under_the_following_condition	Under the following condition:
 workflow_admin	following_action_performed	The following action will be automatically performed:
-workflow_admin	add_new_action	Add a new action: 
+workflow_admin	remove_postaction	Remove the action
 
 plugin_tracker_permissions	plugin_tracker_artifact_access	Access to an artifact
 plugin_tracker_permissions	plugin_tracker_full_access	Access to all tracker artifacts

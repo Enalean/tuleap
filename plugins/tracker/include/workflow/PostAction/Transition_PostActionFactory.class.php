@@ -71,6 +71,20 @@ class Transition_PostActionFactory {
         }
     }
     
+    /**
+     * Remove a post action for the transition
+     *
+     * @param Transition $transition           On wich transition we should add the post action
+     * @param string     $requested_postaction The type of post action
+     *
+     * @return void
+     */
+    public function removePostAction(Transition $transition, $requested_postaction) {
+        if (isset($this->post_actions_classes[$requested_postaction])) {
+            $this->getDao()->delete($postaction_id);
+        }
+    }
+    
     protected function getDao() {
         return new Transition_PostAction_Field_DateDao();
     }
