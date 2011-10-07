@@ -148,7 +148,7 @@ class Transition {
             }
             $html .= '</ul>';
         } else {
-            $html .= '<p><i>Nothing for now</i></p>';
+            $html .= '<p><i>'. $GLOBALS['Language']->getText('workflow_admin', 'no_postaction') .'</i></p>';
         }
         return $html;
     }

@@ -90,7 +90,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     public function fetch() {
         $html = '';
         $select = '<select name="workflow_postaction_field_date_value_type['.$this->id.']">';
-        $select .= '<option value="0" '. ($this->value_type == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'none'). '</option>';
+        $select .= '<option value="0" '. ($this->value_type == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
         $select .= '<option value="'. (int)self::CLEAR_DATE .'" '. ($this->value_type === self::CLEAR_DATE ? 'selected="selected"' : '') .'>empty</option>';
         $select .= '<option value="'. (int)self::FILL_CURRENT_TIME .'" '. ($this->value_type === self::FILL_CURRENT_TIME ? 'selected="selected"' : '') .'>the current date</option>';
         $select .= '</select>';
@@ -100,7 +100,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $fields_date = $tff->getUsedFormElementsByType($tracker, array('date'));
         
         $select_field = '<select name="workflow_postaction_field_date['.$this->id.']">';
-        $select_field .= '<option value="0" '. ($this->field_id == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'none'). '</option>';
+        $select_field .= '<option value="0" '. ($this->field_id == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
         foreach ($fields_date as $field_date) {
             $selected = $this->field_id == $field_date->getId() ? 'selected="selected"' : '';            
             $select_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';

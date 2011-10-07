@@ -1245,6 +1245,7 @@ workflow_admin	following_action_performed	The following action will be automatic
 workflow_admin	add_new_action	Add a new action: 
 workflow_admin	remove_postaction	Remove the action
 workflow_admin	postaction_on_field_already_exist	An action on the field date $1 already exists.
+workflow_admin	no_postaction	There isn't any post action defined yet.
 
 workflow_postaction	field_date_current_time	The field $1 has been automatically set to $2
 workflow_postaction	field_date_clear	The field $1 has been automatically cleared
