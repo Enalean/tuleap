@@ -111,6 +111,8 @@ if (!isset($GLOBALS['feedback'])) {
 }
 
 if (!IS_SCRIPT) {
+    // Prevent "Pragma: no-cache" to be sent to user (break https & IE)
+    session_cache_limiter(false);
     session_start();
     $cookie_manager =& new CookieManager();
     $GLOBALS['session_hash'] = $cookie_manager->isCookie('session_hash') ? $cookie_manager->getCookie('session_hash') : false;

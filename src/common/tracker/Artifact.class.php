@@ -2521,6 +2521,7 @@ class Artifact extends Error {
      * @param Array                  $to
      */
     function sendMail(Codendi_Mail_Interface $mail, $subject, array $to) {
+        $mail->addAdditionalHeader("X-Codendi-Project",     $this->ArtifactType->getGroup()->getUnixName());
         $mail->addAdditionalHeader("X-Codendi-Artifact",    $this->ArtifactType->getItemName());
         $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
         $mail->setFrom($GLOBALS['sys_noreply']);

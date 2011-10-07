@@ -58,7 +58,7 @@ class PluginDao extends DataAccessObject {
     * @return DataAccessResult
     */
     function searchByAvailable($available) {
-        $sql = sprintf("SELECT * FROM plugin WHERE available = %s",
+        $sql = sprintf("SELECT * FROM plugin WHERE available = %s ORDER BY id",
                 $this->da->quoteSmart($available));
         return $this->retrieve($sql);
     }

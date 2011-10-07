@@ -1,7 +1,11 @@
 Version 4.0.23 (Not  released yet)
+    == Bug fix ==
+    * Fix regression on file download with IE and https.
+    * Fix regression on tracker mail header (X-Codendi-Project)
 
     == Plugins ==
     * Hudson v1.4. See separated Changelog
+    * GraphOnTrackerV5 v0.2. See separated Changelog
 
 Version 4.0.22 - Friday, September 20th 2011
     == Enhancement ==

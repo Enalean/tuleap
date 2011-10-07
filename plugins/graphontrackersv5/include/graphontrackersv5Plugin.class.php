@@ -20,12 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Do not load the plugin if tracker is not installed & active
-if (defined('TRACKER_BASE_URL')) {
-
-require_once('common/include/HTTPRequest.class.php');
 require_once('common/plugin/Plugin.class.php');
-require_once('GraphOnTrackersV5_Renderer.class.php');
 
 class GraphOnTrackersV5Plugin extends Plugin {
 
@@ -52,23 +47,25 @@ class GraphOnTrackersV5Plugin extends Plugin {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         
-        $this->_addHook('cssfile',                           'cssFile',                           false);
-        
-        //Tracker report renderer
-        $this->_addHook('tracker_report_renderer_instance',  'tracker_report_renderer_instance',  false);
-        $this->_addHook('tracker_report_renderer_from_xml',  'tracker_report_renderer_from_xml', false);
-        $this->_addHook('tracker_report_add_renderer' ,      'tracker_report_add_renderer',       false);
-        $this->_addHook('tracker_report_create_renderer' ,      'tracker_report_create_renderer',       false);
-        $this->_addHook('tracker_report_renderer_types' ,    'tracker_report_renderer_types',     false);
-        $this->_addHook('trackers_get_renderers' ,    'trackers_get_renderers',     false);
-        
-        //Widgets
-        $this->_addHook('widget_instance',                   'widget_instance',                   false);
-        $this->_addHook('widgets',                           'widgets',                           false);
-        $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',     false);
-        
-        $this->_addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
-        
+        // Do not load the plugin if tracker is not installed & active
+        if (defined('TRACKER_BASE_URL')) {
+            $this->_addHook('cssfile',                           'cssFile',                           false);
+
+            //Tracker report renderer
+            $this->_addHook('tracker_report_renderer_instance',  'tracker_report_renderer_instance',  false);
+            $this->_addHook('tracker_report_renderer_from_xml',  'tracker_report_renderer_from_xml', false);
+            $this->_addHook('tracker_report_add_renderer' ,      'tracker_report_add_renderer',       false);
+            $this->_addHook('tracker_report_create_renderer' ,      'tracker_report_create_renderer',       false);
+            $this->_addHook('tracker_report_renderer_types' ,    'tracker_report_renderer_types',     false);
+            $this->_addHook('trackers_get_renderers' ,    'trackers_get_renderers',     false);
+
+            //Widgets
+            $this->_addHook('widget_instance',                   'widget_instance',                   false);
+            $this->_addHook('widgets',                           'widgets',                           false);
+            $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',     false);
+
+            $this->_addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
+        }
         $this->allowedForProject = array();
     }
 
@@ -177,7 +174,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
      */
     public function trackers_get_renderers($params) {
         if ($params['renderer_type'] == 'plugin_graphontrackersv5') {
-                    
+            require_once('GraphOnTrackersV5_Renderer.class.php');
             $params['renderers'][$params['renderer_key']] = new GraphOnTrackersV5_Renderer(
                     $params['renderer_key'],
                     $params['report'],
@@ -248,12 +245,11 @@ class GraphOnTrackersV5Plugin extends Plugin {
     
     /**
      * function to get plugin info
-     *
      */
-    function &getPluginInfo() {
+    function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'GraphOnTrackersV5PluginInfo')) {
             require_once('GraphOnTrackersV5PluginInfo.class.php');
-            $this->pluginInfo =& new GraphOnTrackersV5PluginInfo($this);
+            $this->pluginInfo = new GraphOnTrackersV5PluginInfo($this);
         }
         return $this->pluginInfo;
     }
@@ -262,10 +258,11 @@ class GraphOnTrackersV5Plugin extends Plugin {
      * Return true if current project has the right to use this plugin.
      */
     function isAllowed() {
-        $request =& HTTPRequest::instance();
+        require_once('common/include/HTTPRequest.class.php');
+        $request = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
         if(!isset($this->allowedForProject[$group_id])) {
-            $pM =& PluginManager::instance();
+            $pM = PluginManager::instance();
             $this->allowedForProject[$group_id] = $pM->isPluginAllowedForProject($this, $group_id);
         }
         return $this->allowedForProject[$group_id];
@@ -280,6 +277,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
     }
     
     function graphontrackersv5_load_chart_factories($params) {
+        require_once('GraphOnTrackersV5_Renderer.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Bar.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Pie.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Gantt.class.php');
@@ -302,6 +300,5 @@ class GraphOnTrackersV5Plugin extends Plugin {
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','gantt'),
         );
     }
-}
 }
 ?>
