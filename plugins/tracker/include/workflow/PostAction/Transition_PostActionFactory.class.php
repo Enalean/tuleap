@@ -41,7 +41,7 @@ class Transition_PostActionFactory {
      */
     public function fetchPostActions() {
         $html = '';
-        $html .= '<p>Add a new action: ';
+        $html .= '<p>'.$GLOBALS['Language']->getText('workflow_admin','add_new_action');
         $html .= '<select name="add_postaction">';
         $html .= '<option value="" selected>--</option>';
         

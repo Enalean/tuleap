@@ -80,8 +80,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * @return string The label of the post action
      */
     public function getLabel() {
-        //TODO: i18n
-        return 'Change the value of a date field';
+        return $GLOBALS['Language']->getText('workflow_admin','post_action_change_value_date_field');
     }
     
     /**
@@ -117,7 +116,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
             $select_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';
         }
         $select_field .= '</select>';
-        $html .= 'Change the value of the date field '. $select_field .' to '. $select;
+        $html .= $GLOBALS['Language']->getText('workflow_admin','change_value_date_field_to', array($select_field, $select));
         return $html;
     }
     

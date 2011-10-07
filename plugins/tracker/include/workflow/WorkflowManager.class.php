@@ -229,7 +229,7 @@ class WorkflowManager {
         echo '<form action="'. $form_action .'" method="POST">';
         echo '<table><tr><td>';
         
-        $section_conditions = new Widget_Static('Under the following condition:');
+        $section_conditions = new Widget_Static($GLOBALS['Language']->getText('workflow_admin','under_the_following_condition'));
         $section_conditions->setContent($this->fetchWorkflowPermissions($transition));
         $section_conditions->display();
         
@@ -238,7 +238,7 @@ class WorkflowManager {
         $actions = '';
         $actions .= $transition->fetchPostActions();
         $actions .= $tpaf->fetchPostActions();
-        $section_postactions = new Widget_Static('The following action will be automatically performed:');
+        $section_postactions = new Widget_Static($GLOBALS['Language']->getText('workflow_admin','following_action_performed'));
         $section_postactions->setContent($actions);
         $section_postactions->display();
         
