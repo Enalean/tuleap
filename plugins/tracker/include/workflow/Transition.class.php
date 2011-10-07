@@ -95,13 +95,14 @@ class Transition {
      * Execute actions before transition happens
      * 
      * @param Array $fields_data Request field data (array[field_id] => data)
+     * @param User  $current_user The user who are performing the update
      * 
      * @return void
      */
-    public function before(&$fields_data) {
+    public function before(&$fields_data, User $current_user) {
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
-            $post_action->before($fields_data);
+            $post_action->before($fields_data, $current_user);
         }
     }
     
@@ -131,13 +132,18 @@ class Transition {
      * @return string html
      */
     public function fetchPostActions() {
+        $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($post_actions = $this->getPostActions()) {
             $html .= '<ul class="workflow_actions">';
             foreach ($post_actions as $pa) {
                 $classname = 'workflow_actions_'. $pa->getShortName();
-                $html .= '<li class="'. $classname .'">';
+                $html .= '<li class="'. $hp->purify($classname) .'">';
                 $html .= $pa->fetch();
+                $html .= '<input type="hidden" name="remove_postaction['. (int)$pa->getId() .']" value="0" />';
+                $html .= '<label class="pc_checkbox">&nbsp';
+                $html .= '<input type="checkbox" title="'. $hp->purify($GLOBALS['Language']->getText('workflow_admin','remove_postaction')) .'" name="remove_postaction['. (int)$pa->getId() .']" value="1" />';
+                $html .= '</label>';
                 $html .= '</li>';
             }
             $html .= '</ul>';

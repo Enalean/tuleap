@@ -58,20 +58,6 @@ class Transition_PostActionFactory {
     }
     
     /**
-     * Get html code to let someone delete a post action for a transition
-     *
-     * @return string html
-     */
-    public function fetchDeletePostActions($postaction_id) {
-        $html = '';
-        $html .= '<input type="hidden" name="remove_postaction['.$postaction_id.']" value="0" />';
-        $html .= '<label class="pc_checkbox">';
-        $html .= '<input type="checkbox" title="'.$GLOBALS['Language']->getText('workflow_admin','remove_postaction').'" name="remove_postaction['.$postaction_id.']" value="1" />';
-        $html .= '&nbsp</label>';
-        return $html;
-    }
-    
-    /**
      * Create a new post action for the transition
      *
      * @param Transition $transition           On wich transition we should add the post action

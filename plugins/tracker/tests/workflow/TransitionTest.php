@@ -21,6 +21,7 @@
 require_once(dirname(__FILE__).'/../../include/workflow/Transition.class.php');
 
 Mock::generate('Transition_PostAction');
+Mock::generate('User');
 
 class TransitionTest extends UnitTestCase {
     
@@ -61,6 +62,8 @@ class TransitionTest extends UnitTestCase {
     }
     
     function testBeforeShouldTriggerActions() {
+        $current_user = new MockUser();
+        
         $field_value_new = array('id' => 2066,
                                                            'old_id' => null,
                                                            'field_id' => 2707,
@@ -83,10 +86,10 @@ class TransitionTest extends UnitTestCase {
         
         $t1->setPostActions(array($a1, $a2));
         
-        $a1->expectOnce('before');
-        $a2->expectOnce('before');
+        $a1->expectOnce('before', array($fields_data, $current_user));
+        $a2->expectOnce('before', array($fields_data, $current_user));
         
-        $t1->before($fields_data);
+        $t1->before($fields_data, $current_user);
     }
 }
 ?>

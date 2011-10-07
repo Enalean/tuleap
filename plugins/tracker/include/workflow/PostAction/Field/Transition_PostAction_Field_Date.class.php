@@ -128,16 +128,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $select_field .= '</select>';
         $html .= $GLOBALS['Language']->getText('workflow_admin','change_value_date_field_to', array($select_field, $select));
         
-        $tpaf = $this->getPostActionFactory();
-        $html .= $tpaf->fetchDeletePostActions($this->getId());
         return $html;
-    }
-    
-    /**
-     * @return Transition_PostActionFactory
-     */
-    public function getPostActionFactory() {
-        return new Transition_PostActionFactory();
     }
     
     /**
@@ -183,22 +174,29 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * Execute actions before transition happens
      * 
      * @param Array $fields_data Request field data (array[field_id] => data)
+     * @param User  $current_user The user who are performing the update
      * 
      * @return void
      */
-    public function before(array &$fields_data) {
+    public function before(array &$fields_data, User $current_user) {
         // Do something only if the value_type and the date field are properly defined 
         if ($this->field_id && ($this->value_type === self::CLEAR_DATE || $this->value_type === self::FILL_CURRENT_TIME)) {
             $field = $this->getFormElementFactory()->getFormElementById($this->field_id);
             if ($field) {
-                if ($this->value_type === self::FILL_CURRENT_TIME) {
-                    $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate($_SERVER['REQUEST_TIME']);
-                    $this->addFeedback('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $new_date_timestamp));
-                } else {
-                    $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate(null);
-                    $this->addFeedback('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel()));
+                if ($field->userCanRead($current_user)) {
+                    if ($field->userCanUpdate($current_user)) {
+                        if ($this->value_type === self::FILL_CURRENT_TIME) {
+                            $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate($_SERVER['REQUEST_TIME']);
+                            $this->addFeedback('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $new_date_timestamp));
+                        } else {
+                            $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate(null);
+                            $this->addFeedback('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel()));
+                        }
+                        $fields_data[$this->field_id] = $new_date_timestamp;
+                    } else {
+                        $this->addFeedback('warning', 'workflow_postaction', 'field_date_no_perms', array($field->getLabel()));
+                    }
                 }
-                $fields_data[$this->field_id] = $new_date_timestamp;
             }
         }
     }

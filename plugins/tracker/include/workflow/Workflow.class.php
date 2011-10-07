@@ -211,11 +211,12 @@ class Workflow {
     /**
      * Execute actions before transition happens (if there is one)
      * 
-     * @param Array $fields_data Request field data (array[field_id] => data)
+     * @param Array $fields_data  Request field data (array[field_id] => data)
+     * @param User  $current_user The user who are performing the update
      * 
      * @return void
      */
-    public function before(array &$fields_data) {
+    public function before(array &$fields_data, User $current_user) {
         if (isset($fields_data[$this->getFieldId()])) {
             $oldValues = $this->artifact->getLastChangeset()->getValue($this->getField());
             $from      = null;
@@ -229,7 +230,7 @@ class Workflow {
             $to         = (int)$fields_data[$this->getFieldId()];
             $transition = $this->getTransition($from, $to);
             if ($transition) {
-                $transition->before($fields_data);
+                $transition->before($fields_data, $current_user);
             }
         }
     }

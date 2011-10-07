@@ -35,6 +35,8 @@ Mock::generate('Tracker_Artifact_Changeset');
 Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_Artifact_ChangesetValue_List');
 Mock::generate('Tracker_Artifact_Changeset_Null');
+Mock::generate('User');
+
 class WorkflowTest extends UnitTestCase {
     
     public function testEmptyWorkflow() {
@@ -188,6 +190,8 @@ class WorkflowTest extends UnitTestCase {
     }
     
     function testBeforeShouldTriggerTransitionActions() {
+        $current_user = new MockUser();
+        
         $f = new MockTracker_FormElement_Field_List();
         $f->setReturnValue('getId', 103);
         
@@ -228,11 +232,13 @@ class WorkflowTest extends UnitTestCase {
             '103' => '802',
         );
         $t1->expectNever('before');
-        $t2->expectOnce('before');
-        $workflow->before($fields_data);
+        $t2->expectOnce('before', array($fields_data, $current_user));
+        $workflow->before($fields_data, $current_user);
     }
     
     function testBeforeShouldTriggerTransitionActionsForNewArtifact() {
+        $current_user = new MockUser();
+        
         $f = new MockTracker_FormElement_Field_List();
         $f->setReturnValue('getId', 103);
         
@@ -269,8 +275,8 @@ class WorkflowTest extends UnitTestCase {
             '103' => '801',
         );
         $t1->expectOnce('before');
-        $t2->expectNever('before');
-        $workflow->before($fields_data);
+        $t2->expectNever('before', array($fields_data, $current_user));
+        $workflow->before($fields_data, $current_user);
     }
 
 }
