@@ -1242,6 +1242,7 @@ workflow_admin	under_the_following_condition	Sous les conditions suivantes :
 workflow_admin	following_action_performed	Les actions ci-dessous seront executées :
 workflow_admin	add_new_action	Ajouter une nouvelle action : 
 workflow_admin	remove_postaction	Supprimer cette action
+workflow_admin	postaction_on_field_already_exist	Une action sur le champ de type date $1 existe déjà.
 
 workflow_postaction	field_date_current_time	Le champs $1 a été automatiquement valué à $2
 workflow_postaction	field_date_clear	Le valeur du champs $1 a été automatiquement effacée

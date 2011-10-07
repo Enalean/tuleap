@@ -122,12 +122,13 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $select_field = '<select name="workflow_postaction_field_date['.$this->id.']">';
         $select_field .= '<option value="0" '. ($this->field_id == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'none'). '</option>';
         foreach ($fields_date as $field_date) {
-            $selected = $this->field_id == $field_date->getId() ? 'selected="selected"' : '';
+            $selected = $this->field_id == $field_date->getId() ? 'selected="selected"' : '';            
             $select_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';
         }
         $select_field .= '</select>';
         $html .= $GLOBALS['Language']->getText('workflow_admin','change_value_date_field_to', array($select_field, $select));
-        //Delete
+        
+        //Delete : TODO: js
         $html .= '<input type="checkbox" title="'.$GLOBALS['Language']->getText('workflow_admin','remove_postaction').'" name="remove_postaction['.$this->getId().']"/>';
         return $html;
     }
@@ -159,8 +160,10 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
                 $value_type = $request->getInArray('workflow_postaction_field_date_value_type', $this->id);
             }
             
-            if ($field_id != $this->field_id || $value_type != $this->value_type) {
+            if (($field_id != $this->field_id || $value_type != $this->value_type) && !$this->getDao()->searchByFieldId($field_id)->getRow()) {
                 $this->getDao()->updatePostAction($this->id, $field_id, $value_type);
+            } else {
+                //TODO: feedback
             }
         }
         
