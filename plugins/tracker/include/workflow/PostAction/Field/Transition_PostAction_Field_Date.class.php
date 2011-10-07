@@ -128,9 +128,16 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $select_field .= '</select>';
         $html .= $GLOBALS['Language']->getText('workflow_admin','change_value_date_field_to', array($select_field, $select));
         
-        //Delete : TODO: js
-        $html .= '<input type="checkbox" title="'.$GLOBALS['Language']->getText('workflow_admin','remove_postaction').'" name="remove_postaction['.$this->getId().']"/>';
+        $tpaf = $this->getPostActionFactory();
+        $html .= $tpaf->fetchDeletePostActions($this->getId());
         return $html;
+    }
+    
+    /**
+     * @return Transition_PostActionFactory
+     */
+    public function getPostActionFactory() {
+        return new Transition_PostActionFactory();
     }
     
     /**
