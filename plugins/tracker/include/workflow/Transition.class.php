@@ -139,11 +139,18 @@ class Transition {
             foreach ($post_actions as $pa) {
                 $classname = 'workflow_actions_'. $pa->getShortName();
                 $html .= '<li class="'. $hp->purify($classname) .'">';
+                
+                // the action itself
+                $html .= '<span>';
                 $html .= $pa->fetch();
+                $html .= '</span>';
+                
+                // the delete buttton
                 $html .= '<input type="hidden" name="remove_postaction['. (int)$pa->getId() .']" value="0" />';
-                $html .= '<label class="pc_checkbox">&nbsp';
-                $html .= '<input type="checkbox" title="'. $hp->purify($GLOBALS['Language']->getText('workflow_admin','remove_postaction')) .'" name="remove_postaction['. (int)$pa->getId() .']" value="1" />';
+                $html .= '<label class="pc_checkbox" title="'. $hp->purify($GLOBALS['Language']->getText('workflow_admin','remove_postaction')) .'">&nbsp';
+                $html .= '<input type="checkbox" name="remove_postaction['. (int)$pa->getId() .']" value="1" />';
                 $html .= '</label>';
+                
                 $html .= '</li>';
             }
             $html .= '</ul>';

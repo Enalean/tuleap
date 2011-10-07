@@ -163,6 +163,8 @@ class WorkflowManager {
         } else if ($request->get('workflow_details')) {
             $transition = $request->get('transition');
             
+            //TODO check that the transition belongs to the current tracker
+            
             // Permissions
             $ugroups = $request->get('ugroups');
             permission_clear_all($this->tracker->group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition, false); 
