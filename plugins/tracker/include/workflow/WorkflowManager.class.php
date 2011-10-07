@@ -51,6 +51,8 @@ class WorkflowManager {
             }
         } else if ($request->get('edit_transition')) {
             $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+            $transition = TransitionFactory::instance()->getTransition($request->get('edit_transition'));
+            /*
             $t = $request->get('edit_transition');
             $res = WorkflowFactory::instance()->getTransitionId($workflow->workflow_id , $t);
             
@@ -66,7 +68,7 @@ class WorkflowManager {
             $field_value_to = $field_values[$row['to_id']];
             
             $transition = new Transition($row['transition_id'], $workflow->workflow_id, $field_value_from, $field_value_to);
-            $this->getPostActionFactory()->loadPostActions($transition);
+            */
             $this->displayTransitionDetails($engine, $request, $current_user, $transition);
             
         } else if ($request->get('delete')) {
@@ -173,8 +175,13 @@ class WorkflowManager {
             // Post actions
             $tpam = new Transition_PostActionManager();
             $tpam->process(TransitionFactory::instance()->getTransition($transition), $request, $current_user);
-            
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(
+                array(
+                    'tracker'         => (int)$this->tracker->id, 
+                    'func'            => 'admin-workflow',
+                    'edit_transition' => $request->get('transition'),
+                )
+            ));
         } else {
             $this->displayAdminDefineWorkflow($engine, $request, $current_user);
         }
@@ -209,14 +216,19 @@ class WorkflowManager {
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title').'</h3>';
         $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
-        if ($transition->from ==null) {
+        
+        //{{{ Get the label of the values from & to
+        $field = Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
+        $field_values = $field->getBind()->getAllValues();
+        if(isset($field_values[$transition->from])) {
+            $from_label = $field_values[$transition->from]->getLabel();
+        }else {
             $from_label = $GLOBALS['Language']->getText('workflow_admin','new_artifact');
-        } else {
-            $from_label = $transition->from->getLabel();
         }
+        $to_label = $field_values[$transition->to]->getLabel();
         
         echo '<p>';
-        echo $GLOBALS['Language']->getText('workflow_admin','title_define_transition_details', array($from_label, $transition->to->getLabel()));
+        echo $GLOBALS['Language']->getText('workflow_admin','title_define_transition_details', array($from_label, $to_label));
         echo '</p>';
         
         $form_action = TRACKER_BASE_URL.'/?'. http_build_query(
