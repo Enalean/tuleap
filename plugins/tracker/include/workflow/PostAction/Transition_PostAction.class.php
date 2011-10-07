@@ -25,6 +25,21 @@
 abstract class Transition_PostAction {
     
     /**
+     * Log feedback to be displayed to the user
+     * @see Response::addFeedback()
+     * 
+     * @param string $level    One of info|warning|error
+     * @param string $pagename The primary key for BaseLanguage::getText()
+     * @param string $category The secondary key for BaseLanguage::getText()
+     * @param string $args     The args for BaseLanguage::getText()
+     *
+     * @return void
+     */
+    protected function addFeedback($level, $pagename, $category, $args) {
+        $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText($pagename, $category, $args));
+    }
+    
+    /**
      * Execute actions before transition happens
      * 
      * @param Array $fields_data Request field data (array[field_id] => data)

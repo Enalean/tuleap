@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once(dirname(__FILE__) .'/../Transition_PostAction.class.php');
+require_once(dirname(__FILE__) .'/../../../Tracker/FormElement/Tracker_FormElementFactory.class.php');
 
 /**
  * Set the date of a field
@@ -176,11 +177,20 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * @return void
      */
     public function before(array &$fields_data) {
-        $new_date_timestamp = null;
-        if ($this->value_type === self::FILL_CURRENT_TIME) {
-            $new_date_timestamp = $_SERVER['REQUEST_TIME'];
+        // Do something only if the value_type and the date field are properly defined 
+        if ($this->field_id && ($this->value_type === self::CLEAR_DATE || $this->value_type === self::FILL_CURRENT_TIME)) {
+            $field = $this->getFormElementFactory()->getFormElementById($this->field_id);
+            if ($field) {
+                if ($this->value_type === self::FILL_CURRENT_TIME) {
+                    $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate($_SERVER['REQUEST_TIME']);
+                    $this->addFeedback('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $new_date_timestamp));
+                } else {
+                    $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate(null);
+                    $this->addFeedback('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel()));
+                }
+                $fields_data[$this->field_id] = $new_date_timestamp;
+            }
         }
-        $fields_data[$this->field_id] = Tracker_Artifact_ChangesetValue_Date::formatDate($new_date_timestamp);
     }
     
     /**
@@ -190,6 +200,13 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      */
     protected function getDao() {
         return new Transition_PostAction_Field_DateDao();
+    }
+    
+    /**
+     * @return Tracker_FormElementFactory
+     */
+    protected function getFormElementFactory() {
+        return Tracker_FormElementFactory::instance();
     }
 }
 ?>
