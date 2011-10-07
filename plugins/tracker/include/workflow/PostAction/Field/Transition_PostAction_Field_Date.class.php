@@ -46,16 +46,6 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     protected $field_id;
     
     /**
-     * @var Transition the transition
-     */
-    protected $transition;
-    
-    /**
-     * @var Integer Id of the post action
-     */
-    protected $id;
-    
-    /**
      * Constructor
      *
      * @param Transition $transition The transition the post action belongs to
@@ -64,8 +54,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * @param Integer    $value_type The type of the value to set
      */
     public function __construct(Transition $transition, $id, $field_id, $value_type) {
-        $this->transition = $transition;
-        $this->id         = $id;
+        parent::__construct($transition, $id);
         $this->field_id   = $field_id;
         $this->value_type = $value_type;
     }
@@ -91,15 +80,6 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      */
     public function getFieldId() {
         return $this->field_id;
-    }
-    
-    /**
-     * Return ID of the post-action
-     *
-     * @return Integer
-     */
-    public function getId() {
-        return $this->id;
     }
     
     /**
@@ -144,7 +124,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
             // Target field
             if ($request->validInArray('workflow_postaction_field_date', new Valid_UInt($this->id))) {
                 $new_field_id = $request->getInArray('workflow_postaction_field_date', $this->id);
-                if ($new_field_id != $field_id) {
+                if ($new_field_id != $field_id && count($this->getDao()->searchByFieldId($this->transition->getTransitionId(), $new_field_id)) === 0) {
                     $field = Tracker_FormElementFactory::instance()->getUsedFormElementById($new_field_id);
                     if ($field) {
                         $field_id = $field->getId();
@@ -158,10 +138,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
                 $value_type = $request->getInArray('workflow_postaction_field_date_value_type', $this->id);
             }
             
-            if (($field_id != $this->field_id || $value_type != $this->value_type) && !$this->getDao()->searchByFieldId($field_id)->getRow()) {
+            if ($field_id != $this->field_id || $value_type != $this->value_type) {
                 $this->getDao()->updatePostAction($this->id, $field_id, $value_type);
-            } else {
-                //TODO: feedback
             }
         }
         

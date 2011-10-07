@@ -25,6 +25,36 @@
 abstract class Transition_PostAction {
     
     /**
+     * @var Transition the transition
+     */
+    protected $transition;
+    
+    /**
+     * @var Integer Id of the post action
+     */
+    protected $id;
+    
+    /**
+     * Constructor
+     *
+     * @param Transition $transition The transition the post action belongs to
+     * @param Integer    $id         Id of the post action
+     */
+    public function __construct(Transition $transition, $id) {
+        $this->transition = $transition;
+        $this->id         = $id;
+    }
+    
+    /**
+     * Return ID of the post-action
+     *
+     * @return Integer
+     */
+    public function getId() {
+        return $this->id;
+    }
+    
+    /**
      * Log feedback to be displayed to the user
      * @see Response::addFeedback()
      * 

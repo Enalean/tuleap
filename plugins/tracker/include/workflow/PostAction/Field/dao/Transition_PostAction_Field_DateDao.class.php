@@ -40,9 +40,13 @@ class Transition_PostAction_Field_DateDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function searchByFieldId($field_id) {
-        $field_id = $this->da->escapeInt($field_id);
-        $sql = "SELECT * FROM tracker_workflow_transition_postactions_field_date WHERE field_id = $field_id";
+    public function searchByFieldId($transition_id, $field_id) {
+        $field_id      = $this->da->escapeInt($field_id);
+        $transition_id = $this->da->escapeInt($transition_id);
+        $sql = "SELECT * 
+                FROM tracker_workflow_transition_postactions_field_date 
+                WHERE field_id      = $field_id 
+                  AND transition_id = $transition_id";
         return $this->retrieve($sql);
     }
     
