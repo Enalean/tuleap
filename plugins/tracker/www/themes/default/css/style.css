@@ -869,12 +869,15 @@ ul.plugin_tracker_my_artifacts_list {
     background-image: url(../images/widget-preview-renderer.png);
 }
 
-ul.workflow_actions, ul.workflow_conditions  {
+.workflow_actions, .workflow_conditions  {
     list-style-type: none;
 }
-li.workflow_actions_field_date {
-    list-style-image: url(../images/ic/ui-text-field-change.png);
+.workflow_actions_field_date {
+    padding: 1em 2em 1em 3em;
+    border: 1px solid #ccc;
+    background: #F6F6F6 url(../images/ic/ui-text-field-change.png) 1em 1em no-repeat;
+    border-radius: 1em;
 }
-li.workflow_conditions_perms {
+.workflow_conditions_perms {
     list-style-image: url(/themes/common/images/ic/lock.png);
 }

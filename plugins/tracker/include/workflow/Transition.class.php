@@ -135,25 +135,26 @@ class Transition {
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($post_actions = $this->getPostActions()) {
-            $html .= '<ul class="workflow_actions">';
+            $html .= '<table class="workflow_actions" width="100%" cellpadding="0" cellspacing="10">';
             foreach ($post_actions as $pa) {
                 $classname = 'workflow_actions_'. $pa->getShortName();
-                $html .= '<li class="'. $hp->purify($classname) .'">';
-                
+                $html .= '<tr><td>';
+
                 // the action itself
-                $html .= '<span>';
+                $html .= '<div class="'. $hp->purify($classname) .'">';
                 $html .= $pa->fetch();
-                $html .= '</span>';
-                
+                $html .= '</div>';
+                $html .= '</td><td>';
+
                 // the delete buttton
                 $html .= '<input type="hidden" name="remove_postaction['. (int)$pa->getId() .']" value="0" />';
                 $html .= '<label class="pc_checkbox" title="'. $hp->purify($GLOBALS['Language']->getText('workflow_admin','remove_postaction')) .'">&nbsp';
                 $html .= '<input type="checkbox" name="remove_postaction['. (int)$pa->getId() .']" value="1" />';
                 $html .= '</label>';
                 
-                $html .= '</li>';
+                $html .= '</td></tr>';
             }
-            $html .= '</ul>';
+            $html .= '</table>';
         } else {
             $html .= '<p><i>'. $GLOBALS['Language']->getText('workflow_admin', 'no_postaction') .'</i></p>';
         }
