@@ -1238,7 +1238,7 @@ workflow_admin	permissions_not_updated	Permissions on transition have not been u
 workflow_admin	permissions_updated	Permissions on transition have been updated.
 workflow_admin	permissions_transition	Can make the transition
 workflow_admin	new_artifact	New artifact
-workflow_admin	change_value_date_field_to	Change the value of the date field $1 to $2
+workflow_admin	change_value_date_field_to	The date field $1 is set to $2
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
 workflow_admin	under_the_following_condition	Under the following condition:
 workflow_admin	following_action_performed	The following action will be automatically performed:
@@ -1246,6 +1246,8 @@ workflow_admin	add_new_action	Add a new action:
 workflow_admin	remove_postaction	Remove the action
 workflow_admin	postaction_on_field_already_exist	An action on the field '$1' already exists.
 workflow_admin	no_postaction	There isn't any post action defined yet.
+workflow_admin	post_action_field_date_empty	""
+workflow_admin	post_action_field_date_current_time	the current time
 
 workflow_postaction	field_date_current_time	The field '$1' has been automatically set to $2
 workflow_postaction	field_date_clear	The field '$1' has been automatically cleared

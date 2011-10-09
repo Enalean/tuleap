@@ -114,8 +114,16 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
 	if ($this->value_type !== self::CLEAR_DATE && $this->value_type !== self::FILL_CURRENT_TIME) {
             $select_value_type .= '<option value="0" '. ($this->value_type == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
         }
-        $select_value_type .= '<option value="'. (int)self::CLEAR_DATE .'" '. ($this->value_type === self::CLEAR_DATE ? 'selected="selected"' : '') .'>empty</option>';
-        $select_value_type .= '<option value="'. (int)self::FILL_CURRENT_TIME .'" '. ($this->value_type === self::FILL_CURRENT_TIME ? 'selected="selected"' : '') .'>the current date</option>';
+        // clear
+        $selected = ($this->value_type === self::CLEAR_DATE ? 'selected="selected"' : '');
+        $select_value_type .= '<option value="'. (int)self::CLEAR_DATE .'" '. $selected .'>';
+        $select_value_type .= $GLOBALS['Language']->getText('workflow_admin', 'post_action_field_date_empty');
+        $select_value_type .= '</option>';
+        // current time
+        $selected = ($this->value_type === self::FILL_CURRENT_TIME ? 'selected="selected"' : '');
+        $select_value_type .= '<option value="'. (int)self::FILL_CURRENT_TIME .'" '. $selected .'>';
+        $select_value_type .= $GLOBALS['Language']->getText('workflow_admin', 'post_action_field_date_current_time');
+        $select_value_type .= '</option>';
         $select_value_type .= '</select>';
         
         //define the selectbox for date fields
