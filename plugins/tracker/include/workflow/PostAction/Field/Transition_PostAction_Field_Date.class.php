@@ -81,6 +81,25 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     public function getFieldId() {
         return $this->field_id;
     }
+
+    /**
+     * Return the field associated to this post action
+     *
+     * @return Tracker_FormElement_Field
+     */
+    protected function getField() {
+        return $this->getFormElementFactory()->getFormElementById($this->field_id);
+    }
+
+    /**
+     * Say if the action is well defined
+     *
+     * @return bool
+     */
+    public function isDefined() {
+        return $this->getField() && ($this->value_type === self::CLEAR_DATE || $this->value_type === self::FILL_CURRENT_TIME);
+    }
+ 
     
     /**
      * Get the html code needed to display the post action in workflow admin
@@ -89,24 +108,39 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      */
     public function fetch() {
         $html = '';
-        $select = '<select name="workflow_postaction_field_date_value_type['.$this->id.']">';
-        $select .= '<option value="0" '. ($this->value_type == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
-        $select .= '<option value="'. (int)self::CLEAR_DATE .'" '. ($this->value_type === self::CLEAR_DATE ? 'selected="selected"' : '') .'>empty</option>';
-        $select .= '<option value="'. (int)self::FILL_CURRENT_TIME .'" '. ($this->value_type === self::FILL_CURRENT_TIME ? 'selected="selected"' : '') .'>the current date</option>';
-        $select .= '</select>';
+
+        //define the selectbox for value_type
+        $select_value_type = '<select name="workflow_postaction_field_date_value_type['.$this->id.']">';
+	if ($this->value_type !== self::CLEAR_DATE && $this->value_type !== self::FILL_CURRENT_TIME) {
+            $select_value_type .= '<option value="0" '. ($this->value_type == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
+        }
+        $select_value_type .= '<option value="'. (int)self::CLEAR_DATE .'" '. ($this->value_type === self::CLEAR_DATE ? 'selected="selected"' : '') .'>empty</option>';
+        $select_value_type .= '<option value="'. (int)self::FILL_CURRENT_TIME .'" '. ($this->value_type === self::FILL_CURRENT_TIME ? 'selected="selected"' : '') .'>the current date</option>';
+        $select_value_type .= '</select>';
         
+        //define the selectbox for date fields
         $tracker = $this->transition->getWorkflow()->getTracker();
-        $tff = Tracker_FormElementFactory::instance();
+        $tff = $this->getFormElementFactory();
         $fields_date = $tff->getUsedFormElementsByType($tracker, array('date'));
         
-        $select_field = '<select name="workflow_postaction_field_date['.$this->id.']">';
-        $select_field .= '<option value="0" '. ($this->field_id == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
+        $select_field  = '<select name="workflow_postaction_field_date['.$this->id.']">';
+        $options_field = '';
+        $one_selected  = false;
         foreach ($fields_date as $field_date) {
-            $selected = $this->field_id == $field_date->getId() ? 'selected="selected"' : '';            
-            $select_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';
+            $selected = '';
+            if ($this->field_id == $field_date->getId()) {
+                $selected     = 'selected="selected"';
+                $one_selected = true;
+            }            
+            $options_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';
         }
+        if (!$one_selected) {
+            $select_field .= '<option value="0" '. ($this->field_id == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
+        }
+        $select_field .= $options_field;
         $select_field .= '</select>';
-        $html .= $GLOBALS['Language']->getText('workflow_admin','change_value_date_field_to', array($select_field, $select));
+
+        $html .= $GLOBALS['Language']->getText('workflow_admin','change_value_date_field_to', array($select_field, $select_value_type));
         
         return $html;
     }
@@ -117,17 +151,24 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * @param Codendi_Request $request
      */
     public function process(Codendi_Request $request) {
-        if ($request->getInArray('workflow_postaction_field_date', $this->id)) {
+        if ($request->getInArray('remove_postaction', $this->id)) {
+            $this->getDao()->deletePostAction($this->id);
+        } else {
             $field_id   = $this->field_id;
             $value_type = $this->value_type;
             
             // Target field
             if ($request->validInArray('workflow_postaction_field_date', new Valid_UInt($this->id))) {
                 $new_field_id = $request->getInArray('workflow_postaction_field_date', $this->id);
-                if ($new_field_id != $field_id && count($this->getDao()->searchByFieldId($this->transition->getTransitionId(), $new_field_id)) === 0) {
-                    $field = Tracker_FormElementFactory::instance()->getUsedFormElementById($new_field_id);
-                    if ($field) {
-                        $field_id = $field->getId();
+                if ($new_field_id != $field_id) {
+                    $new_field = $this->getFormElementFactory()->getUsedFormElementById($new_field_id);
+                    if ($new_field) {
+                        $already_used = $this->getDao()->searchByFieldId($this->transition->getTransitionId(), $new_field->getId());
+                        if (count($already_used)) {
+                            $this->addFeedback('error', 'workflow_admin', 'postaction_on_field_already_exist', array($new_field->getLabel()));
+                        } else {
+                            $field_id = $new_field->getId();
+                        }
                     }
                 }
             }
@@ -137,14 +178,9 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
             if ($request->validInArray('workflow_postaction_field_date_value_type', $valid_value_type)) {
                 $value_type = $request->getInArray('workflow_postaction_field_date_value_type', $this->id);
             }
-            
             if ($field_id != $this->field_id || $value_type != $this->value_type) {
                 $this->getDao()->updatePostAction($this->id, $field_id, $value_type);
             }
-        }
-        
-        if ($request->getInArray('remove_postaction', $this->id)) {
-            $this->getDao()->deletePostAction($this->id);
         }
     }
     
@@ -158,22 +194,20 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      */
     public function before(array &$fields_data, User $current_user) {
         // Do something only if the value_type and the date field are properly defined 
-        if ($this->field_id && ($this->value_type === self::CLEAR_DATE || $this->value_type === self::FILL_CURRENT_TIME)) {
-            $field = $this->getFormElementFactory()->getFormElementById($this->field_id);
-            if ($field) {
-                if ($field->userCanRead($current_user)) {
-                    if ($field->userCanUpdate($current_user)) {
-                        if ($this->value_type === self::FILL_CURRENT_TIME) {
-                            $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate($_SERVER['REQUEST_TIME']);
-                            $this->addFeedback('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $new_date_timestamp));
-                        } else {
-                            $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate(null);
-                            $this->addFeedback('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel()));
-                        }
-                        $fields_data[$this->field_id] = $new_date_timestamp;
+        if ($this->isDefined()) {
+            $field = $this->getField();
+            if ($field->userCanRead($current_user)) {
+                if ($field->userCanUpdate($current_user)) {
+                    if ($this->value_type === self::FILL_CURRENT_TIME) {
+                        $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate($_SERVER['REQUEST_TIME']);
+                        $this->addFeedback('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $new_date_timestamp));
                     } else {
-                        $this->addFeedback('warning', 'workflow_postaction', 'field_date_no_perms', array($field->getLabel()));
+                        $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate(null);
+                        $this->addFeedback('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel()));
                     }
+                    $fields_data[$this->field_id] = $new_date_timestamp;
+                } else {
+                    $this->addFeedback('warning', 'workflow_postaction', 'field_date_no_perms', array($field->getLabel()));
                 }
             }
         }

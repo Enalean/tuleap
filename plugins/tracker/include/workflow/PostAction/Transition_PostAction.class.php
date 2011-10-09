@@ -97,5 +97,12 @@ abstract class Transition_PostAction {
      */
     public abstract function fetch();
     
+    /**
+     * Say if the action is well defined
+     *
+     * @return bool
+     */
+    public abstract function isDefined();
+ 
 }
 ?>
