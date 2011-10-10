@@ -5,12 +5,20 @@ Feature:
     
     Background:
       Given the tracker has a field 'Status' with two values 'Open' and 'Closed'
-      And it has a field 'Closed Date'
+      And it has two date fields 'Closed Date' and 'Start Date'
       And the tracker has a workflow enabled on this field
       And a post action exists on the transition 'Open' => 'Closed'
       And this post action tells that the field 'Closed Date' will take the current date
       And a post action exists on the transition 'Closed' => 'Open'
       And this post action tells that the field 'Closed Date' will be cleared
+      And a post action exists on the transition '<new artifact>' => 'Open'
+      And this post action tells that the field 'Start Date' will take the current time
+    
+    Scenario: Set the start date
+      When I submit a new artifact
+      Then a message says that the field 'Start Date' as been set to the current date
+      And the notification email display the 'Start Date' value
+      And the artifact has 'Start Date' set to the current date
       
     Scenario: Set the close date
       When I switch the field 'Status' from 'Open' to 'Closed'
