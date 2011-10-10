@@ -207,10 +207,10 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
             if ($field->userCanRead($current_user)) {
                 if ($field->userCanUpdate($current_user)) {
                     if ($this->value_type === self::FILL_CURRENT_TIME) {
-                        $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate($_SERVER['REQUEST_TIME']);
+                        $new_date_timestamp = $field->formatDate($_SERVER['REQUEST_TIME']);
                         $this->addFeedback('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $new_date_timestamp));
                     } else {
-                        $new_date_timestamp = Tracker_Artifact_ChangesetValue_Date::formatDate(null);
+                        $new_date_timestamp = $field->formatDate(null);
                         $this->addFeedback('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel()));
                     }
                     $fields_data[$this->field_id] = $new_date_timestamp;

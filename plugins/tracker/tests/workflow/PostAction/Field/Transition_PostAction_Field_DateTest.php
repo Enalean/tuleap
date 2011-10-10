@@ -48,7 +48,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $factory = new MockTracker_FormElementFactory();
         $factory->setReturnReference('getFormElementById', $field, array($field->getId()));
         
-        $expected    = date('Y-m-d', $_SERVER['REQUEST_TIME']);
+        $expected    = $field->formatDate(date('Y-m-d', $_SERVER['REQUEST_TIME']));
         $fields_data = array('field_id' => 'value');
         $transition  = new MockTransition();
         $field_id    = $field->getId();
