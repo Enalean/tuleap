@@ -157,9 +157,11 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     }
     
     /**
-     * Update/Delete actions on the post-action
+     * Update/Delete action
      *
      * @param Codendi_Request $request
+     *
+     * @return void
      */
     public function process(Codendi_Request $request) {
         if ($request->getInArray('remove_postaction', $this->id)) {

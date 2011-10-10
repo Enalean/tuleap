@@ -52,23 +52,6 @@ class WorkflowManager {
         } else if ($request->get('edit_transition')) {
             $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
             $transition = TransitionFactory::instance()->getTransition($request->get('edit_transition'));
-            /*
-            $t = $request->get('edit_transition');
-            $res = WorkflowFactory::instance()->getTransitionId($workflow->workflow_id , $t);
-            
-            $row = $res->getRow();
-            $field=Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id );
-            $field_values = $field->getBind()->getAllValues();
-            
-            if(isset($field_values[$row['from_id']])) {
-                $field_value_from = $field_values[$row['from_id']];
-            }else {
-                $field_value_from =null;
-            }
-            $field_value_to = $field_values[$row['to_id']];
-            
-            $transition = new Transition($row['transition_id'], $workflow->workflow_id, $field_value_from, $field_value_to);
-            */
             $this->displayTransitionDetails($engine, $request, $current_user, $transition);
             
         } else if ($request->get('delete')) {

@@ -103,6 +103,15 @@ abstract class Transition_PostAction {
      * @return bool
      */
     public abstract function isDefined();
+    
+    /**
+     * Update/Delete action
+     *
+     * @param Codendi_Request $request
+     *
+     * @return void
+     */
+    public abstract function process(Codendi_Request $request);
  
 }
 ?>

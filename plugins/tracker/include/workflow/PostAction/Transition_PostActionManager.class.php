@@ -21,6 +21,15 @@
  
 class Transition_PostActionManager {
     
+    /**
+     * Process the artifact functions
+     *
+     * @param Transition      $transition   The transition
+     * @param Codendi_Request $request      The data from the user
+     * @param User            $current_user The current user
+     *
+     * @return void
+     */
     public function process(Transition $transition, Codendi_Request $request, User $current_user) {
         $tpaf = $this->getPostActionFactory();
         
