@@ -88,7 +88,7 @@ abstract class Transition_PostAction {
     /**
      * @return string The label of the post action
      */
-    public abstract function getLabel();
+    public static abstract function getLabel();
     
     /**
      * Get the html code needed to display the post action in workflow admin

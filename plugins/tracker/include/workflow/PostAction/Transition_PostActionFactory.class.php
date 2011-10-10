@@ -85,11 +85,21 @@ class Transition_PostActionFactory {
         }
     }
     
+    /**
+     * @return Transition_PostAction_Field_DateDao
+     */
     protected function getDao() {
         return new Transition_PostAction_Field_DateDao();
     }
     
-    public function loadPostActions($transition) {
+    /**
+     * Load the post actions that belong to a transition
+     * 
+     * @param Transition $transition The transition
+     *
+     * @return void
+     */
+    public function loadPostActions(Transition $transition) {
         $post_actions = array();
         foreach ($this->getDao()->searchByTransitionId($transition->getTransitionId()) as $row) {
             $post_actions[] = new Transition_PostAction_Field_Date($transition, (int)$row['id'], (int)$row['field_id'], (int)$row['value_type']);

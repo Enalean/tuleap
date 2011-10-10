@@ -69,7 +69,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     /**
      * @return string The label of the post action
      */
-    public function getLabel() {
+    public static function getLabel() {
         return $GLOBALS['Language']->getText('workflow_admin','post_action_change_value_date_field');
     }
     
