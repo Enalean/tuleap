@@ -100,8 +100,8 @@ class WorkflowManager {
             $nb_transitions_in_db = count($transitions_in_db);
             for($i=0;$i<$nb_transitions_in_db ;$i++) {
                 
-                $field_value_from = $transitions_in_db[$i]->from;                
-                $field_value_to = $transitions_in_db[$i]->to;
+                $field_value_from = $transitions_in_db[$i]->getFieldValueFrom();
+                $field_value_to   = $transitions_in_db[$i]->getFieldValueTo();
                  //Treatment of the initial state
                 if($field_value_from==null) {
                     $value_to_search=array('',$field_value_to->getId());
