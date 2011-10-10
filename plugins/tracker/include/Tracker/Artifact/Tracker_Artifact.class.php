@@ -22,6 +22,7 @@ require_once(dirname(__FILE__).'/../Tracker_History.class.php');
 require_once(dirname(__FILE__).'/../TrackerFactory.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
+require_once('Tracker_Artifact_Changeset.class.php');
 require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
