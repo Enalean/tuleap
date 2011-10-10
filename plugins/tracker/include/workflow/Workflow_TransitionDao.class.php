@@ -95,17 +95,17 @@ class Workflow_TransitionDao extends DataAccessObject {
         $id = $this->da->escapeInt($id);        
         if ($transitions != null) {
             foreach ($transitions as $transition) {
-                if ($transition->from == null) {
+                if ($transition->getFieldValueFrom() == null) {
                     $from_id = 'null';
-                    $to = $transition->to->getId();
+                    $to      = $transition->getFieldValueTo()->getId();
                     foreach ($values as $value=>$id_value) {
                         if ($value == $to) {
                             $to_id = $id_value;
                         }
                     }                    
                 } else {
-                    $from = $transition->from->getId();
-                    $to = $transition->to->getId();
+                    $from = $transition->getFieldValueFrom()->getId();
+                    $to   = $transition->getFieldValueTo()->getId();
                     foreach ($values as $value=>$id_value) {
                         if ($value == $from) {
                             $from_id = $id_value;
