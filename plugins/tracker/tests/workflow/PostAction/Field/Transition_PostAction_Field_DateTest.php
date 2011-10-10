@@ -44,11 +44,13 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $field->setReturnValue('getLabel', 'Close Date');
         $field->setReturnValue('userCanRead', true, array($current_user));
         $field->setReturnValue('userCanUpdate', true, array($current_user));
+        $field->setReturnValue('formatDate', 'date-of-today', array($_SERVER['REQUEST_TIME']));
         
         $factory = new MockTracker_FormElementFactory();
         $factory->setReturnReference('getFormElementById', $field, array($field->getId()));
         
-        $expected    = $field->formatDate(date('Y-m-d', $_SERVER['REQUEST_TIME']));
+        $expected    = $field->formatDate($_SERVER['REQUEST_TIME']);
+        
         $fields_data = array('field_id' => 'value');
         $transition  = new MockTransition();
         $field_id    = $field->getId();
