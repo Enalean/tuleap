@@ -214,10 +214,6 @@ class WorkflowFactory {
         return $transitions;
     }
     
-    protected function getPostActionFactory() {
-        return new Transition_PostActionFactory();
-    }
-
     /**
      * Duplicate the workflow
      * 
