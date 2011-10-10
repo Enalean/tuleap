@@ -1246,7 +1246,7 @@ workflow_admin	postaction_on_field_already_exist	Une action sur le champ '$1' ex
 workflow_admin	no_postaction	Il n'y a pas encore d'action définie pour cette transition.
 workflow_admin	post_action_field_date_empty	""
 workflow_admin	post_action_field_date_current_time	la date courante
-
+workflow_admin	post_action_not_defined	Cette action sera inactive tant qu'elle ne sera pas complètement définie
 
 workflow_postaction	field_date_current_time	Le champs '$1' a été automatiquement valué à $2
 workflow_postaction	field_date_clear	Le valeur du champs '$1' a été automatiquement effacée

@@ -1248,6 +1248,7 @@ workflow_admin	postaction_on_field_already_exist	An action on the field '$1' alr
 workflow_admin	no_postaction	There isn't any post action defined yet.
 workflow_admin	post_action_field_date_empty	""
 workflow_admin	post_action_field_date_current_time	the current time
+workflow_admin	post_action_not_defined	This action will be inactive until it is completely configured
 
 workflow_postaction	field_date_current_time	The field '$1' has been automatically set to $2
 workflow_postaction	field_date_clear	The field '$1' has been automatically cleared

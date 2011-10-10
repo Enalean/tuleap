@@ -881,3 +881,48 @@ ul.plugin_tracker_my_artifacts_list {
 .workflow_conditions_perms {
     list-style-image: url(/themes/common/images/ic/lock.png);
 }
+
+
+/* {{{ Bootstrap rules */
+.alert-message {
+    background-color: #EEDC94;
+    background-image: -moz-linear-gradient(center top , #FCEEC1, #EEDC94);
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    border-radius: 4px 4px 4px 4px;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset;
+    color: #404040;
+    margin-bottom: 18px;
+    padding: 7px 15px;
+    position: relative;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.alert-message p {
+    margin-bottom: 0;
+}
+.alert-message div {
+    line-height: 28px;
+    margin-bottom: 2px;
+    margin-top: 5px;
+}.alert-message.block-message {
+    background-color: #FDF5D9;
+    background-image: none;
+    border-color: #FCEEC1;
+    box-shadow: none;
+    padding: 14px;
+}
+.alert-message.block-message ul, .alert-message.block-message p {
+    margin-right: 30px;
+}
+.alert-message.block-message ul {
+    margin-bottom: 0;
+}
+.alert-message.block-message li {
+    color: #404040;
+}
+.alert-message.block-message .alert-actions {
+    margin-top: 5px;
+}
+/* }}} */

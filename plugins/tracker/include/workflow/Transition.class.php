@@ -143,7 +143,7 @@ class Transition {
                 // the action itself
                 $html .= '<div class="'. $hp->purify($classname) .'">';
                 if (!$pa->isDefined()) {
-                    $html .= '<div class="feedback_warning">'. 'This action will be inactive until it is completely configured' .'</div>';
+                    $html .= '<div class="alert-message block-message warning">'. $GLOBALS['Language']->getText('workflow_admin', 'post_action_not_defined') .'</div>';
                 }
                 $html .= $pa->fetch();
                 $html .= '</div>';
