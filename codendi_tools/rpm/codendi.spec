@@ -56,6 +56,7 @@ Requires: php-pecl-apc
 Requires: htmlpurifier
 Requires: curl
 Requires: php-zendframework = 1.8.1
+Requires: php-pecl-json
 # Perl
 Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip
 # Apache
