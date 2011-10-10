@@ -2766,58 +2766,61 @@
         <section id="TrackerV5WorkflowOverview">
             <title>Overview</title>
             <para>
-             The power of the &SYS_PRODUCT_NAME; trackers is further increased with 
-             the workflow manager! It allows you to define a workflow for any tracker.
+             A Workflow can help you control the artifact lifecycle, ensure that 
+             your teams follow the rule of your company methodology (CMMi, etc.).
             </para>
             <para>
-             Workflow can help you control the artifact lifecycle, ensure that 
-             your teams follow the rule of your company methodology (CMMi, etc.).
+             Each tracker can have it's own workflow, designed by the tracker administrator.
             </para>
             <para>
              For now, a tracker can have only one workflow defined on one field.
              This field must be a list field (select box).
             </para>
-            <para>N.B. Worflow is not taen n account in artifacts mass change</para>
+            <para>N.B. Worflow is not taken into account in artifacts mass change</para>
         </section>
         <section id="TrackerV5WorkflowAdd">
             <title>Add a workflow to a tracker</title>
+	    <figure id="TrackerV5ManageWorkflowScreen">
+	      <title>Default workflow on Bugs template</title>
+	      <mediaobject>
+		<imageobject>
+		  <imagedata format="PNG"
+			     fileref="../../screenshots/en_US/sc_manage_workflow.png" width="15.3cm" />
+		</imageobject>
+	      </mediaobject>
+	    </figure>
              <itemizedlist>
                 <listitem>
-                    <para><emphasis role="bold">First step</emphasis>:
-                    you have to choose the field on which applies the workflow. 
-                    A workflow can be applied only on select box field type not bind to users.</para>
+                    <para><emphasis role="bold">First, select the field</emphasis>:
+                    you choose the field on which applies the workflow. 
+                    A workflow applies on "Select Box" field type (except if it's bound to users).</para>
                 </listitem>
                 <listitem>
-                    <para><emphasis role="bold">Second step</emphasis>:
-                    you have to define the transitions of the workflow.
-                    <xref linkend="TrackerV5ManageWorkflowScreen" /> shows a sample workflow definition screen used in the 
-                    Bugs Tracker template.
-                    Thanks to the "Workflow Administration" part of the page, you see that the workflow is defined on the field "Status". 
-                    The workflow can be simply enabled or disabled while checking the checkbox and click on "Submit".
-                    To delete the workflow, simply, click on the red cross. This will completely delete the workflow defined, and all the transitions.
+                    <para><emphasis role="bold">Then, define transitions</emphasis>:
+                    the states the artifact should take from it's beginning to it's end.</para>
+		    <para>By default, no transitions are allowed (it's not possible to change the values of selected field). You authorize a transition by clicking on the bullet that cross "FROM" row and "TO STATE" Column. Arrow icon: the transition can happens, grey bullet: the transition is forbidden.</para>
+                    <para>Once you defined all your transition, click on Submit button to save it.</para>
+                    <para>For instance, in <xref linkend="TrackerV5ManageWorkflowScreen" />, various transitions have been defined: 
+		    on artifact submission, defined by fake state "new artifact", the only value available for the field "Status" will be "New".
+                    Then, once Status is "New", possible changes will be "Unconfirmed", "Verified" and "Closed".
                     </para>
-                    <para>
-                    The "Define the transitions" part allows to define the transitions of the workflow.
-                    In the example provided on <xref linkend="TrackerV5ManageWorkflowScreen" />, various transitions have been defined.
-                    For instance, at the submission of an artifact, defined by the state "new artifact", the only value available for the field "Status"
-                    will be "New".
-                    When the status value is "New", the only value available will be "Unconfirmed", "Verified" and "Closed".
-                    </para>
-                    <figure id="TrackerV5ManageWorkflowScreen">
-                        <title>A sample workflow definition screen</title>
-                        <mediaobject>
-                            <imageobject>
-                                <imagedata format="PNG"
-                                fileref="../../screenshots/en_US/sc_manage_workflow.png" width="15.3cm" />
-                            </imageobject>
-                        </mediaobject>
-                    </figure>
                 </listitem>
              </itemizedlist>
+	     <para>To delete the workflow, simply, click on the red cross near to the field name. Transitions are deleted too.</para>
         </section>
         
         <section id="TrackerV5WorkflowPostFunctions">
-            <title>Define rules on transitions</title>
+	  <title>Define rules on transitions</title>
+	  <figure id="TrackerV5FigureTrackerWorkflowTransitionsPermissions">
+	    <title>Define workflow transitions</title>
+	    <mediaobject>
+	      <imageobject>
+		<imagedata format="PNG"
+			   fileref="../../screenshots/en_US/sc_manage_workflow_transitions.png" width="15.3cm" />
+	      </imageobject>
+	    </mediaobject>
+	  </figure>
+	  <para>For a given transition, you can select the people allowed to perform it and actions exectued after the transition happens (if allowed).</para>
             <section id="TrackerV5WorkflowTransitionsUgroup">
                 <title>Groups that may make the transition</title>
                 <para>
@@ -2826,16 +2829,12 @@
                  transition. Then, select the group of users you allow to do the
                  transition (see <xref linkend="TrackerV5FigureTrackerWorkflowTransitionsPermissions" />).
                 </para>
-                <figure id="TrackerV5FigureTrackerWorkflowTransitionsPermissions">
-                 <title>Permissions on workflow transitions</title>
-                    <mediaobject>
-                      <imageobject>
-                        <imagedata format="PNG"
-                          fileref="../../screenshots/en_US/sc_manage_workflow_transitions.png" width="15.3cm" />
-                      </imageobject>
-                    </mediaobject>
-                </figure>
             </section>
+	    <section id="TrackerV5WorkflowTransitionsPostActions">
+	      <title>Post actions</title>
+	      <para>You can define a list of actions after the execution of a transition. As of today, only actions on date fields are available.</para>
+	      <para>For instance, you can set a date field to the date of transaction execution. It might be used to set automatically the close date of an artifact (eg. when it's state move from Resolved to Closed).</para>
+	    </section>
         </section>
     </section>
     
