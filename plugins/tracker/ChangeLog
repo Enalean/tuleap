@@ -3,6 +3,7 @@ Version 0.5 - (Tuleap 4.0.23)
   DISCLAIMER: Your data might be trashed in a future update.
   
   * Fix sla #156. Mail now contains all the submitted fields.
+  * Introduce post actions on workflow transition: set or clear a date field when the artifact change its state.
 
 Version 0.4 - (Tuleap 4.0.22)
   DISCLAIMER: plugin still in beta, do not use it on production servers.
