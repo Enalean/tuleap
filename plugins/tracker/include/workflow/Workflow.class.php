@@ -38,6 +38,11 @@ class Workflow {
      */
     protected $field = null;
     
+    /**
+     * @var Array of Tracker_FormElement_Field_List_Value
+     */
+    protected $field_values = null;
+    
     public function __construct($workflow_id, $tracker_id, $field_id, $is_used, $transitions = null) {
         $this->workflow_id      = $workflow_id;
         $this->tracker_id = $tracker_id;
@@ -94,6 +99,18 @@ class Workflow {
             $this->field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
         }
         return $this->field;
+    }
+    
+    /**
+     * Return all values of the field associated to workflow
+     *
+     * @return Array of Tracker_FormElement_Field_List_Value
+     */
+    public function getAllFieldValues() {
+        if (!$this->field_values) {
+            $this->field_values = $this->getField()->getBind()->getAllValues();
+        }
+        return $this->field_values;
     }
     
     /**

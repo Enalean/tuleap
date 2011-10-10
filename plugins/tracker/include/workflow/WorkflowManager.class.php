@@ -50,10 +50,9 @@ class WorkflowManager {
                 }
             }
         } else if ($request->get('edit_transition')) {
-            $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+            $workflow   = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
             $transition = TransitionFactory::instance()->getTransition($request->get('edit_transition'));
             $this->displayTransitionDetails($engine, $request, $current_user, $transition);
-            
         } else if ($request->get('delete')) {
             
             if (WorkflowFactory::instance()->delete($request->get('delete'))) {
@@ -195,22 +194,18 @@ class WorkflowManager {
         }
     }
     
-    protected function displayTransitionDetails($engine, $request, $current_user, $transition) {
+    protected function displayTransitionDetails(TrackerManager $engine, Codendi_Request $request, User $current_user, Transition $transition) {
         
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title').'</h3>';
-        $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
         
-        //{{{ Get the label of the values from & to
-        $field = Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
-        $field_values = $field->getBind()->getAllValues();
-        if(isset($field_values[$transition->from])) {
-            $from_label = $field_values[$transition->from]->getLabel();
-        }else {
+        if($transition->getFieldValueFrom()) {
+            $from_label = $transition->getFieldValueFrom()->getLabel();
+        } else {
             $from_label = $GLOBALS['Language']->getText('workflow_admin','new_artifact');
         }
-        $to_label = $field_values[$transition->to]->getLabel();
+        $to_label = $transition->getFieldValueTo()->getLabel();
         
         echo '<p>';
         echo $GLOBALS['Language']->getText('workflow_admin','title_define_transition_details', array($from_label, $to_label));
@@ -273,7 +268,7 @@ class WorkflowManager {
         return $html;
     }
     
-    protected function displayAdminWorkflow($engine, $request, $current_user, $workflow) {
+    protected function displayAdminWorkflow(TrackerManager $engine, Codendi_Request $request, User $current_user, Workflow $workflow) {
        
         $field =Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
         

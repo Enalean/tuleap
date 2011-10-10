@@ -21,6 +21,7 @@
 require_once(dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/Transition_PostAction_Field_Date.class.php');
 Mock::generatePartial('Transition_PostAction_Field_Date', 'Transition_PostAction_Field_DateTestVersion', array('addFeedback', 'getFormElementFactory'));
 Mock::generate('Transition');
+require_once ('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_FormElement_Field_Date');

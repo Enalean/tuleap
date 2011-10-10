@@ -37,6 +37,8 @@ class TransitionFactory {
     
     /**
      * The singleton method
+     * 
+     * @return TransitionFactory
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
@@ -49,15 +51,30 @@ class TransitionFactory {
     /**
      * Build a Transition instance
      *
-     * @param array $row The data describing the transition
+     * @param Array    $row      The data describing the transition
+     * @param Workflow $workflow Workflow the transition belongs to
      *
      * @return Transition
      */
-    public function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row, Workflow $workflow = null) {
+        if (!$workflow) {
+            $workflow = WorkflowFactory::instance()->getWorkflow($row['workflow_id']);
+        }
+        
+        $field_values = $workflow->getAllFieldValues();
+        $from         = null;
+        $to           = null;
+        if (isset($field_values[$row['from_id']])) {
+            $from = $field_values[$row['from_id']];
+        }
+        if (isset($field_values[$row['to_id']])) {
+            $to = $field_values[$row['to_id']];
+        }
+        
         $transition = new Transition($row['transition_id'],
-                                          $row['workflow_id'],
-                                          $row['from_id'],
-                                          $row['to_id']);
+                                     $row['workflow_id'],
+                                     $from,
+                                     $to);
         $this->getPostActionFactory()->loadPostActions($transition);
         return $transition;
     }

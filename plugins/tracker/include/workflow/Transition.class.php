@@ -23,8 +23,17 @@ require_once('PostAction/Transition_PostAction.class.php');
 class Transition {
     public $transition_id;
     public $workflow_id;
-    public $from;
-    public $to;
+    
+    /**
+     * @var Tracker_FormElement_Field_List_Value
+     */
+    protected $from = null;
+    
+    /**
+     * @var Tracker_FormElement_Field_List_Value
+     */
+    protected $to   = null;
+    
     /**
      * @var Array of Transition_PostAction
      */
@@ -59,10 +68,20 @@ class Transition {
         $this->workflow = $workflow;
     }
     
+    /**
+     * Access From field value
+     * 
+     * @return Tracker_FormElement_Field_List_Value
+     */
     public function getFieldValueFrom() {
         return $this->from;
     }
     
+    /**
+     * Access To field value
+     * 
+     * @return Tracker_FormElement_Field_List_Value
+     */
     public function getFieldValueTo() {
         return $this->to;
     }

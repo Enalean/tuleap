@@ -37,6 +37,8 @@ class WorkflowFactory {
     
     /**
      * The singleton method
+     * 
+     * @return WorkflowFactory
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
@@ -199,27 +201,15 @@ class WorkflowFactory {
      /**
      * Get the transitions of the workflow
      * 
-     * @param Workflow $workflow the workflow
+     * @param Workflow $workflow The workflow
      *
-     * @return array
+     * @return Array
      */
     public function getTransitions($workflow){
-        // retrieve the field values
-        $field=Tracker_FormElementFactory::instance()->getFormElementById($workflow->getFieldId());
-        
-        $field_values = $field->getBind()->getAllValues();
-        
+        $tf = TransitionFactory::instance();
         $transitions = array();
         foreach($this->getTransitionDao()->searchByWorkflow($workflow->getId()) as $row) {
-            if(isset($field_values[$row['from_id']])) {
-                $field_value_from = $field_values[$row['from_id']];
-            }else {
-                $field_value_from =null;
-            }
-            $field_value_to = $field_values[$row['to_id']];
-            $transition = new Transition($row['transition_id'], $row['workflow_id'], $field_value_from, $field_value_to);
-            $this->getPostActionFactory()->loadPostActions($transition);
-            $transitions[] = $transition;
+            $transitions[] = $tf->getInstanceFromRow($row, $workflow);
         }
         return $transitions;
     }
