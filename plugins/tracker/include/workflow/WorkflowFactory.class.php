@@ -203,10 +203,10 @@ class WorkflowFactory {
      * 
      * @param Workflow $workflow The workflow
      *
-     * @return Array
+     * @return Array of Transition
      */
-    public function getTransitions($workflow){
-        $tf = TransitionFactory::instance();
+    public function getTransitions(Workflow $workflow){
+        $tf          = TransitionFactory::instance();
         $transitions = array();
         foreach($this->getTransitionDao()->searchByWorkflow($workflow->getId()) as $row) {
             $transitions[] = $tf->getInstanceFromRow($row, $workflow);
