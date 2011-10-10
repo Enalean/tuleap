@@ -86,7 +86,11 @@ class Transition {
         return $this->to;
     }
     
-    public function equals($transition) {
+    /**
+     * 
+     * @param Transition $transition
+     */
+    public function equals(Transition $transition) {
         return $transition->getFieldValueFrom() === $this->from && $transition->getFieldValueTo() === $this->to;
     }
     

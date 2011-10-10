@@ -158,6 +158,14 @@ class Workflow {
         return $this->is_used;
     }
     
+    /**
+     * Test if there is a transition defined between the two list values
+     *
+     * @param Tracker_FormElement_Field_List_Value $field_value_from
+     * @param Tracker_FormElement_Field_List_Value $field_value_to
+     * 
+     * @return Boolean
+     */
     public function isTransitionExist($field_value_from, $field_value_to) {
         if ($field_value_from != $field_value_to) {
             $transitions = $this->getTransitions();
