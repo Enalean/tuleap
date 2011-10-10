@@ -22,15 +22,21 @@ class Transition_PostAction_Field_DateDao extends DataAccessObject {
 
     public function create($transition_id) {
         $transition_id = $this->da->escapeInt($transition_id);
-        $sql = "INSERT INTO tracker_workflow_transition_postactions_field_date (transition_id) VALUES ($transition_id)";
+        $sql = "INSERT INTO tracker_workflow_transition_postactions_field_date 
+                (transition_id) 
+                VALUES 
+                ($transition_id)";
         return $this->update($sql);
     }
     
     public function updatePostAction($id, $field_id, $value_type) {
-        $sql = "UPDATE tracker_workflow_transition_postactions_field_date ".
-               " SET field_id   = ".$this->da->escapeInt($field_id).", ".
-               "     value_type = ".$this->da->escapeInt($value_type).
-               " WHERE id = ".$this->da->escapeInt($id);
+        $id         = $this->da->escapeInt($id);
+        $field_id   = $this->da->escapeInt($field_id);
+        $value_type = $this->da->escapeInt($value_type);
+        $sql = "UPDATE tracker_workflow_transition_postactions_field_date 
+                SET field_id   = $field_id, 
+                    value_type = $value_type
+                WHERE id = $id";
         return $this->update($sql);
     }
     
@@ -56,7 +62,9 @@ class Transition_PostAction_Field_DateDao extends DataAccessObject {
     
     public function deletePostAction($id) {
         $id = $this->da->escapeInt($id);
-        $sql = "DELETE FROM tracker_workflow_transition_postactions_field_date WHERE id = $id";
+        $sql = "DELETE 
+                FROM tracker_workflow_transition_postactions_field_date 
+                WHERE id = $id";
         return $this->update($sql);
     }
 }

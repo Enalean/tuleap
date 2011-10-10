@@ -88,7 +88,10 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * @return Tracker_FormElement_Field
      */
     protected function getField() {
-        return $this->getFormElementFactory()->getFormElementById($this->field_id);
+        if ($this->field_id) {
+            return $this->getFormElementFactory()->getFormElementById($this->field_id);
+        }
+        return null;
     }
 
     /**
