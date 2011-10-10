@@ -1034,7 +1034,20 @@ class GitPHP_Project
 			return null;
 		}
 
-		if (preg_match('/[0-9a-f]{40}/i', $hash)) {
+		if (!$this->readRefs)
+			$this->ReadRefList();
+
+		if (isset($this->heads['refs/heads/' . $hash]))
+			return $this->heads['refs/heads/' . $hash]->GetCommit();
+
+		if (isset($this->tags['refs/tags/' . $hash]))
+			return $this->tags['refs/tags/' . $hash]->GetCommit();
+
+		if (preg_match('/[0-9A-Fa-f]{4,39}/', $hash)) {
+			$hash = $this->ExpandHash($hash);
+		}
+
+		if (preg_match('/[0-9A-Fa-f]{40}/', $hash)) {
 
 			if (!isset($this->commitCache[$hash])) {
 				$cacheKey = 'project|' . $this->project . '|commit|' . $hash;
@@ -1048,15 +1061,6 @@ class GitPHP_Project
 			return $this->commitCache[$hash];
 
 		}
-
-		if (!$this->readRefs)
-			$this->ReadRefList();
-
-		if (isset($this->heads['refs/heads/' . $hash]))
-			return $this->heads['refs/heads/' . $hash]->GetCommit();
-
-		if (isset($this->tags['refs/tags/' . $hash]))
-			return $this->tags['refs/tags/' . $hash]->GetCommit();
 
 		return null;
 	}
@@ -1876,9 +1880,9 @@ class GitPHP_Project
 		}
 
 		if ($this->GetCompat()) {
-			return $this->ExpandHashGit($hash);
+			return $this->ExpandHashGit($abbrevHash);
 		}  else {
-			return $this->ExpandHashRaw($hash);
+			return $this->ExpandHashRaw($abbrevHash);
 		}
 	}
 
