@@ -73,7 +73,7 @@ abstract class Transition_PostAction {
     /**
      * Execute actions before transition happens
      * 
-     * @param Array $fields_data Request field data (array[field_id] => data)
+     * @param Array &$fields_data Request field data (array[field_id] => data)
      * @param User  $current_user The user who are performing the update
      * 
      * @return void
@@ -82,12 +82,16 @@ abstract class Transition_PostAction {
     }
     
     /**
-     * @return string The shortname of the post action
+     * Get the shortname of the post action
+     *
+     * @return string
      */
     public abstract function getShortName();
     
     /**
-     * @return string The label of the post action
+     * Get the label of the post action
+     *
+     * @return string
      */
     public static abstract function getLabel();
     
@@ -108,7 +112,7 @@ abstract class Transition_PostAction {
     /**
      * Update/Delete action
      *
-     * @param Codendi_Request $request
+     * @param Codendi_Request $request The request
      *
      * @return void
      */
