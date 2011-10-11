@@ -98,6 +98,8 @@ class Tracker_FormElementFactory {
     
     /**
      * The singleton method
+     * 
+     * @return Tracker_FormElementFactory
      */
     public static function instance() {
         if (!isset(self::$_instance)) {

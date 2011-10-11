@@ -33,6 +33,7 @@ Mock::generatePartial(
         'getChangeset',
         'getUserManager',
         'getArtifactFactory',
+        'getWorkflow',
     )
 );
 
@@ -124,6 +125,8 @@ Mock::generate('Tracker_RulesManager');
         'validate'
     )
 );*/
+Mock::generate('Workflow');
+
 class Tracker_ArtifactTest extends UnitTestCase {
     
     function setUp() {
@@ -810,6 +813,10 @@ class Tracker_ArtifactTest extends UnitTestCase {
         
         $art_factory->expectOnce('save');
         
+        $workflow = new MockWorkflow();
+        $workflow->expectOnce('before');
+        $artifact->setReturnValue('getWorkflow', $workflow);
+        
         // Valid
         $fields_data = array(
             102 => '123',
@@ -906,6 +913,10 @@ class Tracker_ArtifactTest extends UnitTestCase {
         
         $art_factory->expectOnce('save');
         
+        $workflow = new MockWorkflow();
+        $workflow->expectOnce('before');
+        $artifact->setReturnValue('getWorkflow', $workflow);
+        
         // Valid
         $fields_data = array(
             102 => '123',
@@ -973,6 +984,10 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
         $artifact->setReturnReference('getLastChangeset', $changeset);
+        
+        $workflow = new MockWorkflow();
+        $workflow->expectNever('before');
+        $artifact->setReturnValue('getWorkflow', $workflow);
         
         $email   = null; //not annonymous user
         $comment = ''; //empty comment

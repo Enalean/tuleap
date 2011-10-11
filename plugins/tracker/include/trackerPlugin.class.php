@@ -259,7 +259,18 @@ class trackerPlugin extends Plugin {
     var $_cached_permission_user_allowed_to_change;
     function permission_user_allowed_to_change($params) {
         if (!$params['allowed']) {
-            if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
+            $allowed = array(
+                'PLUGIN_TRACKER_ADMIN', 
+                'PLUGIN_TRACKER_ACCESS_FULL', 
+                'PLUGIN_TRACKER_ACCESS_SUBMITTER', 
+                'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 
+                'PLUGIN_TRACKER_FIELD_SUBMIT', 
+                'PLUGIN_TRACKER_FIELD_READ', 
+                'PLUGIN_TRACKER_FIELD_UPDATE', 
+                'PLUGIN_TRACKER_ARTIFACT_ACCESS',
+                'PLUGIN_TRACKER_WORKFLOW_TRANSITION',
+            );
+            if (in_array($params['permission_type'], $allowed)) {
                 $group_id  = $params['group_id'];
                 $object_id = $params['object_id'];
                 $type      = $this->getObjectTypeFromPermissions($params);
@@ -279,6 +290,10 @@ class trackerPlugin extends Plugin {
                             if ($a  = Tracker_ArtifactFactory::instance()->getArtifactById($object_id)) {
                                 //TODO: manage permissions related to field "permission on artifact"
                                 $this->_cached_permission_user_allowed_to_change[$type][$object_id] = $a->getTracker()->userIsAdmin();
+                            }
+                        case 'workflow transition':
+                            if ($transition = TransitionFactory::instance()->getTransition($object_id)) {
+                                $this->_cached_permission_user_allowed_to_change[$type][$object_id] = $transition->getWorkflow()->getTracker()->userIsAdmin();
                             }
                             break;
                     }

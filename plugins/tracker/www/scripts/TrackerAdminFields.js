@@ -291,5 +291,17 @@ document.observe('dom:loaded', function () {
         var r = new codendi.RTE(elem);
     });
     
+    $$("input[type=checkbox][name^=remove_postaction]").each(function (elem) {
+        elem.observe('click', function (evt) {
+            if (elem.checked) {
+                elem.up('tr').down('td').addClassName('workflow_action_deleted');
+                elem.up('tr').select('select').each(function (e) { e.disabled = true; e.readOnly = true; });
+            } else {
+                elem.up('tr').down('td').removeClassName('workflow_action_deleted');
+                elem.up('tr').select('select').each(function (e) { e.disabled = false; e.readOnly = false; });
+            }
+        });
+    });
+    
 });
 

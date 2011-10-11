@@ -101,10 +101,16 @@
     }
 
     /**
-     * Get value of $idx[$variable] in $this->params (user submitted values).
+     * Get value of $idx[$variable] user submitted values.
      *
-     * @param string The index of the variable array in $this->params.
-     * @param string Name of the parameter to get.
+     * For instance if you have: 
+     *   user_preference[103] => "awesome"
+     * You gets "awesome" with
+     *   getInArray('user_preference', 103);
+     *
+     * @param String $idx The index of the variable array in $this->params.
+     * @param String Name of the parameter to get.
+     * 
      * @return mixed If the variable exist, the value is returned (string)
      * otherwise return false;
      */

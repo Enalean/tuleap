@@ -23,6 +23,7 @@ require_once(dirname(__FILE__).'/../TrackerFactory.class.php');
 require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
 require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
 require_once('Tracker_Artifact_Changeset.class.php');
+require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 require_once('www/project/admin/permissions.php');
@@ -642,7 +643,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $changeset_id = null;
         if ( ! $submitter->isAnonymous() || $email != null) {
             if ($this->validateFields($fields_data, true)) {
+                
+                // Initialize a fake Changeset to ensure List & Workflow works with an "initial" thus empty state
+                $this->changesets = array(new Tracker_Artifact_Changeset_Null());
+                
+                $workflow = $this->getWorkflow();
+                if ($workflow) {
+                    $workflow->before($fields_data, $submitter);
+                }
                 if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
+
                     //Store the value(s) of the fields
                     $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
                     foreach ($used_fields as $field) {
@@ -655,6 +665,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     }
                     //Save the artifact
                     $this->getArtifactFactory()->save($this);
+                    
+                    // Clear fake changeset so subsequent call to getChangesets will load a fresh & complete one from the DB
+                    $this->changesets = null;
                 }
             }
         } else {
@@ -729,8 +742,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $last_changeset = $this->getLastChangeset();
                 if ($comment || $last_changeset->hasChanges($fields_data)) {
                     //There is a comment or some change in fields: create a changeset
+                    
+                    $workflow = $this->getWorkflow();
+                    if ($workflow) {
+                        $workflow->before($fields_data, $submitter);
+                    }
                     if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
-                        
                         //Store the comment
                         $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0);
                         
@@ -997,6 +1014,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     function getSubmittedBy() {
         return $this->submitted_by;
+    }
+    
+    /**
+     * Return Workflow the artifact should respect
+     * 
+     * @return Workflow
+     */
+    public function getWorkflow() {
+        $workflow = WorkflowFactory::instance()->getWorkflowField($this->getTrackerId());
+        $workflow->setArtifact($this);
+        return $workflow;
     }
     
     /**

@@ -28,33 +28,89 @@ class Workflow {
     public $transitions;
     public $is_used;
     
+    /**
+     * @var Tracker_Artifact
+     */
+    protected $artifact = null;
+    
+    /**
+     * @var Tracker_FormElement_Field
+     */
+    protected $field = null;
+    
+    /**
+     * @var Array of Tracker_FormElement_Field_List_Value
+     */
+    protected $field_values = null;
+    
     public function __construct($workflow_id, $tracker_id, $field_id, $is_used, $transitions = null) {
         $this->workflow_id      = $workflow_id;
         $this->tracker_id = $tracker_id;
         $this->field_id   = $field_id;
         $this->is_used = $is_used;
-        $this->transitions   = $transitions;        
+        $this->transitions   = $transitions;
     }
     
-     /**
+    /**
+     * Set artifact
+     *
+     * @param Tracker_Artifact $artifact artifact the workflow control
+     */
+    public function setArtifact(Tracker_Artifact $artifact) {
+        $this->artifact = $artifact;
+    }
+    
+    /**
+     * Set field
+     *
+     * @param Tracker_FormElement_Field $field Field
+     */
+    public function setField(Tracker_FormElement_Field $field) {
+        $this->field    = $field;
+        $this->field_id = $field->getId();
+    }
+    
+    /**
      * @return string
      */
     public function getId() {
         return $this->workflow_id;
     }
     
-     /**
+    /**
      * @return string
      */
     public function getTrackerId() {
         return $this->tracker_id;
     }
     
-     /**
+    /**
      * @return string
      */
     public function getFieldId() {
         return $this->field_id;
+    }
+    
+    /**
+     * @return Tracker_FormElement_Field
+     */
+    public function getField() {
+        if (!$this->field) {
+            $this->field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
+        }
+        return $this->field;
+    }
+    
+    /**
+     * Return all values of the field associated to workflow
+     *
+     * @return Array of Tracker_FormElement_Field_List_Value
+     */
+    public function getAllFieldValues() {
+        if (!$this->field_values) {
+            $this->field_values = $this->getField()->getBind()->getAllValues();
+        }
+        return $this->field_values;
     }
     
     /**
@@ -76,6 +132,25 @@ class Workflow {
         return $this->transitions;
     }
     
+    /**
+     * Return transition corresponding to parameters
+     *
+     * @param Integer $field_value_id_from
+     * @param Integer $field_value_id_to
+     * 
+     * @return Transition or null if no transition match
+     */
+    public function getTransition($field_value_id_from, $field_value_id_to) {
+        foreach ($this->getTransitions() as $transition) {
+            $from = $transition->getFieldValueFrom();
+            if ($from === null && $field_value_id_from === null || $from !== null && $from->getId() == $field_value_id_from) {
+                if ($transition->getFieldValueTo()->getId() == $field_value_id_to) {
+                    return $transition;
+                }
+            }
+        }
+    }
+    
      /**
      * @return string
      */
@@ -83,6 +158,14 @@ class Workflow {
         return $this->is_used;
     }
     
+    /**
+     * Test if there is a transition defined between the two list values
+     *
+     * @param Tracker_FormElement_Field_List_Value $field_value_from
+     * @param Tracker_FormElement_Field_List_Value $field_value_to
+     * 
+     * @return Boolean
+     */
     public function isTransitionExist($field_value_from, $field_value_to) {
         if ($field_value_from != $field_value_to) {
             $transitions = $this->getTransitions();
@@ -148,6 +231,33 @@ class Workflow {
                }
                $grand_child->addChild('to_id')->addAttribute('REF', array_search($transition->getFieldValueTo()->getId(), $xmlMapping['values']));
            }
+    }
+    
+    /**
+     * Execute actions before transition happens (if there is one)
+     * 
+     * @param Array $fields_data  Request field data (array[field_id] => data)
+     * @param User  $current_user The user who are performing the update
+     * 
+     * @return void
+     */
+    public function before(array &$fields_data, User $current_user) {
+        if (isset($fields_data[$this->getFieldId()])) {
+            $oldValues = $this->artifact->getLastChangeset()->getValue($this->getField());
+            $from      = null;
+            if ($oldValues) {
+                if ($v = $oldValues->getValue()) {
+                    // Todo: what about multiple values in the changeset?
+                    list(,$from) = each($v);
+                    $from = (int)$from;
+                }
+            }
+            $to         = (int)$fields_data[$this->getFieldId()];
+            $transition = $this->getTransition($from, $to);
+            if ($transition) {
+                $transition->before($fields_data, $current_user);
+            }
+        }
     }
 }
 ?>

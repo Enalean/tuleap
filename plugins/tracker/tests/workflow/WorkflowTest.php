@@ -29,6 +29,13 @@ require_once(dirname(__FILE__).'/../../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
+Mock::generate('Tracker_FormElement_Field_List_Value');
+
+Mock::generate('Tracker_Artifact_Changeset');
+Mock::generate('Tracker_Artifact');
+Mock::generate('Tracker_Artifact_ChangesetValue_List');
+Mock::generate('Tracker_Artifact_Changeset_Null');
+Mock::generate('User');
 
 class WorkflowTest extends UnitTestCase {
     
@@ -38,80 +45,99 @@ class WorkflowTest extends UnitTestCase {
         $this->assertNotNull($workflow->getTransitions());
         $this->assertEqual(count($workflow->getTransitions()),0);
         
-        $field_value_new = array('id' => 2066,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'New',
-                                                           'description' => 'The bug has been submitted',
-                                                           'rank' => '10');
-        $field_value_analyzed = array('id' => 2067,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Analyzed',
-                                                           'description' => 'The bug is analyzed',
-                                                           'rank' => '20');
+        $field_value_new = new MockTracker_FormElement_Field_List_Value();
+        $field_value_new->setReturnValue('getId', 2066);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'New',
+        //'description' => 'The bug has been submitted',
+        //'rank' => '10');
+
+        
+        $field_value_analyzed = new MockTracker_FormElement_Field_List_Value();
+        $field_value_analyzed->setReturnValue('getId', 2067);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Analyzed',
+        //'description' => 'The bug is analyzed',
+        //'rank' => '20');
+        
         // workflow is empty, no transition exists
         $this->assertFalse($workflow->isTransitionExist($field_value_new, $field_value_analyzed));
         $this->assertFalse($workflow->hasTransitions());
     }
     
     public function testUseCaseBug() {
-        $field_value_new = array('id' => 2066,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'New',
-                                                           'description' => 'The bug has been submitted',
-                                                           'rank' => '10');
-        $field_value_analyzed = array('id' => 2067,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Analyzed',
-                                                           'description' => 'The bug is analyzed',
-                                                           'rank' => '20');
-        $field_value_accepted = array('id' => 2068,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Accepted',
-                                                           'description' => 'The bug is accepted',
-                                                           'rank' => '30');
-        $field_value_rejected = array('id' => 2069,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Rejected',
-                                                           'description' => 'The bug is rejected',
-                                                           'rank' => '40');
-        $field_value_fixed = array('id' => 2070,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Fixed',
-                                                           'description' => 'The bug was resolved',
-                                                           'rank' => '50');
-        $field_value_tested = array('id' => 2071,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Tested',
-                                                           'description' => 'The bug is tested',
-                                                           'rank' => '60');
-        $field_value_deployed = array('id' => 2072,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Deployed',
-                                                           'description' => 'The bug is deployed',
-                                                           'rank' => '70');
+        $field_value_new = new MockTracker_FormElement_Field_List_Value();
+        $field_value_new->setReturnValue('getId', 2066);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'New',
+        //'description' => 'The bug has been submitted',
+        //'rank' => '10');
         
-        $t_new_analyzed = new Transition (1, 2, $field_value_new, $field_value_analyzed);
+        $field_value_analyzed = new MockTracker_FormElement_Field_List_Value();
+        $field_value_analyzed->setReturnValue('getId', 2067);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Analyzed',
+        //'description' => 'The bug is analyzed',
+        //'rank' => '20');
+        
+        $field_value_accepted = new MockTracker_FormElement_Field_List_Value();
+        $field_value_accepted->setReturnValue('getId', 2068);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Accepted',
+        //'description' => 'The bug is accepted',
+        //'rank' => '30');
+        
+        $field_value_rejected = new MockTracker_FormElement_Field_List_Value();
+        $field_value_rejected->setReturnValue('getId', 2069);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Rejected',
+        //'description' => 'The bug is rejected',
+        //'rank' => '40');
+        
+        $field_value_fixed = new MockTracker_FormElement_Field_List_Value();
+        $field_value_fixed->setReturnValue('getId', 2070);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Fixed',
+        //'description' => 'The bug was resolved',
+        //'rank' => '50');
+        
+        $field_value_tested = new MockTracker_FormElement_Field_List_Value();
+        $field_value_tested->setReturnValue('getId', 2071);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Tested',
+        //'description' => 'The bug is tested',
+        //'rank' => '60');
+        
+        $field_value_deployed = new MockTracker_FormElement_Field_List_Value();
+        $field_value_deployed->setReturnValue('getId', 2072);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Deployed',
+        //'description' => 'The bug is deployed',
+        //'rank' => '70');
+                                                           
+        
+        $t_new_analyzed      = new Transition (1, 2, $field_value_new, $field_value_analyzed);
         $t_analyzed_accepted = new Transition (1, 2, $field_value_analyzed, $field_value_accepted);
-        $t_analyzed_rejected = new Transition (1,  2, $field_value_analyzed, $field_value_rejected);
-        $t_accepted_fixed = new Transition (1,  2, $field_value_accepted, $field_value_fixed);
-        $t_fixed_tested = new Transition (1,  2, $field_value_fixed, $field_value_tested);
-        $t_tested_deployed = new Transition (1,  2, $field_value_tested, $field_value_deployed);
+        $t_analyzed_rejected = new Transition (1, 2, $field_value_analyzed, $field_value_rejected);
+        $t_accepted_fixed    = new Transition (1, 2, $field_value_accepted, $field_value_fixed);
+        $t_fixed_tested      = new Transition (1, 2, $field_value_fixed, $field_value_tested);
+        $t_tested_deployed   = new Transition (1, 2, $field_value_tested, $field_value_deployed);
         
-        $transitions= array($t_new_analyzed, 
-                                                 $t_analyzed_accepted,
-                                                 $t_analyzed_rejected,
-                                                 $t_accepted_fixed, 
-                                                 $t_fixed_tested, 
-                                                 $t_tested_deployed);
+        $transitions = array($t_new_analyzed, 
+            $t_analyzed_accepted,
+            $t_analyzed_rejected,
+            $t_accepted_fixed, 
+            $t_fixed_tested, 
+            $t_tested_deployed);
         
         $workflow=new Workflow(1, 2, 3, 1, $transitions);
         
@@ -180,6 +206,96 @@ class WorkflowTest extends UnitTestCase {
         $workflow->expectNever('getTransitions');
         $field_value = array();
         $this->assertTrue($workflow->isTransitionExist($field_value, $field_value));
+    }
+    
+    function testBeforeShouldTriggerTransitionActions() {
+        $current_user = new MockUser();
+        
+        $f = new MockTracker_FormElement_Field_List();
+        $f->setReturnValue('getId', 103);
+        
+        $v1 = new MockTracker_FormElement_Field_List_Value();
+        $v2 = new MockTracker_FormElement_Field_List_Value();
+        
+        $v1->setReturnValue('getId', 801);
+        $v2->setReturnValue('getId', 802);
+        
+        $t1 = new MockTransition();
+        $t2 = new MockTransition();
+        
+        $t1->setReturnValue('getFieldValueFrom',     null);
+        $t1->setReturnReference('getFieldValueTo',   $v1);
+        $t2->setReturnReference('getFieldValueFrom', $v1);
+        $t2->setReturnReference('getFieldValueTo',   $v2);
+        
+        $cvl = new MockTracker_Artifact_ChangesetValue_List();
+        $cvl->setReturnValue('getValue', array(801));
+        
+        $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('getValue', $cvl, array($f));
+        
+        $a = new MockTracker_Artifact();
+        $a->setReturnValue('getLastChangeset', $changeset);
+        
+        $workflow_id = 1;
+        $tracker_id  = 2;
+        $field_id    = 103;
+        $is_used     = 1;
+        $transitions = array($t1, $t2);
+        $workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
+        
+        $workflow->setField($f);
+        $workflow->setArtifact($a);
+        
+        $fields_data = array(
+            '103' => '802',
+        );
+        $t1->expectNever('before');
+        $t2->expectOnce('before', array($fields_data, $current_user));
+        $workflow->before($fields_data, $current_user);
+    }
+    
+    function testBeforeShouldTriggerTransitionActionsForNewArtifact() {
+        $current_user = new MockUser();
+        
+        $f = new MockTracker_FormElement_Field_List();
+        $f->setReturnValue('getId', 103);
+        
+        $v1 = new MockTracker_FormElement_Field_List_Value();
+        $v2 = new MockTracker_FormElement_Field_List_Value();
+        
+        $v1->setReturnValue('getId', 801);
+        $v2->setReturnValue('getId', 802);
+        
+        $t1 = new MockTransition();
+        $t2 = new MockTransition();
+        
+        $t1->setReturnValue('getFieldValueFrom',     null);
+        $t1->setReturnReference('getFieldValueTo',   $v1);
+        $t2->setReturnReference('getFieldValueFrom', $v1);
+        $t2->setReturnReference('getFieldValueTo',   $v2);
+        
+        $c = new MockTracker_Artifact_Changeset_Null();
+        
+        $a = new MockTracker_Artifact();
+        $a->setReturnValue('getLastChangeset', $c);
+        
+        $workflow_id = 1;
+        $tracker_id  = 2;
+        $field_id    = 103;
+        $is_used     = 1;
+        $transitions = array($t1, $t2);
+        $workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
+        
+        $workflow->setField($f);
+        $workflow->setArtifact($a);
+        
+        $fields_data = array(
+            '103' => '801',
+        );
+        $t1->expectOnce('before');
+        $t2->expectNever('before', array($fields_data, $current_user));
+        $workflow->before($fields_data, $current_user);
     }
 
 }

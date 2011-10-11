@@ -345,7 +345,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     /**
      * Format a timestamp into Y-m-d format
      */
-    protected function formatDate($date) {
+    public function formatDate($date) {
         return format_date("Y-m-d", (float)$date, '');
     }
     

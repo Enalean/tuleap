@@ -37,6 +37,7 @@ global	off	Désactivé
 global	any	Tous
 global	none	Aucun
 global	none_dashed	-- Aucun --
+global	please_choose_dashed	-- Sélectionner
 global	begin	Début
 global	end	Fin
 global	next	Suivant

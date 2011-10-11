@@ -2699,15 +2699,13 @@
         <section id="TrackerV5WorkflowOverview">
             <title>Définition</title>
             <para>
-             La puissance des outils de suivi de &SYS_PRODUCT_NAME; se trouve renforcée avec le
-             gestionnaire de workflow. Il permet de définir un workflow sur n'importe quel
-             outil de suivi.
-            </para>
-            <para>
             Un workflow peut vous aider à contôler le cycle de vie d'un artefact, vous assurer
             que vos équipes suivent les méthodologies appliquées dans votre
             entreprise (CMMi, etc.).
             </para>
+	    <para>
+	    Vous pouvez définir un Workflow chaque outil de suivi de façon indépendante.
+	    </para>
             <para>
             Pour le moment, un workflow ne peut porter que sur un seul champ.
             Ce dernier doit être un champ de type "Liste de Choix".
@@ -2716,6 +2714,15 @@
         </section>
         <section id="TrackerV5WorkflowAdd">
             <title>Ajouter un workflow à un outil de suivi</title>
+	    <figure id="TrackerV5ManageWorkflowScreen">
+	      <title>Ecran de définition d'un workflow</title>
+	      <mediaobject>
+		<imageobject>
+		  <imagedata format="PNG"
+			     fileref="../../screenshots/fr_FR/sc_manage_workflow.png" width="15.3cm" />
+		</imageobject>
+	      </mediaobject>
+	    </figure>
              <itemizedlist>
                 <listitem>
                     <para><emphasis role="bold">Première étape</emphasis>:
@@ -2739,26 +2746,26 @@
                     Dans l'exemple fourni par la <xref linkend="TrackerV5ManageWorkflowScreen" />, 
                     plusieurs transitions ont été définies
                     Par exemple, à la soumission d'un artefact, définie par l'état
-                    "(new artifact)", la seule valeur disponible pour le champ "Status"
+                    "(New Artifact)", la seule valeur disponible pour le champ "Status"
                     sera "New".
                     Quand le statut sera à "New", les seules valeurs disponibles seront
                     "Unconfirmed", "Verified" et "Closed".
                     </para>
-                    <figure id="TrackerV5ManageWorkflowScreen">
-                        <title>Ecran de définition d'un workflow</title>
-                        <mediaobject>
-                            <imageobject>
-                                <imagedata format="PNG"
-                                fileref="../../screenshots/fr_FR/sc_manage_workflow.png" width="15.3cm" />
-                            </imageobject>
-                        </mediaobject>
-                    </figure>
                 </listitem>
              </itemizedlist>
         </section>
         
         <section id="TrackerV5WorkflowPostFunctions">
             <title>Définir des règles sur les transitions</title>
+	    <figure id="TrackerV5FigureTrackerWorkflowTransitionsPermissions">
+	      <title>Permissions sur les transitions du workflow</title>
+	      <mediaobject>
+		<imageobject>
+		  <imagedata format="PNG"
+			     fileref="../../screenshots/fr_FR/sc_manage_workflow_transitions.png" width="15.3cm" />
+		</imageobject>
+	      </mediaobject>
+	    </figure>
             <section id="TrackerV5WorkflowTransitionsUgroup">
                 <title>Groupes autorisés à effectuer la transition</title>
                 <para>
@@ -2768,16 +2775,12 @@
                 d'utilisateurs que vous autorisez à effectuer la transition.
                  transition (voir la <xref linkend="TrackerV5FigureTrackerWorkflowTransitionsPermissions" />).
                 </para>
-                <figure id="TrackerV5FigureTrackerWorkflowTransitionsPermissions">
-                 <title>Permissions sur les transitions du workflow</title>
-                    <mediaobject>
-                      <imageobject>
-                        <imagedata format="PNG"
-                          fileref="../../screenshots/fr_FR/sc_manage_workflow_transitions.png" width="15.3cm" />
-                      </imageobject>
-                    </mediaobject>
-                </figure>
             </section>
+	    <section id="TrackerV5WorkflowTransitionsPostActions">
+	      <title>Actions post-transition</title>
+	      <para>Vous pouvez définir une liste d'actions qui seront exécutées à la fin de la transition. Pour le moment, les actions possibles concernent les champs de type date. Vous pouvez mettre à jour automatiquement un champ avec la date courante ou, au contraire, y supprimer la valeur.</para>
+	      <para>Cette fonctionnalité peut-être mise en œuvre pour positionner automatiquement une date de cloture lorsqu'un artefact passe de "Résolu" à "Fermé". De la même façon, vous pouvez supprimer la valeur du champ "date de cloture" lorsque l'artefact passe de "Fermé" à "Ré-ouvert".</para>
+	    </section>
         </section>
     </section>
     
