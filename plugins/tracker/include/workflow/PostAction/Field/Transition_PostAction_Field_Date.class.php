@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2011. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -60,17 +60,21 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     }
     
     /**
-     * @return string The shortname of the post action
+     * Get the shortname of the post action
+     *
+     * @return string
      */
     public function getShortName() {
         return 'field_date';
     }
     
     /**
-     * @return string The label of the post action
+     * Get the label of the post action
+     *
+     * @return string
      */
     public static function getLabel() {
-        return $GLOBALS['Language']->getText('workflow_admin','post_action_change_value_date_field');
+        return $GLOBALS['Language']->getText('workflow_admin', 'post_action_change_value_date_field');
     }
     
     /**
@@ -113,8 +117,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $html = '';
 
         //define the selectbox for value_type
-        $select_value_type = '<select name="workflow_postaction_field_date_value_type['.$this->id.']">';
-	if ($this->value_type !== self::CLEAR_DATE && $this->value_type !== self::FILL_CURRENT_TIME) {
+        $select_value_type = '<select name="workflow_postaction_field_date_value_type['. $this->id .']">';
+        if ($this->value_type !== self::CLEAR_DATE && $this->value_type !== self::FILL_CURRENT_TIME) {
             $select_value_type .= '<option value="0" '. ($this->value_type == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
         }
         // clear
@@ -151,7 +155,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $select_field .= $options_field;
         $select_field .= '</select>';
 
-        $html .= $GLOBALS['Language']->getText('workflow_admin','change_value_date_field_to', array($select_field, $select_value_type));
+        $html .= $GLOBALS['Language']->getText('workflow_admin', 'change_value_date_field_to', array($select_field, $select_value_type));
         
         return $html;
     }
@@ -159,7 +163,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     /**
      * Update/Delete action
      *
-     * @param Codendi_Request $request
+     * @param Codendi_Request $request The user's request
      *
      * @return void
      */
@@ -200,7 +204,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     /**
      * Execute actions before transition happens
      * 
-     * @param Array $fields_data Request field data (array[field_id] => data)
+     * @param Array &$fields_data Request field data (array[field_id] => data)
      * @param User  $current_user The user who are performing the update
      * 
      * @return void
@@ -236,6 +240,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     }
     
     /**
+     * Wrapper for Tracker_FormElementFactory
+     *
      * @return Tracker_FormElementFactory
      */
     protected function getFormElementFactory() {

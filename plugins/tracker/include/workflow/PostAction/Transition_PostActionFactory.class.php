@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2011. All Rights Reserved.
  *
  * This file is a part of Tuleap.

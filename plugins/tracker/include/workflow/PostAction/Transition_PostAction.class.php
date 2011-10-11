@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * Copyright (c) Enalean, 2011. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -56,12 +56,13 @@ abstract class Transition_PostAction {
     
     /**
      * Log feedback to be displayed to the user
-     * @see Response::addFeedback()
      * 
      * @param string $level    One of info|warning|error
      * @param string $pagename The primary key for BaseLanguage::getText()
      * @param string $category The secondary key for BaseLanguage::getText()
      * @param string $args     The args for BaseLanguage::getText()
+     *
+     * @see Response::addFeedback()
      *
      * @return void
      */
