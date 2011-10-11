@@ -1,7 +1,7 @@
 Feature:
     In order to spent less time in my SLA tracker
     As a core team member
-    I want to not have to fill in the Close Date field when I close an artifact
+    I want the Close Date field automatically set when I close an artifact
     
     Background:
       Given the tracker has a field 'Status' with two values 'Open' and 'Closed'
