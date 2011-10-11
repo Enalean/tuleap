@@ -45,80 +45,99 @@ class WorkflowTest extends UnitTestCase {
         $this->assertNotNull($workflow->getTransitions());
         $this->assertEqual(count($workflow->getTransitions()),0);
         
-        $field_value_new = array('id' => 2066,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'New',
-                                                           'description' => 'The bug has been submitted',
-                                                           'rank' => '10');
-        $field_value_analyzed = array('id' => 2067,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Analyzed',
-                                                           'description' => 'The bug is analyzed',
-                                                           'rank' => '20');
+        $field_value_new = new MockTracker_FormElement_Field_List_Value();
+        $field_value_new->setReturnValue('getId', 2066);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'New',
+        //'description' => 'The bug has been submitted',
+        //'rank' => '10');
+
+        
+        $field_value_analyzed = new MockTracker_FormElement_Field_List_Value();
+        $field_value_analyzed->setReturnValue('getId', 2067);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Analyzed',
+        //'description' => 'The bug is analyzed',
+        //'rank' => '20');
+        
         // workflow is empty, no transition exists
         $this->assertFalse($workflow->isTransitionExist($field_value_new, $field_value_analyzed));
         $this->assertFalse($workflow->hasTransitions());
     }
     
     public function testUseCaseBug() {
-        $field_value_new = array('id' => 2066,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'New',
-                                                           'description' => 'The bug has been submitted',
-                                                           'rank' => '10');
-        $field_value_analyzed = array('id' => 2067,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Analyzed',
-                                                           'description' => 'The bug is analyzed',
-                                                           'rank' => '20');
-        $field_value_accepted = array('id' => 2068,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Accepted',
-                                                           'description' => 'The bug is accepted',
-                                                           'rank' => '30');
-        $field_value_rejected = array('id' => 2069,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Rejected',
-                                                           'description' => 'The bug is rejected',
-                                                           'rank' => '40');
-        $field_value_fixed = array('id' => 2070,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Fixed',
-                                                           'description' => 'The bug was resolved',
-                                                           'rank' => '50');
-        $field_value_tested = array('id' => 2071,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Tested',
-                                                           'description' => 'The bug is tested',
-                                                           'rank' => '60');
-        $field_value_deployed = array('id' => 2072,
-                                                           'old_id' => null,
-                                                           'field_id' => 2707,
-                                                           'value' => 'Deployed',
-                                                           'description' => 'The bug is deployed',
-                                                           'rank' => '70');
+        $field_value_new = new MockTracker_FormElement_Field_List_Value();
+        $field_value_new->setReturnValue('getId', 2066);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'New',
+        //'description' => 'The bug has been submitted',
+        //'rank' => '10');
         
-        $t_new_analyzed = new Transition (1, 2, $field_value_new, $field_value_analyzed);
+        $field_value_analyzed = new MockTracker_FormElement_Field_List_Value();
+        $field_value_analyzed->setReturnValue('getId', 2067);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Analyzed',
+        //'description' => 'The bug is analyzed',
+        //'rank' => '20');
+        
+        $field_value_accepted = new MockTracker_FormElement_Field_List_Value();
+        $field_value_accepted->setReturnValue('getId', 2068);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Accepted',
+        //'description' => 'The bug is accepted',
+        //'rank' => '30');
+        
+        $field_value_rejected = new MockTracker_FormElement_Field_List_Value();
+        $field_value_rejected->setReturnValue('getId', 2069);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Rejected',
+        //'description' => 'The bug is rejected',
+        //'rank' => '40');
+        
+        $field_value_fixed = new MockTracker_FormElement_Field_List_Value();
+        $field_value_fixed->setReturnValue('getId', 2070);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Fixed',
+        //'description' => 'The bug was resolved',
+        //'rank' => '50');
+        
+        $field_value_tested = new MockTracker_FormElement_Field_List_Value();
+        $field_value_tested->setReturnValue('getId', 2071);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Tested',
+        //'description' => 'The bug is tested',
+        //'rank' => '60');
+        
+        $field_value_deployed = new MockTracker_FormElement_Field_List_Value();
+        $field_value_deployed->setReturnValue('getId', 2072);
+        //'old_id' => null,
+        //'field_id' => 2707,
+        //'value' => 'Deployed',
+        //'description' => 'The bug is deployed',
+        //'rank' => '70');
+                                                           
+        
+        $t_new_analyzed      = new Transition (1, 2, $field_value_new, $field_value_analyzed);
         $t_analyzed_accepted = new Transition (1, 2, $field_value_analyzed, $field_value_accepted);
-        $t_analyzed_rejected = new Transition (1,  2, $field_value_analyzed, $field_value_rejected);
-        $t_accepted_fixed = new Transition (1,  2, $field_value_accepted, $field_value_fixed);
-        $t_fixed_tested = new Transition (1,  2, $field_value_fixed, $field_value_tested);
-        $t_tested_deployed = new Transition (1,  2, $field_value_tested, $field_value_deployed);
+        $t_analyzed_rejected = new Transition (1, 2, $field_value_analyzed, $field_value_rejected);
+        $t_accepted_fixed    = new Transition (1, 2, $field_value_accepted, $field_value_fixed);
+        $t_fixed_tested      = new Transition (1, 2, $field_value_fixed, $field_value_tested);
+        $t_tested_deployed   = new Transition (1, 2, $field_value_tested, $field_value_deployed);
         
-        $transitions= array($t_new_analyzed, 
-                                                 $t_analyzed_accepted,
-                                                 $t_analyzed_rejected,
-                                                 $t_accepted_fixed, 
-                                                 $t_fixed_tested, 
-                                                 $t_tested_deployed);
+        $transitions = array($t_new_analyzed, 
+            $t_analyzed_accepted,
+            $t_analyzed_rejected,
+            $t_accepted_fixed, 
+            $t_fixed_tested, 
+            $t_tested_deployed);
         
         $workflow=new Workflow(1, 2, 3, 1, $transitions);
         

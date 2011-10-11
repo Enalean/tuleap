@@ -87,11 +87,28 @@ class Transition {
     }
     
     /**
-     * 
-     * @param Transition $transition
+     * Says if this transition is equals to another transtion
+     *
+     * @param Transition $transition The transition to compare
+     *
+     * @return bool
      */
     public function equals(Transition $transition) {
-        return $transition->getFieldValueFrom() === $this->from && $transition->getFieldValueTo() === $this->to;
+        $source_from = $this->getFieldValueFrom();
+        $source_to   = $this->getFieldValueTo();
+        $target_from = $transition->getFieldValueFrom();
+        $target_to   = $transition->getFieldValueTo();
+        
+        return is_null($source_from) && is_null($target_from) && is_null($source_to) && is_null($target_to)
+                
+            || is_null($source_from) && is_null($target_from) && !is_null($source_to) && !is_null($target_to) 
+                && $source_to->getId() === $target_to->getId()
+                
+            || !is_null($source_from) && !is_null($target_from) && is_null($source_to) && is_null($target_to) 
+                && $source_from->getId() === $target_from->getId()
+                
+            || !is_null($source_from) && !is_null($target_from) && !is_null($source_to) && !is_null($target_to) 
+                && $source_from->getId() === $target_from->getId() && $source_to->getId() === $target_to->getId();
     }
     
     public function getTransitionId() {
