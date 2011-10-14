@@ -24,19 +24,16 @@
 require_once(dirname(__FILE__).'/../include/LDAP_UserManager.class.php');
 
 Mock::generatePartial('LDAP_UserManager', 'LDAP_UserManagerGenerateLogin', array('getLoginFromString', 'userNameIsAvailable'));
-if (!class_exists('MockInhLDAP')) {
-    // Need a fake mock just to make the type checking happy
-    Mock::generatePartial('LDAP', 'MockInhLDAP', array('search'));
-}
+Mock::generate('LDAP');
+Mock::generate('LDAP_UserDao');
+Mock::generate('User');
+Mock::generate('BackendSVN');
+Mock::generate('SystemEventManager');
 
 class LDAP_UserManagerTest extends UnitTestCase {
-    
-    function __construct($name = 'LDAP_UserManager test') {
-        parent::__construct($name);
-    }
-    
+
     function testGetLoginFromString() {
-        $ldap = new MockInhLDAP($this);
+        $ldap = new MockLDAP($this);
         $lum = new LDAP_UserManager($ldap);
         
         $this->assertEqual($lum->getLoginFromString('coincoin'), 'coincoin');
@@ -91,6 +88,75 @@ class LDAP_UserManagerTest extends UnitTestCase {
         $lum->setReturnValueAt(1, 'userNameIsAvailable', true);
         
         $this->assertEqual($lum->generateLogin('john'), 'john2');
+    }
+    
+    function testUpdateLdapUidShouldPrepareRenameOfUserInTheWholePlatform() {
+        // Parameters
+        $user = new MockUser();
+        $user->setReturnValue('getId', 105);
+        $ldap_uid = 'johndoe';
+        
+        $lum  = TestHelper::getPartialMock('LDAP_UserManager', array('getDao', 'getBackendSVN'));
+        
+        $dao = new MockLDAP_UserDao();
+        $dao->expectOnce('updateLdapUid', array(105, $ldap_uid));
+        $dao->setReturnValue('updateLdapUid', true);
+        $lum->setReturnValue('getDao', $dao);
+        
+        $this->assertTrue($lum->updateLdapUid($user, $ldap_uid));
+        $this->assertEqual($lum->getUsersToRename(), array($user));
+    }
+    
+    function testTriggerRenameOfUsersShouldUpdateSVNAccessFileOfProjectWhereTheUserIsMember() {
+        // Parameters
+        $user = new MockUser();
+        $user->setReturnValue('getId', 105);
+        
+        $lum  = TestHelper::getPartialMock('LDAP_UserManager', array('getSystemEventManager'));
+        
+        $sem = new MockSystemEventManager();
+        $sem->expectOnce('createEvent', array('PLUGIN_LDAP_UPDATE_LOGIN',
+                                              '105',
+                                              SystemEvent::PRIORITY_MEDIUM));
+        $lum->setReturnValue('getSystemEventManager', $sem);
+        
+        $lum->addUserToRename($user);
+        
+        $lum->triggerRenameOfUsers();
+    }
+    
+    function testTriggerRenameOfUsersWithSeveralUsers() {
+        // Parameters
+        $user1 = new MockUser();
+        $user1->setReturnValue('getId', 101);
+        $user2 = new MockUser();
+        $user2->setReturnValue('getId', 102);
+        $user3 = new MockUser();
+        $user3->setReturnValue('getId', 103);
+        
+        $lum  = TestHelper::getPartialMock('LDAP_UserManager', array('getSystemEventManager'));
+        
+        $sem = new MockSystemEventManager();
+        $sem->expectOnce('createEvent', array('PLUGIN_LDAP_UPDATE_LOGIN',
+                                              '101'.SystemEvent::PARAMETER_SEPARATOR.'102'.SystemEvent::PARAMETER_SEPARATOR.'103',
+                                              SystemEvent::PRIORITY_MEDIUM));
+        $lum->setReturnValue('getSystemEventManager', $sem);
+        
+        $lum->addUserToRename($user1);
+        $lum->addUserToRename($user2);
+        $lum->addUserToRename($user3);
+        
+        $lum->triggerRenameOfUsers();
+    }
+    
+    function testTriggerRenameOfUsersWithoutUser() {
+        $lum = TestHelper::getPartialMock('LDAP_UserManager', array('getSystemEventManager'));
+        
+        $sem = new MockSystemEventManager();
+        $sem->expectNever('createEvent');
+        $lum->setReturnValue('getSystemEventManager', $sem);
+        
+        $lum->triggerRenameOfUsers();
     }
 }
 ?>

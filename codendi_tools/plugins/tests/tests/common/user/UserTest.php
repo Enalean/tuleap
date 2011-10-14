@@ -16,6 +16,8 @@ require_once('common/dao/UserPreferencesDao.class.php');
 Mock::generate('UserPreferencesDao');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
+require_once('common/dao/UGroupDao.class.php');
+Mock::generate('UGroupDao');
 
 // {{{ Setup stuff for "recent" things management
 abstract class FakeRecent implements Recent_Element_Interface {
@@ -375,6 +377,19 @@ class UserTest extends UnitTestCase {
         $this->assertEqual($history[4]['id'], 1);
         $this->assertEqual($history[5]['id'], 3);
         $this->assertEqual($history[6]['id'], 4);
+    }
+    
+    function testGetAllProjectShouldListOnlyOneOccurenceOfEachProject() {
+        $user = TestHelper::getPartialMock('User', array('getProjects', 'getUGroupDao'));
+        
+        $user->setReturnValue('getProjects', array(101, 103));
+        
+        $dar = TestHelper::arrayToDar(array('group_id' => 102), array('group_id' => 103), array('group_id' => 104));
+        $dao = new MockUGroupDao();
+        $dao->setReturnValue('searchGroupByUserId', $dar);
+        $user->setReturnValue('getUGroupDao', $dao);
+        
+        $this->assertEqual(array(102, 103, 104, 101), $user->getAllProjects());
     }
 }
 ?>

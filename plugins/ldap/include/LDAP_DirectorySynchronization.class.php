@@ -53,6 +53,7 @@ class LDAP_DirectorySynchronization {
             while($row = db_fetch_array($res)) {
                 $this->ldapSync($row);
             }
+            $this->getLdapUserManager()->triggerRenameOfUsers();
         } else {
             echo "DB error: ".db_error($res).PHP_EOL;
         }
@@ -84,8 +85,7 @@ class LDAP_DirectorySynchronization {
                 $modified = $userSync->sync($user, $lr);
 
                 if ($row['ldap_uid'] != $lr->getLogin()) {
-                    echo "Update LUM ".$user->getName().PHP_EOL;
-                    $this->getLdapUserManager()->updateLdapUid($user->getId(), $lr->getLogin());
+                    $this->getLdapUserManager()->updateLdapUid($user, $lr->getLogin());
                 }
             } elseif (count($lri) == 0) {
                 // User not found in LDAP directory
@@ -95,7 +95,6 @@ class LDAP_DirectorySynchronization {
             }
 
             if ($modified) {
-                echo "Update ".$user->getName().PHP_EOL;
                 $this->getUserManager()->updateDb($user);
             }
         }

@@ -25,17 +25,29 @@ require_once 'LDAP_UserDao.class.php';
 require_once 'LDAP.class.php';
 require_once 'LDAP_UserSync.class.php';
 require_once 'common/user/UserManager.class.php';
+require_once 'common/system_event/SystemEventManager.class.php';
+require_once 'system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
 
 /**
  * Manage interaction between an LDAP group and Codendi user_group.
  */
 class LDAP_UserManager {
+    const EVENT_UPDATE_LOGIN = 'PLUGIN_LDAP_UPDATE_LOGIN';
+    
     /**
      * @type LDAP
      */
     private $ldap;
 
-    private $ldapResultCache;
+    /**
+     * @var Array of LDAPResult
+     */
+    private $ldapResultCache = array();
+
+    /**
+     * @var Array of User
+     */
+    private $usersLoginChanged = array();
 
     /**
      * Constructor
@@ -44,7 +56,6 @@ class LDAP_UserManager {
      */
     function __construct(LDAP $ldap) {
         $this->ldap = $ldap;
-        $this->ldapResultCache = array();
     }
 
     /**
@@ -286,20 +297,66 @@ class LDAP_UserManager {
 
         // Perform DB update
         $userUpdated = $this->getUserManager()->updateDb($user);
-        $ldapUpdated = $this->updateLdapUid($user->getId(), $lr->getLogin());
+        
+        $ldapUpdated = true;
+        $user_id    = $this->getLdapLoginFromUserIds(array($user->getId()))->getRow();
+        if ($user_id['ldap_uid'] != $lr->getLogin()) {
+            $ldapUpdated = $this->updateLdapUid($user, $lr->getLogin());
+            $this->triggerRenameOfUsers();
+        }
+        
         return ($userUpdated || $ldapUpdated);
     }
 
     /**
      * Store new LDAP login in database
      * 
-     * @param Integer $userId  User id
-     * @param String  $ldapUid User LDAP login
+     * Force update of SVNAccessFile in project the user belongs to as 
+     * project member or user group member
+     * 
+     * @param User    $user    The user to update 
+     * @param String  $ldapUid New LDAP login
      * 
      * @return Boolean
      */
-    function updateLdapUid($userId, $ldapUid) {
-        return $this->getDao()->updateLdapUid($userId, $ldapUid);
+    function updateLdapUid(User $user, $ldapUid) {
+        if ($this->getDao()->updateLdapUid($user->getId(), $ldapUid)) {
+            $this->addUserToRename($user);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the list of users whom LDAP uid changed
+     * 
+     * @return Array of User
+     */
+    public function getUsersToRename() {
+        return $this->usersLoginChanged;
+    }
+
+    /**
+     * Add a user whom login changed to the rename pipe
+     * 
+     * @param User $user A user to rename
+     */
+    public function addUserToRename(User $user) {
+        $this->usersLoginChanged[] = $user;
+    }
+
+    /**
+     * Create PLUGIN_LDAP_UPDATE_LOGIN event if there are user login updates pending
+     */
+    public function triggerRenameOfUsers() {
+        if (count($this->usersLoginChanged)) {
+            $userIds = array();
+            foreach ($this->usersLoginChanged as $user) {
+                $userIds[] = $user->getId();
+            }
+            $sem = $this->getSystemEventManager();
+            $sem->createEvent(self::EVENT_UPDATE_LOGIN, implode(SystemEvent::PARAMETER_SEPARATOR, $userIds), SystemEvent::PRIORITY_MEDIUM);
+        }
     }
 
     /**
@@ -330,6 +387,16 @@ class LDAP_UserManager {
     protected function getUserManager()
     {
         return UserManager::instance();
+    }
+    
+    /**
+     * Wrapper for SystemEventManager object
+     *
+     * @return SystemEventManager
+     */
+    protected function getSystemEventManager()
+    {
+        return SystemEventManager::instance();
     }
 }
 

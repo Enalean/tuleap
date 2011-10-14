@@ -111,6 +111,10 @@ class LdapPlugin extends Plugin {
 
         // Daily codendi job
         $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
+        
+        // SystemEvent
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
+        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
     }
     
     /**
@@ -831,6 +835,19 @@ class LdapPlugin extends Plugin {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap());
             $ldapQuery->syncAll();
+        }
+    }
+    
+    public function system_event_get_types($params) {
+        $params['types'][] = 'PLUGIN_LDAP_UPDATE_LOGIN';
+    }
+    
+    public function get_system_event_class($params) {
+        switch($params['type']) {
+            case 'PLUGIN_LDAP_UPDATE_LOGIN' :
+                include_once dirname(__FILE__).'/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
+                $params['class'] = 'SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN';
+                break;
         }
     }
 }

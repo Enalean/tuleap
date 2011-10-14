@@ -385,47 +385,41 @@ class BackendSVN extends Backend {
     }
 
     /**
-     * return all projects that a given member belongs to 
-     * and also the projects that he is a member of its static ugroup
-     * 
-     * @param User $user
-     * @return Array
-     */
-    public function getAllProjects($user) {
-        $projects = array();
-        
-        $uGroupDao = $this->getUGroupDao();
-        $dar = $uGroupDao->searchGroupByUserId($user->getId());
-        foreach ($dar as $row) {
-            $projects[] =$row['group_id'];
-        }
-        $projects = array_merge($projects, $user->getProjects());
-        return $projects;
-    }
-
-    /**
      * Update SVN access files into all projects that a given user belongs to
+     * 
+     * It includes:
+     * + projects the user is member of 
+     * + projects that have user groups that contains the user
      * 
      * @param User $user
      * 
      * @return Boolean
      */
     public function updateSVNAccessForGivenMember($user) {
-        $projects = $this->getAllProjects($user); 
-    
+        $projects = $user->getAllProjects(); 
         if (isset($projects)) {
             foreach ($projects as $groupId) {
                 $project = $this->getProjectManager()->getProject($groupId);
-                if ($this->repositoryExists($project)) {
-                    if (!$this->updateSVNAccess($groupId)) {
-                        return false;
-                    }
-                }
+                $this->updateProjectSVNAccessFile($project);
             }
         }
         return true;
     }
-  
+
+    /**
+     * Update SVNAccessFile of a project
+     * 
+     * @param Project $project The project to update
+     * 
+     * @return Boolean
+     */
+    public function updateProjectSVNAccessFile(Project $project) {
+        if ($this->repositoryExists($project)) {
+            return $this->updateSVNAccess($project->getID());
+        }
+        return true;
+    }
+
     /**
      * Force apache conf update
      *

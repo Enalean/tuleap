@@ -772,6 +772,31 @@ class User {
         return $projects;
     }
 
+    /**
+     * Return all projects that a given member belongs to 
+     * and also the projects that he is a member of its static ugroup
+     * 
+     * @return Array of Integer
+     */
+    public function getAllProjects() {
+        $projects = array();
+        $dar      = $this->getUGroupDao()->searchGroupByUserId($this->user_id);
+        foreach ($dar as $row) {
+            $projects[] = $row['group_id'];
+        }
+        $projects = array_unique(array_merge($projects, $this->getProjects()));
+        return $projects;
+    }
+
+    /**
+     * Wrapper for UGroupDao
+     * 
+     * @return UGroupDao
+     */
+    protected function getUGroupDao() {
+        return new UGroupDao();
+    }
+    
     //
     // Setters
     //

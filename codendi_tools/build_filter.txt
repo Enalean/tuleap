@@ -1,6 +1,0 @@
-.svn
-cvstodimensions
-svntodimensions
-serverupdate
-build_filter.txt
-migration_from_*

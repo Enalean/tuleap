@@ -62,7 +62,7 @@ class LDAP_UserSync {
      */
     public function getSyncAttributes($ldap) {
         //Define the default sync attributes
-        $this->attributes = array($ldap->getLDAPParam('cn'), $ldap->getLDAPParam('mail'));
+        $this->attributes = array($ldap->getLDAPParam('cn'), $ldap->getLDAPParam('mail'), $ldap->getLDAPParam('uid'));
         return $this->attributes;
     }
 

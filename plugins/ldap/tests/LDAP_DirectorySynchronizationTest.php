@@ -54,10 +54,6 @@ class MyUmMock4Suspended extends MockUserManager {
 
 class LDAP_DirectorySynchronizationTest extends UnitTestCase {
 
-    function __construct($name = 'LDAP_DirectorySynchronization test') {
-        parent::__construct($name);
-    }
-
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getContent', dirname(__FILE__).'/empty.txt');
@@ -149,6 +145,10 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
     }
 
     function testUserLdapUidUpdateIfLdapDoesntMatch() {
+        $row = array('user_id'  => '4321',
+                     'ldap_id'  => 'ed1234',
+                     'ldap_uid' => 'oula la'
+                     );
         $sync = new LDAP_DirectorySynchronizationTestVersion($this);
 
         $res = new MockLDAPResult($this);
@@ -172,7 +172,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $sync->setReturnValue('getUserManager', $um);
 
         $lum = new MockLDAP_UserManager($this);
-        $lum->expectOnce('updateLdapUid', array('4321', 'mis_1234'));
+        $lum->expectOnce('updateLdapUid', array(new User($row), 'mis_1234'));
         $sync->setReturnValue('getLdapUserManager', $lum);
 
         $lus = new MockLDAP_UserSync($this);
@@ -180,10 +180,6 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $lus->expectOnce('sync');
         $sync->setReturnValue('getLdapUserSync', $lus);
 
-        $row = array('user_id'  => '4321',
-                     'ldap_id'  => 'ed1234',
-                     'ldap_uid' => 'oula la'
-                     );
         $sync->ldapSync($row);
     }
 

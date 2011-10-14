@@ -1,3 +1,7 @@
+Version 3.6 (Tuleap 4.0.23 - Not released yet)
+    == Bug Fix ==
+    * backlog #185: Propagate LDAP login changes in SVNAccessFile
+    
 Version 3.5 (Tuleap 4.0.22)
     == Bug Fix ==
     * Add CSRF countermeasures

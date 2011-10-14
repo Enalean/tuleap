@@ -57,10 +57,6 @@ Mock::generatePartial('BackendSVN', 'BackendSVNAccessTestVersion', array('update
                                                                         ));
                                                                    
 class BackendSVNTest extends UnitTestCase {
-    
-    function __construct($name = 'BackendSVN test') {
-        parent::__construct($name);
-    }
 
     function setUp() {
         $GLOBALS['svn_prefix']                = dirname(__FILE__) . '/_fixtures/svnroot';
@@ -363,7 +359,7 @@ class BackendSVNTest extends UnitTestCase {
         $project2->setReturnValue('getId', 101);
        
         $projects =  array(102, 101);
-        $backend->setReturnValue('getAllProjects', $projects);
+        $user->setReturnValue('getAllProjects', $projects);
          
         $pm = new MockProjectManager();
         $backend->setReturnValue('getProjectManager', $pm);
