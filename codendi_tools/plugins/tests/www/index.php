@@ -18,13 +18,13 @@ function display_tests($tests, $categ, $params) {
         if ($categ !== "_tests") {
             echo '<li class="categ">';
             echo '<input type="hidden"   name="'. $prefixe .'[_do_all]" value="0" />';
-            echo '<input type="checkbox" name="'. $prefixe .'[_do_all]" value="1" '. ($params['checked'] && isset($params['checked'][$categ]['_do_all']) && $params['checked'][$categ]['_do_all'] ? 'checked="checked"' : '') .' />';
+            echo '<input type="checkbox" name="'. $prefixe .'[_do_all]" value="1" '. ($params['checked'] && $params['checked'][$categ]['_do_all'] ? 'checked="checked"' : '') .' />';
             echo '<b>'. $categ .'</b>';
             echo '<ul>';
         }
         
         foreach($tests as $c => $t) {
-            display_tests($t, $c, array('is_cat' => ($categ !== "_tests"), 'prefixe' => $prefixe, 'checked' => ($params['checked'] && $categ !== "_tests" && isset($params['checked'][$categ]) ? $params['checked'][$categ] : $params['checked'])));
+            display_tests($t, $c, array('is_cat' => ($categ !== "_tests"), 'prefixe' => $prefixe, 'checked' => ($params['checked'] && $categ !== "_tests" ? $params['checked'][$categ] : $params['checked'])));
         }
         
         if ($categ !== "_tests") {
@@ -34,7 +34,7 @@ function display_tests($tests, $categ, $params) {
     } else {
         echo '<li>';
         echo '<input type="hidden"   name="'. $prefixe .'['. $tests .']" value="0" />';
-        echo '<input type="checkbox" name="'. $prefixe .'['. $tests .']" value="1" '. ($params['checked'] && isset($params['checked'][$tests]) && $params['checked'][$tests] ? 'checked="checked"' : '') .' />';
+        echo '<input type="checkbox" name="'. $prefixe .'['. $tests .']" value="1" '. ($params['checked'] && $params['checked'][$tests] ? 'checked="checked"' : '') .' />';
         echo $tests;
         echo '</li>';
     }
