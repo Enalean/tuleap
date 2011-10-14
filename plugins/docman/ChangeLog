@@ -1,3 +1,6 @@
+Version 2.15
+    Do not display [remove] button on a wiki page if it is referenced in the docman
+
 Version 2.14
     'Paste' action should not appear in popup menu for the same cut item or for one of its subfolders.
 

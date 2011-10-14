@@ -251,7 +251,7 @@ class Event {
      * Parameters:
      *   'project' => The project
      *
-     * Expected result
+     * Expected result:
      *   'areas'   => array of string(html)
      */
     const SERVICE_PUBLIC_AREAS = 'service_public_areas';
@@ -265,9 +265,22 @@ class Event {
      *   'group_id'  => the group_id
      *   'val'       => the val of the cross ref
      *
-     * Expected result
+     * Expected result:
      *   'sparkline' => The url to the sparkline image
      */
     const AJAX_REFERENCE_SPARKLINE = 'ajax_reference_sparkline';
+    
+    /**
+     * Say if we can display a [remove] button on a given wiki page
+     *  
+     * Parameters:
+     *   'group_id'  => The project id
+     *   'wiki_page' => The wiki page
+     *   
+     * Expected result:
+     *   'display_remove_button' => boolean, true if ok false otherwise
+     */
+    const WIKI_DISPLAY_REMOVE_BUTTON = 'wiki_display_remove_button';
+
 }
 ?>

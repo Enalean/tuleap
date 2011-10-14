@@ -2,6 +2,28 @@
 //apd_set_pprof_trace(); 
 define('PHPWIKI_NOMAIN', true);
 
+/**
+ * Say if we can display the remove button on a wiki page
+ * 
+ * The wiki page may be driven by another item in the forge (eg a docman document),
+ * therefore wiki administrator shouldn't be able to remove the page.
+ * 
+ * @return bool
+ */
+function display_remove_button($pagename) {
+    $display_remove_button = true;
+    $em = EventManager::instance();
+    $em->processEvent(
+        Event::WIKI_DISPLAY_REMOVE_BUTTON, 
+        array(
+            'display_remove_button' => &$display_remove_button,
+            'group_id'              => GROUP_ID,
+            'wiki_page'             => $pagename,
+        )
+    );
+    return $display_remove_button;
+}
+
 function codendi_main () {
     if ( !USE_DB_SESSION )
         validateSessionPath();

@@ -48,6 +48,9 @@ class Docman_WikiController extends Docman_Controller {
             case 'wiki_page_updated':
                 $this->wikiPageUpdated();
                 break;
+            case 'wiki_display_remove_button':
+                $this->wiki_display_remove_button();
+                break;
             case 'wiki_before_content':
                 $this->wiki_before_content();
             case 'check_whether_wiki_page_is_referenced':
@@ -196,6 +199,14 @@ class Docman_WikiController extends Docman_Controller {
         return $this->viewsManagement();
     }
 
+    function wiki_display_remove_button() {
+        $wiki_page = $this->request->get('wiki_page');
+        $group_id  = $this->request->get('group_id');
+        $item_dao  = $this->_getItemDao();
+        if ($item_dao->isWikiPageReferenced($wiki_page, $group_id)) {
+            $this->request->set('display_remove_button', false);
+        }
+    }
     function wiki_before_content() {
         $wiki_page = $this->request->get('wiki_page');
         $group_id = $this->request->get('group_id');

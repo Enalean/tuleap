@@ -65,6 +65,7 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('default_widgets_for_new_owner',     'default_widgets_for_new_owner',     false);
         $this->_addHook('wiki_page_updated',                 'wiki_page_updated',                 false);
         $this->_addHook('wiki_before_content',               'wiki_before_content',               false);
+        $this->_addHook(Event::WIKI_DISPLAY_REMOVE_BUTTON,   'wiki_display_remove_button',        false);
         $this->_addHook('isWikiPageReferenced',              'isWikiPageReferenced',              false);
         $this->_addHook('isWikiPageEditable',                'isWikiPageEditable',                false);
         $this->_addHook('userCanAccessWikiDocument',         'userCanAccessWikiDocument',         false);
@@ -328,6 +329,13 @@ class DocmanPlugin extends Plugin {
     function wiki_before_content($params) {
         require_once('Docman_WikiRequest.class.php');
         $params['action'] = 'wiki_before_content';
+        $request = new Docman_WikiRequest($params);
+        $this->getWikiController($request)->process(); 
+    }
+    
+    function wiki_display_remove_button($params) {
+        require_once('Docman_WikiRequest.class.php');
+        $params['action'] = 'wiki_display_remove_button';
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process(); 
     }

@@ -22,7 +22,7 @@ rcs_id('$Id: actionbar.tmpl,v 1.36 2005/04/23 11:43:44 rurban Exp $');
       <?=$SEP?><?= Button('chown') ?>
       <?=$SEP?><?= Button('setacl') ?>
     <?php }} ?>
-    <?php if ($user->isAdmin() or mayAccessPage('remove', $page->getName())) { ?>
+    <?php if (display_remove_button($page->getName()) && ($user->isAdmin() or mayAccessPage('remove', $page->getName()))) { ?>
       <?=$SEP?><?= Button('revert',_("Revert"), $revision->isCurrent() ? $page->GetRevisionBefore() : $revision) ?>
       <?=$SEP?><?= Button('remove') ?>
     <?php } ?>
