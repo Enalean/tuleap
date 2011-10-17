@@ -3,6 +3,7 @@ Version 4.0.23 (Not  released yet)
     * Fix regression on file download with IE and https.
     * Fix regression on tracker mail header (X-Codendi-Project)
     * Do not display [remove] button on a wiki page if it is referenced in the docman
+    * Fix issue when there is no sparkline
     
     == Plugins ==
     * Hudson v1.4. See separated Changelog
