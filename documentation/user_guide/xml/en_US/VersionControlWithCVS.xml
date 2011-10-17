@@ -361,7 +361,7 @@
     clients. The CVS Web interface can be accessed via the
     &#34;CVS&#34; item in the Project Main Menu or via the CVS service
     listed in the Public Area (see <xref
-    linkend="FigureASampleProjectSummaryPage" />). The Codendi CVS Web
+    linkend="FigureASampleProjectSummaryPage" />). The CVS Web
     interface provides the following features:</para>
 
     <itemizedlist mark="bullet" spacing="compact">
@@ -542,7 +542,7 @@
       </listitem>
 
       <listitem>
-        <para>The &SYS_PRODUCT_NAME; reference mechanism allows cross-referencing with any &SYS_PRODUCT_NAME; object: artifacts, documents, files, etc.  Please refer to <xref linkend="ReferenceOverview" /> for more details on Codendi references.</para>
+        <para>The &SYS_PRODUCT_NAME; reference mechanism allows cross-referencing with any &SYS_PRODUCT_NAME; object: artifacts, documents, files, etc.  Please refer to <xref linkend="ReferenceOverview" /> for more details on References.</para>
       </listitem>
    </itemizedlist>
 

@@ -381,8 +381,8 @@
     <para>The Subversion Web interface can be accessed via the
     &#34;Subversion&#34; item in the Project Main Menu or via the
     Subversion service listed in the Public Area (see <xref
-    linkend="FigureASampleProjectSummaryPage" />). The Codendi
-    Subversion Web interface provides the following features to &SYS_PRODUCT_NAME;
+    linkend="FigureASampleProjectSummaryPage" />). The
+    Subversion Web interface provides the following features to 
     end-users:</para>
 
     <itemizedlist mark="bullet">
@@ -565,7 +565,7 @@
 	</listitem>
 
         <listitem>
-        <para>The &SYS_PRODUCT_NAME; reference mechanism allows cross-referencing with any &SYS_PRODUCT_NAME; object: artifacts, documents, files, etc.  Please refer to <xref linkend="ReferenceOverview" /> for more details on Codendi references.</para>
+        <para>The &SYS_PRODUCT_NAME; reference mechanism allows cross-referencing with any &SYS_PRODUCT_NAME; object: artifacts, documents, files, etc.  Please refer to <xref linkend="ReferenceOverview" /> for more details on References.</para>
         </listitem>
       </itemizedlist>
 

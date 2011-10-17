@@ -695,7 +695,7 @@
       <title>CC List</title>
 
       <para>As explained later in this chapter (see <xref
-	  linkend="TrackerEmailNotification" />) the Codendi Tracker offers
+	  linkend="TrackerEmailNotification" />) Tracker offers
       a powerful email notification system for those users who, at
       some point, were involved in the life of the artifact whether as
       a submitter, an assignee or as a person who posted a follow-up
@@ -800,7 +800,7 @@
 
       <para>The next section on the artifact update screen deals with
       artifact dependencies (see <xref
-	  linkend="FigureArtifactDependencies" />). Codendi users have the
+	  linkend="FigureArtifactDependencies" />). Users have the
       ability to establish a dependency link from an artifact to one
       or several other artifacts belonging to any of the tracker of
       any &SYS_PRODUCT_NAME; project. This is made possible by the fact that
@@ -847,7 +847,7 @@
 
       <para>In addition to the rather formal way of expressing a
       dependency between two artifacts presented in
-      <xref linkend="ArtifactDependencies"/>, Codendi offers the ability to
+      <xref linkend="ArtifactDependencies"/>, &SYS_PRODUCT_NAME; offers the ability to
       cross-reference any artifact, or any other &SYS_PRODUCT_NAME; object from within a follow-up
       comment.</para>
 
@@ -864,7 +864,7 @@
 
       <para>&SYS_PRODUCT_NAME; reference patterns may be used to reference artifacts, as well as source
       code commits, documents, files, etc. Please refer to 
-      <xref linkend="ReferenceOverview" /> for more details on Codendi references.</para>
+      <xref linkend="ReferenceOverview" /> for more details on References.</para>
 
       <para>Furthemore references concerning artifacts, svn revisions and
        cvs commits are stored in the database. They are displayed in the next section, ordered 
@@ -3339,7 +3339,7 @@ width="14.5cm" />
       <title>Email Notification Settings</title>
 
       <para>As explained earlier in <xref
-	  linkend="TrackerEmailNotification" /> the Codendi Tracker comes
+	  linkend="TrackerEmailNotification" /> Tracker comes
       with a predefined set of rules to keep relevant people aware of
       the artifact life. The default rules can however be complemented
       or tuned in a number of ways:</para>
