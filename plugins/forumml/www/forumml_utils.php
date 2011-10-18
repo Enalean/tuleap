@@ -442,7 +442,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache) {
 
     // Is "ready to display" body already in cache or not
     $bodyIsCached = false;
-    if (isset($msg['cached_html']) && !$purgeCache) {
+    if (!empty($msg['cached_html']) && !$purgeCache) {
         $bodyIsCached = true;
     }
 
@@ -504,6 +504,10 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache) {
                 if ($first) {
                     if (!$bodyIsCached && is_file($attachment['file_path'])) {
                         $body = file_get_contents($attachment['file_path']);
+                        // Make sure that the body is utf8
+                        if (!mb_detect_encoding($body, 'UTF-8', true)) {
+                            $body = mb_convert_encoding($body, 'UTF-8');
+                        }
                         $is_html = true;
                     }
                     continue;
