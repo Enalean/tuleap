@@ -11,8 +11,6 @@
 "file:/usr/local/docbook-dtd/docbookx.dtd"
 [
 <!ENTITY % ParametersDefault SYSTEM "../ParametersDefault.dtd">
-<!ENTITY % ParametersLocal SYSTEM "/etc/codendi/documentation/cli/xml/ParametersLocal.dtd">
-%ParametersLocal;
 %ParametersDefault;
 
 <!-- Entities for inclusion of document chapters -->
@@ -30,8 +28,6 @@ an entity cannot be redefined. Hence this particular order  -->
 
 <book>
   <title>&SYS_PRODUCT_NAME; Command Line Interface (CLI) documentation</title>
-
-  <subtitle><emphasis role="bold">&SYS_DEFAULT_DOMAIN;</emphasis></subtitle>
 
   &BookInfo;
 
