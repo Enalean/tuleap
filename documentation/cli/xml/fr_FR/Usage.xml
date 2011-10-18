@@ -89,6 +89,8 @@
     
     <para><note>NOTE : les caractères accentués ne sont pas supportés dans le client en ligne de commande.</note></para>
 
+    <para><note>NOTE : une étoile (*) après l'argument d'une commande star signifie que cet argument est obligatoire. Par exemple 'getArtifacts --tracker_id*' signifie que la commande getArtifacts doit avoir un paramètre --tracker_id pour fonctionner correctement.</note></para>
+
   </chapter>
 <!--
 Local Variables:

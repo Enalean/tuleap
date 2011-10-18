@@ -1133,7 +1133,19 @@ File retrieved successfully.
     
     <section id="FRSFunctions">
         <title>File Release System functions</title>
-        
+        <para>File release system can return standard error codes:
+	  <itemizedlist mark="bullet">
+	    <listitem>
+	      <para>'invalid_package_fault' (code '3017'): the package doesn't exist</para>
+	    </listitem>
+	    <listitem>
+	      <para>'invalid_release_fault' (code '3018'): the release doesn't exist</para>
+	    </listitem>
+	    <listitem>
+	      <para>'invalid_file_fault' (code '3019'): the file doesn't exist</para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
         <section id="FRSFunctionGetPackages">
             <title>getPackages</title>
             <para>getPackages: Display a list of available packages for a project
@@ -1176,6 +1188,10 @@ File retrieved successfully.
                         <para>--rank: rank of the new package that will be created. By default, set to 0.
                         </para>
                     </listitem>
+		    <listitem>
+                        <para>--approve_license: whether the package should ask for a license approval on file download. By default, set to 1 (ask approval).
+			</para>
+		    </listitem>
                     <listitem>
                         <para>--project: UNIX name of the project you want to add the package in. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
@@ -1313,6 +1329,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionAddFile">
             <title>addFile</title>
+	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to upload files bigger than 2GB (2^32-1 bits) when both CLI and remote server are running on top of 64 bits machines. If you ever need to release a big file in another case (client machine or server in 32 bits) you should use FTP for file upload and --uploaded_file option.</para>
             <para>addFile: Add a file to the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1381,6 +1398,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionGetFile">
             <title>getFile</title>
+	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to download files bigger than 2GB (2^32-1 bits) when both CLI and remote server are running on top of 64 bits machines.</para>
             <para>getFile: Get the content of a file in the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1412,6 +1430,7 @@ File retrieved successfully.
 File retrieved successfully.
                         </programlisting>
                     </example>
+		    <note>Note: no error returned, the file is downloaded successfully.</note>
                </para>
             </para>
         </section>
@@ -1475,6 +1494,7 @@ File retrieved successfully.
 +--------+
                         </programlisting>
                     </example>
+		    <note>Return code (1) means the deletion succeeded. Otherwise server throw an error.</note>
                </para>
             </para>
         </section>
@@ -1654,13 +1674,14 @@ File retrieved successfully.
 		
 		<section id="DocmanFunctionCreateFile">
             <title>createFile</title>
+	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to upload files bigger than 2GB (2^32-1 bits) when both CLI and remote server are running on top of 64 bits machines.</para>
             <para>createFile: Add a document file to the document manager
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--parent_id*: ID of the parent the file will be created in
                         </para>
                     </listitem>
-					<listitem>
+		    <listitem>
                         <para>--project*:Name of the project the item belongs to. If you specified the name of
                             the working project when you logged in, this parameter is not needed.
                         </para>

@@ -1186,7 +1186,19 @@ File retrieved successfully.
 
         <section id="FRSFunctions">
         <title>Fonctions du système de gestion des fichiers</title>
-        
+	<para>Les commandes ci-après peuvent retourner les codes d'erreur suivants:
+	  <itemizedlist mark="bullet">
+	    <listitem>
+	      <para>'invalid_package_fault' (code '3017'): le paquet n'existe pas</para>
+	    </listitem>
+	    <listitem>
+	      <para>'invalid_release_fault' (code '3018'): la version n'existe pas</para>
+	    </listitem>
+	    <listitem>
+	      <para>'invalid_file_fault' (code '3019'): le fichier n'existe pas</para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
         <section id="FRSFunctionGetPackages">
             <title>getPackages</title>
             <para>getPackages: Affiche une liste des paquets disponibles pour un projet
@@ -1229,6 +1241,10 @@ File retrieved successfully.
                         <para>--rank: ordre d'affichage du paquet. Par défaut (si non spécifié), le rang est 0.
                         </para>
                     </listitem>
+		    <listitem>
+                        <para>--approve_license: détermine le package doit demander l'approbation d'un license lors du téléchargement. Par défaut, lavaleur est 1 (demande approbation).
+			</para>
+		    </listitem>
                     <listitem>
                         <para>--project: nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
@@ -1366,6 +1382,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionAddFile">
             <title>addFile</title>
+	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut ajouter des fichiers supérieurs à 2Go (2^32-1 octets) lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits. Dans les autres cas, pour ajouter des fichiers &gt; à 2Go, il faut utiliser FTP pour le transfert et l'option --uploaded_file.</para>
             <para>addFile: Ajoute un fichier au système de gestion des fichiers
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1434,6 +1451,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionGetFile">
             <title>getFile</title>
+	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut télécharger des fichiers supérieurs à 2Go (2^32-1 octets) lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits.</para>
             <para>getFile: Retourne le contenu du fichier
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1465,6 +1483,7 @@ File retrieved successfully.
 File retrieved successfully.
                         </programlisting>
                     </example>
+		    <note>Note : si aucune erreur n'est retournée, le fichier est correctement téléchargé.</note>
                </para>
             </para>
         </section>
@@ -1528,6 +1547,7 @@ File retrieved successfully.
 +--------+
                         </programlisting>
                     </example>
+		    <note>Note : la valeur retournée 1 indique que la suppression a été effectuée. Dans tous les autres cas, une erreur est retournée.</note>
                </para>
             </para>
         </section>
@@ -1704,6 +1724,7 @@ File retrieved successfully.
 		
 		<section id="DocmanFunctionCreateFile">
             <title>createFile</title>
+	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut ajouter des fichiers supérieurs à 2Go (2^32-1 octets) lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits.</para>
             <para>createFile: Ajoute un fichier au gestionnaire de documents
                 <itemizedlist mark="bullet">
                     <listitem>
