@@ -1329,7 +1329,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionAddFile">
             <title>addFile</title>
-	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to upload files bigger than 2GB (2^32-1 bits) when both CLI and remote server are running on top of 64 bits machines. If you ever need to release a big file in another case (client machine or server in 32 bits) you should use FTP for file upload and --uploaded_file option.</para>
+	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to upload files bigger than 2GB when both CLI and remote server are running on top of 64 bits machines. If you ever need to release a big file in another case (client machine or server in 32 bits) you should use FTP for file upload and --uploaded_file option.</para>
             <para>addFile: Add a file to the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1398,7 +1398,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionGetFile">
             <title>getFile</title>
-	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to download files bigger than 2GB (2^32-1 bits) when both CLI and remote server are running on top of 64 bits machines.</para>
+	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to download files bigger than 2GB when both CLI and remote server are running on top of 64 bits machines.</para>
             <para>getFile: Get the content of a file in the File Release System
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1674,7 +1674,7 @@ File retrieved successfully.
 		
 		<section id="DocmanFunctionCreateFile">
             <title>createFile</title>
-	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to upload files bigger than 2GB (2^32-1 bits) when both CLI and remote server are running on top of 64 bits machines.</para>
+	    <para><emphasis role="bold">Big file support:</emphasis> CLI is able to upload files bigger than 2GB when both CLI and remote server are running on top of 64 bits machines.</para>
             <para>createFile: Add a document file to the document manager
                 <itemizedlist mark="bullet">
                     <listitem>

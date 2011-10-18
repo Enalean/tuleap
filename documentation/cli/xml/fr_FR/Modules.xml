@@ -1242,7 +1242,7 @@ File retrieved successfully.
                         </para>
                     </listitem>
 		    <listitem>
-                        <para>--approve_license: détermine le package doit demander l'approbation d'un license lors du téléchargement. Par défaut, lavaleur est 1 (demande approbation).
+                        <para>--approve_license: Si positionné à '1', l'utilisateur final devra approuver une license avant de pouvoir télécharger les fichiers. Sinon, le téléchargement s'effectue directement. Par défaut, la valeur est 1.
 			</para>
 		    </listitem>
                     <listitem>
@@ -1382,7 +1382,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionAddFile">
             <title>addFile</title>
-	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut ajouter des fichiers supérieurs à 2Go (2^32-1 octets) lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits. Dans les autres cas, pour ajouter des fichiers &gt; à 2Go, il faut utiliser FTP pour le transfert et l'option --uploaded_file.</para>
+	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut ajouter des fichiers supérieurs à 2Go lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits. Dans les autres cas, pour ajouter des fichiers &gt; à 2Go, il faut utiliser FTP pour le transfert et l'option --uploaded_file.</para>
             <para>addFile: Ajoute un fichier au système de gestion des fichiers
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1451,7 +1451,7 @@ File retrieved successfully.
         
         <section id="FRSFunctionGetFile">
             <title>getFile</title>
-	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut télécharger des fichiers supérieurs à 2Go (2^32-1 octets) lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits.</para>
+	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut télécharger des fichiers supérieurs à 2Go lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits.</para>
             <para>getFile: Retourne le contenu du fichier
                 <itemizedlist mark="bullet">
                     <listitem>
@@ -1724,7 +1724,7 @@ File retrieved successfully.
 		
 		<section id="DocmanFunctionCreateFile">
             <title>createFile</title>
-	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut ajouter des fichiers supérieurs à 2Go (2^32-1 octets) lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits.</para>
+	    <para><emphasis role="bold">Support des gros fichiers:</emphasis> CLI peut ajouter des fichiers supérieurs à 2Go lorsque que la machine cliente (qui exécute CLI) et le serveur sont des machines 64 bits.</para>
             <para>createFile: Ajoute un fichier au gestionnaire de documents
                 <itemizedlist mark="bullet">
                     <listitem>
