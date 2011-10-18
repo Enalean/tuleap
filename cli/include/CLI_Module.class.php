@@ -97,9 +97,10 @@ class CLI_Module {
             if (preg_match("/^\\-\\-(.+)/s",$parameter_array[$i],$res)) {    // several-character parameter? (IE, "--username=john")
                 $passed_string = $res[1];
                 // is it --parameter=value or just --parameter?
-                if (preg_match("/(.+)=(.+)/s", $passed_string, $res)) {
-                    $passed_parameter = $res[1];
-                    $passed_value = $res[2];
+                $res = preg_split("/=(.+)/", $passed_string, -1, PREG_SPLIT_DELIM_CAPTURE);
+                if (isset($res[1])) {
+                    $passed_parameter = $res[0];
+                    $passed_value = $res[1];
                     $has_value = true;
                 } else {
                     $passed_parameter = $passed_string;

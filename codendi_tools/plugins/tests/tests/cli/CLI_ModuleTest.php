@@ -20,7 +20,7 @@ class CLI_ModuleTest extends UnitTestCase {
     }
     
     function test_get_parameter() {
-        $params = explode(' ', '-v --name=john -l doe -abc');
+        $params = explode(' ', '-v --name=john -l doe -abc --content=/tracker/?group_id=1');
         $m =& new CLI_Module('name', 'description');
         $this->assertFalse($m->getParameter($params, 'version'));
         $this->assertTrue($m->getParameter($params, 'v'));
@@ -29,6 +29,7 @@ class CLI_ModuleTest extends UnitTestCase {
         $this->assertTrue($m->getParameter($params, 'c'));
         $this->assertEqual($m->getParameter($params, array('n', 'name'), true), 'john');
         $this->assertEqual($m->getParameter($params, array('l', 'lastname'), true), 'doe');
+        $this->assertEqual($m->getParameter($params, 'content', true), '/tracker/?group_id=1');
     }
     
     function testExecute() {

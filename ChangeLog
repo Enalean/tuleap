@@ -4,6 +4,7 @@ Version 4.0.23 (Not  released yet)
     * Fix regression on tracker mail header (X-Codendi-Project)
     * Do not display [remove] button on a wiki page if it is referenced in the docman
     * Fix issue when there is no sparkline
+    * Fix bug on CLI parameters when the param value contains '='
     
     == Plugins ==
     * Hudson v1.4. See separated Changelog
