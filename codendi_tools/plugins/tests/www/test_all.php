@@ -31,13 +31,18 @@ function add_test_to_group($test, $categ, $params) {
 /**/
 
 // Usage:
-//  -r  Randomize the order of execution
+//  -i  Invert the order of execution
 //
-$options = getopt('r');
+$options = getopt('ir');
 $g = get_group_tests($GLOBALS['tests']);
-if (isset($options['r'])) {
-    shuffle($random);
-    $g = new TestSuite("All Tests (Random)");
+if (isset($options['r']) || isset($options['i'])) {
+    if (isset($options['r'])) {
+        shuffle($random);
+        $g = new TestSuite("All Tests (random order)");
+    } else f (isset($options['i'])) {
+        rsort($random);
+        $g = new TestSuite("All Tests (invert order)");
+    }
     foreach($random as $file) {
         $g->addTestFile($file);
     }

@@ -1401,8 +1401,6 @@ class Artifact extends Error {
      * @return boolean
      */
     function addDependencies($artifact_id_dependent,&$changes,$masschange, $import = false) {
-        global $Language;
-        
         if ( !$artifact_id_dependent ) 
             return true;
         
@@ -1419,9 +1417,9 @@ class Artifact extends Error {
             if (!$this->validArtifact($id)) {
                 
                 // at import stage, $id can have value "None" or "Aucun"
-                if ( ! $import || $id != $Language->getText('global','none')) {
+                if ( ! $import || $id != $GLOBALS['Language']->getText('global','none')) {
                     $ok = false;
-                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','invalid_art',$id));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact','invalid_art',$id));
                 }
             }            
             if ($ok && ($id != $this->getID()) && !$this->existDependency($id)) {
@@ -1431,7 +1429,7 @@ class Artifact extends Error {
         }
         
         if (!$ok) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','depend_add_fail',$this->getID()));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact','depend_add_fail',$this->getID()));
         } else {
             $changes['Dependencies']['add'] = $artifact_id_dependent;
         }

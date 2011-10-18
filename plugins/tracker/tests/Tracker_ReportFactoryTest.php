@@ -27,7 +27,13 @@ Mock::generate('Tracker_Report_CriteriaFactory');
 require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_Report_RendererFactory.class.php');
 Mock::generate('Tracker_Report_RendererFactory');
 
-class Tracker_ReportFactoryTest extends UnitTestCase {
+class Tracker_ReportFactoryTest extends TuleapTestCase {
+
+    public function tearDown() {
+        foreach ($_SESSION as $key => $nop) {
+            unset($_SESSION[$key]);
+        }
+    }
 
     //testing CannedResponse import
     public function testImport() {

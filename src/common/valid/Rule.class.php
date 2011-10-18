@@ -21,6 +21,7 @@
  */
 
 require_once('common/system_event/SystemEventManager.class.php');
+require_once('common/project/ProjectManager.class.php');
 /**
  * @package Codendi
  */

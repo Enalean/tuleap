@@ -22,7 +22,7 @@ require_once('common/session/Codendi_Session.class.php');
 
 class Codendi_SessionTest extends UnitTestCase {
 
-    public function setUp() {               
+    public function setUp() {
         $this->codendi_session = new Codendi_Session();
         $_SESSION['Codendi_SessionTest'] = array();
         $this->codendi_session->setSessionNamespace($_SESSION['Codendi_SessionTest']);

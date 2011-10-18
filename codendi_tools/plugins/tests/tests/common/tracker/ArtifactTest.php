@@ -1,7 +1,5 @@
 <?php
 
-require_once ('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
 require_once('common/include/Error.class.php');
 require_once('common/tracker/Artifact.class.php');
 
@@ -16,9 +14,6 @@ Mock::generate('ReferenceManager');
 require_once('common/tracker/ArtifactType.class.php');
 Mock::generate('ArtifactType');
 
-require_once('common/include/Response.class.php');
-Mock::generate('Response');
-
 require_once('common/include/Codendi_HTMLPurifier.class.php');
 Mock::generate('Codendi_HTMLPurifier');
 
@@ -31,17 +26,8 @@ require_once('www/include/utils.php');
  *
  * Tests the class Artifact
  */
-class ArtifactTest extends UnitTestCase {
+class ArtifactTest extends TuleapTestCase {
 
-
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
-        unset($art_field_fact);
-    }
 
     function testAddDependenciesSimple() {
         $a =& new ArtifactTestVersion($this);
@@ -53,7 +39,6 @@ class ArtifactTest extends UnitTestCase {
     }
 
     function testAddWrongDependency() {
-        $GLOBALS['Response'] = new MockResponse();
         $a =& new ArtifactTestVersion($this);
         $a->setReturnValue('insertDependency', true);
         $a->setReturnValue('validArtifact', false);
