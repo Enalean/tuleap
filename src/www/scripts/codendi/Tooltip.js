@@ -122,32 +122,34 @@ codendi.Tooltip.load = function (element) {
     });
     
     //load sparklines
-    new Ajax.Request('/sparklines.php', {
-        parameters: { 
-            'sparklines[]': $H(sparkline_hrefs).keys()
-        },
-        onSuccess: function (transport) {
-            if (transport.status == 200) {
-                $H(transport.responseJSON).each(function (element) {
-                    var href      = element[0];
-                    var sparkline = element[1];
-                    //add the sparkline to each link
-                    sparkline_hrefs[href].each(function(a) {
-                            a.insert({
-                                top: new Element('img', {
-                                    src: sparkline,
-                                    style: 'vertical-align: middle; padding-right: 2px;',
-                                    width: '10',
-                                    height: '10'
-                                })
-                            });
+    if ($H(sparkline_hrefs).size()) {
+        new Ajax.Request('/sparklines.php', {
+            parameters: { 
+                'sparklines[]': $H(sparkline_hrefs).keys()
+            },
+            onSuccess: function (transport) {
+                if (transport.status == 200) {
+                    $H(transport.responseJSON).each(function (element) {
+                        var href      = element[0];
+                        var sparkline = element[1];
+                        //add the sparkline to each link
+                        sparkline_hrefs[href].each(function(a) {
+                                a.insert({
+                                    top: new Element('img', {
+                                        src: sparkline,
+                                        style: 'vertical-align: middle; padding-right: 2px;',
+                                        width: '10',
+                                        height: '10'
+                                    })
+                                });
+                        });
                     });
-                });
-                
-                
+                    
+                    
+                }
             }
-        }
-    });
+        });
+    }
 };
 
 codendi.Tooltips = [];
