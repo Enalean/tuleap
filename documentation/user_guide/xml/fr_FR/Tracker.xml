@@ -922,7 +922,7 @@
 
       <para>En complément de la façon plutôt formelle d'exprimer une
       dépendence entre deux artefacts présentée dans la <xref
-      linkend="ArtifactDependencies"/>, Codendi permet de créer une
+      linkend="ArtifactDependencies"/>, &SYS_PRODUCT_NAME; permet de créer une
       référence sur n'importe quel artefact ou autre objet &SYS_PRODUCT_NAME; dans un commentaire.</para>
 
       <para>Lorsque vous tapez du text dans n'importe quel champ texte ou commentaire
@@ -945,7 +945,7 @@
 
       <para>Les patrons de référence de &SYS_PRODUCT_NAME; peuvent etre utilisees pour référencer des artifacts,
       mais aussi des commits CVS, des révision Subversion, des documents, des fichiers, etc. Voir la
-      <xref linkend="ReferenceOverview" /> pour plus d'information sur les références dans Codendi.</para>
+      <xref linkend="ReferenceOverview" /> pour plus d'information sur les Références.</para>
     
       <para>De plus les références vers les outils de suivi, les révision SVN et les 
       commits CVS sont stockées en base de données, et sont résumées dans la section suivante, 
@@ -1741,7 +1741,7 @@ width="14.5cm" />
     <section id="ScrumTemplate">
       <title>L'outil de suivi des besoins de la méthodologie Scrum (Scrum Backlog)</title>
 
-      <para>Codendi facilite le déploiement de la méthodologie Scrum en permettant
+      <para>&SYS_PRODUCT_NAME; facilite le déploiement de la méthodologie Scrum en permettant
       de gérer le "backlog Scrum" (cahier de suivi des besoin) dans un outil de
       suivi dédié. Vous pourrez trouver une description de la méthodologie sur
       <ulink url="http://fr.wikipedia.org/wiki/Scrum">Wikipedia</ulink>.</para>

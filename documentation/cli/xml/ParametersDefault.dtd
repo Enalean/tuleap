@@ -15,5 +15,5 @@ do not modify this file. Use the
 /etc/codendi/documentation/cli/xml/ParametersLocal.dtd file 
 instead and redefine your entities there. If this file doesn't exist create it.-->
 
-<!ENTITY SYS_PRODUCT_NAME "Codendi">
-<!ENTITY SYS_DEFAULT_DOMAIN "codendi.example.com">
+<!ENTITY SYS_PRODUCT_NAME "Tuleap">
+<!ENTITY SYS_DEFAULT_DOMAIN "tuleap.net">

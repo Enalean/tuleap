@@ -93,7 +93,7 @@
       #NNN" crée automatiquement un lien vers le document dont
       l'identifiant est NNN. L'identifiant d'un document est visible
       sur la page principale du gestionnaire de documents lorsqu'on
-      place la souris sur le titre. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des références dans Codendi.
+      place la souris sur le titre. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des Références.
     </para>
 
     </section>

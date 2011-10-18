@@ -84,7 +84,7 @@
     </para>
     
     <para><note>NOTE: the accentuated letters are not supported in the CLI.</note></para>
-
+    <para><note>NOTE: a star (*) near a command argument means the argument is mandatory. For instance getArtifacts --tracker_id* means you have to provides a --tracker_id parameter to getArtifacts command.</note></para>
   </chapter>
 <!--
 Local Variables:

@@ -461,7 +461,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/nomliste
                       <para>
                        <emphasis role="bold">Faire un lien (URL) :</emphasis>
                         le système détectera les URL si elles commencent par http://
-                        <para>Exemple : Vous pouvez aller voir sur http://www.codendi.com</para>
+                        <para>Exemple : Vous pouvez aller voir sur http://tuleap.net</para>
                       </para>
                      </listitem>
                      <listitem>

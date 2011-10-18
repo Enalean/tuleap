@@ -5,7 +5,9 @@ Version 4.0.23 (Not  released yet)
     * Do not display [remove] button on a wiki page if it is referenced in the docman
     * Fix issue when there is no sparkline
     * Fix bug on CLI parameters when the param value contains '='
-    
+    * Update documentation (fix typo and overuse of product name)
+    * Update CLI doc (document big file behaviour).
+
     == Plugins ==
     * Hudson v1.4. See separated Changelog
     * GraphOnTrackerV5 v0.2. See separated Changelog

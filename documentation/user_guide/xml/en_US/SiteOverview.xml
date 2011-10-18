@@ -395,7 +395,7 @@
         <para>The &#34;Site Documentation&#34; pointer is the entry point to the
         &SYS_PRODUCT_NAME; documentation. The &SYS_PRODUCT_NAME; documentation is entirely
         managed via the Document Manager (see <xref
-        linkend="DocumentManager" />) service of the Codendi project,
+        linkend="DocumentManager" />) service of the Administration project,
         which is of course hosted on &SYS_PRODUCT_NAME;. The documents on this page
         cover all the &SYS_PRODUCT_NAME; site. It includes presentation material,
         the user guide and other important documents. Read them

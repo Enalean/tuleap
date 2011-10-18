@@ -581,7 +581,7 @@
       </listitem>
 
       <listitem>
-	<para>Le mécanisme de références de &SYS_PRODUCT_NAME; permet les références croisées entre tous les objets de &SYS_PRODUCT_NAME;: artefacts, documents, messages de commit, fichiers, etc. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des références dans Codendi.</para>
+	<para>Le mécanisme de références de &SYS_PRODUCT_NAME; permet les références croisées entre tous les objets de &SYS_PRODUCT_NAME;: artefacts, documents, messages de commit, fichiers, etc. Voir la <xref linkend="ReferenceOverview" /> pour plus de détails sur la gestion des Références.</para>
       </listitem>
    </itemizedlist>
 

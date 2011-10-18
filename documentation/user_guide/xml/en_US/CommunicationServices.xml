@@ -417,7 +417,7 @@ http://&SYS_LISTS_HOST;/mailman/admin/listname
                       <para>
                        <emphasis role="bold">Write a hyperlink:</emphasis>
                         the system will detect hyperlinks if they are starting with http://
-                        <para>Example : You can read http://www.codendi.com and see what I mean</para>
+                        <para>Example : You can read http://tuleap.net and see what I mean</para>
                       </para>
                      </listitem>
                      <listitem>

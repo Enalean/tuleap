@@ -25,7 +25,7 @@ class CLI_ModuleFactory {
         $m = null;
         if ($this->exist($module)) {
             $className = $this->_getModuleClassName($module);
-            $m =& new $className();
+            $m = new $className();
         }
         return $m;
     }

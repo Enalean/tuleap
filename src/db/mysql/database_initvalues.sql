@@ -125,13 +125,13 @@ INSERT INTO group_desc SET \
 
 INSERT INTO groups SET \
   group_id = '1', \
-  group_name = 'Codendi Administration Project', \
+  group_name = 'Administration Project', \
   is_public = '1', \
   status = 'A', \
-  unix_group_name = 'codendi', \
+  unix_group_name = 'admin', \
   unix_box = 'shell1', \
-  http_domain = 'codendi._DOMAIN_NAME_', \
-  short_description = 'Codendi Administration Project', \
+  http_domain = 'admin._DOMAIN_NAME_', \
+  short_description = 'Administration Project', \
   cvs_box = 'cvs1', \
   svn_box = 'svn1', \
   license = 'cdi', \
@@ -210,7 +210,7 @@ INSERT INTO groups SET \
   unix_group_name = 'none', \
   unix_box = 'shell1', \
   http_domain = '', \
-  short_description = 'The default Codendi template', \
+  short_description = 'The default Tuleap template', \
   cvs_box = '', \
   svn_box = '', \
   license = '', \
@@ -424,7 +424,7 @@ INSERT INTO trove_cat VALUES (10, 2000040701, 6, 6, 'beta', '4 - Beta', 'Resourc
 INSERT INTO trove_cat VALUES (11, 2000040701, 6, 6, 'production', '5 - Production/Stable', 'Deliverables are complete and usable by the intended audience.', 0, 0, 'Development Status :: 5 - Production/Stable', '6 :: 11');
 INSERT INTO trove_cat VALUES (12, 2000040701, 6, 6, 'mature', '6 - Mature', 'This resource has an extensive history of successful use and has probably undergone several stable revisions.', 0, 0, 'Development Status :: 6 - Mature', '6 :: 12');
 INSERT INTO trove_cat VALUES (13, 2000031601, 0, 0, 'license', 'License', 'License terms under which the resource is distributed.', 0, 0, 'License', '13');
-INSERT INTO trove_cat VALUES (14, 2000111301, 13, 13, 'cdi', 'Codendi exchange Policy', 'The default Policy ruling the code sharing attitude.', 0, 0, 'License :: Codendi exchange Policy', '13 :: 14');
+INSERT INTO trove_cat VALUES (14, 2000111301, 13, 13, 'cdi', 'Tuleap exchange Policy', 'The default Policy ruling the code sharing attitude.', 0, 0, 'License :: Tuleap exchange Policy', '13 :: 14');
 INSERT INTO trove_cat VALUES (274, 2001061501, 154, 18, 'printservices', 'Print Services', 'XAC/DDA/Print Services Projects', 0, 0, 'Topic :: Printing :: Print Services', '18 :: 154 :: 274');
 INSERT INTO trove_cat VALUES (275, 2001062601, 160, 160, 'JSP', 'JSP', 'Java Server Pages: Sun\'s Java language embedded in HTML pages', 0, 0, 'Programming Language :: JSP', '160 :: 275');
 INSERT INTO trove_cat VALUES (18, 2000031601, 0, 0, 'topic', 'Topic', 'Topic categorization.', 0, 0, 'Topic', '18');
@@ -1837,7 +1837,7 @@ INSERT INTO snippet_type VALUES (7,'Macros');
 #
 
 INSERT INTO snippet_license VALUES (100,'None');
-INSERT INTO snippet_license VALUES (1,'Codendi exchange Policy');
+INSERT INTO snippet_license VALUES (1,'Tuleap exchange Policy');
 INSERT INTO snippet_license VALUES (2,'Other');
 
 
@@ -1888,9 +1888,9 @@ insert into service (service_id, group_id, label, description, short_name, link,
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (17, 100, 'service_wiki_lbl_key', 'service_wiki_desc_key', 'wiki', '/wiki/?group_id=$group_id', 1, 1, 'system', 105);
 
 -- Group 1
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (31, 1, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/codendi/', 1, 1, 'system', 10);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (31, 1, 'service_summary_lbl_key', 'service_summary_desc_key', 'summary', '/projects/admin/', 1, 1, 'system', 10);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (32, 1, 'service_admin_lbl_key', 'service_admin_desc_key', 'admin', '/project/admin/?group_id=1', 1, 1, 'system', 20);
-insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (33, 1, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://codendi._DOMAIN_NAME_', 1, 1, 'system', 30);
+insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (33, 1, 'service_homepage_lbl_key', 'service_homepage_desc_key', 'homepage', 'http://admin._DOMAIN_NAME_', 1, 1, 'system', 30);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (34, 1, 'service_forum_lbl_key', 'service_forum_desc_key', 'forum', '/forum/?group_id=1', 1, 1, 'system', 40);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (35, 1, 'service_mail_lbl_key', 'service_mail_desc_key', 'mail', '/mail/?group_id=1', 1, 1, 'system', 80);
 insert into service (service_id, group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES (36, 1, 'service_doc_lbl_key', 'service_doc_desc_key', 'doc', '/docman/?group_id=1', 0, 0, 'system', 100);
