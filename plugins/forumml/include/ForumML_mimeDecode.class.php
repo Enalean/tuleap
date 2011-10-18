@@ -23,6 +23,22 @@ require_once('Mail/mimeDecode.php');
 class ForumML_mimeDecode extends Mail_mimeDecode {
 
     /**
+     * Performs the decoding. Decodes the body string passed to it
+     * If it finds certain content-types it will call itself in a
+     * recursive fashion
+     *
+     * @param string Header section
+     * @param string Body section
+     *
+     * @return object Results of decoding process
+     */
+    function _decode($headers, $body, $default_ctype = 'text/plain') {
+        $struct = parent::_decode($headers, $body, $default_ctype);
+        $struct->raw = array('headers' => $headers, 'body' => $body);
+        return $struct;
+    }
+    
+    /**
      * Redfined here just to avoid breakage on isStatic test (first line).
      * It's just a copy/paste of parent's method
      */

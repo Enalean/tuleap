@@ -1,5 +1,8 @@
+Version 2.5
+    * Fix forumml drops forwarded emails
+
 Version 2.4
-	* Fix backlog #196: ForumML drops accents in messages coming from Outlook.
+    * Fix backlog #196: ForumML drops accents in messages coming from Outlook.
 
 Version 2.3
 

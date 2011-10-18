@@ -228,8 +228,14 @@ class ForumMLInsert {
      * @param ForumML_FileStorage $storage     Object that manage the file storage on FS
      */
     function storePart($messageId, $struct, $mailHeaders, $storage) {
+        $body = null;
         if (isset($struct->body) && trim($struct->body) != "") {
             $body = $struct->body;
+        } else if ($struct->ctype_primary == 'message' && $struct->ctype_secondary == 'rfc822') {
+            // this is an attached message (forward as attachment). Store it as is in attachments
+            $body = $struct->raw['body'];
+        }
+        if ($body) {
             $filetype = $struct->headers["content-type"];
             if ($struct->ctype_primary == 'text' && $struct->ctype_secondary == 'html') {
                 $filename = "message_".substr($mailHeaders["message-id"], 1, strpos($mailHeaders["message-id"], '@') - 1).".html";
@@ -258,7 +264,7 @@ class ForumMLInsert {
                 
             // store attachment in /var/lib/codendi/forumml/<listname>/<Y_M_D>
             $date  = date("Y_m_d",strtotime($mailHeaders["date"]));
-            $fpath = $storage->store($basename, $struct->body, $this->id_list, $date);
+            $fpath = $storage->store($basename, $body, $this->id_list, $date);
                 
             // insert attachment in the DB
             $this->insertAttachment($messageId, $basename, $filetype, $fpath, $content_id);	

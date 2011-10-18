@@ -214,6 +214,29 @@ class ForumML_InsertTest extends UnitTestCase {
         $i->storeEmail($structure, $storage);
     } 
 
+    /**
+     * Text only
+     */
+    function testInsertFWDemail() {
+        $structure = $this->getEmailStructure('forwarded_email.mbox');
+        
+        $storage = new MockForumML_FileStorage($this);
+        $storage->setReturnValue('store', '/a/b/c');
+
+        $i = new ForumMLInsertTest($this);
+        $i->setReturnValue('insertMessage', 2);
+
+        $txtBody='Some text
+
+';
+        $i->expectOnce('insertMessage', array('*', $txtBody, 'text/plain; charset=ISO-8859-1'));
+        $i->expectCallCount('insertAttachment', 2);
+        $i->expectAt(0, 'insertAttachment', array(2, 'include: _ FS.eml', 'message/rfc822; name="[gpig-events] [gpig]r18476 - in contrib/st/enhancement/115_webdav_docman_write_access/ plugins/webdav/include: _ FS.eml"', '/a/b/c', ''));
+        $i->expectAt(1, 'insertAttachment', array(2, 'attachment', 'text/plain; charset="us-ascii"', '/a/b/c', ''));
+
+        $i->storeEmail($structure, $storage);
+    }
+
 
 
 }
