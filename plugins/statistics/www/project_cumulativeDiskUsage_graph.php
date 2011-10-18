@@ -37,11 +37,6 @@ if ($request->valid($vGroupId)) {
     header('Location: '.get_server_url());
 }
 
-$user = UserManager::instance()->getCurrentUser();
-if ((!$project->isPublic() || $user->isRestricted()) && !$project->userIsMember($user)) {
-    header('Location: '.get_server_url());
-}
-
 $func = $request->getValidated('func', new Valid_WhiteList('usage', 'progress'), '');
 
 //Get dates for start and end period to watch statistics

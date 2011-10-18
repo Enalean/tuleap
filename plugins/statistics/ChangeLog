@@ -1,3 +1,6 @@
+Version 0.8
+    * For non project admins the graph in project statistics widget in project main page was not displayed
+
 Version 0.7
 	== Bug fix ==
 	* Fix sla #116: incoherent disk statistics. Reduce risk of incomplete data collection.
