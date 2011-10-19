@@ -1,3 +1,6 @@
+Version 1.9
+    * Fix issue when deleting a folder
+
 Version 1.8
 	* Refactor docman write support + fix bugs
 

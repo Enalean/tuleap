@@ -13,6 +13,7 @@
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
+require_once('common/include/CSRFSynchronizerToken.class.php');
 
 function format_html_row($row, &$row_num) {
     echo "<tr class=\"". util_get_alt_row_color($row_num++) ."\">\n";
@@ -39,12 +40,16 @@ $request = HTTPRequest::instance();
 
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 
+$csrf = new CSRFSynchronizerToken('/project/admin/ugroup.php');
+
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 
-if ($request->isPost() && $request->existAndNonEmpty('func')) {
+if ($request->existAndNonEmpty('func')) {
     $ugroup_id   = $request->getValidated('ugroup_id', 'UInt', 0);
+    
     switch($request->get('func')) {
         case 'delete':
+            $csrf->check();
             ugroup_delete($group_id, $ugroup_id);
             break;
         case 'do_update':
@@ -125,7 +130,8 @@ if ($group_id != 100) {
         } else {
             $ugroupRow[300] = array('value' => 0, 'html_attrs' => 'align="center"');
         }
-        $link = '?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=delete';
+        $token =  $csrf->getTokenName().'='.$csrf->getToken();
+        $link = '?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=delete&'.$token;
         $warn = $Language->getText('project_admin_ugroup','del_ug');
         $alt  = $Language->getText('project_admin_servicebar','del');
         $ugroupRow[400] = html_trash_link($link, $warn, $alt);

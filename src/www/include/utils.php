@@ -788,7 +788,11 @@ function util_cleanup_emails ($addresses) {
 // Clean up email address (remove spaces...) and add @... if it is a simple
 // login name
 function util_normalize_email ($address) {
-    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+    if (strpos(':', $GLOBALS['sys_default_domain']) === false) {
+        $host = $GLOBALS['sys_default_domain'];
+    } else {
+        list($host, $port) = explode(':', $GLOBALS['sys_default_domain']);
+    }
     $address = util_cleanup_emails($address);
     if (validate_email($address))
 	return $address;

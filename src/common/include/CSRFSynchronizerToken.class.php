@@ -141,6 +141,13 @@ class CSRFSynchronizerToken {
     }
     
     /**
+     * @return string The token name
+     */
+    public function getTokenName() {
+        return $this->token_name;
+    }
+    
+    /**
      * @return User
      */
     protected function getUser() {

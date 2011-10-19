@@ -295,7 +295,8 @@ CREATE TABLE plugin_docman_approval_user (
   comment TEXT NULL,
   version INT(11) UNSIGNED NULL,
   PRIMARY KEY(table_id, reviewer_id),
-  INDEX rank (rank)
+  INDEX rank (rank),
+  INDEX idx_reviewer (reviewer_id, table_id)
 );
 
 --

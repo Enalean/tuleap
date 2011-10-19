@@ -373,7 +373,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory {
             $params['group_id'] = $this->getProject()->getGroupId();
             $params['confirm']  = true;
             $params['id']       = $this->getItem()->getId();
-            $this->getUtils()->processRequest(new WebDAV_Request($params));
+            $this->getUtils()->processDocmanRequest(new WebDAV_Request($params));
         } else {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'file_denied_delete'));
         }

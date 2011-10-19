@@ -3088,7 +3088,7 @@ class Artifact extends Error {
                 $out_ch .= '<tr>';
                 $out_ch .= '  <td valign="top" nowrap="nowrap"><ul style="margin:0; padding:0; margin-left:1.5em; "><li><strong>'.$hp->purify(SimpleSanitizer::unsanitize($label)).':&nbsp;</strong></li></ul></td>';
                 $out_ch .= '  <td valign="top">';
-                if ($field->getDisplayType() == 'TA' || $field->getDisplayType() == 'TF') {
+                if ($field && ($field->getDisplayType() == 'TA' || $field->getDisplayType() == 'TF')) {
                     $before = explode("\n", $h['del']);
                     $after  = explode("\n", $h['add']);
                     $callback = array(Codendi_HTMLPurifier::instance(), 'purify');
@@ -3104,7 +3104,7 @@ class Artifact extends Error {
                 } else {
                     $before = '<del>'.$hp->purify($h['del']).'</del>';
                     $after  = '<ins>'.$hp->purify($h['add']).'</ins>';
-                    if ($field->getDisplayType() == 'MB') {
+                    if ($field && $field->getDisplayType() == 'MB') {
                         if (strlen($before) != 11) { //'<del></del>' => empty
                             $out_ch .= $before;
                         }
