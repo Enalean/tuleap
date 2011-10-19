@@ -39,7 +39,7 @@ if (isset($options['r']) || isset($options['i'])) {
     if (isset($options['r'])) {
         shuffle($random);
         $g = new TestSuite("All Tests (random order)");
-    } else f (isset($options['i'])) {
+    } else if (isset($options['i'])) {
         rsort($random);
         $g = new TestSuite("All Tests (invert order)");
     }
