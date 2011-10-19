@@ -155,6 +155,129 @@ class CodendiJUnitXMLReporter extends JUnitXMLReporter implements iCodeCoverageR
     }
 }
 
+/**
+ * ColorTextReporter
+ * Adapted from: http://code.sixapart.com/svn/movabletype/prunings/feature-php5-migration/php/extlib/simpletest/ColorTextReporter.php
+ */
+class ColorTextReporter extends SimpleReporter {
+
+    /**
+     *    Does nothing yet. The first output will
+     *    be sent on the first test start.
+     *    @access public
+     */
+    function ColorTextReporter() {
+        $this->SimpleReporter();
+    }
+
+    /**
+     *    Paints the title only.
+     *    @param string $test_name        Name class of test.
+     *    @access public
+     */
+    function paintHeader($test_name) {
+        if (! SimpleReporter::inCli()) {
+            header('Content-type: text/plain');
+        }
+        print "$test_name\n";
+        flush();
+    }
+
+    /**
+     *    Paints the end of the test with a summary of
+     *    the passes and failures.
+     *    @param string $test_name        Name class of test.
+     *    @access public
+     */
+    function paintFooter($test_name) {
+        if ($this->getFailCount() + $this->getExceptionCount() == 0) {
+            print "\n\033[37;1;42m        ALL OK        \033[0m\n";
+        } else {
+            print "\n\033[37;1;41m        FAILURES!!!        \033[0m\n";
+        }
+        print "Test cases run: " . $this->getTestCaseProgress() .
+                "/" . $this->getTestCaseCount() .
+                ", Passes: " . $this->getPassCount() .
+                ", Failures: " . $this->getFailCount() .
+                ", Exceptions: " . $this->getExceptionCount() . "\n";
+    }
+
+    protected $buffer = '';
+    
+    /**
+     *    Paints the test failure as a stack trace.
+     *    @param string $message    Failure message displayed in
+     *                              the context of the other tests.
+     *    @access public
+     */
+    function paintFail($message) {
+        parent::paintFail($message);
+        $this->buffer .= "\n\033[1;31m\t" . $this->getFailCount() . ") $message\033[0m\n";
+        $breadcrumb = $this->getTestList();
+        array_shift($breadcrumb);
+        $this->buffer .= "\tin " . implode("\n\tin ", array_reverse($breadcrumb));
+        $this->buffer .= "\n";
+    }
+
+    /**
+     *    Paints a PHP error or exception.
+     *    @param string $message        Message to be shown.
+     *    @access public
+     *    @abstract
+     */
+    function paintException($exception) {
+        parent::paintException($exception);
+        $breadcrumb = $this->getTestList();
+        array_shift($breadcrumb);
+        error_log("Exception: \n\033[1;31m\t" . $this->getExceptionCount() . ") ". $exception->getMessage() ."\033[0m\n". "\tin " . substr($exception->getTraceAsString(), 0, strpos($exception->getTraceAsString(), "\n")) ."\n");
+    }
+
+    /**
+     *    Paints formatted text such as dumped variables.
+     *    @param string $message        Text to show.
+     *    @access public
+     */
+    function paintFormattedMessage($message) {
+        print "$message\n";
+        flush();
+    }
+
+    function paintMethodStart($test_name)
+    {
+        //print "Start {$test_name} Test\n";
+        $this->buffer = '';
+        $this->before_fails = $this->_fails;
+    }
+
+    var $before_fails = 0;
+
+    function paintMethodEnd($test_name)
+    {
+        //print "End {$test_name} Test\n";
+        if ($this->before_fails != $this->_fails) {
+            if (!$this->buffer_case_displayed) {
+                echo $this->buffer_case;
+                $this->buffer_case_displayed = true;
+            }
+            print "  |--- {$test_name} - \033[1;31mKO\033[0m";
+            print $this->buffer;
+            print "\n";
+        } else {
+            //print " - \033[1;32mOK\033[0m";
+            //print "\n";
+        }
+    }
+
+    protected $buffer_case           = '';
+    protected $buffer_case_displayed = false;
+    function paintCaseStart($test_name)
+    {
+        $this->buffer_case           = "\n {$test_name}\n";
+        $this->buffer_case_displayed = false;
+        return parent::paintCaseStart($test_name);
+    }
+}
+
 class CodendiReporterFactory {
 
     public static function getCodeCoverage($enableCoverage = false) {
@@ -168,7 +291,7 @@ class CodendiReporterFactory {
         $coverage = self::getCodeCoverage($enableCoverage);
         switch ($type) {
             case "text":
-                return new TextReporter();
+                return new ColorTextReporter();
                 break;
             case "junit_xml":
                 return new CodendiJUnitXMLReporter($coverage);
