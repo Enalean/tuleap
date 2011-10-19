@@ -125,6 +125,8 @@ class GitPHP_Resource
 				return 'Français';
 			case 'de_DE':
 				return 'Deutsch';
+			case 'ja_JP':
+				return '日本語';
 			case 'ru_RU':
 				return 'Русский';
 			case 'zh_CN':
