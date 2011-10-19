@@ -10,6 +10,13 @@
  */
 
 /**
+ * Use utf-8 encoding
+ */
+if (function_exists('mb_internal_encoding')) {
+	mb_internal_encoding("UTF-8");
+}
+
+/**
  * Define start time / memory for benchmarking
  */
 define('GITPHP_START_TIME', microtime(true));
