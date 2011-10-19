@@ -471,7 +471,11 @@ class GitPHP_Commit extends GitPHP_GitObject
 			$this->ReadData();
 
 		if ($trim > 0) {
-			return mb_strimwidth($this->title, 0, $trim, '…');
+			if (function_exists('mb_strimwidth')) {
+				return mb_strimwidth($this->title, 0, $trim, '…');
+			} else if (strlen($this->title) > $trim) {
+				return substr($this->title, 0, $trim) . '…';
+			}
 		}
 
 		return $this->title;
