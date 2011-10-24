@@ -86,6 +86,18 @@ class Transition_PostActionFactory {
     }
     
     /**
+     * Delete post actions for the transition
+     *
+     * @param Transition $transition           On wich transition we should add the post action
+     * @param string     $requested_postaction The type of post action
+     *
+     * @return void
+     */
+    public function deletePostAction(Transition $transition) {
+        $this->getDao()->deletePostActionsByTransitionId($transition->transition_id);
+    }
+    
+    /**
      * Wrapper for Transition_PostAction_Field_DateDao
      *
      * @return Transition_PostAction_Field_DateDao
