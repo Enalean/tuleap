@@ -290,7 +290,7 @@ plugin_docman	details_approval_oldver		Cette table correspond à une ancienne ve
 plugin_docman	details_approval_owner_comment	Commentaire du demandeur :
 plugin_docman	details_approval_rank	Rang
 plugin_docman	details_approval_requester	Demandeur d'approbation :
-plugin_docman	details_approval_review_comment	Ajouter un commantaire :
+plugin_docman	details_approval_review_comment	Ajouter un commentaire :
 plugin_docman	details_approval_review_date	Date d'approbation :
 plugin_docman	details_approval_review_notif	Notification :
 plugin_docman	details_approval_review_help	Engagements possibles :<ul><li><strong>Pas encore :</strong> Status quo. Vous pouvez commenter mais personne ne sera notifié.</li><li><strong>Approuver :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur dans la séquence si besoin.</li><li><strong>Rejeter :</strong> Envoie un email au demandeur d'apporbation et stoppe la sequence si besoin.</li><li><strong>Commentaire seulement :</strong> Envoie une email au demandeur d'approbation pour l'informer qu'il y a des commentaires. Dans le mode <em>Séquentiel</em>, le workflow de notification est suspendu.</li><li><strong>Pas d'avis :</strong> Envoie un email au demandeur d'approbation et notifie le prochain approbateur si besoin.</li></ul>
