@@ -26,7 +26,12 @@ require_once('common/user/UserManager.class.php');
  * UserHelper
  */
 class UserHelper {
-    
+
+    const PREFERENCES_NAME_AND_LOGIN = 0;
+    const PREFERENCES_LOGIN_AND_NAME = 1;
+    const PREFERENCES_LOGIN = 2;
+    const PREFERENCES_REAL_NAME = 3;
+
     var $_username_display;
     var $_cache_by_id;
     var $_cache_by_username;
@@ -75,13 +80,13 @@ class UserHelper {
     function getDisplayName($user_name, $realname) {
         $name = '';
         switch($this->_username_display) {
-        case 1:
+        case self::PREFERENCES_LOGIN_AND_NAME:
             $name = "$user_name ($realname)";
             break;
-        case 2:
+        case self::PREFERENCES_LOGIN:
             $name = $user_name;
             break;
-        case 3:
+        case self::PREFERENCES_REAL_NAME:
             $name = $realname;
             break;
         default:
@@ -102,13 +107,13 @@ class UserHelper {
     function getDisplayNameSQLQuery() {
         $name = '';
         switch($this->_username_display) {
-        case 1:
+        case self::PREFERENCES_LOGIN_AND_NAME:
             $name = "CONCAT(user.user_name,' (',user.realname,')') AS full_name";
             break;
-        case 2:
+        case self::PREFERENCES_LOGIN:
             $name = 'user.user_name AS full_name';
             break;
-        case 3:
+        case self::PREFERENCES_REAL_NAME:
             $name = 'user.realname AS full_name';
             break;
         default:
@@ -148,13 +153,13 @@ class UserHelper {
     function getDisplayNameSQLOrder() {
         $order = '';
         switch($this->_username_display) {
-        case 1:
+        case self::PREFERENCES_LOGIN_AND_NAME:
             $order = "user.user_name";
             break;
-        case 2:
+        case self::PREFERENCES_LOGIN:
             $order = 'user.user_name';
             break;
-        case 3:
+        case self::PREFERENCES_REAL_NAME:
             $order = 'user.realname';
             break;
         default:

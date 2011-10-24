@@ -25,8 +25,36 @@ $csv_separators = array("comma", "semicolon", "tab");
 // The date format for CSV export can differ regarding the Excel version.
 // So we let the user define his prefered date format
 define("DEFAULT_CSV_DATEFORMAT", "month_day_year");
+
+define("FONT_SIZE_BROWSER", 0);
+define("FONT_SIZE_SMALL", 1);
+define("FONT_SIZE_NORMAL", 2);
+define("FONT_SIZE_LARGE", 3);
+
 // array of allowed date formats for CSV export
 $csv_dateformats = array("month_day_year", "day_month_year");
+
+function util_get_theme_list() {
+    // Build the theme list from directories in css and css/custom
+    //$dir = opendir($GLOBALS['sys_themeroot']);
+    $theme_list = array();
+    $theme_dirs = array($GLOBALS['sys_themeroot'], $GLOBALS['sys_custom_themeroot']);
+    while (list(,$dirname) = each($theme_dirs)) {
+        // before scanning the directory make sure it exists to avoid warning messages
+        if (is_dir($dirname)) {
+            $dir = opendir($dirname);
+            while ($file = readdir($dir)) {
+                if (is_dir("$dirname/$file") && $file != "." && $file != ".." && $file != "CVS" && $file != "custom" && $file != ".svn") {
+                    if (is_file($dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'_Theme.class.php')) {
+                        $theme_list[] = $file;
+                    }
+                }
+            }
+            closedir($dir);
+        }
+    }
+    return $theme_list;
+}
 
 function util_microtime_float($offset = null) {
     list($usec, $sec) = explode(" ", microtime());

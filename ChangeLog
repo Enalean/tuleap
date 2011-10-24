@@ -15,6 +15,7 @@ Version 4.0.23 (Not  released yet)
     * Fix file download does not work anymore with IE7/8 & https
     * Fix regression on tracker mail headers
     * Force load of plugins ordered by installation order
+    * Fix input validation in user preferences (contrib STMicroeletronics).
 
     == Plugins ==
     * Hudson v1.4. See separated Changelog

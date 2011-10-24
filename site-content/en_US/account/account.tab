@@ -73,7 +73,16 @@ account_preferences	lab_features_title	$1 Lab
 account_preferences	lab_features_description	$1 experimental features in preview mode for bleeding edge users. Only use it if you know what you are doing. The lab features are listed below.
 account_preferences	lab_features_cblabel	Enable $1 Lab
 account_preferences	tracker_mail_format	Tracker emails format:
-
+account_preferences	error_form_mail_site	Verify site updates value
+account_preferences	error_form_mail_va	Verify additional community mailings value
+account_preferences	error_user_fontsize	Verify Font size value
+account_preferences	error_user_theme	Verify theme value
+account_preferences	error_form_sticky_login	Verify remember me value
+account_preferences	error_language_id	Verify language value
+account_preferences	error_user_csv_separator	Verify CSV separator value
+account_preferences	error_user_csv_dateformat	Verify CSV date format value
+account_preferences	error_username_display	Verify username display value
+account_preferences	error_user_tracker_mailformat	Verify emails format value
 #
 #-----------------------------------------------
 # Script: SF/www/account/change_email.php

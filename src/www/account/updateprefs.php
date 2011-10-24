@@ -25,59 +25,101 @@ $csrf->check();
 
 $form_mail_site = 0;
 if($request->existAndNonEmpty('form_mail_site')) {
-    $form_mail_site = (int) $request->get('form_mail_site');
+    if($request->valid(new Valid_WhiteList('form_mail_site', array(0, 1)))) {
+        $form_mail_site = (int) $request->get('form_mail_site');
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_form_mail_site'));
+    }
 }
 
 $form_mail_va = 0;
 if($request->existAndNonEmpty('form_mail_va')) {
-    $form_mail_va = (int) $request->get('form_mail_va');
+    if($request->valid(new Valid_WhiteList('form_mail_va', array(0, 1)))) {
+        $form_mail_va = (int) $request->get('form_mail_va');
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_form_mail_va'));
+    }
 }
 
-$user_fontsize = 2;
+$user_fontsize = FONT_SIZE_NORMAL;
 if($request->existAndNonEmpty('user_fontsize')) {
-    $user_fontsize = (int) $request->get('user_fontsize');
+    if($request->valid(new Valid_WhiteList('user_fontsize', array(FONT_SIZE_BROWSER,
+                                                                  FONT_SIZE_SMALL,
+                                                                  FONT_SIZE_NORMAL,
+                                                                  FONT_SIZE_LARGE)))) {
+        $user_fontsize = (int) $request->get('user_fontsize');
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_fontsize'));
+    }
 }
 
+// $theme_list is defined in /www/include/utils.php
 $user_theme = $GLOBALS['sys_themedefault'];
+$theme_list = util_get_theme_list();
 if($request->existAndNonEmpty('user_theme')) {
-    $user_theme = $request->get('user_theme');
+    if($request->valid(new Valid_WhiteList('user_theme', $theme_list))) {
+        $user_theme = $request->get('user_theme');
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_theme'));
+    }
 }
 
 $form_sticky_login = 0;
 if($request->existAndNonEmpty('form_sticky_login')) {
-    $form_sticky_login = (int) $request->get('form_sticky_login');
+    if($request->valid(new Valid_WhiteList('form_sticky_login', array(0, 1)))) {
+        $form_sticky_login = (int) $request->get('form_sticky_login');
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_form_sticky_login'));
+    }
 }
 
 $language_id = $GLOBALS['sys_lang'];
 if($request->existAndNonEmpty('language_id') && $GLOBALS['Language']->isLanguageSupported($request->get('language_id'))) {
     $language_id= $request->get('language_id');
+} else {
+    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_language_id'));
 }
 
 // we check if the given value is authorized
 // $csv_separators is defined in src/www/include/utils.php
 $user_csv_separator = DEFAULT_CSV_SEPARATOR;
-if($request->existAndNonEmpty('user_csv_separator') &&
-   in_array($request->get('user_csv_separator'), $csv_separators)) {
-    $user_csv_separator = $request->get('user_csv_separator');
+if($request->existAndNonEmpty('user_csv_separator')) {
+   if($request->valid(new Valid_WhiteList('user_csv_separator', $csv_separators))) {
+        $user_csv_separator = $request->get('user_csv_separator');
+   } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_csv_separator'));
+    }
 }
 
 // we check if the given value is authorized
 // $csv_dateformats is defined in src/www/include/utils.php
 $user_csv_dateformat = DEFAULT_CSV_DATEFORMAT;
-if($request->existAndNonEmpty('user_csv_dateformat') &&
-   in_array($request->get('user_csv_dateformat'), $csv_dateformats)) {
-    $user_csv_dateformat = $request->get('user_csv_dateformat');
+if($request->existAndNonEmpty('user_csv_dateformat')) {
+   if($request->valid(new Valid_WhiteList('user_csv_dateformat', $csv_dateformats))) {
+        $user_csv_dateformat = $request->get('user_csv_dateformat');
+   } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_csv_dateformat'));
+    }
 }
 
 $username_display = null;
 if ($request->existAndNonEmpty('username_display')) {
-    $username_display = $request->get('username_display');
+    if($request->valid(new Valid_WhiteList('username_display', array(UserHelper::PREFERENCES_NAME_AND_LOGIN,
+                                                                     UserHelper::PREFERENCES_LOGIN_AND_NAME,
+                                                                     UserHelper::PREFERENCES_LOGIN,
+                                                                     UserHelper::PREFERENCES_REAL_NAME)))) {
+        $username_display = $request->get('username_display');
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_username_display'));
+    }
 }
 
 $user_tracker_mailformat = DEFAULT_TRACKER_MAILFORMAT;
 if ($request->existAndNonEmpty('user_tracker_mailformat')) {
     if($request->valid(new Valid_WhiteList('user_tracker_mailformat', $tracker_mailformats))) {
         $user_tracker_mailformat = $request->get('user_tracker_mailformat');
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_tracker_mailformat'));
     }
 }
 //

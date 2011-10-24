@@ -122,26 +122,9 @@ if ($row_user['theme'] == "" || $row_user['theme'] == "default") {
     $user_theme = $row_user['theme'];
 }
 
-// Build the theme select box from directories in css and css/custom
-//$dir = opendir($GLOBALS['sys_themeroot']);
-$theme_list = array();
-$theme_dirs = array($GLOBALS['sys_themeroot'], $GLOBALS['sys_custom_themeroot']);
-while (list(,$dirname) = each($theme_dirs)) {
-    // before scanning the directory make sure it exists to avoid warning messages
-    if (is_dir($dirname)) {
-        $dir = opendir($dirname);
-        while ($file = readdir($dir)) {
-            if (is_dir("$dirname/$file") && $file != "." && $file != ".." && $file != "CVS" && $file != "custom" && $file != ".svn") {
-                if (is_file($dirname.DIRECTORY_SEPARATOR.$file.DIRECTORY_SEPARATOR.$file.'_Theme.class.php')) {
-                    $theme_list[] = $file;
-                }
-            }
-        }
-        closedir($dir);
-    }
-}
-
+// $theme_list is defined in /www/include/utils.php
 print '<select name="user_theme">'."\n";
+$theme_list = util_get_theme_list();
 natcasesort($theme_list); //Sort an array using a case insensitive "natural order" algorithm
 while (list(,$theme) = each($theme_list)) {
     print '<option value="'.$theme.'"';
@@ -157,21 +140,21 @@ print "</select>\n";
 </td></tr>
 <?php
 echo '<tr><td>'.$Language->getText('account_options', 'font_size').': </td><td><select name="user_fontsize">
-<option value="0"';
+<option value="'.FONT_SIZE_BROWSER.'"';
 
-if ( $row_user['fontsize'] == 0 ) print "selected";
+if ( $row_user['fontsize'] == FONT_SIZE_BROWSER ) print "selected";
 echo '>'.$Language->getText('account_options', 'font_size_browser');
 ?></option>
-<option value="1" <?
-if ( $row_user['fontsize'] == 1 ) print "selected";
+<option value="<? echo FONT_SIZE_SMALL.'" ';
+if ( $row_user['fontsize'] == FONT_SIZE_SMALL ) print "selected";
 echo '>'.$Language->getText('account_options', 'font_size_small');
 ?></option>
-<option value="2" <?
-if ( $row_user['fontsize'] == 2 ) print "selected";
+<option value="<? echo FONT_SIZE_NORMAL.'" ';
+if ( $row_user['fontsize'] == FONT_SIZE_NORMAL ) print "selected";
 echo '>'.$Language->getText('account_options', 'font_size_normal');
 ?></option>
-<option value="3" <?
-if ( $row_user['fontsize'] == 3 ) print "selected";
+<option value="<? echo FONT_SIZE_LARGE.'" ';
+if ( $row_user['fontsize'] == FONT_SIZE_LARGE ) print "selected";
 echo '>'.$Language->getText('account_options', 'font_size_large');
 ?></option>
 </select>
@@ -193,23 +176,23 @@ echo html_get_language_popup($Language,'language_id',UserManager::instance()->ge
  	  	 // build the username_display select-box
  	  	 print '<select name="username_display">'."\n";
  	  	 $u_display = user_get_preference("username_display");
- 	  	 print '<option value="0"';
- 	  	 if ($u_display == 0) {
+ 	  	 print '<option value="'.UserHelper::PREFERENCES_NAME_AND_LOGIN.'"';
+ 	  	 if ($u_display == UserHelper::PREFERENCES_NAME_AND_LOGIN) {
  	  	     print ' selected="selected"';
  	  	 }
                  print '>'.$Language->getText('account_options','codendi_name_and_login').'</option>';
- 	  	 print '<option value="1"';
- 	  	 if ($u_display == 1) {
+ 	  	 print '<option value="'.UserHelper::PREFERENCES_LOGIN_AND_NAME.'"';
+ 	  	 if ($u_display == UserHelper::PREFERENCES_LOGIN_AND_NAME) {
  	  	     print ' selected="selected"';
  	  	 }
                  print '>'.$Language->getText('account_options','codendi_login_and_name').'</option>';
- 	  	 print '<option value="2"';
- 	  	 if ($u_display == 2) {
+ 	  	 print '<option value="'.UserHelper::PREFERENCES_LOGIN.'"';
+ 	  	 if ($u_display == UserHelper::PREFERENCES_LOGIN) {
  	  	     print ' selected="selected"';
  	  	 }
                  print '>'.$Language->getText('account_options','codendi_login').'</option>';
- 	  	 print '<option value="3"';
- 	  	 if ($u_display == 3) {
+ 	  	 print '<option value="'.UserHelper::PREFERENCES_REAL_NAME.'"';
+ 	  	 if ($u_display == UserHelper::PREFERENCES_REAL_NAME) {
  	  	     print ' selected="selected"';
  	  	 }
                  print '>'.$Language->getText('account_options','real_name').'</option>';
