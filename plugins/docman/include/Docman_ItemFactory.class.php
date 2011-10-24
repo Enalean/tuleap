@@ -36,6 +36,7 @@ require_once('Docman_CloneItemsVisitor.class.php');
 require_once('Docman_SubItemsRemovalVisitor.class.php');
 require_once('Docman_PermissionsManager.class.php');
 require_once('Docman_BuildItemMappingVisitor.class.php');
+require_once('Docman_ActionsDeleteVisitor.class.php');
 
 /**
  * 
@@ -1180,6 +1181,34 @@ class Docman_ItemFactory {
         $dao = $this->_getItemDao();
         $dao->updateFromRow($item->toRow());
         $dao->storeDeletedItem($item->getId());
+    }
+
+    /**
+     * Delete Docman hierarchy for a given project
+     *
+     * @param Integer $groupId The project id
+     *
+     * @return Boolean success
+     */
+    public function deleteProjectTree($groupId) {
+        $deleteStatus = true;
+        $root = $this->getRoot($groupId);
+        if ($root) {
+            $dPm = Docman_PermissionsManager::instance($groupId);
+            $subItemsWritable = $dPm->currentUserCanWriteSubItems($root->getId());
+            if($subItemsWritable) {
+                $rootChildren = $this->getChildrenFromParent($root);
+                $user = $this->_getUserManager()->getCurrentUser();
+                foreach ($rootChildren as $children) {
+                    if (!$this->deleteSubTree($children, $user, true)) {
+                        $deleteStatus = false;
+                    }
+                }
+            } else {
+                $deleteStatus = false;
+            }
+        }
+        return $deleteStatus;
     }
 
     /**

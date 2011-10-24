@@ -54,8 +54,9 @@ if ($Update) {
     $res_grp = db_query("SELECT * FROM groups WHERE group_id=$group_id");
 
 	//audit trail
-        if ($group->getStatus() != $form_status)
-		{ group_add_history ('status',$group->getStatus(),$group_id);  }
+    if (isset($form_status) && $form_status && ($group->getStatus() != $form_status)) {
+        group_add_history ('status', $Language->getText('admin_groupedit', 'status_'.$group->getStatus())." :: ".$Language->getText('admin_groupedit', 'status_'.$form_status), $group_id);
+    }
 	if ($group->isPublic() != $form_public) { 
         group_add_history('is_public',$group->isPublic(),$group_id);
         $em->processEvent('project_is_private', array(
@@ -63,16 +64,18 @@ if ($Update) {
             'project_is_private' => $form_public ? 0 : 1
         ));
     }
-	if ($group->getType() != $group_type)
-		{ group_add_history ('group_type',$group->getType(),$group_id);  }
-	if ($group->getHTTPDomain()!= $form_domain)
-		{ group_add_history ('http_domain',$group->getHTTPDomain(),$group_id);  }
-	if ($group->getUnixBox() != $form_box)
-		{ group_add_history ('unix_box',$group->getUnixBox(),$group_id);  }
-	db_query("UPDATE groups SET is_public=$form_public,status='$form_status',"
-		. "license='$form_license',type='$group_type',"
-		. "unix_box='$form_box',http_domain='$form_domain', "
-		. "type='$group_type' WHERE group_id=$group_id");
+    if ($group->getType() != $group_type)
+    { group_add_history ('group_type',$group->getType(),$group_id);  }
+    if ($group->getHTTPDomain()!= $form_domain)
+    { group_add_history ('http_domain',$group->getHTTPDomain(),$group_id);  }
+    if ($group->getUnixBox() != $form_box)
+    { group_add_history ('unix_box',$group->getUnixBox(),$group_id);  }
+    if (isset($form_status) && $form_status) {
+        db_query("UPDATE groups SET is_public=$form_public,status='$form_status',"
+        . "license='$form_license',type='$group_type',"
+        . "unix_box='$form_box',http_domain='$form_domain', "
+        . "type='$group_type' WHERE group_id=$group_id");
+    }
 
 	$feedback .= $Language->getText('admin_groupedit','feedback_info');
 
@@ -129,17 +132,20 @@ echo $template->showTypeBox('group_type',$group->getType());
 ?>
 
 <B><?php echo $Language->getText('global','status'); ?></B>
-<SELECT name="form_status">
+<?php
+//Disable the possibilty to switch from deleted status to an active one
+?>
+<SELECT name="form_status" <?php if ($row_grp['status'] == "D") print "disabled=disabled"; ?>>
 <OPTION <?php if ($row_grp['status'] == "I") print "selected "; ?> value="I">
-<?php echo $Language->getText('admin_groupedit','incomplete'); ?></OPTION>
+<?php echo $Language->getText('admin_groupedit', 'status_I'); ?></OPTION>
 <OPTION <?php if ($row_grp['status'] == "A") print "selected "; ?> value="A">
-<?php echo $Language->getText('admin_groupedit','active'); ?>
+<?php echo $Language->getText('admin_groupedit', 'status_A'); ?></OPTION>
 <OPTION <?php if ($row_grp['status'] == "P") print "selected "; ?> value="P">
-<?php echo $Language->getText('admin_groupedit','pending'); ?>
+<?php echo $Language->getText('admin_groupedit', 'status_P'); ?></OPTION>
 <OPTION <?php if ($row_grp['status'] == "H") print "selected "; ?> value="H">
-<?php echo $Language->getText('admin_groupedit','holding'); ?>
+<?php echo $Language->getText('admin_groupedit', 'status_H'); ?></OPTION>
 <OPTION <?php if ($row_grp['status'] == "D") print "selected "; ?> value="D">
-<?php echo $Language->getText('admin_groupedit','deleted'); ?>
+<?php echo $Language->getText('admin_groupedit', 'status_D'); ?></OPTION>
 </SELECT>
 
 <B><?php echo $Language->getText('admin_groupedit','public'); ?></B>

@@ -303,17 +303,13 @@ function _makeDocmanRequest($sessionKey, $group_id, $action, $params = array()) 
     $actor ="_makeDocmanRequest ($action)";
     
     if (session_continue($sessionKey)) {
-        $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        if (!$group || !is_object($group)) {
-            return new SoapFault(get_group_fault, 'Could Not Get Group', $actor);
-        } elseif ($group->isError()) {
-            return new SoapFault(get_group_fault,  $group->getErrorMessage(), $actor);
+        try {
+            $pm = ProjectManager::instance();
+            $pm->getGroupByIdForSoap($group_id, $actor);
+        } catch (SoapFault $e) {
+            return $e;
         }
-        if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault,  'Restricted user: permission denied.', $actor);
-        }
-        
+
         $params['group_id'] = $group_id;
         $params['action'] = $action;
         $params['confirm'] = true;
@@ -417,10 +413,14 @@ function _updateDocmanItem($sessionKey, $group_id, $item_id, $title, $descriptio
     
     $permParams['id'] = $item_id;
     $permParams['permissions'] = $params['permissions'];
-    _makeDocmanRequest($sessionKey, $group_id, 'permissions', $permParams);    
-    
-    _makeDocmanRequest($sessionKey, $group_id, 'update', _safe_array_merge_recursive($params, $extraParams));
-    
+    $result = _makeDocmanRequest($sessionKey, $group_id, 'permissions', $permParams);    
+    if ($result instanceof SoapFault) {
+        return $result;
+    }
+    $result = _makeDocmanRequest($sessionKey, $group_id, 'update', _safe_array_merge_recursive($params, $extraParams));
+    if ($result instanceof SoapFault) {
+        return $result;
+    }
     return true;
 }
 
@@ -506,7 +506,10 @@ $soapFunctions[] = array('getDocmanFileAllVersionsMD5sum', 'Returns the MD5 chec
 function getDocmanProjectMetadata($sessionKey, $group_id) {
 
     $result = _makeDocmanRequest($sessionKey, $group_id, 'getProjectMetadata');
-    
+    if ($result instanceof SoapFault) {
+        return $result;
+    }
+
     foreach ($result as &$md) {
         $md->listOfValues = array();
         if($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {

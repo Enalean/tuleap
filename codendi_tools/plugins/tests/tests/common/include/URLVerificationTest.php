@@ -20,6 +20,10 @@
 
 require_once('common/user/User.class.php');
 Mock::generate('User');
+require_once('common/project/Project.class.php');
+Mock::generate('Project');
+require_once('common/project/ProjectManager.class.php');
+Mock::generate('ProjectManager');
 require_once('common/include/URLVerification.class.php');
 Mock::generatePartial(
     'URLVerification',
@@ -27,12 +31,26 @@ Mock::generatePartial(
     array('getCurrentUser', 'getEventManager')
 );
 
-Mock::generatepartial('URLVerification', 'URLVerificationTestVersion2', array('getUrlChunks'));
+Mock::generatepartial('URLVerification',
+                      'URLVerificationTestVersion2',
+                      array('getUrlChunks',
+                            'getProjectManager',
+                            'userCanAccessProject',
+                            'exitError'));
 
 Mock::generatePartial(
     'URLVerification',
     'URLVerificationTestVersion3',
-    array('isException', 'verifyProtocol', 'verifyHost', 'verifyRequest', 'getUrlChunks', 'checkRestrictedAccess', 'checkPrivateAccess', 'getRedirectionURL', 'header')
+    array('isException',
+          'verifyProtocol',
+          'verifyHost',
+          'verifyRequest',
+          'getUrlChunks',
+          'checkRestrictedAccess',
+          'checkPrivateAccess',
+          'getRedirectionURL',
+          'header',
+          'checkNotActiveProject')
 );
 
 require_once('common/event/EventManager.class.php');
@@ -62,6 +80,7 @@ class URLVerificationTest extends UnitTestCase {
         $GLOBALS['sys_default_domain'] = 1;
         $GLOBALS['sys_force_ssl'] = 1;
         $GLOBALS['sys_https_host'] = 1;
+        unset($GLOBALS['group_id']);
     }
 
     function testIsScriptAllowedForAnonymous() {
@@ -495,6 +514,72 @@ class URLVerificationTest extends UnitTestCase {
         $urlVerification->expectOnce('header');
         $server = array();
         $urlVerification->assertValidUrl($server);
+    }
+
+    function testUserCanAccessProjectActive() {
+        $urlVerification = new URLVerificationTestVersion();
+        $project = new MockProject();
+        $project->setReturnValue('isActive', true);
+        $this->assertTrue($urlVerification->userCanAccessProject($project));
+    }
+
+    function testUserCanAccessProjectSuperUser() {
+        $urlVerification = new URLVerificationTestVersion();
+        $project = new MockProject();
+        $project->setReturnValue('isActive', false);
+        $user = new MockUser();
+        $user->setReturnValue('isSuperUser', true);
+        $urlVerification->setReturnValue('getCurrentUser', $user);
+        $this->assertTrue($urlVerification->userCanAccessProject($project));
+    }
+
+    function testUserCanAccessProjectAccessDenied() {
+        $urlVerification = new URLVerificationTestVersion();
+        $project = new MockProject();
+        $project->setReturnValue('isActive', false);
+        $user = new MockUser();
+        $user->setReturnValue('isSuperUser', false);
+        $urlVerification->setReturnValue('getCurrentUser', $user);
+        $this->assertFalse($urlVerification->userCanAccessProject($project));
+    }
+
+    function testCheckNotActiveProjectApi() {
+        $urlVerification = new URLVerificationTestVersion2();
+        $GLOBALS['group_id'] = 1;
+        $project = new MockProject();
+        $projectManager = new MockProjectManager();
+        $projectManager->setReturnValue('getProject', $project);
+        $urlVerification->setReturnValue('getProjectManager', $projectManager);
+        $urlVerification->setReturnValue('userCanAccessProject', true);
+        $urlVerification->checkNotActiveProject(array('SCRIPT_NAME' => '/api/'));
+        $urlVerification->expectOnce('getProjectManager');
+        $urlVerification->expectNever('exitError');
+    }
+
+    function testCheckNotActiveProjectError() {
+        $urlVerification = new URLVerificationTestVersion2();
+        $GLOBALS['group_id'] = 1;
+        $project = new MockProject();
+        $projectManager = new MockProjectManager();
+        $projectManager->setReturnValue('getProject', $project);
+        $urlVerification->setReturnValue('getProjectManager', $projectManager);
+        $urlVerification->setReturnValue('userCanAccessProject', false);
+        $urlVerification->checkNotActiveProject(array('SCRIPT_NAME' => '/my/'));
+        $urlVerification->expectOnce('getProjectManager');
+        $urlVerification->expectNever('exitError');
+    }
+
+    function testCheckNotActiveProjectNoError() {
+        $urlVerification = new URLVerificationTestVersion2();
+        $GLOBALS['group_id'] = 1;
+        $project = new MockProject();
+        $projectManager = new MockProjectManager();
+        $projectManager->setReturnValue('getProject', $project);
+        $urlVerification->setReturnValue('getProjectManager', $projectManager);
+        $urlVerification->setReturnValue('userCanAccessProject', true);
+        $urlVerification->checkNotActiveProject(array('SCRIPT_NAME' => '/my/'));
+        $urlVerification->expectOnce('getProjectManager');
+        $urlVerification->expectNever('exitError');
     }
 
 }

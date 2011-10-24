@@ -89,7 +89,7 @@ if ($res['numrows'] > 0) {
         print "<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">";
         print '<td><a href="groupedit.php?group_id='.$grp['group_id'].'">'.$grp['group_name'].'</a></td>';
         print '<td>'.$grp['unix_group_name'].'</td>';
-        print '<td>'.$grp['status'].'</td>';
+        print '<td><span class="site_admin_project_status_'.$grp['status'].'">&nbsp;</span>'.$Language->getText('admin_groupedit', 'status_'.$grp['status']).'</td>';
         // group type
         print "<td>".$template->getLabel($grp['type'])."</td>";
 

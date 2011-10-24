@@ -490,8 +490,8 @@ class URLVerification {
     function userCanAccessPrivate($url, $requestUri) {
         $group_id = (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($requestUri);
         if ($group_id) {
-            $project = ProjectManager::instance()->getProject($group_id);
-            $user    = UserManager::instance()->getCurrentUser();
+            $project = $this->getProjectManager()->getProject($group_id);
+            $user    = $this->getCurrentUser();
             if(!$project->isPublic()) {
                 if (!$user->isMember($group_id)) {
                     return false;
@@ -539,9 +539,66 @@ class URLVerification {
                 $location = $this->getRedirectionURL($server);
                 $this->header($location);
             }
+            $this->checkNotActiveProject($server);
             $this->checkRestrictedAccess($server);
             $this->checkPrivateAccess($server);
         }
+    }
+
+    /**
+     * Checks that only super users can access to not active projects.
+     *
+     * @param Array $server $_SERVER
+     *
+     * @return void
+     */
+    function checkNotActiveProject($server) {
+        $url = $this->getUrl();
+        $group_id = (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $url->getGroupIdFromUrl($server['REQUEST_URI']);
+        if ($group_id) {
+            $project = $this->getProjectManager()->getProject($group_id);
+            if (!$project->isError()) {
+                if ((strcmp(substr($server['SCRIPT_NAME'], 0, 5), '/api/') !=0) && !$this->userCanAccessProject($project)) {
+                    $this->exitError($GLOBALS['Language']->getText('include_session','insufficient_g_access'),$GLOBALS['Language']->getText('include_exit', 'project_status_'.$project->getStatus()));
+                }
+            }
+        }
+    }
+
+    /**
+     * Check if current user can access the given project
+     *
+     * @param Project $project The project to be checked
+     *
+     * @return Boolean False if project is not active and user in not super user
+     */
+    function userCanAccessProject($project) {
+        $user = $this->getCurrentUser();
+        if(!$project->isActive() && !$user->isSuperUser()) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Wrapper for tests
+     *
+     * @param String $title Title of the error message
+     * @param String $text  Text of the error message
+     *
+     * @return Void
+     */
+    function exitError($title, $text) {
+        exit_error($title, $text);
+    }
+
+    /**
+     * Wrapper for tests
+     *
+     * @return ProjectManager
+     */
+    function getProjectManager() {
+        return ProjectManager::instance();
     }
 
     /**

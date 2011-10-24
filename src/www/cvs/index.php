@@ -7,7 +7,7 @@
 // 
 
 require_once('pre.php');    
-require('../cvs/commit_utils.php');    
+require_once('../cvs/commit_utils.php');    
 
 
 // ######################## table for summary info

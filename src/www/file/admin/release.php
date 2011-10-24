@@ -64,8 +64,7 @@ if ($request->valid(new Valid_UInt('package_id'))) {
                          Delete the corresponding row from the database
                          Delete the corresponding directory from the server
                     */
-                    $res = $frsrf->delete_release($group_id, $release_id);
-                    if ($res == 0) {
+                    if (!$frsrf->delete_release($group_id, $release_id)) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editreleases','rel_not_yours'));
                     } else {
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editreleases','rel_del'));

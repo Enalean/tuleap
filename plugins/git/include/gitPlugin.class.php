@@ -33,15 +33,16 @@ class GitPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->_addHook('site_admin_option_hook', 'siteAdminHooks', false);
-        $this->_addHook('cssfile', 'cssFile', false);
-        $this->_addHook('javascript_file', 'jsFile', false);
-        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass', false);
-        $this->_addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, 'getReferenceKeywords', false);
-        $this->_addHook('get_available_reference_natures', 'getReferenceNatures', false);
-        $this->_addHook('SystemEvent_PROJECT_IS_PRIVATE', 'changeProjectRepositoriesAccess', false);
-        $this->_addHook('SystemEvent_PROJECT_RENAME', 'systemEventProjectRename', false);
-        $this->_addHook('file_exists_in_data_dir',    'file_exists_in_data_dir',  false);
+        $this->_addHook('site_admin_option_hook',                          'siteAdminHooks',                  false);
+        $this->_addHook('cssfile',                                         'cssFile',                         false);
+        $this->_addHook('javascript_file',                                 'jsFile',                          false);
+        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,                     'getSystemEventClass',             false);
+        $this->_addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,  'getReferenceKeywords',            false);
+        $this->_addHook('get_available_reference_natures',                 'getReferenceNatures',             false);
+        $this->_addHook('SystemEvent_PROJECT_IS_PRIVATE',                  'changeProjectRepositoriesAccess', false);
+        $this->_addHook('SystemEvent_PROJECT_RENAME',                      'systemEventProjectRename',        false);
+        $this->_addHook('project_is_deleted',                              'project_is_deleted',              false);
+        $this->_addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',         false);
 
         // Stats plugin
         $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
@@ -346,6 +347,26 @@ class GitPlugin extends Plugin {
         $params['types'][] = 'GIT_REPO_CREATE';
         $params['types'][] = 'GIT_REPO_DELETE';
     }
+
+    /**
+     * When project is deleted all its git repositories are archived and marked as deleted
+     *
+     * @param Array $params Parameters contining project id
+     *
+     * @return void
+     */
+    public function project_is_deleted($params) {
+        if (!empty($params['group_id'])) {
+            $projectId = intval($params['group_id']);
+            // Delete all gitolite repositories of the project
+            $gitoliteBackend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
+            $gitoliteBackend->deleteProjectRepositories($projectId);
+            // Delete all git repositories of the project
+            $gitBackend = Backend::instance('Git','GitBackend');
+            $gitBackend->deleteProjectRepositories($projectId);
+        }
+    }
+
 }
 
 ?>

@@ -184,20 +184,15 @@ function getMyProjects($sessionKey) {
  * @return array the SOAPGroup associated with the given unix name
  */
 function getGroupByName($sessionKey, $unix_group_name) {
-    global $Language;
     if (session_continue($sessionKey)) {
-        $group = group_get_object_by_name($unix_group_name);  // function located in common/project/Group.class.php
-        if (! $group || !is_object($group)) {
-            return new SoapFault('2002', $unix_group_name.' : '.$Language->getText('include_group', 'g_not_found'), 'getGroupByName');
-        } elseif ($group->isError()) {
-            return new SoapFault('2002', $group->getErrorMessage(), 'getGroupByName', '');
+        try {
+            $pm = ProjectManager::instance();
+            $project = $pm->getGroupByIdForSoap($unix_group_name, 'getGroupByName', true);
+            $soap_group = group_to_soap($project);
+            return new SoapVar($soap_group, SOAP_ENC_OBJECT);
+        } catch (SoapFault $e) {
+            return $e;
         }
-        if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getGroupByName');
-        }
-        
-        $soap_group = group_to_soap($group);
-        return new SoapVar($soap_group, SOAP_ENC_OBJECT);
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','getGroupByName');
     }
@@ -214,47 +209,33 @@ function getGroupByName($sessionKey, $unix_group_name) {
  */
 function getGroupById($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
-        $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        if (!$group || !is_object($group)) {
-            return new SoapFault('2001', $group_id.' : '.$GLOBALS['Language']->getText('include_group', 'g_not_found'),'getGroupById');
-        } elseif ($group->isError()) {
-            return new SoapFault('2001', $group->getErrorMessage(),'getGroupById');
+        try {
+            $pm = ProjectManager::instance();
+            $group = $pm->getGroupByIdForSoap($group_id, 'getGroupById');
+            $soap_group = group_to_soap($group);
+            return $soap_group;
+        } catch (SoapFault $e) {
+            return $e;
         }
-        if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getGroupById');
-        }
-        
-        $soap_group = group_to_soap($group);
-        return $soap_group;
     } else {
         return new SoapFault(invalid_session_fault,'Invalid Session','getGroup');
     }
 }
-
 
 /**
  * Returns the Ugroups associated to the given project
  * This function can only be called by members of the group 
  */
 function getGroupUgroups($sessionKey, $group_id) {
-   global $Language;
     if (session_continue($sessionKey)) {
-        $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        if (!$group || !is_object($group)) {
-            return new SoapFault(get_group_fault, 'Could Not Get Group', 'getGroupUgroups');
-        } elseif ($group->isError()) {
-            return new SoapFault(get_group_fault,  $group->getErrorMessage(),  'getGroupUgroups');
+        try {
+            $pm = ProjectManager::instance();
+            $group = $pm->getGroupByIdForSoap($group_id, 'getGroupUgroups');
+            $ugroups = ugroup_get_ugroups_with_members($group_id);
+            $return = ugroups_to_soap($ugroups);
+        } catch (SoapFault $e) {
+            return $e;
         }
-        if (!checkGroupMemberAccess($group)) {
-            return new SoapFault(get_group_fault,  'Restricted user: permission denied.',  'getGroupUgroups');
-        }
-        
-        $ugroups = ugroup_get_ugroups_with_members($group_id);
-        $return = ugroups_to_soap($ugroups);
-        
-        return $return;
     } else {
         return new SoapFault(invalid_session_fault, 'Invalid Session', 'getGroupUgroups');
     }

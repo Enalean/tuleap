@@ -80,7 +80,20 @@ class UserGroupDao extends DataAccessObject {
                     AND ug.group_id ='.$this->da->escapeInt($groupId);
         return $this->retrieve($sql);
     }
-}
 
+    /**
+     * Remove users from a given project
+     *
+     * @param Integer $groupId
+     *
+     * @return Boolean
+     */
+    function removeProjectMembers($groupId) {
+        $groupId = $this->da->escapeInt($groupId);
+        $sql     = "DELETE FROM user_group".
+                   " WHERE group_id = ".$groupId;
+        return $this->update($sql);
+    }
+}
 
 ?>

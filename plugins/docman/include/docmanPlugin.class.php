@@ -90,7 +90,8 @@ class DocmanPlugin extends Plugin {
         $this->_addHook('permission_request_information', 'permissionRequestInformation', false);
 
         $this->_addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
-	}
+        $this->_addHook('project_is_deleted', 'project_is_deleted', false);
+    }
 
     function permission_get_name($params) {
         if (!$params['name']) {
@@ -577,7 +578,7 @@ class DocmanPlugin extends Plugin {
                 '<td>'.$row['number'].'</td>'.
                 '<td>'.html_time_ago($row['date']).'</td>'.
                 '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>'.
-                '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_version&id='.$row['id'].'&item_id='.$row['item_id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this version\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
+                '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_version&id='.$row['id'].'&item_id='.$row['item_id'].'" ><IMG SRC="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\'Confirm restore of this version\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
             }
             $html .= '</TABLE>'; 
 
@@ -632,7 +633,7 @@ class DocmanPlugin extends Plugin {
                 '<td>'.$uh->getDisplayNameFromUserId($row['user']).'</td>'.
                 '<td>'.html_time_ago($row['date']).'</td>'.
                 '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>'.
-                '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_item&id='.$row['id'].'" ><IMG SRC="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this item\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
+                '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_item&id='.$row['id'].'" ><IMG SRC="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\'Confirm restore of this item\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';
             }
             $html .= '</TABLE>'; 
 
@@ -669,6 +670,22 @@ class DocmanPlugin extends Plugin {
         $versionFactory = new Docman_VersionFactory();
         $versionFactory->purgeDeletedVersions($params['time']);
     }
+
+    /**
+     * Function called when a project is deleted.
+     * It Marks all project documents as deleted
+     *
+     * @param mixed $params ($param['group_id'] the ID of the deleted project)
+     *
+     * @return void
+     */
+        function project_is_deleted($params) {
+            $groupId = $params['group_id'];
+            if ($groupId) {
+                $docmanItemFactory = new Docman_ItemFactory();
+                $docmanItemFactory->deleteProjectTree($groupId);
+            }
+        }
 
     /**
      * Function called when a user is removed from a project 

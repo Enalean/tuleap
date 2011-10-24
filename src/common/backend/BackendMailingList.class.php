@@ -150,6 +150,28 @@ class BackendMailingList extends Backend {
         return true;
     }
 
+    /**
+     * Archive all project mailing lists
+     *
+     * @param Integer $projectId id of the project
+     *
+     * @return Boolean
+     */
+    public function deleteProjectMailingLists($projectId) {
+        $deleteStatus = true;
+        $res = $this->_getMailingListDao()->searchByProject($projectId);
+        if ($res && !$res->isError()) {
+            while ($row = $res->getRow()) {
+                if ($this->_getMailingListDao()->deleteList($row['group_list_id'])) {
+                    $deleteStatus = $this->deleteList($row['group_list_id']) && $deleteStatus;
+                } else {
+                    $deleteStatus = false;
+                }
+            }
+            return $deleteStatus;
+        }
+        return false;
+    }
 }
 
 ?>

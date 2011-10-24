@@ -26,6 +26,10 @@ require_once 'common/backend/Backend.class.php';
 
 Mock::Generate('Backend');
 Mock::Generate('Git_GitoliteDriver');
+Mock::generatePartial('Git_Backend_Gitolite', 'Git_Backend_GitoliteTestVersion', array('getDao', 'loadRepositoryFromId'));
+Mock::generate('GitRepository');
+Mock::generate('GitDao');
+Mock::generate('DataAccessResult');
 
 class Git_Backend_GitoliteTest extends UnitTestCase {
     
@@ -73,6 +77,72 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         clearstatcache(true, $this->fixtureRenamePath .'/legacy');
         $this->assertFalse(is_dir($this->fixtureRenamePath .'/legacy'));
         $this->assertTrue(is_dir($this->fixtureRenamePath .'/newone'));
+    }
+
+    public function testDeleteProjectRepositoriesDaoError() {
+        $backend = new Git_Backend_GitoliteTestVersion();
+        $dao = new MockGitDao();
+        $dao->expectOnce('getAllGitoliteRespositories');
+        $dar = new MockDataAccessResult();
+        $dar->setReturnValue('isError', true);
+        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
+        $backend->setReturnValue('getDao', $dao);
+        $backend->expectNever('loadRepositoryFromId');
+        $this->assertFalse($backend->deleteProjectRepositories(1));
+    }
+
+    public function testDeleteProjectRepositoriesNothingToDelete() {
+        $backend = new Git_Backend_GitoliteTestVersion();
+        $dao = new MockGitDao();
+        $dao->expectOnce('getAllGitoliteRespositories');
+        $dar = new MockDataAccessResult();
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValue('getRow', false);
+        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
+        $backend->setReturnValue('getDao', $dao);
+        $backend->expectNever('loadRepositoryFromId');
+        $this->assertTrue($backend->deleteProjectRepositories(1));
+    }
+
+    public function testDeleteProjectRepositoriesDeleteFail() {
+        $backend = new Git_Backend_GitoliteTestVersion();
+        $dao = new MockGitDao();
+        $dao->expectOnce('getAllGitoliteRespositories');
+        $dar = new MockDataAccessResult();
+        $dar->setReturnValue('isError', false);
+        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
+        $dar->setReturnValueAt(0, 'getRow', array('repository_id' => 1));
+        $dar->setReturnValueAt(1, 'getRow', array('repository_id' => 2));
+        $dar->setReturnValueAt(2, 'getRow', array('repository_id' => 3));
+        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
+        $backend->setReturnValue('getDao', $dao);
+        $repository = new MockGitRepository();
+        $repository->setReturnValueAt(0, 'delete', true);
+        $repository->setReturnValueAt(1, 'delete', false);
+        $repository->setReturnValueAt(2, 'delete', true);
+        $backend->setReturnValue('loadRepositoryFromId', $repository);
+        $backend->expectCallCount('loadRepositoryFromId', 3);
+        $repository->expectCallCount('delete', 3);
+        $this->assertFalse($backend->deleteProjectRepositories(1));
+    }
+
+    public function testDeleteProjectRepositoriesSuccess() {
+        $backend = new Git_Backend_GitoliteTestVersion();
+        $dao = new MockGitDao();
+        $dao->expectOnce('getAllGitoliteRespositories');
+        $dar = new MockDataAccessResult();
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValueAt(0, 'getRow', array('repository_id' => 1));
+        $dar->setReturnValueAt(1, 'getRow', array('repository_id' => 2));
+        $dar->setReturnValueAt(2, 'getRow', array('repository_id' => 3));
+        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
+        $backend->setReturnValue('getDao', $dao);
+        $repository = new MockGitRepository();
+        $repository->setReturnValue('delete', true);
+        $backend->setReturnValue('loadRepositoryFromId', $repository);
+        $backend->expectCallCount('loadRepositoryFromId', 3);
+        $repository->expectCallCount('delete', 3);
+        $this->assertTrue($backend->deleteProjectRepositories(1));
     }
 
 }

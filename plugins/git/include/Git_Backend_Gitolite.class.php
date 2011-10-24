@@ -284,19 +284,19 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         }
     }
     
-    public function delete($repository) {
+    public function delete($repository, $ignoreHasChildren = false) {
         $path = $repository->getPath();
         if ( empty($path) ) {
             throw new GitBackendException('Bad repository path: '.$path);
         }
         $path = $this->getGitRootPath().$path;
         
-        if ( $this->getDao()->hasChild($repository) === true ) {
+        if ($ignoreHasChildren === false && $this->getDao()->hasChild($repository) === true) {
             throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
         }
         
         if ($repository->canBeDeleted()) {
-            if ($this->getDao()->delete($repository) && $this->deletePermissions($repository)) {
+            if ($this->deletePermissions($repository) && $this->getDao()->delete($repository)) {
                 $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
                 $this->getDriver()->dumpProjectRepoConf($repository->getProject());
                 $this->getDriver()->push();
@@ -311,7 +311,46 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         
         return false;
     }
-    
+
+    /**
+     * Delete all gitolite repositories of a project
+     *
+     * @param Integer $projectId Id of the project
+     *
+     * @return Boolean
+     */
+    public function deleteProjectRepositories($projectId) {
+        $deleteStatus = true;
+        $res          = $this->getDao()->getAllGitoliteRespositories($projectId);
+        if (empty($res) || $res->isError()) {
+            return false;
+        } else {
+            while ($row = $res->getRow()) {
+                $repository = $this->loadRepositoryFromId($row[GitDao::REPOSITORY_ID]);
+                try {
+                    $deleteStatus = $repository->delete(true) && $deleteStatus;
+                } catch (GitBackendException $e) {
+                    $deleteStatus = false;
+                }
+            }
+        }
+        return $deleteStatus;
+    }
+
+    /**
+     * Load a repository from its id. Mainly used as a wrapper for tests
+     *
+     * @param $repositoryId Id of the repository
+     *
+     * @return GitRepository
+     */
+    function loadRepositoryFromId($repositoryId) {
+        $repository = new GitRepository();
+        $repository->setId($repositoryId);
+        $repository->load();
+        return $repository;
+    }
+
     /**
      * Set $driver
      *

@@ -63,7 +63,7 @@ class FRSPackageFactory {
 
         $data_array =& $dar->current();
 
-        return(FRSPackageFactory::getFRSPackageFromArray($data_array));
+        return($this->getFRSPackageFromArray($data_array));
     }
     
     function getFRSPackageByFileIdFromDb($file_id){
@@ -81,7 +81,7 @@ class FRSPackageFactory {
         
         $data_array =& $dar->current();
 
-        return(FRSPackageFactory::getFRSPackageFromArray($data_array));
+        return($this->getFRSPackageFromArray($data_array));
     }
     
     function getFRSPackageByReleaseIDFromDb($release_id, $group_id) {
@@ -100,49 +100,50 @@ class FRSPackageFactory {
 
         $data_array =& $dar->current();
 
-        return(FRSPackageFactory::getFRSPackageFromArray($data_array));
+        return($this->getFRSPackageFromArray($data_array));
     }
-    
+
+    /**
+     * Return the list of Packages for given project
+     * 
+     * @param Integer $group_id
+     * @param String  $status_id
+     * 
+     * @return Array
+     */
     function getFRSPackagesFromDb($group_id, $status_id=null) {
         $_id = (int) $group_id;
-        $dao =& $this->_getFRSPackageDao();
+        $dao = $this->_getFRSPackageDao();
         if($status_id){
-			$_status_id= (int) $status_id;  	
-        	$dar = $dao->searchActivePackagesByGroupId($_id, $this->STATUS_ACTIVE);
-        }else{
-        	$dar = $dao->searchByGroupId($_id);
+            $_status_id= (int) $status_id;
+            $dar = $dao->searchActivePackagesByGroupId($_id, $this->STATUS_ACTIVE);
+        } else {
+            $dar = $dao->searchByGroupId($_id);
         }
-        
-        if($dar->isError()){
-            return;
-        }
-        
-        $packages = array();
-        if($dar->valid()) {
-            $um =& UserManager::instance();
-            $user =& $um->getCurrentUser();
-            
+
+        if ($dar && !$dar->isError()) {
             $packages = array();
-            while ($dar->valid()){		
-                $data_array =& $dar->current();
+            $um = UserManager::instance();
+            $user = $um->getCurrentUser();
+
+            foreach ($dar as $data_array) {
                 if ($status_id){
                     if($this->userCanRead($group_id, $data_array['package_id'],$user->getID())){
-                        $packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
+                        $packages[] = $this->getFRSPackageFromArray($data_array);
                     }else{
                         $frsrf = new FRSReleaseFactory();
                         $authorised_releases = $frsrf->getFRSReleasesFromDb($data_array['package_id'], 1, $group_id);
                         if($authorised_releases && count($authorised_releases)>0){
-                            $packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
+                            $packages[] = $this->getFRSPackageFromArray($data_array);
                         }
                     }
                 }else{
-                    $packages[] = FRSPackageFactory::getFRSPackageFromArray($data_array);
+                    $packages[] = $this->getFRSPackageFromArray($data_array);
                 }
-                $dar->next();
             }
+            return $packages;
         }
-        
-        return $packages;
+        return;
     }
 
     function getPackageIdByName($package_name, $group_id){
@@ -215,30 +216,49 @@ class FRSPackageFactory {
         }
         return false;
     }
-    
-    /*
-    
-    Delete an empty package
-    
-    first, make sure the package is theirs
-    and delete the package from the database
-        
-    return 0 if release not deleted, 1 otherwise
-    */
-    function delete_package($group_id, $package_id) {
 
-        $package =& $this->getFRSPackageFromDb($package_id, $group_id);
+    /**
+     * Delete an empty package
+     * first, make sure the package is theirs
+     * and delete the package from the database
+     * return false if release not deleted, true otherwise
+     * 
+     * @param Integer $group_id
+     * @param Integer $package_id
+     * 
+     * @return Boolean
+     */
+    function delete_package($group_id, $package_id) {
+        $package = $this->getFRSPackageFromDb($package_id, $group_id);
         
         if (!$package_id) {
             //package not found for this project
-            return 0;
+            return false;
         } else {
-            
             //delete the package from the database
             $this->_delete($package_id);
-
-            return 1;
+            return true;
         }
+    }
+
+    /**
+     * Delete all FRS packages of given project
+     *
+     * @param Integer $groupId Project ID
+     *
+     * @return Boolean
+     */
+    function deleteProjectPackages($groupId) {
+        $deleteState = true;
+        $resPackages = $this->getFRSPackagesFromDb($groupId);
+        if (!empty($resPackages)) {
+            foreach ($resPackages as $package) {
+                if (!$this->delete_package($groupId, $package->getPackageID())) {
+                    $deleteState = false;
+                }
+            }
+        }
+        return $deleteState;
     }
 
     /**

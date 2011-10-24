@@ -20,6 +20,7 @@
  * 
  */
 
+require_once 'common/system_event/SystemEvent.class.php';
 
 /**
 * System Event classes
@@ -30,7 +31,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
     /**
      * Verbalize the parameters so they are readable and much user friendly in 
      * notifications
-     * 
+     *
      * @param bool $with_link true if you want links to entities. The returned 
      * string will be html instead of plain/text
      *
@@ -47,38 +48,170 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
      */
     function process() {
         // Check parameters
-        $group_id=$this->getIdFromParam($this->parameters);
-        
-        if ($project = $this->getProject($group_id)) {
-            
-            // Should we delete mailing lists? TODO
-            //$backend->setNeedUpdateMailAliases();
-            
-            if (!Backend::instance('System')->archiveProjectHome($group_id)) {
-                $this->error("Could not archive project home");
-                return false;
+        $groupId=$this->getIdFromParam($this->parameters);
+
+        $deleteState = true;
+
+        if ($project = $this->getProject($groupId)) {
+
+            if (!$this->removeProjectMembers($project)) {
+                $this->error("Could not remove project users");
+                $deleteState = false;
             }
-            
-            if (!Backend::instance('CVS')->archiveProjectCVS($group_id)) {
-                $this->error("Could not archive project CVS repository");
-                return false;
+
+            if (!$this->deleteMembershipRequestNotificationEntries($groupId)) {
+                $this->error("Could not remove membership request notification ugroups or message");
+                $deleteState = false;
             }
-            if ($project->usesCVS()) {
-                Backend::instance('CVS')->setCVSRootListNeedUpdate();
+
+            if (!$this->cleanupProjectFRS($groupId)) {
+                $this->error("Could not remove FRS items");
+                $deleteState = false;
             }
-            
-            if (!Backend::instance('SVN')->archiveProjectSVN($group_id)) {
-                $this->error("Could not archive project SVN repository");
-                return false;
+
+            // Mark all project trackers as deleted
+            $atf = $this->getArtifactTypeFactory($project);
+            if (!$atf->preDeleteAllProjectArtifactTypes()) {
+                $this->error("Could not mark all trackers as deleted");
+                    $deleteState = false;
             }
-            if ($project->usesSVN()) {
-                Backend::instance('SVN')->setSVNApacheConfNeedUpdate();
+
+            $backendSystem = $this->getBackend('System');
+            if ($backendSystem->projectHomeExists($project)) {
+                if (!$backendSystem->archiveProjectHome($groupId)) {
+                    $this->error("Could not archive project home");
+                    $deleteState = false;
+                } else {
+                    // Need to update system group cache
+                    $backendSystem->setNeedRefreshGroupCache();
+                }
             }
-            
-            $this->done();
-            return true;
+
+            // Archive public ftp
+            if (!$backendSystem->archiveProjectFtp($groupId)) {
+                $this->error("Could not archive project public ftp");
+                $deleteState = false;
+            }
+
+            // Mark Wiki attachments as deleted
+            $wa = $this->getWikiAttachment($groupId);
+            if (!$wa->deleteProjectAttachments()) {
+                $this->error("Could not mark all wiki attachments as deleted");
+                $deleteState = false;
+            }
+
+            $backendCVS = $this->getBackend('CVS');
+            if ($backendCVS->repositoryExists($project)) {
+                if (!$backendCVS->archiveProjectCVS($groupId)) {
+                    $this->error("Could not archive project CVS repository");
+                    $deleteState = false;
+                } else {
+                    $backendCVS->setCVSRootListNeedUpdate();
+                }
+            }
+
+            $backendSVN = $this->getBackend('SVN');
+            if ($backendSVN->repositoryExists($project)) {
+                if (!$backendSVN->archiveProjectSVN($groupId)) {
+                    $this->error("Could not archive project SVN repository");
+                    $deleteState = false;
+                } else {
+                    $backendSVN->setSVNApacheConfNeedUpdate();
+                }
+            }
+
+            // Delete Mailing lists
+            $backendMailinList = $this->getBackend('MailingList');
+            if (!$backendMailinList->deleteProjectMailingLists($groupId)) {
+                $this->error("Could not archive project mailing lists");
+                $deleteState = false;
+            } else {
+                // Need to remove list aliases
+                $backendAliases = $this->getBackend('Aliases');
+                $backendAliases->setNeedUpdateMailAliases();
+            }
+
+            if ($deleteState) {
+                $this->done();
+            }
         }
-        return false;
+        return $deleteState;
+    }
+
+     /**
+     * Remove all users from a given project.
+     *
+     * @param Project $project
+     *
+     * @return Boolean
+     */
+    protected function removeProjectMembers($project) {
+        $pm = $this->getProjectManager();
+        return $pm->removeProjectMembers($project);
+    }
+
+     /**
+     * Deletes ugroups assigned to recieve membership request notification 
+     * And the message set from a given project.
+     *
+     * @param Integer $groupId
+     *
+     * @return Boolean
+     */
+    protected function deleteMembershipRequestNotificationEntries($groupId) {
+        $pm = $this->getProjectManager();
+        return $pm->deleteMembershipRequestNotificationEntries($groupId);
+    }
+    
+
+    /**
+     * Remove Files, releases and packages for a given project.
+     *
+     * @param Integer $groupId
+     *
+     * @return Boolean
+     */
+    protected function cleanupProjectFRS($groupId) {
+        $frsff = $this->getFRSFileFactory();
+        return $frsff->deleteProjectFRS($groupId, $this->getBackend('System'));
+    }
+
+    /**
+     * Returns a ArtifactTypeFactory
+     *
+     * @return ArtifactTypeFactory
+     */
+    function getArtifactTypeFactory($project) {
+        return new ArtifactTypeFactory($project);
+    }
+
+    /**
+     * Wrapper for getFRSFileFactory
+     *
+     * @return FRSFileFactory
+     */
+    protected function getFRSFileFactory() {
+        return new FRSFileFactory();
+    }
+
+    /**
+     * Wrapper for tests
+     *
+     * @param Integer $groupId Id of the deleted project
+     *
+     * @return WikiAttachment
+     */
+    protected function getWikiAttachment($groupId) {
+        return new WikiAttachment($groupId);
+    }
+
+    /**
+     * Wrapper for ProjectManager
+     * 
+     * @return ProjectManager
+     */
+    protected function getProjectManager() {
+        return ProjectManager::instance();
     }
 
 }

@@ -220,7 +220,34 @@ class ProjectDao extends DataAccessObject {
         $sql = ' SELECT ugroup_id FROM groups_notif_delegation WHERE group_id = '.$this->da->quoteSmart($groupId);
         return $this->retrieve($sql);
     }
-    
+
+    /**
+     * Deletes the ugroup to be notified for given project
+     *
+     * @param Integer $groupId
+     *
+     * @return Boolean
+     */
+    public function deleteMembershipRequestNotificationUGroup($groupId){
+        $groupId = $this->da->escapeInt($groupId);
+        $sql     = 'DELETE FROM groups_notif_delegation WHERE group_id = '.$groupId;
+        return $this->update($sql);
+    }
+
+    /**
+     * Deletes the message set for a given project
+     *
+     * @param Integer $groupId
+     *
+     * @return Boolean
+     */
+    public function deleteMembershipRequestNotificationMessage($groupId){
+        $groupId = $this->da->escapeInt($groupId);
+        $sql     = 'DELETE FROM groups_notif_delegation_message WHERE group_id = '.$groupId;
+        return $this->update($sql);
+    }
+
+
     /**
      * Returns the message to be displayed to requester asking access for a given project
      *  
@@ -244,8 +271,6 @@ class ProjectDao extends DataAccessObject {
                 ' ON DUPLICATE KEY UPDATE msg_to_requester='.$this->da->quoteSmart($message);
         return $this->update($sql);
     }
-    
-   
 }
 
 ?>

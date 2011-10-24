@@ -24,6 +24,7 @@ require_once('Tracker_CannotAccessTrackerException.class.php');
 require_once('FormElement/Tracker_FormElementFactory.class.php');
 require_once('Artifact/Tracker_ArtifactFactory.class.php');
 require_once('Report/Tracker_ReportFactory.class.php');
+require_once('dao/Tracker_PermDao.class.php');
 
 class TrackerManager { /* extends Engine? */
     
@@ -705,6 +706,26 @@ class TrackerManager { /* extends Engine? */
             
         }
         
+    }
+
+    /**
+     * Mark as deleted all trackers of a given project
+     *
+     * @param Integer $groupId The project id
+     *
+     * @return Boolean
+     */
+    function deleteProjectTrackers($groupId) {
+        $deleteStatus = true;
+        $trackers = $this->getTrackerFactory()->getTrackersByGroupId($groupId);
+        if (!empty($trackers)) {
+            foreach ($trackers as $tracker) {
+                if (!$this->getTrackerFactory()->markAsDeleted($tracker->getId())) {
+                    $deleteStatus = false;
+                }
+            }
+        }
+        return $deleteStatus;
     }
 
 }

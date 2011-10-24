@@ -165,11 +165,12 @@ admin_groupedit	proj_edit	Edit Project Details
 admin_groupedit	proj_admin	Project Admin
 admin_groupedit	proj_member	View/Edit Project Members
 admin_groupedit	group_type	Project Type
-admin_groupedit	incomplete	Incomplete
-admin_groupedit	active	Active
-admin_groupedit	pending	Pending
-admin_groupedit	holding	Holding
-admin_groupedit	deleted	Deleted
+admin_groupedit	status_I	Incomplete
+admin_groupedit	status_A	Active
+admin_groupedit	status_P	Pending
+admin_groupedit	status_H	Holding
+admin_groupedit	status_D	Deleted
+admin_groupedit	status_s	System
 admin_groupedit	public	Public?
 admin_groupedit	license	License
 admin_groupedit	home_box	Home Box

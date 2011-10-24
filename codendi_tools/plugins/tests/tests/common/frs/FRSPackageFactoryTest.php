@@ -19,7 +19,7 @@
  */
 
 require_once(dirname(__FILE__).'/../../../../../../src/common/frs/FRSPackageFactory.class.php');
-Mock::generatePartial('FRSPackageFactory', 'FRSPackageFactoryTestVersion', array('_getFRSPackageDao', 'getUserManager', 'getPermissionsManager'));
+Mock::generatePartial('FRSPackageFactory', 'FRSPackageFactoryTestVersion', array('_getFRSPackageDao', 'getUserManager', 'getPermissionsManager', 'getFRSPackagesFromDb', 'delete_package'));
 require_once(dirname(__FILE__).'/../../../../../../src/common/dao/include/DataAccess.class.php');
 require_once(dirname(__FILE__).'/../../../../../../src/common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
@@ -29,6 +29,7 @@ Mock::generatePartial('FRSPackageDao', 'FRSPackageDaoTestVersion', array('retrie
 Mock::generate('User');
 Mock::generate('UserManager');
 Mock::generate('PermissionsManager');
+Mock::generate('FRSPackage');
 
 class FRSPackageFactoryTest extends UnitTestCase {
     protected $group_id   = 12;
@@ -316,6 +317,28 @@ class FRSPackageFactoryTest extends UnitTestCase {
         $frspf->setReturnValue('getUserManager', $um);
         
         $this->assertFalse($frspf->userCanCreate($this->group_id, $this->user_id));
+    }
+
+    function testDeleteProjectPackagesFail() {
+        $packageFactory = new FRSPackageFactoryTestVersion();
+        $package = new MockFRSPackage();
+        $packageFactory->setReturnValue('getFRSPackagesFromDb', array($package, $package, $package));
+        $packageFactory->setReturnValueAt(0, 'delete_package', true);
+        $packageFactory->setReturnValueAt(1, 'delete_package', false);
+        $packageFactory->setReturnValueAt(2, 'delete_package', true);
+        $packageFactory->expectCallCount('delete_package', 3);
+        $this->assertFalse($packageFactory->deleteProjectPackages(1));
+    }
+
+    function testDeleteProjectPackagesSuccess() {
+        $packageFactory = new FRSPackageFactoryTestVersion();
+        $package = new MockFRSPackage();
+        $packageFactory->setReturnValue('getFRSPackagesFromDb', array($package, $package, $package));
+        $packageFactory->setReturnValueAt(0, 'delete_package', true);
+        $packageFactory->setReturnValueAt(1, 'delete_package', true);
+        $packageFactory->setReturnValueAt(2, 'delete_package', true);
+        $packageFactory->expectCallCount('delete_package', 3);
+        $this->assertTrue($packageFactory->deleteProjectPackages(1));
     }
 
 }

@@ -14,12 +14,13 @@ Mock::generate('Project');
 Mock::generate('ProjectManager');
 Mock::generate('DataAccessResult');
 Mock::generate('FRSReleaseFactory');
+Mock::generate('FRSPackageFactory');
 Mock::generate('FRSRelease');
 Mock::generate('FRSFileDao');
 Mock::generate('FRSFile');
 Mock::generate('BackendSystem');
 Mock::generate('BaseLanguage');
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_getFRSReleaseFactory', '_getProjectManager'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_getFRSReleaseFactory', '_getProjectManager', 'moveDeletedFilesToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_getFRSFileDao', 'purgeFile'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
@@ -1131,6 +1132,82 @@ class FRSFileFactoryTest extends UnitTestCase {
         unlink($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456/toto.txt');
         unlink($GLOBALS['ftp_incoming_dir'].'/toto.txt');
         rmdir($GLOBALS['ftp_frs_dir_prefix'].'/prj/p123_r456');
+    }
+
+    function testDeleteProjectFRSPackagesFail() {
+        $packageFactory = new MockFRSPackageFactory();
+        $packageFactory->setReturnValue('deleteProjectPackages', false);
+
+        $releaseFactory = new MockFRSReleaseFactory();
+        $releaseFactory->setReturnValue('deleteProjectReleases', true);
+        $releaseFactory->setReturnValue('_getFRSPackageFactory', $packageFactory);
+
+        $fileFactory = new FRSFileFactoryTestVersion();
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+        $fileFactory->setReturnValue('moveDeletedFilesToStagingArea', true);
+
+        $fileFactory->expectOnce('moveDeletedFilesToStagingArea');
+        $releaseFactory->expectOnce('deleteProjectReleases');
+        $packageFactory->expectOnce('deleteProjectPackages');
+        $backend = new MockBackendSystem();
+        $this->assertFalse($fileFactory->deleteProjectFRS(1, $backend));
+    }
+
+    function testDeleteProjectFRSReleasesFail() {
+        $packageFactory = new MockFRSPackageFactory();
+        $packageFactory->setReturnValue('deleteProjectPackages', true);
+
+        $releaseFactory = new MockFRSReleaseFactory();
+        $releaseFactory->setReturnValue('deleteProjectReleases', false);
+        $releaseFactory->setReturnValue('_getFRSPackageFactory', $packageFactory);
+
+        $fileFactory = new FRSFileFactoryTestVersion();
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+        $fileFactory->setReturnValue('moveDeletedFilesToStagingArea', true);
+
+        $fileFactory->expectOnce('moveDeletedFilesToStagingArea');
+        $releaseFactory->expectOnce('deleteProjectReleases');
+        $packageFactory->expectOnce('deleteProjectPackages');
+        $backend = new MockBackendSystem();
+        $this->assertFalse($fileFactory->deleteProjectFRS(1, $backend));
+    }
+
+    function testDeleteProjectFRSMoveFail() {
+        $packageFactory = new MockFRSPackageFactory();
+        $packageFactory->setReturnValue('deleteProjectPackages', true);
+
+        $releaseFactory = new MockFRSReleaseFactory();
+        $releaseFactory->setReturnValue('deleteProjectReleases', true);
+        $releaseFactory->setReturnValue('_getFRSPackageFactory', $packageFactory);
+
+        $fileFactory = new FRSFileFactoryTestVersion();
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+        $fileFactory->setReturnValue('moveDeletedFilesToStagingArea', false);
+
+        $fileFactory->expectOnce('moveDeletedFilesToStagingArea');
+        $releaseFactory->expectOnce('deleteProjectReleases');
+        $packageFactory->expectOnce('deleteProjectPackages');
+        $backend = new MockBackendSystem();
+        $this->assertFalse($fileFactory->deleteProjectFRS(1, $backend));
+    }
+
+    function testDeleteProjectFRSSuccess() {
+        $packageFactory = new MockFRSPackageFactory();
+        $packageFactory->setReturnValue('deleteProjectPackages', true);
+
+        $releaseFactory = new MockFRSReleaseFactory();
+        $releaseFactory->setReturnValue('deleteProjectReleases', true);
+        $releaseFactory->setReturnValue('_getFRSPackageFactory', $packageFactory);
+
+        $fileFactory = new FRSFileFactoryTestVersion();
+        $fileFactory->setReturnValue('_getFRSReleaseFactory', $releaseFactory);
+        $fileFactory->setReturnValue('moveDeletedFilesToStagingArea', true);
+
+        $fileFactory->expectOnce('moveDeletedFilesToStagingArea');
+        $releaseFactory->expectOnce('deleteProjectReleases');
+        $packageFactory->expectOnce('deleteProjectPackages');
+        $backend = new MockBackendSystem();
+        $this->assertTrue($fileFactory->deleteProjectFRS(1, $backend));
     }
 
 }

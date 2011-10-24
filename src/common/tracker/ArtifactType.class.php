@@ -531,12 +531,14 @@ class ArtifactType extends Error {
 	/**
 	 *	preDelete - Mark this for deletion.
 	 *
+	 * @param Boolean $bypassPerms Set to true to bypass testing if user is tracker admin
+	 *
 	 *	@return boolean	success.
 	 */
-	function preDelete() {
+	function preDelete($bypassPerms = false) {
 	  global $Language;
 
-		if (!$this->userIsAdmin()) {
+		if (!$bypassPerms && !$this->userIsAdmin()) {
 			$this->setError($Language->getText('tracker_common_canned','perm_denied'));
 			return false;
 		}

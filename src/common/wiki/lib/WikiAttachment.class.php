@@ -108,7 +108,7 @@ class WikiAttachment /* implements UGroupPermission */ {
      * @access public
      * @param  Iterator
      */
-    function &getAttachmentIterator($gid=null) {
+    function getAttachmentIterator($gid=null) {
         $waArray = array();
         if($gid !== null) {
             $gid = (int) $gid;
@@ -589,6 +589,33 @@ class WikiAttachment /* implements UGroupPermission */ {
             return $dao->delete($this->id);
         }
         return false;
+    }
+
+    /**
+     * Mark all project attachments as deleted, no physical remove from the FS until the purge
+     *
+     * @param Integer $groupId Id of the conserned project
+     *
+     * @return Boolean
+     */
+    function deleteProjectAttachments($groupId = null) {
+        $deleteStatus = true;
+        if($groupId !== null) {
+            $groupId = (int) $groupId;
+        }
+        else {
+            $groupId = $this->gid;
+        }
+        $wai = $this->getAttachmentIterator($groupId);
+        $wai->rewind();
+        while($wai->valid()) {
+            $wa = $wai->current();
+            if ($wa->isActive()) {
+                $deleteStatus = $wa->deleteAttachment() && $deleteStatus;
+            }
+            $wai->next();
+        }
+        return $deleteStatus;
     }
 
     /**

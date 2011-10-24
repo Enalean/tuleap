@@ -97,7 +97,7 @@ function news_show_latest($group_id='',$limit=10,$show_summaries=true,$allow_sub
     $sql="SELECT groups.group_name,groups.unix_group_name,news_bytes.submitted_by,news_bytes.forum_id,news_bytes.summary,news_bytes.date,news_bytes.details ".
 	"FROM news_bytes,groups ".
 	"WHERE $wclause ".
-	"AND news_bytes.group_id=groups.group_id ".
+	"AND groups.status = 'A' AND news_bytes.group_id=groups.group_id ".
 	'ORDER BY date DESC LIMIT '.db_ei($limit+$tail_headlines);
 
     $result=db_query($sql);

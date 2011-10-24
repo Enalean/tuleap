@@ -449,6 +449,7 @@ project_admin_utils	verify_end_date	Vérifiez la date de fin
 project_admin_utils	verify_dates	La date de début doit être inférieure à la date de fin
 project_admin_utils	from	Depuis
 project_admin_utils	to	Jusqu'a
+project_admin_utils	status	Statut modifié
 #... end of values
 #
 #-----------------------------------------------

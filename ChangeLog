@@ -1,4 +1,7 @@
 Version 4.0.23 (Not  released yet)
+    == Enhancement ==
+    * Improve project deletion: project only visible by site admins, most services purged. (contrib STMicroelectronics)
+
     == Bug fix ==
     * Fix regression on file download with IE and https.
     * Fix regression on tracker mail header (X-Codendi-Project)
@@ -12,7 +15,7 @@ Version 4.0.23 (Not  released yet)
     * Fix file download does not work anymore with IE7/8 & https
     * Fix regression on tracker mail headers
     * Force load of plugins ordered by installation order
-    
+
     == Plugins ==
     * Hudson v1.4. See separated Changelog
     * GraphOnTrackerV5 v0.2. See separated Changelog

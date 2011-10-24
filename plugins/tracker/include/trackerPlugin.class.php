@@ -57,6 +57,7 @@ class trackerPlugin extends Plugin {
         
         $this->_addHook('widget_instance',                     'widget_instance',                   false);
         $this->_addHook('widgets',                             'widgets',                           false);
+        $this->_addHook('project_is_deleted', 'project_is_deleted', false);
     }
     
     public function getPluginInfo() {
@@ -407,6 +408,22 @@ class trackerPlugin extends Plugin {
                     $params['areas'][] = $area;
                 }
             }
+        }
+    }
+
+    /**
+     * When a project is deleted, we delete all its trackers
+     *
+     * @param mixed $params ($param['group_id'] the ID of the deleted project)
+     *
+     * @return void
+     */
+    function project_is_deleted($params) {
+        $groupId = $params['group_id'];
+        if ($groupId) {
+            include_once 'Tracker/TrackerManager.class.php';
+            $trackerManager = new TrackerManager();
+            $trackerManager->deleteProjectTrackers($groupId);
         }
     }
 }

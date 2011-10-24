@@ -305,6 +305,30 @@ class BackendSystem extends Backend {
     }
 
     /**
+     * Archive ftp elements for a given project.
+     * It would delete FTP directory content of the project
+     * and create a Tarball in temp dir.
+     *
+     * @param Integer $groupId the group id
+     *
+     * @return Boolean
+     */
+    function archiveProjectFtp($groupId) {
+        $project=$this->getProjectManager()->getProject($groupId);
+        if (!$project) {
+            return false;
+        }
+        $anonymousFTP = $GLOBALS['ftp_anon_dir_prefix']."/".$project->getUnixName(false);
+        $backupfile = $GLOBALS['tmp_dir']."/".$project->getUnixName(false)."-ftp.tgz";
+        if (is_dir($anonymousFTP)) {
+            system("cd ".$GLOBALS['ftp_anon_dir_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
+            chmod($backupfile, 0600);
+            $this->recurseDeleteInDir($anonymousFTP);
+        }
+        return true;
+    }
+
+    /**
      * Remove deleted releases and released files
      */
     public function cleanupFRS() {

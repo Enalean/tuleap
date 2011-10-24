@@ -46,6 +46,12 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
+$pm = ProjectManager::instance();
+$project = $pm->getProject($group_id);
+if (!$project->isActive()) {
+    exit_error($GLOBALS['Language']->getText('include_exit','exit_error'), $GLOBALS['Language']->getText('include_exit', 'project_status_'.$project->getStatus()));
+}
+
 //if ($request->isPost()) {
 switch ($func) {
     case 'confirm_restore_frs_file':
@@ -146,7 +152,7 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
 
     $html  = '';
     $html .= '<div class="contenu_onglet" id="contenu_onglet_frs_file">';
-    $html .= '<p>Note: there might be some delay (max 30 minutes) between the time the file is deleted and time it appears here.<br />When a file is deleted by the user, it appears in this list after SYSTEM_CHECK <a href="/admin/system_events/">system event</a> is processed</p>'.
+    $html .= '<p>Note: there might be some delay (max 30 minutes) between the time the file is deleted and time it become restorable.<br />When a file is deleted by the user, it become restorable after SYSTEM_CHECK <a href="/admin/system_events/">system event</a> is processed</p>'.
              '<p>Please note that <strong>actual file restoration</strong> will be done by the <strong>next SYSTEM_CHECK</strong> event. This interface only schedule the restoration.</p>';
     $i     = 1;
     if ($files->rowCount() > 0) {
@@ -162,7 +168,7 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
             $html .= '<td><a href="'.$url.'">'.$file['package_name'].'</a></td>';
             $html .= '<td>'.html_time_ago($file['delete_date']).'</td>';
             $html .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>';
-            $html .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_frs_file&id='.$file['file_id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td>';
+            $html .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_frs_file&id='.$file['file_id'].'"><img src="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\'Confirm restore of this file\')" border="0" height="16" width="16"></a></td>';
             $html .= '</tr>';
         }
     }
@@ -189,7 +195,7 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
             } else {
                 $html .= '<td align="center" colspan="2">File marked to be restored in a deleted release</td>';
             }
-            $html .= '<td align="center"><img src="'.util_get_image_theme("trash-grey.png").'" border="0" height="16" width="16"></td>';
+            $html .= '<td align="center"><img src="'.util_get_image_theme("ic/convert-grey.png").'" border="0" height="16" width="16"></td>';
             $html .= '</tr>';
         }
     }
@@ -208,7 +214,7 @@ function frs_file_restore_view($group_id, $idArray, $nomArray, $htmlArray) {
             $url   = '/file/showfiles.php?group_id='.$group_id.'#p_'.$file['package_id'];
             $html .= '<td><a href="'.$url.'">'.$file['package_name'].'</a></td>';
             $html .= '<td align="center" colspan="2">Not yet restorable</td>';
-            $html .= '<td align="center"><img src="'.util_get_image_theme("trash-grey.png").'" border="0" height="16" width="16"></td>';
+            $html .= '<td align="center"><img src="'.util_get_image_theme("ic/convert-grey.png").'" border="0" height="16" width="16"></td>';
             $html .= '</tr>';
         }
     }
@@ -264,14 +270,14 @@ function wiki_attachment_restore_view($group_id, $idArray, $nomArray, $htmlArray
                 $tabbed_content .= '<tr class="boxitemgrey">';
                 $tabbed_content .= '<td>'.$wiki_attachment['name'].'</td>';
                 $tabbed_content .= '<td align="center" colspan="2">Non-restorable attachment</td>';
-                $tabbed_content .= '<td align="center"><img src="'.util_get_image_theme("trash-grey.png").'" border="0" height="16" width="16"></td>';
+                $tabbed_content .= '<td align="center"><img src="'.util_get_image_theme("ic/convert-grey.png").'" border="0" height="16" width="16"></td>';
             } else {
             $purgeDate = strtotime('+'.$GLOBALS['sys_file_deletion_delay'].' day', $wiki_attachment['delete_date']);
                 $tabbed_content .= '<tr class="'. html_get_alt_row_color($i++) .'">';
                 $tabbed_content .= '<td>'.$wiki_attachment['name'].'</td>';
                 $tabbed_content .= '<td>'.html_time_ago($wiki_attachment['delete_date']).'</td>';
                 $tabbed_content .= '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>';
-                $tabbed_content .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_wiki_attachment&id='.$wiki_attachment['id'].'"><img src="'.util_get_image_theme("trash-x.png").'" onClick="return confirm(\'Confirm restore of this attachment\')" border="0" height="16" width="16"></a></td>';
+                $tabbed_content .= '<td align="center"><a href="?group_id='.$group_id.'&func=confirm_restore_wiki_attachment&id='.$wiki_attachment['id'].'"><img src="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\'Confirm restore of this attachment\')" border="0" height="16" width="16"></a></td>';
             }
                 $tabbed_content .= '</tr>';
         }

@@ -46,7 +46,7 @@ class WikiAttachmentDao extends DataAccessObject {
      * @param integer $id Attachement id
      * @return DataAccessResult
      */
-    function &read($id) {
+    function read($id) {
         $qry = sprintf('SELECT * FROM wiki_attachment'
                        .' WHERE id=%d',
                        $id);
@@ -81,7 +81,7 @@ class WikiAttachmentDao extends DataAccessObject {
      * @param integer $gid Group id
      * @return DataAccessResult
      */
-    function &getList($gid) {
+    function getList($gid) {
         $qry = sprintf('SELECT * FROM wiki_attachment'
                        .' WHERE group_id=%d',
                        $gid);
@@ -99,7 +99,7 @@ class WikiAttachmentDao extends DataAccessObject {
      * @param integer $gid Group id
      * @return DataAccessResult
      */
-    function &getListWithCounterOrderedByRevDate($gid) {
+    function getListWithCounterOrderedByRevDate($gid) {
         $qry = sprintf('SELECT wa.id, wa.group_id, wa.name, count(*) as nb, MAX(war.date) as max_date'
                        .' FROM wiki_attachment_revision AS war, wiki_attachment AS wa'
                        .' WHERE wa.group_id=%d'
@@ -120,7 +120,7 @@ class WikiAttachmentDao extends DataAccessObject {
      * @param string  $filename attachement name
      * @return DataAccessResult
      */
-    function &getIdFromFilename($gid, $filename) {
+    function getIdFromFilename($gid, $filename) {
         $qry = sprintf('SELECT id FROM wiki_attachment'
                        .' WHERE name COLLATE utf8_bin =%s'
                        .' AND group_id=%d'

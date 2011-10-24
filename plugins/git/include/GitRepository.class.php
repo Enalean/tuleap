@@ -504,8 +504,12 @@ class GitRepository implements DVCSRepository {
 
     /**
      * Delete a repository (reference and fork)
+     *
+     * @param Boolean $ignoreHasChildren If true delete will ignore if the repo has childrens
+     *
+     * @return Boolean
      */
-    public function delete() {
+    public function delete($ignoreHasChildren = false) {
         $project = $this->getProject();
         //if empty project name -> get out of here
         if ( !empty($project) ) {
@@ -529,7 +533,7 @@ class GitRepository implements DVCSRepository {
         $postRecMailManager = $this->getPostReceiveMailManager();
         $postRecMailManager->removeMailByRepository($this);
 
-        $this->getBackend()->delete($this);
+        $this->getBackend()->delete($this, $ignoreHasChildren);
     }
 
     /**

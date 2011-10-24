@@ -117,10 +117,11 @@ interface Git_Backend_Interface {
      * Delete a repository
      *
      * @param GitRepository $repository
-     * 
+     * @param Boolean       $ignoreHasChildren If true delete will ignore if the repo has childrens
+     *
      * @return Boolean
      */
-    public function delete($repository);
+    public function delete($repository, $ignoreHasChildren = false);
 
 }
 ?>

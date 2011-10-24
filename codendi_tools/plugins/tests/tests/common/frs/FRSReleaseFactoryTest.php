@@ -25,7 +25,7 @@ Mock::generate('User');
 Mock::generate('UserManager');
 Mock::generate('PermissionsManager');
 Mock::generate('FRSPackageFactory');
-Mock::generatePartial('FRSReleaseFactory', 'FRSReleaseFactoryTestVersion', array('getUserManager', 'getPermissionsManager', '_getFRSPackageFactory'));
+Mock::generatePartial('FRSReleaseFactory', 'FRSReleaseFactoryTestVersion', array('getUserManager', 'getPermissionsManager', '_getFRSPackageFactory', 'getFRSReleasesInfoListFromDb', 'delete_release'));
 
 class FRSReleaseFactoryTest extends UnitTestCase {
     protected $group_id   = 12;
@@ -273,6 +273,29 @@ class FRSReleaseFactoryTest extends UnitTestCase {
         
         $this->assertFalse($frsrf->userCanCreate($this->group_id, $this->user_id));
     }
+
+    function testDeleteProjectReleasesFail() {
+        $releaseFactory = new FRSReleaseFactoryTestVersion();
+        $release = array('release_id' => 1);
+        $releaseFactory->setReturnValue('getFRSReleasesInfoListFromDb', array($release, $release, $release));
+        $releaseFactory->setReturnValueAt(0, 'delete_release', true);
+        $releaseFactory->setReturnValueAt(1, 'delete_release', false);
+        $releaseFactory->setReturnValueAt(2, 'delete_release', true);
+        $releaseFactory->expectCallCount('delete_release', 3);
+        $this->assertFalse($releaseFactory->deleteProjectReleases(1));
+    }
+
+    function testDeleteProjectReleasesSuccess() {
+        $releaseFactory = new FRSReleaseFactoryTestVersion();
+        $release = array('release_id' => 1);
+        $releaseFactory->setReturnValue('getFRSReleasesInfoListFromDb', array($release, $release, $release));
+        $releaseFactory->setReturnValueAt(0, 'delete_release', true);
+        $releaseFactory->setReturnValueAt(1, 'delete_release', true);
+        $releaseFactory->setReturnValueAt(2, 'delete_release', true);
+        $releaseFactory->expectCallCount('delete_release', 3);
+        $this->assertTrue($releaseFactory->deleteProjectReleases(1));
+    }
+
 }
 
 ?>

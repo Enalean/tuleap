@@ -122,13 +122,13 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         return true;
     }
 
-    public function delete($repository) {
+    public function delete($repository, $ignoreHasChildren = false) {
         $path = $repository->getPath();
         if ( empty($path) ) {
             throw new GitBackendException('Bad repository path: '.$path);
         }
         $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$path;        
-        if ( $this->getDao()->hasChild($repository) === true ) {
+        if ($ignoreHasChildren === false && $this->getDao()->hasChild($repository) === true) {
             throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
         }
         
@@ -141,6 +141,31 @@ class GitBackend extends Backend implements Git_Backend_Interface {
             throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error') );
         }
         
+    }
+
+    /**
+     * Delete all repositories of a project
+     *
+     * @param Integer $projectId Id of the project
+     *
+     * @return Boolean
+     */
+    public function deleteProjectRepositories($projectId) {
+        $deleteStatus   = true;
+        $repositoryList = $this->getDao()->getProjectRepositoryList($projectId, true);
+        if (!empty($repositoryList)) {
+            $sem = $this->getSystemEventManager();
+            foreach ($repositoryList as $repositoryId => $repoData) {
+                $sem->createEvent('GIT_REPO_DELETE',
+                                   $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryId.SystemEvent::PARAMETER_SEPARATOR.true,
+                                   SystemEvent::PRIORITY_MEDIUM);
+            }
+        }
+        return $deleteStatus;
+    }
+
+    function getSystemEventManager() {
+        return SystemEventManager::instance();
     }
 
     public function save($repository) {

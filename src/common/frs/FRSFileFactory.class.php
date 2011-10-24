@@ -490,6 +490,30 @@ class FRSFileFactory extends Error {
     }
 
     /**
+     * Remove Files, releases and packages for a given project.
+     *
+     * @param Integer $groupId
+     * @param BackendSystem $backend
+     *
+     * @return Boolean
+     */
+    public function deleteProjectFRS($groupId, $backend) {
+        $deleteState = true;
+        $frsrf = $this->_getFRSReleaseFactory();
+        if (!$frsrf->deleteProjectReleases($groupId)) {
+            $deleteState = false;
+        }
+        $frspf = $frsrf->_getFRSPackageFactory();
+        if (!$frspf->deleteProjectPackages($groupId)) {
+            $deleteState = false;
+        }
+        if (!$this->moveDeletedFilesToStagingArea($backend)) {
+            $deleteState = false;
+        }
+        return $deleteState;
+    }
+
+    /**
      * If release directory is empty, delete it
      *
      * @param FRSFile $file

@@ -22,16 +22,25 @@
  */
 require_once('common/project/ProjectManager.class.php');
 
-Mock::generatePartial('ProjectManager', 'ProjectManagerTestVersion', array('createProjectInstance', '_getDao'));
+Mock::generatePartial('ProjectManager', 'ProjectManagerTestVersion', array('createProjectInstance', '_getDao', '_getUserManager'));
+Mock::generatePartial('ProjectManager', 'ProjectManagerTestVersion2', array('getProject', 'getProjectByUnixName', 'checkRestrictedAccess'));
 Mock::generate('Project');
 require_once('common/dao/ProjectDao.class.php');
 Mock::generate('ProjectDao');
+Mock::generate('UserManager');
+Mock::generate('User');
+require_once('common/language/BaseLanguage.class.php');
+Mock::generate('BaseLanguage');
 
 class ProjectManagerTest extends UnitTestCase {
     function __construct($name = 'ProjectManager test') {
         $this->UnitTestCase($name);
     }
-    
+
+    function tearDown() {
+        unset($GLOBALS['sys_allow_restricted_users']);
+    }
+
     function testGetProject() {
         $p1 = new MockProject($this);
         $p1->setReturnValue('getId', '1');
@@ -93,5 +102,151 @@ class ProjectManagerTest extends UnitTestCase {
         $this->assertFalse($pm->isCached($p1->getId()));
         
     }
+
+    function testGetGroupByIdForSoapNoProject() {
+        if (!defined('get_group_fault')) {
+            define('get_group_fault', '3000');
+        }
+        $Language = new MockBaseLanguage();
+        $GLOBALS['language'] = $Language;
+        $pm = new ProjectManagerTestVersion2();
+        $pm->setReturnValue('getProject', null);
+        $this->expectException('SoapFault');
+        $pm->getGroupByIdForSoap(1, '');
+    }
+
+    function testGetGroupByIdForSoapProjectError() {
+        if (!defined('get_group_fault')) {
+            define('get_group_fault', '3000');
+        }
+        $Language = new MockBaseLanguage();
+        $GLOBALS['language'] = $Language;
+        $pm = new ProjectManagerTestVersion2();
+        $project = new MockProject();
+        $project->setReturnValue('isError', true);
+        $pm->setReturnValue('getProject', $project);
+        $this->expectException('SoapFault');
+        $pm->getGroupByIdForSoap(1, '');
+    }
+
+    function testGetGroupByIdForSoapProjectNotActive() {
+        if (!defined('get_group_fault')) {
+            define('get_group_fault', '3000');
+        }
+        $Language = new MockBaseLanguage();
+        $GLOBALS['language'] = $Language;
+        $pm = new ProjectManagerTestVersion2();
+        $project = new MockProject();
+        $project->setReturnValue('isError', false);
+        $project->setReturnValue('isActive', false);
+        $pm->setReturnValue('getProject', $project);
+        $this->expectException('SoapFault');
+        $pm->getGroupByIdForSoap(1, '');
+    }
+
+    function testGetGroupByIdForSoapRestricted() {
+        if (!defined('get_group_fault')) {
+            define('get_group_fault', '3000');
+        }
+        $Language = new MockBaseLanguage();
+        $GLOBALS['language'] = $Language;
+        $pm = new ProjectManagerTestVersion2();
+        $project = new MockProject();
+        $project->setReturnValue('isError', false);
+        $project->setReturnValue('isActive', true);
+        $pm->setReturnValue('getProject', $project);
+        $pm->setReturnValue('checkRestrictedAccess', false);
+        $this->expectException('SoapFault');
+        $pm->getGroupByIdForSoap(1, '');
+    }
+
+    function testGetGroupByIdForSoapPass() {
+        if (!defined('get_group_fault')) {
+            define('get_group_fault', '3000');
+        }
+        $Language = new MockBaseLanguage();
+        $GLOBALS['language'] = $Language;
+        $pm = new ProjectManagerTestVersion2();
+        $project = new MockProject();
+        $project->setReturnValue('isError', false);
+        $project->setReturnValue('isActive', true);
+        $pm->setReturnValue('getProject', $project);
+        $pm->setReturnValue('checkRestrictedAccess', true);
+        $this->assertNoErrors();
+        $pm->getGroupByIdForSoap(1, '');
+    }
+
+    function testCheckRestrictedAccessNoRestricted () {
+        $pm = new ProjectManagerTestVersion();
+        $this->assertTrue($pm->checkRestrictedAccess(null));
+        $pm->expectNever('_getUserManager');
+    }
+
+    function testCheckRestrictedAccessRestrictedNotAllowed () {
+        $GLOBALS['sys_allow_restricted_users'] = 0;
+        $pm = new ProjectManagerTestVersion();
+        $this->assertTrue($pm->checkRestrictedAccess(null));
+        $pm->expectNever('_getUserManager');
+    }
+
+    function testCheckRestrictedAccessNoGroup () {
+        $GLOBALS['sys_allow_restricted_users'] = 1;
+        $pm = new ProjectManagerTestVersion();
+        $this->assertFalse($pm->checkRestrictedAccess(null));
+        $pm->expectNever('_getUserManager');
+    }
+
+    function testCheckRestrictedAccessNoUser () {
+        $GLOBALS['sys_allow_restricted_users'] = 1;
+        $pm = new ProjectManagerTestVersion();
+        $um = new MockUserManager();
+        $um->setReturnValue('getCurrentUser', null);
+        $pm->setReturnValue('_getUserManager', $um);
+        $project = new MockProject();
+        $this->assertFalse($pm->checkRestrictedAccess($project));
+        $pm->expectOnce('_getUserManager');
+    }
+
+    function testCheckRestrictedAccessUserNotRestricted () {
+        $GLOBALS['sys_allow_restricted_users'] = 1;
+        $pm = new ProjectManagerTestVersion();
+        $um = new MockUserManager();
+        $user = new MockUser();
+        $user->setReturnValue('isRestricted', false);
+        $um->setReturnValue('getCurrentUser', $user);
+        $pm->setReturnValue('_getUserManager', $um);
+        $project = new MockProject();
+        $this->assertTrue($pm->checkRestrictedAccess($project));
+        $pm->expectOnce('_getUserManager');
+    }
+
+    function testCheckRestrictedAccessUserNotMember () {
+        $GLOBALS['sys_allow_restricted_users'] = 1;
+        $pm = new ProjectManagerTestVersion();
+        $um = new MockUserManager();
+        $user = new MockUser();
+        $user->setReturnValue('isRestricted', true);
+        $um->setReturnValue('getCurrentUser', $user);
+        $pm->setReturnValue('_getUserManager', $um);
+        $project = new MockProject();
+        $project->setReturnValue('userIsMember', false);
+        $this->assertFalse($pm->checkRestrictedAccess($project));
+        $pm->expectOnce('_getUserManager');
+    }
+
+    function testCheckRestrictedAccessUserIsMember () {
+        $GLOBALS['sys_allow_restricted_users'] = 1;
+        $pm = new ProjectManagerTestVersion();
+        $um = new MockUserManager();
+        $user = new MockUser();
+        $user->setReturnValue('isRestricted', true);
+        $um->setReturnValue('getCurrentUser', $user);
+        $pm->setReturnValue('_getUserManager', $um);
+        $project = new MockProject();
+        $project->setReturnValue('userIsMember', true);
+        $this->assertTrue($pm->checkRestrictedAccess($project));
+        $pm->expectOnce('_getUserManager');
+    }
+
 }
 ?>

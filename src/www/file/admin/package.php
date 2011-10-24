@@ -74,8 +74,7 @@ if ($request->valid($vFunc)) {
                     if($num_releases>0){
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages','p_not_empty'));
                     }else{
-                        $res = $frspf->delete_package($group_id, $package_id);
-                        if ($res == 0) {
+                        if (!$frspf->delete_package($group_id, $package_id)) {
                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_admin_editpackages','p_not_yours'));
                         } else {
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_admin_editpackages','p_del'));

@@ -58,7 +58,11 @@ class SystemEvent_GIT_REPO_DELETE extends SystemEvent {
                 $this->error('Bad project id');
                 return false;
             }
-            $repository->delete();
+            $ignoreHasChildren = false;
+            if (!empty($parameters[2])) {
+                $ignoreHasChildren = $parameters[2];
+            }
+            $repository->delete($ignoreHasChildren);
 
         } catch (Exception $e) {
             $this->error( $e->getMessage() );

@@ -21,6 +21,7 @@
 //require_once('common/include/Error.class.php');
 require_once('common/tracker/ArtifactType.class.php');
 require_once('common/tracker/ArtifactCanned.class.php');
+require_once('common/tracker/ArtifactRulesManager.class.php');
 require_once('common/dao/ArtifactGroupListDao.class.php');
 require_once('common/dao/CodendiDataAccess.class.php');
 
@@ -177,7 +178,7 @@ class ArtifactTypeFactory extends Error {
 	/**
 	 *	getPendingArtifactTypes - return an array of ArtifactType objects with 'D' status
 	 *
-	 *  @aparam group_id: the group id
+	 *  @param group_id: the group id
 	 *
 	 *	@return	resultSet
 	 */
@@ -200,7 +201,47 @@ class ArtifactTypeFactory extends Error {
 
 		return $result;
 	}
-	
+
+    /**
+     * Mark all project trackers as deleted
+     *
+     * @return Boolean
+     */
+    function preDeleteAllProjectArtifactTypes() {
+        $deleteStatus = true;
+        $artifactTypes = $this->getArtifactTypes();
+        if ($artifactTypes) {
+            foreach ($artifactTypes as $artifactType) {
+                if (!$this->preDeleteArtifactType($artifactType)) {
+                    $deleteStatus = false;
+                }
+            }
+        }
+        return $deleteStatus;
+    }
+
+    /**
+     * Mark a tacker as deleted
+     * @see www/tracker/admin/index.php L908:919
+     *
+     * @param $artifactType Tracker to be deleted
+     *
+     * @return Boolean
+     */
+    function preDeleteArtifactType(ArtifactType $artifactType) {
+        if ($artifactType->preDelete(true)) {
+            $arm = new ArtifactRulesManager();
+            $arm->deleteRulesByArtifactType($artifactType->getID());
+            $referenceManager = ReferenceManager::instance();
+            $ref = $referenceManager->loadReferenceFromKeywordAndNumArgs(strtolower($artifactType->getItemName()), $this->getGroup()->getGroupId(), 1);
+            if ($ref) {
+                $referenceManager->deleteReference($ref);
+            }
+            return true;
+        }
+        return false;
+    }
+
 	/**
 	 *	Delete a tracker
 	 *

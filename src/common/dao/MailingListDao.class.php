@@ -47,5 +47,34 @@ class MailingListDao extends DataAccessObject {
                 WHERE group_list_id = $group_list_id";
         return $this->retrieve($sql);
     }
+
+    /**
+    * Searches by project id
+    *
+    * @param Integer $projectId id of the project
+    *
+    * @return DataAccessResult
+    */
+    function searchByProject($projectId) {
+        $projectId = $this->da->escapeInt($projectId);
+        $sql = "SELECT * FROM mail_group_list 
+                WHERE group_id = $projectId";
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Mark the list as deleted
+     *
+     * @param Integer $listId Id of the mailing list
+     *
+     * @return Boolean
+     */
+    function deleteList($listId) {
+        $listId = $this->da->escapeInt($listId);
+        $sql="UPDATE mail_group_list SET is_public=9 ".
+             " WHERE group_list_id=".$listId;
+        return $this->update($sql);
+    }
+
 }
 ?>

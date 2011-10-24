@@ -103,10 +103,10 @@ class FRSReleaseFactory {
                 $data_array = & $dar->current();
                 if($status_id && $group_id){			
                     if($this->userCanRead($group_id, $package_id, $data_array['release_id'], $user->getID())){
-                        $releases[] = FRSReleaseFactory :: getFRSReleaseFromArray($data_array);
+                        $releases[] = $this->getFRSReleaseFromArray($data_array);
                     }
                 }else{
-                    $releases[] = FRSReleaseFactory :: getFRSReleaseFromArray($data_array);
+                    $releases[] = $this->getFRSReleaseFromArray($data_array);
                 }
                 $dar->next();
             }
@@ -114,32 +114,34 @@ class FRSReleaseFactory {
         
 		return $releases;
 	}
-	
-	function getFRSReleasesInfoListFromDb($group_id, $package_id=null) {
-		$_id = (int) $group_id;
-		$dao = & $this->_getFRSReleaseDao();
-		if($package_id){
-			$_package_id = (int) $package_id;
-			$dar = $dao->searchByGroupPackageID($_id, $_package_id);
-		}else{
-			$dar = $dao->searchByGroupPackageID($_id);
-		}
 
-		if ($dar->isError()) {
-			return;
-		}
+    /**
+     * Returns the list of releases for a given proejct
+     * 
+     * @param Integer $group_id
+     * @param Integer $package_id
+     * 
+     * @return Array
+     */
+    function getFRSReleasesInfoListFromDb($group_id, $package_id=null) {
+        $_id = (int) $group_id;
+        $dao = $this->_getFRSReleaseDao();
+        if ($package_id) {
+            $_package_id = (int) $package_id;
+            $dar = $dao->searchByGroupPackageID($_id, $_package_id);
+        } else {
+            $dar = $dao->searchByGroupPackageID($_id);
+        }
 
-		if (!$dar->valid()) {
-			return;
-		}	
-
-		$releases = array ();
-		while ($dar->valid()) {
-			$releases[] = $dar->current();
-			$dar->next();
-		}
-		return $releases;
-	}
+        if ($dar && !$dar->isError()) {
+            $releases = array ();
+            foreach ($dar as $row) {
+                $releases[] = $row;
+            }
+            return $releases;
+        }
+        return;
+    }
 
 	function isActiveReleases($package_id) {
 		$_id = (int) $package_id;
@@ -229,40 +231,60 @@ class FRSReleaseFactory {
         return false;
     }
 
-	/*
-	
-	Physically delete a release from the download server and database
-	
-	First, make sure the release is theirs
-	Second, delete all its files from the db
-	Third, delete the release itself from the deb
-	Fourth, put it into the delete_files to be removed from the download server
-	
-	return 0 if release not deleted, 1 otherwise
-	*/
-	function delete_release($group_id, $release_id) {
-		GLOBAL $ftp_incoming_dir;
+    /**
+     * Physically delete a release from the download server and database
+     * First, make sure the release is theirs
+     * Second, delete all its files from the db
+     * Third, delete the release itself from the deb
+     * Fourth, put it into the delete_files to be removed from the download server
+     * return false if release not deleted, true otherwise
+     * 
+     * @param Integer $group_id
+     * @param Integer $release_id
+     * 
+     * @return Boolean
+     */
+    function delete_release($group_id, $release_id) {
+        GLOBAL $ftp_incoming_dir;
 
-		$release =& $this->getFRSReleaseFromDb($release_id, $group_id);
-		
-		if (!$release) {
-			//release not found for this project
-			return 0;
-		} else {
-			//delete all corresponding files from the database
-			$res =& $release->getFiles();
-			$rows = count($res);
-			$frsff =& $this->_getFRSFileFactory();
-			for ($i = 0; $i < $rows; $i++) {
-				$frsff->delete_file($group_id, $res[$i]->getFileID());
-				$filename = $res[$i]->getFileName();
-			}
+        $release = $this->getFRSReleaseFromDb($release_id, $group_id);
 
-			//delete the release from the database
-			$this->_delete($release_id);
-			return 1;
-		}
-	}
+        if (!$release) {
+            //release not found for this project
+            return false;
+        } else {
+            //delete all corresponding files from the database
+            $res = $release->getFiles();
+            $frsff = $this->_getFRSFileFactory();
+            foreach ($res as $file) {
+                $frsff->delete_file($group_id, $file->getFileID());
+            }
+
+            //delete the release from the database
+            $this->_delete($release_id);
+            return true;
+        }
+    }
+
+    /**
+     * Delete all FRS releases and files of given project
+     *
+     * @param Integer $groupId Project ID
+     *
+     * @return Boolean
+     */
+    function deleteProjectReleases($groupId) {
+        $deleteState = true;
+        $resReleases = $this->getFRSReleasesInfoListFromDb($groupId);
+        if (!empty($resReleases)) {
+            foreach ($resReleases as $release) {
+                if (!$this->delete_release($groupId, $release['release_id'])) {
+                    $deleteState = false;
+                }
+            }
+        }
+        return $deleteState;
+    }
 
     /**
      * Test is user can administrate FRS service of given project

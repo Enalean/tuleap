@@ -245,6 +245,22 @@ class ProjectManager {
     }
 
     /**
+     * Deletes the ugroups & the message related to a given group
+     *
+     * @param Integer $groupId
+     *
+     * @return Boolean
+     */
+    public function deleteMembershipRequestNotificationEntries($groupId) {
+        $dao = $this->_getDao();
+        if ($dao->deleteMembershipRequestNotificationUGroup($groupId)) {
+            return $dao->deleteMembershipRequestNotificationMessage($groupId);
+        }
+        return false;
+    }
+
+
+    /**
      * Returns the message to be displayed to requester asking access for a given project
      * 
      * @param Integer $groupId
@@ -279,5 +295,86 @@ class ProjectManager {
         $dao = new UserGroupDao(CodendiDataAccess::instance());
         return $dao->returnProjectAdminsByGroupId($groupId);
     }
+
+    /**
+     * Remove Project members from a project
+     *
+     * @param Project $project Affected project
+     *
+     * @return Boolean
+     */
+    public function removeProjectMembers($project) {
+        if (!$project || !is_object($project) || $project->isError()) {
+            exit_no_group();
+        }
+        $dao = new UserGroupDao(CodendiDataAccess::instance());
+        return $dao->removeProjectMembers($project->getID());
+    }
+
+    /**
+     * Get the project from its id for SOAP
+     *
+     * @param Integer $groupId    Id of the project
+     * @param String  $method     Name of the callback method
+     * @param Boolean $byUnixName Optional, Search the project by its unix name instead of its id
+     *
+     * @return Project or SoapFault
+     */
+    function getGroupByIdForSoap($groupId, $method, $byUnixName = false) {
+        if ($byUnixName) {
+            $group = $this->getProjectByUnixName($groupId);
+        } else {
+            $group = $this->getProject($groupId);
+        }
+        if (!$group || !is_object($group)) {
+            throw new SoapFault(get_group_fault, $groupId.' : '.$GLOBALS['language']->getText('include_group', 'g_not_found'), $method);
+        } elseif ($group->isError()) {
+            throw new SoapFault(get_group_fault, $group->getErrorMessage(), $method);
+        } elseif (!$group->isActive()) {
+            throw new SoapFault(get_group_fault, $group->getUnixName().' : '.$GLOBALS['language']->getText('include_exit', 'project_status_'.$group->getStatus()), $method);
+        }
+        if (!$this->checkRestrictedAccess($group)) {
+            throw new SoapFault(get_group_fault, 'Restricted user: permission denied.', $method);
+        }
+        return $group;
+    }
+
+    /**
+     * Check if the user can access the project $group,
+     * regarding the restricted access
+     *
+     * @param Project $group Affected project
+     * @return boolean true if the current session user has access to this project, false otherwise
+     */
+    function checkRestrictedAccess($group) {
+        if (array_key_exists('sys_allow_restricted_users', $GLOBALS) && $GLOBALS['sys_allow_restricted_users'] == 1) {
+            if ($group) {
+                $user = $this->_getUserManager()->getCurrentUser();
+                if ($user) {
+                    if ($user->isRestricted()) {
+                        return $group->userIsMember();
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Wrapper for tests
+     *
+     * @return UserManager
+     */
+    function _getUserManager() {
+        return UserManager::instance();
+    }
+
 }
 ?>

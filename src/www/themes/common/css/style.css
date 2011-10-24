@@ -1353,6 +1353,10 @@ input.inputMessage { color: #ccc; font-size: 11px; }
     background-color: blue;
 }
 
+.site_admin_project_status_A {
+    padding-left: 1em;
+    background-image:url('../images/ic/tick.png');
+}
 
 #site_admin_main_table {
     width: 100%;

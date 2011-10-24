@@ -96,7 +96,7 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
                 if($dIF->deleteWikiPage($item->getPageName(), $item->getGroupId())){
                     $this->response->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_success'));
                 } else {
-                    $this->response->addFeedback('info', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_failed'));
+                    $this->response->addFeedback('error', $GLOBALS['Language']->getText('plugin_docman', 'docman_wiki_delete_wiki_page_failed'));
                 }
             }
         }
