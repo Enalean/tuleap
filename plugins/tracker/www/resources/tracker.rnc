@@ -47,7 +47,7 @@ grammar {
             }?,
             element is_used {xsd:int}?,
             element transitions { 
-                element transition { transitionContent }*
+                element transition { transitionContent }*                
             }?
         }*,
 
@@ -153,7 +153,16 @@ grammar {
         },
         element to_id {
             attribute REF { xsd:string }
-        }
+        },
+        element postactions {
+            element postaction {
+                attribute valuetype { xsd:int },
+                attribute type { xsd:string },
+                element field {
+                    attribute REF { xsd:IDREF }
+                }
+            }*
+        }*
         
         
     semanticContent = 
