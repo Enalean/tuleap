@@ -69,6 +69,15 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     }
     
     /**
+     * Get the value type of the post action
+     *
+     * @return string
+     */
+    public function getValueType() {
+        return $this->value_type;
+    }
+    
+    /**
      * Get the label of the post action
      *
      * @return string
@@ -97,6 +106,9 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         }
         return null;
     }
+    
+    
+    
 
     /**
      * Say if the action is well defined
@@ -228,6 +240,23 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
                 }
             }
         }
+    }
+    
+    /**
+     * Export postactions date to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the postaction is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
+    public function exportToXml(&$root, $xmlMapping) {
+        if ($this->getFieldId()) {
+             $child = $root->addChild('postaction');
+             $child->addAttribute('valuetype', $this->getValueType());
+             $child->addAttribute('type', $this->getShortName());
+             $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
+         }
     }
     
     /**

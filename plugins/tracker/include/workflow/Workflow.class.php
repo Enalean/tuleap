@@ -217,6 +217,14 @@ class Workflow {
         $this->tracker_id = $tracker;
     }
     
+    /**
+     * Export workflow to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the workflow is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
     public function exportToXml(&$root, $xmlMapping) {
            $root->addChild('field_id')->addAttribute('REF', array_search($this->field_id, $xmlMapping));
            $root->addChild('is_used', $this->is_used);
@@ -230,6 +238,14 @@ class Workflow {
                    $grand_child->addChild('from_id')->addAttribute('REF', array_search($transition->getFieldValueFrom()->getId(), $xmlMapping['values']));
                }
                $grand_child->addChild('to_id')->addAttribute('REF', array_search($transition->getFieldValueTo()->getId(), $xmlMapping['values']));
+               
+               $postactions = $transition->getPostActions();
+               if ($postactions) {
+                   $grand_grand_child= $grand_child->addChild('postactions');
+                   foreach ($postactions as $postaction) {
+                       $postaction->exportToXML($grand_grand_child, $xmlMapping);
+                   }
+               }
            }
     }
     
