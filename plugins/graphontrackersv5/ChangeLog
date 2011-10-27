@@ -1,3 +1,9 @@
+Version 0.3 - (Tuleap 4.0.23)
+  DISCLAIMER: plugin in beta, do not use it on production servers.
+  DISCLAIMER: Your data might be trashed in a future update.
+  
+    * Fix 'as of date' issue on gantt charts.
+
 Version 0.2 - (Tuleap 4.0.23)
   DISCLAIMER: plugin in beta, do not use it on production servers.
   DISCLAIMER: Your data might be trashed in a future update.
