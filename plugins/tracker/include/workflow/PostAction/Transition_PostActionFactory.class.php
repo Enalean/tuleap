@@ -116,7 +116,8 @@ class Transition_PostActionFactory {
     public function loadPostActions(Transition $transition) {
         $post_actions = array();
         foreach ($this->getDao()->searchByTransitionId($transition->getTransitionId()) as $row) {
-            $post_actions[] = new Transition_PostAction_Field_Date($transition, (int)$row['id'], (int)$row['field_id'], (int)$row['value_type']);
+            $field = $this->getFormElementFactory()->getFormElementById((int)$row['field_id']);
+            $post_actions[] = new Transition_PostAction_Field_Date($transition, (int)$row['id'], $field, (int)$row['value_type']);
         }
         $transition->setPostActions($post_actions);
     }
@@ -132,12 +133,26 @@ class Transition_PostActionFactory {
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $transition) {
         
-        $field_id_postaction = $xmlMapping[(string)$xml->field['REF']];
         $postaction_attributes = $xml->attributes();
         
-        $postaction = new Transition_PostAction_Field_Date($transition, 0, $field_id_postaction, $postaction_attributes['valuetype']);
+        $postaction = new Transition_PostAction_Field_Date($transition, 0, $xmlMapping[(string)$xml->field['REF']], (int) $postaction_attributes['valuetype']);
       
         return $postaction; 
+    }
+    
+    public function saveObject($postaction) {
+        if (($postaction_id = $this->getDao()->create($postaction->getTransition()->getTransitionId())) > 0) {
+            $this->getDao()->updatePostAction($postaction_id, $postaction->getFieldId(), $postaction->getValueType());
+        }
+    }
+    
+    /**
+     * Wrapper for Tracker_FormElementFactory
+     *
+     * @return Tracker_FormElementFactory
+     */
+    protected function getFormElementFactory() {
+        return Tracker_FormElementFactory::instance();
     }
 }
 ?>

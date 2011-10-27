@@ -268,7 +268,7 @@ class WorkflowFactory {
         $xml_field_id = $xml->field_id;
         $xml_field_attributes = $xml_field_id->attributes();        
         $field_id = $xmlMapping[(string)$xml_field_attributes['REF']];
-        
+
         $transitions = array();
         foreach($xml->transitions->transition as $t) {
                 
@@ -318,7 +318,14 @@ class WorkflowFactory {
                 $from_id = $transition->getFieldValueFrom()->getId();
             }
             $to_id = $transition->getFieldValueTo()->getId();
-            $daot->addTransition($workflow_id, $from_id, $to_id);
+            $transition_id = $daot->addTransition($workflow_id, $from_id, $to_id);
+            $transition->setTransitionId($transition_id);
+            
+            $postactions = $transition->getPostActions();
+            foreach ($postactions as $postaction) {
+                $tpaf = new Transition_PostActionFactory();
+                $tpaf->saveObject($postaction);
+            }
         }
     }
     

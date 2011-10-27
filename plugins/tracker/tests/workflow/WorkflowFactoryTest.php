@@ -52,7 +52,7 @@ class WorkflowFactoryTest extends UnitTestCase {
         
         // There is one post action on last transition
         $postactions = $transitions[2]->getPostActions();
-        $this->assertEqual($postactions[0]->getFieldId(), 110);
+        $this->assertEqual($postactions[0]->getField(), 110);
         $this->assertEqual($postactions[0]->getValueType(), 1);
     }
     

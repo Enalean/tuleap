@@ -41,21 +41,21 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     protected $value_type;
     
     /**
-     * @var Integer Id of the field the post action should modify
+     * @var Tracker_FormElement_Field The field the post action should modify
      */
-    protected $field_id;
+    protected $field;
     
     /**
      * Constructor
      *
-     * @param Transition $transition The transition the post action belongs to
-     * @param Integer    $id         Id of the post action
-     * @param Integer    $field_id   Id of the field the post action should modify
-     * @param Integer    $value_type The type of the value to set
+     * @param Transition                   $transition The transition the post action belongs to
+     * @param Integer                      $id         Id of the post action
+     * @param Tracker_FormElement_Field    $field      Id of the field the post action should modify
+     * @param Integer                      $value_type The type of the value to set
      */
-    public function __construct(Transition $transition, $id, $field_id, $value_type) {
+    public function __construct(Transition $transition, $id, $field, $value_type) {
         parent::__construct($transition, $id);
-        $this->field_id   = $field_id;
+        $this->field      = $field;
         $this->value_type = $value_type;
     }
     
@@ -92,7 +92,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * @return Integer
      */
     public function getFieldId() {
-        return $this->field_id;
+        return $this->field->getId();
     }
 
     /**
@@ -100,15 +100,9 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      *
      * @return Tracker_FormElement_Field
      */
-    protected function getField() {
-        if ($this->field_id) {
-            return $this->getFormElementFactory()->getFormElementById($this->field_id);
-        }
-        return null;
+    public function getField() {
+        return $this->field;
     }
-    
-    
-    
 
     /**
      * Say if the action is well defined
@@ -155,14 +149,14 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $one_selected  = false;
         foreach ($fields_date as $field_date) {
             $selected = '';
-            if ($this->field_id == $field_date->getId()) {
+            if ($this->field->getId() == $field_date->getId()) {
                 $selected     = 'selected="selected"';
                 $one_selected = true;
             }            
             $options_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';
         }
         if (!$one_selected) {
-            $select_field .= '<option value="0" '. ($this->field_id == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
+            $select_field .= '<option value="0" '. ($this->field->getId() == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
         }
         $select_field .= $options_field;
         $select_field .= '</select>';
@@ -183,7 +177,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         if ($request->getInArray('remove_postaction', $this->id)) {
             $this->getDao()->deletePostAction($this->id);
         } else {
-            $field_id   = $this->field_id;
+            $field_id   = $this->field->getId();
             $value_type = $this->value_type;
             
             // Target field
@@ -207,7 +201,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
             if ($request->validInArray('workflow_postaction_field_date_value_type', $valid_value_type)) {
                 $value_type = $request->getInArray('workflow_postaction_field_date_value_type', $this->id);
             }
-            if ($field_id != $this->field_id || $value_type != $this->value_type) {
+            if ($field_id != $this->field->getId() || $value_type != $this->value_type) {
                 $this->getDao()->updatePostAction($this->id, $field_id, $value_type);
             }
         }
@@ -234,7 +228,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
                         $new_date_timestamp = $field->formatDate(null);
                         $this->addFeedback('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel()));
                     }
-                    $fields_data[$this->field_id] = $new_date_timestamp;
+                    $fields_data[$this->field->getId()] = $new_date_timestamp;
                 } else {
                     $this->addFeedback('warning', 'workflow_postaction', 'field_date_no_perms', array($field->getLabel()));
                 }
@@ -266,15 +260,6 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      */
     protected function getDao() {
         return new Transition_PostAction_Field_DateDao();
-    }
-    
-    /**
-     * Wrapper for Tracker_FormElementFactory
-     *
-     * @return Tracker_FormElementFactory
-     */
-    protected function getFormElementFactory() {
-        return Tracker_FormElementFactory::instance();
     }
 }
 ?>

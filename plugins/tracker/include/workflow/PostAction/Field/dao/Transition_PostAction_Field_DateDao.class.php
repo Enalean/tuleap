@@ -36,7 +36,7 @@ class Transition_PostAction_Field_DateDao extends DataAccessObject {
                 (transition_id) 
                 VALUES 
                 ($transition_id)";
-        return $this->update($sql);
+        return $this->updateAndGetLastId($sql);
     }
     
     /**

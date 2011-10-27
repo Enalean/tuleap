@@ -55,6 +55,15 @@ abstract class Transition_PostAction {
     }
     
     /**
+     * Return the transition
+     *
+     * @return Transition
+     */
+    public function getTransition() {
+        return $this->transition;
+    }
+    
+    /**
      * Log feedback to be displayed to the user
      * 
      * @param string $level    One of info|warning|error

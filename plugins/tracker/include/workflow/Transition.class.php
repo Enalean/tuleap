@@ -115,6 +115,10 @@ class Transition {
         return $this->transition_id;
     }
     
+    public function setTransitionId($id) {
+        $this->transition_id = $id;
+    }
+    
     /**
      * Get parent workflow
      *

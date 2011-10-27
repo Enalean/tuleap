@@ -62,7 +62,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $expected)));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
-        $post_action->__construct($transition, $id, $field_id, $value_type);
+        $post_action->__construct($transition, $id, $field, $value_type);
         $post_action->before($fields_data, $current_user);
         $this->assertEqual($expected, $fields_data[$field_id]);
     }
@@ -92,7 +92,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel())));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
-        $post_action->__construct($transition, $id, $field_id, $value_type);
+        $post_action->__construct($transition, $id, $field, $value_type);
         $post_action->before($fields_data, $current_user);
         $this->assertEqual('', $fields_data[$field_id]);
     }
@@ -120,7 +120,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $post_action->expectOnce('addFeedback', array('warning', 'workflow_postaction', 'field_date_no_perms', array($field->getLabel())));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
-        $post_action->__construct($transition, $id, $field_id, $value_type);
+        $post_action->__construct($transition, $id, $field, $value_type);
         $post_action->before($fields_data, $current_user);
         $this->assertFalse(isset($fields_data[$field_id]));
     }
@@ -151,7 +151,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $post_action->expectOnce('addFeedback', array('warning', 'workflow_postaction', 'field_date_no_perms', array($field->getLabel())));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
-        $post_action->__construct($transition, $id, $field_id, $value_type);
+        $post_action->__construct($transition, $id, $field, $value_type);
         $post_action->before($fields_data, $current_user);
         $this->assertEqual($submitted_timestamp, $fields_data[$field_id]);
     }
@@ -180,7 +180,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $post_action->expectNever('addFeedback');
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
-        $post_action->__construct($transition, $id, $field_id, $value_type);
+        $post_action->__construct($transition, $id, $field, $value_type);
         $post_action->before($fields_data, $current_user);
         $this->assertFalse(isset($fields_data[$field_id]));
     }
