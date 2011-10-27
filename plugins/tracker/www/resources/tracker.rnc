@@ -3,7 +3,7 @@ namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
 grammar {
 
-    start = element tracker {   
+    start = element tracker {
         
         # old ids
         attribute id { xsd:int }?,
@@ -269,7 +269,7 @@ grammar {
         | 
             (
                 attribute type { "plugin_graphontrackersv5" },
-                element charts { 
+                element charts {
                     element chart {
                         attribute width { xsd:int },
                         attribute height { xsd:int },

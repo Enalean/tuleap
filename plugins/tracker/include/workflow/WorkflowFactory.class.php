@@ -263,7 +263,7 @@ class WorkflowFactory {
      * 
      * @return Workflow The workflow object, or null if error
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {        
+    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
         
         $xml_field_id = $xml->field_id;
         $xml_field_attributes = $xml_field_id->attributes();        
@@ -273,14 +273,27 @@ class WorkflowFactory {
         foreach($xml->transitions->transition as $t) {
                 
                 $xml_from_attributes = $t->from_id->attributes();
-                if ((string)$t->from_id['REF'] == 'null') {
-                    $from_id = null;
-                } else {
-                    $from_id = $xmlMapping[(string)$t->from_id['REF']];
+                
+                $from = null;
+                if ((string)$t->from_id['REF'] != 'null') {
+                    $from = $xmlMapping[(string)$t->from_id['REF']];
                 }
-                $transitions[] = array('from_id'=>$from_id, 'to_id'=>$xmlMapping[(string)$t->to_id['REF']]);
+                $to = $xmlMapping[(string)$t->to_id['REF']];
+                
+                $transition = new Transition(0, 0, $from, $to);
+                $postactions = array();
+                foreach ($t->postactions->postaction as $p) {
+                    
+                    $field_id_postaction = $xmlMapping[(string)$p->field['REF']];
+                    $postaction_attributes = $p->attributes();
+                    
+                    $tpaf = new Transition_PostActionFactory();
+                    $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
+                }
+                $transition->setPostActions($postactions);
+                $transitions[] = $transition;
         }
-        return new Workflow(0, $tracker, $field_id, $xml->is_used, $transitions); 
+        return new Workflow(0, $tracker, $field_id, $xml->is_used, $transitions);
     }
     
      /**
@@ -298,14 +311,13 @@ class WorkflowFactory {
         
         $workflow_id = $dao->save($workflow->tracker_id->id, $workflow->field_id->id, $workflow->is_used);
         
-        foreach($workflow->transitions as $transition) {
-            if($transition['from_id']==null) {
+        foreach($workflow->getTransitions() as $transition) {
+            if($transition->getFieldValueFrom() == null) {
                 $from_id=null;
             }else {
-                $from_id = $transition['from_id']->getId();
+                $from_id = $transition->getFieldValueFrom()->getId();
             }
-            $to_id = $transition['to_id']->getId();
-            
+            $to_id = $transition->getFieldValueTo()->getId();
             $daot->addTransition($workflow_id, $from_id, $to_id);
         }
     }

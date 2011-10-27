@@ -87,7 +87,7 @@ class WorkflowManager {
            //Add a transition
             foreach($field_values as $field_value_id_from=>$field_value_from) {
                foreach($field_values as $field_value_id_to=>$field_value_to) {
-                   $transition = $field_value_id_from.'_'.$field_value_id_to;                  
+                   $transition = $field_value_id_from.'_'.$field_value_id_to;
                    if ($request->existAndNonEmpty($transition)) {
                        $currMatrix[]=array($field_value_id_from, $field_value_id_to);
                        $k+=$this->addTransition($workflow, $transition, $field_value_from, $field_value_to);
@@ -174,7 +174,7 @@ class WorkflowManager {
     protected function addTransition($workflow, $transition, $field_value_from, $field_value_to) {
         $i=0;
         if ( ! $workflow->isTransitionExist($field_value_from, $field_value_to)) {                                                    
-            if (WorkflowFactory::instance()-> addTransition((int)$workflow->workflow_id, $transition)) {   
+            if (WorkflowFactory::instance()-> addTransition((int)$workflow->workflow_id, $transition)) {
                 $i++;
             }
          }

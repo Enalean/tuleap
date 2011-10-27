@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tracker xmlns="http://codendi.org/tracker">
-<field_id REF="F32"/>
-<is_used>1</is_used>
-<transitions>
-<transition>
-<from_id REF="null"/>
-<to_id REF="F32-V0"/>
-</transition>
-<transition>
-<from_id REF="F32-V0"/>
-<to_id REF="F32-V1"/>
-</transition>
-<transition>
-<from_id REF="F32-V1"/>
-<to_id REF="F32-V0"/>
-</transition>
-</transitions>
+    <field_id REF="F32"/>
+    <is_used>1</is_used>
+    <transitions>
+        <transition>
+            <from_id REF="null"/>
+            <to_id REF="F32-V0"/>
+        </transition>
+        <transition>
+            <from_id REF="F32-V0"/>
+            <to_id REF="F32-V1"/>
+        </transition>
+        <transition>
+            <from_id REF="F32-V1"/>
+            <to_id REF="F32-V0"/>
+            <postactions>
+                <postaction valuetype="1" type="field_date">
+                    <field REF="F1"/>
+                </postaction>
+            </postactions>
+        </transition>
+    </transitions>
 </tracker>
 

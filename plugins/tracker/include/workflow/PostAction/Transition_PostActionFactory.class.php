@@ -120,5 +120,24 @@ class Transition_PostActionFactory {
         }
         $transition->setPostActions($post_actions);
     }
+    
+    /**
+     * Creates a postaction Object
+     * 
+     * @param SimpleXMLElement $xml         containing the structure of the imported postaction
+     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
+     * @param Tracker          $tracker     to which the workflow is attached
+     * 
+     * @return Workflow The workflow object, or null if error
+     */
+    public function getInstanceFromXML($xml, &$xmlMapping, $transition) {
+        
+        $field_id_postaction = $xmlMapping[(string)$xml->field['REF']];
+        $postaction_attributes = $xml->attributes();
+        
+        $postaction = new Transition_PostAction_Field_Date($transition, 0, $field_id_postaction, $postaction_attributes['valuetype']);
+      
+        return $postaction; 
+    }
 }
 ?>

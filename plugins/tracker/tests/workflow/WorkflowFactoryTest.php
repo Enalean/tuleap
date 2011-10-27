@@ -33,15 +33,27 @@ class WorkflowFactoryTest extends UnitTestCase {
         $tracker = new MockTracker();
         
         $mapping = array(
+                    'F1' => 110,
                     'F32'  => 111,
                     'F32-V0' => 801,
                     'F32-V1' => 802
                   );
         
-        $workflow = WorkflowFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);
+        $workflow = WorkflowFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);        
         $this->assertEqual($workflow->getIsUsed(), 1);
         $this->assertEqual($workflow->getFieldId(), 111);
         $this->assertEqual(count($workflow->getTransitions()), 3);
+        
+        // Test post actions
+        $transitions = $workflow->getTransitions();
+        $this->assertEqual(count($transitions[0]->getPostActions()), 0);
+        $this->assertEqual(count($transitions[1]->getPostActions()), 0);
+        $this->assertEqual(count($transitions[2]->getPostActions()), 1);
+        
+        // There is one post action on last transition
+        $postactions = $transitions[2]->getPostActions();
+        $this->assertEqual($postactions[0]->getFieldId(), 110);
+        $this->assertEqual($postactions[0]->getValueType(), 1);
     }
     
 }
