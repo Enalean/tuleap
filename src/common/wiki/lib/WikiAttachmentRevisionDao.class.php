@@ -66,7 +66,7 @@ class WikiAttachmentRevisionDao extends DataAccessObject {
     /**
      * Get one revision
      */
-    function &getRevision($attachmentId, $revision) {
+    function getRevision($attachmentId, $revision) {
         $sql = sprintf('SELECT * FROM wiki_attachment_revision'
                        .' WHERE attachment_id=%d'
                        .' AND revision=%d',
@@ -79,7 +79,7 @@ class WikiAttachmentRevisionDao extends DataAccessObject {
     /**
      * Fetch all revisions of a given attachment
      */
-    function &getAllRevisions($id) {
+    function getAllRevisions($id) {
         $sql = sprintf('SELECT * FROM wiki_attachment_revision'
                        .' WHERE attachment_id=%d'
                        .' ORDER BY date DESC',

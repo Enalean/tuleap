@@ -331,7 +331,7 @@ class WikiAttachmentRevision {
         }
 
         $dao =& WikiAttachmentRevision::getDao();
-        $dar =& $dao->getAllRevisions($id);        
+        $dar = $dao->getAllRevisions($id);        
         while($row =& $dar->getRow()) {
             $war =& new WikiAttachmentRevision($gid);
             $war->setFromRow($row);
