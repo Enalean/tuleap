@@ -1,3 +1,6 @@
+Version 1.16 (Tuleap 4.0.23)
+    * Propagate deletion updates
+
 Version 1.15 (Tuleap 4.0.21)
     * Gitolite repository can be deleted
     * Fix issue when adding several mails in notifications

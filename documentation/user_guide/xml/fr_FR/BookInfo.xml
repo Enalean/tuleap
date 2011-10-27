@@ -147,9 +147,18 @@
       <revision>
         <revnumber>4.0.20</revnumber>
         <date>19-Juillet-2011</date>
-        <authorinitials>Equipe &SYS_PRODUCT_NAME;</authorinitials>
+        <authorinitials>Equipe Enalean</authorinitials>
         <revremark>Ajout Git
         </revremark>
+      </revision>
+
+      <revision>
+        <revnumber>4.0.23</revnumber>
+        <date>27-Octobre-2011</date>
+        <authorinitials>Equipe Enalean</authorinitials>
+        <revremark>Corrige les utilisations du nom de produit.
+	Ajout des Post Actions dans le Workflow.
+	</revremark>
       </revision>
 
     </revhistory>

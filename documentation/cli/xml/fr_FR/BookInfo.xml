@@ -123,6 +123,16 @@
         <revremark>Validation du contole d'accés SVN</revremark>
       </revision>
 
+      <revision>
+        <revnumber>1.4.3</revnumber>
+
+        <date>27-Oct-2011</date>
+
+        <authorinitials>Manuel Vacelet</authorinitials>
+
+        <revremark>Complément d'information sur le FRS (retour d'erreur, usages).</revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--

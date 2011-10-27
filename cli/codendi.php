@@ -32,7 +32,7 @@ define("WSDL_URL", "%wsdl_domain%/soap/codendi.wsdl.php?wsdl");
 
 /**** END OF CONFIGURATION SECTION ****/
 
-$CLI_VERSION = "1.4.1";
+$CLI_VERSION = "1.4.2";
 
 error_reporting(E_ALL);
 ini_set('default_socket_timeout', 3600);

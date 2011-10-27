@@ -123,6 +123,16 @@
         <revremark>SVN access control validation</revremark>
       </revision>
 
+      <revision>
+        <revnumber>1.4.3</revnumber>
+
+        <date>27-Oct-2011</date>
+
+        <authorinitials>Manuel Vacelet</authorinitials>
+
+        <revremark>Update FRS usage description, error code, etc</revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--

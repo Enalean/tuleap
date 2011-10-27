@@ -650,9 +650,19 @@
       <revision>
         <revnumber>4.0.20</revnumber>
         <date>19-July-2011</date>
-        <authorinitials>&SYS_PRODUCT_NAME; team</authorinitials>
+        <authorinitials>Enalean team</authorinitials>
         <revremark>Update Git documentation (new gitolite repositories)</revremark>
       </revision>
+
+      <revision>
+        <revnumber>4.0.23</revnumber>
+        <date>27-October-2011</date>
+        <authorinitials>Enalean team</authorinitials>
+        <revremark>Fix product name usage.
+	Add Workflow PostActions.
+	</revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--

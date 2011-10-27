@@ -1,3 +1,9 @@
+1.4.2 - SOAP api 4.1 (Tuleap 4.0.23)
+    Bug fix
+    =======
+    * Fix notice with php 5.3
+    * Fix = usage in parameters (contrib STMicroeletronics)
+
 1.4.1 - Codendi SOAP api 4.1 (Codendi_ST 4.0.18)
     Bug fix
     =======
