@@ -69,7 +69,10 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
         $this->field_percentage = $arr['field_percentage'];
         $this->field_righttext  = $arr['field_righttext'];
         $this->scale            = $arr['scale'];
-        $this->as_of_date       = date('Y-m-d', $arr['as_of_date']);
+        $this->as_of_date       = 0;
+        if ($arr['as_of_date'] != 0) {
+            $this->as_of_date       = date('Y-m-d', $arr['as_of_date']);
+        }
         $this->summary          = $arr['summary'];
     }
     
@@ -100,7 +103,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
         $session->set("$id.scale",            '');
         $session->set("$id.as_of_date",       '');
         $session->set("$id.summary",          '');
-        
+
         $c = new GraphOnTrackersV5_Chart_Gantt($graphic_report, $id, $rank, $title, $description, $width, $height);
         $c->registerInSession();
         return $c;
@@ -163,6 +166,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
     }
     
     public function createDb($id) {
+        
         $field_start = $this->getField_start();
         if (!is_string($field_start) && !is_int($field_start) && $field_start) {
             $field_start = $field_start->getid();
@@ -193,6 +197,8 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
             $field_summary = $field_summary->getid();
         }
         
+        $as_of_date = $this->getAs_of_date();
+        
         return $this->getDao()->save(
             $id, 
             $field_start,
@@ -221,6 +227,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
     }
     
     protected function updateSpecificProperties($row) {
+        
         $session = self::getSession($this->renderer->report->id, $this->renderer->id);
         
         $session->set("$this->id.field_start", $row['field_start']);
@@ -242,7 +249,6 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
         $this->setScale($row['scale']);
         $this->setAs_of_date($row['as_of_date']);
         $this->setSummary($row['summary']);
-        
         return true;
     }
     

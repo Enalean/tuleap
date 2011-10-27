@@ -159,8 +159,8 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine {
         
         // asOfDate setup 
         if ($this->asOfDate == 0) {
-            $dateRep  = date("Y-m-d",strtotime('now'));
-            $dateDisp = date("m-d-Y",strtotime('now'));
+            $dateRep  = date("Y-m-d", $_SERVER['REQUEST_TIME']);
+            $dateDisp = date("m-d-Y", $_SERVER['REQUEST_TIME']);
             $vline = new GanttVLine($dateRep,"Today:".$dateDisp, $this->graph->getTodayLineColor(), 1, 'solid');
         } else {
             $dateRep  = $this->asOfDate;

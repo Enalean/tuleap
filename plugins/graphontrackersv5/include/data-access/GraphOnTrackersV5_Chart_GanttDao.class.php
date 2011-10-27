@@ -49,8 +49,9 @@ class GraphOnTrackersV5_Chart_GanttDao extends DataAccessObject {
         $field_percentage   = $this->da->escapeInt($field_percentage);
         $field_righttext    = $this->da->escapeInt($field_righttext);
         $scale              = $this->da->quoteSmart($scale);
-        $as_of_date         = strtotime($as_of_date);
+        $as_of_date         = (int) strtotime($as_of_date);
         $summary            = $this->da->escapeInt($summary);
+        
         $sql = "REPLACE INTO $this->table_name (id, field_start, field_due, field_finish, field_percentage, field_righttext, scale, as_of_date, summary)
                 VALUES ($id, $field_start, $field_due, $field_finish, $field_percentage, $field_righttext, $scale, $as_of_date, $summary)";
         return $this->update($sql);
