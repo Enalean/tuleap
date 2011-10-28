@@ -112,7 +112,6 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     public function isDefined() {
         return $this->getField() && ($this->value_type === self::CLEAR_DATE || $this->value_type === self::FILL_CURRENT_TIME);
     }
- 
     
     /**
      * Get the html code needed to display the post action in workflow admin
@@ -260,6 +259,15 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      */
     protected function getDao() {
         return new Transition_PostAction_Field_DateDao();
+    }
+    
+    /**
+     * Wrapper for Tracker_FormElementFactory
+     *
+     * @return Tracker_FormElementFactory
+     */
+    protected function getFormElementFactory() {
+        return Tracker_FormElementFactory::instance();
     }
 }
 ?>
