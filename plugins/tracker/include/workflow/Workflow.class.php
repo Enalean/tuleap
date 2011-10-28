@@ -241,9 +241,21 @@ class Workflow {
                
                $postactions = $transition->getPostActions();
                if ($postactions) {
-                   $grand_grand_child= $grand_child->addChild('postactions');
+                   $grand_grand_child = $grand_child->addChild('postactions');
                    foreach ($postactions as $postaction) {
                        $postaction->exportToXML($grand_grand_child, $xmlMapping);
+                   }
+               }
+               
+               $pm = PermissionsManager::instance();
+               $transition_ugroups = $pm->getAuthorizedUgroups($transition->getTransitionId(), 'PLUGIN_TRACKER_WORKFLOW_TRANSITION');
+               if ($transition_ugroups) {                   
+                   $grand_grand_child = $grand_child->addChild('permissions');
+                   
+                   foreach ($transition_ugroups as $transition_ugroup) {
+                       if (($ugroup = array_search($transition_ugroup['ugroup_id'], $GLOBALS['UGROUPS'])) !== false && $transition_ugroup['ugroup_id'] < 100) {
+                           $grand_grand_child->addChild('permission')->addAttribute('ugroup', $ugroup);
+                       }
                    }
                }
            }
