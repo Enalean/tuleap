@@ -37,6 +37,9 @@ Mock::generate('Tracker_Artifact_ChangesetValue_List');
 Mock::generate('Tracker_Artifact_Changeset_Null');
 Mock::generate('User');
 
+require_once('common/permission/PermissionsManager.class.php');
+Mock::generate('PermissionsManager');
+
 class WorkflowTest extends UnitTestCase {
     
     public function testEmptyWorkflow() {
@@ -183,6 +186,17 @@ class WorkflowTest extends UnitTestCase {
         $t3->setReturnReference('getFieldValueTo',  $ft3);
         
         $transitions = array($t1, $t2, $t3);
+        
+        
+        $pm = new MockPermissionsManager($this);
+        
+        $pm->setReturnValue(
+            'getAuthorizedUgroups',
+            array(
+                1 => array('TRANSITIONPERM_2'),
+                2 => array('TRANSITIONPERM_1'),
+            )
+        );
         
         $w = new Workflow(1, 2, 103, 1, $transitions); 
         
