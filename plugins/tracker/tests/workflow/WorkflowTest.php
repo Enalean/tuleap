@@ -190,13 +190,7 @@ class WorkflowTest extends UnitTestCase {
         
         $pm = new MockPermissionsManager($this);
         
-        $pm->setReturnValue(
-            'getAuthorizedUgroups',
-            array(
-                1 => array('TRANSITIONPERM_2'),
-                2 => array('TRANSITIONPERM_1'),
-            )
-        );
+        $pm->setReturnValue('getAuthorizedUgroups', array(1,2));
         
         $w = new Workflow(1, 2, 103, 1, $transitions); 
         
