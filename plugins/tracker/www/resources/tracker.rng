@@ -419,6 +419,15 @@
         </zeroOrMore>
       </element>
     </zeroOrMore>
+    <zeroOrMore>
+      <element name="permissions">
+        <element name="permission">
+          <attribute name="ugroup">
+            <data type="string"/>
+          </attribute>
+        </element>
+      </element>
+    </zeroOrMore>
   </define>
   <define name="semanticContent">
     <choice>

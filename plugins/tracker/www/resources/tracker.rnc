@@ -162,6 +162,11 @@ grammar {
                     attribute REF { xsd:IDREF }
                 }
             }*
+        }*,
+        element permissions {
+            element permission {
+                attribute ugroup { xsd:string }
+            }
         }*
         
         
