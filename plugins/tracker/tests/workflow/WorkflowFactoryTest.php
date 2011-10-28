@@ -48,12 +48,17 @@ class WorkflowFactoryTest extends UnitTestCase {
         $transitions = $workflow->getTransitions();
         $this->assertEqual(count($transitions[0]->getPostActions()), 0);
         $this->assertEqual(count($transitions[1]->getPostActions()), 0);
-        $this->assertEqual(count($transitions[2]->getPostActions()), 1);
+        $this->assertEqual(count($transitions[2]->getPostActions()), 1);        
         
         // There is one post action on last transition
         $postactions = $transitions[2]->getPostActions();
         $this->assertEqual($postactions[0]->getField(), 110);
         $this->assertEqual($postactions[0]->getValueType(), 1);
+        
+        //Test permissions
+        $permissions = $transitions[2]->getPermissions();
+        $this->assertEqual($permissions[0], 3);
+        
     }
     
 }

@@ -39,6 +39,8 @@ class Transition {
      */
     protected $post_actions = array();
     
+    protected $cache_permissions = array();
+    
     /**
      * @var Workflow
      */
@@ -206,6 +208,28 @@ class Transition {
             $html .= '<p><i>'. $GLOBALS['Language']->getText('workflow_admin', 'no_postaction') .'</i></p>';
         }
         return $html;
+    }
+    
+    /**
+     * Set the cache permission for the ugroup_id
+     * Use during the two-step xml import
+     *
+     * @param Array    $ugroup_ids An array of ugroup id
+     * @param string $permission_type The permission type
+     *
+     * @return void
+     */
+    public function setCachePermission($ugroup_ids) {
+        $this->cache_permissions = $ugroup_ids;
+    }
+    
+    /**
+     * Get the permissions for this transition
+     *
+     * @return array
+     */
+    public function getPermissions() {
+        return $this->cache_permissions;
     }
 }
 ?>

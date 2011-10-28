@@ -421,11 +421,13 @@
     </zeroOrMore>
     <zeroOrMore>
       <element name="permissions">
-        <element name="permission">
-          <attribute name="ugroup">
-            <data type="string"/>
-          </attribute>
-        </element>
+        <zeroOrMore>
+          <element name="permission">
+            <attribute name="ugroup">
+              <data type="string"/>
+            </attribute>
+          </element>
+        </zeroOrMore>
       </element>
     </zeroOrMore>
   </define>

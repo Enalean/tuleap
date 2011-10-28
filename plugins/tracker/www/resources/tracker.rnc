@@ -166,7 +166,7 @@ grammar {
         element permissions {
             element permission {
                 attribute ugroup { xsd:string }
-            }
+            }*
         }*
         
         

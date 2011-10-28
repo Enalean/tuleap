@@ -291,8 +291,19 @@ class WorkflowFactory {
                     $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
                 }
                 $transition->setPostActions($postactions);
-                $transitions[] = $transition;
+                
+                //Permissions on transition
+                $permissions = array();
+                foreach ($t->permissions->permission as $perm) {
+                    $ugroup = (string) $perm['ugroup'];
+                    if (isset($GLOBALS['UGROUPS'][$ugroup])) {
+                        $permissions[] = $GLOBALS['UGROUPS'][$ugroup];
+                    }
+                    $transition->setCachePermission($permissions);
+                }
+                 $transitions[] = $transition;
         }
+        
         return new Workflow(0, $tracker, $field_id, $xml->is_used, $transitions);
     }
     
@@ -322,10 +333,14 @@ class WorkflowFactory {
             $transition->setTransitionId($transition_id);
             
             $postactions = $transition->getPostActions();
+            
             foreach ($postactions as $postaction) {
                 $tpaf = new Transition_PostActionFactory();
                 $tpaf->saveObject($postaction);
-            }
+            }            
+            
+            $permissions = $transition->getPermissions();           
+            $this->addPermissions($permissions, $transition->getTransitionId());
         }
     }
     
