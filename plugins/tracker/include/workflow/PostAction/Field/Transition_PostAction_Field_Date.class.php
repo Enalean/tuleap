@@ -92,7 +92,11 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      * @return Integer
      */
     public function getFieldId() {
-        return $this->field->getId();
+        if ($this->field) {
+            return $this->field->getId();
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -148,14 +152,14 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         $one_selected  = false;
         foreach ($fields_date as $field_date) {
             $selected = '';
-            if ($this->field->getId() == $field_date->getId()) {
+            if ($this->field && ($this->field->getId() == $field_date->getId())) {
                 $selected     = 'selected="selected"';
                 $one_selected = true;
             }            
             $options_field .= '<option value="'. $field_date->getId() .'" '. $selected.'>'.$field_date->getLabel().'</option>';
         }
         if (!$one_selected) {
-            $select_field .= '<option value="0" '. ($this->field->getId() == 0 ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
+            $select_field .= '<option value="0" '. ($this->field ? 'selected="selected"' : '') .'>' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
         }
         $select_field .= $options_field;
         $select_field .= '</select>';
@@ -176,8 +180,9 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         if ($request->getInArray('remove_postaction', $this->id)) {
             $this->getDao()->deletePostAction($this->id);
         } else {
-            $field_id   = $this->field->getId();
-            $value_type = $this->value_type;
+            $field_id     = $this->field ? $this->field->getId() : 0;
+            $ref_field_id = $field_id;
+            $value_type   = $this->value_type;
             
             // Target field
             if ($request->validInArray('workflow_postaction_field_date', new Valid_UInt($this->id))) {
@@ -200,7 +205,9 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
             if ($request->validInArray('workflow_postaction_field_date_value_type', $valid_value_type)) {
                 $value_type = $request->getInArray('workflow_postaction_field_date_value_type', $this->id);
             }
-            if ($field_id != $this->field->getId() || $value_type != $this->value_type) {
+            
+            // Update if something changed
+            if ($field_id != $ref_field_id || $value_type != $this->value_type) {
                 $this->getDao()->updatePostAction($this->id, $field_id, $value_type);
             }
         }
