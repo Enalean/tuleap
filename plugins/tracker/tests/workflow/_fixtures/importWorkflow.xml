@@ -19,6 +19,9 @@
                     <field REF="F1"/>
                 </postaction>
             </postactions>
+            <permissions>
+                <permission ugroup="UGROUP_PROJECT_MEMBERS"/>                
+            </permissions>
         </transition>
     </transitions>
 </tracker>

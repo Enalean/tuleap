@@ -247,9 +247,10 @@ class Workflow {
                    }
                }
                
-               $pm = PermissionsManager::instance();
+               $pm = $this->getPermissionsManager();
                $transition_ugroups = $pm->getAuthorizedUgroups($transition->getTransitionId(), 'PLUGIN_TRACKER_WORKFLOW_TRANSITION');
-               if ($transition_ugroups) {                   
+               
+               if ($transition_ugroups) {
                    $grand_grand_child = $grand_child->addChild('permissions');
                    
                    foreach ($transition_ugroups as $transition_ugroup) {
@@ -286,6 +287,15 @@ class Workflow {
                 $transition->before($fields_data, $current_user);
             }
         }
+    }
+    
+    /**
+     * Wrapper for PermissionsManager
+     *
+     * @return PermissionsManager
+     */
+    function getPermissionsManager() {
+        return PermissionsManager::instance();
     }
 }
 ?>

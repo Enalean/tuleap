@@ -162,6 +162,9 @@ class WorkflowTest extends UnitTestCase {
     } 
 
     public function testExport() {
+        
+        //$workflow = new WorkflowTestVersion(1, 2, 3, 1);
+        
         $ft1 = new MockTracker_FormElement_Field_List();
         $ff2 = new MockTracker_FormElement_Field_List();
         $ft2 = new MockTracker_FormElement_Field_List();
@@ -180,19 +183,26 @@ class WorkflowTest extends UnitTestCase {
         
         $t1->setReturnValue('getFieldValueFrom',  null);
         $t1->setReturnReference('getFieldValueTo',  $ft1);
+        $t1->setReturnValue('getTransitionId',  1);
+        
         $t2->setReturnReference('getFieldValueFrom',  $ff2);
         $t2->setReturnReference('getFieldValueTo',  $ft2);
+        $t2->setReturnValue('getTransitionId',  2);
+        
         $t3->setReturnReference('getFieldValueFrom',  $ff3);
         $t3->setReturnReference('getFieldValueTo',  $ft3);
+        $t3->setReturnValue('getTransitionId',  3);
         
         $transitions = array($t1, $t2, $t3);
+        $ugroups_transition = array('ugroup' => 'UGROUP_PROJECT_MEMBERS');
         
+        $workflow = TestHelper::getPartialMock('Workflow', array('getPermissionsManager'));
+        $workflow->__construct(1, 2, 103, 1, $transitions);
         
         $pm = new MockPermissionsManager($this);
+        $pm->setReturnValue('getAuthorizedUgroups', $ugroups_transition);
         
-        $pm->setReturnValue('getAuthorizedUgroups', array(1,2));
-        
-        $w = new Workflow(1, 2, 103, 1, $transitions); 
+        $workflow->setReturnValue('getPermissionsManager', $pm);
         
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/importWorkflow.xml');
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
@@ -202,7 +212,7 @@ class WorkflowTest extends UnitTestCase {
                                        'F32-V0' => 806,
                                        'F32-V1' => 807)
                                    );
-        $w->exportToXML($root, $array_xml_mapping);
+        $workflow->exportToXML($root, $array_xml_mapping);
         
         $this->assertEqual((string)$xml->field_id['REF'], (string)$root->field_id['REF']);
         $this->assertEqual((int)$xml->is_used, (int)$root->is_used);
