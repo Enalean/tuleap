@@ -16,7 +16,7 @@
             <to_id REF="F32-V0"/>
             <postactions>
                 <postaction valuetype="1" type="field_date">
-                    <field REF="F1"/>
+                    <field_id REF="F1"/>
                 </postaction>
             </postactions>
             <permissions>

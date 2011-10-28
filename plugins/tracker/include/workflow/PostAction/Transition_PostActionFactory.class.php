@@ -135,7 +135,7 @@ class Transition_PostActionFactory {
         
         $postaction_attributes = $xml->attributes();
         
-        $postaction = new Transition_PostAction_Field_Date($transition, 0, $xmlMapping[(string)$xml->field['REF']], (int) $postaction_attributes['valuetype']);
+        $postaction = new Transition_PostAction_Field_Date($transition, 0, $xmlMapping[(string)$xml->field_id['REF']], (int) $postaction_attributes['valuetype']);
       
         return $postaction; 
     }

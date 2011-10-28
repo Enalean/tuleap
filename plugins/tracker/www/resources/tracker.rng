@@ -410,7 +410,7 @@
             <attribute name="type">
               <data type="string"/>
             </attribute>
-            <element name="field">
+            <element name="field_id">
               <attribute name="REF">
                 <data type="IDREF"/>
               </attribute>

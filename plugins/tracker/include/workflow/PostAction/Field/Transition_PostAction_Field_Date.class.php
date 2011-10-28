@@ -255,7 +255,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
              $child = $root->addChild('postaction');
              $child->addAttribute('valuetype', $this->getValueType());
              $child->addAttribute('type', $this->getShortName());
-             $child->addChild('field')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
+             $child->addChild('field_id')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
          }
     }
     

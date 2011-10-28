@@ -284,7 +284,7 @@ class WorkflowFactory {
                 $postactions = array();
                 foreach ($t->postactions->postaction as $p) {
                     
-                    $field_id_postaction = $xmlMapping[(string)$p->field['REF']];
+                    $field_id_postaction = $xmlMapping[(string)$p->field_id['REF']];
                     $postaction_attributes = $p->attributes();
                     
                     $tpaf = new Transition_PostActionFactory();
