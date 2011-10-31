@@ -36,7 +36,7 @@ class TestHelper {
      * @return Object
      */
     public static function getPartialMock($className, $methods) {
-        $partialName = $className.'Partial'.uniqid();
+        $partialName = $className.'_Partial'.uniqid();
         Mock::generatePartial($className, $partialName, $methods);
         return new $partialName();
     }
