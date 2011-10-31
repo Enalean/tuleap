@@ -78,20 +78,38 @@ class Transition_PostAction_Field_DateDao extends DataAccessObject {
     /**
      * Search all postactions belonging to a transition and a field
      *
-     * Useful to know if a field is already used in a post action
+     * Useful to know if a field is already used in a post action of a transition
      *
      * @param int $transition_id The id of the transition 
      * @param int $field_id      The id of the field 
      *
      * @return DataAccessResult
      */
-    public function searchByFieldId($transition_id, $field_id) {
+    public function searchByTransitionIdAndFieldId($transition_id, $field_id) {
         $field_id      = $this->da->escapeInt($field_id);
         $transition_id = $this->da->escapeInt($transition_id);
         $sql = "SELECT * 
                 FROM tracker_workflow_transition_postactions_field_date 
                 WHERE field_id      = $field_id 
                   AND transition_id = $transition_id
+                ORDER BY id";
+        return $this->retrieve($sql);
+    }
+    
+    /**
+     * Search all postactions belonging to a field
+     *
+     * Useful to know if a field is already used in a post action
+     *
+     * @param int $field_id The id of the field 
+     *
+     * @return DataAccessResult
+     */
+    public function searchByFieldId($field_id) {
+        $field_id      = $this->da->escapeInt($field_id);
+        $sql = "SELECT * 
+                FROM tracker_workflow_transition_postactions_field_date 
+                WHERE field_id = $field_id 
                 ORDER BY id";
         return $this->retrieve($sql);
     }

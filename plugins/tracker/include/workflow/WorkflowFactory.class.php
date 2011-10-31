@@ -217,7 +217,7 @@ class WorkflowFactory {
     public function isFieldUsedInWorkflow(Tracker_FormElement_Field $field) {
         $workflow_field = $this->getWorkflowField($field->getTracker()->getId());
         if ($workflow_field) {
-            return $field->getId() == $workflow_field->getId();
+            return $field->getId() == $workflow_field->getId() || $this->getTransitionFactory()->isFieldUsedInTransitions($field);
         } else {
             return false;
         }
@@ -242,12 +242,21 @@ class WorkflowFactory {
      * @return Array of Transition
      */
     public function getTransitions(Workflow $workflow){
-        $tf          = TransitionFactory::instance();
+        $tf          = $this->getTransitionFactory();
         $transitions = array();
         foreach($this->getTransitionDao()->searchByWorkflow($workflow->getId()) as $row) {
             $transitions[] = $tf->getInstanceFromRow($row, $workflow);
         }
         return $transitions;
+    }
+    
+    /**
+     * Wrapper for TransitionFactory
+     *
+     * @return TransitionFactory
+     */
+    protected function getTransitionFactory() {
+        return TransitionFactory::instance();
     }
     
     /**

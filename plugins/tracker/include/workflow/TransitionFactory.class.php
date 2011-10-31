@@ -23,7 +23,7 @@ require_once('Transition.class.php');
 require_once('Workflow_Dao.class.php');
 require_once('Workflow_TransitionDao.class.php');
 require_once('common/permission/PermissionsManager.class.php');
-
+require_once('PostAction/Transition_PostActionFactory.class.php');
 
 class TransitionFactory {
     
@@ -122,6 +122,17 @@ class TransitionFactory {
             }
         }
         return $this->cache_transition_id[$from][$to][0];
+    }
+    
+    /**
+     * Say if a field is used in its tracker workflow transitions
+     *
+     * @param Tracker_FormElement_Field $field The field
+     *
+     * @return bool
+     */
+    public function isFieldUsedInTransitions(Tracker_FormElement_Field $field) {
+        return $this->getPostActionFactory()->isFieldUsedInPostActions($field);
     }
     
     /**

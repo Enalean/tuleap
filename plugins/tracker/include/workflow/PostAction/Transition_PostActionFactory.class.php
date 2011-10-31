@@ -154,5 +154,16 @@ class Transition_PostActionFactory {
     protected function getFormElementFactory() {
         return Tracker_FormElementFactory::instance();
     }
+    
+    /**
+     * Say if a field is used in its tracker workflow transitions post actions
+     *
+     * @param Tracker_FormElement_Field $field The field
+     *
+     * @return bool
+     */
+    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
+        return count($this->getDao()->searchByFieldId($field->getId())) > 0;
+    }
 }
 ?>

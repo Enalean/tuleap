@@ -190,7 +190,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
                 if ($new_field_id != $field_id) {
                     $new_field = $this->getFormElementFactory()->getUsedFormElementById($new_field_id);
                     if ($new_field) {
-                        $already_used = $this->getDao()->searchByFieldId($this->transition->getTransitionId(), $new_field->getId());
+                        $already_used = $this->getDao()->searchByTransitionIdAndFieldId($this->transition->getTransitionId(), $new_field->getId());
                         if (count($already_used)) {
                             $this->addFeedback('error', 'workflow_admin', 'postaction_on_field_already_exist', array($new_field->getLabel()));
                         } else {
