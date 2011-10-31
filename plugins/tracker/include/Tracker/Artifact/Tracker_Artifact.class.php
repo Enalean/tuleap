@@ -1022,7 +1022,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Workflow
      */
     public function getWorkflow() {
-        $workflow = WorkflowFactory::instance()->getWorkflowField($this->getTrackerId());
+        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->getTrackerId());
         if ($workflow) {
             $workflow->setArtifact($this);
         }

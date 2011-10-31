@@ -473,7 +473,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return Workflow Object
      */
     public function getWorkflow(){
-        return WorkflowFactory::instance()->getWorkflowField($this->tracker_id);
+        return WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker_id);
     }
     
     /**

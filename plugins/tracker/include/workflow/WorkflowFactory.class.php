@@ -196,7 +196,7 @@ class WorkflowFactory {
      *
      * @return Workflow the worflow object, or null if there is no workflow
      */
-    public function getWorkflowField($tracker_id) {
+    public function getWorkflowByTrackerId($tracker_id) {
         if (!isset($this->cache_workflowfield[$tracker_id])) {
             $this->cache_workflowfield[$tracker_id] = array(null);
             // only one field per workflow
@@ -208,19 +208,29 @@ class WorkflowFactory {
     }
     
     /**
-     * Say if a field is used in its tracker workflow
+     * Say if a field is used in its tracker workflow or post actions
      *
      * @param Tracker_FormElement_Field $field The field
      *
      * @return bool
      */
     public function isFieldUsedInWorkflow(Tracker_FormElement_Field $field) {
-        $workflow_field = $this->getWorkflowField($field->getTracker()->getId());
-        if ($workflow_field) {
-            return $field->getId() == $workflow_field->getId() || $this->getTransitionFactory()->isFieldUsedInTransitions($field);
-        } else {
-            return false;
+        return $this->isWorkflowField($field) || $this->getTransitionFactory()->isFieldUsedInTransitions($field);
+    }
+    
+    /**
+     * Say if a field is used to define a workflow
+     *
+     * @param Tracker_FormElement_Field $field The field
+     *
+     * @return bool
+     */
+    public function isWorkflowField(Tracker_FormElement_Field $field) {
+        $workflow = $this->getWorkflowByTrackerId($field->getTracker()->getId());
+        if ($workflow) {
+            return $field->getId() == $workflow->getFieldId();
         }
+        return false;
     }
     
     /**

@@ -21,6 +21,7 @@
 require_once(dirname(__FILE__).'/../../include/workflow/WorkflowFactory.class.php');
 require_once(dirname(__FILE__).'/../../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
+Mock::generate('Workflow');
 Mock::generate('Workflow_Dao');
 Mock::generate('TransitionFactory');
 
@@ -80,14 +81,17 @@ class WorkflowFactoryTest extends UnitTestCase {
         $field_close_date->setReturnReference('getTracker', $tracker);
         $field_close_date->setReturnValue('getId', 1003);
         
+        $workflow = new MockWorkflow();
+        $workflow->setReturnValue('getFieldId', $field_status->getId());
+        
         $tf = new MockTransitionFactory();
         $tf->setReturnValue('isFieldUsedInTransitions', false, array($field_start_date));
         $tf->setReturnValue('isFieldUsedInTransitions', true,  array($field_close_date));
         $tf->expectCallCount('isFieldUsedInTransitions', 2);
         
-        $wf = TestHelper::getPartialMock('WorkflowFactory', array('getWorkflowField', 'getTransitionFactory'));
+        $wf = TestHelper::getPartialMock('WorkflowFactory', array('getWorkflowByTrackerId', 'getTransitionFactory'));
         $wf->setReturnReference('getTransitionFactory', $tf);
-        $wf->setReturnReference('getWorkflowField', $field_status, array($tracker->getId()));
+        $wf->setReturnReference('getWorkflowByTrackerId', $workflow, array($tracker->getId()));
         
         $this->assertTrue($wf->isFieldUsedInWorkflow($field_status));
         $this->assertFalse($wf->isFieldUsedInWorkflow($field_start_date));

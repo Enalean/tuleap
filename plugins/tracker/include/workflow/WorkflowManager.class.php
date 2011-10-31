@@ -50,7 +50,7 @@ class WorkflowManager {
                 }
             }
         } else if ($request->get('edit_transition')) {
-            $workflow   = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+            $workflow   = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
             $transition = TransitionFactory::instance()->getTransition($request->get('edit_transition'));
             $this->displayTransitionDetails($engine, $request, $current_user, $transition);
         } else if ($request->get('delete')) {
@@ -66,7 +66,7 @@ class WorkflowManager {
         } else if ($request->get('create_matrix')) {
             
             $k=0;
-            $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+            $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
             
             $field=Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
             $field_values = $field->getBind()->getAllValues();
@@ -127,7 +127,7 @@ class WorkflowManager {
             
         } else if ($request->get('enable_workflow')) {
 
-            $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+            $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
             $is_used = $request->get('is_used');
             //TODO : use $request
             if (/*$request->existAndNonEmpty($is_used)*/$is_used=='on') {
@@ -183,7 +183,7 @@ class WorkflowManager {
     
     protected function displayTransitionsMatrix($workflow, $engine, $request, $current_user) {
 
-        $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title_define_transitions').'</h3>';
         $field =Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
         if ($workflow->hasTransitions()) {
@@ -307,7 +307,7 @@ class WorkflowManager {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title').'</h3>';
-        $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
         
         if(count($workflow)) {
             $this->displayAdminWorkflow($engine, $request, $current_user, $workflow);

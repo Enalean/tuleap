@@ -58,14 +58,19 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      * @return string html
      */
     protected function fetchChangeType() {
-        $html = ' (<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
-                'tracker'            => $this->tracker_id,
-                'func'               => 'admin-formElement-update',
-                'formElement'        => $this->id,
-                'change-type'        => 'msb'
-            )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
-               .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_msb').'</a>)';
-
+        $html = '';
+        
+        //do not change from SB to MSB if the field is used to define the workflow
+        $wf = WorkflowFactory::instance();
+        if (!$wf->isWorkflowField($this)) {
+            $html = ' (<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
+                    'tracker'            => $this->tracker_id,
+                    'func'               => 'admin-formElement-update',
+                    'formElement'        => $this->id,
+                    'change-type'        => 'msb'
+                )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
+                   .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_msb').'</a>)';
+        }
         return $html;
     }
     
@@ -151,8 +156,9 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     public function changeType($type) {
         // only "msb" available at the moment.
         if ($type === 'msb') {
-            // There is nothing to change here...
-            return true;
+            //do not change from SB to MSB if the field is used to define the workflow
+            $wf = WorkflowFactory::instance();
+            return !$wf->isWorkflowField($this);
         }
         return false;
     }
