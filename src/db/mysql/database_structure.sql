@@ -3411,6 +3411,25 @@ CREATE TABLE groups_notif_delegation_message (
   msg_to_requester text NOT NULL default "",
   PRIMARY KEY (group_id)
 );
+
+
+--
+-- Tables for id sharing
+--
+DROP TABLE IF EXISTS tracker_idsharing_tracker;
+DROP TABLE IF EXISTS tracker_idsharing_artifact;
+SELECT @last_insert_artifact := MAX(artifact_id) + 1 FROM artifact;
+SET @s = CONCAT("CREATE TABLE IF NOT EXISTS tracker_idsharing_artifact( id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ) AUTO_INCREMENT =  ", @last_insert_artifact);
+PREPARE stmt FROM @s;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SELECT @last_insert_tracker := MAX(group_artifact_id) + 1 FROM artifact_group_list;
+SET @s = CONCAT("CREATE TABLE IF NOT EXISTS tracker_idsharing_tracker( id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ) AUTO_INCREMENT = ", @last_insert_tracker);
+PREPARE stmt FROM @s;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
 #
 # EOF
 #

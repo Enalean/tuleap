@@ -19,6 +19,7 @@
  */
 
 require_once('common/dao/include/DataAccessObject.class.php');
+require_once('common/dao/TrackerIdSharingDao.class.php');
 class TrackerDao extends DataAccessObject {
     function __construct() {
         parent::__construct();
@@ -102,30 +103,37 @@ class TrackerDao extends DataAccessObject {
         $instantiate_for_new_projects = $this->da->quoteSmart($instantiate_for_new_projects);
         $stop_notification            = $this->da->escapeInt($stop_notification);
         
-        $sql = "INSERT INTO $this->table_name 
-                (group_id, 
-                    name, 
-                    description, 
-                    item_name, 
-                    allow_copy, 
-                    submit_instructions, 
-                    browse_instructions, 
-                    status, 
-                    deletion_date, 
-                    instantiate_for_new_projects, 
-                    stop_notification)
-                VALUES ($group_id, 
-                    $name, 
-                    $description, 
-                    $item_name, 
-                    $allow_copy, 
-                    $submit_instructions, 
-                    $browse_instructions, 
-                    $status, 
-                    $deletion_date, 
-                    $instantiate_for_new_projects, 
-                    $stop_notification)";
-        return $this->updateAndGetLastId($sql);
+        $id_sharing = new TrackerIdSharingDao();
+        if ($id = $id_sharing->generateTrackerId()) {
+            
+            $sql = "INSERT INTO $this->table_name 
+                    (id,
+                        group_id, 
+                        name, 
+                        description, 
+                        item_name, 
+                        allow_copy, 
+                        submit_instructions, 
+                        browse_instructions, 
+                        status, 
+                        deletion_date, 
+                        instantiate_for_new_projects, 
+                        stop_notification)
+                    VALUES ($id,
+                        $group_id, 
+                        $name, 
+                        $description, 
+                        $item_name, 
+                        $allow_copy, 
+                        $submit_instructions, 
+                        $browse_instructions, 
+                        $status, 
+                        $deletion_date, 
+                        $instantiate_for_new_projects, 
+                        $stop_notification)";
+            return $this->updateAndGetLastId($sql);
+        }
+        return false;
     }
     
     function save($tracker) {

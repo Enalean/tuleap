@@ -24,6 +24,7 @@ require_once('common/tracker/ArtifactCanned.class.php');
 require_once('common/tracker/ArtifactRulesManager.class.php');
 require_once('common/dao/ArtifactGroupListDao.class.php');
 require_once('common/dao/CodendiDataAccess.class.php');
+require_once('common/dao/TrackerIdSharingDao.class.php');
 
 class ArtifactTypeFactory extends Error {
 
@@ -552,109 +553,114 @@ class ArtifactTypeFactory extends Error {
 		// We retrieve allow_copy from template
 		$at_template = new ArtifactType($template_group,$atid_template);
 		
-		// First, we create a new ArtifactType into artifact_group_list
-                // By default, set 'instantiate_for_new_projects' to '1', so that a project that is not yet a 
-                // template will be able to have its trackers cloned by default when it becomes a template.
-		$sql="INSERT INTO 
-			artifact_group_list 
-			(group_id, name, description, item_name, allow_copy,
-                         submit_instructions,browse_instructions,instantiate_for_new_projects,stop_notification
-                         ) 
-			VALUES 
-			('". db_ei($group_id) ."',
-			'". db_es($name) ."',
-			'". db_es($description) ."',
-			'". db_es($itemname) ."',
-                        '". db_ei($at_template->allowsCopy()) ."',
-                        '". db_es($at_template->getSubmitInstructions())."',
-                        '". db_es($at_template->getBrowseInstructions())."',1,0)";
-		//echo $sql;
-		$res = db_query($sql);
-		if (!$res || db_affected_rows($res) <= 0) {
-			$this->setError('ArtifactTypeFactory: '.db_error());
-			return false;
-		} else {
-			$id = db_insertid($res,'artifact_group_list','group_artifact_id');
-			$at_new = new ArtifactType($group,$id);
-			if (!$at_new->fetchData($id)) {
-				$this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','load_fail'));
-				return false;
-			} else {
-                
-                //create global notifications
-                $sql = "INSERT INTO artifact_global_notification (tracker_id, addresses, all_updates, check_permissions)
-                SELECT ". db_ei($id) .", addresses, all_updates, check_permissions
-                FROM artifact_global_notification
-                WHERE tracker_id = ". db_ei($atid_template);
-                $res = db_query($sql);
-                if (!$res || db_affected_rows($res) <= 0) {
-                    $this->setError('ArtifactTypeFactory: '.db_error());
+		
+		$id_sharing = new TrackerIdSharingDao();
+        if ($id = $id_sharing->generateTrackerId()) {
+            // First, we create a new ArtifactType into artifact_group_list
+            // By default, set 'instantiate_for_new_projects' to '1', so that a project that is not yet a 
+            // template will be able to have its trackers cloned by default when it becomes a template.
+            $sql="INSERT INTO 
+                artifact_group_list 
+                (group_artifact_id, group_id, name, description, item_name, allow_copy,
+                             submit_instructions,browse_instructions,instantiate_for_new_projects,stop_notification
+                             ) 
+                VALUES 
+                ($id,
+                '". db_ei($group_id) ."',
+                '". db_es($name) ."',
+                '". db_es($description) ."',
+                '". db_es($itemname) ."',
+                            '". db_ei($at_template->allowsCopy()) ."',
+                            '". db_es($at_template->getSubmitInstructions())."',
+                            '". db_es($at_template->getBrowseInstructions())."',1,0)";
+            //echo $sql;
+            $res = db_query($sql);
+            if (!$res || db_affected_rows($res) <= 0) {
+                $this->setError('ArtifactTypeFactory: '.db_error());
+                return false;
+            } else {
+                $id = db_insertid($res,'artifact_group_list','group_artifact_id');
+                $at_new = new ArtifactType($group,$id);
+                if (!$at_new->fetchData($id)) {
+                    $this->setError('ArtifactTypeFactory: '.$Language->getText('tracker_common_type','load_fail'));
+                    return false;
+                } else {
+                    
+                    //create global notifications
+                    $sql = "INSERT INTO artifact_global_notification (tracker_id, addresses, all_updates, check_permissions)
+                    SELECT ". db_ei($id) .", addresses, all_updates, check_permissions
+                    FROM artifact_global_notification
+                    WHERE tracker_id = ". db_ei($atid_template);
+                    $res = db_query($sql);
+                    if (!$res || db_affected_rows($res) <= 0) {
+                        $this->setError('ArtifactTypeFactory: '.db_error());
+                    }
+                    
+                    // Create fieldset factory
+                    $art_fieldset_fact = new ArtifactFieldSetFactory($at_template);
+                    // Then copy all the field sets.
+                    $mapping_field_set_array = $art_fieldset_fact->copyFieldSets($atid_template, $id);
+                    if ( ! $mapping_field_set_array) {
+                      $this->setError('ArtifactTypeFactory: '.$art_fieldset_fact->getErrorMessage());
+                      return false;
+                    }
+                    
+                    // Create field factory
+                    $art_field_fact = new ArtifactFieldFactory($at_template);
+                    
+                    // Then copy all the fields informations
+                    if ( !$art_field_fact->copyFields($id, $mapping_field_set_array,$ugroup_mapping) ) {
+                      $this->setError('ArtifactTypeFactory: '.$art_field_fact->getErrorMessage());
+                      return false;
+                    }
+                    
+                    // Then copy all the reports informations
+                    // Create field factory
+                    $art_report_fact = new ArtifactReportFactory();
+                    
+                    if ( !$report_mapping = $art_report_fact->copyReports($atid_template,$id) ) {
+                      $this->setError('ArtifactTypeFactory: '.$art_report_fact->getErrorMessage());
+                      return false;
+                    }
+                    $em =& EventManager::instance();
+                    $pref_params = array('atid_source'   => $atid_template,
+                                         'atid_dest'     => $id);
+                    $em->processEvent('artifactType_created',$pref_params);
+                    
+                    
+                    // Copy artifact_notification_event and artifact_notification_role
+                    if ( !$at_new->copyNotificationEvent($id) ) {
+                      return false;
+                    }
+                    if ( !$at_new->copyNotificationRole($id) ) {
+                      return false;
+                    }
+                    
+                    // Create user permissions: None for group members and Admin for group admin
+                    if ( !$at_new->createUserPerms($id) ) {
+                      return false;
+                    }
+                    
+                    // Create canned responses
+                    $canned_new = new ArtifactCanned($at_new);
+                    $canned_template = $at_template->getCannedResponses();
+                    if ($canned_template && db_numrows($canned_template) > 0) {
+                      while ($row = db_fetch_array($canned_template)) {
+                        $canned_new->create($row['title'],$row['body']);
+                      }
+                    }
+                    
+                    //Copy template permission
+                    permission_copy_tracker_and_field_permissions($atid_template, $id, $group_id_template, $group_id, $ugroup_mapping);
+                    
+                    //Copy Rules
+                    require_once('ArtifactRulesManager.class.php');
+                    $arm =& new ArtifactRulesManager();
+                    $arm->copyRules($atid_template, $id);
                 }
-                
-                // Create fieldset factory
-                $art_fieldset_fact = new ArtifactFieldSetFactory($at_template);
-                // Then copy all the field sets.
-                $mapping_field_set_array = $art_fieldset_fact->copyFieldSets($atid_template, $id);
-                if ( ! $mapping_field_set_array) {
-		  $this->setError('ArtifactTypeFactory: '.$art_fieldset_fact->getErrorMessage());
-		  return false;
-		}
-                
-		// Create field factory
-		$art_field_fact = new ArtifactFieldFactory($at_template);
-		
-		// Then copy all the fields informations
-		if ( !$art_field_fact->copyFields($id, $mapping_field_set_array,$ugroup_mapping) ) {
-		  $this->setError('ArtifactTypeFactory: '.$art_field_fact->getErrorMessage());
-		  return false;
-		}
-		
-		// Then copy all the reports informations
-		// Create field factory
-		$art_report_fact = new ArtifactReportFactory();
-		
-		if ( !$report_mapping = $art_report_fact->copyReports($atid_template,$id) ) {
-		  $this->setError('ArtifactTypeFactory: '.$art_report_fact->getErrorMessage());
-		  return false;
-		}
-		$em =& EventManager::instance();
-		$pref_params = array('atid_source'   => $atid_template,
-                     		 'atid_dest'     => $id);
-		$em->processEvent('artifactType_created',$pref_params);
-	
-		
-		// Copy artifact_notification_event and artifact_notification_role
-		if ( !$at_new->copyNotificationEvent($id) ) {
-		  return false;
-		}
-		if ( !$at_new->copyNotificationRole($id) ) {
-		  return false;
-		}
-		
-		// Create user permissions: None for group members and Admin for group admin
-		if ( !$at_new->createUserPerms($id) ) {
-		  return false;
-		}
-
-		// Create canned responses
-		$canned_new = new ArtifactCanned($at_new);
-		$canned_template = $at_template->getCannedResponses();
-		if ($canned_template && db_numrows($canned_template) > 0) {
-		  while ($row = db_fetch_array($canned_template)) {
-		    $canned_new->create($row['title'],$row['body']);
-		  }
-		}
-                
-                //Copy template permission
-                permission_copy_tracker_and_field_permissions($atid_template, $id, $group_id_template, $group_id, $ugroup_mapping);
-                
-                //Copy Rules
-                require_once('ArtifactRulesManager.class.php');
-                $arm =& new ArtifactRulesManager();
-                $arm->copyRules($atid_template, $id);
-		return $id;
-			}
-		}
+            }
+        }
+        return $id;
 	}
     
     public function getArtifactGroupListDao() {

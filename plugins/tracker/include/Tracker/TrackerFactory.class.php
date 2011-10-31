@@ -632,8 +632,12 @@ class TrackerFactory {
                 $tracker = $this->getInstanceFromXML($trackerXML, $groupId, $name, $description, $itemname);
                 //Testing consistency of the imported tracker before updating database
                 if ($tracker->testImport()) {
-                    $tracker_id = $this->saveObject($tracker);
-                    $tracker->setId($tracker_id);
+                    if ($tracker_id = $this->saveObject($tracker)) {
+                        $tracker->setId($tracker_id);
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', 'Oops. Something weird occured. Unable to create the tracker. Please insert coin and try again.');
+                        $tracker = null;
+                    }
                 } else {
                     $GLOBALS['Response']->addFeedback('error', 'XML file cannot be imported');
                     $tracker = null;
@@ -680,47 +684,47 @@ class TrackerFactory {
                 '',
                 $tracker->instantiate_for_new_projects,
                 $tracker->stop_notification);
-        $trackerDB = $this->getTrackerById($tracker_id);
-        //create cannedResponses
-        $response_factory = $tracker->getCannedResponseFactory();
-        foreach ($tracker->cannedResponses as $response) {
-            $response_factory->saveObject($tracker_id, $response);
-        }
-        //create formElements
-        foreach ($tracker->formElements as $formElement) {
-            // these fields have no parent
-            Tracker_FormElementFactory::instance()->saveObject($trackerDB, $formElement, 0);
-        }
-        //create report
-        foreach ($tracker->reports as $report) {
-            Tracker_ReportFactory::instance()->saveObject($tracker_id, $report);
-        }
-        //create semantics
-        if (isset($tracker->semantics)) {
-            foreach ($tracker->semantics as $semantic) {
-                Tracker_SemanticFactory::instance()->saveObject($semantic, $trackerDB);
+        if ($tracker_id) {
+            $trackerDB = $this->getTrackerById($tracker_id);
+            //create cannedResponses
+            $response_factory = $tracker->getCannedResponseFactory();
+            foreach ($tracker->cannedResponses as $response) {
+                $response_factory->saveObject($tracker_id, $response);
             }
-        }
-        //create workflow
-        if (isset($tracker->workflow)) {
-            WorkflowFactory::instance()->saveObject($tracker->workflow, $trackerDB);
-        }
-        
-        //tracker permissions
-        if ($tracker->permissionsAreCached()) {
-            $pm = PermissionsManager::instance();
-            foreach ($tracker->getPermissions() as $ugroup => $permissions) {                
-                foreach ($permissions as $permission) {                    
-                    $pm->addPermission($permission, $tracker_id, $ugroup);
+            //create formElements
+            foreach ($tracker->formElements as $formElement) {
+                // these fields have no parent
+                Tracker_FormElementFactory::instance()->saveObject($trackerDB, $formElement, 0);
+            }
+            //create report
+            foreach ($tracker->reports as $report) {
+                Tracker_ReportFactory::instance()->saveObject($tracker_id, $report);
+            }
+            //create semantics
+            if (isset($tracker->semantics)) {
+                foreach ($tracker->semantics as $semantic) {
+                    Tracker_SemanticFactory::instance()->saveObject($semantic, $trackerDB);
                 }
             }
-        } else {            
-            $this->saveTrackerDefaultPermission($tracker_id);
+            //create workflow
+            if (isset($tracker->workflow)) {
+                WorkflowFactory::instance()->saveObject($tracker->workflow, $trackerDB);
+            }
+            
+            //tracker permissions
+            if ($tracker->permissionsAreCached()) {
+                $pm = PermissionsManager::instance();
+                foreach ($tracker->getPermissions() as $ugroup => $permissions) {
+                    foreach ($permissions as $permission) {                    
+                        $pm->addPermission($permission, $tracker_id, $ugroup);
+                    }
+                }
+            } else {
+                $this->saveTrackerDefaultPermission($tracker_id);
+            }
+            
+            $this->postCreateActions($trackerDB);
         }
-       
-
-        
-        $this->postCreateActions($trackerDB);
         return $tracker_id;
     }
 }
