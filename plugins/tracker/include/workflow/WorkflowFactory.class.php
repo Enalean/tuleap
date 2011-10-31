@@ -208,17 +208,33 @@ class WorkflowFactory {
     }
     
     /**
-    *Get the transition_id 
-    * @param int the id of the field_value_from
-    * @param int the id of the field_value_to
-    *
-    * @return int the transition_id
-    */
+     * Say if a field is used in its tracker workflow
+     *
+     * @param Tracker_FormElement_Field $field The field
+     *
+     * @return bool
+     */
+    public function isFieldUsedInWorkflow(Tracker_FormElement_Field $field) {
+        $workflow_field = $this->getWorkflowField($field->getTracker()->getId());
+        if ($workflow_field) {
+            return $field->getId() == $workflow_field->getId();
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     *Get the transition_id 
+     * @param int the id of the field_value_from
+     * @param int the id of the field_value_to
+     *
+     * @return int the transition_id
+     */
     public function getTransitionIdFromTo($workflow_id, $field_value_from, $field_value_to) {
         return $this->getTransitionDao()->getTransitionId($workflow_id, $field_value_from, $field_value_to);
     }
     
-     /**
+    /**
      * Get the transitions of the workflow
      * 
      * @param Workflow $workflow The workflow

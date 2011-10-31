@@ -21,6 +21,7 @@
 require_once(dirname(__FILE__).'/../../include/workflow/WorkflowFactory.class.php');
 require_once(dirname(__FILE__).'/../../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
+Mock::generate('Workflow_Dao');
 
 require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
@@ -61,6 +62,30 @@ class WorkflowFactoryTest extends UnitTestCase {
         
     }
     
+    public function testIsFieldUsedInWorkflow() {
+        
+        $tracker = new MockTracker();
+        $tracker->setReturnValue('getId', 123);
+        
+        $field_status = new MockTracker_FormElement_Field_List();
+        $field_status->setReturnReference('getTracker', $tracker);
+        $field_status->setReturnValue('getId', 1001);
+        
+        $field_start_date = new MockTracker_FormElement_Field_List();
+        $field_start_date->setReturnReference('getTracker', $tracker);
+        $field_status->setReturnValue('getId', 1002);
+        
+        $field_close_date = new MockTracker_FormElement_Field_List();
+        $field_close_date->setReturnReference('getTracker', $tracker);
+        $field_status->setReturnValue('getId', 1003);
+        
+        $wf = TestHelper::getPartialMock('WorkflowFactory', array('getWorkflowField'));
+        $wf->setReturnReference('getWorkflowField', $field_status, array($tracker->getId()));
+        
+        $this->assertTrue($wf->isFieldUsedInWorkflow($field_status));
+        $this->assertFalse($wf->isFieldUsedInWorkflow($field_start_date));
+        $this->assertFalse($wf->isFieldUsedInWorkflow($field_close_date));
+    }
 }
 
 ?>

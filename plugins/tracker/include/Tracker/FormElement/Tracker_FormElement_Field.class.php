@@ -686,12 +686,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
      */
     public function isUsedInWorkflow() {
         $wf = WorkflowFactory::instance();
-        $workflow_field = $wf->getWorkflowField($this->getTrackerId());
-        if ($workflow_field) {
-            return $this->getId() == $workflow_field->getFieldId();
-        } else {
-            return false;
-        }
+        return $wf->isFieldUsedInWorkflow($this);
     }
     
     /**
