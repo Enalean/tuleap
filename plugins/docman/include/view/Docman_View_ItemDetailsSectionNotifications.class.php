@@ -82,7 +82,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                     $user = $um->getUserById($userId);
                     $content .= '<td style="white-space:nowrap">'. $userHelper->getDisplayName($user->getName(), $user->getRealName()) .'</td>';
                     $content .= '<td align="right" style="padding-right:65px; ">';
-                    $content .= '<input id="'. $rowBgColor .'" type="checkbox" value="'. $userId .'" name="attachments_to_delete[]">';
+                    $content .= '<input id="'. $rowBgColor .'" type="checkbox" value="'. $userId .'" name="listeners_to_delete[]">';
                     $content .= '</td></tr>';
                     $res_members->next();
                 }
