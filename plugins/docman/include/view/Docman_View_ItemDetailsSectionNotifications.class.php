@@ -33,7 +33,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $this->token = $token;
     }
     function getContent() {
-        $content = '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</dt>';
+        $content = '<dl><fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</legend>';
         $content .= '<dd>';
         $content .= '<form action="" method="POST">';
         $content .= '<p>';
@@ -53,10 +53,47 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content .= $this->item->accept($this, array('user' => &$user));
         $content .= '<p><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
         $content .= '</form>';
-        $content .= '</dd></dl>';
+        $content .= '</dd></fieldset></dl>';
+        $content .= '<dl>'.$this->displayListeningUsers($this->item->getId()).'</dl>';
         return $content;
     }
-    
+
+    function displayListeningUsers($itemId) {
+        $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
+        $userHelper = new UserHelper();
+        $um = UserManager::instance();
+        $content = '';
+        if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
+            $content .= '<fieldset><legend>Subscribers</legend>';
+            $res_members = $this->notificationsManager->_getListeningUsers($this->item->getId());
+            if ($res_members->count()>0) {
+                $content .= '<form method="POST" action="">';
+                $content .= '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody>';
+                $content .= html_build_list_table_top(array('User name', 'delete ?'));
+                $rowBgColor  = 0;
+                $hp = Codendi_HTMLPurifier::instance();
+                while ($res_members->valid()) {
+                    foreach ($res_members->current() as $key=>$val) {
+                        if ($key == 'user_id') {
+                            $userId = $val;
+                        }
+                    }
+                    $content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
+                    $user = $um->getUserById($userId);
+                    $content .= '<td style="white-space:nowrap">'. $userHelper->getDisplayName($user->getName(), $user->getRealName()) .'</td>';
+                    $content .= '<td align="right" style="padding-right:65px; ">';
+                    $content .= '<input id="'. $rowBgColor .'" type="checkbox" value="'. $userId .'" name="attachments_to_delete[]">';
+                    $content .= '</td></tr>';
+                    $res_members->next();
+                }
+                $content .= '<td align="right" colspan="2" style="padding-right:50px; "><input type="submit" value="Delete"></td></tr>';
+                $content .= '</tbody></table></form>';
+                $content .= '</fieldset>';
+            }
+        }
+        return $content;
+    }
+
     function visitEmpty(&$item, $params) {
         return $this->visitDocument($item, $params);
     }
