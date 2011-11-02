@@ -64,7 +64,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $um = UserManager::instance();
         $content = '';
         if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
-            $content .= '<fieldset><legend>Subscribers</legend>';
+            $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
             $res_members = $this->notificationsManager->_getListeningUsers($this->item->getId());
             if ($res_members->count()>0) {
                 $content .= '<form method="POST" action="">';
