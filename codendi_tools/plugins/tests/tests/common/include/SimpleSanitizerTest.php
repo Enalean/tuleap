@@ -10,19 +10,12 @@ require_once('common/include/SimpleSanitizer.class.php');
  * Test the class SimpleSanitizer
  */
 class SimpleSanitizerTest extends SimpleSanitizerTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function SimpleSanitizerTest() {
-        $this->SimpleSanitizerTestCase('SimpleSanitizer test');
-    }
 
     /**
      * initialize variables for tests
      */
     function setUp() {
-        $this->sanitizer =& new SimpleSanitizer();
+        $this->sanitizer = new SimpleSanitizer();
     }	
 
 }
