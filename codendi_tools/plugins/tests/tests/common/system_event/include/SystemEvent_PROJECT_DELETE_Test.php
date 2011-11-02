@@ -69,7 +69,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
     public function testProjectDeleteUsersFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->SystemEvent('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject();
@@ -141,7 +141,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
     public function testProjectDeleteMembershipRequestNotificationUGroupFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->SystemEvent('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject();
@@ -214,7 +214,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
     public function testProjectDeleteFRSFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->SystemEvent('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject();
@@ -286,7 +286,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
     public function testProjectDeleteTrackersFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->SystemEvent('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject();
@@ -358,7 +358,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
     public function testProjectDeleteProjectHomeFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->SystemEvent('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject();
@@ -430,7 +430,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
     public function testProjectDeletePublicFtpFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->SystemEvent('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject();
@@ -502,7 +502,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
     public function testProjectDeleteWikiAttacmentsFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->SystemEvent('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject();
@@ -574,7 +574,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
     public function testProjectDeleteCVSFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->SystemEvent('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject();
@@ -646,7 +646,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
     public function testProjectDeleteSVNFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->SystemEvent('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject();
@@ -718,7 +718,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
     public function testProjectDeleteMailingListFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->SystemEvent('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject();
@@ -793,7 +793,7 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
      */
     public function testProjectDeleteSucceed() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
-        $evt->SystemEvent('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject();

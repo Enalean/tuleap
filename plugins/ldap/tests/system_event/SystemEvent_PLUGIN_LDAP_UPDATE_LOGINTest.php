@@ -65,7 +65,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends UnitTestCase {
         $backend->expect('updateProjectSVNAccessFile', array($prj3));
         $se->setReturnValue('getBackendSVN', $backend);
         
-        $se->SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
+        $se->__construct($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
         $se->process();
     }
 }

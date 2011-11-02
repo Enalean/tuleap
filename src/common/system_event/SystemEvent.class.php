@@ -90,7 +90,7 @@ abstract class SystemEvent {
      * @param string $end_date
      * @param string $log
      */
-    function SystemEvent($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log) {
+    function __construct($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log) {
         $this->id           = $id;
         $this->type         = $type;
         $this->parameters   = $parameters;
