@@ -231,34 +231,7 @@ class Workflow {
            $child = $root->addChild('transitions');
            $transitions = $this->getTransitions($this->workflow_id);
            foreach ($transitions as $transition) {
-               $grand_child = $child->addChild('transition'); 
-               if ($transition->getFieldValueFrom() == null) {
-                   $grand_child->addChild('from_id')->addAttribute('REF', 'null');
-               }else {
-                   $grand_child->addChild('from_id')->addAttribute('REF', array_search($transition->getFieldValueFrom()->getId(), $xmlMapping['values']));
-               }
-               $grand_child->addChild('to_id')->addAttribute('REF', array_search($transition->getFieldValueTo()->getId(), $xmlMapping['values']));
-               
-               $postactions = $transition->getPostActions();
-               if ($postactions) {
-                   $grand_grand_child = $grand_child->addChild('postactions');
-                   foreach ($postactions as $postaction) {
-                       $postaction->exportToXML($grand_grand_child, $xmlMapping);
-                   }
-               }
-               
-               $pm = $this->getPermissionsManager();
-               $transition_ugroups = $pm->getAuthorizedUgroups($transition->getTransitionId(), 'PLUGIN_TRACKER_WORKFLOW_TRANSITION');
-               
-               if ($transition_ugroups) {
-                   $grand_grand_child = $grand_child->addChild('permissions');
-                   
-                   foreach ($transition_ugroups as $transition_ugroup) {
-                       if (($ugroup = array_search($transition_ugroup['ugroup_id'], $GLOBALS['UGROUPS'])) !== false && $transition_ugroup['ugroup_id'] < 100) {
-                           $grand_grand_child->addChild('permission')->addAttribute('ugroup', $ugroup);
-                       }
-                   }
-               }
+               $transition->exportToXml($child, $xmlMapping);
            }
     }
     
@@ -287,15 +260,6 @@ class Workflow {
                 $transition->before($fields_data, $current_user);
             }
         }
-    }
-    
-    /**
-     * Wrapper for PermissionsManager
-     *
-     * @return PermissionsManager
-     */
-    function getPermissionsManager() {
-        return PermissionsManager::instance();
     }
 }
 ?>

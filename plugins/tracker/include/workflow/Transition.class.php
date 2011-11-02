@@ -243,5 +243,53 @@ class Transition {
     public function getPermissions() {
         return $this->cache_permissions;
     }
+    
+    /**
+     * Export transition to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the transition is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
+    public function exportToXml(&$root, $xmlMapping) {
+        $child = $root->addChild('transition');
+        if ($this->getFieldValueFrom() == null) {
+            $child->addChild('from_id')->addAttribute('REF', 'null');
+        }else {
+            $child->addChild('from_id')->addAttribute('REF', array_search($this->getFieldValueFrom()->getId(), $xmlMapping['values']));
+        }
+        $child->addChild('to_id')->addAttribute('REF', array_search($this->getFieldValueTo()->getId(), $xmlMapping['values']));
+        
+        $postactions = $this->getPostActions();
+        if ($postactions) {
+            $grand_child = $child->addChild('postactions');
+            foreach ($postactions as $postaction) {
+                $postaction->exportToXML($grand_child, $xmlMapping);
+            }
+        }
+        
+        $pm = $this->getPermissionsManager();
+        $transition_ugroups = $pm->getAuthorizedUgroups($this->getTransitionId(), 'PLUGIN_TRACKER_WORKFLOW_TRANSITION');
+        
+        if ($transition_ugroups) {
+            $grand_child = $child->addChild('permissions');
+            
+            foreach ($transition_ugroups as $transition_ugroup) {
+                if (($ugroup = array_search($transition_ugroup['ugroup_id'], $GLOBALS['UGROUPS'])) !== false && $transition_ugroup['ugroup_id'] < 100) {
+                    $grand_child->addChild('permission')->addAttribute('ugroup', $ugroup);
+                }
+            }
+        }
+    }
+    
+     /**
+     * Wrapper for PermissionsManager
+     *
+     * @return PermissionsManager
+     */
+    function getPermissionsManager() {
+        return PermissionsManager::instance();
+    }
 }
 ?>
