@@ -184,5 +184,25 @@ class TransitionFactory {
         
         return $transition;
     }
+    
+    /**
+     * Delete a workflow
+     *
+     * @param int the workflow_id to which belongs the transitions
+     * @param int the group_id to which belongs the transitions
+     * @param Array $transitions, an array of Transition
+     */
+    public function deleteWorkflow($workflow_id, $group_id, $transitions) {
+        
+        //Delete permissions
+        foreach($transitions as $transition) {
+            permission_clear_all($group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), false);
+        }
+        
+        //Delete postactions
+        if ($this->getPostActionFactory()->deleteWorkflow($transitions)) {
+            return $this->getDao()->deleteWorkflowTransitions($workflow_id);
+        }
+    }
 }
 ?>

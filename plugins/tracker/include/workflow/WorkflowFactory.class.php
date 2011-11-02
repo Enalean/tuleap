@@ -104,32 +104,15 @@ class WorkflowFactory {
     }
     
     /**
-     * Delete a workflow transitions
+     * Delete a workflow
      *
      * @param int $workflow_id the workflow id
      */
-    public function deleteWorkflowTransitions($workflow_id) {
-        //The post actions on transitions must be deleted first
-        if ($this->deletePostActionsByTransition($workflow_id)) {
-            return $this->getTransitionDao()->deleteWorkflowTransitions($workflow_id);
-        }
-    }
-    
-    /**
-     * Delete the post actions of each transition of a workflow
-     *
-     * @param int $workflow_id the workflow id
-     */
-    public function deletePostActionsByTransition($workflow_id) {
+    public function deleteWorkflow($workflow_id, $group_id) {
         $workflow = $this->getWorkflow($workflow_id);
-        $transitions = $this->getTransitions($workflow);
-        $tpaf = new Transition_PostActionFactory();
-        foreach ($transitions as $transition) {
-            if ($transition->getPostActions()) {
-                $tpaf->deletePostAction($transition);
-            }
+        if ($this->getTransitionFactory()->deleteWorkflow($workflow_id, $group_id, $this->getTransitions($workflow))) {
+            return $this->delete($workflow_id);
         }
-        return true;
     }
     
     /**

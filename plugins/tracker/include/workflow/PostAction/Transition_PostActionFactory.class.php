@@ -166,5 +166,17 @@ class Transition_PostActionFactory {
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
         return count($this->getDao()->searchByFieldId($field->getId())) > 0;
     }
+    
+    /**
+     * Delete a workflow
+     *
+     * @param Array $transitions, an array of Transition
+     */
+    public function deleteWorkflow($transitions) {
+        foreach ($transitions as $transition) {
+            $this->deletePostAction($transition);
+        }
+        return true;
+    }
 }
 ?>
