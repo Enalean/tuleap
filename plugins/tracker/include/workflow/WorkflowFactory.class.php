@@ -306,37 +306,8 @@ class WorkflowFactory {
 
         $transitions = array();
         foreach($xml->transitions->transition as $t) {
-                
-                $xml_from_attributes = $t->from_id->attributes();
-                
-                $from = null;
-                if ((string)$t->from_id['REF'] != 'null') {
-                    $from = $xmlMapping[(string)$t->from_id['REF']];
-                }
-                $to = $xmlMapping[(string)$t->to_id['REF']];
-                
-                $transition = new Transition(0, 0, $from, $to);
-                $postactions = array();
-                foreach ($t->postactions->postaction_field_date as $p) {
-                    
-                    $field_id_postaction = $xmlMapping[(string)$p->field_id['REF']];
-                    $postaction_attributes = $p->attributes();
-                    
-                    $tpaf = new Transition_PostActionFactory();
-                    $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
-                }
-                $transition->setPostActions($postactions);
-                
-                //Permissions on transition
-                $permissions = array();
-                foreach ($t->permissions->permission as $perm) {
-                    $ugroup = (string) $perm['ugroup'];
-                    if (isset($GLOBALS['UGROUPS'][$ugroup])) {
-                        $permissions[] = $GLOBALS['UGROUPS'][$ugroup];
-                    }
-                    $transition->setPermissions($permissions);
-                }
-                 $transitions[] = $transition;
+            $tf = $this->getTransitionFactory();
+            $transitions[] = $tf->getInstanceFromXML($t, &$xmlMapping);
         }
         
         return new Workflow(0, $tracker, $field_id, $xml->is_used, $transitions);

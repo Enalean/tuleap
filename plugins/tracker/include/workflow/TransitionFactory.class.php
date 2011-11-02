@@ -143,5 +143,46 @@ class TransitionFactory {
     protected function getDao() {
         return new Workflow_TransitionDao();
     }
+    
+    /**
+     * Creates a transition Object
+     * 
+     * @param SimpleXMLElement $xml         containing the structure of the imported workflow
+     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
+     * 
+     * @return Workflow The workflow object, or null if error
+     */
+    public function getInstanceFromXML($xml, &$xmlMapping) {
+        
+        $from = null;
+        if ((string)$xml->from_id['REF'] != 'null') {
+            $from = $xmlMapping[(string)$xml->from_id['REF']];
+        }
+        $to = $xmlMapping[(string)$xml->to_id['REF']];
+        
+        $transition = new Transition(0, 0, $from, $to);
+        $postactions = array();
+        foreach ($xml->postactions->postaction_field_date as $p) {
+            
+            $field_id_postaction = $xmlMapping[(string)$p->field_id['REF']];
+            $postaction_attributes = $p->attributes();
+            
+            $tpaf = new Transition_PostActionFactory();
+            $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
+        }
+        $transition->setPostActions($postactions);
+        
+        //Permissions on transition
+        $permissions = array();
+        foreach ($xml->permissions->permission as $perm) {
+            $ugroup = (string) $perm['ugroup'];
+            if (isset($GLOBALS['UGROUPS'][$ugroup])) {
+                $permissions[] = $GLOBALS['UGROUPS'][$ugroup];
+            }
+            $transition->setPermissions($permissions);
+        }
+        
+        return $transition;
+    }
 }
 ?>
