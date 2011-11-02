@@ -108,9 +108,9 @@ class WorkflowFactory {
      *
      * @param int $workflow_id the workflow id
      */
-    public function deleteWorkflow($workflow_id, $group_id) {
+    public function deleteWorkflow($workflow_id) {
         $workflow = $this->getWorkflow($workflow_id);
-        if ($this->getTransitionFactory()->deleteWorkflow($workflow_id, $group_id, $this->getTransitions($workflow))) {
+        if ($this->getTransitionFactory()->deleteWorkflow($workflow)) {
             return $this->delete($workflow_id);
         }
     }
@@ -225,23 +225,7 @@ class WorkflowFactory {
      */
     public function getTransitionIdFromTo($workflow_id, $field_value_from, $field_value_to) {
         return $this->getTransitionDao()->getTransitionId($workflow_id, $field_value_from, $field_value_to);
-    }
-    
-    /**
-     * Get the transitions of the workflow
-     * 
-     * @param Workflow $workflow The workflow
-     *
-     * @return Array of Transition
-     */
-    public function getTransitions(Workflow $workflow){
-        $tf          = $this->getTransitionFactory();
-        $transitions = array();
-        foreach($this->getTransitionDao()->searchByWorkflow($workflow->getId()) as $row) {
-            $transitions[] = $tf->getInstanceFromRow($row, $workflow);
-        }
-        return $transitions;
-    }
+    }    
     
     /**
      * Wrapper for TransitionFactory

@@ -54,7 +54,7 @@ class WorkflowManager {
             $transition = TransitionFactory::instance()->getTransition($request->get('edit_transition'));
             $this->displayTransitionDetails($engine, $request, $current_user, $transition);
         } else if ($request->get('delete')) {
-             if (WorkflowFactory::instance()->deleteWorkflow($request->get('delete'), $this->tracker->group_id)) {
+             if (WorkflowFactory::instance()->deleteWorkflow($request->get('delete'))) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','deleted'));
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                 'tracker' => (int)$this->tracker->id,

@@ -144,5 +144,21 @@ class Transition_PostAction_Field_DateDao extends DataAccessObject {
         return $this->update($sql);
     }
     
+    /**
+     * Delete a postaction entries by workflow_id
+     *
+     * @param int $id The id of the workflow
+     *
+     * @return bool true if success false otherwise
+     */
+    public function deletePostActionsByWorkflowId($workflow_id) {
+        $workflow_id = $this->da->escapeInt($workflow_id);
+        $sql = "DELETE P
+                FROM tracker_workflow_transition_postactions_field_date AS P
+                   INNER JOIN tracker_workflow_transition AS T ON P.transition_id = T.transition_id
+                WHERE T.workflow_id = $workflow_id";
+        return $this->update($sql);
+    }
+    
 }
 ?>

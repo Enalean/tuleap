@@ -127,7 +127,7 @@ class Workflow {
      */
     public function getTransitions() {
         if ($this->transitions === null) {
-            $this->transitions = WorkflowFactory::instance()->getTransitions($this);
+            $this->transitions = TransitionFactory::instance()->getTransitions($this);
         }
         return $this->transitions;
     }

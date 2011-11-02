@@ -170,13 +170,11 @@ class Transition_PostActionFactory {
     /**
      * Delete a workflow
      *
-     * @param Array $transitions, an array of Transition
+     * @param int $workflow_id the id of the workflow
+     * 
      */
-    public function deleteWorkflow($transitions) {
-        foreach ($transitions as $transition) {
-            $this->deletePostAction($transition);
-        }
-        return true;
+    public function deleteWorkflow($workflow_id) {
+        return $this->getDao()->deletePostActionsByWorkflowId($workflow_id);
     }
 }
 ?>

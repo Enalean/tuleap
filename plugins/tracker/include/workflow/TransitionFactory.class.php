@@ -188,21 +188,39 @@ class TransitionFactory {
     /**
      * Delete a workflow
      *
-     * @param int the workflow_id to which belongs the transitions
-     * @param int the group_id to which belongs the transitions
-     * @param Array $transitions, an array of Transition
+     * @param Workflow $workflow
+     * 
+     * @return boolean
      */
-    public function deleteWorkflow($workflow_id, $group_id, $transitions) {
+    public function deleteWorkflow($workflow) {
+        $transitions = $this->getTransitions($workflow);
+        $workflow_id = $workflow->getId();
         
         //Delete permissions
         foreach($transitions as $transition) {
-            permission_clear_all($group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), false);
+            permission_clear_all($workflow->getTracker()->getGroupId(), 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), false);
         }
         
         //Delete postactions
-        if ($this->getPostActionFactory()->deleteWorkflow($transitions)) {
+        if ($this->getPostActionFactory()->deleteWorkflow($workflow_id)) {
             return $this->getDao()->deleteWorkflowTransitions($workflow_id);
         }
     }
+    
+    /**
+     * Get the transitions of the workflow
+     * 
+     * @param Workflow $workflow The workflow
+     *
+     * @return Array of Transition
+     */
+    public function getTransitions(Workflow $workflow){
+        $transitions = array();
+        foreach($this->getDao()->searchByWorkflow($workflow->getId()) as $row) {
+            $transitions[] = $this->getInstanceFromRow($row, $workflow);
+        }
+        return $transitions;
+    }
+    
 }
 ?>
