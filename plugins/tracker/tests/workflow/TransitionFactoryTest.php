@@ -30,23 +30,9 @@ class TransitionFactoryTest extends UnitTestCase {
         
         $field_start_date = new MockTracker_FormElement_Field_Date($this);
         $field_start_date->setReturnValue('getId', 1002);
-        /*
-        TODO: Why the hell do we need the above line? 
-        
-        If both mock objects don't return something for getId or return the 
-        same thing (1002 & 1002) then the test becomes red. 
-        Whereas we don't use this method. WTF ?
-        
-        Try to comment the above statement to see by yourself.
-        
-        To add some fun (it would be too easy) the tests are green if all tracker 
-        unit tests are run. the tests are red if this test is run in isolation.
-        I'm lovin'it >_<
-        
-        Fix me that or I will kill some puppies. Thanks.
-        */
         
         $field_close_date = new MockTracker_FormElement_Field_Date($this);
+        $field_close_date->setReturnValue('getId', 1003);
         
         $tpaf = new MockTransition_PostActionFactory();
         $tpaf->setReturnValue('isFieldUsedInPostActions', false, array($field_start_date));
