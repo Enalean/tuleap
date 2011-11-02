@@ -129,7 +129,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
         $this->action->setReturnValue('_getDocmanPermissionsManagerInstance', $this->docmanPermissionsManager);
         $this->action->setReturnValue('_getEventManager', new MockEventManager());
         $this->action->setReturnValue('_getFileStorage', $this->fileStorage);
-        $this->action->Docman_SOAPActions($controller);
+        $this->action->__construct($controller);
     }
     
     public function tearDown() {
