@@ -261,5 +261,22 @@ class Workflow {
             }
         }
     }
+    
+   /**
+    * Indicates if permissions on a field can be bypassed
+    *
+    * @param Field $field
+    *
+    * @return boolean true if the permissions on the field can be by passed, false otherwise
+    */
+    public function bypassPermissions($field) {
+        $transitions = $this->getTransitions();
+        foreach ($transitions as $transition) {
+            if ($transition->bypassPermissions($field)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 ?>

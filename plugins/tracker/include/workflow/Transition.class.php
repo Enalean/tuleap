@@ -291,5 +291,22 @@ class Transition {
     function getPermissionsManager() {
         return PermissionsManager::instance();
     }
+    
+   /**
+    * Indicates if permissions on a field can be bypassed
+    *
+    * @param Field $field
+    *
+    * @return boolean true if the permissions on the field can be by passed, false otherwise
+    */
+    public function bypassPermissions($field) {
+        $postactions = $this->getPostActions();
+        foreach ($postactions as $postaction) {
+            if ($postaction->bypassPermissions($field)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 ?>

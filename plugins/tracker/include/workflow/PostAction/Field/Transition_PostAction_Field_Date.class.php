@@ -46,6 +46,11 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
     protected $field;
     
     /**
+     * @var $bypass_permissions true if permissions on field can be bypassed at submission or update
+     */
+    protected $bypass_permissions = false;
+    
+    /**
      * Constructor
      *
      * @param Transition                   $transition The transition the post action belongs to
@@ -108,6 +113,15 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         return $this->field;
     }
 
+    /**
+     * Get the value of bypass_permissions
+     *
+     * @return boolean
+     */
+    public function bypassPermissions($field) {
+        return $this->getFieldId() == $field->getId() && $this->bypass_permissions;
+    }
+    
     /**
      * Say if the action is well defined
      *
@@ -224,20 +238,19 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         // Do something only if the value_type and the date field are properly defined 
         if ($this->isDefined()) {
             $field = $this->getField();
-            if ($field->userCanRead($current_user)) {
-                if ($field->userCanUpdate($current_user)) {
-                    if ($this->value_type === self::FILL_CURRENT_TIME) {
-                        $new_date_timestamp = $field->formatDate($_SERVER['REQUEST_TIME']);
-                        $this->addFeedback('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $new_date_timestamp));
-                    } else {
-                        $new_date_timestamp = $field->formatDate(null);
-                        $this->addFeedback('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel()));
-                    }
-                    $fields_data[$this->field->getId()] = $new_date_timestamp;
-                } else {
-                    $this->addFeedback('warning', 'workflow_postaction', 'field_date_no_perms', array($field->getLabel()));
+            if ($this->value_type === self::FILL_CURRENT_TIME) {
+                $new_date_timestamp = $field->formatDate($_SERVER['REQUEST_TIME']);
+                if ($field->userCanRead($current_user)) {
+                    $this->addFeedback('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $new_date_timestamp));
+                }
+            } else {
+                $new_date_timestamp = $field->formatDate(null);
+                if ($field->userCanRead($current_user)) {
+                    $this->addFeedback('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel()));
                 }
             }
+            $fields_data[$this->field->getId()] = $new_date_timestamp;
+            $this->bypass_permissions = true;
         }
     }
     
