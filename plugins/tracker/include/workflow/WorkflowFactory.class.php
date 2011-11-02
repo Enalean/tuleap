@@ -334,7 +334,7 @@ class WorkflowFactory {
                     if (isset($GLOBALS['UGROUPS'][$ugroup])) {
                         $permissions[] = $GLOBALS['UGROUPS'][$ugroup];
                     }
-                    $transition->setCachePermission($permissions);
+                    $transition->setPermissions($permissions);
                 }
                  $transitions[] = $transition;
         }

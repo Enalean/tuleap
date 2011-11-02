@@ -223,7 +223,7 @@ class Transition {
     }
     
     /**
-     * Set the cache permission for the ugroup_id
+     * Set the permissions for the ugroup_id
      * Use during the two-step xml import
      *
      * @param Array    $ugroup_ids An array of ugroup id
@@ -231,7 +231,7 @@ class Transition {
      *
      * @return void
      */
-    public function setCachePermission($ugroup_ids) {
+    public function setPermissions($ugroup_ids) {
         $this->cache_permissions = $ugroup_ids;
     }
     
