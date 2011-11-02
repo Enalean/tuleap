@@ -163,8 +163,6 @@ class WorkflowTest extends UnitTestCase {
 
     public function testExport() {
         
-        //$workflow = new WorkflowTestVersion(1, 2, 3, 1);
-        
         $ft1 = new MockTracker_FormElement_Field_List();
         $ff2 = new MockTracker_FormElement_Field_List();
         $ft2 = new MockTracker_FormElement_Field_List();

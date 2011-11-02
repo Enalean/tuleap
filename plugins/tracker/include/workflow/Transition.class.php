@@ -113,10 +113,22 @@ class Transition {
                 && $source_from->getId() === $target_from->getId() && $source_to->getId() === $target_to->getId();
     }
     
+    /**
+     * Get the transition id     
+     * 
+     * @return int
+     */
     public function getTransitionId() {
         return $this->transition_id;
     }
     
+    /**
+     * Set the transition id
+     * 
+     * @param int $id the transition id
+     * 
+     * @return int
+     */
     public function setTransitionId($id) {
         $this->transition_id = $id;
     }

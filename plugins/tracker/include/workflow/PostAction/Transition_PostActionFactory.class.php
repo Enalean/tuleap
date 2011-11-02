@@ -135,9 +135,10 @@ class Transition_PostActionFactory {
         
         $postaction_attributes = $xml->attributes();
         
-        $postaction = new Transition_PostAction_Field_Date($transition, 0, $xmlMapping[(string)$xml->field_id['REF']], (int) $postaction_attributes['valuetype']);
-      
-        return $postaction; 
+        if ($xmlMapping[(string)$xml->field_id['REF']]) {
+            $postaction = new Transition_PostAction_Field_Date($transition, 0, $xmlMapping[(string)$xml->field_id['REF']], (int) $postaction_attributes['valuetype']);
+            return $postaction;
+        }
     }
     
     public function saveObject($postaction) {

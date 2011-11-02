@@ -180,8 +180,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         if ($request->getInArray('remove_postaction', $this->id)) {
             $this->getDao()->deletePostAction($this->id);
         } else {
-            $field_id     = $this->field ? $this->field->getId() : 0;
-            $ref_field_id = $field_id;
+            $field_id     = $this->field ? $this->getFieldId() : 0;
             $value_type   = $this->value_type;
             
             // Target field
@@ -207,7 +206,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
             }
             
             // Update if something changed
-            if ($field_id != $ref_field_id || $value_type != $this->value_type) {
+            if ($field_id != $this->getFieldId() || $value_type != $this->value_type) {
                 $this->getDao()->updatePostAction($this->id, $field_id, $value_type);
             }
         }
