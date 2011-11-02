@@ -69,7 +69,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
             if ($res_members->count()>0) {
                 $content .= '<form method="POST" action="">';
                 $content .= '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody>';
-                $content .= html_build_list_table_top(array('User name', 'delete ?'));
+                $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')));
                 $rowBgColor  = 0;
                 $hp = Codendi_HTMLPurifier::instance();
                 while ($res_members->valid()) {
@@ -86,7 +86,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                     $content .= '</td></tr>';
                     $res_members->next();
                 }
-                $content .= '<td align="right" colspan="2" style="padding-right:50px; "><input type="submit" value="Delete"></td></tr>';
+                $content .= '<td align="right" colspan="2" style="padding-right:50px; "><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
                 $content .= '</tbody></table></form>';
                 $content .= '</fieldset>';
             }
