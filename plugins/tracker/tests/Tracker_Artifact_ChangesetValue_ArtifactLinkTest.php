@@ -49,18 +49,22 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends UnitTestCase {
         $this->artlink_info_123->setReturnValue('getArtifactId', '123');
         $this->artlink_info_123->setReturnValue('getKeyword', 'bug');
         $this->artlink_info_123->setReturnValue('getUrl', 'bug #123'); // for test
+	$this->artlink_info_123->setReturnValue('__toString', 'bug #123'); // for test
         $this->artlink_info_321 = new MockTracker_ArtifactLinkInfo();
         $this->artlink_info_321->setReturnValue('getArtifactId', '321');
         $this->artlink_info_321->setReturnValue('getKeyword', 'task');
         $this->artlink_info_321->setReturnValue('getUrl', 'task #321'); // for test
+        $this->artlink_info_321->setReturnValue('__toString', 'task #321'); // for test
         $this->artlink_info_666 = new MockTracker_ArtifactLinkInfo();
         $this->artlink_info_666->setReturnValue('getArtifactId', '666');
         $this->artlink_info_666->setReturnValue('getKeyword', 'sr');
         $this->artlink_info_666->setReturnValue('getUrl', 'sr #666'); // for test
+        $this->artlink_info_666->setReturnValue('__toString', 'sr #666'); // for test
         $this->artlink_info_999 = new MockTracker_ArtifactLinkInfo();
         $this->artlink_info_999->setReturnValue('getArtifactId', '999');
         $this->artlink_info_999->setReturnValue('getKeyword', 'story');
         $this->artlink_info_999->setReturnValue('getUrl', 'story #999'); // for test
+        $this->artlink_info_999->setReturnValue('__toString', 'story #999'); // for test
     }
     
     function testNoDiff() {
