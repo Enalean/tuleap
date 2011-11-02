@@ -30,5 +30,15 @@ class TrackerIdSharingDao extends DataAccessObject {
         $sql = "INSERT INTO tracker_idsharing_tracker VALUES ()";
         return $this->updateAndGetLastId($sql);
     }
+    
+    /**
+     * Get a good artifact id.
+     *
+     * @return int (or false if something gone mad)
+     */
+    public function generateArtifactId() {
+        $sql = "INSERT INTO tracker_idsharing_artifact VALUES ()";
+        return $this->updateAndGetLastId($sql);
+    }
 }
 ?>

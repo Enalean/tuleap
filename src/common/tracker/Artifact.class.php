@@ -384,13 +384,13 @@ class Artifact extends Error {
         
         $group = $ath->getGroup();
         $group_artifact_id = $ath->getID();
-	$error_message = ($import ? $Language->getText('tracker_common_artifact','row',$row) : "");
-
+        $error_message = ($import ? $Language->getText('tracker_common_artifact','row',$row) : "");
+        
         // Retrieve HTTP GET variables and store them in $vfl array
         if (!$vfl) {
-		$vfl = $art_field_fact->extractFieldList();
+            $vfl = $art_field_fact->extractFieldList();
         }
-
+        
         // We check the submitted fields to see if the user has the permissions to submit it
         if (!$import) {
             while ( list($key, $val) = each($vfl)) {
@@ -405,8 +405,8 @@ class Artifact extends Error {
                     // we check if the given value is authorized for this field (for select box fields only)
                     // we don't check here the none value, we check after it with the function checkEmptyFields, to get a better error message if the field required (instead of value 100 is not a valid valid value for the field)
                     if ($field->isSelectBox() && $val != 100 && ! $field->checkValueInPredefinedValues($this->ArtifactType->getID(), $val)) {
-                            $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $val)));
-                            return false;
+                        $this->setError($Language->getText('tracker_common_artifact','bad_field_value', array($field->getLabel(), $val)));
+                        return false;
                     }                    
                     if ($field->isMultiSelectBox()) {
                         foreach ($val as $a_value) {
@@ -427,51 +427,51 @@ class Artifact extends Error {
             } 
         }
         
-	if (!$import) {
-	  // make sure  required fields are not empty
-	  if ( $art_field_fact->checkEmptyFields($vfl) == false ) {
-          $this->setError($art_field_fact->getErrorMessage());
-          exit_missing_param();
-	  }
-	}
-
-
+        if (!$import) {
+            // make sure  required fields are not empty
+            if ( $art_field_fact->checkEmptyFields($vfl) == false ) {
+                $this->setError($art_field_fact->getErrorMessage());
+                exit_missing_param();
+            }
+        }
+        
+        
         // we don't force them to be logged in to submit a bug
         if (!user_isloggedin()) {
-	  $user=100;
+            $user=100;
         } else {
-	  $user=user_getid();
+            $user=user_getid();
         }
-	
-
-	// add default values for fields that have not been shown
-	$add_fields = $art_field_fact->getAllFieldsNotShownOnAdd();
-	while (list($key,$def_val) = each($add_fields)) {
-	  if (!array_key_exists($key,$vfl)) $vfl[$key] = $def_val;
-	}
-
-	
-	if ($import &&
-	    $vfl['submitted_by'] &&
-	    $vfl['submitted_by'] != "")
-	  $user = $vfl['submitted_by'];
-
         
-	// first make sure this wasn't double-submitted
-	$field = $art_field_fact->getFieldFromName('summary');
-	if ( $field && $field->isUsed()) {
-	  $res=db_query("SELECT * 
-                     FROM artifact 
-                     WHERE group_artifact_id = ". db_ei($ath->getID()) ." 
-                       AND submitted_by=".  db_ei($user) ." 
-                       AND summary='". db_es(htmlspecialchars($vfl['summary'])) ."'");
-	  if ($res && db_numrows($res) > 0) {
-	    $this->setError($Language->getText('tracker_common_artifact','double_subm',db_result($res,0,'artifact_id')));
-	    return false;           
-	  }
-	}
-
-                        
+        
+        // add default values for fields that have not been shown
+        $add_fields = $art_field_fact->getAllFieldsNotShownOnAdd();
+        while (list($key,$def_val) = each($add_fields)) {
+            if (!array_key_exists($key,$vfl)) $vfl[$key] = $def_val;
+        }
+        
+        
+        if ($import &&
+            $vfl['submitted_by'] &&
+            $vfl['submitted_by'] != "")
+        $user = $vfl['submitted_by'];
+        
+        
+        // first make sure this wasn't double-submitted
+        $field = $art_field_fact->getFieldFromName('summary');
+        if ( $field && $field->isUsed()) {
+            $res=db_query("SELECT * 
+                FROM artifact 
+                WHERE group_artifact_id = ". db_ei($ath->getID()) ." 
+                AND submitted_by=".  db_ei($user) ." 
+                AND summary='". db_es(htmlspecialchars($vfl['summary'])) ."'");
+            if ($res && db_numrows($res) > 0) {
+                $this->setError($Language->getText('tracker_common_artifact','double_subm',db_result($res,0,'artifact_id')));
+                return false;           
+            }
+        }
+        
+        
         //
         //  Create the insert statement for standard field
         //
@@ -482,16 +482,16 @@ class Artifact extends Error {
         $vfl_values = '';
         $text_value_list=array();
         while (list($field_name,$value) = each($vfl)) {
-                
-	    //echo "<br>field_name=$field_name, value=$value";
- 
+            
+            //echo "<br>field_name=$field_name, value=$value";
+            
             $field = $art_field_fact->getFieldFromName($field_name);
             if ( $field && $field->isStandardField() ) {
                 // skip over special fields  
                 if ($field->isSpecial()) {
                     continue; 
                 }
-                        
+                
                 $vfl_cols .= ','.$field->getName();
                 $is_text = ($field->isTextField() || $field->isTextArea());
                 if  ($is_text) {
@@ -503,110 +503,113 @@ class Artifact extends Error {
                     // if it's a date we must convert the format to unix time
                     list($value,$ok) = util_date_to_unixtime($value);
                 }
-
+                
                 $vfl_values .= ',\''. db_es($value) .'\'';
-                                                    
+                
             }
-                        
+            
         } // while
-
-
+        
+        
         // Add all special fields that were not handled in the previous block
         $fixed_cols = 'open_date,last_update_date,group_artifact_id,submitted_by';
-	if ($import) {
-		if (!isset($vfl['open_date']) || !$vfl['open_date'] || $vfl['open_date'] == "") $open_date = time();
-		else list($open_date,$ok) = util_date_to_unixtime($vfl['open_date']);
-		$fixed_values = "'". db_ei($open_date) ."','".time()."','". db_ei($group_artifact_id) ."','". db_ei($user) ."'";
-	} else {
-	        $fixed_values = "'".time()."','".time()."','". db_ei($group_artifact_id) ."','". db_ei($user) ."'";
+        if ($import) {
+            if (!isset($vfl['open_date']) || !$vfl['open_date'] || $vfl['open_date'] == "") $open_date = time();
+            else list($open_date,$ok) = util_date_to_unixtime($vfl['open_date']);
+            $fixed_values = "'". db_ei($open_date) ."','".time()."','". db_ei($group_artifact_id) ."','". db_ei($user) ."'";
+        } else {
+            $fixed_values = "'".time()."','".time()."','". db_ei($group_artifact_id) ."','". db_ei($user) ."'";
         }  
-
-
+        
+        
         //
         //  Finally, build the full SQL query and insert the artifact itself 
         //
-        $sql="INSERT INTO artifact ($fixed_cols $vfl_cols) VALUES ($fixed_values $vfl_values)";
-        //echo "<br>DBG - SQL insert artifact: $sql";
-        $result=db_query($sql);
-        $artifact_id=db_insertid($result);
-
-        
-	$was_error = false;
-        if (!$artifact_id) {
-            $this->setError($error_prefix.$Language->getText('tracker_common_artifact','insert_err',$sql));
-            $was_error = true;
-        } else {
-                        
-            //
-            //  Insert the field values for no standard field
-            //
-            $fields = $art_field_fact->getAllUsedFields();
-            while (list($field_name,$field) = each($fields)) {
-                        
-                // skip over special fields  
-                if ( ($field->isSpecial())||($field->isStandardField()) ) {
-                    continue; 
-                }
-                                
-                if ( array_key_exists($field_name, $vfl) && isset($vfl[$field_name]) && $vfl[$field_name] ) {
-                    // The field has a value from the user input
-
-                    $value = $vfl[$field_name];
-                                        
-                    $is_text = ($field->isTextField() || $field->isTextArea());
-                    if  ($is_text) {
-                        $value = htmlspecialchars($value);
-                        
-                        //Log for Cross references
-						$text_value_list[]=$value;
-
-
-                        
-                    } else if ($field->isDateField()) {
-                        // if it's a date we must convert the format to unix time
-                        list($value,$ok) = util_date_to_unixtime($value);
-                    }
-        
-                    // Insert the field value
-                    if ( !$field->insertValue($artifact_id,$value) ) {
-                        $error_message .= $Language->getText('tracker_common_artifact','field_err',array($field->getLabel(),$value));
-                        $was_error = true;
-                        $this->setError($error_message);
-                    }
-                                    
-                } else {
-                    // The field hasn't a value from the user input
-                    // We need to insert default value for this field
-                    // because all SQL queries (from Report or Artifact read/update) don't allow 
-                    // empty record (we must use join and not left join for performance reasons).
-                                        
-                    if ( !$field->insertValue($artifact_id,$field->getDefaultValue()) ) {
-                        $error_message .= $Language->getText('tracker_common_artifact','def_err',array($field->getLabel(),$field->getDefaultValue()));
-                        $was_error = true;
-                        $this->setError($error_message);
-                    }
-                                        
-                }
-                                
-            } // while
+        $id_sharing = new TrackerIdSharingDao();
+        if ($artifact_id = $id_sharing->generateArtifactId()) {
+            $sql="INSERT INTO artifact (artifact_id, $fixed_cols $vfl_cols) VALUES ($artifact_id, $fixed_values $vfl_values)";
+            //echo "<br>DBG - SQL insert artifact: $sql";
+            $result=db_query($sql);
             
-
+            $was_error = false;
+            if (!$result || db_affected_rows($result) == 0) {
+                $this->setError($Language->getText('tracker_common_artifact','insert_err',$sql));
+                $was_error = true;
+            } else {
+                
+                //
+                //  Insert the field values for no standard field
+                //
+                $fields = $art_field_fact->getAllUsedFields();
+                while (list($field_name,$field) = each($fields)) {
+                    
+                    // skip over special fields  
+                    if ( ($field->isSpecial())||($field->isStandardField()) ) {
+                        continue; 
+                    }
+                    
+                    if ( array_key_exists($field_name, $vfl) && isset($vfl[$field_name]) && $vfl[$field_name] ) {
+                        // The field has a value from the user input
+                        
+                        $value = $vfl[$field_name];
+                        
+                        $is_text = ($field->isTextField() || $field->isTextArea());
+                        if  ($is_text) {
+                            $value = htmlspecialchars($value);
+                            
+                            //Log for Cross references
+                            $text_value_list[]=$value;
+                            
+                            
+                            
+                        } else if ($field->isDateField()) {
+                            // if it's a date we must convert the format to unix time
+                            list($value,$ok) = util_date_to_unixtime($value);
+                        }
+                        
+                        // Insert the field value
+                        if ( !$field->insertValue($artifact_id,$value) ) {
+                            $error_message .= $Language->getText('tracker_common_artifact','field_err',array($field->getLabel(),$value));
+                            $was_error = true;
+                            $this->setError($error_message);
+                        }
+                        
+                    } else {
+                        // The field hasn't a value from the user input
+                        // We need to insert default value for this field
+                        // because all SQL queries (from Report or Artifact read/update) don't allow 
+                        // empty record (we must use join and not left join for performance reasons).
+                        
+                        if ( !$field->insertValue($artifact_id,$field->getDefaultValue()) ) {
+                            $error_message .= $Language->getText('tracker_common_artifact','def_err',array($field->getLabel(),$field->getDefaultValue()));
+                            $was_error = true;
+                            $this->setError($error_message);
+                        }
+                        
+                    }
+                    
+                } // while
+                
+                
+            }
+            
+            //Add Cross Reference
+            for($i=0;$i<sizeof($text_value_list);$i++){
+                $reference_manager->extractCrossRef($text_value_list[$i],$artifact_id,ReferenceManager::REFERENCE_NATURE_ARTIFACT,$ath->getGroupID());
+            }
+            
+            // artifact permissions
+            $request = HTTPRequest::instance();
+            $this->data_array['artifact_id'] = $artifact_id; // cheat
+            $this->setPermissions($request->get('use_artifact_permissions_name'), $request->get('ugroups'));
+            
+            // All ok then reload the artifact data to make sure it is cached
+            // correctly in memory
+            $this->fetchData($artifact_id);
+        } else {
+            $this->setError($Language->getText('tracker_common_artifact','insert_err',$sql));
+            $was_error = true;
         }
-
-		//Add Cross Reference
-		for($i=0;$i<sizeof($text_value_list);$i++){
-			$reference_manager->extractCrossRef($text_value_list[$i],$artifact_id,ReferenceManager::REFERENCE_NATURE_ARTIFACT,$ath->getGroupID());
-		}
-        
-        // artifact permissions
-        $request = HTTPRequest::instance();
-        $this->data_array['artifact_id'] = $artifact_id; // cheat
-        $this->setPermissions($request->get('use_artifact_permissions_name'), $request->get('ugroups'));
-        
-        // All ok then reload the artifact data to make sure it is cached
-        // correctly in memory
-        $this->fetchData($artifact_id);
-
         return !$was_error;
     }
 

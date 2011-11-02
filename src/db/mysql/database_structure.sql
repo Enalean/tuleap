@@ -3416,6 +3416,14 @@ CREATE TABLE groups_notif_delegation_message (
 --
 -- Tables for id sharing
 --
+-- Note: to check that all is ok, see AUTO_INCREMENT value in "SHOW CREATE TABLE tracker_idsharing_xxx"
+--
+-- -- FOR THE BUCKET: Don't forget the plugin tracker => max(max(), max())
+-- -- eg: 
+-- --   SET @v3_aid := 0, @v5_aid := 0;
+-- --   SELECT @v3_aid := MAX(artifact_id), @v5_aid := MAX(id) FROM artifact, tracker_artifact;
+-- --   SELECT @last_insert_artifact := IF(@v3_aid > @v5_aid, @v3_aid, @v5_aid) + 1;
+-- --   
 DROP TABLE IF EXISTS tracker_idsharing_tracker;
 DROP TABLE IF EXISTS tracker_idsharing_artifact;
 SELECT @last_insert_artifact := MAX(artifact_id) + 1 FROM artifact;

@@ -555,7 +555,7 @@ class ArtifactTypeFactory extends Error {
 		
 		
 		$id_sharing = new TrackerIdSharingDao();
-        if ($id = $id_sharing->generateTrackerId()) {
+        if ($id = $id_sharing->generateArtifactId()) {
             // First, we create a new ArtifactType into artifact_group_list
             // By default, set 'instantiate_for_new_projects' to '1', so that a project that is not yet a 
             // template will be able to have its trackers cloned by default when it becomes a template.
