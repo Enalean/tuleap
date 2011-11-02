@@ -317,7 +317,7 @@ class WorkflowFactory {
                 
                 $transition = new Transition(0, 0, $from, $to);
                 $postactions = array();
-                foreach ($t->postactions->postaction as $p) {
+                foreach ($t->postactions->postaction_field_date as $p) {
                     
                     $field_id_postaction = $xmlMapping[(string)$p->field_id['REF']];
                     $postaction_attributes = $p->attributes();

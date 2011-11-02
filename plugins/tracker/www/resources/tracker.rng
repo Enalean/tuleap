@@ -403,12 +403,9 @@
     <zeroOrMore>
       <element name="postactions">
         <zeroOrMore>
-          <element name="postaction">
+          <element name="postaction_field_date">
             <attribute name="valuetype">
               <data type="int"/>
-            </attribute>
-            <attribute name="type">
-              <data type="string"/>
             </attribute>
             <element name="field_id">
               <attribute name="REF">

@@ -155,9 +155,8 @@ grammar {
             attribute REF { xsd:string }
         },
         element postactions {
-            element postaction {
+            element postaction_field_date {
                 attribute valuetype { xsd:int },
-                attribute type { xsd:string },
                 element field_id {
                     attribute REF { xsd:IDREF }
                 }
