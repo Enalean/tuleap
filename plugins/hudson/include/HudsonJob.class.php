@@ -256,7 +256,7 @@ class HudsonJob {
         if ($num != 0) {
             return floor($sum/$num);
         } else {
-            return null;
+            return 0;
         }
     }
     

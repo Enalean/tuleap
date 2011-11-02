@@ -49,7 +49,10 @@ class HudsonBuildTest extends UnitTestCase {
     }
     function testMissingHostURL() {
         $this->expectException('HudsonJobURLMalformedException');
-        $this->expectError();
+        // See http://php.net/parse_url
+        if (version_compare(PHP_VERSION, '5.3.3', '<')) {
+            $this->expectError();
+        }
         $b = new HudsonBuild("http://");
     }
     
