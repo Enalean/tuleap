@@ -1058,6 +1058,8 @@ plugin_tracker_widget_my	no_artifacts	No artifacts founds.
 
 plugin_tracker_admin	access_denied	Access denied. You don't have permissions to perform this action.
 
+plugin_tracker_admin	error_during_creation	Oops. Something weird occured. Unable to create the tracker. Please try again.
+
 plugin_tracker_admin	semantic	Semantic
 plugin_tracker_admin	manage_semantic	Manage Semantic
 plugin_tracker_admin	manage_semantic_desc	Define semantic of tracker fields (title, status, contributor, tooltip)

@@ -635,7 +635,7 @@ class TrackerFactory {
                     if ($tracker_id = $this->saveObject($tracker)) {
                         $tracker->setId($tracker_id);
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', 'Oops. Something weird occured. Unable to create the tracker. Please insert coin and try again.');
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'error_during_creation'));
                         $tracker = null;
                     }
                 } else {

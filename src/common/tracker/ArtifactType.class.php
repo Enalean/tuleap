@@ -1861,7 +1861,7 @@ class ArtifactType extends Error {
 	    
 	    // copy common artifact fields
         $id_sharing = new TrackerIdSharingDao();
-        if ($aid = $id_sharing->generateTrackerId()) {
+        if ($aid = $id_sharing->generateArtifactId()) {
             $result = db_query("INSERT INTO artifact (artifact_id, group_artifact_id,status_id,submitted_by,open_date,close_date,summary,details,severity) ".
                 "SELECT $aid, ". db_ei($this->getID()) .",status_id,submitted_by,".time().",close_date,summary,details,severity ".
                 "FROM artifact ".
