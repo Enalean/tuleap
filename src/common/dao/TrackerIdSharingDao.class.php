@@ -19,6 +19,23 @@
  */
 
 require_once('common/dao/include/DataAccessObject.class.php');
+
+/**
+ * Manage ID sharing between tracker v3 and v5.
+ *
+ * If you need to insert something in tracker or artifact tables, then
+ * you must use the corresponding method of this class to ensure that 
+ * there will be no id overlap between both tracker engines.
+ *
+ * Usage:
+ * <pre>
+ *     $id_sharing = new TrackerIdSharingDao();
+ *     if ($id = $id_sharing->generateArtifactId()) {
+ *         $sql = "INSERT INTO tracker_artifact
+ *                 (id, tracker_id, submitted_by, submitted_on, use_artifact_permissions)
+ *                 VALUES ($id, ........
+ * </pre>
+ */
 class TrackerIdSharingDao extends DataAccessObject {
     
     /**
