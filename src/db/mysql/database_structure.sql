@@ -3416,27 +3416,13 @@ CREATE TABLE groups_notif_delegation_message (
 --
 -- Tables for id sharing
 --
--- Note: to check that all is ok, see AUTO_INCREMENT value in "SHOW CREATE TABLE tracker_idsharing_xxx"
---
--- -- FOR THE BUCKET: Don't forget the plugin tracker => max(max(), max())
--- -- eg: 
--- --   SET @v3_aid := 0, @v5_aid := 0;
--- --   SELECT @v3_aid := MAX(artifact_id), @v5_aid := MAX(id) FROM artifact, tracker_artifact;
--- --   SELECT @last_insert_artifact := IF(@v3_aid > @v5_aid, @v3_aid, @v5_aid) + 1;
--- --   
-DROP TABLE IF EXISTS tracker_idsharing_tracker;
-DROP TABLE IF EXISTS tracker_idsharing_artifact;
-SELECT @last_insert_artifact := MAX(artifact_id) + 1 FROM artifact;
-SET @s = CONCAT("CREATE TABLE IF NOT EXISTS tracker_idsharing_artifact( id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ) AUTO_INCREMENT =  ", @last_insert_artifact);
-PREPARE stmt FROM @s;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
+CREATE TABLE IF NOT EXISTS tracker_idsharing_artifact( 
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY 
+);
+CREATE TABLE IF NOT EXISTS tracker_idsharing_tracker( 
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY 
+);
 
-SELECT @last_insert_tracker := MAX(group_artifact_id) + 1 FROM artifact_group_list;
-SET @s = CONCAT("CREATE TABLE IF NOT EXISTS tracker_idsharing_tracker( id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ) AUTO_INCREMENT = ", @last_insert_tracker);
-PREPARE stmt FROM @s;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
 
 #
 # EOF

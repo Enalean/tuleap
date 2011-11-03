@@ -2757,6 +2757,23 @@ FROM service
 WHERE short_name = 'cvs' AND is_active = 1 AND is_used = 1;
 
 INSERT INTO system_events_followers (emails, types) VALUES ('admin', 'WARNING,ERROR');
+
+
+
+--
+-- Tables for id sharing
+--
+SELECT @last_insert_artifact := MAX(artifact_id) + 1 FROM artifact;
+SET @s = CONCAT("ALTER TABLE tracker_idsharing_artifact AUTO_INCREMENT =  ", @last_insert_artifact);
+PREPARE stmt FROM @s;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SELECT @last_insert_tracker := MAX(group_artifact_id) + 1 FROM artifact_group_list;
+SET @s = CONCAT("ALTER TABLE tracker_idsharing_tracker AUTO_INCREMENT = ", @last_insert_tracker);
+PREPARE stmt FROM @s;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 #
 # EOF
 #
