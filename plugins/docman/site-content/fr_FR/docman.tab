@@ -638,9 +638,10 @@ plugin_docman	new_view_change	voir/changer
 plugin_docman	notifications_off	Vous ne surveillez plus '$1'.
 plugin_docman	notifications_on	Vous surveillez désormais '$1'.
 plugin_docman	notifications_not_removed	Impossible de supprimer le monitoring pour l'utilisateur '$1'
+plugin_docman	notifications_not_present	Le monitoring n'était pas activé pour l'utilisateur '$1'
 plugin_docman	notifications_removed	Le monitoring a ete supprimé pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_no_user	Aucun utilisateur séléctionné
-plugin_docman	notifications_permission_denied	Vous n'avez pas assez de permission pour supprimer la notification d'autres utilisateurs
+plugin_docman	notifications_permission_denied	Vous n'avez pas assez de permission pour supprimer le monitoring d'autres utilisateurs
 plugin_docman	notifications_cascade_on	Vous surveillez désormais '$1' et sa sous-hiérarchie.
 plugin_docman	notifications_removed_mail_body	$1 a été supprimé par $2.\n\n---------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez cet item.\n$3.
 plugin_docman	notifications_removed_from_mail_body	$1 a été modifié par $2.\n$3&action=show&id=$4\n\nSupprimé:\n $5\n\n----------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez ce répertoire.\nPour arrêter la surveillance, aller à la page suivante :\n $3&action=details&section=notifications&id=$4	

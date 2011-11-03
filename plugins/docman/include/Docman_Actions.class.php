@@ -1595,28 +1595,30 @@ class Docman_Actions extends Actions {
      * @return void
      */
     function remove_monitoring($params) {
-        if ($this->_controler->userCanManage($params['item']->getId())) {
-            if ($params['listeners_to_delete']) {
+        if ($params['listeners_to_delete']) {
+            if ($this->_controler->userCanManage($params['item']->getId())) {
                 $users = array();
                 foreach ($params['listeners_to_delete'] as $userId) {
+                    $user = $this->_getUserManagerInstance()->getUserById($userId);
                     if ($this->_controler->notificationsManager->exist($userId, $params['item']->getId())) {
                         if ($this->_controler->notificationsManager->remove($userId, $params['item']->getId()) && $this->_controler->notificationsManager->remove($userId, $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
-                            $user = $this->_getUserManagerInstance()->getUserById($userId);
                             $users[] = $user->getName();
                             // TODO : send notification to the user about this action
                         } else {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_removed', array($user->getName())));
                         }
+                    } else {
+                        $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_present', array($user->getName())));
                     }
                 }
                 if (!empty($users)) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $users))));
                 }
             } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
             }
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
         }
     }
 
