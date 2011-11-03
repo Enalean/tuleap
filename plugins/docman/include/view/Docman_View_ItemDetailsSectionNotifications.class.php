@@ -89,6 +89,8 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                     $content .= '</td></tr>';
                     $listenersList->next();
                 }
+                // TODO : ax user if he wants or not to notify the users he remove
+                // TODO : We may ax him also if his name wil appear as the guilty one or not
                 $content .= '<td align="right" colspan="2" style="padding-right:50px; "><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
                 $content .= '</tbody></table></form>';
                 $content .= '</fieldset>';
