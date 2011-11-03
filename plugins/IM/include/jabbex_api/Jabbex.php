@@ -513,7 +513,7 @@ class Jabbex implements JabbexInterface
 			return false;
 		}
 
-		if( ! $xml = simplexml_load_string($in_stream) ){
+		if( ! $xml = simplexml_load_string(iconv("ISO-8859-1", "UTF-8", $in_stream)) ){
 			return false;
 		}
 		$status = array('status' => NULL , 'message' => NULL);
