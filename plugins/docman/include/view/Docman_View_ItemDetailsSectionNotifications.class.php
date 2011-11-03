@@ -64,12 +64,11 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $um = UserManager::instance();
         $content = '';
         if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
-            $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
             $res_members_tab = array();
             $this->notificationsManager->_getListeningUsersForGivenItem($this->item->getId(), $res_members_tab, "PLUGIN_DOCMAN");
             $res_members = new arrayIterator($res_members_tab);
             if ($res_members->count()>0) {
-            	
+                $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
                 $content .= '<form method="POST" action="">';
                 $content .= '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody>';
                 $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')));
