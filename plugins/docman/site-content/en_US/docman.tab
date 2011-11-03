@@ -637,6 +637,10 @@ plugin_docman	new_view_change	view/change
 
 plugin_docman	notifications_off	Your monitoring on '$1' has been removed.
 plugin_docman	notifications_on	You're monitoring '$1'.
+plugin_docman	notifications_not_removed	Unable to remove monitoring for user '$1'
+plugin_docman	notifications_removed	Removed monitoring for user(s) '$1'
+plugin_docman	notifications_no_user	No user selected
+plugin_docman	notifications_permission_denied	You don't have enough permissions to remove users notification
 plugin_docman	notifications_cascade_on	You're monitoring '$1' and its sub-hierarchy.
 plugin_docman	notifications_removed_mail_body	$1 has been removed by $2.\n\n---------------------------------------------------------------------\nYou are receiving this message because you were monitoring this item.\n$3.
 plugin_docman	notifications_removed_from_mail_body	$1 has been modified by $2.\n$3&action=show&id=$4\n\nRemoved:\n $5\n\n----------------------------------------------------------------------\nYou are receiving this message because you are monitoring this folder.\nTo stop monitoring, please visit:\n $3&action=details&section=notifications&id=$4	

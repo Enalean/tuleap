@@ -1605,21 +1605,18 @@ class Docman_Actions extends Actions {
                             $users[] = $user->getName();
                             // TODO : send notification to the user about this action
                         } else {
-                            $this->_controler->feedback->log('error', "Unable to remove monitoring on '". $params['item']->getTitle() ."'.");
+                            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_removed', array($user->getName())));
                         }
                     }
                 }
                 if (!empty($users)) {
-                    // TODO : i18n
-                    $this->_controler->feedback->log('info', 'Removed monitoring for user(s) '.implode(",", $users));
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $users))));
                 }
             } else {
-                // TODO : i18n
-                $this->_controler->feedback->log('error', 'No user selected');
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
             }
         } else {
-            // TODO : i18n
-            $this->_controler->feedback->log('error', 'You don\'t have enough permissions to perform this action');
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
         }
     }
 
