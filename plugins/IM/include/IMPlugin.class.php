@@ -642,8 +642,13 @@ class IMPlugin extends Plugin {
             );
         }
         
+        /**
+         * Only display presence for active (non restricted users)
+         *
+         * @param $params
+         */
         function update_user_preferences_appearance($params) {
-            if ($params['request']->exist('plugin_im_display_users_presence')) {
+            if (!$this->getUserManager()->getCurrentUser()->isRestricted() && $params['request']->exist('plugin_im_display_users_presence')) {
                 if ($params['request']->get('plugin_im_display_users_presence')) {
                     $this->getUserManager()->getCurrentUser()->delPreference('plugin_im_hide_users_presence');
                 } else {
@@ -663,7 +668,7 @@ class IMPlugin extends Plugin {
  	 */
 	function im_process_display_presence ($params) {
         $user = $this->getUserManager()->getCurrentUser();
-        if ($user->isloggedIn() && (! $user->getPreference('plugin_im_hide_users_presence'))) { 
+        if ($user->isloggedIn() && !$this->getUserManager()->getCurrentUser()->isRestricted() && (! $user->getPreference('plugin_im_hide_users_presence'))) { 
             $params['user_display_name'] = $this->getDisplayPresence($params['user_id'], $params['user_name'], $params['realname']);
         }
 	}
