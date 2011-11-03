@@ -1587,6 +1587,26 @@ class Docman_Actions extends Actions {
         }
     }
 
+    function remove_monitoring($params) {
+        // TODO : allow this action only to authorized users
+        if ($params['listeners_to_delete']) {
+            foreach ($params['listeners_to_delete'] as $userId) {
+                if ($this->_controler->notificationsManager->remove($userId, $params['item']->getId()) && $this->_controler->notificationsManager->remove($userId, $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                    // TODO : set  user names instead of id's
+                    $users[] = $userId;
+                    // TODO : send notification to the user about this action
+                } else {
+                    $this->_controler->feedback->log('error', "Unable to remove monitoring on '". $params['item']->getTitle() ."'.");
+                }
+            }
+            // TODO : i18n
+            $this->_controler->feedback->log('info', 'Removed monitoring for user(s) '.implode(",", $users));
+        } else {
+            // TODO : i18n
+            $this->_controler->feedback->log('error', 'No user selected');
+        }
+    }
+
     /**
      * @access private
      */
