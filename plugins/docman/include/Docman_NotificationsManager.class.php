@@ -137,6 +137,15 @@ class Docman_NotificationsManager extends NotificationsManager {
         }
     }
 
+    /**
+    * Retrieve list of users that are monitoring a given item.
+    *
+    * @param Integer $id    ID of the item that we are looking for its listeners.
+    * @param Array   $users Array where listeners are inserted.
+    * @param String  $type  Type of listener, in order to retrieve listeners that monitor this item on a sub-hierarchy or not.
+    *
+    * @return void
+    */
     function _getListeningUsersForGivenItem($id, &$users, $type = null) {
         if ($id) {
             $u = $this->dao->searchUserIdByObjectIdAndType($id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
