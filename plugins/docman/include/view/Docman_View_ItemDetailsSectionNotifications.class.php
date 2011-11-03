@@ -64,18 +64,18 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $um = UserManager::instance();
         $content = '';
         if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
-            $res_members_tab = array();
-            $this->notificationsManager->_getListeningUsersForGivenItem($this->item->getId(), $res_members_tab, "PLUGIN_DOCMAN");
-            $res_members = new arrayIterator($res_members_tab);
-            if ($res_members->count()>0) {
+            $listeners = array();
+            $this->notificationsManager->_getListeningUsersForGivenItem($this->item->getId(), $listeners, "PLUGIN_DOCMAN");
+            $listenersList = new arrayIterator($listeners);
+            if ($listenersList->count()>0) {
                 $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
                 $content .= '<form method="POST" action="">';
                 $content .= '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody>';
                 $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')));
                 $rowBgColor  = 0;
                 $hp = Codendi_HTMLPurifier::instance();
-                while ($res_members->valid()) {
-                    foreach ($res_members->current() as $key=>$val) {
+                while ($listenersList->valid()) {
+                    foreach ($listenersList->current() as $key=>$val) {
                         if ($key == 'user_id') {
                             $userId = $val;
                         }
@@ -86,7 +86,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                     $content .= '<td align="right" style="padding-right:65px; ">';
                     $content .= '<input id="'. $rowBgColor .'" type="checkbox" value="'. $userId .'" name="listeners_to_delete[]">';
                     $content .= '</td></tr>';
-                    $res_members->next();
+                    $listenersList->next();
                 }
                 $content .= '<td align="right" colspan="2" style="padding-right:50px; "><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
                 $content .= '</tbody></table></form>';
