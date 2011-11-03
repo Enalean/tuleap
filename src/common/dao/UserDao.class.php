@@ -672,7 +672,8 @@ class UserDao extends DataAccessObject {
             $pattern = $this->da->quoteSmart('%'.$pattern.'%');
             $stm = ' WHERE (user_name LIKE '.$pattern;
             $stm .= '  OR user_id LIKE '.$pattern;
-            $stm .= '  OR realname LIKE '.$pattern.')';
+            $stm .= '  OR realname LIKE '.$pattern;
+            $stm .= '  OR email LIKE '.$pattern.')';
         }
     
         $sql='SELECT SQL_CALC_FOUND_ROWS * FROM user ' 

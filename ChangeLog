@@ -1,3 +1,8 @@
+Version 4.0.24 - Not Released Yet
+
+    == Bug Fix ==
+    * Make site admin able to retrieve users by their mail address (contrib STMicroelectronics)
+
 Version 4.0.23 - Thursday, October 27th 2011
     == Enhancement ==
     * Improve project deletion: project only visible by site admins, most services purged. (contrib STMicroelectronics)
