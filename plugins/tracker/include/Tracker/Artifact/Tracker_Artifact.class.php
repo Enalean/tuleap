@@ -763,7 +763,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                             if (isset($fields_data[$field->getId()]) && $field->userCanUpdate()) {
                                 $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], false);
                             } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanUpdate() && $workflow->bypassPermissions($field)) {
-                                $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], true, true);
+                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], true, true);
                             } else {
                                 $field->saveNewChangeset($this, $last_changeset, $changeset_id, null, false);
                             }
