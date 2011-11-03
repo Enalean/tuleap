@@ -1587,23 +1587,39 @@ class Docman_Actions extends Actions {
         }
     }
 
+    /**
+     * Remove monitoring for more than one user
+     *
+     * @param Array $params contains list if users to remove and the item
+     *
+     * @return void
+     */
     function remove_monitoring($params) {
-        // TODO : allow this action only to authorized users
-        if ($params['listeners_to_delete']) {
-            foreach ($params['listeners_to_delete'] as $userId) {
-                if ($this->_controler->notificationsManager->remove($userId, $params['item']->getId()) && $this->_controler->notificationsManager->remove($userId, $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
-                    // TODO : set  user names instead of id's
-                    $users[] = $userId;
-                    // TODO : send notification to the user about this action
-                } else {
-                    $this->_controler->feedback->log('error', "Unable to remove monitoring on '". $params['item']->getTitle() ."'.");
+        if ($this->_controler->userCanManage($params['item']->getId())) {
+            if ($params['listeners_to_delete']) {
+                $users = array();
+                foreach ($params['listeners_to_delete'] as $userId) {
+                    if ($this->_controler->notificationsManager->exist($userId, $params['item']->getId())) {
+                        if ($this->_controler->notificationsManager->remove($userId, $params['item']->getId()) && $this->_controler->notificationsManager->remove($userId, $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                            $user = $this->_getUserManagerInstance()->getUserById($userId);
+                            $users[] = $user->getName();
+                            // TODO : send notification to the user about this action
+                        } else {
+                            $this->_controler->feedback->log('error', "Unable to remove monitoring on '". $params['item']->getTitle() ."'.");
+                        }
+                    }
                 }
+                if (!empty($users)) {
+                    // TODO : i18n
+                    $this->_controler->feedback->log('info', 'Removed monitoring for user(s) '.implode(",", $users));
+                }
+            } else {
+                // TODO : i18n
+                $this->_controler->feedback->log('error', 'No user selected');
             }
-            // TODO : i18n
-            $this->_controler->feedback->log('info', 'Removed monitoring for user(s) '.implode(",", $users));
         } else {
             // TODO : i18n
-            $this->_controler->feedback->log('error', 'No user selected');
+            $this->_controler->feedback->log('error', 'You don\'t have enough permissions to perform this action');
         }
     }
 

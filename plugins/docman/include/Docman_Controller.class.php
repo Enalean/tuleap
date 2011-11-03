@@ -850,12 +850,13 @@ class Docman_Controller extends Controler {
             $this->_setView('Details');
             break;
         case 'remove_monitoring':
+            $this->_actionParams['listeners_to_delete'] = false;
             if ($this->request->exist('listeners_to_delete')) {
-                // TODO : validate input
-                $this->_actionParams['listeners_to_delete'] = $this->request->get('listeners_to_delete');
-                $this->_actionParams['item']                = $item;
-            } else {
-                $this->_actionParams['listeners_to_delete'] = false;
+                $valid = new Valid_UInt('listeners_to_delete');
+                if($this->request->validArray($valid)) {
+                    $this->_actionParams['listeners_to_delete'] = $this->request->get('listeners_to_delete');
+                    $this->_actionParams['item']                = $item;
+                }
             }
             $this->action = 'remove_monitoring';
             $this->_setView('Details');
