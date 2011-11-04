@@ -226,6 +226,11 @@ class Codendi_SessionTest extends UnitTestCase {
         
         // {{{ PHP prevents us to do thing like that. Which is too bad        
         $session->changeSessionNamespace('.riri');
+
+        //
+        // Check behaviour __get and references.
+        // The expected error (notice) is:
+        // Unexpected PHP error [Indirect modification of overloaded property Codendi_Session::$fifi has no effect
         if (version_compare(PHP_VERSION, '5.2.0', '>=')) { // the error is raised only for further php version. 5.1.6 is silent
             $this->expectError();
         }

@@ -3,9 +3,6 @@
 require_once('common/include/SOAPRequest.class.php');
 
 class SOAPRequestTest extends UnitTestCase {
-    function SOAPRequestTest($name = 'SOAPRequest test') {
-        $this->UnitTestCase($name);
-    }
     
     function testError() {
        new SOAPRequest();

@@ -290,7 +290,7 @@ class Docman_MetadataHtmlDate extends Docman_MetadataHtml {
     function getValue() {
         $v = $this->md->getValue();
         if($v != null && $v != '' && $v != 0) {
-            return strftime("%e %b %Y", $v);
+            return htmlentities(strftime("%e %b %Y", $v));
         }
     }
 }

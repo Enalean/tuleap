@@ -377,7 +377,7 @@ abstract class LDAP_GroupManager
      *
      * @return DataAccessObject
      */
-    protected abstract protected function getDao();
+    protected abstract function getDao();
 }
 
 ?>

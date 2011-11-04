@@ -1,3 +1,6 @@
+Version 2.16
+    Fix output of date metadata (contrib Mesulog)
+    
 Version 2.15
     Do not display [remove] button on a wiki page if it is referenced in the docman
     Add index on docman_approval_user table

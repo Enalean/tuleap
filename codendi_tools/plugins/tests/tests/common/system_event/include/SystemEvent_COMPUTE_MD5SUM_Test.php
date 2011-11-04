@@ -32,10 +32,6 @@ Mock::generate('FRSFile');
 
 class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
 
-    public function __construct($name = 'SystemEvent_COMPUTE_MD5SUM test') {
-        parent::__construct($name);
-    }
-
     function setUp() {
         $GLOBALS['sys_name'] = 'Codendi';
         $GLOBALS['sys_noreply'] = '"Codendi" <noreply@codendi.org>';
@@ -51,7 +47,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
      */
     public function testComputeMd5sumSucceed() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
-        $evt->SystemEvent('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
         $fileFactory = new MockFRSFileFactory($this);
@@ -76,7 +72,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
 
     public function testComputeMd5sumFailure() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
-        $evt->SystemEvent('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
         $fileFactory = new MockFRSFileFactory($this);
@@ -106,7 +102,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
 
     public function testComputeMd5sumUpdateDBFailure() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
-        $evt->SystemEvent('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '10013', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '10013', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
         $fileFactory = new MockFRSFileFactory($this);
@@ -130,7 +126,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
     
     public function testComparisonMd5sumFailure() {
         $evt = new SystemEvent_COMPUTE_MD5SUM_TestVersion($this);
-        $evt->SystemEvent('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_COMPUTE_MD5SUM, '100012', SystemEvent::PRIORITY_MEDIUM, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The file
         $fileFactory = new MockFRSFileFactory($this);

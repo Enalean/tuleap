@@ -45,7 +45,7 @@ class Docman_Actions extends Actions {
     
     var $event_manager;
     
-    function Docman_Actions(&$controler, $view=null) {
+    function __construct(&$controler, $view=null) {
         parent::Actions($controler);
         $this->event_manager =& $this->_getEventManager();
     }

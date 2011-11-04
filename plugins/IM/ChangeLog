@@ -1,2 +1,7 @@
+Version 1.3 - Tuleap 4.0.24
+    * Fix bug with accentuated letters in IM status. (based on Mesulog contrib)
+    * Do not display user IM status for restricted users (based on Mesulog contrib)
+    * If page is browsed in HTTPS, references are made in https too (based on Mesulog contrib)
+
 Version 1.2 - Tuleap 4.0.21
 	* Fix SQL install script

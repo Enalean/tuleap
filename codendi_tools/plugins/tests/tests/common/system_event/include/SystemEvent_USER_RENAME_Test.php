@@ -51,7 +51,7 @@ class SystemEvent_USER_RENAME_Test extends UnitTestCase {
      */
     public function testRenameOps() {
         $evt = new SystemEvent_USER_RENAME_TestVersion($this);
-        $evt->SystemEvent('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The user
         $user = new MockUser($this);
@@ -89,7 +89,7 @@ class SystemEvent_USER_RENAME_Test extends UnitTestCase {
     
     public function testRenameUserRepositoryFailure() {
         $evt = new SystemEvent_USER_RENAME_TestVersion($this);
-        $evt->SystemEvent('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The user
         $user = new MockUser($this);
@@ -131,7 +131,7 @@ class SystemEvent_USER_RENAME_Test extends UnitTestCase {
     
     public function testUpdateCVSWritersFailure() {
         $evt = new SystemEvent_USER_RENAME_TestVersion($this);
-        $evt->SystemEvent('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The user
         $user = new MockUser($this);
@@ -172,7 +172,7 @@ class SystemEvent_USER_RENAME_Test extends UnitTestCase {
     
     public function testUpdateSVNAccessFailure() {
         $evt = new SystemEvent_USER_RENAME_TestVersion($this);
-        $evt->SystemEvent('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The user
         $user = new MockUser($this);

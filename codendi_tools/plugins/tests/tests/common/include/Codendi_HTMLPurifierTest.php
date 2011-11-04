@@ -40,6 +40,10 @@ class Codendi_HTMLPurifierTestVersion extends Codendi_HTMLPurifier {
     private static $Codendi_HTMLPurifier_testversion_instance;
     // Need to redfine this method too because the parent one return a
     // 'Codendi_HTMLPurifier' object.
+
+    protected function __construct() {
+    }
+
     public static function instance() {
         if (!isset(self::$Codendi_HTMLPurifier_testversion_instance)) {
             $c = __CLASS__;

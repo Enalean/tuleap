@@ -1,5 +1,9 @@
 <?php
-error_reporting(E_ALL);
+if (version_compare(PHP_VERSION, '5.3.0', '>=')) { 
+    error_reporting(E_ALL & ~E_DEPRECATED);
+} else {
+    error_reporting(E_ALL);
+}
 require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
 require($GLOBALS['db_config_file']);
 

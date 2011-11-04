@@ -1,4 +1,7 @@
-Version 3.6 (Tuleap 4.0.23 - Not released yet)
+Version 3.7 (Tuleap 4.0.24)
+    * Use PHP5 constructor & fix method signature
+
+Version 3.6 (Tuleap 4.0.23)
     == Bug Fix ==
     * backlog #185: Propagate LDAP login changes in SVNAccessFile
     
