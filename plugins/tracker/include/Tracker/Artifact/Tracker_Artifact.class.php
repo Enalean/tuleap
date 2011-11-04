@@ -651,17 +651,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ($workflow) {
                     $workflow->before($fields_data, $submitter);
                 }
-                
                 if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
 
                     //Store the value(s) of the fields
                     $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
-                    foreach ($used_fields as $field) {
+                    foreach ($used_fields as $field) {                        
                         if (isset($fields_data[$field->getId()]) && $field->userCanSubmit()) {
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], true);
                         } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $workflow->bypassPermissions($field)) {
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], true, true);
-                        }else if (!isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $field->isRequired()) {
+                        } else if (!isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $field->isRequired()) {
                             $fields_data[$field->getId()] = $field->getDefaultValue();
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], true);
                         }
@@ -763,7 +762,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                             if (isset($fields_data[$field->getId()]) && $field->userCanUpdate()) {
                                 $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], false);
                             } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanUpdate() && $workflow->bypassPermissions($field)) {
-                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], true, true);
+                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], false, true);
                             } else {
                                 $field->saveNewChangeset($this, $last_changeset, $changeset_id, null, false);
                             }

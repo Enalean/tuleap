@@ -125,7 +125,14 @@ Mock::generate('Tracker_RulesManager');
         'validate'
     )
 );*/
+
 Mock::generate('Workflow');
+class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends MockWorkflow {
+    function before(&$fields_data, $submitter) {
+        $fields_data[102] = '456';
+        return parent::before($fields_data, $submitter);
+    }
+}
 
 class Tracker_ArtifactTest extends UnitTestCase {
     
@@ -728,6 +735,65 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $this->assertEqual($artifact->createInitialChangeset($fields_data, $user, $email), 1001);
         $this->assertFalse(isset($fields_data[101]));
         $this->assertFalse(isset($fields_data[103]));
+    }
+    
+    function testCreateInitialChangesetWithWorkflowAndNoPermsOnPostActionField() {
+        
+        $dao = new MockTracker_Artifact_ChangesetDao();
+        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null));
+        $dao->expectCallCount('create', 1);
+        
+        $user = new MockUser();
+        $user->setReturnValue('getId', 1234);
+        $user->setReturnValue('isAnonymous', false);
+        
+        $tracker = new MockTracker();
+        $factory = new MockTracker_FormElementFactory();
+        
+        $rules_manager = new MockTracker_RulesManager();
+        $rules_manager->setReturnValue('validate', true);
+        $tracker->setReturnReference('getRulesManager', $rules_manager);
+        
+        $artifact = new Tracker_ArtifactTestVersion();
+        $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
+        $workflow->expectOnce('before');
+        $artifact->setReturnValue('getWorkflow', $workflow);
+        
+       
+        
+        $field1  = new MockTracker_FormElement_Field();
+        $field1->setReturnValue('getId', 101);
+        $field1->setReturnValue('isValid', true);
+        $workflow->setReturnValue('bypassPermissions', false, array($field1));
+        $field1->expectOnce('saveNewChangeset');
+        $field1->setReturnValue('userCanSubmit', true);
+        
+        $field2  = new MockTracker_FormElement_Field();
+        $field2->setReturnValue('getId', 102);
+        $field2->setReturnValue('isValid', true);
+        $field2->setReturnValue('userCanSubmit', false);
+        $workflow->setReturnValue('bypassPermissions', true, array($field2));
+        $field2->expectOnce('saveNewChangeset', array('*', '*', '*', '*', true, true));
+        $factory->setReturnValue('getUsedFields', array($field1, $field2));
+        
+        $art_factory = new MockTracker_ArtifactFactory();
+        
+        $artifact->setReturnReference('getChangesetDao', $dao);
+        $artifact->setReturnReference('getFormElementFactory', $factory);
+        $artifact->setReturnReference('getTracker', $tracker);
+        $artifact->setReturnValue('getId', 66);
+        $artifact->setReturnReference('getArtifactFactory', $art_factory);
+        
+        $art_factory->expectOnce('save');
+        
+        $email = null; //not annonymous user
+        
+        // Valid
+        $fields_data = array(
+            101 => '123',
+        );
+        
+        $this->assertEqual($artifact->createInitialChangeset($fields_data, $user, $email), 1001);
     }
     
     function testCreateNewChangeset() {
