@@ -33,7 +33,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $this->token = $token;
     }
     function getContent() {
-        $content = '<dl><fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</legend>';
+        $content = '<dl style="padding-right:520px; "><fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</legend>';
         $content .= '<dd>';
         $content .= '<form action="" method="POST">';
         $content .= '<p>';
@@ -54,7 +54,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content .= '<p><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
         $content .= '</form>';
         $content .= '</dd></fieldset></dl>';
-        $content .= '<dl>'.$this->displayListeningUsers($this->item->getId()).'</dl>';
+        $content .= '<dl style="padding-right:520px; ">'.$this->displayListeningUsers($this->item->getId()).'</dl>';
         return $content;
     }
 
@@ -71,7 +71,6 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                 $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
                 $content .= '<form method="POST" action="">';
                 $content .= '<input type="hidden" name="action" value="remove_monitoring" />';
-                $content .= '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody>';
                 $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')));
                 $rowBgColor  = 0;
                 $hp = Codendi_HTMLPurifier::instance();
