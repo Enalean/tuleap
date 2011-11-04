@@ -814,16 +814,17 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         $save_new_value = false;
         $dao            = new Tracker_Artifact_Changeset_ValueDao();
         
-        $hasPermission = $this->userCanUpdate();
+        $hasPermission = true;
+        
+        if (!$bypass_permissions) {
+            $hasPermission = $this->userCanUpdate();
+        }
        
         //If a field is not submitable, but has a required default value, the value has to  be submitted ...
         if ($is_submission && !$bypass_permissions) {
             $hasPermission = $this->userCanSubmit() || (!$this->userCanSubmit() && $this->isrequired() && $this->getDefaultValue()!= null);
         }
         
-        if ($bypass_permissions) {
-            $hasPermission = true;
-        }
         //Look for the previous value, if any
         $previous_changesetvalue = null;
         if ($old_changeset) {
