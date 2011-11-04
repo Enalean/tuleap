@@ -759,8 +759,6 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $workflow->expectOnce('before');
         $artifact->setReturnValue('getWorkflow', $workflow);
         
-       
-        
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
@@ -794,6 +792,92 @@ class Tracker_ArtifactTest extends UnitTestCase {
         );
         
         $this->assertEqual($artifact->createInitialChangeset($fields_data, $user, $email), 1001);
+    }
+    
+    function testCreateNewChangesetWithWorkflowAndNoPermsOnPostActionField() {
+        $email   = null; //not anonymous user
+        $comment = '';
+        
+        $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
+        $comment_dao->expectCallCount('createNewVersion', 1);
+
+        $dao = new MockTracker_Artifact_ChangesetDao();
+        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null));
+        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
+        $dao->expectCallCount('create', 1);
+        
+        $user = new MockUser();
+        $user->setReturnValue('getId', 1234);
+        $user->setReturnValue('isAnonymous', false);
+        
+        $tracker = new MockTracker();
+        $tracker->setReturnValue('getGroupId', 666);
+        $tracker->setReturnValue('getItemName', 'foobar');
+        
+        $factory = new MockTracker_FormElementFactory();
+        
+        $rules_manager = new MockTracker_RulesManager();
+        $rules_manager->setReturnValue('validate', true);
+        $tracker->setReturnReference('getRulesManager', $rules_manager);
+        
+        $artifact = new Tracker_ArtifactTestVersion();
+        $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
+        $workflow->expectOnce('before');
+        $artifact->setReturnValue('getWorkflow', $workflow);
+        
+        $field1  = new MockTracker_FormElement_Field();
+        $field1->setReturnValue('getId', 101);
+        $field1->setReturnValue('isValid', true);
+        $field1->setReturnValue('userCanUpdate', true);
+        $workflow->setReturnValue('bypassPermissions', false, array($field1));
+        $field1->expectOnce('saveNewChangeset');
+        
+        $field2  = new MockTracker_FormElement_Field();
+        $field2->setReturnValue('getId', 102);
+        $field2->setReturnValue('isValid', true);
+        $field2->setReturnValue('userCanUpdate', false);
+        $workflow->setReturnValue('bypassPermissions', true, array($field2));
+        $field2->expectOnce('saveNewChangeset', array('*', '*', '*', '*', false, true));
+        $factory->setReturnValue('getUsedFields', array($field1, $field2));
+        
+        $new_changeset = new MockTracker_Artifact_Changeset();
+        $new_changeset->expect('notify', array());
+        
+        $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('hasChanges', true);
+        $changeset_value1 = new MockTracker_Artifact_ChangesetValue();        
+        $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
+        
+        $reference_manager = new MockReferenceManager();
+        $reference_manager->expect('extractCrossRef', array(
+            $comment, 
+            66, 
+            'plugin_tracker_artifact', 
+            666,
+            $user->getId(),
+            'foobar',
+        ));
+        
+        $art_factory = new MockTracker_ArtifactFactory();
+
+        $artifact->setReturnReference('getChangesetDao', $dao);
+        $artifact->setReturnReference('getChangesetCommentDao', $comment_dao);
+        $artifact->setReturnReference('getFormElementFactory', $factory);
+        $artifact->setReturnReference('getTracker', $tracker);
+        $artifact->setReturnValue('getId', 66);
+        $artifact->setReturnReference('getLastChangeset', $changeset);
+        $artifact->setReturnReference('getChangeset', $new_changeset);
+        $artifact->setReturnReference('getReferenceManager', $reference_manager);
+        $artifact->setReturnReference('getArtifactFactory', $art_factory);
+        
+        $art_factory->expectOnce('save');
+        
+        // Valid
+        $fields_data = array(
+            101 => '123',
+        );
+        
+        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
     }
     
     function testCreateNewChangeset() {
