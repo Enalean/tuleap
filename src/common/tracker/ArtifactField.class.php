@@ -576,12 +576,14 @@ class ArtifactField extends Error {
 	 * found then return value_id itself.
 	 * By doing so if this function is called by mistake on a field with type
 	 * text area or text field then it returns the text itself.
+	 * 
+	 * WARNING: the value is not escaped for any output. Please purify it before usage
 	 *
 	 * @return boolean
 	 */
 	function getValue($group_artifact_id,$value_id,$by_field_id=false) {
 	  global $Language;
-      $uh = new UserHelper();
+      $uh = UserHelper::instance();
       
 	    // close_date and assigned_to fields are special select box fields
 	    $value_func = $this->getGlobalValueFunction();

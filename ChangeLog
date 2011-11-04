@@ -2,11 +2,15 @@ Version 4.0.24 - Not Released Yet
 
     == Bug Fix ==
     * Make site admin able to retrieve users by their mail address (contrib STMicroelectronics)
+    * Fix user realname output
 
     == Plugins ==
-    * Docman v2.16. See separated Changelog
-    * IM v1.3. See separated Changelog
+    * Admindelegation v2.3. See separated Changelog
+    * Docman v2.17. See separated Changelog
+    * Docmanwatermark v2.3. See separated Changelog
+    * IM v1.4. See separated Changelog
     * LDAP v3.7. See separated Changelog
+    * Tracker v0.7. See separated Changelog
     
     == Development ==
     * First pass to make Tuleap test suite PHP 5.3 compliant

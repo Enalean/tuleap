@@ -145,8 +145,9 @@ if ($request->valid($vFrm)) {
 					'<TD><A HREF="/forum/message.php?msg_id='.
 		        	db_result($result, $i, 'msg_id').'">'.
 		        	'<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> ';
+	    	$monitorer = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
 	    	$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
-					'<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD>'.
+					'<TD>'.UserHelper::instance()->getLinkOnUser($monitorer).'</TD>'.
 					'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';	
   	    	$i++;
         }

@@ -45,6 +45,7 @@ $title_arr[]=$Language->getText('project_memberlist','skills');
 
 $em = EventManager::instance();
 $user_helper = new UserHelper();
+$hp = Codendi_HTMLPurifier::instance();
 
 echo html_build_list_table_top ($title_arr);
 
@@ -58,7 +59,7 @@ while ( $row_memb=db_fetch_array($res_memb) ) {
         'user_display_name' => &$display_name
     ));
     if (!$display_name) {
-        $display_name = $user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']);
+        $display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
     }
 	print "\t<tr>\n";
 	print "\t\t";

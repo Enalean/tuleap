@@ -57,6 +57,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra {
         $lockInfos = $dPM->getLockFactory()->getProjectLockInfos($params['group_id']);
 
         $uH = UserHelper::instance();
+        $hp = Codendi_HTMLPurifier::instance();
 
         require_once(dirname(__FILE__) . '/../Docman_ItemFactory.class.php');
         $dIF = new Docman_ItemFactory($params['group_id']);
@@ -75,7 +76,7 @@ class Docman_View_Admin_LockInfos extends Docman_View_Extra {
             } else {
                 $content .=  '<a href="'. $this->defaultUrl. '&action=show&id='. $parent->getId(). '">' .$parent->getTitle() .'</a></td>';
             }
-            $content .= '<td>'. $uH->getDisplayNameFromUserId($row['user_id']) .'</td>';
+            $content .= '<td>'. $hp->purify($uH->getDisplayNameFromUserId($row['user_id'])) .'</td>';
             $content .= '<td>'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['lock_date']) .'</td>';
             $content .= '</tr>';
         }

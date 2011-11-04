@@ -199,7 +199,8 @@ extends Docman_View_ItemDetailsSectionApproval {
     }
 
     function _getReviewerTable() {
-        $html = '';
+        $html  = '';
+        $uh    = UserHelper::instance();
         $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_title').'</h3>';
         $html .= '<div id="docman_approval_table_create_table">';
         if(!$this->table->isClosed()) {
@@ -235,7 +236,7 @@ extends Docman_View_ItemDetailsSectionApproval {
                 $html .= '<td align="center">'.$checkbox.'</td>';
 
                 // Username
-                $html .= '<td>'.user_get_name_display_from_id($reviewer->getId()).'</td>';
+                $html .= '<td>'.$this->hp->purify($uh->getDisplayNameFromUserId($reviewer->getId())).'</td>';
 
                 // Review
                 $html .= '<td>'.$this->atf->getReviewStateName($reviewer->getState()).'</td>';

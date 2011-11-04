@@ -37,6 +37,22 @@ class UGroupManager {
     }
 
     /**
+     * Returns a UGroup from its Id
+     *
+     * @param Integer $ugroupId The UserGroupId
+     * 
+     * @return UGroup
+     */
+    public function getById($ugroupId) {
+        $dar = $this->getDao()->searchByUGroupId($ugroupId);
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            return new UGroup($dar->getRow());
+        } else {
+            return new UGroup();
+        }
+    }
+
+    /**
      * Wrapper for UGroupDao
      *
      * @return UGroupDao

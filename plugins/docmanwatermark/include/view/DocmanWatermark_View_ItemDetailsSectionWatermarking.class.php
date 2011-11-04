@@ -69,7 +69,8 @@ class DocmanWatermark_View_ItemDetailsSectionWatermarking extends Docman_View_It
         $dwLog = $this->getDocmanWatermark_Log();
         $dar = $dwLog->getLog($this->item);
         if ($dar && $dar->rowCount() > 0) {
-            $uh = new UserHelper();
+            $uh = UserHelper::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $titles = array($GLOBALS['Language']->getText('plugin_docmanwatermark', 'details_history_when'),
                             $GLOBALS['Language']->getText('plugin_docmanwatermark', 'details_history_who'),
                             $GLOBALS['Language']->getText('plugin_docmanwatermark', 'details_history_what'));
@@ -78,7 +79,7 @@ class DocmanWatermark_View_ItemDetailsSectionWatermarking extends Docman_View_It
             foreach($dar as $logEntry) {
                 $html .= '<tr class="'.html_get_alt_row_color($altColor++).'">';
                 $html .= '<td>'.util_timestamp_to_userdateformat($logEntry['time']).'</td>';
-                $html .= '<td>'.$uh->getDisplayNameFromUserId($logEntry['who']).'</td>';
+                $html .= '<td>'.$hp->purify($uh->getDisplayNameFromUserId($logEntry['who'])).'</td>';
                 $html .= '<td>'.(($logEntry['watermarked'] == 0) ? $GLOBALS['Language']->getText('plugin_docmanwatermark', 'details_history_desactivate') : $GLOBALS['Language']->getText('plugin_docmanwatermark', 'details_history_activate')).'</td>';
                 $html .= '</tr>';
             }

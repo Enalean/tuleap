@@ -35,12 +35,11 @@ function forum_show_a_nested_message ($result,$row=0) {
 	  $g_id = db_result($gr,0,'group_id');
 	}
 
+	$poster = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
 	$ret_val = '
 		<TABLE BORDER="0" WIDTH="100%">
 			<TR>                  
-              <TD class="thread" NOWRAP>'.$Language->getText('forum_forum','by').': <A HREF="/users/'.
-                    db_result($result, $row, 'user_name') .'/">'. 
-                    user_get_name_display_from_unix(db_result($result, $row, "user_name")) .'</A>'.
+              <TD class="thread" NOWRAP>'.$Language->getText('forum_forum','by').': '.UserHelper::instance()->getLinkOnUser($poster).
                     '<BR><A HREF="/forum/message.php?msg_id='.
                     db_result($result, $row, 'msg_id') .'">'.
                     '<IMG SRC="'.util_get_image_theme("msg.png").'" BORDER=0 HEIGHT=12 WIDTH=10> '.
@@ -429,8 +428,9 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 				/*
 					show the subject and poster
 				*/
+				$poster   = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
 				$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
-					'<TD><a href="/users/'.db_result($result, $i, 'user_name').'">'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</a></TD>'.
+					'<TD>'.UserHelper::instance()->getLinkOnUser($poster).'</TD>'.
 					'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';
 
 				/*

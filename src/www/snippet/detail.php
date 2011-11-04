@@ -111,12 +111,12 @@ if ($type=='snippet') {
                 echo '&nbsp;<a href="/snippet/download.php?mode=download&type=snippet&id='.db_result($result,$i,'snippet_version_id').'">';
                 echo '<img src="'.util_get_image_theme("ic/download.png").'" border="0" alt="'.$Language->getText('snippet_details','download').'" title="'.$Language->getText('snippet_details','download').'"></a>';
             }
+            $user = UserManager::instance()->getUserByUserName(db_result($result,$i,'user_name'));
             echo '</center>
                 </TD><TD>'. 
 			        nl2br(db_result($result,$i,'changes')).'</TD><TD align="center">'.
-			        format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD><TD>'.
-				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
-				user_get_name_display_from_unix(db_result($result,$i,'user_name')).'</b></a></TD><TD ALIGN="center"><A HREF="/snippet/delete.php?type=snippet&snippet_version_id='.
+			        format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD><TD><b>'.UserHelper::instance()->getLinkOnUser($user).
+			        '</b></TD><TD ALIGN="center"><A HREF="/snippet/delete.php?type=snippet&snippet_version_id='.
 				db_result($result,$i,'snippet_version_id').
 				'"><IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" BORDER="0"></A></TD></TR>';
 
@@ -244,15 +244,15 @@ if ($type=='snippet') {
 			$changes_output = '<td align="center">-</td>';
 		    }
 
+		    $user = UserManager::instance()->getUserByUserName(db_result($result,$i,'user_name'));
 			echo '
 			<TR class="'. html_get_alt_row_color($i) .'"><TD><A HREF="/snippet/detail.php?type=packagever&id='.$id.'&vid='.
 				db_result($result,$i,'snippet_package_version_id').'"><B><center>'.
 				db_result($result,$i,'version').'</center></B></A></TD>'.
 				$changes_output.'<td align="center">'.
-			        format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD><TD align="center">'.
-				'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
-				user_get_name_display_from_unix(db_result($result,$i,'user_name')).
-				'</b></a></TD><TD ALIGN="center">'.
+			        format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD><TD align="center"><b>'.
+				UserHelper::instance()->getLinkOnUser($user).
+				'</b></TD><TD ALIGN="center">'.
 			        '<A HREF="/snippet/add_snippet_to_package.php?snippet_package_version_id='.
 				db_result($result,$i,'snippet_package_version_id').
 				'"><IMG SRC="'.util_get_image_theme("ic/notes.png").'" BORDER="0"></A></TD><TD ALIGN="center">'.

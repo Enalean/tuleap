@@ -43,7 +43,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         if ($this->display_name) {
             return $this->display_name;
         }
-        return $this->getUserHelper()->getDisplayNameFromUserId($this->getId());
+        return Codendi_HTMLPurifier::instance()->purify($this->getUserHelper()->getDisplayNameFromUserId($this->getId()));
     }
     
     protected function getUserHelper() {

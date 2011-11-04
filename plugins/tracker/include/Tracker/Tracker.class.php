@@ -836,7 +836,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         . $artifact->getTitle() . '</a></td>';
                     }
                     if ($submitted_field->userCanRead()) {
-                        $html .= '<td>' . $user_helper->getDisplayNameFromUserId($artifact->getSubmittedBy()) . '</td>';
+                        $html .= '<td>' . $hp->purify($user_helper->getDisplayNameFromUserId($artifact->getSubmittedBy())) . '</td>';
                     }
                     if ($date_field->userCanRead()) {
                         $html .=  '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'),$artifact->getSubmittedOn()) . '</td>';

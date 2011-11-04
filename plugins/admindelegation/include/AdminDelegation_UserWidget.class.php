@@ -84,6 +84,7 @@ class AdminDelegation_UserWidget extends Widget {
     protected function _showProjectAdmins() {
         $html = '';
         
+        $hp = Codendi_HTMLPurifier::instance();
         $request = HTTPRequest::instance();
         $vFunc = new Valid_WhiteList('plugin_admindelegation_func', array('show_admins'));
         $vFunc->required();
@@ -137,7 +138,7 @@ class AdminDelegation_UserWidget extends Widget {
                     $mailto = $u->getRealname().' &lt;'.$u->getEmail().'&gt;';
                     $allAdmins[] = $mailto;
                     $html .= '<tr class="'. util_get_alt_row_color($i++) .'">';
-                    $html .= '<td>'.$uh->getDisplayNameFromUser($u).'</td>';
+                    $html .= '<td>'.$hp->purify($uh->getDisplayNameFromUser($u)).'</td>';
                     $html .= '<td><a href="mailto:'.$mailto.'">'.$u->getEmail().'</a></td>';
                     $html .= '</tr>';
                 }

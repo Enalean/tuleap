@@ -93,6 +93,8 @@ class Docman_Log { /* implements EventListener */
     
     function fetchLogsForItem($item_id, $display_access_logs) {
         $html = '';
+        $uh   = UserHelper::instance();
+        $hp   = Codendi_HTMLPurifier::instance();
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman','details_history_logs') .'</h3>';
         $dar = $this->dao->searchByItemIdOrderByTimestamp($item_id);
         if ($dar && !$dar->isError()) {
@@ -112,7 +114,7 @@ class Docman_Log { /* implements EventListener */
                 while ($dar->valid()) {
                     $row = $dar->current();
                     if ($row['type'] != PLUGIN_DOCMAN_EVENT_ACCESS || $display_access_logs) {
-                        $user = $row['user_id'] ? user_get_name_display_from_id($row['user_id']) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
+                        $user = $row['user_id'] ? $hp->purify($uh->getDisplayNameFromUserId($row['user_id'])) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                         $html .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
                         $html .= '<td>'. html_time_ago($row['time']) .'</td>';
                         $html .= '<td>'. $user                             .'</td>';

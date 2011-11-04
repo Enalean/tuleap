@@ -139,6 +139,7 @@ $js = "new UserAutoCompleter('granted_user', '".util_get_dir_image_theme()."', f
 $GLOBALS['HTML']->includeFooterJavascriptSnippet($js);
 
 $uh = UserHelper::instance();
+$hp = Codendi_HTMLPurifier::instance();
 
 echo '<h2>'.$GLOBALS['Language']->getText('plugin_admindelegation','permissions_granted_users_title').'</h2>';
 echo '<form method="post" action="?">';
@@ -160,7 +161,7 @@ foreach ($usm->getGrantedUsers() as $row) {
         }
         echo '<tr>';
         echo '<td><input type="checkbox" name="users_to_revoke[]" value="'.$row['user_id'].'" /></td>';
-        echo '<td>'.$uh->getDisplayNameFromUserId($row['user_id']).'</td>';
+        echo '<td>'.$hp->purify($uh->getDisplayNameFromUserId($row['user_id'])).'</td>';
         echo '<td>'.AdminDelegation_Service::getLabel($row['service_id']);
     } else {
         echo ', '.AdminDelegation_Service::getLabel($row['service_id']);
@@ -183,6 +184,7 @@ $GLOBALS['HTML']->footer(array());
  */
 function displayDeleteUserPerService($usm, $uh, $serviceId) {
 
+    $hp = Codendi_HTMLPurifier::instance();
 
     $userDar = $usm->getGrantedUsersForService($serviceId);
 
@@ -203,7 +205,7 @@ function displayDeleteUserPerService($usm, $uh, $serviceId) {
 
         foreach ($userDar as $row) {
             echo '<tr><td><input type="checkbox" name="users_to_revoke[]" value="'.$row['user_id'].'" /></td>';
-            echo '<td>'.$uh->getDisplayNameFromUserId($row['user_id']).'</td></tr>';
+            echo '<td>'.$hp->purify($uh->getDisplayNameFromUserId($row['user_id'])).'</td></tr>';
         }
         echo '</tbody>';
         echo '</table>';

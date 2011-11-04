@@ -290,6 +290,7 @@ function show_thread($thread_id,$et=0) {
 		$et is whether or not the forum is "expanded" or in flat mode
 	*/
 	global $total_rows,$is_followup_to,$subject,$forum_id,$current_message;
+	
     $ret_val = '';
 	$sql="SELECT user.user_name,forum.has_followups,forum.msg_id,forum.subject,forum.thread_id,forum.body,forum.date,forum.is_followup_to ".
 		"FROM forum,user WHERE forum.thread_id='".db_ei($thread_id)."' AND user.user_id=forum.posted_by AND forum.is_followup_to='0' ".
@@ -330,8 +331,9 @@ function show_thread($thread_id,$et=0) {
 			*/
 			if (get_forum_saved_date($forum_id) < db_result($result,$i,'date')) { $ret_val .= '<B>'; }
 
+			$poster = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
 			$ret_val .= db_result($result, $i, 'subject') .'</A></TD>'.
-				'<TD><a href="/users/'.db_result($result, $i, 'user_name').'">'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</a></TD>'.
+				'<TD>'.UserHelper::instance()->getLinkOnUser($poster).'</TD>'.
 				'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';
 			/*
 				Show the body/message if requested
@@ -394,8 +396,9 @@ function show_submessages($thread_id, $msg_id, $level,$et=0) {
 			*/
 			if (get_forum_saved_date($forum_id) < db_result($result,$i,'date')) { $ret_val .= '<B>'; }
 
+			$poster = UserManager::instance()->getUserByUserName(db_result($result, $i, 'user_name'));
 			$ret_val .= db_result($result, $i, 'subject').'</A></TD>'.
-				'<TD><a href="/users/'.db_result($result, $i, 'user_name').'">'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</a></TD>'.
+				'<TD>'.UserHelper::instance()->getLinkOnUser($poster).'</TD>'.
 				'<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,'date')).'</TD></TR>';
 
 			/*

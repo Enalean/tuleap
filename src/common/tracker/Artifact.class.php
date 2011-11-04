@@ -3158,6 +3158,8 @@ class Artifact extends Error {
          */
         function showFollowUpComments($group_id, $pv, $output = self::OUTPUT_BROWSER) {
             $hp = $this->getHTMLPurifier();
+            $uh = UserHelper::instance();
+
             //
             //  Format the comment rows from artifact_history
             //  
@@ -3291,7 +3293,7 @@ class Artifact extends Error {
                     if (db_result($orig_subm, 0, 'mod_by')==100) {
                         $out .= db_result($orig_subm, 0, 'email');
                     } else {
-                        $out .= '<a href="/users/'.urlencode(user_getname(db_result($orig_subm, 0, 'mod_by'))).'">'. $hp->purify(user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')), CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
+                        $out .= '<a href="/users/'.urlencode(user_getname(db_result($orig_subm, 0, 'mod_by'))).'">'. $hp->purify($uh->getDisplayNameFromUserId(db_result($orig_subm, 0, 'mod_by')), CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
                     }
                     
                     $out .= ' </span>';
@@ -3316,7 +3318,7 @@ class Artifact extends Error {
                     if (db_result($orig_subm, 0, 'mod_by')==100) {
                         $user_quoted = db_result($orig_subm, 0, 'email');
                     } else {
-                        $user_quoted = user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by'));
+                        $user_quoted = $uh->getDisplayNameFromUserId(db_result($orig_subm, 0, 'mod_by'));
                     }
                     $user_quoted = addslashes(addslashes($user_quoted));
                     if ($pv == 0) {

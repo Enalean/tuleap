@@ -1,3 +1,9 @@
+Version 0.7 - Tuleap 4.0.24
+  DISCLAIMER: plugin still in beta, do not use it on production servers.
+  DISCLAIMER: Your data might be trashed in a future update.
+  
+  * Fix user realname output
+  
 Version 0.6 - (Tuleap 4.0.23)
   DISCLAIMER: plugin still in beta, do not use it on production servers.
   DISCLAIMER: Your data might be trashed in a future update.

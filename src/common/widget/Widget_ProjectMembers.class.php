@@ -42,7 +42,8 @@ class Widget_ProjectMembers extends Widget {
                             . "WHERE user_group.user_id=user.user_id AND user_group.group_id=".db_ei($group_id)." AND "
                             . "user_group.admin_flags = 'A'");
         if (db_numrows($res_admin) > 0) {
-            $user_helper = new UserHelper();
+            $user_helper = UserHelper::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             $em = EventManager::instance();
             echo '<span class="develtitle">' . $GLOBALS['Language']->getText('include_project_home','proj_admins').':</span><br />';
             while ($row_admin = db_fetch_array($res_admin)) {
@@ -54,7 +55,7 @@ class Widget_ProjectMembers extends Widget {
                           'user_display_name' => &$display_name
                       ));
                 if (!$display_name) {
-                    $display_name = $user_helper->getDisplayNameFromUserId($row_admin['user_id']);
+                    $display_name = $hp->purify($user_helper->getDisplayNameFromUserId($row_admin['user_id']));
                 }
                 echo '<a href="/users/'.$row_admin['user_name'].'/">'. $display_name .'</a><br />';
             }

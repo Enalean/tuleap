@@ -447,7 +447,7 @@ class Theme {
         $owner = $page->getOwner();
     	if ($owner <> ADMIN_USER) {
             //display owner user_name according to the user choice: real name, or Codendi login
-    		$owner = user_get_name_display_from_unix($owner);
+    		$owner = UserHelper::instance()->getDisplayNameFromUserName($owner);
     	}            
         if ($owner) {
             /*
@@ -471,7 +471,7 @@ class Theme {
             if (!$author) $author = $revision->get('author');
             if (!$author) return '';
             //display revision author user_name according to the user choice: real name, or Codendi login
-            if ($author <> "The PhpWiki programming team") $author = user_get_name_display_from_unix($author);            
+            if ($author <> "The PhpWiki programming team") $author = UserHelper::instance()->getDisplayNameFromUserName($author);            
             if ( $dbi->isWikiPage($author) )
                 return fmt("by %s", WikiLink($author));
             else

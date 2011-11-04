@@ -487,15 +487,13 @@ class Docman_MetadataHtmlOwner extends Docman_MetadataHtmlString {
     function getValue() {
         $v = $this->md->getValue();
         if($v != null && $v != '') {
-            return user_get_name_display_from_id($v);
+            $hp = Codendi_HTMLPurifier::instance();
+            $uh = UserHelper::instance();
+            return $hp->purify($uh->getDisplayNameFromUserId($v));
         }
         else {
             return '';
         }
-    }
-
-    function _getHtmlValue() {
-        return $this->getValue();
     }
 
     function _getField() {

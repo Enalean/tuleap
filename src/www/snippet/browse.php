@@ -69,13 +69,12 @@ if ((!$result || $rows < 1) && (!$result2 || $rows2 < 1)) {
 			<TR><TD COLSPAN="3"><B>'.$Language->getText('snippet_browse','p_of_s').'</B></TD>';
 	}
 	for ($i=0; $i<$rows2; $i++) {
+	    $user = UserManager::instance()->getUserByUserName(db_result($result2,$i,'user_name'));
 		echo '
 			<TR class="'. util_get_alt_row_color($i) .'"><TD ROWSPAN="2"><A HREF="/snippet/detail.php?type=package&id='.
 			db_result($result2,$i,'snippet_package_id').'"><B>'.
 			db_result($result2,$i,'snippet_package_id').'</B></A></TD><TD><B>'.
-			db_result($result2,$i,'name').'</TD><TD>'.
-			'<a href="/users/'.db_result($result2,$i,'user_name').'"><b>'.
-			user_get_name_display_from_unix(db_result($result2,$i,'user_name')).'</b></a></TD></TR>';
+			db_result($result2,$i,'name').'</TD><TD><b>'.UserHelper::instance()->getLinkOnUser($user).'</b></TD></TR>';
 		echo '
 			<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.util_make_links(nl2br(db_result($result2,$i,'description'))).'</TD></TR>';
 	}
@@ -90,13 +89,12 @@ if ((!$result || $rows < 1) && (!$result2 || $rows2 < 1)) {
 			<TR><TD COLSPAN="3"><B>'.$Language->getText('snippet_browse','s').'</B></TD>';
 	}
 	for ($i=0; $i<$rows; $i++) {
+	    $user = UserManager::instance()->getUserByUserName(db_result($result,$i,'user_name'));
 		echo '
 			<TR class="'. util_get_alt_row_color($i) .'"><TD ROWSPAN="2"><A HREF="/snippet/detail.php?type=snippet&id='.
 			db_result($result,$i,'snippet_id').'"><B>'.
 			db_result($result,$i,'snippet_id').'</B></A></TD><TD><B>'.
-			db_result($result,$i,'name').'</TD><TD>'.
-			'<a href="/users/'.db_result($result,$i,'user_name').'"><b>'.
-			user_get_name_display_from_unix(db_result($result,$i,'user_name')).'</b></a></TD></TR>';
+			db_result($result,$i,'name').'</TD><TD><b>'.UserHelper::instance()->getLinkOnUser($user).'</b></TD></TR>';
 		echo '
 			<TR class="'. util_get_alt_row_color($i) .'"><TD COLSPAN="2">'.util_make_links(nl2br(db_result($result,$i,'description'))).'</TD></TR>';
 	}

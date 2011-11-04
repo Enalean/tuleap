@@ -102,9 +102,10 @@ function snippet_show_package_snippets($version) {
                 echo '&nbsp;<a href="/snippet/download.php?mode=download&type=snippet&id='.db_result($result,$i,'snippet_version_id').'">';
                 echo '<img src="'.util_get_image_theme("ic/download.png").'" border="0" alt="'.$Language->getText('snippet_details','download').'" title="'.$Language->getText('snippet_details','download').'"></a>';
             }
+            $user = UserManager::instance()->getUserByUserName(db_result($result,$i,'user_name'));
             echo '</center></TD>
                              <TD>'.db_result($result,$i,'name').'</TD><TD>'.
-				user_get_name_display_from_unix(db_result($result,$i,'user_name')).'</TD></TR>';
+				UserHelper::instance()->getLinkOnUser($user).'</TD></TR>';
 		}
 	}
 	echo '</TABLE>';

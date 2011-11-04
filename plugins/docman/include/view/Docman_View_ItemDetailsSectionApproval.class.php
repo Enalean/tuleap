@@ -103,8 +103,8 @@ extends Docman_View_ItemDetailsSection {
     }
 
     function getReviewerTable($forceReadOnly = false) {
-        $html = '';
-        
+        $html  = '';
+        $uh    = UserHelper::instance();
         $rIter = $this->table->getReviewerIterator();
         if($rIter !== null) {
             $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_table_title').'</h3>';
@@ -120,7 +120,7 @@ extends Docman_View_ItemDetailsSection {
             $html .= '<tr>';
             $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_requester').'</td>';
             $html .= '<td>';
-            $html .= user_get_name_display_from_id($this->table->getOwner());
+            $html .= $this->hp->purify($uh->getDisplayNameFromUserId($this->table->getOwner()));
             $html .= '</td>';
             $html .= '</tr>';
 
@@ -189,7 +189,7 @@ extends Docman_View_ItemDetailsSection {
                 $html .= '<tr class="'.html_get_alt_row_color($rowColorIdx++).'">';
 
                 // Name
-                $html .= '<td'.$_trClass.'>'.user_get_name_display_from_id($reviewer->getId()).'</td>';
+                $html .= '<td'.$_trClass.'>'.$this->hp->purify($uh->getDisplayNameFromUserId($reviewer->getId())).'</td>';
 
                 // Review
                 $_reviewHtml = $this->atf->getReviewStateName($reviewer->getState());
@@ -250,6 +250,7 @@ extends Docman_View_ItemDetailsSection {
     
     function getReviewForm($user) {
         $html = '';
+        $uh   = UserHelper::instance();
 
         // Values
         $itemCurrentVersion = $this->_getReviewCurrentVersion();
@@ -301,7 +302,7 @@ extends Docman_View_ItemDetailsSection {
         $html .= '<tr>';
         $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_requester').'</td>';
         $html .= '<td>';
-        $html .= user_get_name_display_from_id($this->table->getOwner());
+        $html .= $this->hp->purify($uh->getDisplayNameFromUserId($this->table->getOwner()));
         $html .= '</td>';
         $html .= '</tr>';
 
@@ -431,6 +432,7 @@ extends Docman_View_ItemDetailsSection {
 
     function getTableHistory() {
         $html = '';
+        $uh   = UserHelper::instance();
         if(is_a($this->table, 'Docman_ApprovalTableVersionned')) {
             $html .= '<h3>'.$GLOBALS['Language']->getText('plugin_docman', 'details_approval_history_title').'</h3>';
             $html .= html_build_list_table_top(array($GLOBALS['Language']->getText('plugin_docman', 'details_approval_history_table_version'),
@@ -453,7 +455,7 @@ extends Docman_View_ItemDetailsSection {
                     $href = $table->getVersionNumber();
                 }
                 $html .= '<td>'.$href.'</td>';
-                $html .= '<td>'.user_get_name_display_from_id($table->getOwner()).'</td>';
+                $html .= '<td>'.$this->hp->purify($uh->getDisplayNameFromUserId($table->getOwner())).'</td>';
                 $html .= '<td>'.$GLOBALS['Language']->getText('plugin_docman', 'approval_review_state_'.$table->getApprovalState()).'</td>';
                 $html .= '<td>'.util_timestamp_to_userdateformat($table->getDate()).'</td>';
                 $html .= '</tr>';

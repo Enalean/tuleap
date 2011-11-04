@@ -236,7 +236,7 @@ while ($row_memb=db_fetch_array($res_memb)) {
         'user_display_name' => &$display_name
     ));
     if (!$display_name) {
-        $display_name = $user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']);
+        $display_name = $hp->purify($user_helper->getDisplayName($row_memb['user_name'], $row_memb['realname']));
     }
     print '<FORM ACTION="?" METHOD="POST"><INPUT TYPE="HIDDEN" NAME="func" VALUE="rmuser">'.
 	'<INPUT TYPE="HIDDEN" NAME="rm_id" VALUE="'.$row_memb['user_id'].'">'.

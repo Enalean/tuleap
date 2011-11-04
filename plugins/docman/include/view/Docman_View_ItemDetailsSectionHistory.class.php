@@ -36,6 +36,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
     }
     function getContent() {
         $content = '';
+        $uh      = UserHelper::instance();
         if (is_a($this->item, 'Docman_File')) {
             $content .= '<h3>'. $GLOBALS['Language']->getText('plugin_docman','details_history_versions') .'</h3>';
             $version_factory =& new Docman_VersionFactory();
@@ -64,11 +65,11 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                             'id'     => $this->item->getId(),
                             'version' => $versions[$key]->getNumber()
                         ));
-                        $user = $versions[$key]->getAuthorId() ? user_get_name_display_from_id($versions[$key]->getAuthorId()) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
+                        $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : $GLOBALS['Language']->getText('plugin_docman','details_history_anonymous');
                         $content .= '<tr class="'. $odd_even[$i++ % count($odd_even)] .'">';
                         $content .= '<td align="center"><a href="'. $download .'">'. $versions[$key]->getNumber() .'</a></td>';
                         $content .= '<td>'. html_time_ago($versions[$key]->getDate()) .'</td>';
-                        $content .= '<td>'. $user                                                  .'</td>';
+                        $content .= '<td>'. $this->hp->purify($user)                                                  .'</td>';
                         $content .= '<td>'. $this->hp->purify($versions[$key]->getLabel())         .'</td>';
                         $content .= '<td>'. $this->hp->purify($versions[$key]->getChangelog(), CODENDI_PURIFIER_LIGHT) .'</td>';
 

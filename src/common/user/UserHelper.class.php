@@ -41,7 +41,7 @@ class UserHelper {
      * Constructor
      * @todo make it protected (singleton powaaa)
      */
-    public function UserHelper() {
+    public function __construct() {
         $this->_username_display = $this->_getCurrentUserUsernameDisplayPreference();
         $this->_cache_by_id = array();
         $this->_cache_by_username = array();
@@ -49,6 +49,10 @@ class UserHelper {
     }
     
     protected static $_instance;
+    /**
+     * 
+     * @return UserHelper
+     */
     public static function instance() {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
@@ -254,10 +258,19 @@ class UserHelper {
      * 
      * @return String
      */
-    function getLinkOnUserFromUserId($user_id) {
+    public function getLinkOnUserFromUserId($user_id) {
+        return $this->getLinkOnUser($this->_getUserManager()->getUserById($user_id));
+    }
+    
+    /**
+     * Get a link on user profile with name according to user prefs.
+     *
+     * @param User $user User object
+     *
+     * @return String
+     */
+    public function getLinkOnUser(User $user) {
         $hp = Codendi_HTMLPurifier::instance();
-        $um = $this->_getUserManager();
-        $user = $um->getUserById($user_id);
         if($user && !$user->isNone()) {
             return '<a href="/users/'.urlencode($user->getName()).'">'.$hp->purify($this->getDisplayNameFromUser($user), CODENDI_PURIFIER_CONVERT_HTML).'</a>';
         } else {

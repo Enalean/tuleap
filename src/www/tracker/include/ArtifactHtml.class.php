@@ -740,6 +740,8 @@ class ArtifactHtml extends Artifact {
             $rows=db_numrows($result);
             $html = '';
             $hp = Codendi_HTMLPurifier::instance();
+            $uh = UserHelper::instance();
+            $um = UserManager::instance();
             if ($rows > 0) {
         
                         $title_arr=array();
@@ -785,19 +787,21 @@ class ArtifactHtml extends Artifact {
                                         $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_old), CODENDI_PURIFIER_CONVERT_HTML) .'</TD><TD>';
                                         $html .= $hp->purify($value_id_new, CODENDI_PURIFIER_CONVERT_HTML);
                                     }
-                        
+                                    
+                                    $user = $um->getUserByUserName(db_result($result, $i, 'user_name'));
                                     $html .= '</TD>'.
                                         '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>'.
-                                        '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
+                                        '<TD>'.$uh->getLinkOnUser($user).'</TD></TR>';
                                 }
                             } else {
+                                $user  = $um->getUserByUserName(db_result($result, $i, 'user_name'));
                                 $html .= "\n".'<TR class="'. util_get_alt_row_color($i) .
                                                     '"><TD>'. $hp->purify(((preg_match("/^(lbl_)/",$field_name) && preg_match("/(_comment)$/",$field_name)) ? "Comment #".((int)substr($field_name,4,-8)) : $field_name), CODENDI_PURIFIER_CONVERT_HTML) .'</TD><TD>';
                                 $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_old), CODENDI_PURIFIER_CONVERT_HTML) .'</TD><TD>';
                                 $html .=  $hp->purify(util_unconvert_htmlspecialchars($value_id_new), CODENDI_PURIFIER_CONVERT_HTML) ;
                                 $html .= '</TD>'.
                                         '<TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, 'date')).'</TD>'.
-                                        '<TD>'.user_get_name_display_from_unix(db_result($result, $i, 'user_name')).'</TD></TR>';
+                                        '<TD>'.$uh->getLinkOnUser($user).'</TD></TR>';
                             }
                         }
                 $html .= '</TABLE>';
@@ -1152,6 +1156,8 @@ class ArtifactHtml extends Artifact {
     *
     */
     function displayRSS() {
+        $uh = UserHelper::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $group = $this->ArtifactType->getGroup();
         $rss = new RSS(array(
             'title'       => $group->getPublicName().' '.$this->ArtifactType->getName() .' #'. $this->getId() .' - '. $this->getValue('summary') .' - '. $GLOBALS['Language']->getText('tracker_include_artifact','follow_ups'),
@@ -1179,7 +1185,7 @@ class ArtifactHtml extends Artifact {
                 'title'       => '<![CDATA['.$GLOBALS['Language']->getText('tracker_include_artifact','add_flup_comment') .' #'.$comment_id.']]>',
                 'description' => '<![CDATA['.$comment_type . util_make_links(nl2br(db_result($result, $i, 'new_value')),$group->getGroupId(),$this->ArtifactType->getID()).']]>',
                 'pubDate'     => gmdate('D, d M Y h:i:s',db_result($orig_date, 0, 'date')).' GMT',
-                'dc:creator'      => user_get_name_display_from_id(db_result($orig_subm, 0, 'mod_by')),
+                'dc:creator'  => $hp->purify($uh->getDisplayNameFromUserId(db_result($orig_subm, 0, 'mod_by'))),
                 'link'        => '<![CDATA['.get_server_url() .'/tracker/?func=detail&aid='. $this->getId() .'&atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId().'#comment_'.$comment_id.']]>',
                 'guid'        => '<![CDATA['.get_server_url() .'/tracker/?func=detail&aid='. $this->getId() .'&atid='. $this->ArtifactType->getID() .'&group_id='. $group->getGroupId().'#comment_'.$comment_id.']]>'
             ));

@@ -311,13 +311,13 @@ function displayProjectHistoryResults($group_id, $res, $export = false, $i = 1) 
             $documents_body = array ('event' => $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id),
                                      'val'   => $hp->purify($val),
                                      'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']),
-                                     'by'    => user_get_name_display_from_unix($row['user_name']));
+                                     'by'    => UserHelper::instance()->getDisplayNameFromUserName($row['user_name']));
             echo build_csv_record(array('event', 'val', 'date', 'by'), $documents_body)."\n";
         } else {
             echo $hp->purify($val);
-
+            $user = UserManager::instance()->getUserByUserName($row['user_name']);
             echo '</TD><TD>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'),$row['date']).
-            '</TD><TD>'.user_get_name_display_from_unix($row['user_name']).'</TD></TR>';
+            '</TD><TD>'.UserHelper::instance()->getLinkOnUser($user).'</TD></TR>';
         }
     }
 }

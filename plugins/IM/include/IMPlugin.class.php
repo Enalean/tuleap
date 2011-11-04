@@ -18,14 +18,10 @@ class IMPlugin extends Plugin {
      */
     var $last_im_datas=array();
     var $last_im_datas_remove=array();
-    /**
-     * plugin id
-     */
-    var $id;
-    
-	function IMPlugin($id,$debug=IM_DEBUG_OFF) {
-    	$this->Plugin($id);
-    	$this->id=$id;
+
+    function __construct($id,$debug=IM_DEBUG_OFF) {
+        parent::__construct($id);
+        
         $this->_addHook('javascript_file', 'jsFile', false);
         $this->_addHook('cssfile', 'cssFile', false);
         $this->_addHook('approve_pending_project', 'projectIsApproved', false);
@@ -594,7 +590,8 @@ class IMPlugin extends Plugin {
 	
 
     function getDisplayPresence($user_id, $user_name, $realname) {
-        $user_helper = new UserHelper();
+        $user_helper = UserHelper::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         $im_object = $this->_get_im_object();
         if(isset($im_object)&&$im_object){
 	        $jabberConf = $im_object->get_server_conf();
@@ -609,7 +606,7 @@ class IMPlugin extends Plugin {
         	$presence='';
         }
         
-        return $presence . $user_helper->getDisplayName($user_name, $realname);
+        return $presence . $hp->purify($user_helper->getDisplayName($user_name, $realname));
     }
 
         function myPageBox($params) {

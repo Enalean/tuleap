@@ -628,9 +628,9 @@ class DocmanPlugin extends Plugin {
                 $html .='<tr class="'. html_get_alt_row_color($i++) .'">'.
                 '<td>'.$row['id'].'</td>'.
                 '<td>'.$itemFactory->getItemTypeAsText($row['item_type']).'</td>'.
-                '<td>'. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
+                '<td>'.$hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId).'</td>'.
                 '<td>'.$hp->purify($row['location']).'</td>'.
-                '<td>'.$uh->getDisplayNameFromUserId($row['user']).'</td>'.
+                '<td>'.$hp->purify($uh->getDisplayNameFromUserId($row['user'])).'</td>'.
                 '<td>'.html_time_ago($row['date']).'</td>'.
                 '<td>'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate).'</td>'.
                 '<td align="center"><a href="/plugins/docman/restore_documents.php?group_id='.$groupId.'&func=confirm_restore_item&id='.$row['id'].'" ><IMG SRC="'.util_get_image_theme("ic/convert.png").'" onClick="return confirm(\'Confirm restore of this item\')" BORDER=0 HEIGHT=16 WIDTH=16></a></td></tr>';

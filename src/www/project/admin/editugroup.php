@@ -13,6 +13,7 @@ require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('www/file/file_utils.php');
 require_once('www/docman/doc_utils.php');
+require_once 'common/project/UGroupManager.class.php';
 
 $hp      = Codendi_HTMLPurifier::instance();
 $request = HTTPRequest::instance();
@@ -125,20 +126,22 @@ if (($func=='edit')||($func=='do_create')) {
     echo '<div style="padding-left:10px">';
     
     // Get existing members from group
-    $sql="SELECT user_id FROM ugroup_user WHERE ugroup_id = ". db_ei($request->get('ugroup_id'));
-    $res = db_query($sql);
-    if (db_numrows($res)>0) {
+    $uGroupMgr = new UGroupManager();
+    $uGroup    = $uGroupMgr->getById($request->get('ugroup_id'));
+    $members   = $uGroup->getMembers();
+    if (count($members) > 0) {
         echo '<form action="ugroup_remove_user.php" method="POST">';
         echo '<input type="hidden" name="group_id" value="'.$group_id.'">';
         echo '<input type="hidden" name="ugroup_id" value="'.$ugroup_id.'">';
         echo '<table>';
         $i = 0;
         $hp = Codendi_HTMLPurifier::instance();
-        while ($data = db_fetch_array($res)) {
+        $userHelper = UserHelper::instance();
+        foreach ($members as $user) {
             echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
-            echo '<td>'. user_get_name_display_from_id($data['user_id']) .'</td>';
+            echo '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
             echo '<td>';
-            project_admin_display_bullet_user($data['user_id'], 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $data['user_id']);
+            project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $user->getId());
             echo '</td>';
             echo '</tr>';
         }
@@ -153,7 +156,7 @@ if (($func=='edit')||($func=='do_create')) {
     echo '<p><a href="/project/admin/ugroup.php?group_id='. $group_id .'">&laquo; '.$Language->getText('project_admin_editugroup','go_back').'</a></p>';
         
     // Display associated permissions
-    $sql="SELECT * FROM permissions WHERE ugroup_id=$ugroup_id ORDER BY permission_type";
+    $sql="SELECT * FROM permissions WHERE ugroup_id=".db_ei($ugroup_id)." ORDER BY permission_type";
     $res=db_query($sql);
     if (db_numrows($res)>0) {
         echo '
