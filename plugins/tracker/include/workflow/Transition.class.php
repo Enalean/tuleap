@@ -227,7 +227,6 @@ class Transition {
      * Use during the two-step xml import
      *
      * @param Array    $ugroup_ids An array of ugroup id
-     * @param string $permission_type The permission type
      *
      * @return void
      */
@@ -283,19 +282,19 @@ class Transition {
         }
     }
     
-     /**
-     * Wrapper for PermissionsManager
-     *
-     * @return PermissionsManager
-     */
-    function getPermissionsManager() {
+   /**
+    * Wrapper for PermissionsManager
+    *
+    * @return PermissionsManager
+    */
+    public function getPermissionsManager() {
         return PermissionsManager::instance();
     }
     
    /**
     * Indicates if permissions on a field can be bypassed
     *
-    * @param Field $field
+    * @param Tracker_FormElement_Field $field
     *
     * @return boolean true if the permissions on the field can be by passed, false otherwise
     */
