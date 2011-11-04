@@ -280,14 +280,14 @@ class WorkflowFactory {
         return new Workflow(0, $tracker, $field_id, $xml->is_used, $transitions);
     }
     
-     /**
-     * Creates new workflow in the database
-     * 
-     * @param Workflow $workflow The workflow to save
-     * @param Tracker          $tracker  The tracker
-     * 
-     * @return void
-     */
+   /**
+    * Creates new workflow in the database
+    * 
+    * @param Workflow $workflow The workflow to save
+    * @param Tracker          $tracker  The tracker
+    * 
+    * @return void
+    */
     public function saveObject($workflow, $tracker) {
         $workflow->setTracker($tracker);
         $dao = $this->getDao();
@@ -295,45 +295,11 @@ class WorkflowFactory {
         
         $workflow_id = $dao->save($workflow->tracker_id->id, $workflow->field_id->id, $workflow->is_used);
         
+        //Save transitions        
         foreach($workflow->getTransitions() as $transition) {
-            if($transition->getFieldValueFrom() == null) {
-                $from_id=null;
-            }else {
-                $from_id = $transition->getFieldValueFrom()->getId();
-            }
-            $to_id = $transition->getFieldValueTo()->getId();
-            $transition_id = $daot->addTransition($workflow_id, $from_id, $to_id);
-            $transition->setTransitionId($transition_id);
-            
-            $postactions = $transition->getPostActions();
-            
-            foreach ($postactions as $postaction) {
-                $tpaf = new Transition_PostActionFactory();
-                $tpaf->saveObject($postaction);
-            }            
-            
-            $permissions = $transition->getPermissions();           
-            $this->addPermissions($permissions, $transition->getTransitionId());
+            $tf = $this->getTransitionFactory();
+            $tf->saveObject($workflow_id, $transition);
         }
-    }
-    
-     /**
-     * Adds permissions in the database
-     * 
-     * @param Array $ugroups the list of ugroups
-     * @param Transition          $transition  The transition
-     * 
-     * @return boolean
-     */
-    public function addPermissions($ugroups, $transition) {
-        $pm = PermissionsManager::instance();
-        $permission_type = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
-        foreach ($ugroups as $ugroup) {
-            if(!$pm->addPermission($permission_type, (int)$transition, $ugroup)) {
-                return false;
-            }
-        }
-        return true;
     }
      
     /**

@@ -218,5 +218,57 @@ class TransitionFactory {
         return $transitions;
     }
     
+   /**
+    * Creates transition in the database
+    * 
+    * @param int $workflow_id The workflow_id of the transitions to save
+    * @param Transition          $transition The transition
+    * 
+    * @return void
+    */
+    public function saveObject($workflow_id, $transition) {
+        
+        $dao = $this->getDao();
+        
+        if($transition->getFieldValueFrom() == null) {
+            $from_id=null;
+        } else {
+            $from_id = $transition->getFieldValueFrom()->getId();
+        }
+        $to_id = $transition->getFieldValueTo()->getId();
+        $transition_id = $dao->addTransition($workflow_id, $from_id, $to_id);
+        $transition->setTransitionId($transition_id);
+        
+        //Save postactions
+        $postactions = $transition->getPostActions();
+        foreach ($postactions as $postaction) {
+            $tpaf = new Transition_PostActionFactory();
+            $tpaf->saveObject($postaction);
+        }
+        
+        //Save permissions
+        $permissions = $transition->getPermissions();
+        $this->addPermissions($permissions, $transition->getTransitionId());
+    }
+    
+   /**
+    * Adds permissions in the database
+    * 
+    * @param Array $ugroups the list of ugroups
+    * @param Transition          $transition  The transition
+    * 
+    * @return boolean
+    */
+    public function addPermissions($ugroups, $transition) {
+        $pm = PermissionsManager::instance();
+        $permission_type = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
+        foreach ($ugroups as $ugroup) {
+            if(!$pm->addPermission($permission_type, (int)$transition, $ugroup)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
 }
 ?>

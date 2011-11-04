@@ -147,7 +147,7 @@ class WorkflowManager {
             // Permissions
             $ugroups = $request->get('ugroups');
             permission_clear_all($this->tracker->group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition, false); 
-            if (WorkflowFactory::instance()->addPermissions($ugroups, $transition)) {
+            if (TransitionFactory::instance()->addPermissions($ugroups, $transition)) {
                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','permissions_updated'));
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin','permissions_not_updated'));
