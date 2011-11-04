@@ -265,9 +265,9 @@ class Workflow {
    /**
     * Indicates if permissions on a field can be bypassed
     *
-    * @param Field $field
+    * @param Tracker_FormElement_Field $field
     *
-    * @return boolean true if the permissions on the field can be by passed, false otherwise
+    * @return boolean true if the permissions on the field can be bypassed, false otherwise
     */
     public function bypassPermissions($field) {
         $transitions = $this->getTransitions();

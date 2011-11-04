@@ -127,9 +127,9 @@ class Transition_PostActionFactory {
      * 
      * @param SimpleXMLElement $xml         containing the structure of the imported postaction
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Tracker          $tracker     to which the workflow is attached
+     * @param Transition       $transition     to which the postaction is attached
      * 
-     * @return Workflow The workflow object, or null if error
+     * @return Transition_PostAction The  Transition_PostAction object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $transition) {
         
@@ -141,6 +141,13 @@ class Transition_PostActionFactory {
         }
     }
     
+   /**
+    * Save a postaction object
+    * 
+    * @param Transition_PostAction $postaction  the object to save
+    *
+    * @return void
+    */
     public function saveObject($postaction) {
         if (($postaction_id = $this->getDao()->create($postaction->getTransition()->getTransitionId())) > 0) {
             $this->getDao()->updatePostAction($postaction_id, $postaction->getFieldId(), $postaction->getValueType());

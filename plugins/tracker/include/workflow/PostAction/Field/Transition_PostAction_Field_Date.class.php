@@ -55,7 +55,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
      *
      * @param Transition                   $transition The transition the post action belongs to
      * @param Integer                      $id         Id of the post action
-     * @param Tracker_FormElement_Field    $field      Id of the field the post action should modify
+     * @param Tracker_FormElement_Field    $field      The field the post action should modify
      * @param Integer                      $value_type The type of the value to set
      */
     public function __construct(Transition $transition, $id, $field, $value_type) {
@@ -115,6 +115,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
 
     /**
      * Get the value of bypass_permissions
+     *
+     * @param Tracker_FormElement_Field $field
      *
      * @return boolean
      */
