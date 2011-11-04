@@ -1595,7 +1595,7 @@ class Docman_Actions extends Actions {
      * @return void
      */
     function remove_monitoring($params) {
-        if ($params['listeners_to_delete']) {
+        if (isset($params['listeners_to_delete']) && is_array($params['listeners_to_delete'])) {
             if ($this->_controler->userCanManage($params['item']->getId())) {
                 $users = array();
                 foreach ($params['listeners_to_delete'] as $userId) {
