@@ -39,6 +39,9 @@ class Transition {
      */
     protected $post_actions = array();
     
+    /**
+     * @var Array of permissions
+     */
     protected $cache_permissions = array();
     
     /**

@@ -163,10 +163,6 @@ class TransitionFactory {
         $transition = new Transition(0, 0, $from, $to);
         $postactions = array();
         foreach ($xml->postactions->postaction_field_date as $p) {
-            
-            $field_id_postaction = $xmlMapping[(string)$p->field_id['REF']];
-            $postaction_attributes = $p->attributes();
-            
             $tpaf = new Transition_PostActionFactory();
             $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
         }

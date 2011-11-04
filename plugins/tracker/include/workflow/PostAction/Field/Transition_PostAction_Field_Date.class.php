@@ -196,7 +196,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction {
         if ($request->getInArray('remove_postaction', $this->id)) {
             $this->getDao()->deletePostAction($this->id);
         } else {
-            $field_id     = $this->field ? $this->getFieldId() : 0;
+            $field_id     = $this->getFieldId();
             $value_type   = $this->value_type;
             
             // Target field
