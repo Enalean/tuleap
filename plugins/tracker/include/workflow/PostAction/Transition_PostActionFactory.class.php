@@ -86,6 +86,18 @@ class Transition_PostActionFactory {
     }
     
     /**
+     * Delete post actions for the transition
+     *
+     * @param Transition $transition           On wich transition we should add the post action
+     * @param string     $requested_postaction The type of post action
+     *
+     * @return void
+     */
+    public function deletePostAction(Transition $transition) {
+        $this->getDao()->deletePostActionsByTransitionId($transition->transition_id);
+    }
+    
+    /**
      * Wrapper for Transition_PostAction_Field_DateDao
      *
      * @return Transition_PostAction_Field_DateDao
@@ -104,9 +116,72 @@ class Transition_PostActionFactory {
     public function loadPostActions(Transition $transition) {
         $post_actions = array();
         foreach ($this->getDao()->searchByTransitionId($transition->getTransitionId()) as $row) {
-            $post_actions[] = new Transition_PostAction_Field_Date($transition, (int)$row['id'], (int)$row['field_id'], (int)$row['value_type']);
+            $field = $this->getFormElementFactory()->getFormElementById((int)$row['field_id']);
+            $post_actions[] = new Transition_PostAction_Field_Date($transition, (int)$row['id'], $field, (int)$row['value_type']);
         }
         $transition->setPostActions($post_actions);
+    }
+    
+    /**
+     * Creates a postaction Object
+     * 
+     * @param SimpleXMLElement $xml         containing the structure of the imported postaction
+     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
+     * @param Transition       $transition     to which the postaction is attached
+     * 
+     * @return Transition_PostAction The  Transition_PostAction object, or null if error
+     */
+    public function getInstanceFromXML($xml, &$xmlMapping, $transition) {
+        
+        $postaction_attributes = $xml->attributes();
+        
+        if ($xmlMapping[(string)$xml->field_id['REF']]) {
+            $postaction = new Transition_PostAction_Field_Date($transition, 0, $xmlMapping[(string)$xml->field_id['REF']], (int) $postaction_attributes['valuetype']);
+            return $postaction;
+        }
+    }
+    
+   /**
+    * Save a postaction object
+    * 
+    * @param Transition_PostAction $postaction  the object to save
+    *
+    * @return void
+    */
+    public function saveObject($postaction) {
+        if (($postaction_id = $this->getDao()->create($postaction->getTransition()->getTransitionId())) > 0) {
+            $this->getDao()->updatePostAction($postaction_id, $postaction->getFieldId(), $postaction->getValueType());
+        }
+    }
+    
+    /**
+     * Wrapper for Tracker_FormElementFactory
+     *
+     * @return Tracker_FormElementFactory
+     */
+    protected function getFormElementFactory() {
+        return Tracker_FormElementFactory::instance();
+    }
+    
+    /**
+     * Say if a field is used in its tracker workflow transitions post actions
+     *
+     * @param Tracker_FormElement_Field $field The field
+     *
+     * @return bool
+     */
+    public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
+        return count($this->getDao()->searchByFieldId($field->getId())) > 0;
+    }
+    
+    /**
+     * Delete a workflow
+     *
+     * @param int $workflow_id the id of the workflow
+     * 
+     */
+    public function deleteWorkflow($workflow_id) {
+        return $this->getDao()->deletePostActionsByWorkflowId($workflow_id);
     }
 }
 ?>

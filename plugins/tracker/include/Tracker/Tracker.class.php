@@ -2102,7 +2102,7 @@ EOS;
 
         // workflow
         $child = $xmlElem->addChild('workflow');
-        $workflow = $this->getWorkflowFactory()->getWorkflowField($this->id);
+        $workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->id);
         if(!empty($workflow)) {
             $workflow->exportToXML($child, $xmlMapping);
         }

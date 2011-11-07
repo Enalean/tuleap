@@ -3,7 +3,7 @@ namespace xsd = "http://www.w3.org/2001/XMLSchema"
 
 grammar {
 
-    start = element tracker {   
+    start = element tracker {
         
         # old ids
         attribute id { xsd:int }?,
@@ -47,7 +47,7 @@ grammar {
             }?,
             element is_used {xsd:int}?,
             element transitions { 
-                element transition { transitionContent }*
+                element transition { transitionContent }*                
             }?
         }*,
 
@@ -153,7 +153,20 @@ grammar {
         },
         element to_id {
             attribute REF { xsd:string }
-        }
+        },
+        element postactions {
+            element postaction_field_date {
+                attribute valuetype { xsd:int },
+                element field_id {
+                    attribute REF { xsd:IDREF }
+                }
+            }*
+        }*,
+        element permissions {
+            element permission {
+                attribute ugroup { xsd:string }
+            }*
+        }*
         
         
     semanticContent = 
@@ -260,7 +273,7 @@ grammar {
         | 
             (
                 attribute type { "plugin_graphontrackersv5" },
-                element charts { 
+                element charts {
                     element chart {
                         attribute width { xsd:int },
                         attribute height { xsd:int },

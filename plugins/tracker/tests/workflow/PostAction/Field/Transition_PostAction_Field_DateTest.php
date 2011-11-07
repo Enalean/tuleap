@@ -62,7 +62,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $expected)));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
-        $post_action->__construct($transition, $id, $field_id, $value_type);
+        $post_action->__construct($transition, $id, $field, $value_type);
         $post_action->before($fields_data, $current_user);
         $this->assertEqual($expected, $fields_data[$field_id]);
     }
@@ -92,12 +92,12 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel())));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
-        $post_action->__construct($transition, $id, $field_id, $value_type);
+        $post_action->__construct($transition, $id, $field, $value_type);
         $post_action->before($fields_data, $current_user);
         $this->assertEqual('', $fields_data[$field_id]);
     }
     
-    public function testBeforeShouldNOTSetTheDate() {
+    public function testBeforeShouldBypassAndSetTheDate() {
         $current_user = new MockUser();
         
         $field = new MockTracker_FormElement_Field_Date();
@@ -109,7 +109,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $factory = new MockTracker_FormElementFactory();
         $factory->setReturnReference('getFormElementById', $field, array($field->getId()));
         
-        $expected    = date('Y-m-d', $_SERVER['REQUEST_TIME']);
+        $expected    = $field->formatDate($_SERVER['REQUEST_TIME']);
         $fields_data = array('field_id' => 'value');
         $transition  = new MockTransition();
         $field_id    = $field->getId();
@@ -117,15 +117,15 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $value_type  = Transition_PostAction_Field_Date::FILL_CURRENT_TIME;
         
         $post_action = new Transition_PostAction_Field_DateTestVersion();
-        $post_action->expectOnce('addFeedback', array('warning', 'workflow_postaction', 'field_date_no_perms', array($field->getLabel())));
+        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $expected)));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
-        $post_action->__construct($transition, $id, $field_id, $value_type);
+        $post_action->__construct($transition, $id, $field, $value_type);
         $post_action->before($fields_data, $current_user);
-        $this->assertFalse(isset($fields_data[$field_id]));
+        $this->assertEqual($expected, $fields_data[$field_id]);
     }
     
-    public function testBeforeShouldNOTClearTheDate() {
+    public function testBeforeShouldBypassAndClearTheDate() {
         $current_user = new MockUser();
         
         $field = new MockTracker_FormElement_Field_Date();
@@ -148,12 +148,12 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $value_type = Transition_PostAction_Field_Date::CLEAR_DATE;
         
         $post_action = new Transition_PostAction_Field_DateTestVersion();
-        $post_action->expectOnce('addFeedback', array('warning', 'workflow_postaction', 'field_date_no_perms', array($field->getLabel())));
+        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel())));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
-        $post_action->__construct($transition, $id, $field_id, $value_type);
+        $post_action->__construct($transition, $id, $field, $value_type);
         $post_action->before($fields_data, $current_user);
-        $this->assertEqual($submitted_timestamp, $fields_data[$field_id]);
+        $this->assertEqual('', $fields_data[$field_id]);
     }
     
     public function testBeforeShouldNOTDisplayFeedback() {
@@ -167,7 +167,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $factory = new MockTracker_FormElementFactory();
         $factory->setReturnReference('getFormElementById', $field, array($field->getId()));
         
-        $submitted_timestamp = 1317817376;
+        $expected    = $field->formatDate($_SERVER['REQUEST_TIME']);
         $transition  = new MockTransition();
         $field_id    = $field->getId();
         $id          = 1;
@@ -180,9 +180,9 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $post_action->expectNever('addFeedback');
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
-        $post_action->__construct($transition, $id, $field_id, $value_type);
+        $post_action->__construct($transition, $id, $field, $value_type);
         $post_action->before($fields_data, $current_user);
-        $this->assertFalse(isset($fields_data[$field_id]));
+        $this->assertEqual($expected, $fields_data[$field_id]);
     }
 }
 ?>

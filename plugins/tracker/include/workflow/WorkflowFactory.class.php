@@ -104,12 +104,15 @@ class WorkflowFactory {
     }
     
     /**
-     * Delete a workflow transitions
+     * Delete a workflow
      *
      * @param int $workflow_id the workflow id
      */
-    public function deleteWorkflowTransitions($workflow_id) {
-        return $this->getTransitionDao()->deleteWorkflowTransitions($workflow_id);
+    public function deleteWorkflow($workflow_id) {
+        $workflow = $this->getWorkflow($workflow_id);
+        if ($this->getTransitionFactory()->deleteWorkflow($workflow)) {
+            return $this->delete($workflow_id);
+        }
     }
     
     /**
@@ -176,7 +179,7 @@ class WorkflowFactory {
      *
      * @return Workflow the worflow object, or null if there is no workflow
      */
-    public function getWorkflowField($tracker_id) {
+    public function getWorkflowByTrackerId($tracker_id) {
         if (!isset($this->cache_workflowfield[$tracker_id])) {
             $this->cache_workflowfield[$tracker_id] = array(null);
             // only one field per workflow
@@ -188,30 +191,49 @@ class WorkflowFactory {
     }
     
     /**
-    *Get the transition_id 
-    * @param int the id of the field_value_from
-    * @param int the id of the field_value_to
-    *
-    * @return int the transition_id
-    */
-    public function getTransitionIdFromTo($workflow_id, $field_value_from, $field_value_to) {
-        return $this->getTransitionDao()->getTransitionId($workflow_id, $field_value_from, $field_value_to);
+     * Say if a field is used in its tracker workflow or post actions
+     *
+     * @param Tracker_FormElement_Field $field The field
+     *
+     * @return bool
+     */
+    public function isFieldUsedInWorkflow(Tracker_FormElement_Field $field) {
+        return $this->isWorkflowField($field) || $this->getTransitionFactory()->isFieldUsedInTransitions($field);
     }
     
-     /**
-     * Get the transitions of the workflow
-     * 
-     * @param Workflow $workflow The workflow
+    /**
+     * Say if a field is used to define a workflow
      *
-     * @return Array of Transition
+     * @param Tracker_FormElement_Field $field The field
+     *
+     * @return bool
      */
-    public function getTransitions(Workflow $workflow){
-        $tf          = TransitionFactory::instance();
-        $transitions = array();
-        foreach($this->getTransitionDao()->searchByWorkflow($workflow->getId()) as $row) {
-            $transitions[] = $tf->getInstanceFromRow($row, $workflow);
+    public function isWorkflowField(Tracker_FormElement_Field $field) {
+        $workflow = $this->getWorkflowByTrackerId($field->getTracker()->getId());
+        if ($workflow) {
+            return $field->getId() == $workflow->getFieldId();
         }
-        return $transitions;
+        return false;
+    }
+    
+    /**
+     *Get the transition_id 
+     * @param int the id of the field_value_from
+     * @param int the id of the field_value_to
+     *
+     * @return int the transition_id
+     */
+    public function getTransitionIdFromTo($workflow_id, $field_value_from, $field_value_to) {
+        return $this->getTransitionDao()->getTransitionId($workflow_id, $field_value_from, $field_value_to);
+    }    
+    
+    /**
+     * Wrapper for TransitionFactory
+     *
+     * @return TransitionFactory
+     */
+    protected function getTransitionFactory() {
+        return TransitionFactory::instance();
     }
     
     /**
@@ -243,34 +265,29 @@ class WorkflowFactory {
      * 
      * @return Workflow The workflow object, or null if error
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {        
+    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
         
         $xml_field_id = $xml->field_id;
         $xml_field_attributes = $xml_field_id->attributes();        
         $field_id = $xmlMapping[(string)$xml_field_attributes['REF']];
-        
+
         $transitions = array();
         foreach($xml->transitions->transition as $t) {
-                
-                $xml_from_attributes = $t->from_id->attributes();
-                if ((string)$t->from_id['REF'] == 'null') {
-                    $from_id = null;
-                } else {
-                    $from_id = $xmlMapping[(string)$t->from_id['REF']];
-                }
-                $transitions[] = array('from_id'=>$from_id, 'to_id'=>$xmlMapping[(string)$t->to_id['REF']]);
+            $tf = $this->getTransitionFactory();
+            $transitions[] = $tf->getInstanceFromXML($t, &$xmlMapping);
         }
-        return new Workflow(0, $tracker, $field_id, $xml->is_used, $transitions); 
+        
+        return new Workflow(0, $tracker, $field_id, $xml->is_used, $transitions);
     }
     
-     /**
-     * Creates new workflow in the database
-     * 
-     * @param Workflow $workflow The workflow to save
-     * @param Tracker          $tracker  The tracker
-     * 
-     * @return void
-     */
+   /**
+    * Creates new workflow in the database
+    * 
+    * @param Workflow $workflow The workflow to save
+    * @param Tracker          $tracker  The tracker
+    * 
+    * @return void
+    */
     public function saveObject($workflow, $tracker) {
         $workflow->setTracker($tracker);
         $dao = $this->getDao();
@@ -278,35 +295,11 @@ class WorkflowFactory {
         
         $workflow_id = $dao->save($workflow->tracker_id->id, $workflow->field_id->id, $workflow->is_used);
         
-        foreach($workflow->transitions as $transition) {
-            if($transition['from_id']==null) {
-                $from_id=null;
-            }else {
-                $from_id = $transition['from_id']->getId();
-            }
-            $to_id = $transition['to_id']->getId();
-            
-            $daot->addTransition($workflow_id, $from_id, $to_id);
+        //Save transitions        
+        foreach($workflow->getTransitions() as $transition) {
+            $tf = $this->getTransitionFactory();
+            $tf->saveObject($workflow_id, $transition);
         }
-    }
-    
-     /**
-     * Adds permissions in the database
-     * 
-     * @param Array $ugroups the list of ugroups
-     * @param Transition          $transition  The transition
-     * 
-     * @return boolean
-     */
-    public function addPermissions($ugroups, $transition) {
-        $pm = PermissionsManager::instance();
-        $permission_type = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
-        foreach ($ugroups as $ugroup) {
-            if(!$pm->addPermission($permission_type, (int)$transition, $ugroup)) {
-                return false;
-            }
-        }
-        return true;
     }
      
     /**

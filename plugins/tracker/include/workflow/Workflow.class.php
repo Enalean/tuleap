@@ -127,7 +127,7 @@ class Workflow {
      */
     public function getTransitions() {
         if ($this->transitions === null) {
-            $this->transitions = WorkflowFactory::instance()->getTransitions($this);
+            $this->transitions = TransitionFactory::instance()->getTransitions($this);
         }
         return $this->transitions;
     }
@@ -217,19 +217,21 @@ class Workflow {
         $this->tracker_id = $tracker;
     }
     
+    /**
+     * Export workflow to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the workflow is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
     public function exportToXml(&$root, $xmlMapping) {
            $root->addChild('field_id')->addAttribute('REF', array_search($this->field_id, $xmlMapping));
            $root->addChild('is_used', $this->is_used);
            $child = $root->addChild('transitions');
            $transitions = $this->getTransitions($this->workflow_id);
            foreach ($transitions as $transition) {
-               $grand_child = $child->addChild('transition'); 
-               if ($transition->getFieldValueFrom() == null) {
-                   $grand_child->addChild('from_id')->addAttribute('REF', 'null');
-               }else {
-                   $grand_child->addChild('from_id')->addAttribute('REF', array_search($transition->getFieldValueFrom()->getId(), $xmlMapping['values']));
-               }
-               $grand_child->addChild('to_id')->addAttribute('REF', array_search($transition->getFieldValueTo()->getId(), $xmlMapping['values']));
+               $transition->exportToXml($child, $xmlMapping);
            }
     }
     
@@ -258,6 +260,23 @@ class Workflow {
                 $transition->before($fields_data, $current_user);
             }
         }
+    }
+    
+   /**
+    * Indicates if permissions on a field can be bypassed
+    *
+    * @param Tracker_FormElement_Field $field
+    *
+    * @return boolean true if the permissions on the field can be bypassed, false otherwise
+    */
+    public function bypassPermissions($field) {
+        $transitions = $this->getTransitions();
+        foreach ($transitions as $transition) {
+            if ($transition->bypassPermissions($field)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 ?>

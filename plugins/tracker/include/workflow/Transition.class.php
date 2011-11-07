@@ -40,6 +40,11 @@ class Transition {
     protected $post_actions = array();
     
     /**
+     * @var Array of permissions
+     */
+    protected $cache_permissions = array();
+    
+    /**
      * @var Workflow
      */
     protected $workflow = null;
@@ -111,8 +116,24 @@ class Transition {
                 && $source_from->getId() === $target_from->getId() && $source_to->getId() === $target_to->getId();
     }
     
+    /**
+     * Get the transition id     
+     * 
+     * @return int
+     */
     public function getTransitionId() {
         return $this->transition_id;
+    }
+    
+    /**
+     * Set the transition id
+     * 
+     * @param int $id the transition id
+     * 
+     * @return int
+     */
+    public function setTransitionId($id) {
+        $this->transition_id = $id;
     }
     
     /**
@@ -202,6 +223,92 @@ class Transition {
             $html .= '<p><i>'. $GLOBALS['Language']->getText('workflow_admin', 'no_postaction') .'</i></p>';
         }
         return $html;
+    }
+    
+    /**
+     * Set the permissions for the ugroup_id
+     * Use during the two-step xml import
+     *
+     * @param Array    $ugroup_ids An array of ugroup id
+     *
+     * @return void
+     */
+    public function setPermissions($ugroup_ids) {
+        $this->cache_permissions = $ugroup_ids;
+    }
+    
+    /**
+     * Get the permissions for this transition
+     *
+     * @return array
+     */
+    public function getPermissions() {
+        return $this->cache_permissions;
+    }
+    
+    /**
+     * Export transition to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the transition is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
+    public function exportToXml(&$root, $xmlMapping) {
+        $child = $root->addChild('transition');
+        if ($this->getFieldValueFrom() == null) {
+            $child->addChild('from_id')->addAttribute('REF', 'null');
+        }else {
+            $child->addChild('from_id')->addAttribute('REF', array_search($this->getFieldValueFrom()->getId(), $xmlMapping['values']));
+        }
+        $child->addChild('to_id')->addAttribute('REF', array_search($this->getFieldValueTo()->getId(), $xmlMapping['values']));
+        
+        $postactions = $this->getPostActions();
+        if ($postactions) {
+            $grand_child = $child->addChild('postactions');
+            foreach ($postactions as $postaction) {
+                $postaction->exportToXML($grand_child, $xmlMapping);
+            }
+        }
+        
+        $pm = $this->getPermissionsManager();
+        $transition_ugroups = $pm->getAuthorizedUgroups($this->getTransitionId(), 'PLUGIN_TRACKER_WORKFLOW_TRANSITION');
+        
+        if ($transition_ugroups) {
+            $grand_child = $child->addChild('permissions');
+            
+            foreach ($transition_ugroups as $transition_ugroup) {
+                if (($ugroup = array_search($transition_ugroup['ugroup_id'], $GLOBALS['UGROUPS'])) !== false && $transition_ugroup['ugroup_id'] < 100) {
+                    $grand_child->addChild('permission')->addAttribute('ugroup', $ugroup);
+                }
+            }
+        }
+    }
+    
+   /**
+    * Wrapper for PermissionsManager
+    *
+    * @return PermissionsManager
+    */
+    public function getPermissionsManager() {
+        return PermissionsManager::instance();
+    }
+    
+   /**
+    * Indicates if permissions on a field can be bypassed
+    *
+    * @param Tracker_FormElement_Field $field
+    *
+    * @return boolean true if the permissions on the field can be by passed, false otherwise
+    */
+    public function bypassPermissions($field) {
+        $postactions = $this->getPostActions();
+        foreach ($postactions as $postaction) {
+            if ($postaction->bypassPermissions($field)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 ?>

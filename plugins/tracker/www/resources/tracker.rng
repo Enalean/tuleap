@@ -400,6 +400,33 @@
         <data type="string"/>
       </attribute>
     </element>
+    <zeroOrMore>
+      <element name="postactions">
+        <zeroOrMore>
+          <element name="postaction_field_date">
+            <attribute name="valuetype">
+              <data type="int"/>
+            </attribute>
+            <element name="field_id">
+              <attribute name="REF">
+                <data type="IDREF"/>
+              </attribute>
+            </element>
+          </element>
+        </zeroOrMore>
+      </element>
+    </zeroOrMore>
+    <zeroOrMore>
+      <element name="permissions">
+        <zeroOrMore>
+          <element name="permission">
+            <attribute name="ugroup">
+              <data type="string"/>
+            </attribute>
+          </element>
+        </zeroOrMore>
+      </element>
+    </zeroOrMore>
   </define>
   <define name="semanticContent">
     <choice>

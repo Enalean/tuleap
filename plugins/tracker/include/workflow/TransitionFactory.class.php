@@ -23,7 +23,7 @@ require_once('Transition.class.php');
 require_once('Workflow_Dao.class.php');
 require_once('Workflow_TransitionDao.class.php');
 require_once('common/permission/PermissionsManager.class.php');
-
+require_once('PostAction/Transition_PostActionFactory.class.php');
 
 class TransitionFactory {
     
@@ -125,6 +125,17 @@ class TransitionFactory {
     }
     
     /**
+     * Say if a field is used in its tracker workflow transitions
+     *
+     * @param Tracker_FormElement_Field $field The field
+     *
+     * @return bool
+     */
+    public function isFieldUsedInTransitions(Tracker_FormElement_Field $field) {
+        return $this->getPostActionFactory()->isFieldUsedInPostActions($field);
+    }
+    
+    /**
      * Get the Workflow Transition dao
      *
      * @return Worflow_TransitionDao
@@ -132,5 +143,132 @@ class TransitionFactory {
     protected function getDao() {
         return new Workflow_TransitionDao();
     }
+    
+    /**
+     * Creates a transition Object
+     * 
+     * @param SimpleXMLElement $xml         containing the structure of the imported workflow
+     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
+     * 
+     * @return Transition The transition object, or null if error
+     */
+    public function getInstanceFromXML($xml, &$xmlMapping) {
+        
+        $from = null;
+        if ((string)$xml->from_id['REF'] != 'null') {
+            $from = $xmlMapping[(string)$xml->from_id['REF']];
+        }
+        $to = $xmlMapping[(string)$xml->to_id['REF']];
+        
+        $transition = new Transition(0, 0, $from, $to);
+        $postactions = array();
+        $tpaf = new Transition_PostActionFactory();
+        foreach ($xml->postactions->postaction_field_date as $p) {            
+            $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
+        }
+        $transition->setPostActions($postactions);
+        
+        //Permissions on transition
+        $permissions = array();
+        foreach ($xml->permissions->permission as $perm) {
+            $ugroup = (string) $perm['ugroup'];
+            if (isset($GLOBALS['UGROUPS'][$ugroup])) {
+                $permissions[] = $GLOBALS['UGROUPS'][$ugroup];
+            }
+            $transition->setPermissions($permissions);
+        }
+        
+        return $transition;
+    }
+    
+    /**
+     * Delete a workflow
+     *
+     * @param Workflow $workflow
+     * 
+     * @return boolean
+     */
+    public function deleteWorkflow($workflow) {
+        $transitions = $this->getTransitions($workflow);
+        $workflow_id = $workflow->getId();
+        
+        //Delete permissions
+        foreach($transitions as $transition) {
+            permission_clear_all($workflow->getTracker()->getGroupId(), 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), false);
+        }
+        
+        //Delete postactions
+        if ($this->getPostActionFactory()->deleteWorkflow($workflow_id)) {
+            return $this->getDao()->deleteWorkflowTransitions($workflow_id);
+        }
+    }
+    
+    /**
+     * Get the transitions of the workflow
+     * 
+     * @param Workflow $workflow The workflow
+     *
+     * @return Array of Transition
+     */
+    public function getTransitions(Workflow $workflow){
+        $transitions = array();
+        foreach($this->getDao()->searchByWorkflow($workflow->getId()) as $row) {
+            $transitions[] = $this->getInstanceFromRow($row, $workflow);
+        }
+        return $transitions;
+    }
+    
+   /**
+    * Creates transition in the database
+    * 
+    * @param int $workflow_id The workflow_id of the transitions to save
+    * @param Transition          $transition The transition
+    * 
+    * @return void
+    */
+    public function saveObject($workflow_id, $transition) {
+        
+        $dao = $this->getDao();
+        
+        if($transition->getFieldValueFrom() == null) {
+            $from_id=null;
+        } else {
+            $from_id = $transition->getFieldValueFrom()->getId();
+        }
+        $to_id = $transition->getFieldValueTo()->getId();
+        $transition_id = $dao->addTransition($workflow_id, $from_id, $to_id);
+        $transition->setTransitionId($transition_id);
+        
+        //Save postactions
+        $postactions = $transition->getPostActions();
+        foreach ($postactions as $postaction) {
+            $tpaf = new Transition_PostActionFactory();
+            $tpaf->saveObject($postaction);
+        }
+        
+        //Save permissions
+        $permissions = $transition->getPermissions();
+        $this->addPermissions($permissions, $transition->getTransitionId());
+    }
+    
+   /**
+    * Adds permissions in the database
+    * 
+    * @param Array $ugroups the list of ugroups
+    * @param Transition          $transition  The transition
+    * 
+    * @return boolean
+    */
+    public function addPermissions($ugroups, $transition) {
+        $pm = PermissionsManager::instance();
+        $permission_type = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
+        foreach ($ugroups as $ugroup) {
+            if(!$pm->addPermission($permission_type, (int)$transition, $ugroup)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
 }
 ?>

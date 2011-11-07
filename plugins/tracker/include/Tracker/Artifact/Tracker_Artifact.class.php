@@ -641,6 +641,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function createInitialChangeset($fields_data, $submitter, $email) {
         $changeset_id = null;
+        $is_submission = true;
+        
         if ( ! $submitter->isAnonymous() || $email != null) {
             if ($this->validateFields($fields_data, true)) {
                 
@@ -655,12 +657,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                     //Store the value(s) of the fields
                     $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
-                    foreach ($used_fields as $field) {
+                    foreach ($used_fields as $field) {                        
                         if (isset($fields_data[$field->getId()]) && $field->userCanSubmit()) {
-                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], true);
-                        } else if (!isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $field->isRequired()) {                           
+                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $is_submission);
+                        } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $workflow->bypassPermissions($field)) {
+                            $bypass_perms  = true;
+                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $is_submission, $bypass_perms);
+                        } else if (!isset($fields_data[$field->getId()]) && !$field->userCanSubmit() && $field->isRequired()) {
                             $fields_data[$field->getId()] = $field->getDefaultValue();
-                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], true);
+                            $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $is_submission);
                         }
                     }
                     //Save the artifact
@@ -736,6 +741,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true) {
         $is_valid = true;
+        $is_submission = false;
+        
         if ( ! $submitter->isAnonymous() || $email != null) {
             if ($this->validateFields($fields_data, false)) {
                 $comment = trim($comment);
@@ -758,9 +765,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
                         foreach ($used_fields as $field) {
                             if (isset($fields_data[$field->getId()]) && $field->userCanUpdate()) {
-                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], false);
+                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $is_submission);
+                            } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanUpdate() && $workflow->bypassPermissions($field)) {
+                                $bypass_perms  = true;
+                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $is_submission, $bypass_perms);
                             } else {
-                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, null, false);
+                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, null, $is_submission);
                             }
                         }
                         
@@ -1022,7 +1032,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Workflow
      */
     public function getWorkflow() {
-        $workflow = WorkflowFactory::instance()->getWorkflowField($this->getTrackerId());
+        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->getTrackerId());
         if ($workflow) {
             $workflow->setArtifact($this);
         }

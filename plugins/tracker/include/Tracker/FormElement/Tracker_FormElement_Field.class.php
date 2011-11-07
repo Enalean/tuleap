@@ -686,12 +686,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
      */
     public function isUsedInWorkflow() {
         $wf = WorkflowFactory::instance();
-        $workflow_field = $wf->getWorkflowField($this->getTrackerId());
-        if ($workflow_field) {
-            return $this->getId() == $workflow_field->getFieldId();
-        } else {
-            return false;
-        }
+        return $wf->isFieldUsedInWorkflow($this);
     }
     
     /**
@@ -814,17 +809,21 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
      *
      * @return bool true if success
      */
-    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, $is_submission = null) {
+    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, $is_submission = false, $bypass_permissions = false) {
         $updated        = false;
         $save_new_value = false;
         $dao            = new Tracker_Artifact_Changeset_ValueDao();
         
-        $hasPermission = $this->userCanUpdate();
-       
-        //If a field is not submitable, but has a required default value, the value has to  be submitted ...
-        if ($is_submission) {
-            $hasPermission = $this->userCanSubmit() || (!$this->userCanSubmit() && $this->isrequired() && $this->getDefaultValue()!= null);
+        if ($bypass_permissions) {
+            $hasPermission = true;
+        } else {
+            $hasPermission = $this->userCanUpdate();
+            //If a field is not submitable, but has a required default value, the value has to  be submitted ...
+            if ($is_submission) {
+                $hasPermission = $this->userCanSubmit() || (!$this->userCanSubmit() && $this->isrequired() && $this->getDefaultValue()!= null);
+            }
         }
+        
         //Look for the previous value, if any
         $previous_changesetvalue = null;
         if ($old_changeset) {

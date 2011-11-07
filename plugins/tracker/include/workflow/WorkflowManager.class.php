@@ -50,23 +50,20 @@ class WorkflowManager {
                 }
             }
         } else if ($request->get('edit_transition')) {
-            $workflow   = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+            $workflow   = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
             $transition = TransitionFactory::instance()->getTransition($request->get('edit_transition'));
             $this->displayTransitionDetails($engine, $request, $current_user, $transition);
         } else if ($request->get('delete')) {
-            
-            if (WorkflowFactory::instance()->delete($request->get('delete'))) {
-                if(WorkflowFactory::instance()->deleteWorkflowTransitions($request->get('delete'))) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','deleted'));
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
-                                                    'tracker' => (int)$this->tracker->id,
-                                                    'func'    => 'admin-workflow')));
-                }
-            }            
+             if (WorkflowFactory::instance()->deleteWorkflow($request->get('delete'))) {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','deleted'));
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
+                                                'tracker' => (int)$this->tracker->id,
+                                                'func'    => 'admin-workflow')));
+             }
         } else if ($request->get('create_matrix')) {
             
             $k=0;
-            $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+            $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
             
             $field=Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
             $field_values = $field->getBind()->getAllValues();
@@ -87,7 +84,7 @@ class WorkflowManager {
            //Add a transition
             foreach($field_values as $field_value_id_from=>$field_value_from) {
                foreach($field_values as $field_value_id_to=>$field_value_to) {
-                   $transition = $field_value_id_from.'_'.$field_value_id_to;                  
+                   $transition = $field_value_id_from.'_'.$field_value_id_to;
                    if ($request->existAndNonEmpty($transition)) {
                        $currMatrix[]=array($field_value_id_from, $field_value_id_to);
                        $k+=$this->addTransition($workflow, $transition, $field_value_from, $field_value_to);
@@ -127,7 +124,7 @@ class WorkflowManager {
             
         } else if ($request->get('enable_workflow')) {
 
-            $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+            $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
             $is_used = $request->get('is_used');
             //TODO : use $request
             if (/*$request->existAndNonEmpty($is_used)*/$is_used=='on') {
@@ -150,7 +147,7 @@ class WorkflowManager {
             // Permissions
             $ugroups = $request->get('ugroups');
             permission_clear_all($this->tracker->group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition, false); 
-            if (WorkflowFactory::instance()->addPermissions($ugroups, $transition)) {
+            if (TransitionFactory::instance()->addPermissions($ugroups, $transition)) {
                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','permissions_updated'));
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin','permissions_not_updated'));
@@ -174,7 +171,7 @@ class WorkflowManager {
     protected function addTransition($workflow, $transition, $field_value_from, $field_value_to) {
         $i=0;
         if ( ! $workflow->isTransitionExist($field_value_from, $field_value_to)) {                                                    
-            if (WorkflowFactory::instance()-> addTransition((int)$workflow->workflow_id, $transition)) {   
+            if (WorkflowFactory::instance()-> addTransition((int)$workflow->workflow_id, $transition)) {
                 $i++;
             }
          }
@@ -183,7 +180,7 @@ class WorkflowManager {
     
     protected function displayTransitionsMatrix($workflow, $engine, $request, $current_user) {
 
-        $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title_define_transitions').'</h3>';
         $field =Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
         if ($workflow->hasTransitions()) {
@@ -307,7 +304,7 @@ class WorkflowManager {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title').'</h3>';
-        $workflow = WorkflowFactory::instance()->getWorkflowField($this->tracker->id);
+        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
         
         if(count($workflow)) {
             $this->displayAdminWorkflow($engine, $request, $current_user, $workflow);
