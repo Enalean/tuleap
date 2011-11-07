@@ -150,7 +150,7 @@ class TransitionFactory {
      * @param SimpleXMLElement $xml         containing the structure of the imported workflow
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * 
-     * @return Workflow The workflow object, or null if error
+     * @return Transition The transition object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping) {
         
@@ -162,8 +162,8 @@ class TransitionFactory {
         
         $transition = new Transition(0, 0, $from, $to);
         $postactions = array();
-        foreach ($xml->postactions->postaction_field_date as $p) {
-            $tpaf = new Transition_PostActionFactory();
+        $tpaf = new Transition_PostActionFactory();
+        foreach ($xml->postactions->postaction_field_date as $p) {            
             $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
         }
         $transition->setPostActions($postactions);
