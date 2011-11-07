@@ -98,6 +98,9 @@ else
     lxc_start_wait $lxc_ip
 fi
 
+# Install needed rpms
+$remotecmd yum install -y --nogpgcheck zip
+
 # Upload tuleap src into /root
 rsync --archive $src_dir $build_host:/root
 $remotecmd chown root:root -R /root/$src_dir
