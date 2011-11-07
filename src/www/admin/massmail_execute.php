@@ -10,6 +10,7 @@ require_once('pre.php');
 
 require_once('common/mail/Mail.class.php');
 require_once('common/mail/Codendi_Mail.class.php');
+require_once('common/include/Tuleap_Template.class.php');
 
 
 session_require(array('group'=>1,'admin_flags'=>'A'));
@@ -69,19 +70,29 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         $mailMessage = $request->get('mail_message');
     }
 
+    $mailSubject = '';
+    $validSubject = new Valid_String('mail_subject');
+    if($request->valid($validSubject)) {
+        $mailSubject = $request->get('mail_subject');
+    }
+
     if ($bodyFormat) {
+        $hp = Codendi_HTMLPurifier::instance();
         $mail = new Codendi_Mail();
-        $mail->setBodyHtml($mailMessage);
+        $tpl = new Tuleap_Template($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
+        $tpl->set('txt_display_not_correct', $GLOBALS['Language']->getText('mail_html_template', 'display_not_correct'));
+        $tpl->set('txt_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'update_prefs'));
+        $tpl->set('txt_can_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'can_update_prefs'));
+        $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
+        $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
+        $tpl->set('title', $hp->purify($mailSubject, CODENDI_PURIFIER_CONVERT_HTML));
+        $tpl->set('body', $mailMessage);
+        $mail->setBodyHtml($tpl->fetch());
     } else {
         $mail = new Mail();
         $mail->setBody($mailMessage);
     }
     $mail->setFrom($GLOBALS['sys_noreply']);
-
-    $validSubject = new Valid_String('mail_subject');
-    if($request->valid($validSubject)) {
-        $mailSubject = $request->get('mail_subject');
-    }
     $mail->setSubject($mailSubject);
 
     if ($destination != 'preview') {
