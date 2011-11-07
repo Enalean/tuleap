@@ -1,4 +1,4 @@
-Version 0.7 - Tuleap 4.0.24
+Version 0.8 - Tuleap 4.0.24
   DISCLAIMER: plugin still in beta, do not use it on production servers.
   DISCLAIMER: Your data might be trashed in a future update.
   
@@ -7,6 +7,7 @@ Version 0.7 - Tuleap 4.0.24
   * Postactions bypass field permissions
   * A field cannot be deleted if a postaction is associated to it.
   * A "select box" field cannot be transformed into a multi one if workflow on it.
+  * no overlap between tracker v3 ids and tracker v5 ids.
   
 Version 0.6 - (Tuleap 4.0.23)
   DISCLAIMER: plugin still in beta, do not use it on production servers.

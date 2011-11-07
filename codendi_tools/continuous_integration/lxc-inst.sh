@@ -38,7 +38,7 @@ until [ -d "/usr/share/tuleap-install" ]; do
         echo "*** Error: cannot install Tuleap after 10 attempts";
         exit 1
     fi
-    yum install -y --disablerepo=epel tuleap-all
+    yum install -y --disablerepo=epel php-pecl-json tuleap-all
     maxretry=$(($maxretry-1))
 done
 

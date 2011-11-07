@@ -3411,6 +3411,19 @@ CREATE TABLE groups_notif_delegation_message (
   msg_to_requester text NOT NULL default "",
   PRIMARY KEY (group_id)
 );
+
+
+--
+-- Tables for id sharing
+--
+CREATE TABLE IF NOT EXISTS tracker_idsharing_artifact( 
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY 
+);
+CREATE TABLE IF NOT EXISTS tracker_idsharing_tracker( 
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY 
+);
+
+
 #
 # EOF
 #

@@ -1856,55 +1856,57 @@ class ArtifactType extends Error {
 	
 	
 	function copyArtifact($from_atid,$from_aid) {
-	  $aid = 0;
-	  $res = true;
-
-	   // copy common artifact fields
-	   $result = db_query("INSERT INTO artifact (group_artifact_id,status_id,submitted_by,open_date,close_date,summary,details,severity) ".
-	   "SELECT ". db_ei($this->getID()) .",status_id,submitted_by,".time().",close_date,summary,details,severity ".
-	   "FROM artifact ".
-	   "WHERE artifact_id='". db_ei($from_aid) ."' ".
-	   "AND group_artifact_id='". db_ei($from_atid) ."'");
-	   if ($result && db_affected_rows($result) > 0) {
-	     $aid=db_insertid($result);
-	   } else {
-	     $this->setError(db_error());
-	     return false;
-	   }
-	   
-	   
-	   // copy specific artifact fields
-	   $result = db_query("INSERT INTO artifact_field_value (field_id,artifact_id,valueInt,valueText,valueFloat,valueDate) ".
-	   "SELECT field_id,". db_ei($aid) .",valueInt,valueText,valueFloat,valueDate ".
-	   "FROM artifact_field_value ".
-	   "WHERE artifact_id = '". db_ei($from_aid) ."'");
-	   if (!$result || db_affected_rows($result) <= 0) {
-	     $this->setError(db_error());
-	     $res = false;
-	   }
-
-	   //copy cc addresses
-	   $result = db_query("INSERT INTO artifact_cc (artifact_id,email,added_by,comment,date) ".
-           "SELECT ". db_ei($aid) .",email,added_by,comment,date ".
-           "FROM artifact_cc ".
-           "WHERE artifact_id='". db_ei($from_aid) ."'");
-	   if (!$result || db_affected_rows($result) <= 0) {
-	     $this->setError(db_error());
-	     $res = false;
-	   }
-
-	   //copy artifact files
-	   db_query("INSERT INTO artifact_file (artifact_id,description,bin_data,filename,filesize,filetype,adddate,submitted_by) ".
-	   "SELECT ".$aid.",description,bin_data,filename,filesize,filetype,adddate,submitted_by ".
-	   "FROM artifact_file ".
-	   "WHERE artifact_id='". db_ei($from_aid) ."'");
-	   if (!$result || db_affected_rows($result) <= 0) {
-	     $this->setError(db_error());
-	     $res = false;
-	   }
-
-	   return $res;
-	}
+	    $aid = 0;
+	    $res = true;
+	    
+	    // copy common artifact fields
+        $id_sharing = new TrackerIdSharingDao();
+        if ($aid = $id_sharing->generateArtifactId()) {
+            $result = db_query("INSERT INTO artifact (artifact_id, group_artifact_id,status_id,submitted_by,open_date,close_date,summary,details,severity) ".
+                "SELECT $aid, ". db_ei($this->getID()) .",status_id,submitted_by,".time().",close_date,summary,details,severity ".
+                "FROM artifact ".
+                "WHERE artifact_id='". db_ei($from_aid) ."' ".
+                "AND group_artifact_id='". db_ei($from_atid) ."'");
+            if (!$result || db_affected_rows($result) == 0) {
+                $this->setError(db_error());
+                return false;
+            }
+            
+            
+            // copy specific artifact fields
+            $result = db_query("INSERT INTO artifact_field_value (field_id,artifact_id,valueInt,valueText,valueFloat,valueDate) ".
+                "SELECT field_id,". db_ei($aid) .",valueInt,valueText,valueFloat,valueDate ".
+                "FROM artifact_field_value ".
+                "WHERE artifact_id = '". db_ei($from_aid) ."'");
+            if (!$result || db_affected_rows($result) <= 0) {
+                $this->setError(db_error());
+                $res = false;
+            }
+            
+            //copy cc addresses
+            $result = db_query("INSERT INTO artifact_cc (artifact_id,email,added_by,comment,date) ".
+                "SELECT ". db_ei($aid) .",email,added_by,comment,date ".
+                "FROM artifact_cc ".
+                "WHERE artifact_id='". db_ei($from_aid) ."'");
+            if (!$result || db_affected_rows($result) <= 0) {
+                $this->setError(db_error());
+                $res = false;
+            }
+            
+            //copy artifact files
+            db_query("INSERT INTO artifact_file (artifact_id,description,bin_data,filename,filesize,filetype,adddate,submitted_by) ".
+                "SELECT ".$aid.",description,bin_data,filename,filesize,filetype,adddate,submitted_by ".
+                "FROM artifact_file ".
+                "WHERE artifact_id='". db_ei($from_aid) ."'");
+            if (!$result || db_affected_rows($result) <= 0) {
+                $this->setError(db_error());
+                $res = false;
+            }
+            
+            return $res;
+        }
+        return false;
+    }
     
     function getReferenceDao() {
         return new ReferenceDao(CodendiDataAccess::instance());

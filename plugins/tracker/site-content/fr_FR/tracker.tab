@@ -1057,6 +1057,8 @@ plugin_tracker_widget_my	no_artifacts	No artifacts founds.
 
 plugin_tracker_admin	access_denied	Accès refusé. Vous n'avez pas les droits suffisants pour effectuer cette action.
 
+plugin_tracker_admin	error_during_creation	Oops. Quelque chose de bizarre c'est produit. Impossible de créer l'outil de suivi. Essayer à nouveau.
+
 plugin_tracker_admin	semantic	Sémantique
 plugin_tracker_admin	manage_semantic	Gérer la sémantique
 plugin_tracker_admin	manage_semantic_desc	Définir la sémantique des champs (titre, état, contributeur, tooltip)

@@ -244,10 +244,14 @@ class Tracker_ArtifactDao extends DataAccessObject {
         $use_artifact_permissions = $this->da->escapeInt($use_artifact_permissions);
         $submitted_on             = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
         $submitted_by             = $this->da->escapeInt($submitted_by);
-        $sql = "INSERT INTO $this->table_name 
-                (tracker_id, submitted_by, submitted_on, use_artifact_permissions)
-                VALUES ($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
-        return $this->updateAndGetLastId($sql);
+        $id_sharing = new TrackerIdSharingDao();
+        if ($id = $id_sharing->generateArtifactId()) {
+            $sql = "INSERT INTO $this->table_name 
+                    (id, tracker_id, submitted_by, submitted_on, use_artifact_permissions)
+                    VALUES ($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)";
+            return $this->updateAndGetLastId($sql);
+        }
+        return false;
     }
     
     function save($id, $tracker_id, $use_artifact_permissions) {
