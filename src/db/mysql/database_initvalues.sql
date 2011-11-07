@@ -2763,13 +2763,13 @@ INSERT INTO system_events_followers (emails, types) VALUES ('admin', 'WARNING,ER
 --
 -- Tables for id sharing
 --
-SELECT @last_insert_artifact := MAX(artifact_id) + 1 FROM artifact;
+SELECT @last_insert_artifact := IFNULL(MAX(artifact_id), 0) + 1 FROM artifact;
 SET @s = CONCAT("ALTER TABLE tracker_idsharing_artifact AUTO_INCREMENT =  ", @last_insert_artifact);
 PREPARE stmt FROM @s;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
-SELECT @last_insert_tracker := MAX(group_artifact_id) + 1 FROM artifact_group_list;
+SELECT @last_insert_tracker := IFNULL(MAX(group_artifact_id), 0) + 1 FROM artifact_group_list;
 SET @s = CONCAT("ALTER TABLE tracker_idsharing_tracker AUTO_INCREMENT = ", @last_insert_tracker);
 PREPARE stmt FROM @s;
 EXECUTE stmt;

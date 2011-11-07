@@ -34,7 +34,7 @@ EOT;
         $aid = 0;
         $tid = 0;
         
-        $sql = "SELECT MAX(artifact_id) AS last_artifact_id FROM artifact";
+        $sql = "SELECT IFNULL(MAX(artifact_id), 0) AS last_artifact_id FROM artifact";
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while fetching the last artifact(v3) id: '.implode(', ', $this->db->dbh->errorInfo()));
@@ -44,7 +44,7 @@ EOT;
         $res->closeCursor();
         unset($res);
         
-        $sql = "SELECT MAX(group_artifact_id) AS last_tracker_id FROM artifact_group_list";
+        $sql = "SELECT IFNULL(MAX(group_artifact_id), 0) AS last_tracker_id FROM artifact_group_list";
         $res = $this->db->dbh->query($sql);
         if ($res === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while fetching the last tracker(v3) id: '.implode(', ', $this->db->dbh->errorInfo()));
@@ -56,7 +56,7 @@ EOT;
         
         // Is plugin tracker installed?
         if ($this->db->tableNameExists('tracker_artifact')) {
-            $sql = "SELECT MAX(id) AS last_artifact_id FROM tracker_artifact";
+            $sql = "SELECT IFNULL(MAX(id), 0) AS last_artifact_id FROM tracker_artifact";
             $res = $this->db->dbh->query($sql);
             if ($res === false) {
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while fetching the last artifact(v5) id: '.implode(', ', $this->db->dbh->errorInfo()));
@@ -66,7 +66,7 @@ EOT;
             $res->closeCursor();
             unset($res);
             
-            $sql = "SELECT MAX(id) AS last_tracker_id FROM tracker";
+            $sql = "SELECT IFNULL(MAX(id), 0) AS last_tracker_id FROM tracker";
             $res = $this->db->dbh->query($sql);
             if ($res === false) {
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while fetching the last tracker(v5) id: '.implode(', ', $this->db->dbh->errorInfo()));
