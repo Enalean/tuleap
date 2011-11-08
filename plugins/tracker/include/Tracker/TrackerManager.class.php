@@ -251,6 +251,8 @@ class TrackerManager { /* extends Engine? */
         $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar);
         
         $hp = Codendi_HTMLPurifier::instance();
+        echo '<style>.highlight_list_element { background-color: yellow; }</style>';
+        echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerTemplateSelector.js"></script>';
         echo '<script type="text/javascript">
               function onChangeGroup() {
                 document.form_create.func.value = "create";
@@ -320,7 +322,7 @@ class TrackerManager { /* extends Engine? */
               </script>
              ';
         echo $Language->getText('plugin_tracker_include_type','create_tracker');
-        echo '<form name="form_create" method="post" enctype="multipart/form-data">
+        echo '<form name="form_create" method="post" enctype="multipart/form-data" id="tracker_create_new">
           <input type="hidden" name="group_id" value="'.(int)$project->group_id.'">
           <input type="hidden" name="func" value="docreate">
           <input type="hidden" name="atid_chosen" value="">
@@ -352,28 +354,34 @@ class TrackerManager { /* extends Engine? */
         echo '<p>'.$Language->getText('plugin_tracker_include_type','choose_creation').'</p>';
         echo '<table>';
         
+        // Select from predefined templates
         echo ' <tr valign="top">
                  <td width="300"><b>'.$Language->getText('plugin_tracker_include_type','from_tmpl').'</b></td>
                  <td colspan="2">';
         echo $this->trackersSelectBox(100, "default_template", $default_template);
-        echo ' &nbsp;<input type="button" name="CreateCodendiTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodendiTemplate()"><br><br></td></tr>';
-        /*echo ' <tr valign="top">
-                 <td width="300"><li>'.$Language->getText('plugin_tracker_include_type','from_exist').'</li></td>
-                 <td>
-                    <table>
-                      <tr>
-                        <td>'.$Language->getText('plugin_tracker_include_type','proj_id').'</td>
-                        <td><input name="group_id_template" value="'. $hp->purify($group_id_template, CODENDI_PURIFIER_CONVERT_HTML) .'"><a href="javascript:showGroupSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
-                      </tr>
-                      <tr>
-                        <td>'.$Language->getText('plugin_tracker_include_type','tracker_id').'</td>
-                        <td><input name="atid_template" value="'. $hp->purify($atid_template, CODENDI_PURIFIER_CONVERT_HTML) .'"><a href="javascript:showTrackerSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
-                      <tr>
-                    </table>
-                 </td>
+        echo ' &nbsp;<input type="button" name="CreateCodendiTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodendiTemplate()"></td></tr>';
+        
+        // Select from existing tracker
+        $gf = new GroupFactory();
+        echo ' <tr valign="top">
+                 <td width="300">'.$Language->getText('plugin_tracker_include_type','from_exist').'</td>
+                 <td clospan="2">
+                     <noscript>Project Id: <input type="text" name="group_id_template" value=""><br/>Tracker Id: <input type="text" name="atid_template" value=""></noscript>';
+        echo '<ul style="border: 1px solid grey; width: 20em; float: left;">';
+        $results = $gf->getMemberGroups();
+        while ($row = db_fetch_array($results)) {
+            echo '<li class="tracker_selected_project" rel="'.$hp->purify($row['group_id']).'">'.$hp->purify($row['group_name']).'</li>';
+        }
+        echo '</ul>';
+
+        echo '<ul style="border: 1px solid grey; width: 20em; float: right;" id="tracker_list_trackers_from_project">';
+        echo '<li>select a project first</li>';
+        echo '</ul>';
+        echo '   </td>
                  <td><input type="button" name="CreateTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateTemplate()"></td>
                </tr>';
-        */
+        
+        // Import XML
         echo ' <tr>
                 <td width="300">'.$Language->getText('plugin_tracker_include_type','from_xml', TRACKER_BASE_URL.'/resources/templates/').'</td>
                 <td>

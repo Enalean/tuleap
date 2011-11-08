@@ -40,6 +40,8 @@ class TrackerFactory {
 
     /**
      * The singleton method
+     * 
+     * @return TrackerFactory
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
@@ -68,7 +70,8 @@ class TrackerFactory {
 
     /**
      * @param int $id the id of the tracker to retrieve
-     * @return array of Trackers that belong to group_id
+     * 
+     * @return Array of Tracker
      */
     public function getTrackersByGroupId($group_id) {
         $trackers = array();
