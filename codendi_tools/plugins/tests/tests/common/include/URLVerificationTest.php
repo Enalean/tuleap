@@ -67,6 +67,8 @@ class MockEM4Anonymous extends MockEventManager {
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
+Mock::generate('URL');
+
 class URLVerificationTest extends UnitTestCase {
 
     function setUp() {
@@ -581,7 +583,73 @@ class URLVerificationTest extends UnitTestCase {
         $urlVerification->expectOnce('getProjectManager');
         $urlVerification->expectNever('exitError');
     }
+    
+    function testUserCanAccessPrivateShouldLetUserPassWhenNotInAProject() {
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'getCurrentUser'));
+        $GLOBALS['group_id'] = -1;
+        $project = new MockProject();
+        $project->setReturnValue('isError', true);
+        $projectManager = new MockProjectManager();
+        $projectManager->setReturnValue('getProject', $project);
+        $urlVerification->setReturnValue('getProjectManager', $projectManager);
+        
+        $this->assertTrue($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
+    }
+    
+    function testUserCanAccessPrivateShouldLetUserPassWhenProjectIsNotAnObject() {
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'getCurrentUser'));
+        $GLOBALS['group_id'] = -1;
+        $projectManager = new MockProjectManager();
+        $projectManager->setReturnValue('getProject', false);
+        $urlVerification->setReturnValue('getProjectManager', $projectManager);
+        
+        $this->assertTrue($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
+    }
 
+    function testUserCanAccessPrivateShouldLetUserPassWhenProjectIsPublic() {
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'getCurrentUser'));
+        $GLOBALS['group_id'] = 120;
+        $project = new MockProject();
+        $project->setReturnValue('isError', true);
+        $project->setReturnValue('isPublic', true);
+        $projectManager = new MockProjectManager();
+        $projectManager->setReturnValue('getProject', $project);
+        $urlVerification->setReturnValue('getProjectManager', $projectManager);
+        
+        $this->assertTrue($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
+    }
+    
+    function testUserCanAccessPrivateShouldLetUserPassWhenUserIsMemberOfPrivateProject() {
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'getCurrentUser'));
+        $GLOBALS['group_id'] = 120;
+        $project = new MockProject();
+        $project->setReturnValue('isError', false);
+        $project->setReturnValue('isPublic', false);
+        $projectManager = new MockProjectManager();
+        $projectManager->setReturnValue('getProject', $project, array(120));
+        $urlVerification->setReturnValue('getProjectManager', $projectManager);
+        $user = new MockUser();
+        $user->setReturnValue('isMember', true, array(120));
+        $urlVerification->setReturnValue('getCurrentUser', $user);
+        
+        $this->assertTrue($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
+    }
+    
+    function testUserCanAccessPrivateShouldBlockWhenUserIsNotMemberOfPrivateProject() {
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getProjectManager', 'getCurrentUser'));
+        $GLOBALS['group_id'] = 120;
+        $project = new MockProject();
+        $project->setReturnValue('isError', false);
+        $project->setReturnValue('isPublic', false);
+        $projectManager = new MockProjectManager();
+        $projectManager->setReturnValue('getProject', $project, array(120));
+        $urlVerification->setReturnValue('getProjectManager', $projectManager);
+        $user = new MockUser();
+        $user->setReturnValue('isMember', false);
+        $urlVerification->setReturnValue('getCurrentUser', $user);
+        
+        $this->assertFalse($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
+    }
 }
 
 ?>

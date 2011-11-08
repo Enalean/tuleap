@@ -492,7 +492,7 @@ class URLVerification {
         if ($group_id) {
             $project = $this->getProjectManager()->getProject($group_id);
             $user    = $this->getCurrentUser();
-            if(!$project->isPublic()) {
+            if($project && !$project->isError() && !$project->isPublic()) {
                 if (!$user->isMember($group_id)) {
                     return false;
                 }
