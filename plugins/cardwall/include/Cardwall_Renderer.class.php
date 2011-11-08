@@ -72,17 +72,26 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                    ) ON (A.last_changeset_id = CV.changeset_id)
                 WHERE A.id IN (". $matching_ids['id'] .")";
         $dao = new DataAccessObject();
-        $html .= '<div class="tracker_renderer_board"><ul>';
+        $html .= '<div class="tracker_renderer_board">';
+        
+        $html .= '<table width="100%" border="1" style="border-collapse: collapse;" bordercolor="#ccc" cellspacing="2" cellpadding="10">
+        <colgroup<<col width="33%"/><col width="33%"/><col width="33%"/></colgroup>
+        <tr valign="top"><td>';
+        
+        $html .= '<ul>';
         
         foreach ($dao->retrieve($sql) as $row) {
-            $html .= '<li>';
-            $html .= '<a href="/tracker/?aid='. $row['id'] .'">';
-            $html .= '<p class="tracker_renderer_board_title">bug #'. $row['id'] .'</p>';
+            $html .= '<li class="tracker_renderer_board_postit">';
+            $html .= '<p class="tracker_renderer_board_title"><a href="'. TRACKER_BASE_URL .'/?aid='. $row['id'] .'">#'. $row['id'] .'</a></p>';
             $html .= '<p class="tracker_renderer_board_content"> '. $row['title'] .'</p>';
-            $html .= '</a>';
             $html .= '</li>';
         }
         $html .= '</ul>';
+        
+        $html .= '</td>';
+        $html .= '<td><ul/></td>';
+        $html .= '<td><ul/></td>';
+        $html .= '</tr></table>';
         
         return $html;
     }

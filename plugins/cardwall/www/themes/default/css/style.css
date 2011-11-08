@@ -7,10 +7,10 @@
   list-style:none;
 }
 .tracker_renderer_board ul{
-  overflow:hidden;
   padding:3em;
 }
-.tracker_renderer_board ul li a{
+.tracker_renderer_board ul li {
+  overflow:hidden;
   text-decoration:none;
   color:#000;
   background:#ffc;
@@ -24,8 +24,6 @@
   -moz-transition:-moz-transform .15s linear;
   -o-transition:-o-transform .15s linear;
   -webkit-transition:-webkit-transform .15s linear;
-}
-.tracker_renderer_board ul li{
   margin:1em;
   float:left;
 }
@@ -38,12 +36,12 @@
   font-family:"Reenie Beanie",arial,sans-serif;
   font-size:180%;
 }
-.tracker_renderer_board ul li a{
+.tracker_renderer_board ul li {
   -webkit-transform: rotate(-6deg);
   -o-transform: rotate(-6deg);
   -moz-transform:rotate(-6deg);
 }
-.tracker_renderer_board ul li:nth-child(even) a{
+.tracker_renderer_board ul li:nth-child(even) {
   -o-transform:rotate(4deg);
   -webkit-transform:rotate(4deg);
   -moz-transform:rotate(4deg);
@@ -51,7 +49,7 @@
   top:5px;
 /*  background:#cfc; */
 }
-.tracker_renderer_board ul li:nth-child(3n) a{
+.tracker_renderer_board ul li:nth-child(3n) {
   -o-transform:rotate(-3deg);
   -webkit-transform:rotate(-3deg);
   -moz-transform:rotate(-3deg);
@@ -59,14 +57,15 @@
   top:-5px;
 /*  background:#ccf; */
 }
-.tracker_renderer_board ul li:nth-child(5n) a{
+.tracker_renderer_board ul li:nth-child(5n) {
   -o-transform:rotate(5deg);
   -webkit-transform:rotate(5deg);
   -moz-transform:rotate(5deg);
   position:relative;
   top:-10px;
 }
-.tracker_renderer_board ul li a:hover,ul li a:focus{
+/* magnifying-glass effect. Maybe too disturbing?
+.tracker_renderer_board ul li:hover, ul li:focus{
   box-shadow:10px 10px 7px rgba(0,0,0,.7);
   -moz-box-shadow:10px 10px 7px rgba(0,0,0,.7);
   -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
@@ -76,3 +75,4 @@
   position:relative;
   z-index:5;
 }
+*/

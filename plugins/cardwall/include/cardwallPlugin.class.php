@@ -30,7 +30,8 @@ class cardwallPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         if (defined('TRACKER_BASE_URL')) {
-            $this->_addHook('cssfile', 'cssFile', false);
+            $this->_addHook('cssfile',                           'cssFile',                           false);
+            $this->_addHook('javascript_file',                   'jsFile',                            false);
             $this->_addHook('tracker_report_renderer_types' ,    'tracker_report_renderer_types',     false);
             $this->_addHook('tracker_report_renderer_instance',  'tracker_report_renderer_instance',  false);
         }
@@ -87,6 +88,13 @@ class cardwallPlugin extends Plugin {
         }
     }
     
+    function jsFile($params) {
+        // Only show the js if we're actually in the Cardwall pages.
+        // This stops styles inadvertently clashing with the main site.
+        if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/script.js"></script>'."\n";
+        }
+    }
 }
 
 ?>
