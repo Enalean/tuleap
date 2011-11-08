@@ -31,6 +31,7 @@ class Combined {
             '/scripts/scriptaculous/controls.js',
             '/scripts/scriptaculous/slider.js',
             '/scripts/scriptaculous/sound.js',
+            '/scripts/accordion/accordion.js',
             '/scripts/codendi/common.js',
             '/scripts/codendi/cross_references.js',
             '/scripts/codendi/Tooltip.js',

@@ -351,22 +351,66 @@ class TrackerManager { /* extends Engine? */
 
         echo '</td><td style="padding-left:2em;">';
         
+        echo '<style>
+        .tracker_new_accordion_toggle {
+            display: block;
+            height: 30px;
+            width: 680px;
+            background:  #a9d06a;
+            padding: 0 10px 0 10px;
+            line-height: 30px;
+            color: #ffffff;
+            font-weight: normal;
+            text-decoration: none;
+            outline: none;
+            font-size: 12px;
+            color: #000000;
+            border-bottom: 1px solid #cde99f;
+            cursor: pointer;
+            margin: 0 0 0 0;
+        }
+        
+        .tracker_new_accordion_toggle_active {
+            background: #e0542f;
+            color: #ffffff;
+            border-bottom: 1px solid #f68263;
+        }
+        
+        .tracker_new_accordion_content {
+            background-color: #ffffff;
+            color: #444444;
+            overflow: hidden;
+        }
+            
+        .tracker_new_accordion_content h2 {
+            margin: 15px 0 5px 10px;
+            color: #0099FF;
+        }
+            
+        .tracker_new_accordion_content p {
+            line-height: 150%;
+            padding: 5px 10px 15px 10px;
+        }
+        </style>';
+        
+        
         echo '<p>'.$Language->getText('plugin_tracker_include_type','choose_creation').'</p>';
-        echo '<table>';
+        
+        echo '<div id="tracker_new_accordion">';
         
         // Select from predefined templates
-        echo ' <tr valign="top">
-                 <td width="300"><b>'.$Language->getText('plugin_tracker_include_type','from_tmpl').'</b></td>
-                 <td colspan="2">';
+        echo '<h3 class="tracker_new_accordion_toggle">'.$Language->getText('plugin_tracker_include_type','from_tmpl').'</h3>';
+        echo '<div class="tracker_new_accordion_content">';
         echo $this->trackersSelectBox(100, "default_template", $default_template);
-        echo ' &nbsp;<input type="button" name="CreateCodendiTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodendiTemplate()"></td></tr>';
+        echo ' &nbsp;<input type="button" name="CreateCodendiTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodendiTemplate()">';
+        echo '</div>';
         
         // Select from existing tracker
         $gf = new GroupFactory();
-        echo ' <tr valign="top">
-                 <td width="300">'.$Language->getText('plugin_tracker_include_type','from_exist').'</td>
-                 <td clospan="2">
-                     <noscript>Project Id: <input type="text" name="group_id_template" value=""><br/>Tracker Id: <input type="text" name="atid_template" value=""></noscript>';
+        echo '<h3 class="tracker_new_accordion_toggle">From existing trackers</h3>';
+        //$Language->getText('plugin_tracker_include_type','from_exist')
+        echo '<div class="tracker_new_accordion_content">';
+        echo '<noscript>Project Id: <input type="text" name="group_id_template" value=""><br/>Tracker Id: <input type="text" name="atid_template" value=""></noscript>';
         echo '<ul style="border: 1px solid grey; width: 20em; float: left;">';
         $results = $gf->getMemberGroups();
         while ($row = db_fetch_array($results)) {
@@ -377,23 +421,27 @@ class TrackerManager { /* extends Engine? */
         echo '<ul style="border: 1px solid grey; width: 20em; float: right;" id="tracker_list_trackers_from_project">';
         echo '<li>select a project first</li>';
         echo '</ul>';
-        echo '   </td>
-                 <td><input type="button" name="CreateTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateTemplate()"></td>
-               </tr>';
+        
+        echo '<div style="clear:both;"></div>';
+        
+        echo 'pouet';
+        echo '<input type="button" name="CreateTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateTemplate()">';
+        
+        echo '</div>';
         
         // Import XML
-        echo ' <tr>
-                <td width="300">'.$Language->getText('plugin_tracker_include_type','from_xml', TRACKER_BASE_URL.'/resources/templates/').'</td>
-                <td>
+        echo '<h3 class="tracker_new_accordion_toggle">XML</h3>';
+        //$Language->getText('plugin_tracker_include_type','from_xml', TRACKER_BASE_URL.'/resources/templates/')
+        echo '<div class="tracker_new_accordion_content">
                  <input type="hidden" name="create_mode" value="">
                  <input type="file" name="file" id="file" />
-                 <input type="submit" name="create_from_xml" value="'.$Language->getText('global','btn_create').'" />
-                </td>
-               </tr>';
-        echo '</table>';
+                 <input type="submit" name="create_from_xml" value="'.$Language->getText('global','btn_create').'" />';
+        echo '</div>';
     
+        echo '</div>'; // tracker_new_accordion
+        
         echo '</td></tr></table></form>';
-        echo '<br/>';
+        //echo '<br/>';
         $this->displayFooter($project);
     }
     

@@ -78,4 +78,21 @@ codendi.tracker.TemplateSelector = Class.create({
 
 document.observe('dom:loaded', function () {
     new codendi.tracker.TemplateSelector($('tracker_create_new'));
+    
+    var acc = new accordion('tracker_new_accordion', {
+        classNames : {
+            toggle: 'tracker_new_accordion_toggle',
+            toggleActive: 'tracker_new_accordion_toggle_active',
+            content: 'tracker_new_accordion_content'
+        }
+    });
+    
+    $$('.tracker_new_accordion_toggle').each(function(accordion) {
+        $(accordion.next(0)).setStyle({
+            height: '0px'
+        });
+    });
+
+    acc.activate($$('#tracker_new_accordion .tracker_new_accordion_toggle')[0]);
+
 });
