@@ -122,7 +122,17 @@ class Docman_NotificationsManager extends NotificationsManager {
         $this->_getListeningUsersForAscendantHierarchy($id, $users, $this->_getType());
         return new ArrayIterator($users);
     }
-    function _getListeningUsersForAscendantHierarchy($id, &$users, $type = null) {
+    /**
+    * Retrieve list of users that are monitoring a given item.
+    *
+    * @param Integer $id            ID of the item that we are looking for its listeners.
+    * @param Array   $users         Array where listeners are inserted.
+    * @param String  $type          Type of listener, in order to retrieve listeners that monitor this item on a sub-hierarchy or not.
+    * @param boolean $itemListeners A flag to decide whether to retrieve ascendant hierarchy listeners or focus only on item listeners.
+    *
+    * @return void
+    */
+    function _getListeningUsersForAscendantHierarchy($id, &$users, $type = null, $itemListeners = null) {
         if ($id) {
             $u = $this->dao->searchUserIdByObjectIdAndType($id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
             if ($u) {
@@ -131,28 +141,9 @@ class Docman_NotificationsManager extends NotificationsManager {
                     $u->next();
                 }
             }
-            if ($item = $this->_item_factory->getItemFromDb($id)) {
-                $this->_getListeningUsersForAscendantHierarchy($item->getParentId(), $users, $type);
-            }
-        }
-    }
-
-    /**
-    * Retrieve list of users that are monitoring a given item.
-    *
-    * @param Integer $id    ID of the item that we are looking for its listeners.
-    * @param Array   $users Array where listeners are inserted.
-    * @param String  $type  Type of listener, in order to retrieve listeners that monitor this item on a sub-hierarchy or not.
-    *
-    * @return void
-    */
-    function _getListeningUsersForGivenItem($id, &$users, $type = null) {
-        if ($id) {
-            $u = $this->dao->searchUserIdByObjectIdAndType($id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
-            if ($u) {
-                while ($u->valid()) {
-                    $users[] = $u->current();
-                    $u->next();
+            if(!$itemListeners) {
+                if ($item = $this->_item_factory->getItemFromDb($id)) {
+                    $this->_getListeningUsersForAscendantHierarchy($item->getParentId(), $users, $type);
                 }
             }
         }

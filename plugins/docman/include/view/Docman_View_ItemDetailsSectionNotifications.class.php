@@ -65,7 +65,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content = '';
         if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
             $listeners = array();
-            $this->notificationsManager->_getListeningUsersForGivenItem($this->item->getId(), $listeners, "PLUGIN_DOCMAN");
+            $this->notificationsManager->_getListeningUsersForAscendantHierarchy($this->item->getId(), $listeners, "PLUGIN_DOCMAN", true);
             $listenersList = new arrayIterator($listeners);
             if ($listenersList->count()>0) {
                 $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
