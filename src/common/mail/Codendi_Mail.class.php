@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('Codendi_Mail_Interface.class.php');
+require_once('Tuleap_Template_Mail.class.php');
 
 /**
  * Class for sending an email using the zend lib.
@@ -36,6 +37,9 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function __construct() {
         $this->mail = new Zend_Mail('UTF-8');
         $this->userDao = $this->getUserDao();
+        
+        $tpl = new Tuleap_Template_Mail();
+        $this->setLookAndFeelTemplate($tpl);
     }
 
     /**
@@ -95,7 +99,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
             $name = trim(trim($matches[1]), '"\'');
             return array($matches[2], $name);
         } else {
-            return array($mail);
+            return array($mail, '');
         }
     }
 
@@ -252,11 +256,61 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     }
 
     /**
-     * 
-     * @param String $message
+     * @const Use the common look and feel
+     *
+     * The common look and feel is the pretty one you can see in trackers v3
      */
-    function setBodyHtml($message) {
-        $this->mail->setBodyHtml($message);
+    const USE_COMMON_LOOK_AND_FEEL = true;
+
+    /**
+     * @const DO NOT use the common look and feel
+     */
+    const DISCARD_COMMON_LOOK_AND_FEEL = false;
+    
+    /**
+     * @var Tuleap_Template_Mail
+     */
+    protected $look_and_feel_template;
+    
+    /**
+     * Set hte template to use for look and feel in html mails
+     *
+     * @param Tuleap_Template_Mail $tpl The template instance
+     *
+     * @return void
+     */
+    public function setLookAndFeelTemplate(Tuleap_Template_Mail $tpl) {
+        $this->look_and_feel_template = $tpl;
+    }
+    
+    /**
+     * Get the template to use for look and feel in html mails
+     *
+     * @return Tuleap_Template_Mail
+     */
+    public function getLookAndFeelTemplate() {
+        return $this->look_and_feel_template;
+    }
+    
+    /**
+     * Set the html body part.
+     *
+     * The default is to send it through the use of a template to send pretty html 
+     * email in a common format shared across the platform. Some usages require
+     * to not use this template (eg: forumml, ...) it can be discarded with the 
+     * second parameter $use_common_look_and_feel.
+     *
+     * @param String $message                  html code to send to the user
+     * @param bool   $use_common_look_and_feel self::USE_COMMON_LOOK_AND_FEEL | self::DISCARD_COMMON_LOOK_AND_FEEL (default is USE)
+     *
+     * @return void
+     */
+    function setBodyHtml($message, $use_common_look_and_feel = self::USE_COMMON_LOOK_AND_FEEL) {
+        if (self::USE_COMMON_LOOK_AND_FEEL == $use_common_look_and_feel) {
+            $this->look_and_feel_template->set('body', $message);
+            $message = $this->look_and_feel_template->fetch();
+        }
+        $this->getMail()->setBodyHtml($message);
     }
 
     /**
@@ -342,7 +396,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
                         'header' => $this->mail->getHeaders());
         $em = EventManager::instance();
         $em->processEvent('mail_sendmail', $params);
-
+        
         try {
             $status = $this->mail->send();
         } catch (Exception $e) {

@@ -249,7 +249,7 @@ class RequestHelpActions extends PluginAction {
         $body = '<table><tr><td>'.$GLOBALS['Language']->getText('plugin_requesthelp', 'requesthelp_mail_support', $user->getRealName()).'.</td></tr>'.$noreply_alert.$core_mail;
 
         $mail->setTo($to);
-        $mail->setBodyHtml($body);
+        $mail->setBodyHtml($body, Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL);
         try {
             if (!$mail->send()) {
                 $requestStatus = false;

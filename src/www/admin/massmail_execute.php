@@ -79,15 +79,8 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
     if ($bodyFormat) {
         $hp = Codendi_HTMLPurifier::instance();
         $mail = new Codendi_Mail();
-        $tpl = new Tuleap_Template($GLOBALS['Language']->getContent('mail/html_template', 'en_US', null, '.php'));
-        $tpl->set('txt_display_not_correct', $GLOBALS['Language']->getText('mail_html_template', 'display_not_correct'));
-        $tpl->set('txt_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'update_prefs'));
-        $tpl->set('txt_can_update_prefs', $GLOBALS['Language']->getText('mail_html_template', 'can_update_prefs'));
-        $tpl->set('http_url', 'http://'. $GLOBALS['sys_default_domain']);
-        $tpl->set('img_path', 'http://'. $GLOBALS['sys_default_domain'] . $GLOBALS['HTML']->getImagePath(''));
-        $tpl->set('title', $hp->purify($mailSubject, CODENDI_PURIFIER_CONVERT_HTML));
-        $tpl->set('body', $mailMessage);
-        $mail->setBodyHtml($tpl->fetch());
+        $mail->getLookAndFeelTemplate()->set('title', $hp->purify($mailSubject, CODENDI_PURIFIER_CONVERT_HTML));
+        $mail->setBodyHtml($mailMessage, Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL);
     } else {
         $mail = new Mail();
         $mail->setBody($mailMessage);

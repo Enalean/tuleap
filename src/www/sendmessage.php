@@ -81,8 +81,11 @@ if (!isset($toaddress) && !isset($touser)) {
 	exit_error($Language->getText('include_exit', 'error'),$Language->getText('sendmessage','err_noparam'));
 }
 
-
-list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+if (strpos(':', $GLOBALS['sys_default_domain']) === false) {
+    $host = $GLOBALS['sys_default_domain'];
+} else {
+    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+}
 
 if (isset($toaddress) && !eregi($host,$toaddress)) {
 	exit_error($Language->getText('include_exit', 'error'),
