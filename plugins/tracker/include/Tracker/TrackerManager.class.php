@@ -325,28 +325,30 @@ class TrackerManager { /* extends Engine? */
           <input type="hidden" name="func" value="docreate">
           <input type="hidden" name="atid_chosen" value="">
           <input type="hidden" name="group_id_chosen" value="">
-          <table width="100%" border="0" cellpadding="5">
-            <tr> 
-              <td width="21%"><b>'.$Language->getText('plugin_tracker_include_artifact','name').'</b>: <font color="red">*</font></td>
-              <td width="79%"> 
-                <input type="text" name="name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'">
-              </td>
-            </tr>
-            <tr> 
-              <td width="21%"><b>'.$Language->getText('plugin_tracker_include_artifact','desc').'</b>: <font color="red">*</font></td>
-              <td width="79%"> 
-                <textarea name="description" rows="3" cols="50">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
-              </td>
-            </tr>
-            <tr> 
-              <td width="21%"><b>'.$Language->getText('plugin_tracker_include_type','short_name').'</b>: <font color="red">*</font></td>
-              <td width="79%"> 
-                <input type="text" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'">
-              </td>
-            </tr>
-                    <tr><td colspan=2><i>'.$Language->getText('plugin_tracker_include_type','avoid_spaces').'</i></td></tr>';
-        echo '</table>';
+          
+          <table>
+          <tr valign="top"><td style="padding-right:2em; border-right: 1px solid #eee;">
+          
+          <p>'. $Language->getText('plugin_tracker_include_type','create_tracker_fill_name') .'</p>
+          
+          <p>
+              <label for="newtracker_name"><b>'. $Language->getText('plugin_tracker_include_artifact','name').'</b>: <font color="red">*</font></label><br />
+              <input type="text" name="name" id="newtracker_name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'">
+          </p>
+          
+          <p>
+              <label for="newtracker_description"><b>'.$Language->getText('plugin_tracker_include_artifact','desc').'</b>: <font color="red">*</font><br />
+              <textarea id="newtracker_description" name="description" rows="3" cols="50">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
+          </p>
+          
+          <p>
+              <label for="newtracker_itemname"><b>'.$Language->getText('plugin_tracker_include_type','short_name').'</b>: <font color="red">*</font></label><br />
+              <input type="text" id="newtracker_itemname" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'"><br />
+              <span style="color:#999;">'.$Language->getText('plugin_tracker_include_type','avoid_spaces').'</span>
+          </p>';
 
+        echo '</td><td style="padding-left:2em;">';
+        
         echo '<p>'.$Language->getText('plugin_tracker_include_type','choose_creation').'</p>';
         echo '<table>';
         
@@ -382,8 +384,8 @@ class TrackerManager { /* extends Engine? */
                </tr>';
         echo '</table>';
     
-        echo '</form>
-              </table>';
+        echo '</td></tr></table></form>';
+        echo '<br/>';
         $this->displayFooter($project);
     }
     

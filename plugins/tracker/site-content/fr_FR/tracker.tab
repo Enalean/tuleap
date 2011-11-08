@@ -458,7 +458,8 @@ plugin_tracker_include_type	choose_proj	Veuillez d'abord choisir un projet et un
 plugin_tracker_include_type	choose_tmpl	Veuillez d'abord choisir un patron.
 plugin_tracker_include_type	choose_file	Veuillez d'abord choisir un fichier à importer.
 plugin_tracker_include_type	select_proj	Veuillez d'abord sélectionner un projet !
-plugin_tracker_include_type	create_tracker	<h2>Créer un nouvel outil de suivi&nbsp;:</h2><p>Veuillez remplir le nom, la description et le nom court de cet outil de suivi&nbsp;:</p>
+plugin_tracker_include_type	create_tracker	<h2>Créer un nouvel outil de suivi&nbsp;:</h2>
+plugin_tracker_include_type	create_tracker_fill_name	Veuillez remplir le nom, la description et le nom court de cet outil de suivi&nbsp;:
 plugin_tracker_include_type	short_name	Nom court
 plugin_tracker_include_type	avoid_spaces	Veuillez éviter les espaces et les ponctuations dans le nom court
 plugin_tracker_include_type	choose_creation	Choisissez une méthode de création&nbsp;:
