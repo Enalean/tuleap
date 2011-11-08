@@ -1076,5 +1076,88 @@ function plugin_tracker_permission_fetch_selection_field($permission_type, $obje
     return $html;
 }
 
+function plugin_tracker_permission_copy_tracker_and_field_permissions($from, $to, $group_id_from, $group_id_to, $ugroup_mapping, $field_mapping) {
+  $result = true;
+
+    //We remove ugroups if 'from' and 'to' are not part of the same project
+    $and_remove_ugroups = "";
+    if ($group_id_from != $group_id_to) {
+        $and_remove_ugroups = " AND ugroup_id <= '100' ";
+    }
+
+
+    //Copy of tracker permissions
+    $sql = <<<EOS
+INSERT INTO `permissions` ( `permission_type`, `object_id`, `ugroup_id`) 
+    SELECT `permission_type`, '$to', `ugroup_id` 
+    FROM `permissions` 
+    WHERE `object_id` = '$from' $and_remove_ugroups
+EOS;
+
+    $res=db_query($sql);
+    if (!$res) {
+      $result = false;
+    }
+    
+    foreach ($field_mapping as $f) {
+        $from = $f['from'];
+        $to = $f['to'];
+   //Copy of field permissions
+    $sql = <<<EOS
+INSERT INTO `permissions` ( `permission_type`, `object_id`, `ugroup_id`) 
+    SELECT `permission_type`, $to, `ugroup_id`
+    FROM `permissions` 
+    WHERE `object_id`=$from $and_remove_ugroups
+EOS;
+    
+    $res=db_query($sql);
+    if (!$res) {
+      $result = false;
+    }
+    
+    }
+    //look after special groups in $ugroup_mapping
+    if (($group_id_from != $group_id_to) && ($ugroup_mapping !== false)) {
+
+      foreach ($ugroup_mapping as $key => $val) {
+	$sql = "INSERT INTO permissions (permission_type,object_id,ugroup_id) ".
+	  "SELECT permission_type, $to, $val ".
+	  "FROM permissions ".
+	  "WHERE object_id = '$from' AND ugroup_id = '$key'";
+	$res=db_query($sql);
+	if (!$res) {
+	  $result = false;
+	}
+
+	$sql = "INSERT INTO permissions (permission_type,object_id,ugroup_id) ".
+	  "SELECT permission_type, CONCAT('$to#',RIGHT(`object_id`, LENGTH(`object_id`)-LENGTH('$from#'))), $val ".
+	  "FROM permissions ".
+	  "WHERE object_id LIKE '$from#%' AND ugroup_id = '$key'";
+	$res=db_query($sql);
+	if (!$res) {
+	  $result = false;
+	}
+      }
+    }
+
+    //look for missing ugroups
+    $sql = "SELECT count(ugroup_id) FROM `permissions` WHERE permission_type LIKE 'TRACKER_%' AND ( `object_id` = '$from' OR `object_id` LIKE '$from#%')";
+    $res=db_query($sql);
+    $row = db_fetch_array($res);
+    $nb_ugroup_from = $row[0];
+    $sql = "SELECT count(ugroup_id) FROM `permissions` WHERE permission_type LIKE 'TRACKER_%' AND ( `object_id` = '$to' OR `object_id` LIKE '$to#%')";
+    $res=db_query($sql);
+    $row = db_fetch_array($res);
+    $nb_ugroup_to = $row[0];
+    if (($nb_ugroup_from - $nb_ugroup_to) != 0) {
+      $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('tracker_admin_permissions','ignore_ug_during_copy'));
+    }
+            
+    if (!$result) {
+      $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'error'));
+    }
+    return $result;
+}
+
 
 ?>

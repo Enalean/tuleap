@@ -395,7 +395,7 @@ class TrackerFactory {
                 $em->processEvent('Tracker_created', $pref_params);
 
                 //Copy template permission
-                permission_copy_tracker_and_field_permissions($id_template, $id, $project_id_template, $project_id, $ugroup_mapping, $field_mapping);
+                plugin_tracker_permission_copy_tracker_and_field_permissions($id_template, $id, $project_id_template, $project_id, $ugroup_mapping, $field_mapping);
 
                 $tracker = $this->getTrackerById($id);
 
@@ -519,12 +519,12 @@ class TrackerFactory {
          *
          * No expected results
          */
-        EventManager::instance()->processEvent('trackers_duplicated', array(
+        /*EventManager::instance()->processEvent('trackers_duplicated', array(
                 'reportMapping'  => $report_mapping,
                 'trackerMapping' => $tracker_mapping,
                 'ugroupsMapping' => $ugroup_mapping,
                 'group_id'       => $to_project_id
-        ));
+        ));*/
     }
 
     /**
