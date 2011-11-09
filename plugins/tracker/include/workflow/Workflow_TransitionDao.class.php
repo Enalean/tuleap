@@ -91,35 +91,5 @@ class Workflow_TransitionDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function duplicate($values, $id, $transitions) {
-        $id = $this->da->escapeInt($id);        
-        if ($transitions != null) {
-            foreach ($transitions as $transition) {
-                if ($transition->getFieldValueFrom() == null) {
-                    $from_id = 'null';
-                    $to      = $transition->getFieldValueTo()->getId();
-                    foreach ($values as $value=>$id_value) {
-                        if ($value == $to) {
-                            $to_id = $id_value;
-                        }
-                    }                    
-                } else {
-                    $from = $transition->getFieldValueFrom()->getId();
-                    $to   = $transition->getFieldValueTo()->getId();
-                    foreach ($values as $value=>$id_value) {
-                        if ($value == $from) {
-                            $from_id = $id_value;
-                        }
-                        if ($value == $to) {
-                            $to_id = $id_value;
-                        }
-                    } 
-                }
-                $sql = "INSERT INTO $this->table_name (from_id, to_id, workflow_id)
-                       VALUES ($from_id, $to_id, $id)";
-                $inserted = $this->update($sql);
-            } 
-        }
-    }
 }
 ?>

@@ -270,5 +270,43 @@ class TransitionFactory {
         return true;
     }
     
+   /**
+    * Duplicate the transitions
+    * 
+    * @param Array $values array of old and new values of the field
+    * @param $id the workflow id
+    * @param Array $transitions the transitions to duplicate
+    * @return void
+    */
+    public function duplicate($values, $id, $transitions) {
+        if ($transitions != null) {
+            foreach ($transitions as $transition) {
+                if ($transition->getFieldValueFrom() == null) {
+                    $from_id = 'null';
+                    $to      = $transition->getFieldValueTo()->getId();
+                    foreach ($values as $value=>$id_value) {
+                        if ($value == $to) {
+                            $to_id = $id_value;
+                        }
+                    }                    
+                } else {
+                    $from = $transition->getFieldValueFrom()->getId();
+                    $to   = $transition->getFieldValueTo()->getId();
+                    foreach ($values as $value=>$id_value) {
+                        if ($value == $from) {
+                            $from_id = $id_value;
+                        }
+                        if ($value == $to) {
+                            $to_id = $id_value;
+                        }
+                    } 
+                }
+                
+                $transition_id = $this->getDao()->addTransition($id, $from_id, $to_id);
+                //Duplicate permissions
+                //Duplicate postactions
+            } 
+        }
+    }
 }
 ?>
