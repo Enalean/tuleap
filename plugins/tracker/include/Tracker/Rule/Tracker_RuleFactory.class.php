@@ -179,14 +179,6 @@ class Tracker_RuleFactory {
     }
     
    /**
-    * copy rules from a tracker to another
-    */
-    function copyRules($from_artifact_type, $to_artifact_type) {
-        $copied = $this->rules_dao->copyRules($from_artifact_type, $to_artifact_type);
-        return $copied;
-    }
-    
-   /**
     * Duplicate the rules from tracker source to tracker target
     *
     * @param int   $from_tracker_id The Id of the tracker source

@@ -363,7 +363,7 @@ class TrackerFactory {
      *
      * @return int id on success, false on failure.
      */
-    function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false, &$report_mapping = array()) {
+    function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false) {
         if ($this->validMandatoryInfoOnCreate($name, $description, $itemname, $project_id)) {
 
             // get the template Group object
@@ -386,6 +386,10 @@ class TrackerFactory {
 
                 // Duplicate Canned Responses
                 Tracker_CannedResponseFactory::instance()->duplicate($id_template, $id);
+                
+                //Duplicate field dependencies
+                Tracker_RuleFactory::instance()->duplicate($id_template, $id, $field_mapping);
+                $tracker = $this->getTrackerById($id);
 
                 // Process event that tracker is created
                 $em =& EventManager::instance();
@@ -396,51 +400,10 @@ class TrackerFactory {
                 //Duplicate Permissions
                 $this->duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping);
                 
-                //Duplicate field dependencies
-                //Tracker_RuleFactory::instance()->copyRules($id_template, $id);                
-                Tracker_RuleFactory::instance()->duplicate($id_template, $id, $field_mapping);
-                $tracker = $this->getTrackerById($id);
-
+                
                 $this->postCreateActions($tracker);
 
                 return $tracker;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                // Copy tracker_notification_event and tracker_notification_role
-                if ( !$at_new->copyNotificationEvent($id) ) {
-                    return false;
-                }
-                if ( !$at_new->copyNotificationRole($id) ) {
-                    return false;
-                }
-
-                // Create user permissions: None for group members and Admin for group admin
-                if ( !$at_new->createUserPerms($id) ) {
-                    return false;
-                }
-
-
-
-                
-
             }
         }
         return false;
@@ -467,7 +430,6 @@ class TrackerFactory {
             $to = $f['to'];
             $pm->duplicatePermissions($from, $to, $ugroup_mapping, $field_mapping);
         }
-        //plugin_tracker_permission_copy_tracker_and_field_permissions($id_template, $id, $project_id_template, $project_id, $ugroup_mapping, $field_mapping);
     }
 
     /**
@@ -518,11 +480,9 @@ class TrackerFactory {
                         $t->getName(),
                         $t->getDescription(),
                         $t->getItemName(),
-                        $ugroup_mapping,
-                        $report_mapping_for_this_tracker);
+                        $ugroup_mapping);
                 if ($new) {
                     $tracker_mapping[$t->getId()] = $new->getId();
-                    $report_mapping = $report_mapping + $report_mapping_for_this_tracker;
                 } else {
                     $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin','tracker_not_duplicated', array($t->getName())));
                 }

@@ -213,7 +213,7 @@ class TrackerFactoryTest extends UnitTestCase {
         $tracker_factory->setReturnReferenceAt(0, 'create', $t_new);
         
         // only one call is expected with following arguments:
-        $tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null, array())); // how to test that the args are 1234 and not 5678???
+        $tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null)); // how to test that the args are 1234 and not 5678???
         
         $tracker_factory->duplicate(100, 999, null);
     }

@@ -241,17 +241,6 @@ class Tracker_RuleDao extends DataAccessObject {
         return $this->update($sql);
     }
     
-    function copyRules($from_artifact_type, $to_artifact_type) {
-        $sql = sprintf('INSERT INTO tracker_rule (group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) '.
-                        ' SELECT %s, source_field_id, source_value_id, target_field_id, rule_type, target_value_id '.
-                        ' FROM tracker_rule '.
-                        ' WHERE group_artifact_id = %s ',
-                               $this->da->quoteSmart($to_artifact_type),
-                               $this->da->quoteSmart($from_artifact_type));
-        return $this->updateAndGetLastId($sql);
-    }
-    
-    
     function deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $field_source_id = $this->da->escapeInt($field_source_id);
