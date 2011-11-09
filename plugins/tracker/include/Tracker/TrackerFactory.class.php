@@ -375,10 +375,6 @@ class TrackerFactory {
             //Ask to dao to duplicate the tracker
             if ($id = $this->getDao()->duplicate($id_template, $project_id, $name, $description, $itemname)) {
 
-                //TODO : create global notifications
-                //$gndao = new Tracker_GlobalNotificationDao($this->getDao()->da);
-                //$gndao->duplicate($id_template, $id);
-
                 // Duplicate Form Elements
                 $field_mapping = Tracker_FormElementFactory::instance()->duplicate($id_template, $id);
 
@@ -399,8 +395,10 @@ class TrackerFactory {
 
                 //Duplicate Permissions
                 $this->duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping);
-
-
+                
+                //Duplicate field dependencies
+                //Tracker_RuleFactory::instance()->copyRules($id_template, $id);                
+                Tracker_RuleFactory::instance()->duplicate($id_template, $id, $field_mapping);
                 $tracker = $this->getTrackerById($id);
 
                 $this->postCreateActions($tracker);
@@ -441,11 +439,7 @@ class TrackerFactory {
 
 
 
-                //Copy Rules
-                require_once('Rule/Tracker_RulesManager.class.php');
-                $arm =& new Tracker_RulesManager();
-                $arm->copyRules($atid_template, $id);
-                return $id;
+                
 
             }
         }

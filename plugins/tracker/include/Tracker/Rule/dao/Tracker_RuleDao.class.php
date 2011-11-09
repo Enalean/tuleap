@@ -49,12 +49,12 @@ class Tracker_RuleDao extends DataAccessObject {
     }
 
     /**
-    * Searches Tracker_Rule by GroupArtifactId 
+    * Searches Tracker_Rule by TrackerId
     * @return DataAccessResult
     */
-    function searchByGroupArtifactId($groupArtifactId) {
-        $sql = sprintf("SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id FROM tracker_rule WHERE group_artifact_id = %s",
-				$this->da->quoteSmart($groupArtifactId));
+    function searchByTrackerId($tracker_id) {
+        $sql = sprintf("SELECT id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id FROM tracker_rule WHERE tracker_id = %s",
+				$this->da->quoteSmart($tracker_id));
         return $this->retrieve($sql);
     }
 
