@@ -139,6 +139,16 @@ class PermissionsDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+   /**
+    * Clone docman permissions
+    * 
+    * @param int $source 
+    * @param int $target
+    * @param $perms
+    * @param $toGroupId
+    * 
+    * @return Boolean
+    */
     function clonePermissions($source, $target, $perms, $toGroupId=0) {
         foreach($perms as $key => $value) {
             $perms[$key] = $this->da->quoteSmart($value);
@@ -163,7 +173,39 @@ class PermissionsDao extends DataAccessObject {
         return $this->update($sql);
     }
     
-    function addPermission($permission_type, $object_id, $ugroup_id){
+   /**
+    * Duplicate permissions
+    * 
+    * @param int $source 
+    * @param int $target
+    * @param array $ugroup_mapping, an array of ugroups
+    * 
+    * @return Boolean
+    */
+    function duplicatePermissions($from, $to, $ugroup_mapping) {
+        $from = $this->da->escapeInt($from);
+        $to = $this->da->escapeInt($to);
+        
+        if ($ugroup_mapping !== false) {
+            foreach($ugroup_mapping as $key => $val) {
+                $key = $this->da->escapeInt($key);
+                $val = $this->da->escapeInt($val);
+                $sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id)
+                            SELECT permission_type, '.$to.','. $val.'
+                            FROM permissions
+                            WHERE object_id = '.$from.' AND ugroup_id = '.$key;
+                $this->update($sql);
+            }
+        }
+        
+        $sql = 'INSERT INTO permissions (permission_type, object_id, ugroup_id)
+                    SELECT permission_type, '.$to.', ugroup_id
+                    FROM permissions
+                    WHERE object_id='.$from.' AND ugroup_id <= 100';
+        return $this->update($sql);
+    }
+    
+    function addPermission($permission_type, $object_id, $ugroup_id) {
         $sql=sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id)".
                      " VALUES ('%s', '%s', '%s')", 
                      $object_id, $permission_type, $ugroup_id);

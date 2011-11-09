@@ -247,6 +247,19 @@ class PermissionsManager {
         return $this->_permission_dao->clonePermissions($source, $target, $perms, $toGroupId);
     }
     
+   /**
+    * Duplicate permissions
+    * 
+    * @param int $source 
+    * @param int $target
+    * @param array $ugroup_mapping, an array of ugroups
+    * 
+    * @return Boolean
+    */
+    public function duplicatePermissions($source, $target, $ugroup_mapping) {
+        return $this->_permission_dao->duplicatePermissions($source, $target, $ugroup_mapping);
+    }
+    
     function isPermissionExist($object_id, $ptype){    	
     	$dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, array($ptype));
     	return $dar->valid();

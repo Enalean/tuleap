@@ -363,7 +363,7 @@ class TrackerFactory {
      *
      * @return int id on success, false on failure.
      */
-    function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping=false, &$report_mapping=array()) {
+    function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false, &$report_mapping = array()) {
         if ($this->validMandatoryInfoOnCreate($name, $description, $itemname, $project_id)) {
 
             // get the template Group object
@@ -397,8 +397,9 @@ class TrackerFactory {
                         'atid_dest'   => $id);
                 $em->processEvent('Tracker_created', $pref_params);
 
-                //Copy template permission
-                plugin_tracker_permission_copy_tracker_and_field_permissions($id_template, $id, $project_id_template, $project_id, $ugroup_mapping, $field_mapping);
+                //Duplicate Permissions
+                $this->duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping);
+
 
                 $tracker = $this->getTrackerById($id);
 
@@ -449,6 +450,30 @@ class TrackerFactory {
             }
         }
         return false;
+    }
+    
+   /**
+    * Duplicat the permissions of a tracker
+    *
+    * @param int $id_template the id of the duplicated tracker
+    * @param int $id          the id of the new tracker
+    * @param array $ugroup_mapping 
+    * @param array $field_mapping
+    *
+    * @return bool
+    */
+    public function duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping) {
+        $pm = PermissionsManager::instance();
+        //Duplicate tracker permissions
+        $pm->duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping);
+        
+        //Duplicate fields permissions
+        foreach ($field_mapping as $f) {
+            $from = $f['from'];
+            $to = $f['to'];
+            $pm->duplicatePermissions($from, $to, $ugroup_mapping, $field_mapping);
+        }
+        //plugin_tracker_permission_copy_tracker_and_field_permissions($id_template, $id, $project_id_template, $project_id, $ugroup_mapping, $field_mapping);
     }
 
     /**
