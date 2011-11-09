@@ -20,7 +20,7 @@
  */
 
 // Check script parameters
-if ($argc != 5) {
+if ($argc != 6) {
     error("Wrong number of arguments");
 }
 

@@ -636,15 +636,21 @@ generate_delete_general_email()
 logGitPushes()
 {
 	# Tuleap specific: Git logging stuffs
+	#@TODO : Non fast-forward pushes ???
 
 	revtype=$(git cat-file -t "$newrev")
 	tuleap_login=$(whoami)
 	repo_location=$(cd $GIT_DIR; pwd)
 	tuleap_repo_name=$(basename $repo_location | sed -e 's/\.git$//')
 	tuleap_group_name=$(basename $(dirname $repo_location))
-	# commits = $(git rev-list "$oldrev".."$newrev" --abbrev-commit)
 
-	php /usr/share/codendi/plugins/git/hooks/gitLog.php --group_name="$tuleap_group_name" --login="$tuleap_login" --type="$revtype" --rev_id="$tuleap_repo_name/$newrev"
+	nbcommits=0
+	for rev in $(git rev-list $oldrev..$newrev)
+	do
+		nbcommits=$((nbcommits+1))
+	done
+
+	php /usr/share/codendi/plugins/git/hooks/gitLog.php --group_name="$tuleap_group_name" --login="$tuleap_login" --type="$revtype" --rev_id="$tuleap_repo_name/$newrev" --commits_number="$nbcommits"
 
 }
 
