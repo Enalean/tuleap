@@ -276,9 +276,11 @@ class TransitionFactory {
     * @param Array $values array of old and new values of the field
     * @param $id the workflow id
     * @param Array $transitions the transitions to duplicate
+    * @param Array $ugroup_mapping the ugroup mapping
+    *
     * @return void
     */
-    public function duplicate($values, $id, $transitions) {
+    public function duplicate($values, $id, $transitions, $ugroup_mapping = false) {
         if ($transitions != null) {
             foreach ($transitions as $transition) {
                 if ($transition->getFieldValueFrom() == null) {

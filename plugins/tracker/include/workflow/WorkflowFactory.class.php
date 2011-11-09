@@ -246,13 +246,15 @@ class WorkflowFactory {
      * @param Array $values array of old and new values of the field
      * @param boolean $is_used 1 if the workflow is used, 0 otherwise
      * @param Array $transitions the transitions of the workflow
+     * @param Array $ugroup_mapping the ugroup mapping
+     *
      * @return void
      */
-     public function duplicate($workflow_id, $to_tracker_id, $from_id, $to_id, $values, $is_used, $transitions) {
+     public function duplicate($workflow_id, $to_tracker_id, $from_id, $to_id, $values, $is_used, $transitions, $ugroup_mapping = false) {
          //Duplicate workflow
          if ($id = $this->getDao()->duplicate($workflow_id, $to_tracker_id, $from_id, $to_id, $values, $is_used)) {
              //Duplicate transitions
-             $this->getTransitionFactory()->duplicate($values, $id, $transitions);
+             $this->getTransitionFactory()->duplicate($values, $id, $transitions, $ugroup_mapping);
          }
      }
      

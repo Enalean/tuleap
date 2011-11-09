@@ -360,6 +360,7 @@ class TrackerFactory {
      * @param string  $name                the name of the new tracker
      * @param string  $description         the description of the new tracker
      * @param string  $itemname            the itemname of the new tracker
+     * @param Array $ugroup_mapping the ugroup mapping
      *
      * @return int id on success, false on failure.
      */
@@ -376,7 +377,7 @@ class TrackerFactory {
             if ($id = $this->getDao()->duplicate($id_template, $project_id, $name, $description, $itemname)) {
 
                 // Duplicate Form Elements
-                $field_mapping = Tracker_FormElementFactory::instance()->duplicate($id_template, $id);
+                $field_mapping = Tracker_FormElementFactory::instance()->duplicate($id_template, $id, $ugroup_mapping);
 
                 // Duplicate Reports
                 Tracker_ReportFactory::instance()->duplicate($id_template, $id, $field_mapping);
