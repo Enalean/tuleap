@@ -633,8 +633,22 @@ generate_delete_general_email()
 	echo $LOGEND
 }
 
+logGitPushes()
+{
+	# Tuleap specific: Git logging stuffs
 
-# --------------- Miscellaneous utilities
+	revtype=$(git cat-file -t "$newrev")
+	tuleap_login=$(whoami)
+	repo_location=$(cd $GIT_DIR; pwd)
+	tuleap_repo_name=$(basename $repo_location | sed -e 's/\.git$//')
+	tuleap_group_name=$(basename $(dirname $repo_location))
+	# commits = $(git rev-list "$oldrev".."$newrev" --abbrev-commit)
+
+	php /usr/share/codendi/plugins/git/hooks/gitLog.php --group_name="$tuleap_group_name" --login="$tuleap_login" --type="$revtype" --rev_id="$tuleap_repo_name/$newrev"
+
+}
+
+#--------------- Miscellaneous utilities
 
 #
 # Show new revisions as the user would like to see them in the email.
@@ -739,11 +753,12 @@ if [ -n "$1" -a -n "$2" -a -n "$3" ]; then
 	# Output to the terminal in command line mode - if someone wanted to
 	# resend an email; they could redirect the output to sendmail
 	# themselves
-	prep_for_email $2 $3 $1 && PAGER= generate_email
+	prep_for_email $2 $3 $1 && PAGER= generate_email && logGitPushes $2 $1
 else
 	while read oldrev newrev refname
 	do
 		prep_for_email $oldrev $newrev $refname || continue
 		generate_email $maxlines | send_mail
+		logGitPushes $newrev $oldrev
 	done
 fi
