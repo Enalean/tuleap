@@ -14,18 +14,14 @@ codendi.tracker.TemplateSelector = Class.create({
     initialize: function (form) {
         this.form = form;
         this.observeProjects();
+        this.observerAutoComplete();
     },
     observeProjects: function () {
         $('tracker_new_project_list').observe('click', this.selectOneProject.bindAsEventListener(this));
     },
     selectOneProject: function (evt) {
-        var target = evt.target;
-        
-        // Highlight selected project
-        //this.selectedOneElement(evt, '.tracker_selected_project', 'group_id_template');
-        
         // Ajax call
-        var groupId = target.value;
+        var groupId = evt.target.value;
         new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/template_selector.php?func=plugin_tracker&target='+groupId, {
             onLoading: function () {
                 /*var img = Builder.node('img', {
@@ -44,39 +40,29 @@ codendi.tracker.TemplateSelector = Class.create({
         
         Event.stop(evt);
     },
-    observeTrackers: function () {
-        $$('.tracker_selector_tracker').each(function (link) {
-            link.observe('click', this.selectOneTracker.bindAsEventListener(this));
+    /**
+     * Observe: press on enter or tab in the field (not other key because user might just navigate)
+     * Observer: click on select result
+     */
+    observerAutoComplete: function () {
+        $('tracker_new_prjname').observe('keypress', function (evt) {
+            if (evt.keyCode == Event.KEY_RETURN || evt.keyCode == Event.KEY_TAB) {
+                this.selectAutocompleter(evt);
+            }
         }.bind(this));
+        $('tracker_new_prjname').observe('change', this.selectAutocompleter.bindAsEventListener(this));
     },
-    selectOneTracker: function (evt) {
-        this.selectedOneElement(evt, '.tracker_selector_tracker', 'atid_template');
-    },
-    // Highlight
-    selectedOneElement: function (evt, elementClass, formElement) {
-        // Selected DOM element
-        var target = evt.target;
-        
-        // Highlight selected element
-        $$(elementClass).each(function (prj) {
-            prj.removeClassName('highlight_list_element');
-        });
-        target.addClassName('highlight_list_element');
-        
-        // Store value in a hidden form element
-        var hiddenStorage = $(formElement);
-        if (!hiddenStorage) {
-            hiddenStorage = Builder.node('input', {
-                'type': 'hidden',
-                'id': formElement});
-            this.form.appendChild(hiddenStorage);
-        }
-        hiddenStorage.setValue(target.attributes['rel'].nodeValue);
-        //console.log(hiddenStorage.getValue());
+    selectAutocompleter: function (evt) {
+        //console.log(evt.target.value);
+        new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/template_selector.php?func=plugin_tracker&target_name='+encodeURIComponent(evt.target.value));
     }
 });
 
+// Crappy, cannot be added in dom:loaded because, by default, constructor wait for dom:loaded event..
+new ProjectAutoCompleter('tracker_new_prjname', codendi.imgroot, false);
+
 document.observe('dom:loaded', function () {
+    // Refresh project list
     new codendi.tracker.TemplateSelector($('tracker_create_new'));
     
     /*var acc = new accordion('tracker_new_accordion', {

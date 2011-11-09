@@ -32,11 +32,23 @@ if ($request->isPost() && $request->valid($vFunc)) {
     switch ($request->get('func')) {
         case 'plugin_tracker':
             $trackerFactory = TrackerFactory::instance();
-            $trackers = $trackerFactory->getTrackersByGroupId($request->get('target'));
-            if (count($trackers)) {
-                foreach ($trackers as $tracker) {
-                    //$res[] = array('id' => $tracker->getId(), 'name' => $tracker->getName());
-                    echo '<option value="'.$tracker->getId().'">'.$tracker->getName().'</option>';
+            
+            $pm = ProjectManager::instance();
+            if ($request->existAndNonEmpty('target')) {
+                $group_id = $request->get('target');
+                $project = $pm->getProject($group_id);
+            } else {
+                $project = $pm->getProjectFromAutocompleter($request->get('target_name'));
+            }
+            if ($project && !$project->isError() && $project->isActive()) {
+                $trackers = $trackerFactory->getTrackersByGroupId($project->getID());
+                if (count($trackers)) {
+                    foreach ($trackers as $tracker) {
+                        //$res[] = array('id' => $tracker->getId(), 'name' => $tracker->getName());
+                        echo '<option value="'.$tracker->getId().'">'.$tracker->getName().'</option>';
+                    }
+                } else {
+                    echo '<option><em>No tracker found</em></option>';
                 }
             } else {
                 echo '<option><em>No tracker found</em></option>';
@@ -54,26 +66,5 @@ if (count($res)) {
     header('Status: 204');
     exit;
 }
-*/
-/*
-$gf = new GroupFactory();
-$hp = Codendi_HTMLPurifier::instance();
-
-echo '<style>.highlight_list_element { background-color: yellow; }</style>';
-
-echo '<ul style="border: 1px solid grey; width: 20em; float: left;">';
-$results = $gf->getMemberGroups();
-while ($row = db_fetch_array($results)) {
-    echo '<li class="tracker_selected_project" rel="'.$hp->purify($row['group_id']).'">'.$hp->purify($row['group_name']).'</li>';
-}
-echo '</ul>';
-
-echo '<ul style="border: 1px solid grey; width: 20em; float: right;" id="tracker_list_trackers_from_project">';
-echo '<li>select a project first</li>';
-echo '</ul>';
-
-$combined = new Combined();
-echo $combined->getScripts(array('/scripts/codendi/common.js'));
-echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerTemplateSelector.js"></script>';
 */
 ?>

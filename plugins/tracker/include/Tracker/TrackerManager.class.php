@@ -417,13 +417,13 @@ class TrackerManager { /* extends Engine? */
             echo '<option value="'.$hp->purify($row['group_id']).'">'.$hp->purify($row['group_name']).'</option>';
         }
         echo '</select>';
-        //echo 'or type the name of another project: ';
 
         echo '<select name="atid_template" size="15" id="tracker_list_trackers_from_project">';
-        //echo '<option value="-1">non</li>';
         echo '</select>';
         
-        //echo '<div style="clear:both;"></div>';
+        echo '<br />';
+        echo 'Or type a project name: <input type="text" name="tracker_new_prjname" id="tracker_new_prjname" value="Start typing" />';
+        echo '<br />';
         
         echo '<input type="button" name="CreateTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateTemplate()">';
         
