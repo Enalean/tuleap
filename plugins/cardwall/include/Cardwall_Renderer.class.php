@@ -62,37 +62,71 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             return 'Nothing to display';
         }
         
-        // Build a small sql query to fetch artifact titles (depends on tracker semantic)
-        $sql = "SELECT A.id AS id, CVT.value AS title
-                FROM tracker_artifact AS A
-                   LEFT JOIN (
-                       tracker_changeset_value AS CV
-                       INNER JOIN tracker_semantic_title as ST ON (CV.field_id = ST.field_id)
-                       INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id = CVT.changeset_value_id)
-                   ) ON (A.last_changeset_id = CV.changeset_id)
-                WHERE A.id IN (". $matching_ids['id'] .")";
-        $dao = new DataAccessObject();
-        $html .= '<div class="tracker_renderer_board">';
-        
-        $html .= '<table width="100%" border="1" style="border-collapse: collapse;" bordercolor="#ccc" cellspacing="2" cellpadding="10">
-        <colgroup<<col width="33%"/><col width="33%"/><col width="33%"/></colgroup>
-        <tr valign="top"><td>';
-        
-        $html .= '<ul>';
-        
-        foreach ($dao->retrieve($sql) as $row) {
-            $html .= '<li class="tracker_renderer_board_postit">';
-            $html .= '<p class="tracker_renderer_board_title"><a href="'. TRACKER_BASE_URL .'/?aid='. $row['id'] .'">#'. $row['id'] .'</a></p>';
-            $html .= '<p class="tracker_renderer_board_content"> '. $row['title'] .'</p>';
-            $html .= '</li>';
+        $field_id = 118;
+        if ($field = Tracker_FormElementFactory::instance()->getFormElementById($field_id)) {
+            //TODO: check that field is a selectbox
+            $values = $field->getAllValues();
+            foreach ($values as $key => $value) {
+                if ($value->isHidden()) {
+                    unset($values[$key]);
+                }
+            }
+            
+            $nb_columns = count($values);
+            if ($nb_columns) {
+                // Build a small sql query to fetch artifact titles (depends on tracker semantic)
+                $sql = "SELECT A.id AS id, CVT.value AS title, CVL.bindvalue_id AS col
+                        FROM tracker_artifact AS A
+                           LEFT JOIN (
+                               tracker_changeset_value AS CV
+                               INNER JOIN tracker_semantic_title as ST ON (CV.field_id = ST.field_id)
+                               INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id = CVT.changeset_value_id)
+                           ) ON (A.last_changeset_id = CV.changeset_id)
+                           LEFT JOIN (
+                               tracker_changeset_value AS CV2
+                               INNER JOIN tracker_changeset_value_list AS CVL ON (CVL.changeset_value_id = CV2.id)
+                           ) ON (A.last_changeset_id = CV2.changeset_id AND CV2.field_id = $field_id) 
+                        WHERE A.id IN (". $matching_ids['id'] .")
+                ";
+                $dao = new DataAccessObject();
+                $html .= '<div class="tracker_renderer_board">';
+                
+                $html .= '<table width="100%" border="1" style="border-collapse: collapse;" bordercolor="#ccc" cellspacing="2" cellpadding="10">';
+                
+                $html .= '<colgroup>';
+                $html .= implode('', array_fill(0, $nb_columns, '<col width="'. floor(100 / $nb_columns) .'%"/>'));
+                $html .= '</colgroup>';
+                
+                $html .= '<thead><tr>';
+                foreach ($values as $value) {
+                    $html .= '<th>';
+                    //TODO: check that users are properly escaped
+                    $html .= Codendi_HTMLPurifier::instance()->purify($value->getLabel());
+                    $html .= '</th>';
+                }
+                $html .= '</tr></thead>';
+                
+                $html .= '<tbody><tr valign="top">';
+                
+                $cards = $dao->retrieve($sql);
+                foreach ($values as $value) {
+                    $html .= '<td>';
+                    $html .= '<ul>';
+                    foreach ($cards as $row) {
+                        if ($row['col'] == $value->getId()) {
+                            $html .= '<li class="tracker_renderer_board_postit">';
+                            $html .= '<p class="tracker_renderer_board_title"><a href="'. TRACKER_BASE_URL .'/?aid='. $row['id'] .'">#'. $row['id'] .'</a></p>';
+                            $html .= '<p class="tracker_renderer_board_content"> '. $row['title'] .'</p>';
+                            $html .= '</li>';
+                        }
+                    }
+                    $html .= '</ul>';
+                    $html .= '</td>';
+                }
+                
+                $html .= '</tr></tbody></table>';
+            }
         }
-        $html .= '</ul>';
-        
-        $html .= '</td>';
-        $html .= '<td><ul/></td>';
-        $html .= '<td><ul/></td>';
-        $html .= '</tr></table>';
-        
         return $html;
     }
 
