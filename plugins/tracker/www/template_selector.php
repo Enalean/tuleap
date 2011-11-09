@@ -24,6 +24,8 @@ require_once 'common/include/GroupFactory.class.php';
 require_once 'common/include/Combined.class.php';
 require_once dirname(__FILE__).'/../include/Tracker/TrackerFactory.class.php';
 
+//$res = array();
+
 $vFunc = new Valid_WhiteList('func', array('plugin_tracker'));
 $vFunc->required();
 if ($request->isPost() && $request->valid($vFunc)) {
@@ -33,15 +35,26 @@ if ($request->isPost() && $request->valid($vFunc)) {
             $trackers = $trackerFactory->getTrackersByGroupId($request->get('target'));
             if (count($trackers)) {
                 foreach ($trackers as $tracker) {
-                    echo '<li class="tracker_selector_tracker" rel="'.$tracker->getId().'">'.$tracker->getName().'</li>';
+                    //$res[] = array('id' => $tracker->getId(), 'name' => $tracker->getName());
+                    echo '<option value="'.$tracker->getId().'">'.$tracker->getName().'</option>';
                 }
             } else {
-                echo '<li><em>No tracker found</em></li>';
+                echo '<option><em>No tracker found</em></option>';
             }
             break;
     }
+}
+/*
+if (count($res)) {
+    //handle JSON request if content
+    header('Content-type: application/json');
+    echo json_encode($res);
+} else {
+    header('HTTP/1.0 204 No Content');
+    header('Status: 204');
     exit;
 }
+*/
 /*
 $gf = new GroupFactory();
 $hp = Codendi_HTMLPurifier::instance();

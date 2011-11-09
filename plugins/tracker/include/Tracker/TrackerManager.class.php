@@ -411,20 +411,20 @@ class TrackerManager { /* extends Engine? */
         //$Language->getText('plugin_tracker_include_type','from_exist')
         echo '<div class="tracker_new_accordion_content">';
         echo '<noscript>Project Id: <input type="text" name="group_id_template" value=""><br/>Tracker Id: <input type="text" name="atid_template" value=""></noscript>';
-        echo '<ul style="border: 1px solid grey; width: 20em; float: left;">';
+        echo '<select name="group_id_template" size="15" id="tracker_new_project_list">';
         $results = $gf->getMemberGroups();
         while ($row = db_fetch_array($results)) {
-            echo '<li class="tracker_selected_project" rel="'.$hp->purify($row['group_id']).'">'.$hp->purify($row['group_name']).'</li>';
+            echo '<option value="'.$hp->purify($row['group_id']).'">'.$hp->purify($row['group_name']).'</option>';
         }
-        echo '</ul>';
+        echo '</select>';
+        //echo 'or type the name of another project: ';
 
-        echo '<ul style="border: 1px solid grey; width: 20em; float: right;" id="tracker_list_trackers_from_project">';
-        echo '<li>select a project first</li>';
-        echo '</ul>';
+        echo '<select name="atid_template" size="15" id="tracker_list_trackers_from_project">';
+        //echo '<option value="-1">non</li>';
+        echo '</select>';
         
-        echo '<div style="clear:both;"></div>';
+        //echo '<div style="clear:both;"></div>';
         
-        echo 'pouet';
         echo '<input type="button" name="CreateTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateTemplate()">';
         
         echo '</div>';

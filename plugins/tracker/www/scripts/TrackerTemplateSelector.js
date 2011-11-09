@@ -16,29 +16,29 @@ codendi.tracker.TemplateSelector = Class.create({
         this.observeProjects();
     },
     observeProjects: function () {
-        $$('.tracker_selected_project').each(function (link) {
-            link.observe('click', this.selectOneProject.bindAsEventListener(this));
-        }.bind(this));
+        $('tracker_new_project_list').observe('click', this.selectOneProject.bindAsEventListener(this));
     },
     selectOneProject: function (evt) {
         var target = evt.target;
         
         // Highlight selected project
-        this.selectedOneElement(evt, '.tracker_selected_project', 'group_id_template');
+        //this.selectedOneElement(evt, '.tracker_selected_project', 'group_id_template');
         
         // Ajax call
-        var groupId = target.attributes['rel'].nodeValue;
+        var groupId = target.value;
         new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/template_selector.php?func=plugin_tracker&target='+groupId, {
             onLoading: function () {
-                var img = Builder.node('img', {
+                /*var img = Builder.node('img', {
                     'src': "/themes/common/images/ic/spinner.gif",
                     'alt': 'Working...'});
                 var span_img = Builder.node('span', {id: 'search_indicator'});
                 span_img.appendChild(img);
-                $('tracker_list_trackers_from_project').appendChild(img);
+                $('tracker_list_trackers_from_project').appendChild(img);*/
             },
-            onComplete: function (transport) {
-                this.observeTrackers();
+            onSuccess: function (response) {
+                /*$A(response.responseJSON).each(function (element) {
+                    console.log(element.name+" "+element.id);
+                }*/
             }.bind(this)
         });
         
@@ -79,7 +79,7 @@ codendi.tracker.TemplateSelector = Class.create({
 document.observe('dom:loaded', function () {
     new codendi.tracker.TemplateSelector($('tracker_create_new'));
     
-    var acc = new accordion('tracker_new_accordion', {
+    /*var acc = new accordion('tracker_new_accordion', {
         classNames : {
             toggle: 'tracker_new_accordion_toggle',
             toggleActive: 'tracker_new_accordion_toggle_active',
@@ -93,6 +93,6 @@ document.observe('dom:loaded', function () {
         });
     });
 
-    acc.activate($$('#tracker_new_accordion .tracker_new_accordion_toggle')[0]);
+    acc.activate($$('#tracker_new_accordion .tracker_new_accordion_toggle')[0]);*/
 
 });
