@@ -80,7 +80,7 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         $hp = Codendi_HTMLPurifier::instance();
         $mail = new Codendi_Mail();
         $mail->getLookAndFeelTemplate()->set('title', $hp->purify($mailSubject, CODENDI_PURIFIER_CONVERT_HTML));
-        $mail->setBodyHtml($mailMessage, Codendi_Mail::DISCARD_COMMON_LOOK_AND_FEEL);
+        $mail->setBodyHtml($mailMessage);
     } else {
         $mail = new Mail();
         $mail->setBody($mailMessage);

@@ -21,6 +21,14 @@ require_once('common/include/Tuleap_Template.class.php');
 
 /**
  * Template class to send beautiful html emails in tuleap
+ *
+ * Usage is transparent through Codendi_Mail
+ * <pre>
+ * $mail = new Codendi_Mail();
+ * $mail->getHtmlTemplate()->set('breadcrumbs', $breadcrumbs);
+ * $mail->setBodyHtml($html);
+ * $mail->send();
+ * </pre>
  */
 class Tuleap_Template_Mail extends Tuleap_Template {
     public function __construct() {
