@@ -306,9 +306,18 @@ class TransitionFactory {
                 
                 $transition_id = $this->getDao()->addTransition($id, $from_id, $to_id);
                 //Duplicate permissions
+                $from_transition_id = $transition->getTransitionId();
+                $from_transition_permissions = $transition->getPermissions();
+                $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping);
                 //Duplicate postactions
             } 
         }
+    }
+    
+    public function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping = false) {
+        $pm = PermissionsManager::instance();
+        //Duplicate tracker permissions
+        $pm->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping);
     }
 }
 ?>

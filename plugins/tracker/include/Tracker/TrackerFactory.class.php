@@ -423,13 +423,13 @@ class TrackerFactory {
     public function duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping) {
         $pm = PermissionsManager::instance();
         //Duplicate tracker permissions
-        $pm->duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping);
+        $pm->duplicatePermissions($id_template, $id, $ugroup_mapping);
         
         //Duplicate fields permissions
         foreach ($field_mapping as $f) {
             $from = $f['from'];
             $to = $f['to'];
-            $pm->duplicatePermissions($from, $to, $ugroup_mapping, $field_mapping);
+            $pm->duplicatePermissions($from, $to, $ugroup_mapping);
         }
     }
 
