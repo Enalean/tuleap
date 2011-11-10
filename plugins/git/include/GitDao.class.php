@@ -299,7 +299,38 @@ class GitDao extends DataAccessObject {
         }
         return true;
     }
-    
+
+    /**
+     * This function log a Git Push in the database
+     *
+     * @param Integer $repoId
+     * @param Integer $userId
+     * @param Integer $nbCommits
+     *
+     * @return Boolean
+     */
+    public function logGitPush($repoId, $userId, $nbCommits) {
+        $repositoryId = $this->da->escapeInt($repoId);
+        $userId = $this->da->escapeInt($userId);
+        $commitsNumber = $this->da->escapeInt($nbCommits);
+        $pushDate = date('Y-m-d H:i:s');
+
+        $query = 'INSERT INTO plugin_git_logging ('.self::REPOSITORY_ID.',
+                                                         user_id,
+                                                         push_date,
+                                                         nb_commit
+                                                     ) values ('.
+                                                        "".$repositoryId.",".
+                                                        "".$userId.",".
+                                                        "'".$pushDate."',".
+                                                        "".$commitsNumber.
+                                                        ')';
+        if ( $this->update($query) === false ) {
+            throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error').' : '.$this->da->isError());
+        }
+        return true;
+    }
+
     public function getProjectRepositoryById($repository) {
         $id = (int)$repository->getId();
         $id = $this->da->escapeInt($id);
