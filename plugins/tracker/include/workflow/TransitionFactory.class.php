@@ -280,7 +280,7 @@ class TransitionFactory {
     *
     * @return void
     */
-    public function duplicate($values, $id, $transitions, $ugroup_mapping = false) {
+    public function duplicate($values, $id, $transitions, $field_mapping, $ugroup_mapping = false) {
         if ($transitions != null) {
             foreach ($transitions as $transition) {
                 if ($transition->getFieldValueFrom() == null) {
@@ -310,7 +310,10 @@ class TransitionFactory {
                 $from_transition_permissions = $transition->getPermissions();
                 $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping);
                 //Duplicate postactions
-            } 
+                $postactions = $transition->getPostActions();
+                $tpaf = new Transition_PostActionFactory();
+                $tpaf->duplicatePostActions($transition_id, $postactions, $field_mapping);
+            }
         }
     }
     

@@ -183,5 +183,17 @@ class Transition_PostActionFactory {
     public function deleteWorkflow($workflow_id) {
         return $this->getDao()->deletePostActionsByWorkflowId($workflow_id);
     }
+    
+   /**
+    * Duplicate postactions of a transition
+    *
+    * @param int $transition_id the id of the transition
+    * @param Array $postactions an array of Transition_PostAction
+    * @param Array $field_mapping the field mapping
+    * 
+    */
+    public function duplicatePostActions($transition_id, $postactions, $field_mapping) {
+        
+    }
 }
 ?>

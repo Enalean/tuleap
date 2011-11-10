@@ -440,15 +440,16 @@ class Tracker_FormElementFactory {
                     //Then duplicate formElement
                     $mapping[] = array('from' => $from_row['id'], 
                                     'to' => $id,
-                                    'values' => $this->getFormElementById($id)->duplicate($from_row['id'], $id));
-                }else {
+                                    'values' => $this->getFormElementById($id)->duplicate($from_row['id'], $id),
+                                    'workflow'=> false);
+                } else {
                     $workflow = $this->getFormElementById($from_row['id'])->getWorkflow();
                     $values = $this->getFormElementById($id)->duplicate($from_row['id'], $id);
-                    $w = $workflow->duplicate($to_tracker_id, $from_row['id'], $id, $values, $ugroup_mapping);
+                    //$w = $workflow->duplicate($to_tracker_id, $from_row['id'], $id, $values, $ugroup_mapping);
                     $mapping[] = array('from' => $from_row['id'],
                                     'to' => $id,
                                     'values' => $values, 
-                                    'workflow'=>$w);
+                                    'workflow'=> true);
                 }
                
                 $type = $this->getType($this->getFormElementById($id));

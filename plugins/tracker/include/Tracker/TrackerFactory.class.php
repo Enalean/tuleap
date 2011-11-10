@@ -378,7 +378,13 @@ class TrackerFactory {
 
                 // Duplicate Form Elements
                 $field_mapping = Tracker_FormElementFactory::instance()->duplicate($id_template, $id, $ugroup_mapping);
-
+                
+                // Duplicate workflow
+                foreach ($field_mapping as $mapping) {
+                    if ($mapping['workflow']) {
+                        WorkflowFactory::instance()->duplicate($id_template, $id, $mapping['from'], $mapping['to'], $mapping['values'], $field_mapping, $ugroup_mapping);
+                    }
+                }
                 // Duplicate Reports
                 Tracker_ReportFactory::instance()->duplicate($id_template, $id, $field_mapping);
 

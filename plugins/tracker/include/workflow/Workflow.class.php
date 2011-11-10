@@ -202,10 +202,6 @@ class Workflow {
          }
     }
     
-    public function duplicate($to_tracker_id, $from_id, $to_id, $values, $ugroup_mapping) {
-        return WorkflowFactory::instance()->duplicate($this->workflow_id, $to_tracker_id, $from_id, $to_id, $values, $this->getIsUsed(), $this->getTransitions(), $ugroup_mapping);
-    }
-    
     /**
      * Set the tracker of this workflow
      *
