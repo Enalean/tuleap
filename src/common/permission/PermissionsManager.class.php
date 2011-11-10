@@ -256,8 +256,8 @@ class PermissionsManager {
     * 
     * @return Boolean
     */
-    public function duplicatePermissions($source, $target, $ugroup_mapping) {
-        return $this->_permission_dao->duplicatePermissions($source, $target, $ugroup_mapping);
+    public function duplicatePermissions($source, $target, $ugroup_mapping, $duplicate_static_perms) {
+        return $this->_permission_dao->duplicatePermissions($source, $target, $ugroup_mapping, $duplicate_static_perms);
     }
     
     function isPermissionExist($object_id, $ptype){    	

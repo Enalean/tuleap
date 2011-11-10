@@ -274,13 +274,13 @@ class TransitionFactory {
     * Duplicate the transitions
     * 
     * @param Array $values array of old and new values of the field
-    * @param $id the workflow id
+    * @param int $id the workflow id
     * @param Array $transitions the transitions to duplicate
     * @param Array $ugroup_mapping the ugroup mapping
     *
     * @return void
     */
-    public function duplicate($values, $id, $transitions, $field_mapping, $ugroup_mapping = false) {
+    public function duplicate($values, $id, $transitions, $field_mapping, $ugroup_mapping = false, $duplicate_static_perms) {
         if ($transitions != null) {
             foreach ($transitions as $transition) {
                 if ($transition->getFieldValueFrom() == null) {
@@ -308,7 +308,7 @@ class TransitionFactory {
                 //Duplicate permissions
                 $from_transition_id = $transition->getTransitionId();
                 $from_transition_permissions = $transition->getPermissions();
-                $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping);
+                $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_static_perms);
                 //Duplicate postactions
                 $postactions = $transition->getPostActions();
                 $tpaf = new Transition_PostActionFactory();
@@ -317,10 +317,19 @@ class TransitionFactory {
         }
     }
     
-    public function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping = false) {
+   /**
+    * Duplicate the transitions permissions
+    * 
+    * @param int $from_transition_id the old transition id
+    * @param int $transition_id the new transition id
+    * @param Array $ugroup_mapping the ugroup mapping
+    *
+    * @return void
+    */
+    public function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_static_perms) {
         $pm = PermissionsManager::instance();
         //Duplicate tracker permissions
-        $pm->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping);
+        $pm->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_static_perms);
     }
 }
 ?>

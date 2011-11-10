@@ -182,7 +182,7 @@ class PermissionsDao extends DataAccessObject {
     * 
     * @return Boolean
     */
-    function duplicatePermissions($from, $to, $ugroup_mapping) {
+    function duplicatePermissions($from, $to, $ugroup_mapping, $duplicate_static_perms) {
         $from = $this->da->escapeInt($from);
         $to = $this->da->escapeInt($to);
         
@@ -198,10 +198,15 @@ class PermissionsDao extends DataAccessObject {
             }
         }
         
+        $and = '';
+        if (! $duplicate_static_perms) {
+            $and = ' AND ugroup_id <= 100';
+        }
+        
         $sql = 'INSERT INTO permissions (permission_type, object_id, ugroup_id)
                     SELECT permission_type, '.$to.', ugroup_id
                     FROM permissions
-                    WHERE object_id='.$from.' AND ugroup_id <= 100';
+                    WHERE object_id='.$from.$and;
         return $this->update($sql);
     }
     

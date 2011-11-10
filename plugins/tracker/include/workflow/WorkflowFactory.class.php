@@ -249,7 +249,7 @@ class WorkflowFactory {
      *
      * @return void
      */
-     public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, $ugroup_mapping) {
+     public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, $ugroup_mapping, $duplicate_static_perms) {
          if ($workflow = $this->getWorkflowByTrackerId($from_tracker_id)) {
             $is_used = $workflow->getIsUsed();
             
@@ -257,7 +257,7 @@ class WorkflowFactory {
             if ($id = $this->getDao()->duplicate($to_tracker_id, $from_id, $to_id, $values, $is_used)) {
                 $transitions = $workflow->getTransitions();
                 //Duplicate transitions
-                $this->getTransitionFactory()->duplicate($values, $id, $transitions, $field_mapping, $ugroup_mapping);
+                $this->getTransitionFactory()->duplicate($values, $id, $transitions, $field_mapping, $ugroup_mapping, $duplicate_static_perms);
             }
          }
      }
