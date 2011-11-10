@@ -312,7 +312,7 @@ class TransitionFactory {
                 //Duplicate postactions
                 $postactions = $transition->getPostActions();
                 $tpaf = new Transition_PostActionFactory();
-                $tpaf->duplicatePostActions($transition_id, $postactions, $field_mapping);
+                $tpaf->duplicate($from_transition_id, $transition_id, $postactions, $field_mapping);
             }
         }
     }
