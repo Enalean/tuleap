@@ -202,6 +202,13 @@ abstract class Tracker_Report_Renderer {
     }
     
     /**
+     * Create a renderer - add in db
+     *     
+     * @return bool true if success, false if failure
+     */
+    public abstract function create();
+    
+    /**
      * Duplicate the renderer
      */
     public abstract function duplicate($from_report_id, $field_mapping);

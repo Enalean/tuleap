@@ -25,7 +25,7 @@ require_once('common/plugin/Plugin.class.php');
  */
 class cardwallPlugin extends Plugin {
 
-    const RENDERER_TYPE = 'plugin_board';
+    const RENDERER_TYPE = 'plugin_cardwall';
 
     public function __construct($id) {
         parent::__construct($id);
@@ -43,7 +43,7 @@ class cardwallPlugin extends Plugin {
      * @param array types Input/Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
     public function tracker_report_renderer_types($params) {
-        $params['types'][self::RENDERER_TYPE] = 'Cardwall';
+        $params['types'][self::RENDERER_TYPE] = 'Card Wall';
     }
     
     /**
@@ -60,14 +60,36 @@ class cardwallPlugin extends Plugin {
     public function tracker_report_renderer_instance($params) {
         if ($params['type'] == self::RENDERER_TYPE) {
             require_once('Cardwall_Renderer.class.php');
+            require_once('Cardwall_RendererDao.class.php');
+            //First retrieve specific properties of the renderer that are not saved in the generic table
+            if ( !isset($row['field_id']) ) {
+                $row['field_id'] = null;
+                if ($params['store_in_session']) {
+                    $this->report_session = new Tracker_Report_Session($params['report']->id);
+                    $this->report_session->changeSessionNamespace("renderers.{$params['row']['id']}");
+                    $row['field_id'] = $this->report_session->get("field_id");
+                }
+                if (!$row['field_id']) {
+                    $dao = new Cardwall_RendererDao();
+                    $cardwall_row = $dao->searchByRendererId($params['row']['id'])->getRow();
+                    if ($cardwall_row) {
+                        $row['field_id'] = $cardwall_row['field_id'];
+                    }
+                }
+            }
+            //Build the instance from the row
             $params['instance'] = new Cardwall_Renderer(
+                $this,
                 $params['row']['id'],
                 $params['report'],
                 $params['row']['name'],
                 $params['row']['description'],
                 $params['row']['rank'],
-                $this
+                $row['field_id']
             );
+            if ($params['store_in_session']) {
+                $params['instance']->initiateSession();
+            }
         }
     }
     
