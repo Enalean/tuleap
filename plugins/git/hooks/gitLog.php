@@ -19,6 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+$DIR = dirname(__FILE__);
+require_once($DIR.'/../include/GitDao.class.php');
+
 // Check script parameters
 if ($argc != 6) {
     error("Wrong number of arguments");
@@ -35,14 +38,25 @@ $repositoryName = $params['repo_name'];
 $userTuleapLogin = $params['login'];
 $nbCommits = $params['commits_number'];
 
+logGitPushes($repositoryName, $userTuleapLogin, $nbCommits);
+
 // Functions
 function error($msg) {
     echo "*** Error: $msg".PHP_EOL;
     exit(1);
 }
 
-function logGitPushes() {
+function logGitPushes($repositoryName, $identifier, $nbCommits) {
+        $um = UserManager::instance();
+        $user = $um->getUserByIdentifier($identifier);
+        $userId = $user->getId();
+        $repoId = 1001;
+        /*@TODO: ** Retrieve Repository id from its name. 
+                 ** Move the whole stuff to a higher layer.
+         */
 
+        $dao = new GitDao();
+        $dao->logGitPush($repoId, $userId, $nbCommits);
 }
 
 ?>
