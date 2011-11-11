@@ -31,6 +31,10 @@ foreach ($argv as $arg) {
     }
 }
 
+$repositoryName = $params['repo_name'];
+$userTuleapLogin = $params['login'];
+$nbCommits = $params['commits_number'];
+
 // Functions
 function error($msg) {
     echo "*** Error: $msg".PHP_EOL;
