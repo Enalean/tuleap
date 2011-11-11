@@ -21,6 +21,7 @@
 
 $DIR = dirname(__FILE__);
 require_once($DIR.'/../include/GitDao.class.php');
+require_once('pre.php');
 
 // Check script parameters
 if ($argc != 6) {
@@ -36,9 +37,10 @@ foreach ($argv as $arg) {
 
 $repositoryName = $params['repo_name'];
 $userTuleapLogin = $params['login'];
+$groupName  = $params['group_name'];
 $nbCommits = $params['commits_number'];
 
-logGitPushes($repositoryName, $userTuleapLogin, $nbCommits, 101);
+logGitPushes($repositoryName, $userTuleapLogin, $nbCommits, $groupName);
 
 // Functions
 function error($msg) {
@@ -46,13 +48,16 @@ function error($msg) {
     exit(1);
 }
 
-function logGitPushes($repositoryName, $identifier, $nbCommits, $projectId) {
+function logGitPushes($repositoryName, $identifier, $nbCommits, $projectName) {
         $um = UserManager::instance();
         $user = $um->getUserByIdentifier($identifier);
         $userId = $user->getId();
         /*@TODO: ** Retrieve Repository id from its name. 
                  ** Move the whole stuff to a higher layer.
+                 ** Manage the case when git pusher is not a Tuleap user.
          */
+
+        $projectId = group_getid_by_name($projectName);
 
         $dao = new GitDao();
         $repoId = 0;
