@@ -353,6 +353,14 @@ class GitDao extends DataAccessObject {
         return true;
     }
 
+    public function getProjectRepositoryIDByName($repositoryName, $projectId) {
+        $projectId = $this->da->escapeInt($projectId);
+        $repositoryName = $this->da->quoteSmart($repositoryName);
+        $query = 'SELECT * '.' FROM '.$this->getTable().
+                 ' WHERE '.self::REPOSITORY_NAME.'='.$repositoryName.' AND '.self::FK_PROJECT_ID.'='.$projectId.' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
+        return $this->retrieve($query);
+    }
+
     protected function hydrateRepositoryObject($repository, $result) {
         $repository->setName($result[self::REPOSITORY_NAME]);
         $repository->setPath($result[self::REPOSITORY_PATH]);

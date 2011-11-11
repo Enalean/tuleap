@@ -38,7 +38,7 @@ $repositoryName = $params['repo_name'];
 $userTuleapLogin = $params['login'];
 $nbCommits = $params['commits_number'];
 
-logGitPushes($repositoryName, $userTuleapLogin, $nbCommits);
+logGitPushes($repositoryName, $userTuleapLogin, $nbCommits, 101);
 
 // Functions
 function error($msg) {
@@ -46,16 +46,22 @@ function error($msg) {
     exit(1);
 }
 
-function logGitPushes($repositoryName, $identifier, $nbCommits) {
+function logGitPushes($repositoryName, $identifier, $nbCommits, $projectId) {
         $um = UserManager::instance();
         $user = $um->getUserByIdentifier($identifier);
         $userId = $user->getId();
-        $repoId = 1001;
         /*@TODO: ** Retrieve Repository id from its name. 
                  ** Move the whole stuff to a higher layer.
          */
 
         $dao = new GitDao();
+        $repoId = 0;
+        $dar = $dao->getProjectRepositoryIDByName($repositoryName, $projectId);
+        if ($dar && !empty($dar) && !$dar->isError()) {
+            while ($row = $dar->getRow()) {
+                $repoId = $row[GitDao::REPOSITORY_ID];
+                        }
+        }
         $dao->logGitPush($repoId, $userId, $nbCommits);
 }
 
