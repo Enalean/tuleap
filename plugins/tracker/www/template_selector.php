@@ -40,9 +40,9 @@ if ($request->isPost() && $request->valid($vFunc)) {
             } else {
                 $project = $pm->getProjectFromAutocompleter($request->get('target_name'));
             }
-            if ($project && !$project->isError() && $project->isActive()) {
+            if ($project && !$project->isError() && ($project->isActive() || $project->getId() == 100)) {
                 $trackers = $trackerFactory->getTrackersByGroupId($project->getID());
-                if (count($trackers)) {
+                if (count($trackers) > 0) {
                     foreach ($trackers as $tracker) {
                         //$res[] = array('id' => $tracker->getId(), 'name' => $tracker->getName());
                         echo '<option value="'.$tracker->getId().'">'.$tracker->getName().'</option>';

@@ -367,13 +367,21 @@ class TrackerFactory {
     function create($project_id, $project_id_template, $id_template, $name, $description, $itemname, $ugroup_mapping = false) {
         
         if ($this->validMandatoryInfoOnCreate($name, $description, $itemname, $project_id)) {
-
-            // get the template Group object
-            $template_group = $this->getProjectManager()->getProject($project_id_template);
+            
+            // Get the template tracker
+            $template_tracker = $this->getTrackerById($id_template);
+            if (!$template_tracker) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','invalid_tracker_tmpl'));
+                return false;
+            }
+            
+            $template_group = $template_tracker->getProject();
             if (!$template_group || !is_object($template_group) || $template_group->isError()) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','invalid_templ'));
                 return false;
             }
+            $project_id_template = $template_group->getId();
+            
             //Ask to dao to duplicate the tracker
             if ($id = $this->getDao()->duplicate($id_template, $project_id, $name, $description, $itemname)) {
 

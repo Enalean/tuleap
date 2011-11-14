@@ -53,7 +53,12 @@ codendi.tracker.TemplateSelector = Class.create({
         $('tracker_new_prjname').observe('change', this.selectAutocompleter.bindAsEventListener(this));
     },
     selectAutocompleter: function (evt) {
-        //console.log(evt.target.value);
+        // Create fake project element to show what is selected
+        var opt = Builder.node('option', { 'value': "" });
+        opt.appendChild(document.createTextNode(evt.target.value));
+        opt.selected = true;
+        $('tracker_new_other').appendChild(opt);
+        
         new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/template_selector.php?func=plugin_tracker&target_name='+encodeURIComponent(evt.target.value));
     }
 });
