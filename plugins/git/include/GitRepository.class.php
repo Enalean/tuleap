@@ -288,7 +288,7 @@ class GitRepository implements DVCSRepository {
         $repoId = $this->getRepositoryIDByName($repositoryName, $projectName);
 
         $dao = $this->getDao();
-        $dao->logGitPush($repoId, $userId, $nbCommits);
+        return $dao->logGitPush($repoId, $userId, $nbCommits);
     }
 
     /**
