@@ -263,7 +263,21 @@ class GitRepository implements DVCSRepository {
         }
         return $this->getProject()->getId();
     }
-    
+
+    public function getRepositoryIDByName($repositoryName, $projectName) {
+        $projectId = group_getid_by_name($projectName);
+        $repoId = 0;
+        if ($projectId) {
+            $dar = $this->getDao()->getProjectRepositoryIDByName($repositoryName, $projectId);
+            if ($dar && !empty($dar) && !$dar->isError()) {
+                while ($row = $dar->getRow()) {
+                     $repoId = $row[GitDao::REPOSITORY_ID];
+                }
+            }
+        }
+        return $repoId;
+    }
+
     /**
      * @param String $name
      */
