@@ -25,13 +25,15 @@
   text-decoration:none;
   color:#000;
   background:#ffc;
-  display:block;
+  display:inline-block;
   padding:1em;
   margin:1em;
   cursor: move;
   border: 1px solid #ccc;
+  width:8em;
 }
 .tracker_renderer_board.nifty ul li {
+  float:left;
   border:none;
   height:10em;
   width:10em;
@@ -41,7 +43,6 @@
   -moz-transition:-moz-transform .15s linear;
   -o-transition:-o-transform .15s linear;
   -webkit-transition:-webkit-transform .15s linear;
-  float:left;
 }
 .tracker_renderer_board ul li p.tracker_renderer_board_title {
   font-size:140%;

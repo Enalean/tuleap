@@ -68,7 +68,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $field = $fact->getFormElementById($this->field_id);
         $used  = array($this->field_id => $field);
         //TODO: check that field is a selectbox
-        //TODO: check that user can read
+        if (!$field->userCanRead()) {
+            $field = null;
+        }
         
         
         $html .= '<input type="hidden" id="tracker_report_cardwall_to_be_refreshed" value="0">';
@@ -158,9 +160,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         
         if ($field) {
             $html .= '<colgroup>';
-            $width = floor(100 / $nb_columns);
             foreach ($values as $key => $value) {
-                $html .= '<col id="tracker_renderer_board_column-'. (int)$value->getId() .'" width="'. $width .'%"/>';
+                $html .= '<col id="tracker_renderer_board_column-'. (int)$value->getId() .'" />';
             }
             $html .= '</colgroup>';
             
