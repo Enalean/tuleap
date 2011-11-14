@@ -25,7 +25,6 @@ require_once('FormElement/Tracker_FormElementFactory.class.php');
 require_once('Artifact/Tracker_ArtifactFactory.class.php');
 require_once('Report/Tracker_ReportFactory.class.php');
 require_once('dao/Tracker_PermDao.class.php');
-require_once('common/reference/Reference_Valid_KeywordName.class.php');
 
 class TrackerManager { /* extends Engine? */
     
@@ -211,9 +210,10 @@ class TrackerManager { /* extends Engine? */
         $is_error    = false;
         $new_tracker = null;
         
-        $name        = trim($request->get('name'));
-        $description = trim($request->get('description'));
-        $itemname    = trim($request->get('itemname'));
+        $name          = trim($request->get('name'));
+        $description   = trim($request->get('description'));
+        $itemname      = trim($request->get('itemname'));
+        $atid_template = $request->getValidated('atid_template', 'uint', 0);
         
         // First try XML
         if (isset($_FILES["tracker_new_xml_file"]["error"]) != UPLOAD_ERR_NO_FILE) {
@@ -225,16 +225,14 @@ class TrackerManager { /* extends Engine? */
             }
         } else {
             // Otherwise tries duplicate
-            $atid_template = $request->getValidated('atid_template', 'uint', 0);
-            
             $new_tracker   = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
         }
 
         if ($new_tracker) {
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&tracker='. $new_tracker->id);
         } else {
-            $atid_template     = $atid_template     ? $atid_template     : '';
-            $this->displayCreateTracker($project, $name, $description, $itemname, $atid_template);
+            $tracker_template = $this->getTrackerFactory()->getTrackerById($atid_template);
+            $this->displayCreateTracker($project, $name, $description, $itemname, $tracker_template);
         }
     }
     
@@ -245,16 +243,13 @@ class TrackerManager { /* extends Engine? */
      * @param unknown_type $name
      * @param unknown_type $description
      * @param unknown_type $itemname
-     * @param unknown_type $default_template
-     * @param unknown_type $group_id_template
-     * @param unknown_type $atid_template
+     * @param Tracker      $tracker_template
      */
     public function displayCreateTracker(Project $project, 
                                          $name = '', 
                                          $description = '', 
                                          $itemname = '',
-                                         $group_id_template = '', 
-                                         $atid_template = '') {
+                                         Tracker $tracker_template = null) {
         global $Language;
         $breadcrumbs = array(
             array(
@@ -278,50 +273,6 @@ class TrackerManager { /* extends Engine? */
           <table>
           <tr valign="top"><td style="padding-right:2em; border-right: 1px solid #eee;">';
           
-
-                echo '<style>
-        .tracker_new_accordion_toggle {
-            display: block;
-            height: 30px;
-            width: 680px;
-            background:  #a9d06a;
-            padding: 0 10px 0 10px;
-            line-height: 30px;
-            color: #ffffff;
-            font-weight: normal;
-            text-decoration: none;
-            outline: none;
-            font-size: 12px;
-            color: #000000;
-            border-bottom: 1px solid #cde99f;
-            cursor: pointer;
-            margin: 0 0 0 0;
-        }
-        
-        .tracker_new_accordion_toggle_active {
-            background: #e0542f;
-            color: #ffffff;
-            border-bottom: 1px solid #f68263;
-        }
-        
-        .tracker_new_accordion_content {
-            background-color: #ffffff;
-            color: #444444;
-            /*overflow: hidden;*/
-        }
-            
-        .tracker_new_accordion_content h2 {
-            margin: 15px 0 5px 10px;
-            color: #0099FF;
-        }
-            
-        .tracker_new_accordion_content p {
-            line-height: 150%;
-            padding: 5px 10px 15px 10px;
-        }
-        </style>';
-        
-        
         echo '<p>'.$Language->getText('plugin_tracker_include_type','choose_creation').'</p>';
         
         echo '<div id="tracker_new_accordion">';
@@ -336,28 +287,34 @@ class TrackerManager { /* extends Engine? */
         echo '<table>';
         
         echo '<tr>';
-        echo '<th>Origin</th>';
-        echo '<th>Available templates</th>';
+        echo '<th align="left">Origin</th>';
+        echo '<th align="left">Available templates</th>';
         echo '</tr>';
         
         echo '<tr>';
         echo '<td valign="top">';
         
-        $preselected  = 100;
+        $group_id_template = 100;
+        $atid_template     = -1;
+        if ($tracker_template) {
+            $group_id_template = $tracker_template->getProject()->getID();
+            $atid_template     = $tracker_template->getId();
+        }
         $selectedHtml = 'selected="selected"';
         
         echo '<select name="group_id_template" size="15" id="tracker_new_project_list">';
         
-        echo '<option value="100" '.($preselected == 100 ? $selectedHtml : '').'>Default templates</option>';
+        echo '<option value="100" '.($group_id_template == 100 ? $selectedHtml : '').'>Default templates</option>';
         
         echo '<optgroup label="My projects">';
         $results = $gf->getMemberGroups();
         while ($row = db_fetch_array($results)) {
-            echo '<option value="'.$hp->purify($row['group_id']).'" '.($preselected == $row['group_id'] ? $selectedHtml : '').'>'.$hp->purify($row['group_name']).'</option>';
+            echo '<option value="'.$hp->purify($row['group_id']).'" '.($group_id_template == $row['group_id'] ? $selectedHtml : '').'>'.$hp->purify($row['group_name']).'</option>';
         }
         echo '</optgroup>';
         
-        echo '<optgroup label="Other Projects" id="tracker_new_other">';
+        echo '<optgroup label="Other Projects">';
+        echo '<option value="-1" id="tracker_new_other">From autocompleter</option>';
         echo '</optgroup>';
         
         echo '</select>';
@@ -368,10 +325,10 @@ class TrackerManager { /* extends Engine? */
         
         echo '<td valign="top">';
         echo '<select name="atid_template" size="15" id="tracker_list_trackers_from_project">';
-        $trackers = $this->getTrackerFactory()->getTrackersByGroupId($preselected);
+        $trackers = $this->getTrackerFactory()->getTrackersByGroupId($group_id_template);
         if (count($trackers) > 0) {
             foreach ($trackers as $tracker) {
-                echo '<option value="'.$tracker->getId().'">'.$tracker->getName().'</option>';
+                echo '<option value="'.$tracker->getId().'" '.($atid_template == $tracker->getId() ? $selectedHtml : '').'>'.$tracker->getName().'</option>';
             }
         } else {
             echo '<option><em>No tracker found</em></option>';
