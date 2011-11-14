@@ -147,9 +147,14 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                 WHERE A.id IN (". $matching_ids['id'] .")
         ";
         $dao = new DataAccessObject();
-        $html .= '<div class="tracker_renderer_board">';
+        $html .= '<div class="tracker_renderer_board nifty">';
         
-        $html .= '<table width="100%" border="1" style="border-collapse: collapse;" bordercolor="#ccc" cellspacing="2" cellpadding="10">';
+        $html .= '<label id="tracker_renderer_board-nifty">';
+        $html .= '<input type="checkbox" onclick="$(this).up(\'div.tracker_renderer_board\').toggleClassName(\'nifty\');" checked="checked" /> ';
+        $html .= 'hand drawn view';
+        $html .= '</label>';
+        
+        $html .= '<table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">';
         
         if ($field) {
             $html .= '<colgroup>';
