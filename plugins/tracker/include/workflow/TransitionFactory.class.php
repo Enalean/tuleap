@@ -330,7 +330,7 @@ class TransitionFactory {
     * @return void
     */
     public function addTransition($workflow_id, $from_id, $to_id) {
-        return $this->getDao()->addTransition($id, $from_id, $to_id);
+        return $this->getDao()->addTransition($workflow_id, $from_id, $to_id);
     }
     
    /**
