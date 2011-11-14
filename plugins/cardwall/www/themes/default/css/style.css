@@ -36,6 +36,8 @@
 .tracker_renderer_board ul li p.tracker_renderer_board_content {
   font-family:"Reenie Beanie",arial,sans-serif;
   font-size:180%;
+  height: 83%;
+  overflow: hidden;
 }
 .tracker_renderer_board ul li {
   -webkit-transform: rotate(-6deg);

@@ -71,6 +71,8 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         //TODO: check that user can read
         
         
+        $html .= '<input type="hidden" id="tracker_report_cardwall_to_be_refreshed" value="0">';
+        
         $html .= '<form id="tracker_report_cardwall_settings" action="" method="POST">';
         $html .= '<input type="hidden" value="'. (int)$this->report->id .'" name="report">';
         $html .= '<input type="hidden" value="'. (int)$this->id .'" name="renderer">';
@@ -151,7 +153,10 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         
         if ($field) {
             $html .= '<colgroup>';
-            $html .= implode('', array_fill(0, $nb_columns, '<col width="'. floor(100 / $nb_columns) .'%"/>'));
+            $width = floor(100 / $nb_columns);
+            foreach ($values as $key => $value) {
+                $html .= '<col id="tracker_renderer_board_column-'. (int)$value->getId() .'" width="'. $width .'%"/>';
+            }
             $html .= '</colgroup>';
             
             $html .= '<thead><tr>';
@@ -184,9 +189,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $html .= '<ul>';
             foreach ($cards as $row) {
                 if (!$field || $row['col'] == $value->getId()) {
-                    $html .= '<li class="tracker_renderer_board_postit">';
-                    $html .= '<p class="tracker_renderer_board_title"><a href="'. TRACKER_BASE_URL .'/?aid='. $row['id'] .'">#'. $row['id'] .'</a></p>';
-                    $html .= '<p class="tracker_renderer_board_content"> '. $row['title'] .'</p>';
+                    $html .= '<li class="tracker_renderer_board_postit" id="tracker_renderer_board_postit-'. (int)$row['id'] .'">';
+                    $html .= '<p class="tracker_renderer_board_title"><a href="'. TRACKER_BASE_URL .'/?aid='. (int)$row['id'] .'">#'. (int)$row['id'] .'</a></p>';
+                    $html .= '<p class="tracker_renderer_board_content"> '. $row['title'] .'</p>'; //TODO: HTMLPurifier
                     $html .= '</li>';
                 }
             }
