@@ -1054,7 +1054,9 @@ plugin_tracker_formelement_property	cols	Columns
 plugin_tracker_formelement_property	static_value	Static value
 plugin_tracker_formelement_property	default_value_today	Today
 
-plugin_tracker_widget_my	no_artifacts	No artifacts founds.
+plugin_tracker_widget_my	no_artifacts	No artifact found.
+
+plugin_tracker	no_artifacts	No artifact found.
 
 plugin_tracker_admin	access_denied	Access denied. You don't have permissions to perform this action.
 

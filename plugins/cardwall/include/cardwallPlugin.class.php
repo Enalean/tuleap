@@ -43,7 +43,7 @@ class cardwallPlugin extends Plugin {
      * @param array types Input/Output parameter. Expected format: $types['my_type'] => 'Label of the type'
      */
     public function tracker_report_renderer_types($params) {
-        $params['types'][self::RENDERER_TYPE] = 'Card Wall';
+        $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_cardwall', 'title');
     }
     
     /**

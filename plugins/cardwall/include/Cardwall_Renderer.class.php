@@ -58,9 +58,11 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     public function fetch($matching_ids, $request, $report_can_be_modified) {
         $html = '';
         
+        $hp = Codendi_HTMLPurifier::instance();
+        
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         if (!$total_rows) {
-            return 'Nothing to display';
+            return $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts');
         }
         
         $fact = Tracker_FormElementFactory::instance();
@@ -81,19 +83,21 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $html .= '<p>'. 'Columns:';
         $options  = '';
         $selected = '';
+        $one_selected = false;
         foreach($fact->getUsedFormElementsByType($this->report->getTracker(), array('sb')) as $formElement) {
             if ($formElement->userCanRead() && count($formElement->getAllValues())) {
                 $selected = '';
                 if (isset($used[$formElement->getId()])) {
                     $selected = 'selected="selected"';
+                    $one_selected = true;
                 }
-                $options .= '<option value="'. $formElement->getId() .'" '. $selected .'>'. $formElement->getLabel() .'</option>';
+                $options .= '<option value="'. $formElement->getId() .'" '. $selected .'>'. $hp->purify($formElement->getLabel()) .'</option>';
             }
         }
         if ($options) {
             $html .= '<select name="renderer_cardwall[columns]" id="tracker_report_cardwall_settings_column" autocomplete="off">';
-            if (!$selected) {
-                $html .= '<option selected="selected" value="">'. '-- '.$GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_criteria').'</option>';
+            if (!$one_selected) {
+                $html .= '<option selected="selected" value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
             }
             $html .= $options;
             $html .= '</select>';
@@ -127,12 +131,12 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                }
             } else {
                 $html .= '<div class="alert-message block-message warning">';
-                $html .= 'There is no values in this field. Please choose another one.'; //TODO i18n
+                $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $hp->purify($field->getLabel()));
                 $html .= '</div>';
             }
         } else {
             $html .= '<div class="alert-message block-message warning">';
-            $html .= 'Please select a field to group artifacts in columns';
+            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'warn_please_choose');
             $html .= '</div>';
         }
         
@@ -159,7 +163,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $html .= 'checked="checked"';
         }
         $html .= ' />';
-        $html .= 'hand drawn view';
+            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'nifty_view');
         $html .= '</label>';
         
         $html .= '<table width="100%" border="1" bordercolor="#ccc" cellspacing="2" cellpadding="10">';
@@ -187,14 +191,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                         }
                     }
                     $html .= '<th '. $style .'>';
-                    $html .= Codendi_HTMLPurifier::instance()->purify($value->getLabel());
+                    $html .= $hp->purify($value->getLabel());
                 } else {
                     $html .= '<th>';
-                    //TODO: check that users are properly escaped
                     if (isset($decorators[$value->getId()])) {
-                        $html .= $decorators[$value->getId()]->decorate(Codendi_HTMLPurifier::instance()->purify($value->getLabel()));
+                        $html .= $decorators[$value->getId()]->decorate($hp->purify($value->getLabel()));
                     } else {
-                        $html .= Codendi_HTMLPurifier::instance()->purify($value->getLabel());
+                        $html .= $hp->purify($value->getLabel());
                     }
                 }
                 $html .= '</th>';
@@ -212,7 +215,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                 if (!$field || $row['col'] == $value->getId()) {
                     $html .= '<li class="tracker_renderer_board_postit" id="tracker_renderer_board_postit-'. (int)$row['id'] .'">';
                     $html .= '<p class="tracker_renderer_board_title"><a href="'. TRACKER_BASE_URL .'/?aid='. (int)$row['id'] .'">#'. (int)$row['id'] .'</a></p>';
-                    $html .= '<p class="tracker_renderer_board_content"> '. Codendi_HTMLPurifier::instance()->purify($row['title'], CODENDI_PURIFIER_BASIC_NOBR, $this->report->getTracker()->getGroupId()) .'</p>';
+                    $html .= '<p class="tracker_renderer_board_content"> '. $hp->purify($row['title'], CODENDI_PURIFIER_BASIC_NOBR, $this->report->getTracker()->getGroupId()) .'</p>';
                     $html .= '</li>';
                 }
             }
@@ -220,7 +223,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $html .= '</td>';
         }
         
-        $html .= '</tr></tbody></table>';
+        $html .= '</tr></tbody></table></div>';
         
         return $html;
     }

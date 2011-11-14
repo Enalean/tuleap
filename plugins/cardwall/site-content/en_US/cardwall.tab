@@ -3,3 +3,6 @@ plugin_cardwall	descriptor_name	Card Wall
 
 plugin_cardwall	title	Card Wall
 
+plugin_cardwall	warn_no_values	There is no values in the field $1. Please choose another one.
+plugin_cardwall	warn_please_choose	Please select a field to group artifacts in columns.
+plugin_cardwall	nifty_view	free-hand drawing view
