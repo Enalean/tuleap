@@ -10,15 +10,31 @@ document.observe('dom:loaded',function () {
         }
         // }}}
         
+        // {{{ Define the draggables cards
         board.select('.tracker_renderer_board_postit').each(function (postit) {
             new Draggable(postit, {
                 revert: 'failure'
             });
         });
-        board.select('col').each(function (col) {
+        // }}}
+        
+        // {{{ Define the droppables columns
+        var cols = board.select('col'),
+            i = 0,
+            cols_classnames = [];
+        cols.each(function (col) {
+            var c = board.identify() + '_dummy_' + i;
+            cols_classnames[i] = c;
+            col.up('table').down('tbody tr').down('td', col.up().childElements().indexOf(col)).select('.tracker_renderer_board_postit').invoke('addClassName', c);
+            i++;
+        });
+        cols.each(function (col) {
+            var col_index = cols.indexOf(col);
             Droppables.add(col, {
                 hoverclass: 'tracker_renderer_board_column_hover',
-                accept: 'tracker_renderer_board_postit',
+                accept: cols_classnames.reject(function (value, key) {
+                    return key == col_index;
+                }),
                 onDrop: function (dragged, dropped, event) {
                     var cursor = Element.getStyle(dragged, 'cursor');
                     Element.setStyle(dragged, {
@@ -33,13 +49,18 @@ document.observe('dom:loaded',function () {
                         method: 'POST',
                         parameters: parameters,
                         onSuccess: function() {
+                            //change the classname of the post it to be accepted by the formers columns
+                            dragged.removeClassName(cols_classnames[dragged.up('tr').childElements().indexOf(dragged.up('td'))]);
+                            dragged.addClassName(cols_classnames[col_index]);
+                            
+                            //switch to the new column
                             Element.remove(dragged);
                             dragged.setStyle({
                                 zIndex: 'auto', 
                                 left: 'auto',
                                 top: 'auto'
                             });
-                            col.up('table').down('tbody tr').down('td', col.up().childElements().indexOf(col)).down('ul').appendChild(dragged);
+                            col.up('table').down('tbody tr').down('td', col_index).down('ul').appendChild(dragged);
                             Element.setStyle(dragged, {
                                 cursor: cursor
                             });
@@ -49,5 +70,6 @@ document.observe('dom:loaded',function () {
                 }
             });
         });
+        // }}}
     });
 });

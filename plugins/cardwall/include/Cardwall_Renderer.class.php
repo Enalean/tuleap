@@ -67,8 +67,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         
         $field = $fact->getFormElementById($this->field_id);
         $used  = array($this->field_id => $field);
-        //TODO: check that field is a selectbox
-        if (!$field->userCanRead()) {
+        if (!$field->userCanRead() || !is_a($field, 'Tracker_FormElement_Field_Selectbox')) {
             $field = null;
         }
         
@@ -116,7 +115,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             }
             $nb_columns = count($values);
             if ($nb_columns) {
-                $column_sql_select  = ", CVL.bindvalue_id AS col";
+                $column_sql_select  = ", IFNULL(CVL.bindvalue_id, 100) AS col";
                 $column_sql_from = "LEFT JOIN (
                                tracker_changeset_value AS CV2
                                INNER JOIN tracker_changeset_value_list AS CVL ON (CVL.changeset_value_id = CV2.id)
@@ -148,11 +147,18 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                    $column_sql_from
                 WHERE A.id IN (". $matching_ids['id'] .")
         ";
+        //echo $sql;
         $dao = new DataAccessObject();
-        $html .= '<div class="tracker_renderer_board nifty">';
+        $nifty = 'nifty';
+        $nifty = false;
+        $html .= '<div class="tracker_renderer_board '. $nifty .'">';
         
         $html .= '<label id="tracker_renderer_board-nifty">';
-        $html .= '<input type="checkbox" onclick="$(this).up(\'div.tracker_renderer_board\').toggleClassName(\'nifty\');" checked="checked" /> ';
+        $html .= '<input type="checkbox" onclick="$(this).up(\'div.tracker_renderer_board\').toggleClassName(\'nifty\');" ';
+        if ($nifty) {
+            $html .= 'checked="checked"';
+        }
+        $html .= ' />';
         $html .= 'hand drawn view';
         $html .= '</label>';
         
@@ -168,20 +174,29 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             $html .= '<thead><tr>';
             $decorators = $field->getBind()->getDecorators();
             foreach ($values as $key => $value) {
-                $style = '';
-                if (isset($decorators[$value->getId()])) {
-                    $r = $decorators[$value->getId()]->r;
-                    $g = $decorators[$value->getId()]->g;
-                    $b = $decorators[$value->getId()]->b;
-                    if ($r !== null && $g !== null && $b !== null ) {
-                        //choose a text color to have right contrast (black on dark colors is quite useless)
-                        $color = (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128 ? 'white' : 'black';
-                        $style = 'style="background-color:rgb('. (int)$r .', '. (int)$g .', '. (int)$b .'); color:'. $color .';"';
+                if (1) {
+                    $style = '';
+                    if (isset($decorators[$value->getId()])) {
+                        $r = $decorators[$value->getId()]->r;
+                        $g = $decorators[$value->getId()]->g;
+                        $b = $decorators[$value->getId()]->b;
+                        if ($r !== null && $g !== null && $b !== null ) {
+                            //choose a text color to have right contrast (black on dark colors is quite useless)
+                            $color = (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128 ? 'white' : 'black';
+                            $style = 'style="background-color:rgb('. (int)$r .', '. (int)$g .', '. (int)$b .'); color:'. $color .';"';
+                        }
+                    }
+                    $html .= '<th '. $style .'>';
+                    $html .= Codendi_HTMLPurifier::instance()->purify($value->getLabel());
+                } else {
+                    $html .= '<th>';
+                    //TODO: check that users are properly escaped
+                    if (isset($decorators[$value->getId()])) {
+                        $html .= $decorators[$value->getId()]->decorate(Codendi_HTMLPurifier::instance()->purify($value->getLabel()));
+                    } else {
+                        $html .= Codendi_HTMLPurifier::instance()->purify($value->getLabel());
                     }
                 }
-                $html .= '<th '. $style .'>';
-                //TODO: check that users are properly escaped
-                $html .= Codendi_HTMLPurifier::instance()->purify($value->getLabel());
                 $html .= '</th>';
             }
             $html .= '</tr></thead>';

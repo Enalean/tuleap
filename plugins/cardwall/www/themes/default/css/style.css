@@ -31,6 +31,7 @@
   cursor: move;
   border: 1px solid #ccc;
   width:8em;
+  vertical-align:top;
 }
 .tracker_renderer_board.nifty ul li {
   float:left;
