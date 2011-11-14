@@ -1,0 +1,12 @@
+plugin_graphontrackers_scrum	descriptor_name	Graphiques Scrum
+plugin_graphontrackers_scrum	descriptor_description	Plugin permettant la création de graphiques de type Scrum sur les outils de suivi
+
+plugin_graphontrackers_scrum	add_title_burndown	Scrum BurnDown
+plugin_graphontrackers_scrum	burndown_property_effort	Champ Effort
+plugin_graphontrackers_scrum	burndown_property_start_date	Début du sprint
+plugin_graphontrackers_scrum	burndown_property_duration	Durée (en jours)
+
+plugin_graphontrackers_scrum	add_title_burnup	Scrum BurnUp
+plugin_graphontrackers_scrum	burnup_property_start_date	Début du sprint
+plugin_graphontrackers_scrum	burnup_property_duration	Durée (en jours)
+
