@@ -274,13 +274,16 @@ class TransitionFactory {
     * Duplicate the transitions
     * 
     * @param Array $values array of old and new values of the field
-    * @param int $id the workflow id
+    * @param int   $workflow_id the workflow id
     * @param Array $transitions the transitions to duplicate
+    * @param Array $field_mapping the field mapping
     * @param Array $ugroup_mapping the ugroup mapping
+    * @param bool  $duplicate_static_perms true if duplicate static perms, false otherwise
     *
     * @return void
     */
-    public function duplicate($values, $id, $transitions, $field_mapping, $ugroup_mapping = false, $duplicate_static_perms) {
+    public function duplicate($values, $workflow_id, $transitions, $field_mapping, $ugroup_mapping = false, $duplicate_static_perms) {
+        
         if ($transitions != null) {
             foreach ($transitions as $transition) {
                 if ($transition->getFieldValueFrom() == null) {
@@ -295,19 +298,19 @@ class TransitionFactory {
                     $from = $transition->getFieldValueFrom()->getId();
                     $to   = $transition->getFieldValueTo()->getId();
                     foreach ($values as $value=>$id_value) {
+                        
                         if ($value == $from) {
                             $from_id = $id_value;
                         }
                         if ($value == $to) {
                             $to_id = $id_value;
                         }
-                    } 
+                    }
                 }
                 
-                $transition_id = $this->getDao()->addTransition($id, $from_id, $to_id);
+                $transition_id = $this->addTransition($workflow_id, $from_id, $to_id);
                 //Duplicate permissions
                 $from_transition_id = $transition->getTransitionId();
-                $from_transition_permissions = $transition->getPermissions();
                 $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_static_perms);
                 //Duplicate postactions
                 $postactions = $transition->getPostActions();
@@ -315,6 +318,19 @@ class TransitionFactory {
                 $tpaf->duplicate($from_transition_id, $transition_id, $postactions, $field_mapping);
             }
         }
+    }
+    
+   /**
+    * Add a transition in db
+    * 
+    * @param int $workflow_id the old transition id
+    * @param int $from_id the new transition id
+    * @param int $to_id the ugroup mapping
+    *
+    * @return void
+    */
+    public function addTransition($workflow_id, $from_id, $to_id) {
+        return $this->getDao()->addTransition($id, $from_id, $to_id);
     }
     
    /**
