@@ -54,9 +54,9 @@ class GraphOnTrackersV5_ScrumPlugin extends Plugin {
         require_once('GraphOnTrackersV5_Scrum_Chart_Burndown.class.php');
         $params['factories']['graphontrackers_scrum_burndown'] = array(
             //The type of the chart
-            'chart_type'      => 'graphontrackers_scrum_burndown',
+            'chart_type'      => 'graphontrackersv5_scrum_burndown',
             //The classname of the chart. The class must be already declared.
-            'chart_classname' => 'GraphOnTrackers_Scrum_Chart_Burndown',
+            'chart_classname' => 'GraphOnTrackersV5_Scrum_Chart_Burndown',
             //The icon used for the button 'Add a chart'
             'icon'            => $this->getThemePath().'/images/burndown.png',
             //The title for the button 'Add a chart'
@@ -66,9 +66,9 @@ class GraphOnTrackersV5_ScrumPlugin extends Plugin {
         require_once('GraphOnTrackersV5_Scrum_Chart_Burnup.class.php');
         $params['factories']['graphontrackers_scrum_burnup'] = array(
             //The type of the chart
-            'chart_type'      => 'graphontrackers_scrum_burnup',
+            'chart_type'      => 'graphontrackersv5_scrum_burnup',
             //The classname of the chart. The class must be already declared.
-            'chart_classname' => 'GraphOnTrackers_Scrum_Chart_Burnup',
+            'chart_classname' => 'GraphOnTrackersV5_Scrum_Chart_Burnup',
             //The icon used for the button 'Add a chart'
             'icon'            => $this->getThemePath().'/images/burnup.png',
             //The title for the button 'Add a chart'

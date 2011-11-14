@@ -122,7 +122,7 @@ class GraphOnTrackersV5_Scrum_Chart_Burndown extends GraphOnTrackersV5_Chart {
      * Return the chart type (gantt, bar, pie, ...)
      */
     public function getChartType() {
-        return "graphontrackers_scrum_burndown";
+        return "graphontrackersv5_scrum_burndown";
     }
     
     /**
