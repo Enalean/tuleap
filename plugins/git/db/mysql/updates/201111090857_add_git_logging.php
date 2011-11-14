@@ -50,7 +50,7 @@ EOT;
         $sql = 'CREATE TABLE plugin_git_logging ('.
                     ' repository_id INT(10) NOT NULL,'.
                     ' user_id INT(11) UNSIGNED NULL,'.
-                    ' push_date INT(11) UNSIGNED NULL,'.
+                    ' push_date datetime NOT NULL,'.
                     ' nb_commit INT,'.
                     ' KEY repository_id (repository_id),'.
                     ' INDEX idx_repository_user(repository_id, user_id))';
