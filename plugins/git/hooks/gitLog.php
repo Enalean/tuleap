@@ -20,7 +20,7 @@
  */
 
 $DIR = dirname(__FILE__);
-require_once($DIR.'/../include/GitDao.class.php');
+require_once($DIR.'/../include/GitRepository.class.php');
 require_once('pre.php');
 
 // Check script parameters
@@ -49,25 +49,14 @@ function error($msg) {
 }
 
 function logGitPushes($repositoryName, $identifier, $nbCommits, $projectName) {
-        $um = UserManager::instance();
-        $user = $um->getUserByIdentifier($identifier);
-        $userId = $user->getId();
-        /*@TODO: ** Retrieve Repository id from its name. 
-                 ** Move the whole stuff to a higher layer.
-                 ** Manage the case when git pusher is not a Tuleap user.
-         */
-
-        $projectId = group_getid_by_name($projectName);
-
-        $dao = new GitDao();
-        $repoId = 0;
-        $dar = $dao->getProjectRepositoryIDByName($repositoryName, $projectId);
-        if ($dar && !empty($dar) && !$dar->isError()) {
-            while ($row = $dar->getRow()) {
-                $repoId = $row[GitDao::REPOSITORY_ID];
-                        }
-        }
-        $dao->logGitPush($repoId, $userId, $nbCommits);
+    $repository = new GitRepository();
+    $repoId = $repository->getRepositoryIDByName($repositoryName, $projectName);
+    $repository->setId($repoId);
+    try {
+        $repository->load();
+    } catch (Exception $e) {
+        error("Unable to load repository");
+    }
 }
-
+$repository->prepareGitLog($repositoryName, $identifier, $projectName, $nbCommits);
 ?>
