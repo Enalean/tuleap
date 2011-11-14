@@ -353,7 +353,7 @@ class GitDao extends DataAccessObject {
         return true;
     }
 
-    public function getProjectRepositoryIDByName($repositoryName, $projectId) {
+    public function getProjectRepositoryByName($repositoryName, $projectId) {
         $projectId = $this->da->escapeInt($projectId);
         $repositoryName = $this->da->quoteSmart($repositoryName);
         $query = 'SELECT * '.' FROM '.$this->getTable().
