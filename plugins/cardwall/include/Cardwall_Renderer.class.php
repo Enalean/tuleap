@@ -212,7 +212,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                 if (!$field || $row['col'] == $value->getId()) {
                     $html .= '<li class="tracker_renderer_board_postit" id="tracker_renderer_board_postit-'. (int)$row['id'] .'">';
                     $html .= '<p class="tracker_renderer_board_title"><a href="'. TRACKER_BASE_URL .'/?aid='. (int)$row['id'] .'">#'. (int)$row['id'] .'</a></p>';
-                    $html .= '<p class="tracker_renderer_board_content"> '. $row['title'] .'</p>'; //TODO: HTMLPurifier
+                    $html .= '<p class="tracker_renderer_board_content"> '. Codendi_HTMLPurifier::instance()->purify($row['title'], CODENDI_PURIFIER_BASIC_NOBR, $this->report->getTracker()->getGroupId()) .'</p>';
                     $html .= '</li>';
                 }
             }
