@@ -37,6 +37,10 @@ class ProjectManagerTest extends UnitTestCase {
         $this->UnitTestCase($name);
     }
 
+    function setUp() {
+        $GLOBALS['Language'] = new MockBaseLanguage();
+    }
+
     function tearDown() {
         unset($GLOBALS['sys_allow_restricted_users']);
         unset($GLOBALS['Language']);
@@ -108,8 +112,6 @@ class ProjectManagerTest extends UnitTestCase {
         if (!defined('get_group_fault')) {
             define('get_group_fault', '3000');
         }
-        $language = new MockBaseLanguage();
-        $GLOBALS['Language'] = $language;
         $pm = new ProjectManagerTestVersion2();
         $pm->setReturnValue('getProject', null);
         $this->expectException('SoapFault');
@@ -120,8 +122,6 @@ class ProjectManagerTest extends UnitTestCase {
         if (!defined('get_group_fault')) {
             define('get_group_fault', '3000');
         }
-        $language = new MockBaseLanguage();
-        $GLOBALS['Language'] = $language;
         $pm = new ProjectManagerTestVersion2();
         $project = new MockProject();
         $project->setReturnValue('isError', true);
@@ -134,8 +134,6 @@ class ProjectManagerTest extends UnitTestCase {
         if (!defined('get_group_fault')) {
             define('get_group_fault', '3000');
         }
-        $language = new MockBaseLanguage();
-        $GLOBALS['Language'] = $language;
         $pm = new ProjectManagerTestVersion2();
         $project = new MockProject();
         $project->setReturnValue('isError', false);
@@ -149,8 +147,6 @@ class ProjectManagerTest extends UnitTestCase {
         if (!defined('get_group_fault')) {
             define('get_group_fault', '3000');
         }
-        $language = new MockBaseLanguage();
-        $GLOBALS['Language'] = $language;
         $pm = new ProjectManagerTestVersion2();
         $project = new MockProject();
         $project->setReturnValue('isError', false);
@@ -165,8 +161,6 @@ class ProjectManagerTest extends UnitTestCase {
         if (!defined('get_group_fault')) {
             define('get_group_fault', '3000');
         }
-        $language = new MockBaseLanguage();
-        $GLOBALS['Language'] = $language;
         $pm = new ProjectManagerTestVersion2();
         $project = new MockProject();
         $project->setReturnValue('isError', false);
