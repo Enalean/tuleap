@@ -163,7 +163,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                     $g = $decorators[$value->getId()]->g;
                     $b = $decorators[$value->getId()]->b;
                     if ($r !== null && $g !== null && $b !== null ) {
-                        $style = 'style="background-color:rgb('. (int)$r .', '. (int)$g .', '. (int)$b .'); text-shadow:1px 1px 1px white;"';
+                        //choose a text color to have right contrast (black on dark colors is quite useless)
+                        $color = (0.3 * $r + 0.59 * $g + 0.11 * $b) < 128 ? 'white' : 'black';
+                        $style = 'style="background-color:rgb('. (int)$r .', '. (int)$g .', '. (int)$b .'); color:'. $color .';"';
                     }
                 }
                 $html .= '<th '. $style .'>';
