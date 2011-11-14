@@ -190,7 +190,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
                     $html .= '</li>';
                 }
             }
-            $html .= '</ul>';
+            $html .= '</ul>&nbsp;';
             $html .= '</td>';
         }
         

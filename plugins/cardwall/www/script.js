@@ -7,6 +7,7 @@ document.observe('dom:loaded',function () {
         });
         board.select('td').each(function (col) {
             Droppables.add(col, {
+                hoverclass: 'tracker_renderer_board_column_hover',
                 accept: 'tracker_renderer_board_postit',
                 onDrop: function (dragged, dropped, event) {
                     Element.remove(dragged);

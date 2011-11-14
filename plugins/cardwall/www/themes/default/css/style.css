@@ -26,6 +26,7 @@
   -webkit-transition:-webkit-transform .15s linear;
   margin:1em;
   float:left;
+  cursor: move;
 }
 .tracker_renderer_board ul li p.tracker_renderer_board_title {
   font-size:140%;
@@ -76,3 +77,10 @@
   z-index:5;
 }
 */
+
+.tracker_renderer_board_column_hover {
+  background: #fcfcfc;
+  -moz-box-shadow:1px 1px 3px rgba(33,33,33, .7) inset;
+  -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
+  box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
+}
