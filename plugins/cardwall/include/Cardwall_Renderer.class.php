@@ -153,12 +153,11 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         ";
         //echo $sql;
         $dao = new DataAccessObject();
-        $nifty = 'nifty';
-        $nifty = false;
+        $nifty = Toggler::getClassname('tracker_renderer_board-nifty') == 'toggler' ? 'nifty' : false;
         $html .= '<div class="tracker_renderer_board '. $nifty .'">';
         
         $html .= '<label id="tracker_renderer_board-nifty">';
-        $html .= '<input type="checkbox" onclick="$(this).up(\'div.tracker_renderer_board\').toggleClassName(\'nifty\');" ';
+        $html .= '<input type="checkbox" onclick="$(this).up(\'div.tracker_renderer_board\').toggleClassName(\'nifty\'); new Ajax.Request(\'/toggler.php?id=tracker_renderer_board-nifty\');" ';
         if ($nifty) {
             $html .= 'checked="checked"';
         }
