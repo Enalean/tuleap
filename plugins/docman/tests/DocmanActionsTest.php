@@ -252,7 +252,7 @@ class DocmanActionsTest extends UnitTestCase {
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
         $actions->setReturnValue('_getUserManagerInstance', $userManager);
-        $params['listeners_to_delete'] = array();
+        $params['listeners_to_delete'] = array(1);
         $params['item'] = new MockDocman_Item();
         $actions->remove_monitoring($params);
         $controller->expectOnce('userCanManage');
