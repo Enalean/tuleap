@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class b201111090857_add_git_logging extends ForgeUpgrade_Bucket {
+class b201111090857_add_git_log extends ForgeUpgrade_Bucket {
 
     /**
      * Description of the bucket
