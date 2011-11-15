@@ -52,19 +52,30 @@ codendi.tracker.TemplateSelector = Class.create({
         }.bind(this));
         $('tracker_new_prjname').observe('update', this.selectAutocompleter.bindAsEventListener(this));
     },
+    /**
+     * Given an event, referesh the list of tracker templates
+     */
     selectAutocompleter: function (evt) {
+        this.updateTrackerTemplateList(evt.target.value);
+    },
+    /**
+     * Refresh list of tracker templates given a project name
+     */
+    updateTrackerTemplateList: function (projectName) {
         $('tracker_new_other').selected = true;
-        
-        new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/template_selector.php?func=plugin_tracker&target_name='+encodeURIComponent(evt.target.value));
+        new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/template_selector.php?func=plugin_tracker&target_name='+encodeURIComponent(projectName));
     }
 });
 
 // Crappy, cannot be added in dom:loaded because, by default, constructor wait for dom:loaded event..
-new ProjectAutoCompleter('tracker_new_prjname', codendi.imgroot, false);
+var autocomplete = new ProjectAutoCompleter('tracker_new_prjname', codendi.imgroot, false);
 
 document.observe('dom:loaded', function () {
     // Refresh project list
-    new codendi.tracker.TemplateSelector($('tracker_create_new'));
+    var selector = new codendi.tracker.TemplateSelector($('tracker_create_new'));
+    autocomplete.setAfterUpdateElement(function () {
+        selector.updateTrackerTemplateList($F('tracker_new_prjname'));
+    });
     
     /*var acc = new accordion('tracker_new_accordion', {
         classNames : {
