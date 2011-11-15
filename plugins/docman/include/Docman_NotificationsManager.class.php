@@ -154,9 +154,9 @@ class Docman_NotificationsManager extends NotificationsManager {
     * @param String  $type        Type of listener, in order to retrieve listeners that monitor this item on a sub-hierarchy or not.
     * @param Boolean $currentItem Make the difference between users monitoring the item directly and ones monitoring it indirectly
     *
-    * @return void
+    * @return Array
     */
-    function _getListeningUsersForAscendantHierarchy2($id, &$users, $type = null, $currentItem = false) {
+    function _getListeningUsersForAscendantHierarchy2($id, $users, $type = null, $currentItem = false) {
         if ($id) {
             $u = $this->dao->searchUserIdByObjectIdAndType($id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
             if ($u) {
@@ -169,9 +169,10 @@ class Docman_NotificationsManager extends NotificationsManager {
                 }
             }
             if ($item = $this->_item_factory->getItemFromDb($id)) {
-                $this->_getListeningUsersForAscendantHierarchy2($item->getParentId(), $users, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
+                $users = $this->_getListeningUsersForAscendantHierarchy2($item->getParentId(), $users, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
             }
         }
+        return $users;
     }
 
     function _buildMessage($event, $params, $user) {
