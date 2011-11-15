@@ -58,6 +58,13 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         return $content;
     }
 
+    /**
+     * Show list of people monitoring the document directly or indirectly by monitoring one of the parents and its subitems
+     *
+     * @param Integer $itemId Id of the document
+     *
+     * @return String
+     */
     function displayListeningUsers($itemId) {
         $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
         $userHelper = new UserHelper();
