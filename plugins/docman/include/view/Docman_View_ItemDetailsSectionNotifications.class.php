@@ -65,28 +65,24 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content = '';
         if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
             $listeners = array();
-            $this->notificationsManager->_getListeningUsersForAscendantHierarchy($this->item->getId(), $listeners, "PLUGIN_DOCMAN", true);
-            $listenersList = new arrayIterator($listeners);
-            if ($listenersList->count()>0) {
+            $this->notificationsManager->_getListeningUsersForAscendantHierarchy2($this->item->getId(), $listeners, "PLUGIN_DOCMAN", false, true);
+            if (!empty($listeners)) {
                 $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
                 $content .= '<form method="POST" action="">';
                 $content .= '<input type="hidden" name="action" value="remove_monitoring" />';
                 $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')));
                 $rowBgColor  = 0;
                 $hp = Codendi_HTMLPurifier::instance();
-                while ($listenersList->valid()) {
-                    foreach ($listenersList->current() as $key=>$val) {
-                        if ($key == 'user_id') {
-                            $userId = $val;
-                        }
-                    }
+                foreach ($listeners as $key=>$val) {
+                    $userId = $key;
                     $content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
                     $user = $um->getUserById($userId);
                     $content .= '<td style="white-space:nowrap">'. $userHelper->getDisplayName($user->getName(), $user->getRealName()) .'</td>';
                     $content .= '<td align="right" style="padding-right:65px; ">';
-                    $content .= '<input id="'. $rowBgColor .'" type="checkbox" value="'. $userId .'" name="listeners_to_delete[]">';
+                    if ($val) {
+                        $content .= '<input id="'. $rowBgColor .'" type="checkbox" value="'. $userId .'" name="listeners_to_delete[]">';
+                    }
                     $content .= '</td></tr>';
-                    $listenersList->next();
                 }
                 // TODO : ax user if he wants or not to notify the users he remove
                 // TODO : We may ax him also if his name wil appear as the guilty one or not

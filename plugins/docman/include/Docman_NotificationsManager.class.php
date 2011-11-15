@@ -149,6 +149,26 @@ class Docman_NotificationsManager extends NotificationsManager {
         }
     }
 
+    function _getListeningUsersForAscendantHierarchy2($id, &$users, $type = null, $itemListeners = null, $currentItem = false) {
+        if ($id) {
+            $u = $this->dao->searchUserIdByObjectIdAndType($id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
+            if ($u) {
+                while ($u->valid()) {
+                    $user = $u->current();
+                    if (!array_key_exists($user['user_id'], $users)) {
+                        $users[$user['user_id']] = $currentItem;
+                    }
+                    $u->next();
+                }
+            }
+            if(!$itemListeners) {
+                if ($item = $this->_item_factory->getItemFromDb($id)) {
+                    $this->_getListeningUsersForAscendantHierarchy2($item->getParentId(), $users, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
+                }
+            }
+        }
+    }
+
     function _buildMessage($event, $params, $user) {
         $type = '';
         switch($event) {
