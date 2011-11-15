@@ -6,38 +6,21 @@
 //
 // 
 
-require_once('pre.php');    
+require_once('pre.php');
 
 $expl_pathinfo = explode('/', $request->getFromServer('REQUEST_URI'));
+$project = ProjectManager::instance()->getProjectFromAutocompleter(urldecode($expl_pathinfo[2]));
+if ($project && !$project->isError()) {
+    $group_id = $project->getId();
 
-//project name wasn't passed in the URL
-
-if (!$expl_pathinfo[2]) {
-	exit_no_group();
-}
-
-//get the group_id based on the group_name in the URL
-$group_id = group_getid_by_name($expl_pathinfo[2]);
-
-//group was not found
-
-if ($group_id === false) {
-	echo db_error();
-	exit_error("Invalid Group","That group does not exist.");
-
-} else {
-
-	//set up the group_id
+    //set up the group_id
     $_REQUEST['group_id'] = $_GET['group_id'] = $group_id;
-    $request =& HTTPRequest::instance();
+    $request = HTTPRequest::instance();
     $request->params['group_id'] = $_REQUEST['group_id'];
     
-	$pm = ProjectManager::instance();
-    $project = $pm->getProject($group_id);
-
-	//now show the project page
-	require_once('project_home.php');
-
+    include_once 'project_home.php';
+} else {
+    exit_no_group();
 }
 
 // Local Variables:
