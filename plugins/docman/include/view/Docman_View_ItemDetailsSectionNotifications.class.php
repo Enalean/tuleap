@@ -33,7 +33,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $this->token = $token;
     }
     function getContent() {
-        $content = '<dl style="padding-right:520px; "><fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</legend>';
+        $content = '<dl><fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</legend>';
         $content .= '<dd>';
         $content .= '<form action="" method="POST">';
         $content .= '<p>';
@@ -54,7 +54,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content .= '<p><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
         $content .= '</form>';
         $content .= '</dd></fieldset></dl>';
-        $content .= '<dl style="padding-right:520px; ">'.$this->displayListeningUsers($this->item->getId()).'</dl>';
+        $content .= '<dl>'.$this->displayListeningUsers($this->item->getId()).'</dl>';
         return $content;
     }
 
@@ -76,25 +76,26 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                 $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
                 $content .= '<form method="POST" action="">';
                 $content .= '<input type="hidden" name="action" value="remove_monitoring" />';
-                $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')));
+                $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')), false, false , false);
                 $rowBgColor  = 0;
                 $hp = Codendi_HTMLPurifier::instance();
                 foreach ($listeners as $key=>$val) {
                     $userId = $key;
                     $content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
                     $user = $um->getUserById($userId);
-                    $content .= '<td style="white-space:nowrap">'. $userHelper->getDisplayName($user->getName(), $user->getRealName()) .'</td>';
-                    $content .= '<td align="right" style="padding-right:65px; ">';
+                    $content .= '<td>'. $userHelper->getDisplayName($user->getName(), $user->getRealName()) .'</td>';
+                    $content .= '<td>';
                     if ($val) {
                         $content .= '<input id="'. $rowBgColor .'" type="checkbox" value="'. $userId .'" name="listeners_to_delete[]">';
                     } else {
+                        $content .= '<input id="'. $rowBgColor .'" type="checkbox" value="'. $userId .'" name="listeners_to_delete[]" DISABLED>';
                         // TODO : Tell that this user is monitoring a parent
                     }
                     $content .= '</td></tr>';
                 }
                 // TODO : ax user if he wants or not to notify the users he remove
                 // TODO : We may ax him also if his name wil appear as the guilty one or not
-                $content .= '<td align="right" colspan="2" style="padding-right:50px; "><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
+                $content .= '<td colspan="2"><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
                 $content .= '</tbody></table></form>';
                 $content .= '</fieldset>';
             }
