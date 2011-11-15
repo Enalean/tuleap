@@ -121,10 +121,14 @@ abstract class Tracker_Report_Renderer {
     
     public function afterProcessRequest(TrackerManager $tracker_manager, $request, $current_user) {
         if (!$request->isAjax()) {
-            $GLOBALS['Response']->redirect('?'. http_build_query(array(
-                                                'report'   => $this->report->id,
-                                                'renderer' => $this->id
-                                                )));
+            $params = array(
+                'report'   => $this->report->id,
+                'renderer' => $this->id
+            );
+            if ($request->existAndNonEmpty('pv')) {
+                $params['pv'] = (int)$request->get('pv');
+            }
+            $GLOBALS['Response']->redirect('?'. http_build_query($params));
         }
     }
     

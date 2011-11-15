@@ -262,6 +262,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $this->getTracker()->displayHeader($tracker_manager, $title, $breadcrumbs);
         }
         
+        if ($request->existAndNonEmpty('pv')) {
+            return;
+        }
+        
         if (!$link_artifact_id && $this->getTracker()->getBrowseInstructions()) {
             echo '<p class="browse_instructions">' . $hp->purify($this->getTracker()->getBrowseInstructions(), CODENDI_PURIFIER_FULL) . '</p>';
         }

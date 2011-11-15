@@ -79,6 +79,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $html .= '<form id="tracker_report_cardwall_settings" action="" method="POST">';
         $html .= '<input type="hidden" value="'. (int)$this->report->id .'" name="report">';
         $html .= '<input type="hidden" value="'. (int)$this->id .'" name="renderer">';
+        if ($request->existAndNonEmpty('pv')) {
+            $html .= '<input type="hidden" value="'. (int)$request->get('pv') .'" name="pv">';
+        }
         $html .= '<input type="hidden" value="renderer" name="func">';
         $html .= '<p>'. 'Columns:';
         $options  = '';
@@ -95,7 +98,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             }
         }
         if ($options) {
-            $html .= '<select name="renderer_cardwall[columns]" id="tracker_report_cardwall_settings_column" autocomplete="off">';
+            $html .= '<select name="renderer_cardwall[columns]" id="tracker_report_cardwall_settings_column" autocomplete="off" onchange="this.form.submit();">';
             if (!$one_selected) {
                 $html .= '<option selected="selected" value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
             }
