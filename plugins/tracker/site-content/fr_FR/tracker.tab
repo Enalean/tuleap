@@ -474,7 +474,7 @@ plugin_tracker_include_type	tmpl_src_prj_my	Mes projets
 plugin_tracker_include_type	tmpl_src_prj_autocomplete	Depuis l'autocompleter
 plugin_tracker_include_type	tmpl_src_prj_other	Autres projets
 plugin_tracker_include_type	tmpl_src_autocomplete_desc	Ou tappez un nom de projet:
-plugin_tracker_include_type	tmpl_src_autocomplete_hint	Commencer à tapper
+plugin_tracker_include_type	tmpl_src_autocomplete_hint	Commencez à tapper
 plugin_tracker_include_type	proj_id	ID du projet&nbsp;:
 plugin_tracker_include_type	tracker_id	ID de l'outil de suivi&nbsp;:
 plugin_tracker_include_type	list_all_fields	Liste de tous les champs disponibles
