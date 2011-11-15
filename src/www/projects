@@ -18,6 +18,11 @@ if ($project && !$project->isError()) {
     $request = HTTPRequest::instance();
     $request->params['group_id'] = $_REQUEST['group_id'];
     
+    if ($request->isAjax()) {
+        echo $group_id;
+        exit;
+    }
+
     include_once 'project_home.php';
 } else {
     exit_no_group();

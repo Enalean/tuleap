@@ -28,28 +28,8 @@ codendi.tracker.TemplateSelector = Class.create({
         $('tracker_new_project_list').observe('change', this.selectOneProject.bindAsEventListener(this));
     },
     selectOneProject: function (evt) {
-        // Ajax call
         var groupId = evt.target.value;
-        if (!this.cacheTemplates[groupId]) {
-            new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/index.php?group_id='+groupId, {
-                onLoading: function () {
-                    /*var img = Builder.node('img', {
-                        'src': "/themes/common/images/ic/spinner.gif",
-                        'alt': 'Working...'});
-                    var span_img = Builder.node('span', {id: 'search_indicator'});
-                    span_img.appendChild(img);
-                    $('tracker_list_trackers_from_project').appendChild(img);*/
-                },
-                onSuccess: function (response) {
-                    /*$A(response.responseJSON).each(function (element) {
-                        console.log(element.name+" "+element.id);
-                    }*/
-                    this.cacheTemplates[groupId] = response.responseText;
-                }.bind(this)
-            });
-        } else {
-            $('tracker_list_trackers_from_project').update(this.cacheTemplates[groupId]);
-        }
+        this.loadTemplateList(groupId);
         Event.stop(evt);
     },
     /**
@@ -74,8 +54,27 @@ codendi.tracker.TemplateSelector = Class.create({
      * Refresh list of tracker templates given a project name
      */
     updateTrackerTemplateList: function (projectName) {
-        $('tracker_new_other').selected = true;
-        new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/template_selector.php?func=plugin_tracker&target_name='+encodeURIComponent(projectName));
+        new Ajax.Request('/projects/' + encodeURIComponent(projectName), {
+            onSuccess: function (response) {
+                var groupId = response.responseText;
+                $('tracker_new_other').selected = true;
+                this.loadTemplateList(groupId);
+            }.bind(this)
+        });
+    },
+    /**
+     * load (ajax) templates for a given project
+     */
+    loadTemplateList: function (groupId) {
+        if (!this.cacheTemplates[groupId]) {
+            new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/index.php?group_id=' + groupId, {
+                onSuccess: function (response) {
+                    this.cacheTemplates[groupId] = response.responseText;
+                }.bind(this)
+            });
+        } else {
+            $('tracker_list_trackers_from_project').update(this.cacheTemplates[groupId]);
+        }
     }
 });
 
