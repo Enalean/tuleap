@@ -55,8 +55,8 @@ VALUES ('PLUGIN_GIT_READ', 2, 1),
        ('PLUGIN_GIT_WPLUS', 3, 0),
        ('PLUGIN_GIT_WPLUS', 4, 0);
 
--- Create plugin_git_logging table --
-CREATE TABLE IF NOT EXISTS `plugin_git_logging` (
+-- Create plugin_git_log table --
+CREATE TABLE IF NOT EXISTS `plugin_git_log` (
   `repository_id` int(10) NOT NULL,
   `user_id` INT(11) UNSIGNED NULL,
   `push_date` datetime NOT NULL,

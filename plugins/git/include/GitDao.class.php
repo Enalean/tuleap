@@ -315,7 +315,7 @@ class GitDao extends DataAccessObject {
         $commitsNumber = $this->da->escapeInt($nbCommits);
         $pushDate = date('Y-m-d H:i:s');
 
-        $query = 'INSERT INTO plugin_git_logging ('.self::REPOSITORY_ID.',
+        $query = 'INSERT INTO plugin_git_log ('.self::REPOSITORY_ID.',
                                                          user_id,
                                                          push_date,
                                                          commits_number
