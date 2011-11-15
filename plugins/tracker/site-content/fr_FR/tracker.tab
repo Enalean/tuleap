@@ -466,6 +466,15 @@ plugin_tracker_include_type	choose_creation	Tout d'abord, selectonnez le patron 
 plugin_tracker_include_type	from_tmpl	A partir de la galerie de patrons&nbsp;:
 plugin_tracker_include_type	from_xml	A partir d'un fichier XML
 plugin_tracker_include_type	from_xml_desc	Vous pouvez sauvegarder puis ré-importer la définition d'un outil de suivi d'un serveur à un autre.<br/>Si vous n'avez pas de fichiers XML, des exemples sont disponibles <a href="$1">ici</a>.
+plugin_tracker_include_type	tmpl_src_prj	Projet source
+plugin_tracker_include_type	tmpl_src_trk	Liste des patrons
+plugin_tracker_include_type	tmpl_src_no_trk	Pas de patron
+plugin_tracker_include_type	tmpl_src_prj_default	Patron par défaut
+plugin_tracker_include_type	tmpl_src_prj_my	Mes projets
+plugin_tracker_include_type	tmpl_src_prj_autocomplete	Depuis l'autocompleter
+plugin_tracker_include_type	tmpl_src_prj_other	Autres projets
+plugin_tracker_include_type	tmpl_src_autocomplete_desc	Ou tappez un nom de projet:
+plugin_tracker_include_type	tmpl_src_autocomplete_hint	Commencer à tapper
 plugin_tracker_include_type	proj_id	ID du projet&nbsp;:
 plugin_tracker_include_type	tracker_id	ID de l'outil de suivi&nbsp;:
 plugin_tracker_include_type	list_all_fields	Liste de tous les champs disponibles

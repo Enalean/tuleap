@@ -475,6 +475,15 @@ plugin_tracker_include_type	choose_creation	First, select a template you want to
 plugin_tracker_include_type	from_tmpl	From template gallery
 plugin_tracker_include_type	from_xml	From XML file
 plugin_tracker_include_type	from_xml_desc	You can dump and load XML description of trackers from one server to another.<br>If you do not have xml tracker template, examples are available <a href="$1">here</a>.
+plugin_tracker_include_type	tmpl_src_prj	Origin
+plugin_tracker_include_type	tmpl_src_trk	Available templates
+plugin_tracker_include_type	tmpl_src_no_trk	No template found
+plugin_tracker_include_type	tmpl_src_prj_default	Default templates
+plugin_tracker_include_type	tmpl_src_prj_my	My projects
+plugin_tracker_include_type	tmpl_src_prj_autocomplete	From autocompleter
+plugin_tracker_include_type	tmpl_src_prj_other	Other Projects
+plugin_tracker_include_type	tmpl_src_autocomplete_desc	Or type a project name:
+plugin_tracker_include_type	tmpl_src_autocomplete_hint	Start typing
 plugin_tracker_include_type	proj_id	Project ID:
 plugin_tracker_include_type	tracker_id	Tracker ID:
 plugin_tracker_include_type	list_all_fields	List of all Available Fields

@@ -238,10 +238,10 @@ class TrackerManager { /* extends Engine? */
     /**
      * Display tracker creation interface
      *
-     * @param unknown_type $project
-     * @param unknown_type $name
-     * @param unknown_type $description
-     * @param unknown_type $itemname
+     * @param Project $project
+     * @param String $name
+     * @param String $description
+     * @param String $itemname
      * @param Tracker      $tracker_template
      */
     public function displayCreateTracker(Project $project, 
@@ -285,8 +285,8 @@ class TrackerManager { /* extends Engine? */
         echo '<table>';
         
         echo '<tr>';
-        echo '<th align="left">Origin</th>';
-        echo '<th align="left">Available templates</th>';
+        echo '<th align="left">'.$Language->getText('plugin_tracker_include_type', 'tmpl_src_prj').'</th>';
+        echo '<th align="left">'.$Language->getText('plugin_tracker_include_type', 'tmpl_src_trk').'</th>';
         echo '</tr>';
         
         echo '<tr>';
@@ -302,22 +302,22 @@ class TrackerManager { /* extends Engine? */
         
         echo '<select name="group_id_template" size="15" id="tracker_new_project_list">';
         
-        echo '<option value="100" '.($group_id_template == 100 ? $selectedHtml : '').'>Default templates</option>';
+        echo '<option value="100" '.($group_id_template == 100 ? $selectedHtml : '').'>'.$Language->getText('plugin_tracker_include_type', 'tmpl_src_prj_default').'</option>';
         
-        echo '<optgroup label="My projects">';
+        echo '<optgroup label="'.$Language->getText('plugin_tracker_include_type', 'tmpl_src_prj_my').'">';
         $results = $gf->getMemberGroups();
         while ($row = db_fetch_array($results)) {
             echo '<option value="'.$hp->purify($row['group_id']).'" '.($group_id_template == $row['group_id'] ? $selectedHtml : '').'>'.$hp->purify($row['group_name']).'</option>';
         }
         echo '</optgroup>';
         
-        echo '<optgroup label="Other Projects">';
-        echo '<option value="-1" id="tracker_new_other">From autocompleter</option>';
+        echo '<optgroup label="'.$Language->getText('plugin_tracker_include_type', 'tmpl_src_prj_other').'">';
+        echo '<option value="-1" id="tracker_new_other">'.$Language->getText('plugin_tracker_include_type', 'tmpl_src_prj_autocomplete').'</option>';
         echo '</optgroup>';
         
         echo '</select>';
 
-        echo '<br/>Or type a project name:<br /><input type="text" name="tracker_new_prjname" id="tracker_new_prjname" value="Start typing" />';
+        echo '<br/>'.$Language->getText('plugin_tracker_include_type', 'tmpl_src_autocomplete_desc').'<br /><input type="text" name="tracker_new_prjname" id="tracker_new_prjname" value="'.$Language->getText('plugin_tracker_include_type', 'tmpl_src_autocomplete_hint').'" />';
         
         echo '</td>';
         
@@ -329,7 +329,7 @@ class TrackerManager { /* extends Engine? */
                 echo '<option value="'.$tracker->getId().'" '.($atid_template == $tracker->getId() ? $selectedHtml : '').'>'. $hp->purify($tracker->getName()) .'</option>';
             }
         } else {
-            echo '<option><em>No tracker found</em></option>';
+            echo '<option>'.$Language->getText('plugin_tracker_include_type', 'tmpl_src_no_trk').'</option>';
         }
         echo '</select>';
         
@@ -416,7 +416,7 @@ class TrackerManager { /* extends Engine? */
             if ($http_content) {
                 echo $http_content;
             } else {
-                echo '<option><em>No tracker found</em></option>';
+                echo '<option>'.$Language->getText('plugin_tracker_include_type', 'tmpl_src_no_trk').'</option>';
             }
             echo $html;
         } else {
