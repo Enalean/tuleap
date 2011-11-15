@@ -3700,7 +3700,7 @@ Element.addMethods({
     var isInline = (Element.getStyle(element, 'display') === 'inline');
     if (!isInline && element.offsetParent) return $(element.offsetParent);
 
-    while ((element = element.parentNode) && element !== document.body) {
+    while ((element = element.parentNode) && element !== document.body && Object.isElement(element)) {
       if (Element.getStyle(element, 'position') !== 'static') {
         return isHtml(element) ? $(document.body) : $(element);
       }
