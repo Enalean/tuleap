@@ -6,6 +6,48 @@
  *
  *--------------------------------------------------------------------------*/
 
+// Function isEventSupported added on 03/15/2011 by R-No (http://blog.r-no.fr/?p=579)
+// Detect "touch" events, and link them with Scriptaculous Drag & Drop features
+// Source of the isEventSupported function : http://kangax.github.com/iseventsupported/
+var isEventSupported = (function(undef) {
+  
+  var TAGNAMES = {
+    'select':'input','change':'input',
+    'submit':'form','reset':'form',
+    'error':'img','load':'img','abort':'img'
+  };
+  
+  function isEventSupported(eventName, element) {
+
+    element = element || document.createElement(TAGNAMES[eventName] || 'div');
+    eventName = 'on' + eventName;
+    
+    var isSupported = (eventName in element);
+    
+    if (!isSupported) {
+      // if it has no `setAttribute` (i.e. doesn't implement Node interface), try generic element
+      if (!element.setAttribute) {
+        element = document.createElement('div');
+      }
+      if (element.setAttribute && element.removeAttribute) {
+        element.setAttribute(eventName, '');
+        isSupported = typeof element[eventName] == 'function';
+
+        // if property was created, "remove it" (by setting value to `undefined`)
+        if (typeof element[eventName] != 'undefined') {
+          element[eventName] = undef;
+        }
+        element.removeAttribute(eventName);
+      }
+    }
+    
+    element = null;
+    return isSupported;
+  }
+  return isEventSupported;
+})();
+
+ 
 var Prototype = {
 
   Version: '1.7',
@@ -59,27 +101,6 @@ var Prototype = {
 
 if (Prototype.Browser.MobileSafari)
   Prototype.BrowserFeatures.SpecificElementExtensions = false;
-
-
-var Abstract = { };
-
-
-var Try = {
-  these: function() {
-    var returnValue;
-
-    for (var i = 0, length = arguments.length; i < length; i++) {
-      var lambda = arguments[i];
-      try {
-        returnValue = lambda();
-        break;
-      } catch (e) { }
-    }
-
-    return returnValue;
-  }
-};
-
 /* Based on Alex Arnell's inheritance implementation. */
 
 var Class = (function() {
@@ -1421,6 +1442,25 @@ var ObjectRange = Class.create(Enumerable, (function() {
 })());
 
 
+
+var Abstract = { };
+
+
+var Try = {
+  these: function() {
+    var returnValue;
+
+    for (var i = 0, length = arguments.length; i < length; i++) {
+      var lambda = arguments[i];
+      try {
+        returnValue = lambda();
+        break;
+      } catch (e) { }
+    }
+
+    return returnValue;
+  }
+};
 
 var Ajax = {
   getTransport: function() {
@@ -3962,7 +4002,6 @@ Prototype.Selector = (function() {
     extendElement: Element.extend
   };
 })();
-Prototype._original_property = window.Sizzle;
 /*!
  * Sizzle CSS Selector Engine - v1.0
  *  Copyright 2009, The Dojo Foundation
@@ -4941,6 +4980,8 @@ window.Sizzle = Sizzle;
 
 })();
 
+Prototype._original_property = window.Sizzle;
+
 ;(function(engine) {
   var extendElements = Prototype.Selector.extendElements;
 
@@ -5447,6 +5488,14 @@ Form.EventObserver = Class.create(Abstract.EventObserver, {
     var docElement = document.documentElement,
      body = document.body || { scrollLeft: 0 };
 
+    if(isEventSupported('touchstart') && event.touches) {
+      if(event.touches[0]) {
+        return event.touches[0].pageX;
+      } else {
+        return event.pageX;
+      }
+    }
+
     return event.pageX || (event.clientX +
       (docElement.scrollLeft || body.scrollLeft) -
       (docElement.clientLeft || 0));
@@ -5455,6 +5504,14 @@ Form.EventObserver = Class.create(Abstract.EventObserver, {
   function pointerY(event) {
     var docElement = document.documentElement,
      body = document.body || { scrollTop: 0 };
+
+    if(isEventSupported('touchstart') && event.touches) {
+      if(event.touches[0]) {
+        return event.touches[0].pageY;
+      } else {
+        return event.pageY;
+      }
+    }
 
     return  event.pageY || (event.clientY +
        (docElement.scrollTop || body.scrollTop) -

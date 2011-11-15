@@ -110,8 +110,14 @@ var Droppables = {
   fire: function(event, element) {
     if(!this.last_active) return;
     Position.prepare();
+    
+    if(Draggables.supportsTouch) {
+    	var pointer = Draggables._lastPointer; 
+    } else {
+    	var pointer = [Event.pointerX(event), Event.pointerY(event)];
+    }
 
-    if (this.isAffected([Event.pointerX(event), Event.pointerY(event)], element, this.last_active))
+    if (this.isAffected(pointer, element, this.last_active))
       if (this.last_active.onDrop) {
         this.last_active.onDrop(element, this.last_active.element, event);
         return true;
@@ -127,6 +133,8 @@ var Droppables = {
 var Draggables = {
   drags: [],
   observers: [],
+  supportsTouch: isEventSupported('touchstart'),
+
 
   register: function(draggable) {
     if(this.drags.length == 0) {
@@ -134,8 +142,13 @@ var Draggables = {
       this.eventMouseMove = this.updateDrag.bindAsEventListener(this);
       this.eventKeypress  = this.keyPress.bindAsEventListener(this);
 
-      Event.observe(document, "mouseup", this.eventMouseUp);
-      Event.observe(document, "mousemove", this.eventMouseMove);
+      if(Draggables.supportsTouch) {
+    	  Event.observe(document, "touchend", this.eventMouseUp);
+    	  Event.observe(document, "touchmove", this.eventMouseMove);
+      } else {
+    	  Event.observe(document, "mouseup", this.eventMouseUp);
+    	  Event.observe(document, "mousemove", this.eventMouseMove);
+      }
       Event.observe(document, "keypress", this.eventKeypress);
     }
     this.drags.push(draggable);
@@ -144,8 +157,13 @@ var Draggables = {
   unregister: function(draggable) {
     this.drags = this.drags.reject(function(d) { return d==draggable });
     if(this.drags.length == 0) {
-      Event.stopObserving(document, "mouseup", this.eventMouseUp);
-      Event.stopObserving(document, "mousemove", this.eventMouseMove);
+    	if(Draggables.supportsTouch) {
+    		Event.stopObserving(document, "touchend", this.eventMouseUp);
+    		Event.stopObserving(document, "touchmove", this.eventMouseMove);
+    	} else {
+    		Event.stopObserving(document, "mouseup", this.eventMouseUp);
+    		Event.stopObserving(document, "mousemove", this.eventMouseMove);
+    	}
       Event.stopObserving(document, "keypress", this.eventKeypress);
     }
   },
@@ -184,7 +202,7 @@ var Draggables = {
       this._timeout = null;
     }
     if(!this.activeDraggable) return;
-    this._lastPointer = null;
+    //this._lastPointer = null;
     this.activeDraggable.endDrag(event);
     this.activeDraggable = null;
   },
@@ -282,13 +300,26 @@ var Draggable = Class.create({
     this.dragging = false;
 
     this.eventMouseDown = this.initDrag.bindAsEventListener(this);
-    Event.observe(this.handle, "mousedown", this.eventMouseDown);
+    if(Draggables.supportsTouch) {
+    	Event.observe(this.handle, "touchstart", this.eventMouseDown);
+    } else {
+    	Event.observe(this.handle, "mousedown", this.eventMouseDown);
+    }
 
     Draggables.register(this);
+	
+	// Display fix for IE6
+	// Source : https://prototype.lighthouseapp.com/projects/8887/tickets/40-drag-drop-fix-for-ie6
+	new Effect.Opacity(element, {duration:0.2, from:element._opacity, to:0.7});
+
   },
 
   destroy: function() {
-    Event.stopObserving(this.handle, "mousedown", this.eventMouseDown);
+    if(Draggables.supportsTouch) {
+        Event.stopObserving(this.handle, "touchstart", this.eventMouseDown);
+    } else {
+        Event.stopObserving(this.handle, "mousedown", this.eventMouseDown);
+    }
     Draggables.unregister(this);
   },
 
@@ -301,7 +332,7 @@ var Draggable = Class.create({
   initDrag: function(event) {
     if(!Object.isUndefined(Draggable._dragging[this.element]) &&
       Draggable._dragging[this.element]) return;
-    if(Event.isLeftClick(event)) {
+    if(Event.isLeftClick(event) || event.touches) {
       // abort on form elements, fixes a Firefox issue
       var src = Event.element(event);
       if((tag_name = src.tagName.toUpperCase()) && (
@@ -415,6 +446,7 @@ var Draggable = Class.create({
     if(success) {
       dropped = Droppables.fire(event, this.element);
       if (!dropped) dropped = false;
+      else Draggables._lastPointer = null;
     }
     if(dropped && this.options.onDropped) this.options.onDropped(this.element);
     Draggables.notify('onEnd', this, event);
