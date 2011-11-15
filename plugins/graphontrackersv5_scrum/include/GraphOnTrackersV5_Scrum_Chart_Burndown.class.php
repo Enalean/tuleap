@@ -178,7 +178,7 @@ class GraphOnTrackersV5_Scrum_Chart_Burndown extends GraphOnTrackersV5_Chart {
     public function getProperties() {
         return array_merge(parent::getProperties(),
             array(
-                'field_id'   => new HTML_Element_Selectbox_TrackerFields_Int_TextFields(
+                'field_id'   => new HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5(
                     $this->getTracker(), 
                     $GLOBALS['Language']->getText('plugin_graphontrackers_scrum','burndown_property_effort'),
                     'chart[field_id]', 

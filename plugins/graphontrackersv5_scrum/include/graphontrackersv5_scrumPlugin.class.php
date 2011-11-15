@@ -27,12 +27,18 @@ require_once('common/plugin/Plugin.class.php');
  */
 class GraphOnTrackersV5_ScrumPlugin extends Plugin {
     
+    const RENDERER_TYPE = 'plugin_graphontrackersv5';
     /**
      * Constructor
      */
     function __construct($id) {
         parent::__construct($id);
-        $this->_addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
+        
+        // Do not load the plugin if tracker is not installed & active
+        if (defined('TRACKER_BASE_URL')) {
+           
+            $this->_addHook('graphontrackersv5_load_chart_factories', 'graphontrackersv5_load_chart_factories', false);
+        }
     }
     
     /**
@@ -46,13 +52,13 @@ class GraphOnTrackersV5_ScrumPlugin extends Plugin {
         }
         return $this->pluginInfo;
     }
-    
+   
     /**
      * return the different charts provided by this plugin
      */
     function graphontrackersv5_load_chart_factories($params) {
         require_once('GraphOnTrackersV5_Scrum_Chart_Burndown.class.php');
-        $params['factories']['graphontrackers_scrum_burndown'] = array(
+        $params['factories']['graphontrackersv5_scrum_burndown'] = array(
             //The type of the chart
             'chart_type'      => 'graphontrackersv5_scrum_burndown',
             //The classname of the chart. The class must be already declared.
@@ -64,7 +70,7 @@ class GraphOnTrackersV5_ScrumPlugin extends Plugin {
         );
         
         require_once('GraphOnTrackersV5_Scrum_Chart_Burnup.class.php');
-        $params['factories']['graphontrackers_scrum_burnup'] = array(
+        $params['factories']['graphontrackersv5_scrum_burnup'] = array(
             //The type of the chart
             'chart_type'      => 'graphontrackersv5_scrum_burnup',
             //The classname of the chart. The class must be already declared.

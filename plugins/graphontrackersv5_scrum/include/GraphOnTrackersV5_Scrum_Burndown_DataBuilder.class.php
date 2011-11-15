@@ -38,8 +38,9 @@ class GraphOnTrackersV5_Scrum_Burndown_DataBuilder extends ChartDataBuilderV5 {
         $fef = Tracker_FormElementFactory::instance();
         $effort_field = $fef->getFormElementById($this->chart->getFieldId());
         $start_date = $this->chart->getStartDate();
+
         $day = 24 * 60 * 60;
-        $start_date = round($start_date / $day);
+        $start_day = round($start_date / $day);
         $artifact_ids = explode(',', $this->artifacts['id']);
         
         if ($effort_field && $effort_field->userCanRead(UserManager::instance()->getCurrentUser())) {
@@ -53,13 +54,14 @@ class GraphOnTrackersV5_Scrum_Burndown_DataBuilder extends ChartDataBuilderV5 {
             $minday=0;
             $maxday=0;
             while ($d = db_fetch_array($res)) {
-		if (!isset($dbdata[$d['day']])) {
-			$dbdata[$d['day']] = array();
-		}
+                if (!isset($dbdata[$d['day']])) {
+                    $dbdata[$d['day']] = array();
+                }
                 $dbdata[$d['day']][$d['id']] = $d['value'];
                 if ($d['day'] > $maxday) $maxday=$d['day'];
                 if ($d['day'] < $minday) $minday=$d['day'];
-	    }
+            }
+            
             for ($day=$start_day; $day<=$maxday; $day++) {
                 if (!isset($data[$start_date])) {
                     $data[$start_date]= array();
@@ -69,8 +71,8 @@ class GraphOnTrackersV5_Scrum_Burndown_DataBuilder extends ChartDataBuilderV5 {
             // so we only keep the last value (possible to change effort several times a day)
 
             foreach($artifact_ids as $aid) {
-		for ($day=$minday; $day<=$maxday; $day++) {
-		    if ($day < $start_date) {
+                for ($day=$minday; $day<=$maxday; $day++) {
+                    if ($day < $start_date) {
                         if (isset($dbdata[$day][$aid])) {
                             $data[$start_date][$aid] = $dbdata[$day][$aid];
                         }
