@@ -216,8 +216,7 @@ class TrackerManager { /* extends Engine? */
         $atid_template = $request->getValidated('atid_template', 'uint', 0);
         
         // First try XML
-        if (isset($_FILES["tracker_new_xml_file"]["error"]) != UPLOAD_ERR_NO_FILE) {
-            
+        if (isset($_FILES["tracker_new_xml_file"]["error"]) && $_FILES["tracker_new_xml_file"]["error"] != UPLOAD_ERR_NO_FILE) {
             $vFile = new Valid_File('tracker_new_xml_file');
             $vFile->required();
             if ($request->validFile($vFile)) {
