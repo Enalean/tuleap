@@ -521,6 +521,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                         'report'   => $this->id,
                         'renderer' => $r->id
                     );
+                    if ($request->existAndNonEmpty('pv')) {
+                        $parameters['pv'] = (int)$request->get('pv');
+                    }
                     if ($link_artifact_id) {
                         $parameters['link-artifact-id'] = (int)$link_artifact_id;
                         $parameters['only-renderer']    = 1;
