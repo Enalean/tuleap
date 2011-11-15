@@ -156,7 +156,7 @@ class Docman_NotificationsManager extends NotificationsManager {
     *
     * @return Array
     */
-    function _getListeningUsersForAscendantHierarchy2($id, $users, $type = null, $currentItem = false) {
+    function _getDistinctListeningUsersForAscendantHierarchy($id, $users, $type = null, $currentItem = false) {
         if ($id) {
             $u = $this->dao->searchUserIdByObjectIdAndType($id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
             if ($u) {
@@ -169,7 +169,7 @@ class Docman_NotificationsManager extends NotificationsManager {
                 }
             }
             if ($item = $this->_item_factory->getItemFromDb($id)) {
-                $users = $this->_getListeningUsersForAscendantHierarchy2($item->getParentId(), $users, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
+                $users = $this->_getDistinctListeningUsersForAscendantHierarchy($item->getParentId(), $users, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
             }
         }
         return $users;
