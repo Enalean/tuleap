@@ -5,6 +5,8 @@
 var codendi = codendi || { };
 codendi.tracker = codendi.tracker || { };
 
+// Store default templates in plain HTML because we cannot query
+// templates from project n°100 through AJAX (damn URLVerification)
 codendi.tracker.defaultTemplates = '';
 
 codendi.tracker.TemplateSelector = Class.create({
