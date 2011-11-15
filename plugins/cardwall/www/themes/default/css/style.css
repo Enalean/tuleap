@@ -103,3 +103,10 @@
   -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
   box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
 }
+
+#tracker_report_renderers li.tracker_report_renderer_tab_plugin_cardwall a {
+    background-image: url(../images/ic/sticky-note-pin-faded.png);
+}
+#tracker_report_renderers li.tracker_report_renderer_tab_plugin_cardwall.tracker_report_renderers-current a {
+    background-image: url(../images/ic/sticky-note-pin.png);
+}
