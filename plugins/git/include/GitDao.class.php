@@ -353,6 +353,14 @@ class GitDao extends DataAccessObject {
         return true;
     }
 
+    /**
+     * Retrieve Git repository data given its name and its group name.
+     *
+     * @param String $repositoryName Name of the repository we are looking for.
+     * @param String $projectId ID of the project to which the repository belong.
+     *
+     * @return DataAccessResult
+     */
     public function getProjectRepositoryByName($repositoryName, $projectId) {
         $projectId = $this->da->escapeInt($projectId);
         $repositoryName = $this->da->quoteSmart($repositoryName);
