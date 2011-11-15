@@ -1,3 +1,6 @@
+Version 3.8
+    * Update synchro example to suspend users upon given criterion.
+
 Version 3.7 (Tuleap 4.0.24)
     * Use PHP5 constructor & fix method signature
 

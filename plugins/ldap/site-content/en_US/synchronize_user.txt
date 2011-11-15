@@ -31,7 +31,7 @@ class LDAPPluginCustomUserSync extends LDAP_UserSync {
      *@return Array
      */ 
     public function getSyncAttributes($ldap) {
-        $this->attributes = array('cn', 'mail', 'employeetype', 'st-eduid', 'o', 'uid');
+        $this->attributes = array('cn', 'mail', 'employeetype', 'st-eduid', 'o', 'uid', 'st-entrystatus');
         return $this->attributes;
     }
     
@@ -71,6 +71,13 @@ class LDAPPluginCustomUserSync extends LDAP_UserSync {
                 }
                 break;
         }
+
+        // Suspend users that left the company and still present in LDAP
+        if ($lr->get('st-entrystatus') == 'T') {
+            $user->setStatus(User::STATUS_SUSPENDED);
+            $modified = true;
+        }
+
         return $modified;
     }
 }
