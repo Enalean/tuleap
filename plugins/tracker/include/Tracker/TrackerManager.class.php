@@ -327,7 +327,7 @@ class TrackerManager { /* extends Engine? */
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId($group_id_template);
         if (count($trackers) > 0) {
             foreach ($trackers as $tracker) {
-                echo '<option value="'.$tracker->getId().'" '.($atid_template == $tracker->getId() ? $selectedHtml : '').'>'.$tracker->getName().'</option>';
+                echo '<option value="'.$tracker->getId().'" '.($atid_template == $tracker->getId() ? $selectedHtml : '').'>'. $hp->purify($tracker->getName()) .'</option>';
             }
         } else {
             echo '<option><em>No tracker found</em></option>';
@@ -339,6 +339,15 @@ class TrackerManager { /* extends Engine? */
         echo '</table>';
         
         echo '</div>';
+        
+        // Load default templates
+        $js = '';
+        $trackers = $this->getTrackerFactory()->getTrackersByGroupId(100);
+        foreach ($trackers as $tracker) {
+            $js .= '<option value="'.$tracker->getId().'">'. $hp->purify($tracker->getName()) .'</option>';
+        }
+        $js = "codendi.tracker.defaultTemplates = '". $hp->purify($js, CODENDI_PURIFIER_JS_QUOTE) ."';";
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         
         // Import XML
         echo '<h3 class="tracker_new_accordion_toggle">'.$Language->getText('plugin_tracker_include_type','from_xml').'</h3>';

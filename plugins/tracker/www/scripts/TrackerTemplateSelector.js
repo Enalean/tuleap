@@ -5,6 +5,8 @@
 var codendi = codendi || { };
 codendi.tracker = codendi.tracker || { };
 
+codendi.tracker.defaultTemplates = '';
+
 codendi.tracker.TemplateSelector = Class.create({
     /**
      * Constructor
@@ -15,6 +17,10 @@ codendi.tracker.TemplateSelector = Class.create({
         this.form = form;
         this.observeProjects();
         this.observerAutoComplete();
+        this.cacheTemplates = { };
+        if (codendi.tracker.defaultTemplates) {
+            this.cacheTemplates[100] = codendi.tracker.defaultTemplates;
+        }
     },
     observeProjects: function () {
         $('tracker_new_project_list').observe('change', this.selectOneProject.bindAsEventListener(this));
@@ -22,22 +28,26 @@ codendi.tracker.TemplateSelector = Class.create({
     selectOneProject: function (evt) {
         // Ajax call
         var groupId = evt.target.value;
-        new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/index.php?group_id='+groupId, {
-            onLoading: function () {
-                /*var img = Builder.node('img', {
-                    'src': "/themes/common/images/ic/spinner.gif",
-                    'alt': 'Working...'});
-                var span_img = Builder.node('span', {id: 'search_indicator'});
-                span_img.appendChild(img);
-                $('tracker_list_trackers_from_project').appendChild(img);*/
-            },
-            onSuccess: function (response) {
-                /*$A(response.responseJSON).each(function (element) {
-                    console.log(element.name+" "+element.id);
-                }*/
-            }.bind(this)
-        });
-        
+        if (!this.cacheTemplates[groupId]) {
+            new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/index.php?group_id='+groupId, {
+                onLoading: function () {
+                    /*var img = Builder.node('img', {
+                        'src': "/themes/common/images/ic/spinner.gif",
+                        'alt': 'Working...'});
+                    var span_img = Builder.node('span', {id: 'search_indicator'});
+                    span_img.appendChild(img);
+                    $('tracker_list_trackers_from_project').appendChild(img);*/
+                },
+                onSuccess: function (response) {
+                    /*$A(response.responseJSON).each(function (element) {
+                        console.log(element.name+" "+element.id);
+                    }*/
+                    this.cacheTemplates[groupId] = response.responseText;
+                }.bind(this)
+            });
+        } else {
+            $('tracker_list_trackers_from_project').update(this.cacheTemplates[groupId]);
+        }
         Event.stop(evt);
     },
     /**
