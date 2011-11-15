@@ -327,11 +327,11 @@ class ProjectManager {
             $group = $this->getProject($groupId);
         }
         if (!$group || !is_object($group)) {
-            throw new SoapFault(get_group_fault, $groupId.' : '.$GLOBALS['language']->getText('include_group', 'g_not_found'), $method);
+            throw new SoapFault(get_group_fault, $groupId.' : '.$GLOBALS['Language']->getText('include_group', 'g_not_found'), $method);
         } elseif ($group->isError()) {
             throw new SoapFault(get_group_fault, $group->getErrorMessage(), $method);
         } elseif (!$group->isActive()) {
-            throw new SoapFault(get_group_fault, $group->getUnixName().' : '.$GLOBALS['language']->getText('include_exit', 'project_status_'.$group->getStatus()), $method);
+            throw new SoapFault(get_group_fault, $group->getUnixName().' : '.$GLOBALS['Language']->getText('include_exit', 'project_status_'.$group->getStatus()), $method);
         }
         if (!$this->checkRestrictedAccess($group)) {
             throw new SoapFault(get_group_fault, 'Restricted user: permission denied.', $method);

@@ -1,3 +1,9 @@
+Version 0.8.1 - Tuleap 4.0.24
+  DISCLAIMER: plugin still in beta, do not use it on production servers.
+  DISCLAIMER: Your data might be trashed in a future update.
+  
+  * factorization in SOAP api of tracker v5 (Contrib STMicroelectronics)
+  
 Version 0.8 - Tuleap 4.0.24
   DISCLAIMER: plugin still in beta, do not use it on production servers.
   DISCLAIMER: Your data might be trashed in a future update.

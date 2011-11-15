@@ -511,17 +511,12 @@ $GLOBALS['server']->register(
 function getTrackerList($sessionKey, $group_id) {
     if (session_continue($sessionKey)) {
         $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        if (!$group || !is_object($group)) {
-            return new SoapFault(get_group_fault,'Could Not Get Group', 'getTrackerList');
-        } elseif ($group->isError()) {
-            return new SoapFault(get_group_fault, $group->getErrorMessage(), 'getTrackerList');
+        try {
+            $project = $pm->getGroupByIdForSoap($group_id, 'getTrackerList');
+        } catch (SoapFault $e) {
+            return $e;
         }
-        if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getTrackerList');
-        }
-        
-        $project = new Project($group_id);
+
         if (!$project->usesService('tracker')) {
             return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getTrackerList');
         }
@@ -596,17 +591,12 @@ function trackerlist_to_soap($tf_arr) {
 function getTrackerFields($sessionKey, $group_id, $tracker_id) {
     if (session_continue($sessionKey)) {
         $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        if (!$group || !is_object($group)) {
-            return new SoapFault(get_group_fault,'Could Not Get Group', 'getTrackerFields');
-        } elseif ($group->isError()) {
-            return new SoapFault(get_group_fault, $group->getErrorMessage(), 'getTrackerFields');
+        try {
+            $project = $pm->getGroupByIdForSoap($group_id, 'getTrackerFields');
+        } catch (SoapFault $e) {
+            return $e;
         }
-        if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getTrackerFields');
-        }
-        
-        $project = new Project($group_id);
+
         if (!$project->usesService('tracker')) {
             return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getTrackerFields');
         }
@@ -686,17 +676,12 @@ function trackerfields_to_soap($tracker, $tracker_fields) {
 function getArtifacts($sessionKey,$group_id,$tracker_id, $criteria, $offset, $max_rows) {
     if (session_continue($sessionKey)) {
         $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        if (!$group || !is_object($group)) {
-            return new SoapFault(get_group_fault,'Could Not Get Group', 'getArtifacts');
-        } elseif ($group->isError()) {
-            return new SoapFault(get_group_fault, $group->getErrorMessage(), 'getArtifacts');
+        try {
+            $project = $pm->getGroupByIdForSoap($group_id, 'getArtifacts');
+        } catch (SoapFault $e) {
+            return $e;
         }
-        if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getArtifacts');
-        }
-        
-        $project = new Project($group_id);
+
         if (!$project->usesService('tracker')) {
             return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getArtifacts');
         }
@@ -742,17 +727,12 @@ function getArtifacts($sessionKey,$group_id,$tracker_id, $criteria, $offset, $ma
 function getArtifact($sessionKey,$group_id,$tracker_id, $artifact_id) {
     if (session_continue($sessionKey)){
         $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
-        if (!$group || !is_object($group)) {
-            return new SoapFault(get_group_fault,'Could Not Get Group', 'getArtifact');
-        } elseif ($group->isError()) {
-            return new SoapFault(get_group_fault, $group->getErrorMessage(), 'getArtifact');
+        try {
+            $project = $pm->getGroupByIdForSoap($group_id, 'getArtifact');
+        } catch (SoapFault $e) {
+            return $e;
         }
-        if (!checkRestrictedAccess($group)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getArtifact');
-        }
-        
-        $project = new Project($group_id);
+
         if (!$project->usesService('tracker')) {
             return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getArtifact');
         }
@@ -879,16 +859,12 @@ function addArtifact($sessionKey, $group_id, $tracker_id, $value) {
     if (session_continue($sessionKey)) {
         $user = UserManager::instance()->getCurrentUser();
         $pm = ProjectManager::instance();
-        $project = $pm->getProject($group_id);
-        if (! $project || ! is_object($project)) {
-            return new SoapFault(get_group_fault,'Could Not Get Group','addArtifact');
-        } elseif ($project->isError()) {
-            return new SoapFault(get_group_fault, $project->getErrorMessage(),'addArtifact');
+        try {
+            $project = $pm->getGroupByIdForSoap($group_id, 'addArtifact');
+        } catch (SoapFault $e) {
+            return $e;
         }
-        if ( ! checkRestrictedAccess($project)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'addArtifact');
-        }
-        
+
         $tf = TrackerFactory::instance();
         $tracker = $tf->getTrackerById($tracker_id);
         if ($tracker == null) {
@@ -966,16 +942,12 @@ function updateArtifact($sessionKey, $group_id, $tracker_id, $artifact_id, $valu
     if (session_continue($sessionKey)) {
         $user = UserManager::instance()->getCurrentUser();
         $pm = ProjectManager::instance();
-        $project = $pm->getProject($group_id);
-        if (! $project || ! is_object($project)) {
-            return new SoapFault(get_group_fault,'Could Not Get Group','updateArtifact');
-        } elseif ($project->isError()) {
-            return new SoapFault(get_group_fault, $project->getErrorMessage(),'updateArtifact');
+        try {
+            $project = $pm->getGroupByIdForSoap($group_id, 'updateArtifact');
+        } catch (SoapFault $e) {
+            return $e;
         }
-        if ( ! checkRestrictedAccess($project)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'updateArtifact');
-        }
-        
+
         $tf = TrackerFactory::instance();
         $tracker = $tf->getTrackerById($tracker_id);
         if ($tracker == null) {
@@ -1067,14 +1039,10 @@ function getArtifactAttachedFiles($sessionKey,$group_id,$group_artifact_id,$arti
     
     if (session_continue($sessionKey)) {
         $pm = ProjectManager::instance();
-        $grp = $pm->getProject($group_id);
-        if (!$grp || !is_object($grp)) {
-            return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactAttachedFiles');
-        } elseif ($grp->isError()) {
-            return new SoapFault(get_group_fault,$grp->getErrorMessage(),'getArtifactAttachedFiles');
-        }
-        if (!checkRestrictedAccess($grp)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getArtifactTrackers');
+        try {
+            $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactAttachedFiles');
+        } catch (SoapFault $e) {
+            return $e;
         }
 
         $at = new ArtifactTracker($grp,$group_artifact_id);
@@ -1125,14 +1093,10 @@ function getArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artif
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
         $pm = ProjectManager::instance();
-        $grp = $pm->getProject($group_id);
-        if (!$grp || !is_object($grp)) {
-            return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactAttachedFile');
-        } elseif ($grp->isError()) {
-            return new SoapFault(get_group_fault,$grp->getErrorMessage(),'getArtifactAttachedFile');
-        }
-        if (!checkRestrictedAccess($grp)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getArtifactTrackers');
+        try {
+            $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactAttachedFile');
+        } catch (SoapFault $e) {
+            return $e;
         }
 
         $at = new ArtifactTracker($grp,$group_artifact_id);
@@ -1234,14 +1198,10 @@ function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artif
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
         $pm = ProjectManager::instance();
-        $grp = $pm->getProject($group_id);
-        if (!$grp || !is_object($grp)) {
-            return new SoapFault(get_group_fault,'Could Not Get Group','addArtifactFile');
-        } elseif ($grp->isError()) {
-            return new SoapFault(get_group_fault,$grp->getErrorMessage(),'addArtifactFile');
-        }
-        if (!checkRestrictedAccess($grp)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getArtifactTrackers');
+        try {
+            $grp = $pm->getGroupByIdForSoap($group_id, 'addArtifactAttachedFile');
+        } catch (SoapFault $e) {
+            return $e;
         }
 
         $at = new ArtifactTracker($grp,$group_artifact_id);
@@ -1315,14 +1275,10 @@ function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$ar
     global $art_field_fact; 
     if (session_continue($sessionKey)) {
         $pm = ProjectManager::instance();
-        $grp = $pm->getProject($group_id);
-        if (!$grp || !is_object($grp)) {
-            return new SoapFault(get_group_fault,'Could Not Get Group','deleteArtifactFile');
-        } elseif ($grp->isError()) {
-            return new SoapFault(get_group_fault,$grp->getErrorMessage(),'deleteArtifactFile');
-        }
-        if (!checkRestrictedAccess($grp)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getArtifactTrackers');
+        try {
+            $grp = $pm->getGroupByIdForSoap($group_id, 'deleteArtifactAttachedFile');
+        } catch (SoapFault $e) {
+            return $e;
         }
 
         $at = new ArtifactTracker($grp,$group_artifact_id);
@@ -1379,14 +1335,10 @@ function deleteArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$ar
 function getArtifactHistory($sessionKey, $group_id, $tracker_id, $artifact_id) {
     if (session_continue($sessionKey)) {
         $pm = ProjectManager::instance();
-        $project = $pm->getProject($group_id);
-        if (!$project || !is_object($project)) {
-            return new SoapFault(get_group_fault,'Could Not Get Group','getArtifactHistory');
-        } elseif ($project->isError()) {
-            return new SoapFault(get_group_fault,$project->getErrorMessage(),'getArtifactHistory');
-        }
-        if (!checkRestrictedAccess($project)) {
-            return new SoapFault(get_group_fault, 'Restricted user: permission denied.', 'getArtifactHistory');
+        try {
+            $grp = $pm->getGroupByIdForSoap($group_id, 'getArtifactHistory');
+        } catch (SoapFault $e) {
+            return $e;
         }
 
         if (!$project->usesService('tracker')) {
