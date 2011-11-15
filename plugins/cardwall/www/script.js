@@ -29,8 +29,9 @@ document.observe('dom:loaded',function () {
             i++;
         });
         cols.each(function (col) {
-            var col_index = cols.indexOf(col);
-            Droppables.add(col, {
+            var col_index = cols.indexOf(col),
+                td = col.up('table').down('tbody tr').down('td', col_index);
+            Droppables.add(td, {
                 hoverclass: 'tracker_renderer_board_column_hover',
                 accept: cols_classnames.reject(function (value, key) {
                     return key == col_index;
@@ -44,7 +45,7 @@ document.observe('dom:loaded',function () {
                         aid: dragged.id.split('-')[1],
                         func: 'artifact-update'
                     };
-                    parameters['artifact['+ $F('tracker_report_cardwall_settings_column') +']'] = dropped.id.split('-')[1];
+                    parameters['artifact['+ $F('tracker_report_cardwall_settings_column') +']'] = col.id.split('-')[1];
                     new Ajax.Request(location.href, {
                         method: 'POST',
                         parameters: parameters,
@@ -60,11 +61,11 @@ document.observe('dom:loaded',function () {
                                 left: 'auto',
                                 top: 'auto'
                             });
-                            col.up('table').down('tbody tr').down('td', col_index).down('ul').appendChild(dragged);
+                            td.down('ul').appendChild(dragged);
                             Element.setStyle(dragged, {
                                 cursor: cursor
                             });
-                            dropped.highlight();
+                            td.highlight();
                         }
                     });
                 }
