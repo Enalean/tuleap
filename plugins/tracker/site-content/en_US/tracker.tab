@@ -467,14 +467,14 @@ plugin_tracker_include_type	choose_proj	Please, choose a project and a tracker f
 plugin_tracker_include_type	choose_tmpl	Please, choose a template first.
 plugin_tracker_include_type	choose_file	Please, choose a file to import.
 plugin_tracker_include_type	select_proj	Please, select a project first!
-plugin_tracker_include_type	create_tracker	<h2>Create a new tracker:</h2>
-plugin_tracker_include_type	create_tracker_fill_name	Please, fill the name, description and short name of this new tracker:
+plugin_tracker_include_type	create_tracker	Create a new tracker
+plugin_tracker_include_type	create_tracker_fill_name	Then, fill the name, description and short name of this new tracker:
 plugin_tracker_include_type	short_name	Short name
 plugin_tracker_include_type	avoid_spaces	Please avoid spaces and punctuation in short names
-plugin_tracker_include_type	choose_creation	Choose a creation method:
-plugin_tracker_include_type	from_tmpl	From a predefined template:
-plugin_tracker_include_type	from_exist	<b>From an existing tracker:</b><br><i>(Choose a project first and then a tracker of this project)</i>
-plugin_tracker_include_type	from_xml	<b>From XML file:</b> if you do not have xml tracker template, examples are available <a href="$1">here</a>.
+plugin_tracker_include_type	choose_creation	First, select a template you want to start from
+plugin_tracker_include_type	from_tmpl	From template gallery
+plugin_tracker_include_type	from_xml	From XML file
+plugin_tracker_include_type	from_xml_desc	You can dump and load XML description of trackers from one server to another.<br>If you do not have xml tracker template, examples are available <a href="$1">here</a>.
 plugin_tracker_include_type	proj_id	Project ID:
 plugin_tracker_include_type	tracker_id	Tracker ID:
 plugin_tracker_include_type	list_all_fields	List of all Available Fields
@@ -743,7 +743,8 @@ plugin_tracker_common_type	no_match	Group_id in db result does not match Group O
 plugin_tracker_common_type	perm_fail	Failed to create user permission: $1
 plugin_tracker_common_type	name_requ	Name, Description, and Short Name are required.
 plugin_tracker_common_type	invalid_shortname	Invalid short name: $1. Please use only alphanumerical characters or an unreserved reference. Press the "Back" button and update this information.
-plugin_tracker_common_type	invalid_templ	Invalid group_id_template
+plugin_tracker_common_type	invalid_templ	Invalid project template
+plugin_tracker_common_type	invalid_tracker_tmpl	Invalid tracker template
 plugin_tracker_common_type	load_fail	failed to load the new tracker
 plugin_tracker_common_type	invalid_at	Invalid ArtifactTrackerID
 plugin_tracker_common_type	invalid_date	Delay date must not be in the past
