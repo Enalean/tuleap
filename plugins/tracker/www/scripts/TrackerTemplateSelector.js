@@ -17,12 +17,12 @@ codendi.tracker.TemplateSelector = Class.create({
         this.observerAutoComplete();
     },
     observeProjects: function () {
-        $('tracker_new_project_list').observe('click', this.selectOneProject.bindAsEventListener(this));
+        $('tracker_new_project_list').observe('change', this.selectOneProject.bindAsEventListener(this));
     },
     selectOneProject: function (evt) {
         // Ajax call
         var groupId = evt.target.value;
-        new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/template_selector.php?func=plugin_tracker&target='+groupId, {
+        new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/index.php?group_id='+groupId, {
             onLoading: function () {
                 /*var img = Builder.node('img', {
                     'src': "/themes/common/images/ic/spinner.gif",

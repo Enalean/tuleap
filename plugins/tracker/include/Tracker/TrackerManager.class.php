@@ -261,7 +261,6 @@ class TrackerManager { /* extends Engine? */
         $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar);
         
         $hp = Codendi_HTMLPurifier::instance();
-        echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerTemplateSelector.js"></script>';
 
         $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerTemplateSelector.js');
         echo '<h2>'.$Language->getText('plugin_tracker_include_type','create_tracker').'</h2>';
@@ -400,16 +399,16 @@ class TrackerManager { /* extends Engine? */
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
         
         if (HTTPRequest::instance()->isAjax()) {
+            $http_content = '';
             foreach ($trackers as $tracker) {
                 if ($tracker->userCanView($user)) {
-                    $html .= '<a href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'" title="';
-                    $html .= $hp->purify($tracker->description, CODENDI_PURIFIER_CONVERT_HTML);
-                    $html .= '">';
-                    $html .= $GLOBALS['HTML']->getImage('ic/clipboard-list.png', array('border' => 0, 'alt' => '', 'style="vertical-align:top;"')) .' ';
-                    $html .= $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML);
-                    $html .= '</a>';
-                    $html .= '<br />';
+                    $http_content .= '<option value="'.$tracker->getId().'">'.$hp->purify($tracker->getName()).'</option>';
                 }
+            }
+            if ($http_content) {
+                echo $http_content;
+            } else {
+                echo '<option><em>No tracker found</em></option>';
             }
             echo $html;
         } else {
