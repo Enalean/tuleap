@@ -88,6 +88,8 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                     $content .= '<td align="right" style="padding-right:65px; ">';
                     if ($val) {
                         $content .= '<input id="'. $rowBgColor .'" type="checkbox" value="'. $userId .'" name="listeners_to_delete[]">';
+                    } else {
+                        // TODO : Tell that this user is monitoring a parent
                     }
                     $content .= '</td></tr>';
                 }
