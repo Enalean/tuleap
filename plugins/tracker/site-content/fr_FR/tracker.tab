@@ -463,7 +463,7 @@ plugin_tracker_include_type	create_tracker_fill_name	Veuillez remplir le nom, la
 plugin_tracker_include_type	short_name	Nom court
 plugin_tracker_include_type	avoid_spaces	Veuillez éviter les espaces et les ponctuations dans le nom court
 plugin_tracker_include_type	choose_creation	Tout d'abord, selectonnez le patron à partir duquel vous voulez démarrer&nbsp;:
-plugin_tracker_include_type	from_tmpl	A partir de la galerie de patrons&nbsp;:
+plugin_tracker_include_type	from_tmpl	A partir de la galerie de patrons
 plugin_tracker_include_type	from_xml	A partir d'un fichier XML
 plugin_tracker_include_type	from_xml_desc	Vous pouvez sauvegarder puis ré-importer la définition d'un outil de suivi d'un serveur à un autre.<br/>Si vous n'avez pas de fichiers XML, des exemples sont disponibles <a href="$1">ici</a>.
 plugin_tracker_include_type	tmpl_src_prj	Projet source
