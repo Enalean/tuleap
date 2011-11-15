@@ -49,13 +49,6 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     }
     
     /**
-     * @return string the html icon of the renderer
-     */
-    public function getIcon() {
-        return '<img src="'. $this->plugin->getThemePath().'/images/renderer.png" />';
-    }
-    
-    /**
      * Delete the renderer
      */
     public function delete() {

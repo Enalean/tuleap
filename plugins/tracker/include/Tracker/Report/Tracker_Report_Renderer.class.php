@@ -65,11 +65,6 @@ abstract class Tracker_Report_Renderer {
         return $this->id;
     }
     
-    /** 
-     * @return string the icon of the renderer
-     */
-    public abstract function getIcon();
-    
     /**
      * Delete the renderer
      */

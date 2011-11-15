@@ -68,9 +68,11 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $fact = Tracker_FormElementFactory::instance();
         
         $field = $fact->getFormElementById($this->field_id);
-        $used  = array($this->field_id => $field);
-        if (!$field->userCanRead() || !is_a($field, 'Tracker_FormElement_Field_Selectbox')) {
-            $field = null;
+        if ($field) {
+            $used  = array($this->field_id => $field);
+            if (!$field->userCanRead() || !is_a($field, 'Tracker_FormElement_Field_Selectbox')) {
+                $field = null;
+            }
         }
         
         
@@ -231,10 +233,6 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     }
 
     /*----- Implements below some abstract methods ----*/
-
-    public function getIcon() {
-                return '<img src="'. $this->plugin->getThemePath().'/images/renderer.png" />';
-    }
 
     public function delete() {}
 
