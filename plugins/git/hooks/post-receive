@@ -12,4 +12,4 @@
 # see contrib/hooks/ for an sample, or uncomment the next line (on debian)
 #
 
-. /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
+. /usr/share/codendi/plugins/git/hooks/post-receive-email &
