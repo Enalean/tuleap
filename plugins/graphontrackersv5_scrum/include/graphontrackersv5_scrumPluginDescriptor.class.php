@@ -31,15 +31,12 @@ require_once('common/plugin/PluginDescriptor.class.php');
  */
 class GraphOnTrackersV5_ScrumPluginDescriptor extends PluginDescriptor {
     
-    /**
-     * Constructor
-     */
+   /**
+    * Constructor
+    */    
     function __construct() {
-        parent::__construct(
-            $GLOBALS['Language']->getText('plugin_graphontrackers_scrum', 'descriptor_name'), 
-            'v0.1', 
-            $GLOBALS['Language']->getText('plugin_graphontrackers_scrum', 'descriptor_description')
-        );
+        parent::__construct($GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'descriptor_description'));
+        $this->setVersionFromFile(dirname(__FILE__).'/../VERSION');
     }
     
 }

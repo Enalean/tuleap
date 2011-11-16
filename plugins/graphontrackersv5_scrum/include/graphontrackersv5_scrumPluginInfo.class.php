@@ -32,7 +32,7 @@ class GraphOnTrackersV5_ScrumPluginInfo extends PluginInfo {
      * Constructor
      */
     function __construct($plugin) {
-        parent::__construct($plugin);
+        $this->PluginInfo($plugin);
         $this->setPluginDescriptor(new GraphOnTrackersV5_ScrumPluginDescriptor());
     }
     

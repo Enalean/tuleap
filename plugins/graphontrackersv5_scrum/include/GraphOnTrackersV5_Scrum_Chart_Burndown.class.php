@@ -180,15 +180,15 @@ class GraphOnTrackersV5_Scrum_Chart_Burndown extends GraphOnTrackersV5_Chart {
             array(
                 'field_id'   => new HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5(
                     $this->getTracker(), 
-                    $GLOBALS['Language']->getText('plugin_graphontrackers_scrum','burndown_property_effort'),
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum','burndown_property_effort'),
                     'chart[field_id]', 
                     $this->getFieldId()),
                 'start_date' => new HTML_Element_Input_Date(
-                    $GLOBALS['Language']->getText('plugin_graphontrackers_scrum','burndown_property_start_date'), 
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum','burndown_property_start_date'), 
                     'chart[start_date]', 
                     $this->getStartDate()),
                 'duration'   => new HTML_Element_Input_Text(
-                    $GLOBALS['Language']->getText('plugin_graphontrackers_scrum','burndown_property_duration'), 
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum','burndown_property_duration'), 
                     'chart[duration]', 
                     $this->getDuration(), 
                     4)

@@ -66,7 +66,7 @@ class GraphOnTrackersV5_ScrumPlugin extends Plugin {
             //The icon used for the button 'Add a chart'
             'icon'            => $this->getThemePath().'/images/burndown.png',
             //The title for the button 'Add a chart'
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackers_scrum', 'add_title_burndown'),
+            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'add_title_burndown'),
         );
         
         /*require_once('GraphOnTrackersV5_Scrum_Chart_Burnup.class.php');
@@ -78,7 +78,7 @@ class GraphOnTrackersV5_ScrumPlugin extends Plugin {
             //The icon used for the button 'Add a chart'
             'icon'            => $this->getThemePath().'/images/burnup.png',
             //The title for the button 'Add a chart'
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackers_scrum', 'add_title_burnup'),
+            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'add_title_burnup'),
         );*/
     }
 }

@@ -1,12 +1,12 @@
-plugin_graphontrackers_scrum	descriptor_name	GraphOnTrackers - Scrum
-plugin_graphontrackers_scrum	descriptor_description	Add some scrum specific charts for GraphOnTrackers plugin
+plugin_graphontrackersv5_scrum	descriptor_name	GraphOnTrackers Scrum on Tracker v5
+plugin_graphontrackersv5_scrum	descriptor_description	Add some scrum specific charts for GraphOnTrackers v5 plugin
 
-plugin_graphontrackers_scrum	add_title_burndown	Scrum BurnDown
-plugin_graphontrackers_scrum	burndown_property_effort	Effort field
-plugin_graphontrackers_scrum	burndown_property_start_date	Start of the sprint
-plugin_graphontrackers_scrum	burndown_property_duration	Duration (in days)
+plugin_graphontrackersv5_scrum	add_title_burndown	Scrum BurnDown
+plugin_graphontrackersv5_scrum	burndown_property_effort	Effort field
+plugin_graphontrackersv5_scrum	burndown_property_start_date	Start of the sprint
+plugin_graphontrackersv5_scrum	burndown_property_duration	Duration (in days)
 
-plugin_graphontrackers_scrum	add_title_burnup	Scrum BurnUp
-plugin_graphontrackers_scrum	burnup_property_start_date	Start of the sprint
-plugin_graphontrackers_scrum	burnup_property_duration	Duration (in days)
+plugin_graphontrackersv5_scrum	add_title_burnup	Scrum BurnUp
+plugin_graphontrackersv5_scrum	burnup_property_start_date	Start of the sprint
+plugin_graphontrackersv5_scrum	burnup_property_duration	Duration (in days)
 

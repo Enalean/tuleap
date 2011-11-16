@@ -183,8 +183,8 @@ class GraphOnTrackersV5_Scrum_Chart_Burnup extends GraphOnTrackersV5_Chart {
             array(
                 new HTML_Element_Selectbox_TrackerFields_Int_TextFields($this->getTracker(), 'Remaining effort field', 'chart[remaining_field]', $this->getRemainingField()),
                 new HTML_Element_Selectbox_TrackerFields_Int_TextFields($this->getTracker(), 'Done field', 'chart[done_field]', $this->getDoneField()),
-                new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackers_scrum','burnup_property_start_date'), 'chart[start_date]', $this->getStartDate()),
-                new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackers_scrum','burnup_property_duration'), 'chart[duration]', $this->getDuration(), 4)
+                new HTML_Element_Input_Date($GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum','burnup_property_start_date'), 'chart[start_date]', $this->getStartDate()),
+                new HTML_Element_Input_Text($GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum','burnup_property_duration'), 'chart[duration]', $this->getDuration(), 4)
         ));
     }
 
