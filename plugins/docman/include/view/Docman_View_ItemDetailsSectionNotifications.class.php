@@ -74,14 +74,13 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
             $listeners = $this->notificationsManager->_getDistinctListeningUsersForAscendantHierarchy($this->item->getId(), array(), PLUGIN_DOCMAN_NOTIFICATION, true);
             if (!empty($listeners)) {
                 $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
-                $content .= '<form method="POST" action="">';
+                $content .= '<form name="remove_monitoring" method="POST" action="">';
                 $content .= '<input type="hidden" name="action" value="remove_monitoring" />';
                 $content .= '<table><tr><td>';
                 $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')), false, false , false);
                 $rowBgColor  = 0;
                 $hp = Codendi_HTMLPurifier::instance();
-                foreach ($listeners as $key=>$val) {
-                    $userId = $key;
+                foreach ($listeners as $userId=>$val) {
                     $content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
                     $user = $um->getUserById($userId);
                     $content .= '<td>'. $userHelper->getDisplayName($user->getName(), $user->getRealName()) .'</td>';
