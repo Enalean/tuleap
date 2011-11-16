@@ -69,7 +69,7 @@ class GraphOnTrackersV5_ScrumPlugin extends Plugin {
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackers_scrum', 'add_title_burndown'),
         );
         
-        require_once('GraphOnTrackersV5_Scrum_Chart_Burnup.class.php');
+        /*require_once('GraphOnTrackersV5_Scrum_Chart_Burnup.class.php');
         $params['factories']['graphontrackersv5_scrum_burnup'] = array(
             //The type of the chart
             'chart_type'      => 'graphontrackersv5_scrum_burnup',
@@ -79,7 +79,7 @@ class GraphOnTrackersV5_ScrumPlugin extends Plugin {
             'icon'            => $this->getThemePath().'/images/burnup.png',
             //The title for the button 'Add a chart'
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackers_scrum', 'add_title_burnup'),
-        );
+        );*/
     }
 }
 ?>
