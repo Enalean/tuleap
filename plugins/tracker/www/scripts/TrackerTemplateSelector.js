@@ -54,6 +54,10 @@ codendi.tracker.TemplateSelector = Class.create({
      * Refresh list of tracker templates given a project name
      */
     updateTrackerTemplateList: function (projectName) {
+        var m = projectName.match(/\(([^\(\)]+)\)$/);
+        if (m[1]) {
+            projectName = m[1];
+        }
         new Ajax.Request('/projects/' + encodeURIComponent(projectName), {
             onSuccess: function (transport) {
                 var groupId = transport.responseJSON.id;
