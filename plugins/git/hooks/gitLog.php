@@ -20,6 +20,7 @@
  */
 
 $DIR = dirname(__FILE__);
+ini_set('include_path', '/usr/share/codendi/src/:/usr/share/codendi/src/www/include/:'.ini_get('include_path'));
 require_once($DIR.'/../include/GitRepository.class.php');
 require_once('pre.php');
 
