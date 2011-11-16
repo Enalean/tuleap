@@ -357,8 +357,8 @@ class TrackerManager { /* extends Engine? */
         }
         echo '</optgroup>';
 
-        echo '<optgroup label="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_other').'">';
-        echo '<option value="-1" id="tracker_new_other">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_autocomplete').'</option>';
+        echo '<optgroup id="tracker_new_other" label="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_other').'">';
+        //echo '<option value="-1" id="tracker_new_other">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_autocomplete').'</option>';
         echo '</optgroup>';
 
         echo '</select>';
@@ -427,7 +427,7 @@ class TrackerManager { /* extends Engine? */
             if ($http_content) {
                 echo $http_content;
             } else {
-                echo '<option>'.$Language->getText('plugin_tracker_include_type', 'tmpl_src_no_trk').'</option>';
+                echo '<option>'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_no_trk') .'</option>';
             }
             echo $html;
         } else {

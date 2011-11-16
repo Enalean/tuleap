@@ -19,13 +19,22 @@ if ($project && !$project->isError()) {
     $request->params['group_id'] = $_REQUEST['group_id'];
     
     if ($request->isAjax()) {
-        echo $group_id;
+        header('Content-type: application/json');
+        echo json_encode(
+            array(
+                'id'   => $group_id, 
+                'name' => $project->getPublicName(),
+            )
+        );
         exit;
     }
 
     include_once 'project_home.php';
 } else {
-    exit_no_group();
+    header("HTTP/1.0 404 Not Found");
+    if (!$request->isAjax()) {
+        exit_no_group();
+    }
 }
 
 // Local Variables:

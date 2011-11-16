@@ -55,9 +55,14 @@ codendi.tracker.TemplateSelector = Class.create({
      */
     updateTrackerTemplateList: function (projectName) {
         new Ajax.Request('/projects/' + encodeURIComponent(projectName), {
-            onSuccess: function (response) {
-                var groupId = response.responseText;
-                $('tracker_new_other').selected = true;
+            onSuccess: function (transport) {
+                var groupId = transport.responseJSON.id;
+                
+                var opt = new Element('option', {
+                    value: groupId,
+                    selected: true
+                }).update(transport.responseJSON.name);
+                $('tracker_new_other').insert(opt);
                 this.loadTemplateList(groupId);
             }.bind(this)
         });
@@ -89,21 +94,5 @@ document.observe('dom:loaded', function () {
     autocomplete.setAfterUpdateElement(function () {
         selector.updateTrackerTemplateList($F('tracker_new_prjname'));
     });
-    
-    /*var acc = new accordion('tracker_new_accordion', {
-        classNames : {
-            toggle: 'tracker_new_accordion_toggle',
-            toggleActive: 'tracker_new_accordion_toggle_active',
-            content: 'tracker_new_accordion_content'
-        }
-    });
-    
-    $$('.tracker_new_accordion_toggle').each(function(accordion) {
-        $(accordion.next(0)).setStyle({
-            height: '0px'
-        });
-    });
-
-    acc.activate($$('#tracker_new_accordion .tracker_new_accordion_toggle')[0]);*/
 
 });
