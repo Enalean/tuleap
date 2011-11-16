@@ -354,6 +354,7 @@ plugin_docman	details_references	Références
 plugin_docman	details_newversion_title	Nouvelle version pour $1
 plugin_docman	details_notifications	Notifications
 plugin_docman	details_listeners	Abonnés
+plugin_docman	details_notifications_help	Les utilisateurs qui ne peuvent pas etre enlevés monitorent un parent avec sa cescendance.<br />Vous pouvez supprimer ce monitoring uniquement depuis le parent en question.
 plugin_docman	details_notifications_sendemail	Envoyez-moi un email dès que cet élément est modifié.
 plugin_docman	details_notifications_cascade_sendemail	...ainsi que pour toute la sous-hiérarchie.
 plugin_docman	details_paste_importmd	Importer les propriétés de $1 :

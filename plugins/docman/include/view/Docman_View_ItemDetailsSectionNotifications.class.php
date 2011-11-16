@@ -76,6 +76,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                 $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
                 $content .= '<form method="POST" action="">';
                 $content .= '<input type="hidden" name="action" value="remove_monitoring" />';
+                $content .= '<table><tr><td>';
                 $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')), false, false , false);
                 $rowBgColor  = 0;
                 $hp = Codendi_HTMLPurifier::instance();
@@ -97,6 +98,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                 // TODO : We may ax him also if his name wil appear as the guilty one or not
                 $content .= '<td colspan="2"><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
                 $content .= '</tbody></table></form>';
+                $content .= '</td><td><div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help').'</div></td></tr></table>';
                 $content .= '</fieldset>';
             }
         }
