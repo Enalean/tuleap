@@ -40,7 +40,8 @@ class GraphOnTrackersV5_Scrum_Burndown_DataBuilder extends ChartDataBuilderV5 {
         $start_date = $this->chart->getStartDate();
 
         $day = 24 * 60 * 60;
-        $start_day = round($start_date / $day);
+        $start_date = round($start_date / $day);
+        
         $artifact_ids = explode(',', $this->artifacts['id']);
         
         if ($effort_field && $effort_field->userCanRead(UserManager::instance()->getCurrentUser())) {
@@ -51,8 +52,8 @@ class GraphOnTrackersV5_Scrum_Burndown_DataBuilder extends ChartDataBuilderV5 {
                     WHERE c.artifact_id IN (". implode(',', $artifact_ids) .")";
             $res = db_query($sql);
             $dbdata = array();
-            $minday=0;
-            $maxday=0;
+            $minday = 0;
+            $maxday = 0;
             while ($d = db_fetch_array($res)) {
                 if (!isset($dbdata[$d['day']])) {
                     $dbdata[$d['day']] = array();
@@ -62,7 +63,7 @@ class GraphOnTrackersV5_Scrum_Burndown_DataBuilder extends ChartDataBuilderV5 {
                 if ($d['day'] < $minday) $minday=$d['day'];
             }
             
-            for ($day=$start_day; $day<=$maxday; $day++) {
+            for ($day=$start_date; $day<=$maxday; $day++) {
                 if (!isset($data[$start_date])) {
                     $data[$start_date]= array();
                 }
@@ -76,7 +77,7 @@ class GraphOnTrackersV5_Scrum_Burndown_DataBuilder extends ChartDataBuilderV5 {
                         if (isset($dbdata[$day][$aid])) {
                             $data[$start_date][$aid] = $dbdata[$day][$aid];
                         }
-                    } else if ($day == $start_day) {
+                    } else if ($day == $start_date) {
                         if (isset($dbdata[$day][$aid])) {
                             $data[$day][$aid] = $dbdata[$day][$aid];
                         } else {
@@ -95,7 +96,6 @@ class GraphOnTrackersV5_Scrum_Burndown_DataBuilder extends ChartDataBuilderV5 {
         }
         $engine->duration = $this->chart->getDuration();
         $engine->data = $data;
-
     }
 
 }
