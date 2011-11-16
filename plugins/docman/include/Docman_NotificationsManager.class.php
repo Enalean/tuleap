@@ -152,20 +152,18 @@ class Docman_NotificationsManager extends NotificationsManager {
     * @param Integer $id          ID of the item that we are looking for its listeners.
     * @param Array   $users       Array where listeners are inserted.
     * @param String  $type        Type of listener, in order to retrieve listeners that monitor this item on a sub-hierarchy or not.
-    * @param Boolean $currentItem Make the difference between users monitoring the item directly and ones monitoring it indirectly
+    * @param Boolean $currentItem Make the difference between users monitoring the item itself and ones monitoring one of its parents sub hierarchy
     *
     * @return Array
     */
     function _getDistinctListeningUsersForAscendantHierarchy($id, $users, $type = null, $currentItem = false) {
         if ($id) {
-            $u = $this->dao->searchUserIdByObjectIdAndType($id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
-            if ($u) {
-                while ($u->valid()) {
-                    $user = $u->current();
+            $dar = $this->dao->searchUserIdByObjectIdAndType($id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
+            if ($dar) {
+                foreach ($dar as $user) {
                     if (!array_key_exists($user['user_id'], $users)) {
                         $users[$user['user_id']] = $currentItem;
                     }
-                    $u->next();
                 }
             }
             if ($item = $this->_item_factory->getItemFromDb($id)) {
