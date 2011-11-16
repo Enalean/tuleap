@@ -484,6 +484,8 @@ plugin_tracker_include_type	tmpl_src_prj_autocomplete	From autocompleter
 plugin_tracker_include_type	tmpl_src_prj_other	Other Projects
 plugin_tracker_include_type	tmpl_src_autocomplete_desc	Or type a project name:
 plugin_tracker_include_type	tmpl_src_autocomplete_hint	Start typing
+plugin_tracker_include_type	create_mode_xml	You may instead load an <a href="$1">XML definition</a> of trackers.
+plugin_tracker_include_type	create_mode_gallery	You may instead start from <a href="$1">the template gallery</a>.
 plugin_tracker_include_type	proj_id	Project ID:
 plugin_tracker_include_type	tracker_id	Tracker ID:
 plugin_tracker_include_type	list_all_fields	List of all Available Fields
