@@ -57,12 +57,16 @@ codendi.tracker.TemplateSelector = Class.create({
         new Ajax.Request('/projects/' + encodeURIComponent(projectName), {
             onSuccess: function (transport) {
                 var groupId = transport.responseJSON.id;
-                
-                var opt = new Element('option', {
-                    value: groupId,
-                    selected: true
-                }).update(transport.responseJSON.name);
-                $('tracker_new_other').insert(opt);
+                var existing_options = $('tracker_new_project_list').select('option[value='+ groupId +']');
+                if (existing_options[0]) {
+                    existing_options[0].selected = true;
+                } else {
+                    var opt = new Element('option', {
+                        value: groupId,
+                        selected: true
+                    }).update(transport.responseJSON.name);
+                    $('tracker_new_other').show().insert(opt);
+                }
                 this.loadTemplateList(groupId);
             }.bind(this)
         });
