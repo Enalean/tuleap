@@ -37,10 +37,21 @@ document.observe('dom:loaded',function () {
                     return key == col_index;
                 }),
                 onDrop: function (dragged, dropped, event) {
-                    var cursor = Element.getStyle(dragged, 'cursor');
-                    Element.setStyle(dragged, {
-                        cursor: 'progress'
+                    //change the classname of the post it to be accepted by the formers columns
+                    dragged.removeClassName(cols_classnames[dragged.up('tr').childElements().indexOf(dragged.up('td'))]);
+                    dragged.addClassName(cols_classnames[col_index]);
+                    
+                    //switch to the new column
+                    Element.remove(dragged);
+                    dragged.setStyle({
+                        zIndex: 'auto', 
+                        left: 'auto',
+                        top: 'auto'
                     });
+                    td.down('ul').appendChild(dragged);
+                    td.highlight();
+                    
+                    //save the new state
                     var parameters = {
                         aid: dragged.id.split('-')[1],
                         func: 'artifact-update'
@@ -49,23 +60,9 @@ document.observe('dom:loaded',function () {
                     new Ajax.Request(location.href, {
                         method: 'POST',
                         parameters: parameters,
-                        onSuccess: function() {
-                            //change the classname of the post it to be accepted by the formers columns
-                            dragged.removeClassName(cols_classnames[dragged.up('tr').childElements().indexOf(dragged.up('td'))]);
-                            dragged.addClassName(cols_classnames[col_index]);
-                            
-                            //switch to the new column
-                            Element.remove(dragged);
-                            dragged.setStyle({
-                                zIndex: 'auto', 
-                                left: 'auto',
-                                top: 'auto'
-                            });
-                            td.down('ul').appendChild(dragged);
-                            Element.setStyle(dragged, {
-                                cursor: cursor
-                            });
-                            td.highlight();
+                        onComplete: function() {
+                            //TODO handle errors (perms, workflow, ...)
+                            // eg: change color of the post it
                         }
                     });
                 }

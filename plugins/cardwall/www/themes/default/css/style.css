@@ -45,6 +45,11 @@
   -o-transition:-o-transform .15s linear;
   -webkit-transition:-webkit-transform .15s linear;
 }
+.tracker_renderer_board ul li.error {
+  -moz-box-shadow:5px 5px 12px rgba(254,0,0,1);
+  -webkit-box-shadow: 5px 5px 12px rgba(254,0,0,.7);
+  box-shadow: 5px 5px 12px rgba(254,0,0,.7);
+}
 .tracker_renderer_board ul li p.tracker_renderer_board_title {
   font-size:140%;
   font-weight:bold;
