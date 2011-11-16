@@ -51,6 +51,7 @@ class TrackerDao extends DataAccessObject {
                 WHERE id = $id";
         return $this->update($sql);
     }
+    
     function duplicate($atid_template, $group_id, $name, $description, $item_name) {
         $atid_template = $this->da->escapeInt($atid_template);
         $group_id      = $this->da->escapeInt($group_id);
@@ -58,26 +59,32 @@ class TrackerDao extends DataAccessObject {
         $description   = $this->da->quoteSmart($description);
         $item_name     = $this->da->quoteSmart($item_name);
         
-        $sql = "INSERT INTO $this->table_name (group_id, 
-                    name, 
-                    description, 
-                    item_name, 
-                    allow_copy, 
-                    submit_instructions, 
-                    browse_instructions, 
-                    status, 
-                    instantiate_for_new_projects, 
-                    stop_notification)
-                SELECT $group_id, $name, $description, $item_name, 
-                    allow_copy, 
-                    submit_instructions, 
-                    browse_instructions, 
-                    status, 
-                    instantiate_for_new_projects, 
-                    stop_notification
-                FROM $this->table_name
-                WHERE id = $atid_template";
-        return $this->updateAndGetLastId($sql);
+        $id_sharing = new TrackerIdSharingDao();
+        if ($id = $id_sharing->generateTrackerId()) {
+            $sql = "INSERT INTO $this->table_name 
+                       (id,
+                        group_id, 
+                        name, 
+                        description, 
+                        item_name, 
+                        allow_copy, 
+                        submit_instructions, 
+                        browse_instructions, 
+                        status, 
+                        instantiate_for_new_projects, 
+                        stop_notification)
+                    SELECT $id, $group_id, $name, $description, $item_name, 
+                        allow_copy, 
+                        submit_instructions, 
+                        browse_instructions, 
+                        status, 
+                        instantiate_for_new_projects, 
+                        stop_notification
+                    FROM $this->table_name
+                    WHERE id = $atid_template";
+            return $this->updateAndGetLastId($sql);
+        }
+        return false;
     }
     
     function create($group_id, 
