@@ -16,61 +16,75 @@ require_once('common/reference/ReferenceManager.class.php');
 
 
 function svn_header($params) {
-        global $group_id, $Language, $there_are_specific_permissions;
+    global $group_id, $Language, $there_are_specific_permissions;
 
-	$params['toptab']='svn';
-	$params['group']=$group_id;
+    $params['toptab'] = 'svn';
+    $params['group']  = $group_id;
 
-	$pm = ProjectManager::instance();
-    $project=$pm->getProject($group_id);
+    $project = ProjectManager::instance()->getProject($group_id);
+    $service = $project->getService('svn');
+    if (!$service) {
+        exit_error($Language->getText('global','error'),$Language->getText('svn_utils','svn_off'));
+    }
 
-	if (!$project->usesService('svn')) {
-	    exit_error($Language->getText('global','error'),$Language->getText('svn_utils','svn_off'));
-	}
-	echo site_project_header($params);
+    $toolbar = array();
+    $toolbar[] = array('title' => $Language->getText('svn_utils','svn_info'),
+                     'url'   => '/svn/?func=info&group_id='.$group_id);
 
-	echo '<P><B><A HREF="/svn/?func=info&group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_info').'</A>';
+    if ($project->isPublic() || user_isloggedin()) {
+        $toolbar[] = array('title' => $Language->getText('svn_utils','browse_tree'),
+                           'url'   => '/svn/viewvc.php/?roottype=svn&root='.$project->getUnixName(false));
+    }
 
-	if ($project->isPublic() || user_isloggedin()) {
-	  echo ' | <A HREF="/svn/viewvc.php/?roottype=svn&root='.$project->getUnixName(false).'">'.$Language->getText('svn_utils','browse_tree').'</A>';
-	}
-	
     if (user_isloggedin()) {
-        echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'&set=my">'.$Language->getText('svn_utils','my_ci').'</A>';
-        echo ' | <A HREF="/svn/?func=browse&group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_query').'</A>';
+        $toolbar[] = array('title' => $Language->getText('svn_utils','my_ci'),
+                           'url'   => '/svn/?func=browse&group_id='.$group_id.'&set=my');
+        $toolbar[] = array('title' => $Language->getText('svn_utils','svn_query'),
+                           'url'   => '/svn/?func=browse&group_id='.$group_id);
     }
     if (user_ismember($group_id, 'A')||user_ismember($group_id,'SVN_ADMIN') ) {
-        echo ' | <A HREF="/svn/admin/?group_id='.$group_id.'">'.$Language->getText('svn_utils','svn_admin').'</A>';
+        $toolbar[] = array('title' => $Language->getText('svn_utils','svn_admin'),
+                           'url'   => '/svn/admin/?group_id='.$group_id);
     }
-    if (!isset($params['help']) || !$params['help']) { $params['help'] = "VersionControlWithSubversion.html";}
-	echo ' | '.help_button($params['help'],false,$Language->getText('global','help'));
+    if (!isset($params['help']) || !$params['help']) {
+        $params['help'] = "VersionControlWithSubversion.html";
+    }
+    $toolbar[] = array('title' => $Language->getText('global','help'),
+                       'url'   => 'javascript:help_window(\''.get_server_url().'/documentation/user_guide/html/'.UserManager::instance()->getCurrentUser()->getLocale().'/'.$params['help'].'\');');
 
-	echo '</B>';
-	echo ' <hr width="300" size="1" align="left" noshade>';
+    $service->displayHeader($params['title'], array(array('title' => $params['title'], 'url' => '/svn/?group_id='.$group_id)), $toolbar);
 }
 
 function svn_header_admin($params) {
     global $group_id,$Language;
     
     //required params for site_project_header();
-    $params['group']=$group_id;
-    $params['toptab']='svn';
+    $params['group']  = $group_id;
+    $params['toptab'] = 'svn';
     
-    $pm = ProjectManager::instance();
-    $project=$pm->getProject($group_id);
-    
-    if (!$project->usesService('svn')) {
-	exit_error($Language->getText('global','error'),$Language->getText('svn_utils','browse_off'));
+    $project = ProjectManager::instance()->getProject($group_id);
+    $service = $project->getService('svn');
+    if (!$service) {
+        exit_error($Language->getText('global','error'),$Language->getText('svn_utils','svn_off'));
     }
-    echo site_project_header($params);
-    echo '<P><B><A HREF="/svn/admin/?group_id='.$group_id.'">'.$Language->getText('svn_utils','admin').'</A></B>';
-    echo ' | <B><A HREF="/svn/admin/?func=general_settings&group_id='.$group_id.'">'.$Language->getText('svn_admin_index','gen_sett').'</A></B>';
-    echo ' | <b><A HREF="/svn/admin/?func=access_control&group_id='.$group_id.'">'.$Language->getText('svn_admin_index','access').'</A></b>';
-    echo ' | <B><A HREF="/svn/admin/?func=notification&group_id='.$group_id.'">'.$Language->getText('svn_utils','notif').'</A></B>';    
+    
+    $toolbar = array();
+    $toolbar[] = array('title' => $Language->getText('svn_utils','admin'),
+                       'url'   => '/svn/admin/?group_id='.$group_id);
+    $toolbar[] = array('title' => $Language->getText('svn_admin_index','gen_sett'),
+                       'url'   => '/svn/admin/?func=general_settings&group_id='.$group_id);
+    $toolbar[] = array('title' => $Language->getText('svn_admin_index','access'),
+                       'url'   => '/svn/admin/?func=access_control&group_id='.$group_id);
+    $toolbar[] = array('title' => $Language->getText('svn_utils','notif'),
+                       'url'   => '/svn/admin/?func=notification&group_id='.$group_id);
 
-    if (!$params['help']) { $params['help'] = "SubversionAdministrationInterface.html";}
-    echo ' | <b>'.help_button($params['help'],false,$Language->getText('global','help')).'</b>';
-    echo ' <hr width="300" size="1" align="left" noshade>';
+    if (!$params['help']) { 
+        $params['help'] = "SubversionAdministrationInterface.html";
+    }
+    $toolbar[] = array('title' => $Language->getText('global','help'),
+                       'url' => 'javascript:help_window(\''.get_server_url().'/documentation/user_guide/html/'.UserManager::instance()->getCurrentUser()->getLocale().'/'.$params['help'].'\');');
+    
+    $service->displayHeader($params['title'], array(array('title' => $params['title'], 'url' => '/svn/?group_id='.$group_id)), $toolbar);
 }
 
 

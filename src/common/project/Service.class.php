@@ -31,6 +31,10 @@ require_once('ServiceNotAllowedForProjectException.class.php');
 class Service {
     
     public $data;
+    
+    /**
+     * @var Project
+     */
     public $project;
     
     /**
@@ -116,6 +120,8 @@ class Service {
     }
     
     public function displayHeader($title, $breadcrumbs, $toolbar) {
+        $GLOBALS['HTML']->setRenderedThroughService(true);
+        
         $breadcrumbs = array_merge(
             array(
                 array(
@@ -145,8 +151,21 @@ class Service {
         if ($pv = (int)HTTPRequest::instance()->get('pv')) {
             $params['pv'] = (int)$pv;
         }
+        
+        $this->displayCloneInheritanceWarning();
+        
         site_project_header($params);
     }
+    
+    /**
+     * Display a warning if the service configuration is not inherited on project clone
+     */
+    public function displayCloneInheritanceWarning() {
+        if ($this->project->isTemplate() && !$this->isInheritedOnClone()) {
+            $GLOBALS['HTML']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'service_conf_not_inherited'));
+        }
+    }
+    
     public function displayFooter() {
         $params = array(
         );
@@ -181,6 +200,14 @@ class Service {
         return false;
     }
 
+    /**
+     * Return true if service configuration is inherited on clone
+     * 
+     * @return Boolean
+     */
+    public function isInheritedOnClone() {
+        return false;
+    }
 }
 
 ?>

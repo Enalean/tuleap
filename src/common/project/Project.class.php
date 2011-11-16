@@ -176,6 +176,13 @@ class Project extends Group {
         return $classname;
     }
 
+    /**
+     * Return service corresponding to project
+     *
+     * @param String $service_name
+     * 
+     * @return Service
+     */
     public function getService($service_name) {
         return $this->usesService($service_name) ? $this->services[$service_name] : null;
     }

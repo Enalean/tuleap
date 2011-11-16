@@ -78,5 +78,16 @@ class ServiceTracker extends Service {
         }
         return false;
     }
+    
+    /**
+     * Tracker are cloned on project creation
+     * 
+     * @see Service::isInheritedOnClone()
+     * 
+     * @return Boolean
+     */
+    public function isInheritedOnClone() {
+        return true;
+    }
 }
 ?>
