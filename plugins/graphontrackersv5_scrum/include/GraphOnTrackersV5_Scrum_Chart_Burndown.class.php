@@ -81,8 +81,6 @@ class GraphOnTrackersV5_Scrum_Chart_Burndown extends GraphOnTrackersV5_Chart {
         $this->duration   = $arr['duration'];
     }
 
-
-
     public function registerInSession() {
         parent::registerInSession();
         $this->report_session->set("$this->id.field_id", $this->field_id);
@@ -122,7 +120,7 @@ class GraphOnTrackersV5_Scrum_Chart_Burndown extends GraphOnTrackersV5_Chart {
      * Return the chart type (gantt, bar, pie, ...)
      */
     public function getChartType() {
-        return "scrum burndown";
+        return "graphontrackersv5_scrum_burndown";
     }
     
     /**
