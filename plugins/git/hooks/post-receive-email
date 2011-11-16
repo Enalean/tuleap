@@ -645,7 +645,14 @@ logGitPushes()
 	tuleap_group_name=$(basename $(dirname $repo_location))
 
 	nbcommits=0
-	for rev in $(git rev-list $oldrev..$newrev)
+	 if expr "$oldrev" : '0*$' >/dev/null 
+		then
+		revspec=$newrev
+		else
+		revspec=$oldrev..$newrev
+	fi
+
+	for rev in $(git rev-list $revspec)
 	do
 		nbcommits=$((nbcommits+1))
 	done
