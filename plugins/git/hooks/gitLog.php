@@ -57,6 +57,6 @@ function logGitPushes($repositoryName, $identifier, $nbCommits, $projectName) {
     } catch (Exception $e) {
         error("Unable to load repository");
     }
-}
 $repository->prepareGitLog($repositoryName, $identifier, $projectName, $nbCommits);
+}
 ?>
