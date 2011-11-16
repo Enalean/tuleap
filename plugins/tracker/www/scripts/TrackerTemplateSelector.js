@@ -66,14 +66,16 @@ codendi.tracker.TemplateSelector = Class.create({
      * load (ajax) templates for a given project
      */
     loadTemplateList: function (groupId) {
-        if (!this.cacheTemplates[groupId]) {
-            new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/index.php?group_id=' + groupId, {
-                onSuccess: function (response) {
-                    this.cacheTemplates[groupId] = response.responseText;
-                }.bind(this)
-            });
-        } else {
-            $('tracker_list_trackers_from_project').update(this.cacheTemplates[groupId]);
+        if (groupId >= 100) {
+            if (!this.cacheTemplates[groupId]) {
+                new Ajax.Updater($('tracker_list_trackers_from_project'), '/plugins/tracker/index.php?group_id=' + groupId, {
+                    onSuccess: function (response) {
+                        this.cacheTemplates[groupId] = response.responseText;
+                    }.bind(this)
+                });
+            } else {
+                $('tracker_list_trackers_from_project').update(this.cacheTemplates[groupId]);
+            }
         }
     }
 });
