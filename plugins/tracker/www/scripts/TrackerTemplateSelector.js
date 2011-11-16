@@ -55,7 +55,7 @@ codendi.tracker.TemplateSelector = Class.create({
      */
     updateTrackerTemplateList: function (projectName) {
         var m = projectName.match(/\(([^\(\)]+)\)$/);
-        if (m[1]) {
+        if (m && m[1]) {
             projectName = m[1];
         }
         new Ajax.Request('/projects/' + encodeURIComponent(projectName), {
