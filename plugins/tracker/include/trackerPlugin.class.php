@@ -128,8 +128,9 @@ class trackerPlugin extends Plugin {
     * @param Array $params
     */
     function register_project_creation($params) {
-       $tm = new TrackerManager();
-       $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
+        $tm = new TrackerManager();
+        $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
+
     }
     
     function permission_get_name($params) {

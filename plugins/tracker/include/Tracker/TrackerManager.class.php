@@ -25,6 +25,7 @@ require_once('FormElement/Tracker_FormElementFactory.class.php');
 require_once('Artifact/Tracker_ArtifactFactory.class.php');
 require_once('Report/Tracker_ReportFactory.class.php');
 require_once('dao/Tracker_PermDao.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 class TrackerManager { /* extends Engine? */
     
@@ -638,10 +639,39 @@ class TrackerManager { /* extends Engine? */
         echo $xml->saveXML();
     }
     
+    /**
+     * On project creation, copy template trackers to destination project
+     *
+     * @param Integer $from_project_id
+     * @param Integer $to_project_id
+     * @param Array   $ugroup_mapping
+     */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
         $this->getTrackerFactory()->duplicate($from_project_id, $to_project_id, $ugroup_mapping);
+        $this->duplicateReferences($from_project_id);
     }
 
+    /**
+     * On project creation, copy all 'plugin_tracker_artifact' references not attached to a tracker
+     *
+     * @param Integer $from_project_id
+     */
+    protected function duplicateReferences($from_project_id) {
+        // Index by shortname
+        foreach ($this->getTrackerFactory()->getTrackersByGroupId($from_project_id) as $tracker) {
+            $trackers[$tracker->getItemName()] = $tracker;
+        }
+        
+        // Loop over references
+        $refMgr     = $this->getReferenceManager();
+        $references = $refMgr->getReferencesByGroupId($from_project_id);
+        foreach ($references as $reference) {
+            if (!isset($trackers[$reference->getKeyword()])) {
+                $refMgr->createReference($reference);
+            }
+        }
+    }
+    
     /**
      * @return Tracker_URL
      */
@@ -667,7 +697,12 @@ class TrackerManager { /* extends Engine? */
     protected function getProject($group_id) {
         return ProjectManager::instance()->getProject($group_id);
     }
-    
+    /**
+     * @return ReferenceManager
+     */
+    protected function getReferenceManager() {
+        return ReferenceManager::instance();
+    }
     /**
      * Check if user has permission to create a tracker or not
      *
