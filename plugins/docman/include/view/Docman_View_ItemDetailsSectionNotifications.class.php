@@ -86,9 +86,9 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                     $content .= '<td>'. $userHelper->getDisplayName($user->getName(), $user->getRealName()) .'</td>';
                     $content .= '<td>';
                     if ($val) {
-                        $content .= '<input id="'. $rowBgColor .'" type="checkbox" value="'. $userId .'" name="listeners_to_delete[]">';
+                        $content .= '<input type="checkbox" value="'. $userId .'" name="listeners_to_delete[]">';
                     } else {
-                        $content .= '<input id="'. $rowBgColor .'" type="checkbox" value="'. $userId .'" name="listeners_to_delete[]" DISABLED>';
+                        $content .= '<input type="checkbox" value="'. $userId .'" name="listeners_to_delete[]" disabled="disabled">';
                     }
                     $content .= '</td></tr>';
                 }
