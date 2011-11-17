@@ -459,8 +459,8 @@
 	 <title>Visualisation Graphique</title>
 	 <para>Il est également possible de visualiser les résultats d'une requête sous forme graphique en ajoutant 
      un onglet de type "Graphique(s)"..
-     Il y a trois types de graphiques disponibles : le camembert, le graphique en bâton, 
-     et le diagramme de Gantt.
+     Il y a quatre types de graphiques disponibles : le camembert, le graphique en bâton, 
+     le diagramme de Gantt, et le diagramme de type Burndown utilisé dans la méthodologie Scrum.
      Comme pour la liste des artefacts (onglet de type "Table"), la vue graphique répond aux critères 
      de sélection.
      Pour plus de détails, voir <xref linkend="TrackerV5ReportRendererCharts" />.
@@ -567,7 +567,7 @@
             <para><emphasis role="bold">Déviation Standard</emphasis>  (seulement pour les entiers et les flottants)</para>
         </listitem>
         <listitem>
-            <para><emphasis role="bold">Somme</emphasis>  (seulement pour les entiers et les flottantss)</para>
+            <para><emphasis role="bold">Somme</emphasis>  (seulement pour les entiers et les flottants)</para>
         </listitem>
        </itemizedlist>
        </para>
@@ -577,8 +577,8 @@
       <title>L'outil de restitution de type "Graphiques"</title>
        <para>
        L'outil de restitution de type "Graphiques" permet d'ajouter des graphes à un rapport.
-        &SYS_PRODUCT_NAME; fournit trois types de graphes : le camembert, le graphique en bâton, et le diagramme 
-		 de Gantt.
+        &SYS_PRODUCT_NAME; fournit quatre types de graphes : le camembert, le graphique en bâton, et le diagramme 
+		 de Gantt, mais aussi des diagrammes de type Burndown utilisés dans la méthodologie Scrum.
         <figure id="TrackerV5FigureChartsTrackerBrowsingScreen">
          <title>Exemple d'outil de restitution de type "Graphiques"</title>
             <mediaobject>
@@ -638,8 +638,7 @@
             </mediaobject>
           </figure>
         </para>
-       </section>
-       <tip>
+        <tip>
         <title>Diagrammes de Gantt</title>
         <para>
         Attention! Si vous gérez de gros projets avec des dates s'étalant sur plusieurs 
@@ -647,6 +646,20 @@
         temporelle. Le diagramme serait trop grand. Merci d'utiliser semaine, mois ou année comme échelle de temps.
        </para>
        </tip>
+       </section>
+        <section id="TrackerV5ReportRendererChartBurndown">
+        <title>Diagramme de type Burndown</title>
+        <para>
+          <figure id="TrackerV5FigureBurndownChartEdition">
+          <title>Edition d'un diagramme de type burndown</title>
+            <mediaobject>
+                <imageobject>
+                    
+                </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+       </section>
      </section>
      
      <section id="TrackerV5ReportRendererUpdate">

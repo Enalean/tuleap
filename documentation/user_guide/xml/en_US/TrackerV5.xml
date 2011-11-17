@@ -427,7 +427,7 @@
 	<section id="TrackerV5ArtifactCharts">
 	 <title>Graphical visualization</title>
 	 <para>You can also view graphical results of your search by adding a Charts tab.
-     There is three types of graphs supported : Pie, Bar and Gantt charts. 
+     There are four types of graphs supported : Pie, Bar and Gantt charts, but also Burndown charts used in Scrum methodology.
      Like the list of artifact (table renderer), the graphical view respond to the 
      selection criteria.
      For more details, see <xref linkend="TrackerV5ReportRendererCharts" />.
@@ -551,7 +551,7 @@
       <title>Charts renderer</title>
        <para>
         Charts renderer allows to add charts in your report.
-        &SYS_PRODUCT_NAME; provides three kind of graphs: pie, bar and gantt charts.
+        &SYS_PRODUCT_NAME; provides four kind of graphs: pie, bar, gantt and burndown charts.
         <figure id="TrackerV5FigureChartsTrackerBrowsingScreen">
          <title>A sample charts renderer screen</title>
             <mediaobject>
@@ -618,6 +618,19 @@
          be too large. Please chnage the time scale to week, month or year.
         </para>
        </tip>
+       <section id="TrackerV5ReportRendererChartBurndown">
+        <title>Burndown charts</title>
+        <para>
+          <figure id="TrackerV5FigureBurndownChartEdition">
+          <title>Burndown Graph edition screen</title>
+            <mediaobject>
+                <imageobject>
+                    
+                </imageobject>
+            </mediaobject>
+          </figure>
+        </para>
+       </section>
      </section>
      
      <section id="TrackerV5ReportRendererUpdate">
