@@ -15,4 +15,5 @@
 while read oldrev newrev refname
     do
         echo $oldrev $newrev $refname | /usr/share/codendi/plugins/git/hooks/post-receive-email >&- 2>&- &
+        . /usr/share/codendi/plugins/git/hooks/post-receive-log $oldrev $newrev >&- 2>&- &
     done

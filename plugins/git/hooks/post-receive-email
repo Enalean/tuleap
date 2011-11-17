@@ -633,34 +633,6 @@ generate_delete_general_email()
 	echo $LOGEND
 }
 
-logGitPushes()
-{
-	# Tuleap specific: Git logging stuffs
-	#@TODO : Non fast-forward pushes ???
-
-	revtype=$(git cat-file -t "$newrev")
-	tuleap_login=$(whoami)
-	repo_location=$(cd $GIT_DIR; pwd)
-	tuleap_repo_name=$(basename $repo_location | sed -e 's/\.git$//')
-	tuleap_group_name=$(basename $(dirname $repo_location))
-
-	nbcommits=0
-	 if expr "$oldrev" : '0*$' >/dev/null 
-		then
-		revspec=$newrev
-		else
-		revspec=$oldrev..$newrev
-	fi
-
-	for rev in $(git rev-list $revspec)
-	do
-		nbcommits=$((nbcommits+1))
-	done
-
-	php /usr/share/codendi/plugins/git/hooks/gitLog.php --group_name="$tuleap_group_name" --login="$tuleap_login" --type="$revtype" --repo_name="$tuleap_repo_name" --commits_number="$nbcommits" > /dev/null
-
-}
-
 #--------------- Miscellaneous utilities
 
 #
@@ -766,12 +738,11 @@ if [ -n "$1" -a -n "$2" -a -n "$3" ]; then
 	# Output to the terminal in command line mode - if someone wanted to
 	# resend an email; they could redirect the output to sendmail
 	# themselves
-	prep_for_email $2 $3 $1 && PAGER= generate_email && logGitPushes $2 $1
+	prep_for_email $2 $3 $1 && PAGER= generate_email
 else
 	while read oldrev newrev refname
 	do
 		prep_for_email $oldrev $newrev $refname || continue
 		generate_email $maxlines | send_mail
-		logGitPushes $newrev $oldrev
 	done
 fi
