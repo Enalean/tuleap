@@ -358,13 +358,28 @@ class TrackerManager { /* extends Engine? */
         echo '<option value="100" '.($group_id_template == 100 ? $selectedHtml : '').'>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_default').'</option>';
 
         echo '<optgroup label="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_my').'">';
+        $project_selected = false;
         $results = $gf->getMemberGroups();
         while ($row = db_fetch_array($results)) {
-            echo '<option value="'.$hp->purify($row['group_id']).'" '.($group_id_template == $row['group_id'] ? $selectedHtml : '').'>'.$hp->purify($row['group_name']).'</option>';
+            $selected = '';
+            if ($group_id_template == $row['group_id']) {
+                $selected = $selectedHtml;
+                $project_selected = true;
+            }
+            echo '<option value="'.$hp->purify($row['group_id']).'" '.($group_id_template == $row['group_id'] ? $selectedHtml : '').'>'.$hp->purify(util_unconvert_htmlspecialchars($row['group_name'])).'</option>';
         }
         echo '</optgroup>';
 
-        echo '<optgroup id="tracker_new_other" style="display:none;" label="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_other').'">';
+        $hide  = 'style="display:none;"';
+        $other = '';
+        if ($tracker_template && !$project_selected) {
+            $hide = '';
+            $other .= '<option value="'. (int)$tracker_template->getProject()->getID() .'" '. $selectedHtml .'>';
+            $other .= $hp->purify(util_unconvert_htmlspecialchars($tracker_template->getProject()->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML);
+            $other .= '</option>';
+        }
+        echo '<optgroup id="tracker_new_other" '. $hide .' label="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_other').'">';
+        echo $other;
         echo '</optgroup>';
 
         echo '</select>';
