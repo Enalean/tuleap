@@ -224,7 +224,7 @@ class TrackerManager { /* extends Engine? */
         $atid_template = $request->getValidated('atid_template', 'uint', 0);
         
         // First try XML
-        if ($request->existAndNonEmpty('create_mode') && $request->existAndNonEmpty('create_mode') == 'xml') {
+        if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'xml') {
             $vFile = new Valid_File('tracker_new_xml_file');
             $vFile->required();
             if ($request->validFile($vFile)) {
@@ -232,7 +232,7 @@ class TrackerManager { /* extends Engine? */
             }
         } else {
             // Otherwise tries duplicate
-            $new_tracker   = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
+            $new_tracker = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
         }
 
         if ($new_tracker) {
