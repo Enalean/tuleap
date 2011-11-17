@@ -42,13 +42,29 @@ $nbCommits = $params['commits_number'];
 
 logGitPushes($repositoryName, $userTuleapLogin, $groupName, $nbCommits);
 
-// Functions
+/**
+ * Pint an error then exit
+ *
+ * @param String $msg Error message to display
+ *
+ * @return void
+ */
 function error($msg) {
     echo "*** Error: $msg".PHP_EOL;
     exit(1);
 }
 
-function logGitPushes($repositoryName, $identifier, $projectName, $nbCommits) {
+/**
+ * Store details about the push in the DB
+ *
+ * @param String  $repositoryName Name of the git repository
+ * @param String  $identifier     Name of the user that performed the push
+ * @param String  $projectName    Unix name of the project
+ * @param Integer $commitsNumber  Number of commits
+ *
+ * @return void
+ */
+function logGitPushes($repositoryName, $identifier, $projectName, $commitsNumber) {
     $repository = new GitRepository();
     $repoId = $repository->getRepositoryIDByName($repositoryName, $projectName);
     $repository->setId($repoId);
@@ -57,6 +73,7 @@ function logGitPushes($repositoryName, $identifier, $projectName, $nbCommits) {
     } catch (Exception $e) {
         error("Unable to load repository");
     }
-$repository->logGitPush($repositoryName, $identifier, $projectName, $nbCommits);
+    $repository->logGitPush($repositoryName, $identifier, $projectName, $commitsNumber);
 }
+
 ?>

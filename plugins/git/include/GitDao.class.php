@@ -303,16 +303,16 @@ class GitDao extends DataAccessObject {
     /**
      * This function log a Git Push in the database
      *
-     * @param Integer $repoId
-     * @param Integer $userId
-     * @param Integer $nbCommits
+     * @param Integer  $repoId        Id of the git repository
+     * @param Integer  $UserId        Id of the user that performed the push
+     * @param Integer $commitsNumber Number of commits
      *
      * @return Boolean
      */
-    public function logGitPush($repoId, $userId, $nbCommits) {
+    public function logGitPush($repoId, $userId, $commitsNumber) {
         $repositoryId = $this->da->escapeInt($repoId);
         $userId = $this->da->escapeInt($userId);
-        $commitsNumber = $this->da->escapeInt($nbCommits);
+        $commitsNumber = $this->da->escapeInt($commitsNumber);
         $pushDate = date('Y-m-d H:i:s');
 
         $query = 'INSERT INTO plugin_git_log ('.self::REPOSITORY_ID.',
@@ -357,7 +357,7 @@ class GitDao extends DataAccessObject {
      * Retrieve Git repository data given its name and its group name.
      *
      * @param String $repositoryName Name of the repository we are looking for.
-     * @param String $projectId ID of the project to which the repository belong.
+     * @param String $projectId      ID of the project to which the repository belong.
      *
      * @return DataAccessResult
      */

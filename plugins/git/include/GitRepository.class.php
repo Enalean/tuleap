@@ -267,8 +267,8 @@ class GitRepository implements DVCSRepository {
     /**
      * Retrieve Git repository ID nowing the repository name and its group name.
      *
-     * @param String $repositoryName
-     * @param String $projectName
+     * @param String $repositoryName Name of the repository
+     * @param String $projectName    Name of the project
      *
      * @return Integer
      */
@@ -289,14 +289,14 @@ class GitRepository implements DVCSRepository {
     /**
      * Prepare data then log a Git push.
      *
-     * @param String $repositoryName
-     * @param String $identifier
-     * @param String $projectName
-     * @param Integer $nbCommits
+     * @param String  $repositoryName Name of the git repository
+     * @param String  $identifier     Name of the user that performed the push
+     * @param String  $projectName    Unix name of the project
+     * @param Integer $commitsNumber  Number of commits
      *
      * @return Boolean
      */
-    public function logGitPush($repositoryName, $identifier, $projectName, $nbCommits) {
+    public function logGitPush($repositoryName, $identifier, $projectName, $commitsNumber) {
         $um = UserManager::instance();
         if ($user = $um->getUserByIdentifier($identifier)) {
             $userId = $user->getId();
@@ -304,7 +304,7 @@ class GitRepository implements DVCSRepository {
             $userId = 100;
         }
         $repoId = $this->getRepositoryIDByName($repositoryName, $projectName);
-        return $this->getDao()->logGitPush($repoId, $userId, $nbCommits);
+        return $this->getDao()->logGitPush($repoId, $userId, $commitsNumber);
     }
 
     /**
