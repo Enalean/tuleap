@@ -33,28 +33,35 @@ class TrackerManager { /* extends Engine? */
      * Check that the service is used and the plugin is allowed for project $project
      * if it is not the case then exit with an error
      * 
-     * @param Project $project
+     * @param Project         $project
+     * @param Codendi_Request $request
      * 
      * @return bool true if success. Otherwise the process terminates.
      */
-    public function checkServiceEnabled(Project $project) {
+    public function checkServiceEnabled(Project $project, Codendi_Request $request) {
         if ($project->usesService('plugin_tracker')) {
             return true;
         }
-        $GLOBALS['Response']->addFeedback('error', "The project doesn't use the 'tracker v5' service");
-        $GLOBALS['HTML']->redirect('/projects/'. $project->getUnixName() .'/');
+        
+        header("HTTP/1.0 404 Not Found");
+        if (!$request->isAjax()) {
+            $GLOBALS['Response']->addFeedback('error', "The project doesn't use the 'tracker v5' service");
+            $GLOBALS['HTML']->redirect('/projects/'. $project->getUnixName() .'/');
+        }
         exit();
     }
     
     /**
      * Check that tracker can be accessed by user
      *
-     * @param Tracker $tracker
-     * @param User    $user
+     * @param Tracker         $tracker
+     * @param User            $user
+     * @param Codendi_Request $request
+     *
      * @throws Tracker_CannotAccessTrackerException
      */
-    public function checkUserCanAccessTracker($tracker, $user) {
-        $this->checkServiceEnabled($tracker->getProject());
+    public function checkUserCanAccessTracker($tracker, $user, Codendi_Request $request) {
+        $this->checkServiceEnabled($tracker->getProject(), $request);
         
         if (!$tracker->isActive()) {
             throw new Tracker_CannotAccessTrackerException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
@@ -73,7 +80,7 @@ class TrackerManager { /* extends Engine? */
      */
     protected function processSubElement(Tracker_Dispatchable_Interface $object, Codendi_Request $request, User $user) {
         // Tracker related check
-        $this->checkUserCanAccessTracker($object->getTracker(), $user);
+        $this->checkUserCanAccessTracker($object->getTracker(), $user, $request);
         $GLOBALS['group_id'] = $object->getTracker()->getGroupId();
 
         // Need specific treatment for artifact
@@ -130,7 +137,7 @@ class TrackerManager { /* extends Engine? */
             if ((int)$request->get('group_id')) {
                 $group_id = (int)$request->get('group_id');
                 if ($project = $this->getProject($group_id)) {
-                    if ($this->checkServiceEnabled($project)) {
+                    if ($this->checkServiceEnabled($project, $request)) {
                         switch($request->get('func')) {
                             case 'docreate':
                                 if ($this->userCanCreateTracker($group_id)) {

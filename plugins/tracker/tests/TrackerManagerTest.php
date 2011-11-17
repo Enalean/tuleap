@@ -189,11 +189,13 @@ class TrackerManagerTest extends UnitTestCase {
     }
     
     public function testProcessItself() {
+        $request_artifact = new MockCodendi_Request($this);
+        
         $tm = TestHelper::getPartialMock('TrackerManager', array('getProject', 'displayAllTrackers', 'checkServiceEnabled'));
         $project = new MockProject();
         $tm->expectOnce('getProject');
         $tm->setReturnValue('getProject', $project, array(5));
-        $tm->setReturnValue('checkServiceEnabled', true, array($project));
+        $tm->setReturnValue('checkServiceEnabled', true, array($project, $request));
         $tm->expectOnce('displayAllTrackers', array($project, $this->user));
         
         $this->artifact->expectNever('process');
@@ -201,7 +203,6 @@ class TrackerManagerTest extends UnitTestCase {
         $this->tracker->expectNever('process');
         $this->formElement->expectNever('process');
         
-        $request_artifact = new MockCodendi_Request($this);
         $request_artifact->setReturnValue('get', '5', array('group_id'));
         $tm->process($request_artifact, $this->user);
     }
