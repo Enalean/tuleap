@@ -771,7 +771,7 @@
                   </group>
                   <group>
                     <attribute name="type">
-                      <value>graphontrackers_scrum_burnup</value>
+                      <value>graphontrackersv5_scrum_burnup</value>
                     </attribute>
                     <optional>
                       <attribute name="start_date">
@@ -796,7 +796,7 @@
                   </group>
                   <group>
                     <attribute name="type">
-                      <value>graphontrackers_scrum_burndown</value>
+                      <value>graphontrackersv5_scrum_burndown</value>
                     </attribute>
                     <optional>
                       <attribute name="start_date">
@@ -809,7 +809,7 @@
                       </attribute>
                     </optional>
                     <optional>
-                      <attribute name="field">
+                      <attribute name="effort_field">
                         <data type="IDREF"/>
                       </attribute>
                     </optional>

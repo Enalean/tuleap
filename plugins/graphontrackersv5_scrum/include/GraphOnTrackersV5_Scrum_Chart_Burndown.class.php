@@ -248,7 +248,7 @@ class GraphOnTrackersV5_Scrum_Chart_Burndown extends GraphOnTrackersV5_Chart {
             $root->addAttribute('duration', $this->duration);
         }
         if ($this->field_id) {
-            $root->addAttribute('field_id', array_search($this->field_id, $formsMapping));
+            $root->addAttribute('effort_field', array_search($this->field_id, $formsMapping));
         }
     }
 
