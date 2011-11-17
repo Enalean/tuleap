@@ -353,7 +353,7 @@ class TrackerManager { /* extends Engine? */
         }
         $selectedHtml = 'selected="selected"';
 
-        echo '<select name="group_id_template" size="15" id="tracker_new_project_list">';
+        echo '<select name="group_id_template" size="15" id="tracker_new_project_list" autocomplete="off">';
 
         echo '<option value="100" '.($group_id_template == 100 ? $selectedHtml : '').'>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_default').'</option>';
 
