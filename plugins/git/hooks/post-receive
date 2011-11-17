@@ -12,4 +12,7 @@
 # see contrib/hooks/ for an sample, or uncomment the next line (on debian)
 #
 
-. /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
+while read oldrev newrev refname
+    do
+        echo $oldrev $newrev $refname | /usr/share/codendi/plugins/git/hooks/post-receive-email >&- 2>&- &
+    done
