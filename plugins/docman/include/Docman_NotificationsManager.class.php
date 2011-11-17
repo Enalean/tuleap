@@ -147,15 +147,20 @@ class Docman_NotificationsManager extends NotificationsManager {
     }
 
    /**
-    * Retrieve list of distinct users that are monitoring a given item.
+    * Returns the list of users monitoring the given item with an array associated to the item the user actually monitors:
+    * getListeningUsers(item(10))
+    * =>
+    *  array(101 => item(10) // The user is monitoring the item(10) directly
+    *        102 => item(20) // The user is monitoring item(10) through item(20) "sub-hierarchy"
+    *  )
     *
-    * @param Integer $id    ID of the item that we are looking for its listeners.
-    * @param Array   $users Array where listeners are inserted.
-    * @param String  $type  Type of listener, in order to retrieve listeners that monitor this item on a sub-hierarchy or not.
+    * @param Docman_Item $item  Item which listenners will be retrieved
+    * @param Array       $users Array where listeners are inserted.
+    * @param String      $type  Type of listener, in order to retrieve listeners that monitor this item on a sub-hierarchy or not.
     *
     * @return Array
     */
-    function _getDistinctListeningUsersForAscendantHierarchy($item, $users = array(), $type = PLUGIN_DOCMAN_NOTIFICATION) {
+    public function getListeningUsers(Docman_Item $item, $users = array(), $type = PLUGIN_DOCMAN_NOTIFICATION) {
         $dar = $this->dao->searchUserIdByObjectIdAndType($item->getId(), $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
         if ($dar) {
             foreach ($dar as $user) {

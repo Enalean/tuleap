@@ -71,7 +71,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $um = UserManager::instance();
         $content = '';
         if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
-            $listeners = $this->notificationsManager->_getDistinctListeningUsersForAscendantHierarchy($this->item);
+            $listeners = $this->notificationsManager->getListeningUsers($this->item);
             if (!empty($listeners)) {
                 $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
                 $content .= '<form name="remove_monitoring" method="POST" action="">';
@@ -92,8 +92,8 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                     }
                     $content .= '</td></tr>';
                 }
-                // TODO : ax user if he wants or not to notify the users he remove
-                // TODO : We may ax him also if his name wil appear as the guilty one or not
+                // TODO : ask user if he wants or not to notify the users he remove
+                // TODO : We may ask him also if his name wil appear as the guilty one or not
                 $content .= '<td colspan="2"><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
                 $content .= '</tbody></table></form>';
                 $content .= '</td><td><div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help').'</div></td></tr></table>';
