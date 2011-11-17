@@ -633,7 +633,8 @@ generate_delete_general_email()
 	echo $LOGEND
 }
 
-#--------------- Miscellaneous utilities
+
+# --------------- Miscellaneous utilities
 
 #
 # Show new revisions as the user would like to see them in the email.
