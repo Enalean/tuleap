@@ -43,6 +43,32 @@ class TrackerDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+   /**
+    * Check if the shortname of the tracker is already used in the project
+    * @param string $item_name the shortname of the tracker we are looking for
+    * @param int $group_id the ID of the group
+    * @return boolean
+    */
+    public function isShortNameExists($item_name, $group_id) {
+        $item_name = $this->da->quoteSmart($item_name);
+        $group_id  = $this->da->escapeInt($group_id);
+        $sql = "SELECT item_name 
+                FROM $this->table_name
+                WHERE item_name = $item_name
+                  AND group_id = $group_id
+                  AND deletion_date IS NULL";
+                  
+        if ($group_id == 100) {
+            $sql .= " UNION
+                        SELECT item_name 
+                        FROM artifact_group_list
+                        WHERE item_name = $item_name
+                          AND group_id = 100
+                          AND deletion_date IS NULL";
+        }
+        return count($this->retrieve($sql));
+    }
+    
     public function markAsDeleted($id) {
         $id = $this->da->escapeInt($id);
         $deletion_date = $this->da->escapeInt($_SERVER['REQUEST_TIME']);

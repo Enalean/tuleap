@@ -473,8 +473,8 @@ plugin_tracker_include_type	tmpl_src_prj_default	Patron par défaut
 plugin_tracker_include_type	tmpl_src_prj_my	Mes projets
 plugin_tracker_include_type	tmpl_src_prj_autocomplete	Depuis l'autocompleter
 plugin_tracker_include_type	tmpl_src_prj_other	Autres projets
-plugin_tracker_include_type	tmpl_src_autocomplete_desc	Ou tappez un nom de projet:
-plugin_tracker_include_type	tmpl_src_autocomplete_hint	Commencez à tapper
+plugin_tracker_include_type	tmpl_src_autocomplete_desc	Ou saisissez un nom de projet:
+plugin_tracker_include_type	tmpl_src_autocomplete_hint	Commencez à taper
 plugin_tracker_include_type	create_mode_xml	Vous pouvez également commencer à partir <a href="$1">d'une définition XML</a> d'un tracker.
 plugin_tracker_include_type	create_mode_gallery	Vous pouvez également commencer à partir <a href="$1">de la galerie de patrons</a>.
 plugin_tracker_include_type	proj_id	ID du projet&nbsp;:

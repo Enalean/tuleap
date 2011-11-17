@@ -290,21 +290,15 @@ class TrackerFactory {
         return false;
     }
 
-    /**
-     * Check if the shortname of the tracker is already used in the project
-     * @param string $shortname the shortname of the tracker we are looking for
-     * @param int $group_id th ID of the group
-     * @return boolean
-     */
+   /**
+    * Check if the shortname of the tracker is already used in the project
+    * @param string $shortname the shortname of the tracker we are looking for
+    * @param int $group_id the ID of the group
+    * @return boolean
+    */
     public function isShortNameExists($shortname, $group_id) {
-        $tracker_dao = $this->getDao();
-        $dar = $tracker_dao->searchByGroupId($group_id);
-        while ($row = $dar->getRow()) {
-            if ($shortname == $row['item_name']) {
-                return true;
-            }
-        }
-        return false;
+        $tracker_dao = $this->getDao();        
+        return $tracker_dao->isShortNameExists($shortname, $group_id);
     }
 
     /**
