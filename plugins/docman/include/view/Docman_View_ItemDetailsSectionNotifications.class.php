@@ -71,21 +71,21 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $um = UserManager::instance();
         $content = '';
         if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
-            $listeners = $this->notificationsManager->_getDistinctListeningUsersForAscendantHierarchy($this->item->getId(), array(), PLUGIN_DOCMAN_NOTIFICATION, true);
+            $listeners = $this->notificationsManager->_getDistinctListeningUsersForAscendantHierarchy($this->item);
             if (!empty($listeners)) {
                 $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
                 $content .= '<form name="remove_monitoring" method="POST" action="">';
                 $content .= '<input type="hidden" name="action" value="remove_monitoring" />';
                 $content .= '<table><tr><td>';
-                $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')), false, false , false);
+                $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_monitored_doc'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')), false, false , false);
                 $rowBgColor  = 0;
                 $hp = Codendi_HTMLPurifier::instance();
-                foreach ($listeners as $userId=>$val) {
+                foreach ($listeners as $userId => $item) {
                     $content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
                     $user = $um->getUserById($userId);
                     $content .= '<td>'. $userHelper->getDisplayName($user->getName(), $user->getRealName()) .'</td>';
-                    $content .= '<td>';
-                    if ($val) {
+                    $content .= '<td>'.$item->getTitle().'</td><td>';
+                    if ($this->item == $item) {
                         $content .= '<input type="checkbox" value="'. $userId .'" name="listeners_to_delete[]">';
                     } else {
                         $content .= '<input type="checkbox" value="'. $userId .'" name="listeners_to_delete[]" disabled="disabled">';

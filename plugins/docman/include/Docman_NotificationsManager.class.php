@@ -149,26 +149,24 @@ class Docman_NotificationsManager extends NotificationsManager {
    /**
     * Retrieve list of distinct users that are monitoring a given item.
     *
-    * @param Integer $id          ID of the item that we are looking for its listeners.
-    * @param Array   $users       Array where listeners are inserted.
-    * @param String  $type        Type of listener, in order to retrieve listeners that monitor this item on a sub-hierarchy or not.
-    * @param Boolean $currentItem Make the difference between users monitoring the item itself and ones monitoring one of its parents sub hierarchy
+    * @param Integer $id    ID of the item that we are looking for its listeners.
+    * @param Array   $users Array where listeners are inserted.
+    * @param String  $type  Type of listener, in order to retrieve listeners that monitor this item on a sub-hierarchy or not.
     *
     * @return Array
     */
-    function _getDistinctListeningUsersForAscendantHierarchy($id, $users, $type = null, $currentItem = false) {
-        if ($id) {
-            $dar = $this->dao->searchUserIdByObjectIdAndType($id, $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
-            if ($dar) {
-                foreach ($dar as $user) {
-                    if (!array_key_exists($user['user_id'], $users)) {
-                        $users[$user['user_id']] = $currentItem;
-                    }
+    function _getDistinctListeningUsersForAscendantHierarchy($item, $users = array(), $type = PLUGIN_DOCMAN_NOTIFICATION) {
+        $dar = $this->dao->searchUserIdByObjectIdAndType($item->getId(), $type ? $type : PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
+        if ($dar) {
+            foreach ($dar as $user) {
+                if (!array_key_exists($user['user_id'], $users)) {
+                    $users[$user['user_id']] = $item;
                 }
             }
-            if ($item = $this->_item_factory->getItemFromDb($id)) {
-                $users = $this->_getDistinctListeningUsersForAscendantHierarchy($item->getParentId(), $users, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
-            }
+        }
+        if ($id = $item->getParentId()) {
+            $item = $this->_item_factory->getItemFromDb($id);
+            $users = $this->_getDistinctListeningUsersForAscendantHierarchy($item, $users, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
         }
         return $users;
     }
