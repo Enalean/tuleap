@@ -171,7 +171,7 @@ class Docman_NotificationsManager extends NotificationsManager {
         }
         if ($id = $item->getParentId()) {
             $item = $this->_item_factory->getItemFromDb($id);
-            $users = $this->_getDistinctListeningUsersForAscendantHierarchy($item, $users, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
+            $users = $this->getListeningUsers($item, $users, PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
         }
         return $users;
     }
