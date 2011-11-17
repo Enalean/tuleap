@@ -51,7 +51,13 @@ logGitPushes()
 # variable.
 GIT_DIR=$(git rev-parse --git-dir 2>/dev/null)
 if [ -z "$GIT_DIR" ]; then
-	echo >&2 "fatal: post-receive: GIT_DIR not set"
+	echo >&2 "fatal: post-receive-log: GIT_DIR not set"
 	exit 1
 fi
-logGitPushes $2 $1
+
+if [ -n "$1" -a -n "$2" ]; then
+	logGitPushes $2 $1
+else
+	echo >&2 "fatal: post-receive-log: Usage is post-receive-log oldrev newrev"
+	exit 1
+fi

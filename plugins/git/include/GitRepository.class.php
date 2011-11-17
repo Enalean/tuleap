@@ -296,7 +296,7 @@ class GitRepository implements DVCSRepository {
      *
      * @return Boolean
      */
-    public function prepareGitLog($repositoryName, $identifier, $projectName, $nbCommits) {
+    public function logGitPush($repositoryName, $identifier, $projectName, $nbCommits) {
         $um = UserManager::instance();
         if ($user = $um->getUserByIdentifier($identifier)) {
             $userId = $user->getId();

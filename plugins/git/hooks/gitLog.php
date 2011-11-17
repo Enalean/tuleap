@@ -19,9 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-$DIR = dirname(__FILE__);
 ini_set('include_path', '/usr/share/codendi/src/:/usr/share/codendi/src/www/include/:'.ini_get('include_path'));
-require_once($DIR.'/../include/GitRepository.class.php');
+require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
 require_once('pre.php');
 
 // Check script parameters
@@ -41,7 +40,7 @@ $userTuleapLogin = $params['login'];
 $groupName  = $params['group_name'];
 $nbCommits = $params['commits_number'];
 
-logGitPushes($repositoryName, $userTuleapLogin, $nbCommits, $groupName);
+logGitPushes($repositoryName, $userTuleapLogin, $groupName, $nbCommits);
 
 // Functions
 function error($msg) {
@@ -49,7 +48,7 @@ function error($msg) {
     exit(1);
 }
 
-function logGitPushes($repositoryName, $identifier, $nbCommits, $projectName) {
+function logGitPushes($repositoryName, $identifier, $projectName, $nbCommits) {
     $repository = new GitRepository();
     $repoId = $repository->getRepositoryIDByName($repositoryName, $projectName);
     $repository->setId($repoId);
@@ -58,6 +57,6 @@ function logGitPushes($repositoryName, $identifier, $nbCommits, $projectName) {
     } catch (Exception $e) {
         error("Unable to load repository");
     }
-$repository->prepareGitLog($repositoryName, $identifier, $projectName, $nbCommits);
+$repository->logGitPush($repositoryName, $identifier, $projectName, $nbCommits);
 }
 ?>
