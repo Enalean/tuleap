@@ -657,7 +657,7 @@ logGitPushes()
 		nbcommits=$((nbcommits+1))
 	done
 
-	php /usr/share/codendi/plugins/git/hooks/gitLog.php --group_name="$tuleap_group_name" --login="$tuleap_login" --type="$revtype" --repo_name="$tuleap_repo_name" --commits_number="$nbcommits"
+	php /usr/share/codendi/plugins/git/hooks/gitLog.php --group_name="$tuleap_group_name" --login="$tuleap_login" --type="$revtype" --repo_name="$tuleap_repo_name" --commits_number="$nbcommits" > /dev/null
 
 }
 
