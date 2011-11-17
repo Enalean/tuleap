@@ -152,16 +152,16 @@ class Service {
             $params['pv'] = (int)$pv;
         }
         
-        $this->displayCloneInheritanceWarning();
+        $this->displayDuplicateInheritanceWarning();
         
         site_project_header($params);
     }
     
     /**
-     * Display a warning if the service configuration is not inherited on project clone
+     * Display a warning if the service configuration is not inherited on project creation
      */
-    public function displayCloneInheritanceWarning() {
-        if ($this->project->isTemplate() && !$this->isInheritedOnClone()) {
+    public function displayDuplicateInheritanceWarning() {
+        if ($this->project->isTemplate() && !$this->isInheritedOnDuplicate()) {
             $GLOBALS['HTML']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'service_conf_not_inherited'));
         }
     }
@@ -205,7 +205,7 @@ class Service {
      * 
      * @return Boolean
      */
-    public function isInheritedOnClone() {
+    public function isInheritedOnDuplicate() {
         return false;
     }
 }
