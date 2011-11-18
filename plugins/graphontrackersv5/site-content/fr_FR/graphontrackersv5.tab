@@ -147,3 +147,15 @@ plugin_graphontrackersv5_include_report	new_created_report	Nouveau rapport graph
 plugin_graphontrackersv5_include_report	report_deleted	Rapport graphique détruit
 plugin_graphontrackersv5_include_report	report_mgmt	Administration de l'outil de suivi - Gestion des rapports graphiques
 plugin_graphontrackersv5_include_report	creation_msg	Champ nom ou portée non rempli
+
+plugin_graphontrackersv5_scrum	descriptor_name	Graphiques Scrum sur les outils de suivi v5
+plugin_graphontrackersv5_scrum	descriptor_description	Plugin permettant la création de graphiques de type Scrum sur les outils de suivi v5
+
+plugin_graphontrackersv5_scrum	add_title_burndown	Scrum BurnDown
+plugin_graphontrackersv5_scrum	burndown_property_effort	Champ Effort
+plugin_graphontrackersv5_scrum	burndown_property_start_date	Début du sprint
+plugin_graphontrackersv5_scrum	burndown_property_duration	Durée (en jours)
+
+plugin_graphontrackersv5_scrum	add_title_burnup	Scrum BurnUp
+plugin_graphontrackersv5_scrum	burnup_property_start_date	Début du sprint
+plugin_graphontrackersv5_scrum	burnup_property_duration	Durée (en jours)

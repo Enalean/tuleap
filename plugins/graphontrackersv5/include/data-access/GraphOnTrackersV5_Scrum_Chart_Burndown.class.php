@@ -20,10 +20,11 @@
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
+require_once('GraphOnTrackersV5_Chart.class.php');
+require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Scrum_Burndown_DataBuilder.class.php');
+require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Scrum_Burndown_Engine.class.php');
 require_once('GraphOnTrackersV5_Scrum_Chart_BurndownDao.class.php');
-require_once('GraphOnTrackersV5_Scrum_Burndown_Engine.class.php');
-require_once('GraphOnTrackersV5_Scrum_Burndown_DataBuilder.class.php');
+
 /**
  * Base class to provide a Scrum Burndown Chart
  */

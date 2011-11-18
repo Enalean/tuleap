@@ -175,3 +175,15 @@ plugin_graphontrackersv5_include_report	new_created_report	New Graphic Report cr
 plugin_graphontrackersv5_include_report	report_deleted	Graphic Report deleted
 plugin_graphontrackersv5_include_report	report_mgmt	Tracker Administration - Tracker Graphic Report Management
 plugin_graphontrackersv5_include_report	creation_msg	Missing Name or Scope field
+
+plugin_graphontrackersv5_scrum	descriptor_name	GraphOnTrackers Scrum on Tracker v5
+plugin_graphontrackersv5_scrum	descriptor_description	Add some scrum specific charts for GraphOnTrackers v5 plugin
+
+plugin_graphontrackersv5_scrum	add_title_burndown	Scrum BurnDown
+plugin_graphontrackersv5_scrum	burndown_property_effort	Effort field
+plugin_graphontrackersv5_scrum	burndown_property_start_date	Start of the sprint
+plugin_graphontrackersv5_scrum	burndown_property_duration	Duration (in days)
+
+plugin_graphontrackersv5_scrum	add_title_burnup	Scrum BurnUp
+plugin_graphontrackersv5_scrum	burnup_property_start_date	Start of the sprint
+plugin_graphontrackersv5_scrum	burnup_property_duration	Duration (in days)
