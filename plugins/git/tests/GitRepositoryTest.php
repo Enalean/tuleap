@@ -162,10 +162,12 @@ class GitRepositoryTest extends UnitTestCase {
         $project = new Mockproject();
         $repo->setReturnValue('_getProjectManager', $pm);
         $pm->setReturnValue('getProjectByUnixName', $project);
+        $project->expectOnce('getID');
         $dao = new MockGitDao();
         $repo->setReturnValue('getDao', $dao);
         $dar = new MockDataAccessResult();
         $dar->setReturnValue('isError', false);
+        $dar->expectOnce('getRow');
         $dar->setReturnValue('getRow', array ("repository_id" => 48));
         $dao->setReturnValue('getProjectRepositoryByName', $dar);
         $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 48);
@@ -192,6 +194,7 @@ class GitRepositoryTest extends UnitTestCase {
         $project = new Mockproject();
         $repo->setReturnValue('_getProjectManager', $pm);
         $pm->setReturnValue('getProjectByUnixName', false);
+        $project->expectNever('getID');
         $this->assertIdentical($repo->getRepositoryIDByName('repo', 'prj'), 0);
     }
 }
