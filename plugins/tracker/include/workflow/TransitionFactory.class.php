@@ -282,7 +282,7 @@ class TransitionFactory {
     *
     * @return void
     */
-    public function duplicate($values, $workflow_id, $transitions, $field_mapping, $ugroup_mapping = false, $duplicate_static_perms) {
+    public function duplicate($values, $workflow_id, $transitions, $field_mapping, $ugroup_mapping = false, $duplicate_type) {
         
         if ($transitions != null) {
             foreach ($transitions as $transition) {
@@ -311,7 +311,7 @@ class TransitionFactory {
                 $transition_id = $this->addTransition($workflow_id, $from_id, $to_id);
                 //Duplicate permissions
                 $from_transition_id = $transition->getTransitionId();
-                $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_static_perms);
+                $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
                 //Duplicate postactions
                 $postactions = $transition->getPostActions();
                 $tpaf = new Transition_PostActionFactory();
@@ -342,10 +342,11 @@ class TransitionFactory {
     *
     * @return void
     */
-    public function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_static_perms) {
-        $pm = PermissionsManager::instance();
+    public function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_type) {
+        $pm = PermissionsManager::instance();        
+        $permission_type = array('PLUGIN_TRACKER_WORKFLOW_TRANSITION');
         //Duplicate tracker permissions
-        $pm->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_static_perms);
+        $pm->duplicatePermissions($from_transition_id, $transition_id, $permission_type, $duplicate_type, $ugroup_mapping);
     }
 }
 ?>

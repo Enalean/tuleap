@@ -382,14 +382,18 @@ class TrackerFactory {
                 // Duplicate Form Elements
                 $field_mapping = Tracker_FormElementFactory::instance()->duplicate($id_template, $id, $ugroup_mapping);
                 
-                $duplicate_static_perms = false;
-                if ($project_id == $project_id_template) {
-                    $duplicate_static_perms = true;
+                if ($ugroup_mapping) {
+                    $duplicate_type = PermissionsDao::DUPLICATE_NEW_PROJECT;
+                } else if ($project_id == $project_id_template) {
+                     $duplicate_type = PermissionsDao::DUPLICATE_SAME_PROJECT;
+                } else {
+                    $duplicate_type = PermissionsDao::DUPLICATE_OTHER_PROJECT;
                 }
+                
                 // Duplicate workflow
                 foreach ($field_mapping as $mapping) {
                     if ($mapping['workflow']) {
-                        WorkflowFactory::instance()->duplicate($id_template, $id, $mapping['from'], $mapping['to'], $mapping['values'], $field_mapping, $ugroup_mapping, $duplicate_static_perms);
+                        WorkflowFactory::instance()->duplicate($id_template, $id, $mapping['from'], $mapping['to'], $mapping['values'], $field_mapping, $ugroup_mapping, $duplicate_type);
                     }
                 }
                 // Duplicate Reports
@@ -400,7 +404,6 @@ class TrackerFactory {
 
                 // Duplicate Canned Responses
                 Tracker_CannedResponseFactory::instance()->duplicate($id_template, $id);
-                
                 //Duplicate field dependencies
                 Tracker_RuleFactory::instance()->duplicate($id_template, $id, $field_mapping);
                 $tracker = $this->getTrackerById($id);
@@ -410,9 +413,8 @@ class TrackerFactory {
                 $pref_params = array('atid_source' => $id_template,
                         'atid_dest'   => $id);
                 $em->processEvent('Tracker_created', $pref_params);
-
                 //Duplicate Permissions
-                $this->duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_static_perms);
+                $this->duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_type);
                 
                 
                 $this->postCreateActions($tracker);
@@ -430,19 +432,22 @@ class TrackerFactory {
     * @param int $id          the id of the new tracker
     * @param array $ugroup_mapping 
     * @param array $field_mapping
+    * @param bool $duplicate_type
     *
     * @return bool
     */
-    public function duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_static_perms) {
+    public function duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_type) {
         $pm = PermissionsManager::instance();
+        $permission_type_tracker = array('PLUGIN_TRACKER_ADMIN','PLUGIN_TRACKER_ACCESS_FULL','PLUGIN_TRACKER_ACCESS_ASSIGNEE','PLUGIN_TRACKER_ACCESS_SUBMITTER','PLUGIN_TRACKER_NONE');
         //Duplicate tracker permissions
-        $pm->duplicatePermissions($id_template, $id, $ugroup_mapping, $duplicate_static_perms);
+        $pm->duplicatePermissions($id_template, $id, $permission_type_tracker, $duplicate_type, $ugroup_mapping);
         
+        $permission_type_field = array('PLUGIN_TRACKER_FIELD_SUBMIT','PLUGIN_TRACKER_FIELD_READ','PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_NONE');
         //Duplicate fields permissions
         foreach ($field_mapping as $f) {
             $from = $f['from'];
             $to = $f['to'];
-            $pm->duplicatePermissions($from, $to, $ugroup_mapping, $duplicate_static_perms);
+            $pm->duplicatePermissions($from, $to, $permission_type_field, $duplicate_type, $ugroup_mapping);
         }
     }
 

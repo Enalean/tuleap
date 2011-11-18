@@ -1309,7 +1309,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $submit_permission = 'PLUGIN_TRACKER_FIELD_SUBMIT';
         $read_permission   = 'PLUGIN_TRACKER_FIELD_READ';
         $update_permission = 'PLUGIN_TRACKER_FIELD_UPDATE';
-        $none = 'PLUGIN_TRACKER_NONE';
+        $none              = 'PLUGIN_TRACKER_NONE';
         $attributes_for_selected = 'selected="selected" style="background:#EEE;"'; //TODO: put style in stylesheet
 
         $html = '';
