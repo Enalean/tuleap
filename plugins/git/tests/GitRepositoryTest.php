@@ -19,10 +19,15 @@
  */
 
 require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
+Mock::generatePartial('GitRepository', 'GitRepositoryTestVersion', array('_getUserManager', 'getRepositoryIDByName', 'getDao'));
 require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');
 Mock::generate('Git_Backend_Gitolite');
 require_once(dirname(__FILE__).'/../include/GitBackend.class.php');
 Mock::generate('GitBackend');
+require_once(dirname(__FILE__).'/../include/GitDao.class.php');
+Mock::generate('GitDao');
+Mock::generate('UserManager');
+Mock::generate('User');
 
 class GitRepositoryTest extends UnitTestCase {
     
@@ -85,6 +90,66 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertFalse($repo->isDotGit('d'));
         $this->assertFalse($repo->isDotGit('defaultgit'));
         $this->assertFalse($repo->isDotGit('default.git.old'));
+    }
+
+    public function testLogGitPushNoUser() {
+        $um = new MockUserManager();
+        $um->setReturnValue('getUserByIdentifier', null);
+        $repo = new GitRepositoryTestVersion();
+        $repo->setReturnValue('_getUserManager', $um);
+        $repo->setReturnValue('getRepositoryIDByName', 1);
+        $dao = new MockGitDao();
+        $dao->setReturnValue('logGitPush', true);
+        $repo->setReturnValue('getDao', $dao);
+
+        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 3));
+
+        $repo->expectOnce('_getUserManager');
+        $um->expectOnce('getUserByIdentifier');
+        $repo->expectOnce('getRepositoryIDByName');
+        $dao->expectOnce('logGitPush');
+    }
+
+    public function testLogGitPushDaoFail() {
+        $user = new MockUser();
+        $user->setReturnValue('getId', 2);
+        $um = new MockUserManager();
+        $um->setReturnValue('getUserByIdentifier', $user);
+        $repo = new GitRepositoryTestVersion();
+        $repo->setReturnValue('_getUserManager', $um);
+        $repo->setReturnValue('getRepositoryIDByName', 1);
+        $dao = new MockGitDao();
+        $dao->setReturnValue('logGitPush', false);
+        $repo->setReturnValue('getDao', $dao);
+
+        $this->assertFalse($repo->logGitPush('repo', 'user', 'prj', 3));
+
+        $repo->expectOnce('_getUserManager');
+        $um->expectOnce('getUserByIdentifier');
+        $user->expectOnce('getId');
+        $repo->expectOnce('getRepositoryIDByName');
+        $dao->expectOnce('logGitPush');
+    }
+
+    public function testLogGitPushSuccess() {
+        $user = new MockUser();
+        $user->setReturnValue('getId', 2);
+        $um = new MockUserManager();
+        $um->setReturnValue('getUserByIdentifier', $user);
+        $repo = new GitRepositoryTestVersion();
+        $repo->setReturnValue('_getUserManager', $um);
+        $repo->setReturnValue('getRepositoryIDByName', 1);
+        $dao = new MockGitDao();
+        $dao->setReturnValue('logGitPush', true);
+        $repo->setReturnValue('getDao', $dao);
+
+        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 3));
+
+        $repo->expectOnce('_getUserManager');
+        $um->expectOnce('getUserByIdentifier');
+        $user->expectOnce('getId');
+        $repo->expectOnce('getRepositoryIDByName');
+        $dao->expectOnce('logGitPush');
     }
 
 }

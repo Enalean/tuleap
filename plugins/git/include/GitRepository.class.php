@@ -93,6 +93,15 @@ class GitRepository implements DVCSRepository {
     }       
 
     /**
+     * Wrapper for tests
+     *
+     * @return UserManager
+     */
+    function _getUserManager() {
+        return UserManager::instance();
+    }
+
+    /**
      * Wrapper
      * @return Boolean
      */
@@ -297,7 +306,7 @@ class GitRepository implements DVCSRepository {
      * @return Boolean
      */
     public function logGitPush($repositoryName, $identifier, $projectName, $commitsNumber) {
-        $um = UserManager::instance();
+        $um = $this->_getUserManager();
         if ($user = $um->getUserByIdentifier($identifier)) {
             $userId = $user->getId();
         } else {
