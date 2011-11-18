@@ -176,37 +176,36 @@ class PermissionsDao extends DataAccessObject {
    /**
     * Duplicate permissions
     * 
-    * @param int $source 
-    * @param int $target
-    * @param array $ugroup_mapping, an array of ugroups
-    * 
+    * @param int    $source
+    * @param int    $target
+    * @param array  $ugroup_mapping, an array of static ugroups
+    * @param bool   $duplicate_static_perms indicates if static perms must be duplicated
+    *
     * @return Boolean
     */
     function duplicatePermissions($from, $to, $ugroup_mapping, $duplicate_static_perms) {
         $from = $this->da->escapeInt($from);
         $to = $this->da->escapeInt($to);
         
-        if ($ugroup_mapping !== false) {
-            foreach($ugroup_mapping as $key => $val) {
-                $key = $this->da->escapeInt($key);
-                $val = $this->da->escapeInt($val);
+        //Duplicate static perms
+        if ($ugroup_mapping !== false && $duplicate_static_perms) {
+            foreach($ugroup_mapping as $template_ugroup => $new_ugroup) {
+                $template_ugroup = $this->da->escapeInt($template_ugroup);
+                $new_ugroup = $this->da->escapeInt($new_ugroup);
                 $sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id)
-                            SELECT permission_type, '.$to.','. $val.'
+                            SELECT permission_type, '.$to.','. $new_ugroup.'
                             FROM permissions
-                            WHERE object_id = '.$from.' AND ugroup_id = '.$key;
+                            WHERE object_id = '.$from.' AND ugroup_id = '.$template_ugroup;
                 $this->update($sql);
             }
         }
         
-        $and = '';
-        if (! $duplicate_static_perms) {
-            $and = ' AND ugroup_id <= 100';
-        }
-        
+        //Duplicate dynamic perms
         $sql = 'INSERT INTO permissions (permission_type, object_id, ugroup_id)
                     SELECT permission_type, '.$to.', ugroup_id
                     FROM permissions
-                    WHERE object_id='.$from.$and;
+                    WHERE object_id='.$from.'
+                        AND ugroup_id <= 100';
         return $this->update($sql);
     }
     

@@ -445,7 +445,6 @@ class Tracker_FormElementFactory {
                 } else {
                     $workflow = $this->getFormElementById($from_row['id'])->getWorkflow();
                     $values = $this->getFormElementById($id)->duplicate($from_row['id'], $id);
-                    //$w = $workflow->duplicate($to_tracker_id, $from_row['id'], $id, $values, $ugroup_mapping);
                     $mapping[] = array('from' => $from_row['id'],
                                     'to' => $id,
                                     'values' => $values, 

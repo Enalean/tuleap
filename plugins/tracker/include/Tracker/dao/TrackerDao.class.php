@@ -56,16 +56,13 @@ class TrackerDao extends DataAccessObject {
                 FROM $this->table_name
                 WHERE item_name = $item_name
                   AND group_id = $group_id
-                  AND deletion_date IS NULL";
-                  
-        if ($group_id == 100) {
-            $sql .= " UNION
-                        SELECT item_name 
-                        FROM artifact_group_list
-                        WHERE item_name = $item_name
-                          AND group_id = 100
-                          AND deletion_date IS NULL";
-        }
+                  AND deletion_date IS NULL
+                UNION
+                  SELECT item_name
+                  FROM artifact_group_list
+                  WHERE item_name = $item_name
+                    AND group_id = $group_id
+                    AND deletion_date IS NULL";
         return count($this->retrieve($sql));
     }
     
