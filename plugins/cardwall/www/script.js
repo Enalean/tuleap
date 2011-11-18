@@ -30,7 +30,9 @@ document.observe('dom:loaded',function () {
         });
         cols.each(function (col) {
             var col_index = cols.indexOf(col),
-                td = col.up('table').down('tbody tr').down('td', col_index);
+                td = col.up('table').down('tbody tr').down('td', col_index),
+                effect = null,
+                restorecolor = td.getStyle('background-color');
             Droppables.add(td, {
                 hoverclass: 'tracker_renderer_board_column_hover',
                 accept: cols_classnames.reject(function (value, key) {
@@ -49,7 +51,12 @@ document.observe('dom:loaded',function () {
                         top: 'auto'
                     });
                     td.down('ul').appendChild(dragged);
-                    td.highlight();
+                    if (effect) {
+                        effect.cancel();
+                    }
+                    effect = new Effect.Highlight(td, {
+                        restorecolor: restorecolor
+                    });
                     
                     //save the new state
                     var parameters = {
