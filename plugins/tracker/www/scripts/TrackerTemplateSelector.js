@@ -99,14 +99,13 @@ codendi.tracker.TemplateSelector = Class.create({
     }
 });
 
-// Crappy, cannot be added in dom:loaded because, by default, constructor wait for dom:loaded event..
-var autocomplete = new ProjectAutoCompleter('tracker_new_prjname', codendi.imgroot, false);
-
 document.observe('dom:loaded', function () {
     // Refresh project list
     var selector = new codendi.tracker.TemplateSelector($('tracker_create_new'));
+    var autocomplete = new ProjectAutoCompleter('tracker_new_prjname', codendi.imgroot, false, {autoLoad: false});
     autocomplete.setAfterUpdateElement(function () {
         selector.updateTrackerTemplateList($F('tracker_new_prjname'));
     });
+    autocomplete.registerOnLoad();
 
 });
