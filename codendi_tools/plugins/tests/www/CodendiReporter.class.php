@@ -3,9 +3,9 @@
 require_once('../include/simpletest/reporter.php');
 require_once('../include/simpletest/extensions/junit_xml_reporter.php');
 
-@include_once 'PHP/CodeCoverage.php';
-@include_once 'PHP/CodeCoverage/Report/HTML.php';
-@include_once 'PHP/CodeCoverage/Report/Clover.php';
+// Need to install php code coverage. 
+// @see: https://github.com/sebastianbergmann/php-code-coverage
+@include_once 'PHP/CodeCoverage/Autoload.php';
 
 /**
  * Invoker decorator to target code coverage only on executed tests
