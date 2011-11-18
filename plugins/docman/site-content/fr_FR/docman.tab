@@ -353,6 +353,9 @@ plugin_docman	details_history_versions_delete_version	Supprimer
 plugin_docman	details_references	Références
 plugin_docman	details_newversion_title	Nouvelle version pour $1
 plugin_docman	details_notifications	Notifications
+plugin_docman	details_listeners	Abonnés
+plugin_docman	details_notifications_monitored_doc	Document monitoré
+plugin_docman	details_notifications_help	Les utilisateurs qui ne peuvent pas être enlevés monitorent un parent avec sa sous-hiérarchie.<br />Vous pouvez supprimer ce monitoring uniquement depuis le parent en question.
 plugin_docman	details_notifications_sendemail	Envoyez-moi un email dès que cet élément est modifié.
 plugin_docman	details_notifications_cascade_sendemail	...ainsi que pour toute la sous-hiérarchie.
 plugin_docman	details_paste_importmd	Importer les propriétés de $1 :
@@ -636,6 +639,11 @@ plugin_docman	new_view_change	voir/changer
 
 plugin_docman	notifications_off	Vous ne surveillez plus '$1'.
 plugin_docman	notifications_on	Vous surveillez désormais '$1'.
+plugin_docman	notifications_not_removed	Impossible de supprimer le monitoring pour l'utilisateur '$1'
+plugin_docman	notifications_not_present	Le monitoring n'était pas activé pour l'utilisateur '$1'
+plugin_docman	notifications_removed	Le monitoring a été supprimé pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_no_user	Aucun utilisateur séléctionné
+plugin_docman	notifications_permission_denied	Vous n'avez pas assez de permission pour supprimer le monitoring d'autres utilisateurs
 plugin_docman	notifications_cascade_on	Vous surveillez désormais '$1' et sa sous-hiérarchie.
 plugin_docman	notifications_removed_mail_body	$1 a été supprimé par $2.\n\n---------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez cet item.\n$3.
 plugin_docman	notifications_removed_from_mail_body	$1 a été modifié par $2.\n$3&action=show&id=$4\n\nSupprimé:\n $5\n\n----------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez ce répertoire.\nPour arrêter la surveillance, aller à la page suivante :\n $3&action=details&section=notifications&id=$4	

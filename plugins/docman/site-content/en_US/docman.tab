@@ -353,6 +353,9 @@ plugin_docman	details_history_versions_delete_version	Delete
 plugin_docman	details_references	References
 plugin_docman	details_newversion_title	New version for $1
 plugin_docman	details_notifications	Notifications
+plugin_docman	details_listeners	Subscribers
+plugin_docman	details_notifications_monitored_doc	Monitored document
+plugin_docman	details_notifications_help	Users that could not be removed are monitoring a parent folder with its sub hierarchy.<br />You can delete that monitoring only from the parent itself.
 plugin_docman	details_notifications_sendemail	Send me an email whenever this item is updated.
 plugin_docman	details_notifications_cascade_sendemail	...and for the whole sub-hierarchy.
 plugin_docman	details_paste_importmd	Import properties from $1:
@@ -636,6 +639,11 @@ plugin_docman	new_view_change	view/change
 
 plugin_docman	notifications_off	Your monitoring on '$1' has been removed.
 plugin_docman	notifications_on	You're monitoring '$1'.
+plugin_docman	notifications_not_removed	Unable to remove monitoring for user '$1'
+plugin_docman	notifications_not_present	Monitoring was not active for user '$1'
+plugin_docman	notifications_removed	Removed monitoring for user(s) '$1'
+plugin_docman	notifications_no_user	No user selected
+plugin_docman	notifications_permission_denied	You don't have enough permissions to remove users monitoring
 plugin_docman	notifications_cascade_on	You're monitoring '$1' and its sub-hierarchy.
 plugin_docman	notifications_removed_mail_body	$1 has been removed by $2.\n\n---------------------------------------------------------------------\nYou are receiving this message because you were monitoring this item.\n$3.
 plugin_docman	notifications_removed_from_mail_body	$1 has been modified by $2.\n$3&action=show&id=$4\n\nRemoved:\n $5\n\n----------------------------------------------------------------------\nYou are receiving this message because you are monitoring this folder.\nTo stop monitoring, please visit:\n $3&action=details&section=notifications&id=$4	

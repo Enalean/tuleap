@@ -1588,6 +1588,41 @@ class Docman_Actions extends Actions {
     }
 
     /**
+     * Remove monitoring for more than one user
+     *
+     * @param Array $params contains list if users to remove and the item
+     *
+     * @return void
+     */
+    function remove_monitoring($params) {
+        if (isset($params['listeners_to_delete']) && is_array($params['listeners_to_delete']) && !empty($params['listeners_to_delete'])) {
+            if ($this->_controler->userCanManage($params['item']->getId())) {
+                $users = array();
+                foreach ($params['listeners_to_delete'] as $userId) {
+                    $user = $this->_getUserManagerInstance()->getUserById($userId);
+                    if ($this->_controler->notificationsManager->exist($userId, $params['item']->getId())) {
+                        if ($this->_controler->notificationsManager->remove($userId, $params['item']->getId()) && $this->_controler->notificationsManager->remove($userId, $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                            $users[] = $user->getName();
+                            // TODO : send notification to the user about this action
+                        } else {
+                            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_removed', array($user->getName())));
+                        }
+                    } else {
+                        $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_present', array($user->getName())));
+                    }
+                }
+                if (!empty($users)) {
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $users))));
+                }
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
+            }
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
+        }
+    }
+
+    /**
      * @access private
      */
     function _approval_update_settings(&$atf, $sStatus, $notification, $description, $owner) {

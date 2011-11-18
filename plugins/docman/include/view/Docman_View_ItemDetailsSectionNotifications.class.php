@@ -33,7 +33,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $this->token = $token;
     }
     function getContent() {
-        $content = '<dl><dt>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</dt>';
+        $content = '<dl><fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_notifications') .'</legend>';
         $content .= '<dd>';
         $content .= '<form action="" method="POST">';
         $content .= '<p>';
@@ -53,10 +53,56 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content .= $this->item->accept($this, array('user' => &$user));
         $content .= '<p><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
         $content .= '</form>';
-        $content .= '</dd></dl>';
+        $content .= '</dd></fieldset></dl>';
+        $content .= '<dl>'.$this->displayListeningUsers($this->item->getId()).'</dl>';
         return $content;
     }
-    
+
+    /**
+     * Show list of people monitoring the document directly or indirectly by monitoring one of the parents and its subitems
+     *
+     * @param Integer $itemId Id of the document
+     *
+     * @return String
+     */
+    function displayListeningUsers($itemId) {
+        $dpm = Docman_PermissionsManager::instance($this->item->getGroupId());
+        $userHelper = new UserHelper();
+        $um = UserManager::instance();
+        $content = '';
+        if ($dpm->userCanManage($um->getCurrentUser(), $itemId)) {
+            $listeners = $this->notificationsManager->getListeningUsers($this->item);
+            if (!empty($listeners)) {
+                $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
+                $content .= '<form name="remove_monitoring" method="POST" action="">';
+                $content .= '<input type="hidden" name="action" value="remove_monitoring" />';
+                $content .= '<table><tr><td>';
+                $content .= html_build_list_table_top(array($GLOBALS['Language']->getText('people_viewprofile', 'user_name'), $GLOBALS['Language']->getText('plugin_docman', 'details_notifications_monitored_doc'), $GLOBALS['Language']->getText('docman_doc_utils', 'delete_ask')), false, false , false);
+                $rowBgColor  = 0;
+                $hp = Codendi_HTMLPurifier::instance();
+                foreach ($listeners as $userId => $item) {
+                    $content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
+                    $user = $um->getUserById($userId);
+                    $content .= '<td>'. $userHelper->getDisplayName($user->getName(), $user->getRealName()) .'</td>';
+                    $content .= '<td>'.$item->getTitle().'</td><td>';
+                    if ($this->item == $item) {
+                        $content .= '<input type="checkbox" value="'. $userId .'" name="listeners_to_delete[]">';
+                    } else {
+                        $content .= '<input type="checkbox" value="'. $userId .'" name="listeners_to_delete[]" disabled="disabled">';
+                    }
+                    $content .= '</td></tr>';
+                }
+                // TODO : ask user if he wants or not to notify the users he remove
+                // TODO : We may ask him also if his name wil appear as the guilty one or not
+                $content .= '<td colspan="2"><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
+                $content .= '</tbody></table></form>';
+                $content .= '</td><td><div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help').'</div></td></tr></table>';
+                $content .= '</fieldset>';
+            }
+        }
+        return $content;
+    }
+
     function visitEmpty(&$item, $params) {
         return $this->visitDocument($item, $params);
     }
