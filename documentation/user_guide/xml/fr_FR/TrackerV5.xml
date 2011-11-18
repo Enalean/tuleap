@@ -654,7 +654,8 @@
           <title>Edition d'un diagramme de type burndown</title>
             <mediaobject>
                 <imageobject>
-                    
+                    <imagedata format="PNG"
+                    fileref="../../screenshots/fr_FR/sc_v5_trackergraphburndown.png" width="15.3cm" />
                 </imageobject>
             </mediaobject>
           </figure>

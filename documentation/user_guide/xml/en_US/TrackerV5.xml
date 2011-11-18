@@ -625,7 +625,8 @@
           <title>Burndown Graph edition screen</title>
             <mediaobject>
                 <imageobject>
-                    
+                    <imagedata format="PNG"
+                    fileref="../../screenshots/en_US/sc_v5_trackergraphburndown.png" width="15.3cm" />
                 </imageobject>
             </mediaobject>
           </figure>
