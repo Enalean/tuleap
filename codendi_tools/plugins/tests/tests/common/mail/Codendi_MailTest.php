@@ -22,8 +22,11 @@
 require_once('common/user/User.class.php');
 Mock::generate('User');
 require_once('common/mail/Codendi_Mail.class.php');
-Mock::generatePartial('Codendi_Mail', 'Codendi_MailTestVersion', array());
-
+Mock::generatePartial('Codendi_Mail', 'Codendi_MailTestVersion', array('getMail'));
+Mock::generate('Tuleap_Template_Mail');
+class FakeZend_Mail {
+    function setBodyHtml() { }
+}
 
 class Codendi_MailTest extends UnitTestCase {
 
@@ -51,9 +54,41 @@ class Codendi_MailTest extends UnitTestCase {
         $mail = new Codendi_MailTestVersion();
         $this->assertEqual(array('john.doe@example.com', 'Tuleap'), $mail->_cleanupMailFormat('"Tuleap" <john.doe@example.com>'));
         $this->assertEqual(array('john.doe@example.com', 'Tuleap'), $mail->_cleanupMailFormat('Tuleap <john.doe@example.com>'));
-        $this->assertEqual(array('"Tuleap" john.doe@example.com'), $mail->_cleanupMailFormat('"Tuleap" john.doe@example.com'));
-        $this->assertEqual(array('"Tuleap" <john.doe@example.com'), $mail->_cleanupMailFormat('"Tuleap" <john.doe@example.com'));
-        $this->assertEqual(array('"Tuleap" john.doe@example.com>'), $mail->_cleanupMailFormat('"Tuleap" john.doe@example.com>'));
+        $this->assertEqual(array('"Tuleap" john.doe@example.com', ''), $mail->_cleanupMailFormat('"Tuleap" john.doe@example.com'));
+        $this->assertEqual(array('"Tuleap" <john.doe@example.com', ''), $mail->_cleanupMailFormat('"Tuleap" <john.doe@example.com'));
+        $this->assertEqual(array('"Tuleap" john.doe@example.com>', ''), $mail->_cleanupMailFormat('"Tuleap" john.doe@example.com>'));
+    }
+    
+    function testTemplateLookAndFeel() {
+        $body = 'body';
+        
+        $tpl = new MockTuleap_Template_Mail();
+        $tpl->expectOnce('set', array('body', $body));
+        $tpl->expectOnce('fetch');
+        
+        $zm = new FakeZend_Mail();
+        
+        $mail = new Codendi_MailTestVersion();
+        $mail->setLookAndFeelTemplate($tpl);
+        $mail->setReturnValue('getMail', $zm);
+        
+        $mail->setBodyHtml($body);
+    }
+    
+    function testDiscardTemplateLookAndFeel() {
+        $body = 'body';
+        
+        $tpl = new MockTuleap_Template_Mail();
+        $tpl->expectNever('set', array('body', $body));
+        $tpl->expectNever('fetch');
+        
+        $zm = new FakeZend_Mail();
+        
+        $mail = new Codendi_MailTestVersion();
+        $mail->setLookAndFeelTemplate($tpl);
+        $mail->setReturnValue('getMail', $zm);
+        
+        $mail->setBodyHtml($body, Codendi_MailTestVersion::DISCARD_COMMON_LOOK_AND_FEEL);
     }
 }
 ?>

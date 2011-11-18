@@ -10,6 +10,7 @@ require_once('pre.php');
 
 require_once('common/mail/Mail.class.php');
 require_once('common/mail/Codendi_Mail.class.php');
+require_once('common/include/Tuleap_Template.class.php');
 
 
 session_require(array('group'=>1,'admin_flags'=>'A'));
@@ -69,19 +70,22 @@ if ($request->isPost() && $request->exist('Submit') &&  $request->existAndNonEmp
         $mailMessage = $request->get('mail_message');
     }
 
+    $mailSubject = '';
+    $validSubject = new Valid_String('mail_subject');
+    if($request->valid($validSubject)) {
+        $mailSubject = $request->get('mail_subject');
+    }
+
     if ($bodyFormat) {
+        $hp = Codendi_HTMLPurifier::instance();
         $mail = new Codendi_Mail();
+        $mail->getLookAndFeelTemplate()->set('title', $hp->purify($mailSubject, CODENDI_PURIFIER_CONVERT_HTML));
         $mail->setBodyHtml($mailMessage);
     } else {
         $mail = new Mail();
         $mail->setBody($mailMessage);
     }
     $mail->setFrom($GLOBALS['sys_noreply']);
-
-    $validSubject = new Valid_String('mail_subject');
-    if($request->valid($validSubject)) {
-        $mailSubject = $request->get('mail_subject');
-    }
     $mail->setSubject($mailSubject);
 
     if ($destination != 'preview') {

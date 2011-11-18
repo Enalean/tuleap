@@ -11,7 +11,8 @@ Version 4.0.24 - Not Released Yet
     * IM v1.4. See separated Changelog
     * LDAP v3.7. See separated Changelog
     * Tracker v0.8.1. See separated Changelog
-    
+    * RequestHelp v1.3. See separated Changelog
+
     == Development ==
     * First pass to make Tuleap test suite PHP 5.3 compliant
     
