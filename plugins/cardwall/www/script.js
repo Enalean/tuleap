@@ -45,12 +45,11 @@ document.observe('dom:loaded', function () {
 
                     //switch to the new column
                     Element.remove(dragged);
+                    td.down('ul').appendChild(dragged);
                     dragged.setStyle({
-                        zIndex: 'auto',
                         left: 'auto',
                         top: 'auto'
                     });
-                    td.down('ul').appendChild(dragged);
                     if (effect) {
                         effect.cancel();
                     }
