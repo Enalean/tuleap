@@ -22,7 +22,7 @@
 
 require_once('common/dao/include/DataAccessObject.class.php');
         
-class GraphOnTrackersV5_Scrum_Chart_BurndownDao extends DataAccessObject {
+class GraphOnTrackersV5_Chart_BurndownDao extends DataAccessObject {
     
     function __construct($da = null) {
         parent::__construct($da);

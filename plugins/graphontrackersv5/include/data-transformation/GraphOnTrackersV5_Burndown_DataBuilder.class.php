@@ -23,7 +23,7 @@
 
 require_once('common/user/UserManager.class.php');
 
-class GraphOnTrackersV5_Scrum_Burndown_DataBuilder extends ChartDataBuilderV5 {
+class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
 
     /**
      * build burndown chart properties

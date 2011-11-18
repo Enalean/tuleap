@@ -21,14 +21,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once('GraphOnTrackersV5_Chart.class.php');
-require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Scrum_Burndown_DataBuilder.class.php');
-require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Scrum_Burndown_Engine.class.php');
-require_once('GraphOnTrackersV5_Scrum_Chart_BurndownDao.class.php');
+require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Burndown_DataBuilder.class.php');
+require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_Burndown.class.php');
+require_once('GraphOnTrackersV5_Chart_BurndownDao.class.php');
 
 /**
  * Base class to provide a Scrum Burndown Chart
  */
-class GraphOnTrackersV5_Scrum_Chart_Burndown extends GraphOnTrackersV5_Chart {
+class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart {
     
     /**
      * The date (timestamp) the sprint start
@@ -90,7 +90,7 @@ class GraphOnTrackersV5_Scrum_Chart_Burndown extends GraphOnTrackersV5_Chart {
     }
     
     protected function getDao() {
-        return new GraphOnTrackersV5_Scrum_Chart_BurndownDao();
+        return new GraphOnTrackersV5_Chart_BurndownDao();
     }
     
     public static function create($graphic_report, $id, $rank, $title, $description, $width, $height) {
@@ -99,7 +99,7 @@ class GraphOnTrackersV5_Scrum_Chart_Burndown extends GraphOnTrackersV5_Chart {
         $session->set("$id.field_id", 0);
         $session->set("$id.start_date", 0);
         $session->set("$id.duration", 0);
-        $c = new GraphOnTrackersV5_Scrum_Chart_Burndown($graphic_report, $id, $rank, $title, $description, $width, $height);
+        $c = new GraphOnTrackersV5_Chart_Burndown($graphic_report, $id, $rank, $title, $description, $width, $height);
         $c->registerInSession();
         return $c;
     }
@@ -121,21 +121,21 @@ class GraphOnTrackersV5_Scrum_Chart_Burndown extends GraphOnTrackersV5_Chart {
      * Return the chart type (gantt, bar, pie, ...)
      */
     public function getChartType() {
-        return "graphontrackersv5_scrum_burndown";
+        return "burndown";
     }
     
     /**
      * @return GraphOnTrackerV5_Engine The engine associated to the concrete chart
      */
     protected function getEngine() {
-        return new GraphOnTrackersV5_Scrum_Burndown_Engine();
+        return new GraphOnTrackersV5_Engine_Burndown();
     }
     
     /**
      * @return ChartDataBuilder The data builder associated to the concrete chart
      */
     protected function getChartDataBuilder($artifacts) {
-        return new GraphOnTrackersV5_Scrum_Burndown_DataBuilder($this,$artifacts);
+        return new GraphOnTrackersV5_Burndown_DataBuilder($this,$artifacts);
     }
     
     /**

@@ -281,7 +281,7 @@ class GraphOnTrackersV5Plugin extends Plugin {
         require_once('data-access/GraphOnTrackersV5_Chart_Bar.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Pie.class.php');
         require_once('data-access/GraphOnTrackersV5_Chart_Gantt.class.php');
-        require_once('data-access/GraphOnTrackersV5_Scrum_Chart_Burndown.class.php');
+        require_once('data-access/GraphOnTrackersV5_Chart_Burndown.class.php');
         //require_once('data-access/GraphOnTrackersV5_Scrum_Chart_Burnup.class.php');
         $params['factories']['pie'] = array(
             'chart_type'      => 'pie',
@@ -301,11 +301,11 @@ class GraphOnTrackersV5Plugin extends Plugin {
             'icon'            => $this->getThemePath().'/images/chart_gantt.png',
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','gantt'),
         );
-        $params['factories']['graphontrackersv5_scrum_burndown'] = array(
+        $params['factories']['burndown'] = array(
             //The type of the chart
-            'chart_type'      => 'graphontrackersv5_scrum_burndown',
+            'chart_type'      => 'burndown',
             //The classname of the chart. The class must be already declared.
-            'chart_classname' => 'GraphOnTrackersV5_Scrum_Chart_Burndown',
+            'chart_classname' => 'GraphOnTrackersV5_Chart_Burndown',
             //The icon used for the button 'Add a chart'
             'icon'            => $this->getThemePath().'/images/burndown.png',
             //The title for the button 'Add a chart'
