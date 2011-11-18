@@ -229,6 +229,25 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         
         $html .= '</tr></tbody></table></div>';
         
+        $proto = Config::get('sys_force_ssl') ? 'https' : 'http';
+        $url   = $proto .'://'. Config::get('sys_default_domain') . TRACKER_BASE_URL .'/?'. http_build_query(
+            array(
+                'report'   => $this->report->id,
+                'renderer' => $this->id,
+                'pv'       => 2,
+            )
+        );
+        
+        $html .= '<div class="plugin_cardwall_qrcode">';
+        $html .= '<div id="plugin_cardwall_qrcode_toggler" class="'. Toggler::getClassname('plugin_cardwall_qrcode_toggler', false, true) .'">QR Code</div>';
+        $html .= '<img src="http://chart.apis.google.com/chart?'. http_build_query(
+            array(
+                'chs'  => '150x150',
+                'cht'  => 'qr',
+                'chld' => 'L|0',
+                'chl'  => $url,
+            )).'" alt="QR code" widht="150" height="150"/>';
+        $html .= '</div>';
         return $html;
     }
 
