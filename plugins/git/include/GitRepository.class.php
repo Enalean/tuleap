@@ -298,9 +298,8 @@ class GitRepository implements DVCSRepository {
             $projectId = $project->getID();
             $dar = $this->getDao()->getProjectRepositoryByName($repositoryName, $projectId);
             if ($dar && !empty($dar) && !$dar->isError()) {
-                while ($row = $dar->getRow()) {
+                     $row = $dar->getRow();
                      $repoId = $row[GitDao::REPOSITORY_ID];
-                }
             }
         }
         return $repoId;

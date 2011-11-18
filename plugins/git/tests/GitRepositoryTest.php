@@ -166,10 +166,24 @@ class GitRepositoryTest extends UnitTestCase {
         $repo->setReturnValue('getDao', $dao);
         $dar = new MockDataAccessResult();
         $dar->setReturnValue('isError', false);
-        $dar->setReturnValueAt(0, 'getRow', array ("repository_id" => 48));
-        $dar->setReturnValueAt(1, 'getRow', false);
+        $dar->setReturnValue('getRow', array ("repository_id" => 48));
         $dao->setReturnValue('getProjectRepositoryByName', $dar);
         $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 48);
+    }
+
+    public function testGetRepositoryIDByNameNoRepository() {
+        $repo = new GitRepositorySecondTestVersion();
+        $pm = new MockProjectManager();
+        $project = new Mockproject();
+        $repo->setReturnValue('_getProjectManager', $pm);
+        $pm->setReturnValue('getProjectByUnixName', $project);
+        $dao = new MockGitDao();
+        $repo->setReturnValue('getDao', $dao);
+        $dar = new MockDataAccessResult();
+        $dar->setReturnValue('isError', true);
+        $dao->setReturnValue('getProjectRepositoryByName', $dar);
+        $dar->expectNever('getRow');
+        $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 0);
     }
 
     public function testGetRepositoryIDByNameNoProjectID() {
