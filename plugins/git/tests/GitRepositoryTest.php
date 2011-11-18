@@ -20,6 +20,7 @@
 
 require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
 Mock::generatePartial('GitRepository', 'GitRepositoryTestVersion', array('_getUserManager', 'getRepositoryIDByName', 'getDao'));
+Mock::generatePartial('GitRepository', 'GitRepositorySecondTestVersion', array('_getProjectManager', 'getDao'));
 require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');
 Mock::generate('Git_Backend_Gitolite');
 require_once(dirname(__FILE__).'/../include/GitBackend.class.php');
@@ -28,6 +29,9 @@ require_once(dirname(__FILE__).'/../include/GitDao.class.php');
 Mock::generate('GitDao');
 Mock::generate('UserManager');
 Mock::generate('User');
+Mock::generate('ProjectManager');
+Mock::generate('Project');
+Mock::generate('DataAccessResult');
 
 class GitRepositoryTest extends UnitTestCase {
     
@@ -152,6 +156,30 @@ class GitRepositoryTest extends UnitTestCase {
         $dao->expectOnce('logGitPush');
     }
 
+    public function testGetRepositoryIDByNameSuccess() {
+        $repo = new GitRepositorySecondTestVersion();
+        $pm = new MockProjectManager();
+        $project = new Mockproject();
+        $repo->setReturnValue('_getProjectManager', $pm);
+        $pm->setReturnValue('getProjectByUnixName', $project);
+        $dao = new MockGitDao();
+        $repo->setReturnValue('getDao', $dao);
+        $dar = new MockDataAccessResult();
+        $dar->setReturnValue('isError', false);
+        $dar->setReturnValueAt(0, 'getRow', array ("repository_id" => 48));
+        $dar->setReturnValueAt(1, 'getRow', false);
+        $dao->setReturnValue('getProjectRepositoryByName', $dar);
+        $this->assertEqual($repo->getRepositoryIDByName('repo', 'prj'), 48);
+    }
+
+    public function testGetRepositoryIDByNameNoProjectID() {
+        $repo = new GitRepositorySecondTestVersion();
+        $pm = new MockProjectManager();
+        $project = new Mockproject();
+        $repo->setReturnValue('_getProjectManager', $pm);
+        $pm->setReturnValue('getProjectByUnixName', false);
+        $this->assertIdentical($repo->getRepositoryIDByName('repo', 'prj'), 0);
+    }
 }
 
 ?>

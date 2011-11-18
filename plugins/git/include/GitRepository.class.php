@@ -102,6 +102,15 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
+     * Wrapper for tests
+     *
+     * @return ProjectManager
+     */
+    function _getProjectManager() {
+        return ProjectManager::instance();
+    }
+
+    /**
      * Wrapper
      * @return Boolean
      */
@@ -282,9 +291,11 @@ class GitRepository implements DVCSRepository {
      * @return Integer
      */
     public function getRepositoryIDByName($repositoryName, $projectName) {
-        $projectId = group_getid_by_name($projectName);
+        $pm = $this->_getProjectManager();
+        $project = $pm->getProjectByUnixName($projectName);
         $repoId = 0;
-        if ($projectId) {
+        if ($project) {
+            $projectId = $project->getID();
             $dar = $this->getDao()->getProjectRepositoryByName($repositoryName, $projectId);
             if ($dar && !empty($dar) && !$dar->isError()) {
                 while ($row = $dar->getRow()) {
