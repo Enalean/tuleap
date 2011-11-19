@@ -65,11 +65,6 @@ abstract class Tracker_Report_Renderer {
         return $this->id;
     }
     
-    /** 
-     * @return string the icon of the renderer
-     */
-    public abstract function getIcon();
-    
     /**
      * Delete the renderer
      */
@@ -121,10 +116,14 @@ abstract class Tracker_Report_Renderer {
     
     public function afterProcessRequest(TrackerManager $tracker_manager, $request, $current_user) {
         if (!$request->isAjax()) {
-            $GLOBALS['Response']->redirect('?'. http_build_query(array(
-                                                'report'   => $this->report->id,
-                                                'renderer' => $this->id
-                                                )));
+            $params = array(
+                'report'   => $this->report->id,
+                'renderer' => $this->id
+            );
+            if ($request->existAndNonEmpty('pv')) {
+                $params['pv'] = (int)$request->get('pv');
+            }
+            $GLOBALS['Response']->redirect('?'. http_build_query($params));
         }
     }
     
@@ -200,6 +199,13 @@ abstract class Tracker_Report_Renderer {
         }
         return $items;
     }
+    
+    /**
+     * Create a renderer - add in db
+     *     
+     * @return bool true if success, false if failure
+     */
+    public abstract function create();
     
     /**
      * Duplicate the renderer

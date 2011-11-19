@@ -14,8 +14,6 @@ class PluginCreationWizard extends Controler {
     
     function PluginCreationWizard() {
         session_require(array('group'=>'1','admin_flags'=>'A'));
-        session_save_path(dirname(__FILE__).'/sessions/');
-        session_start();
     }
     
     function request() {

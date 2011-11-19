@@ -1,28 +1,22 @@
-Version 0.4 - Tuleap 4.0.24
-  DISCLAIMER: plugin in beta, do not use it on production servers.
-  DISCLAIMER: Your data might be trashed in a future update.
+DISCLAIMER: plugin in beta, do not use it on production servers.
+DISCLAIMER: Your data might be trashed in a future update.
 
-  * Add Burndown chart style
+Version 0.5 - Tuleap 4.0.24
+    * Fix renderer following cardwall rework.
+
+Version 0.4 - Tuleap 4.0.24
+    * Add Burndown chart style
 
 Version 0.3 - (Tuleap 4.0.23)
-  DISCLAIMER: plugin in beta, do not use it on production servers.
-  DISCLAIMER: Your data might be trashed in a future update.
-  
     * Fix 'as of date' issue on gantt charts.
 
 Version 0.2 - (Tuleap 4.0.23)
-  DISCLAIMER: plugin in beta, do not use it on production servers.
-  DISCLAIMER: Your data might be trashed in a future update.
-  
     * Clean all graphs
     * Load only the bare minimum to instatiate the plugin even if the plugin "tracker" is not installed
     * Backlog #179: Fix install & dependency on tracker.
     * Fix 'as of date' issue on gantt charts.
-    
+
 Version 0.1 - (Tuleap 4.0.21)
-  DISCLAIMER: plugin in beta, do not use it on production servers.
-  DISCLAIMER: Your data might be trashed in a future update.
-  
     * Add Graph On Tracker for Tracker v5
-    
+
 

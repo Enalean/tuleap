@@ -57,12 +57,6 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $this->report_session->set("{$this->id}.chunksz",   $this->chunksz);
         $this->report_session->set("{$this->id}.multisort", $this->multisort);
     }
-    /**
-     * @return string the icon of the renderer
-     */
-    public function getIcon() {
-        return $GLOBALS['HTML']->getImage('ic/tracker_renderer_table.png');
-    }
     
     /**
      * Delete the renderer
