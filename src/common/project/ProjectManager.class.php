@@ -137,7 +137,7 @@ class ProjectManager {
      * - The group id: 101
      * - The project unix name: unixname
      * 
-     * @return mixed Project or false
+     * @return Project
      */
     public function getProjectFromAutocompleter($name) {
         $matches = array();

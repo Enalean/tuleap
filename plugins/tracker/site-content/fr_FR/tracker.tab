@@ -458,13 +458,25 @@ plugin_tracker_include_type	choose_proj	Veuillez d'abord choisir un projet et un
 plugin_tracker_include_type	choose_tmpl	Veuillez d'abord choisir un patron.
 plugin_tracker_include_type	choose_file	Veuillez d'abord choisir un fichier à importer.
 plugin_tracker_include_type	select_proj	Veuillez d'abord sélectionner un projet !
-plugin_tracker_include_type	create_tracker	<h2>Créer un nouvel outil de suivi&nbsp;:</h2><p>Veuillez remplir le nom, la description et le nom court de cet outil de suivi&nbsp;:</p>
+plugin_tracker_include_type	create_tracker	Créer un nouvel outil de suivi
+plugin_tracker_include_type	create_tracker_fill_name	Veuillez remplir le nom, la description et le nom court de cet outil de suivi&nbsp;:
 plugin_tracker_include_type	short_name	Nom court
 plugin_tracker_include_type	avoid_spaces	Veuillez éviter les espaces et les ponctuations dans le nom court
-plugin_tracker_include_type	choose_creation	Choisissez une méthode de création&nbsp;:
-plugin_tracker_include_type	from_tmpl	A partir d'un patron prédéfini&nbsp;:
-plugin_tracker_include_type	from_exist	<b>A partir d'un outil de suivi existant&nbsp;:</b><br><i>(Choisissez d'abord un projet et ensuite un outil de suivi pour ce projet)</i>
-plugin_tracker_include_type	from_xml	<b>A partir d'un fichier XML&nbsp;:</b> Si vous n'avez pas de fichiers XML, des exemples sont disponibles <a href="$1">ici</a>.
+plugin_tracker_include_type	choose_creation	Tout d'abord, selectonnez le patron à partir duquel vous voulez démarrer&nbsp;:
+plugin_tracker_include_type	from_tmpl	A partir de la galerie de patrons
+plugin_tracker_include_type	from_xml	A partir d'un fichier XML
+plugin_tracker_include_type	from_xml_desc	Vous pouvez sauvegarder puis ré-importer la définition d'un outil de suivi d'un serveur à un autre.<br/>Si vous n'avez pas de fichiers XML, des exemples sont disponibles <a href="$1">ici</a>.
+plugin_tracker_include_type	tmpl_src_prj	Projet source
+plugin_tracker_include_type	tmpl_src_trk	Liste des patrons
+plugin_tracker_include_type	tmpl_src_no_trk	Pas de patron
+plugin_tracker_include_type	tmpl_src_prj_default	Patron par défaut
+plugin_tracker_include_type	tmpl_src_prj_my	Mes projets
+plugin_tracker_include_type	tmpl_src_prj_autocomplete	Depuis l'autocompleter
+plugin_tracker_include_type	tmpl_src_prj_other	Autres projets
+plugin_tracker_include_type	tmpl_src_autocomplete_desc	Ou saisissez un nom de projet:
+plugin_tracker_include_type	tmpl_src_autocomplete_hint	Commencez à taper
+plugin_tracker_include_type	create_mode_xml	Vous pouvez également commencer à partir <a href="$1">d'une définition XML</a> d'un tracker.
+plugin_tracker_include_type	create_mode_gallery	Vous pouvez également commencer à partir <a href="$1">de la galerie de patrons</a>.
 plugin_tracker_include_type	proj_id	ID du projet&nbsp;:
 plugin_tracker_include_type	tracker_id	ID de l'outil de suivi&nbsp;:
 plugin_tracker_include_type	list_all_fields	Liste de tous les champs disponibles
@@ -734,7 +746,8 @@ plugin_tracker_common_type	no_match	Group_id dans la BDD ne correspond pas à l'
 plugin_tracker_common_type	perm_fail	La création des permissions utilisateurs a échoué&nbsp;: $1
 plugin_tracker_common_type	name_requ	Le nom , la description et la nom court sont obligatoires.
 plugin_tracker_common_type	invalid_shortname	Nom court invalide&nbsp;: $1. Veuillez utiliser uniquement des caractères alphanumériques ou un nom court non réservé. Retournez à la page précédente et modifiez ce champ.
-plugin_tracker_common_type	invalid_templ	group_id_template invalide.
+plugin_tracker_common_type	invalid_templ	Le patron de projet selectionné est invalide
+plugin_tracker_common_type	invalid_tracker_tmpl	Le patron d'outil de suivi selectionné est invalide
 plugin_tracker_common_type	load_fail	impossible de charger le nouvel outil de suivi
 plugin_tracker_common_type	invalid_at	ArtifactTrackerID invalide
 plugin_tracker_common_type	invalid_date	La date de report ne doit pas se situer dans le passé
@@ -746,8 +759,8 @@ plugin_tracker_common_type	del_err	Erreur lors de la destruction des dépendance
 plugin_tracker_common_type	none_found	Aucun trouvé 
 plugin_tracker_common_type	invalid_mail	"$1" n'est pas une adresse e-mail valide
 plugin_tracker_common_type	no_view_permission	Vous n'avez pas les permissions pour visualiser cet outil de suivi.
-plugin_tracker_common_type	shortname_already_exists	Le nom court est déjà utilisé. Veuillez en choisir un autre. Retournez à la page précédente et modifiez ce champ.
-plugin_tracker_common_type	name_already_exists	Le nom du tracker est déjà utilisé. Veuillez en choisir un autre. Retournez à la page précédente et modifiez ce champ.
+plugin_tracker_common_type	shortname_already_exists	Le nom court est déjà utilisé. Veuillez en choisir un autre.
+plugin_tracker_common_type	name_already_exists	Le nom du tracker est déjà utilisé. Veuillez en choisir un autre.
 plugin_tracker_common_type	no_view_permission_on_artifact	Vous n'avez pas les permissions pour visualiser cet artefact.
 plugin_tracker_common_type	artifact_not_exist	Cet artefact n'existe pas.
 plugin_tracker_common_type	report_not_exist	Ce rapport n'existe pas.

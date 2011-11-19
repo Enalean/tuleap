@@ -81,11 +81,6 @@ class Tracker_RulesManager {
         return $fact->deleteRulesByValueId($tracker_id, $field_id, $value_id);
     }
     
-    function copyRules($from_artifact_type_id, $to_artifact_type_id) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->copyRules($from_artifact_type_id, $to_artifact_type_id);
-    }
-    
     /**
      * Check if all the selected values of a submitted artefact are coherent regarding the dependencies
      *

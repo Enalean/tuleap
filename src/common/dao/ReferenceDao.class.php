@@ -118,7 +118,7 @@ class ReferenceDao extends DataAccessObject {
         $sql = sprintf("SELECT * FROM reference,reference_group WHERE scope = %s AND reference.id=reference_group.reference_id AND service_short_name = %s AND group_id = %s AND reference.id != 100",
                        $this->da->quoteSmart($scope),
                        $this->da->quoteSmart($service),
-		       $this->da->quoteSmart($group_id));
+                       $this->da->quoteSmart($group_id));
         return $this->retrieve($sql);
     }
 
@@ -147,6 +147,7 @@ class ReferenceDao extends DataAccessObject {
         # This may happen for old tracker created before Reference management.
         # Otherwise, there should not be both S and P reference with the same keyword...
         $sql = sprintf("SELECT * FROM reference r,reference_group rg WHERE ".
+               "service_short_name != 'plugin_tracker' AND ".
 		       "r.keyword = %s AND ".
 		       "r.id=rg.reference_id AND ".
 		       "rg.group_id=%s AND ".

@@ -13,7 +13,7 @@ if ($GLOBALS["sys_disable_subdomains"]) {
 }
 
 // Message preamble with Web pointers and server names
-list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
+list($host,) = explode(':',$GLOBALS['sys_default_domain']);		
 $message = 
 'Your project registration has been approved. 
 

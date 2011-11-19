@@ -87,7 +87,7 @@ class ReferenceManager {
     /**
      * @return ReferenceManager
      */
-    function instance() {
+    public static function instance() {
         static $_referencemanager_instance;
         if (!$_referencemanager_instance) {
             $_referencemanager_instance = new ReferenceManager();

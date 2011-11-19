@@ -417,12 +417,13 @@ class Tracker_FormElementFactory {
     }
     
     /**
-     * duplicate a formElement
+     * Duplicate a formElement
      * @param int $from_tracker_id
      * @param int $to_tracker_id
+     * @param array $ugroup_mapping
      * @return array the mapping between old formElements and new ones
      */
-    public function duplicate($from_tracker_id, $to_tracker_id) {
+    public function duplicate($from_tracker_id, $to_tracker_id, $ugroup_mapping) {
         $mapping = array();
         
         foreach($this->getDao()->searchByTrackerId($from_tracker_id) as $from_row) {
@@ -439,15 +440,15 @@ class Tracker_FormElementFactory {
                     //Then duplicate formElement
                     $mapping[] = array('from' => $from_row['id'], 
                                     'to' => $id,
-                                    'values' => $this->getFormElementById($id)->duplicate($from_row['id'], $id));
-                }else {
+                                    'values' => $this->getFormElementById($id)->duplicate($from_row['id'], $id),
+                                    'workflow'=> false);
+                } else {
                     $workflow = $this->getFormElementById($from_row['id'])->getWorkflow();
                     $values = $this->getFormElementById($id)->duplicate($from_row['id'], $id);
-                    $w = $workflow->duplicate($to_tracker_id, $from_row['id'], $id, $values);
                     $mapping[] = array('from' => $from_row['id'],
                                     'to' => $id,
                                     'values' => $values, 
-                                    'workflow'=>$w);
+                                    'workflow'=> true);
                 }
                
                 $type = $this->getType($this->getFormElementById($id));

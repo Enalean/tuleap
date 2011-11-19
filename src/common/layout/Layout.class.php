@@ -81,6 +81,13 @@ class Layout extends Response {
     protected $toolbar;
 
     /**
+     * Set to true if HTML object is displayed through a Service
+     * 
+     * @var Boolean
+     */
+    protected $renderedThroughService = false;
+    
+    /**
      * Constuctor
      * @param string $root the root of the theme : '/themes/CodeXTab/'
      */
@@ -1026,7 +1033,7 @@ class Layout extends Response {
      * This is a generic header method shared by header() and pv_header()
      */
     public function generic_header($params) {
-        if (isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
+        if (!$this->renderedThroughService && isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
             $pm = ProjectManager::instance();
             $project = $pm->getProject($GLOBALS['group_id']);
             if (isset($params['toptab'])) {
@@ -2073,5 +2080,15 @@ document.observe('dom:loaded', function() {
         }
     }
 
+    /**
+     * Set to true if HTML object is displayed through a Service
+     * 
+     * @see Service
+     *
+     * @param Boolean $value
+     */
+    function setRenderedThroughService($value) {
+        $this->renderedThroughService = $value;
+    }
 }
 ?>

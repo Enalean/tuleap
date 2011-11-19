@@ -270,5 +270,83 @@ class TransitionFactory {
         return true;
     }
     
+   /**
+    * Duplicate the transitions
+    * 
+    * @param Array $values array of old and new values of the field
+    * @param int   $workflow_id the workflow id
+    * @param Array $transitions the transitions to duplicate
+    * @param Array $field_mapping the field mapping
+    * @param Array $ugroup_mapping the ugroup mapping
+    * @param bool  $duplicate_static_perms true if duplicate static perms, false otherwise
+    *
+    * @return void
+    */
+    public function duplicate($values, $workflow_id, $transitions, $field_mapping, $ugroup_mapping = false, $duplicate_type) {
+        
+        if ($transitions != null) {
+            foreach ($transitions as $transition) {
+                if ($transition->getFieldValueFrom() == null) {
+                    $from_id = 'null';
+                    $to      = $transition->getFieldValueTo()->getId();
+                    foreach ($values as $value=>$id_value) {
+                        if ($value == $to) {
+                            $to_id = $id_value;
+                        }
+                    }                    
+                } else {
+                    $from = $transition->getFieldValueFrom()->getId();
+                    $to   = $transition->getFieldValueTo()->getId();
+                    foreach ($values as $value=>$id_value) {
+                        
+                        if ($value == $from) {
+                            $from_id = $id_value;
+                        }
+                        if ($value == $to) {
+                            $to_id = $id_value;
+                        }
+                    }
+                }
+                
+                $transition_id = $this->addTransition($workflow_id, $from_id, $to_id);
+                //Duplicate permissions
+                $from_transition_id = $transition->getTransitionId();
+                $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
+                //Duplicate postactions
+                $postactions = $transition->getPostActions();
+                $tpaf = new Transition_PostActionFactory();
+                $tpaf->duplicate($from_transition_id, $transition_id, $postactions, $field_mapping);
+            }
+        }
+    }
+    
+   /**
+    * Add a transition in db
+    * 
+    * @param int $workflow_id the old transition id
+    * @param int $from_id the new transition id
+    * @param int $to_id the ugroup mapping
+    *
+    * @return void
+    */
+    public function addTransition($workflow_id, $from_id, $to_id) {
+        return $this->getDao()->addTransition($workflow_id, $from_id, $to_id);
+    }
+    
+   /**
+    * Duplicate the transitions permissions
+    * 
+    * @param int $from_transition_id the old transition id
+    * @param int $transition_id the new transition id
+    * @param Array $ugroup_mapping the ugroup mapping
+    *
+    * @return void
+    */
+    public function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_type) {
+        $pm = PermissionsManager::instance();        
+        $permission_type = array('PLUGIN_TRACKER_WORKFLOW_TRANSITION');
+        //Duplicate tracker permissions
+        $pm->duplicatePermissions($from_transition_id, $transition_id, $permission_type, $duplicate_type, $ugroup_mapping);
+    }
 }
 ?>

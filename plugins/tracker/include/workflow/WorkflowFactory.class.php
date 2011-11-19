@@ -239,20 +239,26 @@ class WorkflowFactory {
     /**
      * Duplicate the workflow
      * 
-     * @param $workflow_id the workflow id
+     * @param $from_tracker_id the template tracker id
      * @param $to_tracker_id the tracker id
      * @param $from_id the id of the field
      * @param $to_id the id of the duplicated field
-     * @param Array $values array of old and new values of the field
-     * @param boolean $is_used 1 if the workflow is used, 0 otherwise
-     * @param Array$transitions the transitions of the workflow
+     * @param Array $values array of old and new values of the field    
+     * @param Array $field_mapping the field mapping
+     * @param Array $ugroup_mapping the ugroup mapping
+     *
      * @return void
      */
-     public function duplicate($workflow_id, $to_tracker_id, $from_id, $to_id, $values, $is_used, $transitions) {
-         //Duplicate workflow
-         if ($id = $this->getDao()->duplicate($workflow_id, $to_tracker_id, $from_id, $to_id, $values, $is_used)) {
-             //Duplicate transitions
-              $this->getTransitionDao()->duplicate($values, $id, $transitions);
+     public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, $ugroup_mapping, $duplicate_type) {
+         if ($workflow = $this->getWorkflowByTrackerId($from_tracker_id)) {
+            $is_used = $workflow->getIsUsed();
+            
+            //Duplicate workflow
+            if ($id = $this->getDao()->duplicate($to_tracker_id, $from_id, $to_id, $values, $is_used)) {
+                $transitions = $workflow->getTransitions();
+                //Duplicate transitions
+                $this->getTransitionFactory()->duplicate($values, $id, $transitions, $field_mapping, $ugroup_mapping, $duplicate_type);
+            }
          }
      }
      

@@ -63,7 +63,7 @@ class Workflow_Dao extends DataAccessObject {
         return $this->update($sql);
     }
     
-    public function duplicate($workflow_id, $to_tracker_id, $from_id, $to_id, $values, $is_used) {
+    public function duplicate($to_tracker_id, $from_id, $to_id, $values, $is_used) {
         $to_tracker_id = $this->da->escapeInt($to_tracker_id);
         $to_id    = $this->da->escapeInt($to_id);
         $is_used = $this->da->escapeInt($is_used);

@@ -24,6 +24,11 @@ require_once('include/DataAccessObject.class.php');
  *  Data Access Object for Permissions 
  */
 class PermissionsDao extends DataAccessObject {
+    
+    const DUPLICATE_NEW_PROJECT   = 1;
+    const DUPLICATE_SAME_PROJECT  = 2;
+    const DUPLICATE_OTHER_PROJECT = 3;
+    
     /**
     * Gets all tables of the db
     * @return DataAccessResult
@@ -139,6 +144,16 @@ class PermissionsDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+   /**
+    * Clone docman permissions
+    * 
+    * @param int $source 
+    * @param int $target
+    * @param $perms
+    * @param $toGroupId
+    * 
+    * @return Boolean
+    */
     function clonePermissions($source, $target, $perms, $toGroupId=0) {
         foreach($perms as $key => $value) {
             $perms[$key] = $this->da->quoteSmart($value);
@@ -163,7 +178,54 @@ class PermissionsDao extends DataAccessObject {
         return $this->update($sql);
     }
     
-    function addPermission($permission_type, $object_id, $ugroup_id){
+   /**
+    * Duplicate permissions
+    * 
+    * @param int    $from
+    * @param int    $to
+    * @param String $permission_type    
+    * @param bool   $duplicate_type
+    * @param array  $ugroup_mapping, an array of static ugroups
+    *
+    * @return Boolean
+    */
+    function duplicatePermissions($from, $to, $permission_type, $duplicate_type, $ugroup_mapping = false) {
+        
+        $from = $this->da->escapeInt($from);
+        $to = $this->da->escapeInt($to);
+        $permission_type = "('".implode("','", $permission_type)."')";
+
+        //Duplicate static perms
+        if ($ugroup_mapping !== false) {
+            foreach($ugroup_mapping as $template_ugroup => $new_ugroup) {
+                $template_ugroup = $this->da->escapeInt($template_ugroup);
+                $new_ugroup = $this->da->escapeInt($new_ugroup);
+                $sql = 'INSERT INTO permissions (permission_type,object_id,ugroup_id)
+                            SELECT permission_type, '.$to.','. $new_ugroup.'
+                            FROM permissions
+                            WHERE object_id = '.$from.' 
+                                AND ugroup_id = '.$template_ugroup.'
+                                AND permission_type IN '.$permission_type;
+                $this->update($sql);
+            }
+        }
+        
+        $and = '';
+        if ($duplicate_type == self::DUPLICATE_NEW_PROJECT || $duplicate_type == self::DUPLICATE_OTHER_PROJECT) {
+            $and = ' AND ugroup_id <= 100';
+        }
+        //Duplicate dynamic perms
+        $sql = 'INSERT INTO permissions (permission_type, object_id, ugroup_id)
+                    SELECT permission_type, '.$to.', ugroup_id
+                    FROM permissions
+                    WHERE object_id='.$from.'
+                        AND permission_type IN '.$permission_type
+                        .$and;
+                        
+        return $this->update($sql);
+    }
+    
+    function addPermission($permission_type, $object_id, $ugroup_id) {
         $sql=sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id)".
                      " VALUES ('%s', '%s', '%s')", 
                      $object_id, $permission_type, $ugroup_id);

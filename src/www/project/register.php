@@ -1,4 +1,8 @@
 <?php
+
+ini_set('max_execution_time', 0);
+ini_set('memory_limit', -1);
+
 require_once('pre.php');
 session_require(array('isloggedin'=>1));
 

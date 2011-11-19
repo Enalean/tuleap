@@ -1,3 +1,9 @@
+Version 0.8.2 - Tuleap 4.0.24
+  DISCLAIMER: plugin still in beta, do not use it on production servers.
+  DISCLAIMER: Your data might be trashed in a future update.
+
+  * backlog #259. Simplify tracker creation with duplication of existing trackers on demand or at project creation.
+
 Version 0.8.1 - Tuleap 4.0.24
   DISCLAIMER: plugin still in beta, do not use it on production servers.
   DISCLAIMER: Your data might be trashed in a future update.

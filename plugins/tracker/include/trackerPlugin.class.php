@@ -57,7 +57,8 @@ class trackerPlugin extends Plugin {
         
         $this->_addHook('widget_instance',                     'widget_instance',                   false);
         $this->_addHook('widgets',                             'widgets',                           false);
-        $this->_addHook('project_is_deleted', 'project_is_deleted', false);
+        $this->_addHook('project_is_deleted',                  'project_is_deleted',                false);
+        $this->_addHook('register_project_creation',           'register_project_creation',         false);
     }
     
     public function getPluginInfo() {
@@ -119,6 +120,17 @@ class trackerPlugin extends Plugin {
             }
             $params['done'] = true;
         }
+    }
+    
+   /**
+    * Project creation hook
+    *
+    * @param Array $params
+    */
+    function register_project_creation($params) {
+        $tm = new TrackerManager();
+        $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
+
     }
     
     function permission_get_name($params) {

@@ -183,5 +183,26 @@ class Transition_PostActionFactory {
     public function deleteWorkflow($workflow_id) {
         return $this->getDao()->deletePostActionsByWorkflowId($workflow_id);
     }
+    
+   /**
+    * Duplicate postactions of a transition
+    *
+    * @param int $from_transition_id the id of the template transition
+    * @param int $to_transition_id the id of the transition
+    * @param Array $postactions 
+    * @param Array $field_mapping the field mapping
+    * 
+    */
+    public function duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping) {
+        foreach ($postactions as $postaction) {
+            $from_field_id = $postaction->getFieldId();
+            foreach ($field_mapping as $mapping) {
+                if ($mapping['from'] == $from_field_id) {
+                    $to_field_id = $mapping['to'];
+                    $this->getDao()->duplicate($from_transition_id, $to_transition_id, $from_field_id, $to_field_id);                    
+                }
+            }
+        }
+    }
 }
 ?>

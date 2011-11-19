@@ -8,15 +8,19 @@ var AutoCompleter = Class.create({
     initialize: function(elementId, imgPath, multiple, options) {
         this.elementId = elementId;
         this.options = Object.extend({
+            autoLoad: true,
             defaultValueActsAsHint: true,
             imgPath: imgPath,
             multiple: multiple
         }, options || { });
         // The url to call to get completion list
         this.url = '';
+        this.afterUpdateElement = Prototype.emptyFunction;
 
-        this.registerOnLoadEvent = this.registerOnLoad.bindAsEventListener(this);
-        document.observe('dom:loaded', this.registerOnLoadEvent);
+        if (this.options.autoLoad) {
+            this.registerOnLoadEvent = this.registerOnLoad.bindAsEventListener(this);
+            document.observe('dom:loaded', this.registerOnLoadEvent);
+        }
     },
     /**
      * Attach a listen to the given element (input text) to perfom
@@ -61,12 +65,19 @@ var AutoCompleter = Class.create({
 
             // Autocomplete
             new Ajax.Autocompleter(this.element, update, this.url, {
-                'tokens': tokens,
-                'minChars': '3',
-                'paramName': 'name',
-                'indicator': 'search_indicator'
+                'tokens':             tokens,
+                'minChars':           '3',
+                'paramName':          'name',
+                'indicator':          'search_indicator',
+                'afterUpdateElement': this.afterUpdateElement
             });
         }
+    },
+    /**
+     * Set function executed after autocompletion update
+     */
+    setAfterUpdateElement: function (callback) {
+        this.afterUpdateElement = callback;
     }
 });
 

@@ -25,6 +25,7 @@ require_once('FormElement/Tracker_FormElementFactory.class.php');
 require_once('Artifact/Tracker_ArtifactFactory.class.php');
 require_once('Report/Tracker_ReportFactory.class.php');
 require_once('dao/Tracker_PermDao.class.php');
+require_once('common/reference/ReferenceManager.class.php');
 
 class TrackerManager { /* extends Engine? */
     
@@ -32,28 +33,35 @@ class TrackerManager { /* extends Engine? */
      * Check that the service is used and the plugin is allowed for project $project
      * if it is not the case then exit with an error
      * 
-     * @param Project $project
+     * @param Project         $project
+     * @param Codendi_Request $request
      * 
      * @return bool true if success. Otherwise the process terminates.
      */
-    public function checkServiceEnabled(Project $project) {
+    public function checkServiceEnabled(Project $project, Codendi_Request $request) {
         if ($project->usesService('plugin_tracker')) {
             return true;
         }
-        $GLOBALS['Response']->addFeedback('error', "The project doesn't use the 'tracker v5' service");
-        $GLOBALS['HTML']->redirect('/projects/'. $project->getUnixName() .'/');
+        
+        header("HTTP/1.0 404 Not Found");
+        if (!$request->isAjax()) {
+            $GLOBALS['Response']->addFeedback('error', "The project doesn't use the 'tracker v5' service");
+            $GLOBALS['HTML']->redirect('/projects/'. $project->getUnixName() .'/');
+        }
         exit();
     }
     
     /**
      * Check that tracker can be accessed by user
      *
-     * @param Tracker $tracker
-     * @param User    $user
+     * @param Tracker         $tracker
+     * @param User            $user
+     * @param Codendi_Request $request
+     *
      * @throws Tracker_CannotAccessTrackerException
      */
-    public function checkUserCanAccessTracker($tracker, $user) {
-        $this->checkServiceEnabled($tracker->getProject());
+    public function checkUserCanAccessTracker($tracker, $user, Codendi_Request $request) {
+        $this->checkServiceEnabled($tracker->getProject(), $request);
         
         if (!$tracker->isActive()) {
             throw new Tracker_CannotAccessTrackerException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
@@ -72,7 +80,7 @@ class TrackerManager { /* extends Engine? */
      */
     protected function processSubElement(Tracker_Dispatchable_Interface $object, Codendi_Request $request, User $user) {
         // Tracker related check
-        $this->checkUserCanAccessTracker($object->getTracker(), $user);
+        $this->checkUserCanAccessTracker($object->getTracker(), $user, $request);
         $GLOBALS['group_id'] = $object->getTracker()->getGroupId();
 
         // Need specific treatment for artifact
@@ -129,7 +137,7 @@ class TrackerManager { /* extends Engine? */
             if ((int)$request->get('group_id')) {
                 $group_id = (int)$request->get('group_id');
                 if ($project = $this->getProject($group_id)) {
-                    if ($this->checkServiceEnabled($project)) {
+                    if ($this->checkServiceEnabled($project, $request)) {
                         switch($request->get('func')) {
                             case 'docreate':
                                 if ($this->userCanCreateTracker($group_id)) {
@@ -137,34 +145,7 @@ class TrackerManager { /* extends Engine? */
                                         //todo: check that a file is uploaded
                                         $this->displayTrackerPreview($_FILES["file"]["tmp_name"]);
                                     } else {
-                                        $new_tracker = null;
-                                        $name              = trim($request->get('name'));
-                                        $description       = trim($request->get('description'));
-                                        $itemname          = trim($request->get('itemname'));
-                                        $codendi_template  = (int)$request->get('codendi_template');
-                                        $group_id_template = (int)$request->get('group_id_template');
-                                        $atid_template     = (int)$request->get('atid_template');
-
-                                        if ($codendi_template != 100) {
-                                            $group_id_template =100;
-                                            $atid_template = $codendi_template;
-                                        }
-
-                                        if ($request->exist('create_from_xml') && $request->get('create_from_xml')) {
-                                            //todo: check that a file is uploaded
-                                            $new_tracker = $this->importTracker($project, $name, $description, $itemname, $_FILES["file"]["tmp_name"]);
-                                        } else {
-                                            $new_tracker = $this->getTrackerFactory()->create($project->getId(), $group_id_template, $atid_template, $name, $description, $itemname);
-                                        }
-
-                                        if ($new_tracker) {
-                                            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&tracker='. $new_tracker->id);
-                                        } else {
-                                            $codendi_template  = $codendi_template  ? $codendi_template  : '';
-                                            $group_id_template = $group_id_template ? $group_id_template : '';
-                                            $atid_template     = $atid_template     ? $atid_template     : '';
-                                            $this->displayCreateTracker($project,$name,$description,$itemname,$codendi_template,$group_id_template,$atid_template);
-                                        }
+                                        $this->doCreateTracker($project, $request);
                                     }
                                 } else {
                                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -173,7 +154,7 @@ class TrackerManager { /* extends Engine? */
                                 break;
                             case 'create':
                                 if ($this->userCanCreateTracker($group_id)) {
-                                    $this->displayCreateTracker($project);
+                                    $this->displayCreateTracker($project, $request);
                                 } else {
                                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $group_id);
@@ -233,13 +214,50 @@ class TrackerManager { /* extends Engine? */
         }
     }
     
-    public function displayCreateTracker($project, 
+    public function doCreateTracker(Project $project, Codendi_Request $request) {
+        $is_error    = false;
+        $new_tracker = null;
+        
+        $name          = trim($request->get('name'));
+        $description   = trim($request->get('description'));
+        $itemname      = trim($request->get('itemname'));
+        $atid_template = $request->getValidated('atid_template', 'uint', 0);
+        
+        // First try XML
+        if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'xml') {
+            $vFile = new Valid_File('tracker_new_xml_file');
+            $vFile->required();
+            if ($request->validFile($vFile)) {
+                $new_tracker = $this->importTracker($project, $name, $description, $itemname, $_FILES["tracker_new_xml_file"]["tmp_name"]);
+            }
+        } else {
+            // Otherwise tries duplicate
+            $new_tracker = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
+        }
+
+        if ($new_tracker) {
+            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?group_id='. $project->group_id .'&tracker='. $new_tracker->id);
+        } else {
+            $tracker_template = $this->getTrackerFactory()->getTrackerById($atid_template);
+            $this->displayCreateTracker($project, $request, $name, $description, $itemname, $tracker_template);
+        }
+    }
+    
+    /**
+     * Display tracker creation interface
+     *
+     * @param Project $project
+     * @param String $name
+     * @param String $description
+     * @param String $itemname
+     * @param Tracker      $tracker_template
+     */
+    public function displayCreateTracker(Project $project,
+                                         Codendi_Request $request,
                                          $name = '', 
                                          $description = '', 
-                                         $itemname = '', 
-                                         $codendi_template = '', 
-                                         $group_id_template = '', 
-                                         $atid_template = '') {
+                                         $itemname = '',
+                                         Tracker $tracker_template = null) {
         global $Language;
         $breadcrumbs = array(
             array(
@@ -251,140 +269,158 @@ class TrackerManager { /* extends Engine? */
         $this->displayHeader($project, 'Trackers', $breadcrumbs, $toolbar);
         
         $hp = Codendi_HTMLPurifier::instance();
-        echo '<script type="text/javascript">
-              function onChangeGroup() {
-                document.form_create.func.value = "create";
-                document.form_create.submit();
-              }
-              
-              function checkValues() {
-                codendi.feedback.clear();
-                var is_error = false;
-                if ( !document.form_create.name.value.match(/\S/) ) {
-                    codendi.feedback.log(\'error\', \''. addslashes($Language->getText('plugin_tracker_include_type','fill_name')) .'\');
-                    is_error = true;
-                }
-                if ( !document.form_create.description.value.match(/\S/) ) {
-                    codendi.feedback.log(\'error\', \''. addslashes($Language->getText('plugin_tracker_include_type','fill_desc')) .'\');
-                    is_error = true;
-                }
-                if ( !document.form_create.itemname.value.match(/\S/) ) {
-                    codendi.feedback.log(\'error\', \''. addslashes($Language->getText('plugin_tracker_include_type','fill_short')) .'\');
-                    is_error = true;
-                }
-                return !is_error;
-                
-              }
-            
-              function onSubmitCreateTemplate() {
-                codendi.feedback.clear();
-                if ( checkValues() ) {
-                    if ( (document.form_create.group_id_template.value == "")||(document.form_create.atid_template.value == "") ) {
-                        document.form_create.feedback.value = "'.$Language->getText('plugin_tracker_include_type','choose_proj').'";
-                        document.form_create.func.value = "create";
-                    } else {
-                        document.form_create.atid_chosen.value = document.form_create.atid_template.value;
-                        document.form_create.group_id_chosen.value = document.form_create.group_id_template.value;
-                        document.form_create.submit();
-                    }
-                }
-              }
-    
-              function onSubmitCreateCodendiTemplate() {
-                codendi.feedback.clear();
-                if ( checkValues() ) {
-                    if ( document.form_create.codendi_template.value == 100 ) {
-                        codendi.feedback.log(\'error\', \''. addslashes($Language->getText('plugin_tracker_include_type','choose_tmpl')) .'\');
-                    } else {
-                        document.form_create.atid_chosen.value = document.form_create.codendi_template.value;
-                        document.form_create.group_id_chosen.value = 100;
-                        document.form_create.submit();
-                    }
-                }
-              }
-    
-              function showGroupSelection() {
-                win=window.open("","group_id_selection","height=210,width=480,toolbar=no,location=no,resizable=yes,left=200,top=200");
-                win.location = "'.TRACKER_BASE_URL.'/group_selection.php?opener_form=form_create&opener_field=group_id_template&filter=member";
-              }
-    
-              function showTrackerSelection() {
-                if ( document.form_create.group_id_template.value == "" ) {
-                    alert("'.$Language->getText('plugin_tracker_include_type','select_proj').'");
-                    return;
-                }
-                win=window.open("","artifact_group_id_selection","height=45,width=400,toolbar=no,location=no,resizable=yes,left=200,top=200");
-                win.location = "'.TRACKER_BASE_URL.'/tracker_selection.php?group_id=" + document.form_create.group_id_template.value + "&opener_form=form_create&opener_field=atid_template";
-              }
-    
-              </script>
-             ';
-        echo $Language->getText('plugin_tracker_include_type','create_tracker');
-        echo '<form name="form_create" method="post" enctype="multipart/form-data">
-          <input type="hidden" name="group_id" value="'.(int)$project->group_id.'">
+
+        echo '<h2>'.$Language->getText('plugin_tracker_include_type','create_tracker').'</h2>';
+        
+        echo '<form name="form_create" method="post" enctype="multipart/form-data" id="tracker_create_new">
+          <input type="hidden" name="group_id" value="'.$project->getId().'">
           <input type="hidden" name="func" value="docreate">
-          <input type="hidden" name="atid_chosen" value="">
-          <input type="hidden" name="group_id_chosen" value="">
-          <table width="100%" border="0" cellpadding="5">
-            <tr> 
-              <td width="21%"><b>'.$Language->getText('plugin_tracker_include_artifact','name').'</b>: <font color="red">*</font></td>
-              <td width="79%"> 
-                <input type="text" name="name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'">
-              </td>
-            </tr>
-            <tr> 
-              <td width="21%"><b>'.$Language->getText('plugin_tracker_include_artifact','desc').'</b>: <font color="red">*</font></td>
-              <td width="79%"> 
-                <textarea name="description" rows="3" cols="50">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
-              </td>
-            </tr>
-            <tr> 
-              <td width="21%"><b>'.$Language->getText('plugin_tracker_include_type','short_name').'</b>: <font color="red">*</font></td>
-              <td width="79%"> 
-                <input type="text" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'">
-              </td>
-            </tr>
-                    <tr><td colspan=2><i>'.$Language->getText('plugin_tracker_include_type','avoid_spaces').'</i></td></tr>';
+          
+          <table>
+          <tr valign="top"><td style="padding-right:2em; border-right: 1px solid #eee;">';
+          
+        echo '<p>'.$Language->getText('plugin_tracker_include_type','choose_creation').'</p>';
+
+        if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'xml') {
+            $this->displayCreateTrackerFromXML($project);
+        } else {
+            $this->displayCreateTrackerFromTemplate($project, $tracker_template);
+        }
+
+        echo '</td><td style="padding-left:2em;">';
+
+        echo '<p>'. $Language->getText('plugin_tracker_include_type','create_tracker_fill_name') .'</p>
+          <p>
+              <label for="newtracker_name"><b>'. $Language->getText('plugin_tracker_include_artifact','name').'</b>: <font color="red">*</font></label><br />
+              <input type="text" name="name" id="newtracker_name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'">
+          </p>
+          <p>
+              <label for="newtracker_description"><b>'.$Language->getText('plugin_tracker_include_artifact','desc').'</b>: <font color="red">*</font><br />
+              <textarea id="newtracker_description" name="description" rows="3" cols="50">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
+          </p>
+          <p>
+              <label for="newtracker_itemname"><b>'.$Language->getText('plugin_tracker_include_type','short_name').'</b>: <font color="red">*</font></label><br />
+              <input type="text" id="newtracker_itemname" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'"><br />
+              <span style="color:#999;">'.$Language->getText('plugin_tracker_include_type','avoid_spaces').'</span>
+          </p>';
+        
+        echo '<input type="submit" name="Create" value="'.$Language->getText('global','btn_create').'">';
+
+        echo '</td></tr></table></form>';
+
+        $this->displayFooter($project);
+    }
+
+    /**
+     * 
+     *
+     */
+    function displayCreateTrackerFromTemplate(Project $project, Tracker $tracker_template = null) {
+        $hp = Codendi_HTMLPurifier::instance();
+
+        $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerTemplateSelector.js');
+        
+        $js = '';
+        $trackers = $this->getTrackerFactory()->getTrackersByGroupId(100);
+        foreach ($trackers as $tracker) {
+            $js .= '<option value="'.$tracker->getId().'">'. $hp->purify($tracker->getName()) .'</option>';
+        }
+        $js = "codendi.tracker.defaultTemplates = '". $hp->purify($js, CODENDI_PURIFIER_JS_QUOTE) ."';";
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+        
+        $gf = new GroupFactory();
+        echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','from_tmpl').'</h3>';
+        //
+        echo '<div>';
+        echo '<noscript>Project Id: <input type="text" name="group_id_template" value=""><br/>Tracker Id: <input type="text" name="atid_template" value=""></noscript>';
+        echo '<input type="hidden" name="create_mode" value="gallery">';
+        
+        echo '<table>';
+
+        echo '<tr>';
+        echo '<th align="left">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj').'</th>';
+        echo '<th align="left">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_trk').'</th>';
+        echo '</tr>';
+
+        echo '<tr>';
+        echo '<td valign="top">';
+
+        $group_id_template = 100;
+        $atid_template     = -1;
+        if ($tracker_template) {
+            $group_id_template = $tracker_template->getProject()->getID();
+            $atid_template     = $tracker_template->getId();
+        }
+        $selectedHtml = 'selected="selected"';
+
+        echo '<select name="group_id_template" size="15" id="tracker_new_project_list" autocomplete="off">';
+
+        echo '<option value="100" '.($group_id_template == 100 ? $selectedHtml : '').'>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_default').'</option>';
+
+        echo '<optgroup label="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_my').'">';
+        $project_selected = false;
+        $results = $gf->getMemberGroups();
+        while ($row = db_fetch_array($results)) {
+            $selected = '';
+            if ($group_id_template == $row['group_id']) {
+                $selected = $selectedHtml;
+                $project_selected = true;
+            }
+            echo '<option value="'.$hp->purify($row['group_id']).'" '.($group_id_template == $row['group_id'] ? $selectedHtml : '').'>'.$hp->purify(util_unconvert_htmlspecialchars($row['group_name'])).'</option>';
+        }
+        echo '</optgroup>';
+
+        $hide  = 'style="display:none;"';
+        $other = '';
+        if ($tracker_template && !$project_selected) {
+            $hide = '';
+            $other .= '<option value="'. (int)$tracker_template->getProject()->getID() .'" '. $selectedHtml .'>';
+            $other .= $hp->purify(util_unconvert_htmlspecialchars($tracker_template->getProject()->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML);
+            $other .= '</option>';
+        }
+        echo '<optgroup id="tracker_new_other" '. $hide .' label="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_other').'">';
+        echo $other;
+        echo '</optgroup>';
+
+        echo '</select>';
+
+        echo '<br/>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_autocomplete_desc').'<br /><input type="text" name="tracker_new_prjname" id="tracker_new_prjname" value="'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_autocomplete_hint').'" />';
+
+        echo '</td>';
+
+        echo '<td valign="top">';
+        echo '<select name="atid_template" size="15" id="tracker_list_trackers_from_project">';
+        $trackers = $this->getTrackerFactory()->getTrackersByGroupId($group_id_template);
+        if (count($trackers) > 0) {
+            foreach ($trackers as $tracker) {
+                echo '<option value="'.$tracker->getId().'" '.($atid_template == $tracker->getId() ? $selectedHtml : '').'>'. $hp->purify($tracker->getName()) .'</option>';
+            }
+        } else {
+            echo '<option>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_no_trk').'</option>';
+        }
+        echo '</select>';
+
+        echo '</td>';
+        echo '</tr>';
         echo '</table>';
 
-        echo '<p>'.$Language->getText('plugin_tracker_include_type','choose_creation').'</p>';
-        echo '<table>';
-        /*
-        echo ' <tr valign="top">
-                 <td width="300"><li><b>'.$Language->getText('plugin_tracker_include_type','from_tmpl').'</b></li></td>
-                 <td colspan="2">';
-        echo $this->trackersSelectBox(100,"codendi_template",$codendi_template);
-        echo ' &nbsp;<input type="button" name="CreateCodendiTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateCodendiTemplate()"><br><br></td></tr>';
-        echo ' <tr valign="top">
-                 <td width="300"><li>'.$Language->getText('plugin_tracker_include_type','from_exist').'</li></td>
-                 <td>
-                    <table>
-                      <tr>
-                        <td>'.$Language->getText('plugin_tracker_include_type','proj_id').'</td>
-                        <td><input name="group_id_template" value="'. $hp->purify($group_id_template, CODENDI_PURIFIER_CONVERT_HTML) .'"><a href="javascript:showGroupSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
-                      </tr>
-                      <tr>
-                        <td>'.$Language->getText('plugin_tracker_include_type','tracker_id').'</td>
-                        <td><input name="atid_template" value="'. $hp->purify($atid_template, CODENDI_PURIFIER_CONVERT_HTML) .'"><a href="javascript:showTrackerSelection()"><img src="'.util_get_image_theme("button_choose.png").'" align="absmiddle" border="0"></a></td>
-                      <tr>
-                    </table>
-                 </td>
-                 <td><input type="button" name="CreateTemplate" value="'.$Language->getText('global','btn_create').'" onClick="onSubmitCreateTemplate()"></td>
-               </tr>';
-        */
-        echo ' <tr>
-                <td width="300">'.$Language->getText('plugin_tracker_include_type','from_xml', TRACKER_BASE_URL.'/resources/templates/').'</td>
-                <td>
-                 <input type="hidden" name="create_mode" value="">
-                 <input type="file" name="file" id="file" />
-                 <input type="submit" name="create_from_xml" value="'.$Language->getText('global','btn_create').'" />
-                </td>
-               </tr>';
-        echo '</table>';
+        echo '<p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'create_mode_xml', array('?'.http_build_query(array('group_id' => $project->getID(), 'func' => 'create', 'create_mode' => 'xml')))).'</p>';
+
+        echo '</div>';
+    }
     
-        echo '</form>
-              </table>';
-        $this->displayFooter($project);
+    /**
+     * 
+     */
+    function displayCreateTrackerFromXML(Project $project) {
+        echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml').'</h3>
+              <div>
+                <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml_desc', TRACKER_BASE_URL.'/resources/templates/').'</p>
+                <input type="hidden" name="create_mode" value="xml">
+                <input type="file" name="tracker_new_xml_file" id="tracker_new_xml_file" />
+                
+                <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'create_mode_gallery', array('?'.http_build_query(array('group_id' => $project->getID(), 'func' => 'create', 'create_mode' => 'gallery')))).'</p>
+              </div>';
     }
     
     /**
@@ -403,16 +439,16 @@ class TrackerManager { /* extends Engine? */
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId($project->group_id);
         
         if (HTTPRequest::instance()->isAjax()) {
+            $http_content = '';
             foreach ($trackers as $tracker) {
                 if ($tracker->userCanView($user)) {
-                    $html .= '<a href="'.TRACKER_BASE_URL.'/?tracker='. $tracker->id .'" title="';
-                    $html .= $hp->purify($tracker->description, CODENDI_PURIFIER_CONVERT_HTML);
-                    $html .= '">';
-                    $html .= $GLOBALS['HTML']->getImage('ic/clipboard-list.png', array('border' => 0, 'alt' => '', 'style="vertical-align:top;"')) .' ';
-                    $html .= $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML);
-                    $html .= '</a>';
-                    $html .= '<br />';
+                    $http_content .= '<option value="'.$tracker->getId().'">'.$hp->purify($tracker->getName()).'</option>';
                 }
+            }
+            if ($http_content) {
+                echo $http_content;
+            } else {
+                echo '<option>'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_no_trk') .'</option>';
             }
             echo $html;
         } else {
@@ -593,26 +629,6 @@ class TrackerManager { /* extends Engine? */
     }
     
     /**
-     *  Display a select box for the tracker list for a group
-     *
-     *  @param int    $group_id the project id
-     *  @param string $name     the select box name
-     *  @param ?      $checked  the default value
-     * 
-     *  @return void
-     */
-    protected function trackersSelectBox($group_id, $name, $checked='xzxz') {
-        $hp = Codendi_HTMLPurifier::instance();
-        $tracker_names = array();
-        $tracker_ids   = array();
-        foreach ($this->getTrackerFactory()->getTrackersByGroupId($group_id) as $tracker) {
-            $tracker_names[] =  $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML);
-            $tracker_ids[] = $tracker->id;
-        }
-        return html_build_select_box_from_arrays($tracker_ids,$tracker_names, $name, $checked);
-    }
-    
-    /**
      * Importing Tracker from a submitted XML file
      *  
      * @param Object $project     into which the tracker is imported
@@ -644,10 +660,39 @@ class TrackerManager { /* extends Engine? */
         echo $xml->saveXML();
     }
     
+    /**
+     * On project creation, copy template trackers to destination project
+     *
+     * @param Integer $from_project_id
+     * @param Integer $to_project_id
+     * @param Array   $ugroup_mapping
+     */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
         $this->getTrackerFactory()->duplicate($from_project_id, $to_project_id, $ugroup_mapping);
+        $this->duplicateReferences($from_project_id);
     }
 
+    /**
+     * On project creation, copy all 'plugin_tracker_artifact' references not attached to a tracker
+     *
+     * @param Integer $from_project_id
+     */
+    protected function duplicateReferences($from_project_id) {
+        // Index by shortname
+        foreach ($this->getTrackerFactory()->getTrackersByGroupId($from_project_id) as $tracker) {
+            $trackers[$tracker->getItemName()] = $tracker;
+        }
+        
+        // Loop over references
+        $refMgr     = $this->getReferenceManager();
+        $references = $refMgr->getReferencesByGroupId($from_project_id);
+        foreach ($references as $reference) {
+            if (!isset($trackers[$reference->getKeyword()])) {
+                $refMgr->createReference($reference);
+            }
+        }
+    }
+    
     /**
      * @return Tracker_URL
      */
@@ -673,7 +718,12 @@ class TrackerManager { /* extends Engine? */
     protected function getProject($group_id) {
         return ProjectManager::instance()->getProject($group_id);
     }
-    
+    /**
+     * @return ReferenceManager
+     */
+    protected function getReferenceManager() {
+        return ReferenceManager::instance();
+    }
     /**
      * Check if user has permission to create a tracker or not
      *

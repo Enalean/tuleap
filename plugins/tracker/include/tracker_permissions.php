@@ -1076,5 +1076,4 @@ function plugin_tracker_permission_fetch_selection_field($permission_type, $obje
     return $html;
 }
 
-
 ?>

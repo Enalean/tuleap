@@ -53,6 +53,7 @@ require_once('common/layout/Layout.class.php');
 Mock::generate('Layout');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
+Mock::generate('ReferenceManager');
 
 if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/coin');
@@ -188,11 +189,13 @@ class TrackerManagerTest extends UnitTestCase {
     }
     
     public function testProcessItself() {
+        $request_artifact = new MockCodendi_Request($this);
+        
         $tm = TestHelper::getPartialMock('TrackerManager', array('getProject', 'displayAllTrackers', 'checkServiceEnabled'));
         $project = new MockProject();
         $tm->expectOnce('getProject');
         $tm->setReturnValue('getProject', $project, array(5));
-        $tm->setReturnValue('checkServiceEnabled', true, array($project));
+        $tm->setReturnValue('checkServiceEnabled', true, array($project, $request));
         $tm->expectOnce('displayAllTrackers', array($project, $this->user));
         
         $this->artifact->expectNever('process');
@@ -200,7 +203,6 @@ class TrackerManagerTest extends UnitTestCase {
         $this->tracker->expectNever('process');
         $this->formElement->expectNever('process');
         
-        $request_artifact = new MockCodendi_Request($this);
         $request_artifact->setReturnValue('get', '5', array('group_id'));
         $tm->process($request_artifact, $this->user);
     }
@@ -234,6 +236,57 @@ class TrackerManagerTest extends UnitTestCase {
         
         $this->tracker->expectNever('displaySearch');
         $this->tm->search($request, $this->user);
+    }
+    
+    /**
+     * Given I have 3 plugin_tracker_artifact references in the template project
+     * - bug
+     * - issue 
+     * - task
+     * And 'bug' correspond to 'Bug' tracker
+     * And 'task' correspond to 'Task' tracker
+     * And 'issue' was created by hand by the admin
+     * And 'Bug' tracker is instanciated for new project
+     * And 'Task' tracker is not instanciated for new project
+     * 
+     * Then 'issue' reference is created
+     * And 'bug' reference is not created (it's up to tracker creation to create the reference)
+     * And 'task' reference is not created (it's up to tracker creation to create the reference)
+     *
+     */
+    public function testDuplicateCopyReferences() {
+        $source_project_id       = 100;
+        $destinatnion_project_id = 120;
+        $u_group_mapping         = array();
+        
+        $tm = TestHelper::getPartialMock('TrackerManager', array('getTrackerFactory', 'getReferenceManager'));
+        
+        $tf = new MockTrackerFactory();
+        $tf->expectOnce('duplicate');
+        $tm->setReturnValue('getTrackerFactory', $tf);
+        
+        
+        $r1 = new Reference(101 , 'bug',   'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1 , 100);
+        $r2 = new Reference(102 , 'issue', 'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1 , 100);
+        $r3 = new Reference(103 , 'task',  'desc', '/plugins/tracker/?aid=$1&group_id=$group_id', 'P', 'plugin_tracker', 'plugin_tracker_artifact', 1 , 100);
+
+        $rm = new MockReferenceManager();
+        $rm->expectOnce('getReferencesByGroupId', array($source_project_id));
+        $rm->setReturnValue('getReferencesByGroupId', array($r1, $r2, $r3));
+        $tm->setReturnValue('getReferenceManager', $rm);
+        
+        $t1 = new MockTracker();
+        $t1->setReturnValue('getItemName', 'bug');
+        $t1->setReturnValue('mustBeInstantiatedForNewProjects', true);
+        $t2 = new MockTracker();
+        $t2->setReturnValue('getItemName', 'task');
+        $t2->setReturnValue('mustBeInstantiatedForNewProjects', false);
+        
+        $tf->setReturnValue('getTrackersByGroupId', array($t1, $t2), $source_project_id);
+        
+        $rm->expectOnce('createReference', array($r2));
+        
+        $tm->duplicate($source_project_id, $destinatnion_project_id, $u_group_mapping);
     }
 }
 

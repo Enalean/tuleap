@@ -43,6 +43,29 @@ class TrackerDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+   /**
+    * Check if the shortname of the tracker is already used in the project
+    * @param string $item_name the shortname of the tracker we are looking for
+    * @param int $group_id the ID of the group
+    * @return boolean
+    */
+    public function isShortNameExists($item_name, $group_id) {
+        $item_name = $this->da->quoteSmart($item_name);
+        $group_id  = $this->da->escapeInt($group_id);
+        $sql = "SELECT item_name 
+                FROM $this->table_name
+                WHERE item_name = $item_name
+                  AND group_id = $group_id
+                  AND deletion_date IS NULL
+                UNION
+                  SELECT item_name
+                  FROM artifact_group_list
+                  WHERE item_name = $item_name
+                    AND group_id = $group_id
+                    AND deletion_date IS NULL";
+        return count($this->retrieve($sql));
+    }
+    
     public function markAsDeleted($id) {
         $id = $this->da->escapeInt($id);
         $deletion_date = $this->da->escapeInt($_SERVER['REQUEST_TIME']);
@@ -51,6 +74,7 @@ class TrackerDao extends DataAccessObject {
                 WHERE id = $id";
         return $this->update($sql);
     }
+    
     function duplicate($atid_template, $group_id, $name, $description, $item_name) {
         $atid_template = $this->da->escapeInt($atid_template);
         $group_id      = $this->da->escapeInt($group_id);
@@ -58,26 +82,32 @@ class TrackerDao extends DataAccessObject {
         $description   = $this->da->quoteSmart($description);
         $item_name     = $this->da->quoteSmart($item_name);
         
-        $sql = "INSERT INTO $this->table_name (group_id, 
-                    name, 
-                    description, 
-                    item_name, 
-                    allow_copy, 
-                    submit_instructions, 
-                    browse_instructions, 
-                    status, 
-                    instantiate_for_new_projects, 
-                    stop_notification)
-                SELECT $group_id, $name, $description, $item_name, 
-                    allow_copy, 
-                    submit_instructions, 
-                    browse_instructions, 
-                    status, 
-                    instantiate_for_new_projects, 
-                    stop_notification
-                FROM $this->table_name
-                WHERE id = $atid_template";
-        return $this->updateAndGetLastId($sql);
+        $id_sharing = new TrackerIdSharingDao();
+        if ($id = $id_sharing->generateTrackerId()) {
+            $sql = "INSERT INTO $this->table_name 
+                       (id,
+                        group_id, 
+                        name, 
+                        description, 
+                        item_name, 
+                        allow_copy, 
+                        submit_instructions, 
+                        browse_instructions, 
+                        status, 
+                        instantiate_for_new_projects, 
+                        stop_notification)
+                    SELECT $id, $group_id, $name, $description, $item_name, 
+                        allow_copy, 
+                        submit_instructions, 
+                        browse_instructions, 
+                        status, 
+                        instantiate_for_new_projects, 
+                        stop_notification
+                    FROM $this->table_name
+                    WHERE id = $atid_template";
+            return $this->updateAndGetLastId($sql);
+        }
+        return false;
     }
     
     function create($group_id, 

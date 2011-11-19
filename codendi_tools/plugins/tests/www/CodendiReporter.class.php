@@ -3,9 +3,9 @@
 require_once('../include/simpletest/reporter.php');
 require_once('../include/simpletest/extensions/junit_xml_reporter.php');
 
-@include_once 'PHP/CodeCoverage.php';
-@include_once 'PHP/CodeCoverage/Report/HTML.php';
-@include_once 'PHP/CodeCoverage/Report/Clover.php';
+// Need to install php code coverage. 
+// @see: https://github.com/sebastianbergmann/php-code-coverage
+@include_once 'PHP/CodeCoverage/Autoload.php';
 
 /**
  * Invoker decorator to target code coverage only on executed tests
@@ -159,7 +159,15 @@ class CodendiReporterFactory {
 
     public static function getCodeCoverage($enableCoverage = false) {
         if ($enableCoverage && class_exists('PHP_CodeCoverage')) {
-            return new PHP_CodeCoverage();
+            $filter = new PHP_CodeCoverage_Filter();
+            $filter->addDirectoryToBlacklist($GLOBALS['codendi_dir'].'/codendi_tools');
+            $filter->addDirectoryToBlacklist($GLOBALS['codendi_dir'].'/codendi_tools', '.inc');
+            $filter->addDirectoryToBlacklist($GLOBALS['codendi_dir'].'/codendi_tools', '.txt');
+            $filter->addDirectoryToBlacklist($GLOBALS['codendi_dir'].'/codendi_tools', '.dist');
+            $filter->addDirectoryToBlacklist($GLOBALS['htmlpurifier_dir']);
+            $filter->addDirectoryToBlacklist($GLOBALS['jpgraph_dir']);
+            $filter->addDirectoryToBlacklist($GLOBALS['codendi_dir'].'/src/www');
+            return new PHP_CodeCoverage(null, $filter);
         }
         return null;
     }

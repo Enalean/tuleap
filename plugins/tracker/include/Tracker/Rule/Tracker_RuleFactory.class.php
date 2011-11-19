@@ -178,12 +178,43 @@ class Tracker_RuleFactory {
         return $deleted;
     }
     
-    /**
-    * copy rules from a tracker to another
+   /**
+    * Duplicate the rules from tracker source to tracker target
+    *
+    * @param int   $from_tracker_id The Id of the tracker source
+    * @param int   $to_tracker_id   The Id of the tracker target
+    * @param array $field_mapping   The mapping of the fields of the tracker
+    *
+    * @return void
     */
-    function copyRules($from_artifact_type, $to_artifact_type) {
-        $copied = $this->rules_dao->copyRules($from_artifact_type, $to_artifact_type);
-        return $copied;
+    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+        $dar = $this->rules_dao->searchByTrackerId($from_tracker_id);
+        
+        // Retrieve rules of tracker from
+        while ($row = $dar->getRow()) {
+            // if we already have the status field, just jump to open values
+            $source_field_id = $row['source_field_id'];
+            $target_field_id = $row['target_field_id'];
+            $source_value_id = $row['source_value_id'];
+            $target_value_id = $row['target_value_id'];
+            $rule_type = $row['rule_type'];
+            // walk the mapping array to get the corresponding field values for tracker TARGET
+            foreach ($field_mapping as $mapping) {
+                if ($mapping['from'] == $source_field_id) {
+                    $duplicate_source_field_id = $mapping['to'];
+                    
+                    $mapping_values = $mapping['values'];
+                    $duplicate_source_value_id = $mapping_values[$source_value_id];
+                }
+                if ($mapping['from'] == $target_field_id) {
+                    $duplicate_target_field_id = $mapping['to'];
+                    
+                    $mapping_values = $mapping['values'];
+                    $duplicate_target_value_id = $mapping_values[$target_value_id];
+                }
+            }
+            $this->rules_dao->create($to_tracker_id, $duplicate_source_field_id, $duplicate_source_value_id, $duplicate_target_field_id, $rule_type, $duplicate_target_value_id);
+        }
     }
     
     /**
