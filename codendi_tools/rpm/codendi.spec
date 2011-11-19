@@ -332,9 +332,18 @@ Summary: Graphs for Tracker v5
 Group: Development/Tools
 Version: @@PLUGIN_GRAPHONTRACKERS_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, %{PKG_NAME}-plugin-tracker
+Requires: %{PKG_NAME}-plugin-tracker
 %description plugin-graphontrackers
 Graphs for new tracker generation
+
+%package plugin-cardwall
+Summary: Graphs for Tracker v5
+Group: Development/Tools
+Version: @@PLUGIN_CARDWALL_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}-plugin-tracker
+%description plugin-cardwall
+Fancy cardwall output on top of Tracker v5
 
 #
 ## Themes
@@ -875,6 +884,10 @@ fi
 %files plugin-graphontrackers
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/graphontrackersv5
+
+%files plugin-cardwall
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/cardwall
 
 #
 # Themes
