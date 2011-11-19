@@ -305,7 +305,7 @@ grammar {
                             )
                         |
                             (
-                                attribute type { "graphontrackers_scrum_burnup" },
+                                attribute type { "graphontrackersv5_scrum_burnup" },
                                 attribute start_date { xsd:string }?,
                                 attribute duration { xsd:int }?,
                                 attribute remaining_field{ xsd:IDREF }?,
@@ -313,10 +313,10 @@ grammar {
                             )
                         |
                             (
-                                attribute type { "graphontrackers_scrum_burndown" },
+                                attribute type { "graphontrackersv5_scrum_burndown" },
                                 attribute start_date { xsd:string }?,
                                 attribute duration { xsd:int }?,
-                                attribute field{ xsd:IDREF }?
+                                attribute effort_field{ xsd:IDREF }?
                             )
                         )
                     }*

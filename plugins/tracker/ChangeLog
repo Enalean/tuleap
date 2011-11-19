@@ -1,3 +1,9 @@
+Version 0.8.3 - Tuleap 4.0.24
+  DISCLAIMER: plugin still in beta, do not use it on production servers.
+  DISCLAIMER: Your data might be trashed in a future update.
+
+  * Fix bug in permission computation
+
 Version 0.8.2 - Tuleap 4.0.24
   DISCLAIMER: plugin still in beta, do not use it on production servers.
   DISCLAIMER: Your data might be trashed in a future update.
