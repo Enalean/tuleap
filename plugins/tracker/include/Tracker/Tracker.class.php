@@ -1138,16 +1138,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
         //  </td>
         //</tr>';
 
-        if ($project->isTemplate()) { // Template group
-            echo '
-                <tr> 
-                  <td width="15%"><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','instantiate').':</b></td>
-                  <td>
-                    <input type="checkbox" name="instantiate_for_new_projects" value="1" '. ($this->instantiate_for_new_projects ? 'checked="checked"' : '') . '>
-                  </td>
-                </tr>';
-        }
         echo '
+            <tr> 
+              <td width="15%"><b>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','instantiate').':</b></td>
+              <td>
+                <input type="checkbox" name="instantiate_for_new_projects" value="1" '. ($this->instantiate_for_new_projects ? 'checked="checked"' : '') . '>
+              </td>
+            </tr>
             <tr> 
               <td width="15%">'.$GLOBALS['Language']->getText('plugin_tracker_include_type','submit_instr').'</td>
               <td> 
@@ -1686,11 +1683,11 @@ EOS;
         $old_name = $this->getName();
         $this->name                         = trim($request->getValidated('name', 'string', ''));
         $this->description                  = trim($request->getValidated('description', 'text', ''));
-        $this->item_name                     = trim($request->getValidated('item_name', 'string', ''));
+        $this->item_name                    = trim($request->getValidated('item_name', 'string', ''));
         $this->allow_copy                   = $request->getValidated('allow_copy') ? 1 : 0;
         $this->submit_instructions          = $request->getValidated('submit_instructions', 'text', '');
         $this->browse_instructions          = $request->getValidated('browse_instructions', 'text', '');
-        $this->instantiate_for_new_projects = $project->isTemplate() && $request->getValidated('instantiate_for_new_projects') ? 1 : 0;
+        $this->instantiate_for_new_projects = $request->getValidated('instantiate_for_new_projects') ? 1 : 0;
 
         if (!$this->name || !$this->description || !$this->item_name) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_type','name_requ'));
