@@ -309,12 +309,14 @@ class TransitionFactory {
                 }
                 
                 $transition_id = $this->addTransition($workflow_id, $from_id, $to_id);
-                //Duplicate permissions
+                
+                // Duplicate permissions
                 $from_transition_id = $transition->getTransitionId();
                 $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
-                //Duplicate postactions
+                
+                // Duplicate postactions
                 $postactions = $transition->getPostActions();
-                $tpaf = new Transition_PostActionFactory();
+                $tpaf = $this->getPostActionFactory();
                 $tpaf->duplicate($from_transition_id, $transition_id, $postactions, $field_mapping);
             }
         }

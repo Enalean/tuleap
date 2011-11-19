@@ -254,12 +254,12 @@ class PermissionsManager {
     * @param int    $target
     * @param String $permission_type
     * @param array  $ugroup_mapping, an array of ugroups
-    * @param bool   $duplicate_static_perms indicates if static perms must be duplicated
+    * @param int    $duplicate_type What kind of duplication is going on
     * 
     * @return Boolean
     */
-    public function duplicatePermissions($source, $target, $permission_type, $ugroup_mapping, $duplicate_static_perms) {
-        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_type, $ugroup_mapping, $duplicate_static_perms);
+    public function duplicatePermissions($source, $target, $permission_type, $ugroup_mapping, $duplicate_type) {
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_type, $ugroup_mapping, $duplicate_type);
     }
     
     function isPermissionExist($object_id, $ptype){    	
