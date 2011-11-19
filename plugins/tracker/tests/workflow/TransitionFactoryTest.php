@@ -24,13 +24,10 @@ Mock::generate('Transition_PostActionFactory');
 require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
 
-Mock::generatePartial(
-    'TransitionFactory', 
-    'TransitionFactoryTestVersion', 
-    array(
-        'addTransition'
-    )
-);
+require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List_Value.class.php');
+Mock::generate('Tracker_FormElement_Field_List_Value');
+
+
 class TransitionFactoryTest extends UnitTestCase {
     
     public function testIsFieldUsedInTransitions() {
@@ -63,9 +60,9 @@ class TransitionFactoryTest extends UnitTestCase {
         $t1  = new Transition(1, 1, $field_value_new, $field_value_analyzed);
         $t2  = new Transition(2, 1, $field_value_analyzed, $field_value_accepted);
         $t3  = new Transition(3, 1, $field_value_analyzed, $field_value_new);
-        
         $transitions = array($t1, $t2, $t3);
-        $tf = new TransitionFactoryTestVersion();
+        
+        $tf = TestHelper::getPartialMock('TransitionFactory', array('addTransition', 'getPostActionFactory', 'duplicatePermissions'));
        
         $values = array(
             2066  => 3066,
@@ -77,6 +74,21 @@ class TransitionFactoryTest extends UnitTestCase {
         $tf->expectAt(0, 'addTransition', array(1, 3066, 3067));
         $tf->expectAt(1, 'addTransition', array(1, 3067, 3068));
         $tf->expectAt(2, 'addTransition', array(1, 3067, 3066));
+        $tf->setReturnValueAt(0, 'addTransition', 101);
+        $tf->setReturnValueAt(1, 'addTransition', 102);
+        $tf->setReturnValueAt(2, 'addTransition', 103);
+        
+        $tf->expectCallCount('duplicatePermissions', 3, 'Method duplicatePermissions should be called 3 times.');
+        $tf->expectAt(0, 'duplicatePermissions', array(1, 101, false, false));
+        $tf->expectAt(1, 'duplicatePermissions', array(2, 102, false, false));
+        $tf->expectAt(2, 'duplicatePermissions', array(3, 103, false, false));
+        
+        $tpaf = new MockTransition_PostActionFactory();
+        $tpaf->expectCallCount('duplicate', 3, 'Method duplicate should be called 3 times.');
+        $tpaf->expectAt(0, 'duplicate', array(1, 101, array(), array()));
+        $tpaf->expectAt(1, 'duplicate', array(2, 102, array(), array()));
+        $tpaf->expectAt(2, 'duplicate', array(3, 103, array(), array()));
+        $tf->setReturnValue('getPostActionFactory', $tpaf);
         
         $tf->duplicate($values, 1, $transitions, array(), false, false);
     }

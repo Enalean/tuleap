@@ -181,10 +181,15 @@ class PermissionsDao extends DataAccessObject {
    /**
     * Duplicate permissions
     * 
+    * Manage the 3 types of duplications:
+    * - On project creation: there is a ugroup_mapping so we should a straight copy the dynamics groups and a translated copy of the static groups
+    * - On copy within the same project: no need to translate, we just do a straight copy of the existing permissions (both static and dynamic groups)
+    * - On copy from another project: there is no ugroup_mapping so we can only straight copy dynamic groups. Static groups are left).
+    * 
     * @param int    $from
     * @param int    $to
     * @param String $permission_type    
-    * @param bool   $duplicate_type
+    * @param int    $duplicate_type
     * @param array  $ugroup_mapping, an array of static ugroups
     *
     * @return Boolean
