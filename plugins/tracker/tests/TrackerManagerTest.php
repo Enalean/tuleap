@@ -195,7 +195,7 @@ class TrackerManagerTest extends UnitTestCase {
         $project = new MockProject();
         $tm->expectOnce('getProject');
         $tm->setReturnValue('getProject', $project, array(5));
-        $tm->setReturnValue('checkServiceEnabled', true, array($project, $request));
+        $tm->setReturnValue('checkServiceEnabled', true, array($project, $request_artifact));
         $tm->expectOnce('displayAllTrackers', array($project, $this->user));
         
         $this->artifact->expectNever('process');
