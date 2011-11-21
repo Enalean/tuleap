@@ -771,7 +771,7 @@
                   </group>
                   <group>
                     <attribute name="type">
-                      <value>graphontrackersv5_scrum_burnup</value>
+                      <value>burnup</value>
                     </attribute>
                     <optional>
                       <attribute name="start_date">
@@ -796,7 +796,7 @@
                   </group>
                   <group>
                     <attribute name="type">
-                      <value>graphontrackersv5_scrum_burndown</value>
+                      <value>burndown</value>
                     </attribute>
                     <optional>
                       <attribute name="start_date">
