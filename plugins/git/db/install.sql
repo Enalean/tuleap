@@ -25,6 +25,15 @@ CREATE TABLE IF NOT EXISTS `plugin_git_post_receive_mail` (
   KEY `repository_id` (`repository_id`)
 );
 
+-- Create plugin_git_log table --
+CREATE TABLE IF NOT EXISTS `plugin_git_log` (
+  `repository_id` int(10) unsigned NOT NULL,
+  `user_id` int(11) unsigned NULL,
+  `push_date` datetime NOT NULL,
+  `commits_number` int,
+   KEY `repository_id` (`repository_id`),
+   INDEX `idx_repository_user`(`repository_id`, `user_id`));
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
        VALUES      ( 100, 'plugin_git:service_lbl_key', 'plugin_git:service_desc_key', 'git', '/plugins/git/?group_id=$group_id', 1, 0, 'system', 230 );
@@ -54,14 +63,3 @@ VALUES ('PLUGIN_GIT_READ', 2, 1),
        ('PLUGIN_GIT_WPLUS', 2, 0),
        ('PLUGIN_GIT_WPLUS', 3, 0),
        ('PLUGIN_GIT_WPLUS', 4, 0);
-
--- Create plugin_git_log table --
-CREATE TABLE IF NOT EXISTS `plugin_git_log` (
-  `repository_id` int(10) NOT NULL,
-  `user_id` INT(11) UNSIGNED NULL,
-  `push_date` datetime NOT NULL,
-  `commits_number` INT,
-   KEY `repository_id` (`repository_id`),
-   INDEX `idx_repository_user`(`repository_id`, `user_id`));
-
-
