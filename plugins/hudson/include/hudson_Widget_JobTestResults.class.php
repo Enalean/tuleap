@@ -81,11 +81,10 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget {
             $jobs = $this->getAvailableJobs();
             
             if (array_key_exists($this->job_id, $jobs)) {
-                $used_job = $jobs[$this->job_id];
-                $this->job_url = $used_job->getUrl();
-                $this->job = $used_job;
-                
                 try {
+                    $used_job = $jobs[$this->job_id];
+                    $this->job_url = $used_job->getUrl();
+                    $this->job = $used_job;
                     $this->test_result = new HudsonTestResult($this->job_url);
                 } catch (Exception $e) {
                     $this->test_result = null;

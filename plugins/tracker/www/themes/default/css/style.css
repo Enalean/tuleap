@@ -710,6 +710,7 @@ li.tracker_aggregate_function_add_unused:hover {
 #tracker_renderer_options {
     font-weight:normal;
     float:right;
+    z-index: 150;
 }
 #tracker_renderer_options_menu_handle {
     font-size:0.8em; 

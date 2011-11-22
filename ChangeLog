@@ -3,6 +3,7 @@ Version 4.0.24 - Not Released Yet
     == Bug Fix ==
     * Make site admin able to retrieve users by their mail address (contrib STMicroelectronics)
     * Fix user realname output
+    * Fix fatal error on wiki PageInfo
 
     == Plugins ==
     New plugin: Cardwall v0.1.
@@ -11,9 +12,11 @@ Version 4.0.24 - Not Released Yet
     * Admindelegation v2.3. See separated Changelog
     * Docman v2.18. See separated Changelog
     * Docmanwatermark v2.3. See separated Changelog
+    * ForumMML v2.6. See separated Changelog
+    * Hudson v1.5. See separated Changelog
     * IM v1.4. See separated Changelog
     * LDAP v3.7. See separated Changelog
-    * Tracker v0.8.4. See separated Changelog
+    * Tracker v0.8.5. See separated Changelog
     * GraphOnTrackersv5 v0.5. See separated Changelog
     * RequestHelp v1.3. See separated Changelog
 

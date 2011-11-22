@@ -148,7 +148,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
             $title = $value;
         }
     } else {
-        $title .= $GLOBALS['Language']->getText('plugin_forumml','list_arch');
+        $title .= ' '.$GLOBALS['Language']->getText('plugin_forumml','list_arch');
     }
 	echo '<h2>'.$title.'</h2>';
 

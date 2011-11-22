@@ -79,15 +79,15 @@ class hudson_Widget_JobLastArtifacts extends HudsonJobWidget {
             $jobs = $this->getAvailableJobs();
             
             if (array_key_exists($this->job_id, $jobs)) {
-                $used_job = $jobs[$this->job_id];
-                $this->job_url = $used_job->getUrl();
-                $this->job = $used_job;
-                
-                $this->last_build_url = $this->job_url.'/lastBuild/';
-
                 try {
+                    $used_job = $jobs[$this->job_id];
+                    $this->job_url = $used_job->getUrl();
+                    $this->job = $used_job;
+
+                    $this->last_build_url = $this->job_url.'/lastBuild/';
                     $this->build = new HudsonBuild($this->last_build_url);
                 } catch (Exception $e) {
+                    $this->job = null;
                     $this->build = null;
                 }   
             } else {

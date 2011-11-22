@@ -76,9 +76,13 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget {
             $jobs = $this->getAvailableJobs();
             
             if (array_key_exists($this->job_id, $jobs)) {
-                $used_job = $jobs[$this->job_id];
-                $this->job_url = $used_job->getUrl();
-                $this->job = $used_job;
+                try {
+                    $used_job = $jobs[$this->job_id];
+                    $this->job_url = $used_job->getUrl();
+                    $this->job = $used_job;
+                } catch (Exception $e) {
+                    $this->job = null;
+                }
             } else {
                 $this->job = null;
             }
@@ -89,13 +93,11 @@ class hudson_Widget_JobBuildHistory extends HudsonJobWidget {
     function getContent() {
         $html = '';
         if ($this->job != null) {
-                        
             $job = $this->job;
-                        
+
             $buildHistoryRSSWidget = new Widget_ProjectRss();
             $buildHistoryRSSWidget->rss_url = $job->getUrl().'/rssAll';
             $html .= $buildHistoryRSSWidget->getContent();
-                    
         } else {
             $html .= $GLOBALS['Language']->getText('plugin_hudson', 'widget_job_not_found');
         }

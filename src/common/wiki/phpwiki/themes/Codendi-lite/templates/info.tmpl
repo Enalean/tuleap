@@ -6,7 +6,7 @@ $modifed = $WikiTheme->formatDateTime($revision->get('mtime'));
 
 $dbi = $request->getDbh();
 $author = $revision->get('author');
-$authorLink = user_get_name_display_from_unix($author);
+$authorLink = UserHelper::instance()->getDisplayNameFromUserName($author);
 if ($dbi->isWikiPage($authorLink))
     $authorLink = WikiLink($authorLink);
 

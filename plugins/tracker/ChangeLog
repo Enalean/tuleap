@@ -1,6 +1,9 @@
 DISCLAIMER: plugin still in beta, do not use it on production servers.
 DISCLAIMER: Your data might be trashed in a future update.
 
+Version 0.8.5 - Tuleap 4.0.24
+  * Fix IE7 issue on renderer options menu.
+
 Version 0.8.4 - Tuleap 4.0.24
   * Updates following new cardwall plugin (renderer tweaking)
   * Better printer version management

@@ -34,7 +34,7 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier {
     /**
      * Constructor
      */
-    private function __construct() {
+    protected function __construct() {
     }
 	
 	/**

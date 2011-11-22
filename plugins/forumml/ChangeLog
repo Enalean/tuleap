@@ -1,3 +1,7 @@
+Version 2.6
+    * Make forumml compliant with default purifier
+    * Fix title typo
+
 Version 2.5
     * Fix forumml drops forwarded emails
 

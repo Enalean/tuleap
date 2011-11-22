@@ -76,9 +76,13 @@ class hudson_Widget_JobLastBuilds extends HudsonJobWidget {
             $jobs = $this->getAvailableJobs();
             
             if (array_key_exists($this->job_id, $jobs)) {
-                $used_job = $jobs[$this->job_id];
-                $this->job_url = $used_job->getUrl();
-                $this->job = $used_job;
+                try {
+                    $used_job = $jobs[$this->job_id];
+                    $this->job_url = $used_job->getUrl();
+                    $this->job = $used_job;
+                } catch (Exception $e) {
+                    $this->job = null;
+                }
             } else {
                 $this->job = null;
             }
