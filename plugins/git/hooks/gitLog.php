@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *
+ * This script is called by post-receive-log hook in order to store git pushes in Tuleap db.
+ *
+ * Usage: php gitLog.php --group_name="gpig" --login="disciplus_simplex" --type="git_commit" --repo_name="gpigRepo" --commits_number="12"
  */
 
 ini_set('include_path', '/usr/share/codendi/src/:/usr/share/codendi/src/www/include/:'.ini_get('include_path'));
