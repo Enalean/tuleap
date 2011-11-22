@@ -39,10 +39,7 @@ logGitPushes()
 		revspec=$oldrev..$newrev
 	fi
 
-	for rev in $(git rev-list $revspec)
-	do
-		nbcommits=$((nbcommits+1))
-	done
+	nbcommits=$(git rev-list $revspec | wc -l)
 
 	php /usr/share/codendi/plugins/git/hooks/gitLog.php --group_name="$tuleap_group_name" --login="$tuleap_login" --type="$revtype" --repo_name="$tuleap_repo_name" --commits_number="$nbcommits" > /dev/null
 
