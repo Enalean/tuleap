@@ -313,7 +313,7 @@ class GitDao extends DataAccessObject {
         $repositoryId  = $this->da->escapeInt($repoId);
         $userId        = $this->da->escapeInt($userId);
         $commitsNumber = $this->da->escapeInt($commitsNumber);
-        $pushDate      = date('Y-m-d H:i:s');
+        $pushDate      = $this->da->quoteSmart(date('Y-m-d H:i:s'));
         $query         = "INSERT INTO plugin_git_log (".self::REPOSITORY_ID.",
                                                       user_id,
                                                       push_date,
@@ -321,7 +321,7 @@ class GitDao extends DataAccessObject {
                                                       ) values (
                                                       $repositoryId,
                                                       $userId,
-                                                      '$pushDate',
+                                                      $pushDate,
                                                       $commitsNumber
                                                       )";
         return $this->update($query);
