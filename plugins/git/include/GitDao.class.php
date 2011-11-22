@@ -319,10 +319,10 @@ class GitDao extends DataAccessObject {
                                                       push_date,
                                                       commits_number
                                                       ) values (
-                                                      ".$repositoryId.",
-                                                      ".$userId.",
-                                                      '".$pushDate."',
-                                                      ".$commitsNumber."
+                                                      $repositoryId,
+                                                      $userId,
+                                                      '$pushDate',
+                                                      $commitsNumber
                                                       )";
         return $this->update($query);
     }
