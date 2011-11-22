@@ -33,9 +33,9 @@ logGitPushes()
 
 	nbcommits=0
 	if expr "$oldrev" : '0*$' >/dev/null
-		then
+	then
 		revspec=$newrev
-		else
+	else
 		revspec=$oldrev..$newrev
 	fi
 
