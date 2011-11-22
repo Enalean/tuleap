@@ -32,7 +32,7 @@ logGitPushes()
 	tuleap_group_name=$(basename $(dirname $repo_location))
 
 	nbcommits=0
-	 if expr "$oldrev" : '0*$' >/dev/null 
+	if expr "$oldrev" : '0*$' >/dev/null
 		then
 		revspec=$newrev
 		else
