@@ -283,7 +283,7 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
-     * Retrieve Git repository ID nowing the repository name and its group name.
+     * Retrieve Git repository ID knowing the repository name and its group name.
      *
      * @param String $repositoryName Name of the repository
      * @param String $projectName    Name of the project
