@@ -53,8 +53,8 @@ if [ -z "$GIT_DIR" ]; then
 	exit 1
 fi
 
-if [ -n "$1" -a -n "$2" ]; then
-	logGitPushes $2 $1
+if [ -n $oldrev -a -n $newrev ]; then
+	logGitPushes $newrev $oldrev
 else
 	echo >&2 "fatal: post-receive-log: Usage is post-receive-log oldrev newrev"
 	exit 1
