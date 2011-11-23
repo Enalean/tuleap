@@ -662,6 +662,15 @@
 	Add Workflow PostActions.
 	</revremark>
       </revision>
+      
+      <revision>
+        <revnumber>4.0.24</revnumber>
+        <date>23-November-2011</date>
+        <authorinitials>Enalean team</authorinitials>
+        <revremark>
+            Add burndown in GraphOnTrackers v5.
+        </revremark>
+      </revision>
 
     </revhistory>
   </bookinfo>
