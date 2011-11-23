@@ -41,7 +41,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
         //Those files are allowed to contains something before opening tag
         $this->allow_start = array(
             'cli/codendi.php',
-            'tools/utils/checkCommitMessage.php',
+            'tools/developers/utils/checkCommitMessage.php',
             'plugins/IM/include/jabbex_api/installation/install.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/docman/bin/DocmanImport/FSDocmanUploader.class.php',
