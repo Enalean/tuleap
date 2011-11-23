@@ -23,7 +23,6 @@
 logGitPushes()
 {
 	# Tuleap specific: Git logging stuffs
-	#@TODO : Non fast-forward pushes ???
 
 	revtype=$(git cat-file -t "$newrev")
 	tuleap_login=$(whoami)
@@ -41,7 +40,7 @@ logGitPushes()
 
 	nbcommits=$(git rev-list $revspec | wc -l)
 
-	php /usr/share/codendi/plugins/git/hooks/gitLog.php --group_name="$tuleap_group_name" --login="$tuleap_login" --type="$revtype" --repo_name="$tuleap_repo_name" --commits_number="$nbcommits" > /dev/null
+	/usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/git/hooks/gitLog.php --group_name="$tuleap_group_name" --login="$tuleap_login" --type="$revtype" --repo_name="$tuleap_repo_name" --commits_number="$nbcommits" > /dev/null
 
 }
 

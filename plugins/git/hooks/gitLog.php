@@ -23,7 +23,6 @@
  * Usage: php gitLog.php --group_name="gpig" --login="disciplus_simplex" --type="git_commit" --repo_name="gpigRepo" --commits_number="12"
  */
 
-ini_set('include_path', '/usr/share/codendi/src/:/usr/share/codendi/src/www/include/:'.ini_get('include_path'));
 require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
 require_once('pre.php');
 
