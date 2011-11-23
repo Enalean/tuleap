@@ -26,7 +26,7 @@ foreach ($diff->xpath('paths/path') as $path) {
                 continue;
             }
             // Internal code samples are not perfect
-            if (strpos($p, 'codendi_tools/examples') !== false) {
+            if (strpos($p, 'tools/examples') !== false) {
                 continue;
             }
             echo $p.PHP_EOL;

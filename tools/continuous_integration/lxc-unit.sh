@@ -86,7 +86,7 @@ on_create="false"
 if lxc-ls | egrep -q "^$lxc_name$"; then
     echo "LXC container already exists"
 else
-    cp $src_dir/codendi_tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
+    cp $src_dir/tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
     substitute "lxc.config" "%ip_addr%" "$lxc_ip"
     sudo lxc-create -n $lxc_name -f lxc.config -t centos5
     on_create="true"
@@ -117,7 +117,7 @@ if [ "$on_create" = "true" ]; then
 fi
 
 # Run unit tests and checkstyle
-$remotecmd /root/$src_dir/codendi_tools/continuous_integration/ci_build.sh --workspace="/root" --srcdir="$src_dir" --without-svn-sniff
+$remotecmd /root/$src_dir/tools/continuous_integration/ci_build.sh --workspace="/root" --srcdir="$src_dir" --without-svn-sniff
 
 # Collect results
 scp $build_host:/root/$src_dir/plugins/tests/www/codendi_unit_tests_report.xml .

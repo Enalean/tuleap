@@ -101,7 +101,7 @@ if lxc-ls | egrep -q "^$lxc_name$"; then
 fi
 
 echo "Create a new container $lxc_name"
-cp $src_dir/codendi_tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
+cp $src_dir/tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
 substitute "lxc.config" "%ip_addr%" "$lxc_ip"
 sudo lxc-create -n $lxc_name -f lxc.config -t centos5
 
@@ -111,7 +111,7 @@ lxc_start_wait $lxc_ip
 
 # Upload installation script into /root
 $remotecmd /bin/rm -fr /root/lxc-inst.sh
-rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.sh $build_host:/root
+rsync --delete --archive $src_dir/tools/continuous_integration/lxc-inst.sh $build_host:/root
 
 # Install
 $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
@@ -130,6 +130,6 @@ else
 fi
 
 # And test!
-substitute "$src_dir/codendi_tools/plugins/tests/functional/set.php" "%host%" "http://$lxc_ip"
-phpunit $src_dir/codendi_tools/plugins/tests/functional/
+substitute "$src_dir/tools/plugins/tests/functional/set.php" "%host%" "http://$lxc_ip"
+phpunit $src_dir/tools/plugins/tests/functional/
 

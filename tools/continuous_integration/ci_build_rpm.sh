@@ -25,7 +25,7 @@ fi
 
 # Build official codendi rpms
 pushd .
-cd "$codendi_src/codendi_tools/rpm"
+cd "$codendi_src/tools/rpm"
 make all dist
 popd
 

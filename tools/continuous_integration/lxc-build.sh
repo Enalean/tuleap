@@ -85,7 +85,7 @@ remotecmd="$sshcmd -n $build_host"
 if lxc-ls | egrep -q "^$lxc_name$"; then
     echo "LXC container already exists"
 else
-    cp $src_dir/codendi_tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
+    cp $src_dir/tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
     substitute "lxc.config" "%ip_addr%" "$lxc_ip"
     sudo lxc-create -n $lxc_name -f lxc.config -t centos5
 fi
@@ -109,7 +109,7 @@ $remotecmd chown root:root -R /root/$src_dir
 rsync -az --delete /var/lib/jenkins/docbook $build_host:/root
 
 # Build rpms
-time $remotecmd DOCBOOK_TOOLS_DIR=/root/docbook make -C /root/tuleap/codendi_tools/rpm all dist PKG_NAME=tuleap
+time $remotecmd DOCBOOK_TOOLS_DIR=/root/docbook make -C /root/tuleap/tools/rpm all dist PKG_NAME=tuleap
 
 # Clean up the local dir
 rm -rf yum
