@@ -438,7 +438,7 @@ Tuleap theme
 #
 # Install codendi application
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
-for i in codendi_tools cli plugins site-content src ChangeLog VERSION; do
+for i in tools cli plugins site-content src ChangeLog VERSION; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
 done
 # Remove old scripts: not used and add unneeded perl depedencies to the package
@@ -451,7 +451,7 @@ done
 
 # Install script
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap-install
-%{__install} -m 755 codendi_tools/codendi_install.sh $RPM_BUILD_ROOT/%{_datadir}/tuleap-install/setup.sh
+%{__install} -m 755 tools/codendi_install.sh $RPM_BUILD_ROOT/%{_datadir}/tuleap-install/setup.sh
 #
 # Install Codendi executables
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -696,7 +696,7 @@ fi
 %files
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %dir %{APP_DIR}
-%{APP_DIR}/codendi_tools
+%{APP_DIR}/tools
 %{APP_DIR}/cli
 %{APP_DIR}/site-content
 %{APP_DIR}/ChangeLog

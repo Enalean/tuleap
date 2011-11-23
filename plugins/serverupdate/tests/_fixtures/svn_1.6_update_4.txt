@@ -1,5 +1,5 @@
 Restored 'src/www/scripts/combined/codendi-1236793993.js'
-U codendi_tools/codendi_install.sh
-U codendi_tools/migration_from_Codendi_3.6_to_Codendi_4.0.sh
+U tools/codendi_install.sh
+U tools/migration_from_Codendi_3.6_to_Codendi_4.0.sh
 Updated to revision 12379.
 An error occured during the update.

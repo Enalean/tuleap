@@ -41,7 +41,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
         //Those files are allowed to contains something before opening tag
         $this->allow_start = array(
             'cli/codendi.php',
-            'codendi_tools/utils/checkCommitMessage.php',
+            'tools/utils/checkCommitMessage.php',
             'plugins/IM/include/jabbex_api/installation/install.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/docman/bin/DocmanImport/FSDocmanUploader.class.php',
@@ -51,7 +51,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
         $this->allow_end = array(
             'cli/codendi.php',
             'plugins/tests/www/index.php',
-            'codendi_tools/tests/www/index.php',
+            'tools/tests/www/index.php',
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/IM/www/webmuc/muckl.php',
             'plugins/IM/www/webmuc/roster.js.php',

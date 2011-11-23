@@ -45,7 +45,7 @@ EOF
 %{__cp} %{SOURCE1} cli_ParametersLocal.dtd
 %{__cp} %{SOURCE2} user_guide_ParametersLocal.dtd
 
-codendi_tools/rpm/build_release.sh
+tools/rpm/build_release.sh
 
 %install
 %{__rm} -rf $RPM_BUILD_ROOT
