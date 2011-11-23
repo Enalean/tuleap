@@ -31,7 +31,6 @@ CREATE TABLE IF NOT EXISTS `plugin_git_log` (
   `user_id` int(11) unsigned NULL,
   `push_date` datetime NOT NULL,
   `commits_number` int,
-   KEY `repository_id` (`repository_id`),
    INDEX `idx_repository_user`(`repository_id`, `user_id`));
 
 -- Enable service for project 100
