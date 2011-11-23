@@ -66,3 +66,5 @@ Usage: php svn_log_parser.php svn_log
 
 EOT;
 }
+
+?>
