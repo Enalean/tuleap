@@ -1,3 +1,6 @@
+Version 3.9
+    * Checkbox checked by default when importing an LDAP group (contrib STMicroelectronics)
+    
 Version 3.8
     * Update synchro example to suspend users upon given criterion.
 
