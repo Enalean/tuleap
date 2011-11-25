@@ -27,6 +27,10 @@ Mock::generate('BaseLanguage');
 require_once('common/backend/Backend.class.php');
 Mock::generate('Backend');
 
+Mock::generate('UserManager');
+Mock::generate('ProjectManager');
+Mock::generate('SystemEventManager');
+
 class Rule_ProjectNameIntegrationTest extends UnitTestCase {
 
     function __construct($name = 'Rule_ProjectName Integration test') {

@@ -21,6 +21,8 @@
  */
 
 require_once('common/system_event/SystemEventManager.class.php');
+require_once('common/project/ProjectManager.class.php');
+
 /**
  * @package Codendi
  */
@@ -572,14 +574,14 @@ class Rule_ProjectName
 extends Rule_UserName {
 
     /**
-     * Group name cannot contain underscore for DNS reasons.
+     * Group name cannot contain underscore or dots for DNS reasons.
      *
      * @param String $val
      *
      * @return Boolean
      */
     public function isDNSCompliant($val) {
-        if (strpos($val, '_') === false) {
+        if (strpos($val, '_') === false && strpos($val, '.') === false) {
             return true;
         }
         $this->error = $GLOBALS['Language']->getText('include_account','dns_error');

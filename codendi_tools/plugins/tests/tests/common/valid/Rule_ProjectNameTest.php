@@ -64,6 +64,14 @@ class Rule_ProjectNameTest extends UnitTestCase {
         $this->assertFalse($r->noSpaces("group test 1"));
     }
 
+    function testNoDot() {
+        $r = new Rule_ProjectName();
+        $this->assertFalse($r->isValid("group.test"));
+        $this->assertFalse($r->isValid(".grouptest"));
+        $this->assertFalse($r->isValid("grouptest."));
+        $this->assertFalse($r->isValid("group.test.1"));
+    }
+
     function testReservedNames() {
         $r = new Rule_ProjectName();
         $this->assertTrue($r->isReservedName("www"));

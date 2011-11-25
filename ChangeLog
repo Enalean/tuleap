@@ -1,4 +1,6 @@
 Version 4.0.25 (Not released yet)
+    == Bug Fix ==
+    * Dot no longer allowed in project short names.
 
     == Plugins ==
     * Docman v2.19. See separated Changelog
