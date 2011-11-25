@@ -518,6 +518,7 @@ project_admin_ugroup_utils	ug_create_success	Successfully Created User Group
 project_admin_ugroup_utils	ug_created_but_no_id	ERROR - User group created but cannot get ID: 
 project_admin_ugroup_utils	no_g_template	No group template selected
 project_admin_ugroup_utils	cant_insert_u_in_g	ERROR - Can not insert user $1 in group $2: $3
+project_admin_ugroup_utils	user_already_exist	User already exist
 project_admin_ugroup_utils	u_added	$1 users added
 project_admin_ugroup_utils	ug_name_missed	The group name is missing, please press the "Back" button and complete this information
 project_admin_ugroup_utils	invalid_ug_name	Invalid group name: $1. Please use only alphanumerical characters. Press the "Back" button and complete this information

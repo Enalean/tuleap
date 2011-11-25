@@ -563,21 +563,25 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id) {
     }
 }
 function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id) {
-    $sql = "INSERT INTO ugroup_user (ugroup_id, user_id) VALUES(". db_ei($ugroup_id) .", ". db_ei($user_id) .")";
-    $res = db_query($sql);
-    if (!$res) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils','cant_update_ug',db_error()));
-    }
-    if ($rows = db_affected_rows($res)) {
-        // Now log in project history
-        $res = ugroup_db_get_ugroup($ugroup_id);
-        group_add_history('upd_ug','',$group_id,array(db_result($res,0,'name')));
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_success',array(db_result($res,0,'name'), 1)));
-        // Raise event for ugroup modification
-        EventManager::instance()->processEvent('project_admin_ugroup_add_user', array(
+    if (!ugroup_user_is_member($user_id, $ugroup_id, $group_id)) {
+        $sql = "INSERT INTO ugroup_user (ugroup_id, user_id) VALUES(". db_ei($ugroup_id) .", ". db_ei($user_id) .")";
+        $res = db_query($sql);
+        if (!$res) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils','cant_update_ug',db_error()));
+        }
+        if ($rows = db_affected_rows($res)) {
+            // Now log in project history
+            $res = ugroup_db_get_ugroup($ugroup_id);
+            group_add_history('upd_ug','',$group_id,array(db_result($res,0,'name')));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils','ug_upd_success',array(db_result($res,0,'name'), 1)));
+            // Raise event for ugroup modification
+            EventManager::instance()->processEvent('project_admin_ugroup_add_user', array(
                 'group_id' => $group_id,
                 'ugroup_id' => $ugroup_id,
                 'user_id' => $user_id));
+        }
+    } else {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'cant_insert_u_in_g', array($user_id, $ugroup_id, $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'user_already_exist'))));
     }
 }
 
