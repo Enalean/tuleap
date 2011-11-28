@@ -149,6 +149,8 @@ $mail->setSubject($subject);
 $vFormat = new Valid_WhiteList('body_format', array(FORMAT_HTML, FORMAT_TEXT));
 $bodyFormat = $request->getValidated('body_format', $vFormat, FORMAT_HTML);
 if ($bodyFormat == FORMAT_HTML) {
+    $hp = Codendi_HTMLPurifier::instance();
+    $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject, CODENDI_PURIFIER_CONVERT_HTML));
     $mail->setBodyHtml($body);
 } else {
     $mail->setBodyText($body);
