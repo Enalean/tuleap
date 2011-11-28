@@ -14,17 +14,10 @@ Mock::generatePartial('Mail', 'MailTestVersion', array('_getUserDao'));
  * Test the class Mail
  */
 class MailTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function MailTest() {
-        $this->UnitTestCase('Mail test');
-    }
 
     function testEncoding() {
         $mail =& new MailTestVersion($this);
-        $mail->Mail();
+        $mail->__construct();
         
         $mail->setSubject("été");
         $this->assertNoUnwantedPattern("/é/", $mail->getEncodedSubject());
@@ -78,7 +71,7 @@ class MailTest extends UnitTestCase {
         
         $mail =& new MailTestVersion($this);
         $mail->setReturnReference('_getUserDao', $dao);
-        $mail->Mail();
+        $mail->__construct();
         
         $recipients = $mail->_validateRecipient('exists@A.com, exists@R.com ; exists@S.com, exists@P.com, does@not.exist');
         $this->assertEqual($recipients, '"Exists A" <exists@A.com>, "Exists R" <exists@R.com>, "Exists P (!S)" <exists@P.com>, does@not.exist');
@@ -106,7 +99,7 @@ class MailTest extends UnitTestCase {
         
         $mail =& new MailTestVersion($this);
         $mail->setReturnReference('_getUserDao', $dao);
-        $mail->Mail();
+        $mail->__construct();
         
         $recipients = $mail->_validateRecipient('exists@1.com, exists@2.com');
         $this->assertEqual($recipients, '');

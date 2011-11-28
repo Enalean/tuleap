@@ -15,6 +15,32 @@ require_once('../include/TestHelper.class.php');
 
 require_once('CodendiReporter.class.php');
 
+/**
+ * Method called when a class is not defined.
+ *
+ * Used to load Zend classes on the fly
+ *
+ * @param String $className
+ *
+ * @return void
+ */
+function __autoload($className) {
+    global $Language;
+    if (strpos($className, 'Zend') === 0 && !class_exists($className)) {
+        if (isset($GLOBALS['zend_path'])) {
+            ini_set('include_path', $GLOBALS['zend_path'].':'.ini_get('include_path'));
+            $path = str_replace('_', '/', $className);
+            require_once $path.'.php';
+        } else if (is_dir('/usr/share/zend')) {
+            ini_set('include_path', '/usr/share/zend/:'.ini_get('include_path'));
+            $path = str_replace('_', '/', $className);
+            require_once $path.'.php';
+        } else {
+            exit_error($Language->getText('global','error'),$Language->getText('include_pre','zend_path_not_set',$GLOBALS['sys_email_admin']));
+        }
+    }
+}
+
 // It seems that runkit doesn't work properly on x86_64, at least with
 // PHP 5.1.6
 if (PHP_INT_SIZE == 4) {
