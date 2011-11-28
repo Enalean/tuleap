@@ -2643,6 +2643,9 @@ class Artifact extends Error {
             $body .= '<table>';
             $body .= $snapshot;
             $body .= '</table>';
+            if (!$changes) {
+                $body .= $this->fetchHtmlAnswerButton($artifact_href);
+            }
         }
         
         $result = $this->getFollowups();
@@ -2689,6 +2692,17 @@ class Artifact extends Error {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * @return string html call to action button to include in an html mail
+     */
+    public function fetchHtmlAnswerButton($artifact_href) {
+        return '<p align="right" class="cta">
+            <a href="'. $artifact_href .'" target="_blank">' .
+            $GLOBALS['Language']->getText('tracker_include_artifact','mail_answer_now') .
+            '</a>
+            </p>';
     }
 
     /**
@@ -3148,9 +3162,8 @@ class Artifact extends Error {
         $out .= '
                 </div>
             </div>
-            <div style="clear:both;"></div>
-            <p align="right" class="cta"><a href="'. $artifact_href .'" target="_blank">'.$Language->getText('tracker_include_artifact','mail_answer_now').'</a></p>
-            ';
+            <div style="clear:both;"></div>';
+        $out .= $this->fetchHtmlAnswerButton($artifact_href);
         return $out;
     }
 
