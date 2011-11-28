@@ -221,10 +221,10 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart {
         if ($xml['start_date']) {
             $this->setStartDate((int)$xml['start_date']);
         }
-        if ($propAtt['duration']) {
+        if ($xml['duration']) {
             $this->setDuration((int)$xml['duration']);
         }
-        if (isset($formsMapping[(int)$fieldsAtt['field_id']])) {
+        if (isset($formsMapping[(int)$xml['field_id']])) {
             $this->setFieldId($formsMapping[(int)$xml['field_id']]);
         }
     }
