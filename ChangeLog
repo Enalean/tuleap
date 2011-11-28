@@ -2,6 +2,7 @@ Version 4.0.25 (Not released yet)
     == Bug Fix ==
     * Dot no longer allowed in project short names.
     * Prevent a user from being added to ugroup as many time as the button add is clicked.(contrib STMicroelectronics)
+    * Deleted trackers are no longer exported.(contrib STMicroelectronics)
 
     == Plugins ==
     * Docman v2.19. See separated Changelog

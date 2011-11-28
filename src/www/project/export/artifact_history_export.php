@@ -26,11 +26,7 @@ if ( $atid ) {
 	if ($at->isError()) {
 		exit_error($Language->getText('global','error'),$at->getErrorMessage());
 	}
-	// Check if this tracker is valid (not deleted)
-	if ( !$at->isValid() ) {
-		exit_error($Language->getText('global','error'),$Language->getText('project_export_artifact_deps_export','tracker_no_longer_valid'));
-	}
-	
+
 	// Create field factory
 	$art_field_fact = new ArtifactFieldFactory($at);
 	if ($art_field_fact->isError()) {
@@ -139,7 +135,7 @@ if ($export == 'artifact_history') {
     if ($dbname != $sys_dbname) {
 
 		// Get the artfact type list
-		$at_arr = $atf->getArtifactTypes();
+		$at_arr = $atf->getArtifactTypes(true);
 		
 		if ($at_arr && count($at_arr) >= 1) {
 			for ($j = 0; $j < count($at_arr); $j++) {
@@ -160,7 +156,8 @@ if ($export == 'artifact_history') {
 				}
 				// Check if this tracker is valid (not deleted)
 				if ( !$at->isValid() ) {
-					break;
+                    db_project_query($dbname,'DROP TABLE IF EXISTS '.$tbl_name);
+                    continue;
 				}
 				
 				// Create field factory

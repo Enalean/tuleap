@@ -103,19 +103,23 @@ class ArtifactTypeFactory extends Error {
 	/**
 	 *	getArtifactTypes - return an array of ArtifactType objects of the current group
 	 *
+     * @param Boolean $includeDeleted Define whether list of returned trackers should contain deleted trackers or not
+     *
 	 *	@return	array	The array of ArtifactType objects.
 	 */
-	function getArtifactTypes() {
+    function getArtifactTypes($includeDeleted = false) {
 	  global $Language;
 
 		if ($this->ArtifactTypes) {
 			return $this->ArtifactTypes;
 		}
 
-		$sql="SELECT *, 0 as open_count, 0 as count FROM artifact_group_list
-			WHERE group_id='". db_ei($this->Group->getID()) ."'
-			AND status != 'D'
-			ORDER BY name ASC";
+        $sql="SELECT *, 0 as open_count, 0 as count FROM artifact_group_list
+              WHERE group_id='". db_ei($this->Group->getID()) ."' ";
+        if (!$includeDeleted) {
+            $sql .= " AND status != 'D' ";
+        }
+        $sql .= " ORDER BY name ASC";
 
 		$result = db_query ($sql);
 

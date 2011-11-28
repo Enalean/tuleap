@@ -28,11 +28,6 @@ if ( $atid ) {
 	if ($at->isError()) {
 		exit_error($Language->getText('global','error'),$at->getErrorMessage());
 	}
-	// Check if this tracker is valid (not deleted)
-	if ( !$at->isValid() ) {
-		exit_error($Language->getText('global','error'),$Language->getText('project_export_artifact_deps_export','tracker_no_longer_valid'));
-	}
-
 
         //
         //      Create the ArtifactTypeHtml object - needed in ArtifactField.getFieldPredefinedValues() 
@@ -159,7 +154,7 @@ if ($export == 'artifact') {
     if ($dbname != $sys_dbname) {
 
 		// Get the artfact type list
-		$at_arr = $atf->getArtifactTypes();
+        $at_arr = $atf->getArtifactTypes(true);
 		
 		if ($at_arr && count($at_arr) >= 1) {
 			for ($j = 0; $j < count($at_arr); $j++) {
@@ -179,7 +174,9 @@ if ($export == 'artifact') {
 				}
 				// Check if this tracker is valid (not deleted)
 				if ( !$at->isValid() ) {
-					break;
+                    db_project_query($dbname,'DROP TABLE IF EXISTS '.$tbl_name);
+                    db_project_query($dbname,'DROP TABLE IF EXISTS '."artifact_struct_".$at_arr[$j]->getItemName());
+                    continue;
 				}
 				
                                 //
