@@ -2494,13 +2494,27 @@ class Artifact extends Error {
         $um             = UserManager::instance();
         $html_addresses = array();
         $text_addresses = array();
+        $default = 'html';
+        
         foreach ($addresses as $address) {
-            $user = $um->getUserByEmail($address);
-            $pref = $user ? $user->getPreference('user_tracker_mailformat') : false;
-            if ($pref === 'html') {
-                $html_addresses[] = $address;
+            $users = $um->getAllUsersByEmail($address);
+            if (count($users) > 1){
+                foreach ($users as $user) {
+                    $pref = false;
+                    $pref_user = $user->getPreference('user_tracker_mailformat');
+                    $user_status = $user->getStatus();
+                    if ($pref_user && $pref_user != $default && ($user_status == 'A' || $user_status == 'R')) {
+                        $pref = $pref_user;
+                    }
+                }
             } else {
+                $pref = $users[0] ? $users[0]->getPreference('user_tracker_mailformat') : false;
+            }
+            
+            if ($pref && $pref ==! $default) {
                 $text_addresses[] = $address;
+            } else {
+                $html_addresses[] = $address;                
             }
         }
 
