@@ -1,6 +1,9 @@
 DISCLAIMER: plugin in beta, do not use it on production servers.
 DISCLAIMER: Your data might be trashed in a future update.
 
+Version 0.5.1 - Tuleap 4.0.24.1
+    * Fix XML import
+
 Version 0.5 - Tuleap 4.0.24
     * Fix renderer following cardwall rework.
 
