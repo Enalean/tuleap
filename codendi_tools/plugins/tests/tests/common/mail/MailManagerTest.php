@@ -21,6 +21,7 @@
 require_once 'common/mail/MailManager.class.php';
 
 Mock::generate('User');
+Mock::generate('UserManager');
 
 class MailManagerTest extends UnitTestCase {
     
@@ -84,6 +85,118 @@ class MailManagerTest extends UnitTestCase {
         $mm->setReturnValue('getConfig', 'TheName <noreply@thename.com>', array('sys_noreply'));
         
         $this->assertEqual($mm->getMailByType()->getFrom(), 'noreply@thename.com');
+    }
+    
+    function testGetMailPrefsShouldReturnUsersAccordingToPreferences() {
+        $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
+        
+        $manuel = new MockUser();
+        $manuel->setReturnValue('getPreference', 'html', array('user_tracker_mailformat'));
+        $manuel->setReturnValue('getStatus', 'A');
+
+        $nicolas = new MockUser();
+        $nicolas->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
+        $nicolas->setReturnValue('getStatus', 'A');
+        
+        $um = new MockUserManager();
+        $um->setReturnValue('getAllUsersByEmail', array($manuel), array('manuel@enalean.com'));
+        $um->setReturnValue('getAllUsersByEmail', array($nicolas), array('nicolas@enalean.com'));
+        $mm->setReturnValue('getUserManager', $um);
+        
+        
+        $addresses = array('manuel@enalean.com', 'nicolas@enalean.com');
+        
+        $prefs = $mm->getMailPreferencesByEmail($addresses);
+        $this->assertEqual($prefs['html'], array($manuel));
+        $this->assertEqual($prefs['text'], array($nicolas));
+    }
+    
+    function testGetMailPrefsShouldReturnUserWithTextPref() {
+        $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
+        
+        $manuel = new MockUser();
+        $manuel->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
+        $manuel->setReturnValue('getStatus', 'A');
+        
+        $manuel2 = new MockUser();
+        $manuel2->setReturnValue('getPreference', 'html', array('user_tracker_mailformat'));
+        $manuel2->setReturnValue('getStatus', 'A');
+        
+        $um = new MockUserManager();
+        $um->setReturnValue('getAllUsersByEmail', array($manuel, $manuel2), array('manuel@enalean.com'));
+        
+        $mm->setReturnValue('getUserManager', $um);
+        
+        $addresses = array('manuel@enalean.com');
+        
+        $prefs = $mm->getMailPreferencesByEmail($addresses);
+        $this->assertEqual($prefs['text'], array($manuel));
+        $this->assertEqual($prefs['html'], array());
+    }
+    
+    function testGetMailPrefsShouldReturnUserWithHtmlPref() {
+        $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
+        
+        $manuel = new MockUser();
+        $manuel->setReturnValue('getPreference', false);
+        $manuel->setReturnValue('getStatus', 'A');
+        
+        $manuel2 = new MockUser();
+        $manuel2->setReturnValue('getPreference', 'html', array('user_tracker_mailformat'));
+        $manuel2->setReturnValue('getStatus', 'A');
+        
+        $um = new MockUserManager();
+        $um->setReturnValue('getAllUsersByEmail', array($manuel, $manuel2), array('manuel@enalean.com'));
+        
+        $mm->setReturnValue('getUserManager', $um);
+        
+        $addresses = array('manuel@enalean.com');
+        
+        $prefs = $mm->getMailPreferencesByEmail($addresses);
+        $this->assertEqual($prefs['text'], array());
+        $this->assertEqual($prefs['html'], array($manuel2));
+    }
+    
+    function testGetMailPrefsShouldReturnLastUser() {
+        $mm = TestHelper::getPartialMock('MailManager', array('getUserManager'));
+        
+        $manuel = new MockUser();
+        $manuel->setReturnValue('getPreference', false);
+        $manuel->setReturnValue('getStatus', 'A');
+        
+        $manuel2 = new MockUser();
+        $manuel2->setReturnValue('getPreference', false);
+        $manuel2->setReturnValue('getStatus', 'A');
+        
+        $um = new MockUserManager();
+        $um->setReturnValue('getAllUsersByEmail', array($manuel, $manuel2), array('manuel@enalean.com'));
+        
+        $mm->setReturnValue('getUserManager', $um);
+        
+        $addresses = array('manuel@enalean.com');
+        
+        $prefs = $mm->getMailPreferencesByEmail($addresses);
+        $this->assertEqual($prefs['text'], array());
+        $this->assertEqual($prefs['html'], array($manuel2));
+    }
+    
+    function testGetMailPrefsShouldReturnHTMLUsersWhithAnonymous() {
+        $mm = TestHelper::getPartialMock('MailManager', array('getUserManager', 'getConfig'));
+        
+        $um = new MockUserManager();
+        $um->setReturnValue('getAllUsersByEmail', array());
+        $mm->setReturnValue('getUserManager', $um);
+        
+        $mm->setReturnValue('getConfig', 'fr_BE');
+        
+        $prefs = $mm->getMailPreferencesByEmail(array('manuel@enalean.com'));
+        $this->assertEqual($prefs['text'], array());
+        $this->assertEqual(count($prefs['html']), 1);
+        $this->assertEqual($prefs['html'][0]->getEmail(), 'manuel@enalean.com');
+        $this->assertEqual($prefs['html'][0]->isAnonymous(), true);
+        $this->assertEqual($prefs['html'][0]->getLanguageID(), 'fr_BE');
+        
+        
     }
 }
 

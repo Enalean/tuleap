@@ -170,6 +170,10 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         return $this->mail->getFrom();
     }
 
+    function clearFrom() {
+        $this->mail->clearFrom();
+    }
+    
     function setSubject($subject) {
         $this->mail->setSubject($subject);
     }

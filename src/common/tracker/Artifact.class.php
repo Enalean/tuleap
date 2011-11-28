@@ -2491,31 +2491,16 @@ class Artifact extends Error {
      * @param Codendi_Mail_Interface $html_mail
      */
     function sendNotification($addresses, $subject, $text_mail, $html_mail) {
-        $um             = UserManager::instance();
         $html_addresses = array();
         $text_addresses = array();
-        $default = 'html';
         
-        foreach ($addresses as $address) {
-            $users = $um->getAllUsersByEmail($address);
-            if (count($users) > 1){
-                foreach ($users as $user) {
-                    $pref = false;
-                    $pref_user = $user->getPreference('user_tracker_mailformat');
-                    $user_status = $user->getStatus();
-                    if ($pref_user && $pref_user != $default && ($user_status == 'A' || $user_status == 'R')) {
-                        $pref = $pref_user;
-                    }
-                }
-            } else {
-                $pref = $users[0] ? $users[0]->getPreference('user_tracker_mailformat') : false;
-            }
-            
-            if ($pref && $pref ==! $default) {
-                $text_addresses[] = $address;
-            } else {
-                $html_addresses[] = $address;                
-            }
+        $mailMgr   = new MailManager();
+        $mailPrefs = $mailMgr->getMailPreferencesByEmail($addresses);
+        foreach ($mailPrefs['html'] as $user) {
+            $html_addresses[] = $user->getEmail();
+        }
+        foreach ($mailPrefs['text'] as $user) {
+            $text_addresses[] = $user->getEmail();
         }
 
         $mail = null;

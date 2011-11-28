@@ -18,7 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/user/User.class.php';
+require_once 'common/mail/Mail.class.php';
+require_once 'common/mail/Codendi_Mail.class.php';
+require_once 'common/include/Tuleap_Template.class.php';
+
+require_once 'common/user/UserManager.class.php';
 require_once 'common/include/Config.class.php';
 
 /**
@@ -56,8 +60,59 @@ class MailManager {
         return $mail;
     }
     
+    /**
+     * Return users corresponding to email addresses mapped according to their
+     * preferences.
+     * 
+     * @deprecated
+     * 
+     * @param Array $addresses A set of addresses
+     * 
+     * @return Array of Array of User
+     */
+    public function getMailPreferencesByEmail($addresses) {
+        $default = 'html';
+        $res     = array('html' => array(), 'text' => array());
+        $um      = $this->getUserManager();
+        foreach ($addresses as $address) {
+            $users = $um->getAllUsersByEmail($address);
+            $pref  = $default;
+            if (count($users) > 0) {
+                foreach ($users as $user) {
+                    $pref_user   = $user->getPreference('user_tracker_mailformat');
+                    $user_status = $user->getStatus();
+                    if ($pref_user && $pref_user != $default && ($user_status == 'A' || $user_status == 'R')) {
+                        $pref = $pref_user;
+                        break;
+                    }
+                }
+            } else {
+                $user = new User(array('user_id' => 0, 'language_id' => $this->getConfig('sys_lang')));
+                $user->setEmail($address);
+            }
+            $res[$pref][] = $user;
+        }
+        return $res;
+    }
+    
+    /**
+     * Wrapper for configuration access
+     * 
+     * @param String $var
+     * 
+     * @return String 
+     */
     protected function getConfig($var) {
         return Config::get($var);
+    }
+    
+    /**
+     * Wrapper for UserManager
+     * 
+     * @return UserManager 
+     */
+    protected function getUserManager() {
+        return UserManager::instance();
     }
 }
 
