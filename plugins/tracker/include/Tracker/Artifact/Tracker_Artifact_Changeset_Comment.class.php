@@ -77,42 +77,43 @@ class Tracker_Artifact_Changeset_Comment {
                     $html = '';
                     $hp = Codendi_HTMLPurifier::instance();
                     if ($forMail) {
-                        $html .= '<div class="tracker_artifact_followup_title"><span class="tracker_artifact_followup_title_user">';
+                        $html .= '<div class="tracker_artifact_followup_title">'.PHP_EOL;
+                        $html .= '<span class="tracker_artifact_followup_title_user">'.PHP_EOL;
                         $user = UserManager::instance()->getUserById($this->submitted_by);
                         if ($user && $user->isLoggedIn()) {
-                            $html .= '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')</a>';
+                            $html .= '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')</a>'.PHP_EOL;
                         } else {
-                            $html .= $Language->getText('tracker_include_artifact','anon_user');
+                            $html .= $Language->getText('tracker_include_artifact','anon_user').PHP_EOL;
                         }
-                        $html .= '</span></div>';
+                        $html .= '</span></div>'.PHP_EOL;
                         $timezone = '';
                         if ($user->getId() != 0) {
                             $timezone = ' ('.$user->getTimezone().')';
                         }
-                        $html .= '<div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).$timezone.'</div>
-                                  </div>
-                                  <div class="tracker_artifact_followup_avatar">
-                                  <div class="avatar"></div>
-                                  </div>
-                                  <div class="tracker_artifact_followup_content">
-                                  <div class="tracker_artifact_followup_comment">';
+                        $html .= '<div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).$timezone.'</div>'.PHP_EOL;
+                        $html .= '</div>'.PHP_EOL;
+                        $html .= '<div class="tracker_artifact_followup_avatar">'.PHP_EOL;
+                        $html .= '<div class="avatar"></div>'.PHP_EOL;
+                        $html .= '</div>'.PHP_EOL;
+                        $html .= '<div class="tracker_artifact_followup_content">'.PHP_EOL;
+                        $html .= '<div class="tracker_artifact_followup_comment">';
                     } else {
-                        $html .= '<div class="tracker_artifact_followup_comment_edited_by">';
+                        $html .= '<div class="tracker_artifact_followup_comment_edited_by">'.PHP_EOL;
                         if ($this->parent_id) {
                             $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
                             $html .= ' '. $uh->getLinkOnUserFromUserId($this->submitted_by) .' ';
                             $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
                         }
-                        $html .= '</div>';
+                        $html .= '</div>'.PHP_EOL;
                     }
-                    $html .= '<div class="tracker_artifact_followup_comment_body">';
+                    $html .= '<div class="tracker_artifact_followup_comment_body">'.PHP_EOL;
                     if ($this->parent_id && !trim($this->body)) {
-                        $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
+                        $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>'.PHP_EOL;
                     } else {
-                        $html .= $hp->purify($this->body, CODENDI_PURIFIER_BASIC, $this->changeset->artifact->getTracker()->group_id);
+                        $html .= $hp->purify($this->body, CODENDI_PURIFIER_BASIC, $this->changeset->artifact->getTracker()->group_id).PHP_EOL;
                     }
                     if ($forMail) {
-                        $html .= '</div></div>';
+                        $html .= '</div></div>'.PHP_EOL;
                     }
                     return $html;
                     break;
