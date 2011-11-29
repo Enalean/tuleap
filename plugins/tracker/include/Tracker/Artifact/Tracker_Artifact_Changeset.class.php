@@ -491,7 +491,7 @@ class Tracker_Artifact_Changeset {
 
     protected function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
         $recipient = $user->getEmail();
-        $body      = $this->getBody($is_update, $user, $ignore_perms);
+        $body      = $this->getBody($is_update, $user, $ignore_perms, 'text');
         $subject   = $this->getSubject($user, $ignore_perms);
         $headers   = array(); // TODO
         $hash = md5($body . serialize($headers) . serialize($subject));
