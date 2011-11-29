@@ -619,7 +619,7 @@ class Tracker_Artifact_Changeset {
             // TODO : Add title and stuff (put things into tables)
             // TODO : Add css to the header of the mail
             // Display latest changes (diff)
-            $comment = $this->getComment()->fetchFollowUp($format);
+            $comment = $this->getComment()->fetchFollowUp($format, true);
             $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
             if ($comment || $changes) {
                 $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';

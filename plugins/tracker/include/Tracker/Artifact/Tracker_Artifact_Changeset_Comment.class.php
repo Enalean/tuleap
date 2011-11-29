@@ -64,29 +64,56 @@ class Tracker_Artifact_Changeset_Comment {
     /**
      * Returns the HTML code of this comment
      *
+     * @param String  $format  Format of the output
+     * @param Boolean $forMail If the output is intended for mail notification then value should be true
+     *
      * @return string the HTML code of this comment
      */
-    public function fetchFollowUp($format='html') {
+    public function fetchFollowUp($format='html', $forMail = false) {
         if ($this->body) {
             $uh = UserHelper::instance();
             switch ($format) {
                 case 'html':
                     $html = '';
                     $hp = Codendi_HTMLPurifier::instance();
-                    $html .= '<div class="tracker_artifact_followup_comment_edited_by">';
-                    if ($this->parent_id) {
-                        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
-                        $html .= ' '. $uh->getLinkOnUserFromUserId($this->submitted_by) .' ';
-                        $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
+                    if ($forMail) {
+                        $html .= '<div class="tracker_artifact_followup_title"><span class="tracker_artifact_followup_title_user">';
+                        $user = UserManager::instance()->getUserById($this->submitted_by);
+                        if ($user && $user->isLoggedIn()) {
+                            $html .= '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')</a>';
+                        } else {
+                            $html .= $Language->getText('tracker_include_artifact','anon_user');
+                        }
+                        $html .= '</span></div>';
+                        $timezone = '';
+                        if ($user->getId() != 0) {
+                            $timezone = ' ('.$user->getTimezone().')';
+                        }
+                        $html .= '<div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).$timezone.'</div>
+                                  </div>
+                                  <div class="tracker_artifact_followup_avatar">
+                                  <div class="avatar"></div>
+                                  </div>
+                                  <div class="tracker_artifact_followup_content">
+                                  <div class="tracker_artifact_followup_comment">';
+                    } else {
+                        $html .= '<div class="tracker_artifact_followup_comment_edited_by">';
+                        if ($this->parent_id) {
+                            $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
+                            $html .= ' '. $uh->getLinkOnUserFromUserId($this->submitted_by) .' ';
+                            $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
+                        }
+                        $html .= '</div>';
                     }
-                    $html .= '</div>';
                     $html .= '<div class="tracker_artifact_followup_comment_body">';
                     if ($this->parent_id && !trim($this->body)) {
                         $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
                     } else {
                         $html .= $hp->purify($this->body, CODENDI_PURIFIER_BASIC, $this->changeset->artifact->getTracker()->group_id);
                     }
-                    $html .= '</div>';
+                    if ($forMail) {
+                        $html .= '</div></div>';
+                    }
                     return $html;
                     break;
                 default:
