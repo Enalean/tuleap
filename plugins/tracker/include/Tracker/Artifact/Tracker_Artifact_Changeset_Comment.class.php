@@ -67,39 +67,43 @@ class Tracker_Artifact_Changeset_Comment {
      * @return string the HTML code of this comment
      */
     public function fetchFollowUp($format='html') {
-        $uh = UserHelper::instance();
-        switch ($format) {
-            case 'html':
-                $html = '';
-                $hp = Codendi_HTMLPurifier::instance();
-                $html .= '<div class="tracker_artifact_followup_comment_edited_by">';
-                if ($this->parent_id) {                    
-                    $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
-                    $html .= ' '. $uh->getLinkOnUserFromUserId($this->submitted_by) .' ';
-                    $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
-                }
-                $html .= '</div>';
-                $html .= '<div class="tracker_artifact_followup_comment_body">';
-                if ($this->parent_id && !trim($this->body)) {
-                    $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
-                } else {
-                    $html .= $hp->purify($this->body, CODENDI_PURIFIER_BASIC, $this->changeset->artifact->getTracker()->group_id);
-                }
-                $html .= '</div>';
-                return $html;
-                break;
-            default:
-                $output = '';
-                //if ($this->parent_id) {
-                //$output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
-                //$output .= ' '.$uh->getDisplayNameFromUserId($this->submitted_by);
-                //$output .= ' '.DateHelper::timeAgoInWords($this->submitted_on).PHP_EOL;
-                //}
-                if ( !empty($this->body) ) {
-                    $output .= PHP_EOL.PHP_EOL.$this->body.PHP_EOL.PHP_EOL;
-                }
-                return $output;
-                break;
+        if ($this->body) {
+            $uh = UserHelper::instance();
+            switch ($format) {
+                case 'html':
+                    $html = '';
+                    $hp = Codendi_HTMLPurifier::instance();
+                    $html .= '<div class="tracker_artifact_followup_comment_edited_by">';
+                    if ($this->parent_id) {
+                        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
+                        $html .= ' '. $uh->getLinkOnUserFromUserId($this->submitted_by) .' ';
+                        $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
+                    }
+                    $html .= '</div>';
+                    $html .= '<div class="tracker_artifact_followup_comment_body">';
+                    if ($this->parent_id && !trim($this->body)) {
+                        $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
+                    } else {
+                        $html .= $hp->purify($this->body, CODENDI_PURIFIER_BASIC, $this->changeset->artifact->getTracker()->group_id);
+                    }
+                    $html .= '</div>';
+                    return $html;
+                    break;
+                default:
+                    $output = '';
+                    //if ($this->parent_id) {
+                    //$output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
+                    //$output .= ' '.$uh->getDisplayNameFromUserId($this->submitted_by);
+                    //$output .= ' '.DateHelper::timeAgoInWords($this->submitted_on).PHP_EOL;
+                    //}
+                    if ( !empty($this->body) ) {
+                        $output .= PHP_EOL.PHP_EOL.$this->body.PHP_EOL.PHP_EOL;
+                    }
+                    return $output;
+                    break;
+            }
+        } else {
+            return null;
         }
     }
 }
