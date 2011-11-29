@@ -491,6 +491,7 @@ class Tracker_Artifact_Changeset {
 
     protected function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
         $recipient = $user->getEmail();
+        // TODO : get the mail format from user preferences $user->getPreference('user_tracker_mailformat')
         $body      = $this->getBody($is_update, $user, $ignore_perms, 'text');
         $subject   = $this->getSubject($user, $ignore_perms);
         $headers   = array(); // TODO
@@ -586,8 +587,6 @@ class Tracker_Artifact_Changeset {
      */
     public function getBody($is_update, $recipient_user, $ignore_perms = false, $format = 'html') {
         $art = $this->getArtifact();
-        //retrieve its mail format preferences  from user preference
-        $format = $recipient_user ? $recipient_user->getPreference('user_tracker_mailformat') : false;
         if ($format == 'text') {
             $um = $this->getUserManager();
             $user = $um->getUserById($this->submitted_by);
