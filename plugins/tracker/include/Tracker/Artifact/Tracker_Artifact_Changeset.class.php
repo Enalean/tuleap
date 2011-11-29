@@ -577,12 +577,14 @@ class Tracker_Artifact_Changeset {
     /**
      * Get the body for notification
      *
-     * @param bool   $is_update It is an update, not a new artifact
-     * @param string $recipient The recipient who will receive the notification
+     * @param Boolean $is_update    It is an update, not a new artifact
+     * @param String  $recipient    The recipient who will receive the notification
+     * @param Boolean $ignore_perms ???
+     * @param String  $format       Format of the mail 'text' or 'html'
      *
-     * @return string
+     * @return String
      */
-    public function getBody($is_update, $recipient_user, $ignore_perms=false) {
+    public function getBody($is_update, $recipient_user, $ignore_perms = false, $format = 'html') {
         $art = $this->getArtifact();
         //retrieve its mail format preferences  from user preference
         $format = $recipient_user ? $recipient_user->getPreference('user_tracker_mailformat') : false;
@@ -606,15 +608,29 @@ class Tracker_Artifact_Changeset {
             $output .= PHP_EOL;
             $output .= ' -------------- ' . $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
             $output .= PHP_EOL;
-            $output .= $this->diffToPrevious('text', $recipient_user, $ignore_perms);
+            $output .= $this->diffToPrevious($format, $recipient_user, $ignore_perms);
             $output .= PHP_EOL;
             $output .= ' -------------- ' . $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_artifact') . ' ---------------- ';
             $output .= PHP_EOL;
             $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
             $output .= PHP_EOL;
-        } else {
+        } elseif ($format == 'html') {
             $output ='';
-            //Display latest changes
+            // TODO : Add title and stuff
+            // TODO : Add css to the header of the mail
+            // Display latest changes (diff)
+            $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';
+            // Last comment
+            if ($comment = $this->getComment()) {
+                $output .= $comment->fetchFollowUp($format);
+            }
+            // Last changes
+            if ($changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms)) {
+                $output .= '<hr size="1" />';
+                $output .= '<ul class="tracker_artifact_followup_changes">';
+                $output .= $changes;
+                $output .= '</ul>';
+            }
 
             //Display of snapshot
             $body = $art->fetchMail($recipient_user, $format, $ignore_perms);

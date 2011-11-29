@@ -979,6 +979,7 @@ plugin_tracker_artifact_masschange	changing_items	Changing $1 artifact(s):
 
 plugin_tracker_artifact_changeset	header_changeset	CHANGESET
 plugin_tracker_artifact_changeset	header_artifact	ARTIFACT
+plugin_tracker_artifact_changeset	header_html_changeset	Latest modifications
 
 plugin_tracker_formelement_admin	crossreferences_label	Cross References
 plugin_tracker_formelement_admin	crossreferences_description	Display the cross references for the artifact

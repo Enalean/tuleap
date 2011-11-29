@@ -978,6 +978,7 @@ plugin_tracker_artifact_masschange	changing_items	Changer $1 artefact(s) :
 
 plugin_tracker_artifact_changeset	header_changeset	MODIFICATIONS
 plugin_tracker_artifact_changeset	header_artifact	ARTEFACT
+plugin_tracker_artifact_changeset	header_html_changeset	Dernières modifications
 
 plugin_tracker_formelement_admin	crossreferences_label	Références Croisées
 plugin_tracker_formelement_admin	crossreferences_description	Affiche les références croisées de l'artefact
