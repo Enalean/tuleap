@@ -176,13 +176,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param string $format
      * @return string
      */
-    public function fetchMail($recipient, $format='text', $ignore_perms=false) {
+    public function fetchMail($recipient, $format, $ignore_perms=false) {
         $output = '';
         switch($format) {
             case 'html':
+                $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
                 $output .= $this->fetchMailFormElements($recipient, $format, $ignore_perms);
                 break;
-            default:                                
+            default:
                 //$output .= $this->getTracker()->item_name.' #'. $this->id;
                 $output .= PHP_EOL;
                 //fields formelements                
@@ -205,7 +206,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $text;
     }
 
-    public function fetchMailFollowUp($recipient, $format='text', $ignore_perms=false) {
+    public function fetchMailFollowUp($recipient, $format, $ignore_perms=false) {
         $output = ' ===== '.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').' ===== ';
         $uh = UserHelper::instance();
         $um = UserManager::instance();
@@ -216,6 +217,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 //do not display empty comment
                 continue;
             }
+            switch ($format) {
+            case 'html':
+            $output .= PHP_EOL;
+            $output .= $comment->fetchFollowUp($format);
+            break;
+            case 'text':
             $user = $um->getUserById($comment->submitted_by);
             $output .= PHP_EOL;
             $output .= '----------------------------- ';
@@ -226,6 +233,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $output .= $comment->body;
             $output .= PHP_EOL;
             $output .= PHP_EOL;
+            break;
+            default:
+            $output .= '<!-- TODO -->';
+            break;
+                    }
         }
         return $output;
     }

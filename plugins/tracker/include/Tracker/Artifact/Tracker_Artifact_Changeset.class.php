@@ -617,7 +617,7 @@ class Tracker_Artifact_Changeset {
             //Display latest changes
 
             //Display of snapshot
-            $body = $art->fetchMail($recipient_user, 'html', $ignore_perms);
+            $body = $art->fetchMail($recipient_user, $format, $ignore_perms);
             $output .= $body;
             //Display of follow-up comments
         }
