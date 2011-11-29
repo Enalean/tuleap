@@ -23,9 +23,7 @@
  */
 
 require_once('common/tracker/ArtifactFile.class.php');
-require_once('common/mail/Mail.class.php');
-require_once('common/mail/Codendi_Mail.class.php');
-require_once('common/include/Tuleap_Template.class.php');
+require_once('common/mail/MailManager.class.php');
 require_once('common/include/Codendi_Diff.class.php');
 
 /**
