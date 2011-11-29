@@ -180,8 +180,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $output = '';
         switch($format) {
             case 'html':
-                $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
                 $output .= $this->fetchMailFormElements($recipient, $format, $ignore_perms);
+                $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
                 break;
             default:
                 //$output .= $this->getTracker()->item_name.' #'. $this->id;
