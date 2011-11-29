@@ -52,9 +52,14 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         if ( $ignore_perms || $this->userCanRead($recipient) ) {
             $formElements = $this->getFormElements();
             if ( !empty($formElements) ) {
-                $output .= PHP_EOL;
-                $output .= ' ===== '.$this->getLabel().' ===== ';
-                $output .= PHP_EOL;
+                if ($format == 'text') {
+                    $output .= PHP_EOL;
+                    $output .= ' ===== '.$this->getLabel().' ===== ';
+                    $output .= PHP_EOL;
+                } else {
+                    $hp = Codendi_HTMLPurifier::instance();
+                    //$output .= '<TR><TD class="left">&nbsp;<span >'. $hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
+                }
                 foreach ( $formElements as $formElement ) {
                     $r = $formElement->fetchMailArtifact($recipient, $artifact, $format, $ignore_perms);
                     if ( $r ) {

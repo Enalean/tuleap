@@ -490,6 +490,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         $output = '';
         switch ($format) {
             case 'html':
+                $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
                 $value  = $value->getTimestamp();

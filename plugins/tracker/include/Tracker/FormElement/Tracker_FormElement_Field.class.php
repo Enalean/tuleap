@@ -339,9 +339,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {       
         $output = '';        
         if ( $ignore_perms || $this->userCanRead($recipient) ) {
-            $output .= ' * ';
-            $output .= $this->getLabel();
-            $output .= ' : ';
+            if ($format =='text') {
+                $output .= ' * ';
+                $output .= $this->getLabel();
+                $output .= ' : ';
+            } else {
+                $output .= '<b>'.$this->getLabel().'</b>';;
+            }
             $value = $artifact->getLastChangeset()->getValue($this);
             $output .= $this->fetchMailArtifactValue($artifact, $value, $format);            
         }        

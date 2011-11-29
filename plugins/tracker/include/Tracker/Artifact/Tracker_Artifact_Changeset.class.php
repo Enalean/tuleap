@@ -583,34 +583,44 @@ class Tracker_Artifact_Changeset {
      * @return string
      */
     public function getBody($is_update, $recipient_user, $ignore_perms=false) {
-        $format = 'text';
-        $um = $this->getUserManager();        
-        $user = $um->getUserById($this->submitted_by);
-        
         $art = $this->getArtifact();
-        $output = '+============== '.'['.$art->getTracker()->getItemName() .' #'. $art->getId().'] '.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).' ==============+';
-        $output .= PHP_EOL;
-        $output .= PHP_EOL;
-        $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
-        $output .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $art->getId() .'>';
-        $output .= PHP_EOL;
-        $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
-        $output .= ' '.UserHelper::instance()->getDisplayNameFromUserId($this->submitted_by);
-        $output .= ' on '.util_timestamp_to_userdateformat($this->submitted_on);
-        if ( $comment = $this->getComment() ) {
-            $output .= PHP_EOL;
-            $output .= $comment->fetchFollowUp($format);
-        }
-        $output .= PHP_EOL;
-        $output .= ' -------------- ' . $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
-        $output .= PHP_EOL;
-        $output .= $this->diffToPrevious('text', $recipient_user, $ignore_perms);
-        $output .= PHP_EOL;
-        $output .= ' -------------- ' . $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_artifact') . ' ---------------- ';
-        $output .= PHP_EOL;
-        $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
-        $output .= PHP_EOL;
+        //retrieve its mail format preferences  from user preference
+        $format = $recipient_user ? $recipient_user->getPreference('user_tracker_mailformat') : false;
+        if ($format == 'text') {
+            $um = $this->getUserManager();
+            $user = $um->getUserById($this->submitted_by);
 
+            $output = '+============== '.'['.$art->getTracker()->getItemName() .' #'. $art->getId().'] '.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).' ==============+';
+            $output .= PHP_EOL;
+            $output .= PHP_EOL;
+            $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
+            $output .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $art->getId() .'>';
+            $output .= PHP_EOL;
+            $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
+            $output .= ' '.UserHelper::instance()->getDisplayNameFromUserId($this->submitted_by);
+            $output .= ' on '.util_timestamp_to_userdateformat($this->submitted_on);
+            if ( $comment = $this->getComment() ) {
+                $output .= PHP_EOL;
+                $output .= $comment->fetchFollowUp($format);
+            }
+            $output .= PHP_EOL;
+            $output .= ' -------------- ' . $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
+            $output .= PHP_EOL;
+            $output .= $this->diffToPrevious('text', $recipient_user, $ignore_perms);
+            $output .= PHP_EOL;
+            $output .= ' -------------- ' . $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_artifact') . ' ---------------- ';
+            $output .= PHP_EOL;
+            $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
+            $output .= PHP_EOL;
+        } else {
+            $output ='';
+            //Display latest changes
+
+            //Display of snapshot
+            $body = $art->fetchMail($recipient_user, 'html', $ignore_perms);
+            $output .= $body;
+            //Display of follow-up comments
+        }
         return $output;
     }
 
