@@ -229,10 +229,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     public function fetchMailFollowUp($recipient, $format, $ignore_perms=false) {
-        $output = ' ===== '.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').' ===== ';
         $uh = UserHelper::instance();
         $um = UserManager::instance();
         $cs = $this->getChangesets();
+        if (count($cs) > 0) {
+            $output = '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h2>';
+        }
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
             if ( empty($comment) ) {
@@ -242,7 +244,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             switch ($format) {
             case 'html':
             $output .= PHP_EOL;
-            $output .= $comment->fetchFollowUp($format);
+            $output .= $comment->fetchFollowUp($format, true);
             break;
             case 'text':
             $user = $um->getUserById($comment->submitted_by);
