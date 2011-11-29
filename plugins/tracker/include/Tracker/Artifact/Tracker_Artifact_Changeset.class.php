@@ -616,23 +616,26 @@ class Tracker_Artifact_Changeset {
             $output .= PHP_EOL;
         } elseif ($format == 'html') {
             $output ='';
-            // TODO : Add title and stuff
+            // TODO : Add title and stuff (put things into tables)
             // TODO : Add css to the header of the mail
             // Display latest changes (diff)
             $comment = $this->getComment()->fetchFollowUp($format);
             $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
-            if ($comment || $changes)
-            $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';
-            // Last comment
-            if ($comment) {
-                $output .= $comment;
-            }
-            // Last changes
-            if ($changes) {
-                $output .= '<hr size="1" />';
-                $output .= '<ul class="tracker_artifact_followup_changes">';
-                $output .= $changes;
-                $output .= '</ul>';
+            if ($comment || $changes) {
+                $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';
+                $output .= '<div class="tracker_artifact_followup_header">';
+                // Last comment
+                if ($comment) {
+                    $output .= $comment;
+                }
+                // Last changes
+                if ($changes) {
+                    $output .= '<hr size="1" />';
+                    $output .= '<ul class="tracker_artifact_followup_changes">';
+                    $output .= $changes;
+                    $output .= '</ul>';
+                }
+                $output .= '</div>';
             }
 
             //Display of snapshot
