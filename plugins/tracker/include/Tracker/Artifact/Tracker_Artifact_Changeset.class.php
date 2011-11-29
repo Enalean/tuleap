@@ -615,7 +615,7 @@ class Tracker_Artifact_Changeset {
             $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
             $output .= PHP_EOL;
         } elseif ($format == 'html') {
-            $output ='<h1>'.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).'<h2>';
+            $output ='<h1>'.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).'</h1>';
             // TODO : Add title and stuff (put things into tables)
             // TODO : Add css to the header of the mail
             // Display latest changes (diff)
