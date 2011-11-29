@@ -383,7 +383,7 @@ class Tracker_Artifact_Changeset {
                             } else {
                                 //Case : field added later (ie : artifact already exists) => no value
                                 if ($diff = $current_changeset_value->nodiff()) {
-                                    $result .= $this->displayDiff($diff, $format, $field);
+                                    $result .= $this->displayDiff($diff, $format, $field).PHP_EOL;
                                 }
                             }
                         }
@@ -405,10 +405,10 @@ class Tracker_Artifact_Changeset {
         $result = false;
         switch($format) {
             case 'html':
-                $result .= '<li>';
-                $result .= '<span class="tracker_artifact_followup_changes_field">'. $field->getLabel() .'</span> ';
-                $result .= '<span class="tracker_artifact_followup_changes_changes">'. $diff .'</span>';
-                $result .= '</li>';
+                $result .= '<li>'.PHP_EOL;
+                $result .= '<span class="tracker_artifact_followup_changes_field">'. $field->getLabel() .'</span> '.PHP_EOL;
+                $result .= '<span class="tracker_artifact_followup_changes_changes">'. $diff .'</span>'.PHP_EOL;
+                $result .= '</li>'.PHP_EOL;
             break;
             default://text
                 $result .= ' * '.$field->getLabel().' : '.PHP_EOL;
@@ -626,7 +626,7 @@ class Tracker_Artifact_Changeset {
                 $output .= '<div class="tracker_artifact_followup_header">';
                 // Last comment
                 if ($comment) {
-                    $output .= $comment;
+                    $output .= $comment.PHP_EOL;
                 }
                 // Last changes
                 if ($changes) {
