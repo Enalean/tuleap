@@ -519,6 +519,7 @@ class Tracker_Artifact_Changeset {
      */
     protected function sendNotification($recipients, $headers, $subject, $body) {
         $mail = new Mail();
+        // TODO : add breadcrumbs
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->addAdditionalHeader("X-Codendi-Project",     $this->getArtifact()->getTracker()->getProject()->getUnixName());
         $mail->addAdditionalHeader("X-Codendi-Tracker",     $this->getArtifact()->getTracker()->getItemName());
@@ -614,7 +615,7 @@ class Tracker_Artifact_Changeset {
             $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
             $output .= PHP_EOL;
         } elseif ($format == 'html') {
-            $output ='';
+            $output ='<h1>'.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).'<h2>';
             // TODO : Add title and stuff (put things into tables)
             // TODO : Add css to the header of the mail
             // Display latest changes (diff)
@@ -634,7 +635,7 @@ class Tracker_Artifact_Changeset {
                     $output .= $changes;
                     $output .= '</ul>';
                 }
-                $output .= '</div>';
+                $output .= '</div>'.PHP_EOL;
             }
 
             //Display of snapshot
