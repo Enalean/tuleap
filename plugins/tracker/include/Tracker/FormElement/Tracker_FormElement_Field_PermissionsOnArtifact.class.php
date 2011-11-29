@@ -238,8 +238,12 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $output = '';
         switch($format) {
             case 'html':
+                $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
+                $ugroups  = permission_fetch_selected_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId());
+                $output .= "\n".implode(', ',$ugroups);
+                $output .= '<br>';
                 break;
-            default:                               
+            default:
                 $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
                 $ugroups  = permission_fetch_selected_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId());
                 $output .= "\n".implode(', ',$ugroups);

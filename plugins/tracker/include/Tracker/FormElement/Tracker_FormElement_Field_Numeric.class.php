@@ -220,6 +220,8 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         $output = '';
         switch($format) {
             case 'html':
+                $output = $this->fetchArtifactValueReadOnly($artifact, $value);
+                $output .= '<br>';
                 break;
             default:
                 $value  = $value->getNumeric();

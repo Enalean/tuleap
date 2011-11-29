@@ -271,6 +271,8 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         $output = '';
         switch ($format) {
             case 'html':
+                $output = $this->fetchArtifactValueReadOnly($artifact, $value);
+                $output .= '<br>';
                 break;
             default:
                 $crf  = new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());

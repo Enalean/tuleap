@@ -114,6 +114,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
         $output = '';
         switch ($format) {
             case 'html':
+                $output .= $this->fetchArtifactValueReadOnly($artifact, $value);
+                $output .= '<br>';
                 break;
             default:
                 $output .= '#'.$artifact->id;

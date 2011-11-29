@@ -638,9 +638,14 @@ class Tracker_Artifact_Changeset {
             }
 
             //Display of snapshot
-            $body = $art->fetchMail($recipient_user, $format, $ignore_perms);
-            $output .= $body;
-            //Display of follow-up comments
+            $snapshot = $art->fetchMail($recipient_user, $format, $ignore_perms);
+            if ($snapshot) {
+                $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>';
+                $output .= '<div><hr size="1" />';
+                $output .= '<ul class="tracker_artifact_snapshot">';
+                $output .= $snapshot;
+                $output .= '</ul></div>';
+            }
         }
         return $output;
     }

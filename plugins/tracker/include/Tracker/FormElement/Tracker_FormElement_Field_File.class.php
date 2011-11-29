@@ -176,7 +176,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     }
         
     /**
-     * Fetch the html code to display the field value in artifact
+     * Fetch the html code to display the field value in Mail
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
@@ -191,6 +191,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         $output = '';
         switch($format) {
             case 'html':
+                $output = $this->fetchArtifactValueReadOnly($artifact, $value);
+                $output .= '<br>';
                 break;
             default:
                 $output = PHP_EOL;

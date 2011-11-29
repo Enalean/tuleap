@@ -193,14 +193,36 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $output;
     }
-    
-    public function fetchMailFormElements($recipient, $format='text', $ignore_perms=false) {
+
+    /**
+     * Returns the artifact field for mail rendering
+     * 
+     * @param String $format
+     * 
+     * @return String
+     */
+    public function fetchMailFormElements($recipient, $format, $ignore_perms=false) {
         $text = '';
-        foreach( $this->getTracker()->getFormElements() as $formElement ) {            
-            $output = $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
-            if ( $output ) {
-                $text .= $output;
-                $text .= PHP_EOL;
+        if ($format == 'text') {
+            foreach( $this->getTracker()->getFormElements() as $formElement ) {
+                $output = $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
+                if ( $output ) {
+                    $text .= $output;
+                    $text .= PHP_EOL;
+                }
+            }
+        } else {
+            $i = 0;
+            $fieldsPerLine = 2;
+            foreach($this->getTracker()->getFormElements() as $formElement) {
+                $output = ($i % $fieldsPerLine ? '':"\n<tr>");
+                $output .= $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
+                $i++;
+                $output .= ($i % $fieldsPerLine) ? '':"\n</tr>";
+
+                if ($output) {
+                    $text .= $output;
+                }
             }
         }
         return $text;

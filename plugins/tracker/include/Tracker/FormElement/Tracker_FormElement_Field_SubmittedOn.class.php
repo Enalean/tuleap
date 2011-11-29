@@ -287,6 +287,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         switch ($format) {
             case 'html':
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
+                $output .= '<br>';
                 break;
             default:
                 $value  = $value->getTimestamp();

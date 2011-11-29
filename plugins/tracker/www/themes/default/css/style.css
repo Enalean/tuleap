@@ -827,6 +827,12 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 .tracker-admin-palette-content label {
     font-weight: bold;
 }
+.tracker_artifact_snapshot {
+    font-size:0.8em;
+    opacity:0.7;
+    margin:20px auto;
+}
+
 /* }}} */
 
 
