@@ -180,11 +180,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $output = '';
         switch($format) {
             case 'html':
-                $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>';
-                $output .= '<table><hr size="1" />';
-                $output .= $this->fetchMailFormElements($recipient, $format, $ignore_perms);
-                $output .= '</table>';
-                $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
+                $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>'.PHP_EOL;
+                $output .= '<table><hr size="1" />'.PHP_EOL;
+                $output .= $this->fetchMailFormElements($recipient, $format, $ignore_perms).PHP_EOL;
+                $output .= '</table>'.PHP_EOL;
+                $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms).PHP_EOL;
                 break;
             default:
                 //$output .= $this->getTracker()->item_name.' #'. $this->id;
@@ -236,35 +236,39 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $um = UserManager::instance();
         $cs = $this->getChangesets();
         if (count($cs) > 0) {
-            $output = '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h2>';
+            $output = '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h2>'.PHP_EOL;
         }
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
             $changes = $changeset->diffToPrevious($format, $recipient, $ignore_perms);
             if (empty($comment)) {
-            continue;
+                continue;
             }
             switch ($format) {
-            case 'html':
-            $output .= $comment->fetchFollowUp($format, true);
-            $output .= PHP_EOL;
-            break;
-            case 'text':
-            $user = $um->getUserById($comment->submitted_by);
-            $output .= PHP_EOL;
-            $output .= '----------------------------- ';
-            $output .= PHP_EOL;
-            $output .= $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_date') . util_timestamp_to_userdateformat($comment->submitted_on);
-            $output .= "\t" . $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_by') . $uh->getDisplayNameFromUser($user);
-            $output .= PHP_EOL;
-            $output .= $comment->body;
-            $output .= PHP_EOL;
-            $output .= PHP_EOL;
-            break;
-            default:
-            $output .= '<!-- TODO -->';
-            break;
+                case 'html':
+                    $followup = $comment->fetchFollowUp($format, true);
+                    if (!empty($followup)) {
+                        $output .= '<div class="tracker_artifact_followup_header">'.PHP_EOL;
+                        $output .= $followup.PHP_EOL;
+                        $output .= '</div>'.PHP_EOL;
                     }
+                    break;
+                case 'text':
+                    $user = $um->getUserById($comment->submitted_by);
+                    $output .= PHP_EOL;
+                    $output .= '----------------------------- ';
+                    $output .= PHP_EOL;
+                    $output .= $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_date') . util_timestamp_to_userdateformat($comment->submitted_on);
+                    $output .= "\t" . $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_by') . $uh->getDisplayNameFromUser($user);
+                    $output .= PHP_EOL;
+                    $output .= $comment->body;
+                    $output .= PHP_EOL;
+                    $output .= PHP_EOL;
+                    break;
+                default:
+                    $output .= '<!-- TODO -->';
+                    break;
+            }
         }
         return $output;
     }
