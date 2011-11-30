@@ -619,7 +619,7 @@ class Tracker_Artifact_Changeset {
             $output ='<h1>'.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).'</h1>'.PHP_EOL;
             // Display latest changes (diff)
             if ($comment = $this->getComment()) {
-                $comment = $comment->fetchFollowUp($format, true);
+                $comment = $comment->fetchFollowUp($format, true, true);
             }
             $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
             if ($comment || $changes) {
