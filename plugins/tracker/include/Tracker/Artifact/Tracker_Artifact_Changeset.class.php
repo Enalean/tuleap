@@ -484,7 +484,8 @@ class Tracker_Artifact_Changeset {
                     $m['recipients'],
                     $m['headers'],
                     $m['subject'],
-                    $m['body']
+                    $m['htmlBody'],
+                    $m['txtBody']
                 );
             }
         }
@@ -493,7 +494,10 @@ class Tracker_Artifact_Changeset {
     protected function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
         $recipient = $user->getEmail();
         // TODO : get the mail format from user preferences $user->getPreference('user_tracker_mailformat')
-        $body      = $this->getBody($is_update, $user, $ignore_perms, 'html');
+        //We send multipart mail: html & text body
+        $htmlBody     = $this->getBody($is_update, $user, $ignore_perms, 'html');
+        $txtBody      = $this->getBody($is_update, $user, $ignore_perms, 'text');
+
         $subject   = $this->getSubject($user, $ignore_perms);
         $headers   = array(); // TODO
         $hash = md5($body . serialize($headers) . serialize($subject));
@@ -502,7 +506,8 @@ class Tracker_Artifact_Changeset {
         } else {
             $messages[$hash] = array(
                     'headers'    => $headers,
-                    'body'       => $body,
+                    'htmlBody'   => $htmlBody,
+                    'txtBody'    => $txtBody,
                     'subject'    => $subject,
                     'recipients' => array($recipient),
             );
@@ -518,7 +523,7 @@ class Tracker_Artifact_Changeset {
      *
      * @return void
      */
-    protected function sendNotification($recipients, $headers, $subject, $body) {
+    protected function sendNotification($recipients, $headers, $subject, $htmlBody, $txtBody) {
         $mail = new Codendi_Mail();
         $hp = Codendi_HTMLPurifier::instance();
         $breadcrumbs = array();
@@ -541,7 +546,8 @@ class Tracker_Artifact_Changeset {
         }
         $mail->setTo(implode(', ', $recipients));
         $mail->setSubject($subject);
-        $mail->setBodyHTML($body);
+        $mail->setBodyHTML($htmlBody);
+        $mail->setBodyText($txtBody);
         $mail->send();
     }
 
