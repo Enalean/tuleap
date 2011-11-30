@@ -520,7 +520,18 @@ class Tracker_Artifact_Changeset {
      */
     protected function sendNotification($recipients, $headers, $subject, $body) {
         $mail = new Codendi_Mail();
-        // TODO : add breadcrumbs
+        $hp = Codendi_HTMLPurifier::instance();
+        $breadcrumbs = array();
+        $groupId = $this->getTracker()->getGroupId();
+        $project = $this->getTracker()->getProject();
+        $trackerId = $this->getTracker()->getID();
+        $artifactId = $this->getArtifact()->getID();
+
+        $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project->getUnixName(true) .'" />'. $project->getPublicName() .'</a>';
+        $breadcrumbs[] = '<a href="'. get_server_url() .'/tracker/?tracker='. (int)$trackerId .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->getTracker()->getName())) .'</a>';
+        $breadcrumbs[] = '<a href="'. get_server_url().'/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($this->getTracker()->getName().' #'.$artifactId) .'</a>';
+
+        $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->addAdditionalHeader("X-Codendi-Project",     $this->getArtifact()->getTracker()->getProject()->getUnixName());
         $mail->addAdditionalHeader("X-Codendi-Tracker",     $this->getArtifact()->getTracker()->getItemName());
