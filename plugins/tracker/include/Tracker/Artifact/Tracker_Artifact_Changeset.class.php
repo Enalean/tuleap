@@ -484,7 +484,8 @@ class Tracker_Artifact_Changeset {
                     $m['recipients'],
                     $m['headers'],
                     $m['subject'],
-                    $m['body']
+                    $m['body'],
+                    $m['format']
                 );
             }
         }
@@ -492,8 +493,11 @@ class Tracker_Artifact_Changeset {
 
     protected function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
         $recipient = $user->getEmail();
-        // TODO : get the mail format from user preferences $user->getPreference('user_tracker_mailformat')
-        $body      = $this->getBody($is_update, $user, $ignore_perms, 'html');
+        $format = $user->getPreference('user_tracker_mailformat');
+        if ($format != 'text') {
+            $format = 'html';
+        }
+        $body      = $this->getBody($is_update, $user, $ignore_perms, $format);
         $subject   = $this->getSubject($user, $ignore_perms);
         $headers   = array(); // TODO
         $hash = md5($body . serialize($headers) . serialize($subject));
@@ -505,6 +509,7 @@ class Tracker_Artifact_Changeset {
                     'body'       => $body,
                     'subject'    => $subject,
                     'recipients' => array($recipient),
+                    'format'     => $format
             );
         }
     }
@@ -513,14 +518,19 @@ class Tracker_Artifact_Changeset {
      *
      * @param array  $recipients the list of recipients
      * @param array  $headers    the additional headers
-     * @param string $subject       the content of the message
+     * @param string $subject    the content of the message
      * @param string $body       the content of the message
+     * @param String $format     Format of the mail 'text' or 'html'
      *
      * @return void
      */
-    protected function sendNotification($recipients, $headers, $subject, $body) {
-        $mail = new Codendi_Mail();
-        // TODO : add breadcrumbs
+    protected function sendNotification($recipients, $headers, $subject, $body, $format = 'html') {
+        if ($format == 'text') {
+        $mail = new Mail();
+        } else {
+            $mail = new Codendi_Mail();
+            // TODO : add breadcrumbs
+        }
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->addAdditionalHeader("X-Codendi-Project",     $this->getArtifact()->getTracker()->getProject()->getUnixName());
         $mail->addAdditionalHeader("X-Codendi-Tracker",     $this->getArtifact()->getTracker()->getItemName());
@@ -530,7 +540,7 @@ class Tracker_Artifact_Changeset {
         }
         $mail->setTo(implode(', ', $recipients));
         $mail->setSubject($subject);
-        $mail->setBodyHTML($body);
+        $mail->setBody($body);
         $mail->send();
     }
 
@@ -615,10 +625,8 @@ class Tracker_Artifact_Changeset {
             $output .= PHP_EOL;
             $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
             $output .= PHP_EOL;
-        } elseif ($format == 'html') {
+        } else {
             $output ='<h1>'.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).'</h1>'.PHP_EOL;
-            // TODO : Add title and stuff (put things into tables)
-            // TODO : Add css to the header of the mail
             // Display latest changes (diff)
             $comment = $this->getComment()->fetchFollowUp($format, true);
             $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
