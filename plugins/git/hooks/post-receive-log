@@ -40,7 +40,7 @@ logGitPushes()
 
 	nbcommits=$(git rev-list $revspec | wc -l)
 
-	su -l codendiadm -c "/usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/git/hooks/gitLog.php --group_name=$tuleap_group_name --login=$tuleap_login --type=$revtype --repo_name=$tuleap_repo_name --commits_number=$nbcommits >/dev/null"
+	perl -w /usr/lib/codendi/bin/git-log.pl $tuleap_group_name $tuleap_login $revtype $tuleap_repo_name $nbcommits
 
 }
 
