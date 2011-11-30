@@ -34,4 +34,4 @@ while (<PHP_LAUNCHER>) {
 }
 close(PHP_LAUNCHER);
 
-exec "/usr/bin/php $PHP_PARAMS /usr/share/codendi/plugins/git/hooks/git_log.php --group_name=$ARGV[0] --login=$ARGV[1] --type=$ARGV[2] --repo_name=$ARGV[3] --commits_number=$ARGV[4]";
+exec "/usr/bin/php $PHP_PARAMS /usr/share/codendi/plugins/git/hooks/git-log.php --group_name=$ARGV[0] --login=$ARGV[1] --type=$ARGV[2] --repo_name=$ARGV[3] --commits_number=$ARGV[4]";
