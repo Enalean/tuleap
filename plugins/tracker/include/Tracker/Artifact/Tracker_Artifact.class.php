@@ -246,10 +246,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
             switch ($format) {
             case 'html':
-            $output .= '<div class="tracker_artifact_followup_header">';
-            $output .= PHP_EOL;
             $output .= $comment->fetchFollowUp($format, true);
-            $output .= '</div>'.PHP_EOL;
+            $output .= PHP_EOL;
             break;
             case 'text':
             $user = $um->getUserById($comment->submitted_by);
