@@ -618,7 +618,9 @@ class Tracker_Artifact_Changeset {
         } else {
             $output ='<h1>'.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).'</h1>'.PHP_EOL;
             // Display latest changes (diff)
-            $comment = $this->getComment()->fetchFollowUp($format, true);
+            if ($comment = $this->getComment()) {
+                $comment = $comment->fetchFollowUp($format, true);
+            }
             $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
             if ($comment || $changes) {
                 $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';
