@@ -829,6 +829,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     }
                 } else {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'no_changes', array($this->getId())));
+                    $is_valid = false;
                 }
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'fields_not_valid'));
