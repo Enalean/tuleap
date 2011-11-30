@@ -114,7 +114,7 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
         $output = '';
         switch ($format) {
             case 'html':
-                $output .= $this->fetchArtifactValueReadOnly($artifact, $value);
+                $output .= '<a href= "http://'. $GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">#'. (int)$artifact->id .'</a>';
                 $output .= '<br>';
                 break;
             default:

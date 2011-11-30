@@ -47,7 +47,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return Tracker_FormElementFactory::instance()->getAllFormElementsByParentId($this->id);
     }
 
-    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {        
+    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
         $output = '';
         if ( $ignore_perms || $this->userCanRead($recipient) ) {
             $formElements = $this->getFormElements();
@@ -57,10 +57,18 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
                     $output .= ' ===== '.$this->getLabel().' ===== ';
                     $output .= PHP_EOL;
                 } else {
-                    $hp = Codendi_HTMLPurifier::instance();
-                    $output .= '<TR style="color: #444444; background-color: #F6F6F6;"><TD colspan="2">&nbsp;<span >'. $hp->purify(SimpleSanitizer::unsanitize($this->getLabel()), CODENDI_PURIFIER_CONVERT_HTML) .'</span></TD></TR>';
+                    if ($this->fetchArtifactPrefix() != '<div >') {
+                        $output .= '<tr style="color: #444444; background-color: #F6F6F6;"><td colspan="2">&nbsp;<span >';
+                        $output .= $this->fetchArtifactPrefix();
+                        $output .= $this->fetchArtifactSuffix();
+                        $output .='</span></td></tr>';
+                    } else {
+                        $output .='<tr><td>&nbsp;</td></tr>';
+                        
+                    }
                 }
-                foreach ( $formElements as $formElement ) {
+
+                foreach($formElements as $formElement) {
                     $r = $formElement->fetchMailArtifact($recipient, $artifact, $format, $ignore_perms);
                     if ( $r ) {
                         $output .= $r;
