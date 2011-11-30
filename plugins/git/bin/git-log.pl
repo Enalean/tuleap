@@ -1,4 +1,4 @@
-#!/usr/bin/perl -UT
+#!/usr/bin/perl
 
 # Copyright (c) Enalean, 2011. All Rights Reserved.
 #
