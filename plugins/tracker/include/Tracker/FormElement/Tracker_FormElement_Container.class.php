@@ -64,7 +64,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
                         $output .='</span></td></tr>';
                     } else {
                         $output .='<tr><td>&nbsp;</td></tr>';
-                        
                     }
                 }
 
