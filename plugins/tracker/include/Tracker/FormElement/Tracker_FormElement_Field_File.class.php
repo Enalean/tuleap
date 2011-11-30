@@ -396,36 +396,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 );
                 $sanitized_description = $hp->purify($fileinfo->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
                 $link_show = '<a href="'.$url.TRACKER_BASE_URL.'/?'. $query_link .'"
-                                 '. ($fileinfo->isImage() ? 'rel="lytebox['. $this->getId() .']" ' : '') .'
-                                 '. ($fileinfo->isImage() ? 'style="cursor:-moz-zoom-in;" '        : '') .'
                                  title="'. $sanitized_description .'">';
 
                 $info = $link_show . $hp->purify($fileinfo->getFilename(), CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
                 $info .= ' ('. $fileinfo->getHumanReadableFilesize() .')';
-                if ($submitter_needed) {
-                    $info .= '<div class="tracker_artifact_attachment_submitter">'. 'By '. $uh->getLinkOnUserFromUserId($fileinfo->getSubmittedBy()) .'</div>';
-                }
 
                 $add = '<div class="tracker_artifact_attachment">';
                 $add .= '<table><tr><td>';
-                if ($fileinfo->isImage()) {
-                    $query_add = http_build_query(
-                    array(
-                            'aid'   => $artifact_id,
-                            'field' => $this->id,
-                            'func'  => 'preview-attachment',
-                            'attachment' => $fileinfo->getId()
-                    )
-                    );
-                    $add .= $link_show;
-                    $add .= '<span class="tracker_artifact_preview_attachment">';
-                    $add .= '<img src="'.TRACKER_BASE_URL.'/?'. $query_add .'"
-                                  alt="'. $sanitized_description .'" 
-                                  style="vertical-align:middle;" />';
-                    $add .= '</span> ';
-                    $add .= '</a>';
-                    $add .= '</td><td>';
-                }
                 $add .= $info;
                 $add .= '</td></tr></table>';
                 $add .= '</div>';
