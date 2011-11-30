@@ -1082,7 +1082,8 @@ class Tracker_ArtifactTest extends UnitTestCase {
     
     function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
         $this->language->setReturnValue('getText', 'no changes', array('plugin_tracker_artifact', 'no_changes', '*'));
-        $this->response->expectOnce('addFeedback', array('info', 'no changes'));
+        define('TRACKER_BASE_URL', '/plugins/tracker');
+        $this->response->expectOnce('addFeedback', array('info', 'no changes', CODENDI_PURIFIER_LIGHT));
         
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
         $comment_dao->expectNever('createNewVersion');
