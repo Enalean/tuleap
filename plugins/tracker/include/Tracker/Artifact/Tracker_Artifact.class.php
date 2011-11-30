@@ -828,7 +828,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $is_valid = false; //TODO To be removed
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'no_changes', array($this->getId())));
+                    $art_link = '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->getId() . '">' . $this->getTracker()->getItemName() . ' #' . $this->getId() . '</a>';
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'no_changes', array($art_link)), CODENDI_PURIFIER_LIGHT);
                     $is_valid = false;
                 }
             } else {
