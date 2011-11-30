@@ -957,11 +957,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function hasChanges($previous_changesetvalue, $new_value) {
         if (!is_array($new_value)) {
-            if (empty($new_value) || $new_value == 100) {
-                $new_value = array(100);
-            } else {
-                $new_value = array($new_value);
-            }
+            $new_value = array($new_value);
+        }
+        if (empty($new_value)) {
+            $new_value = array(100);
         }
         if ($previous_changesetvalue) {
             $old_value = $previous_changesetvalue->getValue();
