@@ -641,10 +641,7 @@ class Tracker_Artifact_Changeset {
             //Display of snapshot
             $snapshot = $art->fetchMail($recipient_user, $format, $ignore_perms);
             if ($snapshot) {
-                $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>';
-                $output .= '<table><hr size="1" />';
                 $output .= $snapshot;
-                $output .= '</table>';
             }
         }
         return $output;
