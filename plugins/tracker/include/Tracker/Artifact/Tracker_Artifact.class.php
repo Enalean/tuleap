@@ -241,23 +241,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
             $changes = $changeset->diffToPrevious($format, $recipient, $ignore_perms);
-            if (empty($comment) && empty($changes)) {
-            //skip empty changeset if any !!
+            if (empty($comment)) {
             continue;
             }
             switch ($format) {
             case 'html':
             $output .= '<div class="tracker_artifact_followup_header">';
-            if (!empty($comment)) {
             $output .= PHP_EOL;
             $output .= $comment->fetchFollowUp($format, true);
-            }
-            if (!empty($changes) ) {
-            $output .= '<hr size="1" />';
-            $output .= '<ul class="tracker_artifact_followup_changes">';
-            $output .= $changes;
-            $output .= '</ul>';
-            }
             $output .= '</div>'.PHP_EOL;
             break;
             case 'text':
