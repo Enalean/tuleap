@@ -25,6 +25,7 @@ require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class
 require_once(dirname(__FILE__).'/../Tracker_NotificationsManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/include/Config.class.php');
+require_once('common/mail/MailManager.class.php');
 
 class Tracker_Artifact_Changeset {
     public $id;
@@ -492,7 +493,7 @@ class Tracker_Artifact_Changeset {
     protected function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
         $recipient = $user->getEmail();
         // TODO : get the mail format from user preferences $user->getPreference('user_tracker_mailformat')
-        $body      = $this->getBody($is_update, $user, $ignore_perms, 'text');
+        $body      = $this->getBody($is_update, $user, $ignore_perms, 'html');
         $subject   = $this->getSubject($user, $ignore_perms);
         $headers   = array(); // TODO
         $hash = md5($body . serialize($headers) . serialize($subject));
@@ -518,7 +519,7 @@ class Tracker_Artifact_Changeset {
      * @return void
      */
     protected function sendNotification($recipients, $headers, $subject, $body) {
-        $mail = new Mail();
+        $mail = new Codendi_Mail();
         // TODO : add breadcrumbs
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->addAdditionalHeader("X-Codendi-Project",     $this->getArtifact()->getTracker()->getProject()->getUnixName());
@@ -529,7 +530,7 @@ class Tracker_Artifact_Changeset {
         }
         $mail->setTo(implode(', ', $recipients));
         $mail->setSubject($subject);
-        $mail->setBody($body);
+        $mail->setBodyHTML($body);
         $mail->send();
     }
 
