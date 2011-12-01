@@ -406,10 +406,10 @@ class Tracker_Artifact_Changeset {
         $result = false;
         switch($format) {
             case 'html':
-                $result .= '<li>'.PHP_EOL;
-                $result .= '<span class="tracker_artifact_followup_changes_field">'. $field->getLabel() .'</span> '.PHP_EOL;
-                $result .= '<span class="tracker_artifact_followup_changes_changes">'. $diff .'</span>'.PHP_EOL;
-                $result .= '</li>'.PHP_EOL;
+                $result .= '<li>';
+                $result .= '<span class="tracker_artifact_followup_changes_field">'. $field->getLabel() .'</span> ';
+                $result .= '<span class="tracker_artifact_followup_changes_changes">'. $diff .'</span>';
+                $result .= '</li>';
             break;
             default://text
                 $result .= ' * '.$field->getLabel().' : '.PHP_EOL;
