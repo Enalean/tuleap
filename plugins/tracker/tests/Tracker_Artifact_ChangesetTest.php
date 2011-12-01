@@ -17,6 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+ if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/plugins/tracker');
+}
+ 
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
 Mock::generatePartial(
     'Tracker_Artifact_Changeset', 
@@ -54,7 +59,22 @@ Mock::generate('Tracker');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
+require_once('common/language/BaseLanguage.class.php');
+Mock::generate('BaseLanguage');
+
+Mock::generate('UserHelper');
+Mock::generate('User');
+
 class Tracker_Artifact_ChangesetTest extends UnitTestCase {
+    
+    function setUp() {
+        $GLOBALS['Language'] = new MockBaseLanguage();
+    }
+    
+    function tearDrop() {
+        unset($GLOBALS['Language']);
+    }
+    
     function _testGetValue() {
         $field = new MockTracker_FormElement_Field_Date();
         $value = new MockTracker_Artifact_ChangesetValue_Date();
@@ -290,6 +310,29 @@ BODY;
         $changeset->expectNever('sendNotification');
         $changeset->notify();
     }
-
+    
+    function testChangesetShouldUseUserLanguageInGetBody() {
+        $uh = new MockUserHelper();
+        
+        $tracker = new MockTracker();
+        
+        $a = new MockTracker_Artifact();
+        $a->setReturnValue('getTracker', $tracker);
+        
+        $user = new MockUser();
+        
+        $GLOBALS['Language']->expectAtLeastOnce('getText');
+        
+        $um = new MockUserManager();
+        $um->setReturnValue('getUserById', $user);
+        
+        $changeset = TestHelper::getPartialMock('Tracker_Artifact_Changeset', array('getUserHelper', 'getUserManager', 'getArtifact'));
+        $changeset->setReturnValue('getUserHelper', $uh);
+        $changeset->setReturnValue('getUserManager', $um);
+        $changeset->setReturnValue('getArtifact', $a);
+        //$is_update, $recipient_user, $ignore_perms = false, $format = 'html')
+        $changeset->getBody(false, 'Bob', false, 'text');
+        
+    }
 }
 ?>

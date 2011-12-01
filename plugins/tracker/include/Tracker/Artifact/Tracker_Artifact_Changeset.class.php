@@ -26,6 +26,7 @@ require_once(dirname(__FILE__).'/../Tracker_NotificationsManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/include/Config.class.php');
 require_once('common/mail/MailManager.class.php');
+require_once('utils.php');
 
 class Tracker_Artifact_Changeset {
     public $id;
@@ -622,7 +623,7 @@ class Tracker_Artifact_Changeset {
             $output .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $art->getId() .'>';
             $output .= PHP_EOL;
             $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
-            $output .= ' '.UserHelper::instance()->getDisplayNameFromUserId($this->submitted_by);
+            $output .= ' '. $this->getUserHelper()->getDisplayNameFromUserId($this->submitted_by);
             $output .= ' on '.util_timestamp_to_userdateformat($this->submitted_on);
             if ( $comment = $this->getComment() ) {
                 $output .= PHP_EOL;
@@ -653,6 +654,7 @@ class Tracker_Artifact_Changeset {
                 }
                 // Last changes
                 if ($changes) {
+                    //TODO check that the following is PHP compliant (what if I made a changes without a comment? -- comment is null)
                     if (!empty($comment->body)) {
                         $output .= '<hr size="1" />';
                     }
@@ -673,6 +675,15 @@ class Tracker_Artifact_Changeset {
         return $output;
     }
 
+    /**
+     * Wrapper for UserHelper
+     *
+     * @return UserHelper
+     */
+    protected function getUserHelper() {
+        return UserHelper::instance();
+    }
+    
     /**
      * Get the subject for notification
      *
