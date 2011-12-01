@@ -493,9 +493,13 @@ class Tracker_Artifact_Changeset {
 
     protected function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
         $recipient = $user->getEmail();
-        // TODO : get the mail format from user preferences $user->getPreference('user_tracker_mailformat')
-        //We send multipart mail: html & text body
-        $htmlBody     = $this->getBody($is_update, $user, $ignore_perms, 'html');
+
+        $format = $user->getPreference('user_tracker_mailformat');
+        //We send multipart mail: html & text body in case of preferences set to html
+        $htmlBody = '';
+        if ($format == 'html') {
+            $htmlBody  .= $this->getBody($is_update, $user, $ignore_perms, 'html');
+        }
         $txtBody      = $this->getBody($is_update, $user, $ignore_perms, 'text');
 
         $subject   = $this->getSubject($user, $ignore_perms);
