@@ -447,6 +447,7 @@ class Tracker_Artifact_Changeset {
     
             // 1. Get the recipients list
             $recipients = $this->getRecipients($is_update);
+            
             // 2. Compute the body of the message + headers
             $messages = array();
             $um = $this->getUserManager();
@@ -560,7 +561,7 @@ class Tracker_Artifact_Changeset {
      *
      * @param bool $is_update It is an update, not a new artifact
      *
-     * @return array
+     * @return array of [$recipient => $checkPermissions] where $recipient is a usenrame or an email and $checkPermissions is bool.
      */
     public function getRecipients($is_update) {
         $factory = $this->getFormElementFactory();

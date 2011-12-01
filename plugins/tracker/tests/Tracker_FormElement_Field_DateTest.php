@@ -59,13 +59,20 @@ require_once('common/valid/Rule.class.php');    // unit test not really unit...
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
+require_once('common/language/BaseLanguage.class.php');
+Mock::generate('BaseLanguage');
+
+Mock::generate('Tracker_Artifact_ChangesetValue_Date');
+
 class Tracker_FormElement_Field_DateTest extends UnitTestCase {
     
     function setUp() {
         $GLOBALS['Response'] = new MockResponse();
+        $GLOBALS['Language'] = new MockBaseLanguage();
     }
     function tearDrop() {
         unset($GLOBALS['Response']);
+        unset($GLOBALS['Language']);
     }
     
     function testNoDefaultValue() {
@@ -399,6 +406,37 @@ class Tracker_FormElement_Field_DateTest extends UnitTestCase {
         $date->continueGetInstanceFromXML($xml, $mapping);
         
         $this->assertEqual($date->getDefaultValue(), '');
+    }
+    
+    function testFieldDateShouldSendEmptyMailValueWhenValueIsEmpty() {
+        $artifact = new MockTracker_Artifact();
+        $date = new Tracker_FormElement_Field_DateTestVersion();
+        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, null, null));
+    }
+    
+    function testFieldDateShouldSendAMailWithAReadableDate() {
+        $artifact = new MockTracker_Artifact();
+        
+        $date = new Tracker_FormElement_Field_DateTestVersion();
+        $date->setReturnValue('formatDate', '2011-12-01', array(1322752769));
+        
+        $value = new MockTracker_Artifact_ChangesetValue_Date();
+        $value->setReturnValue('getTimestamp', 1322752769);
+        
+        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $value, 'text'));
+        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $value, 'html'));
+    }
+    
+    function testFieldDateShouldSendEmptyMailWhenThereIsNoDateDefined() {
+        $artifact = new MockTracker_Artifact();
+        
+        $date = new Tracker_FormElement_Field_DateTestVersion();
+        
+        $value = new MockTracker_Artifact_ChangesetValue_Date();
+        $value->setReturnValue('getTimestamp', 0);
+        
+        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, $value, 'text'));
+        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, $value, 'html'));
     }
 }
 
