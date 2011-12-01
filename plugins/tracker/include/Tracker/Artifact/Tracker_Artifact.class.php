@@ -180,11 +180,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $output = '';
         switch($format) {
             case 'html':
-                $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>'.PHP_EOL;
-                $output .= '<table><hr size="1" />'.PHP_EOL;
-                $output .= $this->fetchMailFormElements($recipient, $format, $ignore_perms).PHP_EOL;
-                $output .= '</table>'.PHP_EOL;
-                $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms).PHP_EOL;
+                $content = $this->fetchMailFormElements($recipient, $format, $ignore_perms);
+                if ($content) {
+                    $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>'.PHP_EOL;
+                    $output .= '<table>';
+                    $output .= $content;
+                    $output .= '</table>';
+                }
+
+                $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
                 break;
             default:
                 //$output .= $this->getTracker()->item_name.' #'. $this->id;
