@@ -84,7 +84,7 @@ class Tracker_Artifact_Changeset_Comment {
                         if ($user && $user->isLoggedIn()) {
                             $html .= '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')</a>'.PHP_EOL;
                         } else {
-                            $html .= $Language->getText('tracker_include_artifact','anon_user').PHP_EOL;
+                            $html .= $GLOBALS['Language']->getText('tracker_include_artifact','anon_user').PHP_EOL;
                         }
                         $html .= '</span></div>'.PHP_EOL;
                         $timezone = '';
