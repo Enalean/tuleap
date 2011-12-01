@@ -230,9 +230,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $uh = UserHelper::instance();
         $um = UserManager::instance();
         $cs = $this->getChangesets();
-        if (count($cs) > 0) {
-            $output = '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h2>'.PHP_EOL;
-        }
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
             $changes = $changeset->diffToPrevious($format, $recipient, $ignore_perms);
@@ -242,6 +239,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
             switch ($format) {
                 case 'html':
+                    if(!isset($output)) {
+                    $output = '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h2>'.PHP_EOL;
+                    }
                     $followup = $comment->fetchFollowUp($format, true);
                     if (!empty($followup)) {
                         $output .= '<div class="tracker_artifact_followup_header">'.PHP_EOL;
