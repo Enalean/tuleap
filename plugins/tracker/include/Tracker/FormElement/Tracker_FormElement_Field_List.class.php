@@ -411,7 +411,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         switch($format) {
             case 'html':
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
-                $output .= '<br>';
                 break;
             default:
                 $tablo = array();

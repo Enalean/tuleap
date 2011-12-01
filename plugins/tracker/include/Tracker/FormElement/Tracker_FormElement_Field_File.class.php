@@ -409,7 +409,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 $added[] = $add;
             }
             $output .= implode('', $added);
-            $output .= '<br>';
         }
         return $output;
     }

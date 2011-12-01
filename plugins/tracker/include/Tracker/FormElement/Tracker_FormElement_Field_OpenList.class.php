@@ -193,7 +193,6 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         switch ($format) {
             case 'html':
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
-                $output .= '<br>';
                 break;
             default:
                 $selected_values = !empty($value) ? $value->getListValues() : array();

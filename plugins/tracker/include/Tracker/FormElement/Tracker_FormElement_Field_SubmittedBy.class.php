@@ -226,8 +226,7 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         
         switch($format) {
             case 'html':
-                    $output .= $this->fetchArtifactValueReadOnly($artifact);
-                    $output .= '<br>';
+                $output .= $this->fetchArtifactValueReadOnly($artifact);
                 break;
             default:
                 $output = $this->getBind()->formatMailArtifactValue($value->getId());
