@@ -643,6 +643,11 @@ class User {
         return $this->shell;
     }
     
+    /**
+     * Return the local of the user. Ex: en_US, fr_FR
+     *
+     * @return string
+     */
     function getLocale() {
         return $this->locale;
     }
