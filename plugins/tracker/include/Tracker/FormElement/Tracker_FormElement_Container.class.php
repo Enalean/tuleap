@@ -57,14 +57,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
                     $output .= ' ===== '.$this->getLabel().' ===== ';
                     $output .= PHP_EOL;
                 } else {
-                    if ($this->fetchArtifactPrefix() != '<div >') {
-                        $output .= '<tr style="color: #444444; background-color: #F6F6F6;"><td colspan="2">&nbsp;';
-                        $output .= $this->fetchArtifactPrefix();
-                        $output .= $this->fetchArtifactSuffix();
-                        $output .='</td></tr>';
-                    } else {
-                        $output .='<tr><td>&nbsp;</td></tr>';
-                    }
+                    $output .= $this->fetchMailArtifactPrefix();
                 }
 
                 foreach($formElements as $formElement) {
@@ -331,7 +324,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     protected function fetchAdminFormPermissionLink() {
         return '';
     }
-    
+
     protected abstract function fetchArtifactPrefix();
     protected abstract function fetchArtifactSuffix();
     protected abstract function fetchArtifactContent(array $content);

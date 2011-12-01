@@ -261,7 +261,16 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
             $text .= PHP_EOL;
         }
         return $text;
-    }  
+    }
+
+    /**
+     * fetch artifact prefix for the mail in html
+     *
+     * @return String
+     */
+    protected function fetchMailArtifactPrefix() {
+        return '<tr><td>&nbsp;</td></tr>';
+    }
 
     /**
      * Duplicate a field. If the field has custom properties, 
