@@ -107,11 +107,13 @@ class Tracker_Artifact_Changeset_Comment {
                         }
                         $html .= '</div>'.PHP_EOL;
                     }
-                    $html .= '<div class="tracker_artifact_followup_comment_body">'.PHP_EOL;
-                    if ($this->parent_id && !trim($this->body)) {
-                        $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>'.PHP_EOL;
-                    } else {
-                        $html .= $hp->purify($this->body, CODENDI_PURIFIER_BASIC, $this->changeset->artifact->getTracker()->group_id).PHP_EOL;
+                    if (!$forMail || !empty($this->body)) {
+                        $html .= '<div class="tracker_artifact_followup_comment_body">'.PHP_EOL;
+                        if ($this->parent_id && !trim($this->body)) {
+                            $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>'.PHP_EOL;
+                        } else {
+                            $html .= $hp->purify($this->body, CODENDI_PURIFIER_BASIC, $this->changeset->artifact->getTracker()->group_id).PHP_EOL;
+                        }
                     }
                     if ($forMail) {
                         $html .= '</div></div>'.PHP_EOL;
