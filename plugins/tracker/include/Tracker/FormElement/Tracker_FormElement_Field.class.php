@@ -347,8 +347,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
                 $output .= ' : ';
                 $output .= $this->fetchMailArtifactValue($artifact, $value, $format);
             } else {
-                $output .= '<tr><td align="left" valign="top" width="10%" nowrap="nowrap"><b>'.$this->getLabel().':</b></td>';
-                $output .= '<td valign="top" width="38%">'. $this->fetchMailArtifactValue($artifact, $value, $format).'</td></tr>';
+                $output .= '<td align="left" valign="top" width="10%" nowrap="nowrap"><b>'.$this->getLabel().':</b></td>';
+                $output .= '<td valign="top" width="38%">'. $this->fetchMailArtifactValue($artifact, $value, $format).'</td>';
             }
         }
         return $output;

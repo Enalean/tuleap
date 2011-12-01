@@ -215,17 +215,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
             }
         } else {
-            $i = 0;
-            $fieldsPerLine = 2;
             foreach($this->getTracker()->getFormElements() as $formElement) {
-                $output = ($i % $fieldsPerLine ? '':"\n<table><tr>");
-                $output .= $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
-                $i++;
-                $output .= ($i % $fieldsPerLine) ? '':"\n</tr></table>";
-
-                if ($output) {
-                    $text .= $output;
-                }
+                $text .= $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
             }
         }
         return $text;
