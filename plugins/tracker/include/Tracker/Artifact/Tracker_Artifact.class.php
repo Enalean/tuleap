@@ -237,6 +237,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $comment = $changeset->getComment();
             $changes = $changeset->diffToPrevious($format, $recipient, $ignore_perms);
             if (empty($comment)) {
+                //do not display empty comment
                 continue;
             }
             switch ($format) {
