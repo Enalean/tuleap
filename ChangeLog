@@ -8,6 +8,14 @@ Version 4.0.25 (Not released yet)
     * Docman v2.19. See separated Changelog
     * LDAP v3.9. See separated Changelog
 
+Version 4.0.24.1 (Not released yet)
+    == Bug Fix ==
+    * Fix json issue following upgrade to Prototype v1.7 and Scriptaculous v1.9
+    * Fix viewvc display issues (css where missing)
+    
+    == Plugins ==
+    * GraphOnTrackersv5 v0.5.1 See separated Changelog
+    
 Version 4.0.24 - Wednesday, November 23rd 2011
 
     == Bug Fix ==

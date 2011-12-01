@@ -248,6 +248,7 @@ require_once('Docman_View_GetMenuItemsVisitor.class.php');
 
     /**
      * Convert a php array to JSON encoding
+     * FIXME: use json_encode instead
      */
     function phpArrayToJsArray($array) {
         if (is_array($array)) {

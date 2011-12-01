@@ -104,14 +104,15 @@ class Tracker_FormElement_Field_List_BindDecorator {
      * @return string the internal structure of  the decorator as JSON
      */
     function toJSON() {
-        $json = '{';
-        $json .= "'field_id':". $this->field_id .",";
-        $json .= "'value_id':". $this->value_id .",";
-        $json .= "'r':". $this->r .",";
-        $json .= "'g':". $this->g .",";
-        $json .= "'b':". $this->b ."";
-        $json .= '}';
-        return $json;
+        return json_encode(
+            array(
+                'field_id' => $this->field_id,
+                'value_id' => $this->value_id,
+                'r'        => $this->r,
+                'g'        => $this->g,
+                'b'        => $this->b,
+            )
+        );
     }
     
     /**

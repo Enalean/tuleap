@@ -24,6 +24,15 @@ class GraphOnTrackersV5_Engine_Burndown extends GraphOnTrackersV5_Engine {
     
     public $duration;
     
+    function validData(){
+        if ((is_array($this->duration)) && ($this->duration > 0)){
+            return true;
+        }else{
+            echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackersv5_engine','no_datas',array($this->title))."</p>";                
+            return false;
+        }
+    }
+    
     /**
      * @return Chart
      */

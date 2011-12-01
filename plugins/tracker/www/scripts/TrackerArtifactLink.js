@@ -104,9 +104,9 @@ codendi.tracker.artifact.artifactLink = {
                     func: 'fetch-artifacts',
                     ids: ids
                 },
-                onSuccess: function (transport, json) {
-                    if (transport.responseText) {
-                        var json = eval('('+ transport.responseText.gsub(/\n/, '') +')');
+                onSuccess: function (transport) {
+                    if (transport.responseJSON) {
+                        var json = transport.responseJSON;
                         if (json.rows) {
                             $H(json.rows).each(function (pair) {
                                 var renderer_table = $('tracker_report_table_' + pair.key);
@@ -156,9 +156,8 @@ codendi.tracker.artifact.artifactLink = {
                     .collect(function (checkbox) {return checkbox.name.split('[')[3].split(']')[0];})
                         .join(',')
                 },
-                onSuccess: function (transport, json) {
-                    var json = eval('(' + transport.responseText + ')');
-                    json.tabs.each(function (tab) {
+                onSuccess: function (transport) {
+                    transport.responseJSON.tabs.each(function (tab) {
                         if ($('tracker_report_table_' + tab.key)) {
                             //make sure that the previous aggregates have been removed
                             $('tracker_report_table_' + tab.key).select('tr.tracker_report_table_aggregates').invoke('remove');

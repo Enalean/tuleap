@@ -221,7 +221,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         foreach($matching_values as $v) {
             $json_values[] = $v->fetchJson();
         }
-        return '['. implode(',', $json_values) .']';
+        return json_encode($json_values);
     }
     
     public function process(TrackerManager $tracker_manager, $request, $current_user) {

@@ -86,6 +86,13 @@ class Layout extends Response {
      * @var Boolean
      */
     protected $renderedThroughService = false;
+
+    /**
+     * Store custom css added on the fly
+     *
+     * @var Array of path to CSS files
+     */
+    protected $stylesheets = array();
     
     /**
      * Constuctor
@@ -1195,6 +1202,24 @@ class Layout extends Response {
         echo '
         </script>';
     }
+
+    /**
+     * Add a stylesheet to be include in headers
+     *
+     * @param String $file Path to CSS file
+     */
+    public function addStylesheet($file) {
+        $this->stylesheets[] = $file;
+    }
+
+    /**
+     * Get all stylesheets defined previously
+     *
+     * @return Array of CSS file path
+     */
+    public function getAllStyleSheets() {
+        return $this->stylesheets;
+    }
     
     function getStylesheetTheme($css) {
         if ($GLOBALS['sys_is_theme_custom']) {
@@ -1212,7 +1237,7 @@ class Layout extends Response {
         // Stylesheet external files
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
-        $css = $GLOBALS['sys_user_theme'] . getFontsizeName($GLOBALS['sys_user_font_size']) .'.css';
+        $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
         if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
@@ -1220,18 +1245,29 @@ class Layout extends Response {
                 print '<link rel="stylesheet" type="text/css" href="'.$css.'" />';
             }
         }
-        EventManager::instance()->processEvent("cssfile", null);
-        
+
+        // Display custom css
+        foreach ($this->getAllStylesheets() as $css) {
+            echo '<link rel="stylesheet" type="text/css" href="'.$css.'" />';
+        }
+
+        // Plugins css
+        $em = $this->getEventManager();
+        $em->processEvent("cssfile", null);
         
         // Inline stylesheets
         echo '
         <style type="text/css">
         ';
-        EventManager::instance()->processEvent("cssstyle", null);
+        $em->processEvent("cssstyle", null);
         echo '
         </style>';
     }
     
+    protected function getFontSizeName($p) {
+        return getFontsizeName($GLOBALS['sys_user_font_size']);
+    }
+
     /**
      * Display all the syndication feeds (rss for now) for the current page
      */
@@ -2089,6 +2125,15 @@ document.observe('dom:loaded', function() {
      */
     function setRenderedThroughService($value) {
         $this->renderedThroughService = $value;
+    }
+
+    /**
+     * Wrapper for event manager
+     *
+     * @return EventManager
+     */
+    protected function getEventManager() {
+        return EventManager::instance();
     }
 }
 ?>
