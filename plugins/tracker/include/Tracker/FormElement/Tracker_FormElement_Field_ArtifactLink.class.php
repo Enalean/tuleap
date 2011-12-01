@@ -412,15 +412,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                     }
                 }
                 if ($result) {
-                    $head = 'head:{';
-                    $rows = 'rows:{';
+                    $head = array();
+                    $rows = array();
                     foreach($result as $key => $value) {
-                        $head .= "'". $key ."':'". addslashes($value["head"]) ."',";
-                        $rows .= "'". $key ."':'". addslashes($value["rows"]) ."',";
+                        $head[$key] = $value["head"];
+                        $rows[$key] = $value["rows"];
                     }
-                    $head = substr($head, 0, -1) .'}';
-                    $rows = substr($rows, 0, -1) .'}';
-                    echo '{'. "$head,$rows" .'}';
+                    header('Content-type: application/json');
+                    echo json_encode(array('head' => $head, 'rows' => $rows));
                 }
                 exit();
                 break;
@@ -443,7 +442,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
 
                 $ids = $request->get('ids'); //2, 14, 15
                 $tracker = array();
-                $json = "{'tabs':[";
+                $json = array('tabs' => array());
                 $dao = new Tracker_ArtifactDao();
                 foreach ($dao->searchLastChangesetIds($ids, $ugroups) as $matching_ids) {
                     $tracker_id = $matching_ids['tracker_id'];
@@ -460,17 +459,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                                     $key = $this->id . '_' . $report->id . '_' . $renderer->getId();
                                     $columns          = $renderer->getTableColumns($only_one_column, $use_data_from_db);
                                     $extracted_fields = $renderer->extractFieldsFromColumns($columns);
-                                    $json .= "{'key':'$key',";
-                                    $json .= "'src':'".$renderer->fetchAggregates($matching_ids, $extracolumn, $only_one_column,$columns, $extracted_fields, $use_data_from_db, $read_only);
-                                    $json .= "'},";
+                                    $json['tabs'][] = array(
+                                        'key' => $key,
+                                        'src' => $renderer->fetchAggregates($matching_ids, $extracolumn, $only_one_column,$columns, $extracted_fields, $use_data_from_db, $read_only),
+                                    );
                                     break;
                                 }
                             }
                         }
                     }
                 }
-                $json .= "]}";
-                echo $json;
+                header('Content-type: application/json');
+                echo json_encode($json);
                 exit();
                 break;
             default:

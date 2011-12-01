@@ -4,6 +4,7 @@ require_once ('www/project/admin/permissions.php');
 require_once ('frsValidator.class.php');
 require_once ('common/include/Feedback.class.php');
 require_once ('common/frs/FRSFileFactory.class.php');
+require_once ('json.php');
 
 $vAction = new Valid_WhiteList('action',array('permissions_frs_package','permissions_frs_release','validator_frs_create','validator_frs_update','refresh_file_list'));
 if ($request->valid($vAction)) {
@@ -61,14 +62,15 @@ if ($action == 'permissions_frs_package') {
                 );
                 if ($validator->isValidForCreation($release, $group_id)) {
                     //frs valid
-                    header("X-JSON: ({valid:true})");
+                    $header = array('valid' => true);
                 } else {
                     //frs non valid
                     $errors = $validator->getErrors();
                     $feedback = new Feedback();
                     $feedback->log('error', $errors[0]);
-                    header("X-JSON: ({valid:false, msg:'" . addslashes($feedback->fetch()) . "'})");
+                    $header = array('valid' => false, 'msg' => $feedback->fetch());
                 }
+                header(json_header($header));
             }
         } else {
             if ($action == 'validator_frs_update') {
@@ -100,21 +102,22 @@ if ($action == 'permissions_frs_package') {
                     );
                     if ($validator->isValidForUpdate($release, $group_id)) {
                         //frs valid
-                        header("X-JSON: ({valid:true})");
+                        $header = array('valid' => true);
                     } else {
                         //frs non valid
                         $errors = $validator->getErrors();
                         $feedback = new Feedback();
                         $feedback->log('error', $errors[0]);
-                        header("X-JSON: ({valid:false, msg:'" . addslashes($feedback->fetch()) . "'})");
+                        $header = array('valid' => false, 'msg' => $feedback->fetch());
                     }
+                    header(json_header($header));
                 }
             } else {
                 if ($action == 'refresh_file_list') {
                     $frsff = new FRSFileFactory();
                     $file_list = $frsff->getUploadedFileNames();
                     $available_ftp_files = implode(",", $file_list);
-                    echo "{valid:true, msg:'".$available_ftp_files."'}";
+                    echo '{"valid":true, "msg":"'.$available_ftp_files.'"}';
                 }
             }
         }

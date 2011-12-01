@@ -20,6 +20,8 @@
 
 require_once('Tracker_FormElement_Interface.class.php');
 
+require_once('json.php');
+
 /**
  * Base class for all fields in trackers, from fieldsets to selectboxes
  */
@@ -305,7 +307,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
             $this->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
             echo '<h2>'. $title .'</h2>';
         } else {
-            header('X-JSON: {"dialog-title":"'. $title .'"}');
+            header(json_header(array('dialog-title' => $title)));
         }
         echo '<form name="form1" method="POST" action="'. $url .'">';
         echo $this->fetchAdminForm('docreate-formElement');
@@ -525,7 +527,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
             $this->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
             echo '<h2>'. $title .'</h2>';
         } else {
-            header('X-JSON: {"dialog-title":"'. $title .'"}');
+            header(json_header(array('dialog-title' => $title)));
         }
         echo '<form name="form1" method="POST" action="'. $url .'">';
         echo $this->fetchAdminForm('update-formElement');

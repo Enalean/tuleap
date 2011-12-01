@@ -41,9 +41,9 @@ if (user_isloggedin()) {
     if ($path = viewvc_utils_getfile("/svn/viewvc.php")) {
         $prefix_title = basename($path) .' - ';
     }
+    $GLOBALS['HTML']->addStylesheet('/viewvc-static/styles.css');
     svn_header(array(
-        'title'      => $prefix_title . $Language->getText('svn_utils','browse_tree'),
-        'stylesheet' => array('/viewvc-static/styles.css')
+        'title'      => $prefix_title . $Language->getText('svn_utils','browse_tree')
     ));
   }
 

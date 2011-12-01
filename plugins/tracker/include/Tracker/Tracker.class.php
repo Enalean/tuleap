@@ -31,6 +31,8 @@ require_once('common/widget/Widget_Static.class.php');
 require_once(dirname(__FILE__).'/../tracker_permissions.php');
 require_once('Tracker_Dispatchable_Interface.class.php');
 
+require_once('json.php');
+
 class Tracker implements Tracker_Dispatchable_Interface {
 
     public $id;
@@ -485,7 +487,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $link = (int)$request->get('link-artifact-id');
                     if ($artifact = $this->createArtifact($tracker_manager, $request, $current_user)) {
                         if ($request->isAjax()) {
-                            header("X-JSON: ({aid:".$artifact->getId()."})");
+                            header(json_header(array('aid' => $artifact->getId())));
                             exit;
                         } else if ($link) {
                             echo '<script>window.parent.codendi.tracker.artifact.artifactLink.newArtifact('. (int)$artifact->getId() .');</script>';
