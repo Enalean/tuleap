@@ -17,6 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+
+if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/plugins/tracker');
+}
+
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generatePartial(
     'Tracker_Artifact', 
@@ -1082,7 +1088,6 @@ class Tracker_ArtifactTest extends UnitTestCase {
     
     function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
         $this->language->setReturnValue('getText', 'no changes', array('plugin_tracker_artifact', 'no_changes', '*'));
-        define('TRACKER_BASE_URL', '/plugins/tracker');
         $this->response->expectOnce('addFeedback', array('info', 'no changes', CODENDI_PURIFIER_LIGHT));
         
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
