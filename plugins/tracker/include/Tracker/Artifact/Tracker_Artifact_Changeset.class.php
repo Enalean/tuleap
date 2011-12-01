@@ -500,7 +500,7 @@ class Tracker_Artifact_Changeset {
 
         $subject   = $this->getSubject($user, $ignore_perms);
         $headers   = array(); // TODO
-        $hash = md5($body . serialize($headers) . serialize($subject));
+        $hash = md5($htmlBody . $txtBody . serialize($headers) . serialize($subject));
         if (isset($messages[$hash])) {
             $messages[$hash]['recipients'][] = $recipient;
         } else {
