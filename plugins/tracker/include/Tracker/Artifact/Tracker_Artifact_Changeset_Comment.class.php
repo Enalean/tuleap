@@ -114,9 +114,10 @@ class Tracker_Artifact_Changeset_Comment {
                         } else {
                             $html .= $hp->purify($this->body, CODENDI_PURIFIER_BASIC, $this->changeset->artifact->getTracker()->group_id).PHP_EOL;
                         }
+                        $html .= '</div>'.PHP_EOL;
                     }
                     if ($forMail) {
-                        $html .= '</div></div>'.PHP_EOL;
+                        $html .= '</div>'.PHP_EOL;
                     }
                     return $html;
                     break;
