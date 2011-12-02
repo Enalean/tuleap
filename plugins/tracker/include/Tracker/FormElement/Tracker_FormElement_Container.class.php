@@ -66,6 +66,9 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
                         $output .= $r;
                         $output .= PHP_EOL;
                     }
+                } 
+                if ($format == 'html') {
+                    $output .= $this->fetchMailArtifactSuffix();
                 }
             }
         }

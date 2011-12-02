@@ -128,6 +128,25 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     protected function fetchArtifactPrefix() {
         return $this->fetchColumnPrefix();
     }
+
+    /**
+     * fetch artifact prefix for the mail in html
+     *
+     * @return String
+     */
+    protected function fetchMailArtifactPrefix() {
+        return '';
+    }
+
+    /**
+     * fetch artifact Suffix for the mail in html
+     *
+     * @return String
+     */
+    protected function fetchMailArtifactSuffix() {
+        return '</tr>';
+    }
+
     protected function fetchArtifactSuffix() {
         return $this->fetchColumnSuffix();
     }
