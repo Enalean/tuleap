@@ -46,9 +46,9 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
     protected function fetchMailArtifactPrefix() {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
-        $html .= '<tr style="color: #444444; background-color: #F6F6F6;"><td>&nbsp;';
+        $html .= '<div style="color: #444444; background-color: #F6F6F6;">';
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
-        $html .='</td></tr>';
+        $html .='</div>';
         return $html;
     }
 

@@ -269,7 +269,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      * @return String
      */
     protected function fetchMailArtifactPrefix() {
-        return '<tr>';
+        return '';
     }
 
     /**

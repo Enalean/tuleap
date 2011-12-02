@@ -347,8 +347,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
                 $output .= ' : ';
                 $output .= $this->fetchMailArtifactValue($artifact, $value, $format);
             } else {
-                $output .= '<tr><td align="left" valign="top" width="10%" nowrap="nowrap"><b>'.$this->getLabel().':</b></td>';
-                $output .= '<td valign="top" width="38%">'. $this->fetchMailArtifactValue($artifact, $value, $format).'</td></tr>';
+                $hp = Codendi_HTMLPurifier::instance();
+                $output .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'" '. ($this->takesTwoColumns() ? 'colspan="3"' : '') .'>';
+                $output .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . '</label>';
+                $output .= '<br />';
+                $output .= $this->fetchMailArtifactValue($artifact, $value, $format);
+                $output .= '</div>';
             }
         }
         return $output;
