@@ -251,7 +251,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     break;
                 case 'text':
                     $user = $um->getUserById($comment->submitted_by);
-                    $output .= PHP_EOL;
+                    $output = PHP_EOL;
                     $output .= '----------------------------- ';
                     $output .= PHP_EOL;
                     $output .= $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_date') . util_timestamp_to_userdateformat($comment->submitted_on);
