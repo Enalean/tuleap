@@ -326,7 +326,7 @@ BODY;
         $um = new MockUserManager();
         $um->setReturnValue('getUserById', $user);
         
-        $changeset = TestHelper::getPartialMock('Tracker_Artifact_Changeset', array('getUserHelper', 'getUserManager', 'getArtifact'));
+        $changeset = TestHelper::getPartialMock('Tracker_Artifact_Changeset', array('getUserHelper', 'getUserManager', 'getArtifact', 'getComment'));
         $changeset->setReturnValue('getUserHelper', $uh);
         $changeset->setReturnValue('getUserManager', $um);
         $changeset->setReturnValue('getArtifact', $a);
