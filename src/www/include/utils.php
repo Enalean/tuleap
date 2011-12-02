@@ -113,26 +113,21 @@ function util_get_user_preferences_export_datefmt() {
 }
 
 /**
-* Convert a timestamp unix into the user defined format.
-* This format is depending on the choosen language, and is defined
-* in the site-content file <language>.tab
-*
-* @global $sys_datefmt the user preference date format defined in the language file
-*
-* @param string $date the date in the unix timestamp format
-* @param boolean $day_only false: return the day AND the time, true only the date.
-* @return string the date in the user format, or null if the conversion was not possible or wrong
-*/
+ * Convert a timestamp unix into the user defined format.
+ * This format is depending on the choosen language, and is defined
+ * in the site-content file <language>.tab
+ *
+ * @global $sys_datefmt the user preference date format defined in the language file
+ *
+ * @param string $date the date in the unix timestamp format
+ * @param boolean $day_only false: return the day AND the time, true only the date.
+ *
+ * @deprecated Use DateHelper::formatForLanguage() instead
+ *
+ * @return string the date in the user format, or null if the conversion was not possible or wrong
+ */
 function util_timestamp_to_userdateformat($date, $day_only=false) {
-    
-    if($day_only) {
-        $user_date = format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $date, null);
-    }
-    else {
-        $user_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $date, null);
-    }
-
-    return $user_date;
+    return DateHelper::formatForLanguage($GLOBALS['Language'], $date, $day_only);
 }
 
 // Convert a date in sys_datefmt (Y-M-d H:i ex: 2004-Feb-03 16:13)

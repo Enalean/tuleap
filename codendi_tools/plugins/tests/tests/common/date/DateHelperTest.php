@@ -112,5 +112,25 @@ class DateHelperTest extends UnitTestCase {
             unset($GLOBALS['Language']);
         }
     }
+    
+    public function testFormatDateFormatsTheDateAccordingToLanguage() {
+        $dayOnly = true;
+        $this->assertEqual("2011-12-01", $this->formatDate($dayOnly, "Y-m-d"));
+        $this->assertEqual("2011/01/12", $this->formatDate($dayOnly, "Y/d/m"));
+    }
+    
+    public function testFormatDateCanReturnTheTimeAsWell() {
+        $dayOnly = false;
+        $this->assertEqual("2011-12-01 10:19", $this->formatDate($dayOnly, "Y-m-d h:i"));
+    }
+
+    private function formatDate($dayOnly, $format) {
+        $lang = new MockBaseLanguage();
+        $lang->setReturnValue('getText', $format);
+        $firstOfDecember20118_10_19 = 1322752769;
+        return DateHelper::formatForLanguage($lang, $firstOfDecember20118_10_19, $dayOnly);
+    }
+
+    
 }
 ?>
