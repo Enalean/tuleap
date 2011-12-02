@@ -668,7 +668,6 @@ class Tracker_Artifact_Changeset {
             //Display of snapshot
             $snapshot = $art->fetchMail($recipient_user, $format, $ignore_perms);
             if ($snapshot) {
-                $output .= '<hr size="1" />';
                 $output .= $snapshot;
             }
         }
