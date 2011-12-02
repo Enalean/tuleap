@@ -115,13 +115,13 @@ class DateHelperTest extends UnitTestCase {
     
     public function testFormatDateFormatsTheDateAccordingToLanguage() {
         $dayOnly = true;
-        $this->assertEqual("2011-12-01", $this->formatDate($dayOnly, "Y-m-d"));
-        $this->assertEqual("2011/01/12", $this->formatDate($dayOnly, "Y/d/m"));
+        $this->assertPattern('#2011-\d+\d+#', $this->formatDate($dayOnly, 'Y-m-d'));
+        $this->assertPattern('#2011/\d+/\d+#', $this->formatDate($dayOnly, "Y/d/m"));
     }
     
     public function testFormatDateCanReturnTheTimeAsWell() {
         $dayOnly = false;
-        $this->assertEqual("2011-12-01 10:19", $this->formatDate($dayOnly, "Y-m-d h:i"));
+        $this->assertPattern('#2011-\d+-\d+ \d+:\d+#', $this->formatDate($dayOnly, "Y-m-d h:i"));
     }
 
     private function formatDate($dayOnly, $format) {
