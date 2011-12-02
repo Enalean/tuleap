@@ -66,9 +66,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
                         $output .= $r;
                         $output .= PHP_EOL;
                     }
-                } 
-                if ($format == 'html') {
-                    $output .= $this->fetchMailArtifactSuffix();
                 }
             }
         }
@@ -231,6 +228,25 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         $this->has_been_displayed = true;
         return $html;
     }
+    
+    protected function fetchRecursiveMailArtifact($method, $params = array()) {
+        $html = '';
+        $content = array();
+        $recipients = array();
+        foreach($this->getFormElements() as $formElement) {
+            if ($c = call_user_func_array(array($formElement, $method), $params)) {
+                $content[] = $c;
+            }
+        }
+        $html .=$c;
+        if (count($content)) {
+            $html .= $this->fetchMailArtifactPrefix();
+            $html .= $this->fetchMailArtifactSuffix();
+        }
+        $this->has_been_displayed = true;
+        return $html;
+    }
+    
     protected $has_been_displayed = false;
     public function hasBeenDisplayed() {
         return $this->has_been_displayed;
