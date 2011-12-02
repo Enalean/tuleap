@@ -1,3 +1,12 @@
+Version 4.0.24.1 - Friday, December 2nd 2011
+    == Bug Fix ==
+    * Fix bug with viewvc output
+
+    == Plugins ==
+    * Tracker v0.8.6. See separated Changelog
+    * GraphOnTrackersv5 v0.5.1. See separated Changelog
+    * Docman v2.19. See separated Changelog
+
 Version 4.0.24 - Wednesday, November 23rd 2011
 
     == Bug Fix ==
