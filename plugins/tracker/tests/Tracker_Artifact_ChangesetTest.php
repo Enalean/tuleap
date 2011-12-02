@@ -318,7 +318,7 @@ BODY;
         $GLOBALS['Language']->expectNever('getText');
         $userLanguage->expectAtLeastOnce('getText');
         $changeset = $this->buildChangeSet($user);
-        $changeset->getBody(false, $user, $userLanguage, false, 'text');
+        $changeset->getBodyText(false, $user, $userLanguage, false);
     }
     
     function testChangesetShouldUseUserLanguageInBuildMessage() {

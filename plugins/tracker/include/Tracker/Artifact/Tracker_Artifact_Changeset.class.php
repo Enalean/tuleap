@@ -520,9 +520,9 @@ class Tracker_Artifact_Changeset {
         //We send multipart mail: html & text body in case of preferences set to html
         $htmlBody = '';
         if ($format == 'html') {
-            $htmlBody  .= $this->getBody($is_update, $user, $lang, $ignore_perms, 'html');
+            $htmlBody  .= $this->getBodyHtml($is_update, $user, $lang, $ignore_perms);
         }
-        $txtBody = $this->getBody($is_update, $user, $lang, $ignore_perms, 'text');
+        $txtBody = $this->getBodyText($is_update, $user, $lang, $ignore_perms);
 
         $subject   = $this->getSubject($user, $ignore_perms);
         $headers   = array(); // TODO
@@ -622,26 +622,6 @@ class Tracker_Artifact_Changeset {
     }
 
     /**
-     * Get the body for notification
-     *
-     * @param Boolean $is_update    It is an update, not a new artifact
-     * @param String  $recipient    The recipient who will receive the notification
-     * @param BaseLanguage $language The language of the message
-     * @param Boolean $ignore_perms ???
-     * @param String  $format       Format of the mail 'text' or 'html'
-     *
-     * @return String
-     */
-    public function getBody($is_update, $recipient_user, BaseLanguage $language, $ignore_perms = false, $format = 'html') {
-        if ($format == 'text') {
-            $output = $this->getBodyText($is_update, $recipient_user, $language, $ignore_perms, $format);
-        } else {
-            $output = $this->getBodyHtml($is_update, $recipient_user, $language, $ignore_perms, $format);
-        }
-        return $output;
-    }
-    
-    /**
      * Get the text body for notification
      *
      * @param Boolean $is_update    It is an update, not a new artifact
@@ -651,7 +631,8 @@ class Tracker_Artifact_Changeset {
      *
      * @return String
      */
-    protected function getBodyText($is_update, $recipient_user, BaseLanguage $language, $ignore_perms, $format) {
+    public function getBodyText($is_update, $recipient_user, BaseLanguage $language, $ignore_perms) {
+        $format = 'text';
         $art = $this->getArtifact();
         $um = $this->getUserManager();
         $user = $um->getUserById($this->submitted_by);
@@ -689,7 +670,8 @@ class Tracker_Artifact_Changeset {
      *
      * @return String
      */
-    protected function getBodyHtml($is_update, $recipient_user, BaseLanguage $language, $ignore_perms, $format) {
+    public function getBodyHtml($is_update, $recipient_user, BaseLanguage $language, $ignore_perms) {
+        $format = 'html';
         $art = $this->getArtifact();
         $output ='<h1>'.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).'</h1>'.PHP_EOL;
         // Display latest changes (diff)
