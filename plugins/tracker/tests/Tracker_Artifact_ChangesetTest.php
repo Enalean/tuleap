@@ -321,7 +321,10 @@ BODY;
         
         $user = new MockUser();
         
-        $GLOBALS['Language']->expectAtLeastOnce('getText');
+        $GLOBALS['Language']->expectNever('getText');
+        
+        $userLanguage = new MockBaseLanguage();
+        $userLanguage->expectAtLeastOnce('getText');
         
         $um = new MockUserManager();
         $um->setReturnValue('getUserById', $user);
@@ -330,8 +333,8 @@ BODY;
         $changeset->setReturnValue('getUserHelper', $uh);
         $changeset->setReturnValue('getUserManager', $um);
         $changeset->setReturnValue('getArtifact', $a);
-        //$is_update, $recipient_user, $ignore_perms = false, $format = 'html')
-        $changeset->getBody(false, 'Bob', false, 'text');
+
+        $changeset->getBody(false, 'Bob', $userLanguage, false, 'text');
         
     }
 }

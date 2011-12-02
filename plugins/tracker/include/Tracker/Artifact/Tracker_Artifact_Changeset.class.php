@@ -500,9 +500,9 @@ class Tracker_Artifact_Changeset {
         //We send multipart mail: html & text body in case of preferences set to html
         $htmlBody = '';
         if ($format == 'html') {
-            $htmlBody  .= $this->getBody($is_update, $user, $ignore_perms, 'html');
+            $htmlBody  .= $this->getBody($is_update, $user, $GLOBALS['Language'], $ignore_perms, 'html');
         }
-        $txtBody      = $this->getBody($is_update, $user, $ignore_perms, 'text');
+        $txtBody      = $this->getBody($is_update, $user, $GLOBALS['Language'], $ignore_perms, 'text');
 
         $subject   = $this->getSubject($user, $ignore_perms);
         $headers   = array(); // TODO
@@ -610,9 +610,9 @@ class Tracker_Artifact_Changeset {
      *
      * @return String
      */
-    public function getBody($is_update, $recipient_user, $ignore_perms = false, $format = 'html') {
+    public function getBody($is_update, $recipient_user, BaseLanguage $language, $ignore_perms = false, $format = 'html') {
         $art = $this->getArtifact();
-        if ($format == 'text') {
+		if ($format == 'text') {
             $um = $this->getUserManager();
             $user = $um->getUserById($this->submitted_by);
 
@@ -622,19 +622,19 @@ class Tracker_Artifact_Changeset {
             $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
             $output .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $art->getId() .'>';
             $output .= PHP_EOL;
-            $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
+            $output .= $language->getText('plugin_tracker_include_artifact', 'last_edited');
             $output .= ' '. $this->getUserHelper()->getDisplayNameFromUserId($this->submitted_by);
-            $output .= ' on '.util_timestamp_to_userdateformat($this->submitted_on);
+            $output .= ' on '.DateHelper::formatForLanguage($language, $this->submitted_on);
             if ( $comment = $this->getComment() ) {
                 $output .= PHP_EOL;
                 $output .= $comment->fetchFollowUp($format);
             }
             $output .= PHP_EOL;
-            $output .= ' -------------- ' . $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
+            $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
             $output .= PHP_EOL;
             $output .= $this->diffToPrevious($format, $recipient_user, $ignore_perms);
             $output .= PHP_EOL;
-            $output .= ' -------------- ' . $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_artifact') . ' ---------------- ';
+            $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_artifact') . ' ---------------- ';
             $output .= PHP_EOL;
             $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
             $output .= PHP_EOL;
@@ -646,7 +646,7 @@ class Tracker_Artifact_Changeset {
             }
             $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
             if ($followup || $changes) {
-                $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';
+                $output .= '<h2>'.$language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';
                 $output .= '<div class="tracker_artifact_followup_header">';
                 // Last comment
                 if ($followup) {
