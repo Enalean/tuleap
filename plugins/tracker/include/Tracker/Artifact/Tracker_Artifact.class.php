@@ -230,6 +230,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $uh = UserHelper::instance();
         $um = UserManager::instance();
         $cs = $this->getChangesets();
+        $output = '';
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
             $changes = $changeset->diffToPrevious($format, $recipient, $ignore_perms);
