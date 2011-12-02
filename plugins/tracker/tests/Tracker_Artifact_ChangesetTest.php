@@ -64,6 +64,7 @@ Mock::generate('BaseLanguage');
 
 Mock::generate('UserHelper');
 Mock::generate('User');
+Mock::generate('BaseLanguageFactory');
 
 class Tracker_Artifact_ChangesetTest extends UnitTestCase {
     
@@ -312,6 +313,34 @@ BODY;
     }
     
     function testChangesetShouldUseUserLanguageInGetBody() {
+        $user = new MockUser();
+        $userLanguage = new MockBaseLanguage();
+        $GLOBALS['Language']->expectNever('getText');
+        $userLanguage->expectAtLeastOnce('getText');
+        $changeset = $this->buildChangeSet($user);
+        $changeset->getBody(false, $user, $userLanguage, false, 'text');
+    }
+    
+    function testChangesetShouldUseUserLanguageInBuildMessage() {
+        $user = new MockUser();
+        $user->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
+        $user->setReturnValue('getLocale', 'fr_FR');
+        
+        $userLanguage = new MockBaseLanguage();
+        
+        $GLOBALS['Language']->expectNever('getText');
+        $userLanguage->expectAtLeastOnce('getText');
+        
+        $changeset = $this->buildChangeSet($user);
+        
+        $changeset->getLanguageFactory()->setReturnValue('getBaseLanguage', $userLanguage, array('fr_FR'));
+        $changeset->getLanguageFactory()->expectOnce('getBaseLanguage', array('fr_FR'));
+        
+        $messages = array();
+        $changeset->buildMessage($messages, true, $user, false);
+    }
+    
+    private function buildChangeSet($user) {
         $uh = new MockUserHelper();
         
         $tracker = new MockTracker();
@@ -319,23 +348,17 @@ BODY;
         $a = new MockTracker_Artifact();
         $a->setReturnValue('getTracker', $tracker);
         
-        $user = new MockUser();
-        
-        $GLOBALS['Language']->expectNever('getText');
-        
-        $userLanguage = new MockBaseLanguage();
-        $userLanguage->expectAtLeastOnce('getText');
-        
         $um = new MockUserManager();
         $um->setReturnValue('getUserById', $user);
         
-        $changeset = TestHelper::getPartialMock('Tracker_Artifact_Changeset', array('getUserHelper', 'getUserManager', 'getArtifact', 'getComment'));
+        $languageFactory = new MockBaseLanguageFactory();
+        
+        $changeset = TestHelper::getPartialMock('Tracker_Artifact_Changeset', array('getUserHelper', 'getUserManager', 'getArtifact', 'getComment', 'getLanguageFactory'));
         $changeset->setReturnValue('getUserHelper', $uh);
         $changeset->setReturnValue('getUserManager', $um);
         $changeset->setReturnValue('getArtifact', $a);
-
-        $changeset->getBody(false, 'Bob', $userLanguage, false, 'text');
-        
+        $changeset->setReturnValue('getLanguageFactory', $languageFactory);
+        return $changeset;
     }
 }
 ?>

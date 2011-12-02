@@ -70,9 +70,25 @@ class BaseLanguageFactory {
             $locale = $this->default_language;
         }
         if (!isset($this->languages[$locale])) {
-            $this->cacheBaseLanguage(new BaseLanguage($this->supported_languages, $locale));
+            $this->cacheBaseLanguage($this->createBaseLanguage($locale));
         }
         return $this->languages[$locale];
+    }
+    
+    /**
+     * Instantiate and load a new BaseLanguage
+     *
+     * @param string $supported_languages The supported languages eg: 'en_US,fr_FR'
+     * @param string $locale              The current locale
+     *
+     * @return BaseLanguage
+     */
+    protected function createBaseLanguage($locale) {
+        $currentlocale = setlocale(LC_ALL, '0');
+        $language = new BaseLanguage($this->supported_languages, $locale);
+        $language->loadLanguage($locale);
+        setlocale(LC_ALL, $currentlocale);
+        return $language;
     }
 }
 

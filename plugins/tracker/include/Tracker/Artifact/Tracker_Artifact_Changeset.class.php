@@ -26,6 +26,7 @@ require_once(dirname(__FILE__).'/../Tracker_NotificationsManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/include/Config.class.php');
 require_once('common/mail/MailManager.class.php');
+require_once('common/language/BaseLanguageFactory.class.php');
 require_once('utils.php');
 
 class Tracker_Artifact_Changeset {
@@ -53,8 +54,24 @@ class Tracker_Artifact_Changeset {
         $this->submitted_on = $submitted_on;
         $this->email        = $email;
     }
-
-
+    
+    /**
+     * @var BaseLanguageFactory
+     */
+    protected $languageFactory;
+    
+    /**
+     * Wrapper for BaseLanguageFactory
+     *
+     * @return BaseLanguageFactory
+     */
+    public function getLanguageFactory() {
+        if (!isset($this->languageFactory)) {
+            $this->languageFactory = new BaseLanguageFactory();
+        }
+        return $this->languageFactory;
+    }
+    
     /**
      * Return the value of a field in the current changeset
      *
@@ -493,16 +510,19 @@ class Tracker_Artifact_Changeset {
         }
     }
 
-    protected function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
+    public function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
         $recipient = $user->getEmail();
-
+        
+        $lang = $this->getLanguageFactory()->getBaseLanguage($user->getLocale());
+        
         $format = $user->getPreference('user_tracker_mailformat');
+        
         //We send multipart mail: html & text body in case of preferences set to html
         $htmlBody = '';
         if ($format == 'html') {
-            $htmlBody  .= $this->getBody($is_update, $user, $GLOBALS['Language'], $ignore_perms, 'html');
+            $htmlBody  .= $this->getBody($is_update, $user, $lang, $ignore_perms, 'html');
         }
-        $txtBody      = $this->getBody($is_update, $user, $GLOBALS['Language'], $ignore_perms, 'text');
+        $txtBody = $this->getBody($is_update, $user, $lang, $ignore_perms, 'text');
 
         $subject   = $this->getSubject($user, $ignore_perms);
         $headers   = array(); // TODO
@@ -519,6 +539,7 @@ class Tracker_Artifact_Changeset {
             );
         }
     }
+    
     /**
      * Send a notification
      *
@@ -605,71 +626,101 @@ class Tracker_Artifact_Changeset {
      *
      * @param Boolean $is_update    It is an update, not a new artifact
      * @param String  $recipient    The recipient who will receive the notification
+     * @param BaseLanguage $language The language of the message
      * @param Boolean $ignore_perms ???
      * @param String  $format       Format of the mail 'text' or 'html'
      *
      * @return String
      */
     public function getBody($is_update, $recipient_user, BaseLanguage $language, $ignore_perms = false, $format = 'html') {
-        $art = $this->getArtifact();
-		if ($format == 'text') {
-            $um = $this->getUserManager();
-            $user = $um->getUserById($this->submitted_by);
-
-            $output = '+============== '.'['.$art->getTracker()->getItemName() .' #'. $art->getId().'] '.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).' ==============+';
-            $output .= PHP_EOL;
-            $output .= PHP_EOL;
-            $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
-            $output .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $art->getId() .'>';
-            $output .= PHP_EOL;
-            $output .= $language->getText('plugin_tracker_include_artifact', 'last_edited');
-            $output .= ' '. $this->getUserHelper()->getDisplayNameFromUserId($this->submitted_by);
-            $output .= ' on '.DateHelper::formatForLanguage($language, $this->submitted_on);
-            if ( $comment = $this->getComment() ) {
-                $output .= PHP_EOL;
-                $output .= $comment->fetchFollowUp($format);
-            }
-            $output .= PHP_EOL;
-            $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
-            $output .= PHP_EOL;
-            $output .= $this->diffToPrevious($format, $recipient_user, $ignore_perms);
-            $output .= PHP_EOL;
-            $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_artifact') . ' ---------------- ';
-            $output .= PHP_EOL;
-            $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
-            $output .= PHP_EOL;
+        if ($format == 'text') {
+            $output = $this->getBodyText($is_update, $recipient_user, $language, $ignore_perms, $format);
         } else {
-            $output ='<h1>'.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).'</h1>'.PHP_EOL;
-            // Display latest changes (diff)
-            if ($comment = $this->getComment()) {
-                $followup = $comment->fetchFollowUp($format, true, true);
-            }
-            $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
-            if ($followup || $changes) {
-                $output .= '<h2>'.$language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';
-                $output .= '<div class="tracker_artifact_followup_header">';
-                // Last comment
-                if ($followup) {
-                    $output .= $followup.PHP_EOL;
-                }
-                // Last changes
-                if ($changes) {
-                    //TODO check that the following is PHP compliant (what if I made a changes without a comment? -- comment is null)
-                    if (!empty($comment->body)) {
-                        $output .= '<hr size="1" />';
-                    }
-                    $output .= '<ul class="tracker_artifact_followup_changes">';
-                    $output .= $changes;
-                    $output .= '</ul>';
-                }
-                $output .= '</div>'.PHP_EOL;
-            }
+            $output = $this->getBodyHtml($is_update, $recipient_user, $language, $ignore_perms, $format);
+        }
+        return $output;
+    }
+    
+    /**
+     * Get the text body for notification
+     *
+     * @param Boolean $is_update    It is an update, not a new artifact
+     * @param String  $recipient    The recipient who will receive the notification
+     * @param BaseLanguage $language The language of the message
+     * @param Boolean $ignore_perms ???
+     *
+     * @return String
+     */
+    protected function getBodyText($is_update, $recipient_user, BaseLanguage $language, $ignore_perms, $format) {
+        $art = $this->getArtifact();
+        $um = $this->getUserManager();
+        $user = $um->getUserById($this->submitted_by);
 
-            //Display of snapshot
-            $snapshot = $art->fetchMail($recipient_user, $format, $ignore_perms);
-            if ($snapshot) {
-                $output .= $snapshot;
+        $output = '+============== '.'['.$art->getTracker()->getItemName() .' #'. $art->getId().'] '.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).' ==============+';
+        $output .= PHP_EOL;
+        $output .= PHP_EOL;
+        $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
+        $output .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $art->getId() .'>';
+        $output .= PHP_EOL;
+        $output .= $language->getText('plugin_tracker_include_artifact', 'last_edited');
+        $output .= ' '. $this->getUserHelper()->getDisplayNameFromUserId($this->submitted_by);
+        $output .= ' on '.DateHelper::formatForLanguage($language, $this->submitted_on);
+        if ( $comment = $this->getComment() ) {
+            $output .= PHP_EOL;
+            $output .= $comment->fetchFollowUp($format);
+        }
+        $output .= PHP_EOL;
+        $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
+        $output .= PHP_EOL;
+        $output .= $this->diffToPrevious($format, $recipient_user, $ignore_perms);
+        $output .= PHP_EOL;
+        $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_artifact') . ' ---------------- ';
+        $output .= PHP_EOL;
+        $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
+        $output .= PHP_EOL;
+    }
+    /**
+     * Get the html body for notification
+     *
+     * @param Boolean $is_update    It is an update, not a new artifact
+     * @param String  $recipient    The recipient who will receive the notification
+     * @param BaseLanguage $language The language of the message
+     * @param Boolean $ignore_perms ???
+     *
+     * @return String
+     */
+    protected function getBodyHtml($is_update, $recipient_user, BaseLanguage $language, $ignore_perms, $format) {
+        $art = $this->getArtifact();
+        $output ='<h1>'.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).'</h1>'.PHP_EOL;
+        // Display latest changes (diff)
+        if ($comment = $this->getComment()) {
+            $followup = $comment->fetchFollowUp($format, true, true);
+        }
+        $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
+        if ($followup || $changes) {
+            $output .= '<h2>'.$language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';
+            $output .= '<div class="tracker_artifact_followup_header">';
+            // Last comment
+            if ($followup) {
+                $output .= $followup.PHP_EOL;
             }
+            // Last changes
+            if ($changes) {
+                //TODO check that the following is PHP compliant (what if I made a changes without a comment? -- comment is null)
+                if (!empty($comment->body)) {
+                    $output .= '<hr size="1" />';
+                }
+                $output .= '<ul class="tracker_artifact_followup_changes">';
+                $output .= $changes;
+                $output .= '</ul>';
+            }
+            $output .= '</div>'.PHP_EOL;
+        }
+
+        //Display of snapshot
+        $snapshot = $art->fetchMail($recipient_user, $format, $ignore_perms);
+        if ($snapshot) {
+            $output .= $snapshot;
         }
         return $output;
     }

@@ -25,10 +25,13 @@ class BaseLanguageFactoryTest extends UnitTestCase {
         Config::store();
         Config::load(dirname(__FILE__).'/_fixtures/local.inc');
         $this->supportedLanguages = Config::get('sys_supported_languages');
+        $this->oldLocale = setlocale(LC_ALL, "0");
+        setlocale(LC_ALL, 'fr_FR');
     }
     
     function tearDown() {
         Config::restore();
+        setlocale(LC_ALL, $this->oldLocale);
     }
     
     public function testFactoryShouldReturnABaseLanguageAccordingToTheLocale() {
@@ -45,7 +48,9 @@ class BaseLanguageFactoryTest extends UnitTestCase {
     
     public function testItInstantiatesMissingLanguages() {
         $us = new BaseLanguage($this->supportedLanguages, 'en_US');
+        $us->loadLanguage('en_US');
         $fr = new BaseLanguage($this->supportedLanguages, 'fr_FR');
+        $fr->loadLanguage('fr_FR');
         $factory = new BaseLanguageFactory();
         
         $this->assertEqual($us, $factory->getBaseLanguage('en_US'));
@@ -56,9 +61,29 @@ class BaseLanguageFactoryTest extends UnitTestCase {
     
     public function testFactoryShouldSetADefaultLanguageForUnknownLocales() {
         $default_language = new BaseLanguage($this->supportedLanguages, Config::get('sys_lang'));
+        $default_language->loadLanguage(Config::get('sys_lang'));
         $factory = new BaseLanguageFactory();
         
         $this->assertEqual($default_language, $factory->getBaseLanguage('unknown_locale'));
+    }
+    
+    public function testBecauseOfTheLazyLoadingOfLangTheLangDependedOnTheCurrentUser() {
+        $factory = new BaseLanguageFactory();
+
+        $fr = $factory->getBaseLanguage('fr_FR');
+        $this->assertEqual('fr_FR', $fr->lang);
+        
+        $us = $factory->getBaseLanguage('en_US');
+        $this->assertEqual('en_US', $us->lang);
+    }
+    public function testDoesnMessUpGlobalState() {
+        $factory = new BaseLanguageFactory();
+
+        $currentlocale = setlocale(LC_ALL, '0');
+        $fr = $factory->getBaseLanguage('fr_FR');
+        $this->assertEqual($currentlocale, setlocale(LC_ALL, '0'));
+        $us = $factory->getBaseLanguage('en_US');
+        $this->assertEqual($currentlocale, setlocale(LC_ALL, '0'));
     }
 }
 ?>
