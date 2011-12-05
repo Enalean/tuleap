@@ -272,7 +272,9 @@ height:auto;
 .bodyContent .tracker_formelement_label {
     font-weight: bold;
 }
-
+.bodyContent .tracker_artifact_field {
+    margin-bottom: 1em;
+}
 .bodyContent .tracker_artifact_followup_header {
     -webkit-border-top-right-radius:20px;
     -moz-border-radius-topright:20px;
