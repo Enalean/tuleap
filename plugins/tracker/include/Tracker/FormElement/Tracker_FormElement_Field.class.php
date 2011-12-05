@@ -313,7 +313,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         $html = '';
         if ($this->userCanRead()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'" '. ($this->takesTwoColumns() ? 'colspan="3"' : '') .'>';
+            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $value = $artifact->getLastChangeset()->getValue($this);
