@@ -545,8 +545,9 @@ class Tracker_Artifact_Changeset {
      *
      * @param array  $recipients the list of recipients
      * @param array  $headers    the additional headers
-     * @param string $subject    the content of the message
-     * @param string $body       the content of the message
+     * @param string $subject    the subject of the message
+     * @param string $htmlBody   the html content of the message
+     * @param string $txtBody    the text content of the message
      *
      * @return void
      */

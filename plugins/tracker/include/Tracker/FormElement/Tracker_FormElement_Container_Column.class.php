@@ -138,15 +138,6 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     }
 
     /**
-     * fetch artifact prefix for the mail in html
-     *
-     * @return String
-     */
-    /*protected function fetchMailArtifactPrefix() {
-        return '';
-    }*/
-
-    /**
      * fetch artifact Suffix for the mail in html
      *
      * @return String
