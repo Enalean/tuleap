@@ -37,21 +37,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $html .= '</legend>';
         return $html;
     }
-
-    /**
-     * Fetch artifact prefix for mail
-     * 
-     * @return String
-     */
-    protected function fetchMailArtifactPrefix() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        $html .= '<div style="color: #444444; background-color: #F6F6F6;">';
-        $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
-        $html .='</div>';
-        return $html;
-    }
-
+    
     protected function fetchArtifactSuffix() {
         $html = '';
         $html .= '</fieldset>';

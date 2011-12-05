@@ -45,7 +45,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     }
     
     public function fetchMailArtifactInGroup($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
-        return $this->fetchRecursiveMailArtifact('fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
+        return $this->fetchRecursiveArtifact('fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
     
     /**
@@ -136,16 +136,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     protected function fetchArtifactPrefix() {
         return $this->fetchColumnPrefix();
     }
-
-    /**
-     * fetch artifact Suffix for the mail in html
-     *
-     * @return String
-     */
-    protected function fetchMailArtifactSuffix() {
-        return '';
-    }
-
+    
     protected function fetchArtifactSuffix() {
         return $this->fetchColumnSuffix();
     }

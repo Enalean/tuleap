@@ -48,28 +48,20 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     }
 
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
-        $output = '';
-        if ( $ignore_perms || $this->userCanRead($recipient) ) {
-            $formElements = $this->getFormElements();
-            if ( !empty($formElements) ) {
-                if ($format == 'text') {
-                    $output .= PHP_EOL;
-                    $output .= ' ===== '.$this->getLabel().' ===== ';
-                    $output .= PHP_EOL;
-                } else {
-                    $output .= $this->fetchMailArtifactPrefix();
-                }
-
-                foreach($formElements as $formElement) {
-                    $r = $formElement->fetchMailArtifact($recipient, $artifact, $format, $ignore_perms);
-                    if ( $r ) {
-                        $output .= $r;
-                        $output .= PHP_EOL;
-                    }
-                }
-            }
+        return $this->fetchRecursiveArtifact('fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
+    }
+    
+    
+    /**
+     * Prepare the element to be displayed
+     *
+     * @return void
+     */
+    public function prepareForDisplay() {
+        $this->has_been_displayed = false;
+        foreach($this->getFormElements() as $field) {
+            $field->prepareForDisplay();
         }
-        return $output;
     }
 
     public function getRankSelectboxDefinition() {
@@ -79,7 +71,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
             $def['subitems'][] = $field->getRankSelectboxDefinition();
         }
         return $def;
-    }    
+    }
 
     /**
      * Fetch the "add criteria" box
@@ -229,24 +221,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return $html;
     }
     
-    protected function fetchRecursiveMailArtifact($method, $params = array()) {
-        $html = '';
-        $content = array();
-        $recipients = array();
-        foreach($this->getFormElements() as $formElement) {
-            if ($c = call_user_func_array(array($formElement, $method), $params)) {
-                $content[] = $c;
-            }
-        }
-        $html .=$c;
-        if (count($content)) {
-            $html .= $this->fetchMailArtifactPrefix();
-            $html .= $this->fetchMailArtifactSuffix();
-        }
-        $this->has_been_displayed = true;
-        return $html;
-    }
-    
     protected $has_been_displayed = false;
     public function hasBeenDisplayed() {
         return $this->has_been_displayed;
@@ -347,6 +321,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     protected abstract function fetchArtifactPrefix();
     protected abstract function fetchArtifactSuffix();
     protected abstract function fetchArtifactContent(array $content);
+
 
 }
 ?>

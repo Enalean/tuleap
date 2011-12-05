@@ -837,6 +837,15 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
         return '';
     }
+    
+    /**
+     * Prepare the element to be displayed
+     *
+     * @return void
+     */
+    public function prepareForDisplay() {
+        //do nothing per default
+    }
 
     /**
      * Returns the value that will be displayed in a mail
