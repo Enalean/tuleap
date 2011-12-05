@@ -4,6 +4,7 @@ require_once('pre.php');
 require_once('common/event/EventManager.class.php');
 require_once('www/my/my_utils.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
+require_once('common/mail/MailManager.class.php');
 
 session_require(array('isloggedin'=>'1'));
 
@@ -39,24 +40,17 @@ echo '<h3>'. $Language->getText('account_options', 'preferences') .'</h3>';
   <INPUT type="checkbox" name="form_mail_va" value="1"   <?= $user->getMailVA() ? 'checked="checked"' : '' ?> />
   <?= $Language->getText('account_register', 'communitymail'); ?>
 </p>
-<?php
 
-$u_trackermailformat = user_get_preference("user_tracker_mailformat");
-if (!$u_trackermailformat) {
-    $u_trackermailformat = DEFAULT_TRACKER_MAILFORMAT;
-}
-
-// build the tracker Mail format select box
-?>
 <p>
 
 <?php echo $Language->getText('account_preferences','tracker_mail_format'); ?>
 
-<select name="user_tracker_mailformat">
+<select name="<?= Codendi_Mail_Interface::PREF_FORMAT ?>">
 
 <?php
-// $tracker_mailformats is defined in /www/include/utils.php
-foreach ($tracker_mailformats as $format) {
+$mailManager = new MailManager();
+$u_trackermailformat = $mailManager->getMailPreferencesByUser($user);
+foreach ($mailManager->getAllMailFormats() as $format) {
     print '<option value="'.$format.'"';
     if ($u_trackermailformat == $format) {
         print ' selected="selected"';

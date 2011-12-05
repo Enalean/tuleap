@@ -40,7 +40,7 @@ class MailManager {
      * @return Mail 
      */
     public function getMailForUser(User $user) {
-        $mail = $this->getMailByType($user->getPreference('user_tracker_mailformat'));
+        $mail = $this->getMailByType($this->getMailPreferencesByUser($user));
         $mail->setToUser(array($user));
         return $mail;
     }
@@ -54,7 +54,7 @@ class MailManager {
      */
     public function getMailByType($type = null) {
         $mail = new Codendi_Mail();
-        if ($type == 'text') {
+        if ($type == Codendi_Mail_Interface::FORMAT_TEXT) {
             $mail = new Mail();
         }
         $mail->setFrom($this->getConfig('sys_noreply'));
@@ -110,6 +110,15 @@ class MailManager {
         return Codendi_Mail_Interface::FORMAT_HTML;
     }
     
+    /**
+     * Returns all possible mail formats
+     * 
+     * @return Array
+     */
+    public function getAllMailFormats() {
+        return array(Codendi_Mail_Interface::FORMAT_TEXT, Codendi_Mail_Interface::FORMAT_HTML);
+    }
+
     /**
      * Wrapper for configuration access
      * 
