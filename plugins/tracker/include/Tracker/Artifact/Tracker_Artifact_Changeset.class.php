@@ -54,24 +54,7 @@ class Tracker_Artifact_Changeset {
         $this->submitted_on = $submitted_on;
         $this->email        = $email;
     }
-    
-    /**
-     * @var BaseLanguageFactory
-     */
-    protected $languageFactory;
-    
-    /**
-     * Wrapper for BaseLanguageFactory
-     *
-     * @return BaseLanguageFactory
-     */
-    public function getLanguageFactory() {
-        if (!isset($this->languageFactory)) {
-            $this->languageFactory = new BaseLanguageFactory();
-        }
-        return $this->languageFactory;
-    }
-    
+        
     /**
      * Return the value of a field in the current changeset
      *
@@ -512,10 +495,8 @@ class Tracker_Artifact_Changeset {
 
     public function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
         $recipient = $user->getEmail();
-        
-        $lang = $this->getLanguageFactory()->getBaseLanguage($user->getLocale());
-        
-        $format = $user->getPreference('user_tracker_mailformat');
+        $lang      = $user->getLanguage();
+        $format    = $user->getPreference('user_tracker_mailformat');
         
         //We send multipart mail: html & text body in case of preferences set to html
         $htmlBody = '';

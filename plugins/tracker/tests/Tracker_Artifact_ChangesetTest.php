@@ -322,19 +322,15 @@ BODY;
     }
     
     function testChangesetShouldUseUserLanguageInBuildMessage() {
-        $user = new MockUser();
-        $user->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
-        $user->setReturnValue('getLocale', 'fr_FR');
-        
-        $userLanguage = new MockBaseLanguage();
-        
         $GLOBALS['Language']->expectNever('getText');
+        $userLanguage = new MockBaseLanguage();
         $userLanguage->expectAtLeastOnce('getText');
         
-        $changeset = $this->buildChangeSet($user);
+        $user = new MockUser();
+        $user->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
+        $user->setReturnValue('getLanguage', $userLanguage);
         
-        $changeset->getLanguageFactory()->setReturnValue('getBaseLanguage', $userLanguage, array('fr_FR'));
-        $changeset->getLanguageFactory()->expectOnce('getBaseLanguage', array('fr_FR'));
+        $changeset = $this->buildChangeSet($user);
         
         $messages = array();
         $changeset->buildMessage($messages, true, $user, false);
