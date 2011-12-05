@@ -195,8 +195,28 @@ class MailManagerTest extends UnitTestCase {
         $this->assertEqual($prefs['html'][0]->getEmail(), 'manuel@enalean.com');
         $this->assertEqual($prefs['html'][0]->isAnonymous(), true);
         $this->assertEqual($prefs['html'][0]->getLanguageID(), 'fr_BE');
-        
-        
+    }
+    
+    function testGetMailPrefsByUsersShouldReturnHTMLByDefault() {
+        $mm   = new MailManager();
+        $user = new User(array('id' => 123, 'language_id' => 'en_US'));
+        $this->assertEqual($mm->getMailPreferencesByUser($user), Codendi_Mail_Interface::FORMAT_HTML);
+    }
+    
+    function testGetMailPrefsByUsersShouldReturnTextWhenUserRequestIt() {
+        $mm   = new MailManager();
+        $user = new MockUser();
+        $user->expectOnce('getPreference', array('user_tracker_mailformat'));
+        $user->setReturnValue('getPreference', 'text');
+        $this->assertEqual($mm->getMailPreferencesByUser($user), Codendi_Mail_Interface::FORMAT_TEXT);
+    }
+    
+    function testGetMailPrefsByUsersShouldReturnHTMLWhenPreferenceReturnsFalse() {
+        $mm   = new MailManager();
+        $user = new MockUser();
+        $user->expectOnce('getPreference', array('user_tracker_mailformat'));
+        $user->setReturnValue('getPreference', false);
+        $this->assertEqual($mm->getMailPreferencesByUser($user), Codendi_Mail_Interface::FORMAT_HTML);
     }
 }
 

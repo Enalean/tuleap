@@ -96,6 +96,20 @@ class MailManager {
     }
     
     /**
+     * Returns whether the user wants an HTML or a Text notification
+     * 
+     * @param User $user
+     * 
+     * @return String
+     */
+    public function getMailPreferencesByUser(User $user) {
+        if ($user->getPreference('user_tracker_mailformat') == Codendi_Mail_Interface::FORMAT_TEXT) {
+            return Codendi_Mail_Interface::FORMAT_TEXT;
+        }
+        return Codendi_Mail_Interface::FORMAT_HTML;
+    }
+    
+    /**
      * Wrapper for configuration access
      * 
      * @param String $var

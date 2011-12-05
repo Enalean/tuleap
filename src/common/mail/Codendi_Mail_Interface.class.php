@@ -19,6 +19,16 @@
  */
 
 interface Codendi_Mail_Interface {
+    /**
+     * Send message in HTML
+     */
+    const FORMAT_HTML = 'html';
+    
+    /**
+     * Send message in Text
+     */
+    const FORMAT_TEXT = 'text';
+    
     public function send();
     public function _validateRecipient($list);
 
