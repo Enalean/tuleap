@@ -494,13 +494,15 @@ class Tracker_Artifact_Changeset {
     }
 
     public function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
+        $mailManager = new MailManager();
+        
         $recipient = $user->getEmail();
         $lang      = $user->getLanguage();
-        $format    = $user->getPreference('user_tracker_mailformat');
+        $format    = $mailManager->getMailPreferencesByUser($user);
         
         //We send multipart mail: html & text body in case of preferences set to html
         $htmlBody = '';
-        if ($format == 'html') {
+        if ($format == Codendi_Mail_Interface::FORMAT_HTML) {
             $htmlBody  .= $this->getBodyHtml($is_update, $user, $lang, $ignore_perms);
         }
         $txtBody = $this->getBodyText($is_update, $user, $lang, $ignore_perms);

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/mail/Codendi_Mail_Interface.class.php';
 require_once 'common/mail/Mail.class.php';
 require_once 'common/mail/Codendi_Mail.class.php';
 require_once 'common/include/Tuleap_Template.class.php';
@@ -71,7 +72,7 @@ class MailManager {
      * @return Array of Array of User
      */
     public function getMailPreferencesByEmail($addresses) {
-        $default = 'html';
+        $default = Codendi_Mail_Interface::FORMAT_HTML;
         $res     = array('html' => array(), 'text' => array());
         $um      = $this->getUserManager();
         foreach ($addresses as $address) {
@@ -79,9 +80,9 @@ class MailManager {
             $pref  = $default;
             if (count($users) > 0) {
                 foreach ($users as $user) {
-                    $pref_user   = $user->getPreference('user_tracker_mailformat');
+                    $pref_user   = $this->getMailPreferencesByUser($user);
                     $user_status = $user->getStatus();
-                    if ($pref_user && $pref_user != $default && ($user_status == 'A' || $user_status == 'R')) {
+                    if ($pref_user != $default && ($user_status == 'A' || $user_status == 'R')) {
                         $pref = $pref_user;
                         break;
                     }
@@ -103,7 +104,7 @@ class MailManager {
      * @return String
      */
     public function getMailPreferencesByUser(User $user) {
-        if ($user->getPreference('user_tracker_mailformat') == Codendi_Mail_Interface::FORMAT_TEXT) {
+        if ($user->getPreference(Codendi_Mail_Interface::PREF_FORMAT) == Codendi_Mail_Interface::FORMAT_TEXT) {
             return Codendi_Mail_Interface::FORMAT_TEXT;
         }
         return Codendi_Mail_Interface::FORMAT_HTML;
