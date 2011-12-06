@@ -81,7 +81,7 @@ class Tracker_Artifact_Changeset_Comment {
                         $html .= '<div class="tracker_artifact_followup_title">';
                         $html .= '<span class="tracker_artifact_followup_title_user">';
                         $user = UserManager::instance()->getUserById($this->submitted_by);
-                        if ($user && $user->isLoggedIn()) {
+                        if ($user && !$user->isAnonymous()) {
                             $html .= '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')</a>';
                         } else {
                             $html .= $GLOBALS['Language']->getText('tracker_include_artifact','anon_user');
