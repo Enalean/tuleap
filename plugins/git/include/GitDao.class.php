@@ -299,7 +299,34 @@ class GitDao extends DataAccessObject {
         }
         return true;
     }
-    
+
+    /**
+     * This function log a Git Push in the database
+     *
+     * @param Integer  $repoId        Id of the git repository
+     * @param Integer  $UserId        Id of the user that performed the push
+     * @param Integer $commitsNumber Number of commits
+     *
+     * @return Boolean
+     */
+    public function logGitPush($repoId, $userId, $commitsNumber) {
+        $repositoryId  = $this->da->escapeInt($repoId);
+        $userId        = $this->da->escapeInt($userId);
+        $commitsNumber = $this->da->escapeInt($commitsNumber);
+        $pushDate      = $this->da->quoteSmart(date('Y-m-d H:i:s'));
+        $query         = "INSERT INTO plugin_git_log (".self::REPOSITORY_ID.",
+                                                      user_id,
+                                                      push_date,
+                                                      commits_number
+                                                      ) values (
+                                                      $repositoryId,
+                                                      $userId,
+                                                      $pushDate,
+                                                      $commitsNumber
+                                                      )";
+        return $this->update($query);
+    }
+
     public function getProjectRepositoryById($repository) {
         $id = (int)$repository->getId();
         $id = $this->da->escapeInt($id);
@@ -320,6 +347,22 @@ class GitDao extends DataAccessObject {
         }
         $this->hydrateRepositoryObject($repository, $result);
         return true;
+    }
+
+    /**
+     * Retrieve Git repository data given its name and its group name.
+     *
+     * @param String $repositoryName Name of the repository we are looking for.
+     * @param String $projectId      ID of the project to which the repository belong.
+     *
+     * @return DataAccessResult
+     */
+    public function getProjectRepositoryByName($repositoryName, $projectId) {
+        $projectId = $this->da->escapeInt($projectId);
+        $repositoryName = $this->da->quoteSmart($repositoryName);
+        $query = 'SELECT * '.' FROM '.$this->getTable().
+                 ' WHERE '.self::REPOSITORY_NAME.'='.$repositoryName.' AND '.self::FK_PROJECT_ID.'='.$projectId.' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
+        return $this->retrieve($query);
     }
 
     protected function hydrateRepositoryObject($repository, $result) {

@@ -93,6 +93,24 @@ class GitRepository implements DVCSRepository {
     }       
 
     /**
+     * Wrapper for tests
+     *
+     * @return UserManager
+     */
+    function _getUserManager() {
+        return UserManager::instance();
+    }
+
+    /**
+     * Wrapper for tests
+     *
+     * @return ProjectManager
+     */
+    function _getProjectManager() {
+        return ProjectManager::instance();
+    }
+
+    /**
      * Wrapper
      * @return Boolean
      */
@@ -263,7 +281,51 @@ class GitRepository implements DVCSRepository {
         }
         return $this->getProject()->getId();
     }
-    
+
+    /**
+     * Retrieve Git repository ID knowing the repository name and its group name.
+     *
+     * @param String $repositoryName Name of the repository
+     * @param String $projectName    Name of the project
+     *
+     * @return Integer
+     */
+    public function getRepositoryIDByName($repositoryName, $projectName) {
+        $pm = $this->_getProjectManager();
+        $project = $pm->getProjectByUnixName($projectName);
+        $repoId = 0;
+        if ($project) {
+            $projectId = $project->getID();
+            $dar = $this->getDao()->getProjectRepositoryByName($repositoryName, $projectId);
+            if ($dar && !empty($dar) && !$dar->isError()) {
+                     $row = $dar->getRow();
+                     $repoId = $row[GitDao::REPOSITORY_ID];
+            }
+        }
+        return $repoId;
+    }
+
+    /**
+     * Prepare data then log a Git push.
+     *
+     * @param String  $repositoryName Name of the git repository
+     * @param String  $identifier     Name of the user that performed the push
+     * @param String  $projectName    Unix name of the project
+     * @param Integer $commitsNumber  Number of commits
+     *
+     * @return Boolean
+     */
+    public function logGitPush($repositoryName, $identifier, $projectName, $commitsNumber) {
+        $um = $this->_getUserManager();
+        if ($user = $um->getUserByIdentifier($identifier)) {
+            $userId = $user->getId();
+        } else {
+            $userId = 100;
+        }
+        $repoId = $this->getRepositoryIDByName($repositoryName, $projectName);
+        return $this->getDao()->logGitPush($repoId, $userId, $commitsNumber);
+    }
+
     /**
      * @param String $name
      */

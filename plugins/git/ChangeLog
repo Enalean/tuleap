@@ -1,3 +1,6 @@
+Version 1.17 (Tuleap 4.0.25)
+    * Add fundations for git push logging for stat purpose (contrib STMicroelectronics).
+
 Version 1.16 (Tuleap 4.0.23)
     * Propagate deletion updates
 
