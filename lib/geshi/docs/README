@@ -3,8 +3,8 @@
         ----------------------------------
                  Version 1.0.8
 
-Author:          Nigel McNie, Benny Baumann
-Email:           nigel@geshi.org, BenBE@omorphia.de
+Author:          Benny Baumann, Nigel McNie
+Email:           BenBE@geshi.org, nigel@geshi.org
 GeSHi Website:   http://qbnz.com/highlighter
 
 GeSHi is a generic syntax highlighter, written in PHP. You simply

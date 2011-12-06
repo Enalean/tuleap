@@ -12,6 +12,68 @@ modified by me for consistency/bug fixing.
 Please send any bug reports to BenBE@omorphia.de, or use the bug report tracker
 at sourceforge (http://sourceforge.net/tracker/?group_id=114997&atid=670231)
 
+Version 1.0.8.10
+  -  Added language files
+     * BASCOM AVR (Michal Goralczyk)
+     * C: Loadrunner dialect (Stuart Moncrieff)
+     * CoffeeScript (Trevor Burnham)
+     * EPC (Thorsten Muehlfelder)
+     * Euphoria (Nicholas Koceja)
+     * Falcon (billykater)
+     * HTML5 (Robert Lidberg)
+     * LLVM (Azriel Fasten)
+     * PL/I (Robert Prins)
+     * ProFTPd (Benny Baumann)
+     * PyCon (Benny Baumann)
+     * UnrealScript (pospi)
+     * YAML (Josh Ventura)
+  -  Small bugfix in LangCheck when looking for language files
+  -  Added '-' to list of RX chars that require explicit escaping (SF#3056454, BenBE)
+  -  Minor changes to boundary checks (SF#3077256, BenBE)
+  -  Improvements to language files (BenBE)
+     * Major rework of the ALGOL68 language file (Neville Dempsey)
+     * LangCheck warnings from GO language file (BenBE)
+     * Some additions to the Objeck language file (Randy Hollines)
+     * Properly highlight infinity as numbers for J (Ric Sherlock)
+     * Improved GDB Backtrace language file (Milian Wolff)
+     * Updated Liberty BASIC language file (Chris Iverson)
+     * Fixed a small issue with detection of division vs. regular expressions
+       for ActionScript 3 and JavaScript (Kevin Day)
+     * Fixed Escape handling for CSS (SF#3080513, yecril71pl, BenBE)
+     * Additional comment styles for SAS (SF#3024708, ahnolds, BenBE)
+     * Updated keyword list for TeraTerm (Boris Maisuradze)
+     * Incorrect handling of /**/ comments in Javascript (BenBE)
+     * Support for mod_upload_progress in Apache Config files (BenBE)
+     * Prefix operator handling in F# was broken (BenBE)
+     * CDATA handling for html4strict (BenBE)
+     * Common subcommands for Apache, APT, CVS, Git, SVN and YUM for Bash (BenBE)
+     * Limited support for prompt detection in single line Bash snippets (BenBE)
+     * Added functions of the C standard library (BenBE)
+     * Rework of Lua to use GeSHi's features better (BenBE)
+     * Language file improvements for Python (Zbyszek Szmek)
+     * Fixed documentation links for Groovy (SF#3152356, lifeisfoo)
+     * Fixed incorrect highlighting of certain keywords in Erlang (SF#3138853, BenBE)
+     * Escape chars in C++/C++QT handled incorrectly (SF#3122706, C. Pötsch)
+     * Empty parameters of LaTeX commands tipped the highlighting off (SF#3098329, James Oldfield, BenBE)
+     * Additional Keywords and minor tweaks to Logtalk (Paulo Moura)
+Version 1.0.8.9
+  -  Added language files
+     * Algol68 (Neville Dempsey)
+     * E (Kevin Reid)
+     * FormulaOne (Juro Bystricky)
+     * Go (Markus Jarderot)
+     * Liberty BASIC (Chris Iverson)
+     * MOS 6502/6510 Assemblers (Warren Willmey)
+     * Motorola 68k assembler (Warren Willmey)
+     * Objeck Programming Language (Randy Hollines)
+     * ZXBasic (Jose Rodriguez)
+  -  Added support for $-prefixed hex numbers and @-prefixed octal numbers
+  -  Added Parser Control for languages to tell when numbers are present
+     inside of non-string parts
+  -  Introduced querying supported/known languages directly
+  -  Introduced querying full language names without loading the language file
+  -  Improvements to language files (BenBE)
+     * Added loads of keywords for generic SQL highlighting (Jürgen Thomas)
 Version 1.0.8.8
   -  Added language files
      * ChaiScript (Jason Turner & Jonathan Turner)
