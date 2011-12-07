@@ -159,6 +159,7 @@ $GLOBALS['server']->wsdl->addComplexType(
         'id' => array('name'=>'id', 'type' => 'xsd:int'),
         'parent_id' => array('name'=>'parent_id', 'type' => 'xsd:int'),
         'title' => array('name'=>'title', 'type' => 'xsd:string'),
+        'filename' => array('name'=>'filename', 'type' => 'xsd:string'),
         'type' => array('name'=>'type', 'type' => 'xsd:string'),
         'nb_versions' => array('name'=>'nb_versions', 'type' => 'xsd:int'),
     )
