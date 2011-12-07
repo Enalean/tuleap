@@ -33,7 +33,7 @@ class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsReposi
         $li_regexp_for_repository_representation = '<option>(?P<repo>.*)</option>';
         $nb_repositories                         = count($repositories);
         
-        return sprintf('<select multiple size="7">(?:%s){%d}</select>', $li_regexp_for_repository_representation, $nb_repositories);
+        return sprintf('<select (?P<args>.*)>(?:%s){%d}</select>', $li_regexp_for_repository_representation, $nb_repositories);
     }
     
 }
