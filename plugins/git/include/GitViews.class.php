@@ -23,6 +23,7 @@ require_once('mvc/PluginViews.class.php');
 require_once('GitDao.class.php');
 require_once('GitBackend.class.php');
 require_once('www/project/admin/permissions.php');
+require_once('GitViewsRepositoriesTraversalStrategy_UL.class.php');
 
 /**
  * GitViews
@@ -45,7 +46,7 @@ class GitViews extends PluginViews {
         $GLOBALS['HTML']->footer(array());
     }
 
-    protected function getText($key, $params=array() ) {
+    public function getText($key, $params=array() ) {
         return $GLOBALS['Language']->getText('plugin_git', $key, $params);
     }
 
@@ -585,6 +586,10 @@ class GitViews extends PluginViews {
     protected function _getBreadCrumb() {
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_home').'</b>', '/plugins/git/?group_id='.$this->groupId, 'class=""');
         echo ' | ';
+        
+        echo $this->linkTo( '<b>'.$this->getText('fork_repositories').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=fork_repositories', 'class=""');
+        echo ' | ';
+        
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/documentation/user_guide/html/'.$this->user->getLocale().'/VersionControlWithGit.html\')');
     }
     
@@ -598,84 +603,29 @@ class GitViews extends PluginViews {
         return  $this->userName.'@'.$serverName.':/gitroot/'.$this->projectName.'/'.$repositoryName.'.git';
     }
 
-    protected function _getRepositoryPageUrl($repoId, $repoName) {
+    public function _getRepositoryPageUrl($repoId, $repoName) {
         return $this->linkTo($repoName,'/plugins/git/index.php/'.$this->groupId.'/view/'.$repoId.'/');
+    }
+    
+    protected function forkRepositories() {
+        
     }
 
     /**
      * TREE SUBVIEW
      */
-    protected function _tree( $params=array() ) {        
+    protected function _tree( $params=array() ) {
         if ( empty($params) ) {
             $params = $this->getData();
         }
         if ( !empty($params['repository_list']) ) {
             echo '<h3>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"> [?]</a></h3>';
             $this->help('tree', array('display'=>'none') );
-            echo '<ul>';
-            $this->_displayRepositoryList($params['repository_list']);
-            echo '</ul>';
+            $strategy = new GitViewsRepositoriesTraversalStrategy_UL($this);
+            echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
         }
         else {
             echo "<h3>".$this->getText('tree_msg_no_available_repo')."</h3>";
-        }        
-    }
-
-    protected function _displayRepositoryList($data) {
-        $parentChildrenAssoc = array();
-        foreach ( $data as $repoId=>$repoData ) {
-            if ( !empty($repoData[GitDao::REPOSITORY_PARENT]) ) {
-                $parentId = $repoData[GitDao::REPOSITORY_PARENT];
-                $parentChildrenAssoc[$parentId][] = $repoData[GitDao::REPOSITORY_ID];
-            }
-            else {
-                $parentChildrenAssoc[0][] = $repoId;
-            }
-        }
-        $this->_makeRepositoryTree($parentChildrenAssoc, 0, $data);
-    }
-
-    protected function _makeRepositoryTree(&$flatTree, $currentId, $data) {
-        $user = UserManager::instance()->getCurrentUser();
-        foreach ( $flatTree[$currentId] as $childId ) {
-            $repoId   = $data[$childId][GitDao::REPOSITORY_ID];
-            $repoName = $data[$childId][GitDao::REPOSITORY_NAME];
-            $repoDesc = $data[$childId][GitDao::REPOSITORY_DESCRIPTION];
-            $delDate  = $data[$childId][GitDao::REPOSITORY_DELETION_DATE];
-            $isInit   = $data[$childId][GitDao::REPOSITORY_IS_INITIALIZED];
-            $access   = $data[$childId][GitDao::REPOSITORY_ACCESS];
-            //needs to be checked on filesystem (GitDao::getRepositoryList do not check)
-            //TODO move this code to GitBackend and write a new getRepositoryList function ?
-            //TODO find a better way to do that to avoid the ton of SQL requests!
-            $r = new GitRepository();
-            $r->setId($repoId);
-            $r->load();
-            if ( $isInit == 0 ) {
-                $isInit = $r->isInitialized();
-            }
-
-            if (!$r->userCanRead($user)) {
-                continue;
-            }
-            //we do not want to display deleted repository
-            if ( $delDate != '0000-00-00 00:00:00' ) {
-                continue;
-            }
-
-            // Access type
-            $accessType = $this->fetchAccessType($access, $data[$childId][GitDao::REPOSITORY_BACKEND_TYPE] == GitDao::BACKEND_GITOLITE);
-            
-            echo '<li>'.$accessType.' '.$this->_getRepositoryPageUrl($repoId, $repoName);
-            if ($isInit == 0) {
-                echo ' ('.$this->getText('view_repo_not_initialized').') ';
-            }
-            echo '</li>';
-
-            if ( !empty($flatTree[$childId]) ) {
-                echo '<ul>';
-                $this->_makeRepositoryTree($flatTree, $childId, $data);
-                echo '</ul>';
-            }
         }
     }
     
@@ -685,7 +635,7 @@ class GitViews extends PluginViews {
      * @param $access
      * @param $backend_type
      */
-    protected function fetchAccessType($access, $backendIsGitolite) {
+    public function fetchAccessType($access, $backendIsGitolite) {
         $accessType = '<span class="plugin_git_repo_privacy" title=';
 
         if ($backendIsGitolite) {
