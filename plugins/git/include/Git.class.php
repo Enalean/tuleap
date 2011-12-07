@@ -109,7 +109,8 @@ class Git extends PluginController {
                                             'remove_mail',
                                             'fork',
                                             'set_private',
-                                            'confirm_private');
+                                            'confirm_private',
+                                            'fork_repositories');
         } else {
             $this->addPermittedAction('index');
             if ($repoId !== 0) {
@@ -301,6 +302,9 @@ class Git extends PluginController {
             case 'set_private':
                 $this->addAction('setPrivate', array($this->groupId, $repoId));
                 $this->addView('view');
+                break;
+            case 'fork_repositories':
+                $this->addView('forkRepositories');
                 break;
             #LIST
             default:     

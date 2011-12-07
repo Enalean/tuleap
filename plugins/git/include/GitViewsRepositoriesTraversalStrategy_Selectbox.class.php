@@ -26,7 +26,7 @@ require_once 'GitViews.class.php';
 /**
  * Traverse a list of repositories and furnish a ul/li tree representation
  */
-class GitViewsRepositoriesTraversalStrategy_UL extends GitViewsRepositoriesTraversalStrategy {
+class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositoriesTraversalStrategy {
     
     /**
      * @var GitViews
@@ -51,7 +51,7 @@ class GitViewsRepositoriesTraversalStrategy_UL extends GitViewsRepositoriesTrave
      * @return string the $inner encapsuled in the wrapper
      */
     protected function getMainWrapper($inner) {
-        return '<ul>'. $inner .'</ul>';
+        return '<select multiple size="7">'. $inner .'</select>';
     }
     
     /**
@@ -62,7 +62,7 @@ class GitViewsRepositoriesTraversalStrategy_UL extends GitViewsRepositoriesTrave
      * @return string the $inner encapsulated in its own wrapper
      */
     protected function getItemWrapper($inner) {
-        return '<li>'. $inner .'</li>';
+        return '<option>'. $inner .'</option>';
     }
     
     /**
@@ -74,7 +74,7 @@ class GitViewsRepositoriesTraversalStrategy_UL extends GitViewsRepositoriesTrave
      * @return string the $inner encapsulated in its own wrapper
      */
     protected function getGroupWrapper($label, $inner) {
-        return '<ul>'. $inner .'</ul>';
+        return $inner;
     }
 }
 ?>

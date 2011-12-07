@@ -19,21 +19,21 @@
  */
 
 require_once 'GitViewsRepositoriesTraversalStrategyTest.class.php';
-require_once dirname(__FILE__) .'/../include/GitViewsRepositoriesTraversalStrategy_UL.class.php';
+require_once dirname(__FILE__) .'/../include/GitViewsRepositoriesTraversalStrategy_Selectbox.class.php';
 Mock::generate('GitViews');
 Mock::generate('User');
 
-class GitViewsRepositoriesTraversalStrategy_ULTest extends GitViewsRepositoriesTraversalStrategyTest {
+class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsRepositoriesTraversalStrategyTest {
     
     public function __construct() {
-        parent::__construct('GitViewsRepositoriesTraversalStrategy_UL');
+        parent::__construct('GitViewsRepositoriesTraversalStrategy_Selectbox');
     }
     
     public function getExpectedPattern($repositories) {
-        $li_regexp_for_repository_representation = '<li>(?P<access>.*) (?P<url>.*) (?P<initialized>\(.*\)) </li>';
+        $li_regexp_for_repository_representation = '<option>(?P<repo>.*)</option>';
         $nb_repositories                         = count($repositories);
         
-        return sprintf('<ul>(?:%s){%d}</ul>', $li_regexp_for_repository_representation, $nb_repositories);
+        return sprintf('<select multiple size="7">(?:%s){%d}</select>', $li_regexp_for_repository_representation, $nb_repositories);
     }
     
 }
