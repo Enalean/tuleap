@@ -39,22 +39,29 @@
     <script src="js/ext/require.js"></script>
     {include file='jsconst.tpl'}
     <script type="text/javascript">
-    require({ldelim}
-    	baseUrl: 'js',
-	paths: {ldelim}
-	  {if file_exists('js/common.min.js')}
-	  	common: "common.min",
-	  {/if}
+    var GitPHPJSPaths = {ldelim}
 	{if $googlejs}
 		jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
 	{else}
 		jquery: 'ext/jquery-1.7.1.min'
 	{/if}
-	{rdelim},
+    {rdelim};
+    {block name=javascriptpaths}
+    {if file_exists('js/common.min.js')}
+    GitPHPJSPaths.common = "common.min";
+    {/if}
+    {/block}
+
+    var GitPHPJSModules = null;
+    {block name=javascriptmodules}
+    GitPHPJSModules = ['common'];
+    {/block}
+
+    require({ldelim}
+    	baseUrl: 'js',
+	paths: GitPHPJSPaths,
 	priority: ['jquery']
-    {rdelim}, [
-	  'common'
-      ]);
+    {rdelim}, GitPHPJSModules);
     </script>
     {/block}
     {/if}

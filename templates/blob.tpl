@@ -15,27 +15,13 @@
 {/if}
 {/block}
 
-{block name=javascript}
-    <script src="js/ext/require.js"></script>
-    {include file='jsconst.tpl'}
-    <script type="text/javascript">
-    require({ldelim}
-    	baseUrl: 'js',
-	paths: {ldelim}
-	  {if file_exists("js/blob.min.js")}
-	  	blob: "blob.min",
-	  {/if}
-	{if $googlejs}
-		jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
-	{else}
-		jquery: 'ext/jquery-1.7.1.min'
-	{/if}
-	{rdelim},
-	priority: ['jquery']
-    {rdelim}, [
-	  'blob'
-      ]);
-    </script>
+{block name=javascriptpaths}
+{if file_exists('js/blob.min.js')}
+GitPHPJSPaths.blob = "blob.min";
+{/if}
+{/block}
+{block name=javascriptmodules}
+GitPHPJSModules = ['blob'];
 {/block}
 
 {block name=main}

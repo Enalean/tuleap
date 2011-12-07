@@ -7,27 +7,13 @@
  *}
 {extends file='projectbase.tpl'}
 
-{block name=javascript}
-    <script src="js/ext/require.js"></script>
-    {include file='jsconst.tpl'}
-    <script type="text/javascript">
-    require({ldelim}
-    	baseUrl: 'js',
-	paths: {ldelim}
-	  {if file_exists("js/tree.min.js")}
-	  	tree: "tree.min",
-	  {/if}
-	{if $googlejs}
-		jquery: 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min'
-	{else}
-		jquery: 'ext/jquery-1.7.1.min'
-	{/if}
-	{rdelim},
-	priority: ['jquery']
-    {rdelim}, [
-	  'tree'
-      ]);
-    </script>
+{block name=javascriptpaths}
+{if file_exists('js/tree.min.js')}
+GitPHPJSPaths.tree = "tree.min";
+{/if}
+{/block}
+{block name=javascriptmodules}
+GitPHPJSModules = ['tree'];
 {/block}
 
 {block name=main}
