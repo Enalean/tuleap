@@ -59,10 +59,13 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
     }
 
     // Manage screen/file output
-    function manageOutput($soap_output, &$output, &$fd) {
+    function manageOutput($soap_params, &$output, &$fd) {
         $output = false;
-            if ($soap_output) {
-            $output = $soap_output;
+            if ($soap_params['output']) {
+            $output = $soap_params['output'];
+        } else {
+            $fileInfo = $GLOBALS['soap']->call('getDocmanTreeInfo', $soap_params);
+            $output   = $fileInfo[0]->filename;
         }
         if ($output !== false) {
             while (!($fd = @fopen($output, "wb"))) {
@@ -89,7 +92,7 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
             $callParams['chunk_offset'] = $i * $GLOBALS['soap']->getFileChunkSize();
             $content = base64_decode($GLOBALS['soap']->call($this->soapCommand, $callParams, $use_extra_params));
             if ($i == 0) {
-                $this->manageOutput($soap_params['output'], $output, $fd);
+                $this->manageOutput($soap_params, $output, $fd);
             }
             $cLength = strlen($content);
             if ($output !== false) {
