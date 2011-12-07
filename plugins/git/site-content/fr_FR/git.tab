@@ -140,6 +140,10 @@ plugin_git	perm_W	Ecriture
 plugin_git	perm_W+	Rewind
 
 plugin_git	fork_repositories	Forker des dépôts
+plugin_git	fork_repositories_desc	Vous pouvez créer des forks personnels à partir de différents dépôts parents. Par personnel nous entendons le fait que vous seul aurez accès en écriture au dépôts. L'accès en écriture sera hérité quant à lui des différents dépôts parents.
+plugin_git	fork_repositories_select	Sélectionnez les dépôts à forker
+plugin_git	fork_repositories_path	Choisissez le chemin pour les forks
+plugin_git	fork_repositories_placeholder	Entrer un chemin ou laissez vide
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
 project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1

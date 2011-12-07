@@ -304,6 +304,7 @@ class Git extends PluginController {
                 $this->addView('view');
                 break;
             case 'fork_repositories':
+                $this->addAction('getProjectRepositoryList', array($this->groupId));
                 $this->addView('forkRepositories');
                 break;
             #LIST

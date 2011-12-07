@@ -24,6 +24,7 @@ require_once('GitDao.class.php');
 require_once('GitBackend.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('GitViewsRepositoriesTraversalStrategy_UL.class.php');
+require_once('GitViewsRepositoriesTraversalStrategy_Selectbox.class.php');
 
 /**
  * GitViews
@@ -33,7 +34,8 @@ class GitViews extends PluginViews {
     public function __construct($controller) {
         parent::__construct($controller);
         $this->groupId     = (int)$this->request->get('group_id');
-        $this->projectName = ProjectManager::instance()->getProject($this->groupId)->getUnixName();        
+        $this->project     = ProjectManager::instance()->getProject($this->groupId);
+        $this->projectName = $this->project->getUnixName();
         $this->userName    = $this->user->getName();        
     }
 
@@ -608,7 +610,28 @@ class GitViews extends PluginViews {
     }
     
     protected function forkRepositories() {
+        $params = $this->getData();
+        $this->_getBreadCrumb();
+        echo '<h2>'. $this->getText('fork_repositories') .'</h2>';
+        echo '<div class="help"><p>'. $this->getText('fork_repositories_desc') .'</p></div>';
         
+        echo '<p>';
+        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label><br />';
+        $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
+        echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
+        echo '</p>';
+        
+        echo '<p>';
+        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label><br />';
+        echo '<input type="text" size="30" placeholder="'. $this->getText('fork_repositories_placeholder') .'" />';
+        echo '<div>Eg: u/'. $this->user->getName() .'/%path%/<span>...</div>';
+        echo '</p>';
+        
+        echo '<p>';
+        echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        echo '</p>';
+        
+        echo '<br />';
     }
 
     /**
