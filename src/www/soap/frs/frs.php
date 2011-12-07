@@ -108,6 +108,17 @@ $server->wsdl->addComplexType(
     'tns:FRSFile'
 );
 
+$server->wsdl->addComplexType(
+    'ArrayOfInt',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:int[]')),
+    'xsd:int'
+);
+
 //
 // Function definition
 //
@@ -373,7 +384,37 @@ $server->register(
     Returns true if succeed, or a soap fault if an error occured.'
 );
 
-	
+$server->register(
+    'deleteEmptyPackages',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int'
+        ),
+    array('deleteEmptyPackagesResponse'=>'tns:ArrayOfInt'),
+    $uri,
+    $uri.'#deleteEmptyReleases',
+    'rpc',
+    'encoded',
+    'Delete empty packages in project group_id.
+    Returns true if succeed, or a soap fault if an error occured.'
+);
+
+$server->register(
+    'deleteEmptyReleases',
+    array(
+        'sessionKey'=>'xsd:string',
+        'group_id'=>'xsd:int',
+        'package_id'=>'xsd:int'
+        ),
+    array('deleteEmptyReleasesResponse'=>'tns:ArrayOfInt'),
+    $uri,
+    $uri.'#deleteEmptyReleases',
+    'rpc',
+    'encoded',
+    'Delete empty releases in package package_id.
+    Returns true if succeed, or a soap fault if an error occured.'
+);
+
 } else {
 
 /**
@@ -1185,22 +1226,119 @@ function deleteFile($sessionKey, $group_id, $package_id, $release_id, $file_id) 
         return new SoapFault(invalid_session_fault,'Invalid Session','deleteFile');
     }
 }
-    
+
+/**
+ * deleteEmptyPackages - Delete empty packages in project group_id.
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the project in which we want to delete empty packages
+ *
+ * @return Array list of deleted package id, or a soap fault if:
+ *                 - group_id does not match with a valid project
+ *                 - the user does not have permissions to delete packages
+ *                 - the system was not able to delete the packages.
+ */
+function deleteEmptyPackages($sessionKey, $group_id) {
+    if (session_continue($sessionKey)) {
+        try {
+            $pm = ProjectManager::instance();
+            $pm->getGroupByIdForSoap($group_id, 'deleteEmptyPackages');
+        } catch (SoapFault $e) {
+            return $e;
+        }
+        $packageFactory = new FRSPackageFactory();
+        $packages = $packageFactory->getFRSPackagesFromDb($group_id);
+        $deleted = array();
+        foreach ($packages as $package) {
+            $releaseFactory = new FRSReleaseFactory();
+            $releases = $releaseFactory->getFRSReleasesFromDb($package->getPackageID());
+            if (empty($releases)) {
+                if ($packageFactory->userCanUpdate($group_id, $package->getPackageID())) {
+                    if ($packageFactory->delete_package($group_id, $package->getPackageID())) {
+                        $deleted[] = $package->getPackageID();
+                    } else {
+                        return new SoapFault(invalid_package_fault, 'Package '.$package->getPackageID().' could not be deleted', 'deleteEmptyPackages');
+                    }
+                } else {
+                    return new SoapFault(invalid_package_fault, 'You don\'t have permission to delete package '.$package->getPackageID(), 'deleteEmptyPackages');
+                }
+            }
+        }
+        return $deleted;
+    } else {
+        return new SoapFault(invalid_session_fault, 'Invalid Session', 'deleteEmptyPackages');
+    }
+}
+
+/**
+ * deleteEmptyReleasess - Delete empty releases in package package_id in project group_id.
+ *
+ * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the project in which we want to delete empty releases
+ * @param int $package_id the ID of the package in which we want to delete empty releases
+ *
+ * @return Array list of deleted release id, or a soap fault if:
+ *                 - group_id does not match with a valid project
+ *                 - the package_id does not match
+ *                 - the user does not have permissions to delete releases
+ *                 - the system was not able to delete the releases.
+ */
+function deleteEmptyReleases($sessionKey, $group_id, $package_id) {
+    if (session_continue($sessionKey)) {
+        try {
+            $pm = ProjectManager::instance();
+            $pm->getGroupByIdForSoap($group_id, 'deleteEmptyReleasess');
+        } catch (SoapFault $e) {
+            return $e;
+        }
+        $packageFactory = new FRSPackageFactory();
+        $package = $packageFactory->getFRSPackageFromDb($package_id);
+        if (!$package || $package->getGroupID() != $group_id) {
+            return new SoapFault(invalid_package_fault, 'Invalid Package', 'deleteEmptyReleasess');
+        }
+
+        // retrieve the release
+        $releaseFactory = new FRSReleaseFactory();
+        $releases = $releaseFactory->getFRSReleasesFromDb($package_id);
+        $deleted = array();
+        foreach ($releases as $release) {
+            $fileFactory = new FRSFileFactory();
+            $files = $fileFactory->getFRSFilesFromDb($release->getReleaseID());
+            if (empty($files)) {
+                if ($releaseFactory->userCanUpdate($group_id, $release->getReleaseID())) {
+                    if ($releaseFactory->delete_release($group_id, $release->getReleaseID())) {
+                        $deleted[] = $release->getReleaseID();
+                    } else {
+                        return new SoapFault(invalid_package_fault, 'Release '.$release->getReleaseID().' could not be deleted', 'deleteEmptyReleasess');
+                    }
+                } else {
+                    return new SoapFault(invalid_package_fault, 'You don\'t have permission to delete package '.$release->getReleaseID(), 'deleteEmptyReleasess');
+                }
+            }
+        }
+        return $deleted;
+    } else {
+        return new SoapFault(invalid_session_fault, 'Invalid Session', 'deleteEmptyReleasess');
+    }
+}
+
 $server->addFunction(
-    	array(
+        array(
             'getPackages',
             'addPackage',
             'getReleases',
-    	    'addRelease',
-    	    'getFiles',
-    	    'getFileInfo',
-    	    'getFile',
-    	    'getFileChunk',
-    	    'addFile',
-    	    'addFileChunk',
-    	    'addUploadedFile',
-    	    'getUploadedFiles',
-            'deleteFile'
+            'addRelease',
+            'getFiles',
+            'getFileInfo',
+            'getFile',
+            'getFileChunk',
+            'addFile',
+            'addFileChunk',
+            'addUploadedFile',
+            'getUploadedFiles',
+            'deleteFile',
+            'deleteEmptyPackages',
+            'deleteEmptyReleases'
             ));
 
 }
