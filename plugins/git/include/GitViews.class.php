@@ -624,7 +624,7 @@ class GitViews extends PluginViews {
         echo '<p>';
         echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label><br />';
         echo '<input type="text" size="30" placeholder="'. $this->getText('fork_repositories_placeholder') .'" onchange="$(\'eg_path\').update($F(this).strip() ? $F(this).strip() + \'/\' : \'\')"/>';
-        echo '<div>Eg: u/'. $this->user->getName() .'/<span id="eg_path"></span><span id="eg_repo">...</span></div>';
+        echo '<br><span>Eg: u/'. $this->user->getName() .'/<span id="eg_path"></span><span id="eg_repo">...</span></span>';
         echo '</p>';
         
         echo '<p>';
