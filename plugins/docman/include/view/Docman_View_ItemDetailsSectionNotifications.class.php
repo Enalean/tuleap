@@ -74,7 +74,6 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
             $listeners = $this->notificationsManager->getListeningUsers($this->item);
             if (!empty($listeners)) {
                 $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('plugin_docman', 'details_listeners') .'</legend>';
-                $content .= $this->addListeningUser($itemId);
                 $content .= '<form name="remove_monitoring" method="POST" action="">';
                 $content .= '<input type="hidden" name="action" value="remove_monitoring" />';
                 $content .= '<table><tr><td>';
@@ -94,11 +93,12 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                     $content .= '</td></tr>';
                 }
                 // TODO : ask user if he wants or not to notify the users he remove
-                // TODO : We may ask him also if his name wil appear as the guilty one or not
+                // TODO : We may ask him also if his name will appear as the guilty one or not
                 $content .= '<td colspan="2"><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
                 $content .= '</tbody></table></form>';
-                $content .= '</td><td><div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help').'</div></td></tr></table>';
-                $content .= '</fieldset>';
+                $content .= '</td><td><div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help').'</div></td></tr>';
+                $content .= $this->addListeningUser($itemId);
+                $content .= '</table></fieldset>';
             }
         }
         return $content;
@@ -112,18 +112,18 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
      * @return String
      */
     function addListeningUser($itemId) {
-        $content = '<tr><form name="add_monitoring" method="POST" action="">';
+        $content = '<tr><td colspan="2"><hr width="100%" size="1" NoShade></td></tr>';
+        $content .= '<tr><form name="add_monitoring" method="POST" action="">';
         $content .= '<input type="hidden" name="func" value="adduser">';
         $content .= '<input type="hidden" name="item_id" value="'. $itemId .'">';
         $content .= '<td><b>'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_title') .'</b></td>';
-        $content .= '<td><input type="text" name="unix_name" value="" id="add_user" size="45"></td>';
+        $content .= '<td><input type="text" name="unix_name" value="" id="add_user" size="45">';
         //autocompletion on "add_user" field.
         $autocomplete = "new UserAutoCompleter('add_user','".
                         util_get_dir_image_theme()."',false);";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($autocomplete);
-        $content .= '<td colspan="2" align="center"><input type="submit" name="submit" value="'.
+        $content .= '<input type="submit" name="submit" value="'.
                     $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user') .'"></td></form></tr>';
-        $content .= '<hr width="100%" size="1" NoShade>';
         return $content;
     }
 
