@@ -643,6 +643,8 @@ plugin_docman	notifications_not_removed	Impossible de supprimer le monitoring po
 plugin_docman	notifications_not_present	Le monitoring n'était pas activé pour l'utilisateur '$1'
 plugin_docman	notifications_removed	Le monitoring a été supprimé pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_no_user	Aucun utilisateur séléctionné
+plugin_docman	notifications_add_user	Ajoutez l'utilisateur
+plugin_docman	notifications_add_user_title	Ajoutez un utilisateur à la liste de monitoring :
 plugin_docman	notifications_permission_denied	Vous n'avez pas assez de permission pour supprimer le monitoring d'autres utilisateurs
 plugin_docman	notifications_cascade_on	Vous surveillez désormais '$1' et sa sous-hiérarchie.
 plugin_docman	notifications_removed_mail_body	$1 a été supprimé par $2.\n\n---------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez cet item.\n$3.

@@ -115,13 +115,14 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content = '<form name="add_monitoring" method="POST" action="">';
         $content .= '<input type="hidden" name="func" value="adduser">';
         $content .= '<input type="hidden" name="item_id" value="'. $itemId .'">';
-        $content .= '<tr><td><b>Add user to minotoring list :</b></td>';
+        $content .= '<tr><td><b>'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_title') .'</b></td>';
         $content .= '<td><input type="text" name="unix_name" value="" id="add_user"></td></tr>';
         //autocompletion on "add_user" field.
         $autocomplete = "new UserAutoCompleter('add_user','".
                         util_get_dir_image_theme()."',false);";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($autocomplete);
-        $content .= '<tr><td colspan="2" align="center"><input type="submit" name="submit" value="Add user"></td></tr></form>';
+        $content .= '<tr><td colspan="2" align="center"><input type="submit" name="submit" value="'.
+                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user') .'"></td></tr></form>';
         $content .= '<hr width="100%" size="1" NoShade>';
         return $content;
     }
