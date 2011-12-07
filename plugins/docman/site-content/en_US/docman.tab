@@ -643,8 +643,8 @@ plugin_docman	notifications_not_removed	Unable to remove monitoring for user '$1
 plugin_docman	notifications_not_present	Monitoring was not active for user '$1'
 plugin_docman	notifications_removed	Removed monitoring for user(s) '$1'
 plugin_docman	notifications_no_user	No user selected
-plugin_docman	notifications_add_user	Add user
-plugin_docman	notifications_add_user_title	Add user to the minotoring list :
+plugin_docman	notifications_add_user	Add
+plugin_docman	notifications_add_user_title	Add users to the minotoring list :
 plugin_docman	notifications_permission_denied	You don't have enough permissions to remove users monitoring
 plugin_docman	notifications_cascade_on	You're monitoring '$1' and its sub-hierarchy.
 plugin_docman	notifications_removed_mail_body	$1 has been removed by $2.\n\n---------------------------------------------------------------------\nYou are receiving this message because you were monitoring this item.\n$3.
