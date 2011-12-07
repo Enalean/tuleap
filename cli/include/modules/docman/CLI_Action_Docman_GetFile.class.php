@@ -36,6 +36,10 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
             'name'           => 'output',
             'description'    => '--output=<location>          (Optional) Name of the file to write the file to',
         ));
+        $this->addParam(array(
+            'name'           => 'remote_name',
+            'description'    => '--remote_name=<boolean>          (Optional) Set to true if you want to retrieve the filename from the server instead of using --output',
+        ));
 
     }
     
@@ -59,11 +63,11 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
     }
 
     // Manage screen/file output
-    function manageOutput($soap_params, &$output, &$fd) {
+    function manageOutput($soap_params, &$output, &$fd, $remoteName) {
         $output = false;
             if ($soap_params['output']) {
             $output = $soap_params['output'];
-        } else {
+        } elseif ($remoteName) {
             $fileInfo = $GLOBALS['soap']->call('getDocmanTreeInfo', $soap_params);
             $output   = $fileInfo[0]->filename;
         }
@@ -81,6 +85,9 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
     function soapCall($soap_params, $use_extra_params = true) {
         // Prepare SOAP parameters
         $callParams = $soap_params;
+        $remoteName = $callParams['remote_name'];
+        unset($callParams['remote_name']);
+        unset($soap_params['remote_name']);
         unset($callParams['output']);
         $callParams['chunk_offset']     = 0;
         $callParams['chunk_size'] = $GLOBALS['soap']->getFileChunkSize();
@@ -92,7 +99,7 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
             $callParams['chunk_offset'] = $i * $GLOBALS['soap']->getFileChunkSize();
             $content = base64_decode($GLOBALS['soap']->call($this->soapCommand, $callParams, $use_extra_params));
             if ($i == 0) {
-                $this->manageOutput($soap_params, $output, $fd);
+                $this->manageOutput($soap_params, $output, $fd, $remoteName);
             }
             $cLength = strlen($content);
             if ($output !== false) {
