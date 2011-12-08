@@ -648,6 +648,7 @@ plugin_docman	notifications_already_exists	Le monitoring pour le(s) utilisateur(
 plugin_docman	notifications_no_user	Aucun utilisateur séléctionné
 plugin_docman	notifications_add_user	Ajoutez
 plugin_docman	notifications_add_user_title	Ajoutez des utilisateurs à la liste de monitoring :
+plugin_docman	notifications_add_user_cascade	Monitoring activé pour toute la sous-hiérarchie
 plugin_docman	notifications_permission_denied	Vous n'avez pas assez de permission pour supprimer le monitoring d'autres utilisateurs
 plugin_docman	notifications_cascade_on	Vous surveillez désormais '$1' et sa sous-hiérarchie.
 plugin_docman	notifications_removed_mail_body	$1 a été supprimé par $2.\n\n---------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez cet item.\n$3.
