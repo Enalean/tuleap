@@ -117,7 +117,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $nm->sendNotifications('', '');
     }
 
-    function testGetMessageForUserEmptyListeners() {
+    function testGetMessageForUserSameListenedItem() {
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = new MockUser();
@@ -137,7 +137,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $this->assertEqual("Something happen !\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'something happen', $params));
     }
 
-    function testGetMessageForUser() {
+    function testGetMessageForUserParentListened() {
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = new MockUser();
