@@ -644,6 +644,7 @@ plugin_docman	notifications_not_present	Le monitoring n'était pas activé pour 
 plugin_docman	notifications_removed	Le monitoring a été supprimé pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_added	Le monitoring a été ajouté pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_not_added	Le monitoring n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_cascade_not_added	Le monitoring de la sous-hiérarchie n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_already_exists	Le monitoring pour le(s) utilisateur(s) '$1' existe déjà
 plugin_docman	notifications_no_user	Aucun utilisateur séléctionné
 plugin_docman	notifications_add_user	Ajoutez

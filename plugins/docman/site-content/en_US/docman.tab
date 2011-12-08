@@ -643,7 +643,8 @@ plugin_docman	notifications_not_removed	Unable to remove monitoring for user '$1
 plugin_docman	notifications_not_present	Monitoring was not active for user '$1'
 plugin_docman	notifications_removed	Removed monitoring for user(s) '$1'
 plugin_docman	notifications_added	Monitoring for user(s) '$1' has been added
-plugin_docman	notifications_not_added	Monitoring for user(s) '$1' has not been added
+plugin_docman	notifications_not_added	Monitoring for the whole sub-hierarchy for user(s) '$1' has not been added
+plugin_docman	notifications_cascade_not_added	Monitoring for user(s) '$1' has not been added
 plugin_docman	notifications_already_exists	Monitoring for user(s) '$1' already existing
 plugin_docman	notifications_no_user	No user selected
 plugin_docman	notifications_add_user	Add

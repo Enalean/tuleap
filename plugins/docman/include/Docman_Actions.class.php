@@ -1597,19 +1597,26 @@ class Docman_Actions extends Actions {
     function add_monitoring($params) {
         if (isset($params['listeners_to_add']) && is_array($params['listeners_to_add']) && !empty($params['listeners_to_add'])) {
             if ($this->_controler->userCanManage($params['item']->getId())) {
+                $cascade = false;
+                if (isset($params['monitor_cascade']) && $params['monitor_cascade']) {
+                    $cascade = true;
+                }
                 $users = array();
                 foreach ($params['listeners_to_add'] as $user) {
                     if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
                         if ($this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
+                            if ($cascade && !$this->_controler->notificationsManager->add($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_not_added', array($user->getName())));
+                            }
                             $users[] = $user->getName();
                             // TODO : send notification to the user about this action
                         } else {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_added', array($user->getName())));
                         }
-                    } else {
-                        $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists', array($user->getName())));
+                        } else {
+                            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists', array($user->getName())));
+                        }
                     }
-                }
                 if (!empty($users)) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_added', array(implode(',', $users))));
                 }

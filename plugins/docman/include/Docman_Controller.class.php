@@ -873,6 +873,9 @@ class Docman_Controller extends Controler {
                     foreach ($usernames as $username) {
                         $users[] = $um->findUser($username);
                     }
+                    if ($this->request->exist('monitor_cascade')) {
+                        $this->_actionParams['monitor_cascade'] = $this->request->get('monitor_cascade');
+                    }
                     $this->_actionParams['listeners_to_add'] = $users;
                     $this->_actionParams['item']                = $item;
                 }
