@@ -24,10 +24,15 @@ Mock::generatePartial('Docman_NotificationsManager',
                       array('_getMail',
                             '_getItemFactory',
                             '_groupGetObject',
-                            '_getDao'));
+                            '_getDao',
+                            'getListeningUsers'));
 
 require_once dirname(__FILE__).'/../include/Docman_ItemFactory.class.php';
 Mock::generate('Docman_ItemFactory');
+require_once dirname(__FILE__).'/../include/Docman_Item.class.php';
+Mock::generate('Docman_Item');
+require_once dirname(__FILE__).'/../include/Docman_Path.class.php';
+Mock::generate('Docman_Path');
 
 require_once 'common/user/User.class.php';
 Mock::generate('User');
@@ -110,6 +115,48 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $nm->_messages[] = array('title' => 'Move 2', 'content' => 'Changed 2', 'to' => array($user));
 
         $nm->sendNotifications('', '');
+    }
+
+    function testGetMessageForUserEmptyListeners() {
+        $notificationsManager = new Docman_NotificationsManager_TestVersion();
+        $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
+        $user = new MockUser();
+        $user->setReturnValue('getRealName', 'John Doe');
+        $user->setReturnValue('getId', 2);
+        $params['path']      = new MockDocman_Path();
+        $params['path']->setReturnValue('get', 'Folder1/Folder2/File');
+        $params['item']      = new MockDocman_Item();
+        $params['item']->setReturnValue('getId', 1);
+        $notificationsManager->setReturnValue('getListeningUsers', array($user->getId() => $params['item']));
+        $params['wiki_page'] = 'wiki';
+        $params['url']       = 'http://www.example.com/plugins/docman/';
+
+        $this->assertEqual("Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=1\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'modified', $params));
+        $this->assertEqual("Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=1\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'new_version', $params));
+        $this->assertEqual("New version of wikiwiki page was created by John Doe.\nhttp://www.example.com/plugins/docman/\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'new_wiki_version', $params));
+        $this->assertEqual("Something happen !\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'something happen', $params));
+    }
+
+    function testGetMessageForUser() {
+        $notificationsManager = new Docman_NotificationsManager_TestVersion();
+        $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
+        $user = new MockUser();
+        $user->setReturnValue('getRealName', 'John Doe');
+        $user->setReturnValue('getId', 2);
+        $params['path']      = new MockDocman_Path();
+        $params['path']->setReturnValue('get', 'Folder1/Folder2/File');
+        $params['item']      = new MockDocman_Item();
+        $params['item']->setReturnValue('getId', 10);
+        $parentItem      = new MockDocman_Item();
+        $parentItem->setReturnValue('getId', 1);
+        $notificationsManager->setReturnValue('getListeningUsers', array($user->getId() => $parentItem));
+        $params['wiki_page'] = 'wiki';
+        $params['url']       = 'http://www.example.com/plugins/docman/';
+
+        $this->assertEqual("Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=10\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'modified', $params));
+        $this->assertEqual("Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=10\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'new_version', $params));
+        $this->assertEqual("New version of wikiwiki page was created by John Doe.\nhttp://www.example.com/plugins/docman/\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'new_wiki_version', $params));
+        $this->assertEqual("Something happen !\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'something happen', $params));
     }
 
 }

@@ -232,7 +232,15 @@ class Docman_NotificationsManager extends NotificationsManager {
         $msg .= "\n\n--------------------------------------------------------------------\n";
         $msg .= "You are receiving this message because you are monitoring this item.\n";
         $msg .= "To stop monitoring, please visit:\n";
-        $msg .= $this->_url .'&action=details&section=notifications&id='. $params['item']->getId();
+        $listeners     = $this->getListeningUsers($params['item']);
+        $monitoredItem = $params['item'];
+        foreach ($listeners as $userId => $item) {
+            if ($user->getId() == $userId) {
+                $monitoredItem = $item;
+                break;
+            }
+        }
+        $msg .= $this->_url .'&action=details&section=notifications&id='. $monitoredItem->getId();
         return $msg;
     }
 
