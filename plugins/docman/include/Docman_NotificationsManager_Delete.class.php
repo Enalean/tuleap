@@ -113,11 +113,13 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager {
                                                               $this->_url));
                 break;
             case self::MESSAGE_REMOVED_FROM:
+                $monitoredItem = $this->_getMonitoredItem($user, $params['parent']);
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed_from_mail_body', array($params['path']->get($params['parent']), 
                                                               $user->getRealName(),
                                                               $this->_url,
                                                               $params['parent']->getId(),
-                                                              $params['item']->getTitle()));
+                                                              $params['item']->getTitle(),
+                                                              $monitoredItem->getId()));
                 break;
             default:
                 $msg .= parent::_getMessageForUser($user, $message_type, $params);

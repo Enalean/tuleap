@@ -653,13 +653,18 @@ plugin_docman	notifications_add_user_cascade	Monitoring activé pour toute la so
 plugin_docman	notifications_permission_denied	Vous n'avez pas assez de permission pour supprimer le monitoring d'autres utilisateurs
 plugin_docman	notifications_cascade_on	Vous surveillez désormais '$1' et sa sous-hiérarchie.
 plugin_docman	notifications_removed_mail_body	$1 a été supprimé par $2.\n\n---------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez cet item.\n$3.
-plugin_docman	notifications_removed_from_mail_body	$1 a été modifié par $2.\n$3&action=show&id=$4\n\nSupprimé:\n $5\n\n----------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez ce répertoire.\nPour arrêter la surveillance, aller à la page suivante :\n $3&action=details&section=notifications&id=$4	
-plugin_docman	notifications_added_mail_body	$1 a été modifié par $2\n$3&action=show&id=$4\n\nAjouté :\n$5\n\n----------------------------------------------------------------------\n\nVous recevez ce message parce que vous surveillez ce répertoire. \nPour arrêter la surveillance, aller à la page suivante :\n$3&action=details&section=notifications&id=$4
+plugin_docman	notifications_removed_from_mail_body	$1 a été modifié par $2.\n$3&action=show&id=$4\n\nSupprimé:\n $5\n\n----------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez ce répertoire.\nPour arrêter la surveillance, aller à la page suivante :\n $3&action=details&section=notifications&id=$6
+plugin_docman	notifications_added_mail_body	$1 a été modifié par $2\n$3&action=show&id=$4\n\nAjouté :\n$5\n\n----------------------------------------------------------------------\n\nVous recevez ce message parce que vous surveillez ce répertoire. \nPour arrêter la surveillance, aller à la page suivante :\n$3&action=details&section=notifications&id=$6
 plugin_docman	notifications_moved_to		vers : \n $1
 plugin_docman	notifications_moved_from	de : \n $1
 plugin_docman	notifications_moved_mail_body_begin	$1 a été modifié par $2\n$3&action=show&id=$4\n\nDéplacé
 plugin_docman	notifications_moved_mail_body_end	\n\n--------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez cet item.\nPour arrêter la surveillance, aller à la page suivante :\n$1&action=details&section=notifications&id=$2
 plugin_docman	notifications_moved_from_mail_body_begin	 $1 a été modifié par $2\n$3&action=show&id=$4\n\n$5 déplacé
+plugin_docman	notif_modified_by	a été modifié par
+plugin_docman	notif_wiki_new_version	Une nouvelle version de la page wiki $1 a été crée par
+plugin_docman	notif_something_happen	Quelque chose a changé !
+plugin_docman	notif_footer_message	Vous recevez cette notification car vous monitorez cet item.
+plugin_docman	notif_footer_message_link	Pour arreter le monitoring, veuillez visiter :
 
 plugin_docman	obso_warn_email_subject	[$1] Document '$2' sera obsolète dans un mois
 plugin_docman	obso_warn_email_body	En tant que propriétaire du document, vous êtes notifié de l'obsolescence du document:\nTitre : $1\nProjet : $2\nObsolescence : $3\nLien direct : <$4>\n\nCe document disparaîtra de votre gestionnaire de document dans un mois \nsi vous ne faites rien. Ce document restera accessible à travers l'interface\nd'administration néanmoins.\nVous pouvez changer la date d'obsolescence de votre document à l'adresse suivante : \n<$5>\n\n--\nCeci est un message automatique. Merci de ne pas répondre à cet email.\n
@@ -858,9 +863,3 @@ plugin_docman	item_not_restored	L'item sélectionné n'a pas pu être restauré.
 
 plugin_docman	permission_requests	Demandes de permission pour le gestionnaire de documents
 plugin_docman	permission_requests_information	Le groupe séléctionné n'affectera pas les personnes notifiées pour les demandes de permission sur le service de documents.<br> Seuls les <b>gestionnaires du document</b> seront notifiés dans ce cas.
-
-plugin_docman	notif_modified_by	a été modifié par
-plugin_docman	notif_wiki_new_version	Une nouvelle version de la page wiki $1 a été crée par
-plugin_docman	notif_something_happen	Quelque chose a changé !
-plugin_docman	notif_footer_message	Vous recevez cette notification car vous monitorez cet item.
-plugin_docman	notif_footer_message_link	Pour arreter le monitoring, veuillez visiter :
