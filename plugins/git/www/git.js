@@ -17,7 +17,7 @@ document.observe('dom:loaded', function () {
     if ($('eg_path') && $('eg_repo')) {
         new PeriodicalExecuter(function () {
             $('eg_path').update($F('fork_repositories_path').strip() ? $F('fork_repositories_path').strip() + '/' : '');
-            $('eg_repo').update($F('fork_repositories_repo')[0] || '...');
+            $('eg_repo').update($('fork_repositories_repo').selectedIndex >= 0 ? $('fork_repositories_repo').options[$('fork_repositories_repo').selectedIndex].text : '...');
         }, 1);
     }
 } );

@@ -30,11 +30,23 @@ class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsReposi
     }
     
     public function getExpectedPattern($repositories) {
-        $li_regexp_for_repository_representation = '<option>(?P<repo>.*)</option>';
+        $li_regexp_for_repository_representation = '<option value="(?P<value>.*)">(?P<repo>[^\(]*)</option>';
         $nb_repositories                         = count($repositories);
         
         return sprintf('<select (?P<args>.*)>(?:%s){%d}</select>', $li_regexp_for_repository_representation, $nb_repositories);
     }
     
+    
+    public function testRepoIDShouldBeTheValue() {
+        $view = new MockGitViews();
+        $user = new MockUser();
+        $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
+        
+        $repositories    = $this->getFlatTree($strategy);
+        $a_repository_id = 4;
+        
+        $strategy->__construct($view);
+        $this->assertPattern('`value="'. $a_repository_id .'"`', $strategy->fetch($repositories, $user));
+    }
 }
 ?>

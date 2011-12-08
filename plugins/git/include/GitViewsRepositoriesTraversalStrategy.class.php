@@ -77,22 +77,30 @@ abstract class GitViewsRepositoriesTraversalStrategy {
             if ( $delDate != '0000-00-00 00:00:00' ) {
                 continue;
             }
-
-            // Access type
+            
             $accessType = $this->view->fetchAccessType($access, $data[$childId][GitDao::REPOSITORY_BACKEND_TYPE] == GitDao::BACKEND_GITOLITE);
             
-            $item_representation = $accessType.' '.$this->view->_getRepositoryPageUrl($r->getId(), $repoName);
-            if ($isInit == 0) {
-                $item_representation .= ' ('.$this->view->getText('view_repo_not_initialized').') ';
-            }
+            //TODO Why the hell do we need to use isInit or repoName? Isn't it a property of the repo?
+            $item_representation = $this->getLabel($r, $isInit, $accessType, $repoName);
 
             if ( !empty($flatTree[$childId]) ) {
                 $item_representation .= $this->getGroupWrapper($repoName, $this->_makeRepositoryTree($flatTree, $childId, $data, $user));
             }
-            $html .= $this->getItemWrapper($item_representation);
+            $html .= $this->getItemWrapper($r, $item_representation);
         }
         return $html;
     }
+    /**
+     * Get the repository label
+     *
+     * @param GitRepository $repository    Teh repository
+     * @param bool          $isInitialized true of the repo is initialized
+     * @param string        $accessType    The access type of the repository
+     * @param string        $repoName      The name of the repository
+     *
+     * @return string
+     */
+    protected abstract function getLabel(GitRepository $repository, $isInitialized, $accessType, $repoName);
     
     /**
      * Wrapper for GitRepository for unit testing purpose
@@ -120,11 +128,12 @@ abstract class GitViewsRepositoriesTraversalStrategy {
     /**
      * Get Item wrapper
      *
-     * @param string $inner the string representation of the item
+     * @param GitRepository $repo  the string representation of the item
+     * @param string        $inner the string representation of the item
      *
      * @return string the $inner encapsulated in its own wrapper
      */
-    protected abstract function getItemWrapper($inner);
+    protected abstract function getItemWrapper(GitRepository $repo, $inner);
     
     /**
      * Get group wrapper

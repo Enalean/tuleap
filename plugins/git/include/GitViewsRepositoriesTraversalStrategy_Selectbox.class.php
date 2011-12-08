@@ -44,6 +44,21 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
     }
     
     /**
+     * Get the repository label
+     *
+     * @param GitRepository $repository    Teh repository
+     * @param bool          $isInitialized true of the repo is initialized
+     * @param string        $accessType    The access type of the repository
+     * @param string        $repoName      The name of the repository
+     *
+     * @return string
+     */
+    protected function getLabel(GitRepository $repository, $isInitialized, $accessType, $repoName) {
+        $label = $repoName;
+        return $label;
+    }
+    
+    /**
      * Get the main wrapper of the whole representation
      *
      * @param string $inner The inner string
@@ -57,12 +72,13 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
     /**
      * Get Item wrapper
      *
-     * @param string $inner the string representation of the item
+     * @param GitRepository $repo  the string representation of the item
+     * @param string        $inner the string representation of the item
      *
      * @return string the $inner encapsulated in its own wrapper
      */
-    protected function getItemWrapper($inner) {
-        return '<option>'. $inner .'</option>';
+    protected function getItemWrapper(GitRepository $repo, $inner) {
+        return '<option value="'. $repo->getId() .'">'. $inner .'</option>';
     }
     
     /**
