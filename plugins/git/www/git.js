@@ -13,4 +13,11 @@ document.observe('dom:loaded', function () {
         });
         span.insert({after:link});
     }
+    
+    if ($('eg_path') && $('eg_repo')) {
+        new PeriodicalExecuter(function () {
+            $('eg_path').update($F('fork_repositories_path').strip() ? $F('fork_repositories_path').strip() + '/' : '');
+            $('eg_repo').update($F('fork_repositories_repo')[0] || '...');
+        }, 1);
+    }
 } );
