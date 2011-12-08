@@ -119,7 +119,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content .= '<td><b>'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_title') .'</b></td>';
         $content .= '<td><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea>';
         //autocompletion on "add_user" field.
-        $autocomplete = "new UserAutoCompleter('add_users','".
+        $autocomplete = "new UserAutoCompleter('listeners_to_add','".
                         util_get_dir_image_theme()."',true);";
         $GLOBALS['Response']->includeFooterJavascriptSnippet($autocomplete);
         $content .= '<input type="submit" name="submit" value="'.
