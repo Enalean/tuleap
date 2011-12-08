@@ -226,7 +226,15 @@ class Docman_NotificationsManager extends NotificationsManager {
         return $GLOBALS['Language'];
     }
 
-    function _getMonitoredItem($user, $item) {
+    /**
+     * Obtain the monitored parent from an item monitored indirectly by user
+     *
+     * @param $user User monitoring the item
+     * @param $item Item which parent is monitored
+     *
+     * @return Docman_Item
+     */
+    function _getMonitoredItemForUser($user, $item) {
         $listeners = $this->getListeningUsers($item);
         foreach ($listeners as $userId => $item) {
             if ($user->getId() == $userId) {
@@ -256,7 +264,7 @@ class Docman_NotificationsManager extends NotificationsManager {
         $msg .= "\n\n--------------------------------------------------------------------\n";
         $msg .= $language->getText('plugin_docman', 'notif_footer_message')."\n";
         $msg .= $language->getText('plugin_docman', 'notif_footer_message_link')."\n";
-        $monitoredItem = $this->_getMonitoredItem($user, $params['item']);
+        $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
         $msg .= $this->_url .'&action=details&section=notifications&id='. $monitoredItem->getId();
         return $msg;
     }

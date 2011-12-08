@@ -93,7 +93,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
                     }
                     $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_moved_to', array($params['path']->get($params['parent'])));
                 }
-                $monitoredItem = $this->_getMonitoredItem($user, $params['item']);
+                $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
                  $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_moved_mail_body_end', 
                                                                 array( $this->_url,
                                                                              $monitoredItem->getId()));
@@ -113,7 +113,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
                 if ($dpm->userCanAccess($params['user_monitor'], $params['parent']->getId())) {
                     $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_moved_to', array($params['path']->get($params['parent'])));
                 }
-                $monitoredItem = $this->_getMonitoredItem($user, $params['old_parent']);
+                $monitoredItem = $this->_getMonitoredItemForUser($user, $params['old_parent']);
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_moved_mail_body_end', 
                                                                 array( $this->_url,
                                                                              $monitoredItem->getId()));
@@ -132,7 +132,7 @@ class Docman_NotificationsManager_Move extends Docman_NotificationsManager {
                 if ($dpm->userCanAccess($params['user_monitor'], $params['parent']->getId())) {
                     $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_moved_to', array($params['path']->get($params['parent'])));
                 }
-                $monitoredItem = $this->_getMonitoredItem($user, $params['parent']);
+                $monitoredItem = $this->_getMonitoredItemForUser($user, $params['parent']);
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_moved_mail_body_end', 
                                                                 array( $this->_url,
                                                                              $monitoredItem->getId()));

@@ -53,7 +53,7 @@ class Docman_NotificationsManager_Add extends Docman_NotificationsManager {
         $msg = '';
         switch($message_type) {
             case self::MESSAGE_ADDED:
-                $monitoredItem = $this->_getMonitoredItem($user, $params['parent']);
+                $monitoredItem = $this->_getMonitoredItemForUser($user, $params['parent']);
                 $msg .= $GLOBALS['Language']->getText('plugin_docman', 'notifications_added_mail_body', array($params['path']->get($params['parent']), 
                                                               $user->getRealName(),
                                                               $this->_url,
