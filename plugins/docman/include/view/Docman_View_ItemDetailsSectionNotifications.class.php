@@ -114,10 +114,10 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
     function addListeningUser($itemId) {
         $content = '<tr><td colspan="2"><hr width="100%" size="1" NoShade></td></tr>';
         $content .= '<tr><form name="add_monitoring" method="POST" action="">';
-        $content .= '<input type="hidden" name="func" value="adduser">';
+        $content .= '<input type="hidden" name="action" value="add_monitoring">';
         $content .= '<input type="hidden" name="item_id" value="'. $itemId .'">';
         $content .= '<td><b>'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_title') .'</b></td>';
-        $content .= '<td><textarea name="add_mail" value="" id="add_users" rows="2" cols="50"></textarea>';
+        $content .= '<td><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea>';
         //autocompletion on "add_user" field.
         $autocomplete = "new UserAutoCompleter('add_users','".
                         util_get_dir_image_theme()."',true);";

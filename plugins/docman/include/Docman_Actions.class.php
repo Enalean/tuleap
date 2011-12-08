@@ -1588,6 +1588,41 @@ class Docman_Actions extends Actions {
     }
 
     /**
+     * Add monitoring for more than one user
+     *
+     * @param Array $params contains list if users to subscribe and the item
+     *
+     * @return void
+     */
+    function add_monitoring($params) {
+        if (isset($params['listeners_to_add']) && is_array($params['listeners_to_add']) && !empty($params['listeners_to_add'])) {
+            if ($this->_controler->userCanManage($params['item']->getId())) {
+                $users = array();
+                foreach ($params['listeners_to_add'] as $user) {
+                    if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
+                        if ($this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
+                            $users[] = $user->getName();
+                            // TODO : send notification to the user about this action
+                        } else {
+                            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_added', array($user->getName())));
+                        }
+                    } else {
+                        $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists', array($user->getName())));
+                    }
+                }
+                if (!empty($users)) {
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_added', array(implode(',', $users))));
+                }
+            } else {
+                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
+            }
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
+        }
+    }
+    
+
+    /**
      * Remove monitoring for more than one user
      *
      * @param Array $params contains list if users to remove and the item

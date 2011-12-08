@@ -642,6 +642,9 @@ plugin_docman	notifications_on	Vous surveillez désormais '$1'.
 plugin_docman	notifications_not_removed	Impossible de supprimer le monitoring pour l'utilisateur '$1'
 plugin_docman	notifications_not_present	Le monitoring n'était pas activé pour l'utilisateur '$1'
 plugin_docman	notifications_removed	Le monitoring a été supprimé pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_added	Le monitoring a été ajouté pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_not_added	Le monitoring n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_already_exists	Le monitoring pour le(s) utilisateur(s) '$1' existe déjà
 plugin_docman	notifications_no_user	Aucun utilisateur séléctionné
 plugin_docman	notifications_add_user	Ajoutez
 plugin_docman	notifications_add_user_title	Ajoutez des utilisateurs à la liste de monitoring :

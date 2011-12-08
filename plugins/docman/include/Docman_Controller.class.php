@@ -861,6 +861,26 @@ class Docman_Controller extends Controler {
             $this->action = 'remove_monitoring';
             $this->_setView('Details');
             break;
+
+        case 'add_monitoring':
+            $this->_actionParams['listeners_to_add'] = array();
+            if ($this->request->exist('listeners_to_add')) {
+                $um         = UserManager::instance();
+                $vUser = new Valid_String('listeners_to_add');
+                if($this->request->valid($vUser)) {
+                    $usernames = array_map('trim', preg_split('/[,;]/', $this->request->get('listeners_to_add')));
+                    $users = array();
+                    foreach ($usernames as $username) {
+                        $users[] = $um->findUser($username);
+                    }
+                    $this->_actionParams['listeners_to_add'] = $users;
+                    $this->_actionParams['item']                = $item;
+                }
+            }
+            $this->action = 'add_monitoring';
+            $this->_setView('Details');
+            break;
+
         case 'move_here':
             if (!$this->request->exist('item_to_move')) {
                 $this->feedback->log('error', 'Missing parameter.');
