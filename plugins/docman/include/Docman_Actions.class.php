@@ -1613,10 +1613,10 @@ class Docman_Actions extends Actions {
                         } else {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_added', array($user->getName())));
                         }
-                        } else {
-                            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists', array($user->getName())));
-                        }
+                    } else {
+                        $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists', array($user->getName())));
                     }
+                }
                 if (!empty($users)) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_added', array(implode(',', $users))));
                 }
@@ -1627,7 +1627,7 @@ class Docman_Actions extends Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
         }
     }
-    
+
 
     /**
      * Remove monitoring for more than one user
