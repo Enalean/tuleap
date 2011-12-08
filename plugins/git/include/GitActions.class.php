@@ -475,6 +475,10 @@ class GitActions extends PluginActions {
     function getGitRepository() {
         return new GitRepository();
     }
+    
+    function forkRepositories($groupId, $repos_ids, $path) {
+        $GLOBALS['Response']->addFeedback('info', "Just received forkRepositories($groupId, ". json_encode($repos_ids) .", $path)");
+    }
 
 }
 

@@ -25,6 +25,7 @@ require_once('GitBackend.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('GitViewsRepositoriesTraversalStrategy_UL.class.php');
 require_once('GitViewsRepositoriesTraversalStrategy_Selectbox.class.php');
+require_once('common/include/CSRFSynchronizerToken.class.php');
 
 /**
  * GitViews
@@ -615,6 +616,12 @@ class GitViews extends PluginViews {
         echo '<h2>'. $this->getText('fork_repositories') .'</h2>';
         echo '<div class="help"><p>'. $this->getText('fork_repositories_desc') .'</p></div>';
         
+        echo '<form action="" method="POST">';
+        echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
+        echo '<input type="hidden" name="action" value="do_fork_repositories" />';
+        $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
+        echo $token->fetchHTMLInput();
+        
         echo '<p>';
         echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label><br />';
         $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
@@ -623,7 +630,7 @@ class GitViews extends PluginViews {
         
         echo '<p>';
         echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label><br />';
-        echo '<input type="text" size="30" placeholder="'. $this->getText('fork_repositories_placeholder') .'" id="fork_repositories_path" />';
+        echo '<input type="text" size="30" placeholder="'. $this->getText('fork_repositories_placeholder') .'" id="fork_repositories_path" name="path" />';
         echo '<br><span style="color: #999">Eg: u/'. $this->user->getName() .'/<span id="eg_path"></span><span id="eg_repo">...</span></span>';
         echo '</p>';
         
@@ -631,6 +638,7 @@ class GitViews extends PluginViews {
         echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         echo '</p>';
         
+        echo '</form>';
         echo '<br />';
     }
 

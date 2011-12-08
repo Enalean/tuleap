@@ -66,7 +66,7 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
      * @return string the $inner encapsuled in the wrapper
      */
     protected function getMainWrapper($inner) {
-        return '<select multiple size="7" id="fork_repositories_repo">'. $inner .'</select>';
+        return '<select multiple size="7" id="fork_repositories_repo" name="repos[]">'. $inner .'</select>';
     }
     
     /**

@@ -110,7 +110,9 @@ class Git extends PluginController {
                                             'fork',
                                             'set_private',
                                             'confirm_private',
-                                            'fork_repositories');
+                                            'fork_repositories',
+                                            'do_fork_repositories',
+            );
         } else {
             $this->addPermittedAction('index');
             if ($repoId !== 0) {
@@ -305,6 +307,29 @@ class Git extends PluginController {
                 break;
             case 'fork_repositories':
                 $this->addAction('getProjectRepositoryList', array($this->groupId));
+                $this->addView('forkRepositories');
+                break;
+            case 'do_fork_repositories':
+                $this->addAction('getProjectRepositoryList', array($this->groupId));
+                $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
+                $token->check();
+                
+                $path      = '';
+                $repos_ids = array();
+                
+                $valid = new Valid_String('path');
+                $valid->required();
+                if($this->request->valid($valid)) {
+                    $path = $this->request->get('path');
+                }
+                
+                $valid = new Valid_UInt('repos');
+                $valid->required();
+                if($this->request->validArray($valid)) {
+                    $repos_ids = $this->request->get('repos');
+                }
+                
+                $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path));
                 $this->addView('forkRepositories');
                 break;
             #LIST
