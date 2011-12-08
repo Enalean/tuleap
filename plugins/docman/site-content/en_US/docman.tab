@@ -859,3 +859,9 @@ plugin_docman	item_not_restored	The selected item has not been restored.
 
 plugin_docman	permission_requests	Document access requests
 plugin_docman	permission_requests_information	The selected group will not affect people notified for permission requests on documents service.<br> Only the <b>document managers</b> will be notified in that case.
+
+plugin_docman	notif_modified_by	has been modified by
+plugin_docman	notif_wiki_new_version	New version of $1 wiki page was created by
+plugin_docman	notif_something_happen	Something happen !
+plugin_docman	notif_footer_message	You are receiving this message because you are monitoring this item.
+plugin_docman	notif_footer_message_link	To stop monitoring, please visit:

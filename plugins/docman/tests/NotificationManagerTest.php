@@ -25,7 +25,8 @@ Mock::generatePartial('Docman_NotificationsManager',
                             '_getItemFactory',
                             '_groupGetObject',
                             '_getDao',
-                            'getListeningUsers'));
+                            'getListeningUsers',
+                            '_getLanguageForUser'));
 
 require_once dirname(__FILE__).'/../include/Docman_ItemFactory.class.php';
 Mock::generate('Docman_ItemFactory');
@@ -48,6 +49,9 @@ Mock::generate('Feedback');
 
 require_once 'common/dao/NotificationsDao.class.php';
 Mock::generate('NotificationsDao');
+
+require_once 'common/language/BaseLanguage.class.php';
+Mock::generate('BaseLanguage');
 
 class Docman_NotificationsManagerTest extends UnitTestCase {
 
@@ -118,7 +122,14 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
     }
 
     function testGetMessageForUserSameListenedItem() {
+        $language = new MockBaseLanguage();
+        $language->setReturnValue('getText', 'notif_modified_by', array('plugin_docman', 'notif_modified_by'));
+        $language->setReturnValue('getText', 'notif_wiki_new_version', array('plugin_docman', 'notif_wiki_new_version', 'wiki'));
+        $language->setReturnValue('getText', 'notif_something_happen', array('plugin_docman', 'notif_something_happen'));
+        $language->setReturnValue('getText', 'notif_footer_message', array('plugin_docman', 'notif_footer_message'));
+        $language->setReturnValue('getText', 'notif_footer_message_link', array('plugin_docman', 'notif_footer_message_link'));
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
+        $notificationsManager->setReturnValue('_getLanguageForUser', $language);
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = new MockUser();
         $user->setReturnValue('getRealName', 'John Doe');
@@ -131,14 +142,26 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $params['wiki_page'] = 'wiki';
         $params['url']       = 'http://www.example.com/plugins/docman/';
 
-        $this->assertEqual("Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=1\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'modified', $params));
-        $this->assertEqual("Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=1\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'new_version', $params));
-        $this->assertEqual("New version of wikiwiki page was created by John Doe.\nhttp://www.example.com/plugins/docman/\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'new_wiki_version', $params));
-        $this->assertEqual("Something happen !\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'something happen', $params));
+        $message1 = "Folder1/Folder2/File notif_modified_by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=1\n\n\n--------------------------------------------------------------------\nnotif_footer_message\nnotif_footer_message_link\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $message2 = "Folder1/Folder2/File notif_modified_by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=1\n\n\n--------------------------------------------------------------------\nnotif_footer_message\nnotif_footer_message_link\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $message3 = "notif_wiki_new_version John Doe.\nhttp://www.example.com/plugins/docman/\n\n\n--------------------------------------------------------------------\nnotif_footer_message\nnotif_footer_message_link\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $message4 = "notif_something_happen\n\n--------------------------------------------------------------------\nnotif_footer_message\nnotif_footer_message_link\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+
+        $this->assertEqual($message1, $notificationsManager->_getMessageForUser($user, 'modified', $params));
+        $this->assertEqual($message2, $notificationsManager->_getMessageForUser($user, 'new_version', $params));
+        $this->assertEqual($message3, $notificationsManager->_getMessageForUser($user, 'new_wiki_version', $params));
+        $this->assertEqual($message4, $notificationsManager->_getMessageForUser($user, 'something happen', $params));
     }
 
     function testGetMessageForUserParentListened() {
+        $language = new MockBaseLanguage();
+        $language->setReturnValue('getText', 'notif_modified_by', array('plugin_docman', 'notif_modified_by'));
+        $language->setReturnValue('getText', 'notif_wiki_new_version', array('plugin_docman', 'notif_wiki_new_version', 'wiki'));
+        $language->setReturnValue('getText', 'notif_something_happen', array('plugin_docman', 'notif_something_happen'));
+        $language->setReturnValue('getText', 'notif_footer_message', array('plugin_docman', 'notif_footer_message'));
+        $language->setReturnValue('getText', 'notif_footer_message_link', array('plugin_docman', 'notif_footer_message_link'));
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
+        $notificationsManager->setReturnValue('_getLanguageForUser', $language);
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
         $user = new MockUser();
         $user->setReturnValue('getRealName', 'John Doe');
@@ -153,10 +176,15 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $params['wiki_page'] = 'wiki';
         $params['url']       = 'http://www.example.com/plugins/docman/';
 
-        $this->assertEqual("Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=10\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'modified', $params));
-        $this->assertEqual("Folder1/Folder2/File has been modified by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=10\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'new_version', $params));
-        $this->assertEqual("New version of wikiwiki page was created by John Doe.\nhttp://www.example.com/plugins/docman/\n\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'new_wiki_version', $params));
-        $this->assertEqual("Something happen !\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1", $notificationsManager->_getMessageForUser($user, 'something happen', $params));
+        $message1 = "Folder1/Folder2/File notif_modified_by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=10\n\n\n--------------------------------------------------------------------\nnotif_footer_message\nnotif_footer_message_link\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $message2 = "Folder1/Folder2/File notif_modified_by John Doe.\nhttp://www.example.com/plugins/docman/&action=details&id=10\n\n\n--------------------------------------------------------------------\nnotif_footer_message\nnotif_footer_message_link\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $message3 = "notif_wiki_new_version John Doe.\nhttp://www.example.com/plugins/docman/\n\n\n--------------------------------------------------------------------\nnotif_footer_message\nnotif_footer_message_link\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+        $message4 = "notif_something_happen\n\n--------------------------------------------------------------------\nnotif_footer_message\nnotif_footer_message_link\nhttp://www.example.com/plugins/docman/&action=details&section=notifications&id=1";
+
+        $this->assertEqual($message1, $notificationsManager->_getMessageForUser($user, 'modified', $params));
+        $this->assertEqual($message2, $notificationsManager->_getMessageForUser($user, 'new_version', $params));
+        $this->assertEqual($message3, $notificationsManager->_getMessageForUser($user, 'new_wiki_version', $params));
+        $this->assertEqual($message4, $notificationsManager->_getMessageForUser($user, 'something happen', $params));
     }
 
 }
