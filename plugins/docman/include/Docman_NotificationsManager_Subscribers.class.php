@@ -66,11 +66,21 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
 
     function _getMessageForUser(&$user, $message_type, $params) {
         $msg = '';
+        $language = $this->_getLanguageForUser($user);
         $msg .= "\n\n--------------------------------------------------------------------\n";
-        $msg .= "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.
-         Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. 
-        Cras elementum ultrices diam.";
-        $msg .= $language->getText('plugin_docman', 'notif_footer_message_link')."\n";
+        switch($message_type) {
+            case self::MESSAGE_ADDED:
+                $msg .= $language->getText('plugin_docman', 'notifications_added_to_monitoring_list')."\n";
+                $msg .= $language->getText('plugin_docman', 'notif_footer_message_link')."\n";
+                break;
+            case self::MESSAGE_REMOVED:
+                $msg .= $language->getText('plugin_docman', 'notifications_removed_from_monitoring_list')."\n";
+                $msg .= $language->getText('plugin_docman', 'notif_footer_message_restore_link')."\n";
+                break;
+            default:
+                $msg .= $language->getText('plugin_docman', 'notif_something_happen')."\n";
+                break;
+        }
         $msg .= $this->_url .'&action=details&section=notifications&id='. $params['item']->getId();
         return $msg;
     }
