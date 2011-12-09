@@ -80,10 +80,10 @@ abstract class GitPHP_ControllerBase
 		require_once(GitPHP_Util::AddSlash(GitPHP_Config::GetInstance()->GetValue('smarty_prefix', 'lib/smarty/libs/')) . 'Smarty.class.php');
 		$this->tpl = new Smarty;
 		$this->tpl->error_reporting = E_ALL & ~E_NOTICE;
-		$this->tpl->plugins_dir[] = GITPHP_INCLUDEDIR . 'smartyplugins';
+		$this->tpl->addPluginsDir(GITPHP_INCLUDEDIR . 'smartyplugins');
 
 		if (GitPHP_Config::GetInstance()->GetValue('cache', false)) {
-			$this->tpl->caching = 2;
+			$this->tpl->caching = Smarty::CACHING_LIFETIME_SAVED;
 			if (GitPHP_Config::GetInstance()->HasKey('cachelifetime')) {
 				$this->tpl->cache_lifetime = GitPHP_Config::GetInstance()->GetValue('cachelifetime');
 			}

@@ -1,8 +1,484 @@
-===== SVN trunk  =====
-===== Smarty 3.0.8  =====
-29/05/2011
-- bugfix <?xml ...> in templates did break "cache modified check"
+﻿===== Smarty-3.1.6  =====
+30.11.2011
+- bugfix is_cache() for individual cached subtemplates with $smarty->caching = CACHING_OFF did produce
+  an exception (Forum Topic 20531)
 
+29.11.2011
+- bugfix added exception if the default plugin handler did return a not static callback (Forum Topic 20512)
+
+25.11.2011
+- bugfix {html_select_date} and {html_slecet_time} did not default to current time if "time" was not specified 
+  since r4432 (issue 60)
+
+24.11.2011
+- bugfix a subtemplate later used as main template did use old variable values
+
+21.11.2011
+- bugfix cache file could include unneeded modifier plugins under certain condition
+
+18.11.2011
+- bugfix declare all directory properties private to map direct access to getter/setter also on extended Smarty class
+
+16.11.2011
+- bugfix Smarty_Resource::load() did not always return a proper resource handler (Forum Topic 20414)
+- added escape argument to html_checkboxes and html_radios (Forum Topic 20425)
+
+===== Smarty-3.1.5  =====
+14.11.2011
+- bugfix allow space between function name and open bracket (forum topic 20375)
+
+09.11.2011
+- bugfix different behaviour of uniqid() on cygwin. See https://bugs.php.net/bug.php?id=34908
+  (forum topic 20343)
+
+01.11.2011
+- bugfix {if} and {while} tags without condition did not throw a SmartyCompilerException (Issue #57)
+- bugfix multiline strings in config files could fail on longer strings (reopened Issue #55)
+
+22.10.2011
+- bugfix smarty_mb_from_unicode() would not decode unicode-points properly
+- bugfix use catch Exception instead UnexpectedValueException in 
+  clearCompiledTemplate to be PHP 5.2 compatible
+
+21.10.2011
+- bugfix apostrophe in plugins_dir path name failed (forum topic 20199)
+- improvement sha1() for array keys longer than 150 characters
+- add Smarty::$allow_ambiguous_resources to activate unique resource handling (Forum Topic 20128)
+
+20.10.2011
+- @silenced unlink() in Smarty_Internal_Write_File since debuggers go haywire without it.
+- bugfix Smarty::clearCompiledTemplate() threw an Exception if $cache_id was not present in $compile_dir when $use_sub_dirs = true.
+- bugfix {html_select_date} and {html_select_time} did not properly handle empty time arguments (Forum Topic 20190)
+- improvement removed unnecessary sha1()
+
+19.10.2011
+- revert PHP4 constructor message
+- fixed PHP4 constructor message
+
+===== Smarty-3.1.4 =====
+19.10.2011
+- added exception when using PHP4 style constructor
+
+16.10.2011
+- bugfix testInstall() did not propery check cache_dir and compile_dir
+
+15.10.2011
+- bugfix Smarty_Resource and Smarty_CacheResource runtime caching (Forum Post 75264)
+
+14.10.2011
+- bugfix unique_resource did not properly apply to compiled resources (Forum Topic 20128)
+- add locking to custom resources (Forum Post 75252)
+- add Smarty_Internal_Template::clearCache() to accompany isCached() fetch() etc.
+
+13.10.2011
+- add caching for config files in Smarty_Resource
+- bugfix disable of caching after isCached() call did not work (Forum Topic 20131)
+- add concept unique_resource to combat potentially ambiguous template_resource values when custom resource handlers are used (Forum Topic 20128)
+- bugfix multiline strings in config files could fail on longer strings (Issue #55)
+
+11.10.2011
+- add runtime checks for not matching {capture}/{/capture} calls (Forum Topic 20120)
+ 
+10.10.2011
+- bugfix variable name typo in {html_options} and {html_checkboxes} (Issue #54)
+- bugfix <?xml> tag did create wrong output when caching enabled and the tag was in included subtemplate
+- bugfix Smarty_CacheResource_mysql example was missing strtotime() calls
+
+===== Smarty-3.1.3  =====
+07.10.2011
+- improvement removed html comments from {mailto} (Forum Topic 20092)
+- bugfix testInstall() would not show path to internal plugins_dir (Forum Post 74627)
+- improvement testInstall() now showing resolved paths and checking the include_path if necessary
+- bugfix html_options plugin did not handle object values properly (Issue #49, Forum Topic 20049)
+- improvement html_checkboxes and html_radios to accept null- and object values, and label_ids attribute
+- improvement removed some unnecessary count()s
+- bugfix parent pointer was not set when fetch() for other template was called on template object
+
+06.10.2011
+- bugfix switch lexer internals depending on mbstring.func_overload
+- bugfix start_year and end_year of {html_select_date} did not use current year as offset base (Issue #53)
+
+05.10.2011
+- bugfix of problem introduced with r4342 by replacing strlen() with isset()
+- add environment configuration issue with mbstring.func_overload Smarty cannot compensate for (Issue #45)
+- bugfix nofilter tag option did not disable default modifier
+- bugfix html_options plugin did not handle null- and object values properly (Issue #49, Forum Topic 20049)
+
+04.10.2011
+- bugfix assign() in plugins called in subtemplates did change value also in parent template
+- bugfix of problem introduced with r4342 on math plugin 
+- bugfix output filter should not run on individually cached subtemplates
+- add unloadFilter() method
+- bugfix has_nocache_code flag was not reset before compilation
+
+===== Smarty-3.1.2  =====
+03.10.2011
+- improvement add internal $joined_template_dir property instead computing it on the fly several times
+
+01.10.2011
+- improvement replaced most in_array() calls by more efficient isset() on array_flip()ed haystacks
+- improvement replaced some strlen($foo) > 3 calls by isset($foo[3])
+- improvement Smarty_Internal_Utility::clearCompiledTemplate() removed redundant strlen()s
+
+29.09.2011
+- improvement of Smarty_Internal_Config::loadConfigVars() dropped the in_array for index look up
+
+28.09.2011
+- bugfix on template functions called nocache calling other template functions
+
+27.09.2011
+- bugfix possible warning "attempt to modify property of non-object" in {section} (issue #34)
+- added chaining to Smarty_Internal_Data so $smarty->assign('a',1)->assign('b',2); is possible now
+- bugfix remove race condition when a custom resource did change timestamp during compilation
+- bugfix variable property did not work on objects variable in template
+- bugfix smarty_make_timestamp() failed to process DateTime objects properly
+- bugfix wrong resource could be used on compile check of custom resource
+
+26.09.2011
+- bugfix repeated calls to same subtemplate did not make use of cached template object
+
+24.09.2011
+- removed internal muteExpectedErrors() calls in favor of having the implementor call this once from his application
+- optimized muteExpectedErrors() to pass errors to the latest registered error handler, if appliccable
+- added compile_dir and cache_dir to list of muted directories
+- improvment better error message for undefined templates at {include}
+
+23.09.2011
+- remove unused properties
+- optimization use real function instead anonymous function for preg_replace_callback
+- bugfix a relative {include} in child template blocks failed
+- bugfix direct setting of $template_dir, $config_dir, $plugins_dir in __construct() of an 
+  extended Smarty class created problems
+- bugfix error muting was not implemented for cache locking
+
+===== Smarty 3.1.1  =====
+22.09.2011
+- bugfix {foreachelse} does fail if {section} was nested inside {foreach}
+- bugfix debug.tpl did not display correctly when it was compiled with escape_html = true
+
+21.09.2011
+- bugfix look for mixed case plugin file names as in 3.0 if not found try all lowercase
+- added $error_muting to suppress error messages even for badly implemented error_handlers
+- optimized autoloader
+- reverted ./ and ../ handling in fetch() and display() - they're allowed again
+
+20.09.2011
+- bugfix removed debug echo output while compiling template inheritance
+- bugfix relative paths in $template_dir broke relative path resolving in {include "../foo.tpl"}
+- bugfix {include} did not work inside nested {block} tags
+- bugfix {assign} with scope root and global did not work in all cases
+
+19.09.2011
+- bugfix regression in Smarty_CacheReource_KeyValueStore introduced by r4261
+- bugfix output filter shall not run on included subtemplates
+
+18.09.2011
+- bugfix template caching did not care about file.tpl in different template_dir
+- bugfix {include $file} was broken when merge_compiled_incluges = true
+- bugfix {include} was broken when merge_compiled_incluges = true and same indluded template
+  was used in different main templates in one compilation run
+- bugfix for Smarty2 style compiler plugins on unnamed attribute passing like {tag $foo $bar}
+- bugfix debug.tpl did not display correctly when it was compiled with escape_html = true
+
+17.09.2011
+- bugfix lock_id for file resource would create invalid filepath
+- bugfix resource caching did not care about file.tpl in different template_dir
+
+===== Smarty 3.1.0  =====
+15/09/2011
+- optimization of {foreach}; call internal _count() method only when "total" or "last" {foreach} properties are used
+
+11/09/2011
+- added  unregisterObject() methode
+
+06/09/2011
+- bugfix  isset() did not work in templates on config variables
+
+03/09/2011
+- bugfix createTemplate() must default to cache_id and compile_id of Smarty object
+- bugfix Smarty_CacheResource_KeyValueStore must include $source->uid in cache filepath to keep templates with same
+  name but different folders seperated
+- added cacheresource.apc.php example in demo folder
+
+02/09/2011
+- bugfix cache lock file must use absolute filepath
+
+01/09/2011
+- update of cache locking
+
+30/08/2011
+- added locking mechanism to CacheResource API (implemented with File and KeyValueStores)
+
+28/08/2011
+- bugfix clearCompileTemplate() did not work for specific template subfolder or resource
+
+27/08/2011
+- bugfix {$foo|bar+1} did create syntax error
+
+26/08/2011
+- bugfix when generating nocache code which contains double \
+- bugfix handle race condition if cache file was deleted between filemtime and include
+
+17/08/2011
+- bugfix CacheResource_Custom bad internal fetch() call
+
+15/08/2011
+- bugfix CacheResource would load content twice for KeyValueStore and Custom handlers
+
+06/08/2011
+- bugfix {include} with scope attribute could execute in wrong scope
+- optimization of compile_check processing
+
+03/08/2011
+- allow comment tags to comment {block} tags out in child templates
+
+26/07/2011
+- bugfix experimental getTags() method did not work
+
+24/07/2011
+- sure opened output buffers are closed on exception
+- bugfix {foreach} did not work on IteratorAggregate
+
+22/07/2011
+- clear internal caches on clearAllCache(), clearCache(), clearCompiledTemplate()
+
+21/07/2011
+- bugfix value changes of variable values assigned to Smarty object could not be seen on repeated $smarty->fetch() calls
+
+17/07/2011
+- bugfix {$smarty.block.child} did drop a notice at undefined child
+
+15/07/2011
+- bugfix individual cache_lifetime of {include} did not work correctly inside {block} tags
+- added caches for Smarty_Template_Source and Smarty_Template_Compiled to reduce I/O for multiple cache_id rendering
+
+14/07/2011
+- made Smarty::loadPlugin() respect the include_path if required
+
+13/07/2011
+- optimized internal file write functionality
+- bugfix PHP did eat line break on nocache sections
+- fixed typo of Smarty_Security properties $allowed_modifiers and $disabled_modifiers
+
+06/07/2011
+- bugfix variable modifier must run befor gereral filtering/escaping
+
+04/07/2011
+- bugfix use (?P<name>) syntax at preg_match as some pcre libraries failed on (?<name>)
+- some performance improvement when using generic getter/setter on template objects
+
+30/06/2011
+- bugfix generic getter/setter of Smarty properties used on template objects did throw exception
+- removed is_dir and is_readable checks from directory setters for better performance
+
+28/06/2011
+- added back support of php template resource as undocumented feature
+- bugfix automatic recompilation on version change could drop undefined index notice on old 3.0 cache and compiled files
+- update of README_3_1_DEV.txt and moved into the distribution folder
+- improvement show first characters of eval and string templates instead sha1 Uid in debug window
+
+===== Smarty 3.1-RC1 =====
+25/06/2011
+- revert change of 17/06/2011. $_smarty varibale removed. call loadPlugin() from inside plugin code if required
+- code cleanup, remove no longer used properties and methods
+- update of PHPdoc comments
+
+23/06/2011
+- bugfix {html_select_date} would not respect current time zone
+
+19/06/2011
+- added $errors argument to testInstall() functions to suppress output.
+- added plugin-file checks to testInstall()
+
+18/06/2011
+- bugfix mixed use of same subtemplate inline and not inline in same script could cause a warning during compilation
+
+17/06/2011
+- bugfix/change use $_smarty->loadPlugin() when loading nested depending plugins via loadPlugin
+- bugfix {include ... inline} within {block}...{/block} did fail
+
+16/06/2011
+- bugfix do not overwrite '$smarty' template variable when {include ... scope=parent} is called
+- bugfix complete empty inline subtemplates did fail
+
+15/06/2011
+- bugfix template variables where not accessable within inline subtemplates
+
+12/06/2011
+- bugfix removed unneeded merging of template variable when fetching includled subtemplates
+
+10/06/2011
+- made protected properties $template_dir, $plugins_dir, $cache_dir, $compile_dir, $config_dir accessible via magic methods
+
+09/06/2011
+- fix smarty security_policy issue in plugins {html_image} and {fetch}
+
+05/06/2011
+- update of SMARTY_VERSION
+- bugfix made getTags() working again
+
+04/06/2011
+- allow extends resource in file attribute of {extends} tag
+
+03/06/2011
+- added {setfilter} tag to set filters for variable output
+- added escape_html property to control autoescaping of variable output
+
+27/05/2011
+- added allowed/disabled tags and modifiers in security for sandboxing
+
+23/05/2011
+- added base64: and urlencode: arguments to eval and string resource types
+
+22/05/2011
+- made time-attribute of {html_select_date} and {html_select_time} accept arrays as defined by attributes prefix and field_array
+
+13/05/2011
+- remove setOption / getOption calls from SamrtyBC class
+
+02/05/2011
+- removed experimental setOption() getOption() methods
+- output returned content also on opening tag calls of block plugins
+- rewrite of default plugin handler
+- compile code of variable filters for better performance 
+
+20/04/2011
+- allow {php} {include_php} tags and PHP_ALLOW handling only with the SmartyBC class
+- removed support of php template resource
+
+20/04/2011
+- added extendsall resource example
+- optimization of template variable access
+- optimization of subtemplate handling {include}
+- optimization of template class
+
+01/04/2011
+- bugfix quote handling in capitalize modifier
+
+28/03/2011
+- bugfix stripslashes() requried when using PCRE e-modifier
+
+04/03/2011
+- upgrade to new PHP_LexerGenerator version 0.4.0 for better performance
+
+27/02/2011
+- ignore .svn folders when clearing cache and compiled files
+- string resources do not need a modify check
+
+26/02/2011
+- replaced smarty_internal_wrapper by SmartyBC class
+- load utility functions as static methods instead through __call()
+- bugfix in extends resource when subresources are used
+- optimization of modify checks
+
+25/02/2011
+- use $smarty->error_unassigned to control NOTICE handling on unassigned variables
+
+21/02/2011
+- added new new compile_check mode COMPILECHECK_CACHEMISS
+- corrected new cloning behaviour of createTemplate()
+- do no longer store the compiler object as property in the compile_tag classes to avoid possible memory leaks 
+  during compilation
+
+19/02/2011
+- optimizations on merge_compiled_includes handling
+- a couple of optimizations and bugfixes related to new resource structure
+
+17/02/2011
+- changed ./ and ../ behaviour
+
+14/02/2011
+- added {block ... hide} option to supress block if no child is defined
+
+13/02/2011
+- update handling of recursive subtemplate calls
+- bugfix replace $smarty->triggerError() by exception in smarty_internal_resource_extends.php
+
+12/02/2011
+- new class Smarty_Internal_TemplateBase with shared methods of Smarty and Template objects
+- optimizations of template processing
+- made register... methods permanet
+- code for default_plugin_handler
+- add automatic recompilation at version change
+
+04/02/2011
+- change in Smarty_CacheResource_Custom
+- bugfix cache_lifetime did not compile correctly at {include} after last update
+- moved isCached processing into CacheResource class
+- bugfix new CacheResource API did not work with disabled compile_check
+
+03/02/2011
+- handle template content as function to improve speed on multiple calls of same subtemplate and isCached()/display() calls
+- bugfixes and improvents in the new resource API
+- optimizations of template class code
+
+25/01/2011
+- optimized function html_select_time
+
+22/01/2011
+- added Smarty::$use_include_path configuration directive for Resource API
+
+21/01/2011
+- optimized function html_select_date
+
+19/01/2011
+- optimized outputfilter trimwhitespace
+
+18/01/2011
+- bugfix Config to use Smarty_Resource to fetch sources
+- optimized Smarty_Security's isTrustedDir() and isTrustedPHPDir()
+
+17/01/2011
+- bugfix HTTP headers for CGI SAPIs
+
+16/01/2011
+- optimized internals of Smarty_Resource and Smarty_CacheResource
+
+14/01/2011
+- added modifiercompiler escape to improve performance of escaping html, htmlall, url, urlpathinfo, quotes, javascript
+- added support to choose template_dir to load from: [index]filename.tpl
+
+12/01/2011
+- added unencode modifier to revert results of encode modifier
+- added to_charset and from_charset modifier for character encoding
+
+11/01/2011
+- added SMARTY_MBSTRING to generalize MBString detection
+- added argument $lc_rest to modifier.capitalize to lower-case anything but the first character of a word
+- changed strip modifier to consider unicode white-space, too
+- changed wordwrap modifier to accept UTF-8 strings
+- changed count_sentences modifier to consider unicode characters and treat sequences delimited by ? and ! as sentences, too
+- added argument $double_encode to modifier.escape (applies to html and htmlall only)
+- changed escape modifier to be UTF-8 compliant
+- changed textformat block to be UTF-8 compliant
+- optimized performance of mailto function
+- fixed spacify modifier so characters are not prepended and appended, made it unicode compatible
+- fixed truncate modifier to properly use mb_string if possible
+- removed UTF-8 frenzy from count_characters modifier
+- fixed count_words modifier to treat "hello-world" as a single word like str_count_words() does
+- removed UTF-8 frenzy from upper modifier
+- removed UTF-8 frenzy from lower modifier
+
+01/01/2011
+- optimize smarty_modified_escape for hex, hexentity, decentity.
+
+28/12/2010
+- changed $tpl_vars, $config_vars and $parent to belong to Smarty_Internal_Data
+- added Smarty::registerCacheResource() for dynamic cache resource object registration
+
+27/12/2010
+- added Smarty_CacheResource API and refactored existing cache resources accordingly
+- added Smarty_CacheResource_Custom and Smarty_CacheResource_Mysql
+
+26/12/2010
+- added Smarty_Resource API and refactored existing resources accordingly
+- added Smarty_Resource_Custom and Smarty_Resource_Mysql
+- bugfix Smarty::createTemplate() to return properly cloned template instances
+
+24/12/2010
+- optimize smarty_function_escape_special_chars() for PHP >= 5.2.3
+
+===== SVN 3.0 trunk  =====
 14/05/2011
 - bugfix error handling at stream resources
 
@@ -11,7 +487,6 @@
 
 22/04/2011
 - bugfix allow only fixed string as file attribute at {extends} tag
-- workaround for PHP 5.2.13 bug in method_exists()
 
 01/04/2011
 - bugfix do not run filters and default modifier when displaying the debug template
@@ -49,7 +524,7 @@
 
 18/02/2011
 - bugfix removed possible race condition when isCached() was called for an individually cached subtemplate
-- bugfix force default debug.tpl to be loaded by the file resource when default_resource_type was modified
+- bugfix force default debug.tpl to be loaded by the file resource
 
 17/02/2011
 -improvement not to delete files starting with '.' from cache and template_c folders on clearCompiledTemplate() and clearCache()
@@ -59,8 +534,9 @@
 -improvement allow leading spaces on } tag closing if auto_literal is enabled
 
 13/02/2011
-- bugfix replace $smarty->triggerError() by exception in smarty_internal_resource_extends.php
+- bufix replace $smarty->triggerError() by exception
 - removed obsolete {popup_init..} plugin from demo templates
+- bugfix replace $smarty->triggerError() by exception in smarty_internal_resource_extends.php
 
 ===== Smarty 3.0.7  =====
 09/02/2011
@@ -591,7 +1067,7 @@ request_use_auto_globals
 - added $smarty->_tag_stack for tracing block tag hierarchy
 
 08/02/2010
-- bugfix  use template fullpath at �smarty->cache->clear(...), $smarty->clear_cache(....)
+- bugfix  use template fullpath at §smarty->cache->clear(...), $smarty->clear_cache(....)
 - bugfix of cache filename on extended templates when force_compile=true
 
 07/02/2010
@@ -1260,7 +1736,7 @@ NOTICE: existing compiled template and cache files must be deleted
 - autoappend a directory separator if the xxxxx_dir definition have no trailing one
 
 03/19/2009
-- allow array definition as modifer paramter
+- allow array definition as modifer parameter
 - changed modifier to use multi byte string funktions. 
 
 03/17/2009
