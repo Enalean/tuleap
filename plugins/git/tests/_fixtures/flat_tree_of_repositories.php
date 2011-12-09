@@ -18,13 +18,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+/* 
+
+Git
+|--automaticTests
+|  |-- Python
+|  `-- Ruby
+|-- deps
+|   `-- 3rdparty
+|       |-- cvsgraph
+|       |-- geshi
+|       `-- gitolite
+`-- tools
+    `-- lxc
+*/        
 $repositories = array(
     3 => 
     array (
       'repository_id' => '3',
-      'repository_name' => 'automaticTest/Python',
+      'repository_name' => 'automaticTests/Python',
       'repository_description' => '-- Default description --',
-      'repository_path' => 'ngt/automaticTest/Python.git',
+      'repository_path' => 'ngt/automaticTests/Python.git',
       'repository_parent_id' => '0',
       'project_id' => '101',
       'repository_creation_user_id' => '102',

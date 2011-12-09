@@ -36,7 +36,7 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends UnitTestCase {
         $this->assertIdentical('', $strategy->fetch($repositories, $user));
     }
     
-    public function testFlatTreeShouldReturnFlatUL() {
+    public function testFlatTreeShouldReturnFlatRepresentation() {
         $view = new MockGitViews();
         $user = new MockUser();
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));

@@ -90,6 +90,7 @@ abstract class GitViewsRepositoriesTraversalStrategy {
         }
         return $html;
     }
+
     /**
      * Get the repository label
      *
