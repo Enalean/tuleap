@@ -1588,6 +1588,25 @@ class Docman_Actions extends Actions {
     }
 
     /**
+     * Raise item monitoring list event
+     *
+     * @param Docman_Item $item Locked item
+     * @param User        $user Who locked the item
+     * @param String      $eventType
+     * @param Array       $subscribers
+     *
+     * @return void
+     */
+    function _raiseMonitoringListEvent($item, $subscribers, $eventType, $user) {
+        $p = array('group_id' => $item->getGroupId(),
+                                       'item'     => $item,
+                                       'listeners' => $subscribers,
+                                       'event'    => $eventType,
+                                       'user'     => $user);
+        $this->event_manager->processEvent('plugin_docman_event_subcribers', $p);
+    }
+
+    /**
      * Add monitoring for more than one user
      *
      * @param Array $params contains list if users to subscribe and the item
@@ -1618,14 +1637,8 @@ class Docman_Actions extends Actions {
                 }
                 if (!empty($users)) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_added', array(implode(',', $users))));
-                    // TODO : send notification to the user about this action
-                    $p = array('group_id' => $params['item']->getGroupId(),
-                                       'item'     => $params['item'],
-                                       'listeners' => $params['listeners_to_add'],
-                                       'event'    => 'plugin_docman_add_monitoring',
-                                       'user'     => $user);
-                    $this->event_manager->processEvent('plugin_docman_event_subcribers', $p);
-                    $this->event_manager->processEvent('send_notifications_subscribers', $p);
+                    $this->_raiseMonitoringListEvent($params['item'], $params['listeners_to_add'],'plugin_docman_add_monitoring',$user);
+                    $this->event_manager->processEvent('send_notifications_subscribers', array());
                 }
             } else {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
@@ -1662,14 +1675,8 @@ class Docman_Actions extends Actions {
                 }
                 if (!empty($users)) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $users))));
-                    // TODO : send notification to the user about this action
-                    $p = array('group_id' => $params['item']->getGroupId(),
-                                       'item'     => $params['item'],
-                                       'listeners' => $removedUsers,
-                                       'event'    => 'plugin_docman_remove_monitoring',
-                                       'user'     => $user);
-                    $this->event_manager->processEvent('plugin_docman_event_subcribers', $p);
-                    $this->event_manager->processEvent('send_notifications_subscribers', $p);
+                    $this->_raiseMonitoringListEvent($params['item'], $removedUsers, 'plugin_docman_remove_monitoring', $user);
+                    $this->event_manager->processEvent('send_notifications_subscribers', array());
                 }
             } else {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
