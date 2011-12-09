@@ -66,11 +66,11 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
     }
 
     // Manage screen/file output
-    function manageOutput($soap_params, &$output, &$fd, $remoteName) {
+    function manageOutput($soap_params, &$output, &$fd) {
         $output = false;
             if ($soap_params['output']) {
             $output = $soap_params['output'];
-        } elseif ($remoteName) {
+        } elseif ($soap_params['remote_name']) {
             $fileInfo = $GLOBALS['soap']->call('getDocmanTreeInfo', $soap_params);
             $output   = $fileInfo[0]->filename;
         }
@@ -91,9 +91,8 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
 
     function soapCall($soap_params, $use_extra_params = true) {
         // Prepare SOAP parameters
-        $remoteName = $soap_params['remote_name'];
-        unset($soap_params['remote_name']);
         $callParams = $soap_params;
+        unset($callParams['remote_name']);
         unset($callParams['output']);
         $callParams['chunk_offset']     = 0;
         $callParams['chunk_size'] = $GLOBALS['soap']->getFileChunkSize();
@@ -105,7 +104,7 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
             $callParams['chunk_offset'] = $i * $GLOBALS['soap']->getFileChunkSize();
             $content = base64_decode($GLOBALS['soap']->call($this->soapCommand, $callParams, $use_extra_params));
             if ($i == 0) {
-                $this->manageOutput($soap_params, $output, $fd, $remoteName);
+                $this->manageOutput($soap_params, $output, $fd);
             }
             $cLength = strlen($content);
             if ($output !== false) {
