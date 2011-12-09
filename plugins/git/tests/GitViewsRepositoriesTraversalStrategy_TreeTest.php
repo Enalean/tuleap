@@ -119,11 +119,38 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         $this->assertIsA(($tree['automaticTests']['Python']), 'GitRepository');
     }
     
+    public function testFlatTreeShouldReturnRepresentation() {
+        // Inherited from parent but Not relevant here (more than one HTML table row per repository)
+    }
+    
     public function getExpectedPattern($repositories) {
-        $li_regexp_for_repository_representation = '';
+        $td_regexp_for_repository_representation = '<td>(?P<repo_name>.*)</td>';
         $nb_repositories                         = count($repositories);
         
-        return '.*';
+        return '<tr>('. $td_regexp_for_repository_representation .'){'. $nb_repositories .'}</tr>';;
+    }
+    
+    public function testFetchShouldReturnOneRowPerDepthLevel() {
+        $view = TestHelper::getPartialMock('GitViews', array());
+        $view->groupId = 101;
+        $user = new MockUser();
+        
+        $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
+        $strategy->__construct($view);
+        
+        $repositories    = $this->getFlatTree($strategy);
+        
+        $output = $strategy->fetch($repositories, $user);
+        
+        // Ensure nested levels
+        $this->assertPattern('%<td style="padding-left: 1em;">automaticTests</td>%', $output);
+        $this->assertPattern('%<td style="padding-left: 2em;">.*Python.*</td>%', $output);
+        
+        // Ensure descriptions
+        $this->assertPattern('%Python.*</td><td>-- Default description --</td>%', $output);
+        
+        // Ensure that there is a link to the repository
+        $this->assertPattern('%<a href="[^"]*/view/3/"  >Python</a>%', $output);
     }
 }
 ?>

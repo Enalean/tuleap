@@ -48,7 +48,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
      * @return string
      */
     protected function getLabel(GitRepository $repository, $isInitialized, $accessType, $repoName) {
-        return '';
+        return $repoName;
     }
     
        
@@ -60,7 +60,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
      * @return string the $inner encapsuled in the wrapper
      */
     protected function getMainWrapper($inner) {
-        return 'c';
+        return '<tr>'. $inner .'</tr>';
     }
     
     /**
@@ -72,7 +72,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
      * @return string the $inner encapsulated in its own wrapper
      */
     protected function getItemWrapper(GitRepository $repo, $inner) {
-        return '';
+        return '<td>'. $inner .'</td>';
     }
     
     /**
@@ -84,7 +84,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
      * @return string the $inner encapsulated in its own wrapper
      */
     protected function getGroupWrapper($label, $inner) {
-        return '';
+        return $inner;
     }
     
     public function getTree(array $repositories) {
@@ -106,6 +106,46 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
                 $tree[$head] = $repository;
             }
         }
+    }
+    
+    /**
+     * Display the list of repositories
+     *
+     * @param array $repositories Array of raw representation of repositories, indexed by repository id
+     * @param User  $user         The user who traverse the forest
+     *
+     * @return string
+     */
+    public function fetch(array $repositories, User $user) {
+        $html = '';
+        if (empty($repositories)) {
+            return '';
+        }
+        $tree = $this->getTree($repositories);
+        $html .= '<table>';
+        $html .= $this->fetchRows($tree, 0);
+        $html .= '</table>';
+        return $html;
+    }
+    
+    protected function fetchRows($repositories, $depth) {
+        $html = '';
+        foreach ($repositories as $folder => $child) {
+            $subtree     = '';
+            $description = '&nbsp;';
+            if ($child instanceof GitRepository) {
+                $folder      = $this->view->_getRepositoryPageUrl($child->getId(), $folder);
+                $description = $child->getDescription();
+            }
+            $html .= '<tr>';
+            $html .= '<td style="padding-left: '.($depth + 1).'em;">'. $folder .'</td>';
+            $html .= '<td>'. $description .'</td>';
+            $html .= '</tr>';
+            if (is_array($child)) {
+                $html .= $this->fetchRows($child, $depth + 1);
+            }
+        }
+        return $html;
     }
 }
 ?>

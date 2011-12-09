@@ -36,7 +36,7 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends UnitTestCase {
         $this->assertIdentical('', $strategy->fetch($repositories, $user));
     }
     
-    public function testFlatTreeShouldReturnFlatRepresentation() {
+    public function testFlatTreeShouldReturnRepresentation() {
         $view = new MockGitViews();
         $user = new MockUser();
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
@@ -57,6 +57,7 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends UnitTestCase {
         foreach ($repositories as $row) {
             $r = new MockGitRepository();
             $r->setReturnValue('getId', $row['repository_id']);
+            $r->setReturnValue('getDescription', $row['repository_description']);
             $r->setReturnValue('userCanRead', true);
             
             $strategy->setReturnValue('getRepository', $r, array($row));
