@@ -133,6 +133,16 @@
         <revremark>Update FRS usage description, error code, etc</revremark>
       </revision>
 
+      <revision>
+        <revnumber>1.4.4</revnumber>
+
+        <date>09-Dec-2011</date>
+
+        <authorinitials>Hatem Ounis</authorinitials>
+
+        <revremark>Add some FRS functions</revremark>
+      </revision>
+
     </revhistory>
   </bookinfo>
 <!--

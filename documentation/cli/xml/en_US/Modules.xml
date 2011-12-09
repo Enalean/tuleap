@@ -1535,6 +1535,64 @@ File retrieved successfully.
                </para>
             </para>
         </section>
+
+        <section id="FRSFunctionDeleteEmptyPackages">
+            <title>deleteEmptyPackages</title>
+            <para>deleteEmptyPackages: Delete all packages of the project that doesn't contain releases
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: UNIX name of the project where empty packages will be deleted. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>deleteEmptyPackages command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs deleteEmptyPackages
++--------+
+| Result |
++--------+
+| 294    |
+| 293    |
++--------+
+                        </programlisting>
+                    </example>
+                    <note>Return value is the list of deleted packages id.</note>
+               </para>
+            </para>
+        </section>
+
+        <section id="FRSFunctionDeleteEmptyReleases">
+            <title>deleteEmptyReleases</title>
+            <para>deleteEmptyReleases: Delete all empty releases of the given package
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: UNIX name of the project where empty releases will be deleted. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--package_id: Id of the package where empty releases will be deleted.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>deleteEmptyReleases command</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs deleteEmptyReleases --package_id=292
++--------+
+| Result |
++--------+
+| 219    |
+| 218    |
++--------+
+                        </programlisting>
+                    </example>
+                    <note>Return value is the list of deleted releases id.</note>
+               </para>
+            </para>
+        </section>
     </section>
 
     <section id="DocmanFunctions">
