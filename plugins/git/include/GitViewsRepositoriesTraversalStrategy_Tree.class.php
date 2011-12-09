@@ -21,6 +21,7 @@
 require_once 'GitViewsRepositoriesTraversalStrategy.class.php';
 require_once 'GitRepository.class.php';
 require_once 'GitViews.class.php';
+require_once 'html.php';
 
 /**
  * Traverse a list of repositories and provides a tree in a table view
@@ -122,8 +123,20 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
             return '';
         }
         $tree = $this->getTree($repositories);
-        $html .= '<table>';
-        $html .= $this->fetchRows($tree, 0);
+        $html .= '<table cellspacing="0" id="git_repositories_list">';
+        
+        // header
+        $html .= '<thead>';
+        $html .= '<tr>';
+        $html .= '<th>'. 'Repository' .'</th>';
+        $html .= '<th>'. 'Description' .'</th>';
+        $html .= '</tr>';
+        $html .= '</thead>';
+        
+        // body
+        $rowCount = 0;
+        $html .= '<tbody>'. $this->fetchRows($tree, 0) .'</tbody>';
+        
         $html .= '</table>';
         return $html;
     }
@@ -133,11 +146,13 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         foreach ($repositories as $folder => $child) {
             $subtree     = '';
             $description = '&nbsp;';
+            $trclass     = 'boxitemalt';
             if ($child instanceof GitRepository) {
                 $folder      = $this->view->_getRepositoryPageUrl($child->getId(), $folder);
                 $description = $child->getDescription();
+                $trclass     = 'boxitem';
             }
-            $html .= '<tr>';
+            $html .= '<tr class="'. $trclass .'">';
             $html .= '<td style="padding-left: '.($depth + 1).'em;">'. $folder .'</td>';
             $html .= '<td>'. $description .'</td>';
             $html .= '</tr>';

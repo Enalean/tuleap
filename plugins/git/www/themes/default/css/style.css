@@ -121,3 +121,18 @@ td.plugin_git_first_col {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
 }
+
+#git_repositories_list {
+    border-collapse:collapse;
+    border-bottom: 1px solid #f5f5f5; 
+}
+
+#git_repositories_list td { 
+    border-left: 1px solid #f5f5f5; 
+    border-right: 1px solid #f5f5f5; 
+    padding:0.5em 1em; 
+} 
+
+#git_repositories_list tr.boxitemalt td { 
+    padding: 0.25em 1em; 
+}

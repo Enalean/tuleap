@@ -653,8 +653,8 @@ class GitViews extends PluginViews {
         if ( !empty($params['repository_list']) ) {
             echo '<h3>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"> [?]</a></h3>';
             $this->help('tree', array('display'=>'none') );
-            //$strategy = new GitViewsRepositoriesTraversalStrategy_Tree($this);
-            $strategy = new GitViewsRepositoriesTraversalStrategy_UL($this);
+            $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($this);
+            //$strategy = new GitViewsRepositoriesTraversalStrategy_UL($this);
             echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
         }
         else {
