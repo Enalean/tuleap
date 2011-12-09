@@ -37,6 +37,7 @@ require_once('Docman_NotificationsManager.class.php');
 require_once('Docman_NotificationsManager_Add.class.php');
 require_once('Docman_NotificationsManager_Delete.class.php');
 require_once('Docman_NotificationsManager_Move.class.php');
+require_once('Docman_NotificationsManager_Subscribers.class.php');
 
 require_once('Docman_Log.class.php');
 require_once('common/event/EventManager.class.php');
@@ -115,6 +116,9 @@ class Docman_Controller extends Controler {
         $this->notificationsManager_Move =& new Docman_NotificationsManager_Move($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
         $event_manager->addListener('plugin_docman_event_move', $this->notificationsManager_Move, 'somethingHappen', true, 0);
         $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true, 0);
+        $this->notificationsManager_Subscribers =& new Docman_NotificationsManager_Subscribers($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $event_manager->addListener('plugin_docman_event_subcribers', $this->notificationsManager_Subscribers, 'somethingHappen', true, 0);
+        $event_manager->addListener('send_notifications_subscribers', $this->notificationsManager_Subscribers, 'sendNotifications', true, 0);
     }
 
     /**

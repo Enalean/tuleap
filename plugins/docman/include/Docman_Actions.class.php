@@ -1609,7 +1609,6 @@ class Docman_Actions extends Actions {
                                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_not_added', array($user->getName())));
                             }
                             $users[] = $user->getName();
-                            // TODO : send notification to the user about this action
                         } else {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_added', array($user->getName())));
                         }
@@ -1619,6 +1618,14 @@ class Docman_Actions extends Actions {
                 }
                 if (!empty($users)) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_added', array(implode(',', $users))));
+                    // TODO : send notification to the user about this action
+                    $p = array('group_id' => $params['item']->getGroupId(),
+                                       'item'     => $params['item'],
+                                       'listeners' => $params['listeners_to_add'],
+                                       'event'    => 'plugin_docman_add_monitoring',
+                                       'user'     => $user);
+                    $this->event_manager->processEvent('plugin_docman_event_subcribers', $p);
+                    $this->event_manager->processEvent('send_notifications_subscribers', $p);
                 }
             } else {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
@@ -1627,7 +1634,6 @@ class Docman_Actions extends Actions {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
         }
     }
-
 
     /**
      * Remove monitoring for more than one user
@@ -1640,12 +1646,13 @@ class Docman_Actions extends Actions {
         if (isset($params['listeners_to_delete']) && is_array($params['listeners_to_delete']) && !empty($params['listeners_to_delete'])) {
             if ($this->_controler->userCanManage($params['item']->getId())) {
                 $users = array();
+                $removedUsers = array();
                 foreach ($params['listeners_to_delete'] as $userId) {
                     $user = $this->_getUserManagerInstance()->getUserById($userId);
                     if ($this->_controler->notificationsManager->exist($userId, $params['item']->getId())) {
                         if ($this->_controler->notificationsManager->remove($userId, $params['item']->getId()) && $this->_controler->notificationsManager->remove($userId, $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
                             $users[] = $user->getName();
-                            // TODO : send notification to the user about this action
+                            $removedUsers[] = $user;
                         } else {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_removed', array($user->getName())));
                         }
@@ -1655,6 +1662,14 @@ class Docman_Actions extends Actions {
                 }
                 if (!empty($users)) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $users))));
+                    // TODO : send notification to the user about this action
+                    $p = array('group_id' => $params['item']->getGroupId(),
+                                       'item'     => $params['item'],
+                                       'listeners' => $removedUsers,
+                                       'event'    => 'plugin_docman_remove_monitoring',
+                                       'user'     => $user);
+                    $this->event_manager->processEvent('plugin_docman_event_subcribers', $p);
+                    $this->event_manager->processEvent('send_notifications_subscribers', $p);
                 }
             } else {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));

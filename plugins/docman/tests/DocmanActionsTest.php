@@ -318,6 +318,7 @@ class DocmanActionsTest extends UnitTestCase {
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
+        $actions->event_manager = new MockEventManager($this);
         $actions->setReturnValue('_getUserManagerInstance', $userManager);
         $params['listeners_to_delete'] = array(1, 2, 3);
         $params['item'] = new MockDocman_Item();
@@ -421,6 +422,7 @@ class DocmanActionsTest extends UnitTestCase {
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
+        $actions->event_manager = new MockEventManager($this);
 
         $params['listeners_to_add'] = array($user);
         $params['item'] = new MockDocman_Item();
