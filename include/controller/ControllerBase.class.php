@@ -90,10 +90,7 @@ abstract class GitPHP_ControllerBase
 
 			$servers = GitPHP_Config::GetInstance()->GetValue('memcache', null);
 			if (isset($servers) && is_array($servers) && (count($servers) > 0)) {
-				require_once(GITPHP_CACHEDIR . 'Memcache.class.php');
-				GitPHP_Memcache::GetInstance()->AddServers($servers);
-				require_once(GITPHP_CACHEDIR . 'memcache_cache_handler.php');
-				$this->tpl->cache_handler_func = 'memcache_cache_handler';
+				$this->tpl->caching_type = 'memcache';
 			}
 
 		}
