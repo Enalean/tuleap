@@ -38,7 +38,7 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
         ));
         $this->addParam(array(
             'name'           => 'remote_name',
-            'description'    => '--remote_name or -remote_name          (Optional) Set to true if you want to retrieve the filename from the server instead of using --output',
+            'description'    => '--remote_name or -remote_name          (Optional) use this if you want to retrieve the filename from the server instead of using --output',
             'parameters'     => array('remote_name'),
             'value_required' => false,
             'soap'           => false,
