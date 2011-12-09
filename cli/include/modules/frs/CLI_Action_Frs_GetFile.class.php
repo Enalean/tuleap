@@ -31,7 +31,10 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
         ));
         $this->addParam(array(
             'name'           => 'remote_name',
-            'description'    => '--remote_name=<boolean>          (Optional) Set to true if you want to retrieve the filename from the server instead of using --output',
+            'description'    => '--remote_name          (Optional) Set to true if you want to retrieve the filename from the server instead of using --output',
+            'parameters'     => array('remote_name'),
+            'value_required' => false,
+            'soap'           => false,
         ));
     }
     function validate_package_id(&$package_id) {
@@ -82,6 +85,10 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
                 }
             }
         }
+    }
+
+    function after_loadParams(&$loaded_params) {
+        $loaded_params['soap']['remote_name'] = $loaded_params['others']['remote_name'];
     }
 
     function soapCall($soap_params, $use_extra_params = true) {
