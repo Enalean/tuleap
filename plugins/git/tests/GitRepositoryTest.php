@@ -53,24 +53,20 @@ class GitRepositoryTest extends UnitTestCase {
         $repo = new GitRepository();
         
         $repo->setBackend($gitolite);
-        $this->assertFalse($repo->isNameValid(''));
-        $this->assertTrue($repo->isNameValid('jambon'));
-        $this->assertTrue($repo->isNameValid('jambon.beurre'));
-        $this->assertTrue($repo->isNameValid('jambon-beurre'));
-        $this->assertTrue($repo->isNameValid('jambon_beurre'));
+        $this->checkNameValidation($repo);
         $this->assertTrue($repo->isNameValid('jambon/beurre'));
-        $this->assertFalse($repo->isNameValid('jambon/.beurre'));
-        $this->assertFalse($repo->isNameValid('jambon..beurre'));
-        $this->assertFalse($repo->isNameValid('jambon...beurre'));
-        $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
-        
+       
         $repo->setBackend($gitshell);
+        $this->checkNameValidation($repo);
+        $this->assertFalse($repo->isNameValid('jambon/beurre'));
+    }
+    
+    private function checkNameValidation($repo) {
         $this->assertFalse($repo->isNameValid(''));
         $this->assertTrue($repo->isNameValid('jambon'));
         $this->assertTrue($repo->isNameValid('jambon.beurre'));
         $this->assertTrue($repo->isNameValid('jambon-beurre'));
         $this->assertTrue($repo->isNameValid('jambon_beurre'));
-        $this->assertFalse($repo->isNameValid('jambon/beurre'));
         $this->assertFalse($repo->isNameValid('jambon/.beurre'));
         $this->assertFalse($repo->isNameValid('jambon..beurre'));
         $this->assertFalse($repo->isNameValid('jambon...beurre'));
