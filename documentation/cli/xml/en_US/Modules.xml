@@ -1418,6 +1418,10 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
+                        <para>--remote_name: Use the name retrieved from the server instead of using --output
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--project: UNIX name of the project you want to get the file. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
@@ -1572,7 +1576,7 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
-                        <para>--package_id: Id of the package where empty releases will be deleted.
+                        <para>--package_id*: Id of the package where empty releases will be deleted.
                         </para>
                     </listitem>
                 </itemizedlist>
@@ -2098,6 +2102,10 @@ File uploaded successfully
                     </listitem>
 					<listitem>
                         <para>--output: Name of the file to write the file to
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--remote_name: Use the name retrieved from the server instead of using --output
                         </para>
                     </listitem>
                     <listitem>
