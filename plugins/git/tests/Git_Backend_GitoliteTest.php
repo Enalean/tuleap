@@ -144,6 +144,17 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $repository->expectCallCount('delete', 3);
         $this->assertTrue($backend->deleteProjectRepositories(1));
     }
+    
+    public function testCreateFork_copiesRepositoryAndCallCreateRepository() {
+//      $backend = new Git_Backend_GitoliteTestVersion();
+//      $repository = new MockGitRepository();
+//      $driver = new MockGit_GitoliteDriver();
+//      
+//      $driver->expectsOnce('fork', array($repoPath, $clonePath));
+//      $
+//      #$repository->setReturnValue('fork', true);
+       #$this->assertTrue($backend->createFork($repository));
+    }
 
 }
 

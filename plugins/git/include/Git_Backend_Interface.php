@@ -20,7 +20,7 @@
  */
 
 interface Git_Backend_Interface {
-
+    const GIT_ROOT_PATH = '/var/lib/codendi/gitroot/';
     /**
      * Initialize a new reference repository
      * 

@@ -67,7 +67,7 @@ class GitRepository implements DVCSRepository {
     
     protected $backendType;
 
-    public function __construct() {
+    public function __construct($userManager = null) {
 
         $this->hash        = '';        
         $this->rootPath    = '';
@@ -90,6 +90,7 @@ class GitRepository implements DVCSRepository {
         $this->parent      = null;
         $this->parentId    = 0;
         $this->loaded      = false;        
+        $this->userManager = isset($userManager)? $userManager : UserManager::instance();
     }       
 
     /**
@@ -98,8 +99,10 @@ class GitRepository implements DVCSRepository {
      * @return UserManager
      */
     function _getUserManager() {
-        return UserManager::instance();
+        return $this->userManager;
     }
+    
+
 
     /**
      * Wrapper for tests
@@ -180,6 +183,7 @@ class GitRepository implements DVCSRepository {
         $this->backend = $backend;
     }
 
+                    
     /**
      * Allow to mock in UT
      *
@@ -190,6 +194,7 @@ class GitRepository implements DVCSRepository {
             switch ($this->getBackendType()) {
                 case GitDao::BACKEND_GITOLITE:
                     $this->backend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
+                    
                     break;
                 default:
                     $this->backend = Backend::instance('Git','GitBackend');
@@ -544,7 +549,7 @@ class GitRepository implements DVCSRepository {
      * Clone a repository, it inherits access
      * @param String forkName
      */
-    public function fork($forkName) {        
+    public function forkShell($forkName) {
         $clone = new GitRepository();
         $clone->setName($forkName);
         $clone->setProject( $this->getProject() );
@@ -556,6 +561,19 @@ class GitRepository implements DVCSRepository {
         $clone->setDescription('-- Default description --');
         $this->getBackend()->createFork($clone);
     }
+        
+    public function fork($namespace) {
+        $clone = new GitRepository();
+        $um = $this->userManager;
+        $user = $um->getCurrentUser();
+        
+        $clone->setCreator($user);
+        $clone->setName($this->getName());
+        $clone->setParent($this);
+     
+        $this->getBackend()->fork($clone, $namespace);        
+    }
+    
 
     /**
      * Create a reference repository

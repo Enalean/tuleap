@@ -312,6 +312,8 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         return false;
     }
 
+    public function fork($repository) {
+    }
     /**
      * Delete all gitolite repositories of a project
      *

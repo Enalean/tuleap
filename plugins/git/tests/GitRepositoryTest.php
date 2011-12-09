@@ -34,9 +34,15 @@ Mock::generate('Project');
 Mock::generate('DataAccessResult');
 
 class GitRepositoryTest extends UnitTestCase {
+
+    
+
     
     public function setUp() {
-        symlink(dirname(__FILE__).'/_fixtures/perms', dirname(__FILE__).'/_fixtures/tmp/perms');
+        $link =dirname(__FILE__).'/_fixtures/tmp/perms';
+        if (file_exists($link))
+            unlink($link);
+        symlink(dirname(__FILE__).'/_fixtures/perms', $link);
     }
     
     public function tearDown() {
@@ -207,6 +213,37 @@ class GitRepositoryTest extends UnitTestCase {
         $repo->expectOnce('_getProjectManager');
         $project->expectNever('getID');
     }
+    
+    public function testForkCreatesAnewRepoAndPassesItToTheBackend() {
+        $user = $this->_newUser("sandra");
+        $manager = new MockUserManager();
+        $manager->setReturnValue('getCurrentUser', $user);
+        $backend = new MockGit_Backend_Gitolite();
+        $repo    = new GitRepository($manager);        
+        $repo->setBackend($backend);
+        $clone = $this->_aGitRepoWith($user, $repo);
+        
+        $namespace = "toto/tata";
+
+        $backend->expectOnce('fork', array(new EqualExpectation($clone), $namespace));
+
+        $repo->fork($namespace);
+    }
+    
+    private function _aGitRepoWith($user, $repo) {
+        $clone = new GitRepository();
+        $clone->setCreator($user);
+        $clone->setName($repo->getName());
+        $clone->setParent($repo);
+        return $clone;
+    }
+    
+    public function _newUser($name) {
+        $user = new User(array('language_id' => 1));
+        $user->setUserName($name);
+        return $user;
+    }
+    
 }
 
 ?>
