@@ -93,10 +93,9 @@ class CLI_Action_Frs_GetFile extends CLI_Action {
 
     function soapCall($soap_params, $use_extra_params = true) {
         // Prepare SOAP parameters
-        $callParams = $soap_params;
-        $remoteName = $callParams['remote_name'];
-        unset($callParams['remote_name']);
+        $remoteName = $soap_params['remote_name'];
         unset($soap_params['remote_name']);
+        $callParams = $soap_params;
         unset($callParams['output']);
         $callParams['offset']     = 0;
         $callParams['chunk_size'] = $GLOBALS['soap']->getFileChunkSize();
