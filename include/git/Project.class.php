@@ -1043,11 +1043,12 @@ class GitPHP_Project
 		if (isset($this->tags['refs/tags/' . $hash]))
 			return $this->tags['refs/tags/' . $hash]->GetCommit();
 
-		if (preg_match('/[0-9A-Fa-f]{4,39}/', $hash)) {
+		if (preg_match('/^[0-9A-Fa-f]{4,39}$/', $hash)) {
+			var_dump($hash);
 			$hash = $this->ExpandHash($hash);
 		}
 
-		if (preg_match('/[0-9A-Fa-f]{40}/', $hash)) {
+		if (preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
 
 			if (!isset($this->commitCache[$hash])) {
 				$cacheKey = 'project|' . $this->project . '|commit|' . $hash;
