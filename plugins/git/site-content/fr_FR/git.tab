@@ -20,7 +20,7 @@ plugin_git	info_access_content	les dépôts sont accessibles via l'url ci-dessou
 plugin_git	bread_crumb_home	Liste des dépôts
 plugin_git	bread_crumb_help	Aide
 
-plugin_git	tree_title_available_repo	Liste des dépôts
+plugin_git	tree_title_available_repo	Dépôts du projet
 plugin_git	tree_msg_no_available_repo	Aucun dépôt trouvé
 
 plugin_git	admin_reference_creation_title	Création d'une référence

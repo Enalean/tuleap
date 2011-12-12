@@ -19,7 +19,7 @@ plugin_git	info_access_content	Repositories are accessible through the following
 plugin_git	bread_crumb_home	Repository list
 plugin_git	bread_crumb_help	Help
 
-plugin_git	tree_title_available_repo	Repository list
+plugin_git	tree_title_available_repo	Project repositories
 plugin_git	tree_msg_no_available_repo	No repository found
 
 plugin_git	admin_reference_creation_title	Reference creation

@@ -130,9 +130,7 @@ td.plugin_git_first_col {
 #git_repositories_list td { 
     border-left: 1px solid #f5f5f5; 
     border-right: 1px solid #f5f5f5; 
-    padding:0.5em 1em; 
+    padding-left:1em; 
+    padding-right:1em; 
 } 
 
-#git_repositories_list tr.boxitemalt td { 
-    padding: 0.25em 1em; 
-}
