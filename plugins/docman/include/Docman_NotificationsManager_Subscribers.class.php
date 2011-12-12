@@ -36,7 +36,9 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         if ($users) {
             while($users->valid()) {
                 $user    = $users->current();
+                if ($user->isActive() || $user->isRestricted()) {
                 $this->_buildMessage($params['event'], $params, $user);
+                }
                 $users->next();
             }
         }
