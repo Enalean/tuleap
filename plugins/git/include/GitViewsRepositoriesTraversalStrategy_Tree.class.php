@@ -142,24 +142,43 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     }
     
     protected function fetchRows($repositories, $depth) {
-        $html = '';
+        $nodeHtml   = '';
+        $leavesHtml = '';
         foreach ($repositories as $folder => $child) {
-            $subtree     = '';
-            $description = '&nbsp;';
-            $trclass     = 'boxitemalt';
             if ($child instanceof GitRepository) {
-                $folder      = $this->view->_getRepositoryPageUrl($child->getId(), $folder);
-                $description = $child->getDescription();
-                $trclass     = 'boxitem';
-            }
-            $html .= '<tr class="'. $trclass .'">';
-            $html .= '<td style="padding-left: '.($depth + 1).'em;">'. $folder .'</td>';
-            $html .= '<td>'. $description .'</td>';
-            $html .= '</tr>';
-            if (is_array($child)) {
-                $html .= $this->fetchRows($child, $depth + 1);
+                $leavesHtml .= $this->fetchGitRepositoryRow($child, $folder, $depth);
+            } else {
+                $nodeHtml .= $this->fetchFolderRow($child, $folder, $depth);
             }
         }
+        return $nodeHtml.$leavesHtml;
+    }
+    
+    protected function fetchGitRepositoryRow(GitRepository $repository, $name, $depth) {
+        $trclass     = 'boxitem';
+        $label       = $this->view->_getRepositoryPageUrl($repository->getId(), $name);
+        $description = $repository->getDescription();
+
+        return $this->fetchHTMLRow($trclass, $depth, $label, $description);
+    }
+
+    protected function fetchFolderRow(array $children, $name, $depth) {
+        $trclass     = 'boxitemalt';
+        $description = '&nbsp;';
+
+        $html  = '';
+        $html .= $this->fetchHTMLRow($trclass, $depth, $name, $description);
+        $html .= $this->fetchRows($children, $depth + 1);
+        
+        return $html;
+    }
+
+    protected function fetchHTMLRow($class, $depth, $label, $description) {
+        $html = '';
+        $html .= '<tr class="' . $class . '">';
+        $html .= '<td style="padding-left: ' . ($depth + 1) . 'em;">' . $label . '</td>';
+        $html .= '<td>' . $description . '</td>';
+        $html .= '</tr>';
         return $html;
     }
 }

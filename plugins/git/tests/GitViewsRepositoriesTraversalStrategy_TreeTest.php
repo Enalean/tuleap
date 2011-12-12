@@ -25,21 +25,6 @@ Mock::generate('GitViews');
 Mock::generate('User');
 Mock::generate('GitRepository');
 
-/* 
-
-Git
-|--automaticTests
-|  |-- Python
-|  `-- Ruby
-|-- deps
-|   `-- 3rdparty
-|       |-- cvsgraph
-|       |-- geshi
-|       `-- gitolite
-`-- tools
-    `-- lxc
-*/       
-
 class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositoriesTraversalStrategyTest {
     
     public function __construct() {
@@ -105,8 +90,6 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     }
     
     public function testBuildTree() {
-        
-        
         $view      = new MockGitViews();
         $traversal = TestHelper::getPartialMock('GitViewsRepositoriesTraversalStrategy_Tree', array('getRepository'));
         $traversal->__construct($view);
@@ -151,6 +134,22 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         
         // Ensure that there is a link to the repository
         $this->assertPattern('%<a href="[^"]*/view/3/"  >Python</a>%', $output);
+    }
+  
+    public function testFetchShouldReturnFolderBeforeLeaves() {
+        $view = TestHelper::getPartialMock('GitViews', array());
+        $view->groupId = 101;
+        $user = new MockUser();
+
+        $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
+        $strategy->__construct($view);
+
+        $repositories = $this->getFlatTree($strategy);
+
+        $output = $strategy->fetch($repositories, $user);
+
+        $this->assertPattern('%tools.*abc%', $output);
+    
     }
 }
 ?>

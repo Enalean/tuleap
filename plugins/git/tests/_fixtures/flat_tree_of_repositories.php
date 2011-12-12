@@ -22,6 +22,7 @@
 /* 
 
 Git
+|-- abc
 |--automaticTests
 |  |-- Python
 |  `-- Ruby
@@ -34,6 +35,22 @@ Git
     `-- lxc
 */        
 $repositories = array(
+    2 => 
+    array (
+      'repository_id' => '2',
+      'repository_name' => 'abc',
+      'repository_description' => '-- Default description --',
+      'repository_path' => 'ngt/abc.git',
+      'repository_parent_id' => '0',
+      'project_id' => '101',
+      'repository_creation_user_id' => '102',
+      'repository_creation_date' => '2011-12-06 17:24:58',
+      'repository_deletion_date' => '0000-00-00 00:00:00',
+      'repository_is_initialized' => '0',
+      'repository_access' => 'private',
+      'repository_events_mailing_prefix' => '[SCM]',
+      'repository_backend_type' => 'gitolite',
+    ),
     3 => 
     array (
       'repository_id' => '3',
