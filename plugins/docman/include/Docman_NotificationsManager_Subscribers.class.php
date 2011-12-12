@@ -33,14 +33,11 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     function somethingHappen($event, $params) {
         $um = $this->_getUserManager();
         $users = new ArrayIterator($params['listeners']);
-        $dpm = parent::_getPermissionsManager();
         if ($users) {
             while($users->valid()) {
                 $user    = $users->current();
                 if ($user->isActive() || $user->isRestricted()) {
-                    if ($dpm->userCanAccess($user, $params['item']->getId())) {
-                        $this->_buildMessage($params['event'], $params, $user);
-                    }
+                    $this->_buildMessage($params['event'], $params, $user);
                 }
                 $users->next();
             }
