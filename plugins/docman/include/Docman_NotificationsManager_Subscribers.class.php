@@ -35,8 +35,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         $users = new ArrayIterator($params['listeners']);
         if ($users) {
             while($users->valid()) {
-                $u    = $users->current();
-                $user = $u;
+                $user    = $users->current();
                 $this->_buildMessage($params['event'], $params, $user);
                 $users->next();
             }
@@ -45,14 +44,15 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
 
     function _buildMessage($event, $params, $user) {
         $type = '';
+        $language = parent::_getLanguageForUser($user);
         switch($event) {
             case 'plugin_docman_add_monitoring':
                 $type = self::MESSAGE_ADDED;
-                $subject = 'You were added to '.$params['item']->getTitle().' monitoring list';
+                $subject = $language->getText('plugin_docman', 'notifications_added_to_monitoring_list_subject', array($params['item']->getTitle()));
                 break;
             case 'plugin_docman_remove_monitoring':
                 $type = self::MESSAGE_REMOVED;
-                $subject = 'You were removed to '.$params['item']->getTitle().' monitoring list';
+                $subject = $language->getText('plugin_docman', 'notifications_removed_from_monitoring_list_subject', array($params['item']->getTitle()));
                 break;
             default:
                 $subject = $params['item']->getTitle();

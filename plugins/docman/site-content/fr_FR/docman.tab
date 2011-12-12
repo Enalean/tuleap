@@ -652,7 +652,9 @@ plugin_docman	notifications_add_user_title	Ajoutez des utilisateurs à la liste 
 plugin_docman	notifications_add_user_cascade	Monitoring activé pour toute la sous-hiérarchie
 plugin_docman	notifications_permission_denied	Vous n'avez pas assez de permission pour supprimer le monitoring d'autres utilisateurs
 plugin_docman	notifications_cascade_on	Vous surveillez désormais '$1' et sa sous-hiérarchie.
+plugin_docman	notifications_added_to_monitoring_list_subject	Vous avez été ajouté à la liste de monitoring du document '$1'
 plugin_docman	notifications_added_to_monitoring_list	Vous recevez cette notification car vous avez été rajouté à la liste des utilisateurs qui monitorent cet item.
+plugin_docman	notifications_removed_from_monitoring_list_subject	Vous avez été enlevé de la liste de monitoring du document '$1'
 plugin_docman	notifications_removed_from_monitoring_list	Vous recevez cette notification car vous avez été enlevé de la liste des utilisateurs qui monitorent cet item.
 plugin_docman	notifications_removed_mail_body	$1 a été supprimé par $2.\n\n---------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez cet item.\n$3.
 plugin_docman	notifications_removed_from_mail_body	$1 a été modifié par $2.\n$3&action=show&id=$4\n\nSupprimé:\n $5\n\n----------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez ce répertoire.\nPour arrêter la surveillance, aller à la page suivante :\n $3&action=details&section=notifications&id=$6
