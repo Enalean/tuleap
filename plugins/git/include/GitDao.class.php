@@ -202,56 +202,32 @@ class GitDao extends DataAccessObject {
     }
 
     /**
-     * Obtain project's list of git repositories
+     * Obtain project's list of git repositories. May be filtered out by user to get only her own repositories
      *
      * @param Integre $projectId    Project id
      * @param Boolean $onlyGitShell If true list will contain only git repositories no gitolite
+     * @param Integer $userId       User id
      *
      * @return Array
      */
-    public function getProjectRepositoryList($projectId, $onlyGitShell = false) {
+    public function getProjectRepositoryList($projectId, $onlyGitShell = false, $userId = null) {
         $condition = "";
         if ($onlyGitShell) {
-            $condition = " AND ". self::REPOSITORY_BACKEND_TYPE ." = '". self::BACKEND_GITSHELL ."' ";
+            $condition .= " AND ". self::REPOSITORY_BACKEND_TYPE ." = '". self::BACKEND_GITSHELL ."' ";
         }
         $projectId = $this->da->escapeInt($projectId);
+        $userId    = $this->da->escapeInt($userId);
         if ( empty($projectId) ) {
             return false;
+        }
+        if ( !empty($userId) ) {
+            $condition .= " AND user_id = $userId ";
         }
         $sql = "SELECT * FROM $this->tableName
                 WHERE ". self::FK_PROJECT_ID ." = $projectId
                   AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'"
                   .$condition.
                   "ORDER BY ". self::REPOSITORY_NAME;
-                  
-        $rs = $this->retrieve($sql);
-        if ( empty($rs) || $rs->rowCount() == 0 ) {
-            return false;
-        }
-        $list = array();
-        while( $row = $rs->getRow() ) {
-            $repoId        = $row[self::REPOSITORY_ID];
-            $list[$repoId] = $row;
-        }
-        return $list;
-    }
-
-    /**
-     * Obtain user's list of git repositories
-     *
-     * @param Integer $projectId Project id
-     * @param Integer $userId    User id
-     *
-     * @return Array
-     */
-    public function getUserRepositoryList($projectId, $userId) {
-        $projectId = $this->da->escapeInt($projectId);
-        $userId   = $this->da->escapeInt($userId);
-        $sql = "SELECT * FROM $this->tableName
-                WHERE ". self::FK_PROJECT_ID ." = $projectId
-                  AND user_id = $userId
-                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
-                ORDER BY ". self::REPOSITORY_NAME;
                   
         $rs = $this->retrieve($sql);
         if ( empty($rs) || $rs->rowCount() == 0 ) {

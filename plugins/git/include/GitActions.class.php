@@ -184,16 +184,19 @@ class GitActions extends PluginActions {
         return;
     }
 
-    public function getProjectRepositoryList($projectId, $userId = 0) {
-        $projectId = intval($projectId);
-        $userId    = intval($userId);
-        $dao       = $this->getDao();
-        if ($userId) {
-            $repositoryList = $dao->getUserRepositoryList($projectId, $userId);
-        } else {
-            $repositoryList = $dao->getProjectRepositoryList($projectId);
-        }
-        $this->addData( array('repository_list'=>$repositoryList) );
+    /**
+     * Action to load the user's repositories of a project. If user is not given, then load the project repositories instead.
+     * 
+     * @param int $projectId The project id
+     * @param int $userId    The user id. (== null for project repositories)
+     *
+     * @return bool true if success false otherwise
+     */
+    public function getProjectRepositoryList($projectId, $userId = null) {
+        $onlyGitShell = false;
+        $this->addData(array(
+            'repository_list' => $this->getDao()->getProjectRepositoryList($projectId, $onlyGitShell, $userId)
+        ));
         return true;
     }
     

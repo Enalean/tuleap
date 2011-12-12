@@ -365,37 +365,39 @@ class GitActionsTest extends UnitTestCase {
     
     function testGetProjectRepositoryListShouldReturnProjectRepositories() {
         $projectId = 42;
+        $userId    = 24;
+        
+        $project_repos = array(
+            array(
+                'id'   => '1',
+                'name' => 'a',
+            ),
+            array(
+                'id'   => '2',
+                'name' => 'b',
+            ),
+        );
+        
+        $sandra_repos = array(
+            array(
+                'id'   => '3',
+                'name' => 'c',
+            )
+        );
         
         $dao    = new MockGitDao();
-        $dao->setReturnValue('getProjectRepositoryList', 'return from DAO');
-        $dao->expectOnce('getProjectRepositoryList', array($projectId));
+        $dao->setReturnValue('getProjectRepositoryList', $project_repos, array($projectId, false, null));
+        $dao->setReturnValue('getProjectRepositoryList', $sandra_repos, array($projectId, false, $userId));
         
         $controller = new MockGit();
-        $controller->expectOnce('addData', array(array('repository_list' => 'return from DAO')));
+        $controller->expectAt(0, 'addData', array(array('repository_list' => $project_repos)));
+        $controller->expectAt(1, 'addData', array(array('repository_list' => $sandra_repos)));
         
         $action = TestHelper::getPartialMock('GitActions', array('getDao'));
         $action->setController($controller);
         $action->setReturnValue('getDao', $dao);
         
         $action->getProjectRepositoryList($projectId);
-    }
-
-    
-    function testGetProjectRepositoryListShouldReturnUserRepositories() {
-        $projectId = 42;
-        $userId    = 24;
-        
-        $dao    = new MockGitDao();
-        $dao->setReturnValue('getUserRepositoryList', 'return from DAO');
-        $dao->expectOnce('getUserRepositoryList', array($projectId, $userId));
-        
-        $controller = new MockGit();
-        $controller->expectOnce('addData', array(array('repository_list' => 'return from DAO')));
-        
-        $action = TestHelper::getPartialMock('GitActions', array('getDao'));
-        $action->setController($controller);
-        $action->setReturnValue('getDao', $dao);
-        
         $action->getProjectRepositoryList($projectId, $userId);
     }
 }
