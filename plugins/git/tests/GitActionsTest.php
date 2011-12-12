@@ -385,13 +385,25 @@ class GitActionsTest extends UnitTestCase {
             )
         );
         
+        $repo_owners = TestHelper::arrayToDar(
+            array(
+                array(
+                    'id' => '123',
+                ),
+                array(
+                    'id' => '456',
+                ),
+            )
+        );
+        
         $dao    = new MockGitDao();
         $dao->setReturnValue('getProjectRepositoryList', $project_repos, array($projectId, false, null));
         $dao->setReturnValue('getProjectRepositoryList', $sandra_repos, array($projectId, false, $userId));
+        $dao->setReturnValue('getProjectRepositoriesOwners', $repo_owners, array($projectId));
         
         $controller = new MockGit();
-        $controller->expectAt(0, 'addData', array(array('repository_list' => $project_repos)));
-        $controller->expectAt(1, 'addData', array(array('repository_list' => $sandra_repos)));
+        $controller->expectAt(0, 'addData', array(array('repository_list' => $project_repos, 'repositories_owners' => $repo_owners)));
+        $controller->expectAt(1, 'addData', array(array('repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners)));
         
         $action = TestHelper::getPartialMock('GitActions', array('getDao'));
         $action->setController($controller);

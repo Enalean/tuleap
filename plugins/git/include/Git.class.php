@@ -340,6 +340,7 @@ class Git extends PluginController {
                 $valid->required();
                 if($this->request->valid($valid)) {
                     $user_id = $this->request->get('user');
+                    $this->addData(array('user' => $user_id));
                 }
                 $this->addAction( 'getProjectRepositoryList', array($this->groupId, $user_id) );
                 $this->addView('index');

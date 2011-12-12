@@ -194,8 +194,10 @@ class GitActions extends PluginActions {
      */
     public function getProjectRepositoryList($projectId, $userId = null) {
         $onlyGitShell = false;
+        $dao          = $this->getDao();
         $this->addData(array(
-            'repository_list' => $this->getDao()->getProjectRepositoryList($projectId, $onlyGitShell, $userId)
+            'repository_list'     => $dao->getProjectRepositoryList($projectId, $onlyGitShell, $userId),
+            'repositories_owners' => $dao->getProjectRepositoriesOwners($projectId),
         ));
         return true;
     }

@@ -651,7 +651,29 @@ class GitViews extends PluginViews {
             $params = $this->getData();
         }
         if ( !empty($params['repository_list']) ) {
-            echo '<h3>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"> [?]</a></h3>';
+            //echo '<h3>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"> [?]</a></h3>';
+            if (!empty($params['repositories_owners'])) {
+                $current_id = null;
+                if (!empty($params['user'])) {
+                    $current_id = (int)$params['user'];
+                }
+                $select = '<select name="user" onchange="this.form.submit()">';
+                $uh = UserHelper::instance();
+                $selected = 'selected="selected"';
+                $select .= '<option value="" '. ($current_id ? '' : $selected) .'>'. $this->getText('tree_title_available_repo') .'</option>';
+                foreach ($params['repositories_owners'] as $owner) {
+                    $select .= '<option value="'. (int)$owner['user_id'] .'" '. ($owner['user_id'] == $current_id ? $selected : '') .'>'. $uh->getDisplayName($owner['user_name'], $owner['realname']) .'</option>';
+                }
+                $select .= '</select>';
+                echo '<form action="" method="GET">';
+                echo '<p>';
+                echo '<input type="hidden" name="action" value="index" />';
+                echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
+                echo $select;
+                echo '<noscript><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></noscript>';
+                echo '</p>';
+                echo '</form>';
+            }
             $this->help('tree', array('display'=>'none') );
             $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($this);
             //$strategy = new GitViewsRepositoriesTraversalStrategy_UL($this);

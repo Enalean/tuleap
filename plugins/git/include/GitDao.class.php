@@ -220,7 +220,9 @@ class GitDao extends DataAccessObject {
         if ( empty($projectId) ) {
             return false;
         }
-        if ( !empty($userId) ) {
+        if ( empty($userId) ) {
+            $condition .= " AND user_id IS NULL ";
+        } else {
             $condition .= " AND user_id = $userId ";
         }
         $sql = "SELECT * FROM $this->tableName
@@ -239,6 +241,22 @@ class GitDao extends DataAccessObject {
             $list[$repoId] = $row;
         }
         return $list;
+    }
+    
+    /**
+     * Return the list of users that owns repositories in the project $projectId
+     *
+     * @return DataAccessResult
+     */
+    public function getProjectRepositoriesOwners($projectId) {
+        $projectId = $this->da->escapeInt($projectId);
+        $sql = "SELECT DISTINCT user_id, user_name, realname
+                FROM $this->tableName
+                    INNER JOIN user USING(user_id)
+                WHERE ". self::FK_PROJECT_ID ." = $projectId
+                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                ORDER BY user.user_name";
+        return $this->retrieve($sql);
     }
 
     public function getAllGitoliteRespositories($projectId) {
