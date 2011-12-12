@@ -1659,13 +1659,11 @@ class Docman_Actions extends Actions {
         if (isset($params['listeners_to_delete']) && is_array($params['listeners_to_delete']) && !empty($params['listeners_to_delete'])) {
             if ($this->_controler->userCanManage($params['item']->getId())) {
                 $users = array();
-                $removedUsers = array();
                 foreach ($params['listeners_to_delete'] as $userId) {
                     $user = $this->_getUserManagerInstance()->getUserById($userId);
                     if ($this->_controler->notificationsManager->exist($userId, $params['item']->getId())) {
                         if ($this->_controler->notificationsManager->remove($userId, $params['item']->getId()) && $this->_controler->notificationsManager->remove($userId, $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
-                            $users[] = $user->getName();
-                            $removedUsers[] = $user;
+                            $users[] = $user;
                         } else {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_removed', array($user->getName())));
                         }
@@ -1674,8 +1672,12 @@ class Docman_Actions extends Actions {
                     }
                 }
                 if (!empty($users)) {
-                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $users))));
-                    $this->_raiseMonitoringListEvent($params['item'], $removedUsers, 'plugin_docman_remove_monitoring', $user);
+                    $removedUsers = array();
+                    foreach ($users as $user) {
+                        $removedUsers[] = $user->getName();
+                    }
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $removedUsers))));
+                    $this->_raiseMonitoringListEvent($params['item'], $users, 'plugin_docman_remove_monitoring', $user);
                     $this->event_manager->processEvent('send_notifications_subscribers', array());
                 }
             } else {
