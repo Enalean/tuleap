@@ -50,8 +50,12 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      */
     public function createReference($repository) {
         $id = $this->getDao()->save($repository);
+        $this->updateRepoConf($repository);
+    }
+
+    public function updateRepoConf($repository) {
         $this->driver->dumpProjectRepoConf($repository->getProject());
-        $this->driver->push();
+        return $this->driver->push();
     }
 
     /**
@@ -102,6 +106,10 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         }
         return $this->dao;
     }
+    
+    public function setDao($dao) {
+        $this->dao = $dao;
+    }
 
     /**
      * Verify if given name is not already reserved on filesystem
@@ -140,8 +148,9 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
                 $ok = $success[0];
             }
         }
-        $this->driver->dumpProjectRepoConf($repository->getProject());
-        $this->driver->push();
+        
+        $this->updateRepoConf($repository);
+
         foreach ($msgs as $msg) {
             $GLOBALS['Response']->addFeedback($ok ? 'info' : 'error', $msg);
         }
@@ -199,8 +208,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      */
     public function changeRepositoryMailingList($repository) {
         $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-        $this->getDriver()->dumpProjectRepoConf($repository->getProject());
-        return $this->getDriver()->push();
+        return $this->updateRepoConf($repository);
     }
 
     /**
@@ -298,8 +306,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         if ($repository->canBeDeleted()) {
             if ($this->deletePermissions($repository) && $this->getDao()->delete($repository)) {
                 $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-                $this->getDriver()->dumpProjectRepoConf($repository->getProject());
-                $this->getDriver()->push();
+                $this->updateRepoConf($repository);                
                 $this->getDriver()->delete($path);
                 return true;
             } else {
@@ -312,7 +319,10 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         return false;
     }
 
-    public function fork($repository) {
+    public function fork(GitRepository $repository) {
+        $namespace = $repository->getNamespace();
+        $this->getDriver()->fork($namespace);
+        $this->createReference($repository);
     }
     /**
      * Delete all gitolite repositories of a project

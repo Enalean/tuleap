@@ -30,15 +30,28 @@ Mock::generatePartial('Git_Backend_Gitolite', 'Git_Backend_GitoliteTestVersion',
 Mock::generate('GitRepository');
 Mock::generate('GitDao');
 Mock::generate('DataAccessResult');
+Mock::generate('Project');
 
 class Git_Backend_GitoliteTest extends UnitTestCase {
     
     protected $fixturesPath;
-    
+
+
     public function setUp() {
         $this->fixtureRenamePath = dirname(__FILE__).'/_fixtures/rename';
+        
+        if (file_exists($this->fixtureRenamePath)){
+            @rmdir($this->fixtureRenamePath .'/legacy');
+            @rmdir($this->fixtureRenamePath .'/newone');
+            @rmdir($this->fixtureRenamePath);
+        }
+        
         mkdir($this->fixtureRenamePath .'/legacy', 0777, true);
-        symlink(dirname(__FILE__).'/_fixtures/perms', dirname(__FILE__).'/_fixtures/tmp/perms');
+        
+        $link =dirname(__FILE__).'/_fixtures/tmp/perms';
+        if (file_exists($link))
+            unlink($link);
+        symlink(dirname(__FILE__).'/_fixtures/perms', $link);
     }
     
     public function tearDown() {
@@ -145,17 +158,31 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $this->assertTrue($backend->deleteProjectRepositories(1));
     }
     
-    public function testCreateFork_copiesRepositoryAndCallCreateRepository() {
-//      $backend = new Git_Backend_GitoliteTestVersion();
-//      $repository = new MockGitRepository();
-//      $driver = new MockGit_GitoliteDriver();
-//      
-//      $driver->expectsOnce('fork', array($repoPath, $clonePath));
-//      $
-//      #$repository->setReturnValue('fork', true);
-       #$this->assertTrue($backend->createFork($repository));
-    }
+    public function testFork_clonesRepositoryAndPushesConf() {
+        $namespace  = 'toto';
+        $driver     = new MockGit_GitoliteDriver();
+        $dao        = new MockGitDao();
+        $project    = new MockProject();
+        
+        $repository = $this->_aGitRepoWith($project, $namespace);
+        
+        $backend    = new Git_Backend_Gitolite($driver);
+        $backend->setDao($dao);
+        
+        $dao->expectOnce('save', array($repository));
+        $driver->expectOnce('fork', array($namespace));        
+        $driver->expectOnce('dumpProjectRepoConf', array($project));
+        $driver->expectOnce('push');        
 
+        $backend->fork($repository);
+    }
+        
+    public function _aGitRepoWith($project, $namespace) {
+        $repository = new GitRepository();
+        $repository->setProject($project);
+        $repository->setNamespace($namespace);
+        return $repository;
+    }
 }
 
 ?>

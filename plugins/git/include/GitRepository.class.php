@@ -64,6 +64,7 @@ class GitRepository implements DVCSRepository {
     private $parent;    
     private $loaded;    
     private $dao;
+    private $namespace;
     
     protected $backendType;
 
@@ -344,6 +345,14 @@ class GitRepository implements DVCSRepository {
     public function getName() {
         return $this->name;
     }
+    
+    public function getNamespace() {
+        return $this->namespace;
+    }    
+    public function setNamespace($namespace) {
+        $this->namespace = $namespace;
+    }
+    
 
     public function getDescription() {
         return $this->description;
@@ -570,8 +579,10 @@ class GitRepository implements DVCSRepository {
         $clone->setCreator($user);
         $clone->setName($this->getName());
         $clone->setParent($this);
+        $clone->setNamespace($namespace);
+       
      
-        $this->getBackend()->fork($clone, $namespace);        
+        $this->getBackend()->fork($clone);        
     }
     
 

@@ -462,6 +462,9 @@ class Git_GitoliteDriver {
         return true;
     }
     
+    public function fork(){   
+    }
+    
 }
 
 ?>

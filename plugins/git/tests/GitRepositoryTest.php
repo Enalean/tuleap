@@ -221,20 +221,21 @@ class GitRepositoryTest extends UnitTestCase {
         $backend = new MockGit_Backend_Gitolite();
         $repo    = new GitRepository($manager);        
         $repo->setBackend($backend);
-        $clone = $this->_aGitRepoWith($user, $repo);
         
         $namespace = "toto/tata";
+        $clone = $this->_aGitRepoWith($user, $repo, $namespace);
 
-        $backend->expectOnce('fork', array(new EqualExpectation($clone), $namespace));
+        $backend->expectOnce('fork', array(new EqualExpectation($clone)));
 
         $repo->fork($namespace);
     }
     
-    private function _aGitRepoWith($user, $repo) {
+    private function _aGitRepoWith($user, $repo, $namespace) {
         $clone = new GitRepository();
         $clone->setCreator($user);
         $clone->setName($repo->getName());
         $clone->setParent($repo);
+        $clone->setNamespace($namespace);
         return $clone;
     }
     
