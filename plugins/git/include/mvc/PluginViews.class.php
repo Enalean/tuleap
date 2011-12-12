@@ -31,6 +31,11 @@ require_once('common/include/Codendi_HTMLPurifier.class.php');
 class PluginViews {
     
     protected $request;
+    
+    /**
+     *
+     * @var PluginController
+     */
     protected $controller;
 
     public function __construct($controller) {

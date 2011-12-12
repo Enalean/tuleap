@@ -36,6 +36,10 @@ class PluginActions {
         return $this->controller;
     }
 
+    public function setController(PluginController $controller) {
+        $this->controller = $controller;
+    }
+    
     public function getData() {
         return $this->controller->getData();
     }

@@ -24,7 +24,7 @@ require_once (dirname(__FILE__).'/../include/Git.class.php');
 Mock::generate('Git');
 require_once (dirname(__FILE__).'/../include/GitRepository.class.php');
 Mock::generate('GitRepository');
-
+Mock::generate('GitDao');
 class GitActionsTest extends UnitTestCase {
 
     function testRepoManagement() {
@@ -362,7 +362,42 @@ class GitActionsTest extends UnitTestCase {
 
         $this->assertTrue($gitAction->confirmPrivate(1, 1, 'private', 'desc'));
     }
+    
+    function testGetProjectRepositoryListShouldReturnProjectRepositories() {
+        $projectId = 42;
+        
+        $dao    = new MockGitDao();
+        $dao->setReturnValue('getProjectRepositoryList', 'return from DAO');
+        $dao->expectOnce('getProjectRepositoryList', array($projectId));
+        
+        $controller = new MockGit();
+        $controller->expectOnce('addData', array(array('repository_list' => 'return from DAO')));
+        
+        $action = TestHelper::getPartialMock('GitActions', array('getDao'));
+        $action->setController($controller);
+        $action->setReturnValue('getDao', $dao);
+        
+        $action->getProjectRepositoryList($projectId);
+    }
 
+    
+    function testGetProjectRepositoryListShouldReturnUserRepositories() {
+        $projectId = 42;
+        $userId    = 24;
+        
+        $dao    = new MockGitDao();
+        $dao->setReturnValue('getUserRepositoryList', 'return from DAO');
+        $dao->expectOnce('getUserRepositoryList', array($projectId, $userId));
+        
+        $controller = new MockGit();
+        $controller->expectOnce('addData', array(array('repository_list' => 'return from DAO')));
+        
+        $action = TestHelper::getPartialMock('GitActions', array('getDao'));
+        $action->setController($controller);
+        $action->setReturnValue('getDao', $dao);
+        
+        $action->getProjectRepositoryList($projectId, $userId);
+    }
 }
 
 ?>

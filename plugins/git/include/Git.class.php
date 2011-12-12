@@ -333,8 +333,15 @@ class Git extends PluginController {
                 $this->addView('forkRepositories');
                 break;
             #LIST
-            default:     
-                $this->addAction( 'getProjectRepositoryList', array($this->groupId) );                
+            default:
+                
+                $user_id = null;
+                $valid = new Valid_UInt('user');
+                $valid->required();
+                if($this->request->valid($valid)) {
+                    $user_id = $this->request->get('user');
+                }
+                $this->addAction( 'getProjectRepositoryList', array($this->groupId, $user_id) );
                 $this->addView('index');
                 break;
         }

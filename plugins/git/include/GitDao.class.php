@@ -236,6 +236,35 @@ class GitDao extends DataAccessObject {
         return $list;
     }
 
+    /**
+     * Obtain user's list of git repositories
+     *
+     * @param Integer $projectId Project id
+     * @param Integer $userId    User id
+     *
+     * @return Array
+     */
+    public function getUserRepositoryList($projectId, $userId) {
+        $projectId = $this->da->escapeInt($projectId);
+        $userId   = $this->da->escapeInt($userId);
+        $sql = "SELECT * FROM $this->tableName
+                WHERE ". self::FK_PROJECT_ID ." = $projectId
+                  AND user_id = $userId
+                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                ORDER BY ". self::REPOSITORY_NAME;
+                  
+        $rs = $this->retrieve($sql);
+        if ( empty($rs) || $rs->rowCount() == 0 ) {
+            return false;
+        }
+        $list = array();
+        while( $row = $rs->getRow() ) {
+            $repoId        = $row[self::REPOSITORY_ID];
+            $list[$repoId] = $row;
+        }
+        return $list;
+    }
+
     public function getAllGitoliteRespositories($projectId) {
         $projectId     = $this->da->escapeInt($projectId);
         $type_gitolite = $this->da->quoteSmart(self::BACKEND_GITOLITE);

@@ -184,12 +184,21 @@ class GitActions extends PluginActions {
         return;
     }
 
-    public function getProjectRepositoryList($projectId) {
-        $projectId = intval($projectId);              
-        $dao       = new GitDao();        
-        $repositoryList = $dao->getProjectRepositoryList($projectId);        
-        $this->addData( array('repository_list'=>$repositoryList) );        
+    public function getProjectRepositoryList($projectId, $userId = 0) {
+        $projectId = intval($projectId);
+        $userId    = intval($userId);
+        $dao       = $this->getDao();
+        if ($userId) {
+            $repositoryList = $dao->getUserRepositoryList($projectId, $userId);
+        } else {
+            $repositoryList = $dao->getProjectRepositoryList($projectId);
+        }
+        $this->addData( array('repository_list'=>$repositoryList) );
         return true;
+    }
+    
+    protected function getDao() {
+        return new GitDao();
     }
     
     //TODO check repo - project?

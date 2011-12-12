@@ -19,21 +19,22 @@
  */
 
 
-/* 
-
-Git
-|-- abc
-|--automaticTests
-|  |-- Python
-|  `-- Ruby
-|-- deps
-|   `-- 3rdparty
-|       |-- cvsgraph
-|       |-- geshi
-|       `-- gitolite
-`-- tools
-    `-- lxc
-*/        
+/**
+ *
+ * Git
+ * |-- abc
+ * |-- automaticTests
+ * |   |-- Python
+ * |   `-- Ruby
+ * |-- deps
+ * |   `-- 3rdparty
+ * |       |-- cvsgraph
+ * |       |-- geshi
+ * |       `-- gitolite
+ * `-- tools
+ * `-- lxc
+ * 
+ */
 $repositories = array(
     2 => 
     array (
