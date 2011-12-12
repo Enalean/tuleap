@@ -22,8 +22,8 @@ require_once('CLI_Action_Frs_Files.class.php');
 require_once('CLI_Action_Frs_UploadedFiles.class.php');
 require_once('CLI_Action_Frs_DeleteFile.class.php');
 require_once('CLI_Action_Frs_FileInfo.class.php');
-require_once('CLI_Action_Frs_DeleteEmptyPackages.class.php');
-require_once('CLI_Action_Frs_DeleteEmptyReleases.class.php');
+require_once('CLI_Action_Frs_DeletePackage.class.php');
+require_once('CLI_Action_Frs_DeleteRelease.class.php');
 
 class CLI_Module_Frs extends CLI_Module {
     function CLI_Module_Frs() {
@@ -38,8 +38,8 @@ class CLI_Module_Frs extends CLI_Module {
         $this->addAction(new CLI_Action_Frs_UploadedFiles());
         $this->addAction(new CLI_Action_Frs_DeleteFile());
         $this->addAction(new CLI_Action_Frs_FileInfo());
-        $this->addAction(new CLI_Action_Frs_DeleteEmptyPackages());
-        $this->addAction(new CLI_Action_Frs_DeleteEmptyReleases());
+        $this->addAction(new CLI_Action_Frs_DeletePackage());
+        $this->addAction(new CLI_Action_Frs_DeleteRelease());
     }
 }
 

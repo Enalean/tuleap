@@ -15,10 +15,21 @@
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
-class CLI_Action_Frs_DeleteEmptyPackages extends CLI_Action {
+class CLI_Action_Frs_DeletePackage extends CLI_Action {
 
-    function CLI_Action_Frs_DeleteEmptyPackages() {
-        $this->CLI_Action('deleteEmptyPackages', 'Delete empty packages in a project.');
+    function CLI_Action_Frs_DeletePackage() {
+        $this->CLI_Action('deletePackage', 'Delete an empty package or all empty packages in a project.');
+        $this->addParam(array(
+            'name'           => 'package_id',
+            'description'    => '--package_id=<package_id>    (Optional)Id of the package to be deleted, keep empty if you want to remove all empty packages of the project.',
+        ));
+    }
+
+    function validate_package_id(&$package_id) {
+        if (!$package_id) {
+            $package_id = 0;
+        }
+        return true;
     }
 
 }
