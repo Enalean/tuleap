@@ -1540,36 +1540,40 @@ File retrieved successfully.
             </para>
         </section>
 
-        <section id="FRSFunctionDeleteEmptyPackages">
-            <title>deleteEmptyPackages</title>
-            <para>deleteEmptyPackages: Delete all packages of the project that doesn't contain releases
+        <section id="FRSFunctionDeletePackage">
+            <title>deletePackage</title>
+            <para>deletePackage: Delete an empty package or all empty packages of the project
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--project: UNIX name of the project where empty packages will be deleted. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
                         </para>
                     </listitem>
+                    <listitem>
+                        <para>--package_id: Id of the package to delete if null all empty packages will be deleted.
+                        </para>
+                    </listitem>
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>deleteEmptyPackages command</title>
+                        <title>deletePackage command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs deleteEmptyPackages
-+--------+
-| Result |
-+--------+
-| 294    |
-| 293    |
-+--------+
+[ounis@linux codendi cli ]$ ./codendi.php frs deletePackage
++------------+----------+------+-----------+------+-----------------+
+| package_id | group_id | name | status_id | rank | approve_license |
++------------+----------+------+-----------+------+-----------------+
+| 288        | 104      | test | 1         | 5    |                 |
+| 226        | 104      | pkg  | 1         | 6    |                 |
++------------+----------+------+-----------+------+-----------------+
                         </programlisting>
                     </example>
-                    <note>Return value is the list of deleted packages id.</note>
+                    <note>Return value is the list of deleted packages.</note>
                </para>
             </para>
         </section>
 
-        <section id="FRSFunctionDeleteEmptyReleases">
-            <title>deleteEmptyReleases</title>
-            <para>deleteEmptyReleases: Delete all empty releases of the given package
+        <section id="FRSFunctionDeleteRelease">
+            <title>deleteRelease</title>
+            <para>deleteRelease: Delete an empty release or all empty releases of the given package
                 <itemizedlist mark="bullet">
                     <listitem>
                         <para>--project: UNIX name of the project where empty releases will be deleted. If none is specified, the project specified when you logged in will be used. If none was specified at that time, an error will be displayed.
@@ -1579,21 +1583,25 @@ File retrieved successfully.
                         <para>--package_id*: Id of the package where empty releases will be deleted.
                         </para>
                     </listitem>
+                    <listitem>
+                        <para>--release_id: Id of the release to delete if null all empty releases will be deleted.
+                        </para>
+                    </listitem>
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>deleteEmptyReleases command</title>
+                        <title>deleteRelease command</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs deleteEmptyReleases --package_id=292
-+--------+
-| Result |
-+--------+
-| 219    |
-| 218    |
-+--------+
+[ounis@linux codendi cli ]$ ./codendi.php frs deleteRelease --package_id=292
++------------+------------+---------------+-------+---------+-----------+--------------+-------------+
+| release_id | package_id |     name      | notes | changes | status_id | release_date | released_by |
++------------+------------+---------------+-------+---------+-----------+--------------+-------------+
+| 226        | 288        | empty release |       |         | 1         | 1323648000   | 103         |
+| 224        | 288        | empty         |       |         | 1         | 1323648000   | 103         |
++------------+------------+---------------+-------+---------+-----------+--------------+-------------+
                         </programlisting>
                     </example>
-                    <note>Return value is the list of deleted releases id.</note>
+                    <note>Return value is the list of deleted releases.</note>
                </para>
             </para>
         </section>
