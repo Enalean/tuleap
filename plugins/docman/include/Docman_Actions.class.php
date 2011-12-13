@@ -1619,7 +1619,9 @@ class Docman_Actions extends Actions {
                     $cascade = true;
                 }
                 $users = array();
+                $existingUsers = array();
                 $dpm = $this->_getDocmanPermissionsManagerInstance($params['item']->getGroupId());
+                $invalidUsers = 0;
                 foreach ($params['listeners_to_add'] as $user) {
                     if (is_a($user, 'User')) {
                         if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
@@ -1636,11 +1638,17 @@ class Docman_Actions extends Actions {
                                 $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_access_rights', array($user->getName())));
                             }
                         } else {
-                            $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists', array($user->getName())));
+                            $existingUsers[] = $user->getName();
                         }
                     } else {
-                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
+                        $invalidUsers++;
                     }
+                }
+                if (!empty($invalidUsers)) {
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
+                }
+                if (!empty($existingUsers)) {
+                $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists', array(implode(',', $existingUsers))));
                 }
                 if (!empty($users)) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_added', array(implode(',', $users))));
