@@ -140,7 +140,7 @@
 
         <authorinitials>Hatem Ounis</authorinitials>
 
-        <revremark>Add some FRS functions</revremark>
+        <revremark>Add FRS functions to clean up empty releases and packages</revremark>
       </revision>
 
     </revhistory>

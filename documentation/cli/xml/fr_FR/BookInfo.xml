@@ -140,7 +140,7 @@
 
         <authorinitials>Hatem Ounis</authorinitials>
 
-        <revremark>Ajout de de quelques fonctions dans FRS</revremark>
+        <revremark>Ajout de quelques fonctions dans FRS pour assurer la suppression des releases  et packages vides</revremark>
       </revision>
 
     </revhistory>
