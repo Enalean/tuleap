@@ -1,3 +1,10 @@
+(Not released yet)
+    What's new ?
+    ============
+    * deletePackage delete all empty packages or an empty package if specified
+
+    * deleteRelease delete all empty releases or an empty release if specified
+
 4.1 - (Codendi_ST 4.0.16) 
 	What Changed?
 	============
