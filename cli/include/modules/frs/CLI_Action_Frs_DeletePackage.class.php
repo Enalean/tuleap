@@ -32,6 +32,16 @@ class CLI_Action_Frs_DeletePackage extends CLI_Action {
         return true;
     }
 
+    function soapResult($params, $soap_result, $fieldnames = array(), $loaded_params = array()) {
+        if (!$loaded_params['others']['quiet']) {
+            if (empty($soap_result)) {
+                echo "No package were deleted\n";
+            } else {
+                $this->show_output($soap_result, $fieldnames);
+            }
+        }
+    }
+
 }
 
 ?>
