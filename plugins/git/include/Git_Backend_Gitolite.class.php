@@ -319,10 +319,12 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         return false;
     }
 
-    public function fork(GitRepository $repository) {
-        $namespace = $repository->getNamespace();
-        $this->getDriver()->fork($namespace);
-        $this->createReference($repository);
+    public function fork(GitRepository $old, GitRepository $new) {
+        $name = $old->getName();
+        $old_namespace = $old->getNamespace();
+        $new_namespace = $new->getNamespace();
+        $this->getDriver()->fork($name, $old_namespace, $new_namespace);
+        $this->createReference($new);
     }
     /**
      * Delete all gitolite repositories of a project

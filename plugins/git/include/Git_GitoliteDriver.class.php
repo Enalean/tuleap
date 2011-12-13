@@ -41,6 +41,7 @@ require_once 'exceptions/Git_Command_Exception.class.php';
  *
  */
 class Git_GitoliteDriver {
+    const REPO_ROOT_PATH = "/var/lib/codendi/repositories/";
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
@@ -51,11 +52,12 @@ class Git_GitoliteDriver {
      * @param string $adminPath The path to admin folder of gitolite. 
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
-    public function __construct($adminPath = null) {
+    public function __construct($adminPath = null, $repoRootPath = null) {
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         }
         $this->setAdminPath($adminPath);
+        $this->repoRootPath = isset($repoRootPath) ? $repoRootPath : self::REPO_ROOT_PATH;
     }
     
     /**
@@ -72,7 +74,7 @@ class Git_GitoliteDriver {
      *
      * @return string
      */
-    public function getRepositoriesPath() { 
+    public function getRepositoriesPath() {
         return realpath($this->adminPath .'/../repositories'); 
     }
 
@@ -462,7 +464,13 @@ class Git_GitoliteDriver {
         return true;
     }
     
-    public function fork(){   
+    public function fork($repo, $old_ns, $new_ns){
+        //unixPathJoin
+        $cmd = 'git clone --bare ';
+        $cmd .= $this->repoRootPath.$old_ns.$repo.'.git ';
+        $cmd .= $this->repoRootPath.$new_ns.$repo.'.git ';
+        
+        $this->gitCmd($cmd);
     }
     
 }

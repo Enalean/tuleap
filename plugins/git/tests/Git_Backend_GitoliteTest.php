@@ -159,26 +159,32 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     }
     
     public function testFork_clonesRepositoryAndPushesConf() {
-        $namespace  = 'toto';
+        $name  = 'tuleap';
+        $old_namespace = '';
+        $new_namespace = 'u/johanm/ericsson';
+        
         $driver     = new MockGit_GitoliteDriver();
         $dao        = new MockGitDao();
         $project    = new MockProject();
         
-        $repository = $this->_aGitRepoWith($project, $namespace);
+        
+        $new_repo = $this->_aGitRepoWith($name, $project, $new_namespace);
+        $old_repo = $this->_aGitRepoWith($name, $project, $old_namespace);
         
         $backend    = new Git_Backend_Gitolite($driver);
         $backend->setDao($dao);
         
-        $dao->expectOnce('save', array($repository));
-        $driver->expectOnce('fork', array($namespace));        
+        $dao->expectOnce('save', array($new_repo));
+        $driver->expectOnce('fork', array($name, $old_namespace, $new_namespace));        
         $driver->expectOnce('dumpProjectRepoConf', array($project));
         $driver->expectOnce('push');        
 
-        $backend->fork($repository);
+        $backend->fork($old_repo, $new_repo);
     }
         
-    public function _aGitRepoWith($project, $namespace) {
+    public function _aGitRepoWith($name, $project, $namespace) {
         $repository = new GitRepository();
+        $repository->setName($name);
         $repository->setProject($project);
         $repository->setNamespace($namespace);
         return $repository;

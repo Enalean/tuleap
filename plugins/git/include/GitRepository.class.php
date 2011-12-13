@@ -102,8 +102,6 @@ class GitRepository implements DVCSRepository {
     function _getUserManager() {
         return $this->userManager;
     }
-    
-
 
     /**
      * Wrapper for tests
@@ -582,7 +580,7 @@ class GitRepository implements DVCSRepository {
         $clone->setNamespace($namespace);
        
      
-        $this->getBackend()->fork($clone);        
+        $this->getBackend()->fork($this, $clone);        
     }
     
 

@@ -340,6 +340,27 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertEmptyGitStatus();
     }
     /**/
+    
+    //copier le repo à l'endroit spécifié
+       //si le répertoire n'existe pas le créer
+    function testFork_CloneEmptyToSpecifiedPath() {
+        $new_ns = 'repos/new/repo';
+        $old_ns = 'repos';
+        $old_root_dir = $this->_fixDir.$old_ns;
+        $new_root_dir = $this->_fixDir.$new_ns;
+        
+        system('/bin/rm -rf '.$old_root_dir);
+        
+        mkdir($old_root_dir.'tulip.git', 0770, true);
+        @exec('GIT_DIR='.$old_root_dir.'tulip.git'.' git --bare init --shared=group');
+        
+        $driver = new Git_GitoliteDriver(null, $this->_fixDir);
+        $driver->fork('tulip', $old_ns, $new_ns);
+        
+        $this->assertTrue(is_dir($new_root_dir.'tulip.git'), "the new git repo dir (".$new_root_dir.'tulip.git'.") wasn't found.");
+        $new_repo_HEAD = $new_root_dir.'tulip.git'.'/HEAD';
+        $this->assertTrue(file_exists($new_repo_HEAD), 'the file ('.$new_repo_HEAD.') does not exists');
+    }
 }
 
 ?>
