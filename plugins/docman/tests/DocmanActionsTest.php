@@ -34,10 +34,13 @@ Mock::generatePartial('Docman_Actions','Docman_ActionsTest', array('_getItemFact
                                                                    '_getActionsDeleteVisitor',
                                                                    '_getEventManager',
                                                                    '_getVersionFactory',
+                                                                   '_getDocmanPermissionsManagerInstance',
                                                                    '_getUserManagerInstance'));
 
 require_once(dirname(__FILE__).'/../include/Docman_Controller.class.php');
 Mock::generate('Docman_Controller');
+require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
+Mock::generate('Docman_PermissionsManager');
 
 require_once('common/valid/ValidFactory.class.php');
 
@@ -392,6 +395,10 @@ class DocmanActionsTest extends UnitTestCase {
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
 
+        $docmanPermissionsManager = new MockDocman_PermissionsManager();
+        $docmanPermissionsManager->setReturnValue('userCanAccess', true);
+        $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
+
         $user1 = new MockUser();
         $user1->setReturnValue('getId', 123);
 
@@ -423,6 +430,10 @@ class DocmanActionsTest extends UnitTestCase {
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
         $actions->event_manager = new MockEventManager($this);
+
+        $docmanPermissionsManager = new MockDocman_PermissionsManager();
+        $docmanPermissionsManager->setReturnValue('userCanAccess', true);
+        $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
 
         $params['listeners_to_add'] = array($user);
         $params['item'] = new MockDocman_Item();

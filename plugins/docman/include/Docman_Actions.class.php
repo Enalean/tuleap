@@ -1614,7 +1614,6 @@ class Docman_Actions extends Actions {
      * @return void
      */
     function add_monitoring($params) {
-        $dpm = $this->_getDocmanPermissionsManagerInstance($params['item']->getGroupId());
         if (isset($params['listeners_to_add']) && is_array($params['listeners_to_add']) && !empty($params['listeners_to_add'])) {
             if ($this->_controler->userCanManage($params['item']->getId())) {
                 $cascade = false;
@@ -1622,6 +1621,7 @@ class Docman_Actions extends Actions {
                     $cascade = true;
                 }
                 $users = array();
+                $dpm = $this->_getDocmanPermissionsManagerInstance($params['item']->getGroupId());
                 foreach ($params['listeners_to_add'] as $user) {
                     if (is_object($user)) {
                         if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
