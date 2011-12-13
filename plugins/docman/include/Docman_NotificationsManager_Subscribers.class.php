@@ -30,11 +30,20 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         parent::__construct($group_id, $url, $feedback);
     }
 
+    /**
+     * Trigger notification message build for a list of users monitoring a given docman item.
+     *
+     * @param String $event  Event listened at Docman_Controller side
+     * @param Array  $params Array of params from which we can retrive an array of listners and the event type
+     *
+     * @return void
+     */
     function somethingHappen($event, $params) {
-        $um = parent::_getUserManager();
+        var_dump($event);
+        $um = $this->_getUserManager();
         $users = new ArrayIterator($params['listeners']);
         if ($users) {
-            while($users->valid()) {
+            while ($users->valid()) {
                 $user    = $users->current();
                 if ($user->isActive() || $user->isRestricted()) {
                     $this->_buildMessage($params['event'], $params, $user);
@@ -44,44 +53,62 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         }
     }
 
+    /**
+    * Build notification for a given user according to the type of the event on the monitoring list.
+    *
+    * @param String $event  type of the listened action on the monitoring list.
+    * @param Array  $params Array of params from which we can retrive docman item.
+    * @param User   $user   User we want to notify
+    *
+    * @return void
+    */
     function _buildMessage($event, $params, $user) {
         $type = '';
         $language = parent::_getLanguageForUser($user);
         switch($event) {
-            case 'plugin_docman_add_monitoring':
-                $type = self::MESSAGE_ADDED;
-                $subject = $language->getText('plugin_docman', 'notifications_added_to_monitoring_list_subject', array($params['item']->getTitle()));
-                break;
-            case 'plugin_docman_remove_monitoring':
-                $type = self::MESSAGE_REMOVED;
-                $subject = $language->getText('plugin_docman', 'notifications_removed_from_monitoring_list_subject', array($params['item']->getTitle()));
-                break;
-            default:
-                $subject = $params['item']->getTitle();
-                break;
+        case 'plugin_docman_add_monitoring':
+            $type = self::MESSAGE_ADDED;
+            $subject = $language->getText('plugin_docman', 'notifications_added_to_monitoring_list_subject', array($params['item']->getTitle()));
+            break;
+        case 'plugin_docman_remove_monitoring':
+            $type = self::MESSAGE_REMOVED;
+            $subject = $language->getText('plugin_docman', 'notifications_removed_from_monitoring_list_subject', array($params['item']->getTitle()));
+            break;
+        default:
+            $subject = $params['item']->getTitle();
+            break;
         }
-        $this->_addMessage($user,
-        $subject,
-        $this->_getMessageForUser($user, $type, $params)
+        $this->_addMessage(
+            $user,
+            $subject,
+            $this->_getMessageForUser($user, $type, $params)
         );
     }
 
-    function _getMessageForUser(&$user, $message_type, $params) {
+    /**
+    * Prepare notification message
+    *
+    * @param User   $user         User we want to notify.
+    * @param String $message_type Nature of the operation on the monitoring list.
+    * @param Array  $params       Array of params from which we can retrive docman item.
+    *
+    * @return String
+    */
+    function _getMessageForUser($user, $message_type, $params) {
         $msg = '';
         $language = $this->_getLanguageForUser($user);
-        $msg .= "\n\n--------------------------------------------------------------------\n";
         switch($message_type) {
-            case self::MESSAGE_ADDED:
-                $msg .= $language->getText('plugin_docman', 'notifications_added_to_monitoring_list')."\n";
-                $msg .= $language->getText('plugin_docman', 'notif_footer_message_link')."\n";
-                break;
-            case self::MESSAGE_REMOVED:
-                $msg .= $language->getText('plugin_docman', 'notifications_removed_from_monitoring_list')."\n";
-                $msg .= $language->getText('plugin_docman', 'notif_footer_message_restore_link')."\n";
-                break;
-            default:
-                $msg .= $language->getText('plugin_docman', 'notif_something_happen')."\n";
-                break;
+        case self::MESSAGE_ADDED:
+            $msg .= $language->getText('plugin_docman', 'notifications_added_to_monitoring_list')."\n";
+            $msg .= $language->getText('plugin_docman', 'notif_footer_message_link')."\n";
+            break;
+        case self::MESSAGE_REMOVED:
+            $msg .= $language->getText('plugin_docman', 'notifications_removed_from_monitoring_list')."\n";
+            $msg .= $language->getText('plugin_docman', 'notif_footer_message_restore_link')."\n";
+            break;
+        default:
+            $msg .= $language->getText('plugin_docman', 'notif_something_happen')."\n";
+            break;
         }
         $msg .= $this->_url .'&action=details&section=notifications&id='. $params['item']->getId();
         return $msg;
