@@ -31,7 +31,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     }
 
     function somethingHappen($event, $params) {
-        $um = $this->_getUserManager();
+        $um = parent::_getUserManager();
         $users = new ArrayIterator($params['listeners']);
         if ($users) {
             while($users->valid()) {
@@ -85,16 +85,6 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         }
         $msg .= $this->_url .'&action=details&section=notifications&id='. $params['item']->getId();
         return $msg;
-    }
-
-    function _getUserManager() {
-        return UserManager::instance();
-    }
-    function _getPermissionsManager() {
-        return Docman_PermissionsManager::instance($this->_group_id);
-    }
-    function _getMail() {
-        return new Mail();
     }
 }
 
