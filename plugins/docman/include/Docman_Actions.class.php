@@ -1614,6 +1614,7 @@ class Docman_Actions extends Actions {
      * @return void
      */
     function add_monitoring($params) {
+        $dpm = $this->_getDocmanPermissionsManagerInstance($params['item']->getGroupId());
         if (isset($params['listeners_to_add']) && is_array($params['listeners_to_add']) && !empty($params['listeners_to_add'])) {
             if ($this->_controler->userCanManage($params['item']->getId())) {
                 $cascade = false;
@@ -1624,13 +1625,17 @@ class Docman_Actions extends Actions {
                 foreach ($params['listeners_to_add'] as $user) {
                     if (is_object($user)) {
                         if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
-                            if ($this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
-                                if ($cascade && !$this->_controler->notificationsManager->add($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
-                                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_not_added', array($user->getName())));
+                            if ($dpm->userCanAccess($user, $params['item']->getId())) {
+                                if ($this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
+                                    if ($cascade && !$this->_controler->notificationsManager->add($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_not_added', array($user->getName())));
+                                    }
+                                    $users[] = $user->getName();
+                                } else {
+                                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_added', array($user->getName())));
                                 }
-                                $users[] = $user->getName();
                             } else {
-                                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_added', array($user->getName())));
+                                $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_access_rights', array($user->getName())));
                             }
                         } else {
                             $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists', array($user->getName())));
