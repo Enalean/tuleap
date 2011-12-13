@@ -326,8 +326,9 @@ class Git extends PluginController {
                 $valid = new Valid_String('path');
                 $valid->required();
                 if($this->request->valid($valid)) {
-                    $path = $this->request->get('path');
+                    $path = trim($this->request->get('path'));
                 }
+                $path = 'u/'. $user->getUserName() .'/'. $path;
                 
                 $valid = new Valid_UInt('repos');
                 $valid->required();
@@ -335,7 +336,7 @@ class Git extends PluginController {
                     $repos_ids = $this->request->get('repos');
                 }
                 
-                $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path, UserManager::instance()->getCurrentUser()));
+                $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path, $user));
                 $this->addView('forkRepositories');
                 break;
             #LIST
