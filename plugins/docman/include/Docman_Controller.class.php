@@ -116,7 +116,7 @@ class Docman_Controller extends Controler {
         $this->notificationsManager_Move =& new Docman_NotificationsManager_Move($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
         $event_manager->addListener('plugin_docman_event_move', $this->notificationsManager_Move, 'somethingHappen', true, 0);
         $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true, 0);
-        $this->notificationsManager_Subscribers =& new Docman_NotificationsManager_Subscribers($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $this->notificationsManager_Subscribers = new Docman_NotificationsManager_Subscribers($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
         $event_manager->addListener('plugin_docman_event_subcribers', $this->notificationsManager_Subscribers, 'somethingHappen', true, 0);
         $event_manager->addListener('send_notifications_subscribers', $this->notificationsManager_Subscribers, 'sendNotifications', true, 0);
     }
@@ -869,11 +869,11 @@ class Docman_Controller extends Controler {
         case 'add_monitoring':
             $this->_actionParams['listeners_to_add'] = array();
             if ($this->request->exist('listeners_to_add')) {
-                $um         = UserManager::instance();
+                $um    = UserManager::instance();
                 $vUser = new Valid_String('listeners_to_add');
                 if($this->request->valid($vUser)) {
                     $usernames = array_map('trim', preg_split('/[,;]/', $this->request->get('listeners_to_add')));
-                    $users = array();
+                    $users     = array();
                     foreach ($usernames as $username) {
                         $users[] = $um->findUser($username);
                     }
@@ -881,7 +881,7 @@ class Docman_Controller extends Controler {
                         $this->_actionParams['monitor_cascade'] = $this->request->get('monitor_cascade');
                     }
                     $this->_actionParams['listeners_to_add'] = $users;
-                    $this->_actionParams['item']                = $item;
+                    $this->_actionParams['item']             = $item;
                 }
             }
             $this->action = 'add_monitoring';
