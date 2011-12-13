@@ -167,6 +167,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $dao        = new MockGitDao();
         $project    = new MockProject();
         
+        $project->setReturnValue('getUnixName', 'gpig');
         
         $new_repo = $this->_aGitRepoWith($name, $project, $new_namespace);
         $old_repo = $this->_aGitRepoWith($name, $project, $old_namespace);
@@ -175,7 +176,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $backend->setDao($dao);
         
         $dao->expectOnce('save', array($new_repo));
-        $driver->expectOnce('fork', array($name, $old_namespace, $new_namespace));        
+        $driver->expectOnce('fork', array($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace));        
         $driver->expectOnce('dumpProjectRepoConf', array($project));
         $driver->expectOnce('push');        
 

@@ -321,8 +321,9 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
 
     public function fork(GitRepository $old, GitRepository $new) {
         $name = $old->getName();
-        $old_namespace = $old->getNamespace();
-        $new_namespace = $new->getNamespace();
+        //TODO use $old->getRootPath() (good luck for Unit Tests!)
+        $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
+        $new_namespace = $old->getProject()->getUnixName() .'/'. $new->getNamespace();
         $this->getDriver()->fork($name, $old_namespace, $new_namespace);
         $this->createReference($new);
     }

@@ -345,20 +345,38 @@ class Git_GitoliteDriverTest extends UnitTestCase {
     //copier le repo à l'endroit spécifié
        //si le répertoire n'existe pas le créer
     function testFork_CloneEmptyToSpecifiedPath() {
+        $name = 'tulip';
         $new_ns = 'repos/new/repo/';
         $old_ns = 'repos/';
-        $old_root_dir = $this->_fixDir .'/repositories/'. $old_ns;
-        $new_root_dir = $this->_fixDir .'/repositories/'. $new_ns;
+        $old_root_dir = $this->_fixDir .'/repositories/'. $old_ns . $name .'.git';
+        $new_root_dir = $this->_fixDir .'/repositories/'. $new_ns . $name .'.git';
         
-        mkdir($old_root_dir .'tulip.git', 0770, true);
-        exec('GIT_DIR='. $old_root_dir .'tulip.git  git --bare init --shared=group');
+        mkdir($old_root_dir, 0770, true);
+        exec('GIT_DIR='. $old_root_dir .' git --bare init --shared=group');
         
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        $driver->fork('tulip', $old_ns, $new_ns);
+        $this->assertTrue($driver->fork($name, $old_ns, $new_ns));
         
-        $this->assertTrue(is_dir($new_root_dir .'tulip.git'), "the new git repo dir ({$new_root_dir}tulip.git) wasn't found.");
-        $new_repo_HEAD = $new_root_dir .'tulip.git'.'/HEAD';
+        $this->assertTrue(is_dir($new_root_dir), "the new git repo dir ($new_root_dir) wasn't found.");
+        $new_repo_HEAD = $new_root_dir .'/HEAD';
         $this->assertTrue(file_exists($new_repo_HEAD), 'the file ('. $new_repo_HEAD .') does not exists');
+    }
+    
+    public function testForkShouldNotCloneOnExistingRepositories() {
+        $name = 'tulip';
+        $new_ns = 'repos/new/repo/';
+        $old_ns = 'repos/';
+        $old_root_dir = $this->_fixDir .'/repositories/'. $old_ns . $name .'.git';
+        $new_root_dir = $this->_fixDir .'/repositories/'. $new_ns . $name .'.git';
+        
+        mkdir($old_root_dir, 0770, true);
+        exec('GIT_DIR='. $old_root_dir .' git --bare init --shared=group');
+        
+        mkdir($new_root_dir, 0770, true);
+        exec('GIT_DIR='. $new_root_dir .' git --bare init --shared=group');
+        
+        $driver = new Git_GitoliteDriver($this->_glAdmDir);
+        $this->assertFalse($driver->fork($name, $old_ns, $new_ns));
     }
 }
 

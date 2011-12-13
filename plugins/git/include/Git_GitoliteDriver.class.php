@@ -464,11 +464,14 @@ class Git_GitoliteDriver {
     
     public function fork($repo, $old_ns, $new_ns){
         //unixPathJoin
-        $cmd = 'git clone --bare ';
-        $cmd .= $this->getRepositoriesPath() .'/'. $old_ns .'/'. $repo .'.git ';
-        $cmd .= $this->getRepositoriesPath() .'/'. $new_ns .'/'. $repo .'.git ';
-        
-        $this->gitCmd($cmd);
+        $source = $this->getRepositoriesPath() .'/'. $old_ns .'/'. $repo .'.git';
+        $target = $this->getRepositoriesPath() .'/'. $new_ns .'/'. $repo .'.git';
+        if (!is_dir($target)) {
+            $cmd = 'git clone --bare '. $source .' '. $target;
+            
+            return $this->gitCmd($cmd);
+        }
+        return false;
     }
     
 }
