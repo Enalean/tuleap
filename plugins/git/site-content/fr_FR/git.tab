@@ -77,6 +77,7 @@ plugin_git	actions_delete_backup	Une sauvegarde du dépôt sera disponible dans 
 plugin_git	actions_name_not_available	Un fichier existe déjà avec ce nom sous gitroot
 plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà
 plugin_git	actions_delete_ok	Le dépôt a été supprimé
+plugin_git	actions_error_no_repository_selected	Aucun dépôt n'a été séctionné.
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par

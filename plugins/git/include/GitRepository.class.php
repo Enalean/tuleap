@@ -578,9 +578,8 @@ class GitRepository implements DVCSRepository {
         $clone->setName($this->getName());
         $clone->setParent($this);
         $clone->setNamespace($namespace);
-       
-     
-        $this->getBackend()->fork($this, $clone);        
+        
+        $this->getBackend()->fork($this, $clone);
     }
     
 

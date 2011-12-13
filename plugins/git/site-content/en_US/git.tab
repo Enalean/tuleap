@@ -72,12 +72,14 @@ plugin_git	actions_input_format_error	Repository name is not well formatted. All
 plugin_git	actions_create_repo_process	Repository will be created in a few seconds
 plugin_git	actions_create_repo_exists	Repository $1 already exists
 plugin_git	actions_delete_ok	Repository has been deleted
+plugin_git	actions_no_repository_selected	No repository has been selected.
 
 plugin_git	actions_repo_not_found	The repository does not exist
 plugin_git	actions_repo_access	Repository access permissions are going to be modified in a few seconds
 plugin_git	actions_save_repo_process	Repository informations have been saved
 plugin_git	actions_delete_backup	A repository backup will be available in the backup directory
 plugin_git	actions_name_not_available	     A file already exists with this name under gitroot
+
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Created by

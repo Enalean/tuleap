@@ -32,11 +32,17 @@ class Git extends PluginController {
     const PERM_WRITE = 'PLUGIN_GIT_WRITE';
     const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
 
+    /**
+     * @var GitRepositoryFactory
+     */
+    protected $factory;
+    
     public function __construct(GitPlugin $plugin) {
-        
-        $matches = array();
         parent::__construct();
         
+        $this->factory = new GitRepositoryFactory();
+        
+        $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
             $this->request->set('group_id', $matches[1][0]);
             $this->request->set('action', $matches[2][0]);
@@ -329,7 +335,7 @@ class Git extends PluginController {
                     $repos_ids = $this->request->get('repos');
                 }
                 
-                $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path));
+                $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path, UserManager::instance()->getCurrentUser()));
                 $this->addView('forkRepositories');
                 break;
             #LIST
@@ -376,6 +382,19 @@ class Git extends PluginController {
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_access'));
             }
         }
+    }
+    
+    /**
+     * Instantiate an action based on a given name.
+     *
+     * Can be overriden to pass additionnal parameters to the action
+     *
+     * @param string $action The name of the action
+     *
+     * @return PluginActions
+     */
+    protected function instantiateAction($action) {
+        return new $action($this, $this->factory);
     }
 }
 

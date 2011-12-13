@@ -25,8 +25,22 @@ Mock::generate('Git');
 require_once (dirname(__FILE__).'/../include/GitRepository.class.php');
 Mock::generate('GitRepository');
 Mock::generate('GitDao');
+require_once('common/language/BaseLanguage.class.php');
+Mock::generate('BaseLanguage');
+require_once('common/include/Response.class.php');
+Mock::generate('Response');
+Mock::generate('GitRepositoryFactory');
+Mock::generate('User');
+
 class GitActionsTest extends UnitTestCase {
 
+    function setUp() {
+        $GLOBALS['Language'] = new MockBaseLanguage();
+        $GLOBALS['Language']->setReturnValue('getText', 'actions_no_repository_selected', array('plugin_git', 'actions_no_repository_selected', '*'));
+    }
+    function tearDown() {
+        unset($GLOBALS['Language']);
+    }
     function testRepoManagement() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
@@ -412,6 +426,156 @@ class GitActionsTest extends UnitTestCase {
         $action->getProjectRepositoryList($projectId);
         $action->getProjectRepositoryList($projectId, $userId);
     }
+    
+    function testFork_selectNoRepositoryToCloneShouldDisplayAWarning() {
+        $repositories = array();
+        $path = 'toto';
+        $group_id = 101;
+        
+        $user = new MockUser();
+        
+        $controller = new MockGit($this);
+        $controller->expectOnce('addError', array('actions_no_repository_selected'));
+
+        $factory = new MockGitRepositoryFactory();
+        
+        $action = new GitActions($controller, $factory);
+        $result = $action->forkRepositories($group_id, $repositories, $path, $user);
+        
+        $this->assertFalse($result);
+    }
+    
+    function testForkShouldCloneOneRepository() {
+        $repositories = array('1');
+        $path = 'toto';
+        $group_id = 101;
+        
+        $user = new MockUser();
+        
+        $controller = new MockGit($this);
+        $factory = $this->getFactoryForFork($group_id, $repositories, $path, $user);
+        
+        $action = new GitActions($controller, $factory);
+        $result = $action->forkRepositories($group_id, $repositories, $path, $user);
+        
+        $this->assertTrue($result);
+    }
+    
+    function testForkShouldCloneManyRepositories() {
+        $repositories = array('1', '2', '3');
+        $path = 'toto';
+        $group_id = 101;
+        
+        $user = new MockUser();
+        
+        $controller = new MockGit($this);
+        $factory = $this->getFactoryForFork($group_id, $repositories, $path, $user);
+        
+        $action = new GitActions($controller, $factory);
+        $result = $action->forkRepositories($group_id, $repositories, $path, $user);
+        
+        $this->assertTrue($result);
+    }
+    
+    function testForkShouldCloneManyRepositoriesExceptNonExistentOne() {
+        $repositories = array('1', '2', '3');
+        $path = 'toto';
+        $group_id = 101;
+        
+        $user = new MockUser();
+        
+        $controller = new MockGit($this);
+        $factory = $this->getFactoryForFork($group_id, $repositories, $path, $user);
+        
+        $action = new GitActions($controller, $factory);
+        $result = $action->forkRepositories($group_id, array('1', '2', '3', '4'), $path, $user);
+        
+        $this->assertTrue($result);
+    }
+    
+    function testForkShouldNotCloneAnyNonExistentRepositories() {
+        $repositories = array();
+        $path = 'toto';
+        $group_id = 101;
+        
+        $user = new MockUser();
+        
+        $controller = new MockGit($this);
+        $factory = $this->getFactoryForFork($group_id, $repositories, $path, $user);
+        
+        $action = new GitActions($controller, $factory);
+        $result = $action->forkRepositories($group_id, array('1', '2', '3', '4'), $path, $user);
+        
+        $this->assertFalse($result);
+    }
+    
+    function testForkRepositoriesShouldNotForkUnreadableRepositories() {
+        $repositories = array('1');
+        $path = 'toto';
+        $group_id = 101;
+        
+        $user = new MockUser();
+        
+        $controller = new MockGit($this);
+        $factory = $this->getFactoryForFork($group_id, $repositories, $path, $user, array('1'));
+        
+        $action = new GitActions($controller, $factory);
+        $result = $action->forkRepositories($group_id, $repositories, $path, $user);
+        
+        $this->assertFalse($result);
+    }
+    
+    function testForkRepositoriesShouldNotForkOutsideProjectRepositories() {
+        $id1 = '1';
+        $id2 = '2';
+        $repositories = array($id1, $id2);
+        $path = 'toto';
+        $group_id = 101;
+        $other_group_id = 102;
+        
+        $user = new MockUser();
+        
+        $controller = new MockGit($this);
+        
+        $factory = new MockGitRepositoryFactory();
+        $repo1 = new MockGitRepository();
+        $repo1->setReturnValue('getId', $id1);
+        $repo1->setReturnValue('userCanRead', true, array($user));
+        $repo1->expectNever('fork', array($path));
+        $factory->setReturnValue('getRepository', $repo1, array($other_group_id, $id1));
+        $factory->setReturnValue('getRepository', null, array($group_id, $id1));
+        
+        $repo2 = new MockGitRepository();
+        $repo2->setReturnValue('getId', $id2);
+        $repo2->setReturnValue('userCanRead', true, array($user));
+        $repo2->expectOnce('fork', array($path));
+        $factory->setReturnValue('getRepository', $repo2, array($group_id, $id2));
+        $factory->setReturnValue('getRepository', null, array($other_group_id, $id2));
+        
+        $action = new GitActions($controller, $factory);
+        $result = $action->forkRepositories($group_id, $repositories, $path, $user);
+        
+        $this->assertTrue($result);
+    }
+    
+    protected function getFactoryForFork($group_id, $repo_ids, $path, $user, array $unreadable = array()) {
+        $factory = new MockGitRepositoryFactory();
+        foreach ($repo_ids as $id) {
+            $repo = new MockGitRepository();
+            $repo->setReturnValue('getId', $id);
+            if (in_array($id, $unreadable)) {
+                $repo->setReturnValue('userCanRead', false, array($user));
+                $repo->expectNever('fork', array($path));
+            } else {
+                $repo->setReturnValue('userCanRead', true, array($user));
+                $repo->expectOnce('fork', array($path));
+            }
+            
+            $factory->setReturnValue('getRepository', $repo, array($group_id, $id));
+        }
+        return $factory;
+    }
+
 }
 
 ?>

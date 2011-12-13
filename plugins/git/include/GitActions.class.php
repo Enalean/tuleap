@@ -29,6 +29,7 @@ require_once('GitRepository.class.php');
 require_once('GitDao.class.php');
 require_once('Git_GitoliteDriver.class.php');
 require_once('Git_Backend_Gitolite.class.php');
+require_once('GitRepositoryFactory.class.php');
 
 
 /**
@@ -38,9 +39,20 @@ require_once('Git_Backend_Gitolite.class.php');
  */
 class GitActions extends PluginActions {
 
+    /**
+     * @var GitRepositoryFactory
+     */
+    protected $factory;
 
-    public function __construct($controller) {
+    /**
+     * Constructor
+     *
+     * @param PluginController     $controller The controller
+     * @param GitRepositoryFactory $factory    The factory to manage repositories
+     */
+    public function __construct($controller, GitRepositoryFactory $factory) {
         parent::__construct($controller);
+        $this->factory = $factory;
         $this->systemEventManager = SystemEventManager::instance();
 
     }
@@ -489,9 +501,38 @@ class GitActions extends PluginActions {
     function getGitRepository() {
         return new GitRepository();
     }
-    
-    function forkRepositories($groupId, $repos_ids, $path) {
-        $GLOBALS['Response']->addFeedback('info', "Just received forkRepositories($groupId, ". json_encode($repos_ids) .", $path)");
+
+    /**
+     * Fork a bunch of repositories in a project for a given user
+     *
+     * Repositories that the user cannot access won't be forked as well as 
+     * those that don't belong to the project.
+     * 
+     * @param int    $groupId   The project id
+     * @param array  $repos_ids The array of id of repositories to fork
+     * @param string $path      The path where the new repositories will live
+     * @param User   $user      The owner of those new repositories
+     *
+     * @return true if at least one repository has been cloned
+     */
+    function forkRepositories($groupId, array $repos_ids, $path, User $user) {
+        $c = $this->getController();
+        if(empty($repos_ids)){
+            $c->addError($this->getText('actions_no_repository_selected'));
+            $success = false;
+        } else {
+            $nb_forked = 0;
+            foreach ($repos_ids as $id) {
+                if ($repo = $this->factory->getRepository($groupId, $id)) {
+                    if ($repo->userCanRead($user)) {
+                        $repo->fork($path);
+                        $nb_forked++;
+                    }
+                }
+            }
+            $success = $nb_forked > 0;
+        }
+        return $success;
     }
 
 }

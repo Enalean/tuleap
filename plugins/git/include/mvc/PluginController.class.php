@@ -199,10 +199,23 @@ class PluginController {
         }
         $results       = array();
         $className     = get_class($this).'Actions';
-        $wa            = new $className($this);
+        $wa            = $this->instantiateAction($className);
         foreach ($this->actions as $name=>$params) {
             $wa->process($name, $params);
         }
+    }
+    
+    /**
+     * Instantiate an action based on a given name.
+     *
+     * Can be overriden to pass additionnal parameters to the action
+     *
+     * @param string $action The name of the action
+     *
+     * @return PluginActions
+     */
+    protected function instantiateAction($action) {
+        return new $action($this);
     }
 
     /**
