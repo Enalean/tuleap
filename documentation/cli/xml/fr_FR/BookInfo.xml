@@ -116,16 +116,6 @@
       <revision>
         <revnumber>1.4.2</revnumber>
 
-        <date>29-Jul-2011</date>
-
-        <authorinitials>Hatem Ounis, Nouha Terzi</authorinitials>
-
-        <revremark>Validation du contole d'accés SVN</revremark>
-      </revision>
-
-      <revision>
-        <revnumber>1.4.3</revnumber>
-
         <date>27-Oct-2011</date>
 
         <authorinitials>Manuel Vacelet</authorinitials>
@@ -134,7 +124,7 @@
       </revision>
 
       <revision>
-        <revnumber>1.4.4</revnumber>
+        <revnumber>1.4.3</revnumber>
 
         <date>09-Dec-2011</date>
 
