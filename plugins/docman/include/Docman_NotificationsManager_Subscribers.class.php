@@ -39,7 +39,6 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
      * @return void
      */
     function somethingHappen($event, $params) {
-        var_dump($event);
         $um = $this->_getUserManager();
         $users = new ArrayIterator($params['listeners']);
         if ($users) {
