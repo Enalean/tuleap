@@ -554,14 +554,14 @@ class GitActionsTest extends UnitTestCase {
         $repo1 = new MockGitRepository();
         $repo1->setReturnValue('getId', $id1);
         $repo1->setReturnValue('userCanRead', true, array($user));
-        $repo1->expectNever('fork', array($path));
+        $repo1->expectNever('fork');
         $factory->setReturnValue('getRepository', $repo1, array($other_group_id, $id1));
         $factory->setReturnValue('getRepository', null, array($group_id, $id1));
         
         $repo2 = new MockGitRepository();
         $repo2->setReturnValue('getId', $id2);
         $repo2->setReturnValue('userCanRead', true, array($user));
-        $repo2->expectOnce('fork', array($path));
+        $repo2->expectOnce('fork', array($path, $user));
         $factory->setReturnValue('getRepository', $repo2, array($group_id, $id2));
         $factory->setReturnValue('getRepository', null, array($other_group_id, $id2));
         
@@ -580,10 +580,10 @@ class GitActionsTest extends UnitTestCase {
             $repo->setReturnValue('getId', $id);
             if (in_array($id, $unreadable)) {
                 $repo->setReturnValue('userCanRead', false, array($user));
-                $repo->expectNever('fork', array($path));
+                $repo->expectNever('fork');
             } else {
                 $repo->setReturnValue('userCanRead', true, array($user));
-                $repo->expectOnce('fork', array($path));
+                $repo->expectOnce('fork', array($path, $user));
             }
             
             $factory->setReturnValue('getRepository', $repo, array($group_id, $id));

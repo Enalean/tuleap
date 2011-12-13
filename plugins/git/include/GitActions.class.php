@@ -531,7 +531,7 @@ class GitActions extends PluginActions {
             foreach ($repos_ids as $id) {
                 if ($repo = $this->factory->getRepository($groupId, $id)) {
                     if ($repo->userCanRead($user)) {
-                        $repo->fork($path);
+                        $repo->fork($path, $user);
                         $nb_forked++;
                     }
                 }
