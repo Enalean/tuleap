@@ -216,10 +216,8 @@ class GitRepositoryTest extends UnitTestCase {
     
     public function testForkCreatesAnewRepoAndPassesItToTheBackend() {
         $user = $this->_newUser("sandra");
-        $manager = new MockUserManager();
-        $manager->setReturnValue('getCurrentUser', $user);
         $backend = new MockGit_Backend_Gitolite();
-        $repo    = new GitRepository($manager);        
+        $repo    = new GitRepository();
         $repo->setBackend($backend);
         
         $namespace = "toto/tata";
@@ -227,7 +225,7 @@ class GitRepositoryTest extends UnitTestCase {
 
         $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($clone)));
 
-        $repo->fork($namespace);
+        $repo->fork($namespace, $user);
     }
     
     private function _aGitRepoWith($user, $repo, $namespace) {

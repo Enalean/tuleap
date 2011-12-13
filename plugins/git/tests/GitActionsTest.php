@@ -31,6 +31,7 @@ require_once('common/include/Response.class.php');
 Mock::generate('Response');
 Mock::generate('GitRepositoryFactory');
 Mock::generate('User');
+Mock::generate('SystemEventManager');
 
 class GitActionsTest extends UnitTestCase {
 
@@ -439,7 +440,9 @@ class GitActionsTest extends UnitTestCase {
 
         $factory = new MockGitRepositoryFactory();
         
-        $action = new GitActions($controller, $factory);
+        $systemEventManager = new MockSystemEventManager();
+        
+        $action = new GitActions($controller, $factory, $systemEventManager);
         $result = $action->forkRepositories($group_id, $repositories, $path, $user);
         
         $this->assertFalse($result);
@@ -455,7 +458,9 @@ class GitActionsTest extends UnitTestCase {
         $controller = new MockGit($this);
         $factory = $this->getFactoryForFork($group_id, $repositories, $path, $user);
         
-        $action = new GitActions($controller, $factory);
+        $systemEventManager = new MockSystemEventManager();
+        
+        $action = new GitActions($controller, $factory, $systemEventManager);
         $result = $action->forkRepositories($group_id, $repositories, $path, $user);
         
         $this->assertTrue($result);
@@ -471,7 +476,9 @@ class GitActionsTest extends UnitTestCase {
         $controller = new MockGit($this);
         $factory = $this->getFactoryForFork($group_id, $repositories, $path, $user);
         
-        $action = new GitActions($controller, $factory);
+        $systemEventManager = new MockSystemEventManager();
+        
+        $action = new GitActions($controller, $factory, $systemEventManager);
         $result = $action->forkRepositories($group_id, $repositories, $path, $user);
         
         $this->assertTrue($result);
@@ -487,7 +494,9 @@ class GitActionsTest extends UnitTestCase {
         $controller = new MockGit($this);
         $factory = $this->getFactoryForFork($group_id, $repositories, $path, $user);
         
-        $action = new GitActions($controller, $factory);
+        $systemEventManager = new MockSystemEventManager();
+        
+        $action = new GitActions($controller, $factory, $systemEventManager);
         $result = $action->forkRepositories($group_id, array('1', '2', '3', '4'), $path, $user);
         
         $this->assertTrue($result);
@@ -503,7 +512,9 @@ class GitActionsTest extends UnitTestCase {
         $controller = new MockGit($this);
         $factory = $this->getFactoryForFork($group_id, $repositories, $path, $user);
         
-        $action = new GitActions($controller, $factory);
+        $systemEventManager = new MockSystemEventManager();
+        
+        $action = new GitActions($controller, $factory, $systemEventManager);
         $result = $action->forkRepositories($group_id, array('1', '2', '3', '4'), $path, $user);
         
         $this->assertFalse($result);
@@ -519,7 +530,9 @@ class GitActionsTest extends UnitTestCase {
         $controller = new MockGit($this);
         $factory = $this->getFactoryForFork($group_id, $repositories, $path, $user, array('1'));
         
-        $action = new GitActions($controller, $factory);
+        $systemEventManager = new MockSystemEventManager();
+        
+        $action = new GitActions($controller, $factory, $systemEventManager);
         $result = $action->forkRepositories($group_id, $repositories, $path, $user);
         
         $this->assertFalse($result);
@@ -552,7 +565,9 @@ class GitActionsTest extends UnitTestCase {
         $factory->setReturnValue('getRepository', $repo2, array($group_id, $id2));
         $factory->setReturnValue('getRepository', null, array($other_group_id, $id2));
         
-        $action = new GitActions($controller, $factory);
+        $systemEventManager = new MockSystemEventManager();
+        
+        $action = new GitActions($controller, $factory, $systemEventManager);
         $result = $action->forkRepositories($group_id, $repositories, $path, $user);
         
         $this->assertTrue($result);

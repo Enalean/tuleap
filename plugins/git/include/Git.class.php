@@ -394,7 +394,7 @@ class Git extends PluginController {
      * @return PluginActions
      */
     protected function instantiateAction($action) {
-        return new $action($this, $this->factory);
+        return new $action($this, $this->factory, SystemEventManager::instance());
     }
 }
 

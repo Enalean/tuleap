@@ -68,7 +68,7 @@ class GitRepository implements DVCSRepository {
     
     protected $backendType;
 
-    public function __construct($userManager = null) {
+    public function __construct() {
 
         $this->hash        = '';        
         $this->rootPath    = '';
@@ -90,8 +90,7 @@ class GitRepository implements DVCSRepository {
         $this->config      = array();
         $this->parent      = null;
         $this->parentId    = 0;
-        $this->loaded      = false;        
-        $this->userManager = isset($userManager)? $userManager : UserManager::instance();
+        $this->loaded      = false;
     }       
 
     /**
@@ -100,7 +99,7 @@ class GitRepository implements DVCSRepository {
      * @return UserManager
      */
     function _getUserManager() {
-        return $this->userManager;
+        return UserManager::instance();
     }
 
     /**
@@ -569,10 +568,8 @@ class GitRepository implements DVCSRepository {
         $this->getBackend()->createFork($clone);
     }
         
-    public function fork($namespace) {
+    public function fork($namespace, $user) {
         $clone = new GitRepository();
-        $um = $this->userManager;
-        $user = $um->getCurrentUser();
         
         $clone->setCreator($user);
         $clone->setName($this->getName());

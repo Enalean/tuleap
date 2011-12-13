@@ -45,15 +45,21 @@ class GitActions extends PluginActions {
     protected $factory;
 
     /**
+     * @var SystemEventManager
+     */
+    protected $systemEventManager;
+    
+    /**
      * Constructor
      *
-     * @param PluginController     $controller The controller
-     * @param GitRepositoryFactory $factory    The factory to manage repositories
+     * @param PluginController     $controller         The controller
+     * @param GitRepositoryFactory $factory            The factory to manage repositories
+     * @param SystemEventManager   $systemEventManager The system manager
      */
-    public function __construct($controller, GitRepositoryFactory $factory) {
+    public function __construct($controller, GitRepositoryFactory $factory, SystemEventManager $systemEventManager) {
         parent::__construct($controller);
         $this->factory = $factory;
-        $this->systemEventManager = SystemEventManager::instance();
+        $this->systemEventManager = $systemEventManager;
 
     }
 

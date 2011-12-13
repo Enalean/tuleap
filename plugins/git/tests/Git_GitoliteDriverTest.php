@@ -34,6 +34,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
     function setUp() {
         $this->cwd           = getcwd();
         $this->_fixDir       = dirname(__FILE__).'/_fixtures';
+        $this->_fixDirFork   = $this->_fixDir.'/fork';
         $this->_glAdmDirRef  = $this->_fixDir.'/gitolite-admin-ref';
         $this->_glAdmDir     = $this->_fixDir.'/gitolite-admin';
 
@@ -42,14 +43,17 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         // spots bugs
         system('tar -xf '. $this->_glAdmDirRef .'.tar --directory '.$this->_fixDir);
         symlink($this->_glAdmDirRef, $this->_glAdmDir);
-
+        
+        mkdir($this->_fixDirFork, 0770, true);
+        
         $this->httpsHost = $GLOBALS['sys_https_host'];
         $GLOBALS['sys_https_host'] = 'localhost';
     }
 
     function tearDown() {
         chdir($this->cwd);
-        system('rm -rf '.$this->_glAdmDirRef);
+        system('rm -rf '. $this->_glAdmDirRef);
+        system('rm -rf '. $this->_fixDirFork);
         unlink($this->_glAdmDir);
         $GLOBALS['sys_https_host'] = $this->httpsHost;
     }
@@ -344,22 +348,20 @@ class Git_GitoliteDriverTest extends UnitTestCase {
     //copier le repo à l'endroit spécifié
        //si le répertoire n'existe pas le créer
     function testFork_CloneEmptyToSpecifiedPath() {
-        $new_ns = 'repos/new/repo';
-        $old_ns = 'repos';
-        $old_root_dir = $this->_fixDir.$old_ns;
-        $new_root_dir = $this->_fixDir.$new_ns;
+        $new_ns = '/repos/new/repo/';
+        $old_ns = '/repos/';
+        $old_root_dir = $this->_fixDirFork . $old_ns;
+        $new_root_dir = $this->_fixDirFork . $new_ns;
         
-        system('/bin/rm -rf '.$old_root_dir);
+        mkdir($old_root_dir .'tulip.git', 0770, true);
+        exec('GIT_DIR='. $old_root_dir .'tulip.git  git --bare init --shared=group');
         
-        mkdir($old_root_dir.'tulip.git', 0770, true);
-        @exec('GIT_DIR='.$old_root_dir.'tulip.git'.' git --bare init --shared=group');
-        
-        $driver = new Git_GitoliteDriver(null, $this->_fixDir);
+        $driver = new Git_GitoliteDriver(null, $this->_fixDirFork);
         $driver->fork('tulip', $old_ns, $new_ns);
         
-        $this->assertTrue(is_dir($new_root_dir.'tulip.git'), "the new git repo dir (".$new_root_dir.'tulip.git'.") wasn't found.");
-        $new_repo_HEAD = $new_root_dir.'tulip.git'.'/HEAD';
-        $this->assertTrue(file_exists($new_repo_HEAD), 'the file ('.$new_repo_HEAD.') does not exists');
+        $this->assertTrue(is_dir($new_root_dir .'tulip.git'), "the new git repo dir ({$new_root_dir}tulip.git) wasn't found.");
+        $new_repo_HEAD = $new_root_dir .'tulip.git'.'/HEAD';
+        $this->assertTrue(file_exists($new_repo_HEAD), 'the file ('. $new_repo_HEAD .') does not exists');
     }
 }
 
