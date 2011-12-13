@@ -1591,18 +1591,16 @@ class Docman_Actions extends Actions {
      * Raise item monitoring list event
      *
      * @param Docman_Item $item Locked item
-     * @param User        $user Who locked the item
      * @param String      $eventType
      * @param Array       $subscribers
      *
      * @return void
      */
-    function _raiseMonitoringListEvent($item, $subscribers, $eventType, $user) {
+    function _raiseMonitoringListEvent($item, $subscribers, $eventType) {
         $p = array('group_id' => $item->getGroupId(),
                                        'item'     => $item,
                                        'listeners' => $subscribers,
-                                       'event'    => $eventType,
-                                       'user'     => $user);
+                                       'event'    => $eventType);
         $this->event_manager->processEvent('plugin_docman_event_subcribers', $p);
     }
 
@@ -1646,7 +1644,7 @@ class Docman_Actions extends Actions {
                 }
                 if (!empty($users)) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_added', array(implode(',', $users))));
-                    $this->_raiseMonitoringListEvent($params['item'], $params['listeners_to_add'],'plugin_docman_add_monitoring',$user);
+                    $this->_raiseMonitoringListEvent($params['item'], $params['listeners_to_add'],'plugin_docman_add_monitoring');
                     $this->event_manager->processEvent('send_notifications_subscribers', array());
                 }
             } else {
@@ -1686,7 +1684,7 @@ class Docman_Actions extends Actions {
                         $removedUsers[] = $user->getName();
                     }
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $removedUsers))));
-                    $this->_raiseMonitoringListEvent($params['item'], $users, 'plugin_docman_remove_monitoring', $user);
+                    $this->_raiseMonitoringListEvent($params['item'], $users, 'plugin_docman_remove_monitoring');
                     $this->event_manager->processEvent('send_notifications_subscribers', array());
                 }
             } else {
