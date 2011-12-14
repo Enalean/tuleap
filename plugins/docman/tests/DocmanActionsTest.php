@@ -241,6 +241,8 @@ class DocmanActionsTest extends UnitTestCase {
     function testRemove_monitoringNothingToDelete() {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
+        $controller->feedback->expectOnce('log', array('error', '*'));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_no_user'));
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
         $actions->remove_monitoring(array('listeners_to_delete' => true));
@@ -267,10 +269,19 @@ class DocmanActionsTest extends UnitTestCase {
         $controller->feedback = new MockFeedback();
         $user1 = new MockUser();
         $user1->setReturnValue('getId', 123);
+        $user1->setReturnValue('getName', 'Carol');
         $user2 = new MockUser();
         $user2->setReturnValue('getId', 132);
+        $user2->setReturnValue('getName', 'Carlos');
         $user3 = new MockUser();
         $user3->setReturnValue('getId', 133);
+        $user3->setReturnValue('getName', 'Charlie');
+        $controller->feedback->expectAt(0, 'log', array('warning', '*'));
+        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_not_present', array($user1->getName())));
+        $controller->feedback->expectAt(1, 'log', array('warning', '*'));
+        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_present', array($user2->getName())));
+        $controller->feedback->expectAt(2, 'log', array('warning', '*'));
+        $GLOBALS['Language']->expectAt(2, 'getText', array('plugin_docman', 'notifications_not_present', array($user3->getName())));
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('exist', false);
         $controller->notificationsManager = $notificationsManager;
@@ -348,9 +359,6 @@ class DocmanActionsTest extends UnitTestCase {
         $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 3);
         $notificationsManager->expectCallCount('remove', 6);
-        $user1->expectOnce('getName');
-        $user2->expectOnce('getName');
-        $user3->expectOnce('getName');
     }
 
     function testAdd_monitoringNoOneToAdd() {
