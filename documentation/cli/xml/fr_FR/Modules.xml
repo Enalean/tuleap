@@ -1608,7 +1608,7 @@ File retrieved successfully.
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>deleteEmptyPackage command</title>
+                        <title>commande deleteEmptyPackage</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php frs deleteEmptyPackage --package_id=288
 +------------+----------+------+-----------+------+-----------------+
@@ -1618,7 +1618,7 @@ File retrieved successfully.
 +------------+----------+------+-----------+------+-----------------+
                         </programlisting>
                     </example>
-                    <note>La valeur de retour est le détail du paquet supprimé.</note>
+                    <note>La valeur de retour représente les détails du paquet supprimé.</note>
                </para>
             </para>
         </section>
@@ -1634,7 +1634,7 @@ File retrieved successfully.
                  </itemizedlist>
                 <para>
                     <example>
-                        <title>deleteAllEmptyPackages command</title>
+                        <title>commande deleteAllEmptyPackages</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php frs deleteAllEmptyPackages
 +------------+----------+------+-----------+------+-----------------+
@@ -1669,7 +1669,7 @@ File retrieved successfully.
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>deleteEmptyRelease command</title>
+                        <title>commande deleteEmptyRelease</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php frs deleteEmptyRelease --package_id=288 --release_id=226
 +------------+------------+---------------+-------+---------+-----------+--------------+-------------+
@@ -1679,7 +1679,7 @@ File retrieved successfully.
 +------------+------------+---------------+-------+---------+-----------+--------------+-------------+
                         </programlisting>
                     </example>
-                    <note>La valeur de retour est le détail de la version supprimée.</note>
+                    <note>La valeur de retour représente les détails de la version supprimée.</note>
                </para>
             </para>
         </section>
@@ -1699,7 +1699,7 @@ File retrieved successfully.
                 </itemizedlist>
                 <para>
                     <example>
-                        <title>deleteAllEmptyReleases command</title>
+                        <title>commande deleteAllEmptyReleases</title>
                         <programlisting format="linespecific" linenumbering="unnumbered" width="80">
 [ounis@linux codendi cli ]$ ./codendi.php frs deleteAllEmptyReleases --package_id=288
 +------------+------------+---------------+-------+---------+-----------+--------------+-------------+
