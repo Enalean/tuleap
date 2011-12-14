@@ -18,17 +18,17 @@
 
 require_once(CODENDI_CLI_DIR.'/CLI_Action.class.php');
 
-class CLI_Action_Frs_DeleteRelease extends CLI_Action {
+class CLI_Action_Frs_DeleteEmptyRelease extends CLI_Action {
 
-    function CLI_Action_Frs_DeleteRelease() {
-        $this->CLI_Action('deleteRelease', 'Delete an empty release or all empty releases in a package.');
+    function CLI_Action_Frs_DeleteEmptyRelease() {
+        $this->CLI_Action('deleteEmptyRelease', 'Delete an empty release in a package.');
         $this->addParam(array(
             'name'           => 'package_id',
-            'description'    => '--package_id=<package_id>    Id of the package in which empty releases will be deleted.',
+            'description'    => '--package_id=<package_id>    Id of the package in which empty release will be deleted.',
         ));
         $this->addParam(array(
             'name'           => 'release_id',
-            'description'    => '--release_id=<release_id>    (Optional)Id of the release to be deleted, keep empty if you want to remove all empty releases of the package.',
+            'description'    => '--release_id=<release_id>    Id of the release to be deleted.',
         ));
     }
 
@@ -41,7 +41,7 @@ class CLI_Action_Frs_DeleteRelease extends CLI_Action {
 
     function validate_release_id(&$release_id) {
         if (!$release_id) {
-            $release_id = 0;
+            exit_error("You must specify the ID of the release with the --release_id parameter");
         }
         return true;
     }
