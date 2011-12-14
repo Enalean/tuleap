@@ -856,9 +856,15 @@ class Docman_Controller extends Controler {
         case 'remove_monitoring':
             $this->_actionParams['listeners_to_delete'] = array();
             if ($this->request->exist('listeners_to_delete')) {
+                $um      = UserManager::instance();
                 $vUserId = new Valid_UInt('listeners_to_delete');
                 if($this->request->validArray($vUserId)) {
-                    $this->_actionParams['listeners_to_delete'] = $this->request->get('listeners_to_delete');
+                    $userIds = $this->request->get('listeners_to_delete');
+                    $users   = array();
+                    foreach ($userIds as $userId) {
+                        $users[] = $um->getUserById($userId);
+                    }
+                    $this->_actionParams['listeners_to_delete'] = $users;
                     $this->_actionParams['item']                = $item;
                 }
             }

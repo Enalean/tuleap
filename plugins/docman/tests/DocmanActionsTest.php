@@ -266,20 +266,21 @@ class DocmanActionsTest extends UnitTestCase {
         $controller = new MockDocman_Controller();
         $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
-        $userManager = new MockUserManager();
-        $user = new MockUser();
-        $userManager->setReturnValue('getUserById', $user);
+        $user1 = new MockUser();
+        $user1->setReturnValue('getId', 123);
+        $user2 = new MockUser();
+        $user2->setReturnValue('getId', 132);
+        $user3 = new MockUser();
+        $user3->setReturnValue('getId', 133);
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('exist', false);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $actions->setReturnValue('_getUserManagerInstance', $userManager);
-        $params['listeners_to_delete'] = array(1, 2, 3);
+        $params['listeners_to_delete'] = array($user1, $user2, $user3);
         $params['item'] = new MockDocman_Item();
         $actions->remove_monitoring($params);
         $controller->expectOnce('userCanManage');
-        $userManager->expectCallCount('getUserById', 3);
         $notificationsManager->expectCallCount('exist', 3);
         $notificationsManager->expectNever('remove');
     }
@@ -289,23 +290,24 @@ class DocmanActionsTest extends UnitTestCase {
         $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
         $userManager = new MockUserManager();
-        $user = new MockUser();
-        $userManager->setReturnValue('getUserById', $user);
+                $user1 = new MockUser();
+        $user1->setReturnValue('getId', 123);
+        $user2 = new MockUser();
+        $user2->setReturnValue('getId', 132);
+        $user3 = new MockUser();
+        $user3->setReturnValue('getId', 133);
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('exist', true);
         $notificationsManager->setReturnValue('remove', false);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $actions->setReturnValue('_getUserManagerInstance', $userManager);
-        $params['listeners_to_delete'] = array(1, 2, 3);
+        $params['listeners_to_delete'] = array($user1, $user2, $user3);
         $params['item'] = new MockDocman_Item();
         $actions->remove_monitoring($params);
         $controller->expectOnce('userCanManage');
-        $userManager->expectCallCount('getUserById', 3);
         $notificationsManager->expectCallCount('exist', 3);
         $notificationsManager->expectCallCount('remove', 3);
-        $user->expectNever('getName');
     }
 
     function testRemove_monitoringSuccess() {
@@ -313,8 +315,12 @@ class DocmanActionsTest extends UnitTestCase {
         $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
         $userManager = new MockUserManager();
-        $user = new MockUser();
-        $userManager->setReturnValue('getUserById', $user);
+                $user1 = new MockUser();
+        $user1->setReturnValue('getId', 123);
+        $user2 = new MockUser();
+        $user2->setReturnValue('getId', 132);
+        $user3 = new MockUser();
+        $user3->setReturnValue('getId', 133);
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('exist', true);
         $notificationsManager->setReturnValue('remove', true);
@@ -323,14 +329,15 @@ class DocmanActionsTest extends UnitTestCase {
         $actions->_controler = $controller;
         $actions->event_manager = new MockEventManager($this);
         $actions->setReturnValue('_getUserManagerInstance', $userManager);
-        $params['listeners_to_delete'] = array(1, 2, 3);
+        $params['listeners_to_delete'] = array($user1, $user2, $user3);
         $params['item'] = new MockDocman_Item();
         $actions->remove_monitoring($params);
         $controller->expectOnce('userCanManage');
-        $userManager->expectCallCount('getUserById', 3);
         $notificationsManager->expectCallCount('exist', 3);
         $notificationsManager->expectCallCount('remove', 6);
-        $user->expectCallCount('getName', 3);
+        $user1->expectOnce('getName');
+        $user2->expectOnce('getName');
+        $user3->expectOnce('getName');
     }
 
     function testAdd_monitoringNoOneToAdd() {
