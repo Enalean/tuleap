@@ -37,14 +37,15 @@ if($request->valid($vGroupId)) {
     exit_no_group();
 }
 
-if (!user_ismember($group_id, 'R2')) {
+$frspf = new FRSPackageFactory();
+$user = UserManager::instance()->getCurrentUser();
+if (!$frspf->userCanAdmin($user, $group_id)) {
     exit_permission_denied();
 }
 $GLOBALS['HTML']->includeJavascriptFile("/scripts/scriptaculous/scriptaculous.js");
 $GLOBALS['HTML']->includeCalendarScripts();
 $GLOBALS['HTML']->includeJavascriptFile("../scripts/frs.js");
 
-$frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
 $frsff = new FRSFileFactory();
 $vFunc = new Valid_WhiteList('func',array('delete', 'add', 'create', 'edit', 'update'));

@@ -42,9 +42,9 @@ $packages = array();
 $num_packages = 0;
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
 $res = $frspf->getFRSPackagesFromDb($group_id);
-
+$user = UserManager::instance()->getCurrentUser();
 foreach ($res as $package) {
-    if ($frspf->userCanRead($group_id, $package->getPackageID(), user_getid())) {
+    if ($frspf->userCanRead($group_id, $package->getPackageID(), $user->getId())) {
         if ($request->existAndNonEmpty('release_id')) {
             if($request->valid(new Valid_UInt('release_id'))) {
         	    $release_id = $request->get('release_id');
@@ -75,7 +75,7 @@ file_utils_header($params);
 $hp =& Codendi_HTMLPurifier::instance();
 if ($num_packages < 1) {
     echo '<h3>' . $Language->getText('file_showfiles', 'no_file_p') . '</h3><p>' . $Language->getText('file_showfiles', 'no_p_available');
-    if (user_ismember($group_id,'R2')) {
+    if ($frspf->userCanAdmin($user, $group_id)) {
         echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
     }
     file_utils_footer($params);
@@ -145,7 +145,7 @@ $fmmf =& new FileModuleMonitorFactory();
  
 $javascript_packages_array = array();
  
-if (!$pv && user_ismember($group_id,'R2')) {
+if (!$pv && $frspf->userCanAdmin($user, $group_id)) {
     echo '<p><a href="admin/package.php?func=add&amp;group_id='. $group_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') .']</a></p>';
 }
 // Iterate and show the packages
@@ -156,7 +156,7 @@ while (list ($package_id, $package) = each($packages)) {
         $can_see_package = true;
     } else if ($package->isHidden()){
         $emphasis = 'em';
-        if (user_ismember($group_id,'R2')) {
+        if ($frspf->userCanAdmin($user, $group_id)) {
             $can_see_package = true;
         }
     }
@@ -168,7 +168,7 @@ while (list ($package_id, $package) = each($packages)) {
         }
         print " <$emphasis>". $package->getName() ."</$emphasis>";
         if (!$pv) {
-            if (user_ismember($group_id,'R2')) {
+            if ($frspf->userCanAdmin($user, $group_id)) {
                 print '     <a href="admin/package.php?func=edit&amp;group_id='. $group_id .'&amp;id=' . $package_id . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)  .'">';
                 print '       '. $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) ));
                 print '</a>';
@@ -182,7 +182,7 @@ while (list ($package_id, $package) = each($packages)) {
                 print '<img src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
             }
             print '</a>';
-            if (user_ismember($group_id,'R2')) {
+            if ($frspf->userCanAdmin($user, $group_id)) {
                 print '     &nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id .'" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="return confirm(\''.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), CODENDI_PURIFIER_CONVERT_HTML)  .'\');">'
                             . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
             }
@@ -205,7 +205,7 @@ while (list ($package_id, $package) = each($packages)) {
     
         $javascript_releases_array = array();
         print '<div id="p_'.$package_id.'">';
-        if (!$pv && user_ismember($group_id,'R2')) {
+        if (!$pv && $frspf->userCanAdmin($user, $group_id)) {
             echo '<p><a href="admin/release.php?func=add&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'">['. $GLOBALS['Language']->getText('file_admin_editpackages', 'add_releases') .']</a></p>';
         }
         if (!$res_release || $num_releases < 1) {
@@ -215,13 +215,13 @@ while (list ($package_id, $package) = each($packages)) {
             // iterate and show the releases of the package
             foreach ($res_release as $package_release) {
                 $can_see_release = false;
-                if ($frsrf->userCanRead($group_id, $package_id, $package_release->getReleaseID(), user_getid())) {
+                if ($frsrf->userCanRead($group_id, $package_id, $package_release->getReleaseID(), $user->getId())) {
                     if ($package_release->isActive()) {
                         $emphasis = 'strong';
                         $can_see_release = true;
                     } else if($package_release->isHidden()){
                         $emphasis = 'em';
-                        if (user_ismember($group_id,'R2')) {
+                        if ($frspf->userCanAdmin($user, $group_id)) {
                             $can_see_release = true;
                         }
                     }
@@ -251,7 +251,7 @@ while (list ($package_id, $package) = each($packages)) {
                     }
                     print "     <$emphasis>". $hp->purify($package_release->getName()) . "</$emphasis>";
                     if (!$pv) {
-                        if (user_ismember($group_id,'R2')) {
+                        if ($frspf->userCanAdmin($user, $group_id)) {
                             print '     <a href="admin/release.php?func=edit&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML)  .'">'
                             . $GLOBALS['HTML']->getImage('ic/edit.png',array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editpackages', 'edit'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
                         }
@@ -265,7 +265,7 @@ while (list ($package_id, $package) = each($packages)) {
                     } 
                     print '</td> ';
                     print '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '';
-                    if (!$pv && user_ismember($group_id,'R2')) {
+                    if (!$pv && $frspf->userCanAdmin($user, $group_id)) {
                         print ' <a href="admin/release.php?func=delete&amp;group_id='. $group_id .'&amp;package_id='. $package_id .'&amp;id=' . $package_release->getReleaseID() . '" title="'.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  .'" onclick="return confirm(\''.  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'warn'), CODENDI_PURIFIER_CONVERT_HTML) .'\');">'
                         . $GLOBALS['HTML']->getImage('ic/trash.png', array('alt'=> $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) , 'title'=>  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML) )) .'</a>';
                     }
@@ -344,12 +344,12 @@ while (list ($package_id, $package) = each($packages)) {
                             if ($file_release['file_size'] < 1024) {
                                 $size_precision = 2;
                             }
-                            $user = UserManager::instance()->getUserById($file_release['user_id']);
+                            $owner = UserManager::instance()->getUserById($file_release['user_id']);
                             print '</B></TD>' . '<TD>' . FRSFile::convertBytesToKbytes($file_release['file_size'], $size_precision) . '</TD>' . '<TD>' . ($file_release['downloads'] ? $file_release['downloads'] : '0') . '</TD>';
                             print '<TD>' . (isset ($processor[$file_release['processor']]) ?  $hp->purify($processor[$file_release['processor']], CODENDI_PURIFIER_CONVERT_HTML) : "") . '</TD>';
                             print '<TD>' . (isset ($file_type[$file_release['type']]) ? $file_type[$file_release['type']] : "") . '</TD>' . '<TD>' . format_date("Y-m-d", $file_release['release_time']) . '</TD>'. 
                                   '<TD>' . (isset ($file_release['computed_md5'])? $file_release['computed_md5']: ""). '</TD>' .
-                                  '<TD>' . (isset ($file_release['user_id'])? $user->getRealName(): ""). '</TD>' .'</TR>' . "\n";
+                                  '<TD>' . (isset ($file_release['user_id'])? $owner->getRealName(): ""). '</TD>' .'</TR>' . "\n";
                                  if (!isset ($proj_stats['size']))
                                 $proj_stats['size'] = 0;
                             $proj_stats['size'] += $file_release['file_size'];

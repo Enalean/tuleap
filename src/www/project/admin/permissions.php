@@ -217,12 +217,18 @@ function permission_get_object_fullname($permission_type,$object_id) {
 
 /**
  * Check if the current user is allowed to change permissions, depending on the permission_type
- * TODO: grant project admin all rights??
+ *
+ * @param Integer $group_id        Id of the project
+ * @param String  $permission_type Type of the permission
+ * @param Boolean $object_id       Object on which permission is applied
+ *
+ * @return Boolean
  */
 function permission_user_allowed_to_change($group_id, $permission_type, $object_id=0) {
 
-    // Super-user has all rights...
-    if (user_is_super_user()) return true;
+    // Super-user and project admin has all rights...
+    $user = UserManager::instance()->getCurrentUser();
+    if (user_is_super_user() || $user->isMember($group_id, 'A')) return true;
 
     if ($permission_type=='NEWS_READ') {
         //special case : if user has write (or admin) perms on News, he can submit news ==> he can submit private news ==> he can define news perms

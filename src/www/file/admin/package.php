@@ -40,11 +40,13 @@ if($request->valid($vGroupId)) {
 } else {
     exit_no_group();
 }
-if (!user_ismember($group_id,'R2')) {
+
+$frspf = new FRSPackageFactory();
+$user = UserManager::instance()->getCurrentUser();
+if (!$frspf->userCanAdmin($user, $group_id)) {
     exit_permission_denied();
 }
 
-$frspf = new FRSPackageFactory();
 $frsrf = new FRSReleaseFactory();
 $frsff = new FRSFileFactory();
 
