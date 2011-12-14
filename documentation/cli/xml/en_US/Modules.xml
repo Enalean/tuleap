@@ -1570,7 +1570,7 @@ File retrieved successfully.
             </para>
         </section>
 
-		 section id="FRSFunctionDeleteAllEmptyPackages">
+		<section id="FRSFunctionDeleteAllEmptyPackages">
             <title>deleteAllEmptyPackages</title>
             <para>deleteAllEmptyPackages: Delete all empty packages for a given project
                 <itemizedlist mark="bullet">
