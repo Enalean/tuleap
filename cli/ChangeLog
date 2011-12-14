@@ -9,11 +9,18 @@
 
     What's new ?
     ============
-    * frs deletePackage
-        Delete all empty packages or an empty package if specified
+    * frs deleteEmptyPackage
+        Delete the specified package if empty
 
-    * docman deleteRelease
-        Delete all empty releases or an empty release if specified
+    * frs deleteAllEmptyPackages
+        Delete all empty packages for a given project
+
+    * frs deleteEmptyRelease
+        Delete the specified release if empty
+
+    * frs deleteAllEmptyReleases
+        Delete all empty releases for a given package
+
 
 1.4.2 - SOAP api 4.1 (Tuleap 4.0.23)
     Bug fix
