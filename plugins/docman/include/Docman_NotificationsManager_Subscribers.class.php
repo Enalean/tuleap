@@ -29,9 +29,11 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     /**
      * Constructor
      *
-     * @param Int      $group_id The group id
+     * @param Integer  $group_id The group id
      * @param String   $url      Default url of docman controller
      * @param Feedback $feedback Docman controller feedback
+     *
+     * @return void
      */
     function __construct($group_id, $url, $feedback) {
         parent::__construct($group_id, $url, $feedback);
