@@ -1593,74 +1593,7 @@ File retrieved successfully.
             </para>
         </section>
 
-        <section id="FRSFunctionDeletePackage">
-            <title>deletePackage</title>
-            <para>deletePackage: Supprime un paquet vide ou tous les paquets vides du projet
-                <itemizedlist mark="bullet">
-                    <listitem>
-                        <para>--project: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
-                        </para>
-                    </listitem>
-                    <listitem>
-                        <para>--package_id: Identifiant du paquet a supprimer si laissé vide tous les paquets vides vont être supprimés.
-                        </para>
-                    </listitem>
-                </itemizedlist>
-                <para>
-                    <example>
-                        <title>deletePackage command</title>
-                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs deletePackage
-+------------+----------+------+-----------+------+-----------------+
-| package_id | group_id | name | status_id | rank | approve_license |
-+------------+----------+------+-----------+------+-----------------+
-| 288        | 104      | test | 1         | 5    |                 |
-| 226        | 104      | pkg  | 1         | 6    |                 |
-+------------+----------+------+-----------+------+-----------------+
-                        </programlisting>
-                    </example>
-                    <note>La valeur de retour est la liste des paquets supprimés.</note>
-               </para>
-            </para>
-        </section>
-
-        <section id="FRSFunctionDeleteRelease">
-            <title>deleteRelease</title>
-            <para>deleteRelease: Supprime une version vide ou toutes les versions vides du paquet
-                <itemizedlist mark="bullet">
-                    <listitem>
-                        <para>--project: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
-                        </para>
-                    </listitem>
-                    <listitem>
-                        <para>--package_id*: Id du paquet dans lequel les versions vides seront supprimées
-                        </para>
-                    </listitem>
-                    <listitem>
-                        <para>--release_id: Identifiant de la version a supprimer si laissé vide toutes les versions vides vont être supprimés.
-                        </para>
-                    </listitem>
-                </itemizedlist>
-                <para>
-                    <example>
-                        <title>deleteRelease command</title>
-                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
-[ounis@linux codendi cli ]$ ./codendi.php frs deleteRelease --package_id=292
-+------------+------------+---------------+-------+---------+-----------+--------------+-------------+
-| release_id | package_id |     name      | notes | changes | status_id | release_date | released_by |
-+------------+------------+---------------+-------+---------+-----------+--------------+-------------+
-| 226        | 288        | empty release |       |         | 1         | 1323648000   | 103         |
-| 224        | 288        | empty         |       |         | 1         | 1323648000   | 103         |
-+------------+------------+---------------+-------+---------+-----------+--------------+-------------+
-                        </programlisting>
-                    </example>
-                    <note>La valeur de retour est la liste des versions supprimés.</note>
-               </para>
-            </para>
-        </section>
-    </section>
-	
-	<section id="FRSFunctionDeleteEmptyPackage">
+        <section id="FRSFunctionDeleteEmptyPackage">
             <title>deleteEmptyPackage</title>
             <para>deleteEmptyPackage: Supprime le paquet s'il est vide 
                 <itemizedlist mark="bullet">
