@@ -654,9 +654,9 @@ plugin_docman	notifications_add_user_cascade	Enable monitoring for the whole sub
 plugin_docman	notifications_permission_denied	You don't have enough permissions to remove users monitoring
 plugin_docman	notifications_cascade_on	You're monitoring '$1' and its sub-hierarchy.
 plugin_docman	notifications_added_to_monitoring_list_subject	You were added to '$1' monitoring list
-plugin_docman	notifications_added_to_monitoring_list	You are receiving this message because you were added to the monitoring list of this item.
+plugin_docman	notifications_added_to_monitoring_list	You are receiving this message because you were added to the monitoring list of this item:
 plugin_docman	notifications_removed_from_monitoring_list_subject	You were removed from '$1' monitoring list
-plugin_docman	notifications_removed_from_monitoring_list	You are receiving this message because you were removed from the monitoring list of this item.
+plugin_docman	notifications_removed_from_monitoring_list	You are receiving this message because you were removed from the monitoring list of this item:
 plugin_docman	notifications_removed_mail_body	$1 has been removed by $2.\n\n---------------------------------------------------------------------\nYou are receiving this message because you were monitoring this item.\n$3.
 plugin_docman	notifications_removed_from_mail_body	$1 has been modified by $2.\n$3&action=show&id=$4\n\nRemoved:\n $5\n\n----------------------------------------------------------------------\nYou are receiving this message because you are monitoring this folder.\nTo stop monitoring, please visit:\n $3&action=details&section=notifications&id=$6
 plugin_docman	notifications_added_mail_body	$1 has been modified by $2\n$3&action=show&id=$4\n\nAdded:\n$5\n\n----------------------------------------------------------------------\nYou are receiving this message because you are monitoring this folder.\nTo stop monitoring, please visit:\n$3&action=details&section=notifications&id=$6
