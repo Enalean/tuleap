@@ -1622,8 +1622,8 @@ File retrieved successfully.
                </para>
             </para>
         </section>
-        
-		<section id="FRSFunctionDeleteAllEmptyPackages">
+
+        <section id="FRSFunctionDeleteAllEmptyPackages">
             <title>deleteAllEmptyPackages</title>
             <para>deleteAllEmptyPackages: Supprime tous les paquets vides du projet
                 <itemizedlist mark="bullet">
@@ -1683,7 +1683,6 @@ File retrieved successfully.
                </para>
             </para>
         </section>
-    </section>
 
         <section id="FRSFunctionDeleteAllEmptyReleases">
             <title>deleteAllEmptyReleases</title>
@@ -1716,7 +1715,6 @@ File retrieved successfully.
             </para>
         </section>
     </section>
-
 
     <section id="DocmanFunctions">
         <title>Fonction du Gestionnaire de Documents</title>

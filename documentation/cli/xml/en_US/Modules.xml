@@ -1570,7 +1570,7 @@ File retrieved successfully.
             </para>
         </section>
 
-		<section id="FRSFunctionDeleteAllEmptyPackages">
+        <section id="FRSFunctionDeleteAllEmptyPackages">
             <title>deleteAllEmptyPackages</title>
             <para>deleteAllEmptyPackages: Delete all empty packages for a given project
                 <itemizedlist mark="bullet">
@@ -1596,7 +1596,7 @@ File retrieved successfully.
                </para>
             </para>
         </section>
-		
+
         <section id="FRSFunctionDeleteEmptyRelease">
             <title>deleteEmptyRelease</title>
             <para>deleteEmptyRelease: Delete the given release if empty
@@ -1630,9 +1630,8 @@ File retrieved successfully.
                </para>
             </para>
         </section>
-    </section>
 
-	<section id="FRSFunctionDeleteAllEmptyReleases">
+        <section id="FRSFunctionDeleteAllEmptyReleases">
             <title>deleteAllEmptyReleases</title>
             <para>deleteAllEmptyReleases: Delete all empty releases of the given package
                 <itemizedlist mark="bullet">
@@ -1663,7 +1662,7 @@ File retrieved successfully.
             </para>
         </section>
     </section>
-	
+
     <section id="DocmanFunctions">
         <title>Document Manager functions</title>
         
