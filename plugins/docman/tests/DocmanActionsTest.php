@@ -251,15 +251,12 @@ class DocmanActionsTest extends UnitTestCase {
         $controller = new MockDocman_Controller();
         $controller->setReturnValue('userCanManage', false);
         $controller->feedback = new MockFeedback();
-        $userManager = new MockUserManager();
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $actions->setReturnValue('_getUserManagerInstance', $userManager);
         $params['listeners_to_delete'] = array(1);
         $params['item'] = new MockDocman_Item();
         $actions->remove_monitoring($params);
         $controller->expectOnce('userCanManage');
-        $userManager->expectNever('getUserById');
     }
 
     function testRemove_monitoringNotifDoesNotExist() {
