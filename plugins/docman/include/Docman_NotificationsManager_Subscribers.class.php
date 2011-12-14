@@ -26,6 +26,13 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     const MESSAGE_ADDED = 'added'; // X has been added to monitoring list
     const MESSAGE_REMOVED = 'removed'; // X has been removed from monitoring list
 
+    /**
+     * Constructor
+     *
+     * @param Int      $group_id The group id
+     * @param String   $url      Default url of docman controller
+     * @param Feedback $feedback Docman controller feedback
+     */
     function __construct($group_id, $url, $feedback) {
         parent::__construct($group_id, $url, $feedback);
     }
