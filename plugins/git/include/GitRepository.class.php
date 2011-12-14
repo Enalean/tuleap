@@ -39,6 +39,8 @@ class GitRepository implements DVCSRepository {
     const PUBLIC_ACCESS        = 'public';
     
     const DEFAULT_MAIL_PREFIX = '[SCM]';
+    const REPO_SCOPE_PROJECT  = 'P';
+    const REPO_SCOPE_INDIVIDUAL = 'I';
     
     private $id;
     private $parentId;
@@ -65,6 +67,7 @@ class GitRepository implements DVCSRepository {
     private $loaded;    
     private $dao;
     private $namespace;
+    private $scope;
     
     protected $backendType;
 
@@ -91,6 +94,7 @@ class GitRepository implements DVCSRepository {
         $this->parent      = null;
         $this->parentId    = 0;
         $this->loaded      = false;
+        $this->scope       = self::REPO_SCOPE_PROJECT;
     }       
 
     /**
@@ -444,6 +448,21 @@ class GitRepository implements DVCSRepository {
     public function setPath($path) {
         $this->path = $path;
     }
+    
+    /**
+     * Gives the scope of the repository
+     * @return String
+     */
+    public function getScope() {
+        return $this->scope;
+    }
+    
+    /**
+     * @param String $scope
+     */
+    public function setScope($scope){
+        $this->scope = $scope;
+    }
 
     /**
      * Gives the full relative path (from git root directory) to the repository
@@ -570,11 +589,13 @@ class GitRepository implements DVCSRepository {
         
     public function fork($namespace, $user) {
         $clone = clone $this;
-        
+                
         $clone->setCreator($user);
         $clone->setParent($this);
         $clone->setNamespace($namespace);
-        
+        $clone->setId(null);
+        $clone->setPath($this->getProject()->getUnixName().'/'.$namespace.'/'.$this->getName().'.git');
+        $clone->setScope(self::REPO_SCOPE_INDIVIDUAL);
         $this->getBackend()->fork($this, $clone);
     }
     

@@ -42,6 +42,7 @@ class GitDao extends DataAccessObject {
     const REPOSITORY_ACCESS           = 'repository_access';
     const REPOSITORY_MAIL_PREFIX      = 'repository_events_mailing_prefix';
     const REPOSITORY_BACKEND_TYPE     = 'repository_backend_type';
+    const REPOSITORY_SCOPE            = 'repository_scope';
 
     const REPO_NAME_MAX_LENGTH = 255;
 
@@ -91,6 +92,8 @@ class GitDao extends DataAccessObject {
         $name        = $repository->getName(); 
         $mailPrefix  = $repository->getMailPrefix();
         $parentId    = 0;
+        $scope       = $repository->getScope();
+        
         try {
             $parent   = $repository->getParent();
             if ( !empty($parent) ) {
@@ -114,7 +117,8 @@ class GitDao extends DataAccessObject {
         $creationUserId = $this->da->escapeInt($creationUserId);
         $access         = $this->da->quoteSmart($access);
         $mailPrefix     = $this->da->quoteSmart($mailPrefix);
-
+        $scope          = $this->da->quoteSmart($scope);
+        
         $insert         = false;
         if ( $this->exists($id) ) {            
             $query = 'UPDATE '.$this->getTable().
@@ -140,7 +144,8 @@ class GitDao extends DataAccessObject {
                                                          self::REPOSITORY_CREATION_USER_ID.','.
                                                          self::REPOSITORY_IS_INITIALIZED.','.
                                                          self::REPOSITORY_ACCESS.','.
-                                                         self::REPOSITORY_BACKEND_TYPE.
+                                                         self::REPOSITORY_BACKEND_TYPE.','.
+                                                         self::REPOSITORY_SCOPE.
                                                     ') values ('.
                                                         "".$name.",".
                                                         "".$path.",".
@@ -150,11 +155,12 @@ class GitDao extends DataAccessObject {
                                                         "'".$creationDate."',".
                                                         $creationUserId.",".
                                                         $isInitialized.','.
-                                                        $access.','.
-                                                        $this->da->quoteSmart($backendType).
+                                                        $access.','.                    
+                                                        $this->da->quoteSmart($backendType).','.
+                                                        $scope.
                                                         ')';
         }
-        
+
         if ( $this->update($query) === false ) {
             throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error').' : '.$this->da->isError());
         }
@@ -217,19 +223,22 @@ class GitDao extends DataAccessObject {
         }
         $projectId = $this->da->escapeInt($projectId);
         $userId    = $this->da->escapeInt($userId);
+        
         if ( empty($projectId) ) {
             return false;
         }
+        
         if ( empty($userId) ) {
-            $condition .= " AND user_id IS NULL ";
+            $condition .= " AND repository_scope = 'P' ";
         } else {
-            $condition .= " AND user_id = $userId ";
+            $condition .= " AND repository_creation_user_id = $userId AND repository_scope = 'I' ";
         }
+
         $sql = "SELECT * FROM $this->tableName
                 WHERE ". self::FK_PROJECT_ID ." = $projectId
-                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'"
-                  .$condition.
-                  "ORDER BY ". self::REPOSITORY_NAME;
+                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                  $condition
+                ORDER BY ". self::REPOSITORY_NAME;
                   
         $rs = $this->retrieve($sql);
         if ( empty($rs) || $rs->rowCount() == 0 ) {
@@ -250,11 +259,12 @@ class GitDao extends DataAccessObject {
      */
     public function getProjectRepositoriesOwners($projectId) {
         $projectId = $this->da->escapeInt($projectId);
-        $sql = "SELECT DISTINCT user_id, user_name, realname
+        $sql = "SELECT DISTINCT repository_creation_user_id, user_name, realname
                 FROM $this->tableName
-                    INNER JOIN user USING(user_id)
+                    INNER JOIN user ON user.user_id = repository_creation_user_id
                 WHERE ". self::FK_PROJECT_ID ." = $projectId
                   AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                  AND ". self::REPOSITORY_SCOPE." = 'I'
                 ORDER BY user.user_name";
         return $this->retrieve($sql);
     }

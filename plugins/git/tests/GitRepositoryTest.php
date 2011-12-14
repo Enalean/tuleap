@@ -217,8 +217,12 @@ class GitRepositoryTest extends UnitTestCase {
     public function testForkCreatesAnewRepoAndPassesItToTheBackend() {
         $user = $this->_newUser("sandra");
         $backend = new MockGit_Backend_Gitolite();
+        $project = new Mockproject();
+        $project->setReturnValue('getUnixName', 'tulip');
+        
         $repo    = new GitRepository();
         $repo->setBackend($backend);
+        $repo->setProject($project);
         
         $namespace = "toto/tata";
         $clone = $this->_aGitRepoWith($user, $repo, $namespace, $backend);
@@ -231,10 +235,14 @@ class GitRepositoryTest extends UnitTestCase {
     private function _aGitRepoWith($user, $repo, $namespace, $backend) {
         $clone = new GitRepository();
         $clone->setCreator($user);
-        $clone->setName($repo->getName());
-        $clone->setParent($repo);
         $clone->setNamespace($namespace);
         $clone->setBackend($backend);
+
+        $clone->setName($repo->getName());
+        $clone->setParent($repo);
+        $clone->setProject($repo->getProject());
+        $clone->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
+        $clone->setPath($repo->getProject()->getUnixName().'/'.$namespace.'/'.$repo->getName().'.git');
         return $clone;
     }
     

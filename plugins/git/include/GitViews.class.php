@@ -662,7 +662,7 @@ class GitViews extends PluginViews {
                 $selected = 'selected="selected"';
                 $select .= '<option value="" '. ($current_id ? '' : $selected) .'>'. $this->getText('tree_title_available_repo') .'</option>';
                 foreach ($params['repositories_owners'] as $owner) {
-                    $select .= '<option value="'. (int)$owner['user_id'] .'" '. ($owner['user_id'] == $current_id ? $selected : '') .'>'. $uh->getDisplayName($owner['user_name'], $owner['realname']) .'</option>';
+                    $select .= '<option value="'. (int)$owner['repository_creation_user_id'] .'" '. ($owner['repository_creation_user_id'] == $current_id ? $selected : '') .'>'. $uh->getDisplayName($owner['user_name'], $owner['realname']) .'</option>';
                 }
                 $select .= '</select>';
                 echo '<form action="" method="GET">';
