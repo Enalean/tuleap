@@ -378,6 +378,16 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
         $this->assertFalse($driver->fork($name, $old_ns, $new_ns));
     }
+    
+    public function testIsInitializedShouldReturnTrueEvenIfThereIsNoMaster() {
+        $driver = new Git_GitoliteDriver($this->_glAdmDir);
+        $this->assertTrue($driver->isInitialized($this->_fixDir.'/headless.git'));
+    }
+    
+    public function testIsInitializedShouldReturnFalseEvenIfThereIsNoValidDirectory() {
+        $driver = new Git_GitoliteDriver($this->_glAdmDir);
+        $this->assertFalse($driver->isInitialized($this->_fixDir));
+    }
 }
 
 ?>

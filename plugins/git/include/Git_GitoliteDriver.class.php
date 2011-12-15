@@ -84,9 +84,19 @@ class Git_GitoliteDriver {
         $this->confFilePath = 'conf/gitolite.conf';
     }
     
-    public function masterExists($repoPath) {
-        if (file_exists($repoPath.'/refs/heads/master')) {
-            return true;
+    public function isInitialized($repoPath) {
+        try {
+            $headsPath = $repoPath.'/refs/heads';
+            if (is_dir($headsPath)) {
+                $dir = new DirectoryIterator($headsPath);
+                foreach ($dir as $fileinfo) {
+                    if (!$fileinfo->isDot()) {
+                        return true;
+                    }
+                }
+            }
+        } catch(Exception $e) {
+            // If directory doesn't even exists, return false
         }
         return false;
     }

@@ -66,8 +66,8 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @return Boolean
      */
     public function isInitialized($repository) {
-        $masterExists = $this->driver->masterExists($this->getGitRootPath().'/'.$repository->getPath());
-        if ($masterExists) {
+        $init = $this->driver->isInitialized($this->getGitRootPath().'/'.$repository->getPath());
+        if ($init) {
             $this->getDao()->initialize($repository->getId());
             return true;
         } else {
