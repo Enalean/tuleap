@@ -1625,7 +1625,7 @@ class Docman_Actions extends Actions {
                 foreach ($params['listeners_to_add'] as $user) {
                     if ($user instanceof User) {
                         if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
-                            if ($dpm->userCanAccess($user, $params['item']->getId())) {
+                            if ($dpm->userCanRead($user, $params['item']->getId())) {
                                 if ($this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
                                     if ($cascade && !$this->_controler->notificationsManager->add($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
                                         $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_not_added', array($user->getName())));
