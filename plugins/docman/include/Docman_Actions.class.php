@@ -1623,7 +1623,7 @@ class Docman_Actions extends Actions {
                 $dpm = $this->_getDocmanPermissionsManagerInstance($params['item']->getGroupId());
                 $invalidUsers = 0;
                 foreach ($params['listeners_to_add'] as $user) {
-                    if (is_a($user, 'User')) {
+                    if ($user instanceof User) {
                         if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
                             if ($dpm->userCanAccess($user, $params['item']->getId())) {
                                 if ($this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
