@@ -1659,7 +1659,7 @@ class Docman_Actions extends Actions {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
             }
         } else {
-            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user_added'));
         }
     }
 

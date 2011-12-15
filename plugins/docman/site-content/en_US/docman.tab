@@ -648,11 +648,12 @@ plugin_docman	notifications_cascade_not_added	Monitoring for user(s) '$1' has no
 plugin_docman	notifications_already_exists	Monitoring for user(s) '$1' already exists
 plugin_docman	notifications_no_access_rights	Insufficient permissions for user(s) '$1'
 plugin_docman	notifications_no_user	No user selected
+plugin_docman	notifications_no_user_added	No user added
 plugin_docman	notifications_some_users_not_added	Some users are not added
 plugin_docman	notifications_add_user	Add
 plugin_docman	notifications_add_user_title	Add users to the minotoring list :
 plugin_docman	notifications_add_user_cascade	Enable monitoring for the whole sub-hierarchy
-plugin_docman	notifications_permission_denied	You don't have enough permissions to remove users monitoring
+plugin_docman	notifications_permission_denied	You don't have enough permissions to perform this action
 plugin_docman	notifications_cascade_on	You're monitoring '$1' and its sub-hierarchy.
 plugin_docman	notifications_added_to_monitoring_list_subject	You were added to '$1' monitoring list
 plugin_docman	notifications_added_to_monitoring_list	You are receiving this message because you were added to the monitoring list of this item:

@@ -648,11 +648,12 @@ plugin_docman	notifications_cascade_not_added	Le monitoring de la sous-hiérarch
 plugin_docman	notifications_already_exists	Le monitoring pour le(s) utilisateur(s) '$1' existe déjà
 plugin_docman	notifications_no_access_rights	Les permissions ne sont pas suffisantes pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_no_user	Aucun utilisateur séléctionné
+plugin_docman	notifications_no_user_added	Aucun utilisateur ajouté
 plugin_docman	notifications_some_users_not_added	Certains utilisateurs n'ont pas été ajoutés
 plugin_docman	notifications_add_user	Ajoutez
 plugin_docman	notifications_add_user_title	Ajoutez des utilisateurs à la liste de monitoring :
 plugin_docman	notifications_add_user_cascade	Monitoring activé pour toute la sous-hiérarchie
-plugin_docman	notifications_permission_denied	Vous n'avez pas assez de permission pour supprimer le monitoring d'autres utilisateurs
+plugin_docman	notifications_permission_denied	Vous n'avez pas assez de permission pour cette action
 plugin_docman	notifications_cascade_on	Vous surveillez désormais '$1' et sa sous-hiérarchie.
 plugin_docman	notifications_added_to_monitoring_list_subject	Vous avez été ajouté à la liste de monitoring du document '$1'
 plugin_docman	notifications_added_to_monitoring_list	Vous recevez cette notification car vous avez été rajouté à la liste des utilisateurs qui monitorent cet item:
