@@ -648,6 +648,7 @@ plugin_docman	notifications_cascade_not_added	Le monitoring de la sous-hiérarch
 plugin_docman	notifications_already_exists	Le monitoring pour le(s) utilisateur(s) '$1' existe déjà
 plugin_docman	notifications_no_access_rights	Les permissions ne sont pas suffisantes pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_no_user	Aucun utilisateur séléctionné
+plugin_docman	notifications_some_users_not_added	Certains utilisateurs n'ont pas été ajoutés
 plugin_docman	notifications_add_user	Ajoutez
 plugin_docman	notifications_add_user_title	Ajoutez des utilisateurs à la liste de monitoring :
 plugin_docman	notifications_add_user_cascade	Monitoring activé pour toute la sous-hiérarchie

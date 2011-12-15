@@ -1645,7 +1645,7 @@ class Docman_Actions extends Actions {
                     }
                 }
                 if (!empty($invalidUsers)) {
-                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_some_users_not_added'));
                 }
                 if (!empty($existingUsers)) {
                     $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists', array(implode(',', $existingUsers))));
