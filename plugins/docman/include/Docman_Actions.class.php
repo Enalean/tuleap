@@ -1621,7 +1621,7 @@ class Docman_Actions extends Actions {
                 $users = array();
                 $existingUsers = array();
                 $dpm = $this->_getDocmanPermissionsManagerInstance($params['item']->getGroupId());
-                $invalidUsers = 0;
+                $invalidUsers = $params['invalid_users'];
                 foreach ($params['listeners_to_add'] as $user) {
                     if ($user instanceof User) {
                         if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
@@ -1641,10 +1641,10 @@ class Docman_Actions extends Actions {
                             $existingUsers[$user->getId()] = $user->getName();
                         }
                     } else {
-                        $invalidUsers++;
+                        $invalidUsers = true;
                     }
                 }
-                if (!empty($invalidUsers)) {
+                if ($invalidUsers) {
                     $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_some_users_not_added'));
                 }
                 if (!empty($existingUsers)) {
