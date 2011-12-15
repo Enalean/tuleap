@@ -40,6 +40,7 @@ $repositories = array(
     array (
       'repository_id' => '2',
       'repository_name' => 'abc',
+      'repository_namespace' => '',
       'repository_description' => '-- Default description --',
       'repository_path' => 'ngt/abc.git',
       'repository_parent_id' => '0',
@@ -55,7 +56,8 @@ $repositories = array(
     3 => 
     array (
       'repository_id' => '3',
-      'repository_name' => 'automaticTests/Python',
+      'repository_name' => 'Python',
+      'repository_namespace' => 'automaticTests',
       'repository_description' => '-- Default description --',
       'repository_path' => 'ngt/automaticTests/Python.git',
       'repository_parent_id' => '0',
@@ -71,7 +73,8 @@ $repositories = array(
     4 => 
     array (
       'repository_id' => '4',
-      'repository_name' => 'automaticTests/Ruby',
+      'repository_name' => 'Ruby',
+      'repository_namespace' => 'automaticTests',
       'repository_description' => '-- Default description --',
       'repository_path' => 'ngt/automaticTests/Ruby.git',
       'repository_parent_id' => '0',
@@ -87,7 +90,8 @@ $repositories = array(
     5 => 
     array (
       'repository_id' => '5',
-      'repository_name' => 'deps/3rdparty/cvsgraph',
+      'repository_name' => 'cvsgraph',
+      'repository_namespace' => 'deps/3rdparty',
       'repository_description' => '-- Default description --',
       'repository_path' => 'ngt/deps/3rdparty/cvsgraph.git',
       'repository_parent_id' => '0',
@@ -103,7 +107,8 @@ $repositories = array(
     6 => 
     array (
       'repository_id' => '6',
-      'repository_name' => 'deps/3rdparty/geshi',
+      'repository_name' => 'geshi',
+      'repository_namespace' => 'deps/3rdparty',
       'repository_description' => '-- Default description --',
       'repository_path' => 'ngt/deps/3rdparty/geshi.git',
       'repository_parent_id' => '0',
@@ -119,7 +124,8 @@ $repositories = array(
     7 => 
     array (
       'repository_id' => '7',
-      'repository_name' => 'deps/3rdparty/gitolite',
+      'repository_name' => 'gitolite',
+      'repository_namespace' => 'deps/3rdparty',
       'repository_description' => '-- Default description --',
       'repository_path' => 'ngt/deps/3rdparty/gitolite.git',
       'repository_parent_id' => '0',
@@ -135,7 +141,8 @@ $repositories = array(
     8 => 
     array (
       'repository_id' => '8',
-      'repository_name' => 'tools/lxc',
+      'repository_name' => 'lxc',
+      'repository_namespace' => 'tools',
       'repository_description' => '-- Default description --',
       'repository_path' => 'ngt/tools/lxc.git',
       'repository_parent_id' => '0',
