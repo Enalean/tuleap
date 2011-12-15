@@ -242,7 +242,7 @@ class GitRepositoryTest extends UnitTestCase {
         $clone->setParent($repo);
         $clone->setProject($repo->getProject());
         $clone->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
-        $clone->setPath($repo->getProject()->getUnixName().'/'.$namespace.'/'.$repo->getName().'.git');
+        $clone->setPath(unixPathJoin(array($repo->getProject()->getUnixName(), $namespace, $repo->getName())).'.git');
         return $clone;
     }
     
