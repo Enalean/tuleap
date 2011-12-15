@@ -1653,7 +1653,6 @@ class Docman_Actions extends Actions {
                 if (!empty($users)) {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_added', array(implode(',', $users))));
                     $this->_raiseMonitoringListEvent($params['item'], $params['listeners_to_add'],'plugin_docman_add_monitoring');
-                    $this->event_manager->processEvent('send_notifications_subscribers', array());
                 }
             } else {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
@@ -1692,7 +1691,6 @@ class Docman_Actions extends Actions {
                     }
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $removedUsers))));
                     $this->_raiseMonitoringListEvent($params['item'], $users, 'plugin_docman_remove_monitoring');
-                    $this->event_manager->processEvent('send_notifications_subscribers', array());
                 }
             } else {
                 $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));

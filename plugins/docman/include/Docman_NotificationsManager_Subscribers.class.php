@@ -62,6 +62,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
                 $users->next();
             }
         }
+        $this->sendNotifications('', array());
     }
 
     /**

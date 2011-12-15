@@ -118,7 +118,6 @@ class Docman_Controller extends Controler {
         $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true, 0);
         $this->notificationsManager_Subscribers = new Docman_NotificationsManager_Subscribers($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
         $event_manager->addListener('plugin_docman_event_subcribers', $this->notificationsManager_Subscribers, 'somethingHappen', true, 0);
-        $event_manager->addListener('send_notifications_subscribers', $this->notificationsManager_Subscribers, 'sendNotifications', true, 0);
     }
 
     /**
