@@ -40,8 +40,9 @@ class GitRepositoryTest extends UnitTestCase {
     
     public function setUp() {
         $link =dirname(__FILE__).'/_fixtures/tmp/perms';
-        if (file_exists($link))
+        if (file_exists($link)) {
             unlink($link);
+        }
         symlink(dirname(__FILE__).'/_fixtures/perms', $link);
     }
     

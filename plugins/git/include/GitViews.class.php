@@ -143,6 +143,10 @@ class GitViews extends PluginViews {
             $parent       = $repository->getParent();
             $access       = $repository->getAccess();
             $description  = $repository->getDescription();
+            $namespace    = $repository->getNamespace();
+            if ($namespace) {
+                $namespace = $namespace.'/';
+            }
             $creatorName  = '';
             if ( !empty($creator) ) {
                 $creatorName  = UserHelper::instance()->getLinkOnUserFromUserId($creator->getId());
@@ -182,7 +186,7 @@ class GitViews extends PluginViews {
             $repoActions .= '</ul>';
 
             echo '<div id="plugin_git_reference">';
-            echo '<h2>'.$accessType.$repoName.'</h2>';
+            echo '<h2>'.$accessType.$namespace.$repoName.'</h2>';
             echo $repoActions;
 ?>
 <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
