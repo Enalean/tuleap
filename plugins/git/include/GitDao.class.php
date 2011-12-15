@@ -43,6 +43,7 @@ class GitDao extends DataAccessObject {
     const REPOSITORY_MAIL_PREFIX      = 'repository_events_mailing_prefix';
     const REPOSITORY_BACKEND_TYPE     = 'repository_backend_type';
     const REPOSITORY_SCOPE            = 'repository_scope';
+    const REPOSITORY_NAMESPACE        = 'repository_namespace';
 
     const REPO_NAME_MAX_LENGTH = 255;
 
@@ -93,6 +94,7 @@ class GitDao extends DataAccessObject {
         $mailPrefix  = $repository->getMailPrefix();
         $parentId    = 0;
         $scope       = $repository->getScope();
+        $namespace   = $repository->getNamespace();
         
         try {
             $parent   = $repository->getParent();
@@ -118,6 +120,7 @@ class GitDao extends DataAccessObject {
         $access         = $this->da->quoteSmart($access);
         $mailPrefix     = $this->da->quoteSmart($mailPrefix);
         $scope          = $this->da->quoteSmart($scope);
+        $namespace      = $this->da->quoteSmart($namespace);
         
         $insert         = false;
         if ( $this->exists($id) ) {            
@@ -145,7 +148,8 @@ class GitDao extends DataAccessObject {
                                                          self::REPOSITORY_IS_INITIALIZED.','.
                                                          self::REPOSITORY_ACCESS.','.
                                                          self::REPOSITORY_BACKEND_TYPE.','.
-                                                         self::REPOSITORY_SCOPE.
+                                                         self::REPOSITORY_SCOPE.','.
+                                                         self::REPOSITORY_NAMESPACE.
                                                     ') values ('.
                                                         "".$name.",".
                                                         "".$path.",".
@@ -157,7 +161,8 @@ class GitDao extends DataAccessObject {
                                                         $isInitialized.','.
                                                         $access.','.                    
                                                         $this->da->quoteSmart($backendType).','.
-                                                        $scope.
+                                                        $scope.','.
+                                                        $namespace.
                                                         ')';
         }
 
