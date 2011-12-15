@@ -402,8 +402,10 @@ class DocmanActionsTest extends UnitTestCase {
         $actions->_controler = $controller;
         $user1 = new MockUser();
         $user1->setReturnValue('getName', 'Carol');
+        $user1->setReturnValue('getId', 1);
         $user2 = new MockUser();
         $user2->setReturnValue('getName', 'Carlos');
+        $user2->setReturnValue('getId', 2);
         $controller->feedback->expectOnce('log', array('warning', '*'));
         $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_already_exists', array('Carol,Carlos')));
         $params['listeners_to_add'] = array($user1, $user2);
