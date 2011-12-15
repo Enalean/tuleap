@@ -1638,7 +1638,7 @@ class Docman_Actions extends Actions {
                                 $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_access_rights', array($user->getName())));
                             }
                         } else {
-                            $existingUsers[] = $user->getName();
+                            $existingUsers[$user->getId()] = $user->getName();
                         }
                     } else {
                         $invalidUsers++;
