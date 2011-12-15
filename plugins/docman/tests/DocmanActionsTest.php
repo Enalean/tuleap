@@ -409,7 +409,8 @@ class DocmanActionsTest extends UnitTestCase {
         $controller->feedback->expectOnce('log', array('warning', '*'));
         $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_already_exists', array('Carol,Carlos')));
         $params['listeners_to_add'] = array($user1, $user2);
-        $params['item'] = new MockDocman_Item();
+        $params['item']             = new MockDocman_Item();
+        $params['invalid_users']    = false;
         $actions->add_monitoring($params);
         $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 2);
@@ -440,7 +441,8 @@ class DocmanActionsTest extends UnitTestCase {
         $controller->feedback->expectAt(1, 'log', array('error', '*'));
         $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_added', array($user2->getName())));
         $params['listeners_to_add'] = array($user1, $user2);
-        $params['item'] = new MockDocman_Item();
+        $params['item']             = new MockDocman_Item();
+        $params['invalid_users']    = false;
         $actions->add_monitoring($params);
         $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 2);
@@ -473,7 +475,8 @@ class DocmanActionsTest extends UnitTestCase {
         $controller->feedback->expectAt(1, 'log', array('info', '*'));
         $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_added', array($user1->getName())));
         $params['listeners_to_add'] = array($user1, $user2);
-        $params['item'] = new MockDocman_Item();
+        $params['item']             = new MockDocman_Item();
+        $params['invalid_users']    = false;
         $actions->add_monitoring($params);
         $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 2);
@@ -501,7 +504,8 @@ class DocmanActionsTest extends UnitTestCase {
         $docmanPermissionsManager->setReturnValue('userCanRead', true);
         $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
         $params['listeners_to_add'] = array($user);
-        $params['item'] = new MockDocman_Item();
+        $params['item']             = new MockDocman_Item();
+        $params['invalid_users']    = false;
         $actions->add_monitoring($params);
         $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 1);
