@@ -365,7 +365,7 @@ class DocmanActionsTest extends UnitTestCase {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
         $controller->feedback->expectOnce('log', array('error', '*'));
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_no_user'));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_no_user_added'));
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
         $actions->add_monitoring(array('listeners_to_add' => true));
@@ -427,7 +427,7 @@ class DocmanActionsTest extends UnitTestCase {
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
         $docmanPermissionsManager = new MockDocman_PermissionsManager();
-        $docmanPermissionsManager->setReturnValue('userCanAccess', true);
+        $docmanPermissionsManager->setReturnValue('userCanRead', true);
         $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
         $user1 = new MockUser();
         $user1->setReturnValue('getId', 123);
@@ -458,8 +458,8 @@ class DocmanActionsTest extends UnitTestCase {
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
         $docmanPermissionsManager = new MockDocman_PermissionsManager();
-        $docmanPermissionsManager->setReturnValueAt(0,'userCanAccess', true);
-        $docmanPermissionsManager->setReturnValueAt(1,'userCanAccess', false);
+        $docmanPermissionsManager->setReturnValueAt(0,'userCanRead', true);
+        $docmanPermissionsManager->setReturnValueAt(1,'userCanRead', false);
         $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
         $actions->event_manager = new MockEventManager($this);
         $user1 = new MockUser();
@@ -477,7 +477,7 @@ class DocmanActionsTest extends UnitTestCase {
         $actions->add_monitoring($params);
         $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 2);
-        $docmanPermissionsManager->expectCallCount('userCanAccess', 2);
+        $docmanPermissionsManager->expectCallCount('userCanRead', 2);
         $notificationsManager->expectCallCount('add', 1);
     }
 
@@ -498,7 +498,7 @@ class DocmanActionsTest extends UnitTestCase {
         $actions->_controler = $controller;
         $actions->event_manager = new MockEventManager($this);
         $docmanPermissionsManager = new MockDocman_PermissionsManager();
-        $docmanPermissionsManager->setReturnValue('userCanAccess', true);
+        $docmanPermissionsManager->setReturnValue('userCanRead', true);
         $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
         $params['listeners_to_add'] = array($user);
         $params['item'] = new MockDocman_Item();
