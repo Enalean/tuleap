@@ -19,9 +19,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+function notEmpty($e) {
+    return !empty($e) || $e === '0';
+}
+
 function unixPathJoin($elements) {
     
-    $path = implode('/', array_filter($elements));
+    $path = implode('/', array_filter($elements, 'notEmpty'));
     return preg_replace('%/{1,}%',"/", $path);    
 }
 ?>

@@ -46,7 +46,7 @@ class PathJoinUtilTest extends UnitTestCase {
     }
     
     function testAllEmptyElementsAreIgnored() {
-        $this->assertEqual('toto', unixPathJoin(array('', null, 'toto', '')));
+        $this->assertEqual('toto/0', unixPathJoin(array('', null, 'toto', '0')));
     }
 }
 
