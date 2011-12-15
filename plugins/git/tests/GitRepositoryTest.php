@@ -61,7 +61,12 @@ class GitRepositoryTest extends UnitTestCase {
         $repo->setBackend($gitolite);
         $this->checkNameValidation($repo);
         $this->assertTrue($repo->isNameValid('jambon/beurre'));
-       
+        $this->assertFalse($repo->isNameValid('jambon/.beurre'));
+        $this->assertFalse($repo->isNameValid('jambon..beurre'));
+        $this->assertFalse($repo->isNameValid('jambon...beurre'));
+        $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
+        $this->assertFalse($repo->isNameValid('repo.git'));
+        
         $repo->setBackend($gitshell);
         $this->checkNameValidation($repo);
         $this->assertFalse($repo->isNameValid('jambon/beurre'));
@@ -77,6 +82,7 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertFalse($repo->isNameValid('jambon..beurre'));
         $this->assertFalse($repo->isNameValid('jambon...beurre'));
         $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
+        $this->assertFalse($repo->isNameValid('repo.git'));
     }
     
         
@@ -84,6 +90,7 @@ class GitRepositoryTest extends UnitTestCase {
         $repo = new GitRepository();
         $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/default.conf'));
         $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/tmp/perms/default.conf'));
+        $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/tmp/perms/coincoin.git.git'));
         
         $this->assertFalse($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/../../default.conf'));
         $this->assertFalse($repo->isSubPath('_fixtures/perms/', 'coincoin'));
@@ -92,6 +99,8 @@ class GitRepositoryTest extends UnitTestCase {
     public function testDeletionShoultAffectDotGit() {
         $repo = new GitRepository();
         $this->assertTrue($repo->isDotGit('default.git'));
+        $this->assertTrue($repo->isDotGit('default.git.git'));
+        
         $this->assertFalse($repo->isDotGit('default.conf'));
         $this->assertFalse($repo->isDotGit('d'));
         $this->assertFalse($repo->isDotGit('defaultgit'));
@@ -252,6 +261,34 @@ class GitRepositoryTest extends UnitTestCase {
         return $user;
     }
     
+    public function testCanBeDeletedWithDotGitDotGitRepositoryShouldSucceed() {
+        $repo = $this->getRepositoryForDeletionTesting();
+        $repo->setPath('perms/coincoin.git.git');
+
+        $this->assertTrue($repo->canBeDeleted());
+    }
+
+    public function testCanBeDeletedWithWrongRepositoryPathShouldFail() {
+        $repo = $this->getRepositoryForDeletionTesting();
+        $repo->setPath('perms/coincoin');
+
+        $this->assertFalse($repo->canBeDeleted());
+    }
+    
+    protected function getRepositoryForDeletionTesting() {
+        $backend = new MockGitBackend();
+        $backend->setReturnValue('getGitRootPath', dirname(__FILE__).'/_fixtures');
+
+        $project = new MockProject();
+        $project->setReturnValue('getUnixName', 'perms');
+
+        $repo = new GitRepository();
+        $repo->setBackend($backend);
+        $repo->setProject($project);
+        
+        return $repo;
+    }
+
 }
 
 ?>

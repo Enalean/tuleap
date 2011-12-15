@@ -279,8 +279,10 @@ class Git_GitoliteDriver {
         $conf .= PHP_EOL;
         if ($repository->getNotifiedMails() && count($repository->getNotifiedMails()) > 0) {
             $conf .= ' config hooks.mailinglist = "'. implode(', ', $repository->getNotifiedMails()). '"';
-            $conf .= PHP_EOL;
+        } else {
+            $conf .= ' config hooks.mailinglist = ""';
         }
+        $conf .= PHP_EOL;
         if ($repository->getMailPrefix() != GitRepository::DEFAULT_MAIL_PREFIX) {
             $conf .= ' config hooks.emailprefix = "'. $repository->getMailPrefix() .'"';
             $conf .= PHP_EOL;
