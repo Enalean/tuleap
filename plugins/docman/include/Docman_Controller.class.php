@@ -876,12 +876,17 @@ class Docman_Controller extends Controler {
             $this->_actionParams['listeners_to_add'] = array();
             if ($this->request->exist('listeners_to_add')) {
                 $um    = UserManager::instance();
-                $vUser = new Valid_String('listeners_to_add');
+                $vUser = new Valid_Text('listeners_to_add');
                 if($this->request->valid($vUser)) {
                     $usernames = array_map('trim', preg_split('/[,;]/', $this->request->get('listeners_to_add')));
                     $users     = array();
                     foreach ($usernames as $username) {
-                        $users[] = $um->findUser($username);
+                        $vUserName = new Valid_UserNameFormat($username);
+                        if ($this->request->valid($vUserName)) {
+                            if (!empty($username) && $user = $um->findUser($username)) {
+                                $users[] =$user;
+                            }
+                        }
                     }
                     if ($this->request->exist('monitor_cascade')) {
                         $this->_actionParams['monitor_cascade'] = $this->request->get('monitor_cascade');
