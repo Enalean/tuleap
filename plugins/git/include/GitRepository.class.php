@@ -594,7 +594,8 @@ class GitRepository implements DVCSRepository {
         $clone->setParent($this);
         $clone->setNamespace($namespace);
         $clone->setId(null);
-        $clone->setPath($this->getProject()->getUnixName().'/'.$namespace.'/'.$this->getName().'.git');
+        $path = unixPathJoin(array($this->getRootPath(), $namespace, $this->getName())).'.git';
+        $clone->setPath($path);
         $clone->setScope(self::REPO_SCOPE_INDIVIDUAL);
         $this->getBackend()->fork($this, $clone);
     }

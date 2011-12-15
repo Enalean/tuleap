@@ -464,8 +464,8 @@ class Git_GitoliteDriver {
     
     public function fork($repo, $old_ns, $new_ns){
         //unixPathJoin
-        $source = $this->getRepositoriesPath() .'/'. $old_ns .'/'. $repo .'.git';
-        $target = $this->getRepositoriesPath() .'/'. $new_ns .'/'. $repo .'.git';
+        $source = unixPathJoin(array($this->getRepositoriesPath(),$old_ns, $repo)) .'.git';
+        $target = unixPathJoin(array($this->getRepositoriesPath(),$new_ns, $repo)) .'.git';
         if (!is_dir($target)) {
             $cmd = 'git clone --bare '. $source .' '. $target;
             

@@ -229,9 +229,9 @@ class GitDao extends DataAccessObject {
         }
         
         if ( empty($userId) ) {
-            $condition .= " AND repository_scope = 'P' ";
+            $condition .= " AND repository_scope = '".GitRepository::REPO_SCOPE_PROJECT."' ";
         } else {
-            $condition .= " AND repository_creation_user_id = $userId AND repository_scope = 'I' ";
+            $condition .= " AND repository_creation_user_id = $userId AND repository_scope = '".GitRepository::REPO_SCOPE_INDIVIDUAL."' ";
         }
 
         $sql = "SELECT * FROM $this->tableName
