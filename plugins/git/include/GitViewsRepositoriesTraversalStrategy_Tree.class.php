@@ -91,7 +91,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     public function getTree(array $repositories) {
         $tree = array();
         foreach ($repositories as $repoId => $row) {
-            $path = explode('/', $row['repository_name']);
+            $path = explode('/', $row['repository_namespace']);
             $repo = $this->getRepository($row);
             $this->insertInTree($tree, $repo, $path);
         }
