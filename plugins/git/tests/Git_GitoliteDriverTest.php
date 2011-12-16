@@ -353,6 +353,8 @@ class Git_GitoliteDriverTest extends UnitTestCase {
     }
     
     function testFork_CloneEmptyToSpecifiedPath() {
+        $this->skipIf((posix_getgrnam('gitolite') === false), "Cannot test if there is no 'gitolite' user on server (CI)");
+        
         $name = 'tulip';
         $new_ns = 'repos/new/repo/';
         $old_ns = 'repos/';
@@ -366,24 +368,19 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
         
         $this->assertTrue($driver->fork($name, $old_ns, $new_ns));
-        /*
+
         $this->assertRepoIsClonedWithHooks($new_root_dir);
         
         $this->assertWritableByGroup($new_root_dir, 'gitolite');
-         * 
-         */
     }
     
     private function assertWritableByGroup($new_root_dir, $group) {
-        // Test only is gitolite
-        if (posix_getgrnam($group) !== false) {
-            $this->assertEqual($group, $this->_getFileGroupName($new_root_dir));
-            $this->assertEqual($group, $this->_getFileGroupName($new_root_dir .'/hooks/gitolite_hook.sh'));
-        }
+        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir));
+        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir .'/hooks/gitolite_hook.sh'));
 
-        /*clearstatcache();
+        clearstatcache();
         $rootStats = stat($new_root_dir);
-        $this->assertPattern('/.*770$/', decoct($rootStats[2]));*/
+        $this->assertPattern('/.*770$/', decoct($rootStats[2]));
     }
     
     protected function _getFileGroupName($filePath) {
