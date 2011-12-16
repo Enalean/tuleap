@@ -243,7 +243,7 @@ class GitDao extends DataAccessObject {
                 WHERE ". self::FK_PROJECT_ID ." = $projectId
                   AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
                   $condition
-                ORDER BY ". self::REPOSITORY_NAME;
+                ORDER BY CONCAT(". self::REPOSITORY_NAMESPACE .', '. self::REPOSITORY_NAME .')';
                   
         $rs = $this->retrieve($sql);
         if ( empty($rs) || $rs->rowCount() == 0 ) {
