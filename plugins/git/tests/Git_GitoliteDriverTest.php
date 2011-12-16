@@ -364,9 +364,9 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         exec('cd '.$old_root_dir.' && touch hooks/gitolite_hook.sh');
         
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        /*
-        $this->assertTrue($driver->fork($name, $old_ns, $new_ns));
         
+        $this->assertTrue($driver->fork($name, $old_ns, $new_ns));
+        /*
         $this->assertRepoIsClonedWithHooks($new_root_dir);
         
         $this->assertWritableByGroup($new_root_dir, 'gitolite');
