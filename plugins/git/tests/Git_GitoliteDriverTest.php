@@ -325,8 +325,8 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         
         $row = array(GitDao::REPOSITORY_NAMESPACE => '', GitDao::REPOSITORY_NAME =>'repo');
         $this->assertEqual('project1/repo', $driver->repoFullName($row, $unix_name));
-    }
-    /**/
+    }    
+
     function testRenameProject() {
         $driver = $this->getPartialMock('Git_GitoliteDriver', array('gitPush'));
         $driver->expectOnce('gitPush');
@@ -350,10 +350,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertPattern('`\ninclude "projects/newone.conf"\n`', file_get_contents($this->_glAdmDir.'/conf/gitolite.conf'));
         $this->assertEmptyGitStatus();
     }
-    /**/
     
-    //copier le repo à l'endroit spécifié
-       //si le répertoire n'existe pas le créer
     function testFork_CloneEmptyToSpecifiedPath() {
         $name = 'tulip';
         $new_ns = 'repos/new/repo/';
