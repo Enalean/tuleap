@@ -369,12 +369,15 @@ class Git_GitoliteDriverTest extends UnitTestCase {
 
         $this->assertRepoIsClonedWithHooks($new_root_dir);
         
-        //$this->assertWritableByGroup($new_root_dir, 'gitolite');
+        $this->assertWritableByGroup($new_root_dir, 'gitolite');
     }
     
     private function assertWritableByGroup($new_root_dir, $group) {
-        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir));
-        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir .'/hooks/gitolite_hook.sh'));
+        // Test only is gitolite
+        if (posix_getgrnam($group)) {
+            $this->assertEqual($group, $this->_getFileGroupName($new_root_dir));
+            $this->assertEqual($group, $this->_getFileGroupName($new_root_dir .'/hooks/gitolite_hook.sh'));
+        }
 
         clearstatcache();
         $rootStats = stat($new_root_dir);
