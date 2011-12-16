@@ -359,12 +359,12 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $old_root_dir = $this->_fixDir .'/repositories/'. $old_ns . $name .'.git';
         $new_root_dir = $this->_fixDir .'/repositories/'. $new_ns . $name .'.git';
         
-        /*mkdir($old_root_dir, 0770, true);
+        mkdir($old_root_dir, 0770, true);
         exec('GIT_DIR='. $old_root_dir .' git init --bare --shared=group');
         exec('cd '.$old_root_dir.' && touch hooks/gitolite_hook.sh');
         
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        
+        /*
         $this->assertTrue($driver->fork($name, $old_ns, $new_ns));
         
         $this->assertRepoIsClonedWithHooks($new_root_dir);
