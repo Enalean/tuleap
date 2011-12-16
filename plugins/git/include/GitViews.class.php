@@ -632,21 +632,36 @@ class GitViews extends PluginViews {
         $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
         echo $token->fetchHTMLInput();
         
-        echo '<p>';
-        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label><br />';
+        echo '<table>';
+        echo '<thead>';
+        echo '<tr valign="top">';
+        echo '<td>';
+        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label>';
+        echo '</td>';
+        echo '<td>';
+        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label>';
+        echo '</td>';
+        echo '<td>&nbsp;</td>';
+        echo '</tr>';
+        echo '</thead>';
+        
+        
+        echo '<tbody><tr valign="top">';
+        echo '<td>';
         $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
         echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
-        echo '</p>';
+        echo '</td>';
         
-        echo '<p>';
-        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label><br />';
+        echo '<td>';
         echo '<input type="text" size="30" placeholder="'. $this->getText('fork_repositories_placeholder') .'" id="fork_repositories_path" name="path" />';
-        echo '<br><span style="color: #999">Eg: u/'. $this->user->getName() .'/<span id="eg_path"></span><span id="eg_repo">...</span></span>';
-        echo '</p>';
+        echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
+        echo '</td>';
         
-        echo '<p>';
+        echo '<td>';
         echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        echo '</p>';
+        echo '</td>';
+        
+        echo '</tr></tbody></table>';
         
         echo '</form>';
         echo '<br />';
