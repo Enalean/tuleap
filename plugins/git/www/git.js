@@ -17,6 +17,7 @@ document.observe('dom:loaded', function () {
     }
     
     if (fork_repositories_prefix) {
+        var submit = fork_repositories_prefix.up('form').down('input[type=submit]');
         var tpl = new Template('<div>' + $F('fork_repositories_prefix') + '/#{path}#{repo}</div>');
         var table = fork_repositories_prefix.up('table');
         table.down('thead > tr > td', 2).update('<label style="font-weight: bold;">Preview</label>');
@@ -31,6 +32,7 @@ document.observe('dom:loaded', function () {
                 repo: '...'
             };
             if ($('fork_repositories_repo').selectedIndex >= 0) {
+                submit.enable();
                 preview.update('');
                 for (var i = 0, len = $('fork_repositories_repo').options.length ; i < len ; ++i) {
                     if ($('fork_repositories_repo').options[i].selected) {
@@ -39,6 +41,7 @@ document.observe('dom:loaded', function () {
                     }
                 }
             } else {
+                submit.disable();
                 preview.update(tpl.evaluate(p));
             }
         }, 0.5);
