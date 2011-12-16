@@ -485,10 +485,12 @@ class Git_GitoliteDriver {
         $source = unixPathJoin(array($this->getRepositoriesPath(),$old_ns, $repo)) .'.git';
         $target = unixPathJoin(array($this->getRepositoriesPath(),$new_ns, $repo)) .'.git';
         if (!is_dir($target)) {
-            $cmd = 'git clone --bare '. $source .' '. $target;
-            
+            $cmd = 'umask 0007; sg - gitolite -c "git clone --bare '. $source .' '. $target.'"';
             $clone_result = $this->gitCmd($cmd);
-            system('cd '.$this->getRepositoriesPath().' && cp -f '.$source.'/hooks/* '.$target.'/hooks/');
+            
+            $copyHooks  = 'cd '.$this->getRepositoriesPath().'; ';
+            $copyHooks .= 'sg - gitolite -c "cp -f '.$source.'/hooks/* '.$target.'/hooks/"';
+            $this->gitCmd($copyHooks);
             return $clone_result;
         }
         return false;

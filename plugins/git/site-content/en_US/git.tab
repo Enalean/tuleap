@@ -148,6 +148,7 @@ plugin_git	fork_repositories_desc	You can create personnal forks of various repo
 plugin_git	fork_repositories_select	Select repositories to fork
 plugin_git	fork_repositories_path	Choose the path for the forks
 plugin_git	fork_repositories_placeholder	Enter a path or leave it blank
+plugin_git	fork_malformed_path	Path cannot contain double dots (..)
 
 project_admin_utils	perm_granted_for_git_repository	Permission granted for git repository $1
 project_admin_utils	perm_reset_for_git_repository	Permission reset for git repository $1

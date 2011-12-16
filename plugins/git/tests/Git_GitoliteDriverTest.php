@@ -44,6 +44,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         symlink($this->_glAdmDirRef, $this->_glAdmDir);
         
         $this->httpsHost = $GLOBALS['sys_https_host'];
+
         $GLOBALS['sys_https_host'] = 'localhost';
     }
 
@@ -359,18 +360,32 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $new_root_dir = $this->_fixDir .'/repositories/'. $new_ns . $name .'.git';
         
         mkdir($old_root_dir, 0770, true);
-        exec('GIT_DIR='. $old_root_dir .' git --bare init --shared=group');
+        exec('GIT_DIR='. $old_root_dir .' git init --bare --shared=group');
         exec('cd '.$old_root_dir.' && touch hooks/gitolite_hook.sh');
-        
         
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
         
         $this->assertTrue($driver->fork($name, $old_ns, $new_ns));
+
+        $this->assertRepoIsClonedWithHooks($new_root_dir);
         
-        $this->assertTrue(is_dir($new_root_dir), "the new git repo dir ($new_root_dir) wasn't found.");
-        $new_repo_HEAD = $new_root_dir .'/HEAD';
-        $this->assertTrue(file_exists($new_repo_HEAD), 'the file ('. $new_repo_HEAD .') does not exists');
-        $this->assertTrue(file_exists($new_root_dir .'/hooks/gitolite_hook.sh'), 'the hook file wasn\'t copied to the fork');
+        $this->assertWritableByGroup($new_root_dir, 'gitolite');
+    }
+    
+    private function assertWritableByGroup($new_root_dir, $group) {
+        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir));
+        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir .'/hooks/gitolite_hook.sh'));
+
+        clearstatcache();
+        $rootStats = stat($new_root_dir);
+        $this->assertPattern('/.*770$/', decoct($rootStats[2]));
+    }
+    
+    protected function _getFileGroupName($filePath) {
+        clearstatcache();
+        $rootStats = stat($filePath);
+        $groupInfo = posix_getgrgid($rootStats[5]);
+        return $groupInfo['name'];
     }
     
     public function testForkShouldNotCloneOnExistingRepositories() {
@@ -390,6 +405,12 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertFalse($driver->fork($name, $old_ns, $new_ns));
     }
     
+    public function assertRepoIsClonedWithHooks($new_root_dir) {
+        $this->assertTrue(is_dir($new_root_dir), "the new git repo dir ($new_root_dir) wasn't found.");
+        $new_repo_HEAD = $new_root_dir . '/HEAD';
+        $this->assertTrue(file_exists($new_repo_HEAD), 'the file (' . $new_repo_HEAD . ') does not exists');
+        $this->assertTrue(file_exists($new_root_dir . '/hooks/gitolite_hook.sh'), 'the hook file wasn\'t copied to the fork');
+    }
     public function testIsInitializedShouldReturnTrueEvenIfThereIsNoMaster() {
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
         $this->assertTrue($driver->isInitialized($this->_fixDir.'/headless.git'));
@@ -398,6 +419,10 @@ class Git_GitoliteDriverTest extends UnitTestCase {
     public function testIsInitializedShouldReturnFalseEvenIfThereIsNoValidDirectory() {
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
         $this->assertFalse($driver->isInitialized($this->_fixDir));
+    }
+    
+    public function testForkShouldCopyGitoliteHooks() {
+        
     }
 }
 

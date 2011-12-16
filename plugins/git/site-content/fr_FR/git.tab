@@ -145,6 +145,7 @@ plugin_git	fork_repositories_desc	Vous pouvez créer des forks personnels à par
 plugin_git	fork_repositories_select	Sélectionnez les dépôts à forker
 plugin_git	fork_repositories_path	Choisissez le chemin pour les forks
 plugin_git	fork_repositories_placeholder	Entrer un chemin ou laissez vide
+plugin_git	fork_malformed_path	Le chemin ne peut pas contenir (..)
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
 project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1

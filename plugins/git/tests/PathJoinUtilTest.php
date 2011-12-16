@@ -48,6 +48,22 @@ class PathJoinUtilTest extends UnitTestCase {
     function testAllEmptyElementsAreIgnored() {
         $this->assertEqual('toto/0', unixPathJoin(array('', null, 'toto', '0')));
     }
+    
+    function testUserRepoPath_IsPrefixedByUsername() {
+        $this->assertEqual('u/nicolas', userRepoPath('nicolas', ''));
+        $this->assertEqual('u/nicolas/toto', userRepoPath('nicolas', 'toto'));
+    }
+    function testUserRepoPath_ComplainsWhenThereAreDoubleDots() {
+        $this->expectException('MalformedPathException');
+        userRepoPath('nicolas', '..');
+    }
+    function testUserRepoPath_ComplainsWhenUserTriesToByPathItsHomeDirectory() {
+        $this->expectException('MalformedPathException');
+        $this->assertEqual('u/nicolas/root', userRepoPath('nicolas', '/users/../root'));
+    }
+    // ''     => u/nicolas
+    // toto   => u/nicolas/toto
+    //removes .. in the path
 }
 
 ?>

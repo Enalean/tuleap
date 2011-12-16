@@ -19,23 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'MalformedPathException.class.php';
-
-function notEmpty($e) {
-    return !empty($e) || $e === '0';
+class MalformedPathException extends Exception {
 }
 
-function unixPathJoin($elements) {
-    
-    $path = implode('/', array_filter($elements, 'notEmpty'));
-    return preg_replace('%/{1,}%',"/", $path);    
-}
-
-function userRepoPath($username, $namespace) {
-    $path = unixPathJoin(array('u', $username, $namespace));
-    if (strpos($path, '..') !== false) {
-        throw new MalformedPathException();
-    }
-    return $path;
-}
 ?>

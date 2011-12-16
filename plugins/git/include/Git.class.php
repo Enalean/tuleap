@@ -316,27 +316,32 @@ class Git extends PluginController {
                 $this->addView('forkRepositories');
                 break;
             case 'do_fork_repositories':
-                $this->addAction('getProjectRepositoryList', array($this->groupId));
-                $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
-                $token->check();
-                
-                $path      = '';
-                $repos_ids = array();
-                
-                $valid = new Valid_String('path');
-                $valid->required();
-                if($this->request->valid($valid)) {
-                    $path = trim($this->request->get('path'));
+                try {
+                    $this->addAction('getProjectRepositoryList', array($this->groupId));
+                    $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
+                    $token->check();
+
+                    $repos_ids = array();
+
+                    $valid = new Valid_String('path');
+                    $valid->required();
+
+                    $path      = '';
+                    if($this->request->valid($valid)) {
+                        $path = trim($this->request->get('path'));
+                    }
+                    $path = userRepoPath($user->getUserName(), $path);
+                    
+                    $valid = new Valid_UInt('repos');
+                    $valid->required();
+                    if($this->request->validArray($valid)) {
+                        $repos_ids = $this->request->get('repos');
+                    }
+
+                    $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path, $user));
+                } catch (MalformedPathException $e) {
+                    $this->addError($this->getText('fork_malformed_path'));
                 }
-                $path = 'u/'. $user->getUserName() .'/'. $path;
-                
-                $valid = new Valid_UInt('repos');
-                $valid->required();
-                if($this->request->validArray($valid)) {
-                    $repos_ids = $this->request->get('repos');
-                }
-                
-                $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path, $user));
                 $this->addView('forkRepositories');
                 break;
             #LIST
