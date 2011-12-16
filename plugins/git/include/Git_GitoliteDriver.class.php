@@ -25,6 +25,8 @@ require_once 'common/permission/PermissionsManager.class.php';
 require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
 require_once 'exceptions/Git_Command_Exception.class.php';
+require_once 'PathJoinUtil.php';
+
 
 /**
  * This class manage the interaction between Tuleap and Gitolite
@@ -44,6 +46,10 @@ class Git_GitoliteDriver {
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
+
+    public function repoFullName($row, $unix_name) {
+        return unixPathJoin(array($unix_name, $row[GitDao::REPOSITORY_NAMESPACE], $row[GitDao::REPOSITORY_NAME]));
+    }
 
     /**
      * Constructor
@@ -341,7 +347,7 @@ class Git_GitoliteDriver {
             $notifMgr = $this->getPostReceiveMailManager();
             foreach ($dar as $row) {
                 // Name of the repo
-                $perms .= 'repo '. $project->getUnixName(). '/' . $row[GitDao::REPOSITORY_NAME] . PHP_EOL;
+                $perms .= 'repo '. $this->repoFullName($row, $project->getUnixName()) . PHP_EOL;
 
                 $repository = new GitRepository();
                 $repository->setId($row[GitDao::REPOSITORY_ID]);
@@ -481,7 +487,9 @@ class Git_GitoliteDriver {
         if (!is_dir($target)) {
             $cmd = 'git clone --bare '. $source .' '. $target;
             
-            return $this->gitCmd($cmd);
+            $clone_result = $this->gitCmd($cmd);
+            system('cd '.$this->getRepositoriesPath().' && cp -f '.$source.'/hooks/* '.$target.'/hooks/');
+            return $clone_result;
         }
         return false;
     }

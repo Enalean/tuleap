@@ -278,8 +278,8 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         // List all repo
         $dao = new MockGitDao();
         $dao->expectOnce('getAllGitoliteRespositories', array(404));
-        $dao->setReturnValue('getAllGitoliteRespositories', $this->arrayToDar(array('repository_id' => 4, 'repository_name' => 'test_default', 'repository_events_mailing_prefix' => "[SCM]"),
-                                                                              array('repository_id' => 5, 'repository_name' => 'test_pimped', 'repository_events_mailing_prefix' => "[KOIN] ")
+        $dao->setReturnValue('getAllGitoliteRespositories', $this->arrayToDar(array('repository_id' => 4, 'repository_name' => 'test_default', 'repository_namespace' => '', 'repository_events_mailing_prefix' => "[SCM]"),
+                                                                              array('repository_id' => 5, 'repository_name' => 'test_pimped', 'repository_namespace' => '', 'repository_events_mailing_prefix' => "[KOIN] ")
                                                             )
         );
         $driver->setReturnValue('getDao', $dao);
@@ -316,6 +316,16 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
     
+    function testRepoFullNameConcats_UnixProjectName_Namespace_And_Name() {
+        $driver = new Git_GitoliteDriver();
+        $unix_name = 'project1';
+        
+        $row = array(GitDao::REPOSITORY_NAMESPACE => 'toto', GitDao::REPOSITORY_NAME =>'repo');
+        $this->assertEqual('project1/toto/repo', $driver->repoFullName($row, $unix_name));
+        
+        $row = array(GitDao::REPOSITORY_NAMESPACE => '', GitDao::REPOSITORY_NAME =>'repo');
+        $this->assertEqual('project1/repo', $driver->repoFullName($row, $unix_name));
+    }
     /**/
     function testRenameProject() {
         $driver = $this->getPartialMock('Git_GitoliteDriver', array('gitPush'));
@@ -353,13 +363,17 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         
         mkdir($old_root_dir, 0770, true);
         exec('GIT_DIR='. $old_root_dir .' git --bare init --shared=group');
+        exec('cd '.$old_root_dir.' && touch hooks/gitolite_hook.sh');
+        
         
         $driver = new Git_GitoliteDriver($this->_glAdmDir);
+        
         $this->assertTrue($driver->fork($name, $old_ns, $new_ns));
         
         $this->assertTrue(is_dir($new_root_dir), "the new git repo dir ($new_root_dir) wasn't found.");
         $new_repo_HEAD = $new_root_dir .'/HEAD';
         $this->assertTrue(file_exists($new_repo_HEAD), 'the file ('. $new_repo_HEAD .') does not exists');
+        $this->assertTrue(file_exists($new_root_dir .'/hooks/gitolite_hook.sh'), 'the hook file wasn\'t copied to the fork');
     }
     
     public function testForkShouldNotCloneOnExistingRepositories() {
