@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS `plugin_git` (
   `repository_access` varchar(255) NOT NULL default 'private',
   `repository_events_mailing_prefix` varchar(64) DEFAULT '[SCM]',
   `repository_backend_type` varchar(16) DEFAULT 'gitshell',
-  user_id INT(11) NULL,
+  `repository_scope` varchar(1) NOT NULL,
+  `repository_namespace` varchar(255),
   PRIMARY KEY  (`repository_id`),
   KEY `project_id` (`project_id`)
 );
