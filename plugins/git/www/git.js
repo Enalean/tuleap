@@ -19,11 +19,11 @@ document.observe('dom:loaded', function () {
     if (fork_repositories_prefix) {
         var tpl = new Template('<div>' + $F('fork_repositories_prefix') + '/#{path}#{repo}</div>');
         var table = fork_repositories_prefix.up('table');
-        table.down('thead > tr > td', 1).insert({ after: '<td><label style="font-weight: bold;">Preview</label></td>'});
-        var preview = new Element('td', {
-            style: 'color: #999'
+        table.down('thead > tr > td', 2).update('<label style="font-weight: bold;">Preview</label>');
+        var preview = new Element('div', {
+                style: 'color: #999; border-bottom: 1px solid #EEE; margin-bottom:0.5em; padding-bottom:0.5em;'
         });
-        table.down('tbody > tr > td', 1).insert({ after: preview });
+        table.down('tbody > tr > td', 2).insert({ top: preview });
         
         new PeriodicalExecuter(function () {
             var p = {

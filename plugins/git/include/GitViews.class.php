@@ -653,12 +653,12 @@ class GitViews extends PluginViews {
         echo '</td>';
         
         echo '<td>';
-        echo '<input type="text" size="30" placeholder="'. $this->getText('fork_repositories_placeholder') .'" id="fork_repositories_path" name="path" />';
+        echo '<input type="text" placeholder="'. $this->getText('fork_repositories_placeholder') .'" id="fork_repositories_path" name="path" />';
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
         echo '</td>';
         
         echo '<td>';
-        echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        echo '<input type="submit" value="'. $this->getText('fork_repositories_submit') .'" />';
         echo '</td>';
         
         echo '</tr></tbody></table>';
