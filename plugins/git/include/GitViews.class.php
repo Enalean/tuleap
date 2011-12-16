@@ -595,8 +595,13 @@ class GitViews extends PluginViews {
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_home').'</b>', '/plugins/git/?group_id='.$this->groupId, 'class=""');
         echo ' | ';
         
-        echo $this->linkTo( '<b>'.$this->getText('fork_repositories').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=fork_repositories', 'class=""');
-        echo ' | ';
+        
+        if ($this->user->useLabFeatures()) {
+            echo '<span class="lab_features" title="'. $this->getText('admin_reference_creation_lab_feature') .'">';
+            echo $this->linkTo( '<b>'.$this->getText('fork_repositories').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=fork_repositories', 'class=""');
+            echo ' | ';
+            echo '</span>';
+        }
         
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/documentation/user_guide/html/'.$this->user->getLocale().'/VersionControlWithGit.html\')');
     }
