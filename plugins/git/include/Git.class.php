@@ -338,7 +338,7 @@ class Git extends PluginController {
                         $repos_ids = $this->request->get('repos');
                     }
 
-                    $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path, $user));
+                    $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path, $user, $GLOBALS['HTML']));
                 } catch (MalformedPathException $e) {
                     $this->addError($this->getText('fork_malformed_path'));
                 }

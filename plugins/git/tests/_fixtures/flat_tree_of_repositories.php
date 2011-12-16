@@ -141,8 +141,8 @@ $repositories = array(
     8 => 
     array (
       'repository_id' => '8',
-      'repository_name' => 'lxc',
-      'repository_namespace' => 'tools',
+      'repository_name' => 'lxc/tools',
+      'repository_namespace' => '',
       'repository_description' => '-- Default description --',
       'repository_path' => 'ngt/tools/lxc.git',
       'repository_parent_id' => '0',
@@ -154,6 +154,23 @@ $repositories = array(
       'repository_access' => 'private',
       'repository_events_mailing_prefix' => '[SCM]',
       'repository_backend_type' => 'gitolite',
+    ),
+    9 => 
+    array (
+      'repository_id' => '9',
+      'repository_name' => 'gitshell',
+      'repository_namespace' => '',
+      'repository_description' => '-- Default description --',
+      'repository_path' => 'ngt/gitshell.git',
+      'repository_parent_id' => '0',
+      'project_id' => '101',
+      'repository_creation_user_id' => '102',
+      'repository_creation_date' => '2011-12-06 17:25:46',
+      'repository_deletion_date' => '0000-00-00 00:00:00',
+      'repository_is_initialized' => '0',
+      'repository_access' => 'private',
+      'repository_events_mailing_prefix' => '[SCM]',
+      'repository_backend_type' => 'gitshell',
     ),
 );
 ?>

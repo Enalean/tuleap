@@ -78,7 +78,10 @@ class GitViewsRepositoriesTraversalStrategy_Selectbox extends GitViewsRepositori
      * @return string the $inner encapsulated in its own wrapper
      */
     protected function getItemWrapper(GitRepository $repo, $inner) {
-        return '<option value="'. $repo->getId() .'">'. $inner .'</option>';
+        if ($repo->getBackend() instanceof Git_Backend_Gitolite) {
+            return '<option value="'. $repo->getId() .'">'. $inner .'</option>';
+        }
+        return '';
     }
     
     /**

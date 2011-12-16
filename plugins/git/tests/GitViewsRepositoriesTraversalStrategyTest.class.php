@@ -53,13 +53,15 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends UnitTestCase {
     protected function getFlatTree($strategy) {
         //go find the variable $repositories
         include dirname(__FILE__) .'/_fixtures/flat_tree_of_repositories.php'; 
-        
+        $gitolite_backend = new MockGit_Backend_Gitolite();
         foreach ($repositories as $row) {
             $r = new MockGitRepository();
             $r->setReturnValue('getId', $row['repository_id']);
             $r->setReturnValue('getDescription', $row['repository_description']);
             $r->setReturnValue('userCanRead', true);
-            
+            if ($row['repository_backend_type'] == 'gitolite') {
+                $r->setReturnValue('getBackend', $gitolite_backend);
+            }
             $strategy->setReturnValue('getRepository', $r, array($row));
         }
         return $repositories;

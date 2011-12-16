@@ -30,6 +30,7 @@ require_once('GitDao.class.php');
 require_once('Git_GitoliteDriver.class.php');
 require_once('Git_Backend_Gitolite.class.php');
 require_once('GitRepositoryFactory.class.php');
+require_once('common/layout/Layout.class.php');
 
 
 /**
@@ -518,10 +519,11 @@ class GitActions extends PluginActions {
      * @param array  $repos_ids The array of id of repositories to fork
      * @param string $path      The path where the new repositories will live
      * @param User   $user      The owner of those new repositories
+     * @param Layout $response  The response object
      *
-     * @return true if at least one repository has been cloned
+     * @return bool false if no repository has been cloned
      */
-    function forkRepositories($groupId, array $repos_ids, $path, User $user) {
+    function forkRepositories($groupId, array $repos_ids, $path, User $user, Layout $response) {
         $c = $this->getController();
         if(empty($repos_ids)){
             $c->addError($this->getText('actions_no_repository_selected'));
@@ -537,6 +539,9 @@ class GitActions extends PluginActions {
                 }
             }
             $success = $nb_forked > 0;
+        }
+        if ($success) {
+            $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
         }
         return $success;
     }

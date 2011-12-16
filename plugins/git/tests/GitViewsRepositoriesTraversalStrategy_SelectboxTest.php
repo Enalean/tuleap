@@ -30,10 +30,16 @@ class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsReposi
     }
     
     public function getExpectedPattern($repositories) {
-        $li_regexp_for_repository_representation = '<option value="(?P<value>.*)">(?P<repo>[^\(]*)</option>';
-        $nb_repositories                         = count($repositories);
+        $nb_repositories = count($repositories);
+        foreach ($repositories as $r) {
+            if ($r['repository_backend_type'] == 'gitshell') {
+                $nb_repositories--;
+            }
+        }
+        $li_regexp_for_repository_representation = '<option value="(?P<value>[^"]*)">(?P<repo>[^\(<]*)</option>';
         
-        return sprintf('<select (?P<args>.*)>(?:%s){%d}</select>', $li_regexp_for_repository_representation, $nb_repositories);
+        $pattern = sprintf('<select (?P<args>[^>]*)>(?:%s){%d}</select>', $li_regexp_for_repository_representation, $nb_repositories);
+        return $pattern;
     }
     
     
