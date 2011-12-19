@@ -353,7 +353,9 @@ class Git_GitoliteDriverTest extends UnitTestCase {
     }
     
     function testFork_CloneEmptyToSpecifiedPath() {
-        if (posix_getgrnam('gitolite') != false) {
+        if (posix_getgrnam('gitolite') == false) {
+            echo "testFork_CloneEmptyToSpecifiedPath: Cannot test 'cause there is no 'gitolite' user on server (CI)";
+        } else {
             $name = 'tulip';
             $new_ns = 'repos/new/repo/';
             $old_ns = 'repos/';
@@ -371,8 +373,6 @@ class Git_GitoliteDriverTest extends UnitTestCase {
             $this->assertRepoIsClonedWithHooks($new_root_dir);
 
             $this->assertWritableByGroup($new_root_dir, 'gitolite');
-        } else {
-            echo "testFork_CloneEmptyToSpecifiedPath: Cannot test 'cause there is no 'gitolite' user on server (CI)";
         }
     }
     
