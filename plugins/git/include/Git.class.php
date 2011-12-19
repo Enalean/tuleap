@@ -133,6 +133,15 @@ class Git extends PluginController {
                     $this->addPermittedAction('view');
                     $this->addPermittedAction('edit');
                     $this->addPermittedAction('clone');
+                    if ($repo->belongsTo($user)) {
+                        $this->addPermittedAction('repo_management');
+                        $this->addPermittedAction('mail_prefix');
+                        $this->addPermittedAction('add_mail');
+                        $this->addPermittedAction('remove_mail');
+                        $this->addPermittedAction('del');
+                        $this->addPermittedAction('confirm_deletion');
+                        $this->addPermittedAction('save');
+                    }
                 }
             }
         }

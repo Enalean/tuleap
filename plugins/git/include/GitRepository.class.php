@@ -794,6 +794,17 @@ class GitRepository implements DVCSRepository {
         $repositoryPath = $this->getBackend()->getGitRootPath().'/'.$this->getPath();
         return ($this->isSubPath($referencePath, $repositoryPath) && $this->isDotGit($repositoryPath));
     }
+    
+    /**
+     * Say if a repo belongs to a user
+     *
+     * @param User $user the user
+     *
+     * @return true if the repo is a personnal rep and if it is created by $user
+     */
+    public function belongsTo(User $user) {
+        return $this->getScope() == self::REPO_SCOPE_INDIVIDUAL && $this->getCreatorId() == $user->getId();
+    }
 }
 
 ?>

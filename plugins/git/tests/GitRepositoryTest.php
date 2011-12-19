@@ -290,6 +290,40 @@ class GitRepositoryTest extends UnitTestCase {
         return $repo;
     }
 
+    public function testProjectRepositoryDosNotBelongToUser() {
+        $user = new User(array('language_id' => 1));
+        $user->setUserName('sandra');
+        
+        $repo = new GitRepository();
+        $repo->setCreator($user);
+        $repo->setScope(GitRepository::REPO_SCOPE_PROJECT);
+        
+        $this->assertFalse($repo->belongsTo($user));
+    }
+    
+    public function testUserRepositoryBelongsToUser() {
+        $user = new User(array('language_id' => 1));
+        $user->setUserName('sandra');
+        
+        $repo = new GitRepository();
+        $repo->setCreator($user);
+        $repo->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
+        
+        $this->assertTrue($repo->belongsTo($user));
+    }
+    public function testUserRepositoryDoesNotBelongToAnotherUser() {
+        $creator = new User(array('language_id' => 1));
+        $creator->setId(123);
+        
+        $user = new User(array('language_id' => 1));
+        $user->setId(456);
+        
+        $repo = new GitRepository();
+        $repo->setCreator($creator);
+        $repo->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
+        
+        $this->assertFalse($repo->belongsTo($user));
+    }
 }
 
 ?>
