@@ -624,7 +624,7 @@ class GitViews extends PluginViews {
         $params = $this->getData();
         $this->_getBreadCrumb();
         echo '<h2>'. $this->getText('fork_repositories') .'</h2>';
-        echo '<div class="help"><p>'. $this->getText('fork_repositories_desc') .'</p></div>';
+        echo '<p>'. $this->getText('fork_repositories_desc') .'</p>';
         
         echo '<form action="" method="POST">';
         echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
@@ -632,22 +632,22 @@ class GitViews extends PluginViews {
         $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
         echo $token->fetchHTMLInput();
         
-        echo '<table>';
+        echo '<table id="fork_repositories" cellspacing="0">';
         echo '<thead>';
         echo '<tr valign="top">';
-        echo '<td>';
+        echo '<td class="first">';
         echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label>';
         echo '</td>';
         echo '<td>';
         echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label>';
         echo '</td>';
-        echo '<td>&nbsp;</td>';
+        echo '<td class="last">&nbsp;</td>';
         echo '</tr>';
         echo '</thead>';
         
         
         echo '<tbody><tr valign="top">';
-        echo '<td>';
+        echo '<td class="first">';
         $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
         echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
         echo '</td>';
@@ -657,7 +657,7 @@ class GitViews extends PluginViews {
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
         echo '</td>';
         
-        echo '<td>';
+        echo '<td class="last">';
         echo '<input type="submit" value="'. $this->getText('fork_repositories_submit') .'" />';
         echo '</td>';
         

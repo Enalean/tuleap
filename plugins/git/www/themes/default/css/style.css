@@ -134,3 +134,20 @@ td.plugin_git_first_col {
     padding-right:1em; 
 } 
 
+#fork_repositories {
+    border-collapse: collapse;
+}
+#fork_repositories td {
+    padding-left: 1em;
+    border-left: 1px solid #ccc;
+    padding-right: 1em;
+    border-right: 1px solid #ccc;
+}
+#fork_repositories td.first {
+    padding-left: 0em;
+    border-left: none;
+}
+#fork_repositories td.last {
+    padding-right: 0em;
+    border-right: none;
+}
