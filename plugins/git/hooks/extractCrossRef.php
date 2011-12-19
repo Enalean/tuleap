@@ -22,6 +22,8 @@
  * Usage: php extractCrossRef.php --group_name="gpig" --login="disciplus_simplex" --type="git_commit" --rev_id="gpig/64bf3ca"
  */
 
+require_once('ExtractCrossRef.class.php');
+
 // Check script parameters
 if ($argc != 5) {
     error("Wrong number of arguments");
@@ -34,7 +36,7 @@ foreach ($argv as $arg) {
     }
 }
 
-foreach (array('group_name', 'login', 'type', 'rev_id') as $p) {
+foreach (array('repo_path', 'login', 'type', 'rev_id') as $p) {
     if (!isset($params[$p]) || $params[$p] == "") {
         error("Missing parameter '$p'. (Argv: ".implode(' ', $argv).")");
     }
@@ -42,12 +44,14 @@ foreach (array('group_name', 'login', 'type', 'rev_id') as $p) {
 
 // Get stdin
 $text = file_get_contents('php://stdin');
+$extractor = new ExtractCrossRef();
+$group_name = $extractor->getProjectName($params['repo_path']);
 
 $ch = curl_init();
 
 curl_setopt($ch, CURLOPT_URL, 'http://localhost/api/reference/extractCross');
 curl_setopt($ch, CURLOPT_USERAGENT, 'Codendi Perl Agent');
-curl_setopt($ch, CURLOPT_POSTFIELDS, 'group_name='.$params['group_name'].'&login='.$params['login'].'&type='.$params['type'].'&rev_id='.$params['rev_id'].'&text='.urlencode($text));
+curl_setopt($ch, CURLOPT_POSTFIELDS, 'group_name='.$group_name.'&login='.$params['login'].'&type='.$params['type'].'&rev_id='.$params['rev_id'].'&text='.urlencode($text));
 
 // Output
 
