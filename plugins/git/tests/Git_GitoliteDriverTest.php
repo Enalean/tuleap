@@ -354,7 +354,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
     
     function testFork_CloneEmptyToSpecifiedPath() {
         var_dump(posix_getgrnam('gitolite'));
-        $this->skipIf(false == false, "Cannot test if there is no 'gitolite' user on server (CI)");
+        $this->skipIf(true == false, "Cannot test if there is no 'gitolite' user on server (CI)");
         
         $name = 'tulip';
         $new_ns = 'repos/new/repo/';
