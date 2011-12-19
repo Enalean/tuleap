@@ -330,8 +330,10 @@ class GitPlugin extends Plugin {
                     $repository->setId($params['object_id']);
                     try {
                         $repository->load();
-                        //Only project admin can update perms
-                        $this->_cached_permission_user_allowed_to_change = UserManager::instance()->getCurrentUser()->isMember($repository->getProjectId(), 'A');
+                        //Only project admin can update perms of project repositories
+                        //Only repo owner can update perms of personal repositories
+                        $user = UserManager::instance()->getCurrentUser();
+                        $this->_cached_permission_user_allowed_to_change = $repository->belongsTo($user) || $user->isMember($repository->getProjectId(), 'A');
                     } catch (Exception $e) {
                         // do nothing
                     }
