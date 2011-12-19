@@ -481,7 +481,7 @@ class Git_GitoliteDriver {
     }
     
     public function fork($repo, $old_ns, $new_ns){
-        //unixPathJoin
+
         $source = unixPathJoin(array($this->getRepositoriesPath(),$old_ns, $repo)) .'.git';
         $target = unixPathJoin(array($this->getRepositoriesPath(),$new_ns, $repo)) .'.git';
         if (!is_dir($target)) {
@@ -491,6 +491,7 @@ class Git_GitoliteDriver {
             $copyHooks  = 'cd '.$this->getRepositoriesPath().'; ';
             $copyHooks .= 'sg - gitolite -c "cp -f '.$source.'/hooks/* '.$target.'/hooks/"';
             $this->gitCmd($copyHooks);
+            
             return $clone_result;
         }
         return false;

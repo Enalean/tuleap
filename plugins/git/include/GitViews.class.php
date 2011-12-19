@@ -596,7 +596,7 @@ class GitViews extends PluginViews {
         echo ' | ';
         
         
-        if ($this->user->useLabFeatures()) {
+        if ($this->user->isMember($this->groupId) && $this->user->useLabFeatures()) {
             echo '<span class="lab_features" title="'. $this->getText('admin_reference_creation_lab_feature') .'">';
             echo $this->linkTo( '<b>'.$this->getText('fork_repositories').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=fork_repositories', 'class=""');
             echo ' | ';
