@@ -47,8 +47,8 @@ class Git_GitoliteDriver {
     protected $confFilePath;
     protected $adminPath;
 
-    public function repoFullName($row, $unix_name) {
-        return unixPathJoin(array($unix_name, $row[GitDao::REPOSITORY_NAMESPACE], $row[GitDao::REPOSITORY_NAME]));
+    public function repoFullName(GitRepository $repo, $unix_name) {
+        return unixPathJoin(array($unix_name, $repo->getFullName()));
     }
 
     /**
@@ -346,16 +346,17 @@ class Git_GitoliteDriver {
             $pm       = $this->getPermissionsManager();
             $notifMgr = $this->getPostReceiveMailManager();
             foreach ($dar as $row) {
-                // Name of the repo
-                $perms .= 'repo '. $this->repoFullName($row, $project->getUnixName()) . PHP_EOL;
-
                 $repository = new GitRepository();
                 $repository->setId($row[GitDao::REPOSITORY_ID]);
                 $repository->setName($row[GitDao::REPOSITORY_NAME]);
                 $repository->setProject($project);
                 $repository->setNotifiedMails($notifMgr->getNotificationMailsByRepositoryId($row[GitDao::REPOSITORY_ID]));
                 $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
+                $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
 
+                // Name of the repo
+                $perms .= 'repo '. $this->repoFullName($repository, $project->getUnixName()) . PHP_EOL;
+                
                 // Hook config
                 $perms .= $this->fetchMailHookConfig($project, $repository);
 

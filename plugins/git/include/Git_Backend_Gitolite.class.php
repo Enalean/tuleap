@@ -83,11 +83,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      */
     public function getAccessUrl(GitRepository $repository) {
         $serverName = $_SERVER['SERVER_NAME'];
-        $namespace  = $repository->getNamespace();
-        if ($namespace) {
-            $namespace .= '/';
-        }
-        return  'gitolite@'.$serverName.':'.$repository->getProject()->getUnixName().'/'.$namespace.$repository->getName().'.git';
+        return  'gitolite@'.$serverName.':'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
     }
 
     /**

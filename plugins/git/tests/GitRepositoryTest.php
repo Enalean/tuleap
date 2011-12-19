@@ -35,9 +35,6 @@ Mock::generate('DataAccessResult');
 
 class GitRepositoryTest extends UnitTestCase {
 
-    
-
-    
     public function setUp() {
         $link =dirname(__FILE__).'/_fixtures/tmp/perms';
         if (file_exists($link)) {
@@ -287,6 +284,21 @@ class GitRepositoryTest extends UnitTestCase {
         $repo->setBackend($backend);
         $repo->setProject($project);
         
+        return $repo;
+    }
+    
+    public function testGetFullName_appendsNameSpaceToName() {
+        $repo = $this->_GivenARepositoryWithNameAndNamespace('tulip', null);
+        $this->assertEqual('tulip', $repo->getFullName());
+        
+        $repo = $this->_GivenARepositoryWithNameAndNamespace('tulip', 'u/johan');
+        $this->assertEqual('u/johan/tulip', $repo->getFullName());
+    }
+
+    protected function _GivenARepositoryWithNameAndNamespace($name, $namespace) {
+        $repo = new GitRepository();
+        $repo->setName($name);
+        $repo->setNamespace($namespace);
         return $repo;
     }
 

@@ -343,17 +343,38 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
-     * @return String;
+     * Return repository name. Consider using getFullName instead
+     * 
+     * @see GitRepository::getFullName
+     * 
+     * @return String
      */
     public function getName() {
         return $this->name;
     }
     
+    /**
+     * Return repository namespace. Consider using getFullName instead
+     * 
+     * @see GitRepository::getFullName
+     * 
+     * @return String
+     */
     public function getNamespace() {
         return $this->namespace;
-    }    
+    }
+    
     public function setNamespace($namespace) {
         $this->namespace = $namespace;
+    }
+    
+    /**
+     * Return relative path from project repository root (without .git)
+     * 
+     * @return String
+     */
+    public function getFullName() {
+        return unixPathJoin(array($this->getNamespace(), $this->getName()));
     }
     
 
@@ -467,7 +488,10 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
-     * Gives the full relative path (from git root directory) to the repository
+     * Gives the full relative path (from git root directory) to the repository. Consider using getFullName instead.
+     * 
+     * @see GitRepository::getFullName
+     * 
      * @return String
      */
     public function getPath() {

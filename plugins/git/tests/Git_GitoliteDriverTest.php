@@ -317,15 +317,22 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
     
+    protected function _GivenARepositoryWithNameAndNamespace($name, $namespace) {
+        $repo = new GitRepository();
+        $repo->setName($name);
+        $repo->setNamespace($namespace);
+        return $repo;
+    }
+    
     function testRepoFullNameConcats_UnixProjectName_Namespace_And_Name() {
         $driver = new Git_GitoliteDriver();
         $unix_name = 'project1';
         
-        $row = array(GitDao::REPOSITORY_NAMESPACE => 'toto', GitDao::REPOSITORY_NAME =>'repo');
-        $this->assertEqual('project1/toto/repo', $driver->repoFullName($row, $unix_name));
+        $repo = $this->_GivenARepositoryWithNameAndNamespace('repo', 'toto');
+        $this->assertEqual('project1/toto/repo', $driver->repoFullName($repo, $unix_name));
         
-        $row = array(GitDao::REPOSITORY_NAMESPACE => '', GitDao::REPOSITORY_NAME =>'repo');
-        $this->assertEqual('project1/repo', $driver->repoFullName($row, $unix_name));
+        $repo = $this->_GivenARepositoryWithNameAndNamespace('repo', '');
+        $this->assertEqual('project1/repo', $driver->repoFullName($repo, $unix_name));
     }    
 
     function testRenameProject() {
