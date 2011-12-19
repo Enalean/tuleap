@@ -20,7 +20,7 @@ document.observe('dom:loaded', function () {
         var submit = fork_repositories_prefix.up('form').down('input[type=submit]');
         var tpl = new Template('<div>' + $F('fork_repositories_prefix') + '/#{path}#{repo}</div>');
         var table = fork_repositories_prefix.up('table');
-        table.down('thead > tr > td', 2).update('<label style="font-weight: bold;">Preview</label>');
+        table.down('thead > tr > td', 2).update('<label style="font-weight: bold;">'+ codendi.locales.git.preview +'</label>');
         var preview = new Element('div', {
                 style: 'color: #999; border-bottom: 1px solid #EEE; margin-bottom:0.5em; padding-bottom:0.5em;'
         });

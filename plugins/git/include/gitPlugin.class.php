@@ -36,6 +36,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('site_admin_option_hook',                          'siteAdminHooks',                  false);
         $this->_addHook('cssfile',                                         'cssFile',                         false);
         $this->_addHook('javascript_file',                                 'jsFile',                          false);
+        $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                      false);
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,                     'getSystemEventClass',             false);
         $this->_addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,  'getReferenceKeywords',            false);
         $this->_addHook('get_available_reference_natures',                 'getReferenceNatures',             false);
@@ -90,6 +91,10 @@ class GitPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/git.js"></script>';
         }
+    }
+    
+    public function javascript($params) {
+        include $GLOBALS['Language']->getContent('script_locale', null, 'git');
     }
 
     /**

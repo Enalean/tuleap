@@ -144,7 +144,7 @@ plugin_git	perm_W	Write
 plugin_git	perm_W+	Rewind
 
 plugin_git	fork_repositories	Fork repositories
-plugin_git	fork_repositories_desc	You can create personal forks of various repositories. Permissions on the new repositories will not inherit from parent. <!-- By personal we means that you will be solely responsible of push inside those personal repositories. Read access will be inherited from parent repositories. -->
+plugin_git	fork_repositories_desc	You can create personal forks of various repositories. <div class="lab_features"> This is an experimental feature that will evolve. For now, permissions on the new repositories do not inherit from parent, but have default ones.</div>
 plugin_git	fork_repositories_select	Select repositories to fork
 plugin_git	fork_repositories_path	Choose the path for the forks
 plugin_git	fork_repositories_placeholder	Enter a path or leave it blank

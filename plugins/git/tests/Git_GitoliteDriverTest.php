@@ -395,6 +395,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
     protected function _getFileGroupName($filePath) {
         clearstatcache();
         $rootStats = stat($filePath);
+        var_dump($rootStats);
         $groupInfo = posix_getgrgid($rootStats[5]);
         return $groupInfo['name'];
     }
