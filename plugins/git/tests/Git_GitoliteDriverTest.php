@@ -371,6 +371,8 @@ class Git_GitoliteDriverTest extends UnitTestCase {
             $this->assertRepoIsClonedWithHooks($new_root_dir);
 
             $this->assertWritableByGroup($new_root_dir, 'gitolite');
+        } else {
+            echo "testFork_CloneEmptyToSpecifiedPath: Cannot test 'cause there is no 'gitolite' user on server (CI)";
         }
     }
     
