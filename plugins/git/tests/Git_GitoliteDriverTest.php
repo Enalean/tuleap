@@ -353,26 +353,25 @@ class Git_GitoliteDriverTest extends UnitTestCase {
     }
     
     function testFork_CloneEmptyToSpecifiedPath() {
-        var_dump(posix_getgrnam('gitolite'));
-        $this->skipIf(true, "Cannot test if there is no 'gitolite' user on server (CI)");
-        
-        $name = 'tulip';
-        $new_ns = 'repos/new/repo/';
-        $old_ns = 'repos/';
-        $old_root_dir = $this->_fixDir .'/repositories/'. $old_ns . $name .'.git';
-        $new_root_dir = $this->_fixDir .'/repositories/'. $new_ns . $name .'.git';
-        
-        mkdir($old_root_dir, 0770, true);
-        exec('GIT_DIR='. $old_root_dir .' git init --bare --shared=group');
-        exec('cd '.$old_root_dir.' && touch hooks/gitolite_hook.sh');
-        
-        $driver = new Git_GitoliteDriver($this->_glAdmDir);
-        
-        $this->assertTrue($driver->fork($name, $old_ns, $new_ns));
+        if (posix_getgrnam('gitolite') != false) {
+            $name = 'tulip';
+            $new_ns = 'repos/new/repo/';
+            $old_ns = 'repos/';
+            $old_root_dir = $this->_fixDir .'/repositories/'. $old_ns . $name .'.git';
+            $new_root_dir = $this->_fixDir .'/repositories/'. $new_ns . $name .'.git';
 
-        $this->assertRepoIsClonedWithHooks($new_root_dir);
-        
-        $this->assertWritableByGroup($new_root_dir, 'gitolite');
+            mkdir($old_root_dir, 0770, true);
+            exec('GIT_DIR='. $old_root_dir .' git init --bare --shared=group');
+            exec('cd '.$old_root_dir.' && touch hooks/gitolite_hook.sh');
+
+            $driver = new Git_GitoliteDriver($this->_glAdmDir);
+
+            $this->assertTrue($driver->fork($name, $old_ns, $new_ns));
+
+            $this->assertRepoIsClonedWithHooks($new_root_dir);
+
+            $this->assertWritableByGroup($new_root_dir, 'gitolite');
+        }
     }
     
     private function assertWritableByGroup($new_root_dir, $group) {
