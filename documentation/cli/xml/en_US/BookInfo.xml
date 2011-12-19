@@ -116,21 +116,21 @@
       <revision>
         <revnumber>1.4.2</revnumber>
 
-        <date>29-Jul-2011</date>
-
-        <authorinitials>Hatem Ounis, Nouha Terzi</authorinitials>
-
-        <revremark>SVN access control validation</revremark>
-      </revision>
-
-      <revision>
-        <revnumber>1.4.3</revnumber>
-
         <date>27-Oct-2011</date>
 
         <authorinitials>Manuel Vacelet</authorinitials>
 
         <revremark>Update FRS usage description, error code, etc</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.5.0</revnumber>
+
+        <date>09-Dec-2011</date>
+
+        <authorinitials>Hatem Ounis</authorinitials>
+
+        <revremark>Add FRS functions to clean up empty releases and packages</revremark>
       </revision>
 
     </revhistory>

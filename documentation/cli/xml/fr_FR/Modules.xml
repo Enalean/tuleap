@@ -1471,6 +1471,10 @@ File retrieved successfully.
                         </para>
                     </listitem>
                     <listitem>
+                        <para>--remote_name: Pour retrouver le nom de fichier depuis le serveur au lieu d'utiliser --output.
+                        </para>
+                    </listitem>
+                    <listitem>
                         <para>--project : nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
                         </para>
                     </listitem>
@@ -1585,6 +1589,128 @@ File retrieved successfully.
 +---------+------------+-----------------+-----------+---------+--------------+--------------+---------...
                         </programlisting>
                     </example>
+               </para>
+            </para>
+        </section>
+
+        <section id="FRSFunctionDeleteEmptyPackage">
+            <title>deleteEmptyPackage</title>
+            <para>deleteEmptyPackage: Supprime le paquet s'il est vide 
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--package_id*: Identifiant du paquet à supprimer.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande deleteEmptyPackage</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs deleteEmptyPackage --package_id=288
++------------+----------+------+-----------+------+-----------------+
+| package_id | group_id | name | status_id | rank | approve_license |
++------------+----------+------+-----------+------+-----------------+
+| 288        | 104      | test | 1         | 5    |                 |
++------------+----------+------+-----------+------+-----------------+
+                        </programlisting>
+                    </example>
+                    <note>La valeur de retour représente les détails du paquet supprimé.</note>
+               </para>
+            </para>
+        </section>
+
+        <section id="FRSFunctionDeleteAllEmptyPackages">
+            <title>deleteAllEmptyPackages</title>
+            <para>deleteAllEmptyPackages: Supprime tous les paquets vides du projet
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                 </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande deleteAllEmptyPackages</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs deleteAllEmptyPackages
++------------+----------+------+-----------+------+-----------------+
+| package_id | group_id | name | status_id | rank | approve_license |
++------------+----------+------+-----------+------+-----------------+
+| 288        | 104      | test | 1         | 5    |                 |
+| 226        | 104      | pkg  | 1         | 6    |                 |
++------------+----------+------+-----------+------+-----------------+
+                        </programlisting>
+                    </example>
+                    <note>La valeur de retour est la liste des paquets supprimés.</note>
+               </para>
+            </para>
+        </section>
+
+        <section id="FRSFunctionDeleteEmptyRelease">
+            <title>deleteEmptyRelease</title>
+            <para>deleteEmptyRelease: Supprime la version si elle est vide.
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--package_id*: Id du paquet dans lequel les versions vides seront supprimées
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--release_id*: Identifiant de la version à supprimer.
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande deleteEmptyRelease</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs deleteEmptyRelease --package_id=288 --release_id=226
++------------+------------+---------------+-------+---------+-----------+--------------+-------------+
+| release_id | package_id |     name      | notes | changes | status_id | release_date | released_by |
++------------+------------+---------------+-------+---------+-----------+--------------+-------------+
+| 226        | 288        | empty release |       |         | 1         | 1323648000   | 103         |
++------------+------------+---------------+-------+---------+-----------+--------------+-------------+
+                        </programlisting>
+                    </example>
+                    <note>La valeur de retour représente les détails de la version supprimée.</note>
+               </para>
+            </para>
+        </section>
+
+        <section id="FRSFunctionDeleteAllEmptyReleases">
+            <title>deleteAllEmptyReleases</title>
+            <para>deleteAllEmptyReleases: Supprime toutes les versions vides du paquet
+                <itemizedlist mark="bullet">
+                    <listitem>
+                        <para>--project: Nom UNIX du projet. Si vous ne le spécifiez pas, le projet spécifié lors de la connexion sera utilisé. Si aucun projet n'a été spécifié lors du login, une erreur sera affichée.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--package_id*: Id du paquet dans lequel les versions vides seront supprimées
+                        </para>
+                    </listitem>
+                </itemizedlist>
+                <para>
+                    <example>
+                        <title>commande deleteAllEmptyReleases</title>
+                        <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+[ounis@linux codendi cli ]$ ./codendi.php frs deleteAllEmptyReleases --package_id=288
++------------+------------+---------------+-------+---------+-----------+--------------+-------------+
+| release_id | package_id |     name      | notes | changes | status_id | release_date | released_by |
++------------+------------+---------------+-------+---------+-----------+--------------+-------------+
+| 226        | 288        | empty release |       |         | 1         | 1323648000   | 103         |
+| 224        | 288        | empty         |       |         | 1         | 1323648000   | 103         |
++------------+------------+---------------+-------+---------+-----------+--------------+-------------+
+                        </programlisting>
+                    </example>
+                    <note>La valeur de retour est la liste des versions supprimées.</note>
                </para>
             </para>
         </section>
@@ -2061,6 +2187,10 @@ File uploaded successfully
                     </listitem>
 					<listitem>
                         <para>--output: Nom du fichier 
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>--remote_name: Pour retrouver le nom de fichier depuis le serveur au lieu d'utiliser --output.
                         </para>
                     </listitem>
                     <listitem>

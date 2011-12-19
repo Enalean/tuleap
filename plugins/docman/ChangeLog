@@ -1,3 +1,6 @@
+Version 2.20 - Tuleap 4.0.25
+    SOAP getDocmanTreeInfo return the filename for files and embedded files(contrib STMicroelectronics).
+
 Version 2.19
     Fix file type for files uploaded through soap.
 

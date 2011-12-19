@@ -36,6 +36,13 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
             'name'           => 'output',
             'description'    => '--output=<location>          (Optional) Name of the file to write the file to',
         ));
+        $this->addParam(array(
+            'name'           => 'remote_name',
+            'description'    => '--remote_name or -remote_name          (Optional) use this if you want to retrieve the filename from the server instead of using --output',
+            'parameters'     => array('remote_name'),
+            'value_required' => false,
+            'soap'           => false,
+        ));
 
     }
     
@@ -59,10 +66,13 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
     }
 
     // Manage screen/file output
-    function manageOutput($soap_output, &$output, &$fd) {
+    function manageOutput($soap_params, &$output, &$fd) {
         $output = false;
-            if ($soap_output) {
-            $output = $soap_output;
+            if ($soap_params['output']) {
+            $output = $soap_params['output'];
+        } elseif ($soap_params['remote_name']) {
+            $fileInfo = $GLOBALS['soap']->call('getDocmanTreeInfo', $soap_params);
+            $output   = $fileInfo[0]->filename;
         }
         if ($output !== false) {
             while (!($fd = @fopen($output, "wb"))) {
@@ -75,9 +85,14 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
         }
     }
 
+    function after_loadParams(&$loaded_params) {
+        $loaded_params['soap']['remote_name'] = $loaded_params['others']['remote_name'];
+    }
+
     function soapCall($soap_params, $use_extra_params = true) {
         // Prepare SOAP parameters
         $callParams = $soap_params;
+        unset($callParams['remote_name']);
         unset($callParams['output']);
         $callParams['chunk_offset']     = 0;
         $callParams['chunk_size'] = $GLOBALS['soap']->getFileChunkSize();
@@ -89,7 +104,7 @@ class CLI_Action_Docman_GetFile extends CLI_Action {
             $callParams['chunk_offset'] = $i * $GLOBALS['soap']->getFileChunkSize();
             $content = base64_decode($GLOBALS['soap']->call($this->soapCommand, $callParams, $use_extra_params));
             if ($i == 0) {
-                $this->manageOutput($soap_params['output'], $output, $fd);
+                $this->manageOutput($soap_params, $output, $fd);
             }
             $cLength = strlen($content);
             if ($output !== false) {

@@ -175,17 +175,23 @@ class Docman_SOAPActions extends Docman_Actions {
             $res = array();
             foreach ($itemList as $item) {
                 $type = $itemFactory->getItemTypeForItem($item);
-                if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type = PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
+                if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
                     $vf = $this->_getVersionFactory();
                     $nbVersions = count($vf->getAllVersionForItem($item));
+                    if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE) {
+                        $filename = $item->getCurrentVersion()->getFilename();
+                    } else {
+                        $filename = $item->getTitle().'.html';
+                    }
                 } else {
-                    $nbVersions = null; 
+                    $nbVersions = null;
+                    $filename   = null;
                 }
-                
                 $res[] = array(
                              'id'          => $item->getId(),
                              'parent_id'   => $item->getParentId(),
                              'title'       => $item->getTitle(),
+                             'filename'    => $filename,
                              'type'        => $type,
                              'nb_versions' => $nbVersions,
                          );

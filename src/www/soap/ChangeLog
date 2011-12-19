@@ -1,4 +1,13 @@
-4.1 - (Codendi_ST 4.0.16) 
+4.2 - Tuleap 4.0.25
+	What's new ?
+	============
+	* deleteEmptyPackage delete an empty package (ie. without releases).
+	* deleteAllEmptyPackages delete all empty packages of given project
+
+	* deleteEmptyRelease delete an empty release (ie. without files).
+	* deleteAllEmptyReleases delete all empty releases of given package
+
+4.1 - (Codendi_ST 4.0.16)
 	What Changed?
 	============
 	Types

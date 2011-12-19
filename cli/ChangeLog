@@ -1,3 +1,27 @@
+1.5.0 - SOAP api 4.2 (Tuleap 4.0.25)
+    What Changed?
+    ============
+    * frs getFile
+        Can retrieve the filename from the server if specified.
+
+    * docman getFile
+        Can retrieve the filename from the server if specified.
+
+    What's new ?
+    ============
+    * frs deleteEmptyPackage
+        Delete the specified package if empty
+
+    * frs deleteAllEmptyPackages
+        Delete all empty packages for a given project
+
+    * frs deleteEmptyRelease
+        Delete the specified release if empty
+
+    * frs deleteAllEmptyReleases
+        Delete all empty releases for a given package
+
+
 1.4.2 - SOAP api 4.1 (Tuleap 4.0.23)
     Bug fix
     =======

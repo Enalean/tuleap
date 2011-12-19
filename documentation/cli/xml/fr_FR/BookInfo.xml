@@ -116,21 +116,21 @@
       <revision>
         <revnumber>1.4.2</revnumber>
 
-        <date>29-Jul-2011</date>
-
-        <authorinitials>Hatem Ounis, Nouha Terzi</authorinitials>
-
-        <revremark>Validation du contole d'accés SVN</revremark>
-      </revision>
-
-      <revision>
-        <revnumber>1.4.3</revnumber>
-
         <date>27-Oct-2011</date>
 
         <authorinitials>Manuel Vacelet</authorinitials>
 
         <revremark>Complément d'information sur le FRS (retour d'erreur, usages).</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>1.5.0</revnumber>
+
+        <date>09-Dec-2011</date>
+
+        <authorinitials>Hatem Ounis</authorinitials>
+
+        <revremark>Ajout de quelques fonctions dans FRS pour assurer la suppression des releases  et packages vides</revremark>
       </revision>
 
     </revhistory>

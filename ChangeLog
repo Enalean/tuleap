@@ -6,9 +6,15 @@ Version 4.0.25 (Not released yet)
     * Even if not FRS admin, the project admin should have access like an FRS admin. (contrib STMicroelectronics)
 
     == Plugins ==
-    * Docman v2.19. See separated Changelog
+    * Docman v2.20. See separated Changelog
     * LDAP v3.9. See separated Changelog
     * Git v1.17. See separated Changelog
+
+    == SOAP ==
+    * API version 4.2. See separated Changelog
+
+    == CLI ==
+    * Version 1.5.0. See separated Changelog
 
 Version 4.0.24.1 (Not released yet)
     == Bug Fix ==

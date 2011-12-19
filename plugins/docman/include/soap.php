@@ -159,6 +159,7 @@ $GLOBALS['server']->wsdl->addComplexType(
         'id' => array('name'=>'id', 'type' => 'xsd:int'),
         'parent_id' => array('name'=>'parent_id', 'type' => 'xsd:int'),
         'title' => array('name'=>'title', 'type' => 'xsd:string'),
+        'filename' => array('name'=>'filename', 'type' => 'xsd:string'),
         'type' => array('name'=>'type', 'type' => 'xsd:string'),
         'nb_versions' => array('name'=>'nb_versions', 'type' => 'xsd:int'),
     )
@@ -702,7 +703,11 @@ function getDocmanFileChunk($sessionKey, $group_id, $item_id, $version_number, $
     
     return _makeDocmanRequest($sessionKey, $group_id, 'getFileChunk', $params);
 }
-$soapFunctions[] = array('getDocmanFileChunk', 'Download an  item', 'xsd:string');
+$soapFunctions[] = array('getDocmanFileChunk', 'Returns a part (chunk) of the content, encoded in base64, '.
+                                               'of the file/embedded file which id item_id of a given version version_number, '.
+                                               'if the version is not specified it will be the current one, in the project group_id.'.
+                                               'Returns an error if the group ID does not match with a valid project, or if the item ID '.
+                                               'does not match with the right group ID, or if the version number does not match with the item ID.', 'xsd:string');
 
 /**
  * Deletes a docman item
