@@ -121,6 +121,11 @@ class Git extends PluginController {
             );
         } else {
             $this->addPermittedAction('index');
+            if ($this->user->isMember($this->groupId)) {
+                $this->addPermittedAction('fork_repositories');
+                $this->addPermittedAction('do_fork_repositories');
+            }
+            
             if ($repoId !== 0) {
                 $repo = new GitRepository();
                 $repo->setId($repoId);
