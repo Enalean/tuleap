@@ -34,9 +34,13 @@ Mock::generate('Project');
 Mock::generate('DataAccessResult');
 
 class GitRepositoryTest extends UnitTestCase {
-    
+
     public function setUp() {
-        symlink(dirname(__FILE__).'/_fixtures/perms', dirname(__FILE__).'/_fixtures/tmp/perms');
+        $link =dirname(__FILE__).'/_fixtures/tmp/perms';
+        if (file_exists($link)) {
+            unlink($link);
+        }
+        symlink(dirname(__FILE__).'/_fixtures/perms', $link);
     }
     
     public function tearDown() {
@@ -53,28 +57,30 @@ class GitRepositoryTest extends UnitTestCase {
         $repo = new GitRepository();
         
         $repo->setBackend($gitolite);
-        $this->assertFalse($repo->isNameValid(''));
-        $this->assertTrue($repo->isNameValid('jambon'));
-        $this->assertTrue($repo->isNameValid('jambon.beurre'));
-        $this->assertTrue($repo->isNameValid('jambon-beurre'));
-        $this->assertTrue($repo->isNameValid('jambon_beurre'));
+        $this->checkNameValidation($repo);
         $this->assertTrue($repo->isNameValid('jambon/beurre'));
         $this->assertFalse($repo->isNameValid('jambon/.beurre'));
         $this->assertFalse($repo->isNameValid('jambon..beurre'));
         $this->assertFalse($repo->isNameValid('jambon...beurre'));
         $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
+        $this->assertFalse($repo->isNameValid('repo.git'));
         
         $repo->setBackend($gitshell);
+        $this->checkNameValidation($repo);
+        $this->assertFalse($repo->isNameValid('jambon/beurre'));
+    }
+    
+    private function checkNameValidation($repo) {
         $this->assertFalse($repo->isNameValid(''));
         $this->assertTrue($repo->isNameValid('jambon'));
         $this->assertTrue($repo->isNameValid('jambon.beurre'));
         $this->assertTrue($repo->isNameValid('jambon-beurre'));
         $this->assertTrue($repo->isNameValid('jambon_beurre'));
-        $this->assertFalse($repo->isNameValid('jambon/beurre'));
         $this->assertFalse($repo->isNameValid('jambon/.beurre'));
         $this->assertFalse($repo->isNameValid('jambon..beurre'));
         $this->assertFalse($repo->isNameValid('jambon...beurre'));
         $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
+        $this->assertFalse($repo->isNameValid('repo.git'));
     }
     
         
@@ -82,6 +88,7 @@ class GitRepositoryTest extends UnitTestCase {
         $repo = new GitRepository();
         $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/default.conf'));
         $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/tmp/perms/default.conf'));
+        $this->assertTrue($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/tmp/perms/coincoin.git.git'));
         
         $this->assertFalse($repo->isSubPath(dirname(__FILE__).'/_fixtures/perms/', dirname(__FILE__).'/_fixtures/perms/../../default.conf'));
         $this->assertFalse($repo->isSubPath('_fixtures/perms/', 'coincoin'));
@@ -90,6 +97,8 @@ class GitRepositoryTest extends UnitTestCase {
     public function testDeletionShoultAffectDotGit() {
         $repo = new GitRepository();
         $this->assertTrue($repo->isDotGit('default.git'));
+        $this->assertTrue($repo->isDotGit('default.git.git'));
+        
         $this->assertFalse($repo->isDotGit('default.conf'));
         $this->assertFalse($repo->isDotGit('d'));
         $this->assertFalse($repo->isDotGit('defaultgit'));
@@ -210,6 +219,122 @@ class GitRepositoryTest extends UnitTestCase {
 
         $repo->expectOnce('_getProjectManager');
         $project->expectNever('getID');
+    }
+    
+    public function testForkCreatesAnewRepoAndPassesItToTheBackend() {
+        $user = $this->_newUser("sandra");
+        $backend = new MockGit_Backend_Gitolite();
+        $project = new Mockproject();
+        $project->setReturnValue('getUnixName', 'tulip');
+        
+        $repo    = new GitRepository();
+        $repo->setBackend($backend);
+        $repo->setProject($project);
+        
+        $namespace = "toto/tata";
+        $clone = $this->_aGitRepoWith($user, $repo, $namespace, $backend);
+
+        $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($clone)));
+
+        $repo->fork($namespace, $user);
+    }
+    
+    private function _aGitRepoWith($user, $repo, $namespace, $backend) {
+        $clone = new GitRepository();
+        $clone->setCreator($user);
+        $clone->setNamespace($namespace);
+        $clone->setBackend($backend);
+
+        $clone->setName($repo->getName());
+        $clone->setParent($repo);
+        $clone->setProject($repo->getProject());
+        $clone->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
+        $clone->setPath(unixPathJoin(array($repo->getProject()->getUnixName(), $namespace, $repo->getName())).'.git');
+        return $clone;
+    }
+    
+    public function _newUser($name) {
+        $user = new User(array('language_id' => 1));
+        $user->setUserName($name);
+        return $user;
+    }
+    
+    public function testCanBeDeletedWithDotGitDotGitRepositoryShouldSucceed() {
+        $repo = $this->getRepositoryForDeletionTesting();
+        $repo->setPath('perms/coincoin.git.git');
+
+        $this->assertTrue($repo->canBeDeleted());
+    }
+
+    public function testCanBeDeletedWithWrongRepositoryPathShouldFail() {
+        $repo = $this->getRepositoryForDeletionTesting();
+        $repo->setPath('perms/coincoin');
+
+        $this->assertFalse($repo->canBeDeleted());
+    }
+    
+    protected function getRepositoryForDeletionTesting() {
+        $backend = new MockGitBackend();
+        $backend->setReturnValue('getGitRootPath', dirname(__FILE__).'/_fixtures');
+
+        $project = new MockProject();
+        $project->setReturnValue('getUnixName', 'perms');
+
+        $repo = new GitRepository();
+        $repo->setBackend($backend);
+        $repo->setProject($project);
+        
+        return $repo;
+    }
+    
+    public function testGetFullName_appendsNameSpaceToName() {
+        $repo = $this->_GivenARepositoryWithNameAndNamespace('tulip', null);
+        $this->assertEqual('tulip', $repo->getFullName());
+        
+        $repo = $this->_GivenARepositoryWithNameAndNamespace('tulip', 'u/johan');
+        $this->assertEqual('u/johan/tulip', $repo->getFullName());
+    }
+
+    protected function _GivenARepositoryWithNameAndNamespace($name, $namespace) {
+        $repo = new GitRepository();
+        $repo->setName($name);
+        $repo->setNamespace($namespace);
+        return $repo;
+    }
+
+    public function testProjectRepositoryDosNotBelongToUser() {
+        $user = new User(array('language_id' => 1));
+        $user->setUserName('sandra');
+        
+        $repo = new GitRepository();
+        $repo->setCreator($user);
+        $repo->setScope(GitRepository::REPO_SCOPE_PROJECT);
+        
+        $this->assertFalse($repo->belongsTo($user));
+    }
+    
+    public function testUserRepositoryBelongsToUser() {
+        $user = new User(array('language_id' => 1));
+        $user->setUserName('sandra');
+        
+        $repo = new GitRepository();
+        $repo->setCreator($user);
+        $repo->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
+        
+        $this->assertTrue($repo->belongsTo($user));
+    }
+    public function testUserRepositoryDoesNotBelongToAnotherUser() {
+        $creator = new User(array('language_id' => 1));
+        $creator->setId(123);
+        
+        $user = new User(array('language_id' => 1));
+        $user->setId(456);
+        
+        $repo = new GitRepository();
+        $repo->setCreator($creator);
+        $repo->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
+        
+        $this->assertFalse($repo->belongsTo($user));
     }
 }
 

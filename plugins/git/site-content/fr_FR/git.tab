@@ -6,7 +6,7 @@ plugin_git	service_lbl_key	Git
 plugin_git	service_desc_key	Git
 
 plugin_git	help_reference_title	Intialiser une référence
-plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>git add .</li><li>git commit -m 'initial commit'</li><li>git push $1 master</li>
+plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>touch README (par exemple)</li><li>git add README</li><li>git commit -m 'initial commit'</li><li>git push $1 master</li>
 plugin_git	help_init_reference_msg	Le dépôt n'a pas encore été initialisé, ceci est nécessaire pour permettre aux utilisateurs de le cloner
 plugin_git	help_create_reference_title	Créer une réference
 plugin_git	help_create_reference	<li>Une référence est un dépôt principal qui peut-être clonée sur le serveur codendi (ex: développement d'une fonctionnalité) et aussi clonée localement par les membres du projet pour leur développements.</li>
@@ -20,7 +20,7 @@ plugin_git	info_access_content	les dépôts sont accessibles via l'url ci-dessou
 plugin_git	bread_crumb_home	Liste des dépôts
 plugin_git	bread_crumb_help	Aide
 
-plugin_git	tree_title_available_repo	Liste des dépôts
+plugin_git	tree_title_available_repo	Dépôts du projet
 plugin_git	tree_msg_no_available_repo	Aucun dépôt trouvé
 
 plugin_git	admin_reference_creation_title	Création d'une référence
@@ -68,7 +68,7 @@ plugin_git	disable_fork_gitolite	Le fork d'un dépôt de type "Gitolite" n'est p
 
 plugin_git	actions_params_error	Paramètre requis manquants
 plugin_git	actions_delete_process	Le dépôt va être supprimé dans quelques secondes
-plugin_git	actions_input_format_error	Le nom du dépôt n'est pas correct. Caractères autorisés : $1, la longueur maximale est de $2 caractères.
+plugin_git	actions_input_format_error	Le nom du dépôt n'est pas correct. Caractères autorisés : $1, la longueur maximale est de $2 caractères, le nom ne doit pas finir avec ".git" non plus.
 plugin_git	actions_create_repo_process	Le dépôt va être crée dans quelques secondes
 plugin_git	actions_repo_not_found	Le dépôt n'existe pas
 plugin_git	actions_repo_access	Les droits d'accès au dépôt vont être modifiés dans quelques secondes
@@ -77,6 +77,7 @@ plugin_git	actions_delete_backup	Une sauvegarde du dépôt sera disponible dans 
 plugin_git	actions_name_not_available	Un fichier existe déjà avec ce nom sous gitroot
 plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà
 plugin_git	actions_delete_ok	Le dépôt a été supprimé
+plugin_git	actions_error_no_repository_selected	Aucun dépôt n'a été séctionné.
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par
@@ -139,6 +140,13 @@ plugin_git	perm_R	Lecture
 plugin_git	perm_W	Ecriture
 plugin_git	perm_W+	Rewind
 
+plugin_git	fork_repositories	Forker des dépôts
+plugin_git	fork_repositories_desc	Vous pouvez créer des forks personnels à partir de différents dépôts parents. <div class="lab_features">Cette fonctionnalité est expérimentale, donc soumise à changement. Pour l'instant, les permissions des nouveaux dépôts n'héritent pas de celles du parent, mais seulement de celles par défaut.</div>
+plugin_git	fork_repositories_select	Sélectionnez les dépôts à forker
+plugin_git	fork_repositories_path	Choisissez le chemin pour les forks
+plugin_git	fork_repositories_placeholder	Entrer un chemin ou laissez vide
+plugin_git	fork_repositories_submit	Créer les dépôts personnels
+plugin_git	fork_malformed_path	Le chemin ne peut pas contenir (..)
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
 project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1

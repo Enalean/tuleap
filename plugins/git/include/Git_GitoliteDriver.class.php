@@ -25,6 +25,8 @@ require_once 'common/permission/PermissionsManager.class.php';
 require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
 require_once 'exceptions/Git_Command_Exception.class.php';
+require_once 'PathJoinUtil.php';
+
 
 /**
  * This class manage the interaction between Tuleap and Gitolite
@@ -44,6 +46,10 @@ class Git_GitoliteDriver {
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
+
+    public function repoFullName(GitRepository $repo, $unix_name) {
+        return unixPathJoin(array($unix_name, $repo->getFullName()));
+    }
 
     /**
      * Constructor
@@ -72,7 +78,7 @@ class Git_GitoliteDriver {
      *
      * @return string
      */
-    public function getRepositoriesPath() { 
+    public function getRepositoriesPath() {
         return realpath($this->adminPath .'/../repositories'); 
     }
 
@@ -84,9 +90,19 @@ class Git_GitoliteDriver {
         $this->confFilePath = 'conf/gitolite.conf';
     }
     
-    public function masterExists($repoPath) {
-        if (file_exists($repoPath.'/refs/heads/master')) {
-            return true;
+    public function isInitialized($repoPath) {
+        try {
+            $headsPath = $repoPath.'/refs/heads';
+            if (is_dir($headsPath)) {
+                $dir = new DirectoryIterator($headsPath);
+                foreach ($dir as $fileinfo) {
+                    if (!$fileinfo->isDot()) {
+                        return true;
+                    }
+                }
+            }
+        } catch(Exception $e) {
+            // If directory doesn't even exists, return false
         }
         return false;
     }
@@ -279,8 +295,10 @@ class Git_GitoliteDriver {
         $conf .= PHP_EOL;
         if ($repository->getNotifiedMails() && count($repository->getNotifiedMails()) > 0) {
             $conf .= ' config hooks.mailinglist = "'. implode(', ', $repository->getNotifiedMails()). '"';
-            $conf .= PHP_EOL;
+        } else {
+            $conf .= ' config hooks.mailinglist = ""';
         }
+        $conf .= PHP_EOL;
         if ($repository->getMailPrefix() != GitRepository::DEFAULT_MAIL_PREFIX) {
             $conf .= ' config hooks.emailprefix = "'. $repository->getMailPrefix() .'"';
             $conf .= PHP_EOL;
@@ -328,16 +346,17 @@ class Git_GitoliteDriver {
             $pm       = $this->getPermissionsManager();
             $notifMgr = $this->getPostReceiveMailManager();
             foreach ($dar as $row) {
-                // Name of the repo
-                $perms .= 'repo '. $project->getUnixName(). '/' . $row[GitDao::REPOSITORY_NAME] . PHP_EOL;
-
                 $repository = new GitRepository();
                 $repository->setId($row[GitDao::REPOSITORY_ID]);
                 $repository->setName($row[GitDao::REPOSITORY_NAME]);
                 $repository->setProject($project);
                 $repository->setNotifiedMails($notifMgr->getNotificationMailsByRepositoryId($row[GitDao::REPOSITORY_ID]));
                 $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
+                $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
 
+                // Name of the repo
+                $perms .= 'repo '. $this->repoFullName($repository, $project->getUnixName()) . PHP_EOL;
+                
                 // Hook config
                 $perms .= $this->fetchMailHookConfig($project, $repository);
 
@@ -460,6 +479,23 @@ class Git_GitoliteDriver {
            throw new GitDriverErrorException('Unable to delete path '.$path);
         }
         return true;
+    }
+    
+    public function fork($repo, $old_ns, $new_ns){
+
+        $source = unixPathJoin(array($this->getRepositoriesPath(),$old_ns, $repo)) .'.git';
+        $target = unixPathJoin(array($this->getRepositoriesPath(),$new_ns, $repo)) .'.git';
+        if (!is_dir($target)) {
+            $cmd = 'umask 0007; sg - gitolite -c "git clone --bare '. $source .' '. $target.'"';
+            $clone_result = $this->gitCmd($cmd);
+            
+            $copyHooks  = 'cd '.$this->getRepositoriesPath().'; ';
+            $copyHooks .= 'sg - gitolite -c "cp -f '.$source.'/hooks/* '.$target.'/hooks/"';
+            $this->gitCmd($copyHooks);
+            
+            return $clone_result;
+        }
+        return false;
     }
     
 }

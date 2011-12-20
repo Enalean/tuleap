@@ -83,7 +83,7 @@ class SystemEvent_GIT_REPO_CLONE extends SystemEvent {
             if ( !empty($user) ) {
                 $repository->setCreator($user);
             }            
-            $repository->fork($repositoryName);
+            $repository->forkShell($repositoryName);
             $this->done();
         }
         catch (GitDaoException $e1) {

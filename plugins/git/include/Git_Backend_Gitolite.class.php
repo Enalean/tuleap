@@ -50,8 +50,12 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      */
     public function createReference($repository) {
         $id = $this->getDao()->save($repository);
+        $this->updateRepoConf($repository);
+    }
+
+    public function updateRepoConf($repository) {
         $this->driver->dumpProjectRepoConf($repository->getProject());
-        $this->driver->push();
+        return $this->driver->push();
     }
 
     /**
@@ -62,8 +66,8 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @return Boolean
      */
     public function isInitialized($repository) {
-        $masterExists = $this->driver->masterExists($this->getGitRootPath().'/'.$repository->getPath());
-        if ($masterExists) {
+        $init = $this->driver->isInitialized($this->getGitRootPath().'/'.$repository->getPath());
+        if ($init) {
             $this->getDao()->initialize($repository->getId());
             return true;
         } else {
@@ -77,9 +81,9 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return String
      */
-    public function getAccessUrl($repository) {
-        $serverName  = $_SERVER['SERVER_NAME'];
-        return  'gitolite@'.$serverName.':'.$repository->getProject()->getUnixName().'/'.$repository->getName().'.git';
+    public function getAccessUrl(GitRepository $repository) {
+        $serverName = $_SERVER['SERVER_NAME'];
+        return  'gitolite@'.$serverName.':'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
     }
 
     /**
@@ -101,6 +105,10 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             $this->dao = new GitDao();
         }
         return $this->dao;
+    }
+    
+    public function setDao($dao) {
+        $this->dao = $dao;
     }
 
     /**
@@ -140,8 +148,9 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
                 $ok = $success[0];
             }
         }
-        $this->driver->dumpProjectRepoConf($repository->getProject());
-        $this->driver->push();
+        
+        $this->updateRepoConf($repository);
+
         foreach ($msgs as $msg) {
             $GLOBALS['Response']->addFeedback($ok ? 'info' : 'error', $msg);
         }
@@ -199,8 +208,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      */
     public function changeRepositoryMailingList($repository) {
         $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-        $this->getDriver()->dumpProjectRepoConf($repository->getProject());
-        return $this->getDriver()->push();
+        return $this->updateRepoConf($repository);
     }
 
     /**
@@ -298,8 +306,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         if ($repository->canBeDeleted()) {
             if ($this->deletePermissions($repository) && $this->getDao()->delete($repository)) {
                 $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-                $this->getDriver()->dumpProjectRepoConf($repository->getProject());
-                $this->getDriver()->push();
+                $this->updateRepoConf($repository);                
                 $this->getDriver()->delete($path);
                 return true;
             } else {
@@ -312,6 +319,14 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         return false;
     }
 
+    public function fork(GitRepository $old, GitRepository $new) {
+        $name = $old->getName();
+        //TODO use $old->getRootPath() (good luck for Unit Tests!)
+        $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
+        $new_namespace = $old->getProject()->getUnixName() .'/'. $new->getNamespace();
+        $this->getDriver()->fork($name, $old_namespace, $new_namespace);
+        $this->createReference($new);
+    }
     /**
      * Delete all gitolite repositories of a project
      *

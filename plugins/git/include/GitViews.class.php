@@ -23,6 +23,10 @@ require_once('mvc/PluginViews.class.php');
 require_once('GitDao.class.php');
 require_once('GitBackend.class.php');
 require_once('www/project/admin/permissions.php');
+require_once('GitViewsRepositoriesTraversalStrategy_UL.class.php');
+require_once('GitViewsRepositoriesTraversalStrategy_Selectbox.class.php');
+require_once('GitViewsRepositoriesTraversalStrategy_Tree.class.php');
+require_once('common/include/CSRFSynchronizerToken.class.php');
 
 /**
  * GitViews
@@ -32,7 +36,8 @@ class GitViews extends PluginViews {
     public function __construct($controller) {
         parent::__construct($controller);
         $this->groupId     = (int)$this->request->get('group_id');
-        $this->projectName = ProjectManager::instance()->getProject($this->groupId)->getUnixName();        
+        $this->project     = ProjectManager::instance()->getProject($this->groupId);
+        $this->projectName = $this->project->getUnixName();
         $this->userName    = $this->user->getName();        
     }
 
@@ -45,7 +50,7 @@ class GitViews extends PluginViews {
         $GLOBALS['HTML']->footer(array());
     }
 
-    protected function getText($key, $params=array() ) {
+    public function getText($key, $params=array() ) {
         return $GLOBALS['Language']->getText('plugin_git', $key, $params);
     }
 
@@ -177,7 +182,7 @@ class GitViews extends PluginViews {
             $repoActions .= '</ul>';
 
             echo '<div id="plugin_git_reference">';
-            echo '<h2>'.$accessType.$repoName.'</h2>';
+            echo '<h2>'.$accessType.$repository->getFullName().'</h2>';
             echo $repoActions;
 ?>
 <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
@@ -419,7 +424,7 @@ class GitViews extends PluginViews {
         $_GET['a'] = $_REQUEST['a'];        
         $_REQUEST['group_id']      = $this->groupId;
         $_REQUEST['repo_id']       = $repository->getId();
-        $_REQUEST['repo_name']     = $repository->getName();
+        $_REQUEST['repo_name']     = $repository->getFullName();
         $_GET['p']                 = $_REQUEST['repo_name'].'.git';
         $_REQUEST['repo_path']     = $repository->getPath();
         $_REQUEST['project_dir']   = $repository->getProject()->getUnixName();
@@ -585,6 +590,15 @@ class GitViews extends PluginViews {
     protected function _getBreadCrumb() {
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_home').'</b>', '/plugins/git/?group_id='.$this->groupId, 'class=""');
         echo ' | ';
+        
+        
+        if ($this->user->isMember($this->groupId) && $this->user->useLabFeatures()) {
+            echo '<span class="lab_features" title="'. $this->getText('admin_reference_creation_lab_feature') .'">';
+            echo $this->linkTo( '<b>'.$this->getText('fork_repositories').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=fork_repositories', 'class=""');
+            echo ' | ';
+            echo '</span>';
+        }
+        
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/documentation/user_guide/html/'.$this->user->getLocale().'/VersionControlWithGit.html\')');
     }
     
@@ -598,84 +612,95 @@ class GitViews extends PluginViews {
         return  $this->userName.'@'.$serverName.':/gitroot/'.$this->projectName.'/'.$repositoryName.'.git';
     }
 
-    protected function _getRepositoryPageUrl($repoId, $repoName) {
+    public function _getRepositoryPageUrl($repoId, $repoName) {
         return $this->linkTo($repoName,'/plugins/git/index.php/'.$this->groupId.'/view/'.$repoId.'/');
+    }
+    
+    protected function forkRepositories() {
+        $params = $this->getData();
+        $this->_getBreadCrumb();
+        echo '<h2>'. $this->getText('fork_repositories') .'</h2>';
+        echo '<p>'. $this->getText('fork_repositories_desc') .'</p>';
+        
+        echo '<form action="" method="POST">';
+        echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
+        echo '<input type="hidden" name="action" value="do_fork_repositories" />';
+        $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
+        echo $token->fetchHTMLInput();
+        
+        echo '<table id="fork_repositories" cellspacing="0">';
+        echo '<thead>';
+        echo '<tr valign="top">';
+        echo '<td class="first">';
+        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label>';
+        echo '</td>';
+        echo '<td>';
+        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label>';
+        echo '</td>';
+        echo '<td class="last">&nbsp;</td>';
+        echo '</tr>';
+        echo '</thead>';
+        
+        
+        echo '<tbody><tr valign="top">';
+        echo '<td class="first">';
+        $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
+        echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
+        echo '</td>';
+        
+        echo '<td>';
+        echo '<input type="text" placeholder="'. $this->getText('fork_repositories_placeholder') .'" id="fork_repositories_path" name="path" />';
+        echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
+        echo '</td>';
+        
+        echo '<td class="last">';
+        echo '<input type="submit" value="'. $this->getText('fork_repositories_submit') .'" />';
+        echo '</td>';
+        
+        echo '</tr></tbody></table>';
+        
+        echo '</form>';
+        echo '<br />';
     }
 
     /**
      * TREE SUBVIEW
      */
-    protected function _tree( $params=array() ) {        
+    protected function _tree( $params=array() ) {
         if ( empty($params) ) {
             $params = $this->getData();
         }
         if ( !empty($params['repository_list']) ) {
-            echo '<h3>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"> [?]</a></h3>';
+            //echo '<h3>'.$this->getText('tree_title_available_repo').' <a href="#" onclick="$(\'help_tree\').toggle();"> [?]</a></h3>';
+            if (!empty($params['repositories_owners'])) {
+                $current_id = null;
+                if (!empty($params['user'])) {
+                    $current_id = (int)$params['user'];
+                }
+                $select = '<select name="user" onchange="this.form.submit()">';
+                $uh = UserHelper::instance();
+                $selected = 'selected="selected"';
+                $select .= '<option value="" '. ($current_id ? '' : $selected) .'>'. $this->getText('tree_title_available_repo') .'</option>';
+                foreach ($params['repositories_owners'] as $owner) {
+                    $select .= '<option value="'. (int)$owner['repository_creation_user_id'] .'" '. ($owner['repository_creation_user_id'] == $current_id ? $selected : '') .'>'. $uh->getDisplayName($owner['user_name'], $owner['realname']) .'</option>';
+                }
+                $select .= '</select>';
+                echo '<form action="" method="GET">';
+                echo '<p>';
+                echo '<input type="hidden" name="action" value="index" />';
+                echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
+                echo $select;
+                echo '<noscript><input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></noscript>';
+                echo '</p>';
+                echo '</form>';
+            }
             $this->help('tree', array('display'=>'none') );
-            echo '<ul>';
-            $this->_displayRepositoryList($params['repository_list']);
-            echo '</ul>';
+            $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($this);
+            //$strategy = new GitViewsRepositoriesTraversalStrategy_UL($this);
+            echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
         }
         else {
             echo "<h3>".$this->getText('tree_msg_no_available_repo')."</h3>";
-        }        
-    }
-
-    protected function _displayRepositoryList($data) {
-        $parentChildrenAssoc = array();
-        foreach ( $data as $repoId=>$repoData ) {
-            if ( !empty($repoData[GitDao::REPOSITORY_PARENT]) ) {
-                $parentId = $repoData[GitDao::REPOSITORY_PARENT];
-                $parentChildrenAssoc[$parentId][] = $repoData[GitDao::REPOSITORY_ID];
-            }
-            else {
-                $parentChildrenAssoc[0][] = $repoId;
-            }
-        }
-        $this->_makeRepositoryTree($parentChildrenAssoc, 0, $data);
-    }
-
-    protected function _makeRepositoryTree(&$flatTree, $currentId, $data) {
-        $user = UserManager::instance()->getCurrentUser();
-        foreach ( $flatTree[$currentId] as $childId ) {
-            $repoId   = $data[$childId][GitDao::REPOSITORY_ID];
-            $repoName = $data[$childId][GitDao::REPOSITORY_NAME];
-            $repoDesc = $data[$childId][GitDao::REPOSITORY_DESCRIPTION];
-            $delDate  = $data[$childId][GitDao::REPOSITORY_DELETION_DATE];
-            $isInit   = $data[$childId][GitDao::REPOSITORY_IS_INITIALIZED];
-            $access   = $data[$childId][GitDao::REPOSITORY_ACCESS];
-            //needs to be checked on filesystem (GitDao::getRepositoryList do not check)
-            //TODO move this code to GitBackend and write a new getRepositoryList function ?
-            //TODO find a better way to do that to avoid the ton of SQL requests!
-            $r = new GitRepository();
-            $r->setId($repoId);
-            $r->load();
-            if ( $isInit == 0 ) {
-                $isInit = $r->isInitialized();
-            }
-
-            if (!$r->userCanRead($user)) {
-                continue;
-            }
-            //we do not want to display deleted repository
-            if ( $delDate != '0000-00-00 00:00:00' ) {
-                continue;
-            }
-
-            // Access type
-            $accessType = $this->fetchAccessType($access, $data[$childId][GitDao::REPOSITORY_BACKEND_TYPE] == GitDao::BACKEND_GITOLITE);
-            
-            echo '<li>'.$accessType.' '.$this->_getRepositoryPageUrl($repoId, $repoName);
-            if ($isInit == 0) {
-                echo ' ('.$this->getText('view_repo_not_initialized').') ';
-            }
-            echo '</li>';
-
-            if ( !empty($flatTree[$childId]) ) {
-                echo '<ul>';
-                $this->_makeRepositoryTree($flatTree, $childId, $data);
-                echo '</ul>';
-            }
         }
     }
     
@@ -685,7 +710,7 @@ class GitViews extends PluginViews {
      * @param $access
      * @param $backend_type
      */
-    protected function fetchAccessType($access, $backendIsGitolite) {
+    public function fetchAccessType($access, $backendIsGitolite) {
         $accessType = '<span class="plugin_git_repo_privacy" title=';
 
         if ($backendIsGitolite) {

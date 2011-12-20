@@ -5,7 +5,7 @@ plugin_git	title	Git Plugin
 plugin_git	service_lbl_key	Git
 plugin_git	service_desc_key	Git
 plugin_git	help_reference_title	Initialize a reference repository
-plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>git add .</li><li>git commit -m 'initial commit'</li><li>git push $1 master</li>
+plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>touch README (for example)</li><li>git add README</li><li>git commit -m 'initial commit'</li><li>git push $1 master</li>
 plugin_git	help_init_reference_msg	The current repository has not been initialized yet, this is required to allow users to clone it
 plugin_git	help_create_reference_title	Create a reference
 plugin_git	help_create_reference	<li>A reference is main repository which intends to be forked onto the codendi server (e.g. shared project feature) as well as cloned by users for local developments</li>
@@ -19,7 +19,7 @@ plugin_git	info_access_content	Repositories are accessible through the following
 plugin_git	bread_crumb_home	Repository list
 plugin_git	bread_crumb_help	Help
 
-plugin_git	tree_title_available_repo	Repository list
+plugin_git	tree_title_available_repo	Project repositories
 plugin_git	tree_msg_no_available_repo	No repository found
 
 plugin_git	admin_reference_creation_title	Reference creation
@@ -68,16 +68,18 @@ plugin_git	disable_fork_gitolite	It's not yet possible to fork "Gitolite" based 
 
 plugin_git	actions_params_error	Empty required parameter(s)
 plugin_git	actions_delete_process	Repository will be removed in a few seconds
-plugin_git	actions_input_format_error	Repository name is not well formatted. Allowed characters: $1 and max length is $2.
+plugin_git	actions_input_format_error	Repository name is not well formatted. Allowed characters: $1 and max length is $2, it also must not finish with ".git".
 plugin_git	actions_create_repo_process	Repository will be created in a few seconds
 plugin_git	actions_create_repo_exists	Repository $1 already exists
 plugin_git	actions_delete_ok	Repository has been deleted
+plugin_git	actions_no_repository_selected	No repository has been selected.
 
 plugin_git	actions_repo_not_found	The repository does not exist
 plugin_git	actions_repo_access	Repository access permissions are going to be modified in a few seconds
 plugin_git	actions_save_repo_process	Repository informations have been saved
 plugin_git	actions_delete_backup	A repository backup will be available in the backup directory
 plugin_git	actions_name_not_available	     A file already exists with this name under gitroot
+
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Created by
@@ -140,6 +142,14 @@ plugin_git	gitolite_lab_feature_description	Allow to set specifics, distincts, p
 plugin_git	perm_R	Read
 plugin_git	perm_W	Write
 plugin_git	perm_W+	Rewind
+
+plugin_git	fork_repositories	Fork repositories
+plugin_git	fork_repositories_desc	You can create personal forks of various repositories. <div class="lab_features"> This is an experimental feature that will evolve. For now, permissions on the new repositories do not inherit from parent, but have default ones.</div>
+plugin_git	fork_repositories_select	Select repositories to fork
+plugin_git	fork_repositories_path	Choose the path for the forks
+plugin_git	fork_repositories_placeholder	Enter a path or leave it blank
+plugin_git	fork_repositories_submit	Create personal repositories
+plugin_git	fork_malformed_path	Path cannot contain double dots (..)
 
 project_admin_utils	perm_granted_for_git_repository	Permission granted for git repository $1
 project_admin_utils	perm_reset_for_git_repository	Permission reset for git repository $1

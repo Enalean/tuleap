@@ -29,6 +29,8 @@ require_once('GitRepository.class.php');
 require_once('GitDao.class.php');
 require_once('Git_GitoliteDriver.class.php');
 require_once('Git_Backend_Gitolite.class.php');
+require_once('GitRepositoryFactory.class.php');
+require_once('common/layout/Layout.class.php');
 
 
 /**
@@ -38,10 +40,27 @@ require_once('Git_Backend_Gitolite.class.php');
  */
 class GitActions extends PluginActions {
 
+    /**
+     * @var GitRepositoryFactory
+     */
+    protected $factory;
 
-    public function __construct($controller) {
+    /**
+     * @var SystemEventManager
+     */
+    protected $systemEventManager;
+    
+    /**
+     * Constructor
+     *
+     * @param PluginController     $controller         The controller
+     * @param GitRepositoryFactory $factory            The factory to manage repositories
+     * @param SystemEventManager   $systemEventManager The system manager
+     */
+    public function __construct($controller, GitRepositoryFactory $factory, SystemEventManager $systemEventManager) {
         parent::__construct($controller);
-        $this->systemEventManager = SystemEventManager::instance();
+        $this->factory = $factory;
+        $this->systemEventManager = $systemEventManager;
 
     }
 
@@ -184,12 +203,26 @@ class GitActions extends PluginActions {
         return;
     }
 
-    public function getProjectRepositoryList($projectId) {
-        $projectId = intval($projectId);              
-        $dao       = new GitDao();        
-        $repositoryList = $dao->getProjectRepositoryList($projectId);        
-        $this->addData( array('repository_list'=>$repositoryList) );        
+    /**
+     * Action to load the user's repositories of a project. If user is not given, then load the project repositories instead.
+     * 
+     * @param int $projectId The project id
+     * @param int $userId    The user id. (== null for project repositories)
+     *
+     * @return bool true if success false otherwise
+     */
+    public function getProjectRepositoryList($projectId, $userId = null) {
+        $onlyGitShell = false;
+        $dao          = $this->getDao();
+        $this->addData(array(
+            'repository_list'     => $dao->getProjectRepositoryList($projectId, $onlyGitShell, $userId),
+            'repositories_owners' => $dao->getProjectRepositoriesOwners($projectId),
+        ));
         return true;
+    }
+    
+    protected function getDao() {
+        return new GitDao();
     }
     
     //TODO check repo - project?
@@ -474,6 +507,43 @@ class GitActions extends PluginActions {
      */
     function getGitRepository() {
         return new GitRepository();
+    }
+
+    /**
+     * Fork a bunch of repositories in a project for a given user
+     *
+     * Repositories that the user cannot access won't be forked as well as 
+     * those that don't belong to the project.
+     * 
+     * @param int    $groupId   The project id
+     * @param array  $repos_ids The array of id of repositories to fork
+     * @param string $path      The path where the new repositories will live
+     * @param User   $user      The owner of those new repositories
+     * @param Layout $response  The response object
+     *
+     * @return bool false if no repository has been cloned
+     */
+    function forkRepositories($groupId, array $repos_ids, $path, User $user, Layout $response) {
+        $c = $this->getController();
+        if(empty($repos_ids)){
+            $c->addError($this->getText('actions_no_repository_selected'));
+            $success = false;
+        } else {
+            $nb_forked = 0;
+            foreach ($repos_ids as $id) {
+                if ($repo = $this->factory->getRepository($groupId, $id)) {
+                    if ($repo->userCanRead($user)) {
+                        $repo->fork($path, $user);
+                        $nb_forked++;
+                    }
+                }
+            }
+            $success = $nb_forked > 0;
+        }
+        if ($success) {
+            $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
+        }
+        return $success;
     }
 
 }

@@ -42,14 +42,16 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         // spots bugs
         system('tar -xf '. $this->_glAdmDirRef .'.tar --directory '.$this->_fixDir);
         symlink($this->_glAdmDirRef, $this->_glAdmDir);
-
+        
         $this->httpsHost = $GLOBALS['sys_https_host'];
+
         $GLOBALS['sys_https_host'] = 'localhost';
     }
 
     function tearDown() {
         chdir($this->cwd);
-        system('rm -rf '.$this->_glAdmDirRef);
+        system('rm -rf '. $this->_glAdmDirRef);
+        system('rm -rf '. $this->_fixDir .'/repositories/*');
         unlink($this->_glAdmDir);
         $GLOBALS['sys_https_host'] = $this->httpsHost;
     }
@@ -277,8 +279,8 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         // List all repo
         $dao = new MockGitDao();
         $dao->expectOnce('getAllGitoliteRespositories', array(404));
-        $dao->setReturnValue('getAllGitoliteRespositories', $this->arrayToDar(array('repository_id' => 4, 'repository_name' => 'test_default', 'repository_events_mailing_prefix' => "[SCM]"),
-                                                                              array('repository_id' => 5, 'repository_name' => 'test_pimped', 'repository_events_mailing_prefix' => "[KOIN] ")
+        $dao->setReturnValue('getAllGitoliteRespositories', $this->arrayToDar(array('repository_id' => 4, 'repository_name' => 'test_default', 'repository_namespace' => '', 'repository_events_mailing_prefix' => "[SCM]"),
+                                                                              array('repository_id' => 5, 'repository_name' => 'test_pimped', 'repository_namespace' => '', 'repository_events_mailing_prefix' => "[KOIN] ")
                                                             )
         );
         $driver->setReturnValue('getDao', $dao);
@@ -315,7 +317,24 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
     
-    /**/
+    protected function _GivenARepositoryWithNameAndNamespace($name, $namespace) {
+        $repo = new GitRepository();
+        $repo->setName($name);
+        $repo->setNamespace($namespace);
+        return $repo;
+    }
+    
+    function testRepoFullNameConcats_UnixProjectName_Namespace_And_Name() {
+        $driver = new Git_GitoliteDriver();
+        $unix_name = 'project1';
+        
+        $repo = $this->_GivenARepositoryWithNameAndNamespace('repo', 'toto');
+        $this->assertEqual('project1/toto/repo', $driver->repoFullName($repo, $unix_name));
+        
+        $repo = $this->_GivenARepositoryWithNameAndNamespace('repo', '');
+        $this->assertEqual('project1/repo', $driver->repoFullName($repo, $unix_name));
+    }    
+
     function testRenameProject() {
         $driver = $this->getPartialMock('Git_GitoliteDriver', array('gitPush'));
         $driver->expectOnce('gitPush');
@@ -339,7 +358,79 @@ class Git_GitoliteDriverTest extends UnitTestCase {
         $this->assertPattern('`\ninclude "projects/newone.conf"\n`', file_get_contents($this->_glAdmDir.'/conf/gitolite.conf'));
         $this->assertEmptyGitStatus();
     }
-    /**/
+    
+    function testFork_CloneEmptyToSpecifiedPath() {
+        if (posix_getgrnam('gitolite') == false) {
+            echo "testFork_CloneEmptyToSpecifiedPath: Cannot test 'cause there is no 'gitolite' user on server (CI)";
+        } else {
+            $name = 'tulip';
+            $new_ns = 'repos/new/repo/';
+            $old_ns = 'repos/';
+            $old_root_dir = $this->_fixDir .'/repositories/'. $old_ns . $name .'.git';
+            $new_root_dir = $this->_fixDir .'/repositories/'. $new_ns . $name .'.git';
+
+            mkdir($old_root_dir, 0770, true);
+            exec('GIT_DIR='. $old_root_dir .' git init --bare --shared=group');
+            exec('cd '.$old_root_dir.' && touch hooks/gitolite_hook.sh');
+
+            $driver = new Git_GitoliteDriver($this->_glAdmDir);
+
+            $this->assertTrue($driver->fork($name, $old_ns, $new_ns));
+
+            $this->assertRepoIsClonedWithHooks($new_root_dir);
+
+            $this->assertWritableByGroup($new_root_dir, 'gitolite');
+        }
+    }
+    
+    private function assertWritableByGroup($new_root_dir, $group) {
+        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir));
+        $this->assertEqual($group, $this->_getFileGroupName($new_root_dir .'/hooks/gitolite_hook.sh'));
+
+        clearstatcache();
+        $rootStats = stat($new_root_dir);
+        $this->assertPattern('/.*770$/', decoct($rootStats[2]));
+    }
+    
+    protected function _getFileGroupName($filePath) {
+        clearstatcache();
+        $rootStats = stat($filePath);
+        $groupInfo = posix_getgrgid($rootStats[5]);
+        return $groupInfo['name'];
+    }
+    
+    public function testForkShouldNotCloneOnExistingRepositories() {
+        $name = 'tulip';
+        $new_ns = 'repos/new/repo/';
+        $old_ns = 'repos/';
+        $old_root_dir = $this->_fixDir .'/repositories/'. $old_ns . $name .'.git';
+        $new_root_dir = $this->_fixDir .'/repositories/'. $new_ns . $name .'.git';
+        
+        mkdir($old_root_dir, 0770, true);
+        exec('GIT_DIR='. $old_root_dir .' git --bare init --shared=group');
+        
+        mkdir($new_root_dir, 0770, true);
+        exec('GIT_DIR='. $new_root_dir .' git --bare init --shared=group');
+        
+        $driver = new Git_GitoliteDriver($this->_glAdmDir);
+        $this->assertFalse($driver->fork($name, $old_ns, $new_ns));
+    }
+    
+    public function assertRepoIsClonedWithHooks($new_root_dir) {
+        $this->assertTrue(is_dir($new_root_dir), "the new git repo dir ($new_root_dir) wasn't found.");
+        $new_repo_HEAD = $new_root_dir . '/HEAD';
+        $this->assertTrue(file_exists($new_repo_HEAD), 'the file (' . $new_repo_HEAD . ') does not exists');
+        $this->assertTrue(file_exists($new_root_dir . '/hooks/gitolite_hook.sh'), 'the hook file wasn\'t copied to the fork');
+    }
+    public function testIsInitializedShouldReturnTrueEvenIfThereIsNoMaster() {
+        $driver = new Git_GitoliteDriver($this->_glAdmDir);
+        $this->assertTrue($driver->isInitialized($this->_fixDir.'/headless.git'));
+    }
+    
+    public function testIsInitializedShouldReturnFalseEvenIfThereIsNoValidDirectory() {
+        $driver = new Git_GitoliteDriver($this->_glAdmDir);
+        $this->assertFalse($driver->isInitialized($this->_fixDir));
+    }
 }
 
 ?>

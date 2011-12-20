@@ -30,15 +30,29 @@ Mock::generatePartial('Git_Backend_Gitolite', 'Git_Backend_GitoliteTestVersion',
 Mock::generate('GitRepository');
 Mock::generate('GitDao');
 Mock::generate('DataAccessResult');
+Mock::generate('Project');
 
 class Git_Backend_GitoliteTest extends UnitTestCase {
     
     protected $fixturesPath;
-    
+
+
     public function setUp() {
         $this->fixtureRenamePath = dirname(__FILE__).'/_fixtures/rename';
+        
+        if (file_exists($this->fixtureRenamePath)){
+            @rmdir($this->fixtureRenamePath .'/legacy');
+            @rmdir($this->fixtureRenamePath .'/newone');
+            @rmdir($this->fixtureRenamePath);
+        }
+        
         mkdir($this->fixtureRenamePath .'/legacy', 0777, true);
-        symlink(dirname(__FILE__).'/_fixtures/perms', dirname(__FILE__).'/_fixtures/tmp/perms');
+        
+        $link =dirname(__FILE__).'/_fixtures/tmp/perms';
+        if (file_exists($link)) {
+            unlink($link);
+        }
+        symlink(dirname(__FILE__).'/_fixtures/perms', $link);
     }
     
     public function tearDown() {
@@ -143,6 +157,83 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $backend->expectCallCount('loadRepositoryFromId', 3);
         $repository->expectCallCount('delete', 3);
         $this->assertTrue($backend->deleteProjectRepositories(1));
+    }
+    
+    public function testFork_clonesRepositoryAndPushesConf() {
+        $name  = 'tuleap';
+        $old_namespace = '';
+        $new_namespace = 'u/johanm/ericsson';
+        
+        $driver     = new MockGit_GitoliteDriver();
+        $dao        = new MockGitDao();
+        $project    = new MockProject();
+        
+        $project->setReturnValue('getUnixName', 'gpig');
+        
+        $new_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $new_namespace);
+        $new_repo->setProject($project);
+        $old_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $old_namespace);
+        $old_repo->setProject($project);
+        
+        $backend    = new Git_Backend_Gitolite($driver);
+        $backend->setDao($dao);
+        
+        $dao->expectOnce('save', array($new_repo));
+        $driver->expectOnce('fork', array($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace));        
+        $driver->expectOnce('dumpProjectRepoConf', array($project));
+        $driver->expectOnce('push');        
+
+        $backend->fork($old_repo, $new_repo);
+    }
+    
+    public function _GivenAGitRepoWithNameAndNamespace($name, $namespace) {
+        $repository = new GitRepository();
+        $repository->setName($name);
+        $repository->setNamespace($namespace);
+        
+        $project = new MockProject();
+        $project->setReturnValue('getUnixName', 'gpig');
+        $repository->setProject($project);
+        
+        return $repository;
+    }
+
+    protected function _GivenABackendGitolite() {
+        $driver  = new MockGit_GitoliteDriver();
+        $dao     = new MockGitDao();
+        $backend = new Git_Backend_Gitolite($driver);
+        $backend->setDao($dao);
+        return $backend;
+    }
+
+    public function testGetAccessTypeShouldUseGitoliteSshUser() {
+        $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', 'u/johndoe/uber');
+        $backend    = $this->_GivenABackendGitolite();
+        
+        $url = $backend->getAccessUrl($repository);
+        
+        // url starts by gitolite
+        $this->assertPattern('%^gitolite@%', $url);
+    }
+
+    public function testGetAccessTypeShouldIncludesNameSpace() {
+        $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', 'u/johndoe/uber');
+        $backend    = $this->_GivenABackendGitolite();
+        
+        $url = $backend->getAccessUrl($repository);
+        
+        // url ends by the namespace + name
+        $this->assertPattern('%:gpig/u/johndoe/uber/bionic\.git$%', $url);
+    }
+    
+    public function testGetAccessTypeWithoutNameSpace() {
+        $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', '');
+        $backend    = $this->_GivenABackendGitolite();
+        
+        $url = $backend->getAccessUrl($repository);
+        
+        // url ends by the namespace + name
+        $this->assertPattern('%:gpig/bionic\.git$%', $url);
     }
 
 }

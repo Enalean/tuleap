@@ -42,6 +42,8 @@ class GitDao extends DataAccessObject {
     const REPOSITORY_ACCESS           = 'repository_access';
     const REPOSITORY_MAIL_PREFIX      = 'repository_events_mailing_prefix';
     const REPOSITORY_BACKEND_TYPE     = 'repository_backend_type';
+    const REPOSITORY_SCOPE            = 'repository_scope';
+    const REPOSITORY_NAMESPACE        = 'repository_namespace';
 
     const REPO_NAME_MAX_LENGTH = 255;
 
@@ -91,6 +93,9 @@ class GitDao extends DataAccessObject {
         $name        = $repository->getName(); 
         $mailPrefix  = $repository->getMailPrefix();
         $parentId    = 0;
+        $scope       = $repository->getScope();
+        $namespace   = $repository->getNamespace();
+        
         try {
             $parent   = $repository->getParent();
             if ( !empty($parent) ) {
@@ -114,7 +119,9 @@ class GitDao extends DataAccessObject {
         $creationUserId = $this->da->escapeInt($creationUserId);
         $access         = $this->da->quoteSmart($access);
         $mailPrefix     = $this->da->quoteSmart($mailPrefix);
-
+        $scope          = $this->da->quoteSmart($scope);
+        $namespace      = $this->da->quoteSmart($namespace);
+        
         $insert         = false;
         if ( $this->exists($id) ) {            
             $query = 'UPDATE '.$this->getTable().
@@ -140,7 +147,9 @@ class GitDao extends DataAccessObject {
                                                          self::REPOSITORY_CREATION_USER_ID.','.
                                                          self::REPOSITORY_IS_INITIALIZED.','.
                                                          self::REPOSITORY_ACCESS.','.
-                                                         self::REPOSITORY_BACKEND_TYPE.
+                                                         self::REPOSITORY_BACKEND_TYPE.','.
+                                                         self::REPOSITORY_SCOPE.','.
+                                                         self::REPOSITORY_NAMESPACE.
                                                     ') values ('.
                                                         "".$name.",".
                                                         "".$path.",".
@@ -150,11 +159,13 @@ class GitDao extends DataAccessObject {
                                                         "'".$creationDate."',".
                                                         $creationUserId.",".
                                                         $isInitialized.','.
-                                                        $access.','.
-                                                        $this->da->quoteSmart($backendType).
+                                                        $access.','.                    
+                                                        $this->da->quoteSmart($backendType).','.
+                                                        $scope.','.
+                                                        $namespace.
                                                         ')';
         }
-        
+
         if ( $this->update($query) === false ) {
             throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_update_error').' : '.$this->da->isError());
         }
@@ -202,27 +213,37 @@ class GitDao extends DataAccessObject {
     }
 
     /**
-     * Obtain project's list of git repositories
+     * Obtain project's list of git repositories. May be filtered out by user to get only her own repositories
      *
      * @param Integre $projectId    Project id
      * @param Boolean $onlyGitShell If true list will contain only git repositories no gitolite
+     * @param Integer $userId       User id
      *
      * @return Array
      */
-    public function getProjectRepositoryList($projectId, $onlyGitShell = false) {
+    public function getProjectRepositoryList($projectId, $onlyGitShell = false, $userId = null) {
         $condition = "";
         if ($onlyGitShell) {
-            $condition = " AND ". self::REPOSITORY_BACKEND_TYPE ." = '". self::BACKEND_GITSHELL ."' ";
+            $condition .= " AND ". self::REPOSITORY_BACKEND_TYPE ." = '". self::BACKEND_GITSHELL ."' ";
         }
         $projectId = $this->da->escapeInt($projectId);
+        $userId    = $this->da->escapeInt($userId);
+        
         if ( empty($projectId) ) {
             return false;
         }
+        
+        if ( empty($userId) ) {
+            $condition .= " AND repository_scope = '".GitRepository::REPO_SCOPE_PROJECT."' ";
+        } else {
+            $condition .= " AND repository_creation_user_id = $userId AND repository_scope = '".GitRepository::REPO_SCOPE_INDIVIDUAL."' ";
+        }
+
         $sql = "SELECT * FROM $this->tableName
                 WHERE ". self::FK_PROJECT_ID ." = $projectId
-                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'"
-                  .$condition.
-                  "ORDER BY ". self::REPOSITORY_NAME;
+                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                  $condition
+                ORDER BY CONCAT(". self::REPOSITORY_NAMESPACE .', '. self::REPOSITORY_NAME .')';
                   
         $rs = $this->retrieve($sql);
         if ( empty($rs) || $rs->rowCount() == 0 ) {
@@ -234,6 +255,23 @@ class GitDao extends DataAccessObject {
             $list[$repoId] = $row;
         }
         return $list;
+    }
+    
+    /**
+     * Return the list of users that owns repositories in the project $projectId
+     *
+     * @return DataAccessResult
+     */
+    public function getProjectRepositoriesOwners($projectId) {
+        $projectId = $this->da->escapeInt($projectId);
+        $sql = "SELECT DISTINCT repository_creation_user_id, user_name, realname
+                FROM $this->tableName
+                    INNER JOIN user ON user.user_id = repository_creation_user_id
+                WHERE ". self::FK_PROJECT_ID ." = $projectId
+                  AND ". self::REPOSITORY_DELETION_DATE ." = '0000-00-00 00:00:00'
+                  AND ". self::REPOSITORY_SCOPE." = 'I'
+                ORDER BY user.user_name";
+        return $this->retrieve($sql);
     }
 
     public function getAllGitoliteRespositories($projectId) {
@@ -381,6 +419,8 @@ class GitDao extends DataAccessObject {
         $repository->setAccess($result[self::REPOSITORY_ACCESS]);
         $repository->setMailPrefix($result[self::REPOSITORY_MAIL_PREFIX]);
         $repository->setBackendType($result[self::REPOSITORY_BACKEND_TYPE]);
+        $repository->setNamespace($result[self::REPOSITORY_NAMESPACE]);
+        $repository->setScope($result[self::REPOSITORY_SCOPE]);
         $repository->loadNotifiedMails();
     }
 }

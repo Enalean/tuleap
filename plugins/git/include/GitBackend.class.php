@@ -35,7 +35,6 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     private $packagesFile;
     private $configFile;
     //path MUST end with a '/'
-    const GIT_ROOT_PATH = '/var/lib/codendi/gitroot/';
     private $gitRootPath;
 
     const DEFAULT_DIR_MODE = '770';    
@@ -47,7 +46,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $this->configFile   = 'etc/config.ini';
         $this->dao          = new GitDao();
         //WARN : this is much safer to set it to an absolute path
-        $this->gitRootPath  = self::GIT_ROOT_PATH;
+        $this->gitRootPath  = Git_Backend_Interface::GIT_ROOT_PATH ;
         $this->gitBackupDir = PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir');        
     }
 
@@ -169,7 +168,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     }
 
     public function save($repository) {
-        $path          = self::GIT_ROOT_PATH.'/'.$repository->getPath();
+        $path          = Git_Backend_Interface::GIT_ROOT_PATH .'/'.$repository->getPath();
         $fsDescription = $this->getDriver()->getDescription($path);
         $description   = $repository->getDescription();
         if ( $description != $fsDescription ) {
@@ -179,8 +178,8 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     }
 
     public function renameProject(Project $project, $newName) {
-        if (is_dir(self::GIT_ROOT_PATH.'/'.$project->getUnixName())) {
-            return rename(self::GIT_ROOT_PATH.'/'.$project->getUnixName(), self::GIT_ROOT_PATH.'/'.$newName);
+        if (is_dir(Git_Backend_Interface::GIT_ROOT_PATH .'/'.$project->getUnixName())) {
+            return rename(Git_Backend_Interface::GIT_ROOT_PATH .'/'.$project->getUnixName(), Git_Backend_Interface::GIT_ROOT_PATH .'/'.$newName);
         }
         return true;
     }
@@ -198,7 +197,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     public function changeRepositoryAccess($repository) {
         $access   = $repository->getAccess();
         $repoPath = $repository->getPath();
-        $path     = self::GIT_ROOT_PATH.'/'.$repoPath;        
+        $path     = Git_Backend_Interface::GIT_ROOT_PATH .'/'.$repoPath;        
         $this->getDriver()->setRepositoryAccess($path, $access);
         $this->getDao()->save($repository);
         return true;
@@ -321,7 +320,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      * Verify if given name is not already reserved on filesystem
      */
     public function isNameAvailable($newName) {
-        return ! $this->fileExists(self::GIT_ROOT_PATH.'/'.$newName);
+        return ! $this->fileExists(Git_Backend_Interface::GIT_ROOT_PATH .'/'.$newName);
     }
 
     /**
@@ -330,7 +329,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return String
      */
-    public function getAccessUrl($repository) {
+    public function getAccessUrl(GitRepository $repository) {
         $serverName  = $_SERVER['SERVER_NAME'];
         $user = UserManager::instance()->getCurrentUser();
         return  $user->getUserName() .'@'. $serverName .':/gitroot/'. $repository->getProject()->getUnixName().'/'.$repository->getName().'.git';

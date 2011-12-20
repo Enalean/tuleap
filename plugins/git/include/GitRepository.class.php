@@ -22,8 +22,10 @@
 require_once('GitBackend.class.php');
 require_once('GitDriver.class.php');
 require_once('GitDao.class.php');
+require_once('PathJoinUtil.php');
 require_once(dirname(__FILE__).'/../DVCS/DVCSRepository.class.php');
 require_once('exceptions/GitRepositoryException.class.php');
+
 /**
  * Description of GitRepositoryclass
  *
@@ -39,6 +41,8 @@ class GitRepository implements DVCSRepository {
     const PUBLIC_ACCESS        = 'public';
     
     const DEFAULT_MAIL_PREFIX = '[SCM]';
+    const REPO_SCOPE_PROJECT  = 'P';
+    const REPO_SCOPE_INDIVIDUAL = 'I';
     
     private $id;
     private $parentId;
@@ -64,6 +68,8 @@ class GitRepository implements DVCSRepository {
     private $parent;    
     private $loaded;    
     private $dao;
+    private $namespace;
+    private $scope;
     
     protected $backendType;
 
@@ -89,7 +95,8 @@ class GitRepository implements DVCSRepository {
         $this->config      = array();
         $this->parent      = null;
         $this->parentId    = 0;
-        $this->loaded      = false;        
+        $this->loaded      = false;
+        $this->scope       = self::REPO_SCOPE_PROJECT;
     }       
 
     /**
@@ -180,6 +187,7 @@ class GitRepository implements DVCSRepository {
         $this->backend = $backend;
     }
 
+                    
     /**
      * Allow to mock in UT
      *
@@ -190,6 +198,7 @@ class GitRepository implements DVCSRepository {
             switch ($this->getBackendType()) {
                 case GitDao::BACKEND_GITOLITE:
                     $this->backend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
+                    
                     break;
                 default:
                     $this->backend = Backend::instance('Git','GitBackend');
@@ -334,11 +343,40 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
-     * @return String;
+     * Return repository name. Consider using getFullName instead
+     * 
+     * @see GitRepository::getFullName
+     * 
+     * @return String
      */
     public function getName() {
         return $this->name;
     }
+    
+    /**
+     * Return repository namespace. Consider using getFullName instead
+     * 
+     * @see GitRepository::getFullName
+     * 
+     * @return String
+     */
+    public function getNamespace() {
+        return $this->namespace;
+    }
+    
+    public function setNamespace($namespace) {
+        $this->namespace = $namespace;
+    }
+    
+    /**
+     * Return relative path from project repository root (without .git)
+     * 
+     * @return String
+     */
+    public function getFullName() {
+        return unixPathJoin(array($this->getNamespace(), $this->getName()));
+    }
+    
 
     public function getDescription() {
         return $this->description;
@@ -433,9 +471,27 @@ class GitRepository implements DVCSRepository {
     public function setPath($path) {
         $this->path = $path;
     }
+    
+    /**
+     * Gives the scope of the repository
+     * @return String
+     */
+    public function getScope() {
+        return $this->scope;
+    }
+    
+    /**
+     * @param String $scope
+     */
+    public function setScope($scope){
+        $this->scope = $scope;
+    }
 
     /**
-     * Gives the full relative path (from git root directory) to the repository
+     * Gives the full relative path (from git root directory) to the repository. Consider using getFullName instead.
+     * 
+     * @see GitRepository::getFullName
+     * 
      * @return String
      */
     public function getPath() {
@@ -544,7 +600,7 @@ class GitRepository implements DVCSRepository {
      * Clone a repository, it inherits access
      * @param String forkName
      */
-    public function fork($forkName) {        
+    public function forkShell($forkName) {
         $clone = new GitRepository();
         $clone->setName($forkName);
         $clone->setProject( $this->getProject() );
@@ -556,6 +612,20 @@ class GitRepository implements DVCSRepository {
         $clone->setDescription('-- Default description --');
         $this->getBackend()->createFork($clone);
     }
+        
+    public function fork($namespace, $user) {
+        $clone = clone $this;
+                
+        $clone->setCreator($user);
+        $clone->setParent($this);
+        $clone->setNamespace($namespace);
+        $clone->setId(null);
+        $path = unixPathJoin(array($this->project->getUnixName(), $namespace, $this->getName())).'.git';
+        $clone->setPath($path);
+        $clone->setScope(self::REPO_SCOPE_INDIVIDUAL);
+        $this->getBackend()->fork($this, $clone);
+    }
+    
 
     /**
      * Create a reference repository
@@ -708,7 +778,8 @@ class GitRepository implements DVCSRepository {
         return 1 <= $len && $len < GitDao::REPO_NAME_MAX_LENGTH &&
                !preg_match('`[^'. $this->getBackend()->getAllowedCharsInNamePattern() .']`', $name) &&
                !preg_match('`(?:^|/)\.`', $name) && //do not allow dot at the begining of a world
-               !preg_match('`\.\.`', $name); //do not allow double dots (prevent path collisions)
+               !preg_match('`\.\.`', $name) && //do not allow double dots (prevent path collisions)
+               !preg_match('/\.git$/', $name); //do not allow ".git" at the end since Tuleap will automatically add it, to avoid repository names like "repository.git.git"
     }
     
     /**
@@ -746,6 +817,17 @@ class GitRepository implements DVCSRepository {
         $referencePath  = $this->getBackend()->getGitRootPath().'/'.$this->getProject()->getUnixName();
         $repositoryPath = $this->getBackend()->getGitRootPath().'/'.$this->getPath();
         return ($this->isSubPath($referencePath, $repositoryPath) && $this->isDotGit($repositoryPath));
+    }
+    
+    /**
+     * Say if a repo belongs to a user
+     *
+     * @param User $user the user
+     *
+     * @return true if the repo is a personnal rep and if it is created by $user
+     */
+    public function belongsTo(User $user) {
+        return $this->getScope() == self::REPO_SCOPE_INDIVIDUAL && $this->getCreatorId() == $user->getId();
     }
 }
 

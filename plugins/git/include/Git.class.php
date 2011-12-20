@@ -32,11 +32,17 @@ class Git extends PluginController {
     const PERM_WRITE = 'PLUGIN_GIT_WRITE';
     const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
 
+    /**
+     * @var GitRepositoryFactory
+     */
+    protected $factory;
+    
     public function __construct(GitPlugin $plugin) {
-        
-        $matches = array();
         parent::__construct();
         
+        $this->factory = new GitRepositoryFactory();
+        
+        $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
             $this->request->set('group_id', $matches[1][0]);
             $this->request->set('action', $matches[2][0]);
@@ -109,9 +115,17 @@ class Git extends PluginController {
                                             'remove_mail',
                                             'fork',
                                             'set_private',
-                                            'confirm_private');
+                                            'confirm_private',
+                                            'fork_repositories',
+                                            'do_fork_repositories',
+            );
         } else {
             $this->addPermittedAction('index');
+            if ($this->user->isMember($this->groupId)) {
+                $this->addPermittedAction('fork_repositories');
+                $this->addPermittedAction('do_fork_repositories');
+            }
+            
             if ($repoId !== 0) {
                 $repo = new GitRepository();
                 $repo->setId($repoId);
@@ -119,6 +133,15 @@ class Git extends PluginController {
                     $this->addPermittedAction('view');
                     $this->addPermittedAction('edit');
                     $this->addPermittedAction('clone');
+                    if ($repo->belongsTo($user)) {
+                        $this->addPermittedAction('repo_management');
+                        $this->addPermittedAction('mail_prefix');
+                        $this->addPermittedAction('add_mail');
+                        $this->addPermittedAction('remove_mail');
+                        $this->addPermittedAction('del');
+                        $this->addPermittedAction('confirm_deletion');
+                        $this->addPermittedAction('save');
+                    }
                 }
             }
         }
@@ -302,9 +325,50 @@ class Git extends PluginController {
                 $this->addAction('setPrivate', array($this->groupId, $repoId));
                 $this->addView('view');
                 break;
+            case 'fork_repositories':
+                $this->addAction('getProjectRepositoryList', array($this->groupId));
+                $this->addView('forkRepositories');
+                break;
+            case 'do_fork_repositories':
+                try {
+                    $this->addAction('getProjectRepositoryList', array($this->groupId));
+                    $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
+                    $token->check();
+
+                    $repos_ids = array();
+
+                    $valid = new Valid_String('path');
+                    $valid->required();
+
+                    $path      = '';
+                    if($this->request->valid($valid)) {
+                        $path = trim($this->request->get('path'));
+                    }
+                    $path = userRepoPath($user->getUserName(), $path);
+                    
+                    $valid = new Valid_UInt('repos');
+                    $valid->required();
+                    if($this->request->validArray($valid)) {
+                        $repos_ids = $this->request->get('repos');
+                    }
+
+                    $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path, $user, $GLOBALS['HTML']));
+                } catch (MalformedPathException $e) {
+                    $this->addError($this->getText('fork_malformed_path'));
+                }
+                $this->addView('forkRepositories');
+                break;
             #LIST
-            default:     
-                $this->addAction( 'getProjectRepositoryList', array($this->groupId) );                
+            default:
+                
+                $user_id = null;
+                $valid = new Valid_UInt('user');
+                $valid->required();
+                if($this->request->valid($valid)) {
+                    $user_id = $this->request->get('user');
+                    $this->addData(array('user' => $user_id));
+                }
+                $this->addAction( 'getProjectRepositoryList', array($this->groupId, $user_id) );
                 $this->addView('index');
                 break;
         }
@@ -338,6 +402,19 @@ class Git extends PluginController {
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_access'));
             }
         }
+    }
+    
+    /**
+     * Instantiate an action based on a given name.
+     *
+     * Can be overriden to pass additionnal parameters to the action
+     *
+     * @param string $action The name of the action
+     *
+     * @return PluginActions
+     */
+    protected function instantiateAction($action) {
+        return new $action($this, $this->factory, SystemEventManager::instance());
     }
 }
 
