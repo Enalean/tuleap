@@ -67,6 +67,9 @@ class GitRepositoryTest extends UnitTestCase {
     
     private function checkNameValidation($repo) {
         $this->assertFalse($repo->isNameValid(''));
+        $this->assertFalse($repo->isNameValid('/'));
+        $this->assertFalse($repo->isNameValid('/jambon'));
+        $this->assertFalse($repo->isNameValid('jambon/'));
         $this->assertTrue($repo->isNameValid('jambon'));
         $this->assertTrue($repo->isNameValid('jambon.beurre'));
         $this->assertTrue($repo->isNameValid('jambon-beurre'));
