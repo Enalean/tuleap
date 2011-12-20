@@ -17,14 +17,22 @@ class ExtractCrossRefTest extends UnitTestCase {
         $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/codendi/gitolite/repositories/gpig/dalvik.git'));
         $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/codendi/gitroot/gpig/dalvik.git'));
     }
+    
+    function testExtractsTheNameAfterTheFirstOccurrenceOfRootPath() {
+        $this->assertEqual('gitroot', $this->extractor->getProjectName('/gitroot/gitroot/stuff.git'));
+    }
 
     function testExtractsGroupNameFromPersonalRepos() {
         $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/codendi/gitolite/repositories/gpig/u/manuel/dalvik.git'));
         $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/codendi/gitroot/gpig/u/manuel/dalvik.git'));
     }
     
+    function testExtractsGroupNameFromSymlinkedRepo() {
+        $this->assertEqual('chene', $this->extractor->getProjectName('/data/codendi/gitroot/chene/gitshell.git'));
+    }
+    
     function testExtractsGroupNameThrowsAnExceptionWhenNoProjectNameFound() {
-        $this->expectException('GitNoProjectFound');
+        $this->expectException('GitNoProjectFoundException');
         $this->extractor->getProjectName('/non_existing_path/dalvik.git');
     }
 }
