@@ -332,7 +332,7 @@ Summary: Graphs for Tracker v5
 Group: Development/Tools
 Version: @@PLUGIN_GRAPHONTRACKERS_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}-plugin-tracker
+Requires: %{PKG_NAME}-plugin-tracker >= 0.8.4
 %description plugin-graphontrackers
 Graphs for new tracker generation
 
