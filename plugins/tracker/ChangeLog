@@ -1,6 +1,9 @@
 DISCLAIMER: plugin still in beta, do not use it on production servers.
 DISCLAIMER: Your data might be trashed in a future update.
 
+Version 0.8.7 - Tuleap 4.0.25
+  * Fix bug with JS declaration of tracker namespace
+
 Version 0.8.6 - Tuleap 4.0.24.1
   * Update tracker XML definition (rnc + rng)
 
