@@ -392,7 +392,7 @@ class Git_GitoliteDriverTest extends UnitTestCase {
     }
     
     private function assertNameSpaceFileHasBeenInitialized($repoPath, $namespace, $group) {
-        $namespaceInfoFile = $repoPath.'/tuleap_forked_from';
+        $namespaceInfoFile = $repoPath.'/tuleap_namespace';
         $this->assertTrue(file_exists($namespaceInfoFile), 'the file (' . $namespaceInfoFile . ') does not exists');
         $this->assertEqual(file_get_contents($namespaceInfoFile), $namespace);
         $this->assertEqual($group, $this->_getFileGroupName($namespaceInfoFile));

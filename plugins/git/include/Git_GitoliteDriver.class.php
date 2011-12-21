@@ -494,9 +494,9 @@ class Git_GitoliteDriver {
             $copyHooks .= $asGroupGitolite.' "cp -f '.$source.'/hooks/* '.$target.'/hooks/"';
             $this->gitCmd($copyHooks);
             
-            $forkedFrom = 'cd '.$this->getRepositoriesPath().'; ';
-            $forkedFrom .= $asGroupGitolite.' "echo -n '.$new_ns.' > '.$target.'/tuleap_forked_from"';
-            $this->gitCmd($forkedFrom);
+            $saveNamespace = 'cd '.$this->getRepositoriesPath().'; ';
+            $saveNamespace .= $asGroupGitolite.' "echo -n '.$new_ns.' > '.$target.'/tuleap_namespace"';
+            $this->gitCmd($saveNamespace);
             
             return $clone_result;
         }
