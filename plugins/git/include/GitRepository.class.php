@@ -778,6 +778,7 @@ class GitRepository implements DVCSRepository {
         return 1 <= $len && $len < GitDao::REPO_NAME_MAX_LENGTH &&
                !preg_match('`[^'. $this->getBackend()->getAllowedCharsInNamePattern() .']`', $name) &&
                !preg_match('`(?:^|/)\.`', $name) && //do not allow dot at the begining of a world
+               !preg_match('%/$|^/%', $name) && //do not allow a slash at the beginning nor the end
                !preg_match('`\.\.`', $name) && //do not allow double dots (prevent path collisions)
                !preg_match('/\.git$/', $name); //do not allow ".git" at the end since Tuleap will automatically add it, to avoid repository names like "repository.git.git"
     }

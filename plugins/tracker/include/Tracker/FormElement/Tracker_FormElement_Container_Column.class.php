@@ -121,9 +121,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
             $html .= call_user_func_array(array($group, $method), array_merge(array($next), $params));
         }
         return $html;
-    }
-    
-    
+    }    
     
     protected function fetchArtifactPrefix() {
         return $this->fetchColumnPrefix();

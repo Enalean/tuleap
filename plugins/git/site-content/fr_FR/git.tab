@@ -68,7 +68,7 @@ plugin_git	disable_fork_gitolite	Le fork d'un dépôt de type "Gitolite" n'est p
 
 plugin_git	actions_params_error	Paramètre requis manquants
 plugin_git	actions_delete_process	Le dépôt va être supprimé dans quelques secondes
-plugin_git	actions_input_format_error	Le nom du dépôt n'est pas correct. Caractères autorisés : $1, la longueur maximale est de $2 caractères, le nom ne doit pas finir avec ".git" non plus.
+plugin_git	actions_input_format_error	Le nom du dépôt n'est pas correct. Caractères autorisés : $1, la longueur maximale est de $2 caractères, pas de slash au début ou à la fin, le nom ne doit pas finir avec ".git" non plus.
 plugin_git	actions_create_repo_process	Le dépôt va être crée dans quelques secondes
 plugin_git	actions_repo_not_found	Le dépôt n'existe pas
 plugin_git	actions_repo_access	Les droits d'accès au dépôt vont être modifiés dans quelques secondes

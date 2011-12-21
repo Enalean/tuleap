@@ -59,11 +59,6 @@ class GitRepositoryTest extends UnitTestCase {
         $repo->setBackend($gitolite);
         $this->checkNameValidation($repo);
         $this->assertTrue($repo->isNameValid('jambon/beurre'));
-        $this->assertFalse($repo->isNameValid('jambon/.beurre'));
-        $this->assertFalse($repo->isNameValid('jambon..beurre'));
-        $this->assertFalse($repo->isNameValid('jambon...beurre'));
-        $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
-        $this->assertFalse($repo->isNameValid('repo.git'));
         
         $repo->setBackend($gitshell);
         $this->checkNameValidation($repo);
@@ -72,6 +67,9 @@ class GitRepositoryTest extends UnitTestCase {
     
     private function checkNameValidation($repo) {
         $this->assertFalse($repo->isNameValid(''));
+        $this->assertFalse($repo->isNameValid('/'));
+        $this->assertFalse($repo->isNameValid('/jambon'));
+        $this->assertFalse($repo->isNameValid('jambon/'));
         $this->assertTrue($repo->isNameValid('jambon'));
         $this->assertTrue($repo->isNameValid('jambon.beurre'));
         $this->assertTrue($repo->isNameValid('jambon-beurre'));

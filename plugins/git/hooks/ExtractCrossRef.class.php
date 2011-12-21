@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean 2011. All rights reserved
  *
@@ -18,30 +17,30 @@
  */
 
 /**
- * Description of ExtractCrossRef
+ * Manage interaction with environment of extractCrossRef hook script
  */
 class ExtractCrossRef {
-    const ROOT_PATHS = '/var/lib/codendi/gitolite/repositories,/var/lib/codendi/gitroot,/gitroot,/gitolite/repositories';
 
     public function getProjectName($repoPath) {
-        $rootPaths = explode(',', self::ROOT_PATHS);
+        $rootPaths = array('gitolite/repositories', 'gitroot');
         foreach ($rootPaths as $rootPath) {
-            if (strpos($repoPath, $rootPath) === 0) {
-                return $this->getTheFirstElementAfterTheRootPath($repoPath, $rootPath);
+            if (strpos($repoPath, $rootPath) !== false) {
+                $cutPoint = strpos($repoPath, $rootPath) + strlen($rootPath) + 1;
+                return $this->getTheFirstElementAfterTheRootPath($repoPath, $cutPoint);
             }
         }
-        throw new GitNoProjectFound();
+        throw new GitNoProjectFoundException();
 
     }
 
-    private function getTheFirstElementAfterTheRootPath($repoPath, $rootPath) {
-        $relativePath = substr($repoPath, strlen($rootPath)+1);
+    private function getTheFirstElementAfterTheRootPath($repoPath, $cutPoint) {
+        $relativePath = substr($repoPath, $cutPoint);
         $pathElements = explode('/', $relativePath);
         return $pathElements[0];
     }
 
 }
-class GitNoProjectFound extends Exception {
+class GitNoProjectFoundException extends Exception {
 }
 
 ?>

@@ -113,12 +113,6 @@ class GitActions extends PluginActions {
         $c         = $this->getController();
         $projectId = intval( $projectId );
         
-        if ( empty($repositoryName) ) {
-            $c->addError($this->getText('actions_params_error'));
-            $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
-            return false;
-        }
-        
         $repository = new GitRepository();
         if ($backendType == GitDao::BACKEND_GITOLITE) {
             $backend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
