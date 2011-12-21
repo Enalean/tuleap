@@ -106,8 +106,6 @@ class trackerPlugin extends Plugin {
     public function javascript($params) {
         // TODO: Move this in ServiceTracker::displayHeader()
         include $GLOBALS['Language']->getContent('script_locale', null, 'tracker');
-        echo PHP_EOL;
-        echo "codendi.tracker = codendi.tracker || { };".PHP_EOL;
         echo "codendi.tracker.base_url = '". TRACKER_BASE_URL ."/';".PHP_EOL;
     }
     

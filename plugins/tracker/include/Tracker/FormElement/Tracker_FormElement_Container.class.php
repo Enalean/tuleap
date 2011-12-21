@@ -48,7 +48,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     }
 
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
-        var_dump('entre');
         $output = '';
         if ( $ignore_perms || $this->userCanRead($recipient) ) {
             $formElements = $this->getFormElements();
@@ -57,7 +56,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
                 $output .= ' ===== '.$this->getLabel().' ===== ';
                 $output .= PHP_EOL;
                 foreach ( $formElements as $formElement ) {
-                    var_dump($formElement);
                     $r = $formElement->fetchMailArtifact($recipient, $artifact, $format, $ignore_perms);
                     if ( $r ) {
                         $output .= $r;
