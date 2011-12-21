@@ -385,8 +385,17 @@ class Git_GitoliteDriverTest extends UnitTestCase {
             $this->assertRepoIsClonedWithHooks($new_root_dir);
 
             $this->assertWritableByGroup($new_root_dir, 'gitolite');
+            $this->assertNameSpaceFileHasBeenInitialized($new_root_dir, $new_ns, 'gitolite');
             exec('rm -rf '.$repositoriesDir);
         }
+
+    }
+    
+    private function assertNameSpaceFileHasBeenInitialized($repoPath, $namespace, $group) {
+        $namespaceInfoFile = $repoPath.'/tuleap_forked_from';
+        $this->assertTrue(file_exists($namespaceInfoFile), 'the file (' . $namespaceInfoFile . ') does not exists');
+        $this->assertEqual(file_get_contents($namespaceInfoFile), $namespace);
+        $this->assertEqual($group, $this->_getFileGroupName($namespaceInfoFile));
 
     }
     
