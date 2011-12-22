@@ -4,6 +4,7 @@ Version 4.0.25 (Not released yet)
     * Prevent a user from being added to ugroup as many time as the button add is clicked.(contrib STMicroelectronics)
     * Deleted trackers are no longer exported.(contrib STMicroelectronics)
     * Even if not FRS admin, the project admin should have access like an FRS admin. (contrib STMicroelectronics)
+    * Fix SLA #266: ROOT_DAILY event marked as running. Mysql reconnection mechanism was broken.
 
     == Plugins ==
     * Docman v2.20. See separated Changelog

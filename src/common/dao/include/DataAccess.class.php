@@ -124,7 +124,7 @@ class DataAccess {
             if ($this->nbReco < self::MAX_RECO) {
                 $this->nbReco++;
                 $this->reconnect();
-                return $this->fetch($sql);
+                return $this->query($sql);
             } else {
                 throw new DataAccessException('Unable to access the database ('. mysql_error($this->db) .' - '. mysql_errno() .'). Please contact your administrator.');
             }
