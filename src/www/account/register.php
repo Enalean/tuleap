@@ -220,7 +220,7 @@ if($page == "admin_creation" && $GLOBALS['sys_allow_restricted_users'] == 1){
 
 
 <P>
-<p><input type="submit" name="Register" value="<?php if($page != "admin_creation") print $Language->getText('account_register', 'btn_register'); 
+<p><input type="submit" class="btn primary" name="Register" value="<?php if($page != "admin_creation") print $Language->getText('account_register', 'btn_register'); 
 else print $Language->getText('account_register', 'btn_activate');?>">
 <?php
 if($page == "admin_creation") {

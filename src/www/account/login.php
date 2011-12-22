@@ -207,7 +207,7 @@ if ($_useHttps && $GLOBALS['sys_force_ssl'] == 0 ) {
 ?>
 
 <p>
-<input type="submit" name="login" value="<?php echo $GLOBALS['Language']->getText('account_login', 'login_btn'); ?>">
+<input type="submit" class="btn primary" name="login" value="<?php echo $GLOBALS['Language']->getText('account_login', 'login_btn'); ?>">
 </p>
 
 </form>

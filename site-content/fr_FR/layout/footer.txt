@@ -1,5 +1,3 @@
-<div class="footer">
-Propulsé par <a href="https://tuleap.net/" target="_blank">Tuleap&trade;</a> version <?php echo $version; ?>. Copyright &copy; 2011 <a href="http://www.enalean.com/" target="_blank">Enalean</a>.
-&nbsp;/&nbsp;
-<a href="/tos/tos.php">[tos]</a> - <a href="/tos/privacy.php">[privacy]</a>
-</div>
+<p class="pull-right"><a href="#">Back to top</a></p>
+<p>Propulsé par <a href="https://tuleap.net/" target="_blank">Tuleap</a> version <?php echo $version; ?>. Copyright © 2011 <a href="http://enalean.com/" target="_blank">Enalean</a>.<br />
+Tuleap is free software licensed under GPL License <a href="/tos/tos.php">[tos]</a> - <a href="/tos/privacy.php">[privacy]</a></p>

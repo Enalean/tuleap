@@ -44,7 +44,7 @@ $HTML->header(array('title'=>$Language->getText('account_lostlogin', 'title')));
 <p><?php echo $Language->getText('account_lostlogin', 'newpasswd2'); ?>:
 <br><input type="password" name="form_pw2">
 <input type="hidden" name="confirm_hash" value="<?php echo $purifier->purify($confirm_hash); ?>">
-<p><input type="submit" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
+<p><input type="submit" class="btn primary" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

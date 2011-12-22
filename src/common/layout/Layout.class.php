@@ -1234,12 +1234,8 @@ class Layout extends Response {
      * Display all the stylesheets for the current page
      */
     public function displayStylesheetElements($params) {
+        $this->displayCommonStylesheetElements($params);
         // Stylesheet external files
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
-        $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
-        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
         if(isset($params['stylesheet']) && is_array($params['stylesheet'])) {
             foreach($params['stylesheet'] as $css) {
                 print '<link rel="stylesheet" type="text/css" href="'.$css.'" />';
@@ -1262,6 +1258,14 @@ class Layout extends Response {
         $em->processEvent("cssstyle", null);
         echo '
         </style>';
+    }
+    
+    protected function displayCommonStylesheetElements($params) {
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
+        $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
+        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
+        echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
     }
     
     protected function getFontSizeName($p) {
@@ -1365,9 +1369,13 @@ class Layout extends Response {
 
         // Codendi version number
         $version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));
-
+        
+        echo '<footer class="footer"> 
+                  <div class="container">';
         include($Language->getContent('layout/footer'));
-            
+        echo '   </div>
+            </footer>';
+        
         if ( Config::get('DEBUG_MODE') && (Config::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')) ) {
             $this->showDebugInfo();
         }

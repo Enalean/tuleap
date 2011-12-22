@@ -52,7 +52,7 @@ if (register_valid()) {
 <form action="change_realname.php" method="post">
 <p><?php echo $Language->getText('account_change_realname', 'new_name'); ?>:
 <br><input type="text" name="form_realname" class="textfield_medium" value="<?php echo $hp->purify($user->getRealname(), CODENDI_PURIFIER_CONVERT_HTML) ?>" />
-<p><input type="submit" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
+<p><input type="submit" class="btn primary" name="Update" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php

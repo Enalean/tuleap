@@ -106,7 +106,7 @@ echo '<p>'.$Language->getText('account_verify', 'message');
 <p><?php echo $Language->getText('account_login', 'password'); ?>:
 <br><input type="password" name="form_pw">
 <INPUT type="hidden" name="confirm_hash" value="<?php print $confirm_hash; ?>">
-<p><input type="submit" name="Login" value="<?php echo $Language->getText('account_login', 'login_btn'); ?>">
+<p><input type="submit" class="btn primary" name="Login" value="<?php echo $Language->getText('account_login', 'login_btn'); ?>">
 </form>
 
 <?php
