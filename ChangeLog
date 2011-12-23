@@ -1,4 +1,4 @@
-Version 4.0.25 (Not released yet)
+Version 4.0.25 (Friday, December 23rd 2011)
     == Bug Fix ==
     * Dot no longer allowed in project short names.
     * Prevent a user from being added to ugroup as many time as the button add is clicked.(contrib STMicroelectronics)
@@ -19,7 +19,7 @@ Version 4.0.25 (Not released yet)
     == CLI ==
     * Version 1.5.0. See separated Changelog
 
-Version 4.0.24.1 (Not released yet)
+Version 4.0.24.1 (Friday, December 2nd 2011)
     == Bug Fix ==
     * Fix json issue following upgrade to Prototype v1.7 and Scriptaculous v1.9
     * Fix viewvc display issues (css where missing)
