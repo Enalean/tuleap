@@ -16,7 +16,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require 'pre.php';
+require_once 'pre.php';
+require_once dirname(__FILE__).'/../include/Statistics_ScmSvn.class.php';
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -29,12 +30,54 @@ if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
     header('Location: '.get_server_url());
 }
 
-// TODO: i18n
-$title = 'SCM stats';
-$GLOBALS['HTML']->includeCalendarScripts();
-$GLOBALS['HTML']->header(array('title' => $title));
-echo '<h1>'.$title.'</h1>';
+$request = HTTPRequest::instance();
 
-$GLOBALS['HTML']->footer(array());
+if ($request->exist('export')) {
+    $vStartDate = new Valid('start');
+    $vStartDate->addRule(new Rule_Date());
+    $vStartDate->required();
+    $startDate = $request->get('start');
+    if ($request->valid($vStartDate)) {
+        $startDate = $request->get('start');
+    } elseif (!empty($startDate)) {
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils', 'verify_start_date'));
+        $startDate = null;
+    }
+
+    $vEndDate = new Valid('end');
+    $vEndDate->addRule(new Rule_Date());
+    $vEndDate->required();
+    $endDate = $request->get('end');
+    if ($request->valid($vEndDate)) {
+        $endDate = $request->get('end');
+    } elseif (!empty($endDate)) {
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils', 'verify_end_date'));
+        $endDate = null;
+    }
+
+    // TODO: Optionally set a group Id
+    $groupId = null;
+
+    header ('Content-Type: text/csv');
+    header ('Content-Disposition: filename=project_history.csv');
+    $statsSvn = new Statistics_ScmSvn($startDate, $endDate, $groupId);
+    echo $statsSvn->getHeader();
+    echo $statsSvn->getStats();
+    exit;
+} else {
+    // TODO: i18n
+    $title = 'SCM stats';
+    $GLOBALS['HTML']->includeCalendarScripts();
+    $GLOBALS['HTML']->header(array('title' => $title));
+    echo '<h1>'.$title.'</h1>';
+
+    echo '<form>';
+    echo html_field_date('start', '', false, 10, 10, '', false);
+    echo html_field_date('end', '', false, 10, 10, '', false);
+    echo '<input type="submit" name="export">';
+    echo '</form>';
+
+    $GLOBALS['HTML']->footer(array());
+}
 
 ?>
