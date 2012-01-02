@@ -32,16 +32,14 @@ if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
 
 $request = HTTPRequest::instance();
 
-if ($request->exist('export')) {
     $vStartDate = new Valid('start');
     $vStartDate->addRule(new Rule_Date());
     $vStartDate->required();
     $startDate = $request->get('start');
     if ($request->valid($vStartDate)) {
         $startDate = $request->get('start');
-    } elseif (!empty($startDate)) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils', 'verify_start_date'));
-        $startDate = null;
+    } else {
+        $startDate = date('Y-m-d', strtotime('-1 year'));
     }
 
     $vEndDate = new Valid('end');
@@ -50,14 +48,13 @@ if ($request->exist('export')) {
     $endDate = $request->get('end');
     if ($request->valid($vEndDate)) {
         $endDate = $request->get('end');
-    } elseif (!empty($endDate)) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils', 'verify_end_date'));
-        $endDate = null;
+    } else {
+        $endDate = date('Y-m-d');
     }
-
     // TODO: Optionally set a group Id
     $groupId = null;
 
+if ($request->exist('export')) {
     header ('Content-Type: text/csv');
     header ('Content-Disposition: filename=project_history.csv');
     $statsSvn = new Statistics_ScmSvn($startDate, $endDate, $groupId);
@@ -71,10 +68,31 @@ if ($request->exist('export')) {
     $GLOBALS['HTML']->header(array('title' => $title));
     echo '<h1>'.$title.'</h1>';
 
-    echo '<form>';
-    echo html_field_date('start', '', false, 10, 10, '', false);
-    echo html_field_date('end', '', false, 10, 10, '', false);
-    echo '<input type="submit" name="export">';
+    echo '<form name="form_scm_stats" method="set">';
+    echo '<table>';
+    echo '<tr>';
+    echo '<td>';
+    echo '<b>Start date</b>';
+    echo '</td><td>';
+    echo '<b>End date</b>';
+    echo '</td><td>';
+    echo '<b>Project Id</b>';
+    echo '</td>';
+    echo '</tr><tr>';
+    echo '<td>';
+    // TODO: update timestamp on change
+    list($timestamp,) = util_date_to_unixtime($startDate);
+    echo html_field_date('start', $startDate, false, 10, 10, 'form_scm_stats', false).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
+    echo '</td><td>';
+    list($timestamp,) = util_date_to_unixtime($endDate);
+    echo html_field_date('end', $endDate, false, 10, 10, 'form_scm_stats', false).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
+    echo '</td><td>';
+    echo '<input name="group_id" >';
+    echo '</td><td></tr><tr><td>';
+    echo '<input type="submit" name="export" value="Export CSV" >';
+    echo '</td>';
+    echo '</tr>';
+    echo '</table>';
     echo '</form>';
 
     $GLOBALS['HTML']->footer(array());
