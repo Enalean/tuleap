@@ -23,6 +23,23 @@ require_once 'pre.php';
  */
 class Statistics_ScmSvnDao {
 
+    var $startDate;
+    var $endDate;
+
+    /**
+     * Constructor of the class
+     *
+     * @param String  $startDate Period start date
+     * @param String  $endDate   Period end date
+     * @param Integer $groupId   Project Id
+     *
+     * @return void
+     */
+    function __construct($startDate, $endDate, $groupId = null) {
+        $this->startDate      = str_replace('-', '', $startDate);
+        $this->endDate        = str_replace('-', '', $endDate);
+    }
+
     /**
      * Count all SVN commits for the given period
      *
@@ -31,11 +48,11 @@ class Statistics_ScmSvnDao {
      *
      * @return DataAccessResult
      */
-    function returnStatsFromDB($startDate, $endDate) {
-        $sql = "SELECT COUNT(1) AS commits
-                FROM svn_commits
-                WHERE date > UNIX_TIMESTAMP('".$startDate."')
-                  AND date < UNIX_TIMESTAMP('".$endDate."')";
+    function totalCommits() {
+        $sql = "SELECT svn_commits, svn_adds, svn_deletes
+                FROM group_svn_full_history
+                WHERE day > ".$this->startDate."
+                  AND day < ".$this->endDate;
 
         return db_query($sql);
     }
@@ -48,12 +65,12 @@ class Statistics_ScmSvnDao {
      *
      * @return DataAccessResult
      */
-    function returnStatsFromDBByProject($startDate, $endDate) {
-        $sql = "SELECT unix_group_name AS Project, COUNT(1) AS Commits
-                FROM svn_commits
+    function commitsByProject() {
+        $sql = "SELECT unix_group_name AS Project, SUM(svn_commits) AS commits, SUM(svn_adds) AS adds, SUM(svn_deletes) AS deletes
+                FROM group_svn_full_history
                 JOIN groups g USING (group_id)
-                WHERE date > UNIX_TIMESTAMP('".$startDate."')
-                  AND date < UNIX_TIMESTAMP('".$endDate."')
+                WHERE day > ".$this->startDate."
+                  AND day < ".$this->endDate."
                 GROUP BY Project
                 ORDER BY Commits DESC";
 
@@ -68,12 +85,12 @@ class Statistics_ScmSvnDao {
      *
      * @return DataAccessResult
      */
-    function returnStatsFromDBByUser($startDate, $endDate) {
-        $sql = "SELECT user_name AS User, COUNT(1) AS Commits
-                FROM svn_commits s
-                JOIN user u ON u.user_id = s.whoid
-                WHERE date > UNIX_TIMESTAMP('".$startDate."')
-                  AND date < UNIX_TIMESTAMP('".$endDate."')
+    function commitsByUser() {
+        $sql = "SELECT user_name AS User, SUM(svn_commits) AS commits, SUM(svn_adds) AS adds, SUM(svn_deletes) AS deletes
+                FROM group_svn_full_history
+                JOIN user u USING (user_id)
+                WHERE day > ".$this->startDate."
+                  AND day < ".$this->endDate."
                 GROUP BY User
                 ORDER BY Commits DESC";
 

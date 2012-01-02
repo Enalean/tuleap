@@ -76,20 +76,22 @@ class Statistics_ScmSvn {
      * @return String
      */
     function getStats() {
-        $dao = new Statistics_ScmSvnDao();
+        $dao = new Statistics_ScmSvnDao($this->startDate, $this->endDate);
         $this->addLine(array(''));
         $this->addLine(array('SVN'));
-        $dar = $dao->returnStatsFromDB($this->startDate, $this->endDate);
+        $dar = $dao->totalCommits();
         if (db_numrows($dar) > 0) {
             $this->addLine(array('', 'Total number of commits'));
+            $commits = 0;
             while ($row = db_fetch_array($dar)) {
-                $this->addLine(array('', $row['commits']));
+                $commits += intval($row['svn_commits']) + intval($row['svn_adds']) + intval($row['svn_deletes']);
             }
+            $this->addLine(array('', $commits));
         }
 
         $this->addLine(array(''));
 
-        $dar = $dao->returnStatsFromDBByProject($this->startDate, $this->endDate);
+        $dar = $dao->commitsByProject();
         if (db_numrows($dar) > 0) {
             $this->addLine(array('', 'Project', 'Number of commits'));
             $nb = 0;
@@ -98,19 +100,18 @@ class Statistics_ScmSvn {
                 $info['blank']   = '';
                 $project = $row['Project'];
                 $info['Project'] = $project;
-                $info['Commits'] = $row['Commits'];
-                $nb              += intval($row['Commits']);
+                $info['Commits'] = intval($row['commits']) + intval($row['adds']) + intval($row['deletes']);
+                $nb              += $info['Commits'];
                 $this->addLine($info);
             }
             $this->addLine(array(''));
             $this->addLine(array('', 'Total number projects', db_numrows($dar)));
             $this->addLine(array('', 'Total number of commits', $nb));
-            $this->addLine(array('', 'Average number of commits by project', round($nb/db_numrows($dar))));
         }
 
         $this->addLine(array(''));
 
-        $dar = $dao->returnStatsFromDBByUser($this->startDate, $this->endDate);
+        $dar = $dao->commitsByUser();
         if (db_numrows($dar) > 0) {
             $this->addLine(array('', 'User', 'Number of commits'));
             $nb = 0;
@@ -118,14 +119,13 @@ class Statistics_ScmSvn {
                 $info            = array();
                 $info['blank']   = '';
                 $info['User']    = $row['User'];
-                $info['Commits'] = $row['Commits'];
-                $nb              += intval($row['Commits']);
+                $info['Commits'] = intval($row['commits']) + intval($row['adds']) + intval($row['deletes']);
+                $nb              += $info['Commits'];
                 $this->addLine($info);
             }
             $this->addLine(array(''));
             $this->addLine(array('', 'Total number Users', db_numrows($dar)));
             $this->addLine(array('', 'Total number of commits', $nb));
-            $this->addLine(array('', 'Average number of commits by user', round($nb/db_numrows($dar))));
         }
         return $this->content;
     }

@@ -56,7 +56,7 @@ $request = HTTPRequest::instance();
 
 if ($request->exist('export')) {
     header ('Content-Type: text/csv');
-    header ('Content-Disposition: filename=project_history.csv');
+    header ('Content-Disposition: filename=scm_stats.csv');
     $statsSvn = new Statistics_ScmSvn($startDate, $endDate, $groupId);
     echo $statsSvn->getHeader();
     echo $statsSvn->getStats();
