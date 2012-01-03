@@ -189,7 +189,7 @@ class Statistics_ScmSvn {
             }
         }
 
-        $csvReadUsersNumber[]   = "Total number of userss with SVN read access";
+        $csvReadUsersNumber[]   = "Total number of users with SVN read access";
         $csvTopReadByUser[]     = "Top user (number of read access)";
         $csvTopUserRead[]       = "Top number of read access by user";
         $csvCommitUsersNumber[] = "Total number of users with SVN commits";
