@@ -120,8 +120,17 @@ class Statistics_ScmSvn {
         foreach ($dates as $begin => $end) {
             if ($begin) {
                 $csvPeriods[] = $begin."->".$end;
+                $readDar      = $dao->totalRead($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                if (db_numrows($readDar) > 0) {
+                    $read = 0;
+                    while ($row = db_fetch_array($readDar)) {
+                        $read += intval($row['svn_checkouts']) + intval($row['svn_access_count']) + intval($row['svn_browse']);
+                    }
+                    $csvTotalRead[] = $read;
+                } else {
+                    $csvTotalRead[] = 0;
+                }
                 $commitsDar = $dao->totalCommits($this->convertDateForDao($begin), $this->convertDateForDao($end));
-                $readDar    = $dao->totalRead($this->convertDateForDao($begin), $this->convertDateForDao($end));
                 if (db_numrows($commitsDar) > 0) {
                     $commits = 0;
                     while ($row = db_fetch_array($commitsDar)) {
@@ -131,56 +140,121 @@ class Statistics_ScmSvn {
                 } else {
                     $csvTotalCommits[] = 0;
                 }
-            if (db_numrows($readDar) > 0) {
-                    $read = 0;
-                    while ($row = db_fetch_array($readDar)) {
-                        $read += intval($row['svn_checkouts']) + intval($row['svn_access_count']) + intval($row['svn_browse']);
-                    }
-                    $csvTotalRead[] = $read;
-                } else {
-                    $csvTotalRead[] = 0;
-                }
             }
         }
+
+        $csvReadProjectsNumber[]   = "Total number of projects with SVN read access";
+        $csvTopReadByProject[]     = "Top project (number of read access)";
+        $csvTopProjectRead[]       = "Top number of read access by project";
+        $csvCommitProjectsNumber[] = "Total number of projects with SVN commits";
+        $csvTopCommitByProject[]   = "Top project (number of commits)";
+        $csvTopProjectCommits[]    = "Top number of commits by project";
+        foreach ($dates as $begin => $end) {
+            if ($begin) {
+                $numberOfReadProjects = 0;
+                $topRead              = 0;
+                $topReadProject       = '';
+                $readDar              = $dao->readByProject($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                if (db_numrows($readDar) > 0) {
+                    $nb = 0;
+                    while ($row = db_fetch_array($readDar)) {
+                        $nb += intval($row['checkouts']) + intval($row['access']) + intval($row['browses']);
+                        if ($nb > $topRead) {
+                            $topRead        = $nb;
+                            $topReadProject = $row['Project'];
+                        }
+                        $numberOfReadProjects ++;
+                    }
+                }
+                $csvReadProjectsNumber[] = $numberOfReadProjects;
+                $csvTopReadByProject[]   = $topReadProject;
+                $csvTopProjectRead[]     = $topRead;
+
+                $numberOfCommitProjects = 0;
+                $topCommits             = 0;
+                $topCommitProject       = '';
+                $commitsDar             = $dao->commitsByProject($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                if (db_numrows($commitsDar) > 0) {
+                    $nb = 0;
+                    while ($row = db_fetch_array($commitsDar)) {
+                        $nb += intval($row['commits']) + intval($row['adds']) + intval($row['deletes']);
+                        if ($nb > $topCommits) {
+                            $topCommits       = $nb;
+                            $topCommitProject = $row['Project'];
+                        }
+                        $numberOfCommitProjects ++;
+                    }
+                }
+                $csvCommitProjectsNumber[] = $numberOfCommitProjects;
+                $csvTopCommitByProject[]   = $topCommitProject;
+                $csvTopProjectCommits[]    = $topCommits;
+            }
+        }
+
+        $csvReadUsersNumber[]   = "Total number of userss with SVN read access";
+        $csvTopReadByUser[]     = "Top user (number of read access)";
+        $csvTopUserRead[]       = "Top number of read access by user";
+        $csvCommitUsersNumber[] = "Total number of users with SVN commits";
+        $csvTopCommitByUser[]   = "Top user (number of commits)";
+        $csvTopUserCommits[]    = "Top number of commits by user";
+        foreach ($dates as $begin => $end) {
+            if ($begin) {
+                $numberOfReadUsers = 0;
+                $topRead           = 0;
+                $topReadUser       = '';
+                $readDar           = $dao->readByUser($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                if (db_numrows($readDar) > 0) {
+                    $nb = 0;
+                    while ($row = db_fetch_array($readDar)) {
+                        $nb += intval($row['checkouts']) + intval($row['access']) + intval($row['browses']);
+                        if ($nb > $topRead) {
+                            $topRead     = $nb;
+                            $topReadUser = $row['User'];
+                        }
+                        $numberOfReadUsers ++;
+                    }
+                }
+                $csvReadUsersNumber[] = $numberOfReadUsers;
+                $csvTopReadByUser[]   = $topReadUser;
+                $csvTopUserRead[]     = $topRead;
+
+                $numberOfCommitUsers = 0;
+                $topCommits          = 0;
+                $topCommitUser       = '';
+                $commitsDar          = $dao->commitsByUser($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                if (db_numrows($commitsDar) > 0) {
+                    $nb = 0;
+                    while ($row = db_fetch_array($commitsDar)) {
+                        $nb += intval($row['commits']) + intval($row['adds']) + intval($row['deletes']);
+                        if ($nb > $topCommits) {
+                            $topCommits       = $nb;
+                            $topCommitUser    = $row['User'];
+                        }
+                        $numberOfCommitUsers ++;
+                    }
+                }
+                $csvCommitUsersNumber[] = $numberOfCommitUsers;
+                $csvTopCommitByUser[]     = $topCommitUser;
+                $csvTopUserCommits[]    = $topCommits;
+            }
+        }
+
         $this->addLine($csvPeriods);
         $this->addLine($csvTotalRead);
+        $this->addLine($csvReadProjectsNumber);
+        $this->addLine($csvTopReadByProject);
+        $this->addLine($csvTopProjectRead);
+        $this->addLine($csvReadUsersNumber);
+        $this->addLine($csvTopReadByUser);
+        $this->addLine($csvTopUserRead);
         $this->addLine($csvTotalCommits);
+        $this->addLine($csvCommitProjectsNumber);
+        $this->addLine($csvTopCommitByProject);
+        $this->addLine($csvTopProjectCommits);
+        $this->addLine($csvCommitUsersNumber);
+        $this->addLine($csvTopCommitByUser);
+        $this->addLine($csvTopUserCommits);
 
-        $this->addLine(array(''));
-
-        $dar = $dao->commitsByProject($this->convertDateForDao($this->startDate), $this->convertDateForDao($this->endDate));
-        if (db_numrows($dar) > 0) {
-            $this->addLine(array('Project', 'Number of commits'));
-            $nb = 0;
-            while ($row = db_fetch_array($dar)) {
-                $info = array();
-                $info['Project'] = $row['Project'];
-                $info['Commits'] = intval($row['commits']) + intval($row['adds']) + intval($row['deletes']);
-                $nb              += $info['Commits'];
-                $this->addLine($info);
-            }
-            $this->addLine(array(''));
-            $this->addLine(array('Total number projects', db_numrows($dar)));
-            $this->addLine(array('Total number of commits', $nb));
-        }
-
-        $this->addLine(array(''));
-
-        $dar = $dao->commitsByUser($this->convertDateForDao($this->startDate), $this->convertDateForDao($this->endDate));
-        if (db_numrows($dar) > 0) {
-            $this->addLine(array('User', 'Number of commits'));
-            $nb = 0;
-            while ($row = db_fetch_array($dar)) {
-                $info = array();
-                $info['User']    = $row['User'];
-                $info['Commits'] = intval($row['commits']) + intval($row['adds']) + intval($row['deletes']);
-                $nb              += $info['Commits'];
-                $this->addLine($info);
-            }
-            $this->addLine(array(''));
-            $this->addLine(array('Total number Users', db_numrows($dar)));
-            $this->addLine(array('Total number of commits', $nb));
-        }
         return $this->content;
     }
 

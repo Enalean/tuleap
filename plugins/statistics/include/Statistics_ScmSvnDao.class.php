@@ -68,6 +68,25 @@ class Statistics_ScmSvnDao {
     }
 
     /**
+     * Count SVN read access by project for the given period
+     *
+     * @param String $startDate Period start date
+     * @param String $endDate   Period end date
+     *
+     * @return DataAccessResult
+     */
+    function readByProject($startDate, $endDate) {
+        $sql = "SELECT unix_group_name AS Project, SUM(svn_checkouts) AS checkouts, SUM(svn_access_count) AS access, SUM(svn_browse) AS browses
+                FROM group_svn_full_history
+                JOIN groups g USING (group_id)
+                WHERE day >= ".$startDate."
+                  AND day < ".$endDate."
+                GROUP BY Project";
+
+        return db_query($sql);
+    }
+
+    /**
      * Count SVN commits by project for the given period
      *
      * @param String $startDate Period start date
@@ -82,6 +101,25 @@ class Statistics_ScmSvnDao {
                 WHERE day >= ".$startDate."
                   AND day < ".$endDate."
                 GROUP BY Project";
+
+        return db_query($sql);
+    }
+
+    /**
+     * Count SVN read access by user for the given period
+     *
+     * @param String $startDate Period start date
+     * @param String $endDate   Period end date
+     *
+     * @return DataAccessResult
+     */
+    function readByUser($startDate, $endDate) {
+        $sql = "SELECT user_name AS User, SUM(svn_checkouts) AS checkouts, SUM(svn_access_count) AS access, SUM(svn_browse) AS browses
+                FROM group_svn_full_history
+                JOIN user u USING (user_id)
+                WHERE day >= ".$startDate."
+                  AND day < ".$endDate."
+                GROUP BY User";
 
         return db_query($sql);
     }
