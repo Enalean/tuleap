@@ -79,12 +79,11 @@ if ($request->exist('export')) {
     echo '</td>';
     echo '</tr><tr>';
     echo '<td>';
-    // TODO: update timestamp on change
     list($timestamp,) = util_date_to_unixtime($startDate);
-    echo html_field_date('start', $startDate, false, 10, 10, 'form_scm_stats', false).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
+    echo html_field_date('start', $startDate, false, 10, 10, 'form_scm_stats', false);
     echo '</td><td>';
     list($timestamp,) = util_date_to_unixtime($endDate);
-    echo html_field_date('end', $endDate, false, 10, 10, 'form_scm_stats', false).'<br /><em>'.html_time_ago($timestamp).'</em><br />';
+    echo html_field_date('end', $endDate, false, 10, 10, 'form_scm_stats', false);
     echo '</td><td>';
     echo '<input name="group_id" >';
     echo '</td><td></tr><tr><td>';
