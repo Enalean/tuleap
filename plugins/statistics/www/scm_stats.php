@@ -62,8 +62,7 @@ if ($request->exist('export')) {
     echo $statsSvn->getStats();
     exit;
 } else {
-    // TODO: i18n
-    $title = 'SCM stats';
+    $title = $GLOBALS['Language']->getText('plugin_statistics', 'scm_title');
     $GLOBALS['HTML']->includeCalendarScripts();
     $GLOBALS['HTML']->header(array('title' => $title));
     echo '<h1>'.$title.'</h1>';
@@ -89,7 +88,7 @@ if ($request->exist('export')) {
     echo '</td><td>';
     echo '<input name="group_id" >';
     echo '</td><td></tr><tr><td>';
-    echo '<input type="submit" name="export" value="Export CSV" >';
+    echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_export_button').'" >';
     echo '</td>';
     echo '</tr>';
     echo '</table>';

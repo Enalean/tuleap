@@ -114,9 +114,9 @@ class Statistics_ScmSvn {
         $dates = $this->splitPeriodByMonths();
         $dao = new Statistics_ScmSvnDao(CodendiDataAccess::instance());
         $this->addLine(array('SVN'));
-        $csvPeriods[]      = "Periods";
-        $csvTotalCommits[] = "Total number of SVN commits";
-        $csvTotalRead[]    = "Total number of SVN read access";
+        $csvPeriods[]      = $GLOBALS['Language']->getText('plugin_statistics', 'scm_period');
+        $csvTotalRead[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_total_read');
+        $csvTotalCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_total_commit');
         foreach ($dates as $begin => $end) {
             if ($begin) {
                 $csvPeriods[] = $begin."->".$end;
@@ -143,12 +143,12 @@ class Statistics_ScmSvn {
             }
         }
 
-        $csvReadProjectsNumber[]   = "Total number of projects with SVN read access";
-        $csvTopReadByProject[]     = "Top project (number of read access)";
-        $csvTopProjectRead[]       = "Top number of read access by project";
-        $csvCommitProjectsNumber[] = "Total number of projects with SVN commits";
-        $csvTopCommitByProject[]   = "Top project (number of commits)";
-        $csvTopProjectCommits[]    = "Top number of commits by project";
+        $csvReadProjectsNumber[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_read_project');
+        $csvTopReadByProject[]     = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_read_project');
+        $csvTopProjectRead[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_number_read_project');
+        $csvCommitProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_commit_project');
+        $csvTopCommitByProject[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_commit_project');
+        $csvTopProjectCommits[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_number_top_commit_project');
         foreach ($dates as $begin => $end) {
             if ($begin) {
                 $numberOfReadProjects = 0;
@@ -189,12 +189,12 @@ class Statistics_ScmSvn {
             }
         }
 
-        $csvReadUsersNumber[]   = "Total number of users with SVN read access";
-        $csvTopReadByUser[]     = "Top user (number of read access)";
-        $csvTopUserRead[]       = "Top number of read access by user";
-        $csvCommitUsersNumber[] = "Total number of users with SVN commits";
-        $csvTopCommitByUser[]   = "Top user (number of commits)";
-        $csvTopUserCommits[]    = "Top number of commits by user";
+        $csvReadUsersNumber[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_read_user');
+        $csvTopReadByUser[]     = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_read_user');
+        $csvTopUserRead[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_number_read_user');
+        $csvCommitUsersNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_commit_user');
+        $csvTopCommitByUser[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_commit_user');
+        $csvTopUserCommits[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_number_commit_user');
         foreach ($dates as $begin => $end) {
             if ($begin) {
                 $numberOfReadUsers = 0;

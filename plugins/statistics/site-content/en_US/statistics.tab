@@ -26,3 +26,22 @@ plugin_statistics_admin_page	disk_usage_period	From $1 to $2.
 plugin_statistics_admin_page	disk_usage_proportion	This project uses <b>$1</b> of the <b>$2</b> allowed quota. 
 plugin_statistics_admin_page	year	View statistics for the last $1 months
 plugin_statistics_admin_page	months	View statistics for the last year
+
+plugin_statistics	scm_title	SCM statistics
+plugin_statistics	scm_description	Display SCM statistics of the platform.
+plugin_statistics	scm_export_button	Export CSV
+plugin_statistics	scm_period	Period
+plugin_statistics	scm_svn_total_read	Total number of SVN read access
+plugin_statistics	scm_svn_read_project	Total number of projects with SVN read access
+plugin_statistics	scm_svn_top_read_project	Top project (number of read access)
+plugin_statistics	scm_svn_top_number_read_project	Top number of read access by project
+plugin_statistics	scm_svn_read_user	Total number of users with SVN read access
+plugin_statistics	scm_svn_top_read_user	Top user (number of read access)
+plugin_statistics	scm_svn_top_number_read_user	Top number of read access by user
+plugin_statistics	scm_svn_total_commit	Total number of SVN commits
+plugin_statistics	scm_svn_commit_project	Total number of projects with SVN commits
+plugin_statistics	scm_svn_top_commit_project	Top project (number of commits)
+plugin_statistics	scm_svn_number_top_commit_project	Top number of commits by project
+plugin_statistics	scm_svn_commit_user	Total number of users with SVN commits
+plugin_statistics	scm_svn_top_commit_user	Top user (number of commits)
+plugin_statistics	scm_svn_top_number_commit_user	Top number of commits by user
