@@ -23,6 +23,8 @@ require_once 'pre.php';
  */
 class Statistics_ScmSvnDao extends DataAccessObject {
 
+    var $condition = '';
+
     /**
      * Constructor of the class
      * @param DataAccess $da      Data access details
@@ -32,6 +34,9 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      */
     function __construct(DataAccess $da, $groupId = null) {
         parent::__construct($da);
+        if ($groupId) {
+            $this->condition = ' AND group_id='.$this->da->escapeInt($groupId);
+        }
     }
 
     /**
@@ -46,7 +51,8 @@ class Statistics_ScmSvnDao extends DataAccessObject {
         $sql = "SELECT svn_checkouts, svn_access_count, svn_browse
                 FROM group_svn_full_history
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate);
+                  AND day < ".$this->da->quoteSmart($endDate)."
+                  ".$this->condition;
 
         return $this->retrieve($sql);;
     }
@@ -63,7 +69,8 @@ class Statistics_ScmSvnDao extends DataAccessObject {
         $sql = "SELECT svn_commits, svn_adds, svn_deletes
                 FROM group_svn_full_history
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate);
+                  AND day < ".$this->da->quoteSmart($endDate)."
+                  ".$this->condition;
 
         return $this->retrieve($sql);;
     }
@@ -120,6 +127,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
                 JOIN user u USING (user_id)
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate)."
+                  ".$this->condition."
                 GROUP BY User";
 
         return $this->retrieve($sql);;
@@ -139,6 +147,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
                 JOIN user u USING (user_id)
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate)."
+                  ".$this->condition."
                 GROUP BY User";
 
         return $this->retrieve($sql);;

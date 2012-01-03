@@ -32,30 +32,41 @@ if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
 
 $request = HTTPRequest::instance();
 
-    $vStartDate = new Valid('start');
-    $vStartDate->addRule(new Rule_Date());
-    $vStartDate->required();
+$error = false;
+
+$vStartDate = new Valid('start');
+$vStartDate->addRule(new Rule_Date());
+$vStartDate->required();
+$startDate = $request->get('start');
+if ($request->valid($vStartDate)) {
     $startDate = $request->get('start');
-    if ($request->valid($vStartDate)) {
-        $startDate = $request->get('start');
-    } else {
-        $startDate = date('Y-m-d', strtotime('-1 year'));
-    }
+} else {
+    $startDate = date('Y-m-d', strtotime('-1 year'));
+}
 
-    $vEndDate = new Valid('end');
-    $vEndDate->addRule(new Rule_Date());
-    $vEndDate->required();
+$vEndDate = new Valid('end');
+$vEndDate->addRule(new Rule_Date());
+$vEndDate->required();
+$endDate = $request->get('end');
+if ($request->valid($vEndDate)) {
     $endDate = $request->get('end');
-    if ($request->valid($vEndDate)) {
-        $endDate = $request->get('end');
-    } else {
-        $endDate = date('Y-m-d');
-    }
-    // TODO: end date must be bigger than start date
-    // TODO: Optionally set a group Id
-    $groupId = null;
+} else {
+    $endDate = date('Y-m-d');
+}
 
-if ($request->exist('export')) {
+if ($startDate >= $endDate) {
+    $error = true;
+    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'period_error'));
+}
+
+$groupId  = null;
+$vGroupId = new Valid_GroupId();
+$vGroupId->required();
+if($request->valid($vGroupId)) {
+    $groupId = $request->get('group_id');
+}
+
+if (!$error && $request->exist('export')) {
     header ('Content-Type: text/csv');
     header ('Content-Disposition: filename=scm_stats.csv');
     $statsSvn = new Statistics_ScmSvn($startDate, $endDate, $groupId);

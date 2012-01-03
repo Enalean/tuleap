@@ -29,6 +29,7 @@ class Statistics_ScmSvn {
     var $content;
     var $startDate;
     var $endDate;
+    var $groupId = null;
 
     /**
      * Constructor of the class
@@ -40,10 +41,11 @@ class Statistics_ScmSvn {
      * @return void
      */
     function __construct($startDate, $endDate, $groupId = null) {
-        $this->separator      = get_csv_separator();
-        $this->content        = '';
-        $this->startDate      = $startDate;
-        $this->endDate        = $endDate;
+        $this->separator = get_csv_separator();
+        $this->content   = '';
+        $this->startDate = $startDate;
+        $this->endDate   = $endDate;
+        $this->groupId   = $groupId;
     }
 
     /**
@@ -112,7 +114,7 @@ class Statistics_ScmSvn {
      */
     function getStats() {
         $dates = $this->splitPeriodByMonths();
-        $dao = new Statistics_ScmSvnDao(CodendiDataAccess::instance());
+        $dao = new Statistics_ScmSvnDao(CodendiDataAccess::instance(), $this->groupId);
         $this->addLine(array('SVN'));
         $csvPeriods[]      = $GLOBALS['Language']->getText('plugin_statistics', 'scm_period');
         $csvTotalRead[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_total_read');
@@ -143,49 +145,51 @@ class Statistics_ScmSvn {
             }
         }
 
-        $csvReadProjectsNumber[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_read_project');
-        $csvTopReadByProject[]     = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_read_project');
-        $csvTopProjectRead[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_number_read_project');
-        $csvCommitProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_commit_project');
-        $csvTopCommitByProject[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_commit_project');
-        $csvTopProjectCommits[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_number_top_commit_project');
-        foreach ($dates as $begin => $end) {
-            if ($begin) {
-                $numberOfReadProjects = 0;
-                $topRead              = 0;
-                $topReadProject       = '';
-                $readDar              = $dao->readByProject($this->convertDateForDao($begin), $this->convertDateForDao($end));
-                if ($readDar && !$readDar->isError()) {
-                    foreach ($readDar as $row) {
-                        $nb = intval($row['checkouts']) + intval($row['access']) + intval($row['browses']);
-                        if ($nb > $topRead) {
-                            $topRead        = $nb;
-                            $topReadProject = $row['Project'];
+        if (!$this->groupId) {
+            $csvReadProjectsNumber[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_read_project');
+            $csvTopReadByProject[]     = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_read_project');
+            $csvTopProjectRead[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_number_read_project');
+            $csvCommitProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_commit_project');
+            $csvTopCommitByProject[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_top_commit_project');
+            $csvTopProjectCommits[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_number_top_commit_project');
+            foreach ($dates as $begin => $end) {
+                if ($begin) {
+                    $numberOfReadProjects = 0;
+                    $topRead              = 0;
+                    $topReadProject       = '';
+                    $readDar              = $dao->readByProject($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                    if ($readDar && !$readDar->isError()) {
+                        foreach ($readDar as $row) {
+                            $nb = intval($row['checkouts']) + intval($row['access']) + intval($row['browses']);
+                            if ($nb > $topRead) {
+                                $topRead        = $nb;
+                                $topReadProject = $row['Project'];
+                            }
+                            $numberOfReadProjects ++;
                         }
-                        $numberOfReadProjects ++;
                     }
-                }
-                $csvReadProjectsNumber[] = $numberOfReadProjects;
-                $csvTopReadByProject[]   = $topReadProject;
-                $csvTopProjectRead[]     = $topRead;
+                    $csvReadProjectsNumber[] = $numberOfReadProjects;
+                    $csvTopReadByProject[]   = $topReadProject;
+                    $csvTopProjectRead[]     = $topRead;
 
-                $numberOfCommitProjects = 0;
-                $topCommits             = 0;
-                $topCommitProject       = '';
-                $commitsDar             = $dao->commitsByProject($this->convertDateForDao($begin), $this->convertDateForDao($end));
-                if ($commitsDar && !$commitsDar->isError()) {
-                    foreach ($commitsDar as $row) {
-                        $nb = intval($row['commits']) + intval($row['adds']) + intval($row['deletes']);
-                        if ($nb > $topCommits) {
-                            $topCommits       = $nb;
-                            $topCommitProject = $row['Project'];
+                    $numberOfCommitProjects = 0;
+                    $topCommits             = 0;
+                    $topCommitProject       = '';
+                    $commitsDar             = $dao->commitsByProject($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                    if ($commitsDar && !$commitsDar->isError()) {
+                        foreach ($commitsDar as $row) {
+                            $nb = intval($row['commits']) + intval($row['adds']) + intval($row['deletes']);
+                            if ($nb > $topCommits) {
+                                $topCommits       = $nb;
+                                $topCommitProject = $row['Project'];
+                            }
+                            $numberOfCommitProjects ++;
                         }
-                        $numberOfCommitProjects ++;
                     }
+                    $csvCommitProjectsNumber[] = $numberOfCommitProjects;
+                    $csvTopCommitByProject[]   = $topCommitProject;
+                    $csvTopProjectCommits[]    = $topCommits;
                 }
-                $csvCommitProjectsNumber[] = $numberOfCommitProjects;
-                $csvTopCommitByProject[]   = $topCommitProject;
-                $csvTopProjectCommits[]    = $topCommits;
             }
         }
 
@@ -237,16 +241,20 @@ class Statistics_ScmSvn {
 
         $this->addLine($csvPeriods);
         $this->addLine($csvTotalRead);
-        $this->addLine($csvReadProjectsNumber);
-        $this->addLine($csvTopReadByProject);
-        $this->addLine($csvTopProjectRead);
+        if (!$this->groupId) {
+            $this->addLine($csvReadProjectsNumber);
+            $this->addLine($csvTopReadByProject);
+            $this->addLine($csvTopProjectRead);
+        }
         $this->addLine($csvReadUsersNumber);
         $this->addLine($csvTopReadByUser);
         $this->addLine($csvTopUserRead);
         $this->addLine($csvTotalCommits);
-        $this->addLine($csvCommitProjectsNumber);
-        $this->addLine($csvTopCommitByProject);
-        $this->addLine($csvTopProjectCommits);
+        if (!$this->groupId) {
+            $this->addLine($csvCommitProjectsNumber);
+            $this->addLine($csvTopCommitByProject);
+            $this->addLine($csvTopProjectCommits);
+        }
         $this->addLine($csvCommitUsersNumber);
         $this->addLine($csvTopCommitByUser);
         $this->addLine($csvTopUserCommits);
