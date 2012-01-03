@@ -77,7 +77,7 @@ class Tracker_Artifact_Changeset_Comment {
                 case 'html':
                     $html = '';
                     $hp = Codendi_HTMLPurifier::instance();
-                    if ($forMail) {
+                    if ($forMail) {                        
                         $html .= '<div class="tracker_artifact_followup_title">';
                         $html .= '<span class="tracker_artifact_followup_title_user">';
                         $user = UserManager::instance()->getUserById($this->submitted_by);
@@ -91,7 +91,7 @@ class Tracker_Artifact_Changeset_Comment {
                         if ($user->getId() != 0) {
                             $timezone = ' ('.$user->getTimezone().')';
                         }
-                        $html .= '<div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $_SERVER['REQUEST_TIME']).$timezone.'</div>';
+                        $html .= '<div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on).$timezone.'</div>';
                         $html .= '</div>';
                         $html .= '<div class="tracker_artifact_followup_avatar">';
                         $html .= '<div class="avatar"></div>';

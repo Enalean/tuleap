@@ -659,6 +659,7 @@ class Tracker_Artifact_Changeset {
         $format = 'html';
         $art = $this->getArtifact();
         $output ='<h1>'.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).'</h1>'.PHP_EOL;
+        $followup = '';
         // Display latest changes (diff)
         if ($comment = $this->getComment()) {
             $followup = $comment->fetchFollowUp($format, true, true);
