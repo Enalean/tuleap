@@ -345,6 +345,15 @@ Requires: %{PKG_NAME}-plugin-tracker
 %description plugin-cardwall
 Fancy cardwall output on top of Tracker v5
 
+%package plugin-soapproject
+Summary: Project creation automation through SOAP
+Group: Development/Tools
+Version: @@PLUGIN_SOAPPROJECT_VERSION@@
+Release: 1%{?dist}
+Requires: @@PKG_NAME@@ >= @@VERSION@@
+%description plugin-soapproject
+Project creation automation through SOAP
+
 #
 ## Themes
 #
@@ -600,7 +609,7 @@ else
 fi
 
 # In any cases fix the context
-/usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR}
+/usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR} || true
 
 # This adds the proper /etc/rc*.d links for the script that runs the codendi backend
 #/sbin/chkconfig --add %{APP_NAME}
@@ -890,6 +899,10 @@ fi
 %files plugin-cardwall
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/cardwall
+
+%files plugin-soapproject
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/soapproject
 
 #
 # Themes

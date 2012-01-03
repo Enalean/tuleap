@@ -1,3 +1,6 @@
+
+	* SOAP API update to version 4.3, see src/www/soap/ChangeLog for details.
+
 Version 4.0.25 (Friday, December 23rd 2011)
     == Bug Fix ==
     * Dot no longer allowed in project short names.

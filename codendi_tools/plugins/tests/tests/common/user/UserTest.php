@@ -54,7 +54,7 @@ class UserTestVersion_MockPreferences extends UserTestVersion {
  * Tests the class User
  */
 class UserTest extends UnitTestCase {
-    
+
     function testStatus() {
         $u1 =& new UserTestVersion($this);
         $u1->setReturnValue('getStatus', 'A');
@@ -253,6 +253,7 @@ class UserTest extends UnitTestCase {
         $this->assertFalse($projectmember->isMember(1, 'A'));
     }
 
+
     function testGetAuthorizedKeysSplitedWith1Key() {
         $k1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAtfKHvNobjjB+cYGue/c/SXUL9Htay'
             .'lfQJWnLiV3AuqnbrWm6l9WGnv6+44/6e38Jwk0ywuvCdM5xi9gtWPN9Cw2S8qLbhVr'
@@ -310,6 +311,45 @@ class UserTest extends UnitTestCase {
         $this->assertEqual($res[2], $k2);
     }
     
+    function testActiveUserCanSeePeopleNotInHisProjects() {
+        $activeUser = new UserTestVersion2($this);
+        $activeUser->setId(123);
+        $activeUser->setReturnValue('getUserGroupData', array(101 => array(),
+                                                              102 => array()));
+        $activeUser->setStatus(User::STATUS_ACTIVE);
+
+        $notProjectMember = new UserTestVersion2($this);
+        $notProjectMember->setReturnValue('getUserGroupData', array(103 => array()));
+
+        $this->assertTrue($activeUser->canSee($notProjectMember));
+    }
+
+    function testRestrictedUserCanSeePeopleInHisProjects() {
+        $restrictedUser = new UserTestVersion2($this);
+        $restrictedUser->setId(123);
+        $restrictedUser->setReturnValue('getUserGroupData', array(101 => array(),
+                                                                  102 => array()));
+        $restrictedUser->setStatus(User::STATUS_RESTRICTED);
+
+        $otherProjectMember = new UserTestVersion2($this);
+        $otherProjectMember->setReturnValue('getUserGroupData', array(102 => array()));
+
+        $this->assertTrue($restrictedUser->canSee($otherProjectMember));
+    }
+
+    function testRestrictedUserCannotSeePeopleNotInHisProjects() {
+        $restrictedUser = new UserTestVersion2($this);
+        $restrictedUser->setId(123);
+        $restrictedUser->setReturnValue('getUserGroupData', array(101 => array(),
+                                                                  102 => array()));
+        $restrictedUser->setStatus(User::STATUS_RESTRICTED);
+
+        $notProjectMember = new UserTestVersion2($this);
+        $notProjectMember->setReturnValue('getUserGroupData', array(103 => array()));
+
+        $this->assertFalse($restrictedUser->canSee($notProjectMember));
+    }
+
     function testGetAuthorizedKeysSplitedWithoutKey() {
         $user = new User(array('language_id'     => 'en_US',
                                'authorized_keys' => ''));

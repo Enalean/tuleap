@@ -31,7 +31,7 @@ require_once('common/widget/WidgetLayoutManager.class.php');
 function create_project($data, $do_not_exit = false) {
     srand((double)microtime()*1000000);
     $random_num=rand(0,1000000);
-    
+
     // Make sure default project privacy status is defined. If not
     // then default to "public"
     if (!isset($GLOBALS['sys_is_project_public'])) {
@@ -42,9 +42,14 @@ function create_project($data, $do_not_exit = false) {
     } else {
       $http_domain=$data['project']['form_unix_name'].'.'.$GLOBALS['sys_default_domain'];
     }
-    
-    
-    
+
+    $um = UserManager::instance();
+    if (isset($data['requester'])) {
+        $requester_id = $data['requester']->getId();
+    } else {
+        $requester_id = $um->getCurrentUser()->getId();
+    }
+
     // make group entry
     $insert_data = array(
         'group_name'          => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_full_name'])) ."'",
@@ -112,7 +117,7 @@ function create_project($data, $do_not_exit = false) {
         // make the current user a project admin as well as admin
         // on all Codendi services
         $result=db_query("INSERT INTO user_group (user_id,group_id,admin_flags,bug_flags,forum_flags,project_flags,patch_flags,support_flags,doc_flags,file_flags,wiki_flags,svn_flags,news_flags) VALUES ("
-            . user_getid() . ","
+            . $requester_id . ","
             . $group_id . ","
             . "'A'," // admin flags
             . "2," // bug flags
@@ -130,7 +135,7 @@ function create_project($data, $do_not_exit = false) {
         }
         
         // clear the user data to take into account this new group.
-        $user = UserManager::instance()->getCurrentUser();
+        $user = $um->getCurrentUser();
         $user->clearGroupData();
         
         /*//Add a couple of forums for this group and make the project creator 
@@ -219,7 +224,7 @@ function create_project($data, $do_not_exit = false) {
         while ($arr = db_fetch_array($result)) {
             $fid = forum_create_forum($group_id,$arr['forum_name'],$arr['is_public'],1,
                       $arr['description'], $need_feedback = false);
-            if ($fid != -1) forum_add_monitor($fid, user_getid());
+            if ($fid != -1) forum_add_monitor($fid, $requester_id);
         }
         
         //copy cvs infos
