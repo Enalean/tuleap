@@ -51,6 +51,7 @@ $request = HTTPRequest::instance();
     } else {
         $endDate = date('Y-m-d');
     }
+    // TODO: end date must be bigger than start date
     // TODO: Optionally set a group Id
     $groupId = null;
 
@@ -58,7 +59,6 @@ if ($request->exist('export')) {
     header ('Content-Type: text/csv');
     header ('Content-Disposition: filename=scm_stats.csv');
     $statsSvn = new Statistics_ScmSvn($startDate, $endDate, $groupId);
-    echo $statsSvn->getHeader();
     echo $statsSvn->getStats();
     exit;
 } else {

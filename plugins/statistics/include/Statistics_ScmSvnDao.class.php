@@ -23,21 +23,31 @@ require_once 'pre.php';
  */
 class Statistics_ScmSvnDao {
 
-    var $startDate;
-    var $endDate;
-
     /**
      * Constructor of the class
      *
-     * @param String  $startDate Period start date
-     * @param String  $endDate   Period end date
      * @param Integer $groupId   Project Id
      *
      * @return void
      */
-    function __construct($startDate, $endDate, $groupId = null) {
-        $this->startDate      = str_replace('-', '', $startDate);
-        $this->endDate        = str_replace('-', '', $endDate);
+    function __construct($groupId = null) {
+    }
+
+    /**
+     * Count all SVN read access for the given period
+     *
+     * @param String $startDate Period start date
+     * @param String $endDate   Period end date
+     *
+     * @return DataAccessResult
+     */
+    function totalRead($startDate, $endDate) {
+        $sql = "SELECT svn_checkouts, svn_access_count, svn_browse
+                FROM group_svn_full_history
+                WHERE day >= ".$startDate."
+                  AND day < ".$endDate;
+
+        return db_query($sql);
     }
 
     /**
@@ -48,11 +58,11 @@ class Statistics_ScmSvnDao {
      *
      * @return DataAccessResult
      */
-    function totalCommits() {
+    function totalCommits($startDate, $endDate) {
         $sql = "SELECT svn_commits, svn_adds, svn_deletes
                 FROM group_svn_full_history
-                WHERE day > ".$this->startDate."
-                  AND day < ".$this->endDate;
+                WHERE day >= ".$startDate."
+                  AND day < ".$endDate;
 
         return db_query($sql);
     }
@@ -65,14 +75,13 @@ class Statistics_ScmSvnDao {
      *
      * @return DataAccessResult
      */
-    function commitsByProject() {
+    function commitsByProject($startDate, $endDate) {
         $sql = "SELECT unix_group_name AS Project, SUM(svn_commits) AS commits, SUM(svn_adds) AS adds, SUM(svn_deletes) AS deletes
                 FROM group_svn_full_history
                 JOIN groups g USING (group_id)
-                WHERE day > ".$this->startDate."
-                  AND day < ".$this->endDate."
-                GROUP BY Project
-                ORDER BY Commits DESC";
+                WHERE day >= ".$startDate."
+                  AND day < ".$endDate."
+                GROUP BY Project";
 
         return db_query($sql);
     }
@@ -85,14 +94,13 @@ class Statistics_ScmSvnDao {
      *
      * @return DataAccessResult
      */
-    function commitsByUser() {
+    function commitsByUser($startDate, $endDate) {
         $sql = "SELECT user_name AS User, SUM(svn_commits) AS commits, SUM(svn_adds) AS adds, SUM(svn_deletes) AS deletes
                 FROM group_svn_full_history
                 JOIN user u USING (user_id)
-                WHERE day > ".$this->startDate."
-                  AND day < ".$this->endDate."
-                GROUP BY User
-                ORDER BY Commits DESC";
+                WHERE day >= ".$startDate."
+                  AND day < ".$endDate."
+                GROUP BY User";
 
         return db_query($sql);
     }
