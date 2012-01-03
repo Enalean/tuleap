@@ -44,8 +44,8 @@ class Statistics_ScmSvnDao {
     function totalRead($startDate, $endDate) {
         $sql = "SELECT svn_checkouts, svn_access_count, svn_browse
                 FROM group_svn_full_history
-                WHERE day >= ".$startDate."
-                  AND day < ".$endDate;
+                WHERE day >= ".$this->da->quoteSmart($startDate)."
+                  AND day < ".$this->da->quoteSmart($endDate);
 
         return db_query($sql);
     }
@@ -61,8 +61,8 @@ class Statistics_ScmSvnDao {
     function totalCommits($startDate, $endDate) {
         $sql = "SELECT svn_commits, svn_adds, svn_deletes
                 FROM group_svn_full_history
-                WHERE day >= ".$startDate."
-                  AND day < ".$endDate;
+                WHERE day >= ".$this->da->quoteSmart($startDate)."
+                  AND day < ".$this->da->quoteSmart($endDate);
 
         return db_query($sql);
     }
@@ -79,8 +79,8 @@ class Statistics_ScmSvnDao {
         $sql = "SELECT unix_group_name AS Project, SUM(svn_checkouts) AS checkouts, SUM(svn_access_count) AS access, SUM(svn_browse) AS browses
                 FROM group_svn_full_history
                 JOIN groups g USING (group_id)
-                WHERE day >= ".$startDate."
-                  AND day < ".$endDate."
+                WHERE day >= ".$this->da->quoteSmart($startDate)."
+                  AND day < ".$this->da->quoteSmart($endDate)."
                 GROUP BY Project";
 
         return db_query($sql);
@@ -98,8 +98,8 @@ class Statistics_ScmSvnDao {
         $sql = "SELECT unix_group_name AS Project, SUM(svn_commits) AS commits, SUM(svn_adds) AS adds, SUM(svn_deletes) AS deletes
                 FROM group_svn_full_history
                 JOIN groups g USING (group_id)
-                WHERE day >= ".$startDate."
-                  AND day < ".$endDate."
+                WHERE day >= ".$this->da->quoteSmart($startDate)."
+                  AND day < ".$this->da->quoteSmart($endDate)."
                 GROUP BY Project";
 
         return db_query($sql);
@@ -117,8 +117,8 @@ class Statistics_ScmSvnDao {
         $sql = "SELECT user_name AS User, SUM(svn_checkouts) AS checkouts, SUM(svn_access_count) AS access, SUM(svn_browse) AS browses
                 FROM group_svn_full_history
                 JOIN user u USING (user_id)
-                WHERE day >= ".$startDate."
-                  AND day < ".$endDate."
+                WHERE day >= ".$this->da->quoteSmart($startDate)."
+                  AND day < ".$this->da->quoteSmart($endDate)."
                 GROUP BY User";
 
         return db_query($sql);
@@ -136,8 +136,8 @@ class Statistics_ScmSvnDao {
         $sql = "SELECT user_name AS User, SUM(svn_commits) AS commits, SUM(svn_adds) AS adds, SUM(svn_deletes) AS deletes
                 FROM group_svn_full_history
                 JOIN user u USING (user_id)
-                WHERE day >= ".$startDate."
-                  AND day < ".$endDate."
+                WHERE day >= ".$this->da->quoteSmart($startDate)."
+                  AND day < ".$this->da->quoteSmart($endDate)."
                 GROUP BY User";
 
         return db_query($sql);

@@ -74,18 +74,18 @@ class Statistics_ScmSvn {
         $referenceDay   = intval(substr($this->endDate,8,2));
         $date           = 10000 * $year + 100 * $month + $day;
         $reference      = 10000 * $referenceYear + 100 * $referenceMonth + $referenceDay;
-        $dates[0] = $year."-".str_pad($month, 2, "0", STR_PAD_LEFT)."-".str_pad($day, 2, "0", STR_PAD_LEFT);
-        $last = $dates[0];
-        $first = true;
+        $dates[0]       = $year."-".str_pad($month, 2, "0", STR_PAD_LEFT)."-".str_pad($day, 2, "0", STR_PAD_LEFT);
+        $last           = $dates[0];
+        $first          = true;
         while ($date <= $reference) {
             while ($month <= 12 && $date <= $reference) {
                 if (!$first) {
                     $dates[$last] = $year."-".str_pad($month, 2, "0", STR_PAD_LEFT)."-01";
-                    $last = $dates[$last];
+                    $last         = $dates[$last];
                 }
                 $first = false;
                 $month ++;
-                $date = 10000 * $year + 100 * $month + $day;
+                $date  = 10000 * $year + 100 * $month + $day;
             }
             $year ++;
             $month = 1;
@@ -121,9 +121,9 @@ class Statistics_ScmSvn {
             if ($begin) {
                 $csvPeriods[] = $begin."->".$end;
                 $readDar      = $dao->totalRead($this->convertDateForDao($begin), $this->convertDateForDao($end));
-                if (db_numrows($readDar) > 0) {
+                if ($readDar && !$readDar->isError()) {
                     $read = 0;
-                    while ($row = db_fetch_array($readDar)) {
+                    foreach ($readDar as $row) {
                         $read += intval($row['svn_checkouts']) + intval($row['svn_access_count']) + intval($row['svn_browse']);
                     }
                     $csvTotalRead[] = $read;
@@ -131,9 +131,9 @@ class Statistics_ScmSvn {
                     $csvTotalRead[] = 0;
                 }
                 $commitsDar = $dao->totalCommits($this->convertDateForDao($begin), $this->convertDateForDao($end));
-                if (db_numrows($commitsDar) > 0) {
+                if ($commitsDar && !$commitsDar->isError()) {
                     $commits = 0;
-                    while ($row = db_fetch_array($commitsDar)) {
+                    foreach ($commitsDar as $row) {
                         $commits += intval($row['svn_commits']) + intval($row['svn_adds']) + intval($row['svn_deletes']);
                     }
                     $csvTotalCommits[] = $commits;
@@ -155,8 +155,8 @@ class Statistics_ScmSvn {
                 $topRead              = 0;
                 $topReadProject       = '';
                 $readDar              = $dao->readByProject($this->convertDateForDao($begin), $this->convertDateForDao($end));
-                if (db_numrows($readDar) > 0) {
-                    while ($row = db_fetch_array($readDar)) {
+                if ($readDar && !$readDar->isError()) {
+                    foreach ($readDar as $row) {
                         $nb = intval($row['checkouts']) + intval($row['access']) + intval($row['browses']);
                         if ($nb > $topRead) {
                             $topRead        = $nb;
@@ -173,8 +173,8 @@ class Statistics_ScmSvn {
                 $topCommits             = 0;
                 $topCommitProject       = '';
                 $commitsDar             = $dao->commitsByProject($this->convertDateForDao($begin), $this->convertDateForDao($end));
-                if (db_numrows($commitsDar) > 0) {
-                    while ($row = db_fetch_array($commitsDar)) {
+                if ($commitsDar && !$commitsDar->isError()) {
+                    foreach ($commitsDar as $row) {
                         $nb = intval($row['commits']) + intval($row['adds']) + intval($row['deletes']);
                         if ($nb > $topCommits) {
                             $topCommits       = $nb;
@@ -201,8 +201,8 @@ class Statistics_ScmSvn {
                 $topRead           = 0;
                 $topReadUser       = '';
                 $readDar           = $dao->readByUser($this->convertDateForDao($begin), $this->convertDateForDao($end));
-                if (db_numrows($readDar) > 0) {
-                    while ($row = db_fetch_array($readDar)) {
+                if ($readDar && !$readDar->isError()) {
+                    foreach ($readDar as $row) {
                         $nb = intval($row['checkouts']) + intval($row['access']) + intval($row['browses']);
                         if ($nb > $topRead) {
                             $topRead     = $nb;
@@ -219,8 +219,8 @@ class Statistics_ScmSvn {
                 $topCommits          = 0;
                 $topCommitUser       = '';
                 $commitsDar          = $dao->commitsByUser($this->convertDateForDao($begin), $this->convertDateForDao($end));
-                if (db_numrows($commitsDar) > 0) {
-                    while ($row = db_fetch_array($commitsDar)) {
+                if ($commitsDar && !$commitsDar->isError()) {
+                    foreach ($commitsDar as $row) {
                         $nb = intval($row['commits']) + intval($row['adds']) + intval($row['deletes']);
                         if ($nb > $topCommits) {
                             $topCommits       = $nb;
@@ -230,7 +230,7 @@ class Statistics_ScmSvn {
                     }
                 }
                 $csvCommitUsersNumber[] = $numberOfCommitUsers;
-                $csvTopCommitByUser[]     = $topCommitUser;
+                $csvTopCommitByUser[]   = $topCommitUser;
                 $csvTopUserCommits[]    = $topCommits;
             }
         }
