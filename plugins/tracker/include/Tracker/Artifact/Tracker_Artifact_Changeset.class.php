@@ -683,6 +683,7 @@ class Tracker_Artifact_Changeset {
                 $output .= '</ul>';
             }
             $output .= '</div>'.PHP_EOL;
+            $output .= $this->fetchHtmlAnswerButton(get_server_url().'/plugins/tracker/?aid='.(int)$art->getId());
         }
 
         //Display of snapshot
@@ -691,6 +692,17 @@ class Tracker_Artifact_Changeset {
             $output .= $snapshot;
         }
         return $output;
+    }
+    
+    /**
+     * @return string html call to action button to include in an html mail
+     */
+    public function fetchHtmlAnswerButton($artifact_href) {
+        return '<p align="right" class="cta">
+            <a href="'. $artifact_href .'" target="_blank">' .
+            $GLOBALS['Language']->getText('tracker_include_artifact','mail_answer_now') .
+            '</a>
+            </p>';
     }
 
     /**
