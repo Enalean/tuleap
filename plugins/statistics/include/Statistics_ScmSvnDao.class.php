@@ -21,16 +21,17 @@ require_once 'pre.php';
 /**
  * DAO class for SVN statistics
  */
-class Statistics_ScmSvnDao {
+class Statistics_ScmSvnDao extends DataAccessObject {
 
     /**
      * Constructor of the class
-     *
-     * @param Integer $groupId   Project Id
+     * @param DataAccess $da      Data access details
+     * @param Integer    $groupId Project Id
      *
      * @return void
      */
-    function __construct($groupId = null) {
+    function __construct(DataAccess $da, $groupId = null) {
+        parent::__construct($da);
     }
 
     /**
@@ -47,7 +48,7 @@ class Statistics_ScmSvnDao {
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate);
 
-        return db_query($sql);
+        return $this->retrieve($sql);;
     }
 
     /**
@@ -64,7 +65,7 @@ class Statistics_ScmSvnDao {
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate);
 
-        return db_query($sql);
+        return $this->retrieve($sql);;
     }
 
     /**
@@ -83,7 +84,7 @@ class Statistics_ScmSvnDao {
                   AND day < ".$this->da->quoteSmart($endDate)."
                 GROUP BY Project";
 
-        return db_query($sql);
+        return $this->retrieve($sql);;
     }
 
     /**
@@ -102,7 +103,7 @@ class Statistics_ScmSvnDao {
                   AND day < ".$this->da->quoteSmart($endDate)."
                 GROUP BY Project";
 
-        return db_query($sql);
+        return $this->retrieve($sql);;
     }
 
     /**
@@ -121,7 +122,7 @@ class Statistics_ScmSvnDao {
                   AND day < ".$this->da->quoteSmart($endDate)."
                 GROUP BY User";
 
-        return db_query($sql);
+        return $this->retrieve($sql);;
     }
 
     /**
@@ -140,7 +141,7 @@ class Statistics_ScmSvnDao {
                   AND day < ".$this->da->quoteSmart($endDate)."
                 GROUP BY User";
 
-        return db_query($sql);
+        return $this->retrieve($sql);;
     }
 
 }

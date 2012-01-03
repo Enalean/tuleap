@@ -112,7 +112,7 @@ class Statistics_ScmSvn {
      */
     function getStats() {
         $dates = $this->splitPeriodByMonths();
-        $dao = new Statistics_ScmSvnDao();
+        $dao = new Statistics_ScmSvnDao(CodendiDataAccess::instance());
         $this->addLine(array('SVN'));
         $csvPeriods[]      = "Periods";
         $csvTotalCommits[] = "Total number of SVN commits";
