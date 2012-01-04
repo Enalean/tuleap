@@ -1,6 +1,9 @@
 DISCLAIMER: plugin still in beta, do not use it on production servers.
 DISCLAIMER: Your data might be trashed in a future update.
 
+Version 0.8.8 - Tuleap 4.0.26
+  * Fix sla #160: fatal error on artifact link when the field is mandatory
+
 Version 0.8.7 - Tuleap 4.0.25
   * Fix bug with JS declaration of tracker namespace
 

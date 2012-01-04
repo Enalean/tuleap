@@ -31,7 +31,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
         
         //Same as before when the dirname is ambiguous
         $this->exclude_wholedir = '`(?:'. implode('|', array(
-                                'plugins/IM/include/jabbex_api/tests',
+                                'plugins/IM/include/jabbex_api/_tests',
                                 'plugins/IM/www/webmuc/lib/jsjac/utils',
                                 'plugins/git/gitphp',
                                 'plugins/git/gitphp-0.1.0',

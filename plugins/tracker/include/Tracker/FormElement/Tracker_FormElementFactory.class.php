@@ -294,6 +294,16 @@ class Tracker_FormElementFactory {
         return $this->getUsedFormElementsByType($tracker, array_keys($field_classnames));
     }
     
+    /**
+     * @param Tracker $tracker
+     * @return array of Tracker_FormElement - All fields used and  unused by the tracker
+     */
+    public function getFields($tracker) {
+        $field_classnames = array_merge($this->classnames, $this->special_classnames);
+        EventManager::instance()->processEvent('tracker_formElement_classnames', array('classnames' => &$field_classnames));
+        return $this->getFormElementsByType($tracker, array_keys($field_classnames));
+    }
+    
     public function getUsedFieldByIdAndType($tracker, $field_id, $type) {
         $field = null;
         if ($row = $this->getDao()->searchUsedByIdAndType($tracker->getId(), $field_id, $type)->getRow()) {
@@ -465,9 +475,18 @@ class Tracker_FormElementFactory {
      * @param mixed $type the type (string) or types (array of) you are looking for
      * @return array All text formElements used by the tracker
      */
-    public function getUsedFormElementsByType($tracker, $type) {
+    public function getFormElementsByType($tracker, $type) {
+        return $this->getCachedInstancesFromDAR($this->getDao()->searchUsedByTrackerIdAndType($tracker->id, $type));
+    }
+    
+    /**
+     * @param DataAccessResult $dar the db collection of FormElements to instantiate
+     * 
+     * @return array All text formElements used by the tracker
+     */
+    protected function getCachedInstancesFromDAR(DataAccessResult $dar) {
         $formElements = array();
-        foreach($this->getDao()->searchUsedByTrackerIdAndType($tracker->id, $type) as $row) {
+        foreach($dar as $row) {
             if (!isset($this->formElements[$row['id']])) {
                 $this->formElements[$row['id']] = $this->getInstanceFromRow($row);
             }
@@ -476,6 +495,16 @@ class Tracker_FormElementFactory {
             }
         }
         return $formElements;
+    }
+    
+    /**
+     * @param Tracker $tracker
+     * @param mixed $type the type (string) or types (array of) you are looking for
+     * @return array All text formElements used by the tracker
+     */
+    public function getUsedFormElementsByType($tracker, $type) {
+        $used = true;
+        return $this->getCachedInstancesFromDAR($this->getDao()->searchUsedByTrackerIdAndType($tracker->id, $type, $used));
     }
     
     public function getUnusedFormElementForTracker($tracker) {
@@ -878,7 +907,7 @@ class Tracker_FormElementFactory {
                                 plugin_tracker_permission_process_update_fields_permissions(
                                     $tracker->group_id,
                                     $tracker->id,
-                                    $this->getUsedFields($tracker),
+                                    $this->getFields($tracker),
                                     $ugroups_permissions
                                 );
                             }

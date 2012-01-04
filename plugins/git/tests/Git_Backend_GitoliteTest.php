@@ -37,7 +37,13 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     protected $fixturesPath;
 
 
+    protected $unset_servername = false;
+    
     public function setUp() {
+        if (!isset($_SERVER['SERVER_NAME'])) {
+            $this->unset_servername = true;
+            $_SERVER['SERVER_NAME'] = '_dummy_';
+        }
         $this->fixtureRenamePath = dirname(__FILE__).'/_fixtures/rename';
         
         if (file_exists($this->fixtureRenamePath)){
@@ -56,6 +62,9 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     }
     
     public function tearDown() {
+        if ($this->unset_servername) {
+            unset($_SERVER['SERVER_NAME']);
+        }
         @rmdir($this->fixtureRenamePath .'/legacy');
         @rmdir($this->fixtureRenamePath .'/newone');
         @rmdir($this->fixtureRenamePath);

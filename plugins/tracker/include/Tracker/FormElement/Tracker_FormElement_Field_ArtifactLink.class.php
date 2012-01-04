@@ -802,8 +802,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      */
     public function isValid(Tracker_Artifact $artifact, $value) {
         if ( (! is_array($value) || empty($value['new_values'])) && $this->isRequired()) {
-            $ids = $artifact->getLastChangeset()->getValue($this)->getArtifactIds();
-            if ( ! empty($ids)) {
+            $ids = $this->getLastChangesetArtifactIds($artifact);
+            if ( ! $this->isEmpty($value, $ids)) {
                 // Field is required but there are values, so field is valid
                 $this->has_errors = false;
             } else {
@@ -814,6 +814,55 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
             $this->has_errors = !$this->validate($artifact, $value);
         }
         return !$this->has_errors;
+    }
+    
+    /**
+     * @return Array the ids
+     */
+    private function getLastChangesetArtifactIds(Tracker_Artifact $artifact) {
+        $lastChangeset = $artifact->getLastChangeset();
+        $ids = array();
+        if($lastChangeset) {
+            $ids = $artifact->getLastChangeset()->getValue($this)->getArtifactIds();
+        }
+        return $ids;
+    }
+    
+    /**
+     * Say if the submitted value is empty
+     * if no last changeset values and empty submitted values : empty
+     * if not empty last changeset values and empty submitted values : not empty
+     * if empty new values and not empty last changeset values and not empty removed values have the same size: empty
+     * 
+     * @param array $submitted_value
+     * @param array $last_changeset_values   
+     *
+     * @return bool true if the submitted value is empty
+     */
+    public function isEmpty($submitted_value, $last_changeset_values) {
+        $hasNoNewValues = empty($submitted_value['new_values']);
+        $hasNoLastChangesetValues = empty($last_changeset_values);
+        $hasLastChangesetValues = !$hasNoLastChangesetValues;
+
+        if (($hasNoLastChangesetValues && $hasNoNewValues) ||
+             ($hasLastChangesetValues && $hasNoNewValues 
+                && $this->allLastChangesetValuesRemoved($last_changeset_values, $submitted_value))) {
+            return true;
+        } 
+        return false;
+    }
+    
+    /**
+     * Say if all values of the changeset have been removed
+     * 
+     * @param array $last_changeset_values   
+     * @param array $submitted_value
+     * 
+     * @return bool true if all values have been removed
+     */
+    private function allLastChangesetValuesRemoved($last_changeset_values, $submitted_value) {
+        return !empty($submitted_value['removed_values']) 
+            && count($last_changeset_values) == count($submitted_value['removed_values']);
     }
     
     /**

@@ -40,22 +40,12 @@ Mock::generate('Tracker_Artifact');
 require_once('common/valid/Rule.class.php');
 Mock::generate('Rule_String');
 
-require_once('common/include/Response.class.php');
-Mock::generate('Response');
-
 class Tracker_FormElement_Field_TextTestVersion_Expose_ProtectedMethod extends Tracker_FormElement_Field_TextTestVersion {
     public function buildMatchExpression($a, $b) { return parent::buildMatchExpression($a, $b); }
     public function quote($a) { return "'$a'"; }
 }
 
-class Tracker_FormElement_Field_TextTest extends UnitTestCase {
-    
-    function setUp() {
-        $GLOBALS['Response'] = new MockResponse();
-    }
-    function tearDrop() {
-        unset($GLOBALS['Response']);
-    }
+class Tracker_FormElement_Field_TextTest extends TuleapTestCase {
     
     function testNoDefaultValue() {
         $str_field = new Tracker_FormElement_Field_TextTestVersion();

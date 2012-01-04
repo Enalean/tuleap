@@ -731,11 +731,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
     public function validateField(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null, $is_submission = null) {
         $is_valid = true;
         $hasPermission = $this->userCanUpdate();
-        
         if ($is_submission) {
             $hasPermission = $this->userCanSubmit();
         }
-        
         if ($last_changeset_value === null && ((!is_array($submitted_value) && $submitted_value === null) || (is_array($submitted_value) && empty($submitted_value))) && $hasPermission && $this->isRequired()) {
             $is_valid = false;
             $this->setHasErrors(true);

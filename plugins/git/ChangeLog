@@ -1,3 +1,7 @@
+Version 1.20 (Tuleap 4.0.26)
+    * Remove useless code
+    * Allow some tests to be run in cli
+
 Version 1.19 (Tuleap 4.0.25)
     * Improve resistence of project name extraction
     * Fix issue with repositories name ending with a '/'

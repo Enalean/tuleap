@@ -1,3 +1,17 @@
+Version 4.0.26 (Not released yet)
+    == Bug Fix ==
+    * Update codendi_aliases.conf to resolve some issues in customization of images in themes
+    
+    == Plugins ==
+    * Git v1.20. See separated Changelog
+    * Tracker v0.8.8. See separated Changelog
+    * GraphOnTrackersV5 v0.6.2. See separated Changelog
+    * Cardwall v0.2. See separated Changelog
+
+    == Tuleap Development ==
+    * Allow randomization of execution of unit tests (to be sure that there is no inter dependencies)
+    * Add a color reporter for tests execution in cli 
+
 Version 4.0.25 (Friday, December 23rd 2011)
     == Bug Fix ==
     * Dot no longer allowed in project short names.

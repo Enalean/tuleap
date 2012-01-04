@@ -160,7 +160,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    function searchUsedByTrackerIdAndType($tracker_id, $type) {
+    function searchUsedByTrackerIdAndType($tracker_id, $type, $used = null) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         if (is_array($type)) {
             $type_stm = ' IN ('. implode(',', array_map(array($this->da, 'quoteSmart'), $type)) .') ';
@@ -168,12 +168,15 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
             $type = $this->da->quoteSmart($type);
             $type_stm = " = $type";
         }
+        
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE tracker_id = $tracker_id 
-                  AND formElement_type $type_stm
-                  AND use_it = 1
-                ORDER BY rank";
+                  AND formElement_type $type_stm";
+        if ($used) {
+            $sql.= " AND use_it = 1";
+        }
+        $sql.= " ORDER BY rank";
         return $this->retrieve($sql);
     }
     

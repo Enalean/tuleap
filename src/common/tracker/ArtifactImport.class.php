@@ -115,21 +115,20 @@ class ArtifactImport extends Error {
   }
 
   function localizeLabels() {
-      global $Language;
       // TODO: Localize this properly by adding those 4 fields to the artifact table
       // (standard fields) and the artifact field table with a special flag and make sure
       // all tracker scripts handle them properly
       // For now make a big hack, we export it according to user language preferences
 
-      $this->lbl_list['follow_ups'] = $Language->getText('project_export_artifact_export', 'follow_up_comments');
-      $this->lbl_list['is_dependent_on'] = $Language->getText('project_export_artifact_export', 'depend_on');
-      $this->lbl_list['add_cc'] = $Language->getText('project_export_artifact_export', 'add_cc_lbl');
-      $this->lbl_list['cc_comment'] = $Language->getText('project_export_artifact_export', 'cc_comment_lbl');
+      $this->lbl_list['follow_ups'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments');
+      $this->lbl_list['is_dependent_on'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on');
+      $this->lbl_list['add_cc'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl');
+      $this->lbl_list['cc_comment'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl');
 
-      $this->dsc_list['follow_ups'] = $Language->getText('project_export_artifact_export', 'all_followup_comments');
-      $this->dsc_list['is_dependent_on'] = $Language->getText('project_export_artifact_export', 'depend_on_list');
-      $this->dsc_list['add_cc'] = $Language->getText('project_export_artifact_export', 'add_cc_dsc');;
-      $this->dsc_list['cc_comment'] = $Language->getText('project_export_artifact_export', 'cc_comment_dsc');
+      $this->dsc_list['follow_ups'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'all_followup_comments');
+      $this->dsc_list['is_dependent_on'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on_list');
+      $this->dsc_list['add_cc'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_dsc');;
+      $this->dsc_list['cc_comment'] = $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_dsc');
   }
 
 
@@ -181,14 +180,13 @@ function getUsedFields() {
    * @return true if parse ok, false if errors occurred
    */ 
   function parseFieldNames($data) {
-    global $Language;
     
     $this->num_columns = count($data);
 
     for ($c=0; $c < $this->num_columns; $c++) {
         $field_label = SimpleSanitizer::sanitize($data[$c]);
       if (!array_key_exists($field_label,$this->used_fields)) {
-	$this->setError($Language->getText('tracker_import_utils','field_not_known',array($field_label,$this->ath->getName())));
+	$this->setError($GLOBALS['Language']->getText('tracker_import_utils','field_not_known',array($field_label,$this->ath->getName())));
 	return false;
       }
       
@@ -213,7 +211,6 @@ function getUsedFields() {
   }
 
   function checkMandatoryFields() {
-    global $Language;
     // verify if we have all mandatory fields in the case we have to create an artifact
     if ($this->aid_column == -1) {
       reset($this->used_fields);
@@ -232,7 +229,7 @@ function getUsedFields() {
 	      $label != $this->lbl_list['cc_comment'] &&
 	      !$field->isEmptyOk() && !in_array($label,$this->parsed_labels)) {
 	    
-	    $this->setError($Language->getText('tracker_import_utils','field_mandatory',array($label,$this->ath->getName())));
+	    $this->setError($GLOBALS['Language']->getText('tracker_import_utils','field_mandatory',array($label,$this->ath->getName())));
 	    return false;
 	  }
 	}
@@ -252,13 +249,12 @@ function getUsedFields() {
    * @param data: array containing the parsed csv file (for error reporting)
    */
   function checkPredefinedValues($field,$field_name,$label,$val,$predef_vals,$row,$data) {
-    global $Language;
     $hp = Codendi_HTMLPurifier::instance();
     if ($field->getDisplayType() == "MB") {
       $val_arr = explode(",",$val);
       while (list(,$name) = each($val_arr)) {
-	if (!array_key_exists($name,$predef_vals) && $name != $Language->getText('global','none')) {
-	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array(
+	if (!array_key_exists($name,$predef_vals) && $name != $GLOBALS['Language']->getText('global','none')) {
+	  $this->setError($GLOBALS['Language']->getText('tracker_import_utils','not_a_predefined_value',array(
           $row+1,
           $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML),
           $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) ,
@@ -268,18 +264,18 @@ function getUsedFields() {
 	}
       }
     } else {
-      if (!array_key_exists($val,$predef_vals) && $val != $Language->getText('global','none') && $val != "") {
+      if (!array_key_exists($val,$predef_vals) && $val != $GLOBALS['Language']->getText('global','none') && $val != "") {
 	if (($field_name == 'severity') &&
 	    (strcasecmp($val,'1') == 0 || strcasecmp($val,'5') == 0 || strcasecmp($val,9) == 0)) {
 	  //accept simple ints for Severity fields instead of 1 - Ordinary,5 - Major,9 - Critical
 	  //accept simple ints for Priority fields instead of 1 - Lowest,5 - Medium,9 - Highest
 	} else if ($field_name == 'submitted_by' && 
-		   (($val == $Language->getText('global','none') && $this->ath->allowsAnon()) ||
+		   (($val == $GLOBALS['Language']->getText('global','none') && $this->ath->allowsAnon()) ||
 		    $val == "" ||
-		    user_getemail_from_unix($val) != $Language->getText('include_user','not_found'))) {
+		    user_getemail_from_unix($val) != $GLOBALS['Language']->getText('include_user','not_found'))) {
 	  //accept anonymous user, use importing user as 'submitted by', or simply make sure that user is a known user
 	} else {
-	  $this->setError($Language->getText('tracker_import_utils','not_a_predefined_value',array(
+	  $this->setError($GLOBALS['Language']->getText('tracker_import_utils','not_a_predefined_value',array(
           $row+1,
           $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML),
           $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) ,
@@ -302,7 +298,6 @@ function getUsedFields() {
    *                      for this concrete artifact no aid is given
    */
   function checkValues($row,&$data,$insert,$from_update=false) {
-    global $Language;
     $hp = Codendi_HTMLPurifier::instance();
     for ($c=0; $c < count($this->parsed_labels); $c++) {
       $label = $this->parsed_labels[$c];
@@ -329,10 +324,10 @@ function getUsedFields() {
 	  //we put time() importing user as default
     } else {
 	  
-	  $is_empty = ( ($field->isSelectBox() || $field->isMultiSelectBox()) ? ($val==$Language->getText('global','none')) : ($val==''));
+	  $is_empty = ( ($field->isSelectBox() || $field->isMultiSelectBox()) ? ($val==$GLOBALS['Language']->getText('global','none')) : ($val==''));
 
 	  if ($is_empty) {
-	    $this->setError($Language->getText('tracker_import_utils','field_mandatory_and_current',array(
+	    $this->setError($GLOBALS['Language']->getText('tracker_import_utils','field_mandatory_and_current',array(
             $row+1,
             $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML),
             $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
@@ -355,7 +350,7 @@ function getUsedFields() {
 	  } else {
 	    list($unix_time,$ok) = util_importdatefmt_to_unixtime($val);
 	    if (!$ok) {
-	      $this->setError($Language->getText('tracker_import_utils','incorrect_date',array(
+	      $this->setError($GLOBALS['Language']->getText('tracker_import_utils','incorrect_date',array(
               $row+1,
               $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML) ,
               $hp->purify($val, CODENDI_PURIFIER_CONVERT_HTML) )));
@@ -393,7 +388,7 @@ function getUsedFields() {
               $label != $this->lbl_list['cc_comment'] &&
               !$field->isEmptyOk() && !in_array($label,$this->parsed_labels)) {
 	    
-	    $this->setError($Language->getText('tracker_import_utils','field_mandatory_and_line',array(
+	    $this->setError($GLOBALS['Language']->getText('tracker_import_utils','field_mandatory_and_line',array(
             $row+1,
             $hp->purify(implode(",",$data), CODENDI_PURIFIER_CONVERT_HTML) ,
             $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML) ,
@@ -746,7 +741,7 @@ function getUsedFields() {
    *                               for users and comment-types
    */
   function parseFollowUpComments($followup_comments,&$parsed_comments,$art_id,$for_parse_report=false) {
-    global $sys_lf, $user_id,$Language;
+    global $sys_lf, $user_id;
     
     //echo "<br>\n";
     $comments = $this->splitFollowUpcomments($followup_comments);
@@ -756,14 +751,14 @@ function getUsedFields() {
       $i++;
       if (($i == 1) && 
 	  ( (count($comments) > 1) || 
-	    (trim($comment) == $Language->getText('tracker_import_utils','no_followups')) ) ) {
+	    (trim($comment) == $GLOBALS['Language']->getText('tracker_import_utils','no_followups')) ) ) {
 	//skip first line
 	continue;
       }
       $comment = trim($comment);
       
       //skip the "Date: "
-      if (strpos($comment, $Language->getText('tracker_import_utils','date').":") === false) {
+      if (strpos($comment, $GLOBALS['Language']->getText('tracker_import_utils','date').":") === false) {
           //if no date given, consider this whole string as the comment
 	
           //try nevertheless if we can apply legacy Bug and Task export format
@@ -775,7 +770,7 @@ function getUsedFields() {
                 $this->getImportUser($sub_user_id,$sub_user_name);
                 $arr["date"] = "<I>$date</I>";
                 $arr["by"] = "<I>$sub_user_name</I>";
-                $arr["type"] = "<I>".$Language->getText('global','none')."</I>";
+                $arr["type"] = "<I>".$GLOBALS['Language']->getText('global','none')."</I>";
             } else {
                 $arr["date"] = time();
                 $arr["by"] = $user_id;
@@ -790,11 +785,11 @@ function getUsedFields() {
       }
       
       // here starts reel parsing
-      $comment = substr($comment, strlen($Language->getText('tracker_import_utils','date').":"));
-      $by_position = strpos($comment,$Language->getText('global','by').": ");
+      $comment = substr($comment, strlen($GLOBALS['Language']->getText('tracker_import_utils','date').":"));
+      $by_position = strpos($comment,$GLOBALS['Language']->getText('global','by').": ");
       
       if ($by_position === false) {
-          $this->setError($Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
+          $this->setError($GLOBALS['Language']->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
           return false;
       }
       
@@ -804,18 +799,18 @@ function getUsedFields() {
       else list($date,$ok) = util_importdatefmt_to_unixtime($date_str);
       //echo "$date<br>";
       //skip "By: "
-      $comment = substr($comment, ($by_position + strlen($Language->getText('global','by').": ")));
+      $comment = substr($comment, ($by_position + strlen($GLOBALS['Language']->getText('global','by').": ")));
       
       $by = strtok($comment," \n\t\r\0\x0B");
       $comment = trim(substr($comment,strlen($by)+1));
       
-      if ($by == $Language->getText('global','none')) {
-          $this->setError($Language->getText('tracker_import_utils','specify_valid_user',$i-1));
+      if ($by == $GLOBALS['Language']->getText('global','none')) {
+          $this->setError($GLOBALS['Language']->getText('tracker_import_utils','specify_valid_user',$i-1));
           return false;
       } else {
           $user = $this->getUserManager()->getUserByUserName($by);
           if ($user == null) {
-              $this->setError($Language->getText('tracker_import_utils','not_a_user',array($by,$i-1)));
+              $this->setError($GLOBALS['Language']->getText('tracker_import_utils','not_a_user',array($by,$i-1)));
               return false;
           }
       }
@@ -826,7 +821,7 @@ function getUsedFields() {
           } else if (validate_email($by)) {
               //ok, $by remains what it is
           } else {
-              $this->setError($Language->getText('tracker_import_utils','not_a_user',array($by,$i-1)));
+              $this->setError($GLOBALS['Language']->getText('tracker_import_utils','not_a_user',array($by,$i-1)));
               return false;
           }
       }
@@ -841,7 +836,7 @@ function getUsedFields() {
       }
       
       if ($comment_type_id === false) {
-          if ($for_parse_report) $comment_type_id = $Language->getText('global','none');
+          if ($for_parse_report) $comment_type_id = $GLOBALS['Language']->getText('global','none');
           else $comment_type_id = 100;
       } else if ($for_parse_report) {
           $comment_type_id = $comment_type;
@@ -911,7 +906,7 @@ function getUsedFields() {
    *                               for users and comment-types
    */
      function parseLegacyDetails($details,&$parsed_details,$for_parse_report=false) {
-    global $sys_lf, $user_id,$Language;
+    global $sys_lf, $user_id;
     
     $comments = split("==================================================",$details);
     
@@ -924,21 +919,21 @@ function getUsedFields() {
       
       $comment = trim($comment);
       //skip the "Type: "
-      if (strpos($comment, $Language->getText('tracker_import_utils','type').": ") === false) {
+      if (strpos($comment, $GLOBALS['Language']->getText('tracker_import_utils','type').": ") === false) {
 	//if no type given, consider this whole string as the comment
-	if ($for_parse_report) $comment_type = $Language->getText('global','none');
+	if ($for_parse_report) $comment_type = $GLOBALS['Language']->getText('global','none');
 	else $comment_type = 100;
       } else {
-	$comment = substr($comment, strlen($Language->getText('tracker_import_utils','type').": "));
-	$by_position = strpos($comment,$Language->getText('global','by').": ");
+	$comment = substr($comment, strlen($GLOBALS['Language']->getText('tracker_import_utils','type').": "));
+	$by_position = strpos($comment,$GLOBALS['Language']->getText('global','by').": ");
 	if ($by_position === false) {
-	  $this->setError($Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
+	  $this->setError($GLOBALS['Language']->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
 	  return false;
 	}
 	$type = trim(substr($comment,0,$by_position));
 	$comment_type_id = $this->checkCommentType($type);
 	if ($comment_type_id === false) {
-	  if ($for_parse_report) $comment_type = $Language->getText('global','none');
+	  if ($for_parse_report) $comment_type = $GLOBALS['Language']->getText('global','none');
 	  else $comment_type = 100;
 	} else {
 	  if ($for_parse_report) $comment_type = $type;
@@ -947,14 +942,14 @@ function getUsedFields() {
       }
       
       // By:
-      $by_position = strpos($comment,$Language->getText('global','by').": ");
+      $by_position = strpos($comment,$GLOBALS['Language']->getText('global','by').": ");
       if ($by_position === false) {
-	$this->setError($Language->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
+	$this->setError($GLOBALS['Language']->getText('tracker_import_utils','specify_originator',array($i-1,$comment)));
 	return false;
       }
       
-      $comment = substr($comment, ($by_position + strlen($Language->getText('global','by').": ")));
-      $on_position = strpos($comment, $Language->getText('global','on').": ");
+      $comment = substr($comment, ($by_position + strlen($GLOBALS['Language']->getText('global','by').": ")));
+      $on_position = strpos($comment, $GLOBALS['Language']->getText('global','on').": ");
       $by = trim(substr($comment, 0, $on_position));
       
       
@@ -965,12 +960,12 @@ function getUsedFields() {
 	} else if (validate_email($by)) {
 	  //ok, $by remains what it is
 	} else {
-	  $this->setError($Language->getText('tracker_import_utils','not_a_user',array($by,$i-1)));
+	  $this->setError($GLOBALS['Language']->getText('tracker_import_utils','not_a_user',array($by,$i-1)));
 	  return false;
 	}
       }
       // On:
-      $comment = substr($comment, ($on_position+strlen($Language->getText('global','on').": ")));
+      $comment = substr($comment, ($on_position+strlen($GLOBALS['Language']->getText('global','on').": ")));
       $on = strtok($comment,"\n\t\r\0\x0B");
       $comment = trim(substr($comment,strlen($on)));
       if (!$for_parse_report) list($on,$ok) = util_importdatefmt_to_unixtime($on);

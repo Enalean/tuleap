@@ -150,6 +150,7 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends UnitTestCase {
         $this->assertTrue($f->isValid($a, array('new_values' => ''))); // existing values
         $this->assertFalse($f->isValid($a, array('new_values' => '123, toto')));
         $this->assertTrue($f->isValid($a, null));  // existing values
+        $this->assertFalse($f->isValid($a, array('new_values' => '', 'removed_values'=> '123')));
     }
     
     function testIsValidRequiredFieldWithoutExistingValues() {
@@ -203,6 +204,27 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends UnitTestCase {
         $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
         $res = array('new_values' => '1,3,9');
         $this->assertEqual($res, $f->getFieldData('1,3,9'));
+    }
+    
+    function testIsValid_AddsErrorIfARequiredFieldIsAnArrayWithoutNewValues() {
+        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
+        $f->setReturnValue('isRequired', true);
+        
+        $a = new MockTracker_Artifact();
+        $a->setReturnValue('getLastChangeset', false);
+        $this->assertFalse($f->isValid($a, array('new_values' => '')));
+        $this->assertTrue($f->hasErrors());
+
+    }
+    
+    function testIsValid_AddsErrorIfARequiredFieldValueIsAnEmptyString() {
+        $f = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
+        $f->setReturnValue('isRequired', true);
+        
+        $a = new MockTracker_Artifact();
+        $a->setReturnValue('getLastChangeset', false);
+        $this->assertFalse($f->isValid($a, ''));
+        $this->assertTrue($f->hasErrors());
     }
 
 }
