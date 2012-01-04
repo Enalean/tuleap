@@ -306,7 +306,6 @@ height:auto;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
     margin: 1em 0;
     padding: 0.5em 1em;
-    background: #FFFFCC;
 }
 .bodyContent .tracker_artifact_followup_comment_changes {
 }
