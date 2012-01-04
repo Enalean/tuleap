@@ -1,7 +1,6 @@
 plugin_statistics	descriptor_description	Collection d'outils et de scripts de statistiques sur les données du site
 plugin_statistics	descriptor_name	Statistiques
 
-
 plugin_statistics_show_service	usage_per_service	Utilisation par service
 plugin_statistics_show_service	service_growth	Croissance des services
 
@@ -37,6 +36,12 @@ plugin_statistics	scm_svn_read_project	Nombre total de projets avec des accés e
 plugin_statistics	scm_svn_read_user	Nombre total de utilisateurs avec des accés en lecture à SVN
 plugin_statistics	scm_svn_total_commit	Nombre total des commits SVN
 plugin_statistics	scm_svn_commit_project	Nombre total de projets avec des commits SVN
-plugin_statistics	scm_svn_top_commit_project	Top des projets (nombre de commits)
+plugin_statistics	scm_top_commit_project	Top des projets (nombre de commits)
 plugin_statistics	scm_svn_commit_user	Nombre total de utilisateurs avec des commits SVN
-plugin_statistics	scm_svn_top_commit_user	Top des utilisateurs (nombre de commits)
+plugin_statistics	scm_top_commit_user	Top des utilisateurs (nombre de commits)
+plugin_statistics	scm_cvs_total_read	Nombre total d'accée en lecture à CVS
+plugin_statistics	scm_cvs_read_project	Nombre total de projets avec des accés en lecture à CVS
+plugin_statistics	scm_cvs_read_user	Nombre total de utilisateurs avec des accés en lecture à CVS
+plugin_statistics	scm_cvs_total_commit	Nombre total des commits CVS
+plugin_statistics	scm_cvs_commit_project	Nombre total de projets avec des commits CVS
+plugin_statistics	scm_cvs_commit_user	Nombre total de utilisateurs avec des commits CVS

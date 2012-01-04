@@ -18,6 +18,7 @@
 
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_ScmSvn.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_ScmCvs.class.php';
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -70,7 +71,9 @@ if (!$error && $request->exist('export')) {
     header ('Content-Type: text/csv');
     header ('Content-Disposition: filename=scm_stats.csv');
     $statsSvn = new Statistics_ScmSvn($startDate, $endDate, $groupId);
+    $statsCvs = new Statistics_ScmCvs($startDate, $endDate, $groupId);
     echo $statsSvn->getStats();
+    echo $statsCvs->getStats();
     exit;
 } else {
     $title = $GLOBALS['Language']->getText('plugin_statistics', 'scm_title');
