@@ -28,7 +28,6 @@ cat <<'EOF' >>/etc/yum.repos.d/Tuleap.repo
 enabled=1
 gpgcheck=0
 EOF
-exit 
 
 
 # install rpms
