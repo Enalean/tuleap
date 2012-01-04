@@ -56,7 +56,7 @@ $deleted_users = $row['count'];
 
 db_query("SELECT COUNT(DISTINCT(p.user_id)) AS count
           FROM user_preferences p
-          JOIN user u ON u.user_id
+          JOIN user u USING (user_id)
           WHERE preference_name = 'use_lab_features'
             AND preference_value = 1
             AND (status = 'A'
