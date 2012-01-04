@@ -33,7 +33,6 @@ class GitPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->_addHook('site_admin_option_hook',                          'siteAdminHooks',                  false);
         $this->_addHook('cssfile',                                         'cssFile',                         false);
         $this->_addHook('javascript_file',                                 'jsFile',                          false);
         $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                      false);
@@ -71,10 +70,6 @@ class GitPlugin extends Plugin {
             $this->pluginInfo = new GitPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-
-    public function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->getPluginPath().'/">Git</a></li>';
     }
 
     public function cssFile($params) {
