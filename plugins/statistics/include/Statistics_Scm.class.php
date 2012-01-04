@@ -45,10 +45,13 @@ class Statistics_Scm {
         $this->startDate = $startDate;
         $this->endDate   = $endDate;
         $this->groupId   = $groupId;
+        $this->addLine(array());
     }
 
     /**
      * Add a line to the content
+     *
+     * @param Array $line Array containing the elements of a csv line
      *
      * @return void
      */
@@ -107,6 +110,7 @@ class Statistics_Scm {
     }
 
     /**
+     * Obtain statistics in csv format
      *
      * @return String
      */
