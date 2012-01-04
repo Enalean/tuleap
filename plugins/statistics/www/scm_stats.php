@@ -78,7 +78,7 @@ if (!$error && $request->exist('export')) {
     $GLOBALS['HTML']->header(array('title' => $title));
     echo '<h1>'.$title.'</h1>';
 
-    echo '<form name="form_scm_stats" method="set">';
+    echo '<form name="form_scm_stats" method="get">';
     echo '<table>';
     echo '<tr>';
     echo '<td>';

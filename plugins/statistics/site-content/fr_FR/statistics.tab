@@ -34,15 +34,9 @@ plugin_statistics	scm_export_button	Exporter en CSV
 plugin_statistics	scm_period	Période
 plugin_statistics	scm_svn_total_read	Nombre total d'accée en lecture à SVN
 plugin_statistics	scm_svn_read_project	Nombre total de projets avec des accés en lecture à SVN
-plugin_statistics	scm_svn_top_read_project	Top des projets (nombre d'accés en lecture)
-plugin_statistics	scm_svn_top_number_read_project	Top des nombres d'accés en lecture par projet
 plugin_statistics	scm_svn_read_user	Nombre total de utilisateurs avec des accés en lecture à SVN
-plugin_statistics	scm_svn_top_read_user	Top des utilisateurs (nombre d'accés en lecture)
-plugin_statistics	scm_svn_top_number_read_user	Top des nombres d'accés en lecture par utilisateur
 plugin_statistics	scm_svn_total_commit	Nombre total des commits SVN
 plugin_statistics	scm_svn_commit_project	Nombre total de projets avec des commits SVN
 plugin_statistics	scm_svn_top_commit_project	Top des projets (nombre de commits)
-plugin_statistics	scm_svn_number_top_commit_project	Top des nombres de commits par projet
 plugin_statistics	scm_svn_commit_user	Nombre total de utilisateurs avec des commits SVN
 plugin_statistics	scm_svn_top_commit_user	Top des utilisateurs (nombre de commits)
-plugin_statistics	scm_svn_top_number_commit_user	Top des nombres de commits par utilisateur

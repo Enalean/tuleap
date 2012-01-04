@@ -20,6 +20,7 @@ require_once 'pre.php';
 
 /**
  * DAO class for SVN statistics
+ * TODO: Find a way to add an alias on a sum
  */
 class Statistics_ScmSvnDao extends DataAccessObject {
 
@@ -48,13 +49,13 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalRead($startDate, $endDate) {
-        $sql = "SELECT svn_checkouts, svn_access_count, svn_browse
+        $sql = "SELECT svn_checkouts + svn_access_count + svn_browse
                 FROM group_svn_full_history
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate)."
                   ".$this->condition;
 
-        return $this->retrieve($sql);;
+        return $this->retrieve($sql);
     }
 
     /**
@@ -66,13 +67,13 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalCommits($startDate, $endDate) {
-        $sql = "SELECT svn_commits, svn_adds, svn_deletes
+        $sql = "SELECT svn_commits + svn_adds + svn_deletes
                 FROM group_svn_full_history
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate)."
                   ".$this->condition;
 
-        return $this->retrieve($sql);;
+        return $this->retrieve($sql);
     }
 
     /**
@@ -84,14 +85,15 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function readByProject($startDate, $endDate) {
-        $sql = "SELECT unix_group_name AS Project, SUM(svn_checkouts) AS checkouts, SUM(svn_access_count) AS access, SUM(svn_browse) AS browses
+        $sql = "SELECT unix_group_name AS project, SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse)
                 FROM group_svn_full_history
                 JOIN groups g USING (group_id)
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate)."
-                GROUP BY Project";
+                GROUP BY project
+                ORDER BY SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse) DESC";
 
-        return $this->retrieve($sql);;
+        return $this->retrieve($sql);
     }
 
     /**
@@ -103,14 +105,15 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function commitsByProject($startDate, $endDate) {
-        $sql = "SELECT unix_group_name AS Project, SUM(svn_commits) AS commits, SUM(svn_adds) AS adds, SUM(svn_deletes) AS deletes
+        $sql = "SELECT unix_group_name AS project, SUM(svn_commits) + SUM(svn_adds) + SUM(svn_deletes)
                 FROM group_svn_full_history
                 JOIN groups g USING (group_id)
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate)."
-                GROUP BY Project";
+                GROUP BY project
+                ORDER BY SUM(svn_commits) + SUM(svn_adds) + SUM(svn_deletes) DESC";
 
-        return $this->retrieve($sql);;
+        return $this->retrieve($sql);
     }
 
     /**
@@ -122,15 +125,16 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function readByUser($startDate, $endDate) {
-        $sql = "SELECT user_name AS User, SUM(svn_checkouts) AS checkouts, SUM(svn_access_count) AS access, SUM(svn_browse) AS browses
+        $sql = "SELECT user_name AS user, SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse)
                 FROM group_svn_full_history
                 JOIN user u USING (user_id)
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate)."
                   ".$this->condition."
-                GROUP BY User";
+                GROUP BY user
+                ORDER BY SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse) DESC";
 
-        return $this->retrieve($sql);;
+        return $this->retrieve($sql);
     }
 
     /**
@@ -142,15 +146,16 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function commitsByUser($startDate, $endDate) {
-        $sql = "SELECT user_name AS User, SUM(svn_commits) AS commits, SUM(svn_adds) AS adds, SUM(svn_deletes) AS deletes
+        $sql = "SELECT user_name AS user, SUM(svn_commits) + SUM(svn_adds) + SUM(svn_deletes)
                 FROM group_svn_full_history
                 JOIN user u USING (user_id)
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate)."
                   ".$this->condition."
-                GROUP BY User";
+                GROUP BY user
+                ORDER BY SUM(svn_commits) + SUM(svn_adds) + SUM(svn_deletes) DESC";
 
-        return $this->retrieve($sql);;
+        return $this->retrieve($sql);
     }
 
 }
