@@ -423,6 +423,32 @@ class GitDao extends DataAccessObject {
         $repository->setScope($result[self::REPOSITORY_SCOPE]);
         $repository->loadNotifiedMails();
     }
+
+    /**
+     * Return Git backend statistics
+     *
+     * @param String  $startDate
+     * @param String  $endDate
+     * @param Integer $projectId
+     *
+     * @return DataAccessResult
+     */
+    public function getBackendStatistics($startDate, $endDate, $projectId = null) {
+        $condition = '';
+        if ($projectId) {
+            $condition = "AND ".self::FK_PROJECT_ID."=".$this->da->escapeInt($projectId);
+        }
+        $query = "SELECT count(repository_id) AS count, repository_backend_type AS backend
+                  FROM ".$this->getTable()."
+                  JOIN groups g ON group_id = project_id
+                  WHERE repository_creation_date >= ".$this->da->quoteSmart($startDate)."
+                    AND repository_creation_date < ".$this->da->quoteSmart($endDate)."
+                    ".$condition."
+                    AND status = 'A'
+                    AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00'
+                  GROUP BY backend";
+        return $this->retrieve($query);
+    }
 }
 
 ?>

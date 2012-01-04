@@ -62,6 +62,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
+        $this->_addHook('statistics_scm',                    'statistics_scm',                    false);
     }
 
     public function getPluginInfo() {
@@ -366,6 +367,15 @@ class GitPlugin extends Plugin {
             // Delete all git repositories of the project
             $gitBackend = Backend::instance('Git','GitBackend');
             $gitBackend->deleteProjectRepositories($projectId);
+        }
+    }
+
+    public function statistics_scm($params) {
+        $groupId = null;
+        if (!empty($params['scm_stats'])) {
+            $scmStats = $params['scm_stats'];
+            $gitBackend = Backend::instance('Git','GitBackend');
+            echo $gitBackend->getBackendStatistics($scmStats);
         }
     }
 
