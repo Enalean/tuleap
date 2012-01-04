@@ -87,34 +87,29 @@ sshcmd="ssh -o StrictHostKeyChecking=no"
 # -n to close standard input
 remotecmd="$sshcmd -n $build_host"
 
-
-# Stop the container if running and destroy it
 if lxc-ls | egrep -q "^$lxc_name$"; then
-    # Stop the container if it is running
-    if sudo lxc-info -q --name $lxc_name | grep -q "RUNNING"; then
-        echo "Stopping previously started $lxc_name container"
-        sudo lxc-stop -n $lxc_name
-    fi
-    #Destroy the container
-    echo "Destroying the previous container"	
-    sudo lxc-destroy -n $lxc_name
+    # the server already exists and we suppose this is a reinstall
+    $remotecmd yum reinstall tuleap -y --disablerepo=epel php-pecl-json tuleap-all
+    $remotecmd service httpd restart
+else 
+    # Setup an lxc instance and install tuleap
+    echo "Create a new container $lxc_name"
+    cp $src_dir/codendi_tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
+    substitute "lxc.config" "%ip_addr%" "$lxc_ip"
+
+    sudo lxc-create -n $lxc_name -f lxc.config -t centos5
+
+    # Start the container
+    sudo lxc-start -n $lxc_name -d
+    lxc_start_wait $lxc_ip
+
+    # Upload installation script into /root
+    $remotecmd /bin/rm -fr /root/lxc-inst.sh
+    rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.sh $build_host:/root
+
+    # Install
+    $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
 fi
-
-echo "Create a new container $lxc_name"
-cp $src_dir/codendi_tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
-substitute "lxc.config" "%ip_addr%" "$lxc_ip"
-sudo lxc-create -n $lxc_name -f lxc.config -t centos5
-
-# Start the container
-sudo lxc-start -n $lxc_name -d
-lxc_start_wait $lxc_ip
-
-# Upload installation script into /root
-$remotecmd /bin/rm -fr /root/lxc-inst.sh
-rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.sh $build_host:/root
-
-# Install
-$remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
 
 # Make sure that selenium server is up
 if lxc-ls | egrep -q "^lxc-selenium-server$"; then
