@@ -183,15 +183,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $content = $this->fetchMailFormElements($recipient, $format, $ignore_perms);
                 if ($content) {
                     $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>'.PHP_EOL;
-                    $output .= '<table>';
                     $output .= $content;
-                    $output .= '</table>';
                 }
 
                 $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
                 break;
             default:
-                //$output .= $this->getTracker()->item_name.' #'. $this->id;
                 $output .= PHP_EOL;
                 //fields formelements                
                 $output .= $this->fetchMailFormElements($recipient, $format, $ignore_perms);
@@ -621,7 +618,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     if ($request->get('from_aid')) {
                         $url_redirection = TRACKER_BASE_URL.'/?aid=' . $request->get('from_aid');
                     }
-                    $GLOBALS['Response']->redirect($url_redirection);
+                    //$GLOBALS['Response']->redirect($url_redirection);
                 } else {
                     $this->display($tracker_manager, $request, $current_user);
                 }
