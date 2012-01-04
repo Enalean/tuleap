@@ -126,7 +126,25 @@ class PluginHudsonJobDao extends DataAccessObject {
         $updated = $this->update($sql);
         return $updated;
     }
-    
+
+    /**
+    * Get jobs number
+    *
+    * @param Integer $groupId Id of the project
+    *
+    * @return DataAccessResult
+    */
+    function countJobs($groupId = null) {
+        $condition = '';
+        if ($groupId) {
+            $condition = "WHERE group_id = ".$this->da->escapeInt($groupId);
+        }
+        $sql = "SELECT COUNT(*) AS count
+        FROM plugin_hudson_job
+        ".$condition;
+        return $this->retrieve($sql);
+    }
+
 }
 
 ?>

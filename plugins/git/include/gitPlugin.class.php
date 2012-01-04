@@ -378,7 +378,6 @@ class GitPlugin extends Plugin {
      * @return void
      */
     public function statistics_scm($params) {
-        $groupId = null;
         if (!empty($params['scm_stats'])) {
             $scmStats = $params['scm_stats'];
             $gitBackend = Backend::instance('Git','GitBackend');

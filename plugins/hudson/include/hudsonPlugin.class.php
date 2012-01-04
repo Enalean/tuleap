@@ -28,6 +28,7 @@ class hudsonPlugin extends Plugin {
         $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
         $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
         $this->_addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
+        $this->_addHook('statistics_scm',                'statistics_scm',           false);
     }
 
     function getPluginInfo() {
@@ -295,7 +296,34 @@ class hudsonPlugin extends Plugin {
         $controler =& new hudson();
         $controler->process();
     }
-    
+
+    /**
+     * Display CI statistics in CSV format
+     *
+     * @param Array $params parameters of the event
+     *
+     * @return void
+     */
+    public function statistics_scm($params) {
+        if (!empty($params['scm_stats'])) {
+            $scmStats = $params['scm_stats'];
+            $jobDao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+            $dar = $jobDao->countJobs($scmStats->groupId);
+            $count = 0;
+            if ($dar && !$dar->isError()) {
+                foreach ($dar as $row) {
+                    $count += intval($row['count']);
+                }
+            }
+            $scmStats->clearContent();
+            $scmStats->addLine(array());
+            $scmStats->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'title')));
+            $scmStats->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'job_count'), $count));
+            echo $scmStats->getStats();
+            $scmStats->clearContent();
+        }
+    }
+
 }
 
 ?>

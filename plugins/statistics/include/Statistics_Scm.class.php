@@ -109,6 +109,10 @@ class Statistics_Scm {
         return str_replace('-', '', $date);
     }
 
+    function clearContent() {
+        $this->content = '';
+    }
+
     /**
      * Obtain statistics in csv format
      *

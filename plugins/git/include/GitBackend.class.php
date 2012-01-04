@@ -378,6 +378,8 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     public function getBackendStatistics($scmStats) {
         $dates = $scmStats->splitPeriodByMonths();
         $dao = $this->getDao();
+        $scmStats->clearContent();
+        $scmStats->addLine(array());
         $scmStats->addLine(array('Git'));
         $csvPeriods[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_period');
         $csvGitShell[] = "Git shell";
@@ -402,7 +404,9 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $scmStats->addLine($csvPeriods);
         $scmStats->addLine($csvGitShell);
         $scmStats->addLine($csvGitolite);
-        return $scmStats->getStats();
+        $content = $scmStats->getStats();
+        $scmStats->clearContent();
+        return $content;
     }
 }
 
