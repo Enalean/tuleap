@@ -558,7 +558,9 @@ class Tracker_Artifact_Changeset {
         }
         $mail->setTo(implode(', ', $recipients));
         $mail->setSubject($subject);
-        $mail->setBodyHTML($htmlBody);
+        if ($htmlBody) {
+            $mail->setBodyHTML($htmlBody);
+        }
         $mail->setBodyText($txtBody);
         $mail->send();
     }
@@ -644,6 +646,7 @@ class Tracker_Artifact_Changeset {
         $output .= PHP_EOL;
         $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
         $output .= PHP_EOL;
+        return $output;
     }
     /**
      * Get the html body for notification
