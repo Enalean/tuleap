@@ -131,5 +131,5 @@ fi
 
 # And test!
 substitute "$src_dir/codendi_tools/plugins/tests/functional/set.php" "%host%" "http://$lxc_ip"
-phpunit $src_dir/codendi_tools/plugins/tests/functional/
+cd $src_dir/functionaltests/; cucumber
 

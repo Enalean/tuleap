@@ -1,6 +1,7 @@
 #!/bin/sh
 
-ip_address=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
+
+ip_address=`LC_ALL=C ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
 repo_base_url=$1
 
 # Take the local centos mirror
@@ -27,6 +28,7 @@ cat <<'EOF' >>/etc/yum.repos.d/Tuleap.repo
 enabled=1
 gpgcheck=0
 EOF
+exit 
 
 
 # install rpms
@@ -45,5 +47,8 @@ done
 # install Tuleap
 # TODO: redirect output and errors in a file for debugging purpose
 bash -x /usr/share/tuleap-install/setup.sh --auto-passwd --without-bind-config --disable-subdomains --sys-default-domain=$ip_address --sys-fullname=$ip_address --sys-ip-address=$ip_address --sys-org-name=Tuleap --sys-long-org-name=Tuleap
+
+# activate tuleap licence
+touch /etc/codendi/CODENDI_LICENSE_ACCEPTED
 
 
