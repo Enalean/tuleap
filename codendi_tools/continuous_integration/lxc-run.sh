@@ -4,8 +4,9 @@ set -e
 
 usage() {
     cat <<EOF
-Usage: $1  --lxc-name=<value> --lxc-ip=<value> --srcdir=<value>
+Usage: $1  --lxc-name=<value> --lxc-ip=<value> --srcdir=<value> [--version-upgrade]
 Options
+  --version-upgrade   upgrade the version of tuleap (i.e. default behaviour is to reinstall)
   --lxc-name=<value>  Name of lxc container (eg. lxc-aci-105)
   --lxc-ip=<value>    IP address of lxc container (eg. 192.168.1.105)
   --srcdir=<value>    Source dir
@@ -49,7 +50,7 @@ lxc_start_wait() {
 ##
 ## Parse options
 ##
-options=`getopt -o h -l help,srcdir:,lxc-name:,lxc-ip:,repo-base-url: -- "$@"`
+options=`getopt -o h -l help,srcdir:,lxc-name:,lxc-ip:,repo-base-url:,version-upgrade -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
 eval set -- "$options"
 while true
@@ -70,6 +71,9 @@ do
 	--repo-base-url)
 	    repo_base_url=$2
 	    shift 2;;
+        --version-upgrade)
+            version_upgrade=true
+            shift;;
 	 *)
 	    break;;
     esac
@@ -87,11 +91,7 @@ sshcmd="ssh -o StrictHostKeyChecking=no"
 # -n to close standard input
 remotecmd="$sshcmd -n $build_host"
 
-if lxc-ls | egrep -q "^$lxc_name$"; then
-    # the server already exists and we suppose this is a reinstall
-    $remotecmd yum reinstall tuleap -y --disablerepo=epel php-pecl-json tuleap-all
-    $remotecmd service httpd restart
-else 
+if [ ! lxc-ls | egrep -q "^$lxc_name$" ] ; then
     # Setup an lxc instance and install tuleap
     echo "Create a new container $lxc_name"
     cp $src_dir/codendi_tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
@@ -109,6 +109,14 @@ else
 
     # Install
     $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
+elif [ $version_upgrade ] ; then
+    $remotecmd yum install tuleap -y --disablerepo=epel php-pecl-json tuleap-all
+    $remotecmd service httpd restart
+else 
+    # the server already exists and we suppose this is a reinstall
+    # ==========>>> Warning : yum reinstall probably wont work very well with parts of tuleap that doesnt support yum remove but we havent run into problems yet <<<<<==========
+    $remotecmd yum reinstall tuleap -y --disablerepo=epel php-pecl-json tuleap-all
+    $remotecmd service httpd restart
 fi
 
 # Make sure that selenium server is up
