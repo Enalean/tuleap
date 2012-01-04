@@ -370,6 +370,13 @@ class GitPlugin extends Plugin {
         }
     }
 
+    /**
+     * Display git backend statistics in CSV format
+     *
+     * @param Array $params parameters of the event
+     *
+     * @return void
+     */
     public function statistics_scm($params) {
         $groupId = null;
         if (!empty($params['scm_stats'])) {
