@@ -23,6 +23,10 @@ require_once('common/date/DateHelper.class.php');
 class Tracker_Artifact_Changeset_Comment {
     
     public $id;
+    /**
+     *
+     * @var Tracker_Artifact_Changeset
+     */
     public $changeset;
     public $comment_type_id;
     public $canned_response_id;
@@ -84,6 +88,8 @@ class Tracker_Artifact_Changeset_Comment {
                         if ($user && !$user->isAnonymous()) {
                             $html .= '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.$hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')</a>';
                         } else {
+                            $user = UserManager::instance()->getUserAnonymous();
+                            $user->setEmail($this->changeset->getEmail());
                             $html .= $GLOBALS['Language']->getText('tracker_include_artifact','anon_user');
                         }
                         $html .= '</span></div>';
@@ -93,9 +99,11 @@ class Tracker_Artifact_Changeset_Comment {
                         }
                         $html .= '<div class="tracker_artifact_followup_date">'. format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on).$timezone.'</div>';
                         $html .= '</div>';
-                        $html .= '<div class="tracker_artifact_followup_avatar">';
-                        $html .= '<div class="avatar"></div>';
-                        $html .= '</div>';
+                        if (Config::get('sys_enable_avatars')) {
+                            $html .= '<div class="tracker_artifact_followup_avatar">';
+                            $html .= $user->fetchHtmlAvatar();
+                            $html .= '</div>';
+                        }
                         $html .= '<div class="tracker_artifact_followup_content">';
                         $html .= '<div class="tracker_artifact_followup_comment">';
                     } else {
