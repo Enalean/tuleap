@@ -57,6 +57,7 @@ admin_main	lastday_users	Les dernières 24 heures
 admin_main	lastweek_users	La semaine dernière
 admin_main	lastmonth_users	Le mois dernier
 admin_main	last3months_users	Les 3 derniers mois
+admin_main	mode_lab_users	Utilisateurs actifs ou restreints avec le mode lab activé 
 admin_main	stat_projects	Statistiques des projets
 admin_main	stat_users	Statistiques des utilisateurs
 admin_main	status_user	Par status 

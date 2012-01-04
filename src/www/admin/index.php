@@ -54,7 +54,15 @@ db_query("SELECT count(*) AS count FROM user WHERE status='D'");
 $row = db_fetch_array();
 $deleted_users = $row['count'];
 
-
+db_query("SELECT COUNT(DISTINCT(p.user_id)) AS count
+          FROM user_preferences p
+          JOIN user u ON u.user_id
+          WHERE preference_name = 'use_lab_features'
+            AND preference_value = 1
+            AND (status = 'A'
+              OR status = 'R')");
+$row = db_fetch_array();
+$mode_lab = $row['count'];
 
 if($GLOBALS['sys_user_approval'] == 1){
     $pending_users = $realpending_users; 
@@ -101,6 +109,7 @@ $wStats->setContent('
         </ul>
       </li>
       <li><a href="lastlogins.php">'.$Language->getText('admin_main', 'stat_login').'</a></li>
+      <li>'.$Language->getText('admin_main','mode_lab_users').': <strong>'.$mode_lab.'</strong></li>
     </ul>
   </li>
   <li>'.$Language->getText('admin_main', 'stat_projects').'
