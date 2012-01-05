@@ -206,12 +206,8 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     
     protected function fetchRecursiveArtifact($method, $params = array()) {
         $html = '';
-        $content = array();
-        foreach($this->getFormElements() as $formElement) {
-            if ($c = call_user_func_array(array($formElement, $method), $params)) {
-                $content[] = $c;
-            }
-        }
+        $content = $this->getContainerContent($method, $params);
+        
         if (count($content)) {
             $html .= $this->fetchArtifactPrefix();
             $html .= $this->fetchArtifactContent($content);
@@ -223,12 +219,8 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     
     protected function fetchMailRecursiveArtifact($format, $method, $params = array()) {
         $output = '';
-        $content = array();
-        foreach($this->getFormElements() as $formElement) {
-            if ($c = call_user_func_array(array($formElement, $method), $params)) {
-                $content[] = $c;
-            }
-        }
+        $content = $this->getContainerContent($method, $params);
+        
         if (count($content)) {
             $output .= $this->fetchMailArtifactPrefix($format);
             $output .= $this->fetchMailArtifactContent($format, $content);
@@ -236,6 +228,16 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         }
         $this->has_been_displayed = true;
         return $output;
+    }
+    
+    protected function getContainerContent($method, $params) {
+        $content = array();
+        foreach($this->getFormElements() as $formElement) {
+            if ($c = call_user_func_array(array($formElement, $method), $params)) {
+                $content[] = $c;
+            }
+        }
+        return $content;
     }
     
     protected $has_been_displayed = false;

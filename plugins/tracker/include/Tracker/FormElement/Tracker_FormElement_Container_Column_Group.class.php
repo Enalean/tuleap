@@ -36,29 +36,11 @@ class Tracker_FormElement_Container_Column_Group {
         return $this->fetchGroup($columns, 'fetchAdminInGroup', array($tracker));
     }
     
-    public function fetchMailArtifact($columns, $recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {        
-        return $this->fetchMailGroup($columns, $format, 'fetchMailArtifactInGroup', array($recipient, $artifact, $format, $ignore_perms));
+    public function fetchMailArtifact($columns, $recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
+        return $this->fetchGroup($columns, 'fetchMailArtifactInGroup', array($recipient, $artifact, $format, $ignore_perms), $format);
     }
     
-    protected function fetchGroup($columns, $method, $params) {
-        $html = '';
-        if (is_array($columns) && $columns) {
-            $cells = array();
-            foreach ($columns as $c) {
-                if ($content = call_user_func_array(array($c, $method), $params)) {
-                    $cells[] = '<td>'. $content .'</td>';
-                }
-            }
-            if ($cells) {
-                $html .= '<table width="100%"><tbody><tr valign="top">';
-                $html .= implode('', $cells);
-                $html .= '</tr></tbody></table>';
-            }
-        }
-        return $html;
-    }
-    
-    protected function fetchMailGroup($columns, $format, $method, $params) {
+    protected function fetchGroup($columns, $method, $params, $format = 'html') {
         $output = '';
         if (is_array($columns) && $columns) {
             $cells = array();
