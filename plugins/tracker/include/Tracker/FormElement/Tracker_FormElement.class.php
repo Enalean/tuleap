@@ -264,15 +264,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
     }
 
     /**
-     * fetch artifact prefix for the mail in html
-     *
-     * @return String
-     */
-    protected function fetchMailArtifactPrefix() {
-        return '';
-    }
-
-    /**
      * Duplicate a field. If the field has custom properties, 
      * they should be propagated to the new one
      *

@@ -48,7 +48,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     }
 
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
-        return $this->fetchRecursiveArtifact('fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
+        return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
     
     
@@ -221,6 +221,23 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return $html;
     }
     
+    protected function fetchMailRecursiveArtifact($format, $method, $params = array()) {
+        $output = '';
+        $content = array();
+        foreach($this->getFormElements() as $formElement) {
+            if ($c = call_user_func_array(array($formElement, $method), $params)) {
+                $content[] = $c;
+            }
+        }
+        if (count($content)) {
+            $output .= $this->fetchMailArtifactPrefix($format);
+            $output .= $this->fetchMailArtifactContent($format, $content);
+            $output .= $this->fetchMailArtifactSuffix($format);
+        }
+        $this->has_been_displayed = true;
+        return $output;
+    }
+    
     protected $has_been_displayed = false;
     public function hasBeenDisplayed() {
         return $this->has_been_displayed;
@@ -320,8 +337,20 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
 
     protected abstract function fetchArtifactPrefix();
     protected abstract function fetchArtifactSuffix();
-    protected abstract function fetchArtifactContent(array $content);
+    protected abstract function fetchMailArtifactPrefix($format);
+    protected abstract function fetchMailArtifactSuffix($format);
 
-
+    
+    protected function fetchMailArtifactContent($format, array $content) {
+        if ($format == 'text') {
+            return implode(PHP_EOL, $content);
+        } else {
+            return $this->fetchArtifactContent($content);
+        }
+    }
+    
+    protected function fetchArtifactContent(array $content) {
+        return implode('', $content);
+    }
 }
 ?>

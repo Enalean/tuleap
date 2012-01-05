@@ -45,7 +45,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     }
     
     public function fetchMailArtifactInGroup($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
-        return $this->fetchRecursiveArtifact('fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
+        return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
     
     /**
@@ -140,8 +140,21 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     protected function fetchArtifactSuffix() {
         return $this->fetchColumnSuffix();
     }
-    protected function fetchArtifactContent(array $content) {
-        return implode('', $content);
+    
+    protected function fetchMailArtifactPrefix($format) {
+        if ($format == 'text') {
+            return '';
+        } else {
+            return $this->fetchArtifactPrefix();
+        }
+    }
+    
+    protected function fetchMailArtifactSuffix($format) {
+        if ($format == 'text') {
+            return '';
+        } else {
+            return $this->fetchArtifactSuffix();
+        }
     }
     
     /**

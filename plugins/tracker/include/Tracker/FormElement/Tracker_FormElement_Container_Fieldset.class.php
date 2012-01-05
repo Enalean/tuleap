@@ -43,8 +43,22 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $html .= '</fieldset>';
         return $html;
     }
-    protected function fetchArtifactContent(array $content) {
-        return implode('', $content);
+    
+    protected function fetchMailArtifactPrefix($format) {
+        if ($format == 'text') {
+            $label = $this->getLabel();
+            return $label . PHP_EOL . str_pad('', strlen($label), '-') . PHP_EOL;
+        } else {
+            return $this->fetchArtifactPrefix();
+        }
+    }
+    
+    protected function fetchMailArtifactSuffix($format) {
+        if ($format == 'text') {
+            return PHP_EOL;
+        } else {
+            return $this->fetchArtifactSuffix();
+        }
     }
     
     public function fetchAdmin($tracker) {
