@@ -21,6 +21,7 @@
 
 require_once 'pre.php';
 require_once 'SoapProject_Server.class.php';
+require_once 'common/soap/SOAP_WSDLGenerator.class.php';
 
 // Check if we the server is in secure mode or not.
 if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
@@ -31,6 +32,8 @@ if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_fo
 $uri = $protocol.'://'.$GLOBALS['sys_default_domain'].'/soap/project';
 
 if ($request->exist('wsdl')) {
+    $wsdlGen = new SOAP_WSDLGenerator('SoapProject_Server');
+    
     require_once 'nusoap.php';
     
     // Instantiate server object
@@ -41,30 +44,13 @@ if ($request->exist('wsdl')) {
 
     $server->register(
         'addProject',
-        array(
-            /*'sessionKey'     => 'xsd:string',*/
-            'requesterLogin' => 'xsd:string',
-            'shortName'      => 'xsd:string',
-            'realName'       => 'xsd:string',
-            'privacy'        => 'xsd:string',
-            'templateId'     => 'xsd:int'),
+        $wsdlGen->getParams('addProject'),
         array('addProject' => 'xsd:int'),
         $uri,
         $uri.'#addProject',
         'rpc',
         'encoded',
-        'This method throw an exception if there is a conflict on names or
-         it there is an error during the creation process.
-         It assumes a couple of things:
-         * The project type is "Project" (Not modifiable)
-         * The template is the default one (project id 100).
-         * There is no "Project description" nor any "Project description
-         * fields" (long desc, patents, IP, other software)
-         * The project services are inherited from the template
-         * There is no trove cat selected
-         * The default Software Policy is "Site exchange policy".
-
-         Projects are automatically accepted'
+        $wsdlGen->getComment('addProject')
     );
 
     // Call the service method to initiate the transaction and send the response
