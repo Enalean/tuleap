@@ -45,20 +45,19 @@ class SOAP_NusoapWSDL {
     
     private function appendMethods(soap_server $server) {
         $reflection = new ReflectionClass($this->className);
-        $wsdlGen    = new SOAP_WSDLGenerator($reflection);
         
         $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
-            $methodName = $method->getName();
+            $wsdlGen    = new SOAP_WSDLGenerator($method);
             $server->register(
-                $methodName,
-                $wsdlGen->getParams($methodName),
-                $wsdlGen->getReturnType($methodName),
+                $method->getName(),
+                $wsdlGen->getParameters(),
+                $wsdlGen->getReturnType(),
                 $this->uri,
-                $this->uri.'#'.$methodName,
+                $this->uri.'#'.$method->getName(),
                 'rpc',
                 'encoded',
-                $wsdlGen->getComment($methodName)
+                $wsdlGen->getComment()
             );
         }
     }

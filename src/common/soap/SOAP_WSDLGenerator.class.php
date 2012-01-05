@@ -21,44 +21,77 @@ class SOAP_WSDLGenerator {
     /**
      * @var ReflectionClass
      */
-    private $reflection;
+    private $method;
     
-    public function __construct(ReflectionClass $reflection) {
-        $this->reflection = $reflection;
+    private $comment    = '';
+    private $parameters = array();
+    private $returnType = array();
+    
+    public function __construct(ReflectionMethod $method) {
+        $this->method = $method;
+        $this->parseDocComment();
     }
     
-    public function getComment($methodName) {
-        $comment = '';
-        foreach ($this->getCommentLines($methodName) as $line) {
-            $line = trim($line);
-            $line = preg_replace('%^/\*\*%', '', $line);
-            $line = preg_replace('%^\*/%', '', $line);
-            $line = preg_replace('%^\*%', '', $line);
-
-            if (strpos($line, '@param') !== false || strpos($line, '@return') !== false || strpos($line, '@see') !== false) {
-                continue;
-            }
-
-            $comment .= trim($line).PHP_EOL;
+    public function getComment() {
+        return $this->comment;
+    }
+    
+    public function getParameters() {
+        return $this->parameters;
+    }
+    
+    public function getReturnType() {
+        return $this->returnType;
+    }
+    
+    private function parseDocComment() {
+        foreach ($this->getCommentLines() as $line) {
+            $line = $this->removeCommentsBorders($line);
+            $this->parseDescription($line);
+            $this->parseParameters($line);
+            $this->parseReturnType($line);
         }
-        return $comment;
     }
     
-    private function getCommentLines($methodName) {
-        $method     = $this->reflection->getMethod($methodName);
-        $method->getDocComment();
-        return explode(PHP_EOL, $method->getDocComment());
+    private function removeCommentsBorders($line) {
+        $line = trim($line);
+        $line = preg_replace('%^/\*\*%', '', $line);
+        $line = preg_replace('%^\*/%', '', $line);
+        $line = preg_replace('%^\*%', '', $line);
+        return $line;
     }
     
-    public function getParams($methodName) {
-        $params = array();
-        foreach ($this->getCommentLines($methodName) as $line) {
-            $matches = array();
-            if (preg_match('%@param[ \t]+([^ \t]*)[ \t]+([^ \t]*)[ \t]+.*%', $line, $matches)) {
-                $params[$this->docParamToSoap($matches[2])] = $this->docTypeToSoap($matches[1]);
-            }
+    private function parseDescription($line) {
+        if ($this->lineDoesntContainPhpDoc($line)) {
+            $this->comment .= trim($line).PHP_EOL;
         }
-        return $params;
+    }
+    
+    private function lineDoesntContainPhpDoc($line) {
+        return ($this->isNotPresentInLine($line, '@param') &&
+                $this->isNotPresentInLine($line, '@return') &&
+                $this->isNotPresentInLine($line, '@see'));
+    }
+    
+    private function isNotPresentInLine($line, $token) {
+        return strpos($line, $token) === false;
+    }
+    
+    private function parseParameters($line) {
+        $matches = array();
+        if (preg_match('%@param[ \t]+([^ \t]*)[ \t]+([^ \t]*)[ \t]+.*%', $line, $matches)) {
+            $this->parameters[$this->docParamToSoap($matches[2])] = $this->docTypeToSoap($matches[1]);
+        }
+    }
+    
+    private function parseReturnType($line) {
+        if (preg_match('%@return[ \t]+([^ \t]*)%', $line, $matches)) {
+            $this->returnType = array($this->method->getName() => $this->docTypeToSoap($matches[1]));
+        }
+    }
+    
+    private function getCommentLines() {
+        return explode(PHP_EOL, $this->method->getDocComment());
     }
     
     private function docParamToSoap($paramName) {
@@ -77,17 +110,6 @@ class SOAP_WSDLGenerator {
                 return 'xsd:boolean';
         }
     }
-    
-    public function getReturnType($methodName) {
-        $params = array();
-        foreach ($this->getCommentLines($methodName) as $line) {
-            $matches = array();
-            if (preg_match('%@return[ \t]+([^ \t]*)%', $line, $matches)) {
-                return array($methodName => $this->docTypeToSoap($matches[1]));
-            }
-        }
-    }
-
 }
 
 ?>

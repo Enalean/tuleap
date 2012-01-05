@@ -69,8 +69,8 @@ class SOAP_WSDLGeneratorTest extends UnitTestCase {
     }
     
     function testExtractReturnTypeBoolean() {
-        $gen = $this->GivenGenerator();
-        $this->assertEqual($gen->getReturnType('returnBoolean'), array('returnBoolean' => 'xsd:boolean'));
+        $gen = $this->GivenGenerator('returnBoolean');
+        $this->assertEqual($gen->getReturnType(), array('returnBoolean' => 'xsd:boolean'));
     }
     
     private function assertDoesntContain($reference, $search) {
@@ -82,22 +82,23 @@ class SOAP_WSDLGeneratorTest extends UnitTestCase {
     }
     
     private function GivenTheCommentOfAddProject() {
-        $gen = $this->GivenGenerator();
-        return $gen->getComment('addProject');
+        $gen = $this->GivenGenerator('addProject');
+        return $gen->getComment();
     }
     
     private function GivenTheParametersOfAddProject() {
-        $gen = $this->GivenGenerator();
-        return $gen->getParams('addProject');
+        $gen = $this->GivenGenerator('addProject');
+        return $gen->getParameters();
     }
     
     private function GivenTheReturnTypeOfAddProject() {
-        $gen = $this->GivenGenerator();
-        return $gen->getReturnType('addProject');
+        $gen = $this->GivenGenerator('addProject');
+        return $gen->getReturnType();
     }
     
-    private function GivenGenerator() {
-        return new SOAP_WSDLGenerator(new ReflectionClass('SOAP_WSDLGeneratorFixtures'));
+    private function GivenGenerator($methodName) {
+        $class = new ReflectionClass('SOAP_WSDLGeneratorFixtures');
+        return new SOAP_WSDLGenerator($class->getMethod($methodName));
     }
 }
 
