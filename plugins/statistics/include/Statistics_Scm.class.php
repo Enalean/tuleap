@@ -64,41 +64,6 @@ class Statistics_Scm {
     }
 
     /**
-     * Split the given period by months
-     *
-     * @return Array
-     */
-    function splitPeriodByMonths() {
-        $dates          = array();
-        $year           = intval(substr($this->startDate,0,4));
-        $referenceYear  = intval(substr($this->endDate,0,4));
-        $month          = intval(substr($this->startDate,5,2));
-        $referenceMonth = intval(substr($this->endDate,5,2));
-        $day            = intval(substr($this->startDate,8,2));
-        $referenceDay   = intval(substr($this->endDate,8,2));
-        $date           = 10000 * $year + 100 * $month + $day;
-        $reference      = 10000 * $referenceYear + 100 * $referenceMonth + $referenceDay;
-        $dates[0]       = $year."-".str_pad($month, 2, "0", STR_PAD_LEFT)."-".str_pad($day, 2, "0", STR_PAD_LEFT);
-        $last           = $dates[0];
-        $first          = true;
-        while ($date <= $reference) {
-            while ($month <= 12 && $date <= $reference) {
-                if (!$first) {
-                    $dates[$last] = $year."-".str_pad($month, 2, "0", STR_PAD_LEFT)."-01";
-                    $last         = $dates[$last];
-                }
-                $first = false;
-                $month ++;
-                $date  = 10000 * $year + 100 * $month + $day;
-            }
-            $year ++;
-            $month = 1;
-        }
-        $dates[$last] = $referenceYear."-".str_pad($referenceMonth, 2, "0", STR_PAD_LEFT)."-".str_pad($referenceDay, 2, "0", STR_PAD_LEFT);
-        return $dates;
-    }
-
-    /**
      * Convert dates from the format 'yyyy-mm-dd' to 'yyyymmdd'
      *
      * @param String $date date with format 'yyyy-mm-dd'

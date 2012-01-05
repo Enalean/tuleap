@@ -376,33 +376,31 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      * @return String
      */
     public function getBackendStatistics($scmStats) {
-        $dates = $scmStats->splitPeriodByMonths();
         $dao = $this->getDao();
         $scmStats->clearContent();
         $scmStats->addLine(array());
         $scmStats->addLine(array('Git'));
-        $periods[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_date');
-        $gitShell[] = "Git shell";
-        $gitolite[] = "Gitolite";
-        foreach ($dates as $begin => $end) {
-            if ($begin) {
-                $periods[] = $begin."::".$end;
-                $gitShell[$begin.$end] = 0;
-                $gitolite[$begin.$end] = 0;
-                $dar                      = $dao->getBackendStatistics($begin, $end, $scmStats->groupId);
-                if ($dar && !$dar->isError()) {
-                    foreach ($dar as $row) {
-                        if ($row['backend'] == "gitshell") {
-                            $gitShell[$begin.$end] = intval($row['count']);
-                        } elseif ($row['backend'] == "gitolite") {
-                            $gitolite[$begin.$end] = intval($row['count']);
-                        }
-                    }
-                }
+        $gitShellIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_date');
+        $gitShell[]      = "Git shell";
+        $gitoliteIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_date');
+        $gitolite[]      = "Gitolite";
+        $dar             = $dao->getBackendStatistics('gitshell', $scmStats->startDate, $scmStats->endDate, $scmStats->groupId);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $gitShellIndex[] = $row['year']."-".$row['month'];
+                $gitShell[]      = intval($row['count']);
             }
         }
-        $scmStats->addLine($periods);
+        $dar = $dao->getBackendStatistics('gitolite', $scmStats->startDate, $scmStats->endDate, $scmStats->groupId);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $gitoliteIndex[] = $row['year']."-".$row['month'];
+                $gitolite[]      = intval($row['count']);
+            }
+        }
+        $scmStats->addLine($gitShellIndex);
         $scmStats->addLine($gitShell);
+        $scmStats->addLine($gitoliteIndex);
         $scmStats->addLine($gitolite);
         $content = $scmStats->getStats();
         $scmStats->clearContent();
