@@ -2,7 +2,6 @@
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
- *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -24,8 +23,8 @@ class SOAP_WSDLGenerator {
      */
     private $reflection;
     
-    public function __construct($className) {
-        $this->reflection = new ReflectionClass($className);
+    public function __construct(ReflectionClass $reflection) {
+        $this->reflection = $reflection;
     }
     
     public function getComment($methodName) {
@@ -67,15 +66,25 @@ class SOAP_WSDLGenerator {
     }
     
     private function docTypeToSoap($docType) {
-        switch($docType) {
-            case 'String':
+        switch(strtolower($docType)) {
             case 'string':
                 return 'xsd:string';
-            case 'Integer':
             case 'integer':
-            case 'Int':
             case 'int':
                 return 'xsd:int';
+            case 'boolean':
+            case 'bool':
+                return 'xsd:boolean';
+        }
+    }
+    
+    public function getReturnType($methodName) {
+        $params = array();
+        foreach ($this->getCommentLines($methodName) as $line) {
+            $matches = array();
+            if (preg_match('%@return[ \t]+([^ \t]*)%', $line, $matches)) {
+                return array($methodName => $this->docTypeToSoap($matches[1]));
+            }
         }
     }
 

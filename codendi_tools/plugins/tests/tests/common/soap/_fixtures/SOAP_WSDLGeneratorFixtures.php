@@ -29,6 +29,13 @@ class SOAP_WSDLGeneratorFixtures {
     public function addProject($requesterLogin, $shortName, $realName, $privacy, $templateId) {
         
     }
+    
+    /**
+     * @return Boolean
+     */
+    public function returnBoolean() {
+        
+    }
 
 }
 

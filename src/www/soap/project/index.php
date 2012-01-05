@@ -21,7 +21,6 @@
 
 require_once 'pre.php';
 require_once 'SoapProject_Server.class.php';
-require_once 'common/soap/SOAP_WSDLGenerator.class.php';
 
 // Check if we the server is in secure mode or not.
 if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
@@ -31,35 +30,16 @@ if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_fo
 }
 $uri = $protocol.'://'.$GLOBALS['sys_default_domain'].'/soap/project';
 
+$serviceClass = 'SoapProject_Server';
+
 if ($request->exist('wsdl')) {
-    $wsdlGen = new SOAP_WSDLGenerator('SoapProject_Server');
-    
-    require_once 'nusoap.php';
-    
-    // Instantiate server object
-    $server = new soap_server();
-
-    //configureWSDL($serviceName,$namespace = false,$endpoint = false,$style='rpc', $transport = 'http://schemas.xmlsoap.org/soap/http');
-    $server->configureWSDL('TuleapProjectAPI', $uri, false, 'rpc', 'http://schemas.xmlsoap.org/soap/http', $uri);
-
-    $server->register(
-        'addProject',
-        $wsdlGen->getParams('addProject'),
-        array('addProject' => 'xsd:int'),
-        $uri,
-        $uri.'#addProject',
-        'rpc',
-        'encoded',
-        $wsdlGen->getComment('addProject')
-    );
-
-    // Call the service method to initiate the transaction and send the response
-    $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
-    $server->service($HTTP_RAW_POST_DATA);
+    require_once 'common/soap/SOAP_NusoapWSDL.class.php';
+    $wsdlGen = new SOAP_NusoapWSDL($serviceClass, 'TuleapProjectAPI', $uri);
+    $wsdlGen->dumpWSDL();
 } else {
     $server = new SoapServer($uri.'/?wsdl',
                          array('cache_wsdl' => WSDL_CACHE_NONE));
-    $server->setClass('SoapProject_Server');
+    $server->setClass($serviceClass);
     $server->handle();
 }
 

@@ -24,24 +24,6 @@ require_once '_fixtures/SOAP_WSDLGeneratorFixtures.php';
 
 class SOAP_WSDLGeneratorTest extends UnitTestCase {
     
-    private function assertDoesntContain($reference, $search) {
-        $this->assertTrue(strpos($reference, $search) === false);
-    }
-    
-    private function assertContains($reference, $search) {
-        $this->assertTrue(strpos($reference, $search) !== false);
-    }
-    
-    private function GivenTheCommentOfAddProject() {
-        $gen = new SOAP_WSDLGenerator('SOAP_WSDLGeneratorFixtures');
-        return $gen->getComment('addProject');
-    }
-    
-    private function GivenTheParametersOfAddProject() {
-        $gen = new SOAP_WSDLGenerator('SOAP_WSDLGeneratorFixtures');
-        return $gen->getParams('addProject');
-    }
-    
     function testExtractCommentShouldContainsComment() {
         $comment = $this->GivenTheCommentOfAddProject();
         $this->assertContains($comment, 'Create a new project');
@@ -79,9 +61,44 @@ class SOAP_WSDLGeneratorTest extends UnitTestCase {
             'realName'       => 'xsd:string',
             'privacy'        => 'xsd:string',
             'templateId'     => 'xsd:int'));
-        
     }
     
+    function testExtractReturnType() {
+        $return = $this->GivenTheReturnTypeOfAddProject();
+        $this->assertEqual($return, array('addProject' => 'xsd:int'));
+    }
+    
+    function testExtractReturnTypeBoolean() {
+        $gen = $this->GivenGenerator();
+        $this->assertEqual($gen->getReturnType('returnBoolean'), array('returnBoolean' => 'xsd:boolean'));
+    }
+    
+    private function assertDoesntContain($reference, $search) {
+        $this->assertTrue(strpos($reference, $search) === false);
+    }
+    
+    private function assertContains($reference, $search) {
+        $this->assertTrue(strpos($reference, $search) !== false);
+    }
+    
+    private function GivenTheCommentOfAddProject() {
+        $gen = $this->GivenGenerator();
+        return $gen->getComment('addProject');
+    }
+    
+    private function GivenTheParametersOfAddProject() {
+        $gen = $this->GivenGenerator();
+        return $gen->getParams('addProject');
+    }
+    
+    private function GivenTheReturnTypeOfAddProject() {
+        $gen = $this->GivenGenerator();
+        return $gen->getReturnType('addProject');
+    }
+    
+    private function GivenGenerator() {
+        return new SOAP_WSDLGenerator(new ReflectionClass('SOAP_WSDLGeneratorFixtures'));
+    }
 }
 
 ?>
