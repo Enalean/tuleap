@@ -18,11 +18,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/soap/SOAP_WSDLGenerator.class.php';
+require_once 'common/soap/SOAP_WSDLMethodGenerator.class.php';
 
 require_once '_fixtures/SOAP_WSDLGeneratorFixtures.php';
 
-class SOAP_WSDLGeneratorTest extends UnitTestCase {
+class SOAP_WSDLMethodGeneratorTest extends UnitTestCase {
     
     function testExtractCommentShouldContainsComment() {
         $comment = $this->GivenTheCommentOfAddProject();
@@ -98,7 +98,7 @@ class SOAP_WSDLGeneratorTest extends UnitTestCase {
     
     private function GivenGenerator($methodName) {
         $class = new ReflectionClass('SOAP_WSDLGeneratorFixtures');
-        return new SOAP_WSDLGenerator($class->getMethod($methodName));
+        return new SOAP_WSDLMethodGenerator($class->getMethod($methodName));
     }
 }
 

@@ -18,8 +18,11 @@
  */
 
 require_once 'nusoap.php';
-require_once 'SOAP_WSDLGenerator.class.php';
+require_once 'SOAP_WSDLMethodGenerator.class.php';
 
+/**
+ * Generate a WSDL for all public methods of a given class name
+ */
 class SOAP_NusoapWSDL {
     private $className;
     private $serviceName;
@@ -48,18 +51,22 @@ class SOAP_NusoapWSDL {
         
         $methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
         foreach ($methods as $method) {
-            $wsdlGen    = new SOAP_WSDLGenerator($method);
-            $server->register(
-                $method->getName(),
-                $wsdlGen->getParameters(),
-                $wsdlGen->getReturnType(),
-                $this->uri,
-                $this->uri.'#'.$method->getName(),
-                'rpc',
-                'encoded',
-                $wsdlGen->getComment()
-            );
+            $this->appendOneMethod($server, $method);
         }
+    }
+    
+    private function appendOneMethod(soap_server $server, ReflectionMethod $method) {
+        $wsdlGen    = new SOAP_WSDLMethodGenerator($method);
+        $server->register(
+            $method->getName(),
+            $wsdlGen->getParameters(),
+            $wsdlGen->getReturnType(),
+            $this->uri,
+            $this->uri.'#'.$method->getName(),
+            'rpc',
+            'encoded',
+            $wsdlGen->getComment()
+        );
     }
 }
 

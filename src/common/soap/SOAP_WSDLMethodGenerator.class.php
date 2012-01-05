@@ -17,9 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SOAP_WSDLGenerator {
+/**
+ * Parse a PHP Method and generate SOAP WSDL compatible method description.
+ */
+class SOAP_WSDLMethodGenerator {
     /**
-     * @var ReflectionClass
+     * @var ReflectionMethod
      */
     private $method;
     
