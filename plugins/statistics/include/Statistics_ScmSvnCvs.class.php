@@ -17,13 +17,15 @@
  */
 
 require_once 'Statistics_Scm.class.php';
+require_once 'Statistics_ScmSvnDao.class.php';
 require_once 'Statistics_ScmCvsDao.class.php';
 
 /**
- * SCM statistics for CVS
+ * SCM statistics for SVN or CVS
  */
-class Statistics_ScmCvs extends Statistics_Scm {
+class Statistics_ScmSvnCvs extends Statistics_Scm {
 
+    var $scm;
     var $dao;
     var $dates;
     var $periods;
@@ -37,14 +39,29 @@ class Statistics_ScmCvs extends Statistics_Scm {
     var $topCommitByUser;
 
     /**
+     * Constructor of the class
+     *
+     * @param String  $scm       'svn' or 'cvs'
+     * @param String  $startDate Period start date
+     * @param String  $endDate   Period end date
+     * @param Integer $groupId   Project Id
+     *
+     * @return void
+     */
+    function __construct($scm, $startDate, $endDate, $groupId = null) {
+        $this->scm = $scm;
+        parent::__construct($startDate, $endDate, $groupId);
+    }
+
+    /**
      * Calculate total read access and commits
      *
      * @return void
      */
     function calculateTotalAccess() {
         $this->periods[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_period');
-        $this->totalRead[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_total_read');
-        $this->totalCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_total_commit');
+        $this->totalRead[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_total_read');
+        $this->totalCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_total_commit');
         foreach ($this->dates as $begin => $end) {
             if ($begin) {
                 $this->periods[] = $begin." -> ".$end;
@@ -52,7 +69,11 @@ class Statistics_ScmCvs extends Statistics_Scm {
                 if ($readDar && !$readDar->isError()) {
                     $read = 0;
                     foreach ($readDar as $row) {
-                        $read += intval($row['cvs_checkouts + cvs_browse']);
+                        if ($this->scm == 'svn') {
+                            $read += intval($row['svn_checkouts + svn_access_count + svn_browse']);
+                        } else {
+                            $read += intval($row['cvs_checkouts + cvs_browse']);
+                        }
                     }
                     $this->totalRead[] = $read;
                 } else {
@@ -62,7 +83,11 @@ class Statistics_ScmCvs extends Statistics_Scm {
                 if ($commitsDar && !$commitsDar->isError()) {
                     $commits = 0;
                     foreach ($commitsDar as $row) {
-                        $commits += intval($row['cvs_commits + cvs_adds']);
+                        if ($this->scm == 'svn') {
+                            $commits += intval($row['svn_commits + svn_adds + svn_deletes']);
+                        } else {
+                            $commits += intval($row['cvs_commits + cvs_adds']);
+                        }
                     }
                     $this->totalCommits[] = $commits;
                 } else {
@@ -78,8 +103,8 @@ class Statistics_ScmCvs extends Statistics_Scm {
      * @return void
      */
     function calculateAccessByProject() {
-        $this->readProjectsNumber[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_read_project');
-        $this->commitProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_commit_project');
+        $this->readProjectsNumber[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_read_project');
+        $this->commitProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_commit_project');
         $rank = 1;
         while ($rank <= 10) {
             $this->topCommitByProject[$rank][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_project')." #".$rank;
@@ -119,8 +144,8 @@ class Statistics_ScmCvs extends Statistics_Scm {
      * @return void
      */
     function calculateAccessByUser() {
-        $this->readUsersNumber[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_read_user');
-        $this->commitUsersNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_commit_user');
+        $this->readUsersNumber[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_read_user');
+        $this->commitUsersNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_commit_user');
         $rank = 1;
         while ($rank <= 10) {
             $this->topCommitByUser[$rank][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_user')." #".$rank;
@@ -155,13 +180,19 @@ class Statistics_ScmCvs extends Statistics_Scm {
     }
 
     /**
-     * Add stats for CVS in CSV format
+     * Add stats for SVN or CVS in CSV format
      *
      * @return String
      */
     function getStats() {
         $this->dates = $this->splitPeriodByMonths();
-        $this->dao   = new Statistics_ScmCvsDao(CodendiDataAccess::instance(), $this->groupId);
+        if ($this->scm == 'svn') {
+            $this->dao   = new Statistics_ScmSvnDao(CodendiDataAccess::instance(), $this->groupId);
+            $this->addLine(array('SVN'));
+        } else {
+            $this->dao   = new Statistics_ScmCvsDao(CodendiDataAccess::instance(), $this->groupId);
+            $this->addLine(array('CVS'));
+        }
         $this->calculateTotalAccess();
 
         if (!$this->groupId) {
@@ -170,7 +201,6 @@ class Statistics_ScmCvs extends Statistics_Scm {
 
         $this->calculateAccessByUser();
 
-        $this->addLine(array('CVS'));
         $this->addLine($this->periods);
         $this->addLine($this->totalRead);
         if (!$this->groupId) {
