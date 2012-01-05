@@ -116,4 +116,4 @@ widget_categ_label	ci	Continuous Integration
 
 plugin_hudson	error_object_not_found	Error: Hudson object not found.
 
-plugin_hudson	job_count	Number of jobs
+plugin_hudson	job_count	Number of jobs in $1
