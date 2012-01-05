@@ -19,8 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-// Start SoapServer
-require 'SoapProject_Server.class.php';
+require_once 'pre.php';
+require_once 'SoapProject_Server.class.php';
 
 // Check if we the server is in secure mode or not.
 if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
@@ -30,10 +30,51 @@ if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_fo
 }
 $uri = $protocol.'://'.$GLOBALS['sys_default_domain'].'/soap/project';
 
-$server = new SoapServer(null, array('uri' => $uri, 'cache_wsdl' => WSDL_CACHE_NONE));
+if ($request->exist('wsdl')) {
+    require_once 'nusoap.php';
+    
+    // Instantiate server object
+    $server = new soap_server();
 
-$server->setClass('SoapProject_Server');
+    //configureWSDL($serviceName,$namespace = false,$endpoint = false,$style='rpc', $transport = 'http://schemas.xmlsoap.org/soap/http');
+    $server->configureWSDL('TuleapProjectAPI', $uri, false, 'rpc', 'http://schemas.xmlsoap.org/soap/http', $uri);
 
-$server->handle();
+    $server->register(
+        'addProject',
+        array(
+            /*'sessionKey'     => 'xsd:string',*/
+            'requesterLogin' => 'xsd:string',
+            'shortName'      => 'xsd:string',
+            'realName'       => 'xsd:string',
+            'privacy'        => 'xsd:string',
+            'templateId'     => 'xsd:int'),
+        array('addProject' => 'xsd:int'),
+        $uri,
+        $uri.'#addProject',
+        'rpc',
+        'encoded',
+        'This method throw an exception if there is a conflict on names or
+         it there is an error during the creation process.
+         It assumes a couple of things:
+         * The project type is "Project" (Not modifiable)
+         * The template is the default one (project id 100).
+         * There is no "Project description" nor any "Project description
+         * fields" (long desc, patents, IP, other software)
+         * The project services are inherited from the template
+         * There is no trove cat selected
+         * The default Software Policy is "Site exchange policy".
+
+         Projects are automatically accepted'
+    );
+
+    // Call the service method to initiate the transaction and send the response
+    $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
+    $server->service($HTTP_RAW_POST_DATA);
+} else {
+    $server = new SoapServer($uri.'/?wsdl',
+                         array('cache_wsdl' => WSDL_CACHE_NONE));
+    $server->setClass('SoapProject_Server');
+    $server->handle();
+}
 
 ?>

@@ -23,9 +23,8 @@ if ($argc < 4) {
 }
 
 // Establish connexion to the server
-$client = new SoapClient(null, array('location'   => "http://localhost/soap/project/",
-                                     'uri'        => 'http://localhost/soap/project/',
-                                     'cache_wsdl' => WSDL_CACHE_NONE));
+$client = new SoapClient('http://shunt.cro.enalean.com/soap/project/?wsdl', 
+                         array('cache_wsdl' => WSDL_CACHE_NONE));
 
 //$client->addProject(requester, shortname, longname);
 $prjId = $client->addProject($argv[1], $argv[2], $argv[3]);

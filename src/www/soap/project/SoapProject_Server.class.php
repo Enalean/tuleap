@@ -94,7 +94,7 @@ class SoapProject_Server {
         if ($template && !$template->isError()) {
             $data['project']['built_from_template'] = $template->getID();
         } else {
-            throw new SoapFault('3000', 'Invalid template id');
+            throw new SoapFault('3000', 'Invalid template id '.$templateId);
         }
         
         $data['project']['form_license'] = 'xrx';
