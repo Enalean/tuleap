@@ -67,7 +67,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalCommits($startDate, $endDate) {
-        $sql = "SELECT count(*) AS count
+        $sql = "SELECT COUNT(*) AS count
                 FROM svn_commits
                 WHERE date >= ".$this->da->quoteSmart($startDate)."
                   AND date < ".$this->da->quoteSmart($endDate)."
@@ -105,7 +105,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function commitsByProject($startDate, $endDate) {
-        $sql = "SELECT unix_group_name AS project, count(c.id) AS count
+        $sql = "SELECT unix_group_name AS project, COUNT(c.id) AS count
                 FROM svn_commits c
                 JOIN groups g USING (group_id)
                 WHERE date >= ".$this->da->quoteSmart($startDate)."
@@ -146,7 +146,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function commitsByUser($startDate, $endDate) {
-        $sql = "SELECT user_name AS user, count(c.id) AS count
+        $sql = "SELECT user_name AS user, COUNT(c.id) AS count
                 FROM svn_commits c
                 JOIN user u ON user_id = whoid
                 WHERE date >= ".$this->da->quoteSmart($startDate)."
