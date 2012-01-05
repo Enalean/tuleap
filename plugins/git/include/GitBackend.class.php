@@ -381,29 +381,29 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $scmStats->clearContent();
         $scmStats->addLine(array());
         $scmStats->addLine(array('Git'));
-        $csvPeriods[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_period');
-        $csvGitShell[] = "Git shell";
-        $csvGitolite[] = "Gitolite";
+        $periods[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_period');
+        $gitShell[] = "Git shell";
+        $gitolite[] = "Gitolite";
         foreach ($dates as $begin => $end) {
             if ($begin) {
-                $csvPeriods[] = $begin."->".$end;
-                $csvGitShell[$begin.$end] = 0;
-                $csvGitolite[$begin.$end] = 0;
+                $periods[] = $begin."->".$end;
+                $gitShell[$begin.$end] = 0;
+                $gitolite[$begin.$end] = 0;
                 $dar                      = $dao->getBackendStatistics($begin, $end, $scmStats->groupId);
                 if ($dar && !$dar->isError()) {
                     foreach ($dar as $row) {
                         if ($row['backend'] == "gitshell") {
-                            $csvGitShell[$begin.$end] = intval($row['count']);
+                            $gitShell[$begin.$end] = intval($row['count']);
                         } elseif ($row['backend'] == "gitolite") {
-                            $csvGitolite[$begin.$end] = intval($row['count']);
+                            $gitolite[$begin.$end] = intval($row['count']);
                         }
                     }
                 }
             }
         }
-        $scmStats->addLine($csvPeriods);
-        $scmStats->addLine($csvGitShell);
-        $scmStats->addLine($csvGitolite);
+        $scmStats->addLine($periods);
+        $scmStats->addLine($gitShell);
+        $scmStats->addLine($gitolite);
         $content = $scmStats->getStats();
         $scmStats->clearContent();
         return $content;
