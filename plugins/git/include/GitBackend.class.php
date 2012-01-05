@@ -387,14 +387,14 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $dar             = $dao->getBackendStatistics('gitshell', $scmStats->startDate, $scmStats->endDate, $scmStats->groupId);
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
-                $gitShellIndex[] = $row['year']."-".$row['month'];
+                $gitShellIndex[] = $row['month']." ".$row['year'];
                 $gitShell[]      = intval($row['count']);
             }
         }
         $dar = $dao->getBackendStatistics('gitolite', $scmStats->startDate, $scmStats->endDate, $scmStats->groupId);
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
-                $gitoliteIndex[] = $row['year']."-".$row['month'];
+                $gitoliteIndex[] = $row['month']." ".$row['year'];
                 $gitolite[]      = intval($row['count']);
             }
         }

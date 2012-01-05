@@ -440,7 +440,7 @@ class GitDao extends DataAccessObject {
         }
         $query = "SELECT count(repository_id) AS count,
                   YEAR(repository_creation_date) AS year,
-                  MONTH(repository_creation_date) AS month
+                  MONTHNAME(STR_TO_DATE(MONTH(repository_creation_date), '%m')) AS month
                   FROM ".$this->getTable()."
                   JOIN groups g ON group_id = project_id
                   WHERE repository_backend_type = ".$this->da->quoteSmart($backend)."

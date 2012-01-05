@@ -49,7 +49,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalRead($startDate, $endDate) {
-        $sql = "SELECT MONTH(day) AS month,
+        $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
                 YEAR(day) AS year,
                 svn_checkouts + svn_access_count + svn_browse,
                 COUNT(DISTINCT(group_id)) AS projects,
@@ -72,7 +72,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalCommits($startDate, $endDate) {
-        $sql = "SELECT MONTH(FROM_UNIXTIME(date)) AS month,
+        $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(FROM_UNIXTIME(date)), '%m')) AS month,
                 YEAR(FROM_UNIXTIME(date)) AS year,
                 COUNT(*) AS count,
                 COUNT(DISTINCT(group_id)) AS projects,

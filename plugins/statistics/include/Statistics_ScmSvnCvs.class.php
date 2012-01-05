@@ -56,7 +56,7 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
         $readDar              = $this->dao->totalRead($this->convertDateForDao($this->startDate), $this->convertDateForDao($this->endDate));
         if ($readDar && !$readDar->isError()) {
             foreach ($readDar as $row) {
-                $readIndex[]          = $row['year']."-".$row['month'];
+                $readIndex[]          = $row['month']." ".$row['year'];
                 $readProjectsNumber[] = $row['projects'];
                 $readUsersNumber[]    = $row['users'];
                 if ($this->scm == 'svn') {
@@ -90,7 +90,7 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
         }
         if ($commitsDar && !$commitsDar->isError()) {
             foreach ($commitsDar as $row) {
-                $commitsIndex[]         = $row['year']."-".$row['month'];
+                $commitsIndex[]         = $row['month']." ".$row['year'];
                 $commitProjectsNumber[] = $row['projects'];
                 $commitUsersNumber[]    = $row['users'];
                 if ($this->scm == 'svn') {
