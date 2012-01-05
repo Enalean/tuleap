@@ -30,7 +30,7 @@ plugin_statistics_admin_page	months	Voir les statistiques pour l'an dernier
 plugin_statistics	scm_title	Statistiques des SCM
 plugin_statistics	scm_description	Affiche les statistiques des outils SCM de la plateforme.
 plugin_statistics	scm_export_button	Exporter en CSV
-plugin_statistics	scm_period	Période
+plugin_statistics	scm_date	Date
 plugin_statistics	scm_svn_total_read	Nombre total d'accée en lecture à SVN
 plugin_statistics	scm_svn_read_project	Nombre total de projets avec des accés en lecture à SVN
 plugin_statistics	scm_svn_read_user	Nombre total de utilisateurs avec des accés en lecture à SVN

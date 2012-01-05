@@ -381,7 +381,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $scmStats->clearContent();
         $scmStats->addLine(array());
         $scmStats->addLine(array('Git'));
-        $periods[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_period');
+        $periods[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_date');
         $gitShell[] = "Git shell";
         $gitolite[] = "Gitolite";
         foreach ($dates as $begin => $end) {

@@ -49,11 +49,16 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalRead($startDate, $endDate) {
-        $sql = "SELECT svn_checkouts + svn_access_count + svn_browse
+        $sql = "SELECT MONTH(day) AS month,
+                YEAR(day) AS year,
+                svn_checkouts + svn_access_count + svn_browse,
+                COUNT(DISTINCT(group_id)) AS projects,
+                COUNT(DISTINCT(user_id)) AS users
                 FROM group_svn_full_history
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate)."
-                  ".$this->condition;
+                  ".$this->condition."
+                GROUP BY YEAR(day), MONTH(day)";
 
         return $this->retrieve($sql);
     }
@@ -67,11 +72,16 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalCommits($startDate, $endDate) {
-        $sql = "SELECT COUNT(*) AS count
+        $sql = "SELECT MONTH(FROM_UNIXTIME(date)) AS month,
+                YEAR(FROM_UNIXTIME(date)) AS year,
+                COUNT(*) AS count,
+                COUNT(DISTINCT(group_id)) AS projects,
+                COUNT(DISTINCT(whoid)) AS users
                 FROM svn_commits
                 WHERE date >= ".$this->da->quoteSmart($startDate)."
                   AND date < ".$this->da->quoteSmart($endDate)."
-                  ".$this->condition;
+                  ".$this->condition."
+                GROUP BY year, month";
 
         return $this->retrieve($sql);
     }
@@ -168,16 +178,15 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function repositoriesEvolutionForPeriod($startDate, $endDate) {
-        $sql = " SELECT MONTH(FROM_UNIXTIME(date)) as month,". 
-               " YEAR(FROM_UNIXTIME(date)) as year ,".
-               " count(distinct(repositoryid))".
-               " FROM groups g ".
-               " JOIN svn_commits ".
-               " USING (group_id) ".
-               " WHERE date >= ".$this->da->quoteSmart($startDate)."
-                  AND date < ".$this->da->quoteSmart($endDate).
-               " AND g.status = 'A' ".
-               " GROUP BY year, month";
+        $sql = " SELECT MONTH(FROM_UNIXTIME(date)) as month,
+                 YEAR(FROM_UNIXTIME(date)) as year ,
+                 COUNT(DISTINCT(repositoryid))
+                 FROM groups g 
+                 JOIN svn_commits USING (group_id) 
+                 WHERE date >= ".$this->da->quoteSmart($startDate)."
+                   AND date < ".$this->da->quoteSmart($endDate)."
+                   AND g.status = 'A' 
+                 GROUP BY year, month";
 
         return $this->retrieve($sql);
     }

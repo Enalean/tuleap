@@ -49,11 +49,16 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalRead($startDate, $endDate) {
-        $sql = "SELECT cvs_checkouts + cvs_browse
+        $sql = "SELECT MONTH(day) AS month,
+                YEAR(day) AS year,
+                cvs_checkouts + cvs_browse,
+                COUNT(DISTINCT(group_id)) AS projects,
+                COUNT(DISTINCT(user_id)) AS users
                 FROM group_cvs_full_history
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate)."
-                  ".$this->condition;
+                  ".$this->condition."
+                GROUP BY YEAR(day), MONTH(day)";
 
         return $this->retrieve($sql);
     }
@@ -67,11 +72,16 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalCommits($startDate, $endDate) {
-        $sql = "SELECT cvs_commits + cvs_adds
+        $sql = "SELECT MONTH(day) AS month,
+                YEAR(day) AS year,
+                cvs_commits + cvs_adds,
+                COUNT(DISTINCT(group_id)) AS projects,
+                COUNT(DISTINCT(user_id)) AS users
                 FROM group_cvs_full_history
                 WHERE day >= ".$this->da->quoteSmart($startDate)."
                   AND day < ".$this->da->quoteSmart($endDate)."
-                  ".$this->condition;
+                  ".$this->condition."
+                GROUP BY YEAR(day), MONTH(day)";
 
         return $this->retrieve($sql);
     }
