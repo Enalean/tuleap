@@ -1,6 +1,0 @@
-Version 0.2 - 30 june 2011
-	* Throw an exception when attempting to add a user already member of project
-	* Throw an exception when attempting to add a user to a non existing project
-	* If platform use LDAP plugin, project admin & project members are automatically created into the forge if they don't already exists
-	* API Change for addProject, add tailing parameter:
-		Allow to select a template when creating project (100 by default, it's default template)
