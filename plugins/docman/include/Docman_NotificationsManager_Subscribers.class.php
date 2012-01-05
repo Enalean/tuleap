@@ -52,14 +52,12 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         $users = new ArrayIterator($params['listeners']);
         if ($users) {
             $dpm = $this->_getPermissionsManager();
-            while ($users->valid()) {
-                $user = $users->current();
+            foreach($users as $user) {
                 if ($user->isActive() || $user->isRestricted()) {
                     if ($dpm->userCanAccess($user, $params['item']->getId())) {
                         $this->_buildMessage($params['event'], $params, $user);
                     }
                 }
-                $users->next();
             }
         }
         $this->sendNotifications('', array());
@@ -76,7 +74,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     */
     function _buildMessage($event, $params, $user) {
         $type = '';
-        $language = parent::_getLanguageForUser($user);
+        $language = $this->_getLanguageForUser($user);
         switch($event) {
         case 'plugin_docman_add_monitoring':
             $type = self::MESSAGE_ADDED;
