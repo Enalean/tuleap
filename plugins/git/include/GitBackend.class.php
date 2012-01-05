@@ -386,7 +386,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $gitolite[] = "Gitolite";
         foreach ($dates as $begin => $end) {
             if ($begin) {
-                $periods[] = $begin." -> ".$end;
+                $periods[] = $begin."::".$end;
                 $gitShell[$begin.$end] = 0;
                 $gitolite[$begin.$end] = 0;
                 $dar                      = $dao->getBackendStatistics($begin, $end, $scmStats->groupId);

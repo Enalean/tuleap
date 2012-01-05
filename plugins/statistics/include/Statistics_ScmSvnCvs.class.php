@@ -64,7 +64,7 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
         $this->totalCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_total_commit');
         foreach ($this->dates as $begin => $end) {
             if ($begin) {
-                $this->periods[] = $begin." -> ".$end;
+                $this->periods[] = $begin."::".$end;
                 $readDar      = $this->dao->totalRead($this->convertDateForDao($begin), $this->convertDateForDao($end));
                 if ($readDar && !$readDar->isError()) {
                     $read = 0;
