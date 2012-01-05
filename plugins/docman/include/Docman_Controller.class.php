@@ -874,30 +874,35 @@ class Docman_Controller extends Controler {
         case 'add_monitoring':
             $this->_actionParams['listeners_to_add'] = array();
             $this->_actionParams['invalid_users']    = false;
-            if ($this->request->exist('listeners_to_add')) {
-                $um    = UserManager::instance();
-                $vUser = new Valid_Text('listeners_to_add');
-                if($this->request->valid($vUser)) {
-                    $usernames = array_map('trim', preg_split('/[,;]/', $this->request->get('listeners_to_add')));
-                    $users     = array();
-                    $vUserName = new Valid_String();
-                    $vUserName->required();
-                    foreach ($usernames as $username) {
-                        if ($vUserName->validate($username) && $user = $um->findUser($username)) {
-                            $users[] =$user;
-                        } else {
-                            $this->_actionParams['invalid_users'] = true;
+            if ($this->userCanManage($item->getId())) {
+                if ($this->request->exist('listeners_to_add')) {
+                    $um    = UserManager::instance();
+                    $vUser = new Valid_Text('listeners_to_add');
+                    if($this->request->valid($vUser)) {
+                        $usernames = array_map('trim', preg_split('/[,;]/', $this->request->get('listeners_to_add')));
+                        $users     = array();
+                        $vUserName = new Valid_String();
+                        $vUserName->required();
+                        foreach ($usernames as $username) {
+                            if ($vUserName->validate($username) && $user = $um->findUser($username)) {
+                                $users[] =$user;
+                            } else {
+                                $this->_actionParams['invalid_users'] = true;
+                            }
                         }
+                        if ($this->request->exist('monitor_cascade')) {
+                            $this->_actionParams['monitor_cascade'] = $this->request->get('monitor_cascade');
+                        }
+                        $this->_actionParams['listeners_to_add'] = $users;
+                        $this->_actionParams['item']             = $item;
                     }
-                    if ($this->request->exist('monitor_cascade')) {
-                        $this->_actionParams['monitor_cascade'] = $this->request->get('monitor_cascade');
-                    }
-                    $this->_actionParams['listeners_to_add'] = $users;
-                    $this->_actionParams['item']             = $item;
                 }
+                $this->action = 'add_monitoring';
+                $this->_setView('Details');
+            } else {
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
+                $this->_setView('Details');
             }
-            $this->action = 'add_monitoring';
-            $this->_setView('Details');
             break;
 
         case 'move_here':

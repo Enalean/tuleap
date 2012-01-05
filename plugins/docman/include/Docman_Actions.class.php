@@ -1613,7 +1613,6 @@ class Docman_Actions extends Actions {
      */
     function add_monitoring($params) {
         if (isset($params['listeners_to_add']) && is_array($params['listeners_to_add']) && !empty($params['listeners_to_add'])) {
-            if ($this->_controler->userCanManage($params['item']->getId())) {
                 $cascade = false;
                 if (isset($params['monitor_cascade']) && $params['monitor_cascade']) {
                     $cascade = true;
@@ -1654,9 +1653,6 @@ class Docman_Actions extends Actions {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_added', array(implode(',', $users))));
                     $this->_raiseMonitoringListEvent($params['item'], $params['listeners_to_add'],'plugin_docman_add_monitoring');
                 }
-            } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
-            }
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user_added'));
         }

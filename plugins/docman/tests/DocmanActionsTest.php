@@ -369,31 +369,10 @@ class DocmanActionsTest extends UnitTestCase {
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
         $actions->add_monitoring(array('listeners_to_add' => true));
-        $controller->expectNever('userCanManage');
-    }
-
-    function testAdd_monitoringPermissionDenied() {
-        $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', false);
-        $controller->feedback = new MockFeedback();
-        $userManager = new MockUserManager();
-        $actions = new Docman_ActionsTest();
-        $actions->_controler = $controller;
-        $actions->setReturnValue('_getUserManagerInstance', $userManager);
-        $controller->feedback->expectOnce('log', array('error', '*'));
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_permission_denied'));
-        $params['listeners_to_add'] = array(1);
-        $params['item'] = new MockDocman_Item();
-        $actions->add_monitoring($params);
-        $controller->expectOnce('userCanManage');
-        $notificationsManager = new MockDocman_NotificationsManager();
-        $controller->notificationsManager = $notificationsManager;
-        $notificationsManager->expectNever('exist');
     }
 
     function testAdd_monitoringNotifAlreadyExist() {
         $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('exist', true);
@@ -412,14 +391,12 @@ class DocmanActionsTest extends UnitTestCase {
         $params['item']             = new MockDocman_Item();
         $params['invalid_users']    = false;
         $actions->add_monitoring($params);
-        $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 2);
         $notificationsManager->expectNever('add');
     }
 
     function testAdd_monitoringError() {
         $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('exist', false);
@@ -444,14 +421,12 @@ class DocmanActionsTest extends UnitTestCase {
         $params['item']             = new MockDocman_Item();
         $params['invalid_users']    = false;
         $actions->add_monitoring($params);
-        $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 2);
         $notificationsManager->expectCallCount('add', 2);
     }
 
     function testAdd_monitoringNoUserPermissions() {
         $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('exist', false);
@@ -478,7 +453,6 @@ class DocmanActionsTest extends UnitTestCase {
         $params['item']             = new MockDocman_Item();
         $params['invalid_users']    = false;
         $actions->add_monitoring($params);
-        $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 2);
         $docmanPermissionsManager->expectCallCount('userCanRead', 2);
         $notificationsManager->expectCallCount('add', 1);
@@ -486,7 +460,6 @@ class DocmanActionsTest extends UnitTestCase {
 
     function testAdd_monitoringSuccess() {
         $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
         $user = new MockUser();
         $user->setReturnValue('getId', 123);
@@ -507,7 +480,6 @@ class DocmanActionsTest extends UnitTestCase {
         $params['item']             = new MockDocman_Item();
         $params['invalid_users']    = false;
         $actions->add_monitoring($params);
-        $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 1);
         $notificationsManager->expectCallCount('add', 1);
     }
