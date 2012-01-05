@@ -854,21 +854,26 @@ class Docman_Controller extends Controler {
             break;
         case 'remove_monitoring':
             $this->_actionParams['listeners_to_delete'] = array();
-            if ($this->request->exist('listeners_to_delete')) {
-                $um      = UserManager::instance();
-                $vUserId = new Valid_UInt('listeners_to_delete');
-                if($this->request->validArray($vUserId)) {
-                    $userIds = $this->request->get('listeners_to_delete');
-                    $users   = array();
-                    foreach ($userIds as $userId) {
-                        $users[] = $um->getUserById($userId);
+            if ($this->userCanManage($item->getId())) {
+                if ($this->request->exist('listeners_to_delete')) {
+                    $um      = UserManager::instance();
+                    $vUserId = new Valid_UInt('listeners_to_delete');
+                    if($this->request->validArray($vUserId)) {
+                        $userIds = $this->request->get('listeners_to_delete');
+                        $users   = array();
+                        foreach ($userIds as $userId) {
+                            $users[] = $um->getUserById($userId);
+                        }
+                        $this->_actionParams['listeners_to_delete'] = $users;
+                        $this->_actionParams['item']                = $item;
                     }
-                    $this->_actionParams['listeners_to_delete'] = $users;
-                    $this->_actionParams['item']                = $item;
                 }
+                $this->action = 'remove_monitoring';
+                $this->_setView('Details');
+            } else {
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
+                $this->_setView('Details');
             }
-            $this->action = 'remove_monitoring';
-            $this->_setView('Details');
             break;
 
         case 'add_monitoring':

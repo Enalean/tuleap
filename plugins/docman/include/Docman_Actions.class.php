@@ -1667,7 +1667,6 @@ class Docman_Actions extends Actions {
      */
     function remove_monitoring($params) {
         if (isset($params['listeners_to_delete']) && is_array($params['listeners_to_delete']) && !empty($params['listeners_to_delete'])) {
-            if ($this->_controler->userCanManage($params['item']->getId())) {
                 $users = array();
                 foreach ($params['listeners_to_delete'] as $user) {
                     if ($this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
@@ -1688,9 +1687,6 @@ class Docman_Actions extends Actions {
                     $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $removedUsers))));
                     $this->_raiseMonitoringListEvent($params['item'], $users, 'plugin_docman_remove_monitoring');
                 }
-            } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
-            }
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
         }

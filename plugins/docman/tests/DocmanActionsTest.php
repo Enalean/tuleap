@@ -246,26 +246,10 @@ class DocmanActionsTest extends UnitTestCase {
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
         $actions->remove_monitoring(array('listeners_to_delete' => true));
-        $controller->expectNever('userCanManage');
-    }
-
-    function testRemove_monitoringPermissionDenied() {
-        $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', false);
-        $controller->feedback = new MockFeedback();
-        $controller->feedback->expectOnce('log', array('error', '*'));
-        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_permission_denied'));
-        $actions = new Docman_ActionsTest();
-        $actions->_controler = $controller;
-        $params['listeners_to_delete'] = array(1);
-        $params['item'] = new MockDocman_Item();
-        $actions->remove_monitoring($params);
-        $controller->expectOnce('userCanManage');
     }
 
     function testRemove_monitoringNotifDoesNotExist() {
         $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
         $user1 = new MockUser();
         $user1->setReturnValue('getId', 123);
@@ -290,14 +274,12 @@ class DocmanActionsTest extends UnitTestCase {
         $params['listeners_to_delete'] = array($user1, $user2, $user3);
         $params['item'] = new MockDocman_Item();
         $actions->remove_monitoring($params);
-        $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 3);
         $notificationsManager->expectNever('remove');
     }
 
     function testRemove_monitoringError() {
         $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
         $userManager = new MockUserManager();
         $user1 = new MockUser();
@@ -324,14 +306,12 @@ class DocmanActionsTest extends UnitTestCase {
         $params['listeners_to_delete'] = array($user1, $user2, $user3);
         $params['item'] = new MockDocman_Item();
         $actions->remove_monitoring($params);
-        $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 3);
         $notificationsManager->expectCallCount('remove', 3);
     }
 
     function testRemove_monitoringSuccess() {
         $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
         $userManager = new MockUserManager();
         $user1 = new MockUser();
@@ -356,7 +336,6 @@ class DocmanActionsTest extends UnitTestCase {
         $params['listeners_to_delete'] = array($user1, $user2, $user3);
         $params['item'] = new MockDocman_Item();
         $actions->remove_monitoring($params);
-        $controller->expectOnce('userCanManage');
         $notificationsManager->expectCallCount('exist', 3);
         $notificationsManager->expectCallCount('remove', 6);
     }
