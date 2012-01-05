@@ -117,8 +117,8 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content .= '<input type="hidden" name="action" value="add_monitoring">';
         $content .= '<input type="hidden" name="item_id" value="'. $itemId .'">';
         $content .= '<table>';
-        $content .= '<tr><td><b>'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_title') .'</b></td>';
-        $content .= '<td rowspan="2"><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea></td></tr>';
+        $content .= '<tr><td><b>'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_title') .'</b></td></tr>';
+        $content .= '<tr><td><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea></td></tr>';
 
         //checkbox to enable cascade monitoring
         $content .= '<tr><td><input type="checkbox" name="monitor_cascade" value="1" id="plugin_docman_monitor_cascade" />';
