@@ -408,7 +408,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
                         'header' => $this->mail->getHeaders());
         $em = EventManager::instance();
         $em->processEvent('mail_sendmail', $params);
-        
+        $status = false;        
         try {
             $status = $this->mail->send();
         } catch (Exception $e) {
