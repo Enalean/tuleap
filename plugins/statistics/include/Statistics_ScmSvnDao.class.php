@@ -67,10 +67,10 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalCommits($startDate, $endDate) {
-        $sql = "SELECT svn_commits + svn_adds + svn_deletes
-                FROM group_svn_full_history
-                WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate)."
+        $sql = "SELECT count(*) AS count
+                FROM svn_commits
+                WHERE date >= ".$this->da->quoteSmart($startDate)."
+                  AND date < ".$this->da->quoteSmart($endDate)."
                   ".$this->condition;
 
         return $this->retrieve($sql);
@@ -105,13 +105,13 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function commitsByProject($startDate, $endDate) {
-        $sql = "SELECT unix_group_name AS project, SUM(svn_commits) + SUM(svn_adds) + SUM(svn_deletes)
-                FROM group_svn_full_history
+        $sql = "SELECT unix_group_name AS project, count(c.id) AS count
+                FROM svn_commits c
                 JOIN groups g USING (group_id)
-                WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate)."
+                WHERE date >= ".$this->da->quoteSmart($startDate)."
+                  AND date < ".$this->da->quoteSmart($endDate)."
                 GROUP BY project
-                ORDER BY SUM(svn_commits) + SUM(svn_adds) + SUM(svn_deletes) DESC";
+                ORDER BY count DESC";
 
         return $this->retrieve($sql);
     }
@@ -146,14 +146,14 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function commitsByUser($startDate, $endDate) {
-        $sql = "SELECT user_name AS user, SUM(svn_commits) + SUM(svn_adds) + SUM(svn_deletes)
-                FROM group_svn_full_history
-                JOIN user u USING (user_id)
-                WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate)."
+        $sql = "SELECT user_name AS user, count(c.id) AS count
+                FROM svn_commits c
+                JOIN user u ON user_id = whoid
+                WHERE date >= ".$this->da->quoteSmart($startDate)."
+                  AND date < ".$this->da->quoteSmart($endDate)."
                   ".$this->condition."
                 GROUP BY user
-                ORDER BY SUM(svn_commits) + SUM(svn_adds) + SUM(svn_deletes) DESC";
+                ORDER BY count DESC";
 
         return $this->retrieve($sql);
     }

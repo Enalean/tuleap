@@ -79,12 +79,16 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
                 } else {
                     $this->totalRead[] = 0;
                 }
-                $commitsDar = $this->dao->totalCommits($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                if ($this->scm == 'svn') {
+                    $commitsDar = $this->dao->totalCommits(strtotime($begin), strtotime($end));
+                } else {
+                    $commitsDar = $this->dao->totalCommits($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                }
                 if ($commitsDar && !$commitsDar->isError()) {
                     $commits = 0;
                     foreach ($commitsDar as $row) {
                         if ($this->scm == 'svn') {
-                            $commits += intval($row['svn_commits + svn_adds + svn_deletes']);
+                            $commits += intval($row['count']);
                         } else {
                             $commits += intval($row['cvs_commits + cvs_adds']);
                         }
@@ -120,7 +124,11 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
                 $this->readProjectsNumber[] = $numberOfReadProjects;
 
                 $numberOfCommitProjects = 0;
-                $commitsDar             = $this->dao->commitsByProject($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                if ($this->scm == 'svn') {
+                    $commitsDar = $this->dao->commitsByProject(strtotime($begin), strtotime($end));
+                } else {
+                    $commitsDar = $this->dao->commitsByProject($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                }
                 if ($commitsDar && !$commitsDar->isError()) {
                     $rank = 1;
                     while ($rank <= 10) {
@@ -161,7 +169,11 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
                 $this->readUsersNumber[] = $numberOfReadUsers;
 
                 $numberOfCommitUsers = 0;
-                $commitsDar          = $this->dao->commitsByUser($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                if ($this->scm == 'svn') {
+                    $commitsDar = $this->dao->commitsByUser(strtotime($begin), strtotime($end));
+                } else {
+                    $commitsDar = $this->dao->commitsByUser($this->convertDateForDao($begin), $this->convertDateForDao($end));
+                }
                 if ($commitsDar && !$commitsDar->isError()) {
                     $rank = 1;
                     while ($rank <= 10) {
