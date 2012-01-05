@@ -651,7 +651,7 @@ plugin_docman	notifications_no_user	No user selected
 plugin_docman	notifications_no_user_added	No user added
 plugin_docman	notifications_some_users_not_added	Some users are not added
 plugin_docman	notifications_add_user	Add
-plugin_docman	notifications_add_user_title	Add users to the minotoring list :
+plugin_docman	notifications_add_user_title	Add users to the monitoring list :
 plugin_docman	notifications_add_user_cascade	Enable monitoring for the whole sub-hierarchy
 plugin_docman	notifications_permission_denied	You don't have enough permissions to perform this action
 plugin_docman	notifications_cascade_on	You're monitoring '$1' and its sub-hierarchy.
