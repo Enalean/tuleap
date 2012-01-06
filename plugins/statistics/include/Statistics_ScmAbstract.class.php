@@ -21,7 +21,7 @@ require_once 'Statistics_Scm.class.php';
 /**
  * SCM statistics for SVN or CVS
  */
-class Statistics_ScmSvnCvs extends Statistics_Scm {
+abstract class Statistics_ScmAbstract extends Statistics_Scm {
 
     var $scm;
     var $dao;

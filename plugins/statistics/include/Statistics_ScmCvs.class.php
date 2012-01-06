@@ -18,12 +18,12 @@
 
 require_once 'Statistics_Scm.class.php';
 require_once 'Statistics_ScmCvsDao.class.php';
-require_once 'Statistics_ScmSvnCvs.class.php';
+require_once 'Statistics_ScmAbstract.class.php';
 
 /**
  * SCM statistics for CVS
  */
-class Statistics_ScmCvs extends Statistics_ScmSvnCvs {
+class Statistics_ScmCvs extends Statistics_ScmAbstract {
 
     /**
      * Constructor of the class
