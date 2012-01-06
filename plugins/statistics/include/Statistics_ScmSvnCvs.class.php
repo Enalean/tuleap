@@ -151,13 +151,6 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
      * @return String
      */
     function getStats() {
-        if ($this->scm == 'svn') {
-            $this->dao = new Statistics_ScmSvnDao(CodendiDataAccess::instance(), $this->groupId);
-            $this->addLine(array('SVN'));
-        } else {
-            $this->dao = new Statistics_ScmCvsDao(CodendiDataAccess::instance(), $this->groupId);
-            $this->addLine(array('CVS'));
-        }
         $readStats = $this->calculateReadStats();
         $this->addLine($readStats['read_index']);
         $this->addLine($readStats['total_read']);
