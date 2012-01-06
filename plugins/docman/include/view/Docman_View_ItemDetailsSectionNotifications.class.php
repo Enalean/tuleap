@@ -97,9 +97,9 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                 $content .= '<td colspan="2"><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
                 $content .= '</tbody></table></form>';
                 $content .= '</td><td><div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help').'</div></td></tr>';
-                $content .= $this->addListeningUser($itemId);
-                $content .= '</table></fieldset>';
             }
+            $content .= $this->addListeningUser($itemId);
+            $content .= '</table></fieldset>';
         }
         return $content;
     }
