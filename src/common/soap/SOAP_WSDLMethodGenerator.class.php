@@ -39,6 +39,10 @@ class SOAP_WSDLMethodGenerator {
         return $this->comment;
     }
     
+    public function getHTMLFormattedComment() {
+        return nl2br(trim($this->comment));
+    }
+    
     public function getParameters() {
         return $this->parameters;
     }
@@ -73,6 +77,7 @@ class SOAP_WSDLMethodGenerator {
     private function lineDoesntContainPhpDoc($line) {
         return ($this->isNotPresentInLine($line, '@param') &&
                 $this->isNotPresentInLine($line, '@return') &&
+                $this->isNotPresentInLine($line, '@todo') &&
                 $this->isNotPresentInLine($line, '@see'));
     }
     

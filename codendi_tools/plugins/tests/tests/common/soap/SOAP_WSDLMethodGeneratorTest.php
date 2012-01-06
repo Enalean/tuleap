@@ -40,6 +40,7 @@ class SOAP_WSDLMethodGeneratorTest extends UnitTestCase {
         $this->assertDoesntContain($comment, '@param');
         $this->assertDoesntContain($comment, '@return');
         $this->assertDoesntContain($comment, '@see');
+        $this->assertDoesntContain($comment, '@todo');
     }
     
     function testExtractCommentShouldNotFinishByTonsOfSpaces() {

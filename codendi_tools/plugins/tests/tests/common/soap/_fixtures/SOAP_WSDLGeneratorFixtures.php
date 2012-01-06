@@ -18,6 +18,8 @@ class SOAP_WSDLGeneratorFixtures {
      *
      * Projects are automatically accepted
      *
+     * * @todo DO stuff
+     * 
      * @param String  $requesterLogin Login of the user on behalf of who you create the project
      * @param String  $shortName      Unix name of the project
      * @param String  $realName       Full name of the project
