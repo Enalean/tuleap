@@ -227,7 +227,8 @@ class Docman_NotificationsManager extends NotificationsManager {
     }
 
     /**
-     * Obtain the monitored parent from an item monitored indirectly by user
+     * Given an item monitored by user through "sub-hierarchy", retrieve the monitored parent.
+     * @see getListeningUsers
      *
      * @param $user User monitoring the item
      * @param $item Item which parent is monitored
