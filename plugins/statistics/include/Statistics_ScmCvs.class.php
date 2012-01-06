@@ -44,7 +44,7 @@ class Statistics_ScmCvs extends Statistics_ScmSvnCvs {
      * @return String
      */
     function getStats() {
-        $this->dao = new Statistics_ScmSvnDao(CodendiDataAccess::instance(), $this->groupId);
+        $this->dao = new Statistics_ScmCvsDao(CodendiDataAccess::instance(), $this->groupId);
         $this->addLine(array('CVS'));
         return parent::getStats();
     }
