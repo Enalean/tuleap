@@ -48,19 +48,16 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalRead($startDate, $endDate) {
-        $sql = "SELECT month, year, 'cvs_checkouts + cvs_browse' AS count, projects, users
-                FROM(
-                    SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
-                    YEAR(day) AS year,
-                    cvs_checkouts + cvs_browse,
-                    COUNT(DISTINCT(group_id)) AS projects,
-                    COUNT(DISTINCT(user_id)) AS users
-                    FROM group_cvs_full_history
-                    WHERE day >= ".$this->da->quoteSmart($startDate)."
-                      AND day < ".$this->da->quoteSmart($endDate)."
-                      ".$this->condition."
-                    GROUP BY YEAR(day), MONTH(day)
-                ) AS table";
+        $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
+                YEAR(day) AS year,
+                cvs_checkouts + cvs_browse AS count,
+                COUNT(DISTINCT(group_id)) AS projects,
+                COUNT(DISTINCT(user_id)) AS users
+                FROM group_cvs_full_history
+                WHERE day >= ".$this->da->quoteSmart($startDate)."
+                  AND day < ".$this->da->quoteSmart($endDate)."
+                  ".$this->condition."
+                GROUP BY YEAR(day), MONTH(day)";
 
         return $this->retrieve($sql);
     }
@@ -74,19 +71,16 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalCommits($startDate, $endDate) {
-        $sql = "SELECT month, year, 'cvs_commits + cvs_adds' AS count, projects, users
-                FROM(
-                    SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
-                    YEAR(day) AS year,
-                    cvs_commits + cvs_adds,
-                    COUNT(DISTINCT(group_id)) AS projects,
-                    COUNT(DISTINCT(user_id)) AS users
-                    FROM group_cvs_full_history
-                    WHERE day >= ".$this->da->quoteSmart($startDate)."
-                      AND day < ".$this->da->quoteSmart($endDate)."
-                      ".$this->condition."
-                    GROUP BY YEAR(day), MONTH(day)
-                ) AS table";
+        $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
+                YEAR(day) AS year,
+                cvs_commits + cvs_adds AS count,
+                COUNT(DISTINCT(group_id)) AS projects,
+                COUNT(DISTINCT(user_id)) AS users
+                FROM group_cvs_full_history
+                WHERE day >= ".$this->da->quoteSmart($startDate)."
+                  AND day < ".$this->da->quoteSmart($endDate)."
+                  ".$this->condition."
+                GROUP BY YEAR(day), MONTH(day)";
 
         return $this->retrieve($sql);
     }

@@ -48,19 +48,16 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalRead($startDate, $endDate) {
-        $sql = "SELECT month, year, 'svn_checkouts + svn_access_count + svn_browse' AS count, projects, users
-                FROM (
-                    SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
-                    YEAR(day) AS year,
-                    svn_checkouts + svn_access_count + svn_browse,
-                    COUNT(DISTINCT(group_id)) AS projects,
-                    COUNT(DISTINCT(user_id)) AS users
-                    FROM group_svn_full_history
-                    WHERE day >= ".$this->da->quoteSmart($startDate)."
-                      AND day < ".$this->da->quoteSmart($endDate)."
-                      ".$this->condition."
-                    GROUP BY YEAR(day), MONTH(day)
-                ) AS table";
+        $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
+                YEAR(day) AS year,
+                svn_checkouts + svn_access_count + svn_browse AS count,
+                COUNT(DISTINCT(group_id)) AS projects,
+                COUNT(DISTINCT(user_id)) AS users
+                FROM group_svn_full_history
+                WHERE day >= ".$this->da->quoteSmart($startDate)."
+                  AND day < ".$this->da->quoteSmart($endDate)."
+                  ".$this->condition."
+                GROUP BY YEAR(day), MONTH(day)";
 
         return $this->retrieve($sql);
     }
@@ -80,8 +77,8 @@ class Statistics_ScmSvnDao extends DataAccessObject {
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(whoid)) AS users
                 FROM svn_commits
-                WHERE date >= ".$this->da->quoteSmart($startDate)."
-                  AND date < ".$this->da->quoteSmart($endDate)."
+                WHERE date >= UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).")
+                  AND date < UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
                   ".$this->condition."
                 GROUP BY year, month";
 
@@ -120,8 +117,8 @@ class Statistics_ScmSvnDao extends DataAccessObject {
         $sql = "SELECT unix_group_name AS project, COUNT(c.id) AS count
                 FROM svn_commits c
                 JOIN groups g USING (group_id)
-                WHERE date >= ".$this->da->quoteSmart($startDate)."
-                  AND date < ".$this->da->quoteSmart($endDate)."
+                WHERE date >= UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).")
+                  AND date < UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
                 GROUP BY project
                 ORDER BY count DESC";
 
@@ -161,8 +158,8 @@ class Statistics_ScmSvnDao extends DataAccessObject {
         $sql = "SELECT user_name AS user, COUNT(c.id) AS count
                 FROM svn_commits c
                 JOIN user u ON user_id = whoid
-                WHERE date >= ".$this->da->quoteSmart($startDate)."
-                  AND date < ".$this->da->quoteSmart($endDate)."
+                WHERE date >= UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).")
+                  AND date < UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
                   ".$this->condition."
                 GROUP BY user
                 ORDER BY count DESC";

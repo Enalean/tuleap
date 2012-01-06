@@ -80,7 +80,7 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
         $commitProjectsNumber[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_commit_project');
         $commitUsersNumber[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_'.$this->scm.'_commit_user');
         if ($this->scm == 'svn') {
-            $commitsDar = $this->dao->totalCommits(strtotime($this->startDate), strtotime($this->endDate));
+            $commitsDar = $this->dao->totalCommits($this->startDate, $this->endDate);
         } else {
             $commitsDar = $this->dao->totalCommits($this->convertDateForDao($this->startDate), $this->convertDateForDao($this->endDate));
         }
@@ -111,7 +111,7 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
             $rank ++;
         }
         if ($this->scm == 'svn') {
-            $commitsDar = $this->dao->commitsByProject(strtotime($this->startDate), strtotime($this->endDate));
+            $commitsDar = $this->dao->commitsByProject($this->startDate, $this->endDate);
         } else {
             $commitsDar = $this->dao->commitsByProject($this->convertDateForDao($this->startDate), $this->convertDateForDao($this->endDate));
         }
@@ -141,7 +141,7 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
             $rank ++;
         }
         if ($this->scm == 'svn') {
-            $commitsDar = $this->dao->commitsByUser(strtotime($this->startDate), strtotime($this->endDate));
+            $commitsDar = $this->dao->commitsByUser($this->startDate, $this->endDate);
         } else {
             $commitsDar = $this->dao->commitsByUser($this->convertDateForDao($this->startDate), $this->convertDateForDao($this->endDate));
         }
