@@ -93,7 +93,7 @@ if (!$error && $request->exist('export')) {
     echo '</td><td>';
     echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_end').'</b>';
     echo '</td><td>';
-    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_project_id').'</b>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_project_id').' <font color="red">*</font></b>';
     echo '</td>';
     echo '</tr><tr>';
     echo '<td>';
@@ -107,7 +107,9 @@ if (!$error && $request->exist('export')) {
     echo '</td><td></tr><tr><td>';
     echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_export_button').'" >';
     echo '</td>';
-    echo '</tr>';
+    echo '</tr><tr><td colspan="3">';
+    echo '<font color="red"><b>*</b></font> <font size="-2">'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_project_id_info').'</font>';
+    echo '</td></tr>';
     echo '</table>';
     echo '</form>';
 
