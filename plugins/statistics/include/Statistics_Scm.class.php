@@ -63,17 +63,6 @@ class Statistics_Scm {
         $this->content .= "\n";
     }
 
-    /**
-     * Convert dates from the format 'yyyy-mm-dd' to 'yyyymmdd'
-     *
-     * @param String $date date with format 'yyyy-mm-dd'
-     *
-     * @return String
-     */
-    function convertDateForDao($date) {
-        return str_replace('-', '', $date);
-    }
-
     function clearContent() {
         $this->content = '';
     }

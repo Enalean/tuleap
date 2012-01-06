@@ -54,8 +54,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(user_id)) AS users
                 FROM group_cvs_full_history
-                WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate)."
+                WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
+                  AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                   ".$this->condition."
                 GROUP BY YEAR(day), MONTH(day)";
 
@@ -77,8 +77,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(user_id)) AS users
                 FROM group_cvs_full_history
-                WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate)."
+                WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
+                  AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                   ".$this->condition."
                 GROUP BY YEAR(day), MONTH(day)";
 
@@ -97,8 +97,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
         $sql = "SELECT unix_group_name AS project, SUM(cvs_checkouts) + SUM(cvs_browse)
                 FROM group_cvs_full_history
                 JOIN groups g USING (group_id)
-                WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate)."
+                WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
+                  AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                 GROUP BY project
                 ORDER BY SUM(cvs_checkouts) + SUM(cvs_browse) DESC";
 
@@ -117,8 +117,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
         $sql = "SELECT unix_group_name AS project, SUM(cvs_commits) + SUM(cvs_adds)
                 FROM group_cvs_full_history
                 JOIN groups g USING (group_id)
-                WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate)."
+                WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
+                  AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                 GROUP BY project
                 ORDER BY SUM(cvs_commits) + SUM(cvs_adds) DESC";
 
@@ -137,8 +137,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
         $sql = "SELECT user_name AS user, SUM(cvs_checkouts) + SUM(cvs_browse)
                 FROM group_cvs_full_history
                 JOIN user u USING (user_id)
-                WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate)."
+                WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
+                  AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                   ".$this->condition."
                 GROUP BY user
                 ORDER BY SUM(cvs_checkouts) + SUM(cvs_browse) DESC";
@@ -158,8 +158,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
         $sql = "SELECT user_name AS user, SUM(cvs_commits) + SUM(cvs_adds)
                 FROM group_cvs_full_history
                 JOIN user u USING (user_id)
-                WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate)."
+                WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
+                  AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                   ".$this->condition."
                 GROUP BY user
                 ORDER BY SUM(cvs_commits) + SUM(cvs_adds) DESC";
