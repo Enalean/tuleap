@@ -71,7 +71,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalCommits($startDate, $endDate) {
-        $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(FROM_UNIXTIME(date)), '%m')) AS month,
+        $sql = "SELECT DATE_FORMAT(FROM_UNIXTIME(date), '%M') AS month,
                 YEAR(FROM_UNIXTIME(date)) AS year,
                 COUNT(*) AS count,
                 COUNT(DISTINCT(group_id)) AS projects,
