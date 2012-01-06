@@ -89,11 +89,11 @@ if (!$error && $request->exist('export')) {
     echo '<table>';
     echo '<tr>';
     echo '<td>';
-    echo '<b>Start date</b>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_start').'</b>';
     echo '</td><td>';
-    echo '<b>End date</b>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_end').'</b>';
     echo '</td><td>';
-    echo '<b>Project Id</b>';
+    echo '<b>'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_project_id').'</b>';
     echo '</td>';
     echo '</tr><tr>';
     echo '<td>';
