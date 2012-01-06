@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:proj="http://crampons.cro.enalean.com/soap/project">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <proj:addProject soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+         <sessionKey xsi:type="xsd:string">?</sessionKey>
+         <requesterLogin xsi:type="xsd:string"/>
+         <shortName xsi:type="xsd:string">${#ProjectShortName}</shortName>
+         <realName xsi:type="xsd:string">Project ${#ProjectShortName}</realName>
+         <privacy xsi:type="xsd:string"/>
+         <templateId xsi:type="xsd:int">100</templateId>
+      </proj:addProject>
+   </soapenv:Body>
+</soapenv:Envelope>
