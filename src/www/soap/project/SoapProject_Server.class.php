@@ -26,13 +26,16 @@ class SoapProject_Server {
     /**
      * Create a new project
      *
-     * This method throw an exception if there is a conflict on names or
-     * it there is an error during the creation process.
+     * This method throw an exception if there is a conflict on names or if there is an error during the creation process.
+     * TODO: list error fault code
+     * 
+     * You can select:
+     * * The privacy of the project 'private' or 'public'
+     * * The projectId of the template (100 means default template aka default new project).
+     * 
      * It assumes a couple of things:
      * * The project type is "Project" (Not modifiable)
-     * * The template is the default one (project id 100).
-     * * There is no "Project description" nor any "Project description
-     * * fields" (long desc, patents, IP, other software)
+     * * There is no "Project description" nor any "Project description fields" (long desc, patents, IP, other software)
      * * The project services are inherited from the template
      * * There is no trove cat selected
      * * The default Software Policy is "Site exchange policy".
