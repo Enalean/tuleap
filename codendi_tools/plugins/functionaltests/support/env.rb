@@ -4,7 +4,11 @@ require 'capybara/dsl'
 include RSpec::Matchers
 include Capybara::DSL
 
-Capybara.app_host = 'https://tuleap-host/'
+tuleap_host = ENV['TULEAP_HOST'] 
+if ! tuleap_host
+  raise ("ERROR : you must specify the hostname of the tuleap server you are testing, ex export TULEAP_HOST=myhost.mydomain.com")
+end
+Capybara.app_host = "https://#{tuleap_host}/"
 Capybara.run_server = false
 
 # Register firefox
@@ -27,5 +31,5 @@ begin
 rescue LoadError
 end
 
-#Capybara.default_driver = :firefox
-Capybara.default_driver = :webkit_ignore_ssl
+Capybara.default_driver = :firefox
+#Capybara.default_driver = :webkit_ignore_ssl
