@@ -18,7 +18,8 @@
 
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_Scm.class.php';
-require_once dirname(__FILE__).'/../include/Statistics_ScmSvnCvs.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_ScmCvs.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_ScmSvn.class.php';
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -70,9 +71,9 @@ if($request->valid($vGroupId)) {
 if (!$error && $request->exist('export')) {
     header ('Content-Type: text/csv');
     header ('Content-Disposition: filename=scm_stats.csv');
-    $statsSvn = new Statistics_ScmSvnCvs('svn', $startDate, $endDate, $groupId);
+    $statsSvn = new Statistics_ScmSvn($startDate, $endDate, $groupId);
     echo $statsSvn->getStats();
-    $statsCvs = new Statistics_ScmSvnCvs('cvs', $startDate, $endDate, $groupId);
+    $statsCvs = new Statistics_ScmCvs($startDate, $endDate, $groupId);
     echo $statsCvs->getStats();
     $em = EventManager::instance();
     $params['scm_stats'] = new Statistics_Scm($startDate, $endDate, $groupId);

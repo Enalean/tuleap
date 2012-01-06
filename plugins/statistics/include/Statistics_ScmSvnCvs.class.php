@@ -17,8 +17,6 @@
  */
 
 require_once 'Statistics_Scm.class.php';
-require_once 'Statistics_ScmSvnDao.class.php';
-require_once 'Statistics_ScmCvsDao.class.php';
 
 /**
  * SCM statistics for SVN or CVS
