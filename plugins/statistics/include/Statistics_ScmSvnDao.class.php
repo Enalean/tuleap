@@ -20,7 +20,6 @@ require_once 'pre.php';
 
 /**
  * DAO class for SVN statistics
- * TODO: Find a way to add an alias on a sum
  */
 class Statistics_ScmSvnDao extends DataAccessObject {
 
@@ -49,16 +48,19 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function totalRead($startDate, $endDate) {
-        $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
-                YEAR(day) AS year,
-                svn_checkouts + svn_access_count + svn_browse,
-                COUNT(DISTINCT(group_id)) AS projects,
-                COUNT(DISTINCT(user_id)) AS users
-                FROM group_svn_full_history
-                WHERE day >= ".$this->da->quoteSmart($startDate)."
-                  AND day < ".$this->da->quoteSmart($endDate)."
-                  ".$this->condition."
-                GROUP BY YEAR(day), MONTH(day)";
+        $sql = "SELECT month, year, 'svn_checkouts + svn_access_count + svn_browse' AS count, projects, users
+                FROM (
+                    SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
+                    YEAR(day) AS year,
+                    svn_checkouts + svn_access_count + svn_browse,
+                    COUNT(DISTINCT(group_id)) AS projects,
+                    COUNT(DISTINCT(user_id)) AS users
+                    FROM group_svn_full_history
+                    WHERE day >= ".$this->da->quoteSmart($startDate)."
+                      AND day < ".$this->da->quoteSmart($endDate)."
+                      ".$this->condition."
+                    GROUP BY YEAR(day), MONTH(day)
+                ) AS table";
 
         return $this->retrieve($sql);
     }

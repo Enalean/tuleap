@@ -59,11 +59,7 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
                 $readIndex[]          = $row['month']." ".$row['year'];
                 $readProjectsNumber[] = $row['projects'];
                 $readUsersNumber[]    = $row['users'];
-                if ($this->scm == 'svn') {
-                    $totalRead[] = intval($row['svn_checkouts + svn_access_count + svn_browse']);
-                } else {
-                    $totalRead[] = intval($row['cvs_checkouts + cvs_browse']);
-                }
+                $totalRead[]          = intval($row['count']);
             }
         }
         $result = array('read_index'           => $readIndex,
@@ -93,11 +89,7 @@ class Statistics_ScmSvnCvs extends Statistics_Scm {
                 $commitsIndex[]         = $row['month']." ".$row['year'];
                 $commitProjectsNumber[] = $row['projects'];
                 $commitUsersNumber[]    = $row['users'];
-                if ($this->scm == 'svn') {
-                    $totalCommits[] = intval($row['count']);
-                } else {
-                    $totalCommits[] = intval($row['cvs_commits + cvs_adds']);
-                }
+                $totalCommits[]         = intval($row['count']);
             }
         }
         $result = array('commits_index'           => $commitsIndex,
