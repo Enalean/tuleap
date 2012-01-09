@@ -4,9 +4,9 @@ set -e
 
 usage() {
     cat <<EOF
-Usage: $1  --lxc-name=<value> --lxc-ip=<value> --srcdir=<value> [--version-upgrade]
+Usage: $1  --lxc-name=<value> --lxc-ip=<value> --srcdir=<value> --install-mode=<value>
 Options
-  --version-upgrade   upgrade the version of tuleap (i.e. default behaviour is to reinstall)
+  --install-mode=[update-snapshot|upgrade|clean-install] update-snapshot is assumed if the option is not given
   --lxc-name=<value>  Name of lxc container (eg. lxc-aci-105)
   --lxc-ip=<value>    IP address of lxc container (eg. 192.168.1.105)
   --srcdir=<value>    Source dir
@@ -50,6 +50,7 @@ lxc_start_wait() {
 ##
 ## Parse options
 ##
+install_mode="update-snapshot"
 options=`getopt -o h -l help,srcdir:,lxc-name:,lxc-ip:,repo-base-url:,version-upgrade -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
 eval set -- "$options"
@@ -71,9 +72,9 @@ do
 	--repo-base-url)
 	    repo_base_url=$2
 	    shift 2;;
-        --version-upgrade)
-            version_upgrade=true
-            shift;;
+        --install-mode)
+            install_mode=$2
+            shift 2;;
 	 *)
 	    break;;
     esac
@@ -91,7 +92,7 @@ sshcmd="ssh -o StrictHostKeyChecking=no"
 # -n to close standard input
 remotecmd="$sshcmd -n $build_host"
 
-if [ ! lxc-ls | egrep -q "^$lxc_name$" ] ; then
+if [ ! lxc-ls | egrep -q "^$lxc_name$" || $install_mode == "clean-install"] ; then
     # Setup an lxc instance and install tuleap
     echo "Create a new container $lxc_name"
     cp $src_dir/codendi_tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
@@ -109,7 +110,7 @@ if [ ! lxc-ls | egrep -q "^$lxc_name$" ] ; then
 
     # Install
     $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
-elif [ $version_upgrade ] ; then
+elif [ $install_mode == "upgrade" ] ; then
     $remotecmd yum install tuleap -y --disablerepo=epel php-pecl-json tuleap-all
     $remotecmd service httpd restart
 else 
@@ -133,6 +134,4 @@ else
 fi
 
 # And test!
-
 TULEAP_HOST=$lxc_name cucumber $src_dir/codendi_tools/plugins/tests/functional/features
-
