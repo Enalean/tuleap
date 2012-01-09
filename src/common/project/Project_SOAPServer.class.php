@@ -141,18 +141,9 @@ class Project_SOAPServer {
      * @return Boolean
      */
     public function addProjectMember($sessionKey, $groupId, $userLogin) {
-        $requester = $this->continueSession($sessionKey);
-        $project   = $this->projectManager->getProject($groupId);
-        if ($project && !$project->isError()) {
-            if ($requester->isMember($project->getID(), 'A')) {
-                $result = account_add_user_to_group($project->getID(), $userLogin);
-                return $this->feedbackToSoapFault($result);
-            } else {
-                throw new SoapFault('3201', 'Only project admin can add a project member');
-            }
-        } else {
-            throw new SoapFault('3000', "Invalid project id");
-        }
+        $project = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
+        $result  = account_add_user_to_group($project->getID(), $userLogin);
+        return $this->feedbackToSoapFault($result);
     }
 
     /**
@@ -160,23 +151,39 @@ class Project_SOAPServer {
      *
      * @todo check who is allowed to do that (site admin and/or project admin)
      *
+     * @param String  $sessionKey The project admin session hash
      * @param Integer $groupId Project ID
      * @param String  $userLogin User login name
      *
      * @return Boolean
      */
-    public function removeProjectMember($groupId, $userLogin) {
-        $user = $this->userManager->getUserByUserName($userLogin);
-        if (!$user) {
+    public function removeProjectMember($sessionKey, $groupId, $userLogin) {
+        $project = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
+        
+        $userToAdd = $this->userManager->getUserByUserName($userLogin);
+        if (!$userToAdd) {
             throw new SoapFault('3100', "Invalid user name");
         }
-        if ($user->isMember($groupId)) {
-            return $this->feedbackToSoapFault(account_remove_user_from_group($groupId, $user->getId()));
-        } else {
-            return true;
+        if ($userToAdd->isMember($groupId)) {
+            $result = account_remove_user_from_group($groupId, $userToAdd->getId());
+            return $this->feedbackToSoapFault($result);
         }
+        return true;
     }
 
+    
+    protected function getProjectIfUserIsAdmin($groupId, $sessionKey) {
+        $requester = $this->continueSession($sessionKey);
+        $project   = $this->projectManager->getProject($groupId);
+        if ($project && !$project->isError()) {
+            if ($requester->isMember($project->getID(), 'A')) {
+                return $project;
+            }
+            throw new SoapFault('3201', 'Permission denied: need to be project admin.');
+        }
+        throw new SoapFault('3000', "Invalid project id");
+    }
+    
     /**
      * Transform errors from feedback errors into SoapFault
      *

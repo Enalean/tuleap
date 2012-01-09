@@ -36,7 +36,7 @@ $soapProject = new SoapClient($serverUrl.'/soap/project/?wsdl',
 
 $prjId = $argv[1];
 for($i = 2; $i < $argc; $i++) {
-    var_dump($soapProject->addProjectMember($requesterSessionHash, $prjId, $argv[$i]));
+    var_dump($soapProject->removeProjectMember($requesterSessionHash, $prjId, $argv[$i]));
 }
 
 $soapLogin->logout($adminSessionHash);
