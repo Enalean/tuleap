@@ -93,10 +93,10 @@ class Project_SOAPServer {
     }
     
     private function getTemplateById($id, User $requester) {
-        $template = $this->projectManager->getProject($id);
-        if ($template && !$template->isError()) {
-            if ($template->isTemplate() || $requester->isMember($template->getID(), 'A')) {
-                return $template;
+        $project = $this->projectManager->getProject($id);
+        if ($project && !$project->isError()) {
+            if ($project->isTemplate() || $requester->isMember($project->getID(), 'A')) {
+                return $project;
             }
             throw new SoapFault('3104', 'Project is not a template');
         }
