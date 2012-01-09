@@ -32,6 +32,26 @@ class ProjectCreator {
         $this->projectManager = $projectManager;
     }
 
+    /**
+     *
+     * $data['project']['form_unix_name']
+     * $data['project']['form_full_name']
+     * $data['project']['form_license']
+     * $data['project']['form_license_other']
+     * $data['project']['form_short_description']
+     * $data['project']['built_from_template']
+     * $data['project']['is_test']
+     * $data['project']['is_public']
+     * $data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]
+     * foreach($data['project']['trove'] as $root => $values);
+     * $data['project']['services'][$arr['service_id']]['is_used'];
+     * $data['project']['services'][$arr['service_id']]['server_id'];
+     * 
+     * @param type $shortName
+     * @param type $publicName
+     * @param type $data
+     * @return type 
+     */
     public function create($shortName, $publicName, $data) {
         $rule = new Rule_ProjectName();
         if (!$rule->isValid($shortName)) {
