@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2011. All Rights Reserved.
  *
@@ -16,12 +17,32 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
-require_once 'common/project/ProjectManager.class.php';
-require_once 'www/project/create_project.php';
+require_once 'ProjectManager.class.php';
+require_once 'ProjectCreator.class.php';
 require_once 'www/include/account.php';
 
 class Project_SOAPServer {
+
+    /**
+     * @var ProjectManager
+     */
+    private $projectManager;
+
+    /**
+     * @var ProjectCreator
+     */
+    private $projectCreator;
+
+    /**
+     * @var UserManager
+     */
+    private $userManager;
+
+    public function __construct(ProjectManager $projectManager, ProjectCreator $projectCreator, UserManager $userManager) {
+        $this->projectManager = $projectManager;
+        $this->projectCreator = $projectCreator;
+        $this->userManager = $userManager;
+    }
 
     /**
      * Create a new project
@@ -43,96 +64,75 @@ class Project_SOAPServer {
      * Projects are automatically accepted
      *
      * @param string  $sessionKey     The session hash associated with the session opened by the person who calls the service
-     * @param String  $requesterLogin Login of the user on behalf of who you create the project
+     * @param String  $adminSessionKey Login of the user on behalf of who you create the project
      * @param String  $shortName      Unix name of the project
-     * @param String  $realName       Full name of the project
+     * @param String  $publicName       Full name of the project
      * @param String  $privacy        Either 'public' or 'private'
      * @param Integer $templateId     Id of template project
      *
      * @return Integer The ID of newly created project
      */
-    public function addProject($sessionKey, $requesterLogin, $shortName, $realName, $privacy="public", $templateId=100) {
-        if (session_continue($sessionKey)) {
-            /*
-             $data['project']['form_unix_name']
-             $data['project']['form_full_name']
-             $data['project']['form_license']
-             $data['project']['form_license_other']
-             $data['project']['form_short_description']
-             $data['project']['built_from_template']
-             $data['project']['is_test']
-             $data['project']['is_public']
-             $data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]
-             foreach($data['project']['trove'] as $root => $values);
-             $data['project']['services'][$arr['service_id']]['is_used'];
-             $data['project']['services'][$arr['service_id']]['server_id'];
-             */
-    
-            $data = array();
-    
-            $user = UserManager::instance()->findUser($requesterLogin);
-            if (!$user) {
-                throw new SoapFault('3100', 'Invalid requester name');
-            }
-            $data['requester'] = $user;
-    
-            $rule = new Rule_ProjectName();
-            if (!$rule->isValid($shortName)) {
-                throw new SoapFault('3100', $rule->getErrorMessage());
-            }
-            $data['project']['form_unix_name'] = $shortName;
-    
-            //@TODO: add long name already exists check
-            $rule = new Rule_ProjectFullName();
-            if (!$rule->isValid($realName)) {
-                throw new SoapFault('3100', $rule->getErrorMessage());
-            }
-            $data['project']['form_full_name'] = $realName;
-    
-            if ($privacy === 'public') {
-                $data['project']['is_public'] = true;
-            } else {
-                $data['project']['is_public'] = false;
-            }
-    
-            $template = ProjectManager::instance()->getProject($templateId);
-            if ($template && !$template->isError()) {
-                $data['project']['built_from_template'] = $template->getID();
-            } else {
-                throw new SoapFault('3000', 'Invalid template id '.$templateId);
-            }
-            
-            $data['project']['form_license'] = 'xrx';
-            $data['project']['form_license_other'] = '';
-            $data['project']['form_short_description'] = '';
-            $data['project']['is_test'] = false;
-    
-            $data['project']['services'] = array();
-    
-            $pm = ProjectManager::instance();
-            $p = $pm->getProject($data['project']['built_from_template']);
-            foreach($p->services as $key => $service) {
-                if ($service->isActive() && $service->isUsed()) {
-                    $data['project']['services'][$service->getId()]['is_used'] = true;
-                } else {
-                    $data['project']['services'][$service->getId()]['is_used'] = false;
+    public function addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy="public", $templateId=100) {
+        $admin = $this->userManager->getCurrentUser($adminSessionKey);
+        if ($admin && $admin->isLoggedIn() && $admin->isSuperUser()) {
+            if ($this->continueSession($sessionKey)) {
+
+                /*
+                  $data['project']['form_unix_name']
+                  $data['project']['form_full_name']
+                  $data['project']['form_license']
+                  $data['project']['form_license_other']
+                  $data['project']['form_short_description']
+                  $data['project']['built_from_template']
+                  $data['project']['is_test']
+                  $data['project']['is_public']
+                  $data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]
+                  foreach($data['project']['trove'] as $root => $values);
+                  $data['project']['services'][$arr['service_id']]['is_used'];
+                  $data['project']['services'][$arr['service_id']]['server_id'];
+                 */
+
+                $data = array(
+                    'project' => array(
+                        'form_license' => 'xrx',
+                        'form_license_other' => '',
+                        'form_short_description' => '',
+                        'is_test' => false,
+                        'is_public' => false,
+                        'services' => array(),
+                    )
+                );
+
+                if ($privacy === 'public') {
+                    $data['project']['is_public'] = true;
                 }
+
+                $template = $this->projectManager->getProject($templateId);
+                if ($template && !$template->isError()) {
+                    $data['project']['built_from_template'] = $template->getID();
+                } else {
+                    throw new SoapFault('3100', 'Invalid template id ' . $templateId);
+                }
+
+                foreach ($template->services as $key => $service) {
+                    if ($service->isActive() && $service->isUsed()) {
+                        $data['project']['services'][$service->getId()]['is_used'] = true;
+                    } else {
+                        $data['project']['services'][$service->getId()]['is_used'] = false;
+                    }
+                }
+
+                try {
+                    $project = $this->projectCreator->create($shortName, $publicName, $data);
+                    return $this->projectManager->activate($project);
+                } catch (Exception $e) {
+                    throw new SoapFault('3100', $e->getMessage());
+                }
+            } else {
+                throw new SoapFault('3001', 'Invalid session');
             }
-    
-    
-            /*$data['project']["form_".$descfieldsinfos[$i]["group_desc_id"]]*/
-            /*foreach($data['project']['trove'] as $root => $values);
-             */
-    
-            $id = create_project($data, true);
-            if ($id) {
-                $project = $pm->getProject($id);
-                return $pm->activate($project);
-                //return $id;
-            }
-            throw new SoapFault('3100', 'Project creation failure');
         } else {
-            throw new SoapFault('3001', 'Invalid session');
+            throw new SoapFault('3200', 'Only site admin is allowed to create project on behalf of users');
         }
     }
 
@@ -147,7 +147,7 @@ class Project_SOAPServer {
      * @return Boolean
      */
     public function addProjectMember($groupId, $userLogin) {
-        $project = ProjectManager::instance()->getProject($groupId);
+        $project = $this->projectManager->getProject($groupId);
         if ($project && !$project->isError()) {
             return $this->feedbackToSoapFault(account_add_user_to_group($groupId, $userLogin));
         } else {
@@ -166,7 +166,7 @@ class Project_SOAPServer {
      * @return Boolean
      */
     public function removeProjectMember($groupId, $userLogin) {
-        $user = UserManager::instance()->getUserByUserName($userLogin);
+        $user = $this->userManager->getUserByUserName($userLogin);
         if (!$user) {
             throw new SoapFault('3100', "Invalid user name");
         }
@@ -188,7 +188,7 @@ class Project_SOAPServer {
     protected function feedbackToSoapFault($result) {
         if (!$result) {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
-                foreach($GLOBALS['Response']->_feedback->logs as $log) {
+                foreach ($GLOBALS['Response']->_feedback->logs as $log) {
                     if ($log['level'] == 'error') {
                         throw new SoapFault('3100', $log['msg']);
                     }
@@ -197,5 +197,20 @@ class Project_SOAPServer {
         }
         return $result;
     }
+
+    /**
+     *
+     * @see session_continue
+     * 
+     * @param String $sessionKey
+     * 
+     * @return Boolean
+     */
+    private function continueSession($sessionKey) {
+        $user = $this->userManager->getCurrentUser($sessionKey);
+        return $user->isLoggedIn();
+    }
+
 }
+
 ?>

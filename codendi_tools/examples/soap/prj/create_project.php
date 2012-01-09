@@ -22,17 +22,28 @@ if ($argc < 4) {
     die("Usage: ".$argv[0]." requester shortname longname [member 1] [member 2] [...]\n");
 }
 
+$serverUrl = 'http://shunt.cro.enalean.com';
+
 // Establish connexion to the server
-$client = new SoapClient('http://shunt.cro.enalean.com/soap/project/?wsdl', 
-                         array('cache_wsdl' => WSDL_CACHE_NONE));
+$soapLogin = new SoapClient($serverUrl.'/soap/?wsdl', 
+                            array('cache_wsdl' => WSDL_CACHE_NONE));
+
+$adminSessionHash     = $soapLogin->login('admin', 'siteadmin')->session_hash;
+$requesterSessionHash = $soapLogin->login('manuel', 'manuel')->session_hash;
+
+$soapProject = new SoapClient($serverUrl.'/soap/project/?wsdl', 
+                              array('cache_wsdl' => WSDL_CACHE_NONE));
 
 //$client->addProject(requester, shortname, longname);
-$prjId = $client->addProject($argv[1], $argv[2], $argv[3]);
+$prjId = $soapProject->addProject($requesterSessionHash, $adminSessionHash, $argv[2], $argv[3], 'public', 100);
 
 echo "New Project ID: $prjId\n";
 
 for($i = 4; $i < $argc; $i++) {
-    var_dump($client->addProjectMember($prjId, $argv[$i]));
+    var_dump($soapProject->addProjectMember($prjId, $argv[$i]));
 }
+
+$soapLogin->logout($adminSessionHash);
+$soapLogin->logout($requesterSessionHash);
 
 ?>
