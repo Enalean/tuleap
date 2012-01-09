@@ -20,7 +20,7 @@
  */
 
 require_once 'pre.php';
-require_once 'common/project/Project_SOAPServer.class.php';
+require_once 'SoapProject_Server.class.php';
 
 // Check if we the server is in secure mode or not.
 if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {

@@ -24,19 +24,14 @@ require_once('common/widget/WidgetLayoutManager.class.php');
 *
 * @param  data  
 */
+
+        
         
 
 function create_project($data, $do_not_exit = false) {
     srand((double)microtime()*1000000);
     $random_num=rand(0,1000000);
 
-    ob_start();
-    print_r($data);
-    $out = ob_get_contents();
-    ob_end_clean();
-    file_put_contents('/tmp/create.log', $out.PHP_EOL.PHP_EOL, FILE_APPEND);
-
-    
     // Make sure default project privacy status is defined. If not
     // then default to "public"
     if (!isset($GLOBALS['sys_is_project_public'])) {
@@ -317,7 +312,7 @@ function create_project($data, $do_not_exit = false) {
         //Set up some mailing lists
         //will be done at some point. needs to communicate with geocrawler
         // TBD
-        file_put_contents('/tmp/create.log', implode(',', $ugroup_mapping).PHP_EOL, FILE_APPEND);
+        
         // Generic Trackers Creation
         
         $atf = new ArtifactTypeFactory($template_group);

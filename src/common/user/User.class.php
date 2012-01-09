@@ -398,7 +398,7 @@ class User {
      * @return boolean
      */
     public function isTrackerAdmin($group_id,$group_artifact_id) {
-      return $this->isSuperUser() || ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id,'A'));
+      return ($this->getTrackerPerm($group_artifact_id) >= 2 || $this->isMember($group_id,'A'));
     }
     
     /**

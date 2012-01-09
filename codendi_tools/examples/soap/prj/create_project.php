@@ -22,19 +22,12 @@ if ($argc < 4) {
     die("Usage: ".$argv[0]." requester shortname longname [member 1] [member 2] [...]\n");
 }
 
-$server = 'http://shunt.cro.enalean.com';
-
-//$auth = new SoapClient($server.'/soap/?wsdl');
-//$session_hash = $auth->login('admin', 'siteadmin')->session_hash;
-//var_dump($session_hash);
-$session_hash = '51f9e8445717979005b83f718885e042';
-
 // Establish connexion to the server
 $client = new SoapClient('http://shunt.cro.enalean.com/soap/project/?wsdl', 
                          array('cache_wsdl' => WSDL_CACHE_NONE));
 
 //$client->addProject(requester, shortname, longname);
-$prjId = $client->addProject($session_hash, $argv[1], $argv[2], $argv[3], 'public', 100);
+$prjId = $client->addProject($argv[1], $argv[2], $argv[3]);
 
 echo "New Project ID: $prjId\n";
 
