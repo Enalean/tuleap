@@ -81,7 +81,7 @@ class Project_SOAPServer {
                     try {
                         return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
                     } catch (Exception $e) {
-                        throw new SoapFault($e->getCode(), $e->getMessage());
+                        throw new SoapFault((string)$e->getCode(), $e->getMessage());
                     }
                 } else {
                     throw new SoapFault('3100', 'Invalid template id ' . $templateId);
