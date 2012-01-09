@@ -21,7 +21,7 @@ require_once 'common/project/ProjectManager.class.php';
 require_once 'www/project/create_project.php';
 require_once 'www/include/account.php';
 
-class SoapProject_Server {
+class Project_SOAPServer {
 
     /**
      * Create a new project

@@ -30,7 +30,7 @@ if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_fo
 }
 $uri = $protocol.'://'.$GLOBALS['sys_default_domain'].'/soap/project';
 
-$serviceClass = 'SoapProject_Server';
+$serviceClass = 'Project_SOAPServer';
 
 if ($request->exist('wsdl')) {
     require_once 'common/soap/SOAP_NusoapWSDL.class.php';
