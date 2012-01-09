@@ -163,6 +163,24 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
     }
 
     /**
+     * Total repositories having commits in the given period
+     *
+     * @return Array
+     */
+    function repositoriesWithCommit() {
+        $repositories[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_repo_total');
+        $count = 0;
+        $dar = $this->dao->repositoriesWithCommit($this->startDate, $this->endDate, true);
+        if ($dar && !$dar->isError() && $dar->rowCount()> 0) {
+            foreach ($dar as $row) {
+                $count += intval($row['count']);
+            }
+        }
+        $repositories[] = $count;
+        return $repositories;
+    }
+
+    /**
      * Add stats for SVN or CVS in CSV format
      *
      * @return String
@@ -181,6 +199,7 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
 
         if (!$this->groupId) {
             $this->addLine($this->repositoriesEvolutionForPeriod());
+            $this->addLine($this->repositoriesWithCommit());
             foreach ($this->topCommitByProject() as $line) {
                 $this->addLine($line);
             }

@@ -49,5 +49,5 @@ plugin_statistics	scm_cvs_read_user	Total number of users with CVS read access
 plugin_statistics	scm_cvs_total_commit	Total number of CVS commits
 plugin_statistics	scm_cvs_commit_project	Total number of projects with CVS commits
 plugin_statistics	scm_cvs_commit_user	Total number of users with CVS commits
-plugin_statistics	scm_repo_evolution	Number of repositories containing commits 
-plugin_statistics	scm_repo_total	The total number of repositories containing commits 
+plugin_statistics	scm_repo_evolution	Number of repositories containing commits
+plugin_statistics	scm_repo_total	The total number of repositories containing commits

@@ -49,5 +49,5 @@ plugin_statistics	scm_cvs_read_user	Nombre total de utilisateurs avec des accés
 plugin_statistics	scm_cvs_total_commit	Nombre total des commits CVS
 plugin_statistics	scm_cvs_commit_project	Nombre total de projets avec des commits CVS
 plugin_statistics	scm_cvs_commit_user	Nombre total de utilisateurs avec des commits CVS
-plugin_statistics	scm_repo_evolution	Nombre de depôt contenant au moins un commit 
-plugin_statistics	scm_repo_total	Nombre total des depôts contenant au moins un commit  
+plugin_statistics	scm_repo_evolution	Nombre de depôt contenant au moins un commit
+plugin_statistics	scm_repo_total	Nombre total des depôts contenant au moins un commit
