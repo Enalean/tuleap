@@ -28,6 +28,51 @@ Mock::generate('ProjectCreator');
 
 class Project_SOAPServerTest extends UnitTestCase {
     
+    function testAddProjectShouldFailWhenRequesterIsNotProjectAdmin() {
+        $server = $this->GivenASOAPServerWithBadTemplate();
+        
+        $sessionKey      = '123';
+        $adminSessionKey = '456';
+        $shortName       = 'toto';
+        $publicName      = 'Mon Toto';
+        $privacy         = 'public';
+        $templateId      = 101;
+        
+        // We don't care about the exception details
+        $this->expectException();
+        $server->addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId);
+    }
+    
+    /**
+     *
+     * @return Project_SOAPServer
+     */
+    private function GivenASOAPServerWithBadTemplate() {
+        $user   = new MockUser();
+        $user->setReturnValue('isLoggedIn', true);
+        $user->setReturnValue('isMember', false);
+        
+        $admin  = new MockUser();
+        $admin->setReturnValue('isLoggedIn', true);
+        $admin->setReturnValue('isSuperUser', true);
+        
+        $um     = new MockUserManager();
+        $um->setReturnValue('getCurrentUser', $user, array('123'));
+        $um->setReturnValue('getCurrentUser', $admin, array('456'));
+        
+        $pm     = new MockProjectManager();
+        
+        $template = new MockProject();
+        $template->setReturnValue('isTemplate', false);
+        $pm->setReturnValue('getProject', $template, array(101));
+        
+        $project = new MockProject();
+        $pc      = new MockProjectCreator();
+        
+        $server = new Project_SOAPServer($pm, $pc, $um);
+        return $server;
+    }
+
     function testAddProjectWithoutAValidAdminSessionKeyShouldNotCreateProject() {
         $server = $this->GivenASOAPServer();
         
@@ -45,6 +90,7 @@ class Project_SOAPServerTest extends UnitTestCase {
             $this->assertTrue(true, "Should catch an exception");
         }
     }
+
     
     function testAddProjectShouldCreateAProject() {
         $server = $this->GivenASOAPServer();
@@ -84,6 +130,7 @@ class Project_SOAPServerTest extends UnitTestCase {
         
         $template = new MockProject();
         $template->services = array();
+        $template->setReturnValue('isTemplate', true);
         $pm->setReturnValue('getProject', $template, array(100));
         
         

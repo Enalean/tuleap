@@ -70,6 +70,7 @@ class Project_SOAPServer {
      * * 3101, Project creation failure
      * * 3102, Invalid short name
      * * 3103, Invalid full name
+     * * 3104, Project is not a template
      * 
      * @param String  $sessionKey      Session key of the desired project admin
      * @param String  $adminSessionKey Session key of a site admin
@@ -82,8 +83,8 @@ class Project_SOAPServer {
      */
     public function addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId) {
         $this->continueAdminSession($adminSessionKey);
-        $this->continueSession($sessionKey);
-        $template = $this->getTemplateById($templateId);
+        $requester = $this->continueSession($sessionKey);
+        $template  = $this->getTemplateById($templateId, $requester);
         try {
             return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
         } catch (Exception $e) {
@@ -91,10 +92,13 @@ class Project_SOAPServer {
         }
     }
     
-    private function getTemplateById($id) {
+    private function getTemplateById($id, User $requester) {
         $template = $this->projectManager->getProject($id);
         if ($template && !$template->isError()) {
-            return $template;
+            if ($template->isTemplate() || $requester->isMember($template->getID(), 'A')) {
+                return $template;
+            }
+            throw new SoapFault('3104', 'Project is not a template');
         }
         throw new SoapFault('3100', 'Invalid template id ' . $id);
     }
