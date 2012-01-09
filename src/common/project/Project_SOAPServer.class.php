@@ -83,19 +83,16 @@ class Project_SOAPServer {
     public function addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId) {
         $admin = $this->userManager->getCurrentUser($adminSessionKey);
         if ($admin && $admin->isLoggedIn() && $admin->isSuperUser()) {
-            if ($this->continueSession($sessionKey)) {
-                $template = $this->projectManager->getProject($templateId);
-                if ($template && !$template->isError()) {
-                    try {
-                        return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
-                    } catch (Exception $e) {
-                        throw new SoapFault((string)$e->getCode(), $e->getMessage());
-                    }
-                } else {
-                    throw new SoapFault('3100', 'Invalid template id ' . $templateId);
+            $this->continueSession($sessionKey);
+            $template = $this->projectManager->getProject($templateId);
+            if ($template && !$template->isError()) {
+                try {
+                    return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
+                } catch (Exception $e) {
+                    throw new SoapFault((string) $e->getCode(), $e->getMessage());
                 }
             } else {
-                throw new SoapFault('3001', 'Invalid session');
+                throw new SoapFault('3100', 'Invalid template id ' . $templateId);
             }
         } else {
             throw new SoapFault('3200', 'Only site admin is allowed to create project on behalf of users');
@@ -131,17 +128,28 @@ class Project_SOAPServer {
     /**
      * Add given user as member of the project
      *
+     * Error codes:
+     * * 3000, Invalid project id
+     * * 3201, Only project admin can add a project member
+     * 
      * @todo check who is allowed to do that (site admin and/or project admin)
      *
+     * @param String  $sessionKey The project admin session hash
      * @param Integer $groupId Project ID
      * @param String  $userLogin User login name
      *
      * @return Boolean
      */
-    public function addProjectMember($groupId, $userLogin) {
-        $project = $this->projectManager->getProject($groupId);
+    public function addProjectMember($sessionKey, $groupId, $userLogin) {
+        $requester = $this->continueSession($sessionKey);
+        $project   = $this->projectManager->getProject($groupId);
         if ($project && !$project->isError()) {
-            return $this->feedbackToSoapFault(account_add_user_to_group($groupId, $userLogin));
+            if ($requester->isMember($project->getID(), 'A')) {
+                $result = account_add_user_to_group($project->getID(), $userLogin);
+                return $this->feedbackToSoapFault($result);
+            } else {
+                throw new SoapFault('3201', 'Only project admin can add a project member');
+            }
         } else {
             throw new SoapFault('3000', "Invalid project id");
         }
@@ -196,11 +204,14 @@ class Project_SOAPServer {
      * 
      * @param String $sessionKey
      * 
-     * @return Boolean
+     * @return User
      */
     private function continueSession($sessionKey) {
         $user = $this->userManager->getCurrentUser($sessionKey);
-        return $user->isLoggedIn();
+        if ($user->isLoggedIn()) {
+            return $user;
+        }
+        throw new SoapFault('3001', 'Invalid session');
     }
 
 }
