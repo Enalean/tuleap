@@ -173,7 +173,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     
     /**
      * This method returns the artifact mail rendering
-     * @param string $format
+     * 
+     * @param array  $recipient
+     * @param string $format, the mail format text or html
+     * @param bool   $ignore_perms, indicates if we ignore various permissions
+     * 
      * @return string
      */
     public function fetchMail($recipient, $format, $ignore_perms=false) {
@@ -182,7 +186,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'html':
                 $content = $this->fetchMailFormElements($recipient, $format, $ignore_perms);
                 if ($content) {
-                    $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>'.PHP_EOL;
+                    $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>';
                     $output .= $content;
                 }
 
@@ -201,7 +205,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Returns the artifact field for mail rendering
      * 
-     * @param String $format
+     * @param array  $recipient
+     * @param string $format, the mail format text or html
+     * @param bool   $ignore_perms, indicates if we ignore various permissions
      * 
      * @return String
      */
@@ -219,7 +225,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $text;
     }
-
+    
+    /**
+     * Returns the artifact followup for mail rendering
+     * 
+     * @param array  $recipient
+     * @param string $format, the mail format text or html
+     * @param bool   $ignore_perms, indicates if we ignore various permissions
+     * 
+     * @return String
+     */
     public function fetchMailFollowUp($recipient, $format, $ignore_perms=false) {
         $uh = UserHelper::instance();
         $um = UserManager::instance();
@@ -237,11 +252,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $followup = $comment->fetchFollowUp($format, true);
                     if(!empty($followup)) {
                         if(!isset($output)) {
-                            $output = '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h2>'.PHP_EOL;
+                            $output = '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h2>';
                         }
-                        $output .= '<div class="tracker_artifact_followup_header">'.PHP_EOL;
-                        $output .= $followup.PHP_EOL;
-                        $output .= '</div>'.PHP_EOL;
+                        $output .= '<div class="tracker_artifact_followup_header">';
+                        $output .= $followup;
+                        $output .= '</div>';
                     }
                     break;
                 case 'text':

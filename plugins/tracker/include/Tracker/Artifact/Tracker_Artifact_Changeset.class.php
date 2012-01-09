@@ -614,7 +614,7 @@ class Tracker_Artifact_Changeset {
      * @param Boolean $is_update    It is an update, not a new artifact
      * @param String  $recipient    The recipient who will receive the notification
      * @param BaseLanguage $language The language of the message
-     * @param Boolean $ignore_perms ???
+     * @param Boolean $ignore_perms indicates if permissions have to be ignored
      *
      * @return String
      */

@@ -238,7 +238,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $output = '';
         $separator = '&nbsp;';
         if ($format == 'text') {
-            $separator = '\n';
+            $separator = PHP_EOL;
             $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
         }
 
