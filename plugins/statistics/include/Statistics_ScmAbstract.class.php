@@ -146,6 +146,23 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
     }
 
     /**
+     * Repositories activity evolution
+     *
+     * @return Array
+     */
+    function repositoriesEvolutionForPeriod() {
+        $dar = $this->dao->repositoriesEvolutionForPeriod(strtotime($this->startDate), strtotime($this->endDate));
+        $evolution = array();
+        if ($dar && !$dar->isError() && $dar->rowCount()> 0) {
+            $evolution[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_repo_evolution');
+            foreach ($dar as $row) {
+                $evolution[] = $row['repo_count'];
+            }
+        }
+        return $evolution;
+    }
+
+    /**
      * Add stats for SVN or CVS in CSV format
      *
      * @return String
@@ -161,6 +178,8 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
         $this->addLine($commitStats['total_commits']);
         $this->addLine($commitStats['commit_projects_number']);
         $this->addLine($commitStats['commit_users_number']);
+        $this->addLine($this->repositoriesEvolutionForPeriod());
+
         if (!$this->groupId) {
             foreach ($this->topCommitByProject() as $line) {
                 $this->addLine($line);
@@ -169,6 +188,7 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
         foreach ($this->topCommitByUser() as $line) {
             $this->addLine($line);
         }
+
 
         return $this->content;
     }

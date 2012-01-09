@@ -179,11 +179,11 @@ class Statistics_ScmSvnDao extends DataAccessObject {
     function repositoriesEvolutionForPeriod($startDate, $endDate) {
         $sql = " SELECT MONTH(FROM_UNIXTIME(date)) as month,
                  YEAR(FROM_UNIXTIME(date)) as year ,
-                 COUNT(DISTINCT(repositoryid))
+                 COUNT(DISTINCT(repositoryid)) as repo_count
                  FROM groups g 
                  JOIN svn_commits USING (group_id) 
-                 WHERE date >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
-                   AND date < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
+                 WHERE date >= ".$this->da->quoteSmart($startDate)."
+                   AND date < ".$this->da->quoteSmart($endDate)."
                    AND g.status = 'A' 
                  GROUP BY year, month";
 
