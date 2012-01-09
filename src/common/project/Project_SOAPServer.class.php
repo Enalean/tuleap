@@ -81,22 +81,32 @@ class Project_SOAPServer {
      * @return Integer The ID of newly created project
      */
     public function addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId) {
-        $admin = $this->userManager->getCurrentUser($adminSessionKey);
-        if ($admin && $admin->isLoggedIn() && $admin->isSuperUser()) {
-            $this->continueSession($sessionKey);
-            $template = $this->projectManager->getProject($templateId);
-            if ($template && !$template->isError()) {
-                try {
-                    return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
-                } catch (Exception $e) {
-                    throw new SoapFault((string) $e->getCode(), $e->getMessage());
-                }
-            } else {
-                throw new SoapFault('3100', 'Invalid template id ' . $templateId);
+        $this->continueAdminSession($adminSessionKey);
+        $this->continueSession($sessionKey);
+        $template = $this->projectManager->getProject($templateId);
+        if ($template && !$template->isError()) {
+            try {
+                return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
+            } catch (Exception $e) {
+                throw new SoapFault((string) $e->getCode(), $e->getMessage());
             }
         } else {
-            throw new SoapFault('3200', 'Only site admin is allowed to create project on behalf of users');
+            throw new SoapFault('3100', 'Invalid template id ' . $templateId);
         }
+    }
+    
+    /**
+     *
+     * @param String  $adminSessionKey Session key of a site admin
+     * 
+     * @return User
+     */
+    private function continueAdminSession($adminSessionKey) {
+        $admin = $this->userManager->getCurrentUser($adminSessionKey);
+        if ($admin && $admin->isLoggedIn() && $admin->isSuperUser()) {
+            return $admin;
+        }
+        throw new SoapFault('3200', 'Only site admin is allowed to create project on behalf of users');
     }
 
     private function formatDataAndCreateProject($shortName, $publicName, $privacy, Project $template) {
