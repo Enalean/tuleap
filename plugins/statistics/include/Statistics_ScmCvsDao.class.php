@@ -183,8 +183,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 From cvs_commits cc
                 JOIN cvs_checkins c ON cc.id = c.commitid
                 JOIN cvs_repositories r ON r.id= repositoryid
-                WHERE cc.comm_when >= UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).")
-                  AND cc.comm_when < UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
+                WHERE cc.comm_when >= ".$this->da->quoteSmart($startDate)."
+                  AND cc.comm_when < ".$this->da->quoteSmart($endDate)."
                 GROUP BY year, month";
 
         return $this->retrieve($sql);

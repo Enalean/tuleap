@@ -178,9 +178,9 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
         $this->addLine($commitStats['total_commits']);
         $this->addLine($commitStats['commit_projects_number']);
         $this->addLine($commitStats['commit_users_number']);
-        $this->addLine($this->repositoriesEvolutionForPeriod());
 
         if (!$this->groupId) {
+            $this->addLine($this->repositoriesEvolutionForPeriod());
             foreach ($this->topCommitByProject() as $line) {
                 $this->addLine($line);
             }
