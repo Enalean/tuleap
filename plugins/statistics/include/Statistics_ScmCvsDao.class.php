@@ -177,15 +177,16 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function repositoriesEvolutionForPeriod($startDate, $endDate) {
-        $sql = " SELECT MONTH(cc.comm_when) as month,". 
-               " YEAR(cc.comm_when) as year ,".
-               " count(distinct(repositoryid)) as repo_count".
-               " From cvs_commits cc".
-               " JOIN cvs_checkins c ON cc.id = c.commitid".
-               " JOIN cvs_repositories r ON r.id= repositoryid".
-               " WHERE cc.comm_when >= FROM_UNIXTIME(".$this->da->quoteSmart($startDate).")
-                  AND cc.comm_when < FROM_UNIXTIME(".$this->da->quoteSmart($endDate).")
-                GROUP BY year, month";
+        $sql = "SELECT MONTH(cc.comm_when) as month,
+               YEAR(cc.comm_when) as year ,
+               count(distinct(repositoryid)) as repo_count
+               From cvs_commits cc
+               JOIN cvs_checkins c ON cc.id = c.commitid
+               JOIN cvs_repositories r ON r.id= repositoryid
+               WHERE cc.comm_when >= UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).")
+                 AND cc.comm_when < UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
+               GROUP BY year, month";
+
         return $this->retrieve($sql);
     }
 }

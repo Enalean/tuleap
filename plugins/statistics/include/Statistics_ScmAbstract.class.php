@@ -151,7 +151,7 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
      * @return Array
      */
     function repositoriesEvolutionForPeriod() {
-        $dar = $this->dao->repositoriesEvolutionForPeriod(strtotime($this->startDate), strtotime($this->endDate));
+        $dar = $this->dao->repositoriesEvolutionForPeriod($this->startDate, $this->endDate);
         $evolution = array();
         if ($dar && !$dar->isError() && $dar->rowCount()> 0) {
             $evolution[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_repo_evolution');
@@ -188,7 +188,6 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
         foreach ($this->topCommitByUser() as $line) {
             $this->addLine($line);
         }
-
 
         return $this->content;
     }

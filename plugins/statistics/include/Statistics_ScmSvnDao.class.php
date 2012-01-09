@@ -182,8 +182,8 @@ class Statistics_ScmSvnDao extends DataAccessObject {
                  COUNT(DISTINCT(repositoryid)) as repo_count
                  FROM groups g 
                  JOIN svn_commits USING (group_id) 
-                 WHERE date >= ".$this->da->quoteSmart($startDate)."
-                   AND date < ".$this->da->quoteSmart($endDate)."
+                 WHERE date >= UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).")
+                   AND date < UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
                    AND g.status = 'A' 
                  GROUP BY year, month";
 
