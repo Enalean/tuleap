@@ -83,12 +83,8 @@ class Project_SOAPServerTest extends UnitTestCase {
         $privacy         = 'public';
         $templateId      = 100;
         
-        try {
-            $server->addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId);
-            $this->assertTrue(false, "Creating a project without a valid admin session key should throw an soapfault");
-        } catch (SoapFault $fault) {
-            $this->assertTrue(true, "Should catch an exception");
-        }
+        $this->expectException('SoapFault');
+        $server->addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId);
     }
 
     
