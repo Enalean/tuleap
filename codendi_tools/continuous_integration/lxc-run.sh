@@ -133,6 +133,6 @@ else
 fi
 
 # And test!
-substitute "$src_dir/codendi_tools/plugins/tests/functional/set.php" "%host%" "http://$lxc_ip"
-cd $src_dir/functionaltests/; cucumber
+
+TULEAP_HOST=$lxc_name cucumber $src_dir/codendi_tools/plugins/tests/functional/features
 
