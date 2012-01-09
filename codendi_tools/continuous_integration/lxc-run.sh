@@ -134,4 +134,4 @@ else
 fi
 
 # And test!
-TULEAP_HOST=$lxc_name cucumber $src_dir/codendi_tools/plugins/tests/functional/features
+TULEAP_HOST=$lxc_name cucumber -f junit -o test_results $src_dir/codendi_tools/plugins/tests/functional/features
