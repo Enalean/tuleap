@@ -83,16 +83,20 @@ class Project_SOAPServer {
     public function addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId) {
         $this->continueAdminSession($adminSessionKey);
         $this->continueSession($sessionKey);
-        $template = $this->projectManager->getProject($templateId);
-        if ($template && !$template->isError()) {
-            try {
-                return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
-            } catch (Exception $e) {
-                throw new SoapFault((string) $e->getCode(), $e->getMessage());
-            }
-        } else {
-            throw new SoapFault('3100', 'Invalid template id ' . $templateId);
+        $template = $this->getTemplateById($templateId);
+        try {
+            return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
+        } catch (Exception $e) {
+            throw new SoapFault((string) $e->getCode(), $e->getMessage());
         }
+    }
+    
+    private function getTemplateById($id) {
+        $template = $this->projectManager->getProject($id);
+        if ($template && !$template->isError()) {
+            return $template;
+        }
+        throw new SoapFault('3100', 'Invalid template id ' . $id);
     }
     
     /**
