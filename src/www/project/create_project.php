@@ -1,5 +1,4 @@
 <?php
-require_once('vars.php');
 require_once('service.php');
 require_once('www/forum/forum_utils.php');
 require_once('www/admin/admin_utils.php');
