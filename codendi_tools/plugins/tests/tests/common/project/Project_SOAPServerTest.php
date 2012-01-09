@@ -101,11 +101,14 @@ class Project_SOAPServerTest extends UnitTestCase {
         
         $this->um->setReturnValue('getCurrentUser', $another_user, array('789'));
         
-        
         $template = new MockProject();
         $template->services = array();
         $template->setReturnValue('isTemplate', true);
         $this->pm->setReturnValue('getProject', $template, array(100));
+        
+        $project = new MockProject();
+        $this->pc->setReturnValue('create', $project, array('toto', 'Mon Toto', '*'));
+        $this->pm->setReturnValue('activate', $project, array($project));
         
         return $server;
     }
@@ -122,14 +125,9 @@ class Project_SOAPServerTest extends UnitTestCase {
         $this->um->setReturnValue('getCurrentUser', $this->user, array('123'));
         $this->um->setReturnValue('getCurrentUser', $admin, array('456'));
         
-        $this->pm     = new MockProjectManager();
-        
-        $project = new MockProject();
-        $pc      = new MockProjectCreator();
-        $pc->setReturnValue('create', $project, array('toto', 'Mon Toto', '*'));
-        $this->pm->setReturnValue('activate', $project, array($project));
-        
-        $server = new Project_SOAPServer($this->pm, $pc, $this->um);
+        $this->pm = new MockProjectManager();
+        $this->pc = new MockProjectCreator();
+        $server   = new Project_SOAPServer($this->pm, $this->pc, $this->um);
         return $server;
     }
 }
