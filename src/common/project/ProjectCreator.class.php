@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -17,19 +16,31 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once 'www/project/create_project.php';
 require_once 'Project.class.php';
+require_once 'Project_InvalidShortName_Exception.class.php';
+require_once 'Project_InvalidFullName_Exception.class.php';
+require_once 'Project_Creation_Exception.class.php';
 
 class ProjectCreator {
-
     /**
      * @var ProjectManager 
      */
     private $projectManager;
+    
+    /**
+     * @var Rule_ProjectName
+     */
+    private $ruleShortName;
+    
+    /**
+     * @var Rule_ProjectFullName
+     */
+    private $ruleFullName;
 
-    public function __construct(ProjectManager $projectManager) {
+    public function __construct(ProjectManager $projectManager, Rule_ProjectName $ruleShortName, Rule_ProjectFullName $ruleFullName) {
         $this->projectManager = $projectManager;
+        $this->ruleShortName  = $ruleShortName;
+        $this->ruleFullName   = $ruleFullName;
     }
 
     /**
@@ -53,24 +64,27 @@ class ProjectCreator {
      * @return type 
      */
     public function create($shortName, $publicName, $data) {
-        $rule = new Rule_ProjectName();
-        if (!$rule->isValid($shortName)) {
-            throw new Exception($rule->getErrorMessage());
+        if (!$this->ruleShortName->isValid($shortName)) {
+            throw new Project_InvalidShortName_Exception($this->ruleShortName->getErrorMessage());
         }
         $data['project']['form_unix_name'] = $shortName;
 
         //@TODO: add long name already exists check
-        $rule = new Rule_ProjectFullName();
-        if (!$rule->isValid($publicName)) {
-            throw new Exception($rule->getErrorMessage());
+        if (!$this->ruleFullName->isValid($publicName)) {
+            throw new Project_InvalidFullName_Exception($this->ruleFullName->getErrorMessage());
         }
         $data['project']['form_full_name'] = $publicName;
 
-        $id = create_project($data, true);
+        $id = $this->create_project($data);
         if ($id) {
             return $this->projectManager->getProject($id);
         }
-        throw new Exception('Project creation failure');
+        throw new Project_Creation_Exception();
+    }
+
+    protected function create_project($data) {
+        include 'www/project/create_project.php';
+        return create_project($data, true);
     }
 
 }

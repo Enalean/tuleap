@@ -37,12 +37,15 @@ if ($request->exist('wsdl')) {
     $wsdlGen = new SOAP_NusoapWSDL($serviceClass, 'TuleapProjectAPI', $uri);
     $wsdlGen->dumpWSDL();
 } else {
-    $projectManager = ProjectManager::instance();
-    $projectCreator = new ProjectCreator($projectManager);
     $userManager    = UserManager::instance();
+    $projectManager = ProjectManager::instance();
+    
+    $ruleShortName  = new Rule_ProjectName();
+    $ruleFullName   = new Rule_ProjectFullName();
+    $projectCreator = new ProjectCreator($projectManager, $ruleShortName, $ruleFullName);
     
     $server = new SoapServer($uri.'/?wsdl',
-                         array('cache_wsdl' => WSDL_CACHE_NONE));
+                             array('cache_wsdl' => WSDL_CACHE_NONE));
     $server->setClass($serviceClass, $projectManager, $projectCreator, $userManager);
     $server->handle();
 }
