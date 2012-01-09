@@ -174,11 +174,12 @@ class ArtifactType extends Error {
 			}
 
 			if ( !$this->addUser($row['user_id'],$perm) ) {
+                            file_put_contents('/tmp/create.log', 'createUserPerms KO'.PHP_EOL, FILE_APPEND);
 				$this->setError($Language->getText('tracker_common_type','perm_fail',$this->getErrorMessage()));
 				return false;
 			}
 		}
-		
+		file_put_contents('/tmp/create.log', 'createUserPerms OK'.PHP_EOL, FILE_APPEND);
 		return true;
 
 	}
