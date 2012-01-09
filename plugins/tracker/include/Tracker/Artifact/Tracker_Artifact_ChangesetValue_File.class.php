@@ -201,7 +201,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
                 $removed[] = $fi->getFilename();
             }
             if ($removed = implode(', ', $removed)) {
-                $result .= $removed .' removed';
+                $result .= $removed .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','removed');
             }
             $added = array();
             foreach (array_diff($this->files, $changeset_value->getFiles()) as $fi) {
@@ -211,7 +211,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
                 if ($result) {
                     $result .= PHP_EOL;
                 }
-                $result .= $added .' added';
+                $result .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
             }
             return $result;
         }
@@ -234,7 +234,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
                 if ($result) {
                     $result .= PHP_EOL;
                 }
-                $result .= $added .' added';
+                $changes .= $added .' '.$GLOBALS['Language']->getText('plugin_tracker_artifact','added');
             }
             return $result;
         }
