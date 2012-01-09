@@ -63,12 +63,20 @@ class Project_SOAPServer {
      *
      * Projects are automatically accepted
      *
-     * @param string  $sessionKey     The session hash associated with the session opened by the person who calls the service
-     * @param String  $adminSessionKey Login of the user on behalf of who you create the project
-     * @param String  $shortName      Unix name of the project
-     * @param String  $publicName       Full name of the project
-     * @param String  $privacy        Either 'public' or 'private'
-     * @param Integer $templateId     Id of template project
+     * Error codes:
+     * * 3001, Invalid session (wrong $sessionKey)
+     * * 3200, Only site admin is allowed to create project on behalf of users (wrong $adminSessionKey)
+     * * 3100, Invalid template id (correponding project doesn't exist)
+     * * 3101, Project creation failure
+     * * 3102, Invalid short name
+     * * 3103, Invalid full name
+     * 
+     * @param String  $sessionKey      Session key of the desired project admin
+     * @param String  $adminSessionKey Session key of a site admin
+     * @param String  $shortName       Unix name of the project
+     * @param String  $publicName      Full name of the project
+     * @param String  $privacy         Either 'public' or 'private'
+     * @param Integer $templateId      Id of template project
      *
      * @return Integer The ID of newly created project
      */
