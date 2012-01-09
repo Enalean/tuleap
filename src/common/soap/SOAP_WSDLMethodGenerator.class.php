@@ -75,8 +75,7 @@ class SOAP_WSDLMethodGenerator {
     }
     
     private function lineDoesntContainPhpDoc($line) {
-        return ($this->isNotPresentInLine($line, '@param') &&
-                $this->isNotPresentInLine($line, '@return') &&
+        return ($this->isNotPresentInLine($line, '@return') &&
                 $this->isNotPresentInLine($line, '@todo') &&
                 $this->isNotPresentInLine($line, '@see'));
     }

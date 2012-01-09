@@ -29,15 +29,19 @@ class SOAP_WSDLMethodGeneratorTest extends UnitTestCase {
         $this->assertContains($comment, 'Create a new project');
     }
     
-    function testExtractCommentShouldNotContentCommentsDelimiters() {
+    function testExtractCommentShouldContainsParams() {
+        $comment = $this->GivenTheCommentOfAddProject();
+        $this->assertContains($comment, '@param');
+    }
+    
+    function testExtractCommentShouldNotContainsCommentsDelimiters() {
         $comment = $this->GivenTheCommentOfAddProject();
         $this->assertDoesntContain($comment, '/**');
         $this->assertDoesntContain($comment, '*/');
     }
     
-    function testExtractCommentShouldNotContentDocblocks() {
+    function testExtractCommentShouldNotContainsDocblocks() {
         $comment = $this->GivenTheCommentOfAddProject();
-        $this->assertDoesntContain($comment, '@param');
         $this->assertDoesntContain($comment, '@return');
         $this->assertDoesntContain($comment, '@see');
         $this->assertDoesntContain($comment, '@todo');
