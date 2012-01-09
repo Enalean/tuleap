@@ -130,9 +130,7 @@ class Project_SOAPServer {
      *
      * Error codes:
      * * 3000, Invalid project id
-     * * 3201, Only project admin can add a project member
-     * 
-     * @todo check who is allowed to do that (site admin and/or project admin)
+     * * 3201, Permission denied: need to be project admin
      *
      * @param String  $sessionKey The project admin session hash
      * @param Integer $groupId Project ID
@@ -149,8 +147,12 @@ class Project_SOAPServer {
     /**
      * Remove given user from project members
      *
-     * @todo check who is allowed to do that (site admin and/or project admin)
-     *
+     * Error codes:
+     * * 3000, Invalid project id
+     * * 3201, Permission denied: need to be project admin
+     * * 3202, Invalid user login
+     * * 3203, User not member of project
+     * 
      * @param String  $sessionKey The project admin session hash
      * @param Integer $groupId Project ID
      * @param String  $userLogin User login name
@@ -158,21 +160,24 @@ class Project_SOAPServer {
      * @return Boolean
      */
     public function removeProjectMember($sessionKey, $groupId, $userLogin) {
-        $project = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
-        
-        $userToAdd = $this->userManager->getUserByUserName($userLogin);
-        if (!$userToAdd) {
-            throw new SoapFault('3100', "Invalid user name");
-        }
-        if ($userToAdd->isMember($groupId)) {
-            $result = account_remove_user_from_group($groupId, $userToAdd->getId());
-            return $this->feedbackToSoapFault($result);
-        }
-        return true;
+        $project   = $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
+        $userToAdd = $this->getProjectMember($project, $userLogin);
+        $result    = account_remove_user_from_group($groupId, $userToAdd->getId());
+        return $this->feedbackToSoapFault($result);
     }
 
+    private function getProjectMember(Project $project, $userLogin) {
+        $user = $this->userManager->getUserByUserName($userLogin);
+        if (!$user) {
+            throw new SoapFault('3202', "Invalid user login");
+        }
+        if ($user->isMember($project->getID())) {
+            return $user;
+        }
+        throw new SoapFault('3203', "User not member of project");
+    }
     
-    protected function getProjectIfUserIsAdmin($groupId, $sessionKey) {
+    private function getProjectIfUserIsAdmin($groupId, $sessionKey) {
         $requester = $this->continueSession($sessionKey);
         $project   = $this->projectManager->getProject($groupId);
         if ($project && !$project->isError()) {
@@ -192,7 +197,7 @@ class Project_SOAPServer {
      *
      * @return Boolean
      */
-    protected function feedbackToSoapFault($result) {
+    private function feedbackToSoapFault($result) {
         if (!$result) {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 foreach ($GLOBALS['Response']->_feedback->logs as $log) {
