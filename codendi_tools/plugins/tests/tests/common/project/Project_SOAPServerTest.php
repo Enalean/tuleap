@@ -48,33 +48,20 @@ class Project_SOAPServerTest extends UnitTestCase {
      * @return Project_SOAPServer
      */
     private function GivenASOAPServerWithBadTemplate() {
-        $user   = new MockUser();
-        $user->setReturnValue('isLoggedIn', true);
-        $user->setReturnValue('isMember', false);
+        $server = $this->GivenASOAPServer();
         
-        $admin  = new MockUser();
-        $admin->setReturnValue('isLoggedIn', true);
-        $admin->setReturnValue('isSuperUser', true);
-        
-        $um     = new MockUserManager();
-        $um->setReturnValue('getCurrentUser', $user, array('123'));
-        $um->setReturnValue('getCurrentUser', $admin, array('456'));
-        
-        $pm     = new MockProjectManager();
+        $this->user->setReturnValue('isMember', false);
         
         $template = new MockProject();
         $template->setReturnValue('isTemplate', false);
-        $pm->setReturnValue('getProject', $template, array(101));
         
-        $project = new MockProject();
-        $pc      = new MockProjectCreator();
+        $this->pm->setReturnValue('getProject', $template, array(101));
         
-        $server = new Project_SOAPServer($pm, $pc, $um);
         return $server;
     }
 
     function testAddProjectWithoutAValidAdminSessionKeyShouldNotCreateProject() {
-        $server = $this->GivenASOAPServer();
+        $server = $this->GivenASOAPServerReadyToCreate();
         
         $sessionKey      = '123';
         $adminSessionKey = '789';
@@ -89,7 +76,7 @@ class Project_SOAPServerTest extends UnitTestCase {
 
     
     function testAddProjectShouldCreateAProject() {
-        $server = $this->GivenASOAPServer();
+        $server = $this->GivenASOAPServerReadyToCreate();
         
         $sessionKey      = '123';
         $adminSessionKey = '456';
@@ -106,36 +93,43 @@ class Project_SOAPServerTest extends UnitTestCase {
      *
      * @return Project_SOAPServer
      */
-    private function GivenASOAPServer() {
-        $user   = new MockUser();
-        $user->setReturnValue('isLoggedIn', true);
+    private function GivenASOAPServerReadyToCreate() {
+        $server = $this->GivenASOAPServer();
         
         $another_user = new MockUser();
         $another_user->setReturnValue('isLoggedIn', true);
+        
+        $this->um->setReturnValue('getCurrentUser', $another_user, array('789'));
+        
+        
+        $template = new MockProject();
+        $template->services = array();
+        $template->setReturnValue('isTemplate', true);
+        $this->pm->setReturnValue('getProject', $template, array(100));
+        
+        return $server;
+    }
+    
+    private function GivenASOAPServer() {
+        $this->user = new MockUser();
+        $this->user->setReturnValue('isLoggedIn', true);
         
         $admin  = new MockUser();
         $admin->setReturnValue('isLoggedIn', true);
         $admin->setReturnValue('isSuperUser', true);
         
-        $um     = new MockUserManager();
-        $um->setReturnValue('getCurrentUser', $user, array('123'));
-        $um->setReturnValue('getCurrentUser', $admin, array('456'));
-        $um->setReturnValue('getCurrentUser', $another_user, array('789'));
+        $this->um = new MockUserManager();
+        $this->um->setReturnValue('getCurrentUser', $this->user, array('123'));
+        $this->um->setReturnValue('getCurrentUser', $admin, array('456'));
         
-        $pm     = new MockProjectManager();
-        
-        $template = new MockProject();
-        $template->services = array();
-        $template->setReturnValue('isTemplate', true);
-        $pm->setReturnValue('getProject', $template, array(100));
-        
+        $this->pm     = new MockProjectManager();
         
         $project = new MockProject();
         $pc      = new MockProjectCreator();
         $pc->setReturnValue('create', $project, array('toto', 'Mon Toto', '*'));
-        $pm->setReturnValue('activate', $project, array($project));
+        $this->pm->setReturnValue('activate', $project, array($project));
         
-        $server = new Project_SOAPServer($pm, $pc, $um);
+        $server = new Project_SOAPServer($this->pm, $pc, $this->um);
         return $server;
     }
 }
