@@ -52,7 +52,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
         $users = new ArrayIterator($params['listeners']);
         if ($users) {
             $dpm = $this->_getPermissionsManager();
-            foreach($users as $user) {
+            foreach ($users as $user) {
                 if ($user->isActive() || $user->isRestricted()) {
                     if ($dpm->userCanAccess($user, $params['item']->getId())) {
                         $this->_buildMessage($params['event'], $params, $user);
