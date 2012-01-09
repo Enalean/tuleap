@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -51,7 +51,7 @@ lxc_start_wait() {
 ## Parse options
 ##
 install_mode="update-snapshot"
-options=`getopt -o h -l help,srcdir:,lxc-name:,lxc-ip:,repo-base-url:,version-upgrade -- "$@"`
+options=`getopt -o h -l help,srcdir:,lxc-name:,lxc-ip:,repo-base-url:,install-mode: -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
 eval set -- "$options"
 while true
@@ -92,7 +92,11 @@ sshcmd="ssh -o StrictHostKeyChecking=no"
 # -n to close standard input
 remotecmd="$sshcmd -n $build_host"
 
-if [ ! lxc-ls | egrep -q "^$lxc_name$" || $install_mode == "clean-install"] ; then
+if  ! lxc-ls | egrep -wq "$lxc_name" || [ $install_mode = "clean-install" ] ; then
+    if lxc-ls | egrep -wq "$lxc_name" ; then
+        sudo lxc-stop --name=$lxc_name
+	sudo lxc-destroy --name=$lxc_name
+    fi
     # Setup an lxc instance and install tuleap
     echo "Create a new container $lxc_name"
     cp $src_dir/codendi_tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
@@ -110,7 +114,7 @@ if [ ! lxc-ls | egrep -q "^$lxc_name$" || $install_mode == "clean-install"] ; th
 
     # Install
     $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
-elif [ $install_mode == "upgrade" ] ; then
+elif [ $install_mode = "upgrade" ] ; then
     $remotecmd yum install tuleap -y --disablerepo=epel php-pecl-json tuleap-all
     $remotecmd service httpd restart
 else 
@@ -134,4 +138,4 @@ else
 fi
 
 # And test!
-TULEAP_HOST=$lxc_name cucumber -f junit -o test_results $src_dir/codendi_tools/plugins/tests/functional/features
+TULEAP_HOST=$lxc_ip cucumber -f junit -o test_results $src_dir/codendi_tools/plugins/tests/functional/features
