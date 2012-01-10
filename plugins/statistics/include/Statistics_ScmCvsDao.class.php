@@ -200,9 +200,10 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      */
     function repositoriesWithCommit($startDate, $endDate, $groupByMonth = false) {
         $sql = "SELECT COUNT(DISTINCT(repositoryid)) AS count
-                From cvs_checkins
-                WHERE ci_when >= ".$this->da->quoteSmart($startDate)."
-                  AND ci_when < ".$this->da->quoteSmart($endDate);
+                From cvs_commits cc
+                JOIN cvs_checkins c ON cc.id = c.commitid
+                WHERE cc.comm_when >= ".$this->da->quoteSmart($startDate)."
+                  AND cc.comm_when < ".$this->da->quoteSmart($endDate);
 
         return $this->retrieve($sql);
     }
