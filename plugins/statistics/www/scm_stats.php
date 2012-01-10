@@ -70,7 +70,7 @@ if($request->valid($vGroupId)) {
 
 if (!$error && $request->exist('export')) {
     header ('Content-Type: text/csv');
-    header ('Content-Disposition: filename=scm_stats.csv');
+    header ('Content-Disposition: filename=scm_stats_'.$startDate.'_'.$endDate.'.csv');
     $statsSvn = new Statistics_ScmSvn($startDate, $endDate, $groupId);
     echo $statsSvn->getStats();
     $statsCvs = new Statistics_ScmCvs($startDate, $endDate, $groupId);

@@ -86,8 +86,8 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
                 $totalCommits[]         = intval($row['count']);
             }
         }
-        $result = array('commits_index'           => $commitsIndex,
-                        'total_commits'           => $totalCommits,
+        $result = array('commits_index'          => $commitsIndex,
+                        'total_commits'          => $totalCommits,
                         'commit_projects_number' => $commitProjectsNumber,
                         'commit_users_number'    => $commitUsersNumber);
         return $result;
