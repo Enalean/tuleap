@@ -27,6 +27,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
 
     /**
      * Constructor of the class
+     *
      * @param DataAccess $da      Data access details
      * @param Integer    $groupId Project Id
      *

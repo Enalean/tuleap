@@ -64,13 +64,13 @@ if ($startDate >= $endDate) {
 $groupId  = null;
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if($request->valid($vGroupId)) {
+if ($request->valid($vGroupId)) {
     $groupId = $request->get('group_id');
 }
 
 if (!$error && $request->exist('export')) {
-    header ('Content-Type: text/csv');
-    header ('Content-Disposition: filename=scm_stats_'.$startDate.'_'.$endDate.'.csv');
+    header('Content-Type: text/csv');
+    header('Content-Disposition: filename=scm_stats_'.$startDate.'_'.$endDate.'.csv');
     $statsSvn = new Statistics_ScmSvn($startDate, $endDate, $groupId);
     echo $statsSvn->getStats();
     $statsCvs = new Statistics_ScmCvs($startDate, $endDate, $groupId);

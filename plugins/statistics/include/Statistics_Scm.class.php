@@ -59,10 +59,15 @@ class Statistics_Scm {
         foreach ($line as $element) {
             $this->content .= tocsv($element).$this->separator;
         }
-        $this->content = substr($this->content,0,-1);
+        $this->content = substr($this->content, 0, -1);
         $this->content .= "\n";
     }
 
+    /**
+     * Reset the content
+     *
+     * @return void
+     */
     function clearContent() {
         $this->content = '';
     }
