@@ -180,11 +180,9 @@ class Statistics_ScmSvnDao extends DataAccessObject {
         $sql = "SELECT MONTH(FROM_UNIXTIME(date)) AS month,
                 YEAR(FROM_UNIXTIME(date)) AS year ,
                 COUNT(DISTINCT(repositoryid)) AS repo_count
-                FROM groups g
-                JOIN svn_commits USING (group_id)
+                FROM svn_commits 
                 WHERE date >= UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).")
                   AND date < UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
-                  AND g.status = 'A'
                 GROUP BY year, month";
 
         return $this->retrieve($sql);
