@@ -198,7 +198,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function repositoriesWithCommit($startDate, $endDate, $groupByMonth = false) {
+    function repositoriesWithCommit($startDate, $endDate) {
         $sql = "SELECT COUNT(DISTINCT(group_id)) AS count
                 FROM svn_commits
                 WHERE date >= UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).")

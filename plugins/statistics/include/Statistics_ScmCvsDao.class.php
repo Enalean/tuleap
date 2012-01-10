@@ -197,7 +197,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
      *
      * @return DataAccessResult
      */
-    function repositoriesWithCommit($startDate, $endDate, $groupByMonth = false) {
+    function repositoriesWithCommit($startDate, $endDate) {
         $sql = "SELECT COUNT(DISTINCT(repositoryid)) AS count
                 From cvs_commits cc
                 JOIN cvs_checkins c ON cc.id = c.commitid

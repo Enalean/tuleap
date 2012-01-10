@@ -162,7 +162,7 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
     function repositoriesWithCommit() {
         $repositories[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_repo_total');
         $count = 0;
-        $dar = $this->dao->repositoriesWithCommit($this->startDate, $this->endDate, true);
+        $dar = $this->dao->repositoriesWithCommit($this->startDate, $this->endDate);
         if ($dar && !$dar->isError() && $dar->rowCount()> 0) {
             foreach ($dar as $row) {
                 $count += intval($row['count']);
