@@ -1,75 +1,74 @@
-#
-# Copyright (c) STMicroelectronics 2011. All rights reserved
-#
-
-This is a solution to run integration tests using Selenium Server
-
-LICENSE
-=======
-This code is distributed under the GPL v2 Licence. See the file COPYING for details.
-
-INSTALLATION
+Launch tests
 ============
-Before installing, you need to understand that this code deals with three different machines:
-1. The machine from which you may launch tests having a phpunit. Let's call it "Launcher".
-2. The machine on which web application to be tested is deployed. Let's call it "Server".
-3. The machine from which tests will be launched, we use a web browser installed on it. Let's call it "Client".
 
-To make it simple as a first installation please consider having 1- & 3- on the same machine: your desktop and 2- as are remote web server.
-You will install pear, phpunit & selenium on your desktop and run the tests again your server.
+Cucumber tests
+--------------
 
+$> cd feature
+$> cucumber
+Feature: Make cucumber work
 
-On Launcher
------------
-Install PEAR 1.9.2 by typing
+  Scenario: A user can logon              # features/test.feature:3
+    Given I am on the home page           # features/step_definitions/steps.rb:2
+    When I logon as "admin" : "siteadmin" # features/step_definitions/steps.rb:6
+    Then I am on my personal page         # features/step_definitions/steps.rb:13
 
-    pear install PEAR-1.9.2
-
-Then install PHPUnit:
-
-    pear channel-discover pear.phpunit.de
-    pear channel-discover components.ez.no
-    pear channel-discover pear.symfony-project.com
-    pear install phpunit/PHPUnit
-    
-this would install Selenium extention with it.
-
-On Client
----------
-You need to download selenium-server-standalone-2.5.0.jar from http://seleniumhq.org/download
-
-If you use firefox for tests & daily usage then create a Firefox profile for selenium (you may need to delete extentions.rdf for addons popup)
-
-Then run Selenium by
-
-    java -jar selenium-server-standalone-2.5.0.jar -singlewindow -firefoxProfileTemplate "/path/to/firefox/profile/" -trustAllSSLCertificates
-
-Selenium Server must be always running on client machine as a service to make launching tests from Launcher possible.
-
-To keep the same session for all tests add the option -browserSessionReuse
-
-For headless Client (aka firefox running in da cloud). You will have to use a fake X server.
-
-    yum install firefox xorg-x11-server-Xvfb cairo
-    # you may have to install also xauth?
-
-edit /etc/rc.d/rc.local
-
-    Xvfb :99 -ac -noreset &
-
-install `selenium` service by copying the file ./selenium in /etc/init.d/ folder. Then issue the command:
-
-    chkconfig --add selenium
-    
-And reboot. You're done!
-    
+1 scenario (1 passed)
+3 steps (3 passed)
+0m13.740s
 
 
-RUN TESTS
-=========
-You probably need to modify tests settings in include/set.php file.
+Installation & Setup
+====================
 
-Then you can run tests in command line by just typing:
+# The recommended way to setup the whole platform is to rely on a local ruby installation.
 
-    phpunit codendi_tools/plugins/tests/functional/
+RVM
+===
+RVM is the easiest way to build your own ruby in your homedir.
 
+First, install it:
+bash -s stable < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer )
+
+# Load rvm:
+. $HOME/.rvm/scripts/rvm
+
+# Check all requirements are installed
+rvm requirements
+-> look for "additional dependencies" and install what is needed by "# For Ruby / Ruby HEAD (MRI, Rubinius, & REE), install the following:" section.
+
+# Install ruby head
+rvm install ruby-1.8.7-head
+
+# Load your ruby in your environement:
+$> rvm use ruby-1.8.7-head
+$> which ruby
+/home/manuel/.rvm/rubies/ruby-1.8.7-head/bin/ruby
+$> which gem
+/home/manuel/.rvm/rubies/ruby-1.8.7-head/bin/gem
+
+# Install gems
+gem install rspec cucumber capybara selenium
+
+Environement
+============
+
+# In your ~/.bashrc
+. $HOME/.rvm/scripts/rvm
+rvm use ruby-1.8.7-head
+
+the test suite is configured to browse https://tuleap-host/ 
+you need to set your hosts file to point to your local vm
+192.168.?.? tuleap-host
+
+Running with webkit (faster selenium)
+=======
+install webkit (or qt on mac)
+
+gem install capybara-webkit
+
+# if the current gem of capybara webkit is still 0.7.2, you must build it to get the ssl_error_ignore option :
+git clone https://github.com/thoughtbot/capybara-webkit.git
+cd capybara-webkit
+bundle && rake
+sudo gem install pkg/capybara-webkit-0.7.2.gem
