@@ -1,11 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
 usage() {
     cat <<EOF
-Usage: $1  --lxc-name=<value> --lxc-ip=<value> --srcdir=<value>
+Usage: $1  --lxc-name=<value> --lxc-ip=<value> --srcdir=<value> --install-mode=<value>
 Options
+  --install-mode=[update-snapshot|upgrade|clean-install] update-snapshot is assumed if the option is not given
   --lxc-name=<value>  Name of lxc container (eg. lxc-aci-105)
   --lxc-ip=<value>    IP address of lxc container (eg. 192.168.1.105)
   --srcdir=<value>    Source dir
@@ -49,7 +50,8 @@ lxc_start_wait() {
 ##
 ## Parse options
 ##
-options=`getopt -o h -l help,srcdir:,lxc-name:,lxc-ip:,repo-base-url: -- "$@"`
+install_mode="update-snapshot"
+options=`getopt -o h -l help,srcdir:,lxc-name:,lxc-ip:,repo-base-url:,install-mode: -- "$@"`
 if [ $? != 0 ] ; then echo "Terminating..." >&2 ; usage $0 ;exit 1 ; fi
 eval set -- "$options"
 while true
@@ -70,6 +72,9 @@ do
 	--repo-base-url)
 	    repo_base_url=$2
 	    shift 2;;
+        --install-mode)
+            install_mode=$2
+            shift 2;;
 	 *)
 	    break;;
     esac
@@ -87,34 +92,37 @@ sshcmd="ssh -o StrictHostKeyChecking=no"
 # -n to close standard input
 remotecmd="$sshcmd -n $build_host"
 
-
-# Stop the container if running and destroy it
-if lxc-ls | egrep -q "^$lxc_name$"; then
-    # Stop the container if it is running
-    if sudo lxc-info -q --name $lxc_name | grep -q "RUNNING"; then
-        echo "Stopping previously started $lxc_name container"
-        sudo lxc-stop -n $lxc_name
+if  ! lxc-ls | egrep -wq "$lxc_name" || [ $install_mode = "clean-install" ] ; then
+    if lxc-ls | egrep -wq "$lxc_name" ; then
+        sudo lxc-stop --name=$lxc_name
+	sudo lxc-destroy --name=$lxc_name
     fi
-    #Destroy the container
-    echo "Destroying the previous container"	
-    sudo lxc-destroy -n $lxc_name
+    # Setup an lxc instance and install tuleap
+    echo "Create a new container $lxc_name"
+    cp $src_dir/codendi_tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
+    substitute "lxc.config" "%ip_addr%" "$lxc_ip"
+
+    sudo lxc-create -n $lxc_name -f lxc.config -t centos5
+
+    # Start the container
+    sudo lxc-start -n $lxc_name -d
+    lxc_start_wait $lxc_ip
+
+    # Upload installation script into /root
+    $remotecmd /bin/rm -fr /root/lxc-inst.sh
+    rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.sh $build_host:/root
+
+    # Install
+    $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
+elif [ $install_mode = "upgrade" ] ; then
+    $remotecmd yum install tuleap -y --disablerepo=epel php-pecl-json tuleap-all
+    $remotecmd service httpd restart
+else 
+    # the server already exists and we suppose this is a reinstall
+    # ==========>>> Warning : yum reinstall probably wont work very well with parts of tuleap that doesnt support yum remove but we havent run into problems yet <<<<<==========
+    $remotecmd yum reinstall tuleap -y --disablerepo=epel php-pecl-json tuleap-all
+    $remotecmd service httpd restart
 fi
-
-echo "Create a new container $lxc_name"
-cp $src_dir/codendi_tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
-substitute "lxc.config" "%ip_addr%" "$lxc_ip"
-sudo lxc-create -n $lxc_name -f lxc.config -t centos5
-
-# Start the container
-sudo lxc-start -n $lxc_name -d
-lxc_start_wait $lxc_ip
-
-# Upload installation script into /root
-$remotecmd /bin/rm -fr /root/lxc-inst.sh
-rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.sh $build_host:/root
-
-# Install
-$remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
 
 # Make sure that selenium server is up
 if lxc-ls | egrep -q "^lxc-selenium-server$"; then
@@ -130,6 +138,4 @@ else
 fi
 
 # And test!
-substitute "$src_dir/codendi_tools/plugins/tests/functional/set.php" "%host%" "http://$lxc_ip"
-phpunit $src_dir/codendi_tools/plugins/tests/functional/
-
+TULEAP_HOST=$lxc_ip cucumber -f junit -o test_results $src_dir/codendi_tools/plugins/tests/functional/features
