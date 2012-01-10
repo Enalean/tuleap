@@ -88,7 +88,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
      *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value) {
+    public function diff($changeset_value, $format = 'html') {
         $previous = $changeset_value->getPerms();
         $next = $this->getPerms();
         $changes = false;

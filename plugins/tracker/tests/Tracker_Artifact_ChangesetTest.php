@@ -356,5 +356,20 @@ BODY;
         $changeset->setReturnValue('getLanguageFactory', $languageFactory);
         return $changeset;
     }
+    
+    public function testDisplayDiffShouldNotStripHtmlTagsInPlainTextFormat() {
+        $diff   = "@@ -1 +1 @@
+- Quelle est la couleur <b> du <i> cheval blanc d'Henri IV?
++ Quelle est la couleur <b> du <i> <s> cheval blanc d'Henri IV?";
+        $format = 'text';
+        $field  = new MockTracker_FormElement_Field_Date();
+        $field->setReturnValue('getLabel', 'Summary');
+        
+        $changeset = new Tracker_Artifact_Changeset(null, null, null, null, null);
+        $result    = $changeset->displayDiff($diff, $format, $field);
+        $this->assertPattern('%Quelle est la couleur <b> du <i> <s> cheval blanc%', $result);
+        $this->assertPattern('%Summary%', $result);
+
+    }
 }
 ?>

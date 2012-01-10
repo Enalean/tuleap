@@ -193,7 +193,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value) {
+    public function diff($changeset_value, $format = 'html') {
         if ($this->files !== $changeset_value->getFiles()) {
             $result = '';
             $removed = array();

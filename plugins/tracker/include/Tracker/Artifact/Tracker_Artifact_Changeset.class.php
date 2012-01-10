@@ -414,7 +414,7 @@ class Tracker_Artifact_Changeset {
             break;
             default://text
                 $result .= ' * '.$field->getLabel().' : '.PHP_EOL;
-                $result .= strip_tags($diff).PHP_EOL;
+                $result .= $diff . PHP_EOL;
             break;
         }
         return $result;
