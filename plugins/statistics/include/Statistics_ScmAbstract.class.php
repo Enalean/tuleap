@@ -108,9 +108,6 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
                 if ($row = $commitsDar->getRow()) {
                     $result['project'][] = $row['project'];
                     $result['commits'][] = $row['count'];
-                } else {
-                    $result['project'][] = '';
-                    $result['commits'][] = 0;
                 }
                 $rank ++;
             }
@@ -133,9 +130,6 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
                 if ($row = $commitsDar->getRow()) {
                     $result['user'][]    = $row['user'];
                     $result['commits'][] = $row['count'];
-                } else {
-                    $result['user'][]    = '';
-                    $result['commits'][] = 0;
                 }
                 $rank ++;
             }
