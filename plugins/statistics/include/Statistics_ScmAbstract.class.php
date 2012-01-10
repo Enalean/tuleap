@@ -99,19 +99,18 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
      * @return Array
      */
     function topCommitByProject() {
-        $rank = 1;
-        while ($rank <= 10) {
-            $result[$rank][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_project')." #".$rank;
-            $rank ++;
-        }
+        $result['project'][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_project');
+        $result['commits'][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_project_commits');
         $commitsDar = $this->dao->commitsByProject($this->startDate, $this->endDate);
         if ($commitsDar && !$commitsDar->isError()) {
             $rank = 1;
             while ($rank <= 10) {
                 if ($row = $commitsDar->getRow()) {
-                    $result[$rank][] = $row['project'];
+                    $result['project'][] = $row['project'];
+                    $result['commits'][] = $row['count'];
                 } else {
-                    $result[$rank][] = '';
+                    $result['project'][] = '';
+                    $result['commits'][] = 0;
                 }
                 $rank ++;
             }
@@ -125,19 +124,18 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
      * @return Array
      */
     function topCommitByUser() {
-        $rank = 1;
-        while ($rank <= 10) {
-            $result[$rank][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_user')." #".$rank;
-            $rank ++;
-        }
+        $result['user'][]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_user');
+        $result['commits'][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_user_commits');
         $commitsDar = $this->dao->commitsByUser($this->startDate, $this->endDate);
         if ($commitsDar && !$commitsDar->isError()) {
             $rank = 1;
             while ($rank <= 10) {
                 if ($row = $commitsDar->getRow()) {
-                    $result[$rank][] = $row['user'];
+                    $result['user'][]    = $row['user'];
+                    $result['commits'][] = $row['count'];
                 } else {
-                    $result[$rank][] = '';
+                    $result['user'][]    = '';
+                    $result['commits'][] = 0;
                 }
                 $rank ++;
             }
@@ -200,13 +198,13 @@ abstract class Statistics_ScmAbstract extends Statistics_Scm {
         if (!$this->groupId) {
             $this->addLine($this->repositoriesEvolutionForPeriod());
             $this->addLine($this->repositoriesWithCommit());
-            foreach ($this->topCommitByProject() as $line) {
-                $this->addLine($line);
-            }
+            $projectStats = $this->topCommitByProject();
+            $this->addLine($projectStats['project']);
+            $this->addLine($projectStats['commits']);
         }
-        foreach ($this->topCommitByUser() as $line) {
-            $this->addLine($line);
-        }
+        $userStats = $this->topCommitByUser();
+        $this->addLine($userStats['user']);
+        $this->addLine($userStats['commits']);
 
         return $this->content;
     }

@@ -40,9 +40,11 @@ plugin_statistics	scm_svn_read_project	Total number of projects with SVN read ac
 plugin_statistics	scm_svn_read_user	Total number of users with SVN read access
 plugin_statistics	scm_svn_total_commit	Total number of SVN commits
 plugin_statistics	scm_svn_commit_project	Total number of projects with SVN commits
-plugin_statistics	scm_top_commit_project	Top project (number of commits)
+plugin_statistics	scm_top_commit_project	Top projects
+plugin_statistics	scm_top_commit_project_commits	Top projects (number of commits)
 plugin_statistics	scm_svn_commit_user	Total number of users with SVN commits
-plugin_statistics	scm_top_commit_user	Top user (number of commits)
+plugin_statistics	scm_top_commit_user	Top users
+plugin_statistics	scm_top_commit_user_commits	Top users (number of commits)
 plugin_statistics	scm_cvs_total_read	Total number of CVS read access
 plugin_statistics	scm_cvs_read_project	Total number of projects with CVS read access
 plugin_statistics	scm_cvs_read_user	Total number of users with CVS read access

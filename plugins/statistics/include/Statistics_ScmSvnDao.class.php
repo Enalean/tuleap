@@ -94,13 +94,13 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function readByProject($startDate, $endDate) {
-        $sql = "SELECT unix_group_name AS project, SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse)
+        $sql = "SELECT unix_group_name AS project, SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse) AS count
                 FROM group_svn_full_history
                 JOIN groups g USING (group_id)
                 WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
                   AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                 GROUP BY project
-                ORDER BY SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse) DESC";
+                ORDER BY count DESC";
 
         return $this->retrieve($sql);
     }
@@ -134,14 +134,14 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function readByUser($startDate, $endDate) {
-        $sql = "SELECT user_name AS user, SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse)
+        $sql = "SELECT user_name AS user, SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse) AS count
                 FROM group_svn_full_history
                 JOIN user u USING (user_id)
                 WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
                   AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                   ".$this->condition."
                 GROUP BY user
-                ORDER BY SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse) DESC";
+                ORDER BY count DESC";
 
         return $this->retrieve($sql);
     }
