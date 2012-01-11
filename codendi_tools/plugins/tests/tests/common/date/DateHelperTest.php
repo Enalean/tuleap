@@ -127,8 +127,8 @@ class DateHelperTest extends UnitTestCase {
     private function formatDate($dayOnly, $format) {
         $lang = new MockBaseLanguage();
         $lang->setReturnValue('getText', $format);
-        $firstOfDecember20118_10_19 = 1322752769;
-        return DateHelper::formatForLanguage($lang, $firstOfDecember20118_10_19, $dayOnly);
+        $firstOfDecember2011_12_01 = 1322752769;
+        return DateHelper::formatForLanguage($lang, $firstOfDecember2011_12_01, $dayOnly);
     }
 
     
