@@ -385,7 +385,7 @@ class Tracker_Artifact_Changeset {
                             } else {
                                 //Case : field added later (ie : artifact already exists) => no value
                                 if ($diff = $current_changeset_value->nodiff()) {
-                                    $result .= $this->displayDiff($diff, $format, $field).PHP_EOL;
+                                    $result .= $this->displayDiff($diff, $format, $field);
                                 }
                             }
                         }
@@ -661,7 +661,9 @@ class Tracker_Artifact_Changeset {
     public function getBodyHtml($is_update, $recipient_user, BaseLanguage $language, $ignore_perms) {
         $format = 'html';
         $art = $this->getArtifact();
-        $output ='<h1>'.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).'</h1>'.PHP_EOL;
+        $hp = Codendi_HTMLPurifier::instance();
+        
+        $output ='<h1>'.$hp->purify($art->fetchMailTitle($recipient_user, $format, $ignore_perms)).'</h1>'.PHP_EOL;
         $followup = '';
         // Display latest changes (diff)
         if ($comment = $this->getComment()) {
