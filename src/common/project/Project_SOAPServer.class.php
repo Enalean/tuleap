@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2011. All Rights Reserved.
  *
@@ -21,6 +20,9 @@ require_once 'ProjectManager.class.php';
 require_once 'ProjectCreator.class.php';
 require_once 'www/include/account.php';
 
+/**
+ * Wrapper for project related SOAP methods
+ */
 class Project_SOAPServer {
 
     /**
@@ -48,7 +50,6 @@ class Project_SOAPServer {
      * Create a new project
      *
      * This method throw an exception if there is a conflict on names or if there is an error during the creation process.
-     * TODO: list error fault code
      * 
      * You can select:
      * * The privacy of the project 'private' or 'public'
@@ -92,6 +93,14 @@ class Project_SOAPServer {
         }
     }
     
+    /**
+     * Return a project the user is authorized to use as template
+     * 
+     * @param Integer $id
+     * @param User    $requester
+     * 
+     * @return Project
+     */
     private function getTemplateById($id, User $requester) {
         $project = $this->projectManager->getProject($id);
         if ($project && !$project->isError()) {
@@ -117,6 +126,16 @@ class Project_SOAPServer {
         throw new SoapFault('3200', 'Only site admin is allowed to create project on behalf of users');
     }
 
+    /**
+     * Create the data array needed by create_project and create the project
+     * 
+     * @param String $shortName
+     * @param String $publicName
+     * @param String $privacy
+     * @param Project $template
+     * 
+     * @return Boolean
+     */
     private function formatDataAndCreateProject($shortName, $publicName, $privacy, Project $template) {
         $data = array(
             'project' => array(
@@ -184,6 +203,14 @@ class Project_SOAPServer {
         return $this->feedbackToSoapFault($result);
     }
 
+    /**
+     * Return a user member of project
+     * 
+     * @param Project $project
+     * @param String  $userLogin
+     * 
+     * @return User
+     */
     private function getProjectMember(Project $project, $userLogin) {
         $user = $this->userManager->getUserByUserName($userLogin);
         if (!$user) {
@@ -195,6 +222,14 @@ class Project_SOAPServer {
         throw new SoapFault('3203', "User not member of project");
     }
     
+    /**
+     * Return a Project is the given user is authorized to administrate it
+     * 
+     * @param Integer $groupId
+     * @param String  $sessionKey
+     * 
+     * @return Project
+     */
     private function getProjectIfUserIsAdmin($groupId, $sessionKey) {
         $requester = $this->continueSession($sessionKey);
         $project   = $this->projectManager->getProject($groupId);
