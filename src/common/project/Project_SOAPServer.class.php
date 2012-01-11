@@ -137,7 +137,7 @@ class Project_SOAPServer {
      * @param String $privacy
      * @param Project $template
      * 
-     * @return Boolean
+     * @return Integer
      */
     private function formatDataAndCreateProject($shortName, $publicName, $privacy, Project $template) {
         $data = array(

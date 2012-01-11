@@ -85,8 +85,8 @@ class Project_SOAPServerTest extends UnitTestCase {
         $privacy         = 'public';
         $templateId      = 100;
         
-        $project = $server->addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId);
-        $this->assertIsA($project, 'Project');
+        $projectId = $server->addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId);
+        $this->assertEqual($projectId, 3459);
     }
     
     /**
@@ -106,9 +106,10 @@ class Project_SOAPServerTest extends UnitTestCase {
         $template->setReturnValue('isTemplate', true);
         $this->pm->setReturnValue('getProject', $template, array(100));
         
-        $project = new MockProject();
-        $this->pc->setReturnValue('create', $project, array('toto', 'Mon Toto', '*'));
-        $this->pm->setReturnValue('activate', $project, array($project));
+        $new_project = new MockProject();
+        $new_project->setReturnValue('getID', 3459);
+        $this->pc->setReturnValue('create', $new_project, array('toto', 'Mon Toto', '*'));
+        $this->pm->setReturnValue('activate', $new_project, true);
         
         return $server;
     }
