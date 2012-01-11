@@ -192,7 +192,14 @@ class ProjectManager {
         return $p;
     }
 
-    public function activate($project) {
+    /**
+     * Make project available
+     * 
+     * @param Project $project
+     * 
+     * @return Boolean
+     */
+    public function activate(Project $project) {
         $dao = $this->_getDao();
         if ($dao->updateStatus($project->getId(), 'A')) {
             include_once 'proj_email.php';
@@ -205,7 +212,7 @@ class ProjectManager {
             if (!send_new_project_email($project->getId())) {
                 $GLOBALS['Response']->addFeedback('warning', $project->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
             }
-            return $project->getId();
+            return true;
         }
         return false;
     }

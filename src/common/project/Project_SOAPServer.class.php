@@ -160,7 +160,8 @@ class Project_SOAPServer {
         }
 
         $project = $this->projectCreator->create($shortName, $publicName, $data);
-        return $this->projectManager->activate($project);
+        $this->projectManager->activate($project);
+        return $project->getID();
     }
 
     /**
