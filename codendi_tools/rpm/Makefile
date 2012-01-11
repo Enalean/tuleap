@@ -33,7 +33,6 @@ PLUGIN_REQUESTHELP_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/requesthelp/VE
 PLUGIN_TRACKER_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/tracker/VERSION)
 PLUGIN_GRAPHONTRACKERS_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/graphontrackersv5/VERSION)
 PLUGIN_CARDWALL_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/cardwall/VERSION)
-PLUGIN_SOAPPROJECT_VERSION=$(shell LANG=C cat $(BASE_DIR)/plugins/soapproject/VERSION)
 
 THEME_CODEX_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodeX/VERSION)
 THEME_CODEXTAB_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodeXTab/VERSION)
@@ -102,7 +101,6 @@ $(RPM_TMP)/RPMS/noarch/codendi_st-$(version)-1.noarch.rpm: codendi.spec
 		sed -e 's/@@PLUGIN_TRACKER_VERSION@@/$(PLUGIN_TRACKER_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_GRAPHONTRACKERS_VERSION@@/$(PLUGIN_GRAPHONTRACKERS_VERSION)/g' |\
 		sed -e 's/@@PLUGIN_CARDWALL_VERSION@@/$(PLUGIN_CARDWALL_VERSION)/g' |\
-		sed -e 's/@@PLUGIN_SOAPPROJECT_VERSION@@/$(PLUGIN_SOAPPROJECT_VERSION)/g' |\
 		sed -e 's/@@THEME_CODEX_VERSION@@/$(THEME_CODEX_VERSION)/g' |\
 		sed -e 's/@@THEME_CODEXTAB_VERSION@@/$(THEME_CODEXTAB_VERSION)/g' |\
 		sed -e 's/@@THEME_DAWN_VERSION@@/$(THEME_DAWN_VERSION)/g' |\

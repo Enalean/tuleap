@@ -345,15 +345,6 @@ Requires: %{PKG_NAME}-plugin-tracker
 %description plugin-cardwall
 Fancy cardwall output on top of Tracker v5
 
-%package plugin-soapproject
-Summary: Project creation automation through SOAP
-Group: Development/Tools
-Version: @@PLUGIN_SOAPPROJECT_VERSION@@
-Release: 1%{?dist}
-Requires: @@PKG_NAME@@ >= @@VERSION@@
-%description plugin-soapproject
-Project creation automation through SOAP
-
 #
 ## Themes
 #
@@ -899,10 +890,6 @@ fi
 %files plugin-cardwall
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/cardwall
-
-%files plugin-soapproject
-%defattr(-,%{APP_USER},%{APP_USER},-)
-%{APP_DIR}/plugins/soapproject
 
 #
 # Themes
