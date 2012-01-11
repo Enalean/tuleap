@@ -21,6 +21,11 @@ require_once 'Project_InvalidShortName_Exception.class.php';
 require_once 'Project_InvalidFullName_Exception.class.php';
 require_once 'Project_Creation_Exception.class.php';
 
+/**
+ * Manage creation of a new project in the forge.
+ * 
+ * For now, mainly a wrapper for create_project method
+ */
 class ProjectCreator {
     /**
      * @var ProjectManager 
@@ -44,7 +49,8 @@ class ProjectCreator {
     }
 
     /**
-     *
+     * Create a new project
+     * 
      * $data['project']['form_unix_name']
      * $data['project']['form_full_name']
      * $data['project']['form_license']
@@ -58,10 +64,11 @@ class ProjectCreator {
      * $data['project']['services'][$arr['service_id']]['is_used'];
      * $data['project']['services'][$arr['service_id']]['server_id'];
      * 
-     * @param type $shortName
-     * @param type $publicName
-     * @param type $data
-     * @return type 
+     * @param String $shortName
+     * @param String $publicName
+     * @param Array $data
+     * 
+     * @return Project
      */
     public function create($shortName, $publicName, $data) {
         if (!$this->ruleShortName->isValid($shortName)) {
@@ -69,7 +76,6 @@ class ProjectCreator {
         }
         $data['project']['form_unix_name'] = $shortName;
 
-        //@TODO: add long name already exists check
         if (!$this->ruleFullName->isValid($publicName)) {
             throw new Project_InvalidFullName_Exception($this->ruleFullName->getErrorMessage());
         }
