@@ -113,7 +113,8 @@ class Project_SOAPServer {
     }
     
     /**
-     *
+     * Ensure the given session key belong to an authenticated site admin
+     * 
      * @param String  $adminSessionKey Session key of a site admin
      * 
      * @return User
