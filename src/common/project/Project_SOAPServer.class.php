@@ -24,6 +24,8 @@ require_once 'www/include/account.php';
  * Wrapper for project related SOAP methods
  */
 class Project_SOAPServer {
+    const PRIVACY_PUBLIC  = 'public';
+    const PRIVACY_PRIVATE = 'private';
 
     /**
      * @var ProjectManager
@@ -150,7 +152,7 @@ class Project_SOAPServer {
             )
         );
 
-        if ($privacy === 'public') {
+        if ($privacy === self::PRIVACY_PUBLIC) {
             $data['project']['is_public'] = true;
         }
 
