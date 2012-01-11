@@ -45,6 +45,8 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends UnitTestCase {
         parent::__construct($name);
         $this->field_class          = 'MockTracker_FormElement_Field_ArtifactLink';
         $this->changesetvalue_class = 'Tracker_Artifact_ChangesetValue_ArtifactLink';
+    }
+    function setUp() {
         $this->artlink_info_123 = new MockTracker_ArtifactLinkInfo();
         $this->artlink_info_123->setReturnValue('getArtifactId', '123');
         $this->artlink_info_123->setReturnValue('getKeyword', 'bug');
@@ -69,6 +71,13 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends UnitTestCase {
         $this->artlink_info_999->setReturnValue('getUrl', '<a>story #999</a>'); // for test
         $this->artlink_info_999->setReturnValue('__toString', 'story #999'); // for test
         $this->artlink_info_999->setReturnValue('getLabel', 'story #999');
+    }
+    
+    function tearDown() {
+        unset($this->artlink_info_123);
+        unset($this->artlink_info_321);
+        unset($this->artlink_info_666);
+        unset($this->artlink_info_999);
     }
     
     function testNoDiff() {
