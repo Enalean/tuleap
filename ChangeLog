@@ -7,6 +7,7 @@ Version 4.0.26 (Not released yet)
     * Tracker v0.8.8. See separated Changelog
     * GraphOnTrackersV5 v0.6.2. See separated Changelog
     * Cardwall v0.2. See separated Changelog
+    * Docman v2.21. See separated Changelog
 
     == Tuleap Development ==
     * Allow randomization of execution of unit tests (to be sure that there is no inter dependencies)

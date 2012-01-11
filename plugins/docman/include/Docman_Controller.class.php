@@ -37,6 +37,7 @@ require_once('Docman_NotificationsManager.class.php');
 require_once('Docman_NotificationsManager_Add.class.php');
 require_once('Docman_NotificationsManager_Delete.class.php');
 require_once('Docman_NotificationsManager_Move.class.php');
+require_once('Docman_NotificationsManager_Subscribers.class.php');
 
 require_once('Docman_Log.class.php');
 require_once('common/event/EventManager.class.php');
@@ -115,6 +116,8 @@ class Docman_Controller extends Controler {
         $this->notificationsManager_Move =& new Docman_NotificationsManager_Move($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
         $event_manager->addListener('plugin_docman_event_move', $this->notificationsManager_Move, 'somethingHappen', true, 0);
         $event_manager->addListener('send_notifications',     $this->notificationsManager_Move, 'sendNotifications', true, 0);
+        $this->notificationsManager_Subscribers = new Docman_NotificationsManager_Subscribers($this->getGroupId(), get_server_url().$this->getDefaultUrl(), $this->feedback);
+        $event_manager->addListener('plugin_docman_event_subcribers', $this->notificationsManager_Subscribers, 'somethingHappen', true, 0);
     }
 
     /**
@@ -851,16 +854,62 @@ class Docman_Controller extends Controler {
             break;
         case 'remove_monitoring':
             $this->_actionParams['listeners_to_delete'] = array();
-            if ($this->request->exist('listeners_to_delete')) {
-                $vUserId = new Valid_UInt('listeners_to_delete');
-                if($this->request->validArray($vUserId)) {
-                    $this->_actionParams['listeners_to_delete'] = $this->request->get('listeners_to_delete');
-                    $this->_actionParams['item']                = $item;
+            if ($this->userCanManage($item->getId())) {
+                if ($this->request->exist('listeners_to_delete')) {
+                    $um      = UserManager::instance();
+                    $vUserId = new Valid_UInt('listeners_to_delete');
+                    if($this->request->validArray($vUserId)) {
+                        $userIds = $this->request->get('listeners_to_delete');
+                        $users   = array();
+                        foreach ($userIds as $userId) {
+                            $users[] = $um->getUserById($userId);
+                        }
+                        $this->_actionParams['listeners_to_delete'] = $users;
+                        $this->_actionParams['item']                = $item;
+                    }
                 }
+                $this->action = 'remove_monitoring';
+                $this->_setView('Details');
+            } else {
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
+                $this->_setView('Details');
             }
-            $this->action = 'remove_monitoring';
-            $this->_setView('Details');
             break;
+
+        case 'add_monitoring':
+            $this->_actionParams['listeners_to_add'] = array();
+            $this->_actionParams['invalid_users']    = false;
+            if ($this->userCanManage($item->getId())) {
+                if ($this->request->exist('listeners_to_add')) {
+                    $um    = UserManager::instance();
+                    $vUser = new Valid_Text('listeners_to_add');
+                    if($this->request->valid($vUser)) {
+                        $usernames = array_map('trim', preg_split('/[,;]/', $this->request->get('listeners_to_add')));
+                        $users     = array();
+                        $vUserName = new Valid_String();
+                        $vUserName->required();
+                        foreach ($usernames as $username) {
+                            if ($vUserName->validate($username) && $user = $um->findUser($username)) {
+                                $users[] =$user;
+                            } else {
+                                $this->_actionParams['invalid_users'] = true;
+                            }
+                        }
+                        if ($this->request->exist('monitor_cascade')) {
+                            $this->_actionParams['monitor_cascade'] = $this->request->get('monitor_cascade');
+                        }
+                        $this->_actionParams['listeners_to_add'] = $users;
+                        $this->_actionParams['item']             = $item;
+                    }
+                }
+                $this->action = 'add_monitoring';
+                $this->_setView('Details');
+            } else {
+                $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
+                $this->_setView('Details');
+            }
+            break;
+
         case 'move_here':
             if (!$this->request->exist('item_to_move')) {
                 $this->feedback->log('error', 'Missing parameter.');
