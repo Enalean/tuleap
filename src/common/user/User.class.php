@@ -487,12 +487,8 @@ class User {
         if ($this->isRestricted()) {
             $myGroupData   = $this->getUserGroupData();
             $userGroupData = $user->getUserGroupData();
-            foreach ($myGroupData as $group => $perms) {
-                if (isset($userGroupData[$group])) {
-                    return true;
-                }
-            }
-            return false;
+            $commonGroups  = array_intersect_key($myGroupData, $userGroupData);
+            return count($commonGroups) > 0;
         } else {
             return true;
         }
