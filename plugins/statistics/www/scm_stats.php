@@ -103,7 +103,7 @@ if (!$error && $request->exist('export')) {
     list($timestamp,) = util_date_to_unixtime($endDate);
     echo html_field_date('end', $endDate, false, 10, 10, 'form_scm_stats', false);
     echo '</td><td>';
-    echo '<input name="group_id" >';
+    echo '<input id="scm_stats_group_id" name="group_id" >';
     echo '</td><td></tr><tr><td>';
     echo '<input type="submit" name="export" value="'.$GLOBALS['Language']->getText('plugin_statistics', 'scm_export_button').'" >';
     echo '</td>';
@@ -113,6 +113,9 @@ if (!$error && $request->exist('export')) {
     echo '</table>';
     echo '</form>';
 
+    $script = "new ProjectAutoCompleter('scm_stats_group_id', '".util_get_dir_image_theme()."', false);";
+
+    $GLOBALS['Response']->includeFooterJavascriptSnippet($script);
     $GLOBALS['HTML']->footer(array());
 }
 
