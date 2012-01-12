@@ -425,7 +425,7 @@ class GitDao extends DataAccessObject {
     }
 
     /**
-     * Return Git backend statistics
+     * Count number of repositories grouped by backend type
      *
      * @param String  $startDate
      * @param String  $endDate
