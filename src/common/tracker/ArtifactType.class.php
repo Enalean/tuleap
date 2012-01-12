@@ -1358,7 +1358,7 @@ class ArtifactType extends Error {
 	    //Check: CLOSED  (The bug is closed)
 	    // Rk: this one has precedence over PSS_CHANGE. So notify even if PSS_CHANGE
 	    // says no.
-	    if ($arr_notif[$role]['CLOSED'] && ($changes['status_id']['add'] == 'Closed')) {
+	    if ($arr_notif[$role]['CLOSED'] && (isset($changes['status_id']) && $changes['status_id']['add'] == 'Closed')) {
 			// echo "DBG CLOSED bug notified<br>";
 			return true;
 	    }
@@ -1379,23 +1379,24 @@ class ArtifactType extends Error {
 	    // Rk #2: check this one at the end because it is the most CPU intensive and this
 	    // event seldomly happens
 	    if ($arr_notif['SUBMITTER']['ROLE_CHANGE'] &&
-		(($changes['submitted_by']['add'] == $user_name) || ($changes['submitted_by']['del'] == $user_name)) &&
+		isset($changes['submitted_by']) && (($changes['submitted_by']['add'] == $user_name) || ($changes['submitted_by']['del'] == $user_name)) &&
 		($role == 'SUBMITTER') ) {
 			// echo "DBG ROLE_CHANGE for submitter notified<br>";
 			return true;
 	    }
 	
 	    if ($arr_notif['ASSIGNEE']['ROLE_CHANGE'] &&
-		(($changes['assigned_to']['add'] == $user_name) || ($changes['assigned_to']['del'] == $user_name)) &&
+		isset($changes['assigned_to']) && (($changes['assigned_to']['add'] == $user_name) || ($changes['assigned_to']['del'] == $user_name)) &&
 		($role == 'ASSIGNEE') ) {
 			// echo "DBG ROLE_CHANGE for role assignee notified<br>";
 			return true;
 	    }
 	
 	    $arr_cc_changes = array();
-	    if (isset($changes['CC']['add']))
+	    if (isset($changes['CC']['add'])) {
 			$arr_cc_changes = split('[,;]',$changes['CC']['add']);
-	    $arr_cc_changes[] = $changes['CC']['del'];
+		}
+	    $arr_cc_changes[] = isset($changes['CC']['del']) ? $changes['CC']['del'] : null;
 	    $is_user_in_cc_changes = in_array($user_name,$arr_cc_changes);    
 	    $are_anyother_user_in_cc_changes =
 		(!$is_user_in_cc_changes || count($arr_cc_changes)>1);    

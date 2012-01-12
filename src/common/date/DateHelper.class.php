@@ -88,5 +88,23 @@ class DateHelper {
             return $GLOBALS['Language']->getText('include_utils', 'over_X_years', round($distance_in_minutes / 525960));
         }
     }
+    
+    /**
+     * Get the date in the user's expected format (depends on its locale)
+     *
+     * @param BaseLanguage $lang The user's language
+     * @param int          $date The timestamp to transform
+     * @param bool         $day_only True if display only the date, false if you want the time also
+     *
+     * @return string
+     */
+    public static function formatForLanguage(BaseLanguage $lang, $date, $day_only = false) {
+        if ($day_only) {
+            $user_date = format_date($lang->getText('system', 'datefmt_short'), $date, null);
+        } else {
+            $user_date = format_date($lang->getText('system', 'datefmt'), $date, null);
+        }
+        return $user_date;
+    }
 }
 ?>

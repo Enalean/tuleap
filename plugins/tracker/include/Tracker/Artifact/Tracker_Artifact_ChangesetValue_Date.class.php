@@ -99,7 +99,7 @@ class Tracker_Artifact_ChangesetValue_Date extends Tracker_Artifact_ChangesetVal
      *
      * @return string The difference between another $changeset_value, false if no differneces
      */
-    public function diff($changeset_value) {
+    public function diff($changeset_value, $format = 'html') {
         $next_date     = $this->getDate();
         if ($changeset_value->getTimestamp() != 0) {
             $previous_date = $changeset_value->getDate();

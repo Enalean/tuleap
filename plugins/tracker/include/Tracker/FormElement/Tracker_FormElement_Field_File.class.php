@@ -176,7 +176,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     }
         
     /**
-     * Fetch the html code to display the field value in artifact
+     * Fetch the html code to display the field value in Mail
      *
      * @param Tracker_Artifact                $artifact         The artifact
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
@@ -189,15 +189,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             return '';
         }
         $output = '';
-        switch($format) {
-            case 'html':
-                break;
-            default:
-                $output = PHP_EOL;
-                $output .= $this->fetchMailAllAttachment($artifact->id, $value, $format);
-                break;
-        }       
-        return $output;
+        return $this->fetchMailAllAttachment($artifact->id, $value, $format);
     }
 
     /**
@@ -347,32 +339,76 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return $txt;
     }
 
-    protected function fetchMailAllAttachment($artifact_id, $values, $format='text') {
+    /**
+     * Fetch all attachements for Mail output
+     *
+     * @param Integer $artifact_id The artifact Id
+     * @param Array            $values     The actual value of the field
+     * @param String            $format       The mail format
+     *
+     * @return String
+     */
+    protected function fetchMailAllAttachment($artifact_id, $values, $format) {
         $output = '';
-        if ( !count($values) ) {
+        if (!count($values) ) {
             return '';
         }
-        foreach ($values as $fileinfo) {
-            $query_link = http_build_query(
-                    array(
+
+        $uh = UserHelper::instance();
+
+        $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
+        $url = $proto .'://'. $GLOBALS['sys_default_domain'];
+
+        if ($format == 'text') {
+            foreach ($values as $fileinfo) {
+                $query_link = http_build_query(
+                array(
                         'aid'   => $artifact_id,
                         'field' => $this->id,
                         'func'  => 'show-attachment',
                         'attachment' => $fileinfo->getId()
-                    )
+                )
                 );
-            $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
-            $link = '<'. $proto .'://'. $GLOBALS['sys_default_domain'] .'/tracker?'.$query_link.'>';
-            $output .= $fileinfo->getDescription();                        
-            $output .= ' | ';
-            $output .= $fileinfo->getFilename();
-            $output .= ' | ';
-            $output .= $fileinfo->getHumanReadableFilesize();
-            $output .= ' | ';
-            $output .= UserHelper::instance()->getDisplayNameFromUserId( $fileinfo->getSubmittedBy() );
-            $output .= PHP_EOL;
-            $output .= $link;
-            $output .= PHP_EOL;
+
+                $link = '<'.$url.'/tracker?'.$query_link.'>';
+                $output .= $fileinfo->getDescription();
+                $output .= ' | ';
+                $output .= $fileinfo->getFilename();
+                $output .= ' | ';
+                $output .= $fileinfo->getHumanReadableFilesize();
+                $output .= ' | ';
+                $output .= $uh->getDisplayNameFromUserId( $fileinfo->getSubmittedBy() );
+                $output .= PHP_EOL;
+                $output .= $link;
+                $output .= PHP_EOL;
+            }
+        } else {
+            $hp = Codendi_HTMLPurifier::instance();
+            $added = array();
+            foreach ($values as $fileinfo) {
+                $query_link = http_build_query(
+                array(
+                        'aid'   => $artifact_id,
+                        'field' => $this->id,
+                        'func'  => 'show-attachment',
+                        'attachment' => $fileinfo->getId()
+                )
+                );
+                $sanitized_description = $hp->purify($fileinfo->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
+                $link_show = '<a href="'.$url.TRACKER_BASE_URL.'/?'. $query_link .'"
+                                 title="'. $sanitized_description .'">';
+
+                $info = $link_show . $hp->purify($fileinfo->getFilename(), CODENDI_PURIFIER_CONVERT_HTML) .'</a>';
+                $info .= ' ('. $fileinfo->getHumanReadableFilesize() .')';
+
+                $add = '<div class="tracker_artifact_attachment">';
+                $add .= '<table><tr><td>';
+                $add .= $info;
+                $add .= '</td></tr></table>';
+                $add .= '</div>';
+                $added[] = $add;
+            }
+            $output .= implode('', $added);
         }
         return $output;
     }

@@ -17,6 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+ if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/plugins/tracker');
+}
+ 
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
 Mock::generatePartial(
     'Tracker_Artifact_Changeset', 
@@ -54,7 +59,23 @@ Mock::generate('Tracker');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
+require_once('common/language/BaseLanguage.class.php');
+Mock::generate('BaseLanguage');
+
+Mock::generate('UserHelper');
+Mock::generate('User');
+Mock::generate('BaseLanguageFactory');
+
 class Tracker_Artifact_ChangesetTest extends UnitTestCase {
+    
+    function setUp() {
+        $GLOBALS['Language'] = new MockBaseLanguage();
+    }
+    
+    function tearDrop() {
+        unset($GLOBALS['Language']);
+    }
+    
     function _testGetValue() {
         $field = new MockTracker_FormElement_Field_Date();
         $value = new MockTracker_Artifact_ChangesetValue_Date();
@@ -290,6 +311,65 @@ BODY;
         $changeset->expectNever('sendNotification');
         $changeset->notify();
     }
+    
+    function testChangesetShouldUseUserLanguageInGetBody() {
+        $user = new MockUser();
+        $userLanguage = new MockBaseLanguage();
+        $GLOBALS['Language']->expectNever('getText');
+        $userLanguage->expectAtLeastOnce('getText');
+        $changeset = $this->buildChangeSet($user);
+        $changeset->getBodyText(false, $user, $userLanguage, false);
+    }
+    
+    function testChangesetShouldUseUserLanguageInBuildMessage() {
+        $GLOBALS['Language']->expectNever('getText');
+        $userLanguage = new MockBaseLanguage();
+        $userLanguage->expectAtLeastOnce('getText');
+        
+        $user = new MockUser();
+        $user->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
+        $user->setReturnValue('getLanguage', $userLanguage);
+        
+        $changeset = $this->buildChangeSet($user);
+        
+        $messages = array();
+        $changeset->buildMessage($messages, true, $user, false);
+    }
+    
+    private function buildChangeSet($user) {
+        $uh = new MockUserHelper();
+        
+        $tracker = new MockTracker();
+        
+        $a = new MockTracker_Artifact();
+        $a->setReturnValue('getTracker', $tracker);
+        
+        $um = new MockUserManager();
+        $um->setReturnValue('getUserById', $user);
+        
+        $languageFactory = new MockBaseLanguageFactory();
+        
+        $changeset = TestHelper::getPartialMock('Tracker_Artifact_Changeset', array('getUserHelper', 'getUserManager', 'getArtifact', 'getComment', 'getLanguageFactory'));
+        $changeset->setReturnValue('getUserHelper', $uh);
+        $changeset->setReturnValue('getUserManager', $um);
+        $changeset->setReturnValue('getArtifact', $a);
+        $changeset->setReturnValue('getLanguageFactory', $languageFactory);
+        return $changeset;
+    }
+    
+    public function testDisplayDiffShouldNotStripHtmlTagsInPlainTextFormat() {
+        $diff   = "@@ -1 +1 @@
+- Quelle est la couleur <b> du <i> cheval blanc d'Henri IV?
++ Quelle est la couleur <b> du <i> <s> cheval blanc d'Henri IV?";
+        $format = 'text';
+        $field  = new MockTracker_FormElement_Field_Date();
+        $field->setReturnValue('getLabel', 'Summary');
+        
+        $changeset = new Tracker_Artifact_Changeset(null, null, null, null, null);
+        $result    = $changeset->displayDiff($diff, $format, $field);
+        $this->assertPattern('%Quelle est la couleur <b> du <i> <s> cheval blanc%', $result);
+        $this->assertPattern('%Summary%', $result);
 
+    }
 }
 ?>

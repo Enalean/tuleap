@@ -390,6 +390,37 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         
         $this->assertEqual($date->getDefaultValue(), '');
     }
+    
+    function testFieldDateShouldSendEmptyMailValueWhenValueIsEmpty() {
+        $artifact = new MockTracker_Artifact();
+        $date = new Tracker_FormElement_Field_DateTestVersion();
+        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, null, null));
+    }
+    
+    function testFieldDateShouldSendAMailWithAReadableDate() {
+        $artifact = new MockTracker_Artifact();
+        
+        $date = new Tracker_FormElement_Field_DateTestVersion();
+        $date->setReturnValue('formatDate', '2011-12-01', array(1322752769));
+        
+        $value = new MockTracker_Artifact_ChangesetValue_Date();
+        $value->setReturnValue('getTimestamp', 1322752769);
+        
+        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $value, 'text'));
+        $this->assertEqual('2011-12-01', $date->fetchMailArtifactValue($artifact, $value, 'html'));
+    }
+    
+    function testFieldDateShouldSendEmptyMailWhenThereIsNoDateDefined() {
+        $artifact = new MockTracker_Artifact();
+        
+        $date = new Tracker_FormElement_Field_DateTestVersion();
+        
+        $value = new MockTracker_Artifact_ChangesetValue_Date();
+        $value->setReturnValue('getTimestamp', 0);
+        
+        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, $value, 'text'));
+        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, $value, 'html'));
+    }
 }
 
 ?>

@@ -80,6 +80,10 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
         $field = new MockTracker_FormElement_Field_Float();
         $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $field, false, 987.321);
         $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $field, false, 987);
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+        $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('plugin_tracker_artifact','changed_from'));
+        $GLOBALS['Language']->setReturnValue('getText', 'to', array('plugin_tracker_artifact','to'));
+        
         $this->assertEqual($float_1->diff($float_2), 'changed from 987.0000 to 987.3210');
         $this->assertEqual($float_2->diff($float_1), 'changed from 987.3210 to 987.0000');
         

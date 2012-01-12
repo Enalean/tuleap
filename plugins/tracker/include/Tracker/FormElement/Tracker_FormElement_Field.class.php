@@ -313,7 +313,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         $html = '';
         if ($this->userCanRead()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'" '. ($this->takesTwoColumns() ? 'colspan="3"' : '') .'>';
+            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $value = $artifact->getLastChangeset()->getValue($this);
@@ -336,15 +336,25 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
      * @param Tracker_Artifact $artifact
      * @return <type>
      */
-    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {       
-        $output = '';        
+    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
+        $output = '';
         if ( $ignore_perms || $this->userCanRead($recipient) ) {
-            $output .= ' * ';
-            $output .= $this->getLabel();
-            $output .= ' : ';
             $value = $artifact->getLastChangeset()->getValue($this);
-            $output .= $this->fetchMailArtifactValue($artifact, $value, $format);            
-        }        
+
+            if ($format =='text') {
+                $output .= ' * ';
+                $output .= $this->getLabel();
+                $output .= ' : ';
+                $output .= $this->fetchMailArtifactValue($artifact, $value, $format);
+            } else {
+                $hp = Codendi_HTMLPurifier::instance();
+                $output .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
+                $output .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . '</label>';
+                $output .= '<br />';
+                $output .= $this->fetchMailArtifactValue($artifact, $value, $format);
+                $output .= '</div>';
+            }
+        }
         return $output;
     }
 
@@ -360,7 +370,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         $html = '';
         if ($this->userCanSubmit()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'" '. ($this->takesTwoColumns() ? 'colspan="3"' : '') .'>';
+            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
             
             $html .= '<br />';
@@ -381,7 +391,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         $html = '';
         if ($this->userCanSubmit()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'" '. ($this->takesTwoColumns() ? 'colspan="3"' : '') .'>';
+            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $html .= '<br />';

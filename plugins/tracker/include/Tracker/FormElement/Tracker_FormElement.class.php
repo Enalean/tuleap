@@ -263,7 +263,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
             $text .= PHP_EOL;
         }
         return $text;
-    }  
+    }
 
     /**
      * Duplicate a field. If the field has custom properties, 
@@ -830,13 +830,23 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
         return '';
     }
+    
+    /**
+     * Prepare the element to be displayed
+     *
+     * @return void
+     */
+    public function prepareForDisplay() {
+        //do nothing per default
+    }
 
     /**
-     * Returns the value that will be displaye in a mail
+     * Returns the value that will be displayed in a mail
      * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue $value
-     * @param <type> $format
-     * @return <type> 
+     * @param String $format
+     * 
+     * @return String 
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         return '';

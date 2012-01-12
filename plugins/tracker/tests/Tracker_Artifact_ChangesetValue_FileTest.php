@@ -58,6 +58,9 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
         $field  = new MockTracker_FormElement_Field_File();
         $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array());
         $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array($info));
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+        $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
+        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
         $this->assertEqual($file_1->diff($file_2), 'Screenshot.png removed');
         $this->assertEqual($file_2->diff($file_1), 'Screenshot.png added');
     }
@@ -78,6 +81,9 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
         $field  = new MockTracker_FormElement_Field_File();
         $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array($info1, $info3, $info4));
         $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $field, false, array($info1, $info2));
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+        $GLOBALS['Language']->setReturnValue('getText', 'added', array('plugin_tracker_artifact','added'));
+        $GLOBALS['Language']->setReturnValue('getText', 'removed', array('plugin_tracker_artifact','removed'));
         $this->assertEqual($file_1->diff($file_2), 'Screenshot2.png removed'. PHP_EOL .'Screenshot3.png, Screenshot4.png added');
         $this->assertEqual($file_2->diff($file_1), 'Screenshot3.png, Screenshot4.png removed'. PHP_EOL .'Screenshot2.png added');
     }

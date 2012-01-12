@@ -66,7 +66,7 @@ abstract class Tracker_Artifact_ChangesetValue_Numeric extends Tracker_Artifact_
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function diff($changeset_value) {
+    public function diff($changeset_value, $format = 'html') {
         $previous_numeric = $changeset_value->getValue();
         $next_numeric     = $this->getValue();
         if ($previous_numeric !== $next_numeric) {

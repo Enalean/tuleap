@@ -267,14 +267,21 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      *
      * @return string
      */
-    public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {        
+    public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         $output = '';
+
+        $crf  = new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $crf->fetchDatas();
+
         switch ($format) {
             case 'html':
+                if ($crf->getNbReferences()) {
+                    $output .= $crf->getHTMLDisplayCrossRefs(true, false, false);
+                } else {
+                    $output .= '<div>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') .'</div>';
+                }
                 break;
             default:
-                $crf  = new CrossReferenceFactory($artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId());
-                $crf->fetchDatas();
                 $refs = $crf->getMailCrossRefs('text');
                 $src  = '';
                 $tgt  = '';

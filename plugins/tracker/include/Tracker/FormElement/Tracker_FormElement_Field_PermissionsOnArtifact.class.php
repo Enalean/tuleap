@@ -236,15 +236,14 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         $is_read_only = true;
         $output = '';
-        switch($format) {
-            case 'html':
-                break;
-            default:                               
-                $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
-                $ugroups  = permission_fetch_selected_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId());
-                $output .= "\n".implode(', ',$ugroups);
-                break;
+        $separator = '&nbsp;';
+        if ($format == 'text') {
+            $separator = PHP_EOL;
+            $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
         }
+
+        $ugroups  = permission_fetch_selected_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId());
+        $output .= $separator.implode(', ',$ugroups);
         return $output;
     }
 

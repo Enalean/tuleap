@@ -200,8 +200,6 @@ class UserManager {
      *
      * @param String $email mail address of the user to retrieve
      *
-     * @throws Exception
-     *
      * @return User or null if no user found
      */
     public function getUserByEmail($email) {
@@ -214,6 +212,13 @@ class UserManager {
         }
     }
     
+    public function getAllUsersByEmail($email) {
+        $users = array();
+        foreach ($this->getDao()->searchByEmail($email) as $user) {
+            $users[] = $this->getUserInstanceFromRow($user);
+        }
+        return $users;
+    }
     /**
      * Returns a user that correspond to an identifier
      * The identifier can be prepended with a type.

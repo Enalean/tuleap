@@ -67,21 +67,25 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
      *
      * @return string The difference between another $changeset_value, false if no differences
      */
-    public function diff($changeset_value) {
+    public function diff($changeset_value, $format = 'html') {
         $previous = $changeset_value->getValue();
         $next     = $this->getValue();
         $changes = false;
         if ($previous != $next) {
             $removed_elements = array_diff($previous, $next);
             $removed_arr = array();
+            $method = 'getLabel';
+            if ($format === 'html') {
+                $method = 'getUrl';
+            }
             foreach ($removed_elements as $art_id => $removed_element) {
-                $removed_arr[] = $removed_element->getUrl();
+                $removed_arr[] = $removed_element->$method();
             }
             $removed = implode(', ', $removed_arr);
             $added_elements = array_diff($next, $previous);
             $added_arr = array();
             foreach ($added_elements as $art_id => $added_element) {
-                $added_arr[] = $added_element->getUrl();
+                $added_arr[] = $added_element->$method();
             }
             $added   = implode(', ', $added_arr);
             if (empty($next)) {

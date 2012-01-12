@@ -7,9 +7,9 @@ require_once('common/dao/UserDao.class.php');
 require_once('common/dao/CodendiDataAccess.class.php');
 require_once('Codendi_Mail_Interface.class.php');
 
-class Mail  implements Codendi_Mail_Interface {
+class Mail implements Codendi_Mail_Interface {
     
-    function Mail() {
+    function __construct() {
         $this->setHeaderCharset('UTF-8');
         $this->setBodyCharset('UTF-8');
         $this->setMimeType('text/plain');
@@ -118,7 +118,7 @@ class Mail  implements Codendi_Mail_Interface {
     
     var $_from;
     function setFrom($from) {
-        $this->_from = $this->_validateRecipient($from);
+        $this->_from = $from;
     }
     function getFrom() {
         return $this->_from;
@@ -158,6 +158,12 @@ class Mail  implements Codendi_Mail_Interface {
         return implode(', ', $retArray);
     }
 
+    public function setToUser($to) {
+        foreach ($to as $user) {
+            $this->_to = array($user->getEmail());
+        }
+    }
+    
     var $_to;
     function setTo($to, $raw=false) {
         if($raw)

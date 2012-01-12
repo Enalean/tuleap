@@ -7,7 +7,7 @@
 // 
 
 require_once('pre.php');    
-require_once('common/mail/Codendi_Mail.class.php');
+require_once('common/mail/MailManager.class.php');
 require_once('common/include/HTTPRequest.class.php');
 
 define('FORMAT_TEXT', 0);
@@ -119,7 +119,9 @@ if ($request->valid($valid)) {
     $requestCc = $request->get('cc');
 }
 
-$mail = new Codendi_Mail();
+$mailMgr = new MailManager();
+
+$mail = $mailMgr->getMailByType();
 if (isset($touser)) {
     //Return the user given its user_id
     $to = $um->getUserById($touser);
@@ -149,22 +151,23 @@ $mail->setSubject($subject);
 $vFormat = new Valid_WhiteList('body_format', array(FORMAT_HTML, FORMAT_TEXT));
 $bodyFormat = $request->getValidated('body_format', $vFormat, FORMAT_HTML);
 if ($bodyFormat == FORMAT_HTML) {
+    $hp = Codendi_HTMLPurifier::instance();
+    $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject, CODENDI_PURIFIER_CONVERT_HTML));
     $mail->setBodyHtml($body);
 } else {
     $mail->setBodyText($body);
 }
+$mail->clearFrom();
 $mail->setFrom($email);
-$mail_is_send = $mail->send();
 
-if (!$mail_is_send) {
-    exit_error($GLOBALS['Language']->getText('global', 'error'),
-    $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+if ($mail->send()) {
+    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('sendmessage', 'title_sent', str_replace(',', ', ',$dest)));
+} else {
+    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+    
 }
-site_header(array('title'=>$Language->getText('sendmessage', 'title_sent',array($dest))));
-echo '<H2>'.$Language->getText('sendmessage', 'title_sent',str_replace(',', ', ',$dest)).'</H2>';
-$HTML->footer(array());
+$GLOBALS['Response']->redirect('/users/'.urlencode($to->getUserName()));
 exit;
-
 }
 
 if ($toaddress) {

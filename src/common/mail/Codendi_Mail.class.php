@@ -27,19 +27,31 @@ require_once('Tuleap_Template_Mail.class.php');
  * 
  */
 class Codendi_Mail implements Codendi_Mail_Interface {
+    /**
+     * @const Use the common look and feel
+     *
+     * The common look and feel is the pretty one you can see in trackers v3
+     */
+    const USE_COMMON_LOOK_AND_FEEL = true;
 
+    /**
+     * @const DO NOT use the common look and feel
+     */
+    const DISCARD_COMMON_LOOK_AND_FEEL = false;
+    
     protected $mail;
     protected $userDao;
 
+    /**
+     * @var Tuleap_Template_Mail 
+     */
+    protected $look_and_feel_template;
+    
     /**
      * Constructor
      */
     function __construct() {
         $this->mail = new Zend_Mail('UTF-8');
-        $this->userDao = $this->getUserDao();
-        
-        $tpl = new Tuleap_Template_Mail();
-        $this->setLookAndFeelTemplate($tpl);
     }
 
     /**
@@ -149,6 +161,19 @@ class Codendi_Mail implements Codendi_Mail_Interface {
         $this->mail->setFrom($email, $name);
     }
 
+    /**
+     * Return the sender of the mail
+     *
+     * @return String
+     */
+    function getFrom() {
+        return $this->mail->getFrom();
+    }
+
+    function clearFrom() {
+        $this->mail->clearFrom();
+    }
+    
     function setSubject($subject) {
         $this->mail->setSubject($subject);
     }
@@ -184,7 +209,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function getTo() {
         return $this->_getRecipientsFromHeader('To');
     }
-
+    
     /**
      *
      * @param String  $bcc
@@ -254,24 +279,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
     function getBodyText($textOnly = true) {
         return $this->mail->getBodyText($textOnly);
     }
-
-    /**
-     * @const Use the common look and feel
-     *
-     * The common look and feel is the pretty one you can see in trackers v3
-     */
-    const USE_COMMON_LOOK_AND_FEEL = true;
-
-    /**
-     * @const DO NOT use the common look and feel
-     */
-    const DISCARD_COMMON_LOOK_AND_FEEL = false;
-    
-    /**
-     * @var Tuleap_Template_Mail
-     */
-    protected $look_and_feel_template;
-    
+        
     /**
      * Set hte template to use for look and feel in html mails
      *
@@ -289,6 +297,9 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @return Tuleap_Template_Mail
      */
     public function getLookAndFeelTemplate() {
+        if (!$this->look_and_feel_template) {
+            $this->look_and_feel_template = new Tuleap_Template_Mail();
+        }
         return $this->look_and_feel_template;
     }
     
@@ -307,8 +318,9 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      */
     function setBodyHtml($message, $use_common_look_and_feel = self::USE_COMMON_LOOK_AND_FEEL) {
         if (self::USE_COMMON_LOOK_AND_FEEL == $use_common_look_and_feel) {
-            $this->look_and_feel_template->set('body', $message);
-            $message = $this->look_and_feel_template->fetch();
+            $tpl = $this->getLookAndFeelTemplate();
+            $tpl->set('body', $message);
+            $message = $tpl->fetch();
         }
         $this->getMail()->setBodyHtml($message);
     }
@@ -326,7 +338,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @param String $message
      */
     function setBody($message) {
-        $this->setBodyText($message);
+        $this->setBodyHtml($message);
     }
 
     /**
@@ -335,7 +347,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
      * @return String
      */
     function getBody() {
-        return $this->getBodyText($textOnly = true);
+        return $this->getBodyHtml();
     }
 
     /**
@@ -396,7 +408,7 @@ class Codendi_Mail implements Codendi_Mail_Interface {
                         'header' => $this->mail->getHeaders());
         $em = EventManager::instance();
         $em->processEvent('mail_sendmail', $params);
-        
+        $status = false;        
         try {
             $status = $this->mail->send();
         } catch (Exception $e) {

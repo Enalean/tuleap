@@ -35,10 +35,18 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array()) {
         return $this->fetchWithColumnGroup('fetchArtifact', array($artifact, $submitted_values));
     }
+    
     public function fetchArtifactInGroup(Tracker_Artifact $artifact, $submitted_values = array()) {
         return $this->fetchRecursiveArtifact('fetchArtifact', array($artifact, $submitted_values));
     }
     
+    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
+        return $this->fetchWithColumnGroup('fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
+    }
+    
+    public function fetchMailArtifactInGroup($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
+        return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
+    }
     
     /**
      * Fetch the element for the submit new artifact form
@@ -126,11 +134,25 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     protected function fetchArtifactPrefix() {
         return $this->fetchColumnPrefix();
     }
+    
     protected function fetchArtifactSuffix() {
         return $this->fetchColumnSuffix();
     }
-    protected function fetchArtifactContent(array $content) {
-        return implode('', $content);
+    
+    protected function fetchMailArtifactPrefix($format) {
+        if ($format == 'text') {
+            return '';
+        } else {
+            return $this->fetchArtifactPrefix();
+        }
+    }
+    
+    protected function fetchMailArtifactSuffix($format) {
+        if ($format == 'text') {
+            return '';
+        } else {
+            return $this->fetchArtifactSuffix();
+        }
     }
     
     /**

@@ -410,6 +410,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $output = '';
         switch($format) {
             case 'html':
+                $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
                 $tablo = array();
@@ -955,13 +956,17 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function hasChanges($previous_changesetvalue, $new_value) {
         if (!is_array($new_value)) {
-            if ($new_value == 100) {
-                $new_value = array();
-            } else {
-                $new_value = array($new_value);
-            }
+            $new_value = array($new_value);
         }
-        $old_value = $previous_changesetvalue ? $previous_changesetvalue->getValue() : array();
+        if (empty($new_value)) {
+            $new_value = array(100);
+        }
+        if ($previous_changesetvalue) {
+            $old_value = $previous_changesetvalue->getValue();
+        }
+        if (empty($old_value)) {
+            $old_value = array(100);
+        }
         sort($old_value);
         sort($new_value);
         return $old_value != $new_value;

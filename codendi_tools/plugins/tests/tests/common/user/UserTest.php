@@ -19,6 +19,8 @@ Mock::generate('DataAccessResult');
 require_once('common/dao/UGroupDao.class.php');
 Mock::generate('UGroupDao');
 
+Mock::generate('BaseLanguageFactory');
+
 // {{{ Setup stuff for "recent" things management
 abstract class FakeRecent implements Recent_Element_Interface {
 }
@@ -390,6 +392,15 @@ class UserTest extends UnitTestCase {
         $user->setReturnValue('getUGroupDao', $dao);
         
         $this->assertEqual(array(102, 103, 104, 101), $user->getAllProjects());
+    }
+    
+    function testGetLanguageShouldUserLanguageFactoryIfNotDefined() {
+        $langFactory = new MockBaseLanguageFactory();
+        $langFactory->expectOnce('getBaseLanguage', array('fr_BE'));
+        
+        $user = new User(array('language_id' => 'fr_BE'));
+        $user->setLanguageFactory($langFactory);
+        $user->getLanguage();
     }
 }
 ?>
