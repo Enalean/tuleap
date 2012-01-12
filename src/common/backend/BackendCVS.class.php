@@ -103,33 +103,37 @@ class BackendCVS extends Backend {
                 $this->log("Can't create project CVS dir: $cvs_dir", Backend::LOG_ERROR);
                 return false;
             }
-
+            $r      = 0;
+            $output = '';
             if ($this->useCVSNT()) {
                 // Tell cvsnt not to update /etc/cvsnt/PServer: this is done later by this the script.
-                system($GLOBALS['cvs_cmd']." -d$cvs_dir init -n 2> /dev/null");
+                $r = $this->system($GLOBALS['cvs_cmd']." -d$cvs_dir init -n ", $output);
             } else {
-                system($GLOBALS['cvs_cmd']." -d$cvs_dir init");
+                $r = $this->system($GLOBALS['cvs_cmd']." -d$cvs_dir init", $output);
             }
-
+            
+            if ( !$r ) {
+                $this->log($output, Backend::LOG_ERROR);
+            } 
             // Turn off pserver writers, on anonymous readers
             // See CVS writers update below. Just create an
             // empty writers file so that we can set up the appropriate
             // ownership right below. We will put names in writers
             // later in the script
-            system("echo \"\" > $cvs_dir/CVSROOT/writers");
-             
+            $this->system("echo \"\" > $cvs_dir/CVSROOT/writers");
+           
             if (!$this->useCVSNT()) {
                 // But to allow checkout/update to registered users we
                 // need to setup a world writable directory for CVS lock files
                 $lockdir=$GLOBALS['cvslock_prefix']."/$unix_group_name";
                 $filename= "$cvs_dir/CVSROOT/config";
                 $this->_RcsCheckout($filename);
-                system("echo  >> $filename");
-                system("echo '# !!! Codendi Specific !!! DO NOT REMOVE' >> $filename");
-                system("echo '# Put all CVS lock files in a single directory world writable' >> $filename");
-                system("echo '# directory so that any registered user can checkout/update' >> $filename");
-                system("echo '# without having write permission on the entire cvs tree.' >> $filename");
-                system("echo 'LockDir=$lockdir' >> $filename");
+                $this->system("echo  >> $filename");
+                $this->system("echo '# !!! Codendi Specific !!! DO NOT REMOVE' >> $filename");
+                $this->system("echo '# Put all CVS lock files in a single directory world writable' >> $filename");
+                $this->system("echo '# directory so that any registered user can checkout/update' >> $filename");
+                $this->system("echo '# without having write permission on the entire cvs tree.' >> $filename");
+                $this->system("echo 'LockDir=$lockdir' >> $filename");
                 // commit changes to config file (directly with RCS)
                 $this->_RcsCommit($filename);
 
