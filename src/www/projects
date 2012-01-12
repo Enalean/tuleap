@@ -28,8 +28,36 @@ if ($project && !$project->isError()) {
         );
         exit;
     }
-
-    include_once 'project_home.php';
+	// if the summary service is active we display the dashboard of the project
+	// otherwise we display the first active service on the list
+	
+    if ($project->usesService('summary')){
+    	//now show the project page
+        include_once 'project_home.php';
+    } else {
+    	$serv = $project->services;
+    	$val = array_values($serv);
+    	foreach ($val as $containedSrv){
+    	   if ($containedSrv->isUsed()) {
+    	       $service = $containedSrv;
+    	       break;
+    	   } 
+    	}
+    	if ($service->isIFrame()){
+            $label = $service->getLabel();
+            if ($label == "service_". $service->getShortName() ."_lbl_key") {
+                $label = $Language->getText('project_admin_editservice',$label);
+            } elseif(preg_match('/(.*):(.*)/', $label, $matches)) {
+                $label = $Language->getText($matches[1], $matches[2]);
+            }
+            $title = $label .' - '. $project->getPublicName();
+            site_project_header(array('title' => $title, 'group' => $request->get('group_id'), 'toptab' => $service->getId()));
+            $GLOBALS['HTML']->iframe($service->getUrl(), array('class' => 'iframe_service'));
+            site_project_footer(array());
+        } else {
+            $GLOBALS['Response']->redirect($service->getUrl());
+    	}
+    }
 } else {
     header("HTTP/1.0 404 Not Found");
     if (!$request->isAjax()) {
