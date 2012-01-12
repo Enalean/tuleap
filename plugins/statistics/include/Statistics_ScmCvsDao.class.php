@@ -23,7 +23,7 @@ require_once 'pre.php';
  */
 class Statistics_ScmCvsDao extends DataAccessObject {
 
-    var $condition = '';
+    var $groupFilter = '';
 
     /**
      * Constructor of the class
@@ -36,7 +36,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
     function __construct(DataAccess $da, $groupId = null) {
         parent::__construct($da);
         if ($groupId) {
-            $this->condition = ' AND group_id='.$this->da->escapeInt($groupId);
+            $this->groupFilter = ' AND group_id='.$this->da->escapeInt($groupId);
         }
     }
 
@@ -57,7 +57,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 FROM group_cvs_full_history
                 WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
                   AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
-                  ".$this->condition."
+                  ".$this->groupFilter."
                 GROUP BY YEAR(day), MONTH(day)";
 
         return $this->retrieve($sql);
@@ -80,7 +80,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 FROM group_cvs_full_history
                 WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
                   AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
-                  ".$this->condition."
+                  ".$this->groupFilter."
                 GROUP BY YEAR(day), MONTH(day)";
 
         return $this->retrieve($sql);
@@ -140,7 +140,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 JOIN user u USING (user_id)
                 WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
                   AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
-                  ".$this->condition."
+                  ".$this->groupFilter."
                 GROUP BY user
                 ORDER BY count DESC";
 
@@ -161,7 +161,7 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 JOIN user u USING (user_id)
                 WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
                   AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
-                  ".$this->condition."
+                  ".$this->groupFilter."
                 GROUP BY user
                 ORDER BY count DESC";
 
