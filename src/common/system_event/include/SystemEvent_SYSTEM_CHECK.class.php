@@ -137,6 +137,8 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                     $backendSVN->updateSVNAccess($project->getId());
                     $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
                     $backendSVN->setSVNApacheConfNeedUpdate();
+                } else {
+                    $backendSVN->checkSVNAccessPresence($project->getId());
                 }
                 $backendSVN->updateHooks($project);
 

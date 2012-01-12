@@ -308,6 +308,31 @@ class BackendSVN extends Backend {
     }
 
     /**
+     * Rewrite the .SVNAccessFile if removed
+     *
+     * @return void
+     */
+    public function checkSVNAccessPresence($group_id) {
+        $project = $this->getProjectManager()->getProject($group_id);
+        if (!$project) {
+            return false;
+        }
+        $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
+        $svn_dir = $GLOBALS['svn_prefix']."/".$unix_group_name;
+        if (!is_dir($svn_dir)) {
+            $this->log("Can't update SVN Access file: project SVN repo is missing: $svn_dir", Backend::LOG_ERROR);
+            return false;
+        }
+        
+        $svnaccess_file = $svn_dir."/.SVNAccessFile";
+        
+        if (!is_file($svnaccess_file)) {
+            return $this->updateSVNAccess($group_id);
+        }
+        return true;
+    }
+
+    /**
      * SVNAccessFile groups definitions
      *
      * @param Project $project
