@@ -471,39 +471,33 @@ class BackendSVN extends Backend {
      * @return boolean true on success or false on failure
      */
     public function generateSVNApacheConf() {
-
         $svn_root_file = $GLOBALS['svn_root_file'];
         $svn_root_file_old = $svn_root_file.".old";
         $svn_root_file_new = $svn_root_file.".new";
         
-
-        if (!$fp = fopen($svn_root_file_new, 'w')) {
-            $this->log("Can't open file for writing: $svn_root_file_new", Backend::LOG_ERROR);
+        $conf = $this->getApacheConf();
+        if (file_put_contents($svn_root_file_new, $this->getApacheConf()) !== strlen($conf)) {
+            $this->log("Error while writing to $svn_root_file_new", Backend::LOG_ERROR);
             return false;
         }
-
-        fwrite($fp, $this->getApacheConfHeaders());
-
-        $service_dao = $this->_getServiceDao();
-        $dar = $service_dao->searchActiveUnixGroupByUsedService('svn');
-        foreach ($dar as $row) {
-            // Write repository definition
-            if (!fwrite($fp, $this->getProjectSVNApacheConf($row))) {
-                $this->log("Error while writing to $svn_root_file_new", Backend::LOG_ERROR);
-                return false;
-            }
-        }
-        fclose($fp);
 
         $this->chown("$svn_root_file_new", $this->getHTTPUser());
         $this->chgrp("$svn_root_file_new", $this->getHTTPUser());
         chmod("$svn_root_file_new", 0640);
 
-
         // Backup existing file and install new one
         return $this->installNewFileVersion($svn_root_file_new, $svn_root_file, $svn_root_file_old, true);
     }
 
+    public function getApacheConf() {
+        $conf = $this->getApacheConfHeaders();
+        $dar  = $this->_getServiceDao()->searchActiveUnixGroupByUsedService('svn');
+        foreach ($dar as $row) {
+            $conf .= $this->getProjectSVNApacheConf($row);
+        }
+        return $conf;
+    }
+    
     /**
      *  Define specific log file for SVN queries
      * @return string 
