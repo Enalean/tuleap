@@ -573,6 +573,22 @@ class SystemEventManager {
         return false;
     }
 
+    /**
+     * @deprecated Fusionforge only. Please do not use it in Codendi
+     */
+    public function fetchEvents($offset = 0, $limit = 10, $full = false, $filter_status = false, $filter_type = false, $filter_params = false) {
+	    $results = db_query_params('SELECT * FROM system_event WHERE type IN ($1) AND status IN($2) AND parameters=$3;',array($filter_type, $filter_status,$filter_params));
+	    while($row = db_fetch_array($results))
+	    {
+		    $events[]=$row;
+	    }
+	    if (isset($events)) {
+		    return $events;
+	    }
+	    else {
+		    return null;
+	    }
+    }
 }
 
 ?>
