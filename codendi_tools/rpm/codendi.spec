@@ -600,7 +600,7 @@ else
 fi
 
 # In any cases fix the context
-/usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR}
+/usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR} || true
 
 # This adds the proper /etc/rc*.d links for the script that runs the codendi backend
 #/sbin/chkconfig --add %{APP_NAME}

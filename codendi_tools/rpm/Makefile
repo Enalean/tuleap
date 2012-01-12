@@ -4,6 +4,14 @@ endif
 
 BASE_DIR=$(shell cd ../..; pwd)
 
+ifeq (,$(shell echo "$$DOCBOOK_TOOLS_DIR"))
+DOCBOOK_TOOLS_DIR=$(BASE_DIR)/docbook
+else
+DOCBOOK_TOOLS_DIR=$(shell echo $$DOCBOOK_TOOLS_DIR)
+endif
+
+DOCBOOKTARBALL=https://tuleap.net/file/pub/tuleap/tools/docbook/docbook.tbz2
+
 version=$(shell LANG=C cat $(BASE_DIR)/VERSION)
 
 CORE_MAILMAN_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/CORE_MAILMAN_VERSION)
@@ -37,19 +45,42 @@ THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSIO
 
 PKG_NAME=codendi_st
 
-rpmprep:
-	mkdir -p $(RPM_TMP)
-	cd $(RPM_TMP) && mkdir -p BUILD RPMS SOURCES SPECS SRPMS TMP
-	echo "%_topdir $(RPM_TMP)" > ~/.rpmmacros
-	echo '%_tmppath %{_topdir}/TMP' >> ~/.rpmmacros
-	echo '%_buildroot %{_tmppath}/%{name}-root' >> ~/.rpmmacros
-	echo '%_sysconfdir /etc' >> ~/.rpmmacros
+default: all
 
-tarball: 
-	cd $(BASE_DIR) && find . \( -path ./rpm -o -path '*/.svn' -o -path ./plugins/tests -o -path ./plugins/maillog -o -path ./plugins/salome \) -prune -o -print | cpio -pdumB --quiet $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
-	cd $(RPM_TMP)/SOURCES && tar czf $(PKG_NAME)-$(version).tar.gz $(PKG_NAME)-$(version)
+all: clean build-depends codendi custom_codendi codendi-all-deps
 
-codendi: rpmprep tarball
+##
+## Setup environment
+##
+
+rpmprep: $(RPM_TMP) ~/.rpmmacros
+
+~/.rpmmacros:
+	@echo "Creating ~/.rpmmacros"
+	@echo "%_topdir $(RPM_TMP)" > ~/.rpmmacros
+	@echo '%_tmppath %{_topdir}/TMP' >> ~/.rpmmacros
+	@echo '%_buildroot %{_tmppath}/%{name}-root' >> ~/.rpmmacros
+	@echo '%_sysconfdir /etc' >> ~/.rpmmacros
+
+$(RPM_TMP):
+	@[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP
+
+##
+## Build tarball
+##
+
+tarball: rpmprep $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+
+$(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz:
+	cd $(BASE_DIR) && find . \( -path ./rpm -o -path '*/.svn' -o -path ./plugins/tests -o -path ./plugins/maillog -o -path ./plugins/salome \) -prune -o -print  | cpio -o -H ustar --quiet | gzip > $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+
+##
+## Build RPM
+##
+
+codendi: tarball $(RPM_TMP)/RPMS/noarch/codendi_st-$(version)-1.noarch.rpm
+
+$(RPM_TMP)/RPMS/noarch/codendi_st-$(version)-1.noarch.rpm: codendi.spec
 	cat codendi.spec |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@CORE_MAILMAN_VERSION@@/$(CORE_MAILMAN_VERSION)/g' |\
@@ -92,7 +123,7 @@ custom_codendi: tarball
 		> $(RPM_TMP)/SPECS/codendi-customization.spec
 	cp *_ParametersLocal.dtd $(RPM_TMP)/SOURCES/
 	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/organization_logo.png
-	rpmbuild -bb $(RPM_TMP)/SPECS/codendi-customization.spec
+	export DOCBOOK_TOOLS_DIR=$(DOCBOOK_TOOLS_DIR); rpmbuild -bb $(RPM_TMP)/SPECS/codendi-customization.spec
 
 codendi-all-deps: codendi-all-deps.spec
 	cat $< |\
@@ -112,6 +143,7 @@ tuleap-all: tuleap-all.spec
 
 clean:
 	-rm -Rf $(RPM_TMP)/*
+	@[ ! -d $(RPM_TMP) ] || rmdir $(RPM_TMP)
 	-rm -Rf ~/.rpmmacros
 	-rm -f /tmp/docbook-cug-*
 	-rm -f /tmp/log_xml2html_*
@@ -119,7 +151,17 @@ clean:
 
 all: clean rpmprep codendi custom_codendi codendi-all-deps tuleap-all
 
-dist:
-	mkdir -p $(RPM_TMP)/yum
-	cp -ar $(RPM_TMP)/RPMS/* $(RPM_TMP)/yum
-	createrepo $(RPM_TMP)/yum
+build-depends: /usr/bin/rpmbuild /usr/bin/createrepo /usr/bin/zip $(DOCBOOK_TOOLS_DIR)
+
+/usr/bin/rpmbuild:
+	yum -y install rpm-build
+
+/usr/bin/createrepo:
+	yum -y install createrepo
+
+/usr/bin/zip:
+	yum -y install zip
+
+$(DOCBOOK_TOOLS_DIR):
+	@echo "Using DOCBOOK_TOOLS_DIR=$@"
+	@[ ! -d $@ ] && echo "DOCBOOK_TOOLS_DIR is missing, I suggest you take tarball from $(DOCBOOKTARBALL)" ; exit 1
