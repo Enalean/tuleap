@@ -605,6 +605,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 
 		$linecount = count($lines);
 		$i = 0;
+		$encoding = null;
 
 		/* Commit header */
 		for ($i = 0; $i < $linecount; $i++) {
@@ -635,6 +636,16 @@ class GitPHP_Commit extends GitPHP_GitObject
 				$this->committer = $regs[1];
 				$this->committerEpoch = $regs[2];
 				$this->committerTimezone = $regs[3];
+			} else if (preg_match('/^encoding (.+)$/', $line, $regs)) {
+				$gitEncoding = trim($regs[1]);
+				if ((strlen($gitEncoding) > 0) && function_exists('mb_list_encodings')) {
+					$supportedEncodings = mb_list_encodings();
+					$encIdx = array_search(strtolower($gitEncoding), array_map('strtolower', $supportedEncodings));
+					if ($encIdx !== false) {
+						$encoding = $supportedEncodings[$encIdx];
+					}
+				}
+				$encoding = trim($regs[1]);
 			} else if (strlen($line) == 0) {
 				break;
 			}
@@ -643,6 +654,11 @@ class GitPHP_Commit extends GitPHP_GitObject
 		/* Commit body */
 		for ($i += 1; $i < $linecount; $i++) {
 			$trimmed = trim($lines[$i]);
+
+			if ((strlen($trimmed) > 0) && (strlen($encoding) > 0) && function_exists('mb_convert_encoding')) {
+				$trimmed = mb_convert_encoding($trimmed, 'UTF-8', $encoding);
+			}
+
 			if (empty($this->title) && (strlen($trimmed) > 0))
 				$this->title = $trimmed;
 			if (!empty($this->title)) {
