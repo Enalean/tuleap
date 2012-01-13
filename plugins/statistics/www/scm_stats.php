@@ -113,9 +113,6 @@ if (!$error && $request->exist('export')) {
     echo '</table>';
     echo '</form>';
 
-    $script = "new ProjectAutoCompleter('scm_stats_group_id', '".util_get_dir_image_theme()."', false);";
-
-    $GLOBALS['Response']->includeFooterJavascriptSnippet($script);
     $GLOBALS['HTML']->footer(array());
 }
 
