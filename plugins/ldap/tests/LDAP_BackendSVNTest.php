@@ -21,40 +21,61 @@
 
 require_once dirname(__FILE__).'/../include/LDAP_BackendSVN.class.php';
 
-Mock::generatePartial('LDAP_BackendSVN', 'LDAP_BackendSVNTestVersion', array('getLDAPGroupDao', 'getLDAP'));
+require_once 'common/dao/ServiceDao.class.php';
+Mock::generate('ServiceDao');
+
 Mock::generate('LDAP');
+Mock::generate('LDAP_ProjectManager');
 
 class LDAP_BackendSVNTest extends UnitTestCase {
-    
-    function __construct($name = 'LDAP_BackendSVN test') {
-        parent::__construct($name);
-    }
 
-    function testGetLDAPServersUrlWithOneServer() {
-        $ldap = new MockLDAP($this);
-        $ldap->setReturnValue('getLDAPParam', 'ldap://ldap.codendi.com', array('server'));
-        $ldap->setReturnValue('getLDAPParam', 'dc=codendi,dc=com', array('dn'));
-        $ldapBackendSVN = new LDAP_BackendSVNTestVersion($this);
-        $ldapBackendSVN->setReturnValue('getLDAP', $ldap);
-        $this->assertEqual($ldapBackendSVN->getLDAPServersUrl(), 'ldap://ldap.codendi.com/dc=codendi,dc=com');
-    }
-
-    function testGetLDAPServersUrlWithTwoServers() {
-        $ldap = new MockLDAP($this);
-        $ldap->setReturnValue('getLDAPParam', 'ldap://ldap1.codendi.com, ldap://ldap2.codendi.com', array('server'));
-        $ldap->setReturnValue('getLDAPParam', 'dc=codendi,dc=com', array('dn'));
-        $ldapBackendSVN = new LDAP_BackendSVNTestVersion($this);
-        $ldapBackendSVN->setReturnValue('getLDAP', $ldap);
-        $this->assertEqual($ldapBackendSVN->getLDAPServersUrl(), 'ldap://ldap1.codendi.com ldap2.codendi.com/dc=codendi,dc=com');
+    function setUp() {
+        $GLOBALS['svn_prefix'] = '/svnroot';
     }
     
-    function testGetLDAPServersUrlWithTwoServersLdaps() {
-        $ldap = new MockLDAP($this);
-        $ldap->setReturnValue('getLDAPParam', 'ldaps://ldap1.codendi.com, ldaps://ldap2.codendi.com', array('server'));
-        $ldap->setReturnValue('getLDAPParam', 'dc=codendi,dc=com', array('dn'));
-        $ldapBackendSVN = new LDAP_BackendSVNTestVersion($this);
-        $ldapBackendSVN->setReturnValue('getLDAP', $ldap);
-        $this->assertEqual($ldapBackendSVN->getLDAPServersUrl(), 'ldaps://ldap1.codendi.com ldap2.codendi.com/dc=codendi,dc=com');
+    function tearDown() {
+        unset($GLOBALS['svn_prefix']);
+    }
+    
+    private function GivenAFullApacheConf() {
+        $backend  = TestHelper::getPartialMock('LDAP_BackendSVN', array('_getServiceDao', 'getLdap', 'getLDAPProjectManager'));
+        $dar      = TestHelper::arrayToDar(array('unix_group_name' => 'gpig',
+                                                 'group_name'      => 'Guinea Pig',
+                                                 'group_id'        => 101),
+                                           array('unix_group_name' => 'garden',
+                                                 'group_name'      => 'The Garden Project',
+                                                 'group_id'        => 102));
+        
+        $dao = new MockServiceDao();
+        $dao->setReturnValue('searchActiveUnixGroupByUsedService', $dar);
+        $backend->setReturnValue('_getServiceDao', $dao);
+        
+        $ldap = new MockLDAP();
+        $ldap->setReturnValue('getLDAPParam', 'ldap://ldap.tuleap.com', array('server'));
+        $ldap->setReturnValue('getLDAPParam', 'dc=tuleap,dc=com', array('dn'));
+        $backend->setReturnValue('getLdap', $ldap);
+        
+        $ldapPm = new MockLDAP_ProjectManager();
+        $ldapPm->setReturnValue('hasSVNLDAPAuth', true);
+        $backend->setReturnValue('getLDAPProjectManager', $ldapPm);
+        
+        return $backend->getApacheConf();
+    }
+    
+    function testFullConfShouldWrapEveryThing() {
+        $conf = $this->GivenAFullApacheConf();
+        //echo '<pre>'.htmlentities($conf).'</pre>';
+        
+        $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
+        $this->assertPattern('/AuthLDAPUrl/', $conf);
+        $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
+    }
+    
+    private function ThenThereAreTwoLocationDefinedGpigAndGarden($conf) {
+        $matches = array();
+        preg_match_all('%<Location /svnroot/([^>]*)>%', $conf, $matches);
+        $this->assertEqual($matches[1][0], 'gpig');
+        $this->assertEqual($matches[1][1], 'garden');
     }
 }
 ?>

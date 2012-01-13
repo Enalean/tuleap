@@ -1,19 +1,16 @@
 <?php
 
-require_once 'common/backend/BackendSVN.class.php';
+require_once 'SVN_Apache_Configuration.class.php';
 
-/**
- * Backend class to work on subversion repositories
- */
-class BackendSVNModPerl extends BackendSVN {
+class SVN_Apache_ModPerl extends SVN_Apache_Configuration {
 
-    public function getApacheConfHeaders() {
+    protected function getApacheConfHeaders() {
         $ret  = parent::getApacheConfHeaders();
         $ret .= 'PerlLoadModule Apache::Codendi'."\n\n";
         return $ret;
     }
     
-    public function getProjectSVNApacheConfAuth($row) {
+    protected function getProjectSVNApacheConfAuth($row) {
         $conf = '';
         $conf .= $this->getProjectSVNApacheConfDefault($row['group_name']);
         $conf .= "    PerlAccessHandler Apache::Authn::Codendi::access_handler\n";

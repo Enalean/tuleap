@@ -1,25 +1,30 @@
 <?php
 
-require_once 'common/backend/BackendSVNModPerl.class.php';
+require_once 'common/backend/SVN_Apache_ModPerl.class.php';
 
-require_once('common/dao/ServiceDao.class.php');
-Mock::generate('ServiceDao');
 
-class BackendSVNModPerlTest extends UnitTestCase {
+class SVN_Apache_ModPerlTest extends UnitTestCase {
+    
+    function setUp() {
+        $GLOBALS['svn_prefix'] = '/svnroot';
+    }
+    
+    function tearDown() {
+        unset($GLOBALS['svn_prefix']);
+    }
     
     private function GivenAnApacheAuthenticationConfForGuineaPigProject() {
-        $backend        = TestHelper::getPartialMock('BackendSVNModPerl', array());
         $project_db_row = array('unix_group_name' => 'gpig',
                                 'group_name'      => 'Guinea Pig',
                                 'group_id'        => 101);
-        
-        return $backend->getProjectSVNApacheConfAuth($project_db_row);        
+        $apacheConf = new SVN_Apache_ModPerl(array($project_db_row));
+        return $apacheConf->getFullConf();
     }
     
     function testGetSVNApacheConfHeadersShouldInsertModPerl() {
-        $backend = TestHelper::getPartialMock('BackendSVNModPerl', array());
+        $conf = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         
-        $this->assertPattern('/PerlLoadModule Apache::Codendi/', $backend->getApacheConfHeaders());
+        $this->assertPattern('/PerlLoadModule Apache::Codendi/', $conf);
     }
     
     function testGetApacheAuthShouldContainsDefaultValues() {
@@ -44,19 +49,14 @@ class BackendSVNModPerlTest extends UnitTestCase {
     }
     
     private function GivenAFullApacheConf() {
-        $backend  = TestHelper::getPartialMock('BackendSVNModPerl', array('_getServiceDao'));
-        $dar      = TestHelper::arrayToDar(array('unix_group_name' => 'gpig',
-                                                 'group_name'      => 'Guinea Pig',
-                                                 'group_id'        => 101),
-                                           array('unix_group_name' => 'garden',
-                                                 'group_name'      => 'The Garden Project',
-                                                 'group_id'        => 102));
-        
-        $dao = new MockServiceDao();
-        $dao->setReturnValue('searchActiveUnixGroupByUsedService', $dar);
-        $backend->setReturnValue('_getServiceDao', $dao);
-        
-        return $backend->getApacheConf();
+        $projects = array(array('unix_group_name' => 'gpig',
+                                'group_name'      => 'Guinea Pig',
+                                'group_id'        => 101),
+                          array('unix_group_name' => 'garden',
+                                'group_name'      => 'The Garden Project',
+                                 'group_id'        => 102));
+        $apacheConf = new SVN_Apache_ModPerl($projects);
+        return $apacheConf->getFullConf();
     }
     
     function testFullConfShouldWrapEveryThing() {

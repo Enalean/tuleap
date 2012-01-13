@@ -27,6 +27,7 @@ require_once('common/dao/ServiceDao.class.php');
 require_once('common/svn/SVNAccessFile.class.php');
 require_once('common/include/Error.class.php');
 require_once('www/svn/svn_utils.php');
+require_once('SVN_Apache_Configuration.class.php');
 
 /**
  * Backend class to work on subversion repositories
@@ -489,73 +490,26 @@ class BackendSVN extends Backend {
         return $this->installNewFileVersion($svn_root_file_new, $svn_root_file, $svn_root_file_old, true);
     }
 
-    public function getApacheConf() {
-        $conf = $this->getApacheConfHeaders();
-        $dar  = $this->_getServiceDao()->searchActiveUnixGroupByUsedService('svn');
-        foreach ($dar as $row) {
-            $conf .= $this->getProjectSVNApacheConf($row);
-        }
-        return $conf;
-    }
-    
     /**
-     *  Define specific log file for SVN queries
-     * @return string 
-     */
-    public function getApacheConfHeaders() {
-        $ret = "# Codendi SVN repositories\n\n";
-        $ret = "# Custom log file for SVN queries\n";
-        $ret = 'CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION'."\n\n";
-        return $ret;
-    }
-    
-    /**
-     * Replace double quotes by single quotes in project name (conflict with Apache realm name)
+     * Generate the SVN apache authentication configuration for each project
      * 
-     * @param String $str
      * @return String
      */
-    function escapeStringForApacheConf($str) {
-        return strtr($str, "\"", "'");
-    }
-    
-    public function getProjectSVNApacheConf($row) {
-        $conf = '';
-        $conf .= "<Location /svnroot/".$row['unix_group_name'].">\n";
-        $conf .= "    DAV svn\n";
-        $conf .= "    SVNPath ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."\n";
-        $conf .= "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n";
-        $conf .= $this->getProjectSVNApacheConfAuthz($row);
-        $conf .= $this->getProjectSVNApacheConfAuth($row);
-        $conf .= "</Location>\n\n";
-        return $conf;
+    public function getApacheConf() {
+        $dar  = $this->_getServiceDao()->searchActiveUnixGroupByUsedService('svn');
+        $conf = $this->getApacheAuthMod($dar);
+        return $conf->getFullConf();
     }
 
-    public function getProjectSVNApacheConfAuth($row) {
-        $conf = '';
-        $conf .= "    AuthMYSQLEnable on\n";
-        $conf .= $this->getProjectSVNApacheConfDefault($row['group_name']);
-        $conf .= "    AuthMySQLUser ".$GLOBALS['sys_dbauth_user']."\n";
-        $conf .= "    AuthMySQLPassword ".$GLOBALS['sys_dbauth_passwd']."\n";
-        $conf .= "    AuthMySQLDB ".$GLOBALS['sys_dbname']."\n";
-        $conf .= "    AuthMySQLUserTable \"user, user_group\"\n";
-        $conf .= "    AuthMySQLNameField user.user_name\n";
-        $conf .= "    AuthMySQLPasswordField user.unix_pw\n";
-        $conf .= "    AuthMySQLUserCondition \"(user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=".$row['group_id']."))\"\n";
-        return $conf;
-    }
-
-    public function getProjectSVNApacheConfDefault($projectName) {
-        $conf = '';
-        $conf .= "    Require valid-user\n";
-        $conf .= "    AuthType Basic\n";
-        $conf .= "    AuthName \"Subversion Authorization (".$this->escapeStringForApacheConf($projectName).")\"\n";
-        return $conf;
-    }
-    
-    public function getProjectSVNApacheConfAuthz($row) {
-        $conf = "    AuthzSVNAccessFile ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."/.SVNAccessFile\n";
-        return $conf;
+    /**
+     * Return the right Authentication module for SVN/apache
+     * 
+     * @param Array $projects
+     * 
+     * @return SVN_Apache_Configuration
+     */
+    protected function getApacheAuthMod($projects) {
+        return new SVN_Apache_Configuration($projects);
     }
     
     /**
