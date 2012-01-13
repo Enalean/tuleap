@@ -84,6 +84,9 @@ $sys_cookie_domain = "%sys_default_domain%";
 // the mail host if you have enough horsepower & bandwidth)
 $sys_lists_host = "lists.%sys_default_domain%";
 
+// TODO: WTF?
+$sys_lists_domain = $sys_lists_host;
+
 // Fully qualified name
 $sys_fullname = "%sys_fullname%";
 
@@ -264,11 +267,6 @@ $sys_display_homepage_news = 1;
 // Should be either 'ldap' or 'codendi'
 $sys_auth_type = 'codendi';
 
-// Apache subversion authentication method
-// Possibilities: 'modmysql' or 'modperl'
-// Default: 'modmysql'
-$sys_auth_svn_mod = 'modmysql';
-
 // System name to be used in Web pages, documentation,etc.
 $sys_name = 'Tuleap';
 
@@ -400,6 +398,12 @@ $zend_path = "/usr/share/zend";
 
 //Exchange policy URL
 $sys_exchange_policy_url = "/plugins/docman/?group_id=1";
+
+// The minimum length og mailing list name
+$sys_lists_name_length = 4;
+
+// The mailing list name prefix
+$sys_lists_prefix = '';
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
