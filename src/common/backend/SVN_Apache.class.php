@@ -1,6 +1,6 @@
 <?php
 
-class SVN_Apache_Configuration {
+abstract class SVN_Apache {
     private $projects = array();
     
     public function __construct($projects) {
@@ -25,17 +25,7 @@ class SVN_Apache_Configuration {
         $ret = 'CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION'."\n\n";
         return $ret;
     }
-    
-    /**
-     * Replace double quotes by single quotes in project name (conflict with Apache realm name)
-     * 
-     * @param String $str
-     * @return String
-     */
-    protected function escapeStringForApacheConf($str) {
-        return strtr($str, "\"", "'");
-    }
-    
+        
     protected function getProjectSVNApacheConf($row) {
         $conf = '';
         $conf .= "<Location /svnroot/".$row['unix_group_name'].">\n";
@@ -47,21 +37,9 @@ class SVN_Apache_Configuration {
         $conf .= "</Location>\n\n";
         return $conf;
     }
-
-    protected function getProjectSVNApacheConfAuth($row) {
-        $conf = '';
-        $conf .= "    AuthMYSQLEnable on\n";
-        $conf .= $this->getProjectSVNApacheConfDefault($row['group_name']);
-        $conf .= "    AuthMySQLUser ".$GLOBALS['sys_dbauth_user']."\n";
-        $conf .= "    AuthMySQLPassword ".$GLOBALS['sys_dbauth_passwd']."\n";
-        $conf .= "    AuthMySQLDB ".$GLOBALS['sys_dbname']."\n";
-        $conf .= "    AuthMySQLUserTable \"user, user_group\"\n";
-        $conf .= "    AuthMySQLNameField user.user_name\n";
-        $conf .= "    AuthMySQLPasswordField user.unix_pw\n";
-        $conf .= "    AuthMySQLUserCondition \"(user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=".$row['group_id']."))\"\n";
-        return $conf;
-    }
-
+    
+    abstract protected function getProjectSVNApacheConfAuth($row);
+    
     protected function getProjectSVNApacheConfDefault($projectName) {
         $conf = '';
         $conf .= "    Require valid-user\n";
@@ -73,6 +51,16 @@ class SVN_Apache_Configuration {
     protected function getProjectSVNApacheConfAuthz($row) {
         $conf = "    AuthzSVNAccessFile ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."/.SVNAccessFile\n";
         return $conf;
+    }
+    
+    /**
+     * Replace double quotes by single quotes in project name (conflict with Apache realm name)
+     * 
+     * @param String $str
+     * @return String
+     */
+    protected function escapeStringForApacheConf($str) {
+        return strtr($str, "\"", "'");
     }
 }
 

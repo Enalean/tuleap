@@ -1,8 +1,8 @@
 <?php
 
-require_once 'SVN_Apache_Configuration.class.php';
+require_once 'SVN_Apache.class.php';
 
-class SVN_Apache_ModPerl extends SVN_Apache_Configuration {
+class SVN_Apache_ModPerl extends SVN_Apache {
 
     protected function getApacheConfHeaders() {
         $ret  = parent::getApacheConfHeaders();

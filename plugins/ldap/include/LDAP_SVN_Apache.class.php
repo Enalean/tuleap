@@ -1,6 +1,8 @@
 <?php
 
-class LDAP_SVN_Apache extends SVN_Apache_Configuration {
+require_once 'common/backend/SVN_Apache.class.php';
+
+class LDAP_SVN_Apache extends SVN_Apache {
     /**
      * @var LDAP_ProjectManager
      */

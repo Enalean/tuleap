@@ -27,7 +27,8 @@ require_once('common/dao/ServiceDao.class.php');
 require_once('common/svn/SVNAccessFile.class.php');
 require_once('common/include/Error.class.php');
 require_once('www/svn/svn_utils.php');
-require_once('SVN_Apache_Configuration.class.php');
+require_once('SVN_Apache_ModMysql.class.php');
+require_once('SVN_Apache_ModPerl.class.php');
 
 /**
  * Backend class to work on subversion repositories
@@ -506,10 +507,10 @@ class BackendSVN extends Backend {
      * 
      * @param Array $projects
      * 
-     * @return SVN_Apache_Configuration
+     * @return SVN_Apache_ModMysql
      */
     protected function getApacheAuthMod($projects) {
-        return new SVN_Apache_Configuration($projects);
+        return new SVN_Apache_ModMysql($projects);
     }
     
     /**
