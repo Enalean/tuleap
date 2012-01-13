@@ -48,7 +48,7 @@ abstract class SVN_Apache {
      * @return string 
      */
     protected function getHeaders() {
-        $ret = "# Codendi SVN repositories\n\n";
+        $ret = "# ".$GLOBALS['sys_name']." SVN repositories\n\n";
         $ret = "# Custom log file for SVN queries\n";
         $ret = 'CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION'."\n\n";
         return $ret;
