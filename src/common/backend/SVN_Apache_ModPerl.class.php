@@ -21,15 +21,15 @@ require_once 'SVN_Apache.class.php';
 
 class SVN_Apache_ModPerl extends SVN_Apache {
 
-    protected function getApacheConfHeaders() {
-        $ret  = parent::getApacheConfHeaders();
+    protected function getHeaders() {
+        $ret  = parent::getHeaders();
         $ret .= 'PerlLoadModule Apache::Codendi'."\n\n";
         return $ret;
     }
     
-    protected function getProjectSVNApacheConfAuth($row) {
+    protected function getProjectAuthentication($row) {
         $conf = '';
-        $conf .= $this->getProjectSVNApacheConfDefault($row['group_name']);
+        $conf .= $this->getCommonAuthentication($row['group_name']);
         $conf .= "    PerlAccessHandler Apache::Authn::Codendi::access_handler\n";
         $conf .= "    PerlAuthenHandler Apache::Authn::Codendi::authen_handler\n";
         $conf .= '    CodendiDSN "DBI:mysql:' . $GLOBALS['sys_dbname'] . ':' . $GLOBALS['sys_dbhost'] . '"' . "\n";

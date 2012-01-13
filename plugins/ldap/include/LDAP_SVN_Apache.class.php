@@ -49,7 +49,7 @@ class LDAP_SVN_Apache extends SVN_Apache {
      * 
      * @return String
      */
-    public function getProjectSVNApacheConfAuth($row) {
+    public function getProjectAuthentication($row) {
         if ($this->ldapProjectManager->hasSVNLDAPAuth($row['group_id'])) {
             $conf = '';
             $conf .= '    AuthType Basic'.PHP_EOL;

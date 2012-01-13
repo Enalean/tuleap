@@ -17,17 +17,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+/**
+ * Manage generation of Apache Subversion configuration for project Authentication
+ * and authorization
+ * It generates the content of /etc/httpd/conf.d/codendi_svnroot.conf file
+ */
 abstract class SVN_Apache {
     private $projects = array();
     
+    /**
+     * Takes an array of DB row containing project query result.
+     * Each row is a project
+     * 
+     * @param Array $projects 
+     */
     public function __construct($projects) {
         $this->projects = $projects;
     }
     
     public function getFullConf() {
-        $conf = $this->getApacheConfHeaders();
+        $conf = $this->getHeaders();
         foreach ($this->projects as $row) {
-            $conf .= $this->getProjectSVNApacheConf($row);
+            $conf .= $this->getOneProject($row);
         }
         return $conf;
     }
@@ -36,28 +47,28 @@ abstract class SVN_Apache {
      *  Define specific log file for SVN queries
      * @return string 
      */
-    protected function getApacheConfHeaders() {
+    protected function getHeaders() {
         $ret = "# Codendi SVN repositories\n\n";
         $ret = "# Custom log file for SVN queries\n";
         $ret = 'CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION'."\n\n";
         return $ret;
     }
         
-    protected function getProjectSVNApacheConf($row) {
+    protected function getOneProject($row) {
         $conf = '';
         $conf .= "<Location /svnroot/".$row['unix_group_name'].">\n";
         $conf .= "    DAV svn\n";
         $conf .= "    SVNPath ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."\n";
         $conf .= "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n";
-        $conf .= $this->getProjectSVNApacheConfAuthz($row);
-        $conf .= $this->getProjectSVNApacheConfAuth($row);
+        $conf .= $this->getProjectAuthorization($row);
+        $conf .= $this->getProjectAuthentication($row);
         $conf .= "</Location>\n\n";
         return $conf;
     }
     
-    abstract protected function getProjectSVNApacheConfAuth($row);
+    abstract protected function getProjectAuthentication($row);
     
-    protected function getProjectSVNApacheConfDefault($projectName) {
+    protected function getCommonAuthentication($projectName) {
         $conf = '';
         $conf .= "    Require valid-user\n";
         $conf .= "    AuthType Basic\n";
@@ -65,7 +76,7 @@ abstract class SVN_Apache {
         return $conf;
     }
     
-    protected function getProjectSVNApacheConfAuthz($row) {
+    protected function getProjectAuthorization($row) {
         $conf = "    AuthzSVNAccessFile ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."/.SVNAccessFile\n";
         return $conf;
     }

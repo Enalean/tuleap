@@ -21,10 +21,10 @@ require_once 'SVN_Apache.class.php';
 
 class SVN_Apache_ModMysql extends SVN_Apache {
 
-    protected function getProjectSVNApacheConfAuth($row) {
+    protected function getProjectAuthentication($row) {
         $conf = '';
         $conf .= "    AuthMYSQLEnable on\n";
-        $conf .= $this->getProjectSVNApacheConfDefault($row['group_name']);
+        $conf .= $this->getCommonAuthentication($row['group_name']);
         $conf .= "    AuthMySQLUser ".$GLOBALS['sys_dbauth_user']."\n";
         $conf .= "    AuthMySQLPassword ".$GLOBALS['sys_dbauth_passwd']."\n";
         $conf .= "    AuthMySQLDB ".$GLOBALS['sys_dbname']."\n";
