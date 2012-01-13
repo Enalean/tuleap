@@ -384,8 +384,7 @@ class BackendSVNTest extends UnitTestCase {
             
     }
     
-    private function GivenAFullApacheConf() {
-        $backend  = TestHelper::getPartialMock('BackendSVN', array('_getServiceDao'));
+    private function setupBackendWithTwoGroups($backend) {
         $dar      = TestHelper::arrayToDar(array('unix_group_name' => 'gpig',
                                                  'group_name'      => 'Guinea Pig',
                                                  'group_id'        => 101),
@@ -396,7 +395,12 @@ class BackendSVNTest extends UnitTestCase {
         $dao = new MockServiceDao();
         $dao->setReturnValue('searchActiveUnixGroupByUsedService', $dar);
         $backend->setReturnValue('_getServiceDao', $dao);
-        
+        return $backend;
+    }
+    
+    private function GivenAFullApacheConf() {
+        $backend  = TestHelper::getPartialMock('BackendSVN', array('_getServiceDao'));
+        $this->setupBackendWithTwoGroups($backend);
         return $backend->getApacheConf();
     }
     
@@ -414,6 +418,21 @@ class BackendSVNTest extends UnitTestCase {
         preg_match_all('%<Location /svnroot/([^>]*)>%', $conf, $matches);
         $this->assertEqual($matches[1][0], 'gpig');
         $this->assertEqual($matches[1][1], 'garden');
+    }
+    
+    function GivenAFullApacheConfWithModPerl() {
+        $backend  = TestHelper::getPartialMock('BackendSVN', array('_getServiceDao', 'getConfig'));
+        $backend->setReturnValue('getConfig', 'modperl', array('sys_svn_auth_mod'));
+        $this->setupBackendWithTwoGroups($backend);
+        return $backend->getApacheConf();
+    }
+    
+    function testFullApacheConfWithModPerl() {
+        $conf = $this->GivenAFullApacheConfWithModPerl();
+        
+        $this->assertPattern('/PerlLoadModule Apache::Codendi/', $conf);
+        $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
+        $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
     }
     
 }

@@ -29,11 +29,15 @@ require_once('common/include/Error.class.php');
 require_once('www/svn/svn_utils.php');
 require_once('SVN_Apache_ModMysql.class.php');
 require_once('SVN_Apache_ModPerl.class.php');
+require_once('common/include/Config.class.php');
 
 /**
  * Backend class to work on subversion repositories
  */
 class BackendSVN extends Backend {
+    const CONFIG_SVN_AUTH_KEY   = 'sys_auth_svn_mod';
+    const CONFIG_SVN_AUTH_MYSQL = 'modmysql';
+    const CONFIG_SVN_AUTH_PERL  = 'modperl';
 
 
     protected $SVNApacheConfNeedUpdate;
@@ -73,6 +77,16 @@ class BackendSVN extends Backend {
         return new ServiceDao(CodendiDataAccess::instance());
     }
 
+    
+    /**
+     * Wrapper for Config
+     * 
+     * @return Config
+     */
+    protected function getConfig($var) {
+        return Config::get($var);
+    }
+    
     /**
      * Create project SVN repository
      * If the directory already exists, nothing is done.
@@ -510,6 +524,9 @@ class BackendSVN extends Backend {
      * @return SVN_Apache_ModMysql
      */
     protected function getApacheAuthMod($projects) {
+        if ($this->getConfig(self::CONFIG_SVN_AUTH_KEY) == self::CONFIG_SVN_AUTH_PERL) {
+            return new SVN_Apache_ModPerl($projects);
+        }
         return new SVN_Apache_ModMysql($projects);
     }
     
