@@ -927,6 +927,15 @@ else
     echo '/etc/nsswitch.conf does not exist. Cannot use MySQL authentication!'
 fi
 
+# TODO: package it
+# #Copying perl codendi module for mod_dav_svn authentication
+# codendi_perl_module_dir='/usr/lib/perl5/vendor_perl/5.8.8/Apache'
+# if [ ! -d $codendi_perl_module_dir ];then
+#     $MKDIR -p $codendi_perl_module_dir
+# fi
+# $CP $INSTALL_DIR/src/utils/svn/Codendi.pm $codendi_perl_module_dir/Codendi.pm
+# TODO: /etc/httpd/conf.d/perl.conf
+# TODO: mod_perl perl-BSD-Resource libdbi-dbd-mysql libdbi libdbi-drivers 
 
 # replace string patterns in local.inc
 substitute '/etc/codendi/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
