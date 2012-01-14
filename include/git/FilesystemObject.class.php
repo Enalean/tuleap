@@ -93,7 +93,7 @@ abstract class GitPHP_FilesystemObject extends GitPHP_GitObject
 	public function GetName()
 	{
 		if (!empty($this->path))
-			return basename($this->path);
+			return GitPHP_Util::BaseName($this->path);
 
 		return '';
 	}

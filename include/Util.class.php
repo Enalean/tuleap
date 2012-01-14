@@ -95,4 +95,38 @@ class GitPHP_Util
 		return str_replace($from, $to, $str);
 	}
 
+	/**
+	 * BaseName
+	 *
+	 * Get the filename of a given path
+	 *
+	 * based on Drupal's basename
+	 *
+	 * @access public
+	 * @param string $path path
+	 * @param string $suffix optionally trim this suffix
+	 * @static
+	 * @return string filename
+	 */
+	public static function BaseName($path, $suffix = null)
+	{
+		$sep = '/';
+		if (GitPHP_Util::IsWindows()) {
+			$sep .= '\\';
+		}
+
+		$path = rtrim($path, $sep);
+
+		if (!preg_match('@[^' . preg_quote($sep) . ']+$@', $path, $matches)) {
+			return '';
+		}
+
+		$filename = $matches[0];
+
+		if ($suffix) {
+			$filename = preg_replace('@' . preg_quote($suffix, '@') . '$@', '', $filename);
+		}
+		return $filename;
+	}
+
 }
