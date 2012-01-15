@@ -112,6 +112,7 @@ class GitPHP_Controller_Blob extends GitPHP_ControllerBase
 		if (isset($this->params['plain']) && $this->params['plain']) {
 
 			GitPHP_Log::GetInstance()->SetEnabled(false);
+			$this->preserveWhitespace = true;
 
 			// XXX: Nasty hack to cache headers
 			if (!$this->tpl->is_cached('blobheaders.tpl', $this->GetFullCacheKey())) {

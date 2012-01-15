@@ -105,6 +105,22 @@ class GitPHP_Controller_Blobdiff extends GitPHP_Controller_DiffBase
 	}
 
 	/**
+	 * LoadHeaders
+	 *
+	 * Loads headers for this template
+	 *
+	 * @access protected
+	 */
+	protected function LoadHeaders()
+	{
+		parent::LoadHeaders();
+
+		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
+			$this->preserveWhitespace = true;
+		}
+	}
+
+	/**
 	 * LoadData
 	 *
 	 * Loads data for this template

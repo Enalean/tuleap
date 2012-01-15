@@ -125,6 +125,7 @@ class GitPHP_Controller_ProjectList extends GitPHP_ControllerBase
 		if (isset($this->params['opml']) && ($this->params['opml'] === true)) {
 			$this->headers[] = "Content-type: text/xml; charset=UTF-8";
 			GitPHP_Log::GetInstance()->SetEnabled(false);
+			$this->preserveWhitespace = true;
 		} else if (isset($this->params['txt']) && ($this->params['txt'] === true)) {
 			$this->headers[] = "Content-type: text/plain; charset=utf-8";
 			$this->headers[] = "Content-Disposition: inline; filename=\"index.aux\"";

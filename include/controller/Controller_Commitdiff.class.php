@@ -117,6 +117,7 @@ class GitPHP_Controller_Commitdiff extends GitPHP_Controller_DiffBase
 
 		if (isset($this->params['plain']) && ($this->params['plain'] === true)) {
 			$this->headers[] = 'Content-disposition: inline; filename="git-' . $this->params['hash'] . '.patch"';
+			$this->preserveWhitespace = true;
 		}
 	}
 

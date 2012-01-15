@@ -57,6 +57,16 @@ abstract class GitPHP_ControllerBase
 	protected $headers = array();
 
 	/**
+	 * preserveWhitespace
+	 *
+	 * Flag to preserve whitespace in output
+	 * (for non-html output)
+	 *
+	 * @access protected
+	 */
+	protected $preserveWhitespace = false;
+
+	/**
 	 * __construct
 	 *
 	 * Constructor
@@ -322,6 +332,10 @@ abstract class GitPHP_ControllerBase
 			$this->tpl->clear_all_assign();
 			$this->LoadCommonData();
 			$this->LoadData();
+		}
+
+		if (!$this->preserveWhitespace) {
+			$this->tpl->load_filter('output', 'trimwhitespace');
 		}
 
 		$this->tpl->display($this->GetTemplate(), $this->GetFullCacheKey());

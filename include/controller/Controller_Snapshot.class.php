@@ -49,6 +49,8 @@ class GitPHP_Controller_Snapshot extends GitPHP_ControllerBase
 			throw new GitPHP_MessageException(__('Project is required'), true);
 		}
 
+		$this->preserveWhitespace = true;
+
 		$this->ReadQuery();
 	}
 
