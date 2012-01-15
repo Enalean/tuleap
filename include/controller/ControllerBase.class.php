@@ -337,7 +337,7 @@ abstract class GitPHP_ControllerBase
 		}
 
 		if (!$this->preserveWhitespace) {
-			$this->tpl->load_filter('output', 'trimwhitespace');
+			$this->tpl->loadFilter('output', 'trimwhitespace');
 		}
 
 		$this->tpl->display($this->GetTemplate(), $this->GetFullCacheKey());
