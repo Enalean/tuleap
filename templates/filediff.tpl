@@ -5,7 +5,7 @@
  *
  *  Copyright (C) 2009 Christopher Han <xiphux@gmail.com>
  *}
-<div class="pre">
+<pre>
 {foreach from=$diff item=diffline}
 {if substr($diffline,0,1)=="+"}
 <span class="diffplus">{$diffline|escape:'html'}</span>
@@ -17,4 +17,4 @@
 <span>{$diffline|escape:'html'}</span>
 {/if}
 {/foreach}
-</div>
+</pre>
