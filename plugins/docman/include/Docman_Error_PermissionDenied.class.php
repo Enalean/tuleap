@@ -148,7 +148,13 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied {
         }
 
         $pm = $this->_getPermissionManagerInstance($project->getId());
-        $adminList = $pm->returnDocmanManagerUsers($query['id'], 'PLUGIN_DOCMAN_MANAGE',$project);
+        $adminList = $pm->getDocmanManagerUsers($query['id'],$project);
+        if (empty($adminList)) {
+            $adminList = $pm->getDocmanAdminUsers($project);
+        }
+        if (empty($adminList)) {
+            $adminList = $pm->getProjectAdminUsers($project);
+        }
         $receivers = array();
         foreach ($adminList as $mail => $language) {
             $receivers[] = $mail;

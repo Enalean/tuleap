@@ -1,3 +1,6 @@
+Version 2.22 - Tuleap 4.0.26
+    Fix behaviour on permission denied when accessing document: when no one to notify, notify admin (contrib STMicroelectronics).
+
 Version 2.21 - Tuleap 4.0.26
     Document manager can add and remove people that monitors documents and folders (contrib STMicroelectronics).
 

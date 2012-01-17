@@ -564,31 +564,24 @@ class Docman_PermissionsManager {
     }
 
     /**
-     * Returns docman manager users information  for a given item and permission type
+     * Return the list of people to be notified as document managers for a given item
      *
      * For dynamics ugroups, we decided to force notification to project admin to avoid
      * notification of a lot of people if "Document Manager" set to "project_members" or
      * "all_users".
      *
-     * @param  Integer     $objectId       The id of the object
-     * @param  String      $permissionType The type of permission asked
-     * @param  Project     $project        The related project
+     * @param Integer $objectId The id of the object
+     * @param Project $project  The related project
      *
      * @return Array
      */
-    function returnDocmanManagerUsers($objectId, $permissionType, $project){
+    function getDocmanManagerUsers($objectId, $project) {
         $userArray = array();
-        $dar = $this->_getPermissionManagerInstance()->getUgroupIdByObjectIdAndPermissionType($objectId, $permissionType);
-        if ($dar && !$dar->isError()) {
+        $dao = $this->getDao();
+        $dar = $this->_getPermissionManagerInstance()->getUgroupIdByObjectIdAndPermissionType($objectId, 'PLUGIN_DOCMAN_MANAGE');
+        if ($dar) {
             foreach ($dar as $row) {
-                $dao = $this->getDao();
-                if ($row['ugroup_id'] <= 100) {
-                    //If one of these ugroups is set to be docman manager, we notify project admin
-                    $darDu = $dao->getProjectAdminMembers($project);
-                    foreach ($darDu as $rowDu) {
-                        $userArray[$rowDu['email']] = $rowDu['language_id'];
-                    }
-                } else {
+                if ($row['ugroup_id'] > 100) {
                     $darUg = $dao->getUgroupMembers($row['ugroup_id']);
                     foreach ($darUg as $rowUg) {
                         $userArray[$rowUg['email']] = $rowUg['language_id'];
@@ -599,7 +592,48 @@ class Docman_PermissionsManager {
         return $userArray;
     }
 
+    /**
+     * Return the list of people to be notified as docman admins for the given project
+     *
+     * @param Project $project The related project
+     *
+     * @return Array
+     */
+    function getDocmanAdminUsers($project) {
+        $userArray = array();
+        $dao = $this->getDao();
+        $dar = $dao->getDocmanAdminUgroups($project);
+        if ($dar) {
+            foreach ($dar as $row) {
+                if ($row['ugroup_id'] > 100) {
+                    $darUg = $dao->getUgroupMembers($row['ugroup_id']);
+                    foreach ($darUg as $rowUg) {
+                        $userArray[$rowUg['email']] = $rowUg['language_id'];
+                    }
+                }
+            }
+        }
+        return $userArray;
+    }
 
+    /**
+     * Return the list of people to be notified as project admins
+     *
+     * @param Project $project The related project
+     *
+     * @return Array
+     */
+    function getProjectAdminUsers($project) {
+        $userArray = array();
+        $dao = $this->getDao();
+        $darDu = $dao->getProjectAdminMembers($project);
+        if ($darDu) {
+            foreach ($darDu as $rowDu) {
+                $userArray[$rowDu['email']] = $rowDu['language_id'];
+            }
+        }
+        return $userArray;
+    }
 
 }
 

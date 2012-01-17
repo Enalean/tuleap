@@ -86,8 +86,26 @@ class Docman_PermissionsManagerDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    
-    
+    /**
+     * Returns docman admin ugroups
+     * 
+     * @param Project $project
+     *
+     * @return DataAccessResult
+     */
+    function getDocmanAdminUgroups(Project $project) {
+        $sql="SELECT ugroup_id
+              FROM permissions
+              WHERE permission_type = 'PLUGIN_DOCMAN_ADMIN'
+                AND object_id = ".$this->da->escapeInt($project->getGroupId())."
+              ORDER BY ugroup_id";
+        $res = $this->retrieve($sql);
+        if ($res && !$res->isError()) {
+            return $res;
+        } else {
+            return false;
+        }
+    }
 
 }
 

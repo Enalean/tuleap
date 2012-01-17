@@ -651,5 +651,158 @@ class PermissionsManagerTest extends UnitTestCase {
         $this->assertTrue($this->docmanPm->userCanWrite($this->user, $itemId));
         $this->assertTrue($this->docmanPm->userCanRead($this->user, $itemId));
     }
+
+    function testGetDocmanManagerUsersError() {
+        $pm = new MockPermissionsManager();
+        $pm->setReturnValue('getUgroupIdByObjectIdAndPermissionType', null);
+        $this->docmanPm->setReturnValue('_getPermissionManagerInstance', $pm);
+        $dao = new MockDocman_PermissionsManagerDao();
+        $this->docmanPm->setReturnValue('getDao', $dao);
+
+        $pm->expectOnce('getUgroupIdByObjectIdAndPermissionType');
+        $dao->expectNever('getUgroupMembers');
+        $this->docmanPm->expectOnce('getDao');
+        $this->docmanPm->expectOnce('_getPermissionManagerInstance');
+        $this->assertEqual(array(), $this->docmanPm->getDocmanManagerUsers(1, 1));
+    }
+
+    function testGetDocmanManagerUsersDynamicUgroup() {
+        $dar = array(array('ugroup_id' => 101));
+        $pm = new MockPermissionsManager();
+        $pm->setReturnValue('getUgroupIdByObjectIdAndPermissionType', $dar);
+        $this->docmanPm->setReturnValue('_getPermissionManagerInstance', $pm);
+        $dao = new MockDocman_PermissionsManagerDao();
+        $members = array(array('email'       => 'john.doe@example.com',
+                               'language_id' => 'en_US'),
+                         array('email'       => 'jane.doe@example.com',
+                               'language_id' => 'fr_FR'));
+        $dao->setReturnvalue('getUgroupMembers', $members);
+        $this->docmanPm->setReturnValue('getDao', $dao);
+
+        $pm->expectOnce('getUgroupIdByObjectIdAndPermissionType');
+        $dao->expectOnce('getUgroupMembers');
+        $this->docmanPm->expectOnce('getDao');
+        $this->docmanPm->expectOnce('_getPermissionManagerInstance');
+        $userArray = array('john.doe@example.com' => 'en_US',
+                           'jane.doe@example.com' => 'fr_FR');
+        $this->assertEqual($userArray, $this->docmanPm->getDocmanManagerUsers(1, 1));
+    }
+
+    function testGetDocmanManagerUsersEmptyDynamicUgroup() {
+        $dar = array(array('ugroup_id' => 101));
+        $pm = new MockPermissionsManager();
+        $pm->setReturnValue('getUgroupIdByObjectIdAndPermissionType', $dar);
+        $this->docmanPm->setReturnValue('_getPermissionManagerInstance', $pm);
+        $dao = new MockDocman_PermissionsManagerDao();
+        $dao->setReturnvalue('getUgroupMembers', array());
+        $dao->setReturnvalue('getDocmanAdminUgroups', null);
+        $this->docmanPm->setReturnValue('getDao', $dao);
+
+        $pm->expectOnce('getUgroupIdByObjectIdAndPermissionType');
+        $dao->expectOnce('getUgroupMembers');
+        $this->docmanPm->expectOnce('getDao');
+        $this->docmanPm->expectOnce('_getPermissionManagerInstance');
+        $this->assertEqual(array(), $this->docmanPm->getDocmanManagerUsers(1, 1));
+    }
+
+    function testGetDocmanManagerUsersStaticUgroup() {
+        $dar = array(array('ugroup_id' => 100));
+        $pm = new MockPermissionsManager();
+        $pm->setReturnValue('getUgroupIdByObjectIdAndPermissionType', $dar);
+        $this->docmanPm->setReturnValue('_getPermissionManagerInstance', $pm);
+        $dao = new MockDocman_PermissionsManagerDao();
+        $dao->setReturnvalue('getDocmanAdminUgroups', null);
+        $this->docmanPm->setReturnValue('getDao', $dao);
+
+        $pm->expectOnce('getUgroupIdByObjectIdAndPermissionType');
+        $dao->expectNever('getUgroupMembers');
+        $this->docmanPm->expectOnce('getDao');
+        $this->docmanPm->expectOnce('_getPermissionManagerInstance');
+        $this->assertEqual(array(), $this->docmanPm->getDocmanManagerUsers(1, 1));
+    }
+
+    function testGetDocmanAdminUsersError() {
+        $dao = new MockDocman_PermissionsManagerDao();
+        $dao->setReturnValue('getDocmanAdminUgroups', null);
+        $this->docmanPm->setReturnValue('getDao', $dao);
+
+        $dao->expectOnce('getDocmanAdminUgroups');
+        $dao->expectNever('getUgroupMembers');
+        $this->docmanPm->expectOnce('getDao');
+        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers(1));
+    }
+
+    function testGetDocmanAdminUsersDynamicUgroup() {
+        $dar = array(array('ugroup_id' => 101));
+        $dao = new MockDocman_PermissionsManagerDao();
+        $dao->setReturnValue('getDocmanAdminUgroups', $dar);
+        $members = array(array('email'       => 'john.doe@example.com',
+                               'language_id' => 'en_US'),
+                         array('email'       => 'jane.doe@example.com',
+                               'language_id' => 'fr_FR'));
+        $dao->setReturnvalue('getUgroupMembers', $members);
+        $this->docmanPm->setReturnValue('getDao', $dao);
+
+        $dao->expectOnce('getDocmanAdminUgroups');
+        $dao->expectOnce('getUgroupMembers');
+        $this->docmanPm->expectOnce('getDao');
+        $userArray = array('john.doe@example.com' => 'en_US',
+                           'jane.doe@example.com' => 'fr_FR');
+        $this->assertEqual($userArray, $this->docmanPm->getDocmanAdminUsers(1));
+    }
+
+    function testGetDocmanAdminUsersEmptyDynamicUgroup() {
+        $dar = array(array('ugroup_id' => 101));
+        $dao = new MockDocman_PermissionsManagerDao();
+        $dao->setReturnValue('getDocmanAdminUgroups', $dar);
+        $dao->setReturnvalue('getUgroupMembers', array());
+        $dao->setReturnvalue('getDocmanAdminUgroups', null);
+        $this->docmanPm->setReturnValue('getDao', $dao);
+
+        $dao->expectOnce('getDocmanAdminUgroups');
+        $dao->expectOnce('getUgroupMembers');
+        $this->docmanPm->expectOnce('getDao');
+        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers(1));
+    }
+
+    function testGetDocmanAdminUsersStaticUgroup() {
+        $dar = array(array('ugroup_id' => 100));
+        $dao = new MockDocman_PermissionsManagerDao();
+        $dao->setReturnValue('getDocmanAdminUgroups', $dar);
+        $dao->setReturnvalue('getDocmanAdminUgroups', null);
+        $this->docmanPm->setReturnValue('getDao', $dao);
+
+        $dao->expectOnce('getDocmanAdminUgroups');
+        $dao->expectNever('getUgroupMembers');
+        $this->docmanPm->expectOnce('getDao');
+        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers(1));
+    }
+
+    function testGetProjectAdminUsersError() {
+        $dao = new MockDocman_PermissionsManagerDao();
+        $dao->setReturnValue('getProjectAdminMembers', null);
+        $this->docmanPm->setReturnValue('getDao', $dao);
+
+        $dao->expectOnce('getProjectAdminMembers');
+        $this->docmanPm->expectOnce('getDao');
+        $this->assertEqual(array(), $this->docmanPm->getProjectAdminUsers(1));
+    }
+
+    function testGetProjectAdminUsersSuccess() {
+        $dao = new MockDocman_PermissionsManagerDao();
+        $dar = array(array('email'       => 'john.doe@example.com',
+                           'language_id' => 'en_US'),
+                     array('email'       => 'jane.doe@example.com',
+                           'language_id' => 'fr_FR'));
+        $dao->setReturnValue('getProjectAdminMembers', $dar);
+        $this->docmanPm->setReturnValue('getDao', $dao);
+
+        $dao->expectOnce('getProjectAdminMembers');
+        $this->docmanPm->expectOnce('getDao');
+        $userArray = array('john.doe@example.com' => 'en_US',
+                           'jane.doe@example.com' => 'fr_FR');
+        $this->assertEqual($userArray, $this->docmanPm->getProjectAdminUsers(1));
+    }
+
 }
 ?>
