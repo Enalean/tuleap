@@ -16,60 +16,14 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `activity_log`
---
-
-DROP TABLE IF EXISTS `activity_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `activity_log` (
-  `day` int(11) NOT NULL default '0',
-  `hour` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `browser` varchar(8) NOT NULL default 'OTHER',
-  `ver` float(10,2) NOT NULL default '0.00',
-  `platform` varchar(8) NOT NULL default 'OTHER',
-  `time` int(11) NOT NULL default '0',
-  `page` text,
-  `type` int(11) NOT NULL default '0',
-  KEY `idx_activity_log_day` (`day`),
-  KEY `idx_activity_log_group` (`group_id`),
-  KEY `type_idx` (`type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `activity_log`
 --
 
 LOCK TABLES `activity_log` WRITE;
 /*!40000 ALTER TABLE `activity_log` DISABLE KEYS */;
-INSERT INTO `activity_log` VALUES (20111221,18,0,'MOZILLA',5.00,'Mac',1324487385,'/index.php',0),(20111221,18,0,'MOZILLA',5.00,'Mac',1324487385,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490419,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490419,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490672,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490673,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490674,'/account/login.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490675,'/account/login.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490675,'/account/login.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490676,'/my/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490676,'/my/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490677,'/account/login.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490677,'/account/login.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324491828,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324491828,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493192,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493192,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493229,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493229,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493991,'/projects',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493991,'/projects',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324494510,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324494511,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324494512,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495373,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495374,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495374,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Mac',1324495576,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Mac',1324495576,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495770,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495770,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495771,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495772,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495772,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495772,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495845,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495845,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495846,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495846,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495847,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Mac',1324495865,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Mac',1324495870,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495958,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495958,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495959,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495959,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495959,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495960,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Mac',1324496047,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498433,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498433,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498433,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498434,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498434,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498435,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498615,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498615,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498616,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498616,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498617,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498617,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498679,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498679,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498680,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498681,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498681,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498736,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498736,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498736,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498737,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498738,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498738,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498962,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498962,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498962,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498963,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498963,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498964,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498965,'/search/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Mac',1324499608,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Mac',1324499608,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499692,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499692,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499693,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499693,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499693,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499694,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499695,'/search/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499780,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499781,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499781,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499782,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499782,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499783,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501380,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501380,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501428,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501428,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501429,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501429,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501429,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501430,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501431,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501772,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501772,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501773,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501773,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501774,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501774,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501775,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501825,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501825,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501826,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501826,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501826,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501827,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501915,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501915,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501916,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501916,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501916,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501918,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501962,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501962,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501963,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501963,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501964,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501964,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501965,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501997,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501997,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501998,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501998,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501999,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502000,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502318,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502319,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502319,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502320,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502320,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502321,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502365,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502365,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502366,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502366,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502366,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502368,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502587,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502588,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502589,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502589,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502589,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502590,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503036,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503037,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503298,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503298,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503330,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503330,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503345,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503345,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503346,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503347,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503347,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503347,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503348,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503371,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503372,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503372,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503373,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503373,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503373,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503375,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503467,'/account/preferences.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503475,'/account/updateprefs.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503475,'/account/preferences.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503481,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503510,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503510,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503511,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503511,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503511,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503512,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503621,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503621,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503622,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503622,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503623,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503624,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503706,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503706,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503707,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503708,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503708,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503709,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503756,'/account/logout.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503756,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503758,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503909,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503909,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503910,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503910,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503910,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503911,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503912,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503912,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503936,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503937,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503937,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503937,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503938,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503939,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503939,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504036,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504036,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504037,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504037,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504038,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504039,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504039,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504040,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504140,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504141,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504141,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504142,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504142,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504142,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504143,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504144,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504145,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504145,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505701,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505702,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505702,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505703,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505703,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505704,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505705,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505706,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505706,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505728,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505728,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505729,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505729,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505729,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505731,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505731,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505731,'/my/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506206,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506219,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506219,'/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506231,'/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506239,'/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506239,'/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506245,'/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506245,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506272,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506273,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506273,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506274,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508060,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508061,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508062,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508062,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508062,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508065,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508065,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508066,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512329,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512330,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512330,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512331,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512331,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512332,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512549,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512549,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512550,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512550,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512551,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512551,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512552,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512552,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512553,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512553,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512553,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512554,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513501,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513502,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513502,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513503,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513503,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513504,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513571,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513571,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513575,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513578,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513584,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513584,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513623,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513722,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513722,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513723,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513723,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513724,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513724,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513725,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513725,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513759,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513760,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513761,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513761,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513761,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513762,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513762,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513762,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513833,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513833,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513834,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513834,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513835,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513835,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513836,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513836,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513905,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513984,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513984,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513985,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513985,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513985,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513986,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514025,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514134,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514134,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514135,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514135,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514136,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514136,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516130,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516130,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516131,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516131,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516131,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516132,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516133,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516133,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516417,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516417,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516418,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516418,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516418,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516419,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516420,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516420,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516872,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516873,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516874,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516874,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516874,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516875,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516876,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516876,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516911,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516912,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516912,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516913,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516913,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516914,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516915,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516915,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517221,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517221,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517222,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517222,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517223,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517224,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517224,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517289,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517289,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517290,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517291,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517291,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517292,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517292,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517293,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517333,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517334,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517334,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517335,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517335,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517336,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517337,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517373,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517373,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517374,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517374,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517374,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517378,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517378,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517793,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517793,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517793,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517794,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517794,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517795,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517795,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517796,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517797,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517854,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517854,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517855,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517855,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517856,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517857,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517858,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517886,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517886,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517887,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517887,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517888,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517888,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517889,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517889,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517890,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517891,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517891,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517959,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517960,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517960,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517961,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517961,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517961,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517963,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517963,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517964,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517964,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518089,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518089,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518090,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518090,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518090,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518092,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518092,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518092,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518093,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518093,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518367,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518368,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518368,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518369,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518369,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518369,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518370,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518371,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518372,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518372,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518373,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518373,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518443,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518443,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518444,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518444,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518444,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518445,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518446,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518446,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518447,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518447,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519107,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519108,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519108,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519109,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519109,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519110,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519111,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519111,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519112,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519112,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523814,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523819,'/snippet/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523822,'/softwaremap/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523822,'/softwaremap/trove_list.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523826,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523835,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524586,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524586,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524587,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524587,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524587,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524588,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524589,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524589,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524590,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524591,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525923,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525923,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525924,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525924,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525924,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525925,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525926,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525926,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525927,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525927,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525928,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525955,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525955,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525955,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525956,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525956,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525957,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525957,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525958,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525959,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525959,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525996,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525996,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525997,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525997,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525997,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525998,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525998,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525999,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526000,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526000,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526053,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526053,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526054,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526054,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526054,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526055,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526056,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526056,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526057,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526057,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526058,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526138,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526139,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526139,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526140,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526140,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526141,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526141,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526142,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526142,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526143,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526221,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526221,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526222,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526223,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526223,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526223,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526224,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526225,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526226,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526226,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526226,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526404,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526404,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526405,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526405,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526405,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526406,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526406,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526407,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526408,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526408,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526409,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526431,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526431,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526432,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526432,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526432,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526433,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526433,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526434,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526434,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526435,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526544,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526544,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526544,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526545,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526545,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526545,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526546,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526547,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526548,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526548,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526549,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526549,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526549,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526590,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526591,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526591,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526592,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526592,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526592,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526593,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526594,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526594,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526594,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526595,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526595,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526596,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527280,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527280,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527281,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527282,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527282,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527282,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527283,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527284,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527285,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527285,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527285,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527286,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527451,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527451,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527452,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527452,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527452,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527454,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527454,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527454,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527455,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527456,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527456,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527457,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527540,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527541,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527542,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527542,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527542,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527543,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527544,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527544,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527545,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527545,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527546,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527546,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527547,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527593,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527593,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527594,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527595,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527595,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527596,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527597,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527597,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527598,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527598,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527599,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527667,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527668,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527668,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527669,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527669,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527670,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527671,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527671,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527672,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527673,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527673,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527674,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527758,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527758,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527759,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527759,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527759,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527760,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527761,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527761,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527762,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527763,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527763,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527782,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527783,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527783,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527784,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527784,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527784,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527785,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527786,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527787,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527787,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527788,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527788,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527923,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527923,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527924,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527924,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527924,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527925,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527926,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527926,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527927,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527928,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527928,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527928,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527939,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527939,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527940,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527940,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527941,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527942,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527942,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527943,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527943,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527944,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527944,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527945,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528005,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528005,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528006,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528006,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528006,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528007,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528008,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528008,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528009,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528010,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528010,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528011,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531306,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531306,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531307,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531308,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531309,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531309,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531313,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531313,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531314,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531314,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531315,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531315,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531315,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531316,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531317,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531317,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531319,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531319,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531319,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531379,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531379,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531380,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531381,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531381,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531381,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531382,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531383,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531383,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531384,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531384,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531385,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531385,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531387,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531388,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531389,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531389,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531390,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531532,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531532,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531533,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531534,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531534,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531534,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531535,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531536,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531536,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531537,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531537,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531537,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531538,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531538,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531539,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531539,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531540,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531540,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531541,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531697,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531697,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531698,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531698,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531698,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531699,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531700,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531700,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531701,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531701,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531702,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531702,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531702,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531703,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531704,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531704,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531705,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532107,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532107,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532108,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532108,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532109,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532109,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532109,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532110,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532110,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532110,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532111,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532111,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532112,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532967,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532967,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532968,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532968,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532969,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532969,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532970,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532971,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532971,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533162,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533162,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533163,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533163,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533163,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533164,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533165,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533165,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533166,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533166,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533167,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533167,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533167,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533169,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533169,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533170,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533170,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533170,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533281,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533282,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533282,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533283,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533283,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533283,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533284,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533284,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533285,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533285,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533285,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533286,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533286,'/admin/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533939,'/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533939,'/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533940,'/my/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533940,'/account/login.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533941,'/account/login.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533941,'/my/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533942,'/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533942,'/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533943,'/my/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533943,'/account/login.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533943,'/account/login.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533944,'/my/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533944,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564407,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564407,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564412,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564416,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564683,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564683,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564684,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564700,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564702,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564702,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564702,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564960,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564960,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564961,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564961,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564962,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564962,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564963,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564963,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564964,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564964,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564965,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564965,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564966,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564988,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564988,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564989,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564989,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564990,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564990,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564991,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564992,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564992,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564993,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564993,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564994,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564994,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564995,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564996,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564997,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564998,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564998,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565350,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565351,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565352,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565352,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565352,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565353,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565354,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565355,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565355,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565356,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565356,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565356,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565358,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565358,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565359,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565359,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565400,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565400,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565401,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565401,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565401,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565402,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565403,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565404,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565404,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565405,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565405,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565405,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565406,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565826,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565826,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565827,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565827,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565828,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565829,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565829,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565829,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565830,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565831,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565831,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565832,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565832,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565833,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565833,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565834,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565835,'/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566219,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566220,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566220,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566221,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566221,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566221,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566223,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566223,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566223,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566622,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566622,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566623,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566624,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566624,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566624,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566625,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566626,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566626,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566627,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566627,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566628,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566628,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566629,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566630,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566630,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566631,'/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566631,'/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567085,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567085,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567092,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567096,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567103,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567103,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567108,'/projects/nty/',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567112,'/tracker/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567145,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567151,'/projects/nty/',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567158,'/project/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567176,'/projects/nty/',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567178,'/project/admin/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567180,'/project/admin/servicebar.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567181,'/project/admin/servicebar.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567190,'/project/admin/editservice.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567210,'/project/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567217,'/projects/nty/',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567231,'/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567257,'/project/admin/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567262,'/project/admin/servicebar.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567288,'/account/logout.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567288,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567293,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567298,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567304,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567304,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567308,'/projects/codendi/',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567310,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567311,'/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567319,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567333,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567337,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567341,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567353,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567361,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567368,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567370,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567378,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567390,'/account/logout.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567390,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567393,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567400,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567400,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567404,'/projects/nty/',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567410,'/project/admin/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567416,'/project/admin/servicebar.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567421,'/project/admin/editservice.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567426,'/project/admin/servicebar.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567429,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567451,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567507,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567513,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567549,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567583,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567593,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567607,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567613,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567615,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567633,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567638,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567656,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567693,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567719,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567733,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567763,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567773,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567796,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567807,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324568110,'/plugins/tracker/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324568288,'/project/privacy.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324568298,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324568319,'/plugins/tracker/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324568414,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324568414,'/index.php',0),(20111222,17,101,'MOZILLA',5.00,'Mac',1324569710,'/plugins/tracker/index.php',0),(20111222,17,101,'MOZILLA',5.00,'Mac',1324569981,'/plugins/tracker/index.php',0),(20111222,17,101,'MOZILLA',5.00,'Mac',1324569983,'/plugins/tracker/index.php',0),(20111222,17,101,'MOZILLA',5.00,'Mac',1324570352,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570373,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570413,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570414,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570416,'/sparklines.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570443,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570444,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570462,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570463,'/sparklines.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570472,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570498,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570551,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570553,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570554,'/sparklines.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570558,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570559,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570560,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570719,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570721,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570722,'/sparklines.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570726,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570726,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570743,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570744,'/sparklines.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570761,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570780,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570842,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570849,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580221,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580252,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580253,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580275,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580282,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580291,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580543,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580544,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580581,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580600,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580601,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580611,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580628,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580629,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580644,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580645,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580649,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580662,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580681,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580686,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580694,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580698,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580707,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580718,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580725,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580725,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580759,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580760,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580806,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580812,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580813,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580837,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580838,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580873,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580878,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580922,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580923,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580931,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580932,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580938,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580944,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580951,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580952,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580961,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580962,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324581423,'/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324581423,'/index.php',0),(20111222,21,0,'MOZILLA',5.00,'Mac',1324587595,'/my/index.php',0),(20111222,21,0,'MOZILLA',5.00,'Mac',1324587598,'/projects/nty/',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587611,'/project/admin/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587615,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587665,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587686,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587690,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324587699,'/users/johan/',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587737,'/tracker/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587747,'/project/admin/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587752,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587769,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587774,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324587937,'/projects/nty/',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587959,'/project/admin/group_trove.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587998,'/file/showfiles.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588073,'/file/showfiles.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588099,'/project/admin/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588103,'/project/admin/servicebar.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588175,'/project/admin/editservice.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588277,'/project/admin/editservice.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588286,'/tracker/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588635,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588648,'/account/logout.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588648,'/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588651,'/account/login.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588652,'/account/login.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588658,'/account/login.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588658,'/my/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588659,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588660,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588660,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588661,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588662,'/projects/codendi/',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588663,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588664,'/plugins/IM/index.php',0),(20111222,22,1,'MOZILLA',5.00,'Mac',1324588670,'/plugins/docman/index.php',0),(20111222,22,1,'MOZILLA',5.00,'Mac',1324588687,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588688,'/plugins/IM/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588718,'/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588723,'/admin/grouplist.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588728,'/admin/groupedit.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588732,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588733,'/plugins/IM/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588745,'/plugins/git/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588748,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588749,'/plugins/IM/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588750,'/account/logout.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588750,'/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588754,'/account/login.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588762,'/account/login.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588762,'/my/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588764,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588764,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588765,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588765,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588768,'/my/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588769,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588770,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588770,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588770,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588771,'/projects/nty/',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588773,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588774,'/plugins/IM/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588777,'/plugins/git/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588777,'/plugins/git/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588782,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588783,'/plugins/IM/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588784,'/plugins/tracker/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588787,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588788,'/plugins/IM/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588792,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588804,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588807,'/plugins/tracker/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588811,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588812,'/plugins/IM/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588819,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589329,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589331,'/sparklines.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589336,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589338,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589347,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589442,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589444,'/sparklines.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589578,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589603,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589615,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589645,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589646,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589654,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589676,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589677,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589683,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589697,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589698,'/plugins/tracker/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721983,'/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721984,'/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721985,'/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721986,'/account/login.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721986,'/account/login.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721988,'/account/login.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722140,'/my/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722140,'/account/login.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722149,'/account/login.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722149,'/my/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722151,'/widgets/widget.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722152,'/widgets/widget.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722152,'/widgets/widget.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722153,'/widgets/widget.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722153,'/project/privacy.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722153,'/project/privacy.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722461,'/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722462,'/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722466,'/account/login.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722476,'/account/login.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722483,'/account/login.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722495,'/projects/codendi/',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722498,'/plugins/IM/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722498,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722502,'/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722504,'/admin/userlist.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722594,'/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722596,'/my/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722598,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722598,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722599,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722599,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722605,'/projects/codendi/',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722606,'/plugins/IM/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722606,'/widgets/widget.php',0),(20120116,15,1,'MOZILLA',5.00,'Mac',1326722612,'/project/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722613,'/plugins/IM/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722618,'/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722621,'/admin/userlist.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722622,'/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722624,'/admin/register_admin.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722624,'/scripts/check_pw.js.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722625,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722632,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722633,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722633,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722634,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722634,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722635,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722635,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722635,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722665,'/admin/register_admin.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722671,'/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722673,'/admin/grouplist.php',0),(20120116,15,101,'MOZILLA',5.00,'Mac',1326722676,'/admin/groupedit.php',0),(20120116,15,101,'MOZILLA',5.00,'Mac',1326722690,'/admin/userlist.php',0),(20120116,15,101,'MOZILLA',5.00,'Mac',1326722694,'/admin/groupedit.php',0),(20120116,15,101,'MOZILLA',5.00,'Mac',1326722697,'/project/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722698,'/plugins/IM/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722707,'/user/autocomplete.php',0),(20120116,15,101,'MOZILLA',5.00,'Mac',1326722712,'/project/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722734,'/plugins/IM/index.php',0);
+INSERT INTO `activity_log` VALUES (20111221,18,0,'MOZILLA',5.00,'Mac',1324487385,'/index.php',0),(20111221,18,0,'MOZILLA',5.00,'Mac',1324487385,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490419,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490419,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490672,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490673,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490674,'/account/login.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490675,'/account/login.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490675,'/account/login.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490676,'/my/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490676,'/my/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490677,'/account/login.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324490677,'/account/login.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324491828,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324491828,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493192,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493192,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493229,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493229,'/index.php',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493991,'/projects',0),(20111221,19,0,'MOZILLA',5.00,'Linux',1324493991,'/projects',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324494510,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324494511,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324494512,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495373,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495374,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495374,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Mac',1324495576,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Mac',1324495576,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495770,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495770,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495771,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495772,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495772,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495772,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495845,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495845,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495846,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495846,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495847,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Mac',1324495865,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Mac',1324495870,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495958,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495958,'/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495959,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495959,'/my/index.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495959,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Linux',1324495960,'/account/login.php',0),(20111221,20,0,'MOZILLA',5.00,'Mac',1324496047,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498433,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498433,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498433,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498434,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498434,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498435,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498615,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498615,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498616,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498616,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498617,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498617,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498679,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498679,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498680,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498681,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498681,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498736,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498736,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498736,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498737,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498738,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498738,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498962,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498962,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498962,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498963,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498963,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498964,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324498965,'/search/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Mac',1324499608,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Mac',1324499608,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499692,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499692,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499693,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499693,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499693,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499694,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499695,'/search/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499780,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499781,'/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499781,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499782,'/my/index.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499782,'/account/login.php',0),(20111221,21,0,'MOZILLA',5.00,'Linux',1324499783,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501380,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501380,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501428,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501428,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501429,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501429,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501429,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501430,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501431,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501772,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501772,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501773,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501773,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501774,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501774,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501775,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501825,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501825,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501826,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501826,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501826,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501827,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501915,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501915,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501916,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501916,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501916,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501918,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501962,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501962,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501963,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501963,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501964,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501964,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501965,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501997,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501997,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501998,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501998,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324501999,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502000,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502318,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502319,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502319,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502320,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502320,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502321,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502365,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502365,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502366,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502366,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502366,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502368,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502587,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502588,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502589,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502589,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502589,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324502590,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503036,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503037,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503298,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503298,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503330,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503330,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503345,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503345,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503346,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503347,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503347,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503347,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503348,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503371,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503372,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503372,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503373,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503373,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503373,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503375,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503467,'/account/preferences.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503475,'/account/updateprefs.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503475,'/account/preferences.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503481,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503510,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503510,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503511,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503511,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503511,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503512,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503621,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503621,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503622,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503622,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503623,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503624,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503706,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503706,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503707,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503708,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503708,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503709,'/search/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503756,'/account/logout.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503756,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Mac',1324503758,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503909,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503909,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503910,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503910,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503910,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503911,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503912,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503912,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503936,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503937,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503937,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503937,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503938,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503939,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324503939,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504036,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504036,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504037,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504037,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504038,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504039,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504039,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504040,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504140,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504141,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504141,'/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504142,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504142,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504142,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504143,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504144,'/account/login.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504145,'/my/index.php',0),(20111221,22,0,'MOZILLA',5.00,'Linux',1324504145,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505701,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505702,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505702,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505703,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505703,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505704,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505705,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505706,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505706,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505728,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505728,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505729,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505729,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505729,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505731,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505731,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324505731,'/my/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506206,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506219,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506219,'/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506231,'/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506239,'/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506239,'/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506245,'/index.php',0),(20111221,23,0,'OTHER',0.00,'Other',1324506245,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506272,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506273,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506273,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Mac',1324506274,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508060,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508061,'/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508062,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508062,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508062,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508065,'/account/login.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508065,'/my/index.php',0),(20111221,23,0,'MOZILLA',5.00,'Linux',1324508066,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512329,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512330,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512330,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512331,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512331,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512332,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512549,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512549,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512550,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512550,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512551,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512551,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512552,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512552,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512553,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512553,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512553,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324512554,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513501,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513502,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513502,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513503,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513503,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513504,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513571,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513571,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513575,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513578,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513584,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513584,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513623,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513722,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513722,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513723,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513723,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513724,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513724,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513725,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513725,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513759,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513760,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513761,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513761,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513761,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513762,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513762,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513762,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513833,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513833,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513834,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513834,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513835,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513835,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513836,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513836,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513905,'/admin/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513984,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513984,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513985,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513985,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513985,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324513986,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514025,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514134,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514134,'/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514135,'/my/index.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514135,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514136,'/account/login.php',0),(20111222,1,0,'MOZILLA',5.00,'Mac',1324514136,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516130,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516130,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516131,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516131,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516131,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516132,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516133,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516133,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516417,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516417,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516418,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516418,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516418,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516419,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516420,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516420,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516872,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516873,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516874,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516874,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516874,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516875,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516876,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516876,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516911,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516912,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516912,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516913,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516913,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516914,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516915,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324516915,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517221,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517221,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517222,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517222,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517223,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517224,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517224,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517289,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517289,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517290,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517291,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517291,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517292,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517292,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517293,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517333,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517334,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517334,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517335,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517335,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517336,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517337,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517373,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517373,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517374,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517374,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517374,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517378,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517378,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517793,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517793,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517793,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517794,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517794,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517795,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517795,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517796,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517797,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517854,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517854,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517855,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517855,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517856,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517857,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517858,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517886,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517886,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517887,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517887,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517888,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517888,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517889,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517889,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517890,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517891,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517891,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517959,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517960,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517960,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517961,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517961,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517961,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517963,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517963,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517964,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324517964,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518089,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518089,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518090,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518090,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518090,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518092,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518092,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518092,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518093,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518093,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518367,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518368,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518368,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518369,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518369,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518369,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518370,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518371,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518372,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518372,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518373,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518373,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518443,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518443,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518444,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518444,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518444,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518445,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518446,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518446,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518447,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324518447,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519107,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519108,'/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519108,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519109,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519109,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519110,'/account/login.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519111,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519111,'/my/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519112,'/admin/index.php',0),(20111222,2,0,'MOZILLA',5.00,'Linux',1324519112,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523814,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523819,'/snippet/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523822,'/softwaremap/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523822,'/softwaremap/trove_list.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523826,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Mac',1324523835,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524586,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524586,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524587,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524587,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524587,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524588,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524589,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524589,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524590,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324524591,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525923,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525923,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525924,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525924,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525924,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525925,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525926,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525926,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525927,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525927,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525928,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525955,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525955,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525955,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525956,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525956,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525957,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525957,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525958,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525959,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525959,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525996,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525996,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525997,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525997,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525997,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525998,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525998,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324525999,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526000,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526000,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526053,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526053,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526054,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526054,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526054,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526055,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526056,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526056,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526057,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526057,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526058,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526138,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526139,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526139,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526140,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526140,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526141,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526141,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526142,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526142,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526143,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526221,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526221,'/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526222,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526223,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526223,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526223,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526224,'/account/login.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526225,'/my/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526226,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526226,'/admin/index.php',0),(20111222,4,0,'MOZILLA',5.00,'Linux',1324526226,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526404,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526404,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526405,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526405,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526405,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526406,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526406,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526407,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526408,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526408,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526409,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526431,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526431,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526432,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526432,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526432,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526433,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526433,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526434,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526434,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526435,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526544,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526544,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526544,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526545,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526545,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526545,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526546,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526547,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526548,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526548,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526549,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526549,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526549,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526590,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526591,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526591,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526592,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526592,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526592,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526593,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526594,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526594,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526594,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526595,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526595,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324526596,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527280,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527280,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527281,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527282,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527282,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527282,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527283,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527284,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527285,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527285,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527285,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527286,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527451,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527451,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527452,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527452,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527452,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527454,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527454,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527454,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527455,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527456,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527456,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527457,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527540,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527541,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527542,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527542,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527542,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527543,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527544,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527544,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527545,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527545,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527546,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527546,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527547,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527593,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527593,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527594,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527595,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527595,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527596,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527597,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527597,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527598,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527598,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527599,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527667,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527668,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527668,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527669,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527669,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527670,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527671,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527671,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527672,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527673,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527673,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527674,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527758,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527758,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527759,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527759,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527759,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527760,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527761,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527761,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527762,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527763,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527763,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527782,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527783,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527783,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527784,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527784,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527784,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527785,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527786,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527787,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527787,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527788,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527788,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527923,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527923,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527924,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527924,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527924,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527925,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527926,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527926,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527927,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527928,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527928,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527928,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527939,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527939,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527940,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527940,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527941,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527942,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527942,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527943,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527943,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527944,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527944,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324527945,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528005,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528005,'/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528006,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528006,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528006,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528007,'/account/login.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528008,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528008,'/my/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528009,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528010,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528010,'/admin/index.php',0),(20111222,5,0,'MOZILLA',5.00,'Linux',1324528011,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531306,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531306,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531307,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531308,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531309,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531309,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531313,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531313,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531314,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531314,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531315,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531315,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531315,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531316,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531317,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531317,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531319,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531319,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531319,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531379,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531379,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531380,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531381,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531381,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531381,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531382,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531383,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531383,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531384,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531384,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531385,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531385,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531387,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531388,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531389,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531389,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531390,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531532,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531532,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531533,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531534,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531534,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531534,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531535,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531536,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531536,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531537,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531537,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531537,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531538,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531538,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531539,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531539,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531540,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531540,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531541,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531697,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531697,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531698,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531698,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531698,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531699,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531700,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531700,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531701,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531701,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531702,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531702,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531702,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531703,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531704,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531704,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324531705,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532107,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532107,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532108,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532108,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532109,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532109,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532109,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532110,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532110,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532110,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532111,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532111,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324532112,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532967,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532967,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532968,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532968,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532969,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532969,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532970,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532971,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324532971,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533162,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533162,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533163,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533163,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533163,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533164,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533165,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533165,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533166,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533166,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533167,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533167,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533167,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533169,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533169,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533170,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533170,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Linux',1324533170,'/admin/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533281,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533282,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533282,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533283,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533283,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533283,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533284,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533284,'/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533285,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533285,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533285,'/account/login.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533286,'/my/index.php',0),(20111222,6,0,'MOZILLA',5.00,'Mac',1324533286,'/admin/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533939,'/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533939,'/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533940,'/my/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533940,'/account/login.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533941,'/account/login.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533941,'/my/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533942,'/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533942,'/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533943,'/my/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533943,'/account/login.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533943,'/account/login.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533944,'/my/index.php',0),(20111222,7,0,'MOZILLA',5.00,'Mac',1324533944,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564407,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564407,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564412,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564416,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564683,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564683,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564684,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564700,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564702,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564702,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564702,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564960,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564960,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564961,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564961,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564962,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564962,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564963,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564963,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564964,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564964,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564965,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564965,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324564966,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564988,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564988,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564989,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564989,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564990,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564990,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564991,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564992,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564992,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564993,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564993,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564994,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564994,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564995,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564996,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564997,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564998,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324564998,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565350,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565351,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565352,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565352,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565352,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565353,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565354,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565355,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565355,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565356,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565356,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565356,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565358,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565358,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565359,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565359,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565400,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565400,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565401,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565401,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565401,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565402,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565403,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565404,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565404,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565405,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565405,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565405,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Mac',1324565406,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565826,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565826,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565827,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565827,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565828,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565829,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565829,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565829,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565830,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565831,'/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565831,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565832,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565832,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565833,'/account/login.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565833,'/my/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565834,'/admin/index.php',0),(20111222,15,0,'MOZILLA',5.00,'Linux',1324565835,'/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566219,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566220,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566220,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566221,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566221,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566221,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566223,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566223,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566223,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566622,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566622,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566623,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566624,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566624,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566624,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566625,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566626,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566626,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566627,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566627,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566628,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566628,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566629,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566630,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566630,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566631,'/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Linux',1324566631,'/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567085,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567085,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567092,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567096,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567103,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567103,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567108,'/projects/nty/',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567112,'/tracker/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567145,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567151,'/projects/nty/',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567158,'/project/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567176,'/projects/nty/',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567178,'/project/admin/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567180,'/project/admin/servicebar.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567181,'/project/admin/servicebar.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567190,'/project/admin/editservice.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567210,'/project/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567217,'/projects/nty/',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567231,'/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567257,'/project/admin/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567262,'/project/admin/servicebar.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567288,'/account/logout.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567288,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567293,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567298,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567304,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567304,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567308,'/projects/codendi/',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567310,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567311,'/admin/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567319,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567333,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567337,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567341,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567353,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567361,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567368,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567370,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567378,'/plugins/pluginsadministration/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567390,'/account/logout.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567390,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567393,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567400,'/account/login.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567400,'/my/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324567404,'/projects/nty/',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567410,'/project/admin/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567416,'/project/admin/servicebar.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567421,'/project/admin/editservice.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567426,'/project/admin/servicebar.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567429,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567451,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567507,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567513,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567549,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567583,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567593,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567607,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567613,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567615,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567633,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567638,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567656,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567693,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567719,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567733,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567763,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567773,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567796,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324567807,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324568110,'/plugins/tracker/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324568288,'/project/privacy.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324568298,'/plugins/tracker/index.php',0),(20111222,16,101,'MOZILLA',5.00,'Mac',1324568319,'/plugins/tracker/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324568414,'/index.php',0),(20111222,16,0,'MOZILLA',5.00,'Mac',1324568414,'/index.php',0),(20111222,17,101,'MOZILLA',5.00,'Mac',1324569710,'/plugins/tracker/index.php',0),(20111222,17,101,'MOZILLA',5.00,'Mac',1324569981,'/plugins/tracker/index.php',0),(20111222,17,101,'MOZILLA',5.00,'Mac',1324569983,'/plugins/tracker/index.php',0),(20111222,17,101,'MOZILLA',5.00,'Mac',1324570352,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570373,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570413,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570414,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570416,'/sparklines.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570443,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570444,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570462,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570463,'/sparklines.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570472,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570498,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570551,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570553,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570554,'/sparklines.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570558,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570559,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570560,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570719,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570721,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570722,'/sparklines.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570726,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570726,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570743,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570744,'/sparklines.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570761,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570780,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570842,'/plugins/tracker/index.php',0),(20111222,17,0,'MOZILLA',5.00,'Mac',1324570849,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580221,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580252,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580253,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580275,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580282,'/plugins/tracker/index.php',0),(20111222,19,0,'MOZILLA',5.00,'Mac',1324580291,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580543,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580544,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580581,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580600,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580601,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580611,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580628,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580629,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580644,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580645,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580649,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580662,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580681,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580686,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580694,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580698,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580707,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580718,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580725,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580725,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580759,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580760,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580806,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580812,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580813,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580837,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580838,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580873,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580878,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580922,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580923,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580931,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580932,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580938,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580944,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580951,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580952,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580961,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324580962,'/plugins/tracker/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324581423,'/index.php',0),(20111222,20,0,'MOZILLA',5.00,'Mac',1324581423,'/index.php',0),(20111222,21,0,'MOZILLA',5.00,'Mac',1324587595,'/my/index.php',0),(20111222,21,0,'MOZILLA',5.00,'Mac',1324587598,'/projects/nty/',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587611,'/project/admin/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587615,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587665,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587686,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587690,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324587699,'/users/johan/',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587737,'/tracker/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587747,'/project/admin/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587752,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587769,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587774,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324587937,'/projects/nty/',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587959,'/project/admin/group_trove.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324587998,'/file/showfiles.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588073,'/file/showfiles.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588099,'/project/admin/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588103,'/project/admin/servicebar.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588175,'/project/admin/editservice.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588277,'/project/admin/editservice.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588286,'/tracker/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588635,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588648,'/account/logout.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588648,'/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588651,'/account/login.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588652,'/account/login.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588658,'/account/login.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588658,'/my/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588659,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588660,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588660,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588661,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588662,'/projects/codendi/',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588663,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588664,'/plugins/IM/index.php',0),(20111222,22,1,'MOZILLA',5.00,'Mac',1324588670,'/plugins/docman/index.php',0),(20111222,22,1,'MOZILLA',5.00,'Mac',1324588687,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588688,'/plugins/IM/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588718,'/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588723,'/admin/grouplist.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588728,'/admin/groupedit.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588732,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588733,'/plugins/IM/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588745,'/plugins/git/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588748,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588749,'/plugins/IM/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588750,'/account/logout.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588750,'/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588754,'/account/login.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588762,'/account/login.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588762,'/my/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588764,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588764,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588765,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588765,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588768,'/my/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588769,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588770,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588770,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588770,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588771,'/projects/nty/',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588773,'/widgets/widget.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588774,'/plugins/IM/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588777,'/plugins/git/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588777,'/plugins/git/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588782,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588783,'/plugins/IM/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588784,'/plugins/tracker/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588787,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588788,'/plugins/IM/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588792,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588804,'/project/admin/editgroupinfo.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588807,'/plugins/tracker/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588811,'/project/admin/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324588812,'/plugins/IM/index.php',0),(20111222,22,101,'MOZILLA',5.00,'Mac',1324588819,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589329,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589331,'/sparklines.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589336,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589338,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589347,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589442,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589444,'/sparklines.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589578,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589603,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589615,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589645,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589646,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589654,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589676,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589677,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589683,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589697,'/plugins/tracker/index.php',0),(20111222,22,0,'MOZILLA',5.00,'Mac',1324589698,'/plugins/tracker/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721983,'/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721984,'/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721985,'/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721986,'/account/login.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721986,'/account/login.php',0),(20120116,14,0,'MOZILLA',5.00,'Linux',1326721988,'/account/login.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722140,'/my/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722140,'/account/login.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722149,'/account/login.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722149,'/my/index.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722151,'/widgets/widget.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722152,'/widgets/widget.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722152,'/widgets/widget.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722153,'/widgets/widget.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722153,'/project/privacy.php',0),(20120116,14,0,'MOZILLA',5.00,'Mac',1326722153,'/project/privacy.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722461,'/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722462,'/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722466,'/account/login.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722476,'/account/login.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722483,'/account/login.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722495,'/projects/codendi/',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722498,'/plugins/IM/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722498,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722502,'/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722504,'/admin/userlist.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722594,'/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722596,'/my/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722598,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722598,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722599,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722599,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722605,'/projects/codendi/',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722606,'/plugins/IM/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722606,'/widgets/widget.php',0),(20120116,15,1,'MOZILLA',5.00,'Mac',1326722612,'/project/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722613,'/plugins/IM/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722618,'/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722621,'/admin/userlist.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722622,'/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722624,'/admin/register_admin.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722624,'/scripts/check_pw.js.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722625,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722632,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722633,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722633,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722634,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722634,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722635,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722635,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722635,'/include/check_pw.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722665,'/admin/register_admin.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722671,'/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722673,'/admin/grouplist.php',0),(20120116,15,101,'MOZILLA',5.00,'Mac',1326722676,'/admin/groupedit.php',0),(20120116,15,101,'MOZILLA',5.00,'Mac',1326722690,'/admin/userlist.php',0),(20120116,15,101,'MOZILLA',5.00,'Mac',1326722694,'/admin/groupedit.php',0),(20120116,15,101,'MOZILLA',5.00,'Mac',1326722697,'/project/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722698,'/plugins/IM/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722707,'/user/autocomplete.php',0),(20120116,15,101,'MOZILLA',5.00,'Mac',1326722712,'/project/admin/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Mac',1326722734,'/plugins/IM/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722974,'/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722974,'/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722975,'/account/login.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722976,'/account/login.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722976,'/account/login.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722978,'/account/login.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722978,'/my/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722979,'/my/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722980,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722981,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722981,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722982,'/projects/nty/',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722983,'/projects/nty/',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722984,'/widgets/widget.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722984,'/projects/nty/',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722985,'/plugins/IM/index.php',0),(20120116,15,0,'MOZILLA',5.00,'Linux',1326722986,'/widgets/widget.php',0);
 /*!40000 ALTER TABLE `activity_log` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `activity_log_old`
---
-
-DROP TABLE IF EXISTS `activity_log_old`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `activity_log_old` (
-  `day` int(11) NOT NULL default '0',
-  `hour` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `browser` varchar(8) NOT NULL default 'OTHER',
-  `ver` float(10,2) NOT NULL default '0.00',
-  `platform` varchar(8) NOT NULL default 'OTHER',
-  `time` int(11) NOT NULL default '0',
-  `page` text,
-  `type` int(11) NOT NULL default '0',
-  KEY `idx_activity_log_day` (`day`),
-  KEY `idx_activity_log_group` (`group_id`),
-  KEY `type_idx` (`type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `activity_log_old`
@@ -82,29 +36,6 @@ INSERT INTO `activity_log_old` VALUES (20111020,13,101,'MOZILLA',5.00,'Linux',13
 UNLOCK TABLES;
 
 --
--- Table structure for table `activity_log_old_old`
---
-
-DROP TABLE IF EXISTS `activity_log_old_old`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `activity_log_old_old` (
-  `day` int(11) NOT NULL default '0',
-  `hour` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `browser` varchar(8) NOT NULL default 'OTHER',
-  `ver` float(10,2) NOT NULL default '0.00',
-  `platform` varchar(8) NOT NULL default 'OTHER',
-  `time` int(11) NOT NULL default '0',
-  `page` text,
-  `type` int(11) NOT NULL default '0',
-  KEY `idx_activity_log_day` (`day`),
-  KEY `idx_activity_log_group` (`group_id`),
-  KEY `type_idx` (`type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `activity_log_old_old`
 --
 
@@ -112,32 +43,6 @@ LOCK TABLES `activity_log_old_old` WRITE;
 /*!40000 ALTER TABLE `activity_log_old_old` DISABLE KEYS */;
 /*!40000 ALTER TABLE `activity_log_old_old` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `artifact`
---
-
-DROP TABLE IF EXISTS `artifact`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact` (
-  `artifact_id` int(11) NOT NULL auto_increment,
-  `group_artifact_id` int(11) NOT NULL,
-  `use_artifact_permissions` tinyint(1) NOT NULL default '0',
-  `status_id` int(11) NOT NULL default '1',
-  `submitted_by` int(11) NOT NULL default '100',
-  `open_date` int(11) NOT NULL default '0',
-  `close_date` int(11) NOT NULL default '0',
-  `last_update_date` int(11) unsigned NOT NULL default '0',
-  `summary` text NOT NULL,
-  `details` text NOT NULL,
-  `severity` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`artifact_id`),
-  KEY `idx_fk_group_artifact_id` (`group_artifact_id`),
-  KEY `idx_fk_status_id` (`status_id`),
-  KEY `idx_fk_submitted_by` (`submitted_by`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artifact`
@@ -150,23 +55,6 @@ INSERT INTO `artifact` VALUES (1,101,0,1,102,1319208954,0,1319208954,'edfgvb',''
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_canned_responses`
---
-
-DROP TABLE IF EXISTS `artifact_canned_responses`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_canned_responses` (
-  `artifact_canned_id` int(11) NOT NULL auto_increment,
-  `group_artifact_id` int(11) NOT NULL default '0',
-  `title` text,
-  `body` text,
-  PRIMARY KEY  (`artifact_canned_id`),
-  KEY `idx_artifact_canned_response_group_artifact_id` (`group_artifact_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_canned_responses`
 --
 
@@ -174,25 +62,6 @@ LOCK TABLES `artifact_canned_responses` WRITE;
 /*!40000 ALTER TABLE `artifact_canned_responses` DISABLE KEYS */;
 /*!40000 ALTER TABLE `artifact_canned_responses` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `artifact_cc`
---
-
-DROP TABLE IF EXISTS `artifact_cc`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_cc` (
-  `artifact_cc_id` int(11) NOT NULL auto_increment,
-  `artifact_id` int(11) NOT NULL default '0',
-  `email` varchar(255) NOT NULL default '',
-  `added_by` int(11) NOT NULL default '0',
-  `comment` text NOT NULL,
-  `date` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`artifact_cc_id`),
-  KEY `artifact_id_idx` (`artifact_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artifact_cc`
@@ -204,23 +73,6 @@ LOCK TABLES `artifact_cc` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_dependencies`
---
-
-DROP TABLE IF EXISTS `artifact_dependencies`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_dependencies` (
-  `artifact_depend_id` int(11) NOT NULL auto_increment,
-  `artifact_id` int(11) NOT NULL default '0',
-  `is_dependent_on_artifact_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`artifact_depend_id`),
-  KEY `idx_artifact_dependencies_artifact_id` (`artifact_id`),
-  KEY `idx_actifact_is_dependent_on_artifact_id` (`is_dependent_on_artifact_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_dependencies`
 --
 
@@ -228,37 +80,6 @@ LOCK TABLES `artifact_dependencies` WRITE;
 /*!40000 ALTER TABLE `artifact_dependencies` DISABLE KEYS */;
 /*!40000 ALTER TABLE `artifact_dependencies` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `artifact_field`
---
-
-DROP TABLE IF EXISTS `artifact_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_field` (
-  `field_id` int(11) NOT NULL auto_increment,
-  `group_artifact_id` int(11) NOT NULL,
-  `field_set_id` int(11) unsigned NOT NULL default '0',
-  `field_name` varchar(255) NOT NULL default '',
-  `data_type` int(11) NOT NULL default '0',
-  `display_type` varchar(255) NOT NULL default '',
-  `display_size` varchar(255) NOT NULL default '',
-  `label` varchar(255) NOT NULL default '',
-  `description` text NOT NULL,
-  `scope` char(1) NOT NULL default '',
-  `required` int(11) NOT NULL default '0',
-  `empty_ok` int(11) NOT NULL default '0',
-  `keep_history` int(11) NOT NULL default '0',
-  `special` int(11) NOT NULL default '0',
-  `value_function` text,
-  `default_value` text NOT NULL,
-  PRIMARY KEY  (`field_id`,`group_artifact_id`),
-  KEY `idx_fk_field_name` (`field_name`),
-  KEY `idx_fk_group_artifact_id` (`group_artifact_id`),
-  KEY `idx_fname_grp` (`field_name`(20),`group_artifact_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artifact_field`
@@ -271,24 +92,6 @@ INSERT INTO `artifact_field` VALUES (7,1,1,'submitted_by',5,'SB','','Submitted b
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_field_set`
---
-
-DROP TABLE IF EXISTS `artifact_field_set`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_field_set` (
-  `field_set_id` int(11) unsigned NOT NULL auto_increment,
-  `group_artifact_id` int(11) unsigned NOT NULL default '0',
-  `name` text NOT NULL,
-  `description` text NOT NULL,
-  `rank` int(11) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`field_set_id`),
-  KEY `idx_fk_group_artifact_id` (`group_artifact_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_field_set`
 --
 
@@ -297,22 +100,6 @@ LOCK TABLES `artifact_field_set` WRITE;
 INSERT INTO `artifact_field_set` VALUES (1,1,'fieldset_default_bugs_lbl_key','fieldset_default_bugs_desc_key',10),(2,1,'fieldset_status_bugs_lbl_key','fieldset_status_bugs_desc_key',20),(3,2,'fieldset_default_tasks_lbl_key','fieldset_default_tasks_desc_key',10),(4,2,'fieldset_status_tasks_lbl_key','fieldset_status_tasks_desc_key',20),(5,3,'fieldset_default_SR_lbl_key','fieldset_default_SR_desc_key',10),(6,3,'fieldset_status_SR_lbl_key','fieldset_status_SR_desc_key',20),(7,4,'fieldset_default_lbl_key','fieldset_default_desc_key',10),(8,5,'fieldset_default_patches_lbl_key','fieldset_default_patches_desc_key',10),(9,5,'fieldset_patchtext_patches_lbl_key','fieldset_patchtext_patches_desc_key',20),(10,5,'fieldset_status_patches_lbl_key','fieldset_status_patches_desc_key',30),(14,7,'fieldset_scrum_description_lbl_key','fieldset_scrum_description_desc_key',10),(15,7,'fieldset_scrum_status_lbl_key','fieldset_scrum_status_desc_key',20),(16,101,'fieldset_default_bugs_lbl_key','fieldset_default_bugs_desc_key',10),(17,101,'fieldset_status_bugs_lbl_key','fieldset_status_bugs_desc_key',20),(18,102,'fieldset_default_tasks_lbl_key','fieldset_default_tasks_desc_key',10),(19,102,'fieldset_status_tasks_lbl_key','fieldset_status_tasks_desc_key',20),(20,103,'fieldset_default_SR_lbl_key','fieldset_default_SR_desc_key',10),(21,103,'fieldset_status_SR_lbl_key','fieldset_status_SR_desc_key',20),(22,104,'fieldset_scrum_description_lbl_key','fieldset_scrum_description_desc_key',10),(23,104,'fieldset_scrum_status_lbl_key','fieldset_scrum_status_desc_key',20);
 /*!40000 ALTER TABLE `artifact_field_set` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `artifact_field_usage`
---
-
-DROP TABLE IF EXISTS `artifact_field_usage`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_field_usage` (
-  `field_id` int(11) NOT NULL default '0',
-  `group_artifact_id` int(11) NOT NULL default '0',
-  `use_it` int(11) NOT NULL default '0',
-  `place` int(11) default NULL,
-  KEY `idx_fk` (`field_id`,`group_artifact_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artifact_field_usage`
@@ -325,25 +112,6 @@ INSERT INTO `artifact_field_usage` VALUES (7,1,1,0),(6,1,1,0),(5,1,1,900),(1,1,1
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_field_value`
---
-
-DROP TABLE IF EXISTS `artifact_field_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_field_value` (
-  `field_id` int(11) NOT NULL,
-  `artifact_id` int(11) NOT NULL,
-  `valueInt` int(11) default NULL,
-  `valueText` text,
-  `valueFloat` float(10,4) default NULL,
-  `valueDate` int(11) default NULL,
-  KEY `idx_valueInt` (`artifact_id`,`field_id`,`valueInt`),
-  KEY `xtrk_valueInt` (`valueInt`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_field_value`
 --
 
@@ -352,28 +120,6 @@ LOCK TABLES `artifact_field_value` WRITE;
 INSERT INTO `artifact_field_value` VALUES (3,1,100,NULL,NULL,NULL),(20,1,100,NULL,NULL,NULL),(16,1,100,NULL,NULL,NULL),(4,1,100,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `artifact_field_value` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `artifact_field_value_list`
---
-
-DROP TABLE IF EXISTS `artifact_field_value_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_field_value_list` (
-  `field_id` int(11) NOT NULL default '0',
-  `group_artifact_id` int(11) NOT NULL default '0',
-  `value_id` int(11) NOT NULL default '0',
-  `value` text NOT NULL,
-  `description` text NOT NULL,
-  `order_id` int(11) NOT NULL default '0',
-  `status` char(1) NOT NULL default 'A',
-  PRIMARY KEY  (`field_id`,`group_artifact_id`,`value_id`),
-  KEY `idx_fv_group_artifact_id` (`group_artifact_id`),
-  KEY `idx_fv_value_id` (`value_id`),
-  KEY `idx_fv_status` (`status`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artifact_field_value_list`
@@ -386,28 +132,6 @@ INSERT INTO `artifact_field_value_list` VALUES (2,1,1,'Open','The artifact has b
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_file`
---
-
-DROP TABLE IF EXISTS `artifact_file`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_file` (
-  `id` int(11) NOT NULL auto_increment,
-  `artifact_id` int(11) NOT NULL default '0',
-  `description` text NOT NULL,
-  `bin_data` longblob NOT NULL,
-  `filename` text NOT NULL,
-  `filesize` int(11) NOT NULL,
-  `filetype` text NOT NULL,
-  `adddate` int(11) NOT NULL default '0',
-  `submitted_by` int(11) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `artifact_id` (`artifact_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 MAX_ROWS=1000000 AVG_ROW_LENGTH=1000000;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_file`
 --
 
@@ -417,24 +141,6 @@ LOCK TABLES `artifact_file` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_global_notification`
---
-
-DROP TABLE IF EXISTS `artifact_global_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_global_notification` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `tracker_id` int(11) NOT NULL,
-  `addresses` text NOT NULL,
-  `all_updates` tinyint(1) NOT NULL,
-  `check_permissions` tinyint(1) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `tracker_id` (`tracker_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_global_notification`
 --
 
@@ -442,31 +148,6 @@ LOCK TABLES `artifact_global_notification` WRITE;
 /*!40000 ALTER TABLE `artifact_global_notification` DISABLE KEYS */;
 /*!40000 ALTER TABLE `artifact_global_notification` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `artifact_group_list`
---
-
-DROP TABLE IF EXISTS `artifact_group_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_group_list` (
-  `group_artifact_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL,
-  `name` text,
-  `description` text,
-  `item_name` text,
-  `allow_copy` int(11) NOT NULL default '0',
-  `submit_instructions` text,
-  `browse_instructions` text,
-  `status` char(1) NOT NULL default 'A',
-  `deletion_date` int(11) default NULL,
-  `instantiate_for_new_projects` int(11) NOT NULL default '0',
-  `stop_notification` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`group_artifact_id`),
-  KEY `idx_fk_group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=105 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artifact_group_list`
@@ -479,30 +160,6 @@ INSERT INTO `artifact_group_list` VALUES (1,100,'Bugs','Bugs Tracker','bug',0,NU
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_history`
---
-
-DROP TABLE IF EXISTS `artifact_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_history` (
-  `artifact_history_id` int(11) NOT NULL auto_increment,
-  `artifact_id` int(11) NOT NULL default '0',
-  `field_name` varchar(255) NOT NULL,
-  `old_value` text NOT NULL,
-  `new_value` text NOT NULL,
-  `mod_by` int(11) NOT NULL default '0',
-  `email` varchar(100) NOT NULL,
-  `date` int(11) default NULL,
-  `type` int(11) default NULL,
-  `format` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`artifact_history_id`),
-  KEY `idx_artifact_history_artifact_id` (`artifact_id`),
-  KEY `field_name` (`field_name`(10))
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_history`
 --
 
@@ -512,24 +169,6 @@ LOCK TABLES `artifact_history` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_notification`
---
-
-DROP TABLE IF EXISTS `artifact_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_notification` (
-  `user_id` int(11) NOT NULL default '0',
-  `group_artifact_id` int(11) NOT NULL default '0',
-  `role_id` int(11) NOT NULL default '0',
-  `event_id` int(11) NOT NULL default '0',
-  `notify` int(11) NOT NULL default '1',
-  KEY `user_id_idx` (`user_id`),
-  KEY `group_artifact_id_idx` (`group_artifact_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_notification`
 --
 
@@ -537,25 +176,6 @@ LOCK TABLES `artifact_notification` WRITE;
 /*!40000 ALTER TABLE `artifact_notification` DISABLE KEYS */;
 /*!40000 ALTER TABLE `artifact_notification` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `artifact_notification_event`
---
-
-DROP TABLE IF EXISTS `artifact_notification_event`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_notification_event` (
-  `event_id` int(11) NOT NULL default '0',
-  `group_artifact_id` int(11) NOT NULL default '0',
-  `event_label` varchar(255) default NULL,
-  `rank` int(11) NOT NULL default '0',
-  `short_description_msg` varchar(255) default NULL,
-  `description_msg` varchar(255) default NULL,
-  KEY `event_id_idx` (`event_id`),
-  KEY `group_artifact_id_idx` (`group_artifact_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artifact_notification_event`
@@ -568,23 +188,6 @@ INSERT INTO `artifact_notification_event` VALUES (1,101,'ROLE_CHANGE',10,'event_
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_notification_event_default`
---
-
-DROP TABLE IF EXISTS `artifact_notification_event_default`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_notification_event_default` (
-  `event_id` int(11) NOT NULL default '0',
-  `event_label` varchar(255) default NULL,
-  `rank` int(11) NOT NULL default '0',
-  `short_description_msg` varchar(255) default NULL,
-  `description_msg` varchar(255) default NULL,
-  KEY `event_id_idx` (`event_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_notification_event_default`
 --
 
@@ -593,25 +196,6 @@ LOCK TABLES `artifact_notification_event_default` WRITE;
 INSERT INTO `artifact_notification_event_default` VALUES (1,'ROLE_CHANGE',10,'event_ROLE_CHANGE_shortdesc','event_ROLE_CHANGE_desc'),(2,'NEW_COMMENT',20,'event_NEW_COMMENT_short_desc','event_NEW_COMMENT_desc'),(3,'NEW_FILE',30,'event_NEW_FILE_short_desc','event_NEW_FILE_desc'),(4,'CC_CHANGE',40,'event_CC_CHANGE_short_desc','event_CC_CHANGE_desc'),(5,'CLOSED',50,'event_CLOSED_short_desc','event_CLOSED_desc'),(6,'PSS_CHANGE',60,'event_PSS_CHANGE_short_desc','event_PSS_CHANGE_desc'),(7,'ANY_OTHER_CHANGE',70,'event_ANY_OTHER_CHANGE_short_desc','event_ANY_OTHER_CHANGE_desc'),(8,'I_MADE_IT',80,'event_I_MADE_IT_short_desc','event_I_MADE_IT_desc'),(9,'NEW_ARTIFACT',90,'event_NEW_ARTIFACT_short_desc','event_NEW_ARTIFACT_desc'),(10,'COMMENT_CHANGE',100,'event_COMMENT_CHANGE_short_desc','event_COMMENT_CHANGE_desc');
 /*!40000 ALTER TABLE `artifact_notification_event_default` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `artifact_notification_role`
---
-
-DROP TABLE IF EXISTS `artifact_notification_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_notification_role` (
-  `role_id` int(11) NOT NULL default '0',
-  `group_artifact_id` int(11) NOT NULL default '0',
-  `role_label` varchar(255) default NULL,
-  `rank` int(11) NOT NULL default '0',
-  `short_description_msg` varchar(255) default NULL,
-  `description_msg` varchar(255) default NULL,
-  KEY `role_id_idx` (`role_id`),
-  KEY `group_artifact_id_idx` (`group_artifact_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artifact_notification_role`
@@ -624,23 +208,6 @@ INSERT INTO `artifact_notification_role` VALUES (1,101,'SUBMITTER',10,'role_SUBM
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_notification_role_default`
---
-
-DROP TABLE IF EXISTS `artifact_notification_role_default`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_notification_role_default` (
-  `role_id` int(11) NOT NULL default '0',
-  `role_label` varchar(255) default NULL,
-  `rank` int(11) NOT NULL default '0',
-  `short_description_msg` varchar(255) default NULL,
-  `description_msg` varchar(255) default NULL,
-  KEY `role_id_idx` (`role_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_notification_role_default`
 --
 
@@ -649,23 +216,6 @@ LOCK TABLES `artifact_notification_role_default` WRITE;
 INSERT INTO `artifact_notification_role_default` VALUES (1,'SUBMITTER',10,'role_SUBMITTER_short_desc','role_SUBMITTER_desc'),(2,'ASSIGNEE',20,'role_ASSIGNEE_short_desc','role_ASSIGNEE_desc'),(3,'CC',30,'role_CC_short_desc','role_CC_desc'),(4,'COMMENTER',40,'role_COMMENTER_short_desc','role_COMMENTER_desc');
 /*!40000 ALTER TABLE `artifact_notification_role_default` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `artifact_perm`
---
-
-DROP TABLE IF EXISTS `artifact_perm`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_perm` (
-  `id` int(11) NOT NULL auto_increment,
-  `group_artifact_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `perm_level` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `unique_user` (`group_artifact_id`,`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artifact_perm`
@@ -678,28 +228,6 @@ INSERT INTO `artifact_perm` VALUES (1,101,102,3),(2,102,102,3),(3,103,102,3),(4,
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_report`
---
-
-DROP TABLE IF EXISTS `artifact_report`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_report` (
-  `report_id` int(11) NOT NULL auto_increment,
-  `group_artifact_id` int(11) NOT NULL default '100',
-  `user_id` int(11) NOT NULL default '100',
-  `name` varchar(80) default NULL,
-  `description` varchar(255) default NULL,
-  `scope` char(1) NOT NULL default 'I',
-  `is_default` int(1) default '0',
-  PRIMARY KEY  (`report_id`),
-  KEY `group_artifact_id_idx` (`group_artifact_id`),
-  KEY `user_id_idx` (`user_id`),
-  KEY `scope_idx` (`scope`)
-) ENGINE=MyISAM AUTO_INCREMENT=105 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_report`
 --
 
@@ -708,26 +236,6 @@ LOCK TABLES `artifact_report` WRITE;
 INSERT INTO `artifact_report` VALUES (100,100,100,'Default','The system default artifact report','S',0),(2,2,100,'Tasks','Tasks Report','P',0),(3,3,100,'SR','Support Requests Report','P',0),(4,1,100,'Bugs','Bugs Report','P',0),(6,7,100,'Scrum','Scrum Report','P',1),(101,101,100,'Bugs','Bugs Report','P',0),(102,102,100,'Tasks','Tasks Report','P',0),(103,103,100,'SR','Support Requests Report','P',0),(104,104,100,'Scrum','Scrum Report','P',1);
 /*!40000 ALTER TABLE `artifact_report` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `artifact_report_field`
---
-
-DROP TABLE IF EXISTS `artifact_report_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_report_field` (
-  `report_id` int(11) NOT NULL default '100',
-  `field_name` varchar(255) default NULL,
-  `show_on_query` int(11) default NULL,
-  `show_on_result` int(11) default NULL,
-  `place_query` int(11) default NULL,
-  `place_result` int(11) default NULL,
-  `col_width` int(11) default NULL,
-  KEY `profile_id_idx` (`report_id`),
-  KEY `field_name_idx` (`field_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `artifact_report_field`
@@ -740,26 +248,6 @@ INSERT INTO `artifact_report_field` VALUES (100,'category_id',1,0,10,NULL,NULL),
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_rule`
---
-
-DROP TABLE IF EXISTS `artifact_rule`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_rule` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `group_artifact_id` int(11) unsigned NOT NULL default '0',
-  `source_field_id` int(11) unsigned NOT NULL default '0',
-  `source_value_id` int(11) unsigned NOT NULL default '0',
-  `target_field_id` int(11) unsigned NOT NULL default '0',
-  `rule_type` tinyint(4) unsigned NOT NULL default '0',
-  `target_value_id` int(11) unsigned default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `group_artifact_id` (`group_artifact_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_rule`
 --
 
@@ -769,22 +257,6 @@ LOCK TABLES `artifact_rule` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `artifact_watcher`
---
-
-DROP TABLE IF EXISTS `artifact_watcher`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `artifact_watcher` (
-  `user_id` int(11) NOT NULL default '0',
-  `watchee_id` int(11) NOT NULL default '0',
-  `artifact_group_id` int(11) NOT NULL default '0',
-  KEY `watchee_id_idx` (`watchee_id`,`artifact_group_id`),
-  KEY `user_id_idx` (`user_id`,`artifact_group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `artifact_watcher`
 --
 
@@ -792,84 +264,6 @@ LOCK TABLES `artifact_watcher` WRITE;
 /*!40000 ALTER TABLE `artifact_watcher` DISABLE KEYS */;
 /*!40000 ALTER TABLE `artifact_watcher` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `bug`
---
-
-DROP TABLE IF EXISTS `bug`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug` (
-  `bug_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `status_id` int(11) NOT NULL default '1',
-  `severity` int(11) NOT NULL default '5',
-  `category_id` int(11) NOT NULL default '100',
-  `submitted_by` int(11) NOT NULL default '100',
-  `assigned_to` int(11) NOT NULL default '100',
-  `date` int(11) NOT NULL default '0',
-  `summary` text,
-  `details` text,
-  `close_date` int(11) default NULL,
-  `bug_group_id` int(11) NOT NULL default '100',
-  `resolution_id` int(11) NOT NULL default '100',
-  `category_version_id` int(11) NOT NULL default '100',
-  `platform_version_id` int(11) NOT NULL default '100',
-  `reproducibility_id` int(11) NOT NULL default '100',
-  `size_id` int(11) NOT NULL default '100',
-  `fix_release_id` int(11) NOT NULL default '100',
-  `plan_release_id` int(11) NOT NULL default '100',
-  `hours` float(10,2) NOT NULL default '0.00',
-  `component_version` varchar(255) NOT NULL default '',
-  `fix_release` varchar(255) NOT NULL default '',
-  `plan_release` varchar(255) NOT NULL default '',
-  `priority` int(11) NOT NULL default '100',
-  `keywords` varchar(255) NOT NULL default '',
-  `release_id` int(11) NOT NULL default '100',
-  `release_name` varchar(255) NOT NULL default '',
-  `originator_name` varchar(255) NOT NULL default '',
-  `originator_email` varchar(255) NOT NULL default '',
-  `originator_phone` varchar(255) NOT NULL default '',
-  `custom_tf1` varchar(255) NOT NULL default '',
-  `custom_tf2` varchar(255) NOT NULL default '',
-  `custom_tf3` varchar(255) NOT NULL default '',
-  `custom_tf4` varchar(255) NOT NULL default '',
-  `custom_tf5` varchar(255) NOT NULL default '',
-  `custom_tf6` varchar(255) NOT NULL default '',
-  `custom_tf7` varchar(255) NOT NULL default '',
-  `custom_tf8` varchar(255) NOT NULL default '',
-  `custom_tf9` varchar(255) NOT NULL default '',
-  `custom_tf10` varchar(255) NOT NULL default '',
-  `custom_ta1` text NOT NULL,
-  `custom_ta2` text NOT NULL,
-  `custom_ta3` text NOT NULL,
-  `custom_ta4` text NOT NULL,
-  `custom_ta5` text NOT NULL,
-  `custom_ta6` text NOT NULL,
-  `custom_ta7` text NOT NULL,
-  `custom_ta8` text NOT NULL,
-  `custom_ta9` text NOT NULL,
-  `custom_ta10` text NOT NULL,
-  `custom_sb1` int(11) NOT NULL default '100',
-  `custom_sb2` int(11) NOT NULL default '100',
-  `custom_sb3` int(11) NOT NULL default '100',
-  `custom_sb4` int(11) NOT NULL default '100',
-  `custom_sb5` int(11) NOT NULL default '100',
-  `custom_sb6` int(11) NOT NULL default '100',
-  `custom_sb7` int(11) NOT NULL default '100',
-  `custom_sb8` int(11) NOT NULL default '100',
-  `custom_sb9` int(11) NOT NULL default '100',
-  `custom_sb10` int(11) NOT NULL default '100',
-  `custom_df1` int(11) NOT NULL default '0',
-  `custom_df2` int(11) NOT NULL default '0',
-  `custom_df3` int(11) NOT NULL default '0',
-  `custom_df4` int(11) NOT NULL default '0',
-  `custom_df5` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`bug_id`),
-  KEY `idx_bug_group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `bug`
@@ -882,23 +276,6 @@ INSERT INTO `bug` VALUES (100,100,3,1,100,100,100,1058260700,'None','',0,100,100
 UNLOCK TABLES;
 
 --
--- Table structure for table `bug_bug_dependencies`
---
-
-DROP TABLE IF EXISTS `bug_bug_dependencies`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_bug_dependencies` (
-  `bug_depend_id` int(11) NOT NULL auto_increment,
-  `bug_id` int(11) NOT NULL default '0',
-  `is_dependent_on_bug_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`bug_depend_id`),
-  KEY `idx_bug_bug_dependencies_bug_id` (`bug_id`),
-  KEY `idx_bug_bug_is_dependent_on_task_id` (`is_dependent_on_bug_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `bug_bug_dependencies`
 --
 
@@ -906,23 +283,6 @@ LOCK TABLES `bug_bug_dependencies` WRITE;
 /*!40000 ALTER TABLE `bug_bug_dependencies` DISABLE KEYS */;
 /*!40000 ALTER TABLE `bug_bug_dependencies` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `bug_canned_responses`
---
-
-DROP TABLE IF EXISTS `bug_canned_responses`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_canned_responses` (
-  `bug_canned_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `title` text,
-  `body` text,
-  PRIMARY KEY  (`bug_canned_id`),
-  KEY `idx_bug_canned_response_group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `bug_canned_responses`
@@ -934,25 +294,6 @@ LOCK TABLES `bug_canned_responses` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `bug_cc`
---
-
-DROP TABLE IF EXISTS `bug_cc`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_cc` (
-  `bug_cc_id` int(11) NOT NULL auto_increment,
-  `bug_id` int(11) NOT NULL default '0',
-  `email` varchar(255) NOT NULL default '',
-  `added_by` int(11) NOT NULL default '0',
-  `comment` text NOT NULL,
-  `date` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`bug_cc_id`),
-  KEY `bug_id_idx` (`bug_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `bug_cc`
 --
 
@@ -960,32 +301,6 @@ LOCK TABLES `bug_cc` WRITE;
 /*!40000 ALTER TABLE `bug_cc` DISABLE KEYS */;
 /*!40000 ALTER TABLE `bug_cc` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `bug_field`
---
-
-DROP TABLE IF EXISTS `bug_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_field` (
-  `bug_field_id` int(11) NOT NULL auto_increment,
-  `field_name` varchar(255) NOT NULL default '',
-  `display_type` varchar(255) NOT NULL default '',
-  `display_size` varchar(255) NOT NULL default '',
-  `label` varchar(255) NOT NULL default '',
-  `description` text NOT NULL,
-  `scope` char(1) NOT NULL default '',
-  `required` int(11) NOT NULL default '0',
-  `empty_ok` int(11) NOT NULL default '0',
-  `keep_history` int(11) NOT NULL default '0',
-  `special` int(11) NOT NULL default '0',
-  `custom` int(11) NOT NULL default '0',
-  `value_function` varchar(255) default NULL,
-  PRIMARY KEY  (`bug_field_id`),
-  KEY `idx_bug_field_name` (`field_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=605 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `bug_field`
@@ -998,31 +313,6 @@ INSERT INTO `bug_field` VALUES (90,'bug_id','TF','6/10','Bug ID','Unique bug ide
 UNLOCK TABLES;
 
 --
--- Table structure for table `bug_field_usage`
---
-
-DROP TABLE IF EXISTS `bug_field_usage`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_field_usage` (
-  `bug_field_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `use_it` int(11) NOT NULL default '0',
-  `show_on_add` int(11) NOT NULL default '0',
-  `show_on_add_members` int(11) NOT NULL default '0',
-  `place` int(11) default NULL,
-  `custom_label` varchar(255) default NULL,
-  `custom_description` varchar(255) default NULL,
-  `custom_display_size` varchar(255) default NULL,
-  `custom_empty_ok` int(11) default NULL,
-  `custom_keep_history` int(11) default NULL,
-  `custom_value_function` varchar(255) default NULL,
-  KEY `idx_bug_fu_field_id` (`bug_field_id`),
-  KEY `idx_bug_fu_group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `bug_field_usage`
 --
 
@@ -1031,30 +321,6 @@ LOCK TABLES `bug_field_usage` WRITE;
 INSERT INTO `bug_field_usage` VALUES (90,100,1,0,0,10,NULL,NULL,NULL,NULL,NULL,NULL),(91,100,1,1,1,30,NULL,NULL,NULL,NULL,NULL,NULL),(92,100,1,0,0,20,NULL,NULL,NULL,NULL,NULL,NULL),(93,100,1,0,0,40,NULL,NULL,NULL,NULL,NULL,NULL),(94,100,1,0,0,50,NULL,NULL,NULL,NULL,NULL,NULL),(101,100,1,0,0,600,NULL,NULL,NULL,NULL,NULL,NULL),(102,100,1,0,1,200,NULL,NULL,NULL,NULL,NULL,NULL),(103,100,1,1,1,100,NULL,NULL,NULL,NULL,NULL,NULL),(104,100,1,0,1,500,NULL,NULL,NULL,NULL,NULL,NULL),(105,100,1,1,1,700000,NULL,NULL,NULL,NULL,NULL,NULL),(106,100,1,1,1,700001,NULL,NULL,NULL,NULL,NULL,NULL),(107,100,1,1,1,300,NULL,NULL,NULL,NULL,NULL,NULL),(108,100,1,0,0,400,NULL,NULL,NULL,NULL,NULL,NULL),(200,100,0,0,0,1000,NULL,NULL,NULL,NULL,NULL,NULL),(201,100,0,0,0,1100,NULL,NULL,NULL,NULL,NULL,NULL),(202,100,0,0,0,1200,NULL,NULL,NULL,NULL,NULL,NULL),(203,100,0,0,0,1300,NULL,NULL,NULL,NULL,NULL,NULL),(204,100,0,0,0,1400,NULL,NULL,NULL,NULL,NULL,NULL),(205,100,1,0,0,1500,NULL,NULL,NULL,NULL,NULL,NULL),(206,100,0,0,0,1700,NULL,NULL,NULL,NULL,NULL,NULL),(207,100,0,0,0,1600,NULL,NULL,NULL,NULL,NULL,NULL),(208,100,0,0,0,1800,NULL,NULL,NULL,NULL,NULL,NULL),(209,100,0,0,0,1900,NULL,NULL,NULL,NULL,NULL,NULL),(210,100,0,0,0,2000,NULL,NULL,NULL,NULL,NULL,NULL),(211,100,0,0,0,250,NULL,NULL,NULL,NULL,NULL,NULL),(212,100,0,0,0,3000,NULL,NULL,NULL,NULL,NULL,NULL),(213,100,0,0,0,800,NULL,NULL,NULL,NULL,NULL,NULL),(214,100,0,0,0,800,NULL,NULL,NULL,NULL,NULL,NULL),(215,100,0,0,0,550,NULL,NULL,NULL,NULL,NULL,NULL),(216,100,0,0,0,560,NULL,NULL,NULL,NULL,NULL,NULL),(217,100,0,0,0,570,NULL,NULL,NULL,NULL,NULL,NULL),(300,100,0,0,0,30000,NULL,NULL,NULL,NULL,NULL,NULL),(301,100,0,0,0,30100,NULL,NULL,NULL,NULL,NULL,NULL),(302,100,0,0,0,30200,NULL,NULL,NULL,NULL,NULL,NULL),(303,100,0,0,0,30300,NULL,NULL,NULL,NULL,NULL,NULL),(304,100,0,0,0,30400,NULL,NULL,NULL,NULL,NULL,NULL),(305,100,0,0,0,30500,NULL,NULL,NULL,NULL,NULL,NULL),(306,100,0,0,0,30600,NULL,NULL,NULL,NULL,NULL,NULL),(307,100,0,0,0,30700,NULL,NULL,NULL,NULL,NULL,NULL),(308,100,0,0,0,30800,NULL,NULL,NULL,NULL,NULL,NULL),(309,100,0,0,0,30900,NULL,NULL,NULL,NULL,NULL,NULL),(400,100,0,0,0,40000,NULL,NULL,NULL,NULL,NULL,NULL),(401,100,0,0,0,40100,NULL,NULL,NULL,NULL,NULL,NULL),(402,100,0,0,0,40200,NULL,NULL,NULL,NULL,NULL,NULL),(403,100,0,0,0,40300,NULL,NULL,NULL,NULL,NULL,NULL),(404,100,0,0,0,40400,NULL,NULL,NULL,NULL,NULL,NULL),(405,100,0,0,0,40500,NULL,NULL,NULL,NULL,NULL,NULL),(406,100,0,0,0,40600,NULL,NULL,NULL,NULL,NULL,NULL),(407,100,0,0,0,40700,NULL,NULL,NULL,NULL,NULL,NULL),(408,100,0,0,0,40800,NULL,NULL,NULL,NULL,NULL,NULL),(409,100,0,0,0,40900,NULL,NULL,NULL,NULL,NULL,NULL),(500,100,0,0,0,50000,NULL,NULL,NULL,NULL,NULL,NULL),(501,100,0,0,0,50100,NULL,NULL,NULL,NULL,NULL,NULL),(502,100,0,0,0,50200,NULL,NULL,NULL,NULL,NULL,NULL),(503,100,0,0,0,50300,NULL,NULL,NULL,NULL,NULL,NULL),(504,100,0,0,0,50400,NULL,NULL,NULL,NULL,NULL,NULL),(505,100,0,0,0,50500,NULL,NULL,NULL,NULL,NULL,NULL),(506,100,0,0,0,50600,NULL,NULL,NULL,NULL,NULL,NULL),(507,100,0,0,0,50700,NULL,NULL,NULL,NULL,NULL,NULL),(508,100,0,0,0,50800,NULL,NULL,NULL,NULL,NULL,NULL),(509,100,0,0,0,50900,NULL,NULL,NULL,NULL,NULL,NULL),(600,100,0,0,0,60000,NULL,NULL,NULL,NULL,NULL,NULL),(601,100,0,0,0,60100,NULL,NULL,NULL,NULL,NULL,NULL),(602,100,0,0,0,60200,NULL,NULL,NULL,NULL,NULL,NULL),(603,100,0,0,0,60300,NULL,NULL,NULL,NULL,NULL,NULL),(604,100,0,0,0,60400,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `bug_field_usage` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `bug_field_value`
---
-
-DROP TABLE IF EXISTS `bug_field_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_field_value` (
-  `bug_fv_id` int(11) NOT NULL auto_increment,
-  `bug_field_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `value_id` int(11) NOT NULL default '0',
-  `value` text NOT NULL,
-  `description` text NOT NULL,
-  `order_id` int(11) NOT NULL default '0',
-  `status` char(1) NOT NULL default 'A',
-  PRIMARY KEY  (`bug_fv_id`),
-  KEY `idx_bug_fv_field_id` (`bug_fv_id`),
-  KEY `idx_bug_fv_group_id` (`group_id`),
-  KEY `idx_bug_fv_value_id` (`value_id`),
-  KEY `idx_bug_fv_status` (`status`)
-) ENGINE=MyISAM AUTO_INCREMENT=410 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `bug_field_value`
@@ -1067,28 +333,6 @@ INSERT INTO `bug_field_value` VALUES (101,101,100,1,'Open','The bug has been sub
 UNLOCK TABLES;
 
 --
--- Table structure for table `bug_file`
---
-
-DROP TABLE IF EXISTS `bug_file`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_file` (
-  `bug_file_id` int(11) NOT NULL auto_increment,
-  `bug_id` int(11) NOT NULL default '0',
-  `submitted_by` int(11) NOT NULL default '0',
-  `date` int(11) NOT NULL default '0',
-  `description` text NOT NULL,
-  `file` longblob NOT NULL,
-  `filename` text NOT NULL,
-  `filesize` int(11) NOT NULL default '0',
-  `filetype` text NOT NULL,
-  PRIMARY KEY  (`bug_file_id`),
-  KEY `bug_id_idx` (`bug_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `bug_file`
 --
 
@@ -1096,23 +340,6 @@ LOCK TABLES `bug_file` WRITE;
 /*!40000 ALTER TABLE `bug_file` DISABLE KEYS */;
 /*!40000 ALTER TABLE `bug_file` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `bug_filter`
---
-
-DROP TABLE IF EXISTS `bug_filter`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_filter` (
-  `filter_id` int(11) NOT NULL auto_increment,
-  `user_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `sql_clause` text NOT NULL,
-  `is_active` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`filter_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `bug_filter`
@@ -1124,26 +351,6 @@ LOCK TABLES `bug_filter` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `bug_history`
---
-
-DROP TABLE IF EXISTS `bug_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_history` (
-  `bug_history_id` int(11) NOT NULL auto_increment,
-  `bug_id` int(11) NOT NULL default '0',
-  `field_name` text NOT NULL,
-  `old_value` text NOT NULL,
-  `mod_by` int(11) NOT NULL default '0',
-  `date` int(11) default NULL,
-  `type` int(11) default NULL,
-  PRIMARY KEY  (`bug_history_id`),
-  KEY `idx_bug_history_bug_id` (`bug_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `bug_history`
 --
 
@@ -1153,22 +360,6 @@ LOCK TABLES `bug_history` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `bug_notification`
---
-
-DROP TABLE IF EXISTS `bug_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_notification` (
-  `user_id` int(11) NOT NULL default '0',
-  `role_id` int(11) NOT NULL default '0',
-  `event_id` int(11) NOT NULL default '0',
-  `notify` int(11) NOT NULL default '1',
-  KEY `user_id_idx` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `bug_notification`
 --
 
@@ -1176,23 +367,6 @@ LOCK TABLES `bug_notification` WRITE;
 /*!40000 ALTER TABLE `bug_notification` DISABLE KEYS */;
 /*!40000 ALTER TABLE `bug_notification` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `bug_notification_event`
---
-
-DROP TABLE IF EXISTS `bug_notification_event`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_notification_event` (
-  `event_id` int(11) NOT NULL default '0',
-  `event_label` varchar(255) default NULL,
-  `short_description` varchar(40) default NULL,
-  `description` varchar(255) default NULL,
-  `rank` int(11) NOT NULL default '0',
-  KEY `event_id_idx` (`event_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `bug_notification_event`
@@ -1205,23 +379,6 @@ INSERT INTO `bug_notification_event` VALUES (1,'ROLE_CHANGE','Role has changed',
 UNLOCK TABLES;
 
 --
--- Table structure for table `bug_notification_role`
---
-
-DROP TABLE IF EXISTS `bug_notification_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_notification_role` (
-  `role_id` int(11) NOT NULL default '0',
-  `role_label` varchar(255) default NULL,
-  `short_description` varchar(40) default NULL,
-  `description` varchar(255) default NULL,
-  `rank` int(11) NOT NULL default '0',
-  KEY `role_id_idx` (`role_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `bug_notification_role`
 --
 
@@ -1230,27 +387,6 @@ LOCK TABLES `bug_notification_role` WRITE;
 INSERT INTO `bug_notification_role` VALUES (1,'SUBMITTER','Submitter','The person who submitted the bug',10),(2,'ASSIGNEE','Assignee','The person to whom the bug was assigned',20),(3,'CC','CC','The person who is in the CC list',30),(4,'COMMENTER','Commenter','A person who once posted a follow-up comment',40);
 /*!40000 ALTER TABLE `bug_notification_role` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `bug_report`
---
-
-DROP TABLE IF EXISTS `bug_report`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_report` (
-  `report_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '100',
-  `user_id` int(11) NOT NULL default '100',
-  `name` varchar(80) default NULL,
-  `description` varchar(255) default NULL,
-  `scope` char(1) NOT NULL default 'I',
-  PRIMARY KEY  (`report_id`),
-  KEY `group_id_idx` (`group_id`),
-  KEY `user_id_idx` (`user_id`),
-  KEY `scope_idx` (`scope`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `bug_report`
@@ -1263,25 +399,6 @@ INSERT INTO `bug_report` VALUES (100,100,100,'Default','The system default bug r
 UNLOCK TABLES;
 
 --
--- Table structure for table `bug_report_field`
---
-
-DROP TABLE IF EXISTS `bug_report_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_report_field` (
-  `report_id` int(11) NOT NULL default '100',
-  `field_name` varchar(255) default NULL,
-  `show_on_query` int(11) default NULL,
-  `show_on_result` int(11) default NULL,
-  `place_query` int(11) default NULL,
-  `place_result` int(11) default NULL,
-  `col_width` int(11) default NULL,
-  KEY `profile_id_idx` (`report_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `bug_report_field`
 --
 
@@ -1290,23 +407,6 @@ LOCK TABLES `bug_report_field` WRITE;
 INSERT INTO `bug_report_field` VALUES (100,'category_id',1,0,10,NULL,NULL),(100,'bug_group_id',1,0,20,NULL,NULL),(100,'assigned_to',1,1,30,40,NULL),(100,'status_id',1,0,40,NULL,NULL),(100,'bug_id',0,1,NULL,10,NULL),(100,'summary',0,1,NULL,20,NULL),(100,'date',0,1,NULL,30,NULL),(100,'submitted_by',0,1,NULL,50,NULL);
 /*!40000 ALTER TABLE `bug_report_field` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `bug_task_dependencies`
---
-
-DROP TABLE IF EXISTS `bug_task_dependencies`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_task_dependencies` (
-  `bug_depend_id` int(11) NOT NULL auto_increment,
-  `bug_id` int(11) NOT NULL default '0',
-  `is_dependent_on_task_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`bug_depend_id`),
-  KEY `idx_bug_task_dependencies_bug_id` (`bug_id`),
-  KEY `idx_bug_task_is_dependent_on_task_id` (`is_dependent_on_task_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `bug_task_dependencies`
@@ -1318,21 +418,6 @@ LOCK TABLES `bug_task_dependencies` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `bug_watcher`
---
-
-DROP TABLE IF EXISTS `bug_watcher`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `bug_watcher` (
-  `user_id` int(11) NOT NULL default '0',
-  `watchee_id` int(11) NOT NULL default '0',
-  KEY `user_id_idx` (`user_id`),
-  KEY `watchee_id_idx` (`watchee_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `bug_watcher`
 --
 
@@ -1340,29 +425,6 @@ LOCK TABLES `bug_watcher` WRITE;
 /*!40000 ALTER TABLE `bug_watcher` DISABLE KEYS */;
 /*!40000 ALTER TABLE `bug_watcher` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `cross_references`
---
-
-DROP TABLE IF EXISTS `cross_references`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `cross_references` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `created_at` int(11) NOT NULL default '0',
-  `user_id` int(11) unsigned NOT NULL default '0',
-  `source_type` varchar(255) NOT NULL,
-  `source_keyword` varchar(32) NOT NULL,
-  `source_id` varchar(255) NOT NULL default '0',
-  `source_gid` int(11) unsigned NOT NULL default '0',
-  `target_type` varchar(255) NOT NULL,
-  `target_keyword` varchar(32) NOT NULL,
-  `target_id` varchar(255) NOT NULL default '0',
-  `target_gid` int(11) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `cross_references`
@@ -1374,21 +436,6 @@ LOCK TABLES `cross_references` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `cvs_branches`
---
-
-DROP TABLE IF EXISTS `cvs_branches`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `cvs_branches` (
-  `id` mediumint(9) NOT NULL auto_increment,
-  `branch` varchar(64) character set utf8 collate utf8_bin NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `branch` (`branch`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `cvs_branches`
 --
 
@@ -1396,37 +443,6 @@ LOCK TABLES `cvs_branches` WRITE;
 /*!40000 ALTER TABLE `cvs_branches` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cvs_branches` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `cvs_checkins`
---
-
-DROP TABLE IF EXISTS `cvs_checkins`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `cvs_checkins` (
-  `type` enum('Change','Add','Remove') default NULL,
-  `ci_when` datetime NOT NULL default '0000-00-00 00:00:00',
-  `whoid` mediumint(9) NOT NULL default '0',
-  `repositoryid` mediumint(9) NOT NULL default '0',
-  `dirid` mediumint(9) NOT NULL default '0',
-  `fileid` mediumint(9) NOT NULL default '0',
-  `revision` varchar(32) character set utf8 collate utf8_bin default NULL,
-  `stickytag` varchar(255) character set utf8 collate utf8_bin NOT NULL default '',
-  `branchid` mediumint(9) NOT NULL default '0',
-  `addedlines` int(11) NOT NULL default '999',
-  `removedlines` int(11) NOT NULL default '999',
-  `commitid` int(11) NOT NULL default '0',
-  `descid` int(11) NOT NULL default '0',
-  UNIQUE KEY `repositoryid` (`repositoryid`,`dirid`,`fileid`,`revision`),
-  KEY `ci_when` (`ci_when`),
-  KEY `repositoryid_2` (`repositoryid`),
-  KEY `dirid` (`dirid`),
-  KEY `fileid` (`fileid`),
-  KEY `branchid` (`branchid`),
-  KEY `commitid` (`commitid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `cvs_checkins`
@@ -1438,22 +454,6 @@ LOCK TABLES `cvs_checkins` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `cvs_commits`
---
-
-DROP TABLE IF EXISTS `cvs_commits`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `cvs_commits` (
-  `id` mediumint(9) NOT NULL auto_increment,
-  `comm_when` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-  `whoid` mediumint(9) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `whoid` (`whoid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `cvs_commits`
 --
 
@@ -1461,22 +461,6 @@ LOCK TABLES `cvs_commits` WRITE;
 /*!40000 ALTER TABLE `cvs_commits` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cvs_commits` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `cvs_descs`
---
-
-DROP TABLE IF EXISTS `cvs_descs`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `cvs_descs` (
-  `id` mediumint(9) NOT NULL auto_increment,
-  `description` text,
-  `hash` bigint(20) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `hash` (`hash`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `cvs_descs`
@@ -1488,21 +472,6 @@ LOCK TABLES `cvs_descs` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `cvs_dirs`
---
-
-DROP TABLE IF EXISTS `cvs_dirs`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `cvs_dirs` (
-  `id` mediumint(9) NOT NULL auto_increment,
-  `dir` varchar(128) character set utf8 collate utf8_bin NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `dir` (`dir`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `cvs_dirs`
 --
 
@@ -1510,21 +479,6 @@ LOCK TABLES `cvs_dirs` WRITE;
 /*!40000 ALTER TABLE `cvs_dirs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cvs_dirs` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `cvs_files`
---
-
-DROP TABLE IF EXISTS `cvs_files`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `cvs_files` (
-  `id` mediumint(9) NOT NULL auto_increment,
-  `file` varchar(128) character set utf8 collate utf8_bin NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `file` (`file`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `cvs_files`
@@ -1536,21 +490,6 @@ LOCK TABLES `cvs_files` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `cvs_repositories`
---
-
-DROP TABLE IF EXISTS `cvs_repositories`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `cvs_repositories` (
-  `id` mediumint(9) NOT NULL auto_increment,
-  `repository` varchar(64) character set utf8 collate utf8_bin NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `repository` (`repository`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `cvs_repositories`
 --
 
@@ -1558,26 +497,6 @@ LOCK TABLES `cvs_repositories` WRITE;
 /*!40000 ALTER TABLE `cvs_repositories` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cvs_repositories` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `cvs_tags`
---
-
-DROP TABLE IF EXISTS `cvs_tags`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `cvs_tags` (
-  `repositoryid` mediumint(9) NOT NULL default '0',
-  `branchid` mediumint(9) NOT NULL default '0',
-  `dirid` mediumint(9) NOT NULL default '0',
-  `fileid` mediumint(9) NOT NULL default '0',
-  `revision` varchar(32) character set utf8 collate utf8_bin NOT NULL default '',
-  KEY `repositoryid_2` (`repositoryid`),
-  KEY `dirid` (`dirid`),
-  KEY `fileid` (`fileid`),
-  KEY `branchid` (`branchid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `cvs_tags`
@@ -1589,28 +508,6 @@ LOCK TABLES `cvs_tags` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `db_images`
---
-
-DROP TABLE IF EXISTS `db_images`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `db_images` (
-  `id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `description` text NOT NULL,
-  `bin_data` longblob NOT NULL,
-  `filename` text NOT NULL,
-  `filesize` int(11) NOT NULL default '0',
-  `filetype` text NOT NULL,
-  `width` int(11) NOT NULL default '0',
-  `height` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `idx_db_images_group` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `db_images`
 --
 
@@ -1620,31 +517,6 @@ LOCK TABLES `db_images` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `doc_data`
---
-
-DROP TABLE IF EXISTS `doc_data`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `doc_data` (
-  `docid` int(11) NOT NULL auto_increment,
-  `title` varchar(255) NOT NULL default '',
-  `data` longblob NOT NULL,
-  `updatedate` int(11) NOT NULL default '0',
-  `createdate` int(11) NOT NULL default '0',
-  `created_by` int(11) NOT NULL default '0',
-  `doc_group` int(11) NOT NULL default '0',
-  `rank` int(11) NOT NULL default '0',
-  `description` text,
-  `filename` text,
-  `filesize` int(10) unsigned NOT NULL default '0',
-  `filetype` text,
-  PRIMARY KEY  (`docid`),
-  KEY `idx_doc_group_doc_group` (`doc_group`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `doc_data`
 --
 
@@ -1652,23 +524,6 @@ LOCK TABLES `doc_data` WRITE;
 /*!40000 ALTER TABLE `doc_data` DISABLE KEYS */;
 /*!40000 ALTER TABLE `doc_data` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `doc_groups`
---
-
-DROP TABLE IF EXISTS `doc_groups`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `doc_groups` (
-  `doc_group` int(12) NOT NULL auto_increment,
-  `groupname` varchar(255) NOT NULL default '',
-  `group_rank` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`doc_group`),
-  KEY `idx_doc_groups_group` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `doc_groups`
@@ -1681,23 +536,6 @@ INSERT INTO `doc_groups` VALUES (1,'Documents',10,101);
 UNLOCK TABLES;
 
 --
--- Table structure for table `doc_log`
---
-
-DROP TABLE IF EXISTS `doc_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `doc_log` (
-  `user_id` int(11) NOT NULL default '0',
-  `docid` int(11) NOT NULL default '0',
-  `time` int(11) NOT NULL default '0',
-  KEY `all_idx` (`user_id`,`docid`),
-  KEY `time_idx` (`time`),
-  KEY `docid_idx` (`docid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `doc_log`
 --
 
@@ -1705,21 +543,6 @@ LOCK TABLES `doc_log` WRITE;
 /*!40000 ALTER TABLE `doc_log` DISABLE KEYS */;
 /*!40000 ALTER TABLE `doc_log` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `feedback`
---
-
-DROP TABLE IF EXISTS `feedback`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `feedback` (
-  `session_hash` char(32) NOT NULL,
-  `feedback` text NOT NULL,
-  `created_at` datetime NOT NULL,
-  PRIMARY KEY  (`session_hash`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `feedback`
@@ -1731,23 +554,6 @@ LOCK TABLES `feedback` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `filedownload_log`
---
-
-DROP TABLE IF EXISTS `filedownload_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `filedownload_log` (
-  `user_id` int(11) NOT NULL default '0',
-  `filerelease_id` int(11) NOT NULL default '0',
-  `time` int(11) NOT NULL default '0',
-  KEY `all_idx` (`user_id`,`filerelease_id`),
-  KEY `time_idx` (`time`),
-  KEY `filerelease_id_idx` (`filerelease_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `filedownload_log`
 --
 
@@ -1755,23 +561,6 @@ LOCK TABLES `filedownload_log` WRITE;
 /*!40000 ALTER TABLE `filedownload_log` DISABLE KEYS */;
 /*!40000 ALTER TABLE `filedownload_log` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `filemodule`
---
-
-DROP TABLE IF EXISTS `filemodule`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `filemodule` (
-  `filemodule_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `module_name` varchar(40) default NULL,
-  `recent_filerelease` varchar(20) NOT NULL default '',
-  PRIMARY KEY  (`filemodule_id`),
-  KEY `idx_filemodule_group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `filemodule`
@@ -1784,20 +573,6 @@ INSERT INTO `filemodule` VALUES (1,101,'nty','');
 UNLOCK TABLES;
 
 --
--- Table structure for table `filemodule_monitor`
---
-
-DROP TABLE IF EXISTS `filemodule_monitor`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `filemodule_monitor` (
-  `filemodule_id` int(11) NOT NULL default '0',
-  `user_id` int(11) NOT NULL default '0',
-  KEY `idx_filemodule_monitor_id` (`filemodule_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `filemodule_monitor`
 --
 
@@ -1807,42 +582,6 @@ LOCK TABLES `filemodule_monitor` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `filerelease`
---
-
-DROP TABLE IF EXISTS `filerelease`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `filerelease` (
-  `filerelease_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `user_id` int(11) NOT NULL default '0',
-  `unix_box` varchar(20) NOT NULL default 'remission',
-  `unix_partition` int(11) NOT NULL default '0',
-  `text_notes` text,
-  `text_changes` text,
-  `release_version` varchar(20) default NULL,
-  `filename` varchar(80) default NULL,
-  `filemodule_id` int(11) NOT NULL default '0',
-  `file_type` varchar(50) default NULL,
-  `release_time` int(11) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  `file_size` int(11) default NULL,
-  `post_time` int(11) NOT NULL default '0',
-  `text_format` int(11) NOT NULL default '0',
-  `downloads_week` int(11) NOT NULL default '0',
-  `status` char(1) NOT NULL default 'N',
-  `old_filename` varchar(80) NOT NULL default '',
-  PRIMARY KEY  (`filerelease_id`),
-  KEY `group_id_idx` (`group_id`),
-  KEY `user_id_idx` (`user_id`),
-  KEY `unix_box_idx` (`unix_box`),
-  KEY `post_time_idx` (`post_time`),
-  KEY `idx_release_time` (`release_time`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `filerelease`
 --
 
@@ -1850,23 +589,6 @@ LOCK TABLES `filerelease` WRITE;
 /*!40000 ALTER TABLE `filerelease` DISABLE KEYS */;
 /*!40000 ALTER TABLE `filerelease` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `forge_upgrade_bucket`
---
-
-DROP TABLE IF EXISTS `forge_upgrade_bucket`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `forge_upgrade_bucket` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `script` varchar(255) NOT NULL default '',
-  `start_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `end_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `status` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `forge_upgrade_bucket`
@@ -1879,29 +601,6 @@ INSERT INTO `forge_upgrade_bucket` VALUES (1,'/usr/share/codendi/src/db/mysql/up
 UNLOCK TABLES;
 
 --
--- Table structure for table `forge_upgrade_log`
---
-
-DROP TABLE IF EXISTS `forge_upgrade_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `forge_upgrade_log` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `bucket_id` int(11) unsigned default NULL,
-  `timestamp` datetime NOT NULL default '0000-00-00 00:00:00',
-  `logger` varchar(64) NOT NULL default '',
-  `level` varchar(32) NOT NULL default '',
-  `message` text NOT NULL,
-  `thread` varchar(32) NOT NULL default '',
-  `file` varchar(255) NOT NULL default '',
-  `line` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `bucket_id` (`bucket_id`),
-  CONSTRAINT `forge_upgrade_log_ibfk_1` FOREIGN KEY (`bucket_id`) REFERENCES `forge_upgrade_bucket` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `forge_upgrade_log`
 --
 
@@ -1910,33 +609,6 @@ LOCK TABLES `forge_upgrade_log` WRITE;
 INSERT INTO `forge_upgrade_log` VALUES (1,16,'2011-10-21 09:30:45','ForgeUpgrade','INFO','Processing b201110171036_add_docman_approval_user_index','11571','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(2,16,'2011-10-21 09:30:45','ForgeUpgrade','INFO','PreUp OK','11571','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(3,16,'2011-10-21 09:30:45','ForgeUpgrade','INFO','Up OK','11571','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(4,16,'2011-10-21 09:30:45','ForgeUpgrade','INFO','PostUp OK','11571','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(5,31,'2011-12-22 17:01:18','ForgeUpgrade','INFO','Processing b201102081526_add_table_plugin_git_post_receive_mail','20735','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(6,31,'2011-12-22 17:01:18','ForgeUpgrade','INFO','PreUp OK','20735','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(7,31,'2011-12-22 17:01:18','ForgeUpgrade','INFO','Up OK','20735','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(8,31,'2011-12-22 17:01:18','ForgeUpgrade','INFO','PostUp OK','20735','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(9,32,'2011-12-22 17:01:18','ForgeUpgrade','INFO','Processing b201102090815_add_column_repository_events_mailing_prefix','20735','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(10,32,'2011-12-22 17:01:18','ForgeUpgrade','INFO','PreUp OK','20735','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(11,32,'2011-12-22 17:01:18','ForgeUpgrade','ERROR','An error occured while adding the column repository_events_mailing_prefix to the table plugin_git','20735','/usr/share/forgeupgrade/src/ForgeUpgrade.php',333),(12,33,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Processing b201102090815_add_column_repository_events_mailing_prefix','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(13,33,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PreUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(14,33,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Up OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(15,33,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PostUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(16,34,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Processing b201102091302_deploy_post_receive_to_existing_repositories','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(17,34,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PreUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(18,34,'2011-12-22 17:05:23','ForgeUpgrade_Bucket','INFO','Deploy /var/lib/codendi/gitroot/nty/hoooola.git/hooks/post-receive','20773','/usr/share/tuleap_jm1974/plugins/git/updates/2011/201102091302_deploy_post_receive_to_existing_repositories.php',33),(19,34,'2011-12-22 17:05:23','ForgeUpgrade_Bucket','INFO','Deploy /var/lib/codendi/gitroot/nty/hej.git/hooks/post-receive','20773','/usr/share/tuleap_jm1974/plugins/git/updates/2011/201102091302_deploy_post_receive_to_existing_repositories.php',33),(20,34,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Up OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(21,34,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PostUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(22,35,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Processing b201106281541_add_backend_type','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(23,35,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PreUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(24,35,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Up OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(25,35,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PostUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(26,36,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Processing b201107071731_add_permission_type','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(27,36,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PreUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(28,36,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Up OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(29,36,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PostUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(30,37,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Processing b201108311118_add_widget_renderer','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(31,37,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PreUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(32,37,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Up OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(33,37,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PostUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(34,38,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Processing b201109151443_reactivate_plugin_in_templates','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(35,38,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PreUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(36,38,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Up OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(37,38,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PostUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(38,39,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Processing b201110051717_add_postaction_field_date_table','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(39,39,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PreUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(40,39,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Up OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(41,39,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PostUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(42,40,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Processing b201111021759_id_sharing','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(43,40,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PreUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(44,40,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Up OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(45,40,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PostUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(46,41,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Processing b201111090857_add_table_plugin_git_log','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(47,41,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PreUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(48,41,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Up OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(49,41,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PostUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(50,42,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Processing b201112130946_add_user_id','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(51,42,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PreUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(52,42,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Up OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(53,42,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PostUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(54,43,'2011-12-22 17:05:23','ForgeUpgrade','INFO','Processing b201112150858_add_repository_scope','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(55,43,'2011-12-22 17:05:23','ForgeUpgrade','INFO','PreUp OK','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(56,43,'2011-12-22 17:05:23','ForgeUpgrade','ERROR','An error occured while adding the column repository_scope to the table plugin_git','20773','/usr/share/forgeupgrade/src/ForgeUpgrade.php',333),(57,44,'2011-12-22 17:05:46','ForgeUpgrade','INFO','Processing b201112150858_add_repository_scope','20788','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(58,44,'2011-12-22 17:05:46','ForgeUpgrade','INFO','PreUp OK','20788','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(59,44,'2011-12-22 17:05:46','ForgeUpgrade','INFO','Up OK','20788','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(60,44,'2011-12-22 17:05:46','ForgeUpgrade','INFO','PostUp OK','20788','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(61,45,'2011-12-22 17:05:46','ForgeUpgrade','INFO','Processing b201112151709_add_repository_namespace','20788','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(62,45,'2011-12-22 17:05:46','ForgeUpgrade','INFO','PreUp OK','20788','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(63,45,'2011-12-22 17:05:46','ForgeUpgrade','ERROR','An error occured while adding the column repository_namespace to the table plugin_git','20788','/usr/share/forgeupgrade/src/ForgeUpgrade.php',333),(64,46,'2011-12-22 17:06:03','ForgeUpgrade','INFO','Processing b201112151709_add_repository_namespace','20794','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(65,46,'2011-12-22 17:06:03','ForgeUpgrade','INFO','PreUp OK','20794','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(66,46,'2011-12-22 17:06:03','ForgeUpgrade','INFO','Up OK','20794','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(67,46,'2011-12-22 17:06:03','ForgeUpgrade','INFO','PostUp OK','20794','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304),(68,47,'2011-12-22 17:06:03','ForgeUpgrade','INFO','Processing b201112160838_delete_user_id','20794','/usr/share/forgeupgrade/src/ForgeUpgrade.php',293),(69,47,'2011-12-22 17:06:03','ForgeUpgrade','INFO','PreUp OK','20794','/usr/share/forgeupgrade/src/ForgeUpgrade.php',297),(70,47,'2011-12-22 17:06:03','ForgeUpgrade','INFO','Up OK','20794','/usr/share/forgeupgrade/src/ForgeUpgrade.php',301),(71,47,'2011-12-22 17:06:03','ForgeUpgrade','INFO','PostUp OK','20794','/usr/share/forgeupgrade/src/ForgeUpgrade.php',304);
 /*!40000 ALTER TABLE `forge_upgrade_log` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `forum`
---
-
-DROP TABLE IF EXISTS `forum`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `forum` (
-  `msg_id` int(11) NOT NULL auto_increment,
-  `group_forum_id` int(11) NOT NULL default '0',
-  `posted_by` int(11) NOT NULL default '0',
-  `subject` text NOT NULL,
-  `body` text NOT NULL,
-  `date` int(11) NOT NULL default '0',
-  `is_followup_to` int(11) NOT NULL default '0',
-  `thread_id` int(11) NOT NULL default '0',
-  `has_followups` int(11) default '0',
-  PRIMARY KEY  (`msg_id`),
-  KEY `idx_forum_group_forum_id` (`group_forum_id`),
-  KEY `idx_forum_is_followup_to` (`is_followup_to`),
-  KEY `idx_forum_thread_id` (`thread_id`),
-  KEY `idx_forum_id_date` (`group_forum_id`,`date`),
-  KEY `idx_forum_id_date_followup` (`group_forum_id`,`date`,`is_followup_to`),
-  KEY `idx_forum_thread_date_followup` (`thread_id`,`date`,`is_followup_to`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `forum`
@@ -1949,20 +621,6 @@ INSERT INTO `forum` VALUES (1,4,100,'Bienvenue sur Nicolas First Project Open Di
 UNLOCK TABLES;
 
 --
--- Table structure for table `forum_agg_msg_count`
---
-
-DROP TABLE IF EXISTS `forum_agg_msg_count`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `forum_agg_msg_count` (
-  `group_forum_id` int(11) NOT NULL,
-  `count` int(11) NOT NULL,
-  PRIMARY KEY  (`group_forum_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `forum_agg_msg_count`
 --
 
@@ -1971,25 +629,6 @@ LOCK TABLES `forum_agg_msg_count` WRITE;
 INSERT INTO `forum_agg_msg_count` VALUES (4,1),(5,1),(6,1);
 /*!40000 ALTER TABLE `forum_agg_msg_count` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `forum_group_list`
---
-
-DROP TABLE IF EXISTS `forum_group_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `forum_group_list` (
-  `group_forum_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `forum_name` text NOT NULL,
-  `is_public` int(11) NOT NULL default '0',
-  `description` text,
-  PRIMARY KEY  (`group_forum_id`),
-  KEY `idx_forum_group_list_group_id` (`group_id`),
-  FULLTEXT KEY `description` (`description`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `forum_group_list`
@@ -2002,23 +641,6 @@ INSERT INTO `forum_group_list` VALUES (1,100,'Open Discussion',1,'General Discus
 UNLOCK TABLES;
 
 --
--- Table structure for table `forum_monitored_forums`
---
-
-DROP TABLE IF EXISTS `forum_monitored_forums`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `forum_monitored_forums` (
-  `monitor_id` int(11) NOT NULL auto_increment,
-  `forum_id` int(11) NOT NULL default '0',
-  `user_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`monitor_id`),
-  KEY `idx_forum_monitor_thread_id` (`forum_id`),
-  KEY `idx_forum_monitor_combo_id` (`forum_id`,`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `forum_monitored_forums`
 --
 
@@ -2027,22 +649,6 @@ LOCK TABLES `forum_monitored_forums` WRITE;
 INSERT INTO `forum_monitored_forums` VALUES (1,4,102),(2,5,102),(3,6,102);
 /*!40000 ALTER TABLE `forum_monitored_forums` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `forum_monitored_threads`
---
-
-DROP TABLE IF EXISTS `forum_monitored_threads`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `forum_monitored_threads` (
-  `thread_monitor_id` int(11) NOT NULL auto_increment,
-  `forum_id` int(11) NOT NULL default '0',
-  `thread_id` int(11) NOT NULL default '0',
-  `user_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`thread_monitor_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `forum_monitored_threads`
@@ -2054,22 +660,6 @@ LOCK TABLES `forum_monitored_threads` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `forum_saved_place`
---
-
-DROP TABLE IF EXISTS `forum_saved_place`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `forum_saved_place` (
-  `saved_place_id` int(11) NOT NULL auto_increment,
-  `user_id` int(11) NOT NULL default '0',
-  `forum_id` int(11) NOT NULL default '0',
-  `save_date` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`saved_place_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `forum_saved_place`
 --
 
@@ -2077,19 +667,6 @@ LOCK TABLES `forum_saved_place` WRITE;
 /*!40000 ALTER TABLE `forum_saved_place` DISABLE KEYS */;
 /*!40000 ALTER TABLE `forum_saved_place` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `forum_thread_id`
---
-
-DROP TABLE IF EXISTS `forum_thread_id`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `forum_thread_id` (
-  `thread_id` int(11) NOT NULL auto_increment,
-  PRIMARY KEY  (`thread_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `forum_thread_id`
@@ -2102,25 +679,6 @@ INSERT INTO `forum_thread_id` VALUES (1),(2),(3);
 UNLOCK TABLES;
 
 --
--- Table structure for table `frs_dlstats_agg`
---
-
-DROP TABLE IF EXISTS `frs_dlstats_agg`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_dlstats_agg` (
-  `file_id` int(11) NOT NULL default '0',
-  `day` int(11) NOT NULL default '0',
-  `downloads_http` int(11) NOT NULL default '0',
-  `downloads_ftp` int(11) NOT NULL default '0',
-  KEY `file_id_idx` (`file_id`),
-  KEY `day_idx` (`day`),
-  KEY `downloads_http_idx` (`downloads_http`),
-  KEY `downloads_ftp_idx` (`downloads_ftp`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `frs_dlstats_agg`
 --
 
@@ -2128,23 +686,6 @@ LOCK TABLES `frs_dlstats_agg` WRITE;
 /*!40000 ALTER TABLE `frs_dlstats_agg` DISABLE KEYS */;
 /*!40000 ALTER TABLE `frs_dlstats_agg` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `frs_dlstats_file_agg`
---
-
-DROP TABLE IF EXISTS `frs_dlstats_file_agg`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_dlstats_file_agg` (
-  `file_id` int(11) NOT NULL default '0',
-  `day` int(11) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  KEY `idx_dlstats_file_file_id` (`file_id`),
-  KEY `idx_dlstats_file_day` (`day`),
-  KEY `idx_dlstats_file_down` (`downloads`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `frs_dlstats_file_agg`
@@ -2157,20 +698,6 @@ INSERT INTO `frs_dlstats_file_agg` VALUES (0,20111016,0),(0,20111017,0),(0,20111
 UNLOCK TABLES;
 
 --
--- Table structure for table `frs_dlstats_filetotal_agg`
---
-
-DROP TABLE IF EXISTS `frs_dlstats_filetotal_agg`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_dlstats_filetotal_agg` (
-  `file_id` int(11) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  KEY `idx_stats_agr_tmp_fid` (`file_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `frs_dlstats_filetotal_agg`
 --
 
@@ -2180,23 +707,6 @@ LOCK TABLES `frs_dlstats_filetotal_agg` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `frs_dlstats_group_agg`
---
-
-DROP TABLE IF EXISTS `frs_dlstats_group_agg`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_dlstats_group_agg` (
-  `group_id` int(11) NOT NULL default '0',
-  `day` int(11) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  KEY `group_id_idx` (`group_id`),
-  KEY `day_idx` (`day`),
-  KEY `downloads_idx` (`downloads`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `frs_dlstats_group_agg`
 --
 
@@ -2204,20 +714,6 @@ LOCK TABLES `frs_dlstats_group_agg` WRITE;
 /*!40000 ALTER TABLE `frs_dlstats_group_agg` DISABLE KEYS */;
 /*!40000 ALTER TABLE `frs_dlstats_group_agg` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `frs_dlstats_grouptotal_agg`
---
-
-DROP TABLE IF EXISTS `frs_dlstats_grouptotal_agg`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_dlstats_grouptotal_agg` (
-  `group_id` int(11) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  KEY `idx_stats_agr_tmp_gid` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `frs_dlstats_grouptotal_agg`
@@ -2230,36 +726,6 @@ INSERT INTO `frs_dlstats_grouptotal_agg` VALUES (1,0),(46,0),(99,0),(101,0);
 UNLOCK TABLES;
 
 --
--- Table structure for table `frs_file`
---
-
-DROP TABLE IF EXISTS `frs_file`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_file` (
-  `file_id` int(11) NOT NULL auto_increment,
-  `filename` text,
-  `filepath` varchar(255) default NULL,
-  `release_id` int(11) NOT NULL default '0',
-  `type_id` int(11) NOT NULL default '0',
-  `processor_id` int(11) NOT NULL default '0',
-  `release_time` int(11) NOT NULL default '0',
-  `file_size` bigint(20) NOT NULL default '0',
-  `post_date` int(11) NOT NULL default '0',
-  `status` char(1) NOT NULL default 'A',
-  `computed_md5` varchar(32) default NULL,
-  `reference_md5` varchar(32) default NULL,
-  `user_id` int(11) default NULL,
-  PRIMARY KEY  (`file_id`),
-  KEY `idx_frs_file_release_id` (`release_id`),
-  KEY `idx_frs_file_type` (`type_id`),
-  KEY `idx_frs_file_date` (`post_date`),
-  KEY `idx_frs_file_processor` (`processor_id`),
-  KEY `idx_frs_file_name` (`filename`(45))
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `frs_file`
 --
 
@@ -2269,35 +735,6 @@ LOCK TABLES `frs_file` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `frs_file_deleted`
---
-
-DROP TABLE IF EXISTS `frs_file_deleted`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_file_deleted` (
-  `file_id` int(11) NOT NULL,
-  `filename` text,
-  `filepath` varchar(255) default NULL,
-  `release_id` int(11) NOT NULL default '0',
-  `type_id` int(11) NOT NULL default '0',
-  `processor_id` int(11) NOT NULL default '0',
-  `release_time` int(11) NOT NULL default '0',
-  `file_size` bigint(20) NOT NULL default '0',
-  `post_date` int(11) NOT NULL default '0',
-  `status` char(1) NOT NULL default 'A',
-  `computed_md5` varchar(32) default NULL,
-  `reference_md5` varchar(32) default NULL,
-  `user_id` int(11) default NULL,
-  `delete_date` int(11) unsigned default NULL,
-  `purge_date` int(11) unsigned default NULL,
-  PRIMARY KEY  (`file_id`),
-  KEY `idx_delete_date` (`delete_date`),
-  KEY `idx_purge_date` (`purge_date`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `frs_file_deleted`
 --
 
@@ -2305,20 +742,6 @@ LOCK TABLES `frs_file_deleted` WRITE;
 /*!40000 ALTER TABLE `frs_file_deleted` DISABLE KEYS */;
 /*!40000 ALTER TABLE `frs_file_deleted` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `frs_filetype`
---
-
-DROP TABLE IF EXISTS `frs_filetype`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_filetype` (
-  `type_id` int(11) NOT NULL auto_increment,
-  `name` text,
-  PRIMARY KEY  (`type_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `frs_filetype`
@@ -2331,25 +754,6 @@ INSERT INTO `frs_filetype` VALUES (2000,'Binary .rpm'),(2100,'Binary .deb'),(300
 UNLOCK TABLES;
 
 --
--- Table structure for table `frs_log`
---
-
-DROP TABLE IF EXISTS `frs_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_log` (
-  `log_id` int(11) NOT NULL auto_increment,
-  `time` int(11) NOT NULL default '0',
-  `user_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `item_id` int(11) NOT NULL,
-  `action_id` int(11) NOT NULL,
-  PRIMARY KEY  (`log_id`),
-  KEY `idx_frs_log_group_item` (`group_id`,`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `frs_log`
 --
 
@@ -2359,25 +763,6 @@ LOCK TABLES `frs_log` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `frs_package`
---
-
-DROP TABLE IF EXISTS `frs_package`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_package` (
-  `package_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `name` text,
-  `status_id` int(11) NOT NULL default '0',
-  `rank` int(11) NOT NULL default '0',
-  `approve_license` tinyint(1) NOT NULL default '1',
-  PRIMARY KEY  (`package_id`),
-  KEY `idx_package_group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `frs_package`
 --
 
@@ -2385,22 +770,6 @@ LOCK TABLES `frs_package` WRITE;
 /*!40000 ALTER TABLE `frs_package` DISABLE KEYS */;
 /*!40000 ALTER TABLE `frs_package` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `frs_processor`
---
-
-DROP TABLE IF EXISTS `frs_processor`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_processor` (
-  `processor_id` int(11) NOT NULL auto_increment,
-  `name` text,
-  `rank` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`processor_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `frs_processor`
@@ -2413,30 +782,6 @@ INSERT INTO `frs_processor` VALUES (1000,'i386',10,100),(1500,'x86_64',15,100),(
 UNLOCK TABLES;
 
 --
--- Table structure for table `frs_release`
---
-
-DROP TABLE IF EXISTS `frs_release`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `frs_release` (
-  `release_id` int(11) NOT NULL auto_increment,
-  `package_id` int(11) NOT NULL default '0',
-  `name` text,
-  `notes` text,
-  `changes` text,
-  `status_id` int(11) NOT NULL default '0',
-  `preformatted` int(11) NOT NULL default '0',
-  `release_date` int(11) NOT NULL default '0',
-  `released_by` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`release_id`),
-  KEY `idx_frs_release_by` (`released_by`),
-  KEY `idx_frs_release_date` (`release_date`),
-  KEY `idx_frs_release_package` (`package_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `frs_release`
 --
 
@@ -2444,27 +789,6 @@ LOCK TABLES `frs_release` WRITE;
 /*!40000 ALTER TABLE `frs_release` DISABLE KEYS */;
 /*!40000 ALTER TABLE `frs_release` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `group_cvs_full_history`
---
-
-DROP TABLE IF EXISTS `group_cvs_full_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `group_cvs_full_history` (
-  `group_id` int(11) NOT NULL default '0',
-  `user_id` int(11) NOT NULL default '0',
-  `day` int(11) NOT NULL default '0',
-  `cvs_commits` int(11) NOT NULL default '0',
-  `cvs_adds` int(11) NOT NULL default '0',
-  `cvs_checkouts` int(11) NOT NULL default '0',
-  `cvs_browse` int(11) NOT NULL default '0',
-  KEY `group_id_idx` (`group_id`),
-  KEY `user_id_idx` (`user_id`),
-  KEY `day_idx` (`day`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `group_cvs_full_history`
@@ -2476,25 +800,6 @@ LOCK TABLES `group_cvs_full_history` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `group_cvs_history`
---
-
-DROP TABLE IF EXISTS `group_cvs_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `group_cvs_history` (
-  `group_id` int(11) NOT NULL default '0',
-  `user_name` varchar(80) NOT NULL default '',
-  `cvs_commits` int(11) NOT NULL default '0',
-  `cvs_commits_wk` int(11) NOT NULL default '0',
-  `cvs_adds` int(11) NOT NULL default '0',
-  `cvs_adds_wk` int(11) NOT NULL default '0',
-  KEY `group_id_idx` (`group_id`),
-  KEY `user_name_idx` (`user_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `group_cvs_history`
 --
 
@@ -2502,25 +807,6 @@ LOCK TABLES `group_cvs_history` WRITE;
 /*!40000 ALTER TABLE `group_cvs_history` DISABLE KEYS */;
 /*!40000 ALTER TABLE `group_cvs_history` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `group_desc`
---
-
-DROP TABLE IF EXISTS `group_desc`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `group_desc` (
-  `group_desc_id` int(11) NOT NULL auto_increment,
-  `desc_required` tinyint(1) NOT NULL default '0',
-  `desc_name` varchar(255) NOT NULL,
-  `desc_description` text,
-  `desc_rank` int(11) NOT NULL default '0',
-  `desc_type` enum('line','text') NOT NULL default 'text',
-  PRIMARY KEY  (`group_desc_id`),
-  UNIQUE KEY `desc_name` (`desc_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=105 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `group_desc`
@@ -2533,22 +819,6 @@ INSERT INTO `group_desc` VALUES (101,1,'project_desc_name:full_desc','project_de
 UNLOCK TABLES;
 
 --
--- Table structure for table `group_desc_value`
---
-
-DROP TABLE IF EXISTS `group_desc_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `group_desc_value` (
-  `desc_value_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL,
-  `group_desc_id` int(11) NOT NULL,
-  `value` text NOT NULL,
-  PRIMARY KEY  (`desc_value_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `group_desc_value`
 --
 
@@ -2557,25 +827,6 @@ LOCK TABLES `group_desc_value` WRITE;
 INSERT INTO `group_desc_value` VALUES (1,101,101,'fgb');
 /*!40000 ALTER TABLE `group_desc_value` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `group_history`
---
-
-DROP TABLE IF EXISTS `group_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `group_history` (
-  `group_history_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `field_name` text NOT NULL,
-  `old_value` text NOT NULL,
-  `mod_by` int(11) NOT NULL default '0',
-  `date` int(11) default NULL,
-  PRIMARY KEY  (`group_history_id`),
-  KEY `idx_group_history_group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `group_history`
@@ -2588,30 +839,6 @@ INSERT INTO `group_history` VALUES (1,1,'added_user %% nicolas','nicolas',101,13
 UNLOCK TABLES;
 
 --
--- Table structure for table `group_svn_full_history`
---
-
-DROP TABLE IF EXISTS `group_svn_full_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `group_svn_full_history` (
-  `group_id` int(11) NOT NULL default '0',
-  `user_id` int(11) NOT NULL default '0',
-  `day` int(11) NOT NULL default '0',
-  `svn_commits` int(11) NOT NULL default '0',
-  `svn_adds` int(11) NOT NULL default '0',
-  `svn_deletes` int(11) NOT NULL default '0',
-  `svn_checkouts` int(11) NOT NULL default '0',
-  `svn_access_count` int(11) NOT NULL default '0',
-  `svn_browse` int(11) NOT NULL default '0',
-  UNIQUE KEY `accessid` (`group_id`,`user_id`,`day`),
-  KEY `group_id_idx` (`group_id`),
-  KEY `user_id_idx` (`user_id`),
-  KEY `day_idx` (`day`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `group_svn_full_history`
 --
 
@@ -2619,20 +846,6 @@ LOCK TABLES `group_svn_full_history` WRITE;
 /*!40000 ALTER TABLE `group_svn_full_history` DISABLE KEYS */;
 /*!40000 ALTER TABLE `group_svn_full_history` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `group_type`
---
-
-DROP TABLE IF EXISTS `group_type`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `group_type` (
-  `type_id` int(11) NOT NULL,
-  `name` text NOT NULL,
-  PRIMARY KEY  (`type_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `group_type`
@@ -2645,64 +858,6 @@ INSERT INTO `group_type` VALUES (1,'project'),(2,'template'),(3,'test_project');
 UNLOCK TABLES;
 
 --
--- Table structure for table `groups`
---
-
-DROP TABLE IF EXISTS `groups`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `groups` (
-  `group_id` int(11) NOT NULL auto_increment,
-  `group_name` varchar(255) default NULL,
-  `is_public` int(11) NOT NULL default '0',
-  `status` char(1) NOT NULL default 'A',
-  `unix_group_name` varchar(30) NOT NULL default '',
-  `unix_box` varchar(20) NOT NULL default 'shell1',
-  `http_domain` varchar(80) default NULL,
-  `short_description` varchar(255) default NULL,
-  `cvs_box` varchar(20) NOT NULL default 'cvs1',
-  `svn_box` varchar(20) NOT NULL default 'svn1',
-  `license` varchar(16) default NULL,
-  `license_other` text,
-  `register_time` int(11) NOT NULL default '0',
-  `rand_hash` text,
-  `new_bug_address` text NOT NULL,
-  `new_patch_address` text NOT NULL,
-  `new_support_address` text NOT NULL,
-  `new_task_address` text NOT NULL,
-  `type` int(11) NOT NULL default '1',
-  `built_from_template` int(11) NOT NULL default '100',
-  `send_all_bugs` int(11) NOT NULL default '0',
-  `send_all_patches` int(11) NOT NULL default '0',
-  `send_all_support` int(11) NOT NULL default '0',
-  `send_all_tasks` int(11) NOT NULL default '0',
-  `bug_preamble` text NOT NULL,
-  `support_preamble` text NOT NULL,
-  `patch_preamble` text NOT NULL,
-  `pm_preamble` text NOT NULL,
-  `xrx_export_ettm` int(11) NOT NULL default '0',
-  `bug_allow_anon` int(11) NOT NULL default '1',
-  `cvs_tracker` int(11) NOT NULL default '1',
-  `cvs_watch_mode` int(11) NOT NULL default '0',
-  `cvs_events_mailing_list` text NOT NULL,
-  `cvs_events_mailing_header` varchar(64) character set utf8 collate utf8_bin default NULL,
-  `cvs_preamble` text NOT NULL,
-  `cvs_is_private` tinyint(1) NOT NULL default '0',
-  `svn_tracker` int(11) NOT NULL default '1',
-  `svn_mandatory_ref` tinyint(4) NOT NULL default '0',
-  `svn_events_mailing_list` text NOT NULL,
-  `svn_events_mailing_header` varchar(64) character set utf8 collate utf8_bin default NULL,
-  `svn_preamble` text NOT NULL,
-  `svn_accessfile` text,
-  PRIMARY KEY  (`group_id`),
-  KEY `idx_groups_status` (`status`),
-  KEY `idx_groups_public` (`is_public`),
-  KEY `idx_groups_unix` (`unix_group_name`),
-  KEY `idx_groups_type` (`type`)
-) ENGINE=MyISAM AUTO_INCREMENT=102 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `groups`
 --
 
@@ -2713,20 +868,6 @@ INSERT INTO `groups` VALUES (1,'Codendi Administration Project',1,'A','codendi',
 UNLOCK TABLES;
 
 --
--- Table structure for table `groups_notif_delegation`
---
-
-DROP TABLE IF EXISTS `groups_notif_delegation`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `groups_notif_delegation` (
-  `group_id` int(11) NOT NULL default '0',
-  `ugroup_id` int(11) NOT NULL,
-  PRIMARY KEY  (`group_id`,`ugroup_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `groups_notif_delegation`
 --
 
@@ -2734,20 +875,6 @@ LOCK TABLES `groups_notif_delegation` WRITE;
 /*!40000 ALTER TABLE `groups_notif_delegation` DISABLE KEYS */;
 /*!40000 ALTER TABLE `groups_notif_delegation` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `groups_notif_delegation_message`
---
-
-DROP TABLE IF EXISTS `groups_notif_delegation_message`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `groups_notif_delegation_message` (
-  `group_id` int(11) NOT NULL default '0',
-  `msg_to_requester` text NOT NULL,
-  PRIMARY KEY  (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `groups_notif_delegation_message`
@@ -2760,29 +887,6 @@ INSERT INTO `groups_notif_delegation_message` VALUES (100,'member_request_delega
 UNLOCK TABLES;
 
 --
--- Table structure for table `image`
---
-
-DROP TABLE IF EXISTS `image`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `image` (
-  `image_id` int(11) NOT NULL auto_increment,
-  `image_category` int(11) NOT NULL default '1',
-  `image_type` varchar(40) NOT NULL default '',
-  `image_data` blob,
-  `group_id` int(11) NOT NULL default '0',
-  `image_bytes` int(11) NOT NULL default '0',
-  `image_caption` text,
-  `organization_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`image_id`),
-  KEY `image_category_idx` (`image_category`),
-  KEY `image_type_idx` (`image_type`),
-  KEY `group_id_idx` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `image`
 --
 
@@ -2790,22 +894,6 @@ LOCK TABLES `image` WRITE;
 /*!40000 ALTER TABLE `image` DISABLE KEYS */;
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `layouts`
---
-
-DROP TABLE IF EXISTS `layouts`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `layouts` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL default '',
-  `description` text NOT NULL,
-  `scope` char(1) NOT NULL default 'S',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `layouts`
@@ -2818,28 +906,6 @@ INSERT INTO `layouts` VALUES (1,'2 columns','Simple layout made of 2 columns','S
 UNLOCK TABLES;
 
 --
--- Table structure for table `layouts_contents`
---
-
-DROP TABLE IF EXISTS `layouts_contents`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `layouts_contents` (
-  `owner_id` int(11) unsigned NOT NULL default '0',
-  `owner_type` varchar(1) NOT NULL default 'u',
-  `layout_id` int(11) unsigned NOT NULL default '0',
-  `column_id` int(11) unsigned NOT NULL default '0',
-  `name` varchar(255) NOT NULL default '',
-  `rank` int(11) NOT NULL default '0',
-  `is_minimized` tinyint(1) NOT NULL default '0',
-  `is_removed` tinyint(1) NOT NULL default '0',
-  `display_preferences` tinyint(1) NOT NULL default '0',
-  `content_id` int(11) unsigned NOT NULL default '0',
-  KEY `user_id` (`owner_id`,`owner_type`,`layout_id`,`name`,`content_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `layouts_contents`
 --
 
@@ -2848,22 +914,6 @@ LOCK TABLES `layouts_contents` WRITE;
 INSERT INTO `layouts_contents` VALUES (100,'u',1,1,'myprojects',0,0,0,0,0),(101,'u',1,1,'myprojects',0,0,0,0,0),(100,'u',1,1,'mybookmarks',1,0,0,0,0),(101,'u',1,1,'mybookmarks',1,0,0,0,0),(100,'u',1,1,'mydocman',2,0,0,0,0),(101,'u',1,1,'mydocman',2,0,0,0,0),(100,'u',1,1,'mymonitoredforums',3,0,0,0,0),(101,'u',1,1,'mymonitoredforums',3,0,0,0,0),(100,'u',1,1,'mysurveys',4,0,0,0,0),(101,'u',1,1,'mysurveys',4,0,0,0,0),(101,'u',1,2,'myadmin',-2,0,0,0,0),(101,'u',1,2,'mysystemevent',-3,0,0,0,0),(100,'u',1,2,'myartifacts',0,0,0,0,0),(101,'u',1,2,'myartifacts',0,0,0,0,0),(100,'u',1,2,'mymonitoredfp',1,0,0,0,0),(101,'u',1,2,'mymonitoredfp',1,0,0,0,0),(1,'g',1,1,'projectdescription',0,0,0,0,0),(46,'g',1,1,'projectdescription',0,0,0,0,0),(100,'g',1,1,'projectdescription',0,0,0,0,0),(1,'g',1,1,'projectclassification',1,0,0,0,0),(46,'g',1,1,'projectclassification',1,0,0,0,0),(100,'g',1,1,'projectclassification',1,0,0,0,0),(1,'g',1,1,'projectpublicareas',2,0,0,0,0),(46,'g',1,1,'projectpublicareas',2,0,0,0,0),(100,'g',1,1,'projectpublicareas',2,0,0,0,0),(1,'g',1,2,'projectmembers',0,0,0,0,0),(46,'g',1,2,'projectmembers',0,0,0,0,0),(100,'g',1,2,'projectmembers',0,0,0,0,0),(100,'g',1,2,'projectlatestnews',1,0,0,0,0),(1,'g',1,2,'projectlatestnews',1,0,0,0,0),(46,'g',1,2,'projectlatestnews',1,0,0,0,0),(100,'g',1,2,'projectlatestfilereleases',2,0,0,0,0),(1,'g',1,2,'projectlatestfilereleases',2,0,0,0,0),(100,'g',1,2,'projectlatestsvncommits',3,0,0,0,0),(1,'g',1,2,'projectlatestsvncommits',3,0,0,0,0),(102,'u',1,1,'myprojects',0,0,0,0,0),(102,'u',1,1,'mybookmarks',1,0,0,0,0),(102,'u',1,1,'mymonitoredforums',2,0,0,0,0),(102,'u',1,1,'mysurveys',4,0,0,0,0),(102,'u',1,2,'myartifacts',0,0,0,0,0),(102,'u',1,2,'mymonitoredfp',1,0,0,0,0),(102,'u',1,1,'plugin_docman_mydocman',2,0,0,0,0),(101,'g',1,1,'projectclassification',1,0,0,0,0),(101,'g',1,1,'projectdescription',0,0,0,0,0),(101,'g',1,2,'projectlatestfilereleases',2,0,0,0,0),(101,'g',1,2,'projectlatestnews',1,0,0,0,0),(101,'g',1,2,'projectlatestsvncommits',3,0,0,0,0),(101,'g',1,2,'projectmembers',0,0,0,0,0),(101,'g',1,1,'projectpublicareas',2,0,0,0,0),(103,'u',1,1,'myprojects',0,0,0,0,0),(103,'u',1,1,'mybookmarks',1,0,0,0,0),(103,'u',1,1,'mymonitoredforums',2,0,0,0,0),(103,'u',1,1,'mysurveys',4,0,0,0,0),(103,'u',1,2,'myartifacts',0,0,0,0,0),(103,'u',1,2,'mymonitoredfp',1,0,0,0,0),(103,'u',1,1,'plugin_docman_mydocman',2,0,0,0,0),(104,'u',1,1,'myprojects',0,0,0,0,0),(104,'u',1,1,'mybookmarks',1,0,0,0,0),(104,'u',1,1,'mymonitoredforums',2,0,0,0,0),(104,'u',1,1,'mysurveys',4,0,0,0,0),(104,'u',1,2,'myartifacts',0,0,0,0,0),(104,'u',1,2,'mymonitoredfp',1,0,0,0,0),(104,'u',1,1,'plugin_docman_mydocman',2,0,0,0,0);
 /*!40000 ALTER TABLE `layouts_contents` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `layouts_rows`
---
-
-DROP TABLE IF EXISTS `layouts_rows`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `layouts_rows` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `layout_id` int(11) unsigned NOT NULL default '0',
-  `rank` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `layout_id` (`layout_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `layouts_rows`
@@ -2876,22 +926,6 @@ INSERT INTO `layouts_rows` VALUES (1,1,0),(2,2,0),(3,3,0),(4,4,0);
 UNLOCK TABLES;
 
 --
--- Table structure for table `layouts_rows_columns`
---
-
-DROP TABLE IF EXISTS `layouts_rows_columns`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `layouts_rows_columns` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `layout_row_id` int(11) unsigned NOT NULL default '0',
-  `width` int(11) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `layout_row_id` (`layout_row_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `layouts_rows_columns`
 --
 
@@ -2900,27 +934,6 @@ LOCK TABLES `layouts_rows_columns` WRITE;
 INSERT INTO `layouts_rows_columns` VALUES (1,1,50),(2,1,50),(3,2,33),(4,2,33),(5,2,33),(6,3,33),(7,3,66),(8,4,66),(9,4,33);
 /*!40000 ALTER TABLE `layouts_rows_columns` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `mail_group_list`
---
-
-DROP TABLE IF EXISTS `mail_group_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `mail_group_list` (
-  `group_list_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `list_name` text,
-  `is_public` int(11) NOT NULL default '0',
-  `password` varchar(16) default NULL,
-  `list_admin` int(11) NOT NULL default '0',
-  `status` int(11) NOT NULL default '0',
-  `description` text,
-  PRIMARY KEY  (`group_list_id`),
-  KEY `idx_mail_group_list_group` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `mail_group_list`
@@ -2933,29 +946,6 @@ INSERT INTO `mail_group_list` VALUES (1,101,'nty-devel',1,'4c75ab7448f1028c',102
 UNLOCK TABLES;
 
 --
--- Table structure for table `news_bytes`
---
-
-DROP TABLE IF EXISTS `news_bytes`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `news_bytes` (
-  `id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `submitted_by` int(11) NOT NULL default '0',
-  `is_approved` int(11) NOT NULL default '0',
-  `date` int(11) NOT NULL default '0',
-  `forum_id` int(11) NOT NULL default '0',
-  `summary` text,
-  `details` text,
-  PRIMARY KEY  (`id`),
-  KEY `idx_news_bytes_forum` (`forum_id`),
-  KEY `idx_news_bytes_group` (`group_id`),
-  KEY `idx_news_bytes_approved` (`is_approved`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `news_bytes`
 --
 
@@ -2965,21 +955,6 @@ LOCK TABLES `news_bytes` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `notifications`
---
-
-DROP TABLE IF EXISTS `notifications`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `notifications` (
-  `user_id` int(11) NOT NULL default '0',
-  `object_id` int(11) NOT NULL default '0',
-  `type` varchar(100) NOT NULL default '',
-  PRIMARY KEY  (`user_id`,`object_id`,`type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `notifications`
 --
 
@@ -2987,22 +962,6 @@ LOCK TABLES `notifications` WRITE;
 /*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
 /*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `owner_layouts`
---
-
-DROP TABLE IF EXISTS `owner_layouts`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `owner_layouts` (
-  `owner_id` int(11) unsigned NOT NULL default '0',
-  `owner_type` varchar(1) NOT NULL default 'u',
-  `layout_id` int(11) unsigned NOT NULL default '0',
-  `is_default` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`owner_id`,`owner_type`,`layout_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `owner_layouts`
@@ -3015,32 +974,6 @@ INSERT INTO `owner_layouts` VALUES (100,'u',1,1),(101,'u',1,1),(1,'g',1,1),(46,'
 UNLOCK TABLES;
 
 --
--- Table structure for table `patch`
---
-
-DROP TABLE IF EXISTS `patch`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `patch` (
-  `patch_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `patch_status_id` int(11) NOT NULL default '0',
-  `patch_category_id` int(11) NOT NULL default '0',
-  `submitted_by` int(11) NOT NULL default '0',
-  `assigned_to` int(11) NOT NULL default '0',
-  `open_date` int(11) NOT NULL default '0',
-  `summary` text,
-  `code` longblob,
-  `close_date` int(11) NOT NULL default '0',
-  `filename` varchar(255) NOT NULL default '',
-  `filesize` varchar(50) NOT NULL default '',
-  `filetype` varchar(50) NOT NULL default '',
-  PRIMARY KEY  (`patch_id`),
-  KEY `idx_patch_group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `patch`
 --
 
@@ -3048,22 +981,6 @@ LOCK TABLES `patch` WRITE;
 /*!40000 ALTER TABLE `patch` DISABLE KEYS */;
 /*!40000 ALTER TABLE `patch` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `patch_category`
---
-
-DROP TABLE IF EXISTS `patch_category`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `patch_category` (
-  `patch_category_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `category_name` text NOT NULL,
-  PRIMARY KEY  (`patch_category_id`),
-  KEY `idx_patch_group_group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `patch_category`
@@ -3076,25 +993,6 @@ INSERT INTO `patch_category` VALUES (100,100,'None');
 UNLOCK TABLES;
 
 --
--- Table structure for table `patch_history`
---
-
-DROP TABLE IF EXISTS `patch_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `patch_history` (
-  `patch_history_id` int(11) NOT NULL auto_increment,
-  `patch_id` int(11) NOT NULL default '0',
-  `field_name` text NOT NULL,
-  `old_value` text NOT NULL,
-  `mod_by` int(11) NOT NULL default '0',
-  `date` int(11) default NULL,
-  PRIMARY KEY  (`patch_history_id`),
-  KEY `idx_patch_history_patch_id` (`patch_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `patch_history`
 --
 
@@ -3102,20 +1000,6 @@ LOCK TABLES `patch_history` WRITE;
 /*!40000 ALTER TABLE `patch_history` DISABLE KEYS */;
 /*!40000 ALTER TABLE `patch_history` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `patch_status`
---
-
-DROP TABLE IF EXISTS `patch_status`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `patch_status` (
-  `patch_status_id` int(11) NOT NULL auto_increment,
-  `status_name` text,
-  PRIMARY KEY  (`patch_status_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `patch_status`
@@ -3128,20 +1012,6 @@ INSERT INTO `patch_status` VALUES (1,'Open'),(2,'Closed'),(3,'Deleted'),(4,'Post
 UNLOCK TABLES;
 
 --
--- Table structure for table `people_skill`
---
-
-DROP TABLE IF EXISTS `people_skill`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `people_skill` (
-  `skill_id` int(11) NOT NULL auto_increment,
-  `name` text,
-  PRIMARY KEY  (`skill_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `people_skill`
 --
 
@@ -3152,23 +1022,6 @@ INSERT INTO `people_skill` VALUES (1,'3100 SQL'),(2,'3110 C/C++'),(3,'3120 Perl'
 UNLOCK TABLES;
 
 --
--- Table structure for table `people_skill_inventory`
---
-
-DROP TABLE IF EXISTS `people_skill_inventory`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `people_skill_inventory` (
-  `skill_inventory_id` int(11) NOT NULL auto_increment,
-  `user_id` int(11) NOT NULL default '0',
-  `skill_id` int(11) NOT NULL default '0',
-  `skill_level_id` int(11) NOT NULL default '0',
-  `skill_year_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`skill_inventory_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `people_skill_inventory`
 --
 
@@ -3176,20 +1029,6 @@ LOCK TABLES `people_skill_inventory` WRITE;
 /*!40000 ALTER TABLE `people_skill_inventory` DISABLE KEYS */;
 /*!40000 ALTER TABLE `people_skill_inventory` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `people_skill_level`
---
-
-DROP TABLE IF EXISTS `people_skill_level`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `people_skill_level` (
-  `skill_level_id` int(11) NOT NULL auto_increment,
-  `name` text,
-  PRIMARY KEY  (`skill_level_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `people_skill_level`
@@ -3202,20 +1041,6 @@ INSERT INTO `people_skill_level` VALUES (10,'Want to Learn'),(20,'Familiar'),(30
 UNLOCK TABLES;
 
 --
--- Table structure for table `people_skill_year`
---
-
-DROP TABLE IF EXISTS `people_skill_year`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `people_skill_year` (
-  `skill_year_id` int(11) NOT NULL auto_increment,
-  `name` text,
-  PRIMARY KEY  (`skill_year_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `people_skill_year`
 --
 
@@ -3224,21 +1049,6 @@ LOCK TABLES `people_skill_year` WRITE;
 INSERT INTO `people_skill_year` VALUES (1,'< 6 Months'),(2,'6 Mo - 2 yr'),(3,'2 yr - 5 yr'),(4,'5 yr - 10 yr'),(5,'> 10 years');
 /*!40000 ALTER TABLE `people_skill_year` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `permissions`
---
-
-DROP TABLE IF EXISTS `permissions`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `permissions` (
-  `permission_type` varchar(255) NOT NULL,
-  `object_id` varchar(255) NOT NULL,
-  `ugroup_id` int(11) NOT NULL,
-  KEY `object_id` (`object_id`(10))
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `permissions`
@@ -3251,20 +1061,6 @@ INSERT INTO `permissions` VALUES ('TRACKER_ACCESS_FULL','1',1),('TRACKER_FIELD_S
 UNLOCK TABLES;
 
 --
--- Table structure for table `permissions_values`
---
-
-DROP TABLE IF EXISTS `permissions_values`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `permissions_values` (
-  `permission_type` text NOT NULL,
-  `ugroup_id` int(11) NOT NULL,
-  `is_default` int(11) NOT NULL default '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `permissions_values`
 --
 
@@ -3273,23 +1069,6 @@ LOCK TABLES `permissions_values` WRITE;
 INSERT INTO `permissions_values` VALUES ('PACKAGE_READ',100,0),('PACKAGE_READ',1,0),('PACKAGE_READ',2,1),('PACKAGE_READ',3,0),('PACKAGE_READ',4,0),('PACKAGE_READ',11,0),('RELEASE_READ',100,0),('RELEASE_READ',1,0),('RELEASE_READ',2,0),('RELEASE_READ',3,0),('RELEASE_READ',4,0),('RELEASE_READ',11,0),('DOCGROUP_READ',100,0),('DOCGROUP_READ',1,1),('DOCGROUP_READ',2,0),('DOCGROUP_READ',3,0),('DOCGROUP_READ',4,0),('DOCGROUP_READ',12,0),('DOCGROUP_READ',13,0),('DOCUMENT_READ',100,0),('DOCUMENT_READ',1,0),('DOCUMENT_READ',2,0),('DOCUMENT_READ',3,0),('DOCUMENT_READ',4,0),('DOCUMENT_READ',12,0),('DOCUMENT_READ',13,0),('WIKI_READ',100,0),('WIKI_READ',1,0),('WIKI_READ',2,1),('WIKI_READ',3,0),('WIKI_READ',4,0),('WIKI_READ',14,0),('WIKIPAGE_READ',100,0),('WIKIPAGE_READ',1,0),('WIKIPAGE_READ',2,1),('WIKIPAGE_READ',3,0),('WIKIPAGE_READ',4,0),('WIKIPAGE_READ',14,0),('WIKIATTACHMENT_READ',100,0),('WIKIATTACHMENT_READ',1,0),('WIKIATTACHMENT_READ',2,1),('WIKIATTACHMENT_READ',3,0),('WIKIATTACHMENT_READ',4,0),('NEWS_READ',1,1),('TRACKER_ACCESS_FULL',1,1),('TRACKER_ACCESS_FULL',2,0),('TRACKER_ACCESS_FULL',3,0),('TRACKER_ACCESS_FULL',4,0),('TRACKER_ACCESS_FULL',15,0),('TRACKER_ACCESS_SUBMITTER',3,0),('TRACKER_ACCESS_SUBMITTER',4,0),('TRACKER_ACCESS_SUBMITTER',15,0),('TRACKER_ACCESS_ASSIGNEE',3,0),('TRACKER_ACCESS_ASSIGNEE',4,0),('TRACKER_ACCESS_ASSIGNEE',15,0),('TRACKER_FIELD_SUBMIT',1,0),('TRACKER_FIELD_SUBMIT',2,0),('TRACKER_FIELD_SUBMIT',3,0),('TRACKER_FIELD_SUBMIT',4,0),('TRACKER_FIELD_SUBMIT',15,0),('TRACKER_FIELD_READ',1,0),('TRACKER_FIELD_READ',2,0),('TRACKER_FIELD_READ',3,0),('TRACKER_FIELD_READ',4,0),('TRACKER_FIELD_READ',15,0),('TRACKER_FIELD_UPDATE',3,0),('TRACKER_FIELD_UPDATE',4,0),('TRACKER_FIELD_UPDATE',15,0),('TRACKER_ARTIFACT_ACCESS',1,1),('TRACKER_ARTIFACT_ACCESS',2,0),('TRACKER_ARTIFACT_ACCESS',3,0),('TRACKER_ARTIFACT_ACCESS',4,0),('TRACKER_ARTIFACT_ACCESS',15,0),('PLUGIN_DOCMAN_READ',1,0),('PLUGIN_DOCMAN_READ',2,1),('PLUGIN_DOCMAN_READ',3,0),('PLUGIN_DOCMAN_READ',4,0),('PLUGIN_DOCMAN_WRITE',1,0),('PLUGIN_DOCMAN_WRITE',2,0),('PLUGIN_DOCMAN_WRITE',3,1),('PLUGIN_DOCMAN_WRITE',4,0),('PLUGIN_DOCMAN_MANAGE',1,0),('PLUGIN_DOCMAN_MANAGE',2,0),('PLUGIN_DOCMAN_MANAGE',3,0),('PLUGIN_DOCMAN_MANAGE',4,1),('PLUGIN_DOCMAN_ADMIN',1,0),('PLUGIN_DOCMAN_ADMIN',2,0),('PLUGIN_DOCMAN_ADMIN',3,0),('PLUGIN_DOCMAN_ADMIN',4,1),('PLUGIN_GIT_READ',2,1),('PLUGIN_GIT_READ',3,0),('PLUGIN_GIT_READ',4,0),('PLUGIN_GIT_WRITE',2,0),('PLUGIN_GIT_WRITE',3,1),('PLUGIN_GIT_WRITE',4,0),('PLUGIN_GIT_WPLUS',2,0),('PLUGIN_GIT_WPLUS',3,0),('PLUGIN_GIT_WPLUS',4,0),('PLUGIN_TRACKER_ACCESS_FULL',1,1),('PLUGIN_TRACKER_ACCESS_FULL',2,0),('PLUGIN_TRACKER_ACCESS_FULL',3,0),('PLUGIN_TRACKER_ACCESS_FULL',4,0),('PLUGIN_TRACKER_ACCESS_SUBMITTER',3,0),('PLUGIN_TRACKER_ACCESS_SUBMITTER',4,0),('PLUGIN_TRACKER_ACCESS_ASSIGNEE',3,0),('PLUGIN_TRACKER_ACCESS_ASSIGNEE',4,0),('PLUGIN_TRACKER_FIELD_SUBMIT',1,0),('PLUGIN_TRACKER_FIELD_SUBMIT',2,0),('PLUGIN_TRACKER_FIELD_SUBMIT',3,0),('PLUGIN_TRACKER_FIELD_SUBMIT',4,0),('PLUGIN_TRACKER_FIELD_READ',1,0),('PLUGIN_TRACKER_FIELD_READ',2,0),('PLUGIN_TRACKER_FIELD_READ',3,0),('PLUGIN_TRACKER_FIELD_READ',4,0),('PLUGIN_TRACKER_FIELD_UPDATE',3,0),('PLUGIN_TRACKER_FIELD_UPDATE',4,0),('PLUGIN_TRACKER_ARTIFACT_ACCESS',1,1),('PLUGIN_TRACKER_ARTIFACT_ACCESS',2,0),('PLUGIN_TRACKER_ARTIFACT_ACCESS',3,0),('PLUGIN_TRACKER_ARTIFACT_ACCESS',4,0),('PLUGIN_TRACKER_WORKFLOW_TRANSITION',1,0),('PLUGIN_TRACKER_WORKFLOW_TRANSITION',2,0),('PLUGIN_TRACKER_WORKFLOW_TRANSITION',3,1),('PLUGIN_TRACKER_WORKFLOW_TRANSITION',4,0);
 /*!40000 ALTER TABLE `permissions_values` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin`
---
-
-DROP TABLE IF EXISTS `plugin`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin` (
-  `id` int(11) NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL,
-  `available` tinyint(4) NOT NULL default '0',
-  `prj_restricted` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin`
@@ -3302,30 +1081,6 @@ INSERT INTO `plugin` VALUES (1,'pluginsadministration',1,0),(2,'docman',1,0),(3,
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_docman_approval`
---
-
-DROP TABLE IF EXISTS `plugin_docman_approval`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_approval` (
-  `table_id` int(11) unsigned NOT NULL auto_increment,
-  `item_id` int(11) unsigned default NULL,
-  `version_id` int(11) unsigned default NULL,
-  `wiki_version_id` int(11) unsigned default NULL,
-  `table_owner` int(11) unsigned NOT NULL,
-  `date` int(11) unsigned default NULL,
-  `description` text,
-  `status` tinyint(4) NOT NULL default '0',
-  `notification` tinyint(4) NOT NULL default '0',
-  `auto_status` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`table_id`),
-  UNIQUE KEY `version_id` (`version_id`),
-  UNIQUE KEY `item_id` (`item_id`,`wiki_version_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_docman_approval`
 --
 
@@ -3335,27 +1090,6 @@ LOCK TABLES `plugin_docman_approval` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_docman_approval_user`
---
-
-DROP TABLE IF EXISTS `plugin_docman_approval_user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_approval_user` (
-  `table_id` int(11) unsigned NOT NULL,
-  `reviewer_id` int(11) unsigned NOT NULL,
-  `rank` int(11) NOT NULL default '0',
-  `date` int(11) unsigned default NULL,
-  `state` tinyint(4) NOT NULL default '0',
-  `comment` text,
-  `version` int(11) unsigned default NULL,
-  PRIMARY KEY  (`table_id`,`reviewer_id`),
-  KEY `rank` (`rank`),
-  KEY `idx_reviewer` (`reviewer_id`,`table_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_docman_approval_user`
 --
 
@@ -3363,41 +1097,6 @@ LOCK TABLES `plugin_docman_approval_user` WRITE;
 /*!40000 ALTER TABLE `plugin_docman_approval_user` DISABLE KEYS */;
 /*!40000 ALTER TABLE `plugin_docman_approval_user` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_docman_item`
---
-
-DROP TABLE IF EXISTS `plugin_docman_item`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_item` (
-  `item_id` int(11) unsigned NOT NULL auto_increment,
-  `parent_id` int(11) unsigned default NULL,
-  `group_id` int(11) unsigned default NULL,
-  `title` text,
-  `description` text,
-  `create_date` int(11) unsigned default NULL,
-  `update_date` int(11) unsigned default NULL,
-  `delete_date` int(11) unsigned default NULL,
-  `user_id` int(11) unsigned default NULL,
-  `status` tinyint(4) NOT NULL default '100',
-  `obsolescence_date` int(11) NOT NULL default '0',
-  `rank` int(11) NOT NULL default '0',
-  `item_type` int(11) unsigned default NULL,
-  `link_url` text,
-  `wiki_page` text,
-  `file_is_embedded` int(11) unsigned default NULL,
-  PRIMARY KEY  (`item_id`),
-  KEY `idx_group_id` (`group_id`),
-  KEY `parent_id` (`parent_id`),
-  KEY `rank` (`rank`),
-  KEY `search` (`group_id`,`delete_date`,`obsolescence_date`),
-  FULLTEXT KEY `fltxt_title` (`title`),
-  FULLTEXT KEY `fltxt_description` (`description`),
-  FULLTEXT KEY `fltxt` (`title`,`description`)
-) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_docman_item`
@@ -3410,35 +1109,6 @@ INSERT INTO `plugin_docman_item` VALUES (1,0,1,'roottitle_lbl_key','',1318858462
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_docman_item_deleted`
---
-
-DROP TABLE IF EXISTS `plugin_docman_item_deleted`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_item_deleted` (
-  `item_id` int(11) unsigned NOT NULL,
-  `parent_id` int(11) unsigned default NULL,
-  `group_id` int(11) unsigned default NULL,
-  `title` text,
-  `description` text,
-  `create_date` int(11) unsigned default NULL,
-  `update_date` int(11) unsigned default NULL,
-  `delete_date` int(11) unsigned default NULL,
-  `purge_date` int(11) unsigned default NULL,
-  `user_id` int(11) unsigned default NULL,
-  `status` tinyint(4) NOT NULL default '100',
-  `obsolescence_date` int(11) NOT NULL default '0',
-  `rank` int(11) NOT NULL default '0',
-  `item_type` int(11) unsigned default NULL,
-  `link_url` text,
-  `wiki_page` text,
-  `file_is_embedded` int(11) unsigned default NULL,
-  PRIMARY KEY  (`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_docman_item_deleted`
 --
 
@@ -3448,21 +1118,6 @@ LOCK TABLES `plugin_docman_item_deleted` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_docman_item_lock`
---
-
-DROP TABLE IF EXISTS `plugin_docman_item_lock`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_item_lock` (
-  `item_id` int(11) unsigned NOT NULL default '0',
-  `user_id` int(11) NOT NULL default '0',
-  `lock_date` int(11) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_docman_item_lock`
 --
 
@@ -3470,28 +1125,6 @@ LOCK TABLES `plugin_docman_item_lock` WRITE;
 /*!40000 ALTER TABLE `plugin_docman_item_lock` DISABLE KEYS */;
 /*!40000 ALTER TABLE `plugin_docman_item_lock` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_docman_log`
---
-
-DROP TABLE IF EXISTS `plugin_docman_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_log` (
-  `time` int(11) unsigned NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `item_id` int(11) unsigned NOT NULL default '0',
-  `user_id` int(11) NOT NULL default '0',
-  `type` tinyint(4) NOT NULL default '0',
-  `old_value` text,
-  `new_value` text,
-  `field` text,
-  KEY `time` (`time`),
-  KEY `item_id` (`item_id`),
-  KEY `group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_docman_log`
@@ -3504,32 +1137,6 @@ INSERT INTO `plugin_docman_log` VALUES (1319109966,101,30,102,1,NULL,NULL,NULL),
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_docman_metadata`
---
-
-DROP TABLE IF EXISTS `plugin_docman_metadata`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_metadata` (
-  `field_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL default '',
-  `data_type` int(11) NOT NULL default '0',
-  `label` varchar(255) NOT NULL default '',
-  `description` text NOT NULL,
-  `required` int(11) NOT NULL default '0',
-  `empty_ok` int(11) NOT NULL default '0',
-  `mul_val_ok` tinyint(4) NOT NULL default '0',
-  `special` int(11) NOT NULL default '0',
-  `default_value` text NOT NULL,
-  `use_it` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`field_id`),
-  KEY `idx_name` (`name`(10)),
-  KEY `idx_group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_docman_metadata`
 --
 
@@ -3537,26 +1144,6 @@ LOCK TABLES `plugin_docman_metadata` WRITE;
 /*!40000 ALTER TABLE `plugin_docman_metadata` DISABLE KEYS */;
 /*!40000 ALTER TABLE `plugin_docman_metadata` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_docman_metadata_love`
---
-
-DROP TABLE IF EXISTS `plugin_docman_metadata_love`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_metadata_love` (
-  `value_id` int(11) NOT NULL auto_increment,
-  `name` text NOT NULL,
-  `description` text NOT NULL,
-  `rank` int(11) NOT NULL default '0',
-  `status` char(1) NOT NULL default 'A',
-  PRIMARY KEY  (`value_id`),
-  KEY `rank` (`rank`),
-  KEY `name` (`name`(10)),
-  KEY `idx_fv_status` (`status`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_docman_metadata_love`
@@ -3569,20 +1156,6 @@ INSERT INTO `plugin_docman_metadata_love` VALUES (100,'love_special_none_name_ke
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_docman_metadata_love_md`
---
-
-DROP TABLE IF EXISTS `plugin_docman_metadata_love_md`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_metadata_love_md` (
-  `field_id` int(11) NOT NULL default '0',
-  `value_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`field_id`,`value_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_docman_metadata_love_md`
 --
 
@@ -3592,27 +1165,6 @@ LOCK TABLES `plugin_docman_metadata_love_md` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_docman_metadata_value`
---
-
-DROP TABLE IF EXISTS `plugin_docman_metadata_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_metadata_value` (
-  `field_id` int(11) NOT NULL,
-  `item_id` int(11) NOT NULL,
-  `valueInt` int(11) default NULL,
-  `valueText` text,
-  `valueDate` int(11) default NULL,
-  `valueString` text,
-  KEY `idx_field_item_id` (`field_id`,`item_id`),
-  FULLTEXT KEY `fltxt` (`valueText`,`valueString`),
-  FULLTEXT KEY `fltxt_txt` (`valueText`),
-  FULLTEXT KEY `fltxt_str` (`valueString`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_docman_metadata_value`
 --
 
@@ -3620,22 +1172,6 @@ LOCK TABLES `plugin_docman_metadata_value` WRITE;
 /*!40000 ALTER TABLE `plugin_docman_metadata_value` DISABLE KEYS */;
 /*!40000 ALTER TABLE `plugin_docman_metadata_value` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_docman_project_settings`
---
-
-DROP TABLE IF EXISTS `plugin_docman_project_settings`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_project_settings` (
-  `group_id` int(11) NOT NULL default '0',
-  `view` varchar(255) default NULL,
-  `use_obsolescence_date` tinyint(4) NOT NULL default '0',
-  `use_status` tinyint(4) NOT NULL default '0',
-  KEY `group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_docman_project_settings`
@@ -3648,31 +1184,6 @@ INSERT INTO `plugin_docman_project_settings` VALUES (100,'Tree',0,0),(101,'Tree'
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_docman_report`
---
-
-DROP TABLE IF EXISTS `plugin_docman_report`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_report` (
-  `report_id` int(11) NOT NULL auto_increment,
-  `name` varchar(255) default NULL,
-  `title` varchar(255) default NULL,
-  `group_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL default '100',
-  `item_id` int(11) default NULL,
-  `scope` char(1) NOT NULL default 'I',
-  `is_default` tinyint(1) NOT NULL default '0',
-  `advanced_search` tinyint(1) NOT NULL default '0',
-  `description` text,
-  `image` int(11) default NULL,
-  PRIMARY KEY  (`report_id`),
-  KEY `group_idx` (`group_id`),
-  KEY `user_idx` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_docman_report`
 --
 
@@ -3680,25 +1191,6 @@ LOCK TABLES `plugin_docman_report` WRITE;
 /*!40000 ALTER TABLE `plugin_docman_report` DISABLE KEYS */;
 /*!40000 ALTER TABLE `plugin_docman_report` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_docman_report_filter`
---
-
-DROP TABLE IF EXISTS `plugin_docman_report_filter`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_report_filter` (
-  `report_id` int(11) NOT NULL,
-  `label` varchar(255) NOT NULL,
-  `value_love` int(11) default NULL,
-  `value_string` varchar(255) default NULL,
-  `value_date1` varchar(32) default NULL,
-  `value_date2` varchar(32) default NULL,
-  `value_date_op` tinyint(2) default NULL,
-  KEY `report_label_idx` (`report_id`,`label`(10))
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_docman_report_filter`
@@ -3710,22 +1202,6 @@ LOCK TABLES `plugin_docman_report_filter` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_docman_tokens`
---
-
-DROP TABLE IF EXISTS `plugin_docman_tokens`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_tokens` (
-  `user_id` int(11) NOT NULL,
-  `token` char(32) NOT NULL,
-  `url` text NOT NULL,
-  `created_at` datetime NOT NULL,
-  PRIMARY KEY  (`user_id`,`token`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_docman_tokens`
 --
 
@@ -3733,31 +1209,6 @@ LOCK TABLES `plugin_docman_tokens` WRITE;
 /*!40000 ALTER TABLE `plugin_docman_tokens` DISABLE KEYS */;
 /*!40000 ALTER TABLE `plugin_docman_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_docman_version`
---
-
-DROP TABLE IF EXISTS `plugin_docman_version`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_version` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `item_id` int(11) unsigned default NULL,
-  `number` int(11) unsigned default NULL,
-  `user_id` int(11) unsigned default NULL,
-  `label` text,
-  `changelog` text,
-  `date` int(11) unsigned default NULL,
-  `filename` text,
-  `filesize` int(11) unsigned default NULL,
-  `filetype` text,
-  `path` text,
-  PRIMARY KEY  (`id`),
-  KEY `item_id` (`item_id`),
-  FULLTEXT KEY `fltxt` (`label`,`changelog`,`filename`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_docman_version`
@@ -3770,32 +1221,6 @@ INSERT INTO `plugin_docman_version` VALUES (2,30,2,102,'','',1319109981,'LOgoTul
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_docman_version_deleted`
---
-
-DROP TABLE IF EXISTS `plugin_docman_version_deleted`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_version_deleted` (
-  `id` int(11) unsigned NOT NULL,
-  `item_id` int(11) unsigned default NULL,
-  `number` int(11) unsigned default NULL,
-  `user_id` int(11) unsigned default NULL,
-  `label` text,
-  `changelog` text,
-  `create_date` int(11) unsigned default NULL,
-  `delete_date` int(11) unsigned default NULL,
-  `purge_date` int(11) unsigned default NULL,
-  `filename` text,
-  `filesize` int(11) unsigned default NULL,
-  `filetype` text,
-  `path` text,
-  PRIMARY KEY  (`id`),
-  KEY `item_id` (`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_docman_version_deleted`
 --
 
@@ -3806,24 +1231,6 @@ INSERT INTO `plugin_docman_version_deleted` VALUES (1,30,1,102,'','Initial versi
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_docman_widget_embedded`
---
-
-DROP TABLE IF EXISTS `plugin_docman_widget_embedded`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_docman_widget_embedded` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `owner_id` int(11) unsigned NOT NULL,
-  `owner_type` varchar(1) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `item_id` int(11) unsigned NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_docman_widget_embedded`
 --
 
@@ -3831,26 +1238,6 @@ LOCK TABLES `plugin_docman_widget_embedded` WRITE;
 /*!40000 ALTER TABLE `plugin_docman_widget_embedded` DISABLE KEYS */;
 /*!40000 ALTER TABLE `plugin_docman_widget_embedded` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_forumml_attachment`
---
-
-DROP TABLE IF EXISTS `plugin_forumml_attachment`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_forumml_attachment` (
-  `id_attachment` int(10) unsigned NOT NULL auto_increment,
-  `id_message` int(10) unsigned NOT NULL,
-  `file_name` text NOT NULL,
-  `file_type` varchar(80) NOT NULL,
-  `file_size` int(10) unsigned NOT NULL,
-  `file_path` varchar(255) NOT NULL,
-  `content_id` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`id_attachment`),
-  KEY `idx_fk_id_message` (`id_message`,`content_id`(10))
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_forumml_attachment`
@@ -3863,21 +1250,6 @@ INSERT INTO `plugin_forumml_attachment` VALUES (1,2,'message_4E9C3CE7.4060306.ht
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_forumml_header`
---
-
-DROP TABLE IF EXISTS `plugin_forumml_header`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_forumml_header` (
-  `id_header` int(10) unsigned NOT NULL auto_increment,
-  `name` varchar(255) NOT NULL,
-  PRIMARY KEY  (`id_header`),
-  KEY `idx_name` (`name`(20))
-) ENGINE=MyISAM AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_forumml_header`
 --
 
@@ -3886,27 +1258,6 @@ LOCK TABLES `plugin_forumml_header` WRITE;
 INSERT INTO `plugin_forumml_header` VALUES (1,'message-id'),(2,'date'),(3,'from'),(4,'subject'),(5,'return-path'),(6,'delivered-to'),(7,'to'),(8,'in-reply-to'),(9,'references'),(10,'x-mailer'),(11,'mime-version'),(12,'content-type'),(13,'content-transfer-encoding'),(14,'sender'),(15,'errors-to'),(16,'x-beenthere'),(17,'x-mailman-version'),(18,'precedence'),(19,'list-help'),(20,'list-post'),(21,'list-subscribe'),(22,'list-id'),(23,'list-unsubscribe'),(24,'list-archive'),(25,'x-original-to'),(26,'x-priority'),(27,'x-msmail-priority'),(28,'importance'),(29,'x-mimeole'),(30,'reply-to'),(31,'x-list-received-date'),(32,'user-agent'),(33,'x-mailman-approved-at'),(34,'cc'),(35,'x-mozilla-status'),(36,'x-mozilla-status2'),(37,'thread-index'),(38,'x-accept-language'),(39,'keywords'),(40,'organization'),(41,'x-reply-to'),(42,'x-enigmail-version'),(43,'x-enigmail-supports'),(44,'x-ms-tnef-correlator'),(45,'x-pgp-universal'),(46,'x-forwarded-message-id');
 /*!40000 ALTER TABLE `plugin_forumml_header` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_forumml_message`
---
-
-DROP TABLE IF EXISTS `plugin_forumml_message`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_forumml_message` (
-  `id_message` int(10) unsigned NOT NULL auto_increment,
-  `id_list` int(10) unsigned NOT NULL,
-  `id_parent` int(10) unsigned NOT NULL,
-  `body` text,
-  `last_thread_update` int(10) unsigned NOT NULL default '0',
-  `msg_type` varchar(30) NOT NULL default '',
-  `cached_html` mediumtext,
-  PRIMARY KEY  (`id_message`),
-  KEY `idx_fk_id_list` (`id_list`),
-  KEY `idx_fk_id_parent` (`id_parent`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_forumml_message`
@@ -3919,21 +1270,6 @@ INSERT INTO `plugin_forumml_message` VALUES (1,1,0,'',1318863550,'text/plain; ch
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_forumml_messageheader`
---
-
-DROP TABLE IF EXISTS `plugin_forumml_messageheader`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_forumml_messageheader` (
-  `id_message` int(10) unsigned NOT NULL,
-  `id_header` int(10) unsigned NOT NULL,
-  `value` text NOT NULL,
-  PRIMARY KEY  (`id_message`,`id_header`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_forumml_messageheader`
 --
 
@@ -3942,34 +1278,6 @@ LOCK TABLES `plugin_forumml_messageheader` WRITE;
 INSERT INTO `plugin_forumml_messageheader` VALUES (1,5,'<nicolas@cro.enalean.com>'),(1,25,'nty-devel@antibott.cro.enalean.com'),(1,6,'nty-devel@antibott.cro.enalean.com'),(1,1,'<4E9C3A57.5000208@cro.enalean.com>'),(1,2,'Mon, 17 Oct 2011 16:23:19 +0200'),(1,3,'Nicolas <nicolas@cro.enalean.com>'),(1,32,'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20110929 Thunderbird/7.0.1'),(1,11,'1.0'),(1,7,'nty-devel@antibott.cro.enalean.com'),(1,12,'text/plain; charset=ISO-8859-1'),(1,13,'7bit'),(1,4,'[Nty-devel] Hi there from N'),(1,16,'nty-devel@antibott.cro.enalean.com'),(1,17,'2.1.9'),(1,18,'list'),(1,22,'<nty-devel.antibott.cro.enalean.com>'),(1,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(1,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(1,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(1,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(1,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(1,31,'Mon, 17 Oct 2011 14:23:15 -0000'),(2,5,'<nicolas@cro.enalean.com>'),(2,25,'nty-devel@antibott.cro.enalean.com'),(2,6,'nty-devel@antibott.cro.enalean.com'),(2,1,'<4E9C3CE7.4060306@cro.enalean.com>'),(2,2,'Mon, 17 Oct 2011 16:34:15 +0200'),(2,3,'Nicolas <nicolas@cro.enalean.com>'),(2,32,'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20110929 Thunderbird/7.0.1'),(2,11,'1.0'),(2,7,'nty-devel@antibott.cro.enalean.com'),(2,9,'<4E9C3A57.5000208@cro.enalean.com>'),(2,8,'<4E9C3A57.5000208@cro.enalean.com>'),(2,12,'multipart/alternative; boundary=\"------------030609020706070004030107\"'),(2,4,'Re: [Nty-devel] Hi there from N'),(2,16,'nty-devel@antibott.cro.enalean.com'),(2,17,'2.1.9'),(2,18,'list'),(2,22,'<nty-devel.antibott.cro.enalean.com>'),(2,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(2,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(2,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(2,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(2,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(2,31,'Mon, 17 Oct 2011 14:34:11 -0000'),(3,5,'<nicolas@cro.enalean.com>'),(3,25,'nty-devel@antibott.cro.enalean.com'),(3,6,'nty-devel@antibott.cro.enalean.com'),(3,1,'<001201cc8cda$899fc450$0f02000a@crolles2p17iti>'),(3,3,'\"Nicolas\" <nicolas@cro.enalean.com>'),(3,7,'\"Nicolas\" <nicolas@cro.enalean.com>, <nty-devel@antibott.cro.enalean.com>'),(3,9,'<4E9C3A57.5000208@cro.enalean.com> <4E9C3CE7.4060306@cro.enalean.com>'),(3,2,'Mon, 17 Oct 2011 16:39:12 +0200'),(3,11,'1.0'),(3,12,'multipart/alternative; boundary=\"----=_NextPart_000_000F_01CC8CEB.4D195210\"'),(3,26,'3'),(3,27,'Normal'),(3,10,'Microsoft Outlook Express 6.00.2800.1106'),(3,29,'Produced By Microsoft MimeOLE V6.00.2800.1106'),(3,4,'Re: [Nty-devel] Hi there from N'),(3,16,'nty-devel@antibott.cro.enalean.com'),(3,17,'2.1.9'),(3,18,'list'),(3,22,'<nty-devel.antibott.cro.enalean.com>'),(3,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(3,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(3,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(3,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(3,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(3,31,'Mon, 17 Oct 2011 14:39:09 -0000'),(4,5,'<nicolas@cro.enalean.com>'),(4,25,'nty-devel@antibott.cro.enalean.com'),(4,6,'nty-devel@antibott.cro.enalean.com'),(4,1,'<001c01cc8cdd$5371cdd0$0f02000a@crolles2p17iti>'),(4,3,'\"Nicolas\" <nicolas@cro.enalean.com>'),(4,7,'\"Nicolas\" <nicolas@cro.enalean.com>, <nty-devel@antibott.cro.enalean.com>'),(4,9,'<4E9C3A57.5000208@cro.enalean.com> <4E9C3CE7.4060306@cro.enalean.com> <001201cc8cda$899fc450$0f02000a@crolles2p17iti>'),(4,2,'Mon, 17 Oct 2011 16:59:10 +0200'),(4,11,'1.0'),(4,12,'multipart/alternative; boundary=\"----=_NextPart_000_0019_01CC8CEE.16E6C7B0\"'),(4,26,'3'),(4,27,'Normal'),(4,10,'Microsoft Outlook Express 6.00.2800.1106'),(4,29,'Produced By Microsoft MimeOLE V6.00.2800.1106'),(4,4,'Re: [Nty-devel] Hi there from N'),(4,16,'nty-devel@antibott.cro.enalean.com'),(4,17,'2.1.9'),(4,18,'list'),(4,22,'<nty-devel.antibott.cro.enalean.com>'),(4,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(4,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(4,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(4,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(4,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(4,31,'Mon, 17 Oct 2011 14:59:05 -0000'),(5,5,'<nicolas@cro.enalean.com>'),(5,25,'nty-devel@antibott.cro.enalean.com'),(5,6,'nty-devel@antibott.cro.enalean.com'),(5,1,'<002501cc8cdd$a27501e0$0f02000a@crolles2p17iti>'),(5,3,'\"Nicolas\" <nicolas@cro.enalean.com>'),(5,7,'<nty-devel@antibott.cro.enalean.com>'),(5,2,'Mon, 17 Oct 2011 17:01:22 +0200'),(5,11,'1.0'),(5,12,'multipart/alternative; boundary=\"----=_NextPart_000_0022_01CC8CEE.65EB5B50\"'),(5,26,'3'),(5,27,'Normal'),(5,10,'Microsoft Outlook Express 6.00.2800.1106'),(5,29,'Produced By Microsoft MimeOLE V6.00.2800.1106'),(5,4,'[Nty-devel] Lés accents'),(5,16,'nty-devel@antibott.cro.enalean.com'),(5,17,'2.1.9'),(5,18,'list'),(5,22,'<nty-devel.antibott.cro.enalean.com>'),(5,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(5,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(5,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(5,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(5,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(5,31,'Mon, 17 Oct 2011 15:01:18 -0000'),(6,5,'<nicolas@cro.enalean.com>'),(6,25,'nty-devel@antibott.cro.enalean.com'),(6,6,'nty-devel@antibott.cro.enalean.com'),(6,1,'<003801cc8cde$4d76c740$0f02000a@crolles2p17iti>'),(6,3,'\"Nicolas\" <nicolas@cro.enalean.com>'),(6,7,'\"Nicolas\" <nicolas@cro.enalean.com>, <nty-devel@antibott.cro.enalean.com>'),(6,9,'<002501cc8cdd$a27501e0$0f02000a@crolles2p17iti>'),(6,2,'Mon, 17 Oct 2011 17:06:09 +0200'),(6,11,'1.0'),(6,12,'multipart/alternative; boundary=\"----=_NextPart_000_0035_01CC8CEF.10ED47C0\"'),(6,26,'3'),(6,27,'Normal'),(6,10,'Microsoft Outlook Express 6.00.2800.1106'),(6,29,'Produced By Microsoft MimeOLE V6.00.2800.1106'),(6,4,'Re: [Nty-devel] Lés accents'),(6,16,'nty-devel@antibott.cro.enalean.com'),(6,17,'2.1.9'),(6,18,'list'),(6,22,'<nty-devel.antibott.cro.enalean.com>'),(6,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(6,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(6,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(6,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(6,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(6,31,'Mon, 17 Oct 2011 15:06:05 -0000'),(7,5,'<nicolas@cro.enalean.com>'),(7,25,'nty-devel@antibott.cro.enalean.com'),(7,6,'nty-devel@antibott.cro.enalean.com'),(7,1,'<4E9C4E02.5060703@cro.enalean.com>'),(7,2,'Mon, 17 Oct 2011 17:47:14 +0200'),(7,3,'Nicolas <nicolas@cro.enalean.com>'),(7,32,'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20110929 Thunderbird/7.0.1'),(7,11,'1.0'),(7,7,'nty-devel@antibott.cro.enalean.com'),(7,9,'<002501cc8cdd$a27501e0$0f02000a@crolles2p17iti>'),(7,8,'<002501cc8cdd$a27501e0$0f02000a@crolles2p17iti>'),(7,12,'text/plain; charset=ISO-8859-1'),(7,13,'8bit'),(7,4,'Re: [Nty-devel] Lés accents'),(7,16,'nty-devel@antibott.cro.enalean.com'),(7,17,'2.1.9'),(7,18,'list'),(7,22,'<nty-devel.antibott.cro.enalean.com>'),(7,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(7,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(7,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(7,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(7,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(7,31,'Mon, 17 Oct 2011 15:47:07 -0000'),(8,5,'<nicolas@cro.enalean.com>'),(8,25,'nty-devel@antibott.cro.enalean.com'),(8,6,'nty-devel@antibott.cro.enalean.com'),(8,1,'<4E9C4E36.2050006@cro.enalean.com>'),(8,2,'Mon, 17 Oct 2011 17:48:06 +0200'),(8,3,'Nicolas <nicolas@cro.enalean.com>'),(8,32,'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20110929 Thunderbird/7.0.1'),(8,11,'1.0'),(8,7,'nty-devel@antibott.cro.enalean.com'),(8,9,'<002501cc8cdd$a27501e0$0f02000a@crolles2p17iti>'),(8,8,'<002501cc8cdd$a27501e0$0f02000a@crolles2p17iti>'),(8,12,'text/plain; charset=ISO-8859-1'),(8,13,'8bit'),(8,4,'Re: [Nty-devel] Lés accents'),(8,16,'nty-devel@antibott.cro.enalean.com'),(8,17,'2.1.9'),(8,18,'list'),(8,22,'<nty-devel.antibott.cro.enalean.com>'),(8,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(8,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(8,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(8,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(8,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(8,31,'Mon, 17 Oct 2011 15:47:59 -0000'),(9,5,'<nicolas@cro.enalean.com>'),(9,25,'nty-devel@antibott.cro.enalean.com'),(9,6,'nty-devel@antibott.cro.enalean.com'),(9,1,'<004301cc8d6a$c7da6410$0f02000a@crolles2p17iti>'),(9,3,'\"Nicolas\" <nicolas@cro.enalean.com>'),(9,7,'<nty-devel@antibott.cro.enalean.com>'),(9,2,'Tue, 18 Oct 2011 09:51:44 +0200'),(9,11,'1.0'),(9,12,'multipart/mixed; boundary=\"----=_NextPart_000_003F_01CC8D7B.8B41A250\"'),(9,26,'3'),(9,27,'Normal'),(9,10,'Microsoft Outlook Express 6.00.2800.1106'),(9,29,'Produced By Microsoft MimeOLE V6.00.2800.1106'),(9,4,'[Nty-devel] un email en attach'),(9,16,'nty-devel@antibott.cro.enalean.com'),(9,17,'2.1.9'),(9,18,'list'),(9,22,'<nty-devel.antibott.cro.enalean.com>'),(9,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(9,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(9,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(9,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(9,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(9,31,'Tue, 18 Oct 2011 07:50:59 -0000'),(10,5,'<nicolas@cro.enalean.com>'),(10,25,'nty-devel@antibott.cro.enalean.com'),(10,6,'nty-devel@antibott.cro.enalean.com'),(10,1,'<005001cc8d6b$8abb2780$0f02000a@crolles2p17iti>'),(10,3,'\"Nicolas\" <nicolas@cro.enalean.com>'),(10,7,'<nty-devel@antibott.cro.enalean.com>'),(10,2,'Tue, 18 Oct 2011 09:57:11 +0200'),(10,11,'1.0'),(10,12,'multipart/mixed; boundary=\"----=_NextPart_000_004C_01CC8D7C.4E3180F0\"'),(10,26,'3'),(10,27,'Normal'),(10,10,'Microsoft Outlook Express 6.00.2800.1106'),(10,29,'Produced By Microsoft MimeOLE V6.00.2800.1106'),(10,4,'[Nty-devel] en email en attch (before)'),(10,16,'nty-devel@antibott.cro.enalean.com'),(10,17,'2.1.9'),(10,18,'list'),(10,22,'<nty-devel.antibott.cro.enalean.com>'),(10,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(10,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(10,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(10,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(10,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(10,31,'Tue, 18 Oct 2011 07:56:25 -0000'),(11,5,'<nicolas@cro.enalean.com>'),(11,25,'nty-devel@antibott.cro.enalean.com'),(11,6,'nty-devel@antibott.cro.enalean.com'),(11,1,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(11,3,'\"Nicolas\" <nicolas@cro.enalean.com>'),(11,7,'<nty-devel@antibott.cro.enalean.com>'),(11,2,'Tue, 18 Oct 2011 09:58:39 +0200'),(11,11,'1.0'),(11,12,'multipart/alternative; boundary=\"----=_NextPart_000_0055_01CC8D7C.82A033E0\"'),(11,26,'3'),(11,27,'Normal'),(11,10,'Microsoft Outlook Express 6.00.2800.1106'),(11,29,'Produced By Microsoft MimeOLE V6.00.2800.1106'),(11,4,'[Nty-devel] Fw:  Hi there from N'),(11,16,'nty-devel@antibott.cro.enalean.com'),(11,17,'2.1.9'),(11,18,'list'),(11,22,'<nty-devel.antibott.cro.enalean.com>'),(11,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(11,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(11,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(11,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(11,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(11,31,'Tue, 18 Oct 2011 07:57:53 -0000'),(12,5,'<nicolas@cro.enalean.com>'),(12,25,'nty-devel@antibott.cro.enalean.com'),(12,6,'nty-devel@antibott.cro.enalean.com'),(12,1,'<4E9D31D0.8080900@cro.enalean.com>'),(12,2,'Tue, 18 Oct 2011 09:59:12 +0200'),(12,3,'Nicolas <nicolas@cro.enalean.com>'),(12,32,'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20110929 Thunderbird/7.0.1'),(12,11,'1.0'),(12,7,'nty-devel@antibott.cro.enalean.com'),(12,9,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(12,8,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(12,46,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(12,12,'multipart/mixed; boundary=\"------------020604090305060100040206\"'),(12,4,'[Nty-devel] Fwd:  Fw:  Hi there from N'),(12,16,'nty-devel@antibott.cro.enalean.com'),(12,17,'2.1.9'),(12,18,'list'),(12,22,'<nty-devel.antibott.cro.enalean.com>'),(12,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(12,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(12,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(12,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(12,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(12,31,'Tue, 18 Oct 2011 07:58:25 -0000'),(13,5,'<nicolas@cro.enalean.com>'),(13,25,'nty-devel@antibott.cro.enalean.com'),(13,6,'nty-devel@antibott.cro.enalean.com'),(13,1,'<4E9D31F3.6030509@cro.enalean.com>'),(13,2,'Tue, 18 Oct 2011 09:59:47 +0200'),(13,3,'Nicolas <nicolas@cro.enalean.com>'),(13,32,'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20110929 Thunderbird/7.0.1'),(13,11,'1.0'),(13,7,'nty-devel@antibott.cro.enalean.com'),(13,9,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(13,8,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(13,46,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(13,12,'multipart/mixed; boundary=\"------------000301020203010107060107\"'),(13,4,'[Nty-devel] Fwd:  Fw:  Hi there from N'),(13,16,'nty-devel@antibott.cro.enalean.com'),(13,17,'2.1.9'),(13,18,'list'),(13,22,'<nty-devel.antibott.cro.enalean.com>'),(13,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(13,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(13,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(13,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(13,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(13,31,'Tue, 18 Oct 2011 07:59:01 -0000'),(14,5,'<nicolas@cro.enalean.com>'),(14,25,'nty-devel@antibott.cro.enalean.com'),(14,6,'nty-devel@antibott.cro.enalean.com'),(14,1,'<4E9D3246.60808@cro.enalean.com>'),(14,2,'Tue, 18 Oct 2011 10:01:10 +0200'),(14,3,'Nicolas <nicolas@cro.enalean.com>'),(14,32,'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20110929 Thunderbird/7.0.1'),(14,11,'1.0'),(14,7,'nty-devel@antibott.cro.enalean.com'),(14,9,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(14,8,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(14,46,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(14,12,'multipart/mixed; boundary=\"------------010108010009010107030602\"'),(14,4,'[Nty-devel] Fwd:  Fw:  Hi there from N'),(14,16,'nty-devel@antibott.cro.enalean.com'),(14,17,'2.1.9'),(14,18,'list'),(14,22,'<nty-devel.antibott.cro.enalean.com>'),(14,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(14,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(14,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(14,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(14,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(14,31,'Tue, 18 Oct 2011 08:00:23 -0000'),(15,5,'<nicolas@cro.enalean.com>'),(15,25,'nty-devel@antibott.cro.enalean.com'),(15,6,'nty-devel@antibott.cro.enalean.com'),(15,1,'<4E9D3255.7010006@cro.enalean.com>'),(15,2,'Tue, 18 Oct 2011 10:01:25 +0200'),(15,3,'Nicolas <nicolas@cro.enalean.com>'),(15,32,'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20110929 Thunderbird/7.0.1'),(15,11,'1.0'),(15,7,'nty-devel@antibott.cro.enalean.com'),(15,9,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(15,8,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(15,46,'<005801cc8d6b$bf1a7120$0f02000a@crolles2p17iti>'),(15,12,'multipart/mixed; boundary=\"------------060702080008040000070001\"'),(15,4,'[Nty-devel] Fwd:  Fw:  Hi there from N'),(15,16,'nty-devel@antibott.cro.enalean.com'),(15,17,'2.1.9'),(15,18,'list'),(15,22,'<nty-devel.antibott.cro.enalean.com>'),(15,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(15,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(15,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(15,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(15,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(15,31,'Tue, 18 Oct 2011 08:00:38 -0000'),(16,5,'<nicolas@cro.enalean.com>'),(16,25,'nty-devel@antibott.cro.enalean.com'),(16,6,'nty-devel@antibott.cro.enalean.com'),(16,1,'<4E9D494B.90701@cro.enalean.com>'),(16,2,'Tue, 18 Oct 2011 11:39:23 +0200'),(16,3,'Nicolas <nicolas@cro.enalean.com>'),(16,32,'Mozilla/5.0 (X11; Linux x86_64; rv:7.0.1) Gecko/20110929 Thunderbird/7.0.1'),(16,11,'1.0'),(16,7,'nty-devel@antibott.cro.enalean.com'),(16,9,'<4E9D3255.7010006@cro.enalean.com>'),(16,8,'<4E9D3255.7010006@cro.enalean.com>'),(16,46,'<4E9D3255.7010006@cro.enalean.com>'),(16,12,'multipart/mixed; boundary=\"------------090206070306060202020205\"'),(16,4,'[Nty-devel] Fwd:  Fwd:  Fw:  Hi there from N'),(16,16,'nty-devel@antibott.cro.enalean.com'),(16,17,'2.1.9'),(16,18,'list'),(16,22,'<nty-devel.antibott.cro.enalean.com>'),(16,23,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=unsubscribe>'),(16,24,'<http://antibott.cro.enalean.com/pipermail/nty-devel>'),(16,20,'<mailto:nty-devel@antibott.cro.enalean.com>'),(16,19,'<mailto:nty-devel-request@antibott.cro.enalean.com?subject=help>'),(16,21,'<http://antibott.cro.enalean.com/mailman/listinfo/nty-devel>,  <mailto:nty-devel-request@antibott.cro.enalean.com?subject=subscribe>'),(16,31,'Tue, 18 Oct 2011 09:38:32 -0000');
 /*!40000 ALTER TABLE `plugin_forumml_messageheader` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_git`
---
-
-DROP TABLE IF EXISTS `plugin_git`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_git` (
-  `repository_id` int(10) unsigned NOT NULL auto_increment,
-  `repository_name` varchar(255) NOT NULL,
-  `repository_description` text,
-  `repository_path` varchar(255) NOT NULL,
-  `repository_parent_id` int(11) default NULL,
-  `project_id` int(11) NOT NULL default '0',
-  `repository_creation_user_id` int(11) NOT NULL,
-  `repository_creation_date` datetime NOT NULL,
-  `repository_deletion_date` datetime NOT NULL,
-  `repository_is_initialized` tinyint(4) NOT NULL default '0',
-  `repository_access` varchar(255) NOT NULL default 'private',
-  `repository_backend_type` varchar(16) default 'gitshell',
-  `repository_events_mailing_prefix` varchar(64) default '[SCM]',
-  `repository_scope` varchar(1) default NULL,
-  `repository_namespace` varchar(255) default NULL,
-  PRIMARY KEY  (`repository_id`),
-  KEY `project_id` (`project_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_git`
@@ -3982,22 +1290,6 @@ INSERT INTO `plugin_git` VALUES (1,'hoppla','-- Default description --','nty/hop
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_git_log`
---
-
-DROP TABLE IF EXISTS `plugin_git_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_git_log` (
-  `repository_id` int(10) unsigned NOT NULL,
-  `user_id` int(11) unsigned default NULL,
-  `push_date` datetime NOT NULL,
-  `commits_number` int(11) default NULL,
-  KEY `idx_repository_user` (`repository_id`,`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_git_log`
 --
 
@@ -4007,20 +1299,6 @@ LOCK TABLES `plugin_git_log` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_git_post_receive_mail`
---
-
-DROP TABLE IF EXISTS `plugin_git_post_receive_mail`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_git_post_receive_mail` (
-  `recipient_mail` varchar(255) NOT NULL,
-  `repository_id` int(10) NOT NULL,
-  KEY `repository_id` (`repository_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_git_post_receive_mail`
 --
 
@@ -4028,21 +1306,6 @@ LOCK TABLES `plugin_git_post_receive_mail` WRITE;
 /*!40000 ALTER TABLE `plugin_git_post_receive_mail` DISABLE KEYS */;
 /*!40000 ALTER TABLE `plugin_git_post_receive_mail` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_graphontrackers_bar_chart`
---
-
-DROP TABLE IF EXISTS `plugin_graphontrackers_bar_chart`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_graphontrackers_bar_chart` (
-  `id` int(11) NOT NULL,
-  `field_base` varchar(255) default NULL,
-  `field_group` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_graphontrackers_bar_chart`
@@ -4055,28 +1318,6 @@ INSERT INTO `plugin_graphontrackers_bar_chart` VALUES (2,'severity',''),(5,'seve
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_graphontrackers_chart`
---
-
-DROP TABLE IF EXISTS `plugin_graphontrackers_chart`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_graphontrackers_chart` (
-  `id` int(11) NOT NULL auto_increment,
-  `report_graphic_id` int(11) NOT NULL,
-  `rank` int(11) NOT NULL,
-  `chart_type` varchar(255) default NULL,
-  `title` varchar(255) default NULL,
-  `description` text,
-  `width` int(11) default '600',
-  `height` int(11) default '400',
-  PRIMARY KEY  (`id`),
-  KEY `report_graphic_id` (`report_graphic_id`),
-  KEY `chart_type` (`chart_type`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_graphontrackers_chart`
 --
 
@@ -4085,27 +1326,6 @@ LOCK TABLES `plugin_graphontrackers_chart` WRITE;
 INSERT INTO `plugin_graphontrackers_chart` VALUES (1,1,5,'pie','Status','Number of Artifacts by Status',600,400),(2,1,10,'bar','Severity','Number of Artifacts by severity level',600,400),(3,1,15,'pie','Assignment','Number of Artifacts by Assignee',600,400),(4,2,5,'pie','Status','Number of Artifacts by Status',600,400),(5,2,10,'bar','Severity','Number of Artifacts by severity level',600,400),(6,2,15,'pie','Assignment','Number of Artifacts by Assignee',600,400),(7,3,5,'pie','Status','Number of Artifacts by Status',600,400),(8,3,10,'bar','Severity','Number of Artifacts by severity level',600,400),(9,3,15,'bar','Assignment','Number of Artifacts by Assignee',600,400),(10,4,5,'gantt','Gantt','Gantt Chart for Task Management',0,0),(11,5,3,'pie','Status','Number of Artifacts by Status',600,400),(12,5,4,'bar','Severity','Number of Artifacts by severity level',600,400),(13,5,5,'pie','Assignment','Number of Artifacts by Assignee',600,400),(14,6,3,'pie','Status','Number of Artifacts by Status',600,400),(15,6,4,'bar','Severity','Number of Artifacts by severity level',600,400),(16,6,5,'bar','Assignment','Number of Artifacts by Assignee',600,400),(17,7,1,'gantt','Gantt','Gantt Chart for Task Management',0,0),(18,8,3,'pie','Status','Number of Artifacts by Status',600,400),(19,8,4,'bar','Severity','Number of Artifacts by severity level',600,400),(20,8,5,'pie','Assignment','Number of Artifacts by Assignee',600,400);
 /*!40000 ALTER TABLE `plugin_graphontrackers_chart` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_graphontrackers_gantt_chart`
---
-
-DROP TABLE IF EXISTS `plugin_graphontrackers_gantt_chart`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_graphontrackers_gantt_chart` (
-  `id` int(11) NOT NULL,
-  `field_start` varchar(255) default NULL,
-  `field_due` varchar(255) default NULL,
-  `field_finish` varchar(255) default NULL,
-  `field_percentage` varchar(255) default NULL,
-  `field_righttext` varchar(255) default NULL,
-  `scale` varchar(20) default NULL,
-  `as_of_date` int(11) default NULL,
-  `summary` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_graphontrackers_gantt_chart`
@@ -4118,20 +1338,6 @@ INSERT INTO `plugin_graphontrackers_gantt_chart` VALUES (10,'start_date','due_da
 UNLOCK TABLES;
 
 --
--- Table structure for table `plugin_graphontrackers_pie_chart`
---
-
-DROP TABLE IF EXISTS `plugin_graphontrackers_pie_chart`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_graphontrackers_pie_chart` (
-  `id` int(11) NOT NULL,
-  `field_base` varchar(255) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `plugin_graphontrackers_pie_chart`
 --
 
@@ -4140,24 +1346,6 @@ LOCK TABLES `plugin_graphontrackers_pie_chart` WRITE;
 INSERT INTO `plugin_graphontrackers_pie_chart` VALUES (1,'status_id'),(4,'status_id'),(7,'status_id'),(3,'assigned_to'),(6,'assigned_to'),(11,'status_id'),(13,'assigned_to'),(14,'status_id'),(18,'status_id'),(20,'assigned_to');
 /*!40000 ALTER TABLE `plugin_graphontrackers_pie_chart` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `plugin_graphontrackers_report_graphic`
---
-
-DROP TABLE IF EXISTS `plugin_graphontrackers_report_graphic`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `plugin_graphontrackers_report_graphic` (
-  `report_graphic_id` int(11) NOT NULL auto_increment,
-  `group_artifact_id` int(11) default NULL,
-  `user_id` int(11) default NULL,
-  `name` varchar(255) default NULL,
-  `description` varchar(255) default NULL,
-  `scope` char(1) default NULL,
-  PRIMARY KEY  (`report_graphic_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `plugin_graphontrackers_report_graphic`
@@ -4170,20 +1358,6 @@ INSERT INTO `plugin_graphontrackers_report_graphic` VALUES (1,1,101,'Default','G
 UNLOCK TABLES;
 
 --
--- Table structure for table `priority_plugin_hook`
---
-
-DROP TABLE IF EXISTS `priority_plugin_hook`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `priority_plugin_hook` (
-  `plugin_id` int(11) NOT NULL,
-  `hook` varchar(100) NOT NULL,
-  `priority` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `priority_plugin_hook`
 --
 
@@ -4191,23 +1365,6 @@ LOCK TABLES `priority_plugin_hook` WRITE;
 /*!40000 ALTER TABLE `priority_plugin_hook` DISABLE KEYS */;
 /*!40000 ALTER TABLE `priority_plugin_hook` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `project_assigned_to`
---
-
-DROP TABLE IF EXISTS `project_assigned_to`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_assigned_to` (
-  `project_assigned_id` int(11) NOT NULL auto_increment,
-  `project_task_id` int(11) NOT NULL default '0',
-  `assigned_to_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`project_assigned_id`),
-  KEY `idx_project_assigned_to_task_id` (`project_task_id`),
-  KEY `idx_project_assigned_to_assigned_to` (`assigned_to_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `project_assigned_to`
@@ -4219,25 +1376,6 @@ LOCK TABLES `project_assigned_to` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_cc`
---
-
-DROP TABLE IF EXISTS `project_cc`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_cc` (
-  `project_cc_id` int(11) NOT NULL auto_increment,
-  `project_task_id` int(11) NOT NULL default '0',
-  `email` varchar(255) NOT NULL default '',
-  `added_by` int(11) NOT NULL default '0',
-  `comment` text NOT NULL,
-  `date` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`project_cc_id`),
-  KEY `project_id_idx` (`project_task_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_cc`
 --
 
@@ -4245,20 +1383,6 @@ LOCK TABLES `project_cc` WRITE;
 /*!40000 ALTER TABLE `project_cc` DISABLE KEYS */;
 /*!40000 ALTER TABLE `project_cc` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `project_counts_tmp`
---
-
-DROP TABLE IF EXISTS `project_counts_tmp`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_counts_tmp` (
-  `group_id` int(11) default NULL,
-  `type` text,
-  `count` float(8,5) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `project_counts_tmp`
@@ -4271,20 +1395,6 @@ INSERT INTO `project_counts_tmp` VALUES (101,'forum',2.19722),(100,'tasks',1.386
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_counts_weekly_tmp`
---
-
-DROP TABLE IF EXISTS `project_counts_weekly_tmp`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_counts_weekly_tmp` (
-  `group_id` int(11) default NULL,
-  `type` text,
-  `count` float(8,5) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_counts_weekly_tmp`
 --
 
@@ -4294,23 +1404,6 @@ LOCK TABLES `project_counts_weekly_tmp` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_dependencies`
---
-
-DROP TABLE IF EXISTS `project_dependencies`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_dependencies` (
-  `project_depend_id` int(11) NOT NULL auto_increment,
-  `project_task_id` int(11) NOT NULL default '0',
-  `is_dependent_on_task_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`project_depend_id`),
-  KEY `idx_project_dependencies_task_id` (`project_task_id`),
-  KEY `idx_project_is_dependent_on_task_id` (`is_dependent_on_task_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_dependencies`
 --
 
@@ -4318,31 +1411,6 @@ LOCK TABLES `project_dependencies` WRITE;
 /*!40000 ALTER TABLE `project_dependencies` DISABLE KEYS */;
 /*!40000 ALTER TABLE `project_dependencies` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `project_field`
---
-
-DROP TABLE IF EXISTS `project_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_field` (
-  `project_field_id` int(11) NOT NULL auto_increment,
-  `field_name` varchar(255) NOT NULL default '',
-  `display_type` varchar(255) NOT NULL default '',
-  `display_size` varchar(255) NOT NULL default '',
-  `label` varchar(255) NOT NULL default '',
-  `description` text NOT NULL,
-  `scope` char(1) NOT NULL default '',
-  `required` int(11) NOT NULL default '0',
-  `empty_ok` int(11) NOT NULL default '0',
-  `keep_history` int(11) NOT NULL default '0',
-  `special` int(11) NOT NULL default '0',
-  `custom` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`project_field_id`),
-  KEY `idx_project_field_name` (`field_name`)
-) ENGINE=MyISAM AUTO_INCREMENT=104 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `project_field`
@@ -4355,30 +1423,6 @@ INSERT INTO `project_field` VALUES (90,'project_task_id','TF','6/10','Project Ta
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_field_usage`
---
-
-DROP TABLE IF EXISTS `project_field_usage`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_field_usage` (
-  `project_field_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `use_it` int(11) NOT NULL default '0',
-  `show_on_add` int(11) NOT NULL default '0',
-  `show_on_add_members` int(11) NOT NULL default '0',
-  `place` int(11) default NULL,
-  `custom_label` varchar(255) default NULL,
-  `custom_description` varchar(255) default NULL,
-  `custom_display_size` varchar(255) default NULL,
-  `custom_empty_ok` int(11) default NULL,
-  `custom_keep_history` int(11) default NULL,
-  KEY `idx_project_fu_field_id` (`project_field_id`),
-  KEY `idx_project_fu_group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_field_usage`
 --
 
@@ -4387,30 +1431,6 @@ LOCK TABLES `project_field_usage` WRITE;
 INSERT INTO `project_field_usage` VALUES (90,100,1,1,1,10,NULL,NULL,NULL,NULL,NULL),(91,100,1,1,1,20,NULL,NULL,NULL,NULL,NULL),(92,100,1,1,1,30,NULL,NULL,NULL,NULL,NULL),(94,100,1,1,1,40,NULL,NULL,NULL,NULL,NULL),(95,100,1,1,1,50,NULL,NULL,NULL,NULL,NULL),(96,100,1,1,1,60,NULL,NULL,NULL,NULL,NULL),(97,100,1,1,1,70,NULL,NULL,NULL,NULL,NULL),(98,100,1,1,1,80,NULL,NULL,NULL,NULL,NULL),(99,100,1,1,1,80,NULL,NULL,NULL,NULL,NULL),(100,100,1,1,1,90,NULL,NULL,NULL,NULL,NULL),(102,100,1,1,1,110,NULL,NULL,NULL,NULL,NULL),(103,100,1,1,1,120,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `project_field_usage` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `project_field_value`
---
-
-DROP TABLE IF EXISTS `project_field_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_field_value` (
-  `project_fv_id` int(11) NOT NULL auto_increment,
-  `project_field_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `value_id` int(11) NOT NULL default '0',
-  `value` text NOT NULL,
-  `description` text NOT NULL,
-  `order_id` int(11) NOT NULL default '0',
-  `status` char(1) NOT NULL default 'A',
-  PRIMARY KEY  (`project_fv_id`),
-  KEY `idx_project_fv_field_id` (`project_fv_id`),
-  KEY `idx_project_fv_group_id` (`group_id`),
-  KEY `idx_project_fv_value_id` (`value_id`),
-  KEY `idx_project_fv_status` (`status`)
-) ENGINE=MyISAM AUTO_INCREMENT=135 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `project_field_value`
@@ -4423,28 +1443,6 @@ INSERT INTO `project_field_value` VALUES (101,97,100,1000,'Not started','The tas
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_file`
---
-
-DROP TABLE IF EXISTS `project_file`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_file` (
-  `project_file_id` int(11) NOT NULL auto_increment,
-  `project_task_id` int(11) NOT NULL default '0',
-  `submitted_by` int(11) NOT NULL default '0',
-  `date` int(11) NOT NULL default '0',
-  `description` text NOT NULL,
-  `file` longblob NOT NULL,
-  `filename` text NOT NULL,
-  `filesize` int(11) NOT NULL default '0',
-  `filetype` text NOT NULL,
-  PRIMARY KEY  (`project_file_id`),
-  KEY `project_task_id_idx` (`project_task_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_file`
 --
 
@@ -4452,25 +1450,6 @@ LOCK TABLES `project_file` WRITE;
 /*!40000 ALTER TABLE `project_file` DISABLE KEYS */;
 /*!40000 ALTER TABLE `project_file` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `project_group_list`
---
-
-DROP TABLE IF EXISTS `project_group_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_group_list` (
-  `group_project_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `project_name` text NOT NULL,
-  `is_public` int(11) NOT NULL default '0',
-  `description` text,
-  `order_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`group_project_id`),
-  KEY `idx_project_group_list_group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `project_group_list`
@@ -4483,25 +1462,6 @@ INSERT INTO `project_group_list` VALUES (100,100,'none',0,NULL,0);
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_history`
---
-
-DROP TABLE IF EXISTS `project_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_history` (
-  `project_history_id` int(11) NOT NULL auto_increment,
-  `project_task_id` int(11) NOT NULL default '0',
-  `field_name` text NOT NULL,
-  `old_value` text NOT NULL,
-  `mod_by` int(11) NOT NULL default '0',
-  `date` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`project_history_id`),
-  KEY `idx_project_history_task_id` (`project_task_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_history`
 --
 
@@ -4509,22 +1469,6 @@ LOCK TABLES `project_history` WRITE;
 /*!40000 ALTER TABLE `project_history` DISABLE KEYS */;
 /*!40000 ALTER TABLE `project_history` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `project_metric`
---
-
-DROP TABLE IF EXISTS `project_metric`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_metric` (
-  `ranking` int(11) NOT NULL auto_increment,
-  `percentile` float(8,2) default NULL,
-  `group_id` int(11) NOT NULL,
-  PRIMARY KEY  (`ranking`),
-  KEY `idx_project_metric_group` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `project_metric`
@@ -4537,21 +1481,6 @@ INSERT INTO `project_metric` VALUES (1,100.00,101),(2,75.00,1),(3,50.00,100),(4,
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_metric_tmp1`
---
-
-DROP TABLE IF EXISTS `project_metric_tmp1`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_metric_tmp1` (
-  `ranking` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL,
-  `value` float(8,5) default NULL,
-  PRIMARY KEY  (`ranking`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_metric_tmp1`
 --
 
@@ -4560,21 +1489,6 @@ LOCK TABLES `project_metric_tmp1` WRITE;
 INSERT INTO `project_metric_tmp1` VALUES (1,101,7.71869),(2,1,6.80240),(3,100,4.09434),(4,99,1.60944);
 /*!40000 ALTER TABLE `project_metric_tmp1` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `project_metric_weekly_tmp1`
---
-
-DROP TABLE IF EXISTS `project_metric_weekly_tmp1`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_metric_weekly_tmp1` (
-  `ranking` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `value` float(8,5) default NULL,
-  PRIMARY KEY  (`ranking`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `project_metric_weekly_tmp1`
@@ -4586,22 +1500,6 @@ LOCK TABLES `project_metric_weekly_tmp1` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_notification`
---
-
-DROP TABLE IF EXISTS `project_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_notification` (
-  `user_id` int(11) NOT NULL default '0',
-  `role_id` int(11) NOT NULL default '0',
-  `event_id` int(11) NOT NULL default '0',
-  `notify` int(11) NOT NULL default '1',
-  KEY `user_id_idx` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_notification`
 --
 
@@ -4609,23 +1507,6 @@ LOCK TABLES `project_notification` WRITE;
 /*!40000 ALTER TABLE `project_notification` DISABLE KEYS */;
 /*!40000 ALTER TABLE `project_notification` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `project_notification_event`
---
-
-DROP TABLE IF EXISTS `project_notification_event`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_notification_event` (
-  `event_id` int(11) NOT NULL default '0',
-  `event_label` varchar(255) default NULL,
-  `short_description` varchar(40) default NULL,
-  `description` varchar(255) default NULL,
-  `rank` int(11) NOT NULL default '0',
-  KEY `event_id_idx` (`event_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `project_notification_event`
@@ -4638,23 +1519,6 @@ INSERT INTO `project_notification_event` VALUES (1,'ROLE_CHANGE','Role has chang
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_notification_role`
---
-
-DROP TABLE IF EXISTS `project_notification_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_notification_role` (
-  `role_id` int(11) NOT NULL default '0',
-  `role_label` varchar(255) default NULL,
-  `short_description` varchar(40) default NULL,
-  `description` varchar(255) default NULL,
-  `rank` int(11) NOT NULL default '0',
-  KEY `role_id_idx` (`role_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_notification_role`
 --
 
@@ -4665,22 +1529,6 @@ INSERT INTO `project_notification_role` VALUES (1,'SUBMITTER','Submitter','The p
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_plugin`
---
-
-DROP TABLE IF EXISTS `project_plugin`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_plugin` (
-  `project_id` int(11) NOT NULL,
-  `plugin_id` int(11) NOT NULL,
-  UNIQUE KEY `project_plugin` (`project_id`,`plugin_id`),
-  KEY `project_id_idx` (`project_id`),
-  KEY `plugin_id_idx` (`plugin_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_plugin`
 --
 
@@ -4688,20 +1536,6 @@ LOCK TABLES `project_plugin` WRITE;
 /*!40000 ALTER TABLE `project_plugin` DISABLE KEYS */;
 /*!40000 ALTER TABLE `project_plugin` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `project_status`
---
-
-DROP TABLE IF EXISTS `project_status`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_status` (
-  `status_id` int(11) NOT NULL auto_increment,
-  `status_name` text NOT NULL,
-  PRIMARY KEY  (`status_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `project_status`
@@ -4714,30 +1548,6 @@ INSERT INTO `project_status` VALUES (1,'Open'),(2,'Closed'),(100,'None'),(3,'Del
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_task`
---
-
-DROP TABLE IF EXISTS `project_task`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_task` (
-  `project_task_id` int(11) NOT NULL auto_increment,
-  `group_project_id` int(11) NOT NULL default '0',
-  `summary` text NOT NULL,
-  `details` text NOT NULL,
-  `percent_complete` int(11) NOT NULL default '0',
-  `priority` int(11) NOT NULL default '0',
-  `hours` float(10,2) NOT NULL default '0.00',
-  `start_date` int(11) NOT NULL default '0',
-  `end_date` int(11) NOT NULL default '0',
-  `created_by` int(11) NOT NULL default '0',
-  `status_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`project_task_id`),
-  KEY `idx_project_task_group_project_id` (`group_project_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_task`
 --
 
@@ -4746,21 +1556,6 @@ LOCK TABLES `project_task` WRITE;
 INSERT INTO `project_task` VALUES (100,100,'None','',0,0,0.00,0,0,0,0);
 /*!40000 ALTER TABLE `project_task` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `project_watcher`
---
-
-DROP TABLE IF EXISTS `project_watcher`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_watcher` (
-  `user_id` int(11) NOT NULL default '0',
-  `watchee_id` int(11) NOT NULL default '0',
-  KEY `user_id_idx` (`user_id`),
-  KEY `watchee_id_idx` (`watchee_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `project_watcher`
@@ -4772,22 +1567,6 @@ LOCK TABLES `project_watcher` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `project_weekly_metric`
---
-
-DROP TABLE IF EXISTS `project_weekly_metric`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `project_weekly_metric` (
-  `ranking` int(11) NOT NULL auto_increment,
-  `percentile` float(8,2) default NULL,
-  `group_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`ranking`),
-  KEY `idx_project_metric_weekly_group` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `project_weekly_metric`
 --
 
@@ -4795,27 +1574,6 @@ LOCK TABLES `project_weekly_metric` WRITE;
 /*!40000 ALTER TABLE `project_weekly_metric` DISABLE KEYS */;
 /*!40000 ALTER TABLE `project_weekly_metric` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `reference`
---
-
-DROP TABLE IF EXISTS `reference`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `reference` (
-  `id` int(11) NOT NULL auto_increment,
-  `keyword` varchar(25) NOT NULL,
-  `description` text NOT NULL,
-  `link` text NOT NULL,
-  `scope` char(1) NOT NULL default 'P',
-  `service_short_name` text,
-  `nature` varchar(64) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `keyword_idx` (`keyword`),
-  KEY `scope_idx` (`scope`)
-) ENGINE=MyISAM AUTO_INCREMENT=107 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `reference`
@@ -4828,23 +1586,6 @@ INSERT INTO `reference` VALUES (1,'art','reference_art_desc_key','/tracker/?func
 UNLOCK TABLES;
 
 --
--- Table structure for table `reference_group`
---
-
-DROP TABLE IF EXISTS `reference_group`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `reference_group` (
-  `id` int(11) NOT NULL auto_increment,
-  `reference_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `is_active` tinyint(4) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `group_id_idx` (`group_id`,`is_active`)
-) ENGINE=MyISAM AUTO_INCREMENT=75 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `reference_group`
 --
 
@@ -4855,24 +1596,6 @@ INSERT INTO `reference_group` VALUES (1,1,100,1),(2,2,100,1),(3,3,100,1),(4,4,10
 UNLOCK TABLES;
 
 --
--- Table structure for table `server`
---
-
-DROP TABLE IF EXISTS `server`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `server` (
-  `id` int(11) unsigned NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `http` text NOT NULL,
-  `https` text NOT NULL,
-  `is_master` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `server`
 --
 
@@ -4880,32 +1603,6 @@ LOCK TABLES `server` WRITE;
 /*!40000 ALTER TABLE `server` DISABLE KEYS */;
 /*!40000 ALTER TABLE `server` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `service`
---
-
-DROP TABLE IF EXISTS `service`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `service` (
-  `service_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL,
-  `label` text,
-  `description` text,
-  `short_name` text,
-  `link` text,
-  `is_active` int(11) NOT NULL default '0',
-  `is_used` int(11) NOT NULL default '0',
-  `scope` text NOT NULL,
-  `rank` int(11) NOT NULL default '0',
-  `location` enum('master','same','satellite') NOT NULL default 'master',
-  `server_id` int(11) unsigned default NULL,
-  `is_in_iframe` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`service_id`),
-  KEY `idx_group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=138 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `service`
@@ -4918,55 +1615,14 @@ INSERT INTO `service` VALUES (1,100,'service_summary_lbl_key','service_summary_d
 UNLOCK TABLES;
 
 --
--- Table structure for table `session`
---
-
-DROP TABLE IF EXISTS `session`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `session` (
-  `user_id` int(11) NOT NULL default '0',
-  `session_hash` char(32) NOT NULL default '',
-  `ip_addr` char(15) NOT NULL default '',
-  `time` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`session_hash`),
-  KEY `idx_session_user_id` (`user_id`),
-  KEY `time_idx` (`time`),
-  KEY `idx_session_time` (`time`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `session`
 --
 
 LOCK TABLES `session` WRITE;
 /*!40000 ALTER TABLE `session` DISABLE KEYS */;
-INSERT INTO `session` VALUES (102,'44725d03554fa6dea746687671c7b871','192.168.1.66',1318862071),(102,'b886402577af3317bc1917d67a54006e','192.168.1.66',1319209749),(102,'2e1eb8c67dbe79bd57ae8f574bca8e45','192.168.1.69',1319205033),(102,'243815ddd2982e8ad586ae3c2fcd701a','192.168.1.5',1319205068),(103,'77cd89d17942afec1b101c3f6fcc9415','192.168.1.201',1324349371),(101,'ebbf42c07510bd74837d771170d8a20f','192.168.1.198',1324503911),(101,'b710c32b230c2b03f1141768c45e57a2','192.168.1.198',1324503939),(101,'0ec1e2ba82f72d9b2972276689a0970c','192.168.1.198',1324504039),(101,'250248b1fe3cc4bfbcbb0c14be4d302e','192.168.1.198',1324504144),(101,'f952786dfc448322895c259d4c7f1396','192.168.1.198',1324505705),(101,'fc34d806a209f23ac3cff99cfc6e14d3','192.168.1.198',1324505730),(101,'d615f3353dddb50768f2ace48eb20c92','192.168.1.198',1324508065),(101,'08b2169fa7382b97f02db7c60b98aa0e','192.168.1.198',1324508827),(101,'0067096d3558ff8e0960e7010d7c6415','192.168.1.198',1324509179),(101,'65d311e85048ec2bc3c08a9f49f92e88','192.168.56.1',1324509515),(101,'3666e912ded818bfed9656d144de3de3','192.168.56.1',1324509582),(101,'d68267dea3c4d4fec08b64ea65dcce9f','192.168.56.1',1324509589),(101,'428f87a43e66b59c12b391dfdeab3a85','192.168.56.1',1324509994),(101,'d13d8bd867b7ea2853a1baf5e0af38ca','192.168.56.1',1324510026),(101,'1af726c10b75d480c5d5b1df0148536f','192.168.56.1',1324510049),(101,'5cff157fe65b94b1b72bf05f0bce0686','192.168.56.1',1324512331),(101,'39f44a2613ba553d0a9cf03023939c9c','192.168.56.1',1324512550),(101,'b5a8cb69c12c7a04fc6f2e1de0da24d9','192.168.56.1',1324512553),(101,'f00543777ddcd5a261e690ca1bd04a2b','192.168.56.1',1324513503),(101,'89a98855ef97c90f9a81dc7c3e1bed33','192.168.56.1',1324513584),(101,'dc0783c461666d39b4a81175e9a8154b','192.168.56.1',1324513723),(101,'18a25dd3858da6c6ca6c595db41ab631','192.168.56.1',1324513761),(101,'868e2972c63f311de625e48e914c765f','192.168.56.1',1324513835),(101,'c43101ffb5e30b5d0e1cb5b00906c919','192.168.56.1',1324513985),(101,'100807d483860caac50822ec8bb4f2a7','192.168.56.1',1324514135),(101,'8358eeae8550d3eb9549ef58c3e3ef20','192.168.1.198',1324516132),(101,'87098bdb8e99e612979aad16bb174329','192.168.1.198',1324516419),(101,'69d695e64b862d8500bbb452cbd45406','192.168.1.198',1324516875),(101,'fc5f8c62acbc0af7e2617f21b644b5f9','192.168.1.198',1324516914),(101,'3dc8ba869221dd5a8c825be4e7c36731','192.168.1.198',1324517224),(101,'07a0dec9af52502b2ababbb4a8a8ebba','192.168.1.198',1324517292),(101,'ea6b866d76c05b824117f735e464e818','192.168.1.198',1324517336),(101,'5b6793bc4314f8f0f71146d1e18463f9','192.168.1.198',1324517378),(101,'fdc1bcd7a8041ec4400f925d941c7c83','192.168.1.198',1324517796),(101,'89f49ab4d362e8d43ce850305c760dae','192.168.1.198',1324517857),(101,'99c53c0cc0ba7fa8d47f0a384ba58c61','192.168.1.198',1324517889),(101,'95fae94f226d6d6862b02db56a923243','192.168.1.198',1324517963),(101,'d73b3f59d914ecc697e52288686b89c6','192.168.1.198',1324518091),(101,'bbb50fda7f76f1375f7eca0cd46abf73','192.168.1.198',1324518371),(101,'0167706e923f85f8200a130585fbc865','192.168.1.198',1324518445),(101,'5a1775a0f74a0d002cfdf7f66aefbbfc','192.168.1.198',1324519110),(101,'39ca646dc9d0447c00683f7eb882a8d5','192.168.1.198',1324524589),(101,'45ab32b9ec879de9af71c3d081abc644','192.168.1.198',1324525925),(101,'6b154ecbe65ebf01e1f3066271315558','192.168.1.198',1324525957),(101,'b6813771fa83731c4aab539a4e3deb10','192.168.1.198',1324525998),(101,'5512aba28d8bb6223d322a9e622a890c','192.168.1.198',1324526055),(101,'043652b97fb529a5d7d59f6a14192380','192.168.1.198',1324526141),(101,'b1053544257cd7b1a95bb1611f8abb98','192.168.1.198',1324526224),(101,'135812628ce5257d329fa8fe64611270','192.168.1.198',1324526406),(101,'33a99ae03b839be03caafc7774016a5e','192.168.1.198',1324526433),(101,'077fa7856ee1497dbf23e443d4e8f3db','192.168.1.198',1324526547),(101,'856b0070d04a1068874a1cfa8c1f035f','192.168.1.198',1324526593),(101,'800149c4629de4f0a0a09804fbd967d4','192.168.1.198',1324527283),(101,'b147cc2addf06e26f3bab9b90ca49840','192.168.1.198',1324527453),(101,'05902c59a0e730de05750e7ee99958d5','192.168.1.198',1324527544),(101,'fbcb15f7b62d27e015ae45d54a3dd13d','192.168.1.198',1324527596),(101,'a783ef4c3028986af9b10c7e5ebcef44','192.168.1.198',1324527670),(101,'d06a31691c669b7851129cbff2296bf9','192.168.1.198',1324527760),(101,'20c686acbe4127f2fe1b76efe6683ba2','192.168.1.198',1324527785),(101,'153e896e2026e5709533f33a57ad7971','192.168.1.198',1324527926),(101,'dbc3f80c3874ab74c6f8db09bc1d94c5','192.168.1.198',1324527941),(101,'315d3d25bf3092992b38ebddad684910','192.168.1.198',1324528007),(101,'1882f1979b987665e82179bf83ef69d7','192.168.1.198',1324531313),(101,'51b1f4e791113bf4d33bc673950c96fc','192.168.1.198',1324531317),(101,'5c9682c8a25a3eff9f26e4c32d7c50a2','192.168.1.198',1324531382),(101,'e4c8c30b784ffa65a4b6fa92573e89a9','192.168.1.198',1324531387),(101,'5f6087bbd8ced1f05e21085aa78345ba','192.168.1.198',1324531535),(101,'cf30780aaaf0333a980871e0b9f44246','192.168.1.198',1324531539),(101,'0acbe9b67d611c585bb3fd6e67366994','192.168.1.198',1324531700),(101,'fddac33a06007d52095258c033e2cbba','192.168.1.198',1324531703),(101,'8940f9962a95c95e1ec622a23d0c6e66','192.168.56.1',1324532108),(101,'36ada4a731622832834391e04846b505','192.168.56.1',1324532111),(101,'95cb07c24e3e4756f64540546ca4ae77','192.168.1.198',1324532970),(101,'e6ec102a76602dcf34c13a2d1d5d2a4c','192.168.1.198',1324533164),(101,'f757640df2e214a04450f1487f63306d','192.168.1.198',1324533168),(101,'639a513ac4dbb079cfe47d931da03d6b','192.168.56.1',1324533283),(101,'b50a81d3af1d93e935a7d66d8919acd6','192.168.56.1',1324533285),(101,'85f125a6fe01575e2fa02ae37e55022d','192.168.56.1',1324533941),(101,'1ebbb4b0dcf7f464eb1e18e15f95f0b6','192.168.56.1',1324533943),(101,'7b8faabdca670cfbd5c40c9fe75f029b','192.168.56.1',1324564962),(101,'faa4c3c7041a9fb71a5b5a809e21e3fc','192.168.56.1',1324564964),(101,'6bfe1eb1279444eb3f0c592579b577a9','192.168.1.198',1324564991),(101,'5d5f05efd3ddd08a6d02beb6a6f444be','192.168.1.198',1324564996),(101,'76ea283f649c4e083f1ee9ce0b7a29fb','192.168.1.198',1324565353),(101,'64ed06d3a88b2e44f37107faeea7f3be','192.168.1.198',1324565357),(101,'f849ae80b2ba3fa0b88608e4ae53d190','192.168.56.1',1324565401),(101,'73cb75cf24db87482336bae461457668','192.168.56.1',1324565405),(101,'fcafaeb027375b9713e04f80526ee8ff','192.168.1.198',1324565828),(101,'efeb8b176e456f6a805bfcfe85e90293','192.168.1.198',1324565833),(101,'e8dcf64ea150089eec8b731c5ae3c8eb','192.168.1.198',1324566222),(101,'1e1d163ce78d5f17eddefae2c88e6797','192.168.1.198',1324566625),(101,'4cfb72dc59120c3641acc54cd9e9a06c','192.168.1.198',1324566630),(103,'7cc2f07027afd70b40390104e3b4a332','192.168.56.1',1324588762),(101,'f9855694898e8d727233be086a8090ec','192.168.56.1',1326722148);
+INSERT INTO `session` VALUES (102,'44725d03554fa6dea746687671c7b871','192.168.1.66',1318862071),(102,'b886402577af3317bc1917d67a54006e','192.168.1.66',1319209749),(102,'2e1eb8c67dbe79bd57ae8f574bca8e45','192.168.1.69',1319205033),(102,'243815ddd2982e8ad586ae3c2fcd701a','192.168.1.5',1319205068),(103,'77cd89d17942afec1b101c3f6fcc9415','192.168.1.201',1324349371),(101,'ebbf42c07510bd74837d771170d8a20f','192.168.1.198',1324503911),(101,'b710c32b230c2b03f1141768c45e57a2','192.168.1.198',1324503939),(101,'0ec1e2ba82f72d9b2972276689a0970c','192.168.1.198',1324504039),(101,'250248b1fe3cc4bfbcbb0c14be4d302e','192.168.1.198',1324504144),(101,'f952786dfc448322895c259d4c7f1396','192.168.1.198',1324505705),(101,'fc34d806a209f23ac3cff99cfc6e14d3','192.168.1.198',1324505730),(101,'d615f3353dddb50768f2ace48eb20c92','192.168.1.198',1324508065),(101,'08b2169fa7382b97f02db7c60b98aa0e','192.168.1.198',1324508827),(101,'0067096d3558ff8e0960e7010d7c6415','192.168.1.198',1324509179),(101,'65d311e85048ec2bc3c08a9f49f92e88','192.168.56.1',1324509515),(101,'3666e912ded818bfed9656d144de3de3','192.168.56.1',1324509582),(101,'d68267dea3c4d4fec08b64ea65dcce9f','192.168.56.1',1324509589),(101,'428f87a43e66b59c12b391dfdeab3a85','192.168.56.1',1324509994),(101,'d13d8bd867b7ea2853a1baf5e0af38ca','192.168.56.1',1324510026),(101,'1af726c10b75d480c5d5b1df0148536f','192.168.56.1',1324510049),(101,'5cff157fe65b94b1b72bf05f0bce0686','192.168.56.1',1324512331),(101,'39f44a2613ba553d0a9cf03023939c9c','192.168.56.1',1324512550),(101,'b5a8cb69c12c7a04fc6f2e1de0da24d9','192.168.56.1',1324512553),(101,'f00543777ddcd5a261e690ca1bd04a2b','192.168.56.1',1324513503),(101,'89a98855ef97c90f9a81dc7c3e1bed33','192.168.56.1',1324513584),(101,'dc0783c461666d39b4a81175e9a8154b','192.168.56.1',1324513723),(101,'18a25dd3858da6c6ca6c595db41ab631','192.168.56.1',1324513761),(101,'868e2972c63f311de625e48e914c765f','192.168.56.1',1324513835),(101,'c43101ffb5e30b5d0e1cb5b00906c919','192.168.56.1',1324513985),(101,'100807d483860caac50822ec8bb4f2a7','192.168.56.1',1324514135),(101,'8358eeae8550d3eb9549ef58c3e3ef20','192.168.1.198',1324516132),(101,'87098bdb8e99e612979aad16bb174329','192.168.1.198',1324516419),(101,'69d695e64b862d8500bbb452cbd45406','192.168.1.198',1324516875),(101,'fc5f8c62acbc0af7e2617f21b644b5f9','192.168.1.198',1324516914),(101,'3dc8ba869221dd5a8c825be4e7c36731','192.168.1.198',1324517224),(101,'07a0dec9af52502b2ababbb4a8a8ebba','192.168.1.198',1324517292),(101,'ea6b866d76c05b824117f735e464e818','192.168.1.198',1324517336),(101,'5b6793bc4314f8f0f71146d1e18463f9','192.168.1.198',1324517378),(101,'fdc1bcd7a8041ec4400f925d941c7c83','192.168.1.198',1324517796),(101,'89f49ab4d362e8d43ce850305c760dae','192.168.1.198',1324517857),(101,'99c53c0cc0ba7fa8d47f0a384ba58c61','192.168.1.198',1324517889),(101,'95fae94f226d6d6862b02db56a923243','192.168.1.198',1324517963),(101,'d73b3f59d914ecc697e52288686b89c6','192.168.1.198',1324518091),(101,'bbb50fda7f76f1375f7eca0cd46abf73','192.168.1.198',1324518371),(101,'0167706e923f85f8200a130585fbc865','192.168.1.198',1324518445),(101,'5a1775a0f74a0d002cfdf7f66aefbbfc','192.168.1.198',1324519110),(101,'39ca646dc9d0447c00683f7eb882a8d5','192.168.1.198',1324524589),(101,'45ab32b9ec879de9af71c3d081abc644','192.168.1.198',1324525925),(101,'6b154ecbe65ebf01e1f3066271315558','192.168.1.198',1324525957),(101,'b6813771fa83731c4aab539a4e3deb10','192.168.1.198',1324525998),(101,'5512aba28d8bb6223d322a9e622a890c','192.168.1.198',1324526055),(101,'043652b97fb529a5d7d59f6a14192380','192.168.1.198',1324526141),(101,'b1053544257cd7b1a95bb1611f8abb98','192.168.1.198',1324526224),(101,'135812628ce5257d329fa8fe64611270','192.168.1.198',1324526406),(101,'33a99ae03b839be03caafc7774016a5e','192.168.1.198',1324526433),(101,'077fa7856ee1497dbf23e443d4e8f3db','192.168.1.198',1324526547),(101,'856b0070d04a1068874a1cfa8c1f035f','192.168.1.198',1324526593),(101,'800149c4629de4f0a0a09804fbd967d4','192.168.1.198',1324527283),(101,'b147cc2addf06e26f3bab9b90ca49840','192.168.1.198',1324527453),(101,'05902c59a0e730de05750e7ee99958d5','192.168.1.198',1324527544),(101,'fbcb15f7b62d27e015ae45d54a3dd13d','192.168.1.198',1324527596),(101,'a783ef4c3028986af9b10c7e5ebcef44','192.168.1.198',1324527670),(101,'d06a31691c669b7851129cbff2296bf9','192.168.1.198',1324527760),(101,'20c686acbe4127f2fe1b76efe6683ba2','192.168.1.198',1324527785),(101,'153e896e2026e5709533f33a57ad7971','192.168.1.198',1324527926),(101,'dbc3f80c3874ab74c6f8db09bc1d94c5','192.168.1.198',1324527941),(101,'315d3d25bf3092992b38ebddad684910','192.168.1.198',1324528007),(101,'1882f1979b987665e82179bf83ef69d7','192.168.1.198',1324531313),(101,'51b1f4e791113bf4d33bc673950c96fc','192.168.1.198',1324531317),(101,'5c9682c8a25a3eff9f26e4c32d7c50a2','192.168.1.198',1324531382),(101,'e4c8c30b784ffa65a4b6fa92573e89a9','192.168.1.198',1324531387),(101,'5f6087bbd8ced1f05e21085aa78345ba','192.168.1.198',1324531535),(101,'cf30780aaaf0333a980871e0b9f44246','192.168.1.198',1324531539),(101,'0acbe9b67d611c585bb3fd6e67366994','192.168.1.198',1324531700),(101,'fddac33a06007d52095258c033e2cbba','192.168.1.198',1324531703),(101,'8940f9962a95c95e1ec622a23d0c6e66','192.168.56.1',1324532108),(101,'36ada4a731622832834391e04846b505','192.168.56.1',1324532111),(101,'95cb07c24e3e4756f64540546ca4ae77','192.168.1.198',1324532970),(101,'e6ec102a76602dcf34c13a2d1d5d2a4c','192.168.1.198',1324533164),(101,'f757640df2e214a04450f1487f63306d','192.168.1.198',1324533168),(101,'639a513ac4dbb079cfe47d931da03d6b','192.168.56.1',1324533283),(101,'b50a81d3af1d93e935a7d66d8919acd6','192.168.56.1',1324533285),(101,'85f125a6fe01575e2fa02ae37e55022d','192.168.56.1',1324533941),(101,'1ebbb4b0dcf7f464eb1e18e15f95f0b6','192.168.56.1',1324533943),(101,'7b8faabdca670cfbd5c40c9fe75f029b','192.168.56.1',1324564962),(101,'faa4c3c7041a9fb71a5b5a809e21e3fc','192.168.56.1',1324564964),(101,'6bfe1eb1279444eb3f0c592579b577a9','192.168.1.198',1324564991),(101,'5d5f05efd3ddd08a6d02beb6a6f444be','192.168.1.198',1324564996),(101,'76ea283f649c4e083f1ee9ce0b7a29fb','192.168.1.198',1324565353),(101,'64ed06d3a88b2e44f37107faeea7f3be','192.168.1.198',1324565357),(101,'f849ae80b2ba3fa0b88608e4ae53d190','192.168.56.1',1324565401),(101,'73cb75cf24db87482336bae461457668','192.168.56.1',1324565405),(101,'fcafaeb027375b9713e04f80526ee8ff','192.168.1.198',1324565828),(101,'efeb8b176e456f6a805bfcfe85e90293','192.168.1.198',1324565833),(101,'e8dcf64ea150089eec8b731c5ae3c8eb','192.168.1.198',1324566222),(101,'1e1d163ce78d5f17eddefae2c88e6797','192.168.1.198',1324566625),(101,'4cfb72dc59120c3641acc54cd9e9a06c','192.168.1.198',1324566630),(103,'7cc2f07027afd70b40390104e3b4a332','192.168.56.1',1324588762),(101,'f9855694898e8d727233be086a8090ec','192.168.56.1',1326722148),(104,'53573d0ac71d5b9a55fa4250dc4db77b','192.168.1.198',1326722978);
 /*!40000 ALTER TABLE `session` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `snippet`
---
-
-DROP TABLE IF EXISTS `snippet`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `snippet` (
-  `snippet_id` int(11) NOT NULL auto_increment,
-  `created_by` int(11) NOT NULL default '0',
-  `name` text,
-  `description` text,
-  `type` int(11) NOT NULL default '0',
-  `language` int(11) NOT NULL default '0',
-  `license` text NOT NULL,
-  `category` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`snippet_id`),
-  KEY `idx_snippet_language` (`language`),
-  KEY `idx_snippet_category` (`category`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `snippet`
@@ -4976,19 +1632,6 @@ LOCK TABLES `snippet` WRITE;
 /*!40000 ALTER TABLE `snippet` DISABLE KEYS */;
 /*!40000 ALTER TABLE `snippet` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `snippet_category`
---
-
-DROP TABLE IF EXISTS `snippet_category`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `snippet_category` (
-  `category_id` int(11) NOT NULL,
-  `category_name` varchar(255) NOT NULL default ''
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `snippet_category`
@@ -5001,19 +1644,6 @@ INSERT INTO `snippet_category` VALUES (100,'None'),(1,'UNIX Admin'),(2,'HTML Man
 UNLOCK TABLES;
 
 --
--- Table structure for table `snippet_language`
---
-
-DROP TABLE IF EXISTS `snippet_language`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `snippet_language` (
-  `language_id` int(11) NOT NULL,
-  `language_name` varchar(255) NOT NULL default ''
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `snippet_language`
 --
 
@@ -5022,19 +1652,6 @@ LOCK TABLES `snippet_language` WRITE;
 INSERT INTO `snippet_language` VALUES (100,'None'),(1,'Awk'),(2,'C'),(3,'C++'),(4,'Perl'),(5,'PHP'),(6,'Python'),(7,'Unix Shell'),(8,'Java'),(9,'AppleScript'),(10,'Visual Basic'),(11,'TCL'),(12,'Lisp'),(13,'Mixed'),(14,'JavaScript'),(15,'SQL'),(16,'MatLab'),(17,'Other Language'),(18,'LabView'),(19,'C#'),(20,'Postscript'),(21,'VB.NET');
 /*!40000 ALTER TABLE `snippet_language` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `snippet_license`
---
-
-DROP TABLE IF EXISTS `snippet_license`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `snippet_license` (
-  `license_id` int(11) NOT NULL,
-  `license_name` varchar(255) NOT NULL default ''
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `snippet_license`
@@ -5047,26 +1664,6 @@ INSERT INTO `snippet_license` VALUES (100,'None'),(1,'Codendi exchange Policy'),
 UNLOCK TABLES;
 
 --
--- Table structure for table `snippet_package`
---
-
-DROP TABLE IF EXISTS `snippet_package`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `snippet_package` (
-  `snippet_package_id` int(11) NOT NULL auto_increment,
-  `created_by` int(11) NOT NULL default '0',
-  `name` text,
-  `description` text,
-  `category` int(11) NOT NULL default '0',
-  `language` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`snippet_package_id`),
-  KEY `idx_snippet_package_language` (`language`),
-  KEY `idx_snippet_package_category` (`category`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `snippet_package`
 --
 
@@ -5074,22 +1671,6 @@ LOCK TABLES `snippet_package` WRITE;
 /*!40000 ALTER TABLE `snippet_package` DISABLE KEYS */;
 /*!40000 ALTER TABLE `snippet_package` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `snippet_package_item`
---
-
-DROP TABLE IF EXISTS `snippet_package_item`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `snippet_package_item` (
-  `snippet_package_item_id` int(11) NOT NULL auto_increment,
-  `snippet_package_version_id` int(11) NOT NULL default '0',
-  `snippet_version_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`snippet_package_item_id`),
-  KEY `idx_snippet_package_item_pkg_ver` (`snippet_package_version_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `snippet_package_item`
@@ -5101,25 +1682,6 @@ LOCK TABLES `snippet_package_item` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `snippet_package_version`
---
-
-DROP TABLE IF EXISTS `snippet_package_version`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `snippet_package_version` (
-  `snippet_package_version_id` int(11) NOT NULL auto_increment,
-  `snippet_package_id` int(11) NOT NULL default '0',
-  `changes` text,
-  `version` text,
-  `submitted_by` int(11) NOT NULL default '0',
-  `date` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`snippet_package_version_id`),
-  KEY `idx_snippet_package_version_pkg_id` (`snippet_package_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `snippet_package_version`
 --
 
@@ -5127,19 +1689,6 @@ LOCK TABLES `snippet_package_version` WRITE;
 /*!40000 ALTER TABLE `snippet_package_version` DISABLE KEYS */;
 /*!40000 ALTER TABLE `snippet_package_version` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `snippet_type`
---
-
-DROP TABLE IF EXISTS `snippet_type`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `snippet_type` (
-  `type_id` int(11) NOT NULL,
-  `type_name` varchar(255) NOT NULL default ''
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `snippet_type`
@@ -5152,29 +1701,6 @@ INSERT INTO `snippet_type` VALUES (100,'None'),(1,'Function'),(2,'Full Script'),
 UNLOCK TABLES;
 
 --
--- Table structure for table `snippet_version`
---
-
-DROP TABLE IF EXISTS `snippet_version`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `snippet_version` (
-  `snippet_version_id` int(11) NOT NULL auto_increment,
-  `snippet_id` int(11) NOT NULL default '0',
-  `changes` text,
-  `version` text,
-  `submitted_by` int(11) NOT NULL default '0',
-  `date` int(11) NOT NULL default '0',
-  `code` longblob,
-  `filename` varchar(255) NOT NULL default '',
-  `filesize` varchar(50) NOT NULL default '',
-  `filetype` varchar(50) NOT NULL default '',
-  PRIMARY KEY  (`snippet_version_id`),
-  KEY `idx_snippet_version_snippet_id` (`snippet_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `snippet_version`
 --
 
@@ -5182,19 +1708,6 @@ LOCK TABLES `snippet_version` WRITE;
 /*!40000 ALTER TABLE `snippet_version` DISABLE KEYS */;
 /*!40000 ALTER TABLE `snippet_version` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `stats_agg_logo_by_day`
---
-
-DROP TABLE IF EXISTS `stats_agg_logo_by_day`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_agg_logo_by_day` (
-  `day` int(11) default NULL,
-  `count` int(11) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `stats_agg_logo_by_day`
@@ -5206,20 +1719,6 @@ LOCK TABLES `stats_agg_logo_by_day` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `stats_agg_logo_by_group`
---
-
-DROP TABLE IF EXISTS `stats_agg_logo_by_group`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_agg_logo_by_group` (
-  `day` int(11) default NULL,
-  `group_id` int(11) default NULL,
-  `count` int(11) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `stats_agg_logo_by_group`
 --
 
@@ -5229,19 +1728,6 @@ LOCK TABLES `stats_agg_logo_by_group` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `stats_agg_pages_by_browser`
---
-
-DROP TABLE IF EXISTS `stats_agg_pages_by_browser`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_agg_pages_by_browser` (
-  `browser` varchar(8) default NULL,
-  `count` int(11) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `stats_agg_pages_by_browser`
 --
 
@@ -5249,20 +1735,6 @@ LOCK TABLES `stats_agg_pages_by_browser` WRITE;
 /*!40000 ALTER TABLE `stats_agg_pages_by_browser` DISABLE KEYS */;
 /*!40000 ALTER TABLE `stats_agg_pages_by_browser` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `stats_agg_pages_by_day`
---
-
-DROP TABLE IF EXISTS `stats_agg_pages_by_day`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_agg_pages_by_day` (
-  `day` int(11) NOT NULL default '0',
-  `count` int(11) NOT NULL default '0',
-  KEY `idx_pages_by_day_day` (`day`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `stats_agg_pages_by_day`
@@ -5275,19 +1747,6 @@ INSERT INTO `stats_agg_pages_by_day` VALUES (20111017,494),(20111018,94),(201112
 UNLOCK TABLES;
 
 --
--- Table structure for table `stats_agg_pages_by_day_old`
---
-
-DROP TABLE IF EXISTS `stats_agg_pages_by_day_old`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_agg_pages_by_day_old` (
-  `day` int(11) default NULL,
-  `count` int(11) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `stats_agg_pages_by_day_old`
 --
 
@@ -5295,19 +1754,6 @@ LOCK TABLES `stats_agg_pages_by_day_old` WRITE;
 /*!40000 ALTER TABLE `stats_agg_pages_by_day_old` DISABLE KEYS */;
 /*!40000 ALTER TABLE `stats_agg_pages_by_day_old` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `stats_agg_site_by_day`
---
-
-DROP TABLE IF EXISTS `stats_agg_site_by_day`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_agg_site_by_day` (
-  `day` int(11) NOT NULL default '0',
-  `count` int(11) NOT NULL default '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `stats_agg_site_by_day`
@@ -5320,20 +1766,6 @@ INSERT INTO `stats_agg_site_by_day` VALUES (20111017,494),(20111018,94),(2011122
 UNLOCK TABLES;
 
 --
--- Table structure for table `stats_agg_site_by_group`
---
-
-DROP TABLE IF EXISTS `stats_agg_site_by_group`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_agg_site_by_group` (
-  `day` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `count` int(11) NOT NULL default '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `stats_agg_site_by_group`
 --
 
@@ -5342,22 +1774,6 @@ LOCK TABLES `stats_agg_site_by_group` WRITE;
 INSERT INTO `stats_agg_site_by_group` VALUES (20111017,0,404),(20111017,1,3),(20111017,101,87),(20111018,0,70),(20111018,1,3),(20111018,101,21),(20111220,0,107),(20111220,100,4),(20111220,101,96);
 /*!40000 ALTER TABLE `stats_agg_site_by_group` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `stats_agr_filerelease`
---
-
-DROP TABLE IF EXISTS `stats_agr_filerelease`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_agr_filerelease` (
-  `filerelease_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  KEY `idx_stats_agr_tmp_fid` (`filerelease_id`),
-  KEY `idx_stats_agr_tmp_gid` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `stats_agr_filerelease`
@@ -5369,44 +1785,6 @@ LOCK TABLES `stats_agr_filerelease` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `stats_agr_project`
---
-
-DROP TABLE IF EXISTS `stats_agr_project`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_agr_project` (
-  `group_id` int(11) NOT NULL default '0',
-  `group_ranking` int(11) NOT NULL default '0',
-  `group_metric` float(8,5) NOT NULL default '0.00000',
-  `developers` smallint(6) NOT NULL default '0',
-  `file_releases` smallint(6) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  `site_views` int(11) NOT NULL default '0',
-  `logo_views` int(11) NOT NULL default '0',
-  `msg_posted` smallint(6) NOT NULL default '0',
-  `msg_uniq_auth` smallint(6) NOT NULL default '0',
-  `bugs_opened` smallint(6) NOT NULL default '0',
-  `bugs_closed` smallint(6) NOT NULL default '0',
-  `support_opened` smallint(6) NOT NULL default '0',
-  `support_closed` smallint(6) NOT NULL default '0',
-  `patches_opened` smallint(6) NOT NULL default '0',
-  `patches_closed` smallint(6) NOT NULL default '0',
-  `tasks_opened` smallint(6) NOT NULL default '0',
-  `tasks_closed` smallint(6) NOT NULL default '0',
-  `cvs_checkouts` smallint(6) NOT NULL default '0',
-  `cvs_commits` smallint(6) NOT NULL default '0',
-  `cvs_adds` smallint(6) NOT NULL default '0',
-  `svn_commits` smallint(6) NOT NULL default '0',
-  `svn_adds` smallint(6) NOT NULL default '0',
-  `svn_deletes` smallint(6) NOT NULL default '0',
-  `svn_checkouts` smallint(6) NOT NULL default '0',
-  `svn_access_count` smallint(6) NOT NULL default '0',
-  KEY `idx_project_agr_log_group` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `stats_agr_project`
 --
 
@@ -5414,24 +1792,6 @@ LOCK TABLES `stats_agr_project` WRITE;
 /*!40000 ALTER TABLE `stats_agr_project` DISABLE KEYS */;
 /*!40000 ALTER TABLE `stats_agr_project` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `stats_ftp_downloads`
---
-
-DROP TABLE IF EXISTS `stats_ftp_downloads`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_ftp_downloads` (
-  `day` int(11) NOT NULL default '0',
-  `filerelease_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  KEY `idx_ftpdl_day` (`day`),
-  KEY `idx_ftpdl_fid` (`filerelease_id`),
-  KEY `idx_ftpdl_group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `stats_ftp_downloads`
@@ -5443,24 +1803,6 @@ LOCK TABLES `stats_ftp_downloads` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `stats_http_downloads`
---
-
-DROP TABLE IF EXISTS `stats_http_downloads`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_http_downloads` (
-  `day` int(11) NOT NULL default '0',
-  `filerelease_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  KEY `idx_httpdl_day` (`day`),
-  KEY `idx_httpdl_fid` (`filerelease_id`),
-  KEY `idx_httpdl_group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `stats_http_downloads`
 --
 
@@ -5468,53 +1810,6 @@ LOCK TABLES `stats_http_downloads` WRITE;
 /*!40000 ALTER TABLE `stats_http_downloads` DISABLE KEYS */;
 /*!40000 ALTER TABLE `stats_http_downloads` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `stats_project`
---
-
-DROP TABLE IF EXISTS `stats_project`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_project` (
-  `month` int(11) NOT NULL default '0',
-  `week` int(11) NOT NULL default '0',
-  `day` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `group_ranking` int(11) NOT NULL default '0',
-  `group_metric` float(8,5) NOT NULL default '0.00000',
-  `developers` smallint(6) NOT NULL default '0',
-  `file_releases` smallint(6) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  `site_views` int(11) NOT NULL default '0',
-  `subdomain_views` int(11) NOT NULL default '0',
-  `msg_posted` smallint(6) NOT NULL default '0',
-  `msg_uniq_auth` smallint(6) NOT NULL default '0',
-  `bugs_opened` smallint(6) NOT NULL default '0',
-  `bugs_closed` smallint(6) NOT NULL default '0',
-  `support_opened` smallint(6) NOT NULL default '0',
-  `support_closed` smallint(6) NOT NULL default '0',
-  `patches_opened` smallint(6) NOT NULL default '0',
-  `patches_closed` smallint(6) NOT NULL default '0',
-  `tasks_opened` smallint(6) NOT NULL default '0',
-  `tasks_closed` smallint(6) NOT NULL default '0',
-  `cvs_checkouts` smallint(6) NOT NULL default '0',
-  `cvs_commits` smallint(6) NOT NULL default '0',
-  `cvs_adds` smallint(6) NOT NULL default '0',
-  `svn_commits` smallint(6) NOT NULL default '0',
-  `svn_adds` smallint(6) NOT NULL default '0',
-  `svn_deletes` smallint(6) NOT NULL default '0',
-  `svn_checkouts` smallint(6) NOT NULL default '0',
-  `svn_access_count` smallint(6) NOT NULL default '0',
-  `artifacts_opened` smallint(6) NOT NULL default '0',
-  `artifacts_closed` smallint(6) NOT NULL default '0',
-  KEY `idx_project_log_group` (`group_id`),
-  KEY `idx_archive_project_month` (`month`),
-  KEY `idx_archive_project_week` (`week`),
-  KEY `idx_archive_project_day` (`day`),
-  KEY `idx_archive_project_monthday` (`month`,`day`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `stats_project`
@@ -5527,52 +1822,6 @@ INSERT INTO `stats_project` VALUES (201110,42,16,99,4,25.00000,1,0,0,0,0,0,0,0,0
 UNLOCK TABLES;
 
 --
--- Table structure for table `stats_project_tmp`
---
-
-DROP TABLE IF EXISTS `stats_project_tmp`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_project_tmp` (
-  `month` int(11) NOT NULL default '0',
-  `week` int(11) NOT NULL default '0',
-  `day` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `group_ranking` int(11) NOT NULL default '0',
-  `group_metric` float(8,5) NOT NULL default '0.00000',
-  `developers` smallint(6) NOT NULL default '0',
-  `file_releases` smallint(6) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  `site_views` int(11) NOT NULL default '0',
-  `subdomain_views` int(11) NOT NULL default '0',
-  `msg_posted` smallint(6) NOT NULL default '0',
-  `msg_uniq_auth` smallint(6) NOT NULL default '0',
-  `bugs_opened` smallint(6) NOT NULL default '0',
-  `bugs_closed` smallint(6) NOT NULL default '0',
-  `support_opened` smallint(6) NOT NULL default '0',
-  `support_closed` smallint(6) NOT NULL default '0',
-  `patches_opened` smallint(6) NOT NULL default '0',
-  `patches_closed` smallint(6) NOT NULL default '0',
-  `tasks_opened` smallint(6) NOT NULL default '0',
-  `tasks_closed` smallint(6) NOT NULL default '0',
-  `cvs_checkouts` smallint(6) NOT NULL default '0',
-  `cvs_commits` smallint(6) NOT NULL default '0',
-  `cvs_adds` smallint(6) NOT NULL default '0',
-  `svn_commits` smallint(6) NOT NULL default '0',
-  `svn_adds` smallint(6) NOT NULL default '0',
-  `svn_deletes` smallint(6) NOT NULL default '0',
-  `svn_checkouts` smallint(6) NOT NULL default '0',
-  `svn_access_count` smallint(6) NOT NULL default '0',
-  `artifacts_opened` smallint(6) NOT NULL default '0',
-  `artifacts_closed` smallint(6) NOT NULL default '0',
-  KEY `idx_project_log_group` (`group_id`),
-  KEY `idx_project_stats_day` (`day`),
-  KEY `idx_project_stats_week` (`week`),
-  KEY `idx_project_stats_month` (`month`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `stats_project_tmp`
 --
 
@@ -5581,32 +1830,6 @@ LOCK TABLES `stats_project_tmp` WRITE;
 INSERT INTO `stats_project_tmp` VALUES (201112,51,20,99,4,25.00000,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),(201112,51,20,1,2,75.00000,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),(201112,51,20,101,1,100.00000,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),(201112,51,20,100,3,50.00000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 /*!40000 ALTER TABLE `stats_project_tmp` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `stats_site`
---
-
-DROP TABLE IF EXISTS `stats_site`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `stats_site` (
-  `month` int(11) NOT NULL default '0',
-  `week` int(11) NOT NULL default '0',
-  `day` int(11) NOT NULL default '0',
-  `site_views` int(11) NOT NULL default '0',
-  `subdomain_views` int(11) NOT NULL default '0',
-  `downloads` int(11) NOT NULL default '0',
-  `uniq_users` int(11) NOT NULL default '0',
-  `sessions` int(11) NOT NULL default '0',
-  `total_users` int(11) NOT NULL default '0',
-  `new_users` int(11) NOT NULL default '0',
-  `new_projects` int(11) NOT NULL default '0',
-  KEY `idx_stats_site_month` (`month`),
-  KEY `idx_stats_site_week` (`week`),
-  KEY `idx_stats_site_day` (`day`),
-  KEY `idx_stats_site_monthday` (`month`,`day`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `stats_site`
@@ -5619,29 +1842,6 @@ INSERT INTO `stats_site` VALUES (201110,42,16,0,0,0,0,0,2,0,0),(201110,42,17,0,0
 UNLOCK TABLES;
 
 --
--- Table structure for table `support`
---
-
-DROP TABLE IF EXISTS `support`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `support` (
-  `support_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `support_status_id` int(11) NOT NULL default '0',
-  `support_category_id` int(11) NOT NULL default '0',
-  `priority` int(11) NOT NULL default '0',
-  `submitted_by` int(11) NOT NULL default '0',
-  `assigned_to` int(11) NOT NULL default '0',
-  `open_date` int(11) NOT NULL default '0',
-  `summary` text,
-  `close_date` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`support_id`),
-  KEY `idx_support_group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `support`
 --
 
@@ -5650,23 +1850,6 @@ LOCK TABLES `support` WRITE;
 INSERT INTO `support` VALUES (100,100,0,0,0,0,0,0,NULL,0);
 /*!40000 ALTER TABLE `support` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `support_canned_responses`
---
-
-DROP TABLE IF EXISTS `support_canned_responses`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `support_canned_responses` (
-  `support_canned_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `title` text,
-  `body` text,
-  PRIMARY KEY  (`support_canned_id`),
-  KEY `idx_support_canned_response_group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `support_canned_responses`
@@ -5679,22 +1862,6 @@ INSERT INTO `support_canned_responses` VALUES (100,100,NULL,NULL);
 UNLOCK TABLES;
 
 --
--- Table structure for table `support_category`
---
-
-DROP TABLE IF EXISTS `support_category`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `support_category` (
-  `support_category_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `category_name` text NOT NULL,
-  PRIMARY KEY  (`support_category_id`),
-  KEY `idx_support_group_group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `support_category`
 --
 
@@ -5705,25 +1872,6 @@ INSERT INTO `support_category` VALUES (100,100,'None');
 UNLOCK TABLES;
 
 --
--- Table structure for table `support_history`
---
-
-DROP TABLE IF EXISTS `support_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `support_history` (
-  `support_history_id` int(11) NOT NULL auto_increment,
-  `support_id` int(11) NOT NULL default '0',
-  `field_name` text NOT NULL,
-  `old_value` text NOT NULL,
-  `mod_by` int(11) NOT NULL default '0',
-  `date` int(11) default NULL,
-  PRIMARY KEY  (`support_history_id`),
-  KEY `idx_support_history_support_id` (`support_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `support_history`
 --
 
@@ -5731,24 +1879,6 @@ LOCK TABLES `support_history` WRITE;
 /*!40000 ALTER TABLE `support_history` DISABLE KEYS */;
 /*!40000 ALTER TABLE `support_history` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `support_messages`
---
-
-DROP TABLE IF EXISTS `support_messages`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `support_messages` (
-  `support_message_id` int(11) NOT NULL auto_increment,
-  `support_id` int(11) NOT NULL default '0',
-  `from_email` text,
-  `date` int(11) NOT NULL default '0',
-  `body` text,
-  PRIMARY KEY  (`support_message_id`),
-  KEY `idx_support_messages_support_id` (`support_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `support_messages`
@@ -5761,20 +1891,6 @@ INSERT INTO `support_messages` VALUES (100,100,NULL,0,NULL);
 UNLOCK TABLES;
 
 --
--- Table structure for table `support_status`
---
-
-DROP TABLE IF EXISTS `support_status`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `support_status` (
-  `support_status_id` int(11) NOT NULL auto_increment,
-  `status_name` text,
-  PRIMARY KEY  (`support_status_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `support_status`
 --
 
@@ -5783,21 +1899,6 @@ LOCK TABLES `support_status` WRITE;
 INSERT INTO `support_status` VALUES (1,'Open'),(2,'Closed'),(3,'Deleted');
 /*!40000 ALTER TABLE `support_status` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `survey_question_types`
---
-
-DROP TABLE IF EXISTS `survey_question_types`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `survey_question_types` (
-  `id` int(11) NOT NULL auto_increment,
-  `type` text NOT NULL,
-  `rank` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `survey_question_types`
@@ -5810,23 +1911,6 @@ INSERT INTO `survey_question_types` VALUES (1,'radio_buttons_1_5',21),(2,'text_a
 UNLOCK TABLES;
 
 --
--- Table structure for table `survey_questions`
---
-
-DROP TABLE IF EXISTS `survey_questions`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `survey_questions` (
-  `question_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `question` text NOT NULL,
-  `question_type` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`question_id`),
-  KEY `idx_survey_questions_group` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `survey_questions`
 --
 
@@ -5834,23 +1918,6 @@ LOCK TABLES `survey_questions` WRITE;
 /*!40000 ALTER TABLE `survey_questions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `survey_questions` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `survey_radio_choices`
---
-
-DROP TABLE IF EXISTS `survey_radio_choices`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `survey_radio_choices` (
-  `choice_id` int(11) NOT NULL auto_increment,
-  `question_id` int(11) NOT NULL default '0',
-  `choice_rank` int(11) NOT NULL default '0',
-  `radio_choice` text NOT NULL,
-  PRIMARY KEY  (`choice_id`),
-  KEY `idx_survey_radio_choices_question_id` (`question_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `survey_radio_choices`
@@ -5862,22 +1929,6 @@ LOCK TABLES `survey_radio_choices` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `survey_rating_aggregate`
---
-
-DROP TABLE IF EXISTS `survey_rating_aggregate`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `survey_rating_aggregate` (
-  `type` int(11) NOT NULL,
-  `id` int(11) NOT NULL,
-  `response` float NOT NULL,
-  `count` int(11) NOT NULL,
-  KEY `idx_survey_rating_aggregate_type_id` (`type`,`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `survey_rating_aggregate`
 --
 
@@ -5885,24 +1936,6 @@ LOCK TABLES `survey_rating_aggregate` WRITE;
 /*!40000 ALTER TABLE `survey_rating_aggregate` DISABLE KEYS */;
 /*!40000 ALTER TABLE `survey_rating_aggregate` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `survey_rating_response`
---
-
-DROP TABLE IF EXISTS `survey_rating_response`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `survey_rating_response` (
-  `user_id` int(11) NOT NULL default '0',
-  `type` int(11) NOT NULL default '0',
-  `id` int(11) NOT NULL default '0',
-  `response` int(11) NOT NULL default '0',
-  `date` int(11) NOT NULL default '0',
-  KEY `idx_survey_rating_responses_user_type_id` (`user_id`,`type`,`id`),
-  KEY `idx_survey_rating_responses_type_id` (`type`,`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `survey_rating_response`
@@ -5914,27 +1947,6 @@ LOCK TABLES `survey_rating_response` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `survey_responses`
---
-
-DROP TABLE IF EXISTS `survey_responses`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `survey_responses` (
-  `user_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `survey_id` int(11) NOT NULL default '0',
-  `question_id` int(11) NOT NULL default '0',
-  `response` text NOT NULL,
-  `date` int(11) NOT NULL default '0',
-  KEY `idx_survey_responses_user_survey` (`user_id`,`survey_id`),
-  KEY `idx_survey_responses_user_survey_question` (`user_id`,`survey_id`,`question_id`),
-  KEY `idx_survey_responses_survey_question` (`survey_id`,`question_id`),
-  KEY `idx_survey_responses_group_id` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `survey_responses`
 --
 
@@ -5942,25 +1954,6 @@ LOCK TABLES `survey_responses` WRITE;
 /*!40000 ALTER TABLE `survey_responses` DISABLE KEYS */;
 /*!40000 ALTER TABLE `survey_responses` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `surveys`
---
-
-DROP TABLE IF EXISTS `surveys`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `surveys` (
-  `survey_id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `survey_title` text NOT NULL,
-  `survey_questions` text NOT NULL,
-  `is_active` int(11) NOT NULL default '1',
-  `is_anonymous` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`survey_id`),
-  KEY `idx_surveys_group` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `surveys`
@@ -5973,28 +1966,6 @@ INSERT INTO `surveys` VALUES (1,1,'dev_survey_title_key','',0,0);
 UNLOCK TABLES;
 
 --
--- Table structure for table `svn_checkins`
---
-
-DROP TABLE IF EXISTS `svn_checkins`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `svn_checkins` (
-  `id` int(11) NOT NULL auto_increment,
-  `type` enum('Change','Add','Delete') default NULL,
-  `commitid` int(11) NOT NULL default '0',
-  `dirid` int(11) NOT NULL default '0',
-  `fileid` int(11) NOT NULL default '0',
-  `addedlines` int(11) NOT NULL default '999',
-  `removedlines` int(11) NOT NULL default '999',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `uniq_checkins_idx` (`commitid`,`dirid`,`fileid`),
-  KEY `dirid` (`dirid`),
-  KEY `fileid` (`fileid`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `svn_checkins`
 --
 
@@ -6002,30 +1973,6 @@ LOCK TABLES `svn_checkins` WRITE;
 /*!40000 ALTER TABLE `svn_checkins` DISABLE KEYS */;
 /*!40000 ALTER TABLE `svn_checkins` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `svn_commits`
---
-
-DROP TABLE IF EXISTS `svn_commits`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `svn_commits` (
-  `id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `repositoryid` int(11) NOT NULL default '0',
-  `revision` int(11) NOT NULL default '0',
-  `date` int(11) NOT NULL default '0',
-  `whoid` int(11) NOT NULL default '0',
-  `description` text,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `uniq_commits_idx` (`repositoryid`,`revision`),
-  KEY `whoid` (`whoid`),
-  KEY `revision` (`revision`),
-  KEY `idx_search` (`group_id`,`whoid`,`id`),
-  FULLTEXT KEY `description` (`description`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `svn_commits`
@@ -6037,21 +1984,6 @@ LOCK TABLES `svn_commits` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `svn_dirs`
---
-
-DROP TABLE IF EXISTS `svn_dirs`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `svn_dirs` (
-  `id` int(11) NOT NULL auto_increment,
-  `dir` varchar(255) character set utf8 collate utf8_bin NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `uniq_dir_idx` (`dir`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `svn_dirs`
 --
 
@@ -6059,21 +1991,6 @@ LOCK TABLES `svn_dirs` WRITE;
 /*!40000 ALTER TABLE `svn_dirs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `svn_dirs` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `svn_files`
---
-
-DROP TABLE IF EXISTS `svn_files`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `svn_files` (
-  `id` int(11) NOT NULL auto_increment,
-  `file` varchar(255) character set utf8 collate utf8_bin NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `uniq_file_idx` (`file`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `svn_files`
@@ -6085,21 +2002,6 @@ LOCK TABLES `svn_files` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `svn_repositories`
---
-
-DROP TABLE IF EXISTS `svn_repositories`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `svn_repositories` (
-  `id` int(11) NOT NULL auto_increment,
-  `repository` varchar(255) character set utf8 collate utf8_bin NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `uniq_repository_idx` (`repository`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `svn_repositories`
 --
 
@@ -6107,27 +2009,6 @@ LOCK TABLES `svn_repositories` WRITE;
 /*!40000 ALTER TABLE `svn_repositories` DISABLE KEYS */;
 /*!40000 ALTER TABLE `svn_repositories` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `system_event`
---
-
-DROP TABLE IF EXISTS `system_event`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `system_event` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `type` varchar(255) NOT NULL default '',
-  `parameters` text,
-  `priority` tinyint(1) NOT NULL default '0',
-  `status` enum('NEW','RUNNING','DONE','ERROR','WARNING') NOT NULL default 'NEW',
-  `create_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `process_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `end_date` datetime NOT NULL default '0000-00-00 00:00:00',
-  `log` text,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=274 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `system_event`
@@ -6140,21 +2021,6 @@ INSERT INTO `system_event` VALUES (1,'USER_CREATE','102',2,'DONE','2011-10-17 15
 UNLOCK TABLES;
 
 --
--- Table structure for table `system_events_followers`
---
-
-DROP TABLE IF EXISTS `system_events_followers`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `system_events_followers` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `emails` text NOT NULL,
-  `types` varchar(31) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `system_events_followers`
 --
 
@@ -6165,21 +2031,6 @@ INSERT INTO `system_events_followers` VALUES (1,'admin','WARNING,ERROR');
 UNLOCK TABLES;
 
 --
--- Table structure for table `tmp_projs_releases_tmp`
---
-
-DROP TABLE IF EXISTS `tmp_projs_releases_tmp`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tmp_projs_releases_tmp` (
-  `year` int(11) NOT NULL default '0',
-  `month` int(11) NOT NULL default '0',
-  `total_proj` int(11) NOT NULL default '0',
-  `total_releases` int(11) NOT NULL default '0'
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tmp_projs_releases_tmp`
 --
 
@@ -6187,39 +2038,6 @@ LOCK TABLES `tmp_projs_releases_tmp` WRITE;
 /*!40000 ALTER TABLE `tmp_projs_releases_tmp` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tmp_projs_releases_tmp` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `top_group`
---
-
-DROP TABLE IF EXISTS `top_group`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `top_group` (
-  `group_id` int(11) NOT NULL default '0',
-  `group_name` varchar(40) default NULL,
-  `downloads_all` int(11) NOT NULL default '0',
-  `rank_downloads_all` int(11) NOT NULL default '0',
-  `rank_downloads_all_old` int(11) NOT NULL default '0',
-  `downloads_week` int(11) NOT NULL default '0',
-  `rank_downloads_week` int(11) NOT NULL default '0',
-  `rank_downloads_week_old` int(11) NOT NULL default '0',
-  `userrank` int(11) NOT NULL default '0',
-  `rank_userrank` int(11) NOT NULL default '0',
-  `rank_userrank_old` int(11) NOT NULL default '0',
-  `forumposts_week` int(11) NOT NULL default '0',
-  `rank_forumposts_week` int(11) NOT NULL default '0',
-  `rank_forumposts_week_old` int(11) NOT NULL default '0',
-  `pageviews_proj` int(11) NOT NULL default '0',
-  `rank_pageviews_proj` int(11) NOT NULL default '0',
-  `rank_pageviews_proj_old` int(11) NOT NULL default '0',
-  KEY `rank_downloads_all_idx` (`rank_downloads_all`),
-  KEY `rank_downloads_week_idx` (`rank_downloads_week`),
-  KEY `rank_userrank_idx` (`rank_userrank`),
-  KEY `rank_forumposts_week_idx` (`rank_forumposts_week`),
-  KEY `pageviews_proj_idx` (`pageviews_proj`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `top_group`
@@ -6232,31 +2050,6 @@ INSERT INTO `top_group` VALUES (2,NULL,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),(3,NULL,0,
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker`
---
-
-DROP TABLE IF EXISTS `tracker`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker` (
-  `id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL,
-  `name` text,
-  `description` text,
-  `item_name` text,
-  `allow_copy` int(11) NOT NULL default '0',
-  `submit_instructions` text,
-  `browse_instructions` text,
-  `status` char(1) NOT NULL default 'A',
-  `deletion_date` int(11) default NULL,
-  `instantiate_for_new_projects` int(11) NOT NULL default '0',
-  `stop_notification` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `idx_fk_group_id` (`group_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=106 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker`
 --
 
@@ -6265,26 +2058,6 @@ LOCK TABLES `tracker` WRITE;
 INSERT INTO `tracker` VALUES (105,101,'Bugs','bugss e','bugss',0,'','','',NULL,0,0);
 /*!40000 ALTER TABLE `tracker` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_artifact`
---
-
-DROP TABLE IF EXISTS `tracker_artifact`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_artifact` (
-  `id` int(11) NOT NULL auto_increment,
-  `tracker_id` int(11) NOT NULL,
-  `last_changeset_id` int(11) NOT NULL,
-  `submitted_by` int(11) NOT NULL,
-  `submitted_on` int(11) NOT NULL,
-  `use_artifact_permissions` tinyint(1) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `idx_tracker_id` (`tracker_id`),
-  KEY `idx_my` (`submitted_by`,`tracker_id`,`last_changeset_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_artifact`
@@ -6297,23 +2070,6 @@ INSERT INTO `tracker_artifact` VALUES (2,105,3,103,1324570412,0);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_canned_response`
---
-
-DROP TABLE IF EXISTS `tracker_canned_response`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_canned_response` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `tracker_id` int(11) NOT NULL,
-  `title` text NOT NULL,
-  `body` text NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `tracker_id_idx` (`tracker_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_canned_response`
 --
 
@@ -6321,24 +2077,6 @@ LOCK TABLES `tracker_canned_response` WRITE;
 /*!40000 ALTER TABLE `tracker_canned_response` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_canned_response` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_changeset`
---
-
-DROP TABLE IF EXISTS `tracker_changeset`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset` (
-  `id` int(11) NOT NULL auto_increment,
-  `artifact_id` int(11) NOT NULL,
-  `submitted_by` int(11) default NULL,
-  `submitted_on` int(11) NOT NULL,
-  `email` varchar(255) default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `artifact_idx` (`artifact_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_changeset`
@@ -6351,28 +2089,6 @@ INSERT INTO `tracker_changeset` VALUES (1,2,103,1324570412,NULL),(2,2,103,132457
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_changeset_comment`
---
-
-DROP TABLE IF EXISTS `tracker_changeset_comment`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset_comment` (
-  `id` int(11) NOT NULL auto_increment,
-  `changeset_id` int(11) NOT NULL,
-  `comment_type_id` int(11) default NULL,
-  `canned_response_id` int(11) default NULL,
-  `parent_id` int(11) default NULL,
-  `submitted_by` int(11) default NULL,
-  `submitted_on` int(11) NOT NULL,
-  `body` text NOT NULL,
-  `old_artifact_history_id` int(11) default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `changeset_idx` (`changeset_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_changeset_comment`
 --
 
@@ -6381,24 +2097,6 @@ LOCK TABLES `tracker_changeset_comment` WRITE;
 INSERT INTO `tracker_changeset_comment` VALUES (1,2,NULL,NULL,0,103,1324570551,'',NULL),(2,3,NULL,NULL,0,103,1324570719,'',NULL);
 /*!40000 ALTER TABLE `tracker_changeset_comment` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_changeset_value`
---
-
-DROP TABLE IF EXISTS `tracker_changeset_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset_value` (
-  `id` int(11) NOT NULL auto_increment,
-  `changeset_id` int(11) NOT NULL,
-  `field_id` int(11) NOT NULL,
-  `has_changed` tinyint(1) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `value_idx` (`changeset_id`,`field_id`),
-  KEY `field_idx` (`field_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_changeset_value`
@@ -6411,22 +2109,6 @@ INSERT INTO `tracker_changeset_value` VALUES (1,1,108,1),(2,1,111,1),(3,1,113,1)
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_changeset_value_artifactlink`
---
-
-DROP TABLE IF EXISTS `tracker_changeset_value_artifactlink`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset_value_artifactlink` (
-  `changeset_value_id` int(11) NOT NULL,
-  `artifact_id` int(11) NOT NULL,
-  `keyword` varchar(32) NOT NULL,
-  `group_id` int(11) NOT NULL,
-  PRIMARY KEY  (`changeset_value_id`,`artifact_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_changeset_value_artifactlink`
 --
 
@@ -6434,20 +2116,6 @@ LOCK TABLES `tracker_changeset_value_artifactlink` WRITE;
 /*!40000 ALTER TABLE `tracker_changeset_value_artifactlink` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_changeset_value_artifactlink` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_changeset_value_date`
---
-
-DROP TABLE IF EXISTS `tracker_changeset_value_date`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset_value_date` (
-  `changeset_value_id` int(11) NOT NULL,
-  `value` int(11) default NULL,
-  PRIMARY KEY  (`changeset_value_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_changeset_value_date`
@@ -6460,20 +2128,6 @@ INSERT INTO `tracker_changeset_value_date` VALUES (25,NULL),(26,NULL);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_changeset_value_file`
---
-
-DROP TABLE IF EXISTS `tracker_changeset_value_file`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset_value_file` (
-  `changeset_value_id` int(11) NOT NULL,
-  `fileinfo_id` int(11) NOT NULL,
-  PRIMARY KEY  (`changeset_value_id`,`fileinfo_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_changeset_value_file`
 --
 
@@ -6481,20 +2135,6 @@ LOCK TABLES `tracker_changeset_value_file` WRITE;
 /*!40000 ALTER TABLE `tracker_changeset_value_file` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_changeset_value_file` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_changeset_value_float`
---
-
-DROP TABLE IF EXISTS `tracker_changeset_value_float`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset_value_float` (
-  `changeset_value_id` int(11) NOT NULL,
-  `value` float(10,4) default NULL,
-  PRIMARY KEY  (`changeset_value_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_changeset_value_float`
@@ -6506,20 +2146,6 @@ LOCK TABLES `tracker_changeset_value_float` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_changeset_value_int`
---
-
-DROP TABLE IF EXISTS `tracker_changeset_value_int`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset_value_int` (
-  `changeset_value_id` int(11) NOT NULL,
-  `value` int(11) default NULL,
-  PRIMARY KEY  (`changeset_value_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_changeset_value_int`
 --
 
@@ -6527,20 +2153,6 @@ LOCK TABLES `tracker_changeset_value_int` WRITE;
 /*!40000 ALTER TABLE `tracker_changeset_value_int` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_changeset_value_int` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_changeset_value_list`
---
-
-DROP TABLE IF EXISTS `tracker_changeset_value_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset_value_list` (
-  `changeset_value_id` int(11) NOT NULL,
-  `bindvalue_id` int(11) NOT NULL,
-  PRIMARY KEY  (`changeset_value_id`,`bindvalue_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_changeset_value_list`
@@ -6553,23 +2165,6 @@ INSERT INTO `tracker_changeset_value_list` VALUES (2,100),(3,100),(4,110),(5,100
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_changeset_value_openlist`
---
-
-DROP TABLE IF EXISTS `tracker_changeset_value_openlist`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset_value_openlist` (
-  `changeset_value_id` int(11) NOT NULL,
-  `bindvalue_id` int(11) default NULL,
-  `openvalue_id` int(11) default NULL,
-  `insertion_order` int(11) unsigned NOT NULL auto_increment,
-  PRIMARY KEY  (`insertion_order`),
-  UNIQUE KEY `idx` (`changeset_value_id`,`bindvalue_id`,`openvalue_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_changeset_value_openlist`
 --
 
@@ -6579,20 +2174,6 @@ LOCK TABLES `tracker_changeset_value_openlist` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_changeset_value_permissionsonartifact`
---
-
-DROP TABLE IF EXISTS `tracker_changeset_value_permissionsonartifact`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset_value_permissionsonartifact` (
-  `changeset_value_id` int(11) NOT NULL,
-  `use_perm` tinyint(1) NOT NULL,
-  `ugroup_id` int(11) NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_changeset_value_permissionsonartifact`
 --
 
@@ -6600,20 +2181,6 @@ LOCK TABLES `tracker_changeset_value_permissionsonartifact` WRITE;
 /*!40000 ALTER TABLE `tracker_changeset_value_permissionsonartifact` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_changeset_value_permissionsonartifact` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_changeset_value_text`
---
-
-DROP TABLE IF EXISTS `tracker_changeset_value_text`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_changeset_value_text` (
-  `changeset_value_id` int(11) NOT NULL,
-  `value` text NOT NULL,
-  PRIMARY KEY  (`changeset_value_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_changeset_value_text`
@@ -6626,34 +2193,6 @@ INSERT INTO `tracker_changeset_value_text` VALUES (1,'a creation'),(8,'toto tata
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_field`
---
-
-DROP TABLE IF EXISTS `tracker_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `old_id` int(11) unsigned default NULL,
-  `tracker_id` int(11) unsigned NOT NULL,
-  `parent_id` int(11) unsigned NOT NULL default '0',
-  `formElement_type` varchar(255) NOT NULL,
-  `name` text NOT NULL,
-  `label` text NOT NULL,
-  `description` text NOT NULL,
-  `use_it` tinyint(1) NOT NULL,
-  `rank` int(11) unsigned NOT NULL,
-  `scope` char(1) NOT NULL,
-  `required` tinyint(1) default NULL,
-  `notifications` tinyint(1) default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `idx_fk_old_id` (`old_id`),
-  KEY `idx_fk_tracker_id` (`tracker_id`),
-  KEY `idx_fk_parent_id` (`parent_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=137 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_field`
 --
 
@@ -6662,21 +2201,6 @@ LOCK TABLES `tracker_field` WRITE;
 INSERT INTO `tracker_field` VALUES (101,NULL,105,0,'column','column8','Column Top 1','',1,3,'P',0,NULL),(102,NULL,105,101,'aid','artifact_id','Artifact ID','Unique artifact identifier',1,0,'P',0,NULL),(103,NULL,105,101,'subby','submitted_by','Submitted by','User who originally submitted the artifact',1,1,'P',0,NULL),(104,NULL,105,0,'column','column10','Column Top 2','',1,127,'P',0,NULL),(105,NULL,105,104,'lud','last_update_date','Last Modified On','Date and time of the latest modification in an artifact',1,0,'P',0,NULL),(106,NULL,105,104,'subon','open_date','Submitted on','Date and time for the initial artifact submission',1,2,'P',0,NULL),(107,NULL,105,0,'fieldset','fieldset_1','Details','fieldset_default_desc_key',1,138,'P',1,NULL),(108,NULL,105,107,'string','summary','Summary','One line description of the artifact',1,0,'P',1,NULL),(109,NULL,105,107,'text','details','Original Submission','A full description of the artifact',1,7,'P',0,NULL),(110,NULL,105,107,'column','column10_1','Column Details 1','',1,8,'P',0,NULL),(111,NULL,105,110,'sb','severity','Severity','Impact of the artifact on the system (Critical, Major,...)',1,0,'P',0,NULL),(112,NULL,105,107,'column','column10_11','Column Details 2','',1,12,'P',0,NULL),(113,NULL,105,112,'sb','category','Category','Generally correspond to high level modules or functionalities of your software (e.g. User interface, Configuration Manager, Scheduler, Memory Manager...)',1,0,'P',0,NULL),(114,NULL,105,107,'date','close_date','End Date','End Date',0,20,'P',0,NULL),(115,NULL,105,107,'msb','multi_assigned_to','Assigned to (multiple)','Who is in charge of this artifact',0,31,'P',0,NULL),(116,NULL,105,0,'fieldset','fieldset1','Stage','',1,289,'P',0,NULL),(117,NULL,105,116,'column','column3','Stage 1','',1,0,'P',0,NULL),(118,NULL,105,117,'sb','status_id','Status','Artifact Status',1,0,'P',0,NULL),(119,NULL,105,117,'sb','stage','Stage','Stage in the life cycle of the artifact',0,6,'P',0,NULL),(120,NULL,105,116,'column','column4','Stage 2','',1,2,'P',0,NULL),(121,NULL,105,120,'sb','resolution','Resolution','The resolution field indicates what happened to the bug.',1,0,'P',0,NULL),(122,NULL,105,116,'column','column9','Stage 3','',1,3,'P',0,NULL),(123,NULL,105,122,'sb','assigned_to','Assigned to','Who is in charge of solving the artifact',1,0,'P',0,1),(124,NULL,105,0,'fieldset','fieldset1_1','Attachments','',1,290,'P',0,NULL),(125,NULL,105,124,'file','attachment','Attachments','',1,0,'P',0,NULL),(126,NULL,105,0,'fieldset','fieldset1_11','References','',1,292,'P',0,NULL),(127,NULL,105,126,'cross','cross_references','Cross references','List of items referenced by or referencing this item.',1,0,'P',0,NULL),(128,NULL,105,126,'art_link','references','References','',0,1,'P',0,NULL),(129,NULL,105,0,'fieldset','fieldset1_111','Permissions','',1,293,'P',0,NULL),(130,NULL,105,129,'perm','permissions_on_artifact','Permissions on artifact','Let users groups to define who can access an artifact.',1,0,'P',0,NULL),(131,NULL,105,0,'sb','platform','Platform','',0,29,'P',0,NULL),(132,NULL,105,0,'sb','source','Source','Customer from which the request comes from.',0,31,'P',0,NULL),(133,NULL,105,0,'sb','version','Version','Product version concerned by the bug.',0,33,'P',0,NULL),(134,NULL,105,136,'date','closed_date','Closed Date','',1,1,'P',0,NULL),(135,NULL,105,136,'date','start_date','Start Date','',1,0,'P',0,NULL),(136,NULL,105,0,'fieldset','bug_lifecycle','bug lifecycle','',1,0,'P',0,NULL);
 /*!40000 ALTER TABLE `tracker_field` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_field_date`
---
-
-DROP TABLE IF EXISTS `tracker_field_date`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_date` (
-  `field_id` int(11) NOT NULL,
-  `default_value` int(11) default NULL,
-  `default_value_type` tinyint(1) default NULL,
-  PRIMARY KEY  (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_field_date`
@@ -6689,22 +2213,6 @@ INSERT INTO `tracker_field_date` VALUES (105,NULL,1),(106,NULL,1),(114,0,0),(134
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_field_float`
---
-
-DROP TABLE IF EXISTS `tracker_field_float`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_float` (
-  `field_id` int(11) NOT NULL,
-  `default_value` float(10,4) default NULL,
-  `maxchars` int(11) NOT NULL,
-  `size` int(11) NOT NULL,
-  PRIMARY KEY  (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_field_float`
 --
 
@@ -6712,22 +2220,6 @@ LOCK TABLES `tracker_field_float` WRITE;
 /*!40000 ALTER TABLE `tracker_field_float` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_field_float` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_field_int`
---
-
-DROP TABLE IF EXISTS `tracker_field_int`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_int` (
-  `field_id` int(11) NOT NULL,
-  `default_value` int(11) default NULL,
-  `maxchars` int(11) NOT NULL,
-  `size` int(11) NOT NULL,
-  PRIMARY KEY  (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_field_int`
@@ -6740,20 +2232,6 @@ INSERT INTO `tracker_field_int` VALUES (102,NULL,0,30);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_field_list`
---
-
-DROP TABLE IF EXISTS `tracker_field_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_list` (
-  `field_id` int(11) NOT NULL,
-  `bind_type` varchar(255) NOT NULL,
-  PRIMARY KEY  (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_field_list`
 --
 
@@ -6762,23 +2240,6 @@ LOCK TABLES `tracker_field_list` WRITE;
 INSERT INTO `tracker_field_list` VALUES (103,'users'),(111,'static'),(113,'static'),(115,'users'),(118,'static'),(119,'static'),(121,'static'),(123,'users'),(131,'static'),(132,'static'),(133,'static');
 /*!40000 ALTER TABLE `tracker_field_list` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_field_list_bind_decorator`
---
-
-DROP TABLE IF EXISTS `tracker_field_list_bind_decorator`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_list_bind_decorator` (
-  `field_id` int(11) NOT NULL,
-  `value_id` int(11) NOT NULL,
-  `red` tinyint(3) unsigned NOT NULL,
-  `green` tinyint(3) unsigned NOT NULL,
-  `blue` tinyint(3) unsigned NOT NULL,
-  PRIMARY KEY  (`field_id`,`value_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_field_list_bind_decorator`
@@ -6791,20 +2252,6 @@ INSERT INTO `tracker_field_list_bind_decorator` VALUES (111,101,255,255,102),(11
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_field_list_bind_defaultvalue`
---
-
-DROP TABLE IF EXISTS `tracker_field_list_bind_defaultvalue`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_list_bind_defaultvalue` (
-  `field_id` int(11) NOT NULL,
-  `value_id` int(11) NOT NULL,
-  PRIMARY KEY  (`field_id`,`value_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_field_list_bind_defaultvalue`
 --
 
@@ -6812,20 +2259,6 @@ LOCK TABLES `tracker_field_list_bind_defaultvalue` WRITE;
 /*!40000 ALTER TABLE `tracker_field_list_bind_defaultvalue` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_field_list_bind_defaultvalue` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_field_list_bind_static`
---
-
-DROP TABLE IF EXISTS `tracker_field_list_bind_static`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_list_bind_static` (
-  `field_id` int(11) NOT NULL,
-  `is_rank_alpha` tinyint(1) NOT NULL,
-  PRIMARY KEY  (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_field_list_bind_static`
@@ -6838,26 +2271,6 @@ INSERT INTO `tracker_field_list_bind_static` VALUES (111,0),(113,0),(115,0),(118
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_field_list_bind_static_value`
---
-
-DROP TABLE IF EXISTS `tracker_field_list_bind_static_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_list_bind_static_value` (
-  `id` int(11) NOT NULL auto_increment,
-  `old_id` int(11) default NULL,
-  `field_id` int(11) NOT NULL,
-  `label` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `rank` int(11) NOT NULL,
-  `is_hidden` tinyint(1) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `field_id_idx` (`field_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=139 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_field_list_bind_static_value`
 --
 
@@ -6866,20 +2279,6 @@ LOCK TABLES `tracker_field_list_bind_static_value` WRITE;
 INSERT INTO `tracker_field_list_bind_static_value` VALUES (101,NULL,111,'1 - Ordinary','',0,0),(102,NULL,111,'2','',1,0),(103,NULL,111,'3','',2,0),(104,NULL,111,'4','',3,0),(105,NULL,111,'5 - Major','',4,0),(106,NULL,111,'6','',5,0),(107,NULL,111,'7','',6,0),(108,NULL,111,'8','',7,0),(109,NULL,111,'9 - Critical','',8,0),(110,NULL,118,'New','',0,0),(111,NULL,118,'Unconfirmed','',1,0),(112,NULL,118,'Verified','',2,0),(113,NULL,118,'Resolved','',3,0),(114,NULL,118,'Closed','',4,0),(115,NULL,118,'Reopened','',5,0),(116,NULL,119,'New','The artifact has just been submitted',0,0),(117,NULL,119,'Analyzed','The cause of the artifact has been identified and documented',1,0),(118,NULL,119,'Accepted','The artifact will be worked on.',2,0),(119,NULL,119,'Under Implementation','The artifact is being worked on.',3,0),(120,NULL,119,'Ready for Review','Updated/Created non-software work product (e.g. documentation) is ready for review and approval.',4,0),(121,NULL,119,'Ready for Test','Updated/Created software is ready to be included in the next build',5,0),(122,NULL,119,'In Test','Updated/Created software is in the build and is ready to enter the test phase',6,0),(123,NULL,119,'Approved','The artifact fix has been succesfully tested. It is approved and awaiting release.',7,0),(124,NULL,119,'Declined','The artifact was not accepted.',8,0),(125,NULL,119,'Done','The artifact is closed.',9,0),(126,NULL,121,'Fixed','',0,0),(127,NULL,121,'Will not fix','',1,0),(128,NULL,121,'Invalid','',2,0),(129,NULL,121,'Later','',3,0),(130,NULL,121,'Duplicate','',4,0),(131,NULL,121,'Remind','',5,0),(132,NULL,121,'Works for me','',6,0),(133,NULL,131,'Linux','',0,0),(134,NULL,131,'Windows XP','',1,0),(135,NULL,131,'Solaris','',2,0),(136,NULL,131,'Windows 2000','',3,0),(137,NULL,131,'Other','',4,0),(138,NULL,118,'Open','',6,0);
 /*!40000 ALTER TABLE `tracker_field_list_bind_static_value` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_field_list_bind_users`
---
-
-DROP TABLE IF EXISTS `tracker_field_list_bind_users`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_list_bind_users` (
-  `field_id` int(11) NOT NULL,
-  `value_function` text,
-  PRIMARY KEY  (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_field_list_bind_users`
@@ -6892,20 +2291,6 @@ INSERT INTO `tracker_field_list_bind_users` VALUES (103,'artifact_submitters'),(
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_field_msb`
---
-
-DROP TABLE IF EXISTS `tracker_field_msb`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_msb` (
-  `field_id` int(11) NOT NULL,
-  `size` int(11) NOT NULL,
-  PRIMARY KEY  (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_field_msb`
 --
 
@@ -6914,20 +2299,6 @@ LOCK TABLES `tracker_field_msb` WRITE;
 INSERT INTO `tracker_field_msb` VALUES (115,7);
 /*!40000 ALTER TABLE `tracker_field_msb` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_field_openlist`
---
-
-DROP TABLE IF EXISTS `tracker_field_openlist`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_openlist` (
-  `field_id` int(11) NOT NULL,
-  `hint` varchar(255) NOT NULL,
-  PRIMARY KEY  (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_field_openlist`
@@ -6939,22 +2310,6 @@ LOCK TABLES `tracker_field_openlist` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_field_openlist_value`
---
-
-DROP TABLE IF EXISTS `tracker_field_openlist_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_openlist_value` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `field_id` int(11) unsigned NOT NULL,
-  `label` varchar(255) NOT NULL default '',
-  PRIMARY KEY  (`id`),
-  KEY `idx_search` (`field_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_field_openlist_value`
 --
 
@@ -6962,22 +2317,6 @@ LOCK TABLES `tracker_field_openlist_value` WRITE;
 /*!40000 ALTER TABLE `tracker_field_openlist_value` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_field_openlist_value` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_field_string`
---
-
-DROP TABLE IF EXISTS `tracker_field_string`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_string` (
-  `field_id` int(11) NOT NULL,
-  `default_value` text,
-  `maxchars` int(11) NOT NULL,
-  `size` int(11) NOT NULL,
-  PRIMARY KEY  (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_field_string`
@@ -6990,22 +2329,6 @@ INSERT INTO `tracker_field_string` VALUES (108,'',150,61);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_field_text`
---
-
-DROP TABLE IF EXISTS `tracker_field_text`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_field_text` (
-  `field_id` int(11) NOT NULL,
-  `default_value` text,
-  `rows` int(11) NOT NULL,
-  `cols` int(11) NOT NULL,
-  PRIMARY KEY  (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_field_text`
 --
 
@@ -7014,26 +2337,6 @@ LOCK TABLES `tracker_field_text` WRITE;
 INSERT INTO `tracker_field_text` VALUES (109,'',7,80);
 /*!40000 ALTER TABLE `tracker_field_text` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_fileinfo`
---
-
-DROP TABLE IF EXISTS `tracker_fileinfo`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_fileinfo` (
-  `id` int(11) NOT NULL auto_increment,
-  `old_id` int(11) default NULL,
-  `submitted_by` int(11) NOT NULL,
-  `description` text,
-  `filename` text NOT NULL,
-  `filesize` bigint(20) unsigned NOT NULL,
-  `filetype` text NOT NULL,
-  PRIMARY KEY  (`id`),
-  FULLTEXT KEY `fltxt` (`description`,`filename`)
-) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_fileinfo`
@@ -7045,24 +2348,6 @@ LOCK TABLES `tracker_fileinfo` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_global_notification`
---
-
-DROP TABLE IF EXISTS `tracker_global_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_global_notification` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `tracker_id` int(11) NOT NULL,
-  `addresses` text NOT NULL,
-  `all_updates` tinyint(1) NOT NULL,
-  `check_permissions` tinyint(1) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `tracker_id` (`tracker_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_global_notification`
 --
 
@@ -7070,19 +2355,6 @@ LOCK TABLES `tracker_global_notification` WRITE;
 /*!40000 ALTER TABLE `tracker_global_notification` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_global_notification` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_idsharing_artifact`
---
-
-DROP TABLE IF EXISTS `tracker_idsharing_artifact`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_idsharing_artifact` (
-  `id` int(11) NOT NULL auto_increment,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_idsharing_artifact`
@@ -7095,19 +2367,6 @@ INSERT INTO `tracker_idsharing_artifact` VALUES (2);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_idsharing_tracker`
---
-
-DROP TABLE IF EXISTS `tracker_idsharing_tracker`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_idsharing_tracker` (
-  `id` int(11) NOT NULL auto_increment,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=106 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_idsharing_tracker`
 --
 
@@ -7116,24 +2375,6 @@ LOCK TABLES `tracker_idsharing_tracker` WRITE;
 INSERT INTO `tracker_idsharing_tracker` VALUES (105);
 /*!40000 ALTER TABLE `tracker_idsharing_tracker` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_notification`
---
-
-DROP TABLE IF EXISTS `tracker_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_notification` (
-  `user_id` int(11) NOT NULL,
-  `tracker_id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL,
-  `event_id` int(11) NOT NULL,
-  `notify` int(11) NOT NULL default '1',
-  KEY `user_id_idx` (`user_id`),
-  KEY `tracker_id_idx` (`tracker_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_notification`
@@ -7145,25 +2386,6 @@ LOCK TABLES `tracker_notification` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_notification_event`
---
-
-DROP TABLE IF EXISTS `tracker_notification_event`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_notification_event` (
-  `event_id` int(11) NOT NULL,
-  `tracker_id` int(11) NOT NULL,
-  `event_label` varchar(255) default NULL,
-  `rank` int(11) NOT NULL,
-  `short_description_msg` varchar(255) default NULL,
-  `description_msg` varchar(255) default NULL,
-  KEY `event_id_idx` (`event_id`),
-  KEY `tracker_id_idx` (`tracker_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_notification_event`
 --
 
@@ -7171,23 +2393,6 @@ LOCK TABLES `tracker_notification_event` WRITE;
 /*!40000 ALTER TABLE `tracker_notification_event` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_notification_event` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_notification_event_default`
---
-
-DROP TABLE IF EXISTS `tracker_notification_event_default`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_notification_event_default` (
-  `event_id` int(11) NOT NULL,
-  `event_label` varchar(255) default NULL,
-  `rank` int(11) NOT NULL,
-  `short_description_msg` varchar(255) default NULL,
-  `description_msg` varchar(255) default NULL,
-  KEY `event_id_idx` (`event_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_notification_event_default`
@@ -7199,25 +2404,6 @@ LOCK TABLES `tracker_notification_event_default` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_notification_role`
---
-
-DROP TABLE IF EXISTS `tracker_notification_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_notification_role` (
-  `role_id` int(11) NOT NULL,
-  `tracker_id` int(11) NOT NULL,
-  `role_label` varchar(255) default NULL,
-  `rank` int(11) NOT NULL,
-  `short_description_msg` varchar(255) default NULL,
-  `description_msg` varchar(255) default NULL,
-  KEY `role_id_idx` (`role_id`),
-  KEY `tracker_id_idx` (`tracker_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_notification_role`
 --
 
@@ -7225,23 +2411,6 @@ LOCK TABLES `tracker_notification_role` WRITE;
 /*!40000 ALTER TABLE `tracker_notification_role` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_notification_role` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_notification_role_default`
---
-
-DROP TABLE IF EXISTS `tracker_notification_role_default`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_notification_role_default` (
-  `role_id` int(11) NOT NULL,
-  `role_label` varchar(255) default NULL,
-  `rank` int(11) NOT NULL,
-  `short_description_msg` varchar(255) default NULL,
-  `description_msg` varchar(255) default NULL,
-  KEY `role_id_idx` (`role_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_notification_role_default`
@@ -7253,23 +2422,6 @@ LOCK TABLES `tracker_notification_role_default` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_perm`
---
-
-DROP TABLE IF EXISTS `tracker_perm`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_perm` (
-  `id` int(11) NOT NULL auto_increment,
-  `tracker_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `perm_level` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `unique_user` (`tracker_id`,`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_perm`
 --
 
@@ -7277,32 +2429,6 @@ LOCK TABLES `tracker_perm` WRITE;
 /*!40000 ALTER TABLE `tracker_perm` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_perm` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_report`
---
-
-DROP TABLE IF EXISTS `tracker_report`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report` (
-  `id` int(11) NOT NULL auto_increment,
-  `old_id` int(11) default NULL,
-  `project_id` int(11) default NULL,
-  `user_id` int(11) default NULL,
-  `tracker_id` int(11) NOT NULL,
-  `is_default` tinyint(1) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `current_renderer_id` int(11) NOT NULL,
-  `parent_report_id` int(11) default NULL,
-  `is_query_displayed` tinyint(1) NOT NULL,
-  `updated_by` int(11) default NULL,
-  `updated_at` int(11) default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `tracker_idx` (`tracker_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=103 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_report`
@@ -7315,25 +2441,6 @@ INSERT INTO `tracker_report` VALUES (101,NULL,NULL,NULL,105,0,'Bugs','The system
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_report_criteria`
---
-
-DROP TABLE IF EXISTS `tracker_report_criteria`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_criteria` (
-  `id` int(11) NOT NULL auto_increment,
-  `report_id` int(11) NOT NULL,
-  `field_id` int(11) NOT NULL,
-  `rank` int(11) NOT NULL,
-  `is_advanced` tinyint(1) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `report_idx` (`report_id`),
-  KEY `report_field_idx` (`report_id`,`field_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_report_criteria`
 --
 
@@ -7342,20 +2449,6 @@ LOCK TABLES `tracker_report_criteria` WRITE;
 INSERT INTO `tracker_report_criteria` VALUES (101,101,118,0,0),(102,101,123,1,0),(103,101,106,2,0),(104,101,102,3,0),(105,101,105,4,0),(106,101,108,5,0),(107,101,109,6,0),(108,101,121,7,0),(109,101,113,8,0),(110,102,118,0,0),(111,102,123,1,0),(112,102,106,2,0),(113,102,102,3,0),(114,102,113,4,0);
 /*!40000 ALTER TABLE `tracker_report_criteria` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_report_criteria_alphanum_value`
---
-
-DROP TABLE IF EXISTS `tracker_report_criteria_alphanum_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_criteria_alphanum_value` (
-  `criteria_id` int(11) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  PRIMARY KEY  (`criteria_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_report_criteria_alphanum_value`
@@ -7367,22 +2460,6 @@ LOCK TABLES `tracker_report_criteria_alphanum_value` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_report_criteria_date_value`
---
-
-DROP TABLE IF EXISTS `tracker_report_criteria_date_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_criteria_date_value` (
-  `criteria_id` int(11) NOT NULL,
-  `op` char(1) default NULL,
-  `from_date` int(11) default NULL,
-  `to_date` int(11) default NULL,
-  PRIMARY KEY  (`criteria_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_report_criteria_date_value`
 --
 
@@ -7390,20 +2467,6 @@ LOCK TABLES `tracker_report_criteria_date_value` WRITE;
 /*!40000 ALTER TABLE `tracker_report_criteria_date_value` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_report_criteria_date_value` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_report_criteria_file_value`
---
-
-DROP TABLE IF EXISTS `tracker_report_criteria_file_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_criteria_file_value` (
-  `criteria_id` int(11) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  PRIMARY KEY  (`criteria_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_report_criteria_file_value`
@@ -7415,20 +2478,6 @@ LOCK TABLES `tracker_report_criteria_file_value` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_report_criteria_list_value`
---
-
-DROP TABLE IF EXISTS `tracker_report_criteria_list_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_criteria_list_value` (
-  `criteria_id` int(11) NOT NULL,
-  `value` int(11) NOT NULL,
-  PRIMARY KEY  (`criteria_id`,`value`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_report_criteria_list_value`
 --
 
@@ -7436,20 +2485,6 @@ LOCK TABLES `tracker_report_criteria_list_value` WRITE;
 /*!40000 ALTER TABLE `tracker_report_criteria_list_value` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_report_criteria_list_value` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_report_criteria_openlist_value`
---
-
-DROP TABLE IF EXISTS `tracker_report_criteria_openlist_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_criteria_openlist_value` (
-  `criteria_id` int(11) NOT NULL,
-  `value` text NOT NULL,
-  PRIMARY KEY  (`criteria_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_report_criteria_openlist_value`
@@ -7461,19 +2496,6 @@ LOCK TABLES `tracker_report_criteria_openlist_value` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_report_criteria_permissionsonartifact_value`
---
-
-DROP TABLE IF EXISTS `tracker_report_criteria_permissionsonartifact_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_criteria_permissionsonartifact_value` (
-  `criteria_id` int(11) NOT NULL,
-  `value` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_report_criteria_permissionsonartifact_value`
 --
 
@@ -7481,26 +2503,6 @@ LOCK TABLES `tracker_report_criteria_permissionsonartifact_value` WRITE;
 /*!40000 ALTER TABLE `tracker_report_criteria_permissionsonartifact_value` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_report_criteria_permissionsonartifact_value` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_report_renderer`
---
-
-DROP TABLE IF EXISTS `tracker_report_renderer`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_renderer` (
-  `id` int(11) NOT NULL auto_increment,
-  `old_id` int(11) default NULL,
-  `report_id` int(11) NOT NULL,
-  `renderer_type` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `rank` int(11) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `report_idx` (`report_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=103 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_report_renderer`
@@ -7513,21 +2515,6 @@ INSERT INTO `tracker_report_renderer` VALUES (101,NULL,101,'table','Results','',
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_report_renderer_table`
---
-
-DROP TABLE IF EXISTS `tracker_report_renderer_table`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_renderer_table` (
-  `renderer_id` int(11) NOT NULL,
-  `chunksz` mediumint(9) NOT NULL,
-  `multisort` tinyint(1) NOT NULL,
-  PRIMARY KEY  (`renderer_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_report_renderer_table`
 --
 
@@ -7536,22 +2523,6 @@ LOCK TABLES `tracker_report_renderer_table` WRITE;
 INSERT INTO `tracker_report_renderer_table` VALUES (101,15,0),(102,15,0);
 /*!40000 ALTER TABLE `tracker_report_renderer_table` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_report_renderer_table_columns`
---
-
-DROP TABLE IF EXISTS `tracker_report_renderer_table_columns`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_renderer_table_columns` (
-  `renderer_id` int(11) NOT NULL,
-  `field_id` int(11) NOT NULL,
-  `rank` int(11) NOT NULL,
-  `width` tinyint(4) NOT NULL,
-  PRIMARY KEY  (`renderer_id`,`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_report_renderer_table_columns`
@@ -7564,21 +2535,6 @@ INSERT INTO `tracker_report_renderer_table_columns` VALUES (101,102,0,0),(101,10
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_report_renderer_table_functions_aggregates`
---
-
-DROP TABLE IF EXISTS `tracker_report_renderer_table_functions_aggregates`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_renderer_table_functions_aggregates` (
-  `renderer_id` int(11) NOT NULL,
-  `field_id` int(11) NOT NULL,
-  `aggregate` varchar(10) NOT NULL,
-  PRIMARY KEY  (`renderer_id`,`field_id`,`aggregate`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_report_renderer_table_functions_aggregates`
 --
 
@@ -7586,22 +2542,6 @@ LOCK TABLES `tracker_report_renderer_table_functions_aggregates` WRITE;
 /*!40000 ALTER TABLE `tracker_report_renderer_table_functions_aggregates` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_report_renderer_table_functions_aggregates` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_report_renderer_table_sort`
---
-
-DROP TABLE IF EXISTS `tracker_report_renderer_table_sort`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_report_renderer_table_sort` (
-  `renderer_id` int(11) NOT NULL,
-  `field_id` int(11) NOT NULL,
-  `is_desc` tinyint(1) NOT NULL,
-  `rank` int(11) NOT NULL,
-  PRIMARY KEY  (`renderer_id`,`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_report_renderer_table_sort`
@@ -7613,26 +2553,6 @@ LOCK TABLES `tracker_report_renderer_table_sort` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_rule`
---
-
-DROP TABLE IF EXISTS `tracker_rule`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_rule` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `tracker_id` int(11) unsigned NOT NULL default '0',
-  `source_field_id` int(11) unsigned NOT NULL default '0',
-  `source_value_id` int(11) unsigned NOT NULL default '0',
-  `target_field_id` int(11) unsigned NOT NULL default '0',
-  `rule_type` tinyint(4) unsigned NOT NULL default '0',
-  `target_value_id` int(11) unsigned default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `tracker_id` (`tracker_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_rule`
 --
 
@@ -7640,21 +2560,6 @@ LOCK TABLES `tracker_rule` WRITE;
 /*!40000 ALTER TABLE `tracker_rule` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_rule` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_semantic_contributor`
---
-
-DROP TABLE IF EXISTS `tracker_semantic_contributor`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_semantic_contributor` (
-  `tracker_id` int(11) NOT NULL,
-  `field_id` int(11) NOT NULL,
-  PRIMARY KEY  (`tracker_id`),
-  KEY `filed_id_idx` (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_semantic_contributor`
@@ -7667,21 +2572,6 @@ INSERT INTO `tracker_semantic_contributor` VALUES (105,123);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_semantic_status`
---
-
-DROP TABLE IF EXISTS `tracker_semantic_status`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_semantic_status` (
-  `tracker_id` int(11) NOT NULL,
-  `field_id` int(11) NOT NULL,
-  `open_value_id` int(11) NOT NULL,
-  KEY `idx` (`tracker_id`,`field_id`,`open_value_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_semantic_status`
 --
 
@@ -7690,21 +2580,6 @@ LOCK TABLES `tracker_semantic_status` WRITE;
 INSERT INTO `tracker_semantic_status` VALUES (105,118,110),(105,118,111),(105,118,112),(105,118,113),(105,118,115);
 /*!40000 ALTER TABLE `tracker_semantic_status` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_semantic_title`
---
-
-DROP TABLE IF EXISTS `tracker_semantic_title`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_semantic_title` (
-  `tracker_id` int(11) NOT NULL,
-  `field_id` int(11) NOT NULL,
-  PRIMARY KEY  (`tracker_id`),
-  KEY `filed_id_idx` (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_semantic_title`
@@ -7717,20 +2592,6 @@ INSERT INTO `tracker_semantic_title` VALUES (105,108);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_staticfield_richtext`
---
-
-DROP TABLE IF EXISTS `tracker_staticfield_richtext`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_staticfield_richtext` (
-  `field_id` int(11) NOT NULL,
-  `static_value` text,
-  PRIMARY KEY  (`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_staticfield_richtext`
 --
 
@@ -7738,21 +2599,6 @@ LOCK TABLES `tracker_staticfield_richtext` WRITE;
 /*!40000 ALTER TABLE `tracker_staticfield_richtext` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_staticfield_richtext` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_tooltip`
---
-
-DROP TABLE IF EXISTS `tracker_tooltip`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_tooltip` (
-  `tracker_id` int(11) NOT NULL,
-  `field_id` int(11) NOT NULL,
-  `rank` int(11) NOT NULL,
-  PRIMARY KEY  (`tracker_id`,`field_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_tooltip`
@@ -7765,22 +2611,6 @@ INSERT INTO `tracker_tooltip` VALUES (105,102,0),(105,108,1),(105,118,2);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_watcher`
---
-
-DROP TABLE IF EXISTS `tracker_watcher`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_watcher` (
-  `user_id` int(11) NOT NULL default '0',
-  `watchee_id` int(11) NOT NULL default '0',
-  `tracker_id` int(11) NOT NULL default '0',
-  KEY `watchee_id_idx` (`watchee_id`,`tracker_id`),
-  KEY `user_id_idx` (`user_id`,`tracker_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_watcher`
 --
 
@@ -7790,24 +2620,6 @@ LOCK TABLES `tracker_watcher` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_widget_renderer`
---
-
-DROP TABLE IF EXISTS `tracker_widget_renderer`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_widget_renderer` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `owner_id` int(11) unsigned NOT NULL default '0',
-  `owner_type` varchar(1) NOT NULL default 'u',
-  `title` varchar(255) NOT NULL,
-  `renderer_id` int(11) NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_widget_renderer`
 --
 
@@ -7815,24 +2627,6 @@ LOCK TABLES `tracker_widget_renderer` WRITE;
 /*!40000 ALTER TABLE `tracker_widget_renderer` DISABLE KEYS */;
 /*!40000 ALTER TABLE `tracker_widget_renderer` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_workflow`
---
-
-DROP TABLE IF EXISTS `tracker_workflow`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_workflow` (
-  `workflow_id` int(11) NOT NULL auto_increment,
-  `tracker_id` int(11) NOT NULL,
-  `field_id` int(11) NOT NULL,
-  `is_used` tinyint(1) NOT NULL,
-  PRIMARY KEY  (`workflow_id`),
-  KEY `idx_wf_tracker_id` (`tracker_id`),
-  KEY `idx_wf_field_id` (`field_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_workflow`
@@ -7845,23 +2639,6 @@ INSERT INTO `tracker_workflow` VALUES (2,105,118,0);
 UNLOCK TABLES;
 
 --
--- Table structure for table `tracker_workflow_transition`
---
-
-DROP TABLE IF EXISTS `tracker_workflow_transition`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_workflow_transition` (
-  `transition_id` int(11) NOT NULL auto_increment,
-  `from_id` int(11) default NULL,
-  `to_id` int(11) NOT NULL,
-  `workflow_id` int(11) NOT NULL,
-  PRIMARY KEY  (`transition_id`),
-  KEY `idx_wf_workflow_id` (`workflow_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `tracker_workflow_transition`
 --
 
@@ -7870,23 +2647,6 @@ LOCK TABLES `tracker_workflow_transition` WRITE;
 INSERT INTO `tracker_workflow_transition` VALUES (17,138,114,2),(16,114,138,2),(15,0,138,2);
 /*!40000 ALTER TABLE `tracker_workflow_transition` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `tracker_workflow_transition_postactions_field_date`
---
-
-DROP TABLE IF EXISTS `tracker_workflow_transition_postactions_field_date`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `tracker_workflow_transition_postactions_field_date` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `transition_id` int(11) NOT NULL,
-  `field_id` int(11) unsigned default NULL,
-  `value_type` tinyint(2) default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `idx_wf_transition_id` (`transition_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `tracker_workflow_transition_postactions_field_date`
@@ -7899,32 +2659,6 @@ INSERT INTO `tracker_workflow_transition_postactions_field_date` VALUES (1,17,13
 UNLOCK TABLES;
 
 --
--- Table structure for table `trove_cat`
---
-
-DROP TABLE IF EXISTS `trove_cat`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `trove_cat` (
-  `trove_cat_id` int(11) NOT NULL auto_increment,
-  `version` int(11) NOT NULL default '0',
-  `parent` int(11) NOT NULL default '0',
-  `root_parent` int(11) NOT NULL default '0',
-  `shortname` varchar(80) default NULL,
-  `fullname` varchar(80) default NULL,
-  `description` varchar(255) default NULL,
-  `count_subcat` int(11) NOT NULL default '0',
-  `count_subproj` int(11) NOT NULL default '0',
-  `fullpath` text NOT NULL,
-  `fullpath_ids` text,
-  PRIMARY KEY  (`trove_cat_id`),
-  KEY `parent_idx` (`parent`),
-  KEY `root_parent_idx` (`root_parent`),
-  KEY `version_idx` (`version`)
-) ENGINE=MyISAM AUTO_INCREMENT=283 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `trove_cat`
 --
 
@@ -7935,25 +2669,6 @@ INSERT INTO `trove_cat` VALUES (1,2000031601,0,0,'audience','Intended Audience',
 UNLOCK TABLES;
 
 --
--- Table structure for table `trove_group_link`
---
-
-DROP TABLE IF EXISTS `trove_group_link`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `trove_group_link` (
-  `trove_group_id` int(11) NOT NULL auto_increment,
-  `trove_cat_id` int(11) NOT NULL default '0',
-  `trove_cat_version` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `trove_cat_root` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`trove_group_id`),
-  KEY `idx_trove_group_link_group_id` (`group_id`),
-  KEY `idx_trove_group_link_cat_id` (`trove_cat_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `trove_group_link`
 --
 
@@ -7961,22 +2676,6 @@ LOCK TABLES `trove_group_link` WRITE;
 /*!40000 ALTER TABLE `trove_group_link` DISABLE KEYS */;
 /*!40000 ALTER TABLE `trove_group_link` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `ugroup`
---
-
-DROP TABLE IF EXISTS `ugroup`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `ugroup` (
-  `ugroup_id` int(11) NOT NULL auto_increment,
-  `name` text NOT NULL,
-  `description` text NOT NULL,
-  `group_id` int(11) NOT NULL,
-  PRIMARY KEY  (`ugroup_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=102 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `ugroup`
@@ -7989,21 +2688,6 @@ INSERT INTO `ugroup` VALUES (100,'ugroup_nobody_name_key','ugroup_nobody_desc_ke
 UNLOCK TABLES;
 
 --
--- Table structure for table `ugroup_mapping`
---
-
-DROP TABLE IF EXISTS `ugroup_mapping`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `ugroup_mapping` (
-  `to_group_id` int(11) NOT NULL,
-  `src_ugroup_id` int(11) NOT NULL,
-  `dst_ugroup_id` int(11) NOT NULL,
-  PRIMARY KEY  (`to_group_id`,`src_ugroup_id`,`dst_ugroup_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `ugroup_mapping`
 --
 
@@ -8013,19 +2697,6 @@ LOCK TABLES `ugroup_mapping` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `ugroup_user`
---
-
-DROP TABLE IF EXISTS `ugroup_user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `ugroup_user` (
-  `ugroup_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `ugroup_user`
 --
 
@@ -8033,49 +2704,6 @@ LOCK TABLES `ugroup_user` WRITE;
 /*!40000 ALTER TABLE `ugroup_user` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ugroup_user` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `user` (
-  `user_id` int(11) NOT NULL auto_increment,
-  `user_name` text NOT NULL,
-  `email` text NOT NULL,
-  `user_pw` varchar(32) NOT NULL default '',
-  `realname` varchar(32) NOT NULL default '',
-  `register_purpose` text,
-  `status` char(1) NOT NULL default 'A',
-  `shell` varchar(50) NOT NULL default '/sbin/nologin',
-  `unix_pw` varchar(40) NOT NULL default '',
-  `unix_status` char(1) NOT NULL default 'N',
-  `unix_uid` int(11) NOT NULL default '0',
-  `unix_box` varchar(10) NOT NULL default 'shell1',
-  `ldap_id` text,
-  `add_date` int(11) NOT NULL default '0',
-  `approved_by` int(11) NOT NULL default '0',
-  `confirm_hash` varchar(32) default NULL,
-  `mail_siteupdates` int(11) NOT NULL default '0',
-  `mail_va` int(11) NOT NULL default '0',
-  `sticky_login` int(11) NOT NULL default '0',
-  `authorized_keys` text,
-  `email_new` text,
-  `people_view_skills` int(11) NOT NULL default '0',
-  `people_resume` text NOT NULL,
-  `timezone` varchar(64) default 'GMT',
-  `fontsize` int(10) unsigned NOT NULL default '0',
-  `theme` varchar(50) default NULL,
-  `language_id` varchar(17) NOT NULL default 'en_US',
-  `last_pwd_update` int(11) NOT NULL default '0',
-  `expiry_date` int(11) default NULL,
-  PRIMARY KEY  (`user_id`),
-  KEY `idx_user_name` (`user_name`(10)),
-  KEY `idx_user_user` (`status`)
-) ENGINE=MyISAM AUTO_INCREMENT=105 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `user`
@@ -8088,49 +2716,14 @@ INSERT INTO `user` VALUES (100,'None','noreply@antibott.cro.enalean.com','******
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_access`
---
-
-DROP TABLE IF EXISTS `user_access`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `user_access` (
-  `user_id` int(11) NOT NULL default '0',
-  `last_access_date` int(11) NOT NULL default '0',
-  `prev_auth_success` int(11) NOT NULL default '0',
-  `last_auth_success` int(11) NOT NULL default '0',
-  `last_auth_failure` int(11) NOT NULL default '0',
-  `nb_auth_failure` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `user_access`
 --
 
 LOCK TABLES `user_access` WRITE;
 /*!40000 ALTER TABLE `user_access` DISABLE KEYS */;
-INSERT INTO `user_access` VALUES (100,0,0,0,0,0),(101,1326722148,1324588657,1326722148,1324567297,0),(99,0,0,0,0,0),(102,1324043732,1319205068,1319209749,0,0),(103,1324588762,1324567400,1324588762,1324349367,0),(104,0,0,0,0,0);
+INSERT INTO `user_access` VALUES (100,0,0,0,0,0),(101,1326722148,1324588657,1326722148,1324567297,0),(99,0,0,0,0,0),(102,1324043732,1319205068,1319209749,0,0),(103,1324588762,1324567400,1324588762,1324349367,0),(104,1326722978,0,1326722978,0,0);
 /*!40000 ALTER TABLE `user_access` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `user_bookmarks`
---
-
-DROP TABLE IF EXISTS `user_bookmarks`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `user_bookmarks` (
-  `bookmark_id` int(11) NOT NULL auto_increment,
-  `user_id` int(11) NOT NULL default '0',
-  `bookmark_url` text,
-  `bookmark_title` text,
-  PRIMARY KEY  (`bookmark_id`),
-  KEY `idx_user_bookmark_user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `user_bookmarks`
@@ -8140,38 +2733,6 @@ LOCK TABLES `user_bookmarks` WRITE;
 /*!40000 ALTER TABLE `user_bookmarks` DISABLE KEYS */;
 /*!40000 ALTER TABLE `user_bookmarks` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `user_group`
---
-
-DROP TABLE IF EXISTS `user_group`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `user_group` (
-  `user_group_id` int(11) NOT NULL auto_increment,
-  `user_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `admin_flags` char(16) NOT NULL default '',
-  `bug_flags` int(11) NOT NULL default '0',
-  `forum_flags` int(11) NOT NULL default '0',
-  `project_flags` int(11) NOT NULL default '2',
-  `patch_flags` int(11) NOT NULL default '1',
-  `support_flags` int(11) NOT NULL default '1',
-  `doc_flags` int(11) NOT NULL default '0',
-  `file_flags` int(11) NOT NULL default '0',
-  `wiki_flags` int(11) NOT NULL default '0',
-  `svn_flags` int(11) NOT NULL default '0',
-  `news_flags` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`user_group_id`),
-  KEY `idx_user_group_user_id` (`user_id`),
-  KEY `idx_user_group_group_id` (`group_id`),
-  KEY `bug_flags_idx` (`bug_flags`),
-  KEY `forum_flags_idx` (`forum_flags`),
-  KEY `project_flags_idx` (`project_flags`),
-  KEY `admin_flags_idx` (`admin_flags`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `user_group`
@@ -8184,19 +2745,6 @@ INSERT INTO `user_group` VALUES (1,101,1,'A',2,2,2,2,2,1,2,2,2,2),(2,99,99,'A',0
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_plugin`
---
-
-DROP TABLE IF EXISTS `user_plugin`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `user_plugin` (
-  `user_id` int(11) NOT NULL,
-  `plugin_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `user_plugin`
 --
 
@@ -8206,47 +2754,14 @@ LOCK TABLES `user_plugin` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `user_preferences`
---
-
-DROP TABLE IF EXISTS `user_preferences`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `user_preferences` (
-  `user_id` int(11) NOT NULL default '0',
-  `preference_name` varchar(255) NOT NULL default '',
-  `preference_value` text,
-  PRIMARY KEY  (`user_id`,`preference_name`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `user_preferences`
 --
 
 LOCK TABLES `user_preferences` WRITE;
 /*!40000 ALTER TABLE `user_preferences` DISABLE KEYS */;
-INSERT INTO `user_preferences` VALUES (101,'synchronizer_token_/admin/sessions.phpea03f4039ee7f7f013f38f8cddae91c4','71c0dd5ca3a07b8f232fe2fc32d85540'),(101,'my_artifacts_show','AS'),(102,'my_artifacts_show','AS'),(102,'synchronizer_token_/project/register.php4448242e93df6d55121e800f3f331e5d','e4ed3b17b69aad50847c210750357f95'),(102,'my_hide_forum101','0|3'),(102,'plugin_docman_hide_101_29','2'),(102,'synchronizer_token_/account/preferences.php9024509df185f5cc84264b164642d455','e18e3e12b27c5397ca7b53141d9b4367'),(102,'artifact_browse_report101','100'),(102,'my_hide_artifact101','0|1'),(102,'synchronizer_token_/account/preferences.phpb886402577af3317bc1917d67a54006e','4551585eb2b72e75c586f61fd7e0f3af'),(102,'user_csv_separator','comma'),(102,'user_csv_dateformat','month_day_year'),(102,'user_tracker_mailformat','text'),(102,'username_display','0'),(102,'use_lab_features','0'),(103,'my_artifacts_show','AS'),(103,'synchronizer_token_/account/preferences.php77cd89d17942afec1b101c3f6fcc9415','86e3ac94649397b1afa8176cd4967d35'),(103,'user_csv_separator','comma'),(103,'user_csv_dateformat','month_day_year'),(103,'user_tracker_mailformat','text'),(103,'username_display','0'),(103,'use_lab_features','1'),(101,'synchronizer_token_/account/preferences.phpf43bae0335c66a2b9e7f18e71252327e','c9dd598b45480eb996477600e7418da8'),(101,'user_csv_separator','comma'),(101,'user_csv_dateformat','month_day_year'),(101,'user_tracker_mailformat','text'),(101,'username_display','0'),(101,'use_lab_features','0'),(103,'tracker_105_report_101_last_renderer','101'),(103,'recent_elements','a:1:{i:0;a:2:{s:2:\"id\";s:1:\"2\";s:4:\"link\";s:81:\"<a class=\"cross-reference\" href=\"/goto?key=bugss&val=2&group_id=101\">bugss #2</a>\";}}'),(101,'synchronizer_token_/admin/sessions.phpf9855694898e8d727233be086a8090ec','7b8d68b0f9f59cb176518039f6ff835f');
+INSERT INTO `user_preferences` VALUES (101,'synchronizer_token_/admin/sessions.phpea03f4039ee7f7f013f38f8cddae91c4','71c0dd5ca3a07b8f232fe2fc32d85540'),(101,'my_artifacts_show','AS'),(102,'my_artifacts_show','AS'),(102,'synchronizer_token_/project/register.php4448242e93df6d55121e800f3f331e5d','e4ed3b17b69aad50847c210750357f95'),(102,'my_hide_forum101','0|3'),(102,'plugin_docman_hide_101_29','2'),(102,'synchronizer_token_/account/preferences.php9024509df185f5cc84264b164642d455','e18e3e12b27c5397ca7b53141d9b4367'),(102,'artifact_browse_report101','100'),(102,'my_hide_artifact101','0|1'),(102,'synchronizer_token_/account/preferences.phpb886402577af3317bc1917d67a54006e','4551585eb2b72e75c586f61fd7e0f3af'),(102,'user_csv_separator','comma'),(102,'user_csv_dateformat','month_day_year'),(102,'user_tracker_mailformat','text'),(102,'username_display','0'),(102,'use_lab_features','0'),(103,'my_artifacts_show','AS'),(103,'synchronizer_token_/account/preferences.php77cd89d17942afec1b101c3f6fcc9415','86e3ac94649397b1afa8176cd4967d35'),(103,'user_csv_separator','comma'),(103,'user_csv_dateformat','month_day_year'),(103,'user_tracker_mailformat','text'),(103,'username_display','0'),(103,'use_lab_features','1'),(101,'synchronizer_token_/account/preferences.phpf43bae0335c66a2b9e7f18e71252327e','c9dd598b45480eb996477600e7418da8'),(101,'user_csv_separator','comma'),(101,'user_csv_dateformat','month_day_year'),(101,'user_tracker_mailformat','text'),(101,'username_display','0'),(101,'use_lab_features','0'),(103,'tracker_105_report_101_last_renderer','101'),(103,'recent_elements','a:1:{i:0;a:2:{s:2:\"id\";s:1:\"2\";s:4:\"link\";s:81:\"<a class=\"cross-reference\" href=\"/goto?key=bugss&val=2&group_id=101\">bugss #2</a>\";}}'),(101,'synchronizer_token_/admin/sessions.phpf9855694898e8d727233be086a8090ec','7b8d68b0f9f59cb176518039f6ff835f'),(104,'my_artifacts_show','AS');
 /*!40000 ALTER TABLE `user_preferences` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `widget_image`
---
-
-DROP TABLE IF EXISTS `widget_image`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `widget_image` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `owner_id` int(11) unsigned NOT NULL default '0',
-  `owner_type` varchar(1) NOT NULL default 'u',
-  `title` varchar(255) NOT NULL,
-  `url` text NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `widget_image`
@@ -8258,24 +2773,6 @@ LOCK TABLES `widget_image` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `widget_rss`
---
-
-DROP TABLE IF EXISTS `widget_rss`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `widget_rss` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `owner_id` int(11) unsigned NOT NULL default '0',
-  `owner_type` varchar(1) NOT NULL default 'u',
-  `title` varchar(255) NOT NULL,
-  `url` text NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `widget_rss`
 --
 
@@ -8283,24 +2780,6 @@ LOCK TABLES `widget_rss` WRITE;
 /*!40000 ALTER TABLE `widget_rss` DISABLE KEYS */;
 /*!40000 ALTER TABLE `widget_rss` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `widget_twitterfollow`
---
-
-DROP TABLE IF EXISTS `widget_twitterfollow`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `widget_twitterfollow` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `owner_id` int(11) unsigned NOT NULL default '0',
-  `owner_type` varchar(1) NOT NULL default 'u',
-  `title` varchar(255) NOT NULL,
-  `user` text NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `widget_twitterfollow`
@@ -8312,25 +2791,6 @@ LOCK TABLES `widget_twitterfollow` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `widget_wikipage`
---
-
-DROP TABLE IF EXISTS `widget_wikipage`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `widget_wikipage` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `owner_id` int(11) unsigned NOT NULL default '0',
-  `owner_type` varchar(1) NOT NULL default 'u',
-  `title` varchar(255) NOT NULL,
-  `group_id` int(11) unsigned NOT NULL default '0',
-  `wiki_page` text,
-  PRIMARY KEY  (`id`),
-  KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `widget_wikipage`
 --
 
@@ -8338,23 +2798,6 @@ LOCK TABLES `widget_wikipage` WRITE;
 /*!40000 ALTER TABLE `widget_wikipage` DISABLE KEYS */;
 /*!40000 ALTER TABLE `widget_wikipage` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `wiki_attachment`
---
-
-DROP TABLE IF EXISTS `wiki_attachment`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `wiki_attachment` (
-  `id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `filesystem_name` varchar(255) default NULL,
-  `delete_date` int(11) unsigned default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `wiki_attachment`
@@ -8366,26 +2809,6 @@ LOCK TABLES `wiki_attachment` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `wiki_attachment_deleted`
---
-
-DROP TABLE IF EXISTS `wiki_attachment_deleted`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `wiki_attachment_deleted` (
-  `id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `filesystem_name` varchar(255) default NULL,
-  `delete_date` int(11) unsigned default NULL,
-  `purge_date` int(11) unsigned default NULL,
-  PRIMARY KEY  (`id`),
-  KEY `idx_delete_date` (`delete_date`),
-  KEY `idx_purge_date` (`purge_date`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `wiki_attachment_deleted`
 --
 
@@ -8393,25 +2816,6 @@ LOCK TABLES `wiki_attachment_deleted` WRITE;
 /*!40000 ALTER TABLE `wiki_attachment_deleted` DISABLE KEYS */;
 /*!40000 ALTER TABLE `wiki_attachment_deleted` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `wiki_attachment_log`
---
-
-DROP TABLE IF EXISTS `wiki_attachment_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `wiki_attachment_log` (
-  `user_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `wiki_attachment_id` int(11) NOT NULL default '0',
-  `wiki_attachment_revision_id` int(11) NOT NULL default '0',
-  `time` int(11) NOT NULL default '0',
-  KEY `all_idx` (`user_id`,`group_id`),
-  KEY `time_idx` (`time`),
-  KEY `group_id_idx` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `wiki_attachment_log`
@@ -8423,25 +2827,6 @@ LOCK TABLES `wiki_attachment_log` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `wiki_attachment_revision`
---
-
-DROP TABLE IF EXISTS `wiki_attachment_revision`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `wiki_attachment_revision` (
-  `id` int(11) NOT NULL auto_increment,
-  `attachment_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
-  `revision` int(11) NOT NULL,
-  `mimetype` varchar(255) NOT NULL,
-  `size` bigint(20) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `wiki_attachment_revision`
 --
 
@@ -8449,25 +2834,6 @@ LOCK TABLES `wiki_attachment_revision` WRITE;
 /*!40000 ALTER TABLE `wiki_attachment_revision` DISABLE KEYS */;
 /*!40000 ALTER TABLE `wiki_attachment_revision` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `wiki_group_list`
---
-
-DROP TABLE IF EXISTS `wiki_group_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `wiki_group_list` (
-  `id` int(11) NOT NULL auto_increment,
-  `group_id` int(11) NOT NULL default '0',
-  `wiki_name` varchar(255) NOT NULL default '',
-  `wiki_link` varchar(255) NOT NULL default '',
-  `description` varchar(255) NOT NULL default '',
-  `rank` int(11) NOT NULL default '0',
-  `language_id` varchar(17) NOT NULL default 'en_US',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `wiki_group_list`
@@ -8479,21 +2845,6 @@ LOCK TABLES `wiki_group_list` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `wiki_link`
---
-
-DROP TABLE IF EXISTS `wiki_link`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `wiki_link` (
-  `linkfrom` int(11) NOT NULL,
-  `linkto` int(11) NOT NULL,
-  KEY `linkfrom` (`linkfrom`),
-  KEY `linkto` (`linkto`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `wiki_link`
 --
 
@@ -8501,24 +2852,6 @@ LOCK TABLES `wiki_link` WRITE;
 /*!40000 ALTER TABLE `wiki_link` DISABLE KEYS */;
 /*!40000 ALTER TABLE `wiki_link` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `wiki_log`
---
-
-DROP TABLE IF EXISTS `wiki_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `wiki_log` (
-  `user_id` int(11) NOT NULL default '0',
-  `group_id` int(11) NOT NULL default '0',
-  `pagename` varchar(255) NOT NULL default '',
-  `time` int(11) NOT NULL default '0',
-  KEY `all_idx` (`user_id`,`group_id`),
-  KEY `time_idx` (`time`),
-  KEY `group_id_idx` (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `wiki_log`
@@ -8530,19 +2863,6 @@ LOCK TABLES `wiki_log` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `wiki_nonempty`
---
-
-DROP TABLE IF EXISTS `wiki_nonempty`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `wiki_nonempty` (
-  `id` int(11) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `wiki_nonempty`
 --
 
@@ -8550,25 +2870,6 @@ LOCK TABLES `wiki_nonempty` WRITE;
 /*!40000 ALTER TABLE `wiki_nonempty` DISABLE KEYS */;
 /*!40000 ALTER TABLE `wiki_nonempty` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `wiki_page`
---
-
-DROP TABLE IF EXISTS `wiki_page`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `wiki_page` (
-  `id` int(11) NOT NULL auto_increment,
-  `pagename` varchar(100) character set utf8 collate utf8_bin NOT NULL,
-  `hits` int(11) NOT NULL default '0',
-  `pagedata` mediumtext NOT NULL,
-  `cached_html` mediumblob,
-  `group_id` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `idx_page_group` (`group_id`,`pagename`(10))
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `wiki_page`
@@ -8580,22 +2881,6 @@ LOCK TABLES `wiki_page` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `wiki_recent`
---
-
-DROP TABLE IF EXISTS `wiki_recent`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `wiki_recent` (
-  `id` int(11) NOT NULL,
-  `latestversion` int(11) default NULL,
-  `latestmajor` int(11) default NULL,
-  `latestminor` int(11) default NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
-
---
 -- Dumping data for table `wiki_recent`
 --
 
@@ -8603,25 +2888,6 @@ LOCK TABLES `wiki_recent` WRITE;
 /*!40000 ALTER TABLE `wiki_recent` DISABLE KEYS */;
 /*!40000 ALTER TABLE `wiki_recent` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Table structure for table `wiki_version`
---
-
-DROP TABLE IF EXISTS `wiki_version`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-CREATE TABLE `wiki_version` (
-  `id` int(11) NOT NULL,
-  `version` int(11) NOT NULL,
-  `mtime` int(11) NOT NULL,
-  `minor_edit` tinyint(4) default '0',
-  `content` mediumtext NOT NULL,
-  `versiondata` mediumtext NOT NULL,
-  PRIMARY KEY  (`id`,`version`),
-  KEY `mtime` (`mtime`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `wiki_version`
@@ -8641,4 +2907,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-01-16 14:08:27
+-- Dump completed on 2012-01-16 14:11:57
