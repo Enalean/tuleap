@@ -38,8 +38,9 @@ Capybara.default_driver = :webkit_ignore_ssl
 
 Before do
   puts "reinit database"
-  base = "/usr/share/codendi/"
-  system "ssh root@#{$tuleap_host} -C \"mysql -B -pwelcome0 -uroot codendi < #{base}dump.sql\"" 
+  codendi_dir = "/usr/share/codendi"
+  fixture_file = "codendi_tools/plugins/tests/functional/fixture.sql"
+  system "ssh root@#{$tuleap_host} -C \"mysql -B -pwelcome0 -uroot codendi < #{codendi_dir}/#{fixture_file}\"" 
 end
 
 Before do
