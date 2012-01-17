@@ -832,7 +832,7 @@ class LdapPlugin extends Plugin {
      * @return void
      */
     function codendi_daily_start($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($GLOBALS['sys_auth_type'] == 'ldap' && $this->getLDAP()->getLDAPParam('daily_sync') == 1) {
             $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap());
             $ldapQuery->syncAll();
         }
