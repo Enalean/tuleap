@@ -37,21 +37,4 @@ end
 #Capybara.default_driver = :firefox
 Capybara.default_driver = :webkit_ignore_ssl
 
-Before do
-  puts "reinit database"
-  codendi_dir = "/usr/share/codendi"
-  fixture_file = "codendi_tools/plugins/tests/functional/fixture.sql"
-  system "ssh root@#{$tuleap_host} -C \"mysql -B -pwelcome0 -uroot codendi < #{codendi_dir}/#{fixture_file}\"" 
-end
-
-Before do
-  # Start on the home page
-  visit('/')
-end
-After do |scenario|
-  if scenario.failed?
-    screenshot_path = Capybara::Screenshot::Cucumber.screen_shot_and_save_page[:image]
-    # Trying to embed the screenshot into our output."
-  end
-end
 
