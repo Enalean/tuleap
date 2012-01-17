@@ -35,7 +35,7 @@ THEME_CODEXSTN_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodexSTN/VE
 THEME_STEERFORGE_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/SteerForge/VERSION)
 THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSION)
 
-PKG_NAME=codendi_st
+PKG_NAME=tuleap
 
 rpmprep:
 	mkdir -p $(RPM_TMP)
