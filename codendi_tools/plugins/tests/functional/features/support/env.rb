@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'capybara/cucumber'
+require 'capybara-screenshot/cucumber'
 require 'capybara/dsl'
 include RSpec::Matchers
 include Capybara::DSL
@@ -46,5 +47,11 @@ end
 Before do
   # Start on the home page
   visit('/')
+end
+After do |scenario|
+  if scenario.failed?
+    screenshot_path = Capybara::Screenshot::Cucumber.screen_shot_and_save_page[:image]
+    # Trying to embed the screenshot into our output."
+  end
 end
 

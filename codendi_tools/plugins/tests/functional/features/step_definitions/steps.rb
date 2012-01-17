@@ -1,9 +1,12 @@
 When /^I go to the bugs tracker of Test Project$/ do
   find(:xpath, '//a[text()="Test Project"]').click
+  #find(:xpath, '//a[text()="Bugs"]').click
+  find(:xpath, '//a[starts-with(@href,"/plugins/tracker/?")]').click
+  find(:xpath, '//a[text()=" Bugs"]').click
 end
 
 When /^I submit a new artifact$/ do
-  pending # express the regexp above with the code you wish you had
+  find(:xpath, '//a[contains(@href, "func=new-artifact")]').click
 end
 
 Then /^a message says that the field 'Start Date' as been set to the current date$/ do
