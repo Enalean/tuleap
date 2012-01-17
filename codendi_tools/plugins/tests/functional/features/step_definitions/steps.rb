@@ -1,10 +1,21 @@
+Given /^I am on the bugs tracker of Test Project$/ do
+  pending # express the regexp above with the code you wish you had
+end
 
-Given /^I am on the home page$/ do
-  visit('/')
+When /^I submit a new artifact$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^a message says that the field 'Start Date' as been set to the current date$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^the artifact has 'Start Date' set to the current date$/ do
+  pending # express the regexp above with the code you wish you had
 end
 
 When /^I logon as "([^"]*)" : "([^"]*)"$/ do |user, pwd|
-    find(:xpath, "//a[@href='/my/']").click
+    find(:xpath, "//a[@href='/account/login.php']").click
     fill_in('form_loginname', :with => user)
     fill_in('form_pw', :with => pwd)
     find("input[name='login']").click

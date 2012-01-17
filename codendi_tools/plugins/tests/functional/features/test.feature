@@ -1,7 +1,6 @@
 Feature: It is possible to log in 
 
 Background: 
-Given I am on the home page
 When I logon as "admin" : "siteadmin"
 
 Scenario: Just after login the user is on his personal page 
