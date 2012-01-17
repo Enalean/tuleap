@@ -1,5 +1,5 @@
-Given /^I am on the bugs tracker of Test Project$/ do
-  pending # express the regexp above with the code you wish you had
+When /^I go to the bugs tracker of Test Project$/ do
+  find(:xpath, '//a[text()="Test Project"]').click
 end
 
 When /^I submit a new artifact$/ do

@@ -16,8 +16,8 @@ Feature:
     
     Scenario: Set the start date
       Given I logon as "testuser" : "tuleap_pass"
-      And I am on the bugs tracker of Test Project
-      When I submit a new artifact
+      When I go to the bugs tracker of Test Project
+      And I submit a new artifact
       Then a message says that the field 'Start Date' as been set to the current date
       #And the notification email display the 'Start Date' value
       And the artifact has 'Start Date' set to the current date
