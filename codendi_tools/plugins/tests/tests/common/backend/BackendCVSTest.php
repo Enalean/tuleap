@@ -43,7 +43,7 @@ Mock::generatePartial('BackendCVS', 'BackendCVSTestVersion', array('getUserManag
                                                                        '_getServiceDao',
                                                                        'getCVSWatchMode',
                                                                        'getHTTPUserUID',
-                                                                       'log'
+                                                                       'log',
                                                            ));
 
 Mock::generatePartial('BackendCVS', 'BackendCVS4RenameCVSNT', array('useCVSNT', '_RcsCheckout', '_RcsCommit','updateCVSwriters',
@@ -66,6 +66,8 @@ class BackendCVSTest extends UnitTestCase {
     
     
     function tearDown() {
+        system('rm -rf '. escapeshellarg($GLOBALS['cvs_prefix']     .'/TestProj'));
+        system('rm -rf '. escapeshellarg($GLOBALS['cvslock_prefix'] .'/TestProj'));
         //clear the cache between each tests
         Backend::clearInstances();
         rmdir($GLOBALS['cvs_prefix'] . '/' . 'toto');
@@ -495,38 +497,41 @@ class BackendCVSTest extends UnitTestCase {
     }
     
     function testCheckCVSModeNeedOwnerUpdate() {
+        $cvsdir = $GLOBALS['cvs_prefix'].'/TestProj';
+        mkdir($cvsdir .'/CVSROOT', 0700, true);
+        
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
         $project->setReturnValue('isPublic', true);
         $project->setReturnValue('isCVSPrivate', false);
         $project->setReturnValue('getMembersUserNames',array());
 
+        $backend = $this->GivenACVSRepositoryWithWrongOwnership($project, $cvsdir);
+        $backend->expectOnce('log', array('Restoring ownership on CVS dir: '.$cvsdir, 'info'));
+        
+        $this->assertTrue($backend->checkCVSMode($project));
+    }
+    
+    /**
+     * @return BackendCVS
+     */
+    function GivenACVSRepositoryWithWrongOwnership($project, $cvsdir) {
         $pm = new MockProjectManager();
         $pm->setReturnReference('getProject', $project, array(1));
 
-        $backend = new BackendCVSTestVersion($this);
+        $backend = TestHelper::getPartialMock('BackendCVS', array('getProjectManager', 'system', 'chown', 'chgrp', 'chmod', 'getHTTPUserUID', 'log'));
         $backend->setReturnValue('getProjectManager', $pm);
-        $backend = new BackendCVSTestVersion($this);
-        $backend->setReturnReference('getProjectManager', $pm);
-        $backend->createProjectCVS(1);
 
-        $cvsdir = $GLOBALS['cvs_prefix'].'/TestProj';
+        touch($cvsdir.'/CVSROOT/loginfo');
+        touch($cvsdir.'/CVSROOT/commitinfo');
+        touch($cvsdir.'/CVSROOT/config');
+        
+        //fake the fact that the repo has wrong ownership
         $stat = stat($cvsdir.'/CVSROOT/loginfo');
-        $project->setReturnValue('getUnixGID', $stat['gid']+1);
+        $project->setReturnValue('getUnixGID', $stat['gid'] + 1);
         $backend->setReturnValue('getHTTPUserUID', $stat['uid']);
-
-        $this->assertTrue(file_exists($cvsdir.'/CVSROOT/loginfo'));
-        $this->assertTrue(file_exists($cvsdir.'/CVSROOT/commitinfo'));
-        $this->assertTrue(file_exists($cvsdir.'/CVSROOT/config'));
-
-        $backend->expectOnce('log', array('Restoring ownership on CVS dir: '.$cvsdir, 'info'));
-
-        $this->assertTrue($backend->checkCVSMode($project));
-
-        // Cleanup
-        $backend->recurseDeleteInDir($GLOBALS['cvs_prefix']."/TestProj");
-        rmdir($GLOBALS['cvs_prefix']."/TestProj");
-        rmdir($GLOBALS['cvslock_prefix']."/TestProj");
+        
+        return $backend;
     }
 
 }
