@@ -422,7 +422,7 @@ class BackendSVNTest extends UnitTestCase {
     
     function GivenAFullApacheConfWithModPerl() {
         $backend  = TestHelper::getPartialMock('BackendSVN', array('_getServiceDao', 'getConfig'));
-        $backend->setReturnValue('getConfig', 'modperl', array('sys_svn_auth_mod'));
+        $backend->setReturnValue('getConfig', 'modperl', array(BackendSVN::CONFIG_SVN_AUTH_KEY));
         $this->setupBackendWithTwoGroups($backend);
         return $backend->getApacheConf();
     }
