@@ -27,8 +27,8 @@ require_once('common/dao/ServiceDao.class.php');
 require_once('common/svn/SVNAccessFile.class.php');
 require_once('common/include/Error.class.php');
 require_once('www/svn/svn_utils.php');
-require_once('SVN_Apache_ModMysql.class.php');
-require_once('SVN_Apache_ModPerl.class.php');
+require_once('common/svn/SVN_Apache_ModMysql.class.php');
+require_once('common/svn/SVN_Apache_ModPerl.class.php');
 require_once('common/include/Config.class.php');
 
 /**
@@ -512,8 +512,14 @@ class BackendSVN extends Backend {
      */
     public function getApacheConf() {
         $dar  = $this->_getServiceDao()->searchActiveUnixGroupByUsedService('svn');
+        return $this->getApacheAuthMod($dar)->getFullConf();
+        /*$auth = new SVN_Apache_Auth_Factory();
+        foreach ($dar as $row) {
+            $auth = new SVN_Apache_Auth_Factory();::get($row);
+            $conf .= $auth->getConf();
+        }*/
         $conf = $this->getApacheAuthMod($dar);
-        return $conf->getFullConf();
+        return $conf;//$conf->getFullConf();
     }
 
     /**

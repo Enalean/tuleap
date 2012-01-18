@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/backend/SVN_Apache_ModPerl.class.php';
+require_once 'common/svn/SVN_Apache_ModPerl.class.php';
 
 
 class SVN_Apache_ModPerlTest extends UnitTestCase {

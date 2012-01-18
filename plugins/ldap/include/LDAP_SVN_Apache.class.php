@@ -17,9 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/backend/SVN_Apache.class.php';
+require_once 'common/backend/SVN_Apache_ModMysql.class.php';
 
-class LDAP_SVN_Apache extends SVN_Apache {
+class LDAP_SVN_Apache extends SVN_Apache_ModMysql {
     /**
      * @var LDAP_ProjectManager
      */
@@ -60,7 +60,7 @@ class LDAP_SVN_Apache extends SVN_Apache {
             $conf .= '    Require valid-user'.PHP_EOL;
             return $conf;
         } else {
-            return parent::getProjectSVNApacheConfAuth($row);
+            return parent::getProjectAuthentication($row);
         }
     }
     
