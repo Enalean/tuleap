@@ -1,3 +1,4 @@
+-- At Orange there is 'default 0'
 ALTER TABLE `codendi`.`artifact` CHANGE COLUMN `group_artifact_id` `group_artifact_id` INT(11) NOT NULL  ;
 
 ALTER TABLE `codendi`.`artifact_field` CHANGE COLUMN `group_artifact_id` `group_artifact_id` INT(11) NOT NULL  ;
