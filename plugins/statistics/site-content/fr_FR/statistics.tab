@@ -35,21 +35,21 @@ plugin_statistics	scm_project_id	Identifiant du projet
 plugin_statistics	scm_project_id_info	L'identifiant du projet est optionnel, laissez le champ vide pour calculer les statistiques de toute la plateforme.
 plugin_statistics	scm_export_button	Exporter en CSV
 plugin_statistics	scm_month	Mois
-plugin_statistics	scm_svn_total_read	Nombre total d'accée en lecture à SVN
-plugin_statistics	scm_svn_read_project	Nombre total de projets avec des accés en lecture à SVN
-plugin_statistics	scm_svn_read_user	Nombre total de utilisateurs avec des accés en lecture à SVN
+plugin_statistics	scm_svn_total_read	Nombre total d'accès en lecture à SVN
+plugin_statistics	scm_svn_read_project	Nombre total de projets avec des accès en lecture à SVN
+plugin_statistics	scm_svn_read_user	Nombre total d'utilisateurs avec des accès en lecture à SVN
 plugin_statistics	scm_svn_total_commit	Nombre total des commits SVN
 plugin_statistics	scm_svn_commit_project	Nombre total de projets avec des commits SVN
 plugin_statistics	scm_top_commit_project	Top des projets
 plugin_statistics	scm_top_commit_project_commits	Top des projets (nombre de commits)
-plugin_statistics	scm_svn_commit_user	Nombre total de utilisateurs avec des commits SVN
+plugin_statistics	scm_svn_commit_user	Nombre total d'utilisateurs avec des commits SVN
 plugin_statistics	scm_top_commit_user	Top des utilisateurs
 plugin_statistics	scm_top_commit_user_commits	Top des utilisateurs (nombre de commits)
-plugin_statistics	scm_cvs_total_read	Nombre total d'accée en lecture à CVS
-plugin_statistics	scm_cvs_read_project	Nombre total de projets avec des accés en lecture à CVS
-plugin_statistics	scm_cvs_read_user	Nombre total de utilisateurs avec des accés en lecture à CVS
+plugin_statistics	scm_cvs_total_read	Nombre total d'accès en lecture à CVS
+plugin_statistics	scm_cvs_read_project	Nombre total de projets avec des accès en lecture à CVS
+plugin_statistics	scm_cvs_read_user	Nombre total d'utilisateurs avec des accès en lecture à CVS
 plugin_statistics	scm_cvs_total_commit	Nombre total des commits CVS
 plugin_statistics	scm_cvs_commit_project	Nombre total de projets avec des commits CVS
-plugin_statistics	scm_cvs_commit_user	Nombre total de utilisateurs avec des commits CVS
-plugin_statistics	scm_repo_evolution	Nombre de depôt contenant au moins un commit
-plugin_statistics	scm_repo_total	Nombre total des depôts contenant au moins un commit
+plugin_statistics	scm_cvs_commit_user	Nombre total d'utilisateurs avec des commits CVS
+plugin_statistics	scm_repo_evolution	Nombre de dépôts contenant au moins un commit
+plugin_statistics	scm_repo_total	Nombre total des dépôts contenant au moins un commit
