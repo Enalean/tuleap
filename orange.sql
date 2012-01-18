@@ -40,7 +40,7 @@ CREATE TABLE `activity_log` (
   KEY `idx_activity_log_day` (`day`),
   KEY `idx_activity_log_group` (`group_id`),
   KEY `type_idx` (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,7 +72,7 @@ CREATE TABLE `activity_log_old` (
   KEY `idx_activity_log_day` (`day`),
   KEY `idx_activity_log_group` (`group_id`),
   KEY `type_idx` (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -104,7 +104,7 @@ CREATE TABLE `activity_log_old_old` (
   KEY `idx_activity_log_day` (`day`),
   KEY `idx_activity_log_group` (`group_id`),
   KEY `type_idx` (`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -139,7 +139,7 @@ CREATE TABLE `artifact` (
   KEY `idx_fk_group_artifact_id` (`group_artifact_id`),
   KEY `idx_fk_status_id` (`status_id`),
   KEY `idx_fk_submitted_by` (`submitted_by`)
-) ENGINE=InnoDB AUTO_INCREMENT=82233 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=82233 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -165,7 +165,7 @@ CREATE TABLE `artifact_canned_responses` (
   `body` text,
   PRIMARY KEY  (`artifact_canned_id`),
   KEY `idx_artifact_canned_response_group_artifact_id` (`group_artifact_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -193,7 +193,7 @@ CREATE TABLE `artifact_cc` (
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (`artifact_cc_id`),
   KEY `artifact_id_idx` (`artifact_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23722 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=23722 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,7 +219,7 @@ CREATE TABLE `artifact_dependencies` (
   PRIMARY KEY  (`artifact_depend_id`),
   KEY `idx_artifact_dependencies_artifact_id` (`artifact_id`),
   KEY `idx_actifact_is_dependent_on_artifact_id` (`is_dependent_on_artifact_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1992 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=1992 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -259,7 +259,7 @@ CREATE TABLE `artifact_field` (
   KEY `idx_fk_field_name` (`field_name`),
   KEY `idx_fk_group_artifact_id` (`group_artifact_id`),
   KEY `idx_fname_grp` (`field_name`(20),`group_artifact_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=114 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -286,7 +286,7 @@ CREATE TABLE `artifact_field_set` (
   `rank` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`field_set_id`),
   KEY `idx_fk_group_artifact_id` (`group_artifact_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12754 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=12754 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -311,7 +311,7 @@ CREATE TABLE `artifact_field_usage` (
   `use_it` int(11) NOT NULL default '0',
   `place` int(11) default NULL,
   KEY `idx_fk` (`field_id`,`group_artifact_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -339,7 +339,7 @@ CREATE TABLE `artifact_field_value` (
   `valueDate` int(11) default NULL,
   KEY `idx_valueInt` (`artifact_id`,`field_id`,`valueInt`),
   KEY `xtrk_valueInt` (`valueInt`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -370,7 +370,7 @@ CREATE TABLE `artifact_field_value_list` (
   KEY `idx_fv_group_artifact_id` (`group_artifact_id`),
   KEY `idx_fv_value_id` (`value_id`),
   KEY `idx_fv_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -401,7 +401,7 @@ CREATE TABLE `artifact_file` (
   `submitted_by` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `artifact_id` (`artifact_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16539 DEFAULT CHARSET=utf8 MAX_ROWS=1000000 AVG_ROW_LENGTH=1000000;
+)  AUTO_INCREMENT=16539 DEFAULT CHARSET=utf8 MAX_ROWS=1000000 AVG_ROW_LENGTH=1000000;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -428,7 +428,7 @@ CREATE TABLE `artifact_global_notification` (
   `check_permissions` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `tracker_id` (`tracker_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8141 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=8141 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -462,7 +462,7 @@ CREATE TABLE `artifact_group_list` (
   `stop_notification` int(11) NOT NULL default '0',
   PRIMARY KEY  (`group_artifact_id`),
   KEY `idx_fk_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9638 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=9638 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -495,7 +495,7 @@ CREATE TABLE `artifact_history` (
   PRIMARY KEY  (`artifact_history_id`),
   KEY `idx_artifact_history_artifact_id` (`artifact_id`),
   KEY `field_name` (`field_name`(10))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -522,7 +522,7 @@ CREATE TABLE `artifact_notification` (
   `notify` int(11) NOT NULL default '1',
   KEY `user_id_idx` (`user_id`),
   KEY `group_artifact_id_idx` (`group_artifact_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -550,7 +550,7 @@ CREATE TABLE `artifact_notification_event` (
   `description_msg` varchar(255) default NULL,
   KEY `event_id_idx` (`event_id`),
   KEY `group_artifact_id_idx` (`group_artifact_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -576,7 +576,7 @@ CREATE TABLE `artifact_notification_event_default` (
   `short_description_msg` varchar(255) default NULL,
   `description_msg` varchar(255) default NULL,
   KEY `event_id_idx` (`event_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -604,7 +604,7 @@ CREATE TABLE `artifact_notification_role` (
   `description_msg` varchar(255) default NULL,
   KEY `role_id_idx` (`role_id`),
   KEY `group_artifact_id_idx` (`group_artifact_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -630,7 +630,7 @@ CREATE TABLE `artifact_notification_role_default` (
   `short_description_msg` varchar(255) default NULL,
   `description_msg` varchar(255) default NULL,
   KEY `role_id_idx` (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -656,7 +656,7 @@ CREATE TABLE `artifact_perm` (
   `perm_level` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `unique_user` (`group_artifact_id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=81800 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=81800 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -687,7 +687,7 @@ CREATE TABLE `artifact_report` (
   KEY `group_artifact_id_idx` (`group_artifact_id`),
   KEY `user_id_idx` (`user_id`),
   KEY `scope_idx` (`scope`)
-) ENGINE=InnoDB AUTO_INCREMENT=9844 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=9844 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -716,7 +716,7 @@ CREATE TABLE `artifact_report_field` (
   `col_width` int(11) default NULL,
   KEY `profile_id_idx` (`report_id`),
   KEY `field_name_idx` (`field_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -745,7 +745,7 @@ CREATE TABLE `artifact_rule` (
   `target_value_id` int(11) unsigned default NULL,
   PRIMARY KEY  (`id`),
   KEY `group_artifact_id` (`group_artifact_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15539 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=15539 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -770,7 +770,7 @@ CREATE TABLE `artifact_watcher` (
   `artifact_group_id` int(11) NOT NULL default '0',
   KEY `watchee_id_idx` (`watchee_id`,`artifact_group_id`),
   KEY `user_id_idx` (`user_id`,`artifact_group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -857,7 +857,7 @@ CREATE TABLE `bug` (
   `custom_df5` int(11) NOT NULL default '0',
   PRIMARY KEY  (`bug_id`),
   KEY `idx_bug_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -883,7 +883,7 @@ CREATE TABLE `bug_bug_dependencies` (
   PRIMARY KEY  (`bug_depend_id`),
   KEY `idx_bug_bug_dependencies_bug_id` (`bug_id`),
   KEY `idx_bug_bug_is_dependent_on_task_id` (`is_dependent_on_bug_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -909,7 +909,7 @@ CREATE TABLE `bug_canned_responses` (
   `body` text,
   PRIMARY KEY  (`bug_canned_id`),
   KEY `idx_bug_canned_response_group_id` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -937,7 +937,7 @@ CREATE TABLE `bug_cc` (
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (`bug_cc_id`),
   KEY `bug_id_idx` (`bug_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -972,7 +972,7 @@ CREATE TABLE `bug_field` (
   `value_function` varchar(255) default NULL,
   PRIMARY KEY  (`bug_field_id`),
   KEY `idx_bug_field_name` (`field_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=605 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=605 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1006,7 +1006,7 @@ CREATE TABLE `bug_field_usage` (
   `custom_value_function` varchar(255) default NULL,
   KEY `idx_bug_fu_field_id` (`bug_field_id`),
   KEY `idx_bug_fu_group_id` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1039,7 +1039,7 @@ CREATE TABLE `bug_field_value` (
   KEY `idx_bug_fv_group_id` (`group_id`),
   KEY `idx_bug_fv_value_id` (`value_id`),
   KEY `idx_bug_fv_status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=410 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=410 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1070,7 +1070,7 @@ CREATE TABLE `bug_file` (
   `filetype` text NOT NULL,
   PRIMARY KEY  (`bug_file_id`),
   KEY `bug_id_idx` (`bug_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1096,7 +1096,7 @@ CREATE TABLE `bug_filter` (
   `sql_clause` text NOT NULL,
   `is_active` int(11) NOT NULL default '0',
   PRIMARY KEY  (`filter_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1125,7 +1125,7 @@ CREATE TABLE `bug_history` (
   `type` int(11) default NULL,
   PRIMARY KEY  (`bug_history_id`),
   KEY `idx_bug_history_bug_id` (`bug_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1150,7 +1150,7 @@ CREATE TABLE `bug_notification` (
   `event_id` int(11) NOT NULL default '0',
   `notify` int(11) NOT NULL default '1',
   KEY `user_id_idx` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1176,7 +1176,7 @@ CREATE TABLE `bug_notification_event` (
   `description` varchar(255) default NULL,
   `rank` int(11) NOT NULL default '0',
   KEY `event_id_idx` (`event_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1202,7 +1202,7 @@ CREATE TABLE `bug_notification_role` (
   `description` varchar(255) default NULL,
   `rank` int(11) NOT NULL default '0',
   KEY `role_id_idx` (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1232,7 +1232,7 @@ CREATE TABLE `bug_report` (
   KEY `group_id_idx` (`group_id`),
   KEY `user_id_idx` (`user_id`),
   KEY `scope_idx` (`scope`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1260,7 +1260,7 @@ CREATE TABLE `bug_report_field` (
   `place_result` int(11) default NULL,
   `col_width` int(11) default NULL,
   KEY `profile_id_idx` (`report_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1286,7 +1286,7 @@ CREATE TABLE `bug_task_dependencies` (
   PRIMARY KEY  (`bug_depend_id`),
   KEY `idx_bug_task_dependencies_bug_id` (`bug_id`),
   KEY `idx_bug_task_is_dependent_on_task_id` (`is_dependent_on_task_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1310,7 +1310,7 @@ CREATE TABLE `bug_watcher` (
   `watchee_id` int(11) NOT NULL default '0',
   KEY `user_id_idx` (`user_id`),
   KEY `watchee_id_idx` (`watchee_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1342,7 +1342,7 @@ CREATE TABLE `cross_references` (
   `target_id` varchar(255) NOT NULL default '0',
   `target_gid` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14512 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=14512 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1366,7 +1366,7 @@ CREATE TABLE `cvs_branches` (
   `branch` varchar(64) character set utf8 collate utf8_bin NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `branch` (`branch`)
-) ENGINE=InnoDB AUTO_INCREMENT=689 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=689 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1406,7 +1406,7 @@ CREATE TABLE `cvs_checkins` (
   KEY `fileid` (`fileid`),
   KEY `branchid` (`branchid`),
   KEY `commitid` (`commitid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1431,7 +1431,7 @@ CREATE TABLE `cvs_commits` (
   `whoid` mediumint(9) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `whoid` (`whoid`)
-) ENGINE=InnoDB AUTO_INCREMENT=281956 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=281956 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1456,7 +1456,7 @@ CREATE TABLE `cvs_descs` (
   `hash` bigint(20) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `hash` (`hash`)
-) ENGINE=InnoDB AUTO_INCREMENT=220147 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=220147 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1480,7 +1480,7 @@ CREATE TABLE `cvs_dirs` (
   `dir` varchar(128) character set utf8 collate utf8_bin NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `dir` (`dir`)
-) ENGINE=InnoDB AUTO_INCREMENT=134314 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=134314 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1504,7 +1504,7 @@ CREATE TABLE `cvs_files` (
   `file` varchar(128) character set utf8 collate utf8_bin NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `file` (`file`)
-) ENGINE=InnoDB AUTO_INCREMENT=285080 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=285080 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1528,7 +1528,7 @@ CREATE TABLE `cvs_repositories` (
   `repository` varchar(64) character set utf8 collate utf8_bin NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `repository` (`repository`)
-) ENGINE=InnoDB AUTO_INCREMENT=467 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=467 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1557,7 +1557,7 @@ CREATE TABLE `cvs_tags` (
   KEY `dirid` (`dirid`),
   KEY `fileid` (`fileid`),
   KEY `branchid` (`branchid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1588,7 +1588,7 @@ CREATE TABLE `db_images` (
   `height` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `idx_db_images_group` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1622,7 +1622,7 @@ CREATE TABLE `doc_data` (
   `rank` int(11) NOT NULL default '0',
   PRIMARY KEY  (`docid`),
   KEY `idx_doc_group_doc_group` (`doc_group`)
-) ENGINE=InnoDB AUTO_INCREMENT=2430 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2430 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1648,7 +1648,7 @@ CREATE TABLE `doc_groups` (
   `group_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`doc_group`),
   KEY `idx_doc_groups_group` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3502 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=3502 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1674,7 +1674,7 @@ CREATE TABLE `doc_log` (
   KEY `all_idx` (`user_id`,`docid`),
   KEY `time_idx` (`time`),
   KEY `docid_idx` (`docid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1698,7 +1698,7 @@ CREATE TABLE `feedback` (
   `feedback` text NOT NULL,
   `created_at` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`session_hash`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1724,7 +1724,7 @@ CREATE TABLE `filedownload_log` (
   KEY `all_idx` (`user_id`,`filerelease_id`),
   KEY `time_idx` (`time`),
   KEY `filerelease_id_idx` (`filerelease_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1750,7 +1750,7 @@ CREATE TABLE `filemodule` (
   `recent_filerelease` varchar(20) NOT NULL,
   PRIMARY KEY  (`filemodule_id`),
   KEY `idx_filemodule_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2990 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2990 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1773,7 +1773,7 @@ CREATE TABLE `filemodule_monitor` (
   `filemodule_id` int(11) NOT NULL default '0',
   `user_id` int(11) NOT NULL default '0',
   KEY `idx_filemodule_monitor_id` (`filemodule_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1818,7 +1818,7 @@ CREATE TABLE `filerelease` (
   KEY `unix_box_idx` (`unix_box`),
   KEY `post_time_idx` (`post_time`),
   KEY `idx_release_time` (`release_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1844,7 +1844,7 @@ CREATE TABLE `forge_upgrade_bucket` (
   `end_date` datetime NOT NULL default '0000-00-00 00:00:00',
   `status` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=81 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1877,7 +1877,7 @@ CREATE TABLE `forge_upgrade_log` (
   PRIMARY KEY  (`id`),
   KEY `bucket_id` (`bucket_id`),
   CONSTRAINT `forge_upgrade_log_ibfk_1` FOREIGN KEY (`bucket_id`) REFERENCES `forge_upgrade_bucket` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=197 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=197 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1914,7 +1914,7 @@ CREATE TABLE `forum` (
   KEY `idx_forum_id_date` (`group_forum_id`,`date`),
   KEY `idx_forum_id_date_followup` (`group_forum_id`,`date`,`is_followup_to`),
   KEY `idx_forum_thread_date_followup` (`thread_id`,`date`,`is_followup_to`)
-) ENGINE=InnoDB AUTO_INCREMENT=11029 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=11029 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1937,7 +1937,7 @@ CREATE TABLE `forum_agg_msg_count` (
   `group_forum_id` int(11) NOT NULL,
   `count` int(11) NOT NULL,
   PRIMARY KEY  (`group_forum_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1965,7 +1965,7 @@ CREATE TABLE `forum_group_list` (
   PRIMARY KEY  (`group_forum_id`),
   KEY `idx_forum_group_list_group_id` (`group_id`),
   FULLTEXT KEY `description` (`description`)
-) ENGINE=MyISAM AUTO_INCREMENT=9844 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=9844 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1991,7 +1991,7 @@ CREATE TABLE `forum_monitored_forums` (
   PRIMARY KEY  (`monitor_id`),
   KEY `idx_forum_monitor_thread_id` (`forum_id`),
   KEY `idx_forum_monitor_combo_id` (`forum_id`,`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9661 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=9661 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2016,7 +2016,7 @@ CREATE TABLE `forum_monitored_threads` (
   `thread_id` int(11) NOT NULL default '0',
   `user_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`thread_monitor_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=116 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2041,7 +2041,7 @@ CREATE TABLE `forum_saved_place` (
   `forum_id` int(11) NOT NULL default '0',
   `save_date` int(11) NOT NULL default '0',
   PRIMARY KEY  (`saved_place_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2063,7 +2063,7 @@ DROP TABLE IF EXISTS `forum_thread_id`;
 CREATE TABLE `forum_thread_id` (
   `thread_id` int(11) NOT NULL auto_increment,
   PRIMARY KEY  (`thread_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10155 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=10155 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2091,7 +2091,7 @@ CREATE TABLE `frs_dlstats_agg` (
   KEY `day_idx` (`day`),
   KEY `downloads_http_idx` (`downloads_http`),
   KEY `downloads_ftp_idx` (`downloads_ftp`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2117,7 +2117,7 @@ CREATE TABLE `frs_dlstats_file_agg` (
   KEY `idx_dlstats_file_file_id` (`file_id`),
   KEY `idx_dlstats_file_day` (`day`),
   KEY `idx_dlstats_file_down` (`downloads`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2140,7 +2140,7 @@ CREATE TABLE `frs_dlstats_filetotal_agg` (
   `file_id` int(11) NOT NULL default '0',
   `downloads` int(11) NOT NULL default '0',
   KEY `idx_stats_agr_tmp_fid` (`file_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2166,7 +2166,7 @@ CREATE TABLE `frs_dlstats_group_agg` (
   KEY `group_id_idx` (`group_id`),
   KEY `day_idx` (`day`),
   KEY `downloads_idx` (`downloads`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2189,7 +2189,7 @@ CREATE TABLE `frs_dlstats_grouptotal_agg` (
   `group_id` int(11) NOT NULL default '0',
   `downloads` int(11) NOT NULL default '0',
   KEY `idx_stats_agr_tmp_gid` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2228,7 +2228,7 @@ CREATE TABLE `frs_file` (
   KEY `idx_frs_file_date` (`post_date`),
   KEY `idx_frs_file_processor` (`processor_id`),
   KEY `idx_frs_file_name` (`filename`(45))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2266,7 +2266,7 @@ CREATE TABLE `frs_file_deleted` (
   PRIMARY KEY  (`file_id`),
   KEY `idx_delete_date` (`delete_date`),
   KEY `idx_purge_date` (`purge_date`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2289,7 +2289,7 @@ CREATE TABLE `frs_filetype` (
   `type_id` int(11) NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`type_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2317,7 +2317,7 @@ CREATE TABLE `frs_log` (
   `action_id` int(11) NOT NULL,
   PRIMARY KEY  (`log_id`),
   KEY `idx_frs_log_group_item` (`group_id`,`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2345,7 +2345,7 @@ CREATE TABLE `frs_package` (
   `approve_license` tinyint(1) NOT NULL default '1',
   PRIMARY KEY  (`package_id`),
   KEY `idx_package_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2708 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2708 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2370,7 +2370,7 @@ CREATE TABLE `frs_processor` (
   `rank` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`processor_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10021 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=10021 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2403,7 +2403,7 @@ CREATE TABLE `frs_release` (
   KEY `idx_frs_release_by` (`released_by`),
   KEY `idx_frs_release_date` (`release_date`),
   KEY `idx_frs_release_package` (`package_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9721 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=9721 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2433,7 +2433,7 @@ CREATE TABLE `group_cvs_full_history` (
   KEY `group_id_idx` (`group_id`),
   KEY `user_id_idx` (`user_id`),
   KEY `day_idx` (`day`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2461,7 +2461,7 @@ CREATE TABLE `group_cvs_history` (
   `cvs_adds_wk` int(11) NOT NULL default '0',
   KEY `group_id_idx` (`group_id`),
   KEY `user_name_idx` (`user_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2489,7 +2489,7 @@ CREATE TABLE `group_desc` (
   `desc_type` enum('line','text') NOT NULL default 'text',
   PRIMARY KEY  (`group_desc_id`),
   UNIQUE KEY `desc_name` (`desc_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=106 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2514,7 +2514,7 @@ CREATE TABLE `group_desc_value` (
   `group_desc_id` int(11) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY  (`desc_value_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6799 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=6799 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2542,7 +2542,7 @@ CREATE TABLE `group_history` (
   `date` int(11) default NULL,
   PRIMARY KEY  (`group_history_id`),
   KEY `idx_group_history_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=296535 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=296535 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2575,7 +2575,7 @@ CREATE TABLE `group_svn_full_history` (
   KEY `group_id_idx` (`group_id`),
   KEY `user_id_idx` (`user_id`),
   KEY `day_idx` (`day`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2598,7 +2598,7 @@ CREATE TABLE `group_type` (
   `type_id` int(11) NOT NULL default '0',
   `name` text NOT NULL,
   PRIMARY KEY  (`type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2665,7 +2665,7 @@ CREATE TABLE `groups` (
   KEY `idx_groups_public` (`is_public`),
   KEY `idx_groups_unix` (`unix_group_name`),
   KEY `idx_groups_type` (`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=3195 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=3195 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2689,7 +2689,7 @@ CREATE TABLE `groups_notif_delegation` (
   `ugroup_id` int(11) NOT NULL,
   PRIMARY KEY  (`group_id`,`ugroup_id`),
   KEY `group_id` (`group_id`,`ugroup_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2712,7 +2712,7 @@ CREATE TABLE `groups_notif_delegation_message` (
   `group_id` int(11) NOT NULL default '0',
   `msg_to_requester` text NOT NULL,
   PRIMARY KEY  (`group_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2745,7 +2745,7 @@ CREATE TABLE `image` (
   KEY `image_category_idx` (`image_category`),
   KEY `image_type_idx` (`image_type`),
   KEY `group_id_idx` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2770,7 +2770,7 @@ CREATE TABLE `layouts` (
   `description` text NOT NULL,
   `scope` char(1) NOT NULL default 'S',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2801,7 +2801,7 @@ CREATE TABLE `layouts_contents` (
   `display_preferences` tinyint(1) NOT NULL default '0',
   `content_id` int(11) unsigned NOT NULL default '0',
   KEY `user_id` (`owner_id`,`owner_type`,`layout_id`,`name`,`content_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2826,7 +2826,7 @@ CREATE TABLE `layouts_rows` (
   `rank` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `layout_id` (`layout_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2851,7 +2851,7 @@ CREATE TABLE `layouts_rows_columns` (
   `width` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `layout_row_id` (`layout_row_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2881,7 +2881,7 @@ CREATE TABLE `mail_group_list` (
   `description` text,
   PRIMARY KEY  (`group_list_id`),
   KEY `idx_mail_group_list_group` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=998 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=998 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2913,7 +2913,7 @@ CREATE TABLE `news_bytes` (
   KEY `idx_news_bytes_forum` (`forum_id`),
   KEY `idx_news_bytes_group` (`group_id`),
   KEY `idx_news_bytes_approved` (`is_approved`)
-) ENGINE=InnoDB AUTO_INCREMENT=801 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=801 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2937,7 +2937,7 @@ CREATE TABLE `notifications` (
   `object_id` int(11) NOT NULL default '0',
   `type` varchar(100) NOT NULL,
   PRIMARY KEY  (`user_id`,`object_id`,`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2962,7 +2962,7 @@ CREATE TABLE `owner_layouts` (
   `layout_id` int(11) unsigned NOT NULL default '0',
   `is_default` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`owner_id`,`owner_type`,`layout_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -2997,7 +2997,7 @@ CREATE TABLE `patch` (
   `filetype` varchar(50) NOT NULL,
   PRIMARY KEY  (`patch_id`),
   KEY `idx_patch_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3022,7 +3022,7 @@ CREATE TABLE `patch_category` (
   `category_name` text NOT NULL,
   PRIMARY KEY  (`patch_category_id`),
   KEY `idx_patch_group_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3050,7 +3050,7 @@ CREATE TABLE `patch_history` (
   `date` int(11) default NULL,
   PRIMARY KEY  (`patch_history_id`),
   KEY `idx_patch_history_patch_id` (`patch_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3073,7 +3073,7 @@ CREATE TABLE `patch_status` (
   `patch_status_id` int(11) NOT NULL auto_increment,
   `status_name` text,
   PRIMARY KEY  (`patch_status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3096,7 +3096,7 @@ CREATE TABLE `people_skill` (
   `skill_id` int(11) NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`skill_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3122,7 +3122,7 @@ CREATE TABLE `people_skill_inventory` (
   `skill_level_id` int(11) NOT NULL default '0',
   `skill_year_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`skill_inventory_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=678 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=678 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3145,7 +3145,7 @@ CREATE TABLE `people_skill_level` (
   `skill_level_id` int(11) NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`skill_level_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3168,7 +3168,7 @@ CREATE TABLE `people_skill_year` (
   `skill_year_id` int(11) NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`skill_year_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3192,7 +3192,7 @@ CREATE TABLE `permissions` (
   `object_id` varchar(255) NOT NULL,
   `ugroup_id` int(11) NOT NULL default '0',
   KEY `object_id` (`object_id`(10))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3215,7 +3215,7 @@ CREATE TABLE `permissions_values` (
   `permission_type` text NOT NULL,
   `ugroup_id` int(11) NOT NULL default '0',
   `is_default` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3242,7 +3242,7 @@ CREATE TABLE `plugin` (
   `prj_restricted` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3268,7 +3268,7 @@ CREATE TABLE `plugin_cvstodimensions_log` (
   `user_id` int(11) NOT NULL default '0',
   `state` int(11) NOT NULL default '0',
   `error` varchar(255) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3291,7 +3291,7 @@ CREATE TABLE `plugin_cvstodimensions_modules` (
   `group_id` int(11) NOT NULL default '0',
   `module` varchar(255) NOT NULL,
   `design_part` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3315,7 +3315,7 @@ CREATE TABLE `plugin_cvstodimensions_parameters` (
   `product` varchar(255) NOT NULL,
   `dimensions_db` varchar(255) NOT NULL,
   `status` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3348,7 +3348,7 @@ CREATE TABLE `plugin_docman_approval` (
   PRIMARY KEY  (`table_id`),
   UNIQUE KEY `item_id` (`item_id`,`wiki_version_id`),
   KEY `idx_owner` (`table_owner`,`table_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3379,7 +3379,7 @@ CREATE TABLE `plugin_docman_approval_user` (
   KEY `rank` (`rank`),
   KEY `idx_review` (`reviewer_id`,`table_id`),
   KEY `idx_reviewer` (`reviewer_id`,`table_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3422,7 +3422,7 @@ CREATE TABLE `plugin_docman_item` (
   FULLTEXT KEY `fltxt_title` (`title`),
   FULLTEXT KEY `fltxt_description` (`description`),
   FULLTEXT KEY `fltxt` (`title`,`description`)
-) ENGINE=MyISAM AUTO_INCREMENT=32486 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=32486 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3460,7 +3460,7 @@ CREATE TABLE `plugin_docman_item_deleted` (
   `wiki_page` text,
   `file_is_embedded` int(11) unsigned default NULL,
   PRIMARY KEY  (`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3484,7 +3484,7 @@ CREATE TABLE `plugin_docman_item_lock` (
   `user_id` int(11) NOT NULL default '0',
   `lock_date` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3515,7 +3515,7 @@ CREATE TABLE `plugin_docman_log` (
   KEY `time` (`time`),
   KEY `item_id` (`item_id`),
   KEY `group_id` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3549,7 +3549,7 @@ CREATE TABLE `plugin_docman_metadata` (
   PRIMARY KEY  (`field_id`),
   KEY `idx_name` (`name`(10)),
   KEY `idx_group_id` (`group_id`,`use_it`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3578,7 +3578,7 @@ CREATE TABLE `plugin_docman_metadata_love` (
   KEY `idx_fv_status` (`status`),
   KEY `rank` (`rank`),
   KEY `name` (`name`(10))
-) ENGINE=InnoDB AUTO_INCREMENT=108 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=108 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3601,7 +3601,7 @@ CREATE TABLE `plugin_docman_metadata_love_md` (
   `field_id` int(11) NOT NULL default '0',
   `value_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`field_id`,`value_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3631,7 +3631,7 @@ CREATE TABLE `plugin_docman_metadata_value` (
   FULLTEXT KEY `fltxt` (`valueText`,`valueString`),
   FULLTEXT KEY `fltxt_txt` (`valueText`),
   FULLTEXT KEY `fltxt_str` (`valueString`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3656,7 +3656,7 @@ CREATE TABLE `plugin_docman_project_settings` (
   `use_obsolescence_date` tinyint(4) NOT NULL default '0',
   `use_status` tinyint(4) NOT NULL default '0',
   KEY `group_id` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3690,7 +3690,7 @@ CREATE TABLE `plugin_docman_report` (
   PRIMARY KEY  (`report_id`),
   KEY `group_idx` (`group_id`),
   KEY `user_idx` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3718,7 +3718,7 @@ CREATE TABLE `plugin_docman_report_filter` (
   `value_date2` varchar(32) default NULL,
   `value_date_op` tinyint(2) default NULL,
   KEY `report_label_idx` (`report_id`,`label`(10))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3743,7 +3743,7 @@ CREATE TABLE `plugin_docman_tokens` (
   `url` text NOT NULL,
   `created_at` datetime NOT NULL default '0000-00-00 00:00:00',
   PRIMARY KEY  (`user_id`,`token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3778,7 +3778,7 @@ CREATE TABLE `plugin_docman_version` (
   KEY `item_id` (`item_id`),
   KEY `idx_item_id` (`item_id`),
   FULLTEXT KEY `fltxt` (`label`,`changelog`,`filename`)
-) ENGINE=MyISAM AUTO_INCREMENT=23476 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=23476 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3813,7 +3813,7 @@ CREATE TABLE `plugin_docman_version_deleted` (
   `path` text,
   PRIMARY KEY  (`id`),
   KEY `item_id` (`item_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3840,7 +3840,7 @@ CREATE TABLE `plugin_docman_widget_embedded` (
   `item_id` int(11) unsigned NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3865,7 +3865,7 @@ CREATE TABLE `plugin_git_log` (
   `push_date` datetime NOT NULL,
   `commits_number` int(11) default NULL,
   KEY `idx_repository_user` (`repository_id`,`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3888,7 +3888,7 @@ CREATE TABLE `plugin_git_post_receive_mail` (
   `recipient_mail` varchar(255) NOT NULL,
   `repository_id` int(10) NOT NULL,
   KEY `repository_id` (`repository_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3912,7 +3912,7 @@ CREATE TABLE `plugin_graphontrackers_bar_chart` (
   `field_base` varchar(255) default NULL,
   `field_group` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3943,7 +3943,7 @@ CREATE TABLE `plugin_graphontrackers_chart` (
   PRIMARY KEY  (`id`),
   KEY `report_graphic_id` (`report_graphic_id`),
   KEY `chart_type` (`chart_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=22947 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=22947 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3973,7 +3973,7 @@ CREATE TABLE `plugin_graphontrackers_gantt_chart` (
   `as_of_date` int(11) default NULL,
   `summary` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3996,7 +3996,7 @@ CREATE TABLE `plugin_graphontrackers_pie_chart` (
   `id` int(11) NOT NULL,
   `field_base` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4023,7 +4023,7 @@ CREATE TABLE `plugin_graphontrackers_report_graphic` (
   `description` varchar(255) default NULL,
   `scope` char(1) default NULL,
   PRIMARY KEY  (`report_graphic_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9180 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=9180 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4051,7 +4051,7 @@ CREATE TABLE `plugin_hudson_job` (
   `use_cvs_trigger` tinyint(4) NOT NULL default '0',
   `token` varchar(128) NOT NULL,
   PRIMARY KEY  (`job_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4077,7 +4077,7 @@ CREATE TABLE `plugin_hudson_widget` (
   `owner_type` varchar(1) NOT NULL,
   `job_id` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4100,7 +4100,7 @@ CREATE TABLE `plugin_salome_activatedplugins` (
   `group_id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY  (`group_id`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4124,7 +4124,7 @@ CREATE TABLE `plugin_salome_configuration` (
   `name` varchar(255) NOT NULL,
   `value` tinyint(1) NOT NULL,
   PRIMARY KEY  (`group_id`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4150,7 +4150,7 @@ CREATE TABLE `plugin_salome_proxy` (
   `proxy_password` varchar(128) NOT NULL,
   `active` tinyint(1) NOT NULL,
   PRIMARY KEY  (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4176,7 +4176,7 @@ CREATE TABLE `plugin_serverupdate_upgrade` (
   `success` tinyint(4) NOT NULL default '0',
   `error` text NOT NULL,
   PRIMARY KEY  (`date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4205,7 +4205,7 @@ CREATE TABLE `plugin_svntodimensions_log` (
   `state` int(11) NOT NULL,
   `error` varchar(255) default NULL,
   PRIMARY KEY  (`log_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=215 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=215 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4229,7 +4229,7 @@ CREATE TABLE `plugin_svntodimensions_parameters` (
   `product` varchar(255) NOT NULL,
   `dimensions_db` varchar(255) NOT NULL,
   `status` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4261,7 +4261,7 @@ CREATE TABLE `plugin_userlog_request` (
   KEY `idx_time` (`time`),
   KEY `idx_group_id` (`group_id`),
   KEY `idx_user_id` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4284,7 +4284,7 @@ CREATE TABLE `priority_plugin_hook` (
   `plugin_id` int(11) NOT NULL default '0',
   `hook` varchar(100) NOT NULL,
   `priority` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4310,7 +4310,7 @@ CREATE TABLE `project_assigned_to` (
   PRIMARY KEY  (`project_assigned_id`),
   KEY `idx_project_assigned_to_task_id` (`project_task_id`),
   KEY `idx_project_assigned_to_assigned_to` (`assigned_to_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4338,7 +4338,7 @@ CREATE TABLE `project_cc` (
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (`project_cc_id`),
   KEY `project_id_idx` (`project_task_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4361,7 +4361,7 @@ CREATE TABLE `project_counts_tmp` (
   `group_id` int(11) default NULL,
   `type` text,
   `count` float(8,5) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4384,7 +4384,7 @@ CREATE TABLE `project_counts_weekly_tmp` (
   `group_id` int(11) default NULL,
   `type` text,
   `count` float(8,5) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4410,7 +4410,7 @@ CREATE TABLE `project_dependencies` (
   PRIMARY KEY  (`project_depend_id`),
   KEY `idx_project_dependencies_task_id` (`project_task_id`),
   KEY `idx_project_is_dependent_on_task_id` (`is_dependent_on_task_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4444,7 +4444,7 @@ CREATE TABLE `project_field` (
   `custom` int(11) NOT NULL default '0',
   PRIMARY KEY  (`project_field_id`),
   KEY `idx_project_field_name` (`field_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=104 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=104 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4477,7 +4477,7 @@ CREATE TABLE `project_field_usage` (
   `custom_keep_history` int(11) default NULL,
   KEY `idx_project_fu_field_id` (`project_field_id`),
   KEY `idx_project_fu_group_id` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4510,7 +4510,7 @@ CREATE TABLE `project_field_value` (
   KEY `idx_project_fv_group_id` (`group_id`),
   KEY `idx_project_fv_value_id` (`value_id`),
   KEY `idx_project_fv_status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=135 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4541,7 +4541,7 @@ CREATE TABLE `project_file` (
   `filetype` text NOT NULL,
   PRIMARY KEY  (`project_file_id`),
   KEY `project_task_id_idx` (`project_task_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4569,7 +4569,7 @@ CREATE TABLE `project_group_list` (
   `order_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`group_project_id`),
   KEY `idx_project_group_list_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4597,7 +4597,7 @@ CREATE TABLE `project_history` (
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (`project_history_id`),
   KEY `idx_project_history_task_id` (`project_task_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4622,7 +4622,7 @@ CREATE TABLE `project_metric` (
   `group_id` int(11) NOT NULL,
   PRIMARY KEY  (`ranking`),
   KEY `idx_project_metric_group` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2990 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2990 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4646,7 +4646,7 @@ CREATE TABLE `project_metric_tmp1` (
   `group_id` int(11) NOT NULL,
   `value` float(8,5) default NULL,
   PRIMARY KEY  (`ranking`)
-) ENGINE=InnoDB AUTO_INCREMENT=2990 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2990 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4670,7 +4670,7 @@ CREATE TABLE `project_metric_weekly_tmp1` (
   `group_id` int(11) NOT NULL,
   `value` float(8,5) default NULL,
   PRIMARY KEY  (`ranking`)
-) ENGINE=InnoDB AUTO_INCREMENT=1068 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=1068 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4695,7 +4695,7 @@ CREATE TABLE `project_notification` (
   `event_id` int(11) NOT NULL default '0',
   `notify` int(11) NOT NULL default '1',
   KEY `user_id_idx` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4721,7 +4721,7 @@ CREATE TABLE `project_notification_event` (
   `description` varchar(255) default NULL,
   `rank` int(11) NOT NULL default '0',
   KEY `event_id_idx` (`event_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4747,7 +4747,7 @@ CREATE TABLE `project_notification_role` (
   `description` varchar(255) default NULL,
   `rank` int(11) NOT NULL default '0',
   KEY `role_id_idx` (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4772,7 +4772,7 @@ CREATE TABLE `project_plugin` (
   UNIQUE KEY `project_plugin` (`project_id`,`plugin_id`),
   KEY `project_id_idx` (`project_id`),
   KEY `plugin_id_idx` (`plugin_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4795,7 +4795,7 @@ CREATE TABLE `project_status` (
   `status_id` int(11) NOT NULL auto_increment,
   `status_name` text NOT NULL,
   PRIMARY KEY  (`status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4828,7 +4828,7 @@ CREATE TABLE `project_task` (
   `status_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`project_task_id`),
   KEY `idx_project_task_group_project_id` (`group_project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4852,7 +4852,7 @@ CREATE TABLE `project_watcher` (
   `watchee_id` int(11) NOT NULL default '0',
   KEY `user_id_idx` (`user_id`),
   KEY `watchee_id_idx` (`watchee_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4877,7 +4877,7 @@ CREATE TABLE `project_weekly_metric` (
   `group_id` int(11) NOT NULL,
   PRIMARY KEY  (`ranking`),
   KEY `idx_project_metric_weekly_group` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1068 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=1068 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4907,7 +4907,7 @@ CREATE TABLE `reference` (
   PRIMARY KEY  (`id`),
   KEY `keyword_idx` (`keyword`),
   KEY `scope_idx` (`scope`)
-) ENGINE=InnoDB AUTO_INCREMENT=9592 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=9592 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4933,7 +4933,7 @@ CREATE TABLE `reference_group` (
   `is_active` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `group_id_idx` (`group_id`,`is_active`)
-) ENGINE=InnoDB AUTO_INCREMENT=74323 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=74323 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4960,7 +4960,7 @@ CREATE TABLE `server` (
   `https` text NOT NULL,
   `is_master` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4995,7 +4995,7 @@ CREATE TABLE `service` (
   `is_in_iframe` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`service_id`),
   KEY `idx_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59732 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=59732 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5023,7 +5023,7 @@ CREATE TABLE `session` (
   KEY `idx_session_user_id` (`user_id`),
   KEY `time_idx` (`time`),
   KEY `idx_session_time` (`time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5054,7 +5054,7 @@ CREATE TABLE `snippet` (
   PRIMARY KEY  (`snippet_id`),
   KEY `idx_snippet_language` (`language`),
   KEY `idx_snippet_category` (`category`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5076,7 +5076,7 @@ DROP TABLE IF EXISTS `snippet_category`;
 CREATE TABLE `snippet_category` (
   `category_id` int(11) NOT NULL default '0',
   `category_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5098,7 +5098,7 @@ DROP TABLE IF EXISTS `snippet_language`;
 CREATE TABLE `snippet_language` (
   `language_id` int(11) NOT NULL default '0',
   `language_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5120,7 +5120,7 @@ DROP TABLE IF EXISTS `snippet_license`;
 CREATE TABLE `snippet_license` (
   `license_id` int(11) NOT NULL default '0',
   `license_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5149,7 +5149,7 @@ CREATE TABLE `snippet_package` (
   PRIMARY KEY  (`snippet_package_id`),
   KEY `idx_snippet_package_language` (`language`),
   KEY `idx_snippet_package_category` (`category`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5174,7 +5174,7 @@ CREATE TABLE `snippet_package_item` (
   `snippet_version_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`snippet_package_item_id`),
   KEY `idx_snippet_package_item_pkg_ver` (`snippet_package_version_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5202,7 +5202,7 @@ CREATE TABLE `snippet_package_version` (
   `date` int(11) NOT NULL default '0',
   PRIMARY KEY  (`snippet_package_version_id`),
   KEY `idx_snippet_package_version_pkg_id` (`snippet_package_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5224,7 +5224,7 @@ DROP TABLE IF EXISTS `snippet_type`;
 CREATE TABLE `snippet_type` (
   `type_id` int(11) NOT NULL default '0',
   `type_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5256,7 +5256,7 @@ CREATE TABLE `snippet_version` (
   `filetype` varchar(50) NOT NULL,
   PRIMARY KEY  (`snippet_version_id`),
   KEY `idx_snippet_version_snippet_id` (`snippet_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5278,7 +5278,7 @@ DROP TABLE IF EXISTS `stats_agg_logo_by_day`;
 CREATE TABLE `stats_agg_logo_by_day` (
   `day` int(11) default NULL,
   `count` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5301,7 +5301,7 @@ CREATE TABLE `stats_agg_logo_by_group` (
   `day` int(11) default NULL,
   `group_id` int(11) default NULL,
   `count` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5323,7 +5323,7 @@ DROP TABLE IF EXISTS `stats_agg_pages_by_browser`;
 CREATE TABLE `stats_agg_pages_by_browser` (
   `browser` varchar(8) default NULL,
   `count` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5346,7 +5346,7 @@ CREATE TABLE `stats_agg_pages_by_day` (
   `day` int(11) NOT NULL default '0',
   `count` int(11) NOT NULL default '0',
   KEY `idx_pages_by_day_day` (`day`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5368,7 +5368,7 @@ DROP TABLE IF EXISTS `stats_agg_pages_by_day_old`;
 CREATE TABLE `stats_agg_pages_by_day_old` (
   `day` int(11) default NULL,
   `count` int(11) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5390,7 +5390,7 @@ DROP TABLE IF EXISTS `stats_agg_site_by_day`;
 CREATE TABLE `stats_agg_site_by_day` (
   `day` int(11) NOT NULL default '0',
   `count` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5413,7 +5413,7 @@ CREATE TABLE `stats_agg_site_by_group` (
   `day` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
   `count` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5438,7 +5438,7 @@ CREATE TABLE `stats_agr_filerelease` (
   `downloads` int(11) NOT NULL default '0',
   KEY `idx_stats_agr_tmp_fid` (`filerelease_id`),
   KEY `idx_stats_agr_tmp_gid` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5485,7 +5485,7 @@ CREATE TABLE `stats_agr_project` (
   `svn_checkouts` smallint(6) NOT NULL default '0',
   `svn_access_count` smallint(6) NOT NULL default '0',
   KEY `idx_project_agr_log_group` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5512,7 +5512,7 @@ CREATE TABLE `stats_ftp_downloads` (
   KEY `idx_ftpdl_day` (`day`),
   KEY `idx_ftpdl_fid` (`filerelease_id`),
   KEY `idx_ftpdl_group_id` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5539,7 +5539,7 @@ CREATE TABLE `stats_http_downloads` (
   KEY `idx_httpdl_day` (`day`),
   KEY `idx_httpdl_fid` (`filerelease_id`),
   KEY `idx_httpdl_group_id` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5595,7 +5595,7 @@ CREATE TABLE `stats_project` (
   KEY `idx_archive_project_week` (`week`),
   KEY `idx_archive_project_day` (`day`),
   KEY `idx_archive_project_monthday` (`month`,`day`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5650,7 +5650,7 @@ CREATE TABLE `stats_project_tmp` (
   KEY `idx_project_stats_day` (`day`),
   KEY `idx_project_stats_week` (`week`),
   KEY `idx_project_stats_month` (`month`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5685,7 +5685,7 @@ CREATE TABLE `stats_site` (
   KEY `idx_stats_site_week` (`week`),
   KEY `idx_stats_site_day` (`day`),
   KEY `idx_stats_site_monthday` (`month`,`day`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5717,7 +5717,7 @@ CREATE TABLE `support` (
   `close_date` int(11) NOT NULL default '0',
   PRIMARY KEY  (`support_id`),
   KEY `idx_support_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5743,7 +5743,7 @@ CREATE TABLE `support_canned_responses` (
   `body` text,
   PRIMARY KEY  (`support_canned_id`),
   KEY `idx_support_canned_response_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5768,7 +5768,7 @@ CREATE TABLE `support_category` (
   `category_name` text NOT NULL,
   PRIMARY KEY  (`support_category_id`),
   KEY `idx_support_group_group_id` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5796,7 +5796,7 @@ CREATE TABLE `support_history` (
   `date` int(11) default NULL,
   PRIMARY KEY  (`support_history_id`),
   KEY `idx_support_history_support_id` (`support_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5823,7 +5823,7 @@ CREATE TABLE `support_messages` (
   `body` text,
   PRIMARY KEY  (`support_message_id`),
   KEY `idx_support_messages_support_id` (`support_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5846,7 +5846,7 @@ CREATE TABLE `support_status` (
   `support_status_id` int(11) NOT NULL auto_increment,
   `status_name` text,
   PRIMARY KEY  (`support_status_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5870,7 +5870,7 @@ CREATE TABLE `survey_question_types` (
   `type` text NOT NULL,
   `rank` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5896,7 +5896,7 @@ CREATE TABLE `survey_questions` (
   `question_type` int(11) NOT NULL default '0',
   PRIMARY KEY  (`question_id`),
   KEY `idx_survey_questions_group` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=297 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=297 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5922,7 +5922,7 @@ CREATE TABLE `survey_radio_choices` (
   `radio_choice` text NOT NULL,
   PRIMARY KEY  (`choice_id`),
   KEY `idx_survey_radio_choices_question_id` (`question_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=84 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5947,7 +5947,7 @@ CREATE TABLE `survey_rating_aggregate` (
   `response` float NOT NULL,
   `count` int(11) NOT NULL,
   KEY `idx_survey_rating_aggregate_type_id` (`type`,`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -5974,7 +5974,7 @@ CREATE TABLE `survey_rating_response` (
   `date` int(11) NOT NULL default '0',
   KEY `idx_survey_rating_responses_user_type_id` (`user_id`,`type`,`id`),
   KEY `idx_survey_rating_responses_type_id` (`type`,`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6004,7 +6004,7 @@ CREATE TABLE `survey_responses` (
   KEY `idx_survey_responses_user_survey_question` (`user_id`,`survey_id`,`question_id`),
   KEY `idx_survey_responses_survey_question` (`survey_id`,`question_id`),
   KEY `idx_survey_responses_group_id` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6032,7 +6032,7 @@ CREATE TABLE `surveys` (
   `is_anonymous` int(11) NOT NULL default '0',
   PRIMARY KEY  (`survey_id`),
   KEY `idx_surveys_group` (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6063,7 +6063,7 @@ CREATE TABLE `svn_checkins` (
   UNIQUE KEY `uniq_checkins_idx` (`commitid`,`dirid`,`fileid`),
   KEY `dirid` (`dirid`),
   KEY `fileid` (`fileid`)
-) ENGINE=InnoDB AUTO_INCREMENT=23502093 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=23502093 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6096,7 +6096,7 @@ CREATE TABLE `svn_commits` (
   KEY `revision` (`revision`),
   KEY `idx_search` (`group_id`,`whoid`,`id`),
   FULLTEXT KEY `description` (`description`)
-) ENGINE=MyISAM AUTO_INCREMENT=2153200 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2153200 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6120,7 +6120,7 @@ CREATE TABLE `svn_dirs` (
   `dir` varchar(255) character set utf8 collate utf8_bin NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uniq_dir_idx` (`dir`)
-) ENGINE=InnoDB AUTO_INCREMENT=2667191 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2667191 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6144,7 +6144,7 @@ CREATE TABLE `svn_files` (
   `file` varchar(255) character set utf8 collate utf8_bin NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uniq_file_idx` (`file`)
-) ENGINE=InnoDB AUTO_INCREMENT=2838241 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2838241 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6168,7 +6168,7 @@ CREATE TABLE `svn_repositories` (
   `repository` varchar(255) character set utf8 collate utf8_bin NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uniq_repository_idx` (`repository`)
-) ENGINE=InnoDB AUTO_INCREMENT=2365 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2365 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6198,7 +6198,7 @@ CREATE TABLE `system_event` (
   `end_date` datetime default NULL,
   `log` text,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22872 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=22872 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6222,7 +6222,7 @@ CREATE TABLE `system_events_followers` (
   `emails` text NOT NULL,
   `types` varchar(31) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6246,7 +6246,7 @@ CREATE TABLE `tmp_projs_releases_tmp` (
   `month` int(11) NOT NULL default '0',
   `total_proj` int(11) NOT NULL default '0',
   `total_releases` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6288,7 +6288,7 @@ CREATE TABLE `top_group` (
   KEY `rank_userrank_idx` (`rank_userrank`),
   KEY `rank_forumposts_week_idx` (`rank_forumposts_week`),
   KEY `pageviews_proj_idx` (`pageviews_proj`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6310,7 +6310,7 @@ DROP TABLE IF EXISTS `tracker_idsharing_artifact`;
 CREATE TABLE `tracker_idsharing_artifact` (
   `id` int(11) NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6332,7 +6332,7 @@ DROP TABLE IF EXISTS `tracker_idsharing_tracker`;
 CREATE TABLE `tracker_idsharing_tracker` (
   `id` int(11) NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6359,7 +6359,7 @@ CREATE TABLE `tracker_widget_renderer` (
   `renderer_id` int(11) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6385,7 +6385,7 @@ CREATE TABLE `tracker_workflow_transition_postactions_field_date` (
   `value_type` tinyint(2) default NULL,
   PRIMARY KEY  (`id`),
   KEY `idx_wf_transition_id` (`transition_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6420,7 +6420,7 @@ CREATE TABLE `trove_cat` (
   KEY `parent_idx` (`parent`),
   KEY `root_parent_idx` (`root_parent`),
   KEY `version_idx` (`version`)
-) ENGINE=InnoDB AUTO_INCREMENT=351 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=351 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6448,7 +6448,7 @@ CREATE TABLE `trove_group_link` (
   PRIMARY KEY  (`trove_group_id`),
   KEY `idx_trove_group_link_group_id` (`group_id`),
   KEY `idx_trove_group_link_cat_id` (`trove_cat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23949 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=23949 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6473,7 +6473,7 @@ CREATE TABLE `ugroup` (
   `description` text NOT NULL,
   `group_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`ugroup_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1222 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=1222 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6497,7 +6497,7 @@ CREATE TABLE `ugroup_mapping` (
   `src_ugroup_id` int(11) NOT NULL default '0',
   `dst_ugroup_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`to_group_id`,`src_ugroup_id`,`dst_ugroup_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6519,7 +6519,7 @@ DROP TABLE IF EXISTS `ugroup_user`;
 CREATE TABLE `ugroup_user` (
   `ugroup_id` int(11) NOT NULL default '0',
   `user_id` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6571,7 +6571,7 @@ CREATE TABLE `user` (
   PRIMARY KEY  (`user_id`),
   KEY `idx_user_user` (`status`),
   KEY `idx_user_name` (`user_name`(10))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6598,7 +6598,7 @@ CREATE TABLE `user_access` (
   `last_auth_failure` int(11) NOT NULL default '0',
   `nb_auth_failure` int(11) NOT NULL default '0',
   PRIMARY KEY  (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6624,7 +6624,7 @@ CREATE TABLE `user_bookmarks` (
   `bookmark_title` text,
   PRIMARY KEY  (`bookmark_id`),
   KEY `idx_user_bookmark_user_id` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1830 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=1830 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6665,7 +6665,7 @@ CREATE TABLE `user_group` (
   KEY `forum_flags_idx` (`forum_flags`),
   KEY `project_flags_idx` (`project_flags`),
   KEY `admin_flags_idx` (`admin_flags`)
-) ENGINE=InnoDB AUTO_INCREMENT=29262 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=29262 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6687,7 +6687,7 @@ DROP TABLE IF EXISTS `user_plugin`;
 CREATE TABLE `user_plugin` (
   `user_id` int(11) NOT NULL default '0',
   `plugin_id` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6711,7 +6711,7 @@ CREATE TABLE `user_preferences` (
   `preference_name` varchar(255) NOT NULL,
   `preference_value` text,
   PRIMARY KEY  (`user_id`,`preference_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6738,7 +6738,7 @@ CREATE TABLE `widget_image` (
   `url` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6765,7 +6765,7 @@ CREATE TABLE `widget_rss` (
   `url` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=90 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=90 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6792,7 +6792,7 @@ CREATE TABLE `widget_twitterfollow` (
   `user` text NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6820,7 +6820,7 @@ CREATE TABLE `widget_wikipage` (
   `wiki_page` text,
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6846,7 +6846,7 @@ CREATE TABLE `wiki_attachment` (
   `filesystem_name` varchar(255) default NULL,
   `delete_date` int(11) unsigned default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6875,7 +6875,7 @@ CREATE TABLE `wiki_attachment_deleted` (
   PRIMARY KEY  (`id`),
   KEY `idx_delete_date` (`delete_date`),
   KEY `idx_purge_date` (`purge_date`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6903,7 +6903,7 @@ CREATE TABLE `wiki_attachment_log` (
   KEY `all_idx` (`user_id`,`group_id`),
   KEY `time_idx` (`time`),
   KEY `group_id_idx` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6931,7 +6931,7 @@ CREATE TABLE `wiki_attachment_revision` (
   `mimetype` varchar(255) NOT NULL,
   `size` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3758 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=3758 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6959,7 +6959,7 @@ CREATE TABLE `wiki_group_list` (
   `rank` int(11) NOT NULL default '0',
   `language_id` varchar(17) NOT NULL default 'en_US',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1485 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=1485 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -6983,7 +6983,7 @@ CREATE TABLE `wiki_link` (
   `linkto` int(11) NOT NULL default '0',
   KEY `linkfrom` (`linkfrom`),
   KEY `linkto` (`linkto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7010,7 +7010,7 @@ CREATE TABLE `wiki_log` (
   KEY `all_idx` (`user_id`,`group_id`),
   KEY `time_idx` (`time`),
   KEY `group_id_idx` (`group_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7032,7 +7032,7 @@ DROP TABLE IF EXISTS `wiki_nonempty`;
 CREATE TABLE `wiki_nonempty` (
   `id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7060,7 +7060,7 @@ CREATE TABLE `wiki_page` (
   `cached_html` mediumblob,
   PRIMARY KEY  (`id`),
   KEY `idx_page_group` (`group_id`,`pagename`(10))
-) ENGINE=InnoDB AUTO_INCREMENT=195286 DEFAULT CHARSET=utf8;
+)  AUTO_INCREMENT=195286 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7085,7 +7085,7 @@ CREATE TABLE `wiki_recent` (
   `latestmajor` int(11) default NULL,
   `latestminor` int(11) default NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7111,7 +7111,7 @@ CREATE TABLE `wiki_session` (
   `sess_ip` varchar(15) NOT NULL,
   PRIMARY KEY  (`sess_id`),
   KEY `sess_date` (`sess_date`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -7139,7 +7139,7 @@ CREATE TABLE `wiki_version` (
   `versiondata` mediumtext NOT NULL,
   PRIMARY KEY  (`id`,`version`),
   KEY `mtime` (`mtime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
