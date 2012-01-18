@@ -19,7 +19,7 @@
 require_once('www/project/export/project_export_utils.php');
 
 /**
- * SCM statistics
+ * Render SCM statistics in csv format
  */
 class Statistics_Scm {
 
