@@ -2,8 +2,6 @@
 ##
 ## Copyright (c) Xerox Corporation, Codendi Team, 2001-2010. All rights reserved
 ##
-## This file is a part of Codendi.
-##
 ## Codendi is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
@@ -21,7 +19,7 @@
 ## This script has been written against the Redmine 
 ## see <http://www.redmine.org/projects/redmine/repository/entry/trunk/extra/svn/Redmine.pm>
 
-package Apache::Authn::Codendi;
+package Apache::Authn::Tuleap;
 
 use strict;
 use warnings FATAL => 'all', NONFATAL => 'redefine';
@@ -40,63 +38,63 @@ use APR::Table ();
 
 my @directives = (
   {
-    name => 'CodendiDSN',
+    name => 'TuleapDSN',
     req_override => OR_AUTHCFG,
     args_how => TAKE1,
     errmsg => 'Dsn in format used by Perl DBI. eg: "DBI:Pg:dbname=databasename;host=my.db.server"',
   },
   {
-    name => 'CodendiDbUser',
+    name => 'TuleapDbUser',
     req_override => OR_AUTHCFG,
     args_how => TAKE1,
   },
   {
-    name => 'CodendiDbPass',
+    name => 'TuleapDbPass',
     req_override => OR_AUTHCFG,
     args_how => TAKE1,
   },
 {
-    name => 'CodendiGroupId',
+    name => 'TuleapGroupId',
     req_override => OR_AUTHCFG,
     args_how => TAKE1,
   },
 
   {
-    name => 'CodendiDbWhereClause',
+    name => 'TuleapDbWhereClause',
     req_override => OR_AUTHCFG,
     args_how => TAKE1,
   },
   {
-    name => 'CodendiCacheCredsMax',
+    name => 'TuleapCacheCredsMax',
     req_override => OR_AUTHCFG,
     args_how => TAKE1,
-    errmsg => 'CodendiCacheCredsMax must be decimal number',
+    errmsg => 'TuleapCacheCredsMax must be decimal number',
   },
 );
 
-sub CodendiDSN {
+sub TuleapDSN {
   my ($self, $parms, $arg) = @_;
-  $self->{CodendiDSN} = $arg;
+  $self->{TuleapDSN} = $arg;
   my $query = "SELECT user_name  FROM user, user_group WHERE (user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=?)) AND user_name=? AND user_pw=?";
 
-  $self->{CodendiQuery} = trim($query);
+  $self->{TuleapQuery} = trim($query);
 }
 
-sub CodendiDbUser { set_val('CodendiDbUser', @_); }
-sub CodendiDbPass { set_val('CodendiDbPass', @_); }
-sub CodendiDbWhereClause {
+sub TuleapDbUser { set_val('TuleapDbUser', @_); }
+sub TuleapDbPass { set_val('TuleapDbPass', @_); }
+sub TuleapDbWhereClause {
   my ($self, $parms, $arg) = @_;
-  $self->{CodendiQuery} = trim($self->{CodendiQuery}.($arg ? $arg : "")." ");
+  $self->{TuleapQuery} = trim($self->{TuleapQuery}.($arg ? $arg : "")." ");
 }
-sub CodendiGroupId { set_val('CodendiGroupId', @_); }
+sub TuleapGroupId { set_val('TuleapGroupId', @_); }
 
-sub CodendiCacheCredsMax {
+sub TuleapCacheCredsMax {
   my ($self, $parms, $arg) = @_;
   if ($arg) {
-    $self->{CodendiCachePool} = APR::Pool->new;
-    $self->{CodendiCacheCreds} = APR::Table::make($self->{CodendiCachePool}, $arg);
-    $self->{CodendiCacheCredsCount} = 0;
-    $self->{CodendiCacheCredsMax} = $arg;
+    $self->{TuleapCachePool} = APR::Pool->new;
+    $self->{TuleapCacheCreds} = APR::Table::make($self->{TuleapCachePool}, $arg);
+    $self->{TuleapCacheCredsCount} = 0;
+    $self->{TuleapCacheCredsMax} = $arg;
   }
 }
 
@@ -127,11 +125,11 @@ sub access_handler {
 
 sub authen_handler {
   my $r = shift;
-  my ($res, $Codendi_pass) =  $r->get_basic_auth_pw();
+  my ($res, $tuleap_pass) =  $r->get_basic_auth_pw();
   
   return $res unless $res == OK;
 
-  if (is_allowed($r->user, $Codendi_pass, $r)) {
+  if (is_allowed($r->user, $tuleap_pass, $r)) {
       return OK;
   } else {
       $r->note_auth_failure();
@@ -179,38 +177,38 @@ sub is_public_project {
 # }
 
 sub is_allowed {
-	my $Codendi_user = shift;
-	my $Codendi_pass = shift;
+	my $tuleap_user = shift;
+	my $tuleap_pass = shift;
 	my $r = shift;
 
 	my $project_id  = get_project_identifier($r);
 
-	my $pass_digest = Digest::MD5::md5_hex($Codendi_pass);
+	my $pass_digest = Digest::MD5::md5_hex($tuleap_pass);
 
 	my $cfg = Apache2::Module::get_config(__PACKAGE__, $r->server, $r->per_dir_config);
 	my $usrprojpass;
-	if ($cfg->{CodendiCacheCredsMax}) {
-		$usrprojpass = $cfg->{CodendiCacheCreds}->get($Codendi_user.":".$project_id);
+	if ($cfg->{TuleapCacheCredsMax}) {
+		$usrprojpass = $cfg->{TuleapCacheCreds}->get($tuleap_user.":".$project_id);
 		return 1 if (defined $usrprojpass and ($usrprojpass eq $pass_digest));
 	}
 
-	my $query = $cfg->{CodendiQuery};
+	my $query = $cfg->{TuleapQuery};
 	my $dbh         = connect_database($r);
 	my $sth = $dbh->prepare($query);
-	$sth->execute($project_id, $Codendi_user, $pass_digest);
+	$sth->execute($project_id, $tuleap_user, $pass_digest);
 
         my $ret = $sth->fetchrow_array; 
 
-	if ($cfg->{CodendiCacheCredsMax} and $ret) {
+	if ($cfg->{TuleapCacheCredsMax} and $ret) {
 		if (defined $usrprojpass) {
-			$cfg->{CodendiCacheCreds}->set($Codendi_user.":".$project_id, $pass_digest);
+			$cfg->{TuleapCacheCreds}->set($tuleap_user.":".$project_id, $pass_digest);
 		} else {
-			if ($cfg->{CodendiCacheCredsCount} < $cfg->{CodendiCacheCredsMax}) {
-				$cfg->{CodendiCacheCreds}->set($Codendi_user.":".$project_id, $pass_digest);
-				$cfg->{CodendiCacheCredsCount}++;
+			if ($cfg->{TuleapCacheCredsCount} < $cfg->{TuleapCacheCredsMax}) {
+				$cfg->{TuleapCacheCreds}->set($tuleap_user.":".$project_id, $pass_digest);
+				$cfg->{TuleapCacheCredsCount}++;
 			} else {
-				$cfg->{CodendiCacheCreds}->clear();
-				$cfg->{CodendiCacheCredsCount} = 0;
+				$cfg->{TuleapCacheCreds}->clear();
+				$cfg->{TuleapCacheCredsCount} = 0;
 			}
 		}
 	}
@@ -224,13 +222,13 @@ sub is_allowed {
 sub get_project_identifier {
     my $r = shift;
     my $cfg = Apache2::Module::get_config(__PACKAGE__, $r->server, $r->per_dir_config);
-    return $cfg->{CodendiGroupId};
+    return $cfg->{TuleapGroupId};
 }
 
 sub connect_database {
     my $r = shift;
     my $cfg = Apache2::Module::get_config(__PACKAGE__, $r->server, $r->per_dir_config);
-    my $dbh = DBI->connect($cfg->{CodendiDSN},$cfg->{CodendiDbUser}, $cfg->{CodendiDbPass}, { AutoCommit => 0});
+    my $dbh = DBI->connect($cfg->{TuleapDSN},$cfg->{TuleapDbUser}, $cfg->{TuleapDbPass}, { AutoCommit => 0});
     return $dbh;
 }
 

@@ -408,7 +408,7 @@ class BackendSVNTest extends UnitTestCase {
         $conf = $this->GivenAFullApacheConf();
         //echo '<pre>'.htmlentities($conf).'</pre>';
         
-        $this->assertNoPattern('/PerlLoadModule Apache::Codendi/', $conf);
+        $this->assertNoPattern('/PerlLoadModule Apache::Tuleap/', $conf);
         $this->assertPattern('/AuthMYSQLEnable/', $conf);
         $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
     }
@@ -430,7 +430,7 @@ class BackendSVNTest extends UnitTestCase {
     function testFullApacheConfWithModPerl() {
         $conf = $this->GivenAFullApacheConfWithModPerl();
         
-        $this->assertPattern('/PerlLoadModule Apache::Codendi/', $conf);
+        $this->assertPattern('/PerlLoadModule Apache::Tuleap/', $conf);
         $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
         $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
     }

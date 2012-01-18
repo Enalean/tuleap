@@ -23,20 +23,20 @@ class SVN_Apache_ModPerl extends SVN_Apache {
 
     protected function getHeaders() {
         $ret  = parent::getHeaders();
-        $ret .= 'PerlLoadModule Apache::Codendi'."\n\n";
+        $ret .= 'PerlLoadModule Apache::Tuleap'."\n\n";
         return $ret;
     }
     
     protected function getProjectAuthentication($row) {
         $conf = '';
         $conf .= $this->getCommonAuthentication($row['group_name']);
-        $conf .= "    PerlAccessHandler Apache::Authn::Codendi::access_handler\n";
-        $conf .= "    PerlAuthenHandler Apache::Authn::Codendi::authen_handler\n";
-        $conf .= '    CodendiDSN "DBI:mysql:' . $GLOBALS['sys_dbname'] . ':' . $GLOBALS['sys_dbhost'] . '"' . "\n";
-        $conf .= '    CodendiDbUser "' . $GLOBALS['sys_dbauth_user'] . '"' . "\n";
-        $conf .= '    CodendiDbPass "' . $GLOBALS['sys_dbauth_passwd'] . '"' . "\n";
-        $conf .= '    CodendiGroupId "' . $row['group_id'] . '"' . "\n";
-        $conf .= '    CodendiCacheCredsMax 10' . "\n";
+        $conf .= "    PerlAccessHandler Apache::Authn::Tuleap::access_handler\n";
+        $conf .= "    PerlAuthenHandler Apache::Authn::Tuleap::authen_handler\n";
+        $conf .= '    TuleapDSN "DBI:mysql:' . $GLOBALS['sys_dbname'] . ':' . $GLOBALS['sys_dbhost'] . '"' . "\n";
+        $conf .= '    TuleapDbUser "' . $GLOBALS['sys_dbauth_user'] . '"' . "\n";
+        $conf .= '    TuleapDbPass "' . $GLOBALS['sys_dbauth_passwd'] . '"' . "\n";
+        $conf .= '    TuleapGroupId "' . $row['group_id'] . '"' . "\n";
+        $conf .= '    TuleapCacheCredsMax 10' . "\n";
         return $conf;
     }
     

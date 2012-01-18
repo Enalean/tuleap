@@ -41,7 +41,7 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
     function testGetSVNApacheConfHeadersShouldInsertModPerl() {
         $conf = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         
-        $this->assertPattern('/PerlLoadModule Apache::Codendi/', $conf);
+        $this->assertPattern('/PerlLoadModule Apache::Tuleap/', $conf);
     }
     
     function testGetApacheAuthShouldContainsDefaultValues() {
@@ -56,7 +56,7 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
         $conf = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         
         $this->assertPattern('/PerlAccessHandler/', $conf);
-        $this->assertPattern('/CodendiDSN/', $conf);
+        $this->assertPattern('/TuleapDSN/', $conf);
     }
     
     function testGetApacheAuthShouldNotReferenceAuthMysql() {
@@ -80,7 +80,7 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
         $conf = $this->GivenAFullApacheConf();
         //echo '<pre>'.htmlentities($conf).'</pre>';
         
-        $this->assertPattern('/PerlLoadModule Apache::Codendi/', $conf);
+        $this->assertPattern('/PerlLoadModule Apache::Tuleap/', $conf);
         $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
         $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
     }
