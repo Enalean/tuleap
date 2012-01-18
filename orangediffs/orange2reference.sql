@@ -18,7 +18,7 @@ ALTER TABLE `codendi`.`artifact_report` CHANGE COLUMN `is_default` `is_default` 
 ALTER TABLE `codendi`.`doc_data` CHANGE COLUMN `rank` `rank` INT(11) NOT NULL DEFAULT '0'  AFTER `doc_group` ;
 -- At Orange there VARCHAR(32)
 ALTER TABLE `codendi`.`feedback` CHANGE COLUMN `session_hash` `session_hash` CHAR(32) NOT NULL  ;
-
+-- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`group_type` CHANGE COLUMN `type_id` `type_id` INT(11) NOT NULL  ;
 -- At orange : there is INDEX `group_id` (`group_id` ASC, `ugroup_id` ASC) ;
 ALTER TABLE `codendi`.`groups_notif_delegation` 
@@ -43,7 +43,8 @@ ALTER TABLE `codendi`.`plugin_docman_approval_user` CHANGE COLUMN `reviewer_id` 
 ALTER TABLE `codendi`.`plugin_docman_item` 
 ADD INDEX `search` (`group_id` ASC, `delete_date` ASC, `obsolescence_date` ASC) ;
 -- At Orange there is NOT NULL 'default 0'
--- ADD INDEX `idx_group_id` (`group_id` ASC, `use_it` ASC) ;
+-- At Orange there is ADD INDEX `idx_group_id` (`group_id` ASC, `use_it` ASC) ; 
+-- => do the change, this way the index can be used for queries where the clause doesn't include use_it 
 ALTER TABLE `codendi`.`plugin_docman_metadata` ADD COLUMN `default_value` TEXT NOT NULL  AFTER `special` , CHANGE COLUMN `group_id` `group_id` INT(11) NOT NULL  
 , DROP INDEX `idx_group_id` 
 , ADD INDEX `idx_group_id` (`group_id` ASC) ;
@@ -79,6 +80,7 @@ ALTER TABLE `codendi`.`snippet_license` CHANGE COLUMN `license_id` `license_id` 
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`snippet_type` CHANGE COLUMN `type_id` `type_id` INT(11) NOT NULL  ;
 -- At Orange there is default NULL for process_date and end_date
+-- => do this, our code depends on 0000-00-00 ...
 ALTER TABLE `codendi`.`system_event` CHANGE COLUMN `process_date` `process_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'  , CHANGE COLUMN `end_date` `end_date` DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'  ;
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`ugroup` CHANGE COLUMN `group_id` `group_id` INT(11) NOT NULL  ;
@@ -87,6 +89,7 @@ ALTER TABLE `codendi`.`ugroup_mapping` CHANGE COLUMN `to_group_id` `to_group_id`
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`ugroup_user` CHANGE COLUMN `ugroup_id` `ugroup_id` INT(11) NOT NULL  , CHANGE COLUMN `user_id` `user_id` INT(11) NOT NULL  ;
 -- At Orange default is '/usr/lib/codendi/bin/cvssh-restricted', and last_pwd_date is UNSIGNED
+-- => don't do this??
 ALTER TABLE `codendi`.`user` CHANGE COLUMN `shell` `shell` VARCHAR(50) NOT NULL DEFAULT '/sbin/nologin'  , CHANGE COLUMN `last_pwd_update` `last_pwd_update` INT(11) NOT NULL DEFAULT '0'  ;
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`user_plugin` CHANGE COLUMN `user_id` `user_id` INT(11) NOT NULL  , CHANGE COLUMN `plugin_id` `plugin_id` INT(11) NOT NULL  ;
@@ -106,11 +109,5 @@ ALTER TABLE `codendi`.`wiki_page` CHANGE COLUMN `cached_html` `cached_html` MEDI
 ALTER TABLE `codendi`.`wiki_recent` CHANGE COLUMN `id` `id` INT(11) NOT NULL  ;
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`wiki_version` CHANGE COLUMN `id` `id` INT(11) NOT NULL  , CHANGE COLUMN `version` `version` INT(11) NOT NULL  , CHANGE COLUMN `mtime` `mtime` INT(11) NOT NULL  ;
-
+-- => do this, we likely have no code that uses this
 DROP TABLE IF EXISTS `codendi`.`wiki_session` ;
-
-DROP TABLE IF EXISTS `codendi`.`plugin_userlog_request` ;
-
-DROP TABLE IF EXISTS `codendi`.`plugin_hudson_widget` ;
-
-DROP TABLE IF EXISTS `codendi`.`plugin_hudson_job` ;
