@@ -375,7 +375,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      *
      * @return String
      */
-    public function getBackendStatistics($scmStats) {
+    public function getBackendStatistics(Statistics_Scm $scmStats) {
         $dao = $this->getDao();
         $scmStats->clearContent();
         $scmStats->addLine(array());
