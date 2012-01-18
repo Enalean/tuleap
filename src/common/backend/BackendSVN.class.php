@@ -518,7 +518,7 @@ class BackendSVN extends Backend {
         foreach ($dar as $row) {
             $auth = $factory->get($row);
             $this->collectApacheConfHeaders($auth);
-            $conf .= $auth->getFullConf();
+            $conf .= $auth->getConf();
         }
         return $this->getApacheConfHeaders().$conf;
     }
@@ -534,7 +534,12 @@ class BackendSVN extends Backend {
     }
     
     private function getApacheConfHeaders() {
-        return implode(PHP_EOL, $this->apacheConfHeaders);
+        $headers  = '';
+        $headers .= "# " . $GLOBALS['sys_name'] . " SVN repositories\n";
+        $headers .= "# Custom log file for SVN queries\n";
+        $headers .= 'CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION' . "\n\n";
+        $headers .= implode(PHP_EOL, $this->apacheConfHeaders);
+        return $headers;
     }
     
     /**

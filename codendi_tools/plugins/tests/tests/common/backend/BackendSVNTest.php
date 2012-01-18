@@ -419,12 +419,8 @@ class BackendSVNTest extends UnitTestCase {
         $this->assertNoPattern('/PerlLoadModule Apache::Tuleap/', $conf);
         $this->assertPattern('/AuthMYSQLEnable/', $conf);
         $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
-    }
-    
-    function testFullConfShouldContainOnlyOneCustomLog() {
-        $conf = $this->GivenAFullApacheConfWithModMysql();
-        //echo '<pre>'.htmlentities($conf).'</pre>';
         
+        // There is only one CustomLog
         preg_match_all('/CustomLog/', $conf, $matches);
         $this->assertEqual(1, count($matches[0]));
     }
@@ -449,6 +445,10 @@ class BackendSVNTest extends UnitTestCase {
         $this->assertPattern('/PerlLoadModule Apache::Tuleap/', $conf);
         $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
         $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
+        
+        // There is only one CustomLog
+        preg_match_all('/CustomLog/', $conf, $matches);
+        $this->assertEqual(1, count($matches[0]));
     }
     
 }

@@ -34,31 +34,28 @@ abstract class SVN_Apache {
         $this->project = $project;
     }
     
-    public function getFullConf() {
-        //$conf  = $this->getHeaders();
-        $conf = $this->getOneProject($this->project);
-        return $conf;
+    /**
+     * Return something to be inserted at the top of the svnroot.conf file
+     * 
+     * @return string
+     */
+    public function getHeaders() {
+        return '';
     }
     
     /**
-     *  Define specific log file for SVN queries
+     * Return project location configuration
+     * 
      * @return string 
      */
-    public function getHeaders() {
-        $ret = "# ".$GLOBALS['sys_name']." SVN repositories\n\n";
-        $ret = "# Custom log file for SVN queries\n";
-        $ret = 'CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION'."\n\n";
-        return $ret;
-    }
-        
-    protected function getOneProject($row) {
+    public function getConf() {
         $conf = '';
-        $conf .= "<Location /svnroot/".$row['unix_group_name'].">\n";
+        $conf .= "<Location /svnroot/".$this->project['unix_group_name'].">\n";
         $conf .= "    DAV svn\n";
-        $conf .= "    SVNPath ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."\n";
+        $conf .= "    SVNPath ".$GLOBALS['svn_prefix']."/".$this->project['unix_group_name']."\n";
         $conf .= "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n";
-        $conf .= $this->getProjectAuthorization($row);
-        $conf .= $this->getProjectAuthentication($row);
+        $conf .= $this->getProjectAuthorization($this->project);
+        $conf .= $this->getProjectAuthentication($this->project);
         $conf .= "</Location>\n\n";
         return $conf;
     }

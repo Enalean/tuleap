@@ -21,11 +21,6 @@ require_once 'common/svn/SVN_Apache.class.php';
 
 class LDAP_SVN_Apache extends SVN_Apache {
     /**
-     * @var LDAP_ProjectManager
-     */
-    private $ldapProjectManager;
-    
-    /**
      * @var LDAP
      */
     private $ldap;
