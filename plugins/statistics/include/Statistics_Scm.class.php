@@ -24,11 +24,11 @@ require_once('www/project/export/project_export_utils.php');
  */
 class Statistics_Scm {
 
-    var $separator;
-    var $content;
-    var $startDate;
-    var $endDate;
-    var $groupId = null;
+    public $separator;
+    public $content;
+    public $startDate;
+    public $endDate;
+    public $groupId = null;
 
     /**
      * Constructor of the class
