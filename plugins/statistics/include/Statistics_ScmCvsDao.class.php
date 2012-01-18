@@ -99,7 +99,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
                   AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                 GROUP BY project
-                ORDER BY count DESC";
+                ORDER BY count DESC
+                LIMIT 10";
 
         return $this->retrieve($sql);
     }
@@ -119,7 +120,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                 WHERE day >= DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d')
                   AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                 GROUP BY project
-                ORDER BY count DESC";
+                ORDER BY count DESC
+                LIMIT 10";
 
         return $this->retrieve($sql);
     }
@@ -140,7 +142,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                   AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                   ".$this->groupFilter."
                 GROUP BY user
-                ORDER BY count DESC";
+                ORDER BY count DESC
+                LIMIT 10";
 
         return $this->retrieve($sql);
     }
@@ -161,7 +164,8 @@ class Statistics_ScmCvsDao extends DataAccessObject {
                   AND day < DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                   ".$this->groupFilter."
                 GROUP BY user
-                ORDER BY count DESC";
+                ORDER BY count DESC
+                LIMIT 10";
 
         return $this->retrieve($sql);
     }
