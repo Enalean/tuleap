@@ -27,8 +27,7 @@ require_once('common/dao/ServiceDao.class.php');
 require_once('common/svn/SVNAccessFile.class.php');
 require_once('common/include/Error.class.php');
 require_once('www/svn/svn_utils.php');
-require_once('common/svn/SVN_Apache_ModMysql.class.php');
-require_once('common/svn/SVN_Apache_ModPerl.class.php');
+require_once('common/svn/SVN_Apache_Auth_Factory.class.php');
 require_once('common/include/Config.class.php');
 
 /**
@@ -42,6 +41,8 @@ class BackendSVN extends Backend {
 
     protected $SVNApacheConfNeedUpdate;
 
+    protected $apacheConfHeaders = array();
+    
     /**
      * Constructor
      */
@@ -511,17 +512,31 @@ class BackendSVN extends Backend {
      * @return String
      */
     public function getApacheConf() {
+        $conf = '';
         $dar  = $this->_getServiceDao()->searchActiveUnixGroupByUsedService('svn');
-        return $this->getApacheAuthMod($dar)->getFullConf();
-        /*$auth = new SVN_Apache_Auth_Factory();
+        $factory = $this->getSVNApacheAuthFactory();
         foreach ($dar as $row) {
-            $auth = new SVN_Apache_Auth_Factory();::get($row);
-            $conf .= $auth->getConf();
-        }*/
-        $conf = $this->getApacheAuthMod($dar);
-        return $conf;//$conf->getFullConf();
+            $auth = $factory->get($row);
+            $this->collectApacheConfHeaders($auth);
+            $conf .= $auth->getFullConf();
+        }
+        return $this->getApacheConfHeaders().$conf;
+    }
+    
+    protected function getSVNApacheAuthFactory() {
+        return new SVN_Apache_Auth_Factory();
     }
 
+    private function collectApacheConfHeaders(SVN_Apache $auth) {
+        $headers = $auth->getHeaders();
+        $key     = md5($headers);
+        $this->apacheConfHeaders[$key] = $headers;
+    }
+    
+    private function getApacheConfHeaders() {
+        return implode(PHP_EOL, $this->apacheConfHeaders);
+    }
+    
     /**
      * Return the right Authentication module for SVN/apache
      * 

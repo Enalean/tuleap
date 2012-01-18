@@ -108,6 +108,7 @@ class LdapPlugin extends Plugin {
         
         // Backend SVN
         $this->_addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
+        $this->_addHook(Event::SVN_APACHE_AUTH,    'svn_apache_auth',         false);
 
         // Daily codendi job
         $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
@@ -821,6 +822,15 @@ class LdapPlugin extends Plugin {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             $params['base']  = 'LDAP_BackendSVN';
             $params['setup'] = array($this->getLdap());
+        }
+    }
+    
+    function svn_apache_auth($params) {
+        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            $ldapProjectManager = new LDAP_ProjectManager();
+            if ($ldapProjectManager->hasSVNLDAPAuth($params['project_info']['group_id'])) {
+                $params['svn_apache_auth'] = new LDAP_SVN_Apache($this->getLdap(), $params['project_info']);
+            }
         }
     }
 

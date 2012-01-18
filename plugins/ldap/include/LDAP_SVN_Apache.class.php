@@ -17,9 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/backend/SVN_Apache_ModMysql.class.php';
+require_once 'common/svn/SVN_Apache.class.php';
 
-class LDAP_SVN_Apache extends SVN_Apache_ModMysql {
+class LDAP_SVN_Apache extends SVN_Apache {
     /**
      * @var LDAP_ProjectManager
      */
@@ -35,10 +35,9 @@ class LDAP_SVN_Apache extends SVN_Apache_ModMysql {
      */
     private $ldapUrl = null;
     
-    public function __construct(LDAP $ldap, LDAP_ProjectManager $ldapProjectManager, $projects) {
+    public function __construct(LDAP $ldap, $projects) {
         parent::__construct($projects);
-        $this->ldap               = $ldap;
-        $this->ldapProjectManager = $ldapProjectManager;
+        $this->ldap = $ldap;
     }
     
     /**
@@ -50,18 +49,14 @@ class LDAP_SVN_Apache extends SVN_Apache_ModMysql {
      * @return String
      */
     public function getProjectAuthentication($row) {
-        if ($this->ldapProjectManager->hasSVNLDAPAuth($row['group_id'])) {
-            $conf = '';
-            $conf .= '    AuthType Basic'.PHP_EOL;
-            $conf .= '    AuthBasicProvider ldap'.PHP_EOL;
-            $conf .= '    AuthzLDAPAuthoritative Off'.PHP_EOL;
-            $conf .= '    AuthName "LDAP Subversion Authorization ('.$this->escapeStringForApacheConf($row['group_name']).')"'.PHP_EOL;
-            $conf .= '    AuthLDAPUrl "'.$this->getLDAPServersUrl().'"'.PHP_EOL;
-            $conf .= '    Require valid-user'.PHP_EOL;
-            return $conf;
-        } else {
-            return parent::getProjectAuthentication($row);
-        }
+        $conf = '';
+        $conf .= '    AuthType Basic' . PHP_EOL;
+        $conf .= '    AuthBasicProvider ldap' . PHP_EOL;
+        $conf .= '    AuthzLDAPAuthoritative Off' . PHP_EOL;
+        $conf .= '    AuthName "LDAP Subversion Authorization (' . $this->escapeStringForApacheConf($row['group_name']) . ')"' . PHP_EOL;
+        $conf .= '    AuthLDAPUrl "' . $this->getLDAPServersUrl() . '"' . PHP_EOL;
+        $conf .= '    Require valid-user' . PHP_EOL;
+        return $conf;
     }
     
     /**

@@ -27,6 +27,16 @@ Mock::generate('ServiceDao');
 Mock::generate('LDAP');
 Mock::generate('LDAP_ProjectManager');
 
+class LDAP_BackendSVNTestEventManager extends EventManager {
+    function processEvent($event, $params) {
+        $ldap = new MockLDAP();
+        $ldap->setReturnValue('getLDAPParam', 'ldap://ldap.tuleap.com', array('server'));
+        $ldap->setReturnValue('getLDAPParam', 'dc=tuleap,dc=com', array('dn'));
+        
+        $params['svn_apache_auth'] = new LDAP_SVN_Apache($ldap, $params['project_info']);
+    }
+}
+
 class LDAP_BackendSVNTest extends UnitTestCase {
 
     function setUp() {
@@ -38,7 +48,7 @@ class LDAP_BackendSVNTest extends UnitTestCase {
     }
     
     private function GivenAFullApacheConf() {
-        $backend  = TestHelper::getPartialMock('LDAP_BackendSVN', array('_getServiceDao', 'getLdap', 'getLDAPProjectManager'));
+        $backend  = TestHelper::getPartialMock('LDAP_BackendSVN', array('_getServiceDao', 'getLdap', 'getLDAPProjectManager', 'getSVNApacheAuthFactory'));
         $dar      = TestHelper::arrayToDar(array('unix_group_name' => 'gpig',
                                                  'group_name'      => 'Guinea Pig',
                                                  'group_id'        => 101),
@@ -50,14 +60,9 @@ class LDAP_BackendSVNTest extends UnitTestCase {
         $dao->setReturnValue('searchActiveUnixGroupByUsedService', $dar);
         $backend->setReturnValue('_getServiceDao', $dao);
         
-        $ldap = new MockLDAP();
-        $ldap->setReturnValue('getLDAPParam', 'ldap://ldap.tuleap.com', array('server'));
-        $ldap->setReturnValue('getLDAPParam', 'dc=tuleap,dc=com', array('dn'));
-        $backend->setReturnValue('getLdap', $ldap);
-        
-        $ldapPm = new MockLDAP_ProjectManager();
-        $ldapPm->setReturnValue('hasSVNLDAPAuth', true);
-        $backend->setReturnValue('getLDAPProjectManager', $ldapPm);
+        $factory = TestHelper::getPartialMock('SVN_Apache_Auth_Factory', array('getEventManager'));
+        $factory->setReturnValue('getEventManager', new LDAP_BackendSVNTestEventManager());
+        $backend->setReturnValue('getSVNApacheAuthFactory', $factory);
         
         return $backend->getApacheConf();
     }

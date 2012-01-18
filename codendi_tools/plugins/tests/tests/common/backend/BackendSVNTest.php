@@ -39,6 +39,7 @@ require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');
 require_once('common/svn/SVNAccessFile.class.php');
 Mock::generate('SVNAccessFile');
+Mock::generate('EventManager');
 Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('getUserManager', 
                                                                    'getProjectManager',
                                                                    'getUGroupDao',
@@ -63,6 +64,7 @@ class BackendSVNTest extends UnitTestCase {
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
         $GLOBALS['svn_root_file']             = dirname(__FILE__) . '/_fixtures/etc/httpd/conf.d/codendi_svnroot.conf';
         mkdir($GLOBALS['svn_prefix'] . '/' . 'toto');
+        Config::store();
     }
     
     
@@ -73,6 +75,7 @@ class BackendSVNTest extends UnitTestCase {
         unset($GLOBALS['svn_prefix']);
         unset($GLOBALS['tmp_dir']);
         unset($GLOBALS['svn_root_file']);
+        Config::restore();
     }
     
     function testConstructor() {
@@ -384,7 +387,8 @@ class BackendSVNTest extends UnitTestCase {
             
     }
     
-    private function setupBackendWithTwoGroups($backend) {
+    private function GivenBackendWithTwoGroups() {
+        $backend  = TestHelper::getPartialMock('BackendSVN', array('_getServiceDao', 'getSVNApacheAuthFactory'));
         $dar      = TestHelper::arrayToDar(array('unix_group_name' => 'gpig',
                                                  'group_name'      => 'Guinea Pig',
                                                  'group_id'        => 101),
@@ -395,22 +399,34 @@ class BackendSVNTest extends UnitTestCase {
         $dao = new MockServiceDao();
         $dao->setReturnValue('searchActiveUnixGroupByUsedService', $dar);
         $backend->setReturnValue('_getServiceDao', $dao);
+        
+        $factory = TestHelper::getPartialMock('SVN_Apache_Auth_Factory', array('getEventManager'));
+        $factory->setReturnValue('getEventManager', new MockEventManager());
+        $backend->setReturnValue('getSVNApacheAuthFactory', $factory);
+                
         return $backend;
     }
     
-    private function GivenAFullApacheConf() {
-        $backend  = TestHelper::getPartialMock('BackendSVN', array('_getServiceDao'));
-        $this->setupBackendWithTwoGroups($backend);
+    private function GivenAFullApacheConfWithModMysql() {
+        $backend = $this->GivenBackendWithTwoGroups();
         return $backend->getApacheConf();
     }
     
     function testFullConfShouldWrapEveryThing() {
-        $conf = $this->GivenAFullApacheConf();
+        $conf = $this->GivenAFullApacheConfWithModMysql();
         //echo '<pre>'.htmlentities($conf).'</pre>';
         
         $this->assertNoPattern('/PerlLoadModule Apache::Tuleap/', $conf);
         $this->assertPattern('/AuthMYSQLEnable/', $conf);
         $this->ThenThereAreTwoLocationDefinedGpigAndGarden($conf);
+    }
+    
+    function testFullConfShouldContainOnlyOneCustomLog() {
+        $conf = $this->GivenAFullApacheConfWithModMysql();
+        //echo '<pre>'.htmlentities($conf).'</pre>';
+        
+        preg_match_all('/CustomLog/', $conf, $matches);
+        $this->assertEqual(1, count($matches[0]));
     }
     
     private function ThenThereAreTwoLocationDefinedGpigAndGarden($conf) {
@@ -421,14 +437,14 @@ class BackendSVNTest extends UnitTestCase {
     }
     
     function GivenAFullApacheConfWithModPerl() {
-        $backend  = TestHelper::getPartialMock('BackendSVN', array('_getServiceDao', 'getConfig'));
-        $backend->setReturnValue('getConfig', 'modperl', array(BackendSVN::CONFIG_SVN_AUTH_KEY));
-        $this->setupBackendWithTwoGroups($backend);
+        Config::set(BackendSVN::CONFIG_SVN_AUTH_KEY, BackendSVN::CONFIG_SVN_AUTH_PERL);
+        $backend = $this->GivenBackendWithTwoGroups();
         return $backend->getApacheConf();
     }
     
     function testFullApacheConfWithModPerl() {
         $conf = $this->GivenAFullApacheConfWithModPerl();
+        //echo '<pre>'.htmlentities($conf).'</pre>';
         
         $this->assertPattern('/PerlLoadModule Apache::Tuleap/', $conf);
         $this->assertNoPattern('/AuthMYSQLEnable/', $conf);

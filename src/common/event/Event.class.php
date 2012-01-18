@@ -281,6 +281,8 @@ class Event {
      *   'display_remove_button' => boolean, true if ok false otherwise
      */
     const WIKI_DISPLAY_REMOVE_BUTTON = 'wiki_display_remove_button';
+    
+    const SVN_APACHE_AUTH = 'svn_apache_auth';
 
 }
 ?>

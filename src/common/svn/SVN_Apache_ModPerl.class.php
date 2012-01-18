@@ -21,9 +21,9 @@ require_once 'SVN_Apache.class.php';
 
 class SVN_Apache_ModPerl extends SVN_Apache {
 
-    protected function getHeaders() {
-        $ret  = parent::getHeaders();
-        $ret .= 'PerlLoadModule Apache::Tuleap'."\n\n";
+    public function getHeaders() {
+        //$ret  = parent::getHeaders();
+        $ret = 'PerlLoadModule Apache::Tuleap'."\n\n";
         return $ret;
     }
     

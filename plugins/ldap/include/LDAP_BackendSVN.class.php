@@ -36,10 +36,6 @@ class LDAP_BackendSVN extends BackendSVN {
     public function setUp(LDAP $ldap) {
         $this->ldap = $ldap;
     }
-    
-    protected function getApacheAuthMod($projects) {
-        return new LDAP_SVN_Apache($this->getLDAP(), $this->getLDAPProjectManager(), $projects);
-    }
 
     /**
      * Return a SVNAccessFile group definition based on given userids

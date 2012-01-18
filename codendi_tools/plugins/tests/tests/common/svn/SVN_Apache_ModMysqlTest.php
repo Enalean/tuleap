@@ -17,10 +17,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/svn/SVN_Apache_ModPerl.class.php';
+require_once 'common/svn/SVN_Apache_ModMysql.class.php';
 
 
-class SVN_Apache_ModPerlTest extends UnitTestCase {
+class SVN_Apache_ModMysqlTest extends UnitTestCase {
     
     function setUp() {
         $GLOBALS['svn_prefix'] = '/svnroot';
@@ -30,44 +30,40 @@ class SVN_Apache_ModPerlTest extends UnitTestCase {
         unset($GLOBALS['svn_prefix']);
     }
     
-    /**
-     * @return SVN_Apache_ModPerl
-     */
     private function GivenAnApacheAuthenticationConfForGuineaPigProject() {
         $project_db_row = array('unix_group_name' => 'gpig',
                                 'group_name'      => 'Guinea Pig',
                                 'group_id'        => 101);
-        return new SVN_Apache_ModPerl($project_db_row);
+        $apacheConf = new SVN_Apache_ModMysql($project_db_row);
+        return $apacheConf->getFullConf();
     }
     
-    function testGetSVNApacheConfHeadersShouldInsertModPerl() {
-        $conf = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        
-        $this->assertPattern('/PerlLoadModule Apache::Tuleap/', $conf->getHeaders());
-    }
     
     function testGetApacheAuthShouldContainsDefaultValues() {
-        $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        $conf = $mod->getFullConf();
+        $conf = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         
         $this->assertPattern('/Require valid-user/', $conf);
         $this->assertPattern('/AuthType Basic/', $conf);
         $this->assertPattern('/AuthName "Subversion Authorization \(Guinea Pig\)"/', $conf);
     }
     
-    function testGetApacheAuthShouldSetupPerlAccess() {
-        $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        $conf = $mod->getFullConf();
+    function testGetApacheAuthShouldSetupMysqlAccess() {
+        $conf = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         
-        $this->assertPattern('/PerlAccessHandler/', $conf);
-        $this->assertPattern('/TuleapDSN/', $conf);
+        $this->assertPattern('/AuthMYSQLEnable/', $conf);
+        $this->assertPattern('/AuthMySQLUser/', $conf);
+        $this->assertPattern('/AuthMySQLPassword/', $conf);
+        $this->assertPattern('/AuthMySQLDB/', $conf);
+        $this->assertPattern('/AuthMySQLUserTable/', $conf);
+        $this->assertPattern('/AuthMySQLNameField/', $conf);
+        $this->assertPattern('/AuthMySQLPasswordField/', $conf);
+        $this->assertPattern('/AuthMySQLUserCondition/', $conf);
     }
     
-    function testGetApacheAuthShouldNotReferenceAuthMysql() {
-        $mod  = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
-        $conf = $mod->getFullConf();
+    function testGetApacheAuthShouldNotReferenceAuthPerl() {
+        $conf = $this->GivenAnApacheAuthenticationConfForGuineaPigProject();
         
-        $this->assertNoPattern('/AuthMYSQLEnable/', $conf);
+        $this->assertNoPattern('/PerlAccessHandler/', $conf);
     }
 }
 

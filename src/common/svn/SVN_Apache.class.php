@@ -23,23 +23,20 @@
  * It generates the content of /etc/httpd/conf.d/codendi_svnroot.conf file
  */
 abstract class SVN_Apache {
-    private $projects = array();
+    private $project = array();
     
     /**
-     * Takes an array of DB row containing project query result.
-     * Each row is a project
+     * Takes a project DB row
      * 
-     * @param Array $projects 
+     * @param Array $project 
      */
-    public function __construct($projects) {
-        $this->projects = $projects;
+    public function __construct($project) {
+        $this->project = $project;
     }
     
     public function getFullConf() {
-        $conf = $this->getHeaders();
-        foreach ($this->projects as $row) {
-            $conf .= $this->getOneProject($row);
-        }
+        //$conf  = $this->getHeaders();
+        $conf = $this->getOneProject($this->project);
         return $conf;
     }
     
@@ -47,7 +44,7 @@ abstract class SVN_Apache {
      *  Define specific log file for SVN queries
      * @return string 
      */
-    protected function getHeaders() {
+    public function getHeaders() {
         $ret = "# ".$GLOBALS['sys_name']." SVN repositories\n\n";
         $ret = "# Custom log file for SVN queries\n";
         $ret = 'CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION'."\n\n";
