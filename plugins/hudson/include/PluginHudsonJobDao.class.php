@@ -140,10 +140,10 @@ class PluginHudsonJobDao extends DataAccessObject {
             $condition = "AND group_id = ".$this->da->escapeInt($groupId);
         }
         $sql = "SELECT COUNT(*) AS count
-        FROM plugin_hudson_job
-        JOIN groups USING (group_id)
-        WHERE status = 'A'
-          ".$condition;
+                FROM plugin_hudson_job
+                JOIN groups USING (group_id)
+                WHERE status = 'A'
+                  ".$condition;
         return $this->retrieve($sql);
     }
 
