@@ -16,8 +16,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
-
 /**
  * DAO class for CVS statistics
  */
