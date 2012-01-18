@@ -832,10 +832,25 @@ class LdapPlugin extends Plugin {
      * @return void
      */
     function codendi_daily_start($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap' && $this->getLDAP()->getLDAPParam('daily_sync') == 1) {
+        if ($GLOBALS['sys_auth_type'] == 'ldap' && $this->isDailySyncEnabled()) {
             $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap());
             $ldapQuery->syncAll();
         }
+    }
+    
+    /**
+     * The daily synchro is enabled if the variable is not defined or if the variable is defined to 1
+     * 
+     * This is for backward compatibility (when daily_sync was not yet defined).
+     * 
+     * @return Boolean
+     */
+    protected function isDailySyncEnabled() {
+        $dailySync = $this->getLDAP()->getLDAPParam('daily_sync');
+        if ($dailySync === null || $dailySync == 1) {
+            return true;
+        }
+        return false;
     }
     
     public function system_event_get_types($params) {
