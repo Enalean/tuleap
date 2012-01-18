@@ -29,15 +29,14 @@ ALTER TABLE `codendi`.`permissions` CHANGE COLUMN `ugroup_id` `ugroup_id` INT(11
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`permissions_values` CHANGE COLUMN `ugroup_id` `ugroup_id` INT(11) NOT NULL  ;
 -- At Orange there is NOT NULL 'default 0'
-ALTER TABLE `codendi`.`plugin_docman_approval` CHANGE COLUMN `table_owner` `table_owner` INT(11) UNSIGNED NOT NULL  
-, ADD UNIQUE INDEX `version_id` (`version_id` ASC);
+ALTER TABLE `codendi`.`plugin_docman_approval` CHANGE COLUMN `table_owner` `table_owner` INT(11) UNSIGNED NOT NULL;
 
 ALTER TABLE `codendi`.`plugin_docman_item` 
-ADD INDEX `search` (`group_id` ASC, `delete_date` ASC, `obsolescence_date` ASC) ;
+ADD INDEX `obselescence` (`group_id` ASC, `delete_date` ASC, `obsolescence_date` ASC) ;
 -- At Orange there is NOT NULL 'default 0'
 -- At Orange there is ADD INDEX `idx_group_id` (`group_id` ASC, `use_it` ASC) ; 
 -- => do the change, this way the index can be used for queries where the clause doesn't include use_it 
-ALTER TABLE `codendi`.`plugin_docman_metadata` ADD COLUMN `default_value` TEXT NOT NULL  AFTER `special` , CHANGE COLUMN `group_id` `group_id` INT(11) NOT NULL  
+ALTER TABLE `codendi`.`plugin_docman_metadata` CHANGE COLUMN `group_id` `group_id` INT(11) NOT NULL  
 , DROP INDEX `idx_group_id` 
 , ADD INDEX `idx_group_id` (`group_id` ASC) ;
 -- At Orange there is NOT NULL 'default 0'
