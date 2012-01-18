@@ -20,6 +20,9 @@
 require_once 'SVN_Apache_ModPerl.class.php';
 require_once 'SVN_Apache_ModMysql.class.php';
 
+/**
+ * Manage load of the right SVN_Apache authentication module for given project
+ */
 class SVN_Apache_Auth_Factory {
     
     /**
@@ -35,8 +38,8 @@ class SVN_Apache_Auth_Factory {
         );
         $this->getEventManager()->processEvent(Event::SVN_APACHE_AUTH, $params);
         if (!$svnApacheAuth) {
-            switch (Config::get(BackendSVN::CONFIG_SVN_AUTH_KEY)) {
-                case BackendSVN::CONFIG_SVN_AUTH_PERL:
+            switch (Config::get(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY)) {
+                case SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL:
                     $svnApacheAuth = new SVN_Apache_ModPerl($projectInfo);
                     break;
                 default:

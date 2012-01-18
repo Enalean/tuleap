@@ -27,22 +27,16 @@ require_once('common/dao/ServiceDao.class.php');
 require_once('common/svn/SVNAccessFile.class.php');
 require_once('common/include/Error.class.php');
 require_once('www/svn/svn_utils.php');
-require_once('common/svn/SVN_Apache_Auth_Factory.class.php');
+require_once('common/svn/SVN_Apache_SvnrootConf.class.php');
 require_once('common/include/Config.class.php');
 
 /**
  * Backend class to work on subversion repositories
  */
 class BackendSVN extends Backend {
-    const CONFIG_SVN_AUTH_KEY   = 'sys_auth_svn_mod';
-    const CONFIG_SVN_AUTH_MYSQL = 'modmysql';
-    const CONFIG_SVN_AUTH_PERL  = 'modperl';
-
 
     protected $SVNApacheConfNeedUpdate;
 
-    protected $apacheConfHeaders = array();
-    
     /**
      * Constructor
      */
@@ -493,7 +487,7 @@ class BackendSVN extends Backend {
         $svn_root_file_new = $svn_root_file.".new";
         
         $conf = $this->getApacheConf();
-        if (file_put_contents($svn_root_file_new, $this->getApacheConf()) !== strlen($conf)) {
+        if (file_put_contents($svn_root_file_new, $conf) !== strlen($conf)) {
             $this->log("Error while writing to $svn_root_file_new", Backend::LOG_ERROR);
             return false;
         }
@@ -506,54 +500,15 @@ class BackendSVN extends Backend {
         return $this->installNewFileVersion($svn_root_file_new, $svn_root_file, $svn_root_file_old, true);
     }
 
-    /**
-     * Generate the SVN apache authentication configuration for each project
-     * 
-     * @return String
-     */
-    public function getApacheConf() {
-        $conf = '';
-        $dar  = $this->_getServiceDao()->searchActiveUnixGroupByUsedService('svn');
-        $factory = $this->getSVNApacheAuthFactory();
-        foreach ($dar as $row) {
-            $auth = $factory->get($row);
-            $this->collectApacheConfHeaders($auth);
-            $conf .= $auth->getConf();
-        }
-        return $this->getApacheConfHeaders().$conf;
+    function getApacheConf() {
+        $projects = $this->_getServiceDao()->searchActiveUnixGroupByUsedService('svn');
+        $factory  = $this->getSVNApacheAuthFactory();
+        $conf = new SVN_Apache_SvnrootConf($factory, $projects);
+        return $conf->getFullConf();
     }
     
     protected function getSVNApacheAuthFactory() {
         return new SVN_Apache_Auth_Factory();
-    }
-
-    private function collectApacheConfHeaders(SVN_Apache $auth) {
-        $headers = $auth->getHeaders();
-        $key     = md5($headers);
-        $this->apacheConfHeaders[$key] = $headers;
-    }
-    
-    private function getApacheConfHeaders() {
-        $headers  = '';
-        $headers .= "# " . $GLOBALS['sys_name'] . " SVN repositories\n";
-        $headers .= "# Custom log file for SVN queries\n";
-        $headers .= 'CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION' . "\n\n";
-        $headers .= implode(PHP_EOL, $this->apacheConfHeaders);
-        return $headers;
-    }
-    
-    /**
-     * Return the right Authentication module for SVN/apache
-     * 
-     * @param Array $projects
-     * 
-     * @return SVN_Apache_ModMysql
-     */
-    protected function getApacheAuthMod($projects) {
-        if ($this->getConfig(self::CONFIG_SVN_AUTH_KEY) == self::CONFIG_SVN_AUTH_PERL) {
-            return new SVN_Apache_ModPerl($projects);
-        }
-        return new SVN_Apache_ModMysql($projects);
     }
     
     /**

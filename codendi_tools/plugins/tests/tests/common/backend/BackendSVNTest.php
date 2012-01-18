@@ -433,7 +433,7 @@ class BackendSVNTest extends UnitTestCase {
     }
     
     function GivenAFullApacheConfWithModPerl() {
-        Config::set(BackendSVN::CONFIG_SVN_AUTH_KEY, BackendSVN::CONFIG_SVN_AUTH_PERL);
+        Config::set(SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_KEY, SVN_Apache_SvnrootConf::CONFIG_SVN_AUTH_PERL);
         $backend = $this->GivenBackendWithTwoGroups();
         return $backend->getApacheConf();
     }
