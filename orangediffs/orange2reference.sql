@@ -20,9 +20,6 @@ ALTER TABLE `codendi`.`doc_data` CHANGE COLUMN `rank` `rank` INT(11) NOT NULL DE
 ALTER TABLE `codendi`.`feedback` CHANGE COLUMN `session_hash` `session_hash` CHAR(32) NOT NULL  ;
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`group_type` CHANGE COLUMN `type_id` `type_id` INT(11) NOT NULL  ;
--- At orange : there is INDEX `group_id` (`group_id` ASC, `ugroup_id` ASC) ;
-ALTER TABLE `codendi`.`groups_notif_delegation` 
-DROP INDEX `group_id` ;
 -- At orange there is CHAR(1)
 ALTER TABLE `codendi`.`layouts_contents` CHANGE COLUMN `owner_type` `owner_type` VARCHAR(1) NOT NULL DEFAULT 'u'  ;
 -- At orange there is CHAR(1)
@@ -32,13 +29,8 @@ ALTER TABLE `codendi`.`permissions` CHANGE COLUMN `ugroup_id` `ugroup_id` INT(11
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`permissions_values` CHANGE COLUMN `ugroup_id` `ugroup_id` INT(11) NOT NULL  ;
 -- At Orange there is NOT NULL 'default 0'
--- At Orange there is ADD INDEX `idx_owner` (`table_owner` ASC, `table_id` ASC) 
 ALTER TABLE `codendi`.`plugin_docman_approval` CHANGE COLUMN `table_owner` `table_owner` INT(11) UNSIGNED NOT NULL  
-, ADD UNIQUE INDEX `version_id` (`version_id` ASC) 
-, DROP INDEX `idx_owner` ;
--- At Orange there is ADD INDEX `idx_review` (`reviewer_id` ASC, `table_id` ASC) ;
-ALTER TABLE `codendi`.`plugin_docman_approval_user` CHANGE COLUMN `reviewer_id` `reviewer_id` INT(11) UNSIGNED NOT NULL  
-, DROP INDEX `idx_review` ;
+, ADD UNIQUE INDEX `version_id` (`version_id` ASC);
 
 ALTER TABLE `codendi`.`plugin_docman_item` 
 ADD INDEX `search` (`group_id` ASC, `delete_date` ASC, `obsolescence_date` ASC) ;
@@ -56,9 +48,6 @@ ALTER TABLE `codendi`.`plugin_docman_report` CHANGE COLUMN `group_id` `group_id`
 ALTER TABLE `codendi`.`plugin_docman_report_filter` CHANGE COLUMN `report_id` `report_id` INT(11) NOT NULL  ;
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`plugin_docman_tokens` CHANGE COLUMN `user_id` `user_id` INT(11) NOT NULL  , CHANGE COLUMN `token` `token` CHAR(32) NOT NULL  ;
--- At Orange there is ADD INDEX `idx_item_id` (`item_id` ASC) ;
-ALTER TABLE `codendi`.`plugin_docman_version` 
-DROP INDEX `idx_item_id` ;
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`priority_plugin_hook` CHANGE COLUMN `plugin_id` `plugin_id` INT(11) NOT NULL  , CHANGE COLUMN `priority` `priority` INT(11) NOT NULL  ;
 -- At Tuleap there is NOT NULL 'default 0'
@@ -109,5 +98,5 @@ ALTER TABLE `codendi`.`wiki_page` CHANGE COLUMN `cached_html` `cached_html` MEDI
 ALTER TABLE `codendi`.`wiki_recent` CHANGE COLUMN `id` `id` INT(11) NOT NULL  ;
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `codendi`.`wiki_version` CHANGE COLUMN `id` `id` INT(11) NOT NULL  , CHANGE COLUMN `version` `version` INT(11) NOT NULL  , CHANGE COLUMN `mtime` `mtime` INT(11) NOT NULL  ;
--- => do this, we likely have no code that uses this
+-- => do this???, we likely have no code that uses this
 DROP TABLE IF EXISTS `codendi`.`wiki_session` ;
