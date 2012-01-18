@@ -492,7 +492,7 @@ done
 
 # Core subversion mod_perl
 %{__install} -d $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
-%{__install} src/utils/svn/Codendi.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
+%{__install} src/utils/svn/Tuleap.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
 
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
@@ -830,7 +830,7 @@ fi
 
 %files core-subversion-modperl
 %defattr(-,root,root,-)
-%{perl_vendorlib}/Apache/Codendi.pm
+%{perl_vendorlib}/Apache/Tuleap.pm
 
 %files core-cvs
 %defattr(-,%{APP_USER},%{APP_USER},-)
