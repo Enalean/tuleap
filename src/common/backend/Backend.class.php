@@ -271,13 +271,15 @@ class Backend {
     /** 
      * Create system function to allow mocking in unit tests 
      *
-     * @param string $cmd The command that will be executed
-     * @param Integer $rval command return value
-     * @return mixed Returns the last line of the command output on success, and false 
-     * on failure.
+     * @param string $cmd    The command that will be executed
+     * @param String $output Command last line if command succeeded
+     *
+     * @return Boolean True if command succeeded
      */
-    protected function system($cmd, &$rval=0) {        
-        return system($cmd, $rval);
+    protected function system($cmd, &$output='') {
+        $r = 0;
+        $output = system($cmd, $r);
+        return !$r;
     }
 
     /**
@@ -289,7 +291,7 @@ class Backend {
      * @return boolean true on success or false on failure
      */
     public function log($message, $level = 'info') {
-        return error_log(date('c')." [$level] $message.\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
+        return error_log(date('c')." [$level] $message\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
     }
 
     /** 
