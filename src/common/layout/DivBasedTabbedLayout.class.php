@@ -355,12 +355,13 @@ echo $this->outerTabs($params);
                                                ,'title'=>$Language->getText('include_layout','Help')
                                                ,'selected'=>$selected)));
         
+        /* Specific Orange
         $selected = (boolean) (strstr(getStringFromServer('REQUEST_URI'),'/projects/software/'));
         $sthSelected = ($sthSelected || $selected);
         $menuTree->addChild(new TreeNode(array('link'=>'/projects/software/'
                                                ,'title'=>$Language->getText('include_layout','SoftwareCommunity')
                                                ,'selected'=>$selected)));
-        
+        */
         // Set selected value for 'home' link (this is the selected tab 
         // if no other was previously selected)
         $homeNodeData =& $homeNode->getData();
