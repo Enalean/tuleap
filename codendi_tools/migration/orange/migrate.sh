@@ -16,11 +16,6 @@ sh upgrade.sh 025_docman_approval_table_index && sleep 1
 sh upgrade.sh 027_reset_artifact_permission && sleep 1
 cd -
 
-sudo yum install forgeupgrade
-# config???!!!!
-# create tables *_bucket *_log ???
-mysql -ucodendiadm -p$pass -h$dbhost $dbname < forgeupgrade_tables.sql 
-
 /usr/lib/forgeupgrade/bin/forgeupgrade --config=$configfile update
 
 mysql -ucodendiadm -p$pass -h$dbhost $dbname < orange2reference.sql 
