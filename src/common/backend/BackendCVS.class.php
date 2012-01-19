@@ -141,26 +141,14 @@ class BackendCVS extends Backend {
                 $this->createLockDirIfMissing($project);
             }
 
-            // setup loginfo to make group ownership every commit
-            // commit changes to config file (directly with RCS)
-            $filename= "$cvs_dir/CVSROOT/loginfo";
-            $this->_RcsCheckout($filename);
-            if ($this->useCVSNT()) {
-                // use DEFAULT because there is an issue with multiple 'ALL' lines with cvsnt.
-                system("echo \"DEFAULT chgrp -f -R  $unix_group_name $cvs_dir\" >> $filename");
-            } else {
-                system("echo \"ALL (cat;chgrp -R $unix_group_name $cvs_dir)>/dev/null 2>&1\" >> $filename");
-            }
-            $this->_RcsCommit($filename);
-
             // put an empty line in in the valid tag cache (means no tag yet)
             // (this file is not under version control so don't check it in)
-            system("echo \"\" > $cvs_dir/CVSROOT/val-tags");
-            chmod("$cvs_dir/CVSROOT/val-tags", 0664);
+            $this->system("echo \"\" > $cvs_dir/CVSROOT/val-tags");
+            $this->system("chmod 0664 $cvs_dir/CVSROOT/val-tags");
 
             // set group ownership, http user
-            $this->recurseChownChgrp($cvs_dir, $this->getHTTPUser(), $unix_group_name);
-            system("chmod g+rw $cvs_dir");
+            $this->changeRepoOwnership($cvs_dir, $unix_group_name);
+            $this->system("chmod -R g+rws $cvs_dir");
         }
 
         // Create writer file
@@ -169,9 +157,9 @@ class BackendCVS extends Backend {
         // history was deleted (or not created)? Recreate it.
         if ($this->useCVSNT()) {
             // Create history file (not created by default by cvsnt)
-            system("touch $cvs_dir/CVSROOT/history");
+            $this->system("touch $cvs_dir/CVSROOT/history");
             // Must be writable
-            chmod("$cvs_dir/CVSROOT/history", 0666);
+            $this->system("chmod 0666 $cvs_dir/CVSROOT/history");
             $this->recurseChownChgrp($cvs_dir."/CVSROOT", $this->getHTTPUser(), $unix_group_name);
         }
 
@@ -200,11 +188,11 @@ class BackendCVS extends Backend {
         if (!$this->useCVSNT()) {
             $lockdir=$GLOBALS['cvslock_prefix']."/".$project->getUnixName(false);
             if (! is_dir($lockdir)) {
-                if (!mkdir("$lockdir", 0777)) {
+                if (!mkdir("$lockdir",2777)) {
                     $this->log("Can't create project CVS lock dir: $lockdir", Backend::LOG_ERROR);
                     return false;
                 }
-                chmod("$lockdir", 0777); // overwrite umask value
+                $this->system("chmod 2777 $lockdir"); // overwrite umask value
             }
         }
         return true;
@@ -350,8 +338,8 @@ class BackendCVS extends Backend {
 
                 // Apply cvs watch on only if cvs_watch_mode changed to on
                 $this->CVSWatch($cvs_dir, $unix_group_name, 1);
-                $this->recurseChownChgrp($cvs_dir, $this->getHTTPUser(), $unix_group_name);
-                system("chmod g+rw $cvs_dir");
+                $this->changeRepoOwnership($cvs_dir, $unix_group_name);
+                $this->system("chmod g+rws $cvs_dir");
             }
         } else {
             // Remove notify command if cvs_watch_mode is off.
@@ -382,14 +370,14 @@ class BackendCVS extends Backend {
             return false;
         } else {
             mkdir("$sandbox_dir", 0700);
-            chmod("$sandbox_dir", 0700); // overwrite umask value
+            $this->system("chmod 0700 $sandbox_dir"); // overwrite umask value
         }
         if ($watch_mode == 1) {
-            system("cd $sandbox_dir;cvs -d$cvs_dir co . 2>/dev/null 1>&2;cvs -d$cvs_dir watch on 2>/dev/null 1>&2;");
+            $this->system("cd $sandbox_dir;cvs -d$cvs_dir co . 2>/dev/null 1>&2;cvs -d$cvs_dir watch on 2>/dev/null 1>&2;");
         } else {
-            system("cd $sandbox_dir;cvs -d$cvs_dir co . 2>/dev/null 1>&2;cvs -d$cvs_dir watch off 2>/dev/null 1>&2;");
+            $this->system("cd $sandbox_dir;cvs -d$cvs_dir co . 2>/dev/null 1>&2;cvs -d$cvs_dir watch off 2>/dev/null 1>&2;");
         }
-        system("rm -rf $sandbox_dir;");
+        $this->system("rm -rf $sandbox_dir;");
         return true;
     }
 
@@ -400,8 +388,8 @@ class BackendCVS extends Backend {
      *
      * @return void
      */
-    function _RcsCheckout($file) {
-        system("co -q -l $file");
+    function _RcsCheckout($file, &$output='') {
+        return $this->system("co -q -l $file", $output);
     }
 
     /**
@@ -411,8 +399,8 @@ class BackendCVS extends Backend {
      *
      * @return void
      */
-    function _RcsCommit($file) {
-        system("/usr/bin/rcs -q -l $file; ci -q -m\"Codendi modification\" $file; co -q $file");
+    function _RcsCommit($file, &$output='') {
+        return $this->system("/usr/bin/rcs -q -l $file; ci -q -m\"Codendi modification\" $file; co -q $file", $output);
     }
 
     /**
@@ -431,7 +419,7 @@ class BackendCVS extends Backend {
         $backupfile=$GLOBALS['tmp_dir']."/".$project->getUnixName(false)."-cvs.tgz";
 
         if (is_dir($mydir)) {
-            system("cd ".$GLOBALS['cvs_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
+            $this->system("cd ".$GLOBALS['cvs_prefix']."; tar cfz $backupfile ".$project->getUnixName(false));
             chmod($backupfile, 0600);
             $this->recurseDeleteInDir($mydir);
             rmdir($mydir);
@@ -532,7 +520,7 @@ class BackendCVS extends Backend {
      * @return boolean true if success
      */
     public function setCVSPrivacy($project, $is_private) {
-        $perms = $is_private ? 0770 : 0775;
+        $perms = $is_private ? 2770 : 2775;
         $cvsroot = $GLOBALS['cvs_prefix'] . '/' . $project->getUnixName(false);
         return is_dir($cvsroot) && $this->chmod($cvsroot, $perms);
     }
@@ -575,15 +563,17 @@ class BackendCVS extends Backend {
         }
         if ($need_owner_update) {
             $this->log("Restoring ownership on CVS dir: $cvsroot", Backend::LOG_INFO);
-            $this->recurseChownChgrp($cvsroot, $this->getHTTPUser(), $unix_group_name);
-            $this->chown($cvsroot, $this->getHTTPUser());
-            $this->chgrp($cvsroot, $unix_group_name);
-            system("chmod g+rw $cvsroot");
+            $this->changeRepoOwnership($cvsroot, $unix_group_name);
+            $this->system('chmod g+rws '.$cvsroot);
         }
 
         return true;
     }
-
+   
+    public function changeRepoOwnership($repo_path, $unix_group_name) {
+            return $this->system("chown -R {$this->getHTTPUser()}:{$unix_group_name} $repo_path");
+    }
+    
     /**
      * Deleting files older than 2 hours in /var/run/log_accum that contain 'files'
      * (they have not been deleted due to commit abort)
@@ -592,7 +582,7 @@ class BackendCVS extends Backend {
      */
     public function cleanup() {
         // TODO: test!
-        $filelist = shell_exec("/usr/bin/find ".$GLOBALS['cvs_hook_tmp_dir']." -name \"*.files.*\" -amin +120");
+        $filelist = shell_exec("/usr/bin/find ".$GLOBALS['cvs_hook_tmp_dir'].' -name "*.files.*" -amin +120;');
         $files = explode("\n", $filelist);
         // Remove last (empty) element
         array_pop($files);
