@@ -267,4 +267,4 @@ ALTER TABLE `wiki_version`
     CHANGE COLUMN `version` `version` INT(11) NOT NULL  ,
     CHANGE COLUMN `mtime` `mtime` INT(11) NOT NULL  ;
 -- => do this???, we likely have no code that uses this
-DROP TABLE IF EXISTS `wiki_session` ;
+-- DROP TABLE IF EXISTS `wiki_session` ;
