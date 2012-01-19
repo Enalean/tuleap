@@ -72,7 +72,15 @@ $(RPM_TMP):
 tarball: rpmprep $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
 $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz:
-	cd $(BASE_DIR) && find . \( -path ./rpm -o -path '*/.svn' -o -path ./plugins/tests -o -path ./plugins/maillog -o -path ./plugins/salome \) -prune -o -print  | cpio -o -H ustar --quiet | gzip > $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
+	[ -h $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version) ] || ln -s $(BASE_DIR) $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version)
+	cd $(RPM_TMP)/SOURCES && \
+		find $(PKG_NAME)-$(version)/ \(\
+			 -path '*/.svn' -o\
+			 -path $(PKG_NAME)-$(version)/plugins/tests -o\
+			 -path $(PKG_NAME)-$(version)/plugins/maillog \)\
+			-prune -o -print |\
+		 cpio -o -H ustar --quiet |\
+		 gzip > $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz
 
 ##
 ## Build RPM
