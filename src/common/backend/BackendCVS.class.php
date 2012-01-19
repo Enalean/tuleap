@@ -148,7 +148,7 @@ class BackendCVS extends Backend {
 
             // set group ownership, http user
             $this->changeRepoOwnership($cvs_dir, $unix_group_name);
-            $this->system("chmod -R g+rws $cvs_dir");
+            $this->recursiveSgidOnDirectories($cvs_dir);
         }
 
         // Create writer file
@@ -176,6 +176,10 @@ class BackendCVS extends Backend {
         return true;
     }
 
+    protected function recursiveSgidOnDirectories($root) {
+        $this->system('find '.$root.' -type d -exec chmod g+rws {} \;');
+    }
+    
     /**
      * Create lock dir if missing
      *

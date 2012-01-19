@@ -144,12 +144,10 @@ class BackendCVSTest extends UnitTestCase {
         $this->assertTrue(is_dir($GLOBALS['cvs_prefix']."/TestProj/CVSROOT"),"CVSROOT dir should be created");
         $this->assertTrue(is_file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/loginfo"),"loginfo file should be created");
 
-        $loginfo_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/loginfo");
-        $this->assertTrue(in_array($backend->block_marker_start,$loginfo_file),"loginfo file should contain block");
         $commitinfo_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/commitinfo");
         $this->assertTrue(in_array($backend->block_marker_start,$commitinfo_file),"commitinfo file should contain block");
 
-         $commitinfov_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/commitinfo,v");
+        $commitinfov_file = file($GLOBALS['cvs_prefix']."/TestProj/CVSROOT/commitinfo,v");
         $this->assertTrue(in_array($backend->block_marker_start,$commitinfov_file),"commitinfo file should be under version control and contain block");
        
         $this->assertTrue(is_dir($GLOBALS['cvslock_prefix']."/TestProj"),"CVS lock dir should be created");
@@ -221,7 +219,7 @@ class BackendCVSTest extends UnitTestCase {
     public function testSetCVSPrivacy_private() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
-        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 0770));
+        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 2770));
         
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');
@@ -232,7 +230,7 @@ class BackendCVSTest extends UnitTestCase {
     public function testsetCVSPrivacy_public() {
         $backend = new BackendCVSTestVersion($this);
         $backend->setReturnValue('chmod', true);
-        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 0775));
+        $backend->expectOnce('chmod', array($GLOBALS['cvs_prefix'] . '/' . 'toto', 2775));
         
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'toto');
@@ -282,9 +280,9 @@ class BackendCVSTest extends UnitTestCase {
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/config");
 
         // Test loginfo file
-        $file = file_get_contents($repoPath."/CVSROOT/loginfo");
-        $this->assertTrue(preg_match('#^ALL \(cat;chgrp -R foobar '.$GLOBALS['cvs_prefix']."/foobar\)>/dev/null 2>&1$#m", $file), "CVS loginfo chrp should use new project name");
-        $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
+        //$file = file_get_contents($repoPath."/CVSROOT/loginfo");
+        //$this->assertTrue(preg_match('#^ALL \(cat;chgrp -R foobar '.$GLOBALS['cvs_prefix']."/foobar\)>/dev/null 2>&1$#m", $file), "CVS loginfo chrp should use new project name");
+        //$this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
 
         // Test loginfo file
         $file = file_get_contents($repoPath."/CVSROOT/commitinfo");
@@ -325,11 +323,13 @@ class BackendCVSTest extends UnitTestCase {
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/config");
 
         // Test loginfo file
+        /*
         $file = file_get_contents($repoPath."/CVSROOT/loginfo");
         $this->assertTrue(preg_match('#^ALL \(cat;chgrp -R foobar '.$GLOBALS['cvs_prefix']."/foobar\)>/dev/null 2>&1$#m", $file), "CVS loginfo chrp should use new project name");
         $this->assertTrue(preg_match('#^ALL \('.$GLOBALS['codendi_bin_prefix']."/log_accum -T foobar -C foobar -s %{sVv}\)>/dev/null 2>&1$#m", $file), "CVS loginfo log_accum should use new project name");
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
-
+*/
+        
         // Test loginfo file
         $file = file_get_contents($repoPath."/CVSROOT/commitinfo");
         $this->assertTrue(preg_match('#^ALL '.$GLOBALS['codendi_bin_prefix']."/commit_prep -T foobar -r$#m", $file), "CVS commitinfo should use new project name");
