@@ -14,3 +14,5 @@ echo 'Votre identifiant est ' .$_SERVER['REMOTE_USER'];
 </h1>
 </body>
 </html>
+<?php
+?>
