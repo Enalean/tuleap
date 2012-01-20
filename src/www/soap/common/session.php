@@ -99,6 +99,21 @@ function login($loginname, $passwd) {
 }
 
 /**
+ * loginAs: open session for another user
+ *
+ * @global $Language
+ *
+ * @param string $admin_session_hash
+ * @param string $loginname the user name (login)
+ * 
+ * @return string the user session_hash 
+ */
+function loginAs($admin_session_hash, $loginname) {
+    $server = new Session_SOAPServer($Language, UserManager::instance());
+    return $server->loginAs($admin_session_hash, $loginname);
+}
+
+/**
  * retrieveSession : retrieve a valid Codendi session
  *
  * @global $Language
@@ -150,7 +165,8 @@ $server->addFunction(
             'login',
             'retrieveSession',
             'logout',
-            'getAPIVersion'
+            'getAPIVersion',
+            'loginAs'
             ));
 
 
