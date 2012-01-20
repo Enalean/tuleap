@@ -82,9 +82,14 @@ $sys_cookie_domain = "%sys_default_domain%";
  
 // Machine that hosts the mailing lists (This could also be
 // the mail host if you have enough horsepower & bandwidth)
+// /!\ Developers: if you need to change the default value, it will have an
+//     impact on the source code, grep is your friend.
 $sys_lists_host = "lists.%sys_default_domain%";
 
-// TODO: WTF?
+// If you want you list to belong to a domain different of $sys_lists_host
+// you can define it here.
+// For instance, you might want to send mails with lists.forge.company.com machine
+// but with lists like 'tuleap-devel@company.com' name.
 $sys_lists_domain = $sys_lists_host;
 
 // Fully qualified name
