@@ -355,6 +355,13 @@ echo $this->outerTabs($params);
                                                ,'title'=>$Language->getText('include_layout','Help')
                                                ,'selected'=>$selected)));
         
+        $additional_tabs = array();
+        include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
+        foreach ($additional_tabs as $t) {
+            $sthSelected = ($sthSelected || $t['selected']);
+            $menuTree->addChild(new TreeNode($t));
+        }
+
         // Set selected value for 'home' link (this is the selected tab 
         // if no other was previously selected)
         $homeNodeData =& $homeNode->getData();
