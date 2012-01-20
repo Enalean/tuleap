@@ -510,10 +510,10 @@ do
 		MYSQL="$MYSQL -P$mysql_port"
 		MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
 		;;
-	--mysql-root-password=*)
+	--mysql-root-password)
 		rt_passwd="$2";shift 2
 		;;
-	--mysql-httpd-host=*)
+	--mysql-httpd-host)
 		mysql_httpd_host="$2";shift 2 ;;
 	-h|--help)
 		usage $0 ;;
