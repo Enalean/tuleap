@@ -1,1 +1,0 @@
-alter table plugin_forumml_message add column cached_html mediumtext default null after msg_type;
