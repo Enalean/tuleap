@@ -53,13 +53,9 @@ gem install rspec cucumber capybara selenium
 Environement
 ============
 
-# In your ~/.bashrc
+# add the following lines to your ~/.bashrc and source it
 . $HOME/.rvm/scripts/rvm
 rvm use ruby-1.8.7-head
-
-the test suite is configured to browse https://tuleap-host/ 
-you need to set your hosts file to point to your local vm
-192.168.?.? tuleap-host
 
 Running with webkit (faster selenium)
 =======
