@@ -9,6 +9,6 @@
 
 {block name=main}
 
-<div class="message {if $error}error{/if}">{$message}</div>
+<div class="message {if $error}error{/if}">{$message|escape}</div>
 
 {/block}
