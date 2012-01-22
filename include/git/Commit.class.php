@@ -906,7 +906,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$results = array();
 
 		foreach ($this->treePaths as $path => $hash) {
-			if (preg_match('/' . $pattern . '/i', $path)) {
+			if (preg_match('/' . preg_quote($pattern, '/') . '/i', $path)) {
 				$obj = $this->GetProject()->GetTree($hash);
 				$obj->SetCommit($this);
 				$results[$path] = $obj;
@@ -914,7 +914,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		}
 
 		foreach ($this->blobPaths as $path => $hash) {
-			if (preg_match('/' . $pattern . '/i', $path)) {
+			if (preg_match('/' . preg_quote($pattern, '/') . '/i', $path)) {
 				$obj = $this->GetProject()->GetBlob($hash);
 				$obj->SetCommit($this);
 				$results[$path] = $obj;
@@ -948,7 +948,7 @@ class GitPHP_Commit extends GitPHP_GitObject
 		$args[] = '--ignore-case';
 		$args[] = '-n';
 		$args[] = '-e';
-		$args[] = $pattern;
+		$args[] = '\'' . preg_quote($pattern) . '\'';
 		$args[] = $this->hash;
 
 		$lines = explode("\n", $exe->Execute(GIT_GREP, $args));
