@@ -17,9 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'common/user/UserManager.class.php';
+require_once 'UserManager.class.php';
 
-class Session_SOAPServer {
+class User_SOAPServer {
 
     const PERMISSION_DENIED = "3300";
     private $userManager;
@@ -27,14 +27,23 @@ class Session_SOAPServer {
     public function __construct(UserManager $userManager) {
         $this->userManager = $userManager;
     }
-  
-    public function loginAs($admin_session_hash, $login_name) {
+    
+    public function loginAs($login_name, $admin_session_hash) {
         $user = $this->userManager->getCurrentUser($admin_session_hash);
         if ($user->isSuperUser()) {
-            return $this->userManager->loginAs($login_name);
+            return $this->userManager->login($login_name);
         }
         throw new SoapFault(self::PERMISSION_DENIED, 'Permission denied');
     }
+    
+    /*public function loginAs($login_name, $admin_session_hash) {
+        $user = $this->userManager->getCurrentUser($admin_session_hash);
+        if ($user->isSuperUser()) {
+            $log_as_user = $this->userManager->loginAs($login_name, $admin_session_hash);
+            return $log_as_user->getSessionHash();
+        }
+        throw new SoapFault(self::PERMISSION_DENIED, 'Permission denied');
+    }*/
 }
 
 ?>
