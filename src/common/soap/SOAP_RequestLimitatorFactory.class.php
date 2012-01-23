@@ -20,6 +20,10 @@
 require_once 'SOAP_RequestLimitator.class.php';
 require_once 'dao/SOAP_RequestLimitatorDao.class.php';
 
+/**
+ * Create a SOAP_Limitator wired to the database and configured according to
+ * the configuration (local.inc)
+ */
 class SOAP_RequestLimitatorFactory {
 
     /**
