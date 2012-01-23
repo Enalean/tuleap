@@ -25,6 +25,7 @@ class DataAccessObject {
     /**
     * Private
     * $da stores data access object
+     * @var DataAccess
     */
     var $da;
 

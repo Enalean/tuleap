@@ -18,48 +18,41 @@
  */
 
 require_once 'SOAP_NbRequestsExceedLimit_Exception.class.php';
+require_once 'dao/SOAP_RequestLimitatorDao.class.php';
 
 class SOAP_RequestLimitator {
     private $nbMaxCall;
     private $timeframe;
     
+    private $currentTime;
     private $nbCallToMethod;
     private $firstCallToMethod;
 
-    public function __construct($nbCall, $timeframe) {
+    public function __construct($nbCall, $timeframe, $dao) {
         $this->nbMaxCall      = $nbCall;
         $this->timeframe      = $timeframe;
         
+        $this->dao = $dao;
         $this->nbCallToMethod    = array();
         $this->firstCallToMethod = array();
     }
     
     public function logCallTo($methodName) {
-        $this->logCallToMethod($methodName);
+        $this->currentTime = time();
+        $this->loadDataFor($methodName);
         if ($this->callToMethodExceedsLimit($methodName)) {
-            throw new SOAP_NbRequestsExceedLimit_Exception('stuff');
+            throw new SOAP_NbRequestsExceedLimit_Exception();
         }
+        $this->dao->saveCallToMethod($methodName, $this->currentTime);
     }
     
-    private function logCallToMethod($name) {
-        if (isset($this->nbCallToMethod[$name]) && !$this->delayExpired($name)) {
-            $this->nbCallToMethod[$name]++;
+    private function loadDataFor($name) {
+        $dar = $this->dao->searchFirstCallToMethod($name, ($this->currentTime - $this->timeframe));
+        if ($dar && $dar->rowCount() == 1) {
+            $this->nbCallToMethod[$name] = $this->dao->foundRows();
         } else {
-            $this->initCounters($name);
+            $this->nbCallToMethod[$name] = 0;
         }
-    }
-    
-    private function delayExpired($name) {
-        $timeSinceFirstCall = time() - $this->firstCallToMethod[$name];
-        if ($timeSinceFirstCall >= $this->timeframe) {
-            return true;
-        }
-        return false;
-    }
-    
-    private function initCounters($name) {
-        $this->nbCallToMethod[$name]    = 0;
-        $this->firstCallToMethod[$name] = time();
     }
     
     private function callToMethodExceedsLimit($name) {

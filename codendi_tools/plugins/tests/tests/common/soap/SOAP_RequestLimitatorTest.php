@@ -19,30 +19,74 @@
 
 require_once 'common/soap/SOAP_RequestLimitator.class.php';
 
+Mock::generate('SOAP_RequestLimitatorDao');
+
+/**
+ * Ensure the given value is ~1h ago (from execution time).
+ */
+class AboutOneHourAgoExpectation extends SimpleExpectation {
+    
+    public function test($input) {
+        $oneHourAgo = time() - 3600;
+        $delta = abs($input - $oneHourAgo);
+        if ($delta <= 10) {
+            return true;
+        }
+        return false;
+    }
+    
+    public function testMessage($input) {
+        $now = time();
+        return 'The given value is not ~1 hour ago (Input: '.$input.' => '.date('c', $input).' <=> Now: '.$now.' => '.date('c', $now).')';
+    }
+}
+
 class SOAP_RequestLimitatorTest extends UnitTestCase {
 
+    private function GivenThereWasAlreadyOneCallTheLastHour() {
+        $dao = new MockSOAP_RequestLimitatorDao();
+        $time30minutesAgo = time() - 30*60;
+        $dar = TestHelper::arrayToDar(array('method_name' => 'addProject', 'date' => $time30minutesAgo));
+        // Ensure we search into the db stuff ~1 hour agos  
+        $dao->setReturnValue('searchFirstCallToMethod', $dar, array('addProject', new AboutOneHourAgoExpectation()));
+        $dao->expectOnce('foundRows');
+        $dao->setReturnValue('foundRows', 1);
+        
+        // Ensure the saved value is ~ the current time (more or less 10 sec)
+        $dao->expectOnce('saveCallToMethod', array('addProject', new WithinMarginExpectation(time(), 10)));
+        
+        return $dao;
+    }
+    
     public function testTwoRequestsShouldBeAllowedByConfiguration() {
-        $limitator = new SOAP_RequestLimitator($nb_call = 10, $timeframe = 3600);
-        $limitator->logCallTo('addProject');
+        $dao = $this->GivenThereWasAlreadyOneCallTheLastHour();
+        $limitator = new SOAP_RequestLimitator($nb_call = 10, $timeframe = 3600, $dao);
         $limitator->logCallTo('addProject');
     }
     
     public function testOneRequestIsAllowed() {
-        $limitator = new SOAP_RequestLimitator($nb_call = 1, $timeframe = 3600);
+        $dao = new MockSOAP_RequestLimitatorDao();
+        
+        $dar = new MockDataAccessResult();
+        $dar->setReturnValue('rowCount', 0);
+        $dar->setReturnValue('getRow', null);
+        $dao->setReturnValue('searchFirstCallToMethod', $dar);
+        
+        $dao->expectOnce('saveCallToMethod', array('addProject', '*'));
+        
+        $limitator = new SOAP_RequestLimitator($nb_call = 10, $timeframe = 3600, $dao);
         $limitator->logCallTo('addProject');
     }
     
     public function testTwoRequestsShouldThrowAnException() {
+        $dao = new MockSOAP_RequestLimitatorDao();
+        $time30minutesAgo = time() - 30*60;
+        $dar = TestHelper::arrayToDar(array('method_name' => 'addProject', 'date' => $time30minutesAgo));
+        $dao->setReturnValue('searchFirstCallToMethod', $dar);
+        $dao->setReturnValue('foundRows', 10);
+        
         $this->expectException('SOAP_NbRequestsExceedLimit_Exception');
-        $limitator = new SOAP_RequestLimitator($nb_call = 1, $timeframe = 2);
-        $limitator->logCallTo('addProject');
-        $limitator->logCallTo('addProject');
-    }
-    
-    public function testTwoRequestsAtAllowedRateShouldBeAllowed() {
-        $limitator = new SOAP_RequestLimitator($nb_call = 1, $timeframe = 2);
-        $limitator->logCallTo('addProject');
-        sleep(2);
+        $limitator = new SOAP_RequestLimitator($nb_call = 10, $timeframe = 3600, $dao);
         $limitator->logCallTo('addProject');
     }
 }
