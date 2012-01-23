@@ -64,7 +64,7 @@ class SOAP_RequestLimitatorTest extends UnitTestCase {
         $limitator->logCallTo('addProject');
     }
     
-    public function testOneRequestIsAllowed() {
+    private function GivenThereIsNoPreviousCallStoredInDB() {
         $dao = new MockSOAP_RequestLimitatorDao();
         
         $dar = new MockDataAccessResult();
@@ -74,18 +74,31 @@ class SOAP_RequestLimitatorTest extends UnitTestCase {
         
         $dao->expectOnce('saveCallToMethod', array('addProject', '*'));
         
+        return $dao;
+    }
+    
+    public function testOneRequestIsAllowed() {
+        $dao = $this->GivenThereIsNoPreviousCallStoredInDB();
+        
         $limitator = new SOAP_RequestLimitator($nb_call = 10, $timeframe = 3600, $dao);
         $limitator->logCallTo('addProject');
     }
     
-    public function testTwoRequestsShouldThrowAnException() {
+    private function GivenThereWasAlreadyTenCallToAddProject() {
         $dao = new MockSOAP_RequestLimitatorDao();
+        
         $time30minutesAgo = time() - 30*60;
         $dar = TestHelper::arrayToDar(array('method_name' => 'addProject', 'date' => $time30minutesAgo));
         $dao->setReturnValue('searchFirstCallToMethod', $dar);
         $dao->setReturnValue('foundRows', 10);
         
         $dao->expectOnce('saveCallToMethod', array('addProject', '*'));
+        
+        return $dao;
+    }
+    
+    public function testTwoRequestsShouldThrowAnException() {
+        $dao = $this->GivenThereWasAlreadyTenCallToAddProject();
         
         $this->expectException('SOAP_NbRequestsExceedLimit_Exception');
         $limitator = new SOAP_RequestLimitator($nb_call = 10, $timeframe = 3600, $dao);
