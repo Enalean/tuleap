@@ -489,22 +489,24 @@ class UserManager {
     }
     
     function loginAs($name, $admin_session_hash) {
-        $user = $this->getCurrentUser();
-        
-        if ($user->isSuperUser()) {
-            $user_login_as = $this->_extendedUserDao->getUserByName($name);
-            if (!$this->checkUserStatus($user_login_as->getStatus())) {
-                throw new User_Not_In_Order();
-            }
-            
-            $session_hash = $this->getDao()->createSession(null, null);
-            if (!$session_hash) {
-                throw new Session_Not_Created();
-            }
-        } else {
+        if (! $this->getCurrentUser()->isSuperUser()) {
             throw new User_Not_Authorized();
         }
         
+        $user_login_as = $this->_extendedUserDao->getUserByName($name);
+        if (!$this->checkUserStatus($user_login_as->getStatus())) {
+            throw new User_Not_In_Order();
+        }        
+        return $this->createSession($user_login_as);
+    }
+
+    private function createSession($user) {
+        $now = $_SERVER['REQUEST_TIME'];
+        $session_hash = $this->getDao()->createSession($user->getId(), $now);
+        if (!$session_hash) {
+            throw new Session_Not_Created();
+        }
+        return $session_hash;
     }
     
     function checkUserStatus($status, $allowpending = false) {

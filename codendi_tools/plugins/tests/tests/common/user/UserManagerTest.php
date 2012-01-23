@@ -487,6 +487,28 @@ class UserManagerTest extends UnitTestCase {
         $um->loginAs('Clooney', $admin_session_hash);
     }
     
+    function testLoginAsCreatesASessionAndReturnsASessionHash() {
+        $um = UserManager::instance();
+        $admin_session_hash = 'adminsessionhash';
+        $adminUser = new MockUser($this);
+        $adminUser->setReturnValue('isSuperUser', true);
+        $um->_currentuser = $adminUser;
+        
+        $userLoginAs = new MockUser($this);
+        $userLoginAs->setReturnValue('getStatus', 'A');
+        
+        $dao = new MockExtendedUserDao();
+        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
+        
+        $um->_extendedUserDao = $dao;
+        $user_dao = new MockUserDao($this);
+        $user_dao->setReturnValue('createSession', 'session_hash', array($userLoginAs->getId(), $_SERVER['REQUEST_TIME']));
+        $um->_userdao = $user_dao;
+        $session_hash = $um->loginAs('Clooney', $admin_session_hash);
+        $this->assertEqual($session_hash, 'session_hash');
+        
+    }
+    
     function testSuspenedUserGetSession() {
         
         $cm               = new MockCookieManager($this);
