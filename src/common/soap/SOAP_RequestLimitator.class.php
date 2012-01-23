@@ -20,46 +20,76 @@
 require_once 'SOAP_NbRequestsExceedLimit_Exception.class.php';
 require_once 'dao/SOAP_RequestLimitatorDao.class.php';
 
+/**
+ * Record and verify that a SOAP method is called in the quota range.
+ * The quota is defined with a number of call per timeframe (for instance 10
+ * call per hours).
+ */
 class SOAP_RequestLimitator {
     private $nbMaxCall;
     private $timeframe;
+    /**
+     * @var SOAP_RequestLimitatorDao
+     */
+    private $dao;
     
     private $currentTime;
     private $nbCallToMethod;
     private $firstCallToMethod;
 
-    public function __construct($nbCall, $timeframe, $dao) {
-        $this->nbMaxCall      = $nbCall;
-        $this->timeframe      = $timeframe;
+    /**
+     * Constructor
+     * 
+     * @param Integer                  $nbCall    Maximum number of call allowed
+     * @param Integer                  $timeframe Time during which $nbCall applies
+     * @param SOAP_RequestLimitatorDao $dao       Data access object
+     */
+    public function __construct($nbCall, $timeframe, SOAP_RequestLimitatorDao $dao) {
+        $this->nbMaxCall = $nbCall;
+        $this->timeframe = $timeframe;
+        $this->dao       = $dao;
         
-        $this->dao = $dao;
         $this->nbCallToMethod    = array();
         $this->firstCallToMethod = array();
     }
     
+    /**
+     * Save a call to a method name, throw an exception if quota is exceeded
+     * 
+     * @param String $methodName
+     * @throws SOAP_NbRequestsExceedLimit_Exception 
+     */
     public function logCallTo($methodName) {
         $this->currentTime = time();
         $this->loadDataFor($methodName);
-        if ($this->callToMethodExceedsLimit($methodName)) {
+        $this->dao->saveCallToMethod($methodName, $this->currentTime);
+        $this->checkIfMethodExceedsLimits($methodName);
+    }
+    
+    /**
+     * Load data from the DB
+     * 
+     * @param String $methodName 
+     */
+    private function loadDataFor($methodName) {
+        $dar = $this->dao->searchFirstCallToMethod($methodName, ($this->currentTime - $this->timeframe));
+        if ($dar && $dar->rowCount() == 1) {
+            $this->nbCallToMethod[$methodName] = $this->dao->foundRows();
+        } else {
+            $this->nbCallToMethod[$methodName] = 0;
+        }
+    }
+    
+    /**
+     * Verify if amount of method call respect limits
+     * 
+     * @param String $methodName
+     * @throws SOAP_NbRequestsExceedLimit_Exception 
+     */
+    private function checkIfMethodExceedsLimits($methodName) {
+        if ($this->nbCallToMethod[$methodName] >= $this->nbMaxCall) {
             throw new SOAP_NbRequestsExceedLimit_Exception();
         }
-        $this->dao->saveCallToMethod($methodName, $this->currentTime);
-    }
-    
-    private function loadDataFor($name) {
-        $dar = $this->dao->searchFirstCallToMethod($name, ($this->currentTime - $this->timeframe));
-        if ($dar && $dar->rowCount() == 1) {
-            $this->nbCallToMethod[$name] = $this->dao->foundRows();
-        } else {
-            $this->nbCallToMethod[$name] = 0;
-        }
-    }
-    
-    private function callToMethodExceedsLimit($name) {
-        if ($this->nbCallToMethod[$name] >= $this->nbMaxCall) {
-            return true;
-        }
-        return false;
     }
 }
 

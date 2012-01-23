@@ -85,6 +85,8 @@ class SOAP_RequestLimitatorTest extends UnitTestCase {
         $dao->setReturnValue('searchFirstCallToMethod', $dar);
         $dao->setReturnValue('foundRows', 10);
         
+        $dao->expectOnce('saveCallToMethod', array('addProject', '*'));
+        
         $this->expectException('SOAP_NbRequestsExceedLimit_Exception');
         $limitator = new SOAP_RequestLimitator($nb_call = 10, $timeframe = 3600, $dao);
         $limitator->logCallTo('addProject');

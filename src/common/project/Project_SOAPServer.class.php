@@ -81,6 +81,7 @@ class Project_SOAPServer {
      * * 3102, Invalid short name
      * * 3103, Invalid full name
      * * 3104, Project is not a template
+     * * 4000, SOAP Call Quota exceeded (you created to much project during the last hour, according to configuration)
      * 
      * @param String  $sessionKey      Session key of the desired project admin
      * @param String  $adminSessionKey Session key of a site admin

@@ -27,6 +27,8 @@ require_once 'dao/SOAP_RequestLimitatorDao.class.php';
 class SOAP_RequestLimitatorFactory {
 
     /**
+     * Returns a Limitator object
+     * 
      * @return SOAP_RequestLimitator
      */
     function getLimitator() {
