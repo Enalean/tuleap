@@ -22,7 +22,7 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 class SOAP_RequestLimitatorDao extends DataAccessObject {
     
     public function searchFirstCallToMethod($name, $delay) {
-        $sql = 'SELECT * '.
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS * '.
                ' FROM soap_call_counter'.
                ' WHERE method_name = '.$this->da->quoteSmart($name).
                ' AND date >= '.$this->da->escapeInt($delay).

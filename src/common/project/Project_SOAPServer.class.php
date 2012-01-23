@@ -19,6 +19,7 @@
 require_once 'ProjectManager.class.php';
 require_once 'ProjectCreator.class.php';
 require_once 'www/include/account.php';
+require_once 'common/soap/SOAP_RequestLimitator.class.php';
 
 /**
  * Wrapper for project related SOAP methods
@@ -42,10 +43,16 @@ class Project_SOAPServer {
      */
     private $userManager;
 
-    public function __construct(ProjectManager $projectManager, ProjectCreator $projectCreator, UserManager $userManager) {
+    /**
+     * @var SOAP_RequestLimitator 
+     */
+    private $limitator;
+
+    public function __construct(ProjectManager $projectManager, ProjectCreator $projectCreator, UserManager $userManager, SOAP_RequestLimitator $limitator) {
         $this->projectManager = $projectManager;
         $this->projectCreator = $projectCreator;
-        $this->userManager = $userManager;
+        $this->userManager    = $userManager;
+        $this->limitator      = $limitator;
     }
 
     /**
@@ -89,6 +96,7 @@ class Project_SOAPServer {
         $requester = $this->continueSession($sessionKey);
         $template  = $this->getTemplateById($templateId, $requester);
         try {
+            $this->limitator->logCallTo('addProject');
             return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
         } catch (Exception $e) {
             throw new SoapFault((string) $e->getCode(), $e->getMessage());

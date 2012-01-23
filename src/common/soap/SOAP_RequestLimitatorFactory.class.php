@@ -17,9 +17,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class SOAP_NbRequestsExceedLimit_Exception extends Exception {
-    public function __construct($message = 'The number of SOAP call exceeded quota.') {
-        parent::__construct($message, '4000');
+require_once 'SOAP_RequestLimitator.class.php';
+require_once 'dao/SOAP_RequestLimitatorDao.class.php';
+
+class SOAP_RequestLimitatorFactory {
+    /**
+     * @return SOAP_RequestLimitator
+     */
+    function getLimitator() {
+        return new SOAP_RequestLimitator(50, 3600, new SOAP_RequestLimitatorDao());
     }
 }
 
