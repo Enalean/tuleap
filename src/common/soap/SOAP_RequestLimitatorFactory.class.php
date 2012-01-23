@@ -21,11 +21,12 @@ require_once 'SOAP_RequestLimitator.class.php';
 require_once 'dao/SOAP_RequestLimitatorDao.class.php';
 
 class SOAP_RequestLimitatorFactory {
+
     /**
      * @return SOAP_RequestLimitator
      */
     function getLimitator() {
-        return new SOAP_RequestLimitator(50, 3600, new SOAP_RequestLimitatorDao());
+        return new SOAP_RequestLimitator(Config::get('sys_nb_sensitive_soap_call_per_hour'), 3600, new SOAP_RequestLimitatorDao());
     }
 }
 
