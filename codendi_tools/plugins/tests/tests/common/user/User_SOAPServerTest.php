@@ -21,7 +21,7 @@ require_once 'common/soap/Session_SOAPServer.class.php';
 Mock::generate('UserManager');
 Mock::generate('User');
 
-class Session_SOAPServerTest extends UnitTestCase {
+class User_SOAPServerTest extends UnitTestCase {
     private $admin_session_hash = 'ghjghjgj';
     private $user_name = 'johan';
     private $userSessionsHash = 'qmslgfjqmsljfhqsmljhqziojfijhzr';
@@ -34,10 +34,10 @@ class Session_SOAPServerTest extends UnitTestCase {
         $user->setReturnValue('isSuperUser', true);
         $userManager->setReturnValue('getCurrentUser', $user, array($this->admin_session_hash));
         
-        $userManager->setReturnValue('login', $this->userSessionsHash, array($this->user_name));
+        //$userManager->setReturnValue('login', $this->userSessionsHash, array($this->user_name));
 
-        $server = new Session_SOAPServer($userManager);
-        $this->assertEqual($this->userSessionsHash, $server->loginAs($this->admin_session_hash, $this->user_name));
+        //$server = new Session_SOAPServer($userManager);
+        $this->assertEqual($this->userSessionsHash, $userManager->loginAs($this->admin_session_hash, $this->user_name));
     }
     
     public function testReturnsSoapFaultIfAdminSessionHashNotValid() {
@@ -48,8 +48,9 @@ class Session_SOAPServerTest extends UnitTestCase {
         $userManager->setReturnValue('getCurrentUser', $user, array($this->admin_session_hash));
         
         $this->expectException('SoapFault');
-        $server = new Session_SOAPServer($userManager);
-        $server->loginAs($this->admin_session_hash, $this->user_name);
+        //$server = new Session_SOAPServer($userManager);
+        //$server->loginAs($this->admin_session_hash, $this->user_name);
+        $userManager->loginAs($this->admin_session_hash, $this->user_name);
     }
 }
 

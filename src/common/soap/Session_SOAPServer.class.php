@@ -31,7 +31,7 @@ class Session_SOAPServer {
     public function loginAs($admin_session_hash, $login_name) {
         $user = $this->userManager->getCurrentUser($admin_session_hash);
         if ($user->isSuperUser()) {
-            return $this->userManager->login($login_name);
+            return $this->userManager->loginAs($login_name);
         }
         throw new SoapFault(self::PERMISSION_DENIED, 'Permission denied');
     }

@@ -509,6 +509,10 @@ class UserManager {
         return $this->_currentuser;
     }
     
+    function loginAs($admin_session_hash, $name) {
+        return $name_session_hash;
+    }
+    
     /**
      * Force the login of the user.
      *

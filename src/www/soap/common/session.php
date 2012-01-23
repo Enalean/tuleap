@@ -109,8 +109,10 @@ function login($loginname, $passwd) {
  * @return string the user session_hash 
  */
 function loginAs($admin_session_hash, $loginname) {
-    $server = new Session_SOAPServer($Language, UserManager::instance());
-    return $server->loginAs($admin_session_hash, $loginname);
+    $user = UserManager::instance()->loginAs($admin_session_hash, $loginname);
+    //$server = new Session_SOAPServer($Language, UserManager::instance());
+    //return $server->loginAs($admin_session_hash, $loginname);
+    return $user;
 }
 
 /**
