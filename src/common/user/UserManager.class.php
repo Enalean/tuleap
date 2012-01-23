@@ -22,6 +22,9 @@ require_once('common/user/User.class.php');
 require_once('common/dao/UserDao.class.php');
 require_once('common/dao/WikiDao.class.php');
 require_once('common/session/Codendi_Session.class.php');
+require_once('User_Not_Authorized.class.php');
+require_once('User_Not_In_Order.class.php');
+require_once('Session_Not_Created.class.php');
 
 class UserManager {
     
@@ -30,8 +33,10 @@ class UserManager {
     var $_userid_byldapid = array();
     var $_userdao         = null;
     var $_currentuser     = null;
+    public $_extendedUserDao = null;
     
     protected function __construct() {
+        $this->_extendedUserDao = new ExtendedUserDao();
     }
     
     protected static $_instance;
@@ -400,36 +405,10 @@ class UserManager {
                 //We retrieve the user access information  to test on it
                 $accessInfo = $this->getUserAccessInfo($this->_currentuser);
                 if ($auth_success) {
-                    $allowed = false;
                     //Check the status
                     $status  = $this->_currentuser->getStatus();
-                    if (($status == 'A') || ($status == 'R') || 
-                        ($allowpending && ($status == 'V' || $status == 'W' ||
-                            ($GLOBALS['sys_user_approval']==0 && $status == 'P')))) {
-                        $allowed =  true;
-                    } else {
-                        if ($status == 'S') { 
-                            //acount suspended
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_suspended'));
-                            $allowed =  false;
-                        }
-                        if (($GLOBALS['sys_user_approval']==0 && ($status == 'P' || $status == 'V' || $status == 'W'))||
-                            ($GLOBALS['sys_user_approval']==1 && ($status == 'V' || $status == 'W'))) { 
-                            //account pending
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_pending'));
-                            $allowed =  false;
-                        } 
-                        if ($status == 'D') { 
-                            //account deleted
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_deleted'));
-                            $allowed =  false;
-                        }
-                        if (($status != 'A')&&($status != 'R')) {
-                            //unacceptable account flag
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_not_active'));
-                            $allowed =  false;
-                        }
-                    }
+                    $allowed = $this->checkUserStatus($status, $allowpending);
+                    
                     if ($allowed) {
                         //Check that password is not expired
                         if ($password_lifetime = $this->_getPasswordLifetime()) {
@@ -510,141 +489,55 @@ class UserManager {
     }
     
     function loginAs($name, $admin_session_hash) {
-        $logged_in = false;
-        $now = $_SERVER['REQUEST_TIME'];
-        
-        $auth_success     = false;
-        $auth_user_id     = null;
-        $auth_user_status = null;        
-        
-        $user = $this->userManager->getCurrentUser($admin_session_hash);
+        $user = $this->getCurrentUser();
         
         if ($user->isSuperUser()) {
-            //If nobody answer success, look for the user into the db
-            if ($auth_success || ($dar = $this->getDao()->searchByUserName($name))) {
-                if ($auth_success || ($row = $dar->getRow())) {
-                    if ($auth_success) {
-                        $this->_currentuser = $this->getUserById($auth_user_id);
-                    } else {
-                        $this->_currentuser = $this->getUserInstanceFromRow($row);
-                            //We have the good user, but check that he is allowed to connect
-                            $auth_success = true;
-                            $params = array('user_id'           => $this->_currentuser->getId(),
-                                            'allow_codendi_login' => &$auth_success);
-                            $em->processEvent('session_after_login', $params);
-                    }
-                    //We retrieve the user access information  to test on it
-                    $accessInfo = $this->getUserAccessInfo($this->_currentuser);
-                    if ($auth_success) {
-                        $allowed = false;
-                        //Check the status
-                        $status  = $this->_currentuser->getStatus();
-                        if (($status == 'A') || ($status == 'R') || 
-                            ($allowpending && ($status == 'V' || $status == 'W' ||
-                                ($GLOBALS['sys_user_approval']==0 && $status == 'P')))) {
-                            $allowed =  true;
-                        } else {
-                            if ($status == 'S') { 
-                                //acount suspended
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_suspended'));
-                                $allowed =  false;
-                            }
-                            if (($GLOBALS['sys_user_approval']==0 && ($status == 'P' || $status == 'V' || $status == 'W'))||
-                                ($GLOBALS['sys_user_approval']==1 && ($status == 'V' || $status == 'W'))) { 
-                                //account pending
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_pending'));
-                                $allowed =  false;
-                            } 
-                            if ($status == 'D') { 
-                                //account deleted
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_deleted'));
-                                $allowed =  false;
-                            }
-                            if (($status != 'A')&&($status != 'R')) {
-                                //unacceptable account flag
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_not_active'));
-                                $allowed =  false;
-                            }
-                        }
-                        if ($allowed) {
-                            //Check that password is not expired
-                            if ($password_lifetime = $this->_getPasswordLifetime()) {
-                                $expired = false;
-                                $expiration_date = $now - 3600 * 24 * $password_lifetime;
-                                $warning_date = $expiration_date + 3600 * 24 * 10; //Warns 10 days before
-                                
-                                if ($this->_currentuser->getLastPwdUpdate() < $expiration_date) {
-                                    $expired = true;
-                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session', 'expired_password'));
-                                } else {
-                                    //warn the user that its password will expire
-                                    if ($this->_currentuser->getLastPwdUpdate() < $warning_date) {
-                                        $GLOBALS['Response']->addFeedback(
-                                            'warning', 
-                                            $GLOBALS['Language']->getText(
-                                                'include_session', 
-                                                'password_will_expire', 
-                                                ceil(($this->_currentuser->getLastPwdUpdate() - $expiration_date) / ( 3600 * 24 ))
-                                            )
-                                        );
-                                    }
-                                }
-                                //The password is expired. Redirect the user.
-                                if ($expired) {
-                                    $GLOBALS['Response']->redirect('/account/change_pw.php?user_id='.$this->_currentuser->getId());
-                                }
-                            }
-                            //Create the session
-                            if ($session_hash = $this->getDao()->createSession($this->_currentuser->getId(), $now)) {
-                                $logged_in = true;
-                                $this->_currentuser->setSessionHash($session_hash);
-                                
-                                // If permanent login configured then cookie expires in one year from now
-                                $expire = 0;
-                                if ($this->_currentuser->getStickyLogin()) {
-                                    $expire = $now + $this->_getSessionLifetime();
-                                }
-                                $this->_getCookieManager()->setCookie('session_hash', $session_hash, $expire);
-                                
-                                // Populate response with details about login attempts.
-                                //
-                                // Always display the last succefull log-in. But if there was errors (number of
-                                // bad attempts > 0) display the number of bad attempts and the last
-                                // error. Moreover, in case of errors, messages are displayed as warning
-                                // instead of info.
-                                $level = 'info';
-                                if($accessInfo['nb_auth_failure'] > 0) {
-                                    $level = 'warning';
-                                    $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_last_failure').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $accessInfo['last_auth_failure']));
-                                    $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_nb_failure').' '.$accessInfo['nb_auth_failure']);
-                                }
-                                // Display nothing if no previous record.
-                                if($accessInfo['last_auth_success'] > 0) {
-                                    $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText('include_menu', 'auth_prev_success').' '.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $accessInfo['last_auth_success']));
-                                }
-                            }
-                        }
-                    } else {
-                        //invalid password or user_name
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','invalid_pwd'));
-                        $this->getDao()->storeLoginFailure($name, $now);
-                        //Add a delay when use login fail.
-                        //The delay is 2 sec/nb of bad attempt.
-                        sleep(2 * $accessInfo['nb_auth_failure']);
-                    }
-                }
+            $user_login_as = $this->_extendedUserDao->getUserByName($name);
+            if (!$this->checkUserStatus($user_login_as->getStatus())) {
+                throw new User_Not_In_Order();
             }
-        }
-        if (!$logged_in) {
-            $this->_currentuser = $this->_getUserInstanceFromRow(array('user_id' => 0));
+            
+            $session_hash = $this->getDao()->createSession(null, null);
+            if (!$session_hash) {
+                throw new Session_Not_Created();
+            }
+        } else {
+            throw new User_Not_Authorized();
         }
         
-        //cache the user
-        $this->_users[$this->_currentuser->getId()] = $this->_currentuser;
-        $this->_userid_bynames[$this->_currentuser->getUserName()] = $this->_currentuser->getId();
-        return $this->_currentuser;
-        /*$log_as_user = $this->login($name, '');
-        return $log_as_user;*/
+    }
+    
+    function checkUserStatus($status, $allowpending = false) {
+        
+        $allowed = false;
+        if (($status == 'A') || ($status == 'R') ||
+            ($allowpending && ($status == 'V' || $status == 'W' ||
+                ($GLOBALS['sys_user_approval']==0 && $status == 'P')))) {
+            $allowed =  true;
+        } else {
+            if ($status == 'S') {
+                //acount suspended
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_suspended'));
+                $allowed =  false;
+            }
+            if (($GLOBALS['sys_user_approval']==0 && ($status == 'P' || $status == 'V' || $status == 'W'))||
+                ($GLOBALS['sys_user_approval']==1 && ($status == 'V' || $status == 'W'))) {
+                //account pending
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_pending'));
+                $allowed =  false;
+            }
+            if ($status == 'D') {
+                //account deleted
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_deleted'));
+                $allowed =  false;
+            }
+            if (($status != 'A')&&($status != 'R')) {
+                //unacceptable account flag
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_not_active'));
+                $allowed =  false;
+            }
+        }
+        return $allowed;
     }
     
     /**

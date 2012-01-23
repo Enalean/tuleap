@@ -4,6 +4,8 @@ require_once('common/user/User.class.php');
 Mock::generate('User');
 require_once('common/dao/UserDao.class.php');
 Mock::generate('UserDao');
+require_once('common/user/dao/ExtendedUserDao.class.php');
+Mock::generate('ExtendedUserDao');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 require_once('common/include/Response.class.php');
@@ -416,8 +418,77 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnReference('getDao', $dao);
         $this->assertReference($userAnonymous, $um->login('user_123', 'bad_pwd', 0));
     }
+    
+    /*function testLoginAsCreatesASessionAndReturnsASessionHash()  {
+        $admin_session_hash = 'adminsessionhash';
+        $login_as_user_name = 'user_123';
+        $dao = new MockUserDao($this);
+        $um = UserManager::instance();
+        $user = new MockUser($this);
+        $um->_currentuser = $user;
+//        $user->setReturnValue('isSuperUser', true);
+        
+//        $um->setReturnValue('checkUserStatus', true);
+        $dao->expectOnce('createSession');
+        $um->loginAs($login_as_user_name, $admin_session_hash);
+    }*/
+    
+    function testLoginAsReturnsAnExceptionWhenNotCallByTheSuperUser() {
+        
+        $um = UserManager::instance();
+        $admin_session_hash = 'adminsessionhash';
+        $adminUser = new MockUser($this);
+        $um->_currentuser = $adminUser;
+        $adminUser->setReturnValue('isSuperUser', false);
+        
+        $this->expectException('User_Not_Authorized');
+        $um->loginAs('toto', $admin_session_hash);
+    }
+    
+    function testLoginAsReturnsAnExceptionWhenAccountIsNotInOrder() {
+        $um = UserManager::instance();
+        $admin_session_hash = 'adminsessionhash';
+        $adminUser = new MockUser($this);
+        $adminUser->setReturnValue('isSuperUser', true);
+        $um->_currentuser = $adminUser;
+        
+        $userLoginAs = new MockUser($this);
+        $userLoginAs->setReturnValue('getStatus', 'D');
+        
+        $dao = new MockExtendedUserDao();
+        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
+        
+        $um->_extendedUserDao = $dao;
+        
+        $this->expectException('User_Not_In_Order');
+        $um->loginAs('Clooney', $admin_session_hash);
+    }
+    
+    function testLoginAsReturnsAnExceptionWhenSessionIsNotCreated() {
+        $um = UserManager::instance();
+        $admin_session_hash = 'adminsessionhash';
+        $adminUser = new MockUser($this);
+        $adminUser->setReturnValue('isSuperUser', true);
+        $um->_currentuser = $adminUser;
+        
+        $userLoginAs = new MockUser($this);
+        $userLoginAs->setReturnValue('getStatus', 'A');
+        
+        $dao = new MockExtendedUserDao();
+        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
+        
+        $um->_extendedUserDao = $dao;
+        
+        $user_dao = new MockUserDao($this);
+        $user_dao->setReturnValue('createSession', false);
+        $um->_userdao = $user_dao;
 
+        $this->expectException('Session_Not_Created');
+        $um->loginAs('Clooney', $admin_session_hash);
+    }
+    
     function testSuspenedUserGetSession() {
+        
         $cm               = new MockCookieManager($this);
         $dar_valid_hash   = new MockDataAccessResult($this);
         $user123          = new MockUser($this);
