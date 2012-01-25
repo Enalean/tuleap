@@ -22,17 +22,21 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 class SOAP_RequestLimitatorDao extends DataAccessObject {
     
     public function searchFirstCallToMethod($name, $delay) {
-        $sql = 'SELECT SQL_CALC_FOUND_ROWS * '.
-               ' FROM soap_call_counter'.
-               ' WHERE method_name = '.$this->da->quoteSmart($name).
-               ' AND date >= '.$this->da->escapeInt($delay).
-               ' ORDER BY date ASC LIMIT 1';
+        $name  = $this->da->quoteSmart($name);
+        $delay = $this->da->escapeInt($delay);
+        $sql   = "SELECT SQL_CALC_FOUND_ROWS *
+                  FROM soap_call_counter
+                  WHERE method_name = $name
+                    AND date >= $delay
+                  ORDER BY date ASC LIMIT 1";
         return $this->retrieve($sql);
     }
     
     public function saveCallToMethod($name, $time) {
-        $sql = 'INSERT INTO soap_call_counter (method_name, date)'.
-               ' VALUES ('.$this->da->quoteSmart($name).','.$this->da->escapeInt($time).')';
+        $name = $this->da->quoteSmart($name);
+        $time = $this->da->escapeInt($time);
+        $sql  = "INSERT INTO soap_call_counter (method_name, date)
+                 VALUES ($name, $time)";
         return $this->update($sql);
     }
 }
