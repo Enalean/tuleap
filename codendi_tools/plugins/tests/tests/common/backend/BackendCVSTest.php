@@ -280,11 +280,6 @@ class BackendCVSTest extends UnitTestCase {
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/config");
 
         // Test loginfo file
-        //$file = file_get_contents($repoPath."/CVSROOT/loginfo");
-        //$this->assertTrue(preg_match('#^ALL \(cat;chgrp -R foobar '.$GLOBALS['cvs_prefix']."/foobar\)>/dev/null 2>&1$#m", $file), "CVS loginfo chrp should use new project name");
-        //$this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
-
-        // Test loginfo file
         $file = file_get_contents($repoPath."/CVSROOT/commitinfo");
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/commitinfo");
 
@@ -323,12 +318,9 @@ class BackendCVSTest extends UnitTestCase {
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/config");
 
         // Test loginfo file
-        /*
         $file = file_get_contents($repoPath."/CVSROOT/loginfo");
-        $this->assertTrue(preg_match('#^ALL \(cat;chgrp -R foobar '.$GLOBALS['cvs_prefix']."/foobar\)>/dev/null 2>&1$#m", $file), "CVS loginfo chrp should use new project name");
         $this->assertTrue(preg_match('#^ALL \('.$GLOBALS['codendi_bin_prefix']."/log_accum -T foobar -C foobar -s %{sVv}\)>/dev/null 2>&1$#m", $file), "CVS loginfo log_accum should use new project name");
         $this->assertFalse(preg_match("/TestProj/", $file), "There should no longer be any occurence of old project name in CVSROOT/loginfo");
-*/
         
         // Test loginfo file
         $file = file_get_contents($repoPath."/CVSROOT/commitinfo");
