@@ -34,10 +34,8 @@ class UserManager {
     
     var $_userdao         = null;
     var $_currentuser     = null;
-    public $_extendedUserDao = null;
     
     protected function __construct() {
-        $this->_extendedUserDao = new ExtendedUserDao();
     }
     
     protected static $_instance;

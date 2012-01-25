@@ -727,29 +727,26 @@ class UserManagerTest extends UnitTestCase {
         $this->assertEqual($session_hash, 'session_hash');
         
     }
-    private function aUserWithStatus($status) {
+    private function aUserWithStatusAndId($status, $id) {
         $userLoginAs = new MockUser();
         $userLoginAs->setReturnValue('getStatus', $status);
+        $userLoginAs->setReturnValue('getId', $id);
         return $userLoginAs;
     }
 
     private function aUserManagerWithCurrentUser($user) {
-        $um = TestHelper::getPartialMock('UserManager', array('getCurrentUser', 'getUserByUserName'));
+        $um = TestHelper::getPartialMock('UserManager', array('getCurrentUser'));
         $um->setReturnValue('getCurrentUser', $user);
         return $um;
     }
-    function injectUser($um, $name, $status) {
-        $user = $this->aUserWithStatus($status);
-        $um->setReturnValue('getUserByUserName', $user, array($name));
+    function injectUser(UserManager $um, $name, $status) {
+        $whatever = 999;
+        $user = $this->aUserWithStatusAndId($status, $whatever);
+        $um->_userid_bynames[$name] = $user->getId();
+        $um->_users[$user->getId()] = $user;
         return $user;
     }
 
-    private function anExtendedDaoThatReturns($userLoginAs, $forArgument) {
-        $dao = new MockExtendedUserDao();
-        $dao->setReturnValue('getUserByName', $userLoginAs, array($forArgument));
-        return $dao;
-    }
-    
     private function anAdminUser() {
         $adminUser = new MockUser($this);
         $adminUser->setReturnValue('isSuperUser', true);
