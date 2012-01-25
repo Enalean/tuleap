@@ -494,7 +494,7 @@ class UserManager {
             throw new User_Not_Authorized();
         }
         
-        $user_login_as = $this->_extendedUserDao->getUserByName($name);
+        $user_login_as = $this->getUserByUserName($name);
         if (!$this->checkUserStatus($user_login_as->getStatus())) {
             throw new User_Not_In_Order();
         }        

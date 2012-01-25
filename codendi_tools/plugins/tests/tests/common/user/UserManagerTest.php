@@ -693,26 +693,17 @@ class UserManagerTest extends UnitTestCase {
     function testLoginAsReturnsAnExceptionWhenAccountIsNotInOrder() {
         $hash_is_not_important = null;
         $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
-        
-        $userLoginAs = $this->aUserWithStatus('D');
-        
-        $dao = $this->anExtendedDaoThatReturns($userLoginAs, 'Clooney');
-        
-        $um->_extendedUserDao = $dao;
-        
+        $this->injectUser($um, 'Johnny', 'D');
+
         $this->expectException('User_Not_In_Order');
-        $um->loginAs('Clooney', $hash_is_not_important);
+        $um->loginAs('Johnny', $hash_is_not_important);
     }
     
     function testLoginAsReturnsAnExceptionWhenSessionIsNotCreated() {
         $hash_is_not_important = null;
         $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
-        
-        $userLoginAs = $this->aUserWithStatus('A');
-        
-        $dao = $this->anExtendedDaoThatReturns($userLoginAs, 'Clooney');
-        
-        $um->_extendedUserDao = $dao;
+
+        $this->injectUser($um, 'Clooney', 'A');
         
         $user_dao = new MockUserDao($this);
         $user_dao->setReturnValue('createSession', false);
@@ -726,14 +717,12 @@ class UserManagerTest extends UnitTestCase {
         $hash_is_not_important = null;
         $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
         
-        $userLoginAs = $this->aUserWithStatus('A');
-        
-        $dao = $this->anExtendedDaoThatReturns($userLoginAs, 'Clooney');
-        
-        $um->_extendedUserDao = $dao;
+        $userLoginAs = $this->injectUser($um, 'Clooney', 'A');
+
         $user_dao = new MockUserDao($this);
         $user_dao->setReturnValue('createSession', 'session_hash', array($userLoginAs->getId(), $_SERVER['REQUEST_TIME']));
         $um->_userdao = $user_dao;
+        
         $session_hash = $um->loginAs('Clooney', $hash_is_not_important);
         $this->assertEqual($session_hash, 'session_hash');
         
@@ -745,9 +734,14 @@ class UserManagerTest extends UnitTestCase {
     }
 
     private function aUserManagerWithCurrentUser($user) {
-        $um = TestHelper::getPartialMock('UserManager', array('getCurrentUser'));
+        $um = TestHelper::getPartialMock('UserManager', array('getCurrentUser', 'getUserByUserName'));
         $um->setReturnValue('getCurrentUser', $user);
         return $um;
+    }
+    function injectUser($um, $name, $status) {
+        $user = $this->aUserWithStatus($status);
+        $um->setReturnValue('getUserByUserName', $user, array($name));
+        return $user;
     }
 
     private function anExtendedDaoThatReturns($userLoginAs, $forArgument) {
