@@ -499,6 +499,7 @@ class BackendCVSTest extends UnitTestCase {
     function testCheckCVSModeNeedOwnerUpdate() {
         $cvsdir = $GLOBALS['cvs_prefix'].'/TestProj';
         mkdir($cvsdir .'/CVSROOT', 0700, true);
+        chmod($cvsdir .'/CVSROOT', 04700);
         
         $project = new MockProject($this);
         $project->setReturnValue('getUnixName', 'TestProj', array(false));
