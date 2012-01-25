@@ -281,7 +281,17 @@ class Event {
      *   'display_remove_button' => boolean, true if ok false otherwise
      */
     const WIKI_DISPLAY_REMOVE_BUTTON = 'wiki_display_remove_button';
-    
+
+    /**
+     * Allow to replace the default SVN_Apache_Auth object to be used for
+     * generation of project svn apache authentication
+     * 
+     * Parameters:
+     *     'project_info'    => A row of Projects DB table
+     * 
+     * Expected result:
+     *     'svn_apache_auth' => SVN_Apache_Auth, object to generate the conf if relevant
+     */
     const SVN_APACHE_AUTH = 'svn_apache_auth';
 
 }
