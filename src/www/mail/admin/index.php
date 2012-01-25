@@ -26,7 +26,7 @@ if ($group_id && user_ismember($group_id,'A')) {
 
 		if ($add_list) {
 			$list_password = substr(md5($GLOBALS['session_hash'] . time() . rand(0,40000)),0,16);
-			if (!$list_name || strlen($list_name) < $GLOBALS['sys_lists_name_length']) {
+			if (!$list_name || strlen($list_name) < Config::get('sys_lists_name_min_length')) {
 				exit_error($Language->getText('global','error'),$Language->getText('mail_admin_index','provide_correct_list_name'));
 			}
             if (! ereg('(^([a-zA-Z\_0-9\.-]*))$' , $list_name)) {

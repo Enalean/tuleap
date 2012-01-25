@@ -86,10 +86,10 @@ $sys_cookie_domain = "%sys_default_domain%";
 //     impact on the source code, grep is your friend.
 $sys_lists_host = "lists.%sys_default_domain%";
 
-// If you want you list to belong to a domain different of $sys_lists_host
+// If you want the mailing-lists to belong to a domain different of $sys_lists_host
 // you can define it here.
-// For instance, you might want to send mails with lists.forge.company.com machine
-// but with lists like 'tuleap-devel@company.com' name.
+// For instance, you might want to send mails via 'lists.forge.example.com' machine
+// but with lists like 'tuleap-devel@example.com' name.
 $sys_lists_domain = $sys_lists_host;
 
 // Fully qualified name
@@ -404,8 +404,8 @@ $zend_path = "/usr/share/zend";
 //Exchange policy URL
 $sys_exchange_policy_url = "/plugins/docman/?group_id=1";
 
-// The minimum length og mailing list name
-$sys_lists_name_length = 4;
+// The minimum length of mailing list name
+$sys_lists_name_min_length = 4;
 
 // The mailing list name prefix
 $sys_lists_prefix = '';
