@@ -37,7 +37,7 @@ abstract class SVN_Apache {
     /**
      * Return something to be inserted at the top of the svnroot.conf file
      * 
-     * @return string
+     * @return String
      */
     public function getHeaders() {
         return '';
@@ -46,7 +46,7 @@ abstract class SVN_Apache {
     /**
      * Return project location configuration
      * 
-     * @return string 
+     * @return String 
      */
     public function getConf() {
         $conf = '';
@@ -60,8 +60,22 @@ abstract class SVN_Apache {
         return $conf;
     }
     
+    /**
+     * Returns the Apache authentication directives for given project
+     * 
+     * @param Array $row Project DB row
+     * 
+     * @return String 
+     */
     abstract protected function getProjectAuthentication($row);
     
+    /**
+     * Returns the standard Apache authentication directives (shared by most modules)
+     * 
+     * @param String $projectName
+     * 
+     * @return String 
+     */
     protected function getCommonAuthentication($projectName) {
         $conf = '';
         $conf .= "    Require valid-user\n";
@@ -70,6 +84,13 @@ abstract class SVN_Apache {
         return $conf;
     }
     
+    /**
+     * Returns SVN authorization directive
+     * 
+     * @param Array $row Project DB row
+     * 
+     * @return String 
+     */
     protected function getProjectAuthorization($row) {
         $conf = "    AuthzSVNAccessFile ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."/.SVNAccessFile\n";
         return $conf;
@@ -79,6 +100,7 @@ abstract class SVN_Apache {
      * Replace double quotes by single quotes in project name (conflict with Apache realm name)
      * 
      * @param String $str
+     * 
      * @return String
      */
     protected function escapeStringForApacheConf($str) {
