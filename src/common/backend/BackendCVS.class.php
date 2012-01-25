@@ -107,9 +107,9 @@ class BackendCVS extends Backend {
             $output = '';
             if ($this->useCVSNT()) {
                 // Tell cvsnt not to update /etc/cvsnt/PServer: this is done later by this the script.
-                $r = $this->system($GLOBALS['cvs_cmd']." -d$cvs_dir init -n ", $output);
+                $output = $this->system($GLOBALS['cvs_cmd']." -d$cvs_dir init -n ", $r);
             } else {
-                $r = $this->system($GLOBALS['cvs_cmd']." -d$cvs_dir init", $output);
+                $output = $this->system($GLOBALS['cvs_cmd']." -d$cvs_dir init", $r);
             }
             
             if ( !$r ) {
@@ -393,7 +393,9 @@ class BackendCVS extends Backend {
      * @return void
      */
     function _RcsCheckout($file, &$output='') {
-        return $this->system("co -q -l $file", $output);
+        $rcode = 0;
+        $output = $this->system("co -q -l $file", $rcode);
+        return $rcode;
     }
 
     /**
@@ -404,7 +406,9 @@ class BackendCVS extends Backend {
      * @return void
      */
     function _RcsCommit($file, &$output='') {
-        return $this->system("/usr/bin/rcs -q -l $file; ci -q -m\"Codendi modification\" $file; co -q $file", $output);
+        $rcode  = 0;
+        $output = $this->system("/usr/bin/rcs -q -l $file; ci -q -m\"Codendi modification\" $file; co -q $file", $rcode);
+        return $rcode;
     }
 
     /**

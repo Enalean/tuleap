@@ -305,9 +305,9 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $projectName = $repository->getProject()->getUnixName();
         $archiveName = $projectName.'_'.$name.'_'.strtotime($date).'.tar.bz2 ';
         $cmd    = ' tar cjf '.$archiveName.' '.$path;
-        $output = '';
-        $rcode = $this->system( $cmd, $output );        
-        if ( !$rcode ) {
+        $rcode  = 0 ;
+        $output = $this->system( $cmd, $rcode );        
+        if ( $rcode != 0 ) {
             throw new GitBackendException($cmd.' -> '.$output);
         }
         if ( !empty($this->gitBackupDir) && is_dir($this->gitBackupDir) ) {
