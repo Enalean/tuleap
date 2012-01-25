@@ -104,13 +104,13 @@ function login($loginname, $passwd) {
  * @global $Language
  *
  * @param string $admin_session_hash
- * @param string $loginname the user name (login)
+ * @param string $username the user name (login)
  * 
  * @return string the user session_hash 
  */
-function loginAs($loginname, $admin_session_hash) {
+function loginAs($admin_session_hash, $username) {
     $server = new Session_SOAPServer($Language, UserManager::instance());
-    return $server->loginAs($loginname, $admin_session_hash);
+    return $server->loginAs($admin_session_hash, $username);
 }
 
 /**

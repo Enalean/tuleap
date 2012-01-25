@@ -23,35 +23,32 @@ Mock::generate('UserManager');
 Mock::generate('User');
 
 class User_SOAPServerTest extends UnitTestCase {
-    private $admin_session_hash = 'ghjghjgj';
-    private $user_name = 'johan';
-    private $userSessionsHash = 'qmslgfjqmsljfhqsmljhqziojfijhzr';
+    public function testReturnsSoapFaultsWhenUserManagerThrowsAnException() {
+        $this->givenAUserManagerThatIsProgrammedToThrow(new User_Not_Authorized())
+                ->thenLoginAsReturns(new SoapFault('3300', 'Permission denied'));
+        $this->givenAUserManagerThatIsProgrammedToThrow(new User_Not_In_Order())
+                ->thenLoginAsReturns(new SoapFault('3301', 'User not active'));
+        $this->givenAUserManagerThatIsProgrammedToThrow(new Session_Not_Created())
+                ->thenLoginAsReturns(new SoapFault('3302', 'Temporary error creating a session, please try again in a couple of seconds'));
+    }
 
-    
-    public function testOpenSessionForUser() {
-        $userManager = new MockUserManager();
-
-        $user = new MockUser();
-        $user->setReturnValue('isSuperUser', true);
-        $userManager->setReturnValue('getCurrentUser', $user, array($this->admin_session_hash));
+    private function givenAUserManagerThatIsProgrammedToThrow($exception) {
+        $um = new MockUserManager();
+        $um->throwOn('loginAs', $exception);
+        $server = new User_SOAPServer($um);
+        return new UserManagerAsserter($server, $this);
+    }
+}
+class UserManagerAsserter {
+    public function __construct(User_SOAPServer $server, $asserter) {
+        $this->server = $server;
+        $this->asserter = $asserter;
+    }
+    public function thenLoginAsReturns($expected) {
+        $this->asserter->assertIdentical($this->server->loginAs(null, null), $expected);
         
-        $userManager->setReturnValue('login', $this->userSessionsHash, array($this->user_name));
-
-        $server = new User_SOAPServer($userManager);
-        $this->assertEqual($this->userSessionsHash, $server->loginAs($this->user_name, $this->admin_session_hash));
     }
     
-    public function testReturnsSoapFaultIfAdminSessionHashNotValid() {
-        $userManager = new MockUserManager();
-        
-        $user = new MockUser();
-        $user->setReturnValue('isSuperUser', false);
-        $userManager->setReturnValue('getCurrentUser', $user, array($this->admin_session_hash));
-        
-        $this->expectException('SoapFault');
-        $server = new User_SOAPServer($userManager);
-        $server->loginAs($this->user_name, $this->admin_session_hash);
-    }
 }
 
 ?>

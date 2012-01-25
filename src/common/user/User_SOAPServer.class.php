@@ -28,22 +28,19 @@ class User_SOAPServer {
         $this->userManager = $userManager;
     }
     
-    public function loginAs($login_name, $admin_session_hash) {
-        $user = $this->userManager->getCurrentUser($admin_session_hash);
-        if ($user->isSuperUser()) {
-            return $this->userManager->login($login_name);
+    public function loginAs($admin_session_hash, $username) {
+        try {
+            return $this->userManager->loginAs($admin_session_hash, $username);
+        } catch (User_Not_Authorized $e) {
+            return new SoapFault('3300', 'Permission denied');
+        }catch (User_Not_In_Order $e) {
+            return new SoapFault('3301', 'User not active');
+        } catch (Session_Not_Created $e) {
+            return new SoapFault('3302', 'Temporary error creating a session, please try again in a couple of seconds');
         }
-        throw new SoapFault(self::PERMISSION_DENIED, 'Permission denied');
     }
     
-    /*public function loginAs($login_name, $admin_session_hash) {
-        $user = $this->userManager->getCurrentUser($admin_session_hash);
-        if ($user->isSuperUser()) {
-            $log_as_user = $this->userManager->loginAs($login_name, $admin_session_hash);
-            return $log_as_user->getSessionHash();
-        }
-        throw new SoapFault(self::PERMISSION_DENIED, 'Permission denied');
-    }*/
+  
 }
 
 ?>
