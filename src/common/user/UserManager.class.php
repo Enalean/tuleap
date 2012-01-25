@@ -488,6 +488,13 @@ class UserManager {
         return $this->_currentuser;
     }
     
+   /**
+    * loginAs allows the siteadmin to log as someone else
+    *
+    * @param string $username
+    * 
+    * @return string a session hash
+    */
     function loginAs($name) {
         if (! $this->getCurrentUser()->isSuperUser()) {
             throw new UserNotAuthorizedException();

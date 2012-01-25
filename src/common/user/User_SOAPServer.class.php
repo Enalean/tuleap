@@ -27,6 +27,13 @@ class User_SOAPServer {
         $this->userManager = $userManager;
     }
     
+   /**
+    * loginAs allows the siteadmin to log as someone else
+    *
+    * @param string $username
+    * 
+    * @return string a session hash
+    */
     public function loginAs($username) {
         try {
             return $this->userManager->loginAs($username);
