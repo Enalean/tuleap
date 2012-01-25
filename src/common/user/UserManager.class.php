@@ -31,6 +31,7 @@ class UserManager {
     var $_users           = array();
     var $_userid_bynames  = array();
     var $_userid_byldapid = array();
+    
     var $_userdao         = null;
     var $_currentuser     = null;
     public $_extendedUserDao = null;
@@ -489,7 +490,7 @@ class UserManager {
     }
     
     function loginAs($name, $admin_session_hash) {
-        if (! $this->getCurrentUser()->isSuperUser()) {
+        if (! $this->getCurrentUser($admin_session_hash)->isSuperUser()) {
             throw new User_Not_Authorized();
         }
         

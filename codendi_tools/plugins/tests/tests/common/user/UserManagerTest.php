@@ -419,96 +419,6 @@ class UserManagerTest extends UnitTestCase {
         $this->assertReference($userAnonymous, $um->login('user_123', 'bad_pwd', 0));
     }
     
-    /*function testLoginAsCreatesASessionAndReturnsASessionHash()  {
-        $admin_session_hash = 'adminsessionhash';
-        $login_as_user_name = 'user_123';
-        $dao = new MockUserDao($this);
-        $um = UserManager::instance();
-        $user = new MockUser($this);
-        $um->_currentuser = $user;
-//        $user->setReturnValue('isSuperUser', true);
-        
-//        $um->setReturnValue('checkUserStatus', true);
-        $dao->expectOnce('createSession');
-        $um->loginAs($login_as_user_name, $admin_session_hash);
-    }*/
-    
-    function testLoginAsReturnsAnExceptionWhenNotCallByTheSuperUser() {
-        
-        $um = UserManager::instance();
-        $admin_session_hash = 'adminsessionhash';
-        $adminUser = new MockUser($this);
-        $um->_currentuser = $adminUser;
-        $adminUser->setReturnValue('isSuperUser', false);
-        
-        $this->expectException('User_Not_Authorized');
-        $um->loginAs('toto', $admin_session_hash);
-    }
-    
-    function testLoginAsReturnsAnExceptionWhenAccountIsNotInOrder() {
-        $um = UserManager::instance();
-        $admin_session_hash = 'adminsessionhash';
-        $adminUser = new MockUser($this);
-        $adminUser->setReturnValue('isSuperUser', true);
-        $um->_currentuser = $adminUser;
-        
-        $userLoginAs = new MockUser($this);
-        $userLoginAs->setReturnValue('getStatus', 'D');
-        
-        $dao = new MockExtendedUserDao();
-        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
-        
-        $um->_extendedUserDao = $dao;
-        
-        $this->expectException('User_Not_In_Order');
-        $um->loginAs('Clooney', $admin_session_hash);
-    }
-    
-    function testLoginAsReturnsAnExceptionWhenSessionIsNotCreated() {
-        $um = UserManager::instance();
-        $admin_session_hash = 'adminsessionhash';
-        $adminUser = new MockUser($this);
-        $adminUser->setReturnValue('isSuperUser', true);
-        $um->_currentuser = $adminUser;
-        
-        $userLoginAs = new MockUser($this);
-        $userLoginAs->setReturnValue('getStatus', 'A');
-        
-        $dao = new MockExtendedUserDao();
-        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
-        
-        $um->_extendedUserDao = $dao;
-        
-        $user_dao = new MockUserDao($this);
-        $user_dao->setReturnValue('createSession', false);
-        $um->_userdao = $user_dao;
-
-        $this->expectException('Session_Not_Created');
-        $um->loginAs('Clooney', $admin_session_hash);
-    }
-    
-    function testLoginAsCreatesASessionAndReturnsASessionHash() {
-        $um = UserManager::instance();
-        $admin_session_hash = 'adminsessionhash';
-        $adminUser = new MockUser($this);
-        $adminUser->setReturnValue('isSuperUser', true);
-        $um->_currentuser = $adminUser;
-        
-        $userLoginAs = new MockUser($this);
-        $userLoginAs->setReturnValue('getStatus', 'A');
-        
-        $dao = new MockExtendedUserDao();
-        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
-        
-        $um->_extendedUserDao = $dao;
-        $user_dao = new MockUserDao($this);
-        $user_dao->setReturnValue('createSession', 'session_hash', array($userLoginAs->getId(), $_SERVER['REQUEST_TIME']));
-        $um->_userdao = $user_dao;
-        $session_hash = $um->loginAs('Clooney', $admin_session_hash);
-        $this->assertEqual($session_hash, 'session_hash');
-        
-    }
-    
     function testSuspenedUserGetSession() {
         
         $cm               = new MockCookieManager($this);
@@ -759,5 +669,95 @@ class UserManagerTest extends UnitTestCase {
         // Codendi 4.0 and new User, we should use this assertion:
         //$this->assertEqual(1789, $user->getUnixUid());
     }
+    function testLoginAsCallsGetCurrentUserWithTheProvidedHash() {
+        $ordinaryUser = new MockUser($this);
+        $ordinaryUser->setReturnValue('isSuperUser', false);
+        $admin_session_hash = 'adminsessionhash';
+        $um = $this->aUserManagerWithCurrentUser($ordinaryUser);
+
+        $um->expectOnce('getCurrentUser', array($admin_session_hash));
+        
+        $this->expectException('User_Not_Authorized');
+        $um->loginAs(null, $admin_session_hash);
+    }
+    
+    function testLoginAsReturnsAnExceptionWhenNotCallByTheSuperUser() {
+        $hash_is_not_important = null;
+        $ordinaryUser = new MockUser($this);
+        $ordinaryUser->setReturnValue('isSuperUser', false);
+        $um = $this->aUserManagerWithCurrentUser($ordinaryUser);
+        
+        $this->expectException('User_Not_Authorized');
+        $um->loginAs('tlkjtj', $hash_is_not_important);
+    }
+    function testLoginAsReturnsAnExceptionWhenAccountIsNotInOrder() {
+        $hash_is_not_important = null;
+        $adminUser = new MockUser($this);
+        $adminUser->setReturnValue('isSuperUser', true);
+        $um = $this->aUserManagerWithCurrentUser($adminUser);
+        
+        $userLoginAs = $this->aUserWithStatus('D');
+        
+        $dao = new MockExtendedUserDao();
+        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
+        
+        $um->_extendedUserDao = $dao;
+        
+        $this->expectException('User_Not_In_Order');
+        $um->loginAs('Clooney', $hash_is_not_important);
+    }
+    
+    function testLoginAsReturnsAnExceptionWhenSessionIsNotCreated() {
+        $hash_is_not_important = null;
+        $adminUser = new MockUser($this);
+        $adminUser->setReturnValue('isSuperUser', true);
+        $um = $this->aUserManagerWithCurrentUser($adminUser);
+        
+        $userLoginAs = $this->aUserWithStatus('A');
+        
+        $dao = new MockExtendedUserDao();
+        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
+        
+        $um->_extendedUserDao = $dao;
+        
+        $user_dao = new MockUserDao($this);
+        $user_dao->setReturnValue('createSession', false);
+        $um->_userdao = $user_dao;
+
+        $this->expectException('Session_Not_Created');
+        $um->loginAs('Clooney', $hash_is_not_important);
+    }
+    
+    function testLoginAsCreatesASessionAndReturnsASessionHash() {
+        $hash_is_not_important = null;
+        $adminUser = new MockUser($this);
+        $adminUser->setReturnValue('isSuperUser', true);
+        $um = $this->aUserManagerWithCurrentUser($adminUser);
+        
+        $userLoginAs = $this->aUserWithStatus('A');
+        
+        $dao = new MockExtendedUserDao();
+        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
+        
+        $um->_extendedUserDao = $dao;
+        $user_dao = new MockUserDao($this);
+        $user_dao->setReturnValue('createSession', 'session_hash', array($userLoginAs->getId(), $_SERVER['REQUEST_TIME']));
+        $um->_userdao = $user_dao;
+        $session_hash = $um->loginAs('Clooney', $hash_is_not_important);
+        $this->assertEqual($session_hash, 'session_hash');
+        
+    }
+    private function aUserWithStatus($status) {
+        $userLoginAs = new MockUser();
+        $userLoginAs->setReturnValue('getStatus', $status);
+        return $userLoginAs;
+    }
+
+    public function aUserManagerWithCurrentUser($user) {
+        $um = TestHelper::getPartialMock('UserManager', array('getCurrentUser'));
+        $um->setReturnValue('getCurrentUser', $user);
+        return $um;
+    }    
 }
+
 ?>
