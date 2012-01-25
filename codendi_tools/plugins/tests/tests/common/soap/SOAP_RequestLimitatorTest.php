@@ -45,7 +45,7 @@ class SOAP_RequestLimitatorTest extends UnitTestCase {
 
     private function GivenThereWasAlreadyOneCallTheLastHour() {
         $dao = new MockSOAP_RequestLimitatorDao();
-        $time30minutesAgo = time() - 30*60;
+        $time30minutesAgo = time() - 30 * 60;
         $dar = TestHelper::arrayToDar(array('method_name' => 'addProject', 'date' => $time30minutesAgo));
         // Ensure we search into the db stuff ~1 hour agos  
         $dao->setReturnValue('searchFirstCallToMethod', $dar, array('addProject', new AboutOneHourAgoExpectation()));
@@ -87,7 +87,7 @@ class SOAP_RequestLimitatorTest extends UnitTestCase {
     private function GivenThereWasAlreadyTenCallToAddProject() {
         $dao = new MockSOAP_RequestLimitatorDao();
         
-        $time30minutesAgo = time() - 30*60;
+        $time30minutesAgo = time() - 30 * 60;
         $dar = TestHelper::arrayToDar(array('method_name' => 'addProject', 'date' => $time30minutesAgo));
         $dao->setReturnValue('searchFirstCallToMethod', $dar);
         $dao->setReturnValue('foundRows', 10);
