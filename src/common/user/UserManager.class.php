@@ -487,7 +487,7 @@ class UserManager {
         return $this->_currentuser;
     }
     
-    function loginAs($name, $admin_session_hash) {
+    function loginAs($admin_session_hash, $name) {
         if (! $this->getCurrentUser($admin_session_hash)->isSuperUser()) {
             throw new User_Not_Authorized();
         }

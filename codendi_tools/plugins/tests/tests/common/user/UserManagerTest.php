@@ -678,7 +678,7 @@ class UserManagerTest extends UnitTestCase {
         $um->expectOnce('getCurrentUser', array($admin_session_hash));
         
         $this->expectException('User_Not_Authorized');
-        $um->loginAs(null, $admin_session_hash);
+        $um->loginAs($admin_session_hash, null);
     }
     
     function testLoginAsReturnsAnExceptionWhenNotCallByTheSuperUser() {
@@ -688,7 +688,7 @@ class UserManagerTest extends UnitTestCase {
         $um = $this->aUserManagerWithCurrentUser($ordinaryUser);
         
         $this->expectException('User_Not_Authorized');
-        $um->loginAs('tlkjtj', $hash_is_not_important);
+        $um->loginAs($hash_is_not_important, 'tlkjtj');
     }
     function testLoginAsReturnsAnExceptionWhenAccountIsNotInOrder() {
         $hash_is_not_important = null;
@@ -696,7 +696,7 @@ class UserManagerTest extends UnitTestCase {
         $this->injectUser($um, 'Johnny', 'D');
 
         $this->expectException('User_Not_In_Order');
-        $um->loginAs('Johnny', $hash_is_not_important);
+        $um->loginAs($hash_is_not_important, 'Johnny');
     }
     
     function testLoginAsReturnsAnExceptionWhenSessionIsNotCreated() {
@@ -710,7 +710,7 @@ class UserManagerTest extends UnitTestCase {
         $um->_userdao = $user_dao;
 
         $this->expectException('Session_Not_Created');
-        $um->loginAs('Clooney', $hash_is_not_important);
+        $um->loginAs($hash_is_not_important, 'Clooney');
     }
     
     function testLoginAsCreatesASessionAndReturnsASessionHash() {
@@ -723,7 +723,7 @@ class UserManagerTest extends UnitTestCase {
         $user_dao->setReturnValue('createSession', 'session_hash', array($userLoginAs->getId(), $_SERVER['REQUEST_TIME']));
         $um->_userdao = $user_dao;
         
-        $session_hash = $um->loginAs('Clooney', $hash_is_not_important);
+        $session_hash = $um->loginAs($hash_is_not_important, 'Clooney');
         $this->assertEqual($session_hash, 'session_hash');
         
     }

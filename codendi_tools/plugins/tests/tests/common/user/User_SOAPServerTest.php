@@ -23,7 +23,7 @@ Mock::generate('UserManager');
 Mock::generate('User');
 
 class User_SOAPServerTest extends UnitTestCase {
-    public function testReturnsSoapFaultsWhenUserManagerThrowsAnException() {
+    public function testLoginAsReturnsSoapFaultsWhenUserManagerThrowsAnException() {
         $this->givenAUserManagerThatIsProgrammedToThrow(new User_Not_Authorized())
                 ->thenLoginAsReturns(new SoapFault('3300', 'Permission denied'));
         $this->givenAUserManagerThatIsProgrammedToThrow(new User_Not_In_Order())
@@ -31,13 +31,26 @@ class User_SOAPServerTest extends UnitTestCase {
         $this->givenAUserManagerThatIsProgrammedToThrow(new Session_Not_Created())
                 ->thenLoginAsReturns(new SoapFault('3302', 'Temporary error creating a session, please try again in a couple of seconds'));
     }
-
+    
+    public function testLoginAsReturnsASessionHash() {
+        $um = new MockUserManager();
+        $user_soap_server = new User_SOAPServer($um);
+        $admin_session_hash = 'ghhghghghg';
+        $user_name = 'toto';        
+        $expected_session_hash = 'qljsruhefnlkqsjf';
+        
+        $um->setReturnValue('loginAs', $expected_session_hash, array($admin_session_hash, $user_name));
+        $user_session_hash = $user_soap_server->loginAs($admin_session_hash, $user_name);
+        $this->assertEqual($expected_session_hash, $user_session_hash);
+    }
+    
     private function givenAUserManagerThatIsProgrammedToThrow($exception) {
         $um = new MockUserManager();
         $um->throwOn('loginAs', $exception);
         $server = new User_SOAPServer($um);
         return new UserManagerAsserter($server, $this);
     }
+    
 }
 class UserManagerAsserter {
     public function __construct(User_SOAPServer $server, $asserter) {
