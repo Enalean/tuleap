@@ -692,14 +692,11 @@ class UserManagerTest extends UnitTestCase {
     }
     function testLoginAsReturnsAnExceptionWhenAccountIsNotInOrder() {
         $hash_is_not_important = null;
-        $adminUser = new MockUser($this);
-        $adminUser->setReturnValue('isSuperUser', true);
-        $um = $this->aUserManagerWithCurrentUser($adminUser);
+        $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
         
         $userLoginAs = $this->aUserWithStatus('D');
         
-        $dao = new MockExtendedUserDao();
-        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
+        $dao = $this->anExtendedDaoThatReturns($userLoginAs, 'Clooney');
         
         $um->_extendedUserDao = $dao;
         
@@ -709,14 +706,11 @@ class UserManagerTest extends UnitTestCase {
     
     function testLoginAsReturnsAnExceptionWhenSessionIsNotCreated() {
         $hash_is_not_important = null;
-        $adminUser = new MockUser($this);
-        $adminUser->setReturnValue('isSuperUser', true);
-        $um = $this->aUserManagerWithCurrentUser($adminUser);
+        $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
         
         $userLoginAs = $this->aUserWithStatus('A');
         
-        $dao = new MockExtendedUserDao();
-        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
+        $dao = $this->anExtendedDaoThatReturns($userLoginAs, 'Clooney');
         
         $um->_extendedUserDao = $dao;
         
@@ -730,14 +724,11 @@ class UserManagerTest extends UnitTestCase {
     
     function testLoginAsCreatesASessionAndReturnsASessionHash() {
         $hash_is_not_important = null;
-        $adminUser = new MockUser($this);
-        $adminUser->setReturnValue('isSuperUser', true);
-        $um = $this->aUserManagerWithCurrentUser($adminUser);
+        $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
         
         $userLoginAs = $this->aUserWithStatus('A');
         
-        $dao = new MockExtendedUserDao();
-        $dao->setReturnValue('getUserByName', $userLoginAs, array('Clooney'));
+        $dao = $this->anExtendedDaoThatReturns($userLoginAs, 'Clooney');
         
         $um->_extendedUserDao = $dao;
         $user_dao = new MockUserDao($this);
@@ -753,11 +744,24 @@ class UserManagerTest extends UnitTestCase {
         return $userLoginAs;
     }
 
-    public function aUserManagerWithCurrentUser($user) {
+    private function aUserManagerWithCurrentUser($user) {
         $um = TestHelper::getPartialMock('UserManager', array('getCurrentUser'));
         $um->setReturnValue('getCurrentUser', $user);
         return $um;
-    }    
+    }
+
+    private function anExtendedDaoThatReturns($userLoginAs, $forArgument) {
+        $dao = new MockExtendedUserDao();
+        $dao->setReturnValue('getUserByName', $userLoginAs, array($forArgument));
+        return $dao;
+    }
+    
+    private function anAdminUser() {
+        $adminUser = new MockUser($this);
+        $adminUser->setReturnValue('isSuperUser', true);
+        return $adminUser;
+        
+    }
 }
 
 ?>
