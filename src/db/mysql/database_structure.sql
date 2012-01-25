@@ -3425,7 +3425,8 @@ CREATE TABLE IF NOT EXISTS tracker_idsharing_tracker(
 
 CREATE TABLE IF NOT EXISTS soap_call_counter (
     method_name varchar(255) NOT NULL,
-    date int(11) unsigned NOT NULL
+    date int(11) unsigned NOT NULL,
+    INDEX (method_name, date)
 );
 
 #
