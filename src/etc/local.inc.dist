@@ -411,7 +411,7 @@ $sys_lists_name_length = 4;
 $sys_lists_prefix = '';
 
 // The mailing list name suffix
-$sys_lists_postfix = '';
+$sys_lists_suffix = '';
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
