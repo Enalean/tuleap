@@ -398,7 +398,7 @@ $sys_exchange_policy_url = "/plugins/docman/?group_id=1";
 
 // Allow to limit the number of SOAP call that might be critical for the platform.
 // As of today it only impact Project::addProject but it might evolve.
-$sys_nb_sensitive_soap_call_per_hour = 10;
+$sys_nb_sensitive_soap_calls_per_hour = 10;
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
