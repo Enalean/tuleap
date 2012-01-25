@@ -17,8 +17,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class User_Not_Active_Exception extends Exception {
-    function __construct($message = 'user not active') {
+class UserNotAuthorizedException extends Exception {
+    function __construct($message = 'user not authorized') {
         parent::__construct($message, 3300);
     }
 }

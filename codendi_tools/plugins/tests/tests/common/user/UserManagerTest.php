@@ -674,7 +674,7 @@ class UserManagerTest extends UnitTestCase {
 
         $um->expectOnce('getCurrentUser', array());
         
-        $this->expectException('User_Not_Authorized_Exception');
+        $this->expectException('UserNotAuthorizedException');
         $um->loginAs(null);
     }
     
@@ -684,7 +684,7 @@ class UserManagerTest extends UnitTestCase {
         $ordinaryUser->setReturnValue('isSuperUser', false);
         $um = $this->aUserManagerWithCurrentUser($ordinaryUser);
         
-        $this->expectException('User_Not_Authorized_Exception');
+        $this->expectException('UserNotAuthorizedException');
         $um->loginAs('tlkjtj');
     }
     
@@ -696,7 +696,7 @@ class UserManagerTest extends UnitTestCase {
         $name = 'toto';
         $um->setReturnValue('getUserByUserName', null, array($name));
 
-        $this->expectException('User_Not_Exist_Exception');
+        $this->expectException('UserNotExistException');
         $um->loginAs($name);
     }
     
@@ -704,7 +704,7 @@ class UserManagerTest extends UnitTestCase {
         $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
         $this->injectUser($um, 'Johnny', 'D');
 
-        $this->expectException('User_Not_Active_Exception');
+        $this->expectException('UserNotActiveException');
         $um->loginAs('Johnny');
     }
     
@@ -717,7 +717,7 @@ class UserManagerTest extends UnitTestCase {
         $user_dao->setReturnValue('createSession', false);
         $um->_userdao = $user_dao;
 
-        $this->expectException('Session_Not_Created_Exception');
+        $this->expectException('SessionNotCreatedException');
         $um->loginAs('Clooney');
     }
     

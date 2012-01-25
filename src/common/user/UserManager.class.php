@@ -22,10 +22,10 @@ require_once('common/user/User.class.php');
 require_once('common/dao/UserDao.class.php');
 require_once('common/dao/WikiDao.class.php');
 require_once('common/session/Codendi_Session.class.php');
-require_once('User_Not_Authorized_Exception.class.php');
-require_once('User_Not_Active_Exception.class.php');
-require_once('User_Not_Exist_Exception.class.php');
-require_once('Session_Not_Created_Exception.class.php');
+require_once('UserNotExistException.class.php');
+require_once('UserNotAuthorizedException.class.php');
+require_once('UserNotActiveException.class.php');
+require_once('SessionNotCreatedException.class.php');
 
 class UserManager {
     
@@ -490,15 +490,15 @@ class UserManager {
     
     function loginAs($name) {
         if (! $this->getCurrentUser()->isSuperUser()) {
-            throw new User_Not_Authorized_Exception();
+            throw new UserNotAuthorizedException();
         }
         
         $user_login_as = $this->getUserByUserName($name);
         if (!$user_login_as) {
-            throw new User_Not_Exist_Exception();
+            throw new UserNotExistException();
         }
         if (!$this->checkUserStatus($user_login_as->getStatus())) {
-            throw new User_Not_Active_Exception();
+            throw new UserNotActiveException();
         }        
         return $this->createSession($user_login_as);
     }
@@ -507,7 +507,7 @@ class UserManager {
         $now = $_SERVER['REQUEST_TIME'];
         $session_hash = $this->getDao()->createSession($user->getId(), $now);
         if (!$session_hash) {
-            throw new Session_Not_Created_Exception();
+            throw new SessionNotCreatedException();
         }
         return $session_hash;
     }
