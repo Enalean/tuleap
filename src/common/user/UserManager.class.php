@@ -24,6 +24,7 @@ require_once('common/dao/WikiDao.class.php');
 require_once('common/session/Codendi_Session.class.php');
 require_once('User_Not_Authorized_Exception.class.php');
 require_once('User_Not_Active_Exception.class.php');
+require_once('User_Not_Exist_Exception.class.php');
 require_once('Session_Not_Created_Exception.class.php');
 
 class UserManager {
@@ -493,6 +494,9 @@ class UserManager {
         }
         
         $user_login_as = $this->getUserByUserName($name);
+        if (!$user_login_as) {
+            throw new User_Not_Exist_Exception();
+        }
         if (!$this->checkUserStatus($user_login_as->getStatus())) {
             throw new User_Not_Active_Exception();
         }        

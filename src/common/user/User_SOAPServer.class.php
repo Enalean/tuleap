@@ -32,10 +32,12 @@ class User_SOAPServer {
             return $this->userManager->loginAs($username);
         } catch (User_Not_Authorized_Exception $e) {
             return new SoapFault('3300', 'Permission denied');
-        }catch (User_Not_Active_Exception $e) {
-            return new SoapFault('3301', 'User not active');
+        } catch (User_Not_Exist_Exception $e) {
+            return new SoapFault('3301', 'User not exist');
+        } catch (User_Not_Active_Exception $e) {
+            return new SoapFault('3302', 'User not active');
         } catch (Session_Not_Created_Exception $e) {
-            return new SoapFault('3302', 'Temporary error creating a session, please try again in a couple of seconds');
+            return new SoapFault('3303', 'Temporary error creating a session, please try again in a couple of seconds');
         }
     }
     

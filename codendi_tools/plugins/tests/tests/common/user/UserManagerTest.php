@@ -687,6 +687,19 @@ class UserManagerTest extends UnitTestCase {
         $this->expectException('User_Not_Authorized_Exception');
         $um->loginAs('tlkjtj');
     }
+    
+    function testLoginAsReturnsAnExceptionWhenAccountDoesNotExist() {
+        $um = TestHelper::getPartialMock('UserManager', array('getCurrentUser', 'getUserByUserName'));
+        $admin_user = $this->anAdminUser();
+        $um->setReturnValue('getCurrentUser', $admin_user);
+        
+        $name = 'toto';
+        $um->setReturnValue('getUserByUserName', null, array($name));
+
+        $this->expectException('User_Not_Exist_Exception');
+        $um->loginAs($name);
+    }
+    
     function testLoginAsReturnsAnExceptionWhenAccountIsNotInOrder() {
         $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
         $this->injectUser($um, 'Johnny', 'D');
