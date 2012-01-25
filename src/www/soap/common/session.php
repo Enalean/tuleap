@@ -1,8 +1,7 @@
 <?php
 
-require_once('session.php'); 
 require_once('common/include/CookieManager.class.php');
-
+require_once('common/user/User_SOAPServer.class.php');
 define('invalid_session_fault', '3001');
 define('login_fault', '3002');
 
@@ -36,6 +35,19 @@ $server->register('login', // method name
     'rpc', // style
     'encoded', // use
     'Login Codendi Server with given login and password.
+     Returns a soap fault if the login failed.' // documentation
+);
+
+$server->register('loginAs', // method name
+    array('admin_session_hash' => 'xsd:string', // input parameters
+          'loginname'    => 'xsd:string'
+    ),
+    array('return'   => 'xsd:string'), // output parameters
+    $uri, // namespace
+    $uri.'#loginAs', // soapaction
+    'rpc', // style
+    'encoded', // use
+    'Login Codendi Server with given admin_session_name and login.
      Returns a soap fault if the login failed.' // documentation
 );
 
@@ -109,7 +121,7 @@ function login($loginname, $passwd) {
  * @return string the user session_hash 
  */
 function loginAs($admin_session_hash, $username) {
-    $server = new Session_SOAPServer($Language, UserManager::instance());
+    $server = new User_SOAPServer(UserManager::instance());
     return $server->loginAs($admin_session_hash, $username);
 }
 
