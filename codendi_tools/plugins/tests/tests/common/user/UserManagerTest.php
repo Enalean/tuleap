@@ -707,7 +707,7 @@ class UserManagerTest extends UnitTestCase {
         $user_dao->setReturnValue('createSession', false);
         $um->_userdao = $user_dao;
 
-        $this->expectException('Session_Not_Created');
+        $this->expectException('Session_Not_Created_Exception');
         $um->loginAs($hash_is_not_important, 'Clooney');
     }
     

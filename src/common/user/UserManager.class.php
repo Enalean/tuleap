@@ -24,7 +24,7 @@ require_once('common/dao/WikiDao.class.php');
 require_once('common/session/Codendi_Session.class.php');
 require_once('User_Not_Authorized_Exception.class.php');
 require_once('User_Not_Active_Exception.class.php');
-require_once('Session_Not_Created.class.php');
+require_once('Session_Not_Created_Exception.class.php');
 
 class UserManager {
     
@@ -503,7 +503,7 @@ class UserManager {
         $now = $_SERVER['REQUEST_TIME'];
         $session_hash = $this->getDao()->createSession($user->getId(), $now);
         if (!$session_hash) {
-            throw new Session_Not_Created();
+            throw new Session_Not_Created_Exception();
         }
         return $session_hash;
     }
