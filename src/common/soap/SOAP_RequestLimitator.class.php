@@ -60,7 +60,7 @@ class SOAP_RequestLimitator {
      * @throws SOAP_NbRequestsExceedLimit_Exception 
      */
     public function logCallTo($methodName) {
-        $this->currentTime = time();
+        $this->currentTime = $_SERVER['REQUEST_TIME'];
         $this->loadDataFor($methodName);
         $this->dao->saveCallToMethod($methodName, $this->currentTime);
         $this->checkIfMethodExceedsLimits($methodName);
