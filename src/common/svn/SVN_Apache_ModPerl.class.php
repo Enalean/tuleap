@@ -33,7 +33,7 @@ class SVN_Apache_ModPerl extends SVN_Apache {
         $conf .= "    PerlAuthenHandler Apache::Authn::Tuleap::authen_handler\n";
         $conf .= '    TuleapDSN "DBI:mysql:' . $GLOBALS['sys_dbname'] . ':' . $GLOBALS['sys_dbhost'] . '"' . "\n";
         $conf .= '    TuleapDbUser "' . $GLOBALS['sys_dbauth_user'] . '"' . "\n";
-        $conf .= '    TuleapDbPass "' . $GLOBALS['sys_dbauth_passwd'] . '"' . "\n";
+        $conf .= '    TuleapDbPass "' . $this->escapeStringForApacheConf($GLOBALS['sys_dbauth_passwd']) . '"' . "\n";
         $conf .= '    TuleapGroupId "' . $row['group_id'] . '"' . "\n";
         $conf .= '    TuleapCacheCredsMax 10' . "\n";
         return $conf;
