@@ -27,17 +27,7 @@ Mock::generate('ProjectManager');
 Mock::generate('ProjectCreator');
 Mock::generate('SOAP_RequestLimitator');
 
-class SOAP_RequestLimitatorThrowException extends SOAP_RequestLimitator {
-    public function __construct() {
-    }
-    
-    public function logCallTo($methodName) {
-        throw new SOAP_NbRequestsExceedLimit_Exception();
-    }
-}
-
 class Project_SOAPServerTest extends UnitTestCase {
-    private $limitator;
     
     function testAddProjectShouldFailWhenRequesterIsNotProjectAdmin() {
         $server = $this->GivenASOAPServerWithBadTemplate();
@@ -101,8 +91,8 @@ class Project_SOAPServerTest extends UnitTestCase {
     }
     
     function testAddProjectShouldFailIfQuotaExceeded() {
-        $this->limitator = new SOAP_RequestLimitatorThrowException();
         $server = $this->GivenASOAPServerReadyToCreate();
+        $this->limitator->throwOn('logCallTo', new SOAP_NbRequestsExceedLimit_Exception());
         
         $sessionKey      = '123';
         $adminSessionKey = '456';
@@ -153,12 +143,10 @@ class Project_SOAPServerTest extends UnitTestCase {
         $this->um->setReturnValue('getCurrentUser', $this->user, array('123'));
         $this->um->setReturnValue('getCurrentUser', $admin, array('456'));
         
-        $this->pm = new MockProjectManager();
-        $this->pc = new MockProjectCreator();
-        if (!isset($this->limitator)) {
-            $this->limitator = new MockSOAP_RequestLimitator();
-        }
-        $server   = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->limitator);
+        $this->pm        = new MockProjectManager();
+        $this->pc        = new MockProjectCreator();
+        $this->limitator = new MockSOAP_RequestLimitator();
+        $server          = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->limitator);
         return $server;
     }
 }
