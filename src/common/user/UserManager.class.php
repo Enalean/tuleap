@@ -22,8 +22,8 @@ require_once('common/user/User.class.php');
 require_once('common/dao/UserDao.class.php');
 require_once('common/dao/WikiDao.class.php');
 require_once('common/session/Codendi_Session.class.php');
-require_once('User_Not_Authorized.class.php');
-require_once('User_Not_In_Order.class.php');
+require_once('User_Not_Authorized_Exception.class.php');
+require_once('User_Not_Active_Exception.class.php');
 require_once('Session_Not_Created.class.php');
 
 class UserManager {
@@ -489,12 +489,12 @@ class UserManager {
     
     function loginAs($admin_session_hash, $name) {
         if (! $this->getCurrentUser($admin_session_hash)->isSuperUser()) {
-            throw new User_Not_Authorized();
+            throw new User_Not_Authorized_Exception();
         }
         
         $user_login_as = $this->getUserByUserName($name);
         if (!$this->checkUserStatus($user_login_as->getStatus())) {
-            throw new User_Not_In_Order();
+            throw new User_Not_Active_Exception();
         }        
         return $this->createSession($user_login_as);
     }

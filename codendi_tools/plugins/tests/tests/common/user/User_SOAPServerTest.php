@@ -24,9 +24,9 @@ Mock::generate('User');
 
 class User_SOAPServerTest extends UnitTestCase {
     public function testLoginAsReturnsSoapFaultsWhenUserManagerThrowsAnException() {
-        $this->givenAUserManagerThatIsProgrammedToThrow(new User_Not_Authorized())
+        $this->givenAUserManagerThatIsProgrammedToThrow(new User_Not_Authorized_Exception())
                 ->thenLoginAsReturns(new SoapFault('3300', 'Permission denied'));
-        $this->givenAUserManagerThatIsProgrammedToThrow(new User_Not_In_Order())
+        $this->givenAUserManagerThatIsProgrammedToThrow(new User_Not_Active_Exception())
                 ->thenLoginAsReturns(new SoapFault('3301', 'User not active'));
         $this->givenAUserManagerThatIsProgrammedToThrow(new Session_Not_Created())
                 ->thenLoginAsReturns(new SoapFault('3302', 'Temporary error creating a session, please try again in a couple of seconds'));

@@ -34,7 +34,7 @@ $server->register('login', // method name
     $uri.'#login', // soapaction
     'rpc', // style
     'encoded', // use
-    'Login Codendi Server with given login and password.
+    'Login Tuleap Server with given login and password.
      Returns a soap fault if the login failed.' // documentation
 );
 
@@ -47,7 +47,7 @@ $server->register('loginAs', // method name
     $uri.'#loginAs', // soapaction
     'rpc', // style
     'encoded', // use
-    'Login Codendi Server with given admin_session_name and login.
+    'Login Tuleap Server with given admin_session_name and login.
      Returns a soap fault if the login failed.' // documentation
 );
 
@@ -180,8 +180,6 @@ $server->addFunction(
             'getAPIVersion',
             'loginAs'
             ));
-
-
 }
 
 ?>

@@ -31,9 +31,9 @@ class User_SOAPServer {
     public function loginAs($admin_session_hash, $username) {
         try {
             return $this->userManager->loginAs($admin_session_hash, $username);
-        } catch (User_Not_Authorized $e) {
+        } catch (User_Not_Authorized_Exception $e) {
             return new SoapFault('3300', 'Permission denied');
-        }catch (User_Not_In_Order $e) {
+        }catch (User_Not_Active_Exception $e) {
             return new SoapFault('3301', 'User not active');
         } catch (Session_Not_Created $e) {
             return new SoapFault('3302', 'Temporary error creating a session, please try again in a couple of seconds');

@@ -4,8 +4,6 @@ require_once('common/user/User.class.php');
 Mock::generate('User');
 require_once('common/dao/UserDao.class.php');
 Mock::generate('UserDao');
-require_once('common/user/dao/ExtendedUserDao.class.php');
-Mock::generate('ExtendedUserDao');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 require_once('common/include/Response.class.php');
@@ -677,7 +675,7 @@ class UserManagerTest extends UnitTestCase {
 
         $um->expectOnce('getCurrentUser', array($admin_session_hash));
         
-        $this->expectException('User_Not_Authorized');
+        $this->expectException('User_Not_Authorized_Exception');
         $um->loginAs($admin_session_hash, null);
     }
     
@@ -687,7 +685,7 @@ class UserManagerTest extends UnitTestCase {
         $ordinaryUser->setReturnValue('isSuperUser', false);
         $um = $this->aUserManagerWithCurrentUser($ordinaryUser);
         
-        $this->expectException('User_Not_Authorized');
+        $this->expectException('User_Not_Authorized_Exception');
         $um->loginAs($hash_is_not_important, 'tlkjtj');
     }
     function testLoginAsReturnsAnExceptionWhenAccountIsNotInOrder() {
@@ -695,7 +693,7 @@ class UserManagerTest extends UnitTestCase {
         $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
         $this->injectUser($um, 'Johnny', 'D');
 
-        $this->expectException('User_Not_In_Order');
+        $this->expectException('User_Not_Active_Exception');
         $um->loginAs($hash_is_not_important, 'Johnny');
     }
     
