@@ -35,12 +35,11 @@ class User_SOAPServerTest extends UnitTestCase {
     public function testLoginAsReturnsASessionHash() {
         $um = new MockUserManager();
         $user_soap_server = new User_SOAPServer($um);
-        $admin_session_hash = 'ghhghghghg';
         $user_name = 'toto';        
         $expected_session_hash = 'qljsruhefnlkqsjf';
         
-        $um->setReturnValue('loginAs', $expected_session_hash, array($admin_session_hash, $user_name));
-        $user_session_hash = $user_soap_server->loginAs($admin_session_hash, $user_name);
+        $um->setReturnValue('loginAs', $expected_session_hash, array($user_name));
+        $user_session_hash = $user_soap_server->loginAs($user_name);
         $this->assertEqual($expected_session_hash, $user_session_hash);
     }
     

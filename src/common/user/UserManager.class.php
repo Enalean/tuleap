@@ -487,8 +487,8 @@ class UserManager {
         return $this->_currentuser;
     }
     
-    function loginAs($admin_session_hash, $name) {
-        if (! $this->getCurrentUser($admin_session_hash)->isSuperUser()) {
+    function loginAs($name) {
+        if (! $this->getCurrentUser()->isSuperUser()) {
             throw new User_Not_Authorized_Exception();
         }
         
@@ -499,7 +499,7 @@ class UserManager {
         return $this->createSession($user_login_as);
     }
 
-    private function createSession($user) {
+    private function createSession(User $user) {
         $now = $_SERVER['REQUEST_TIME'];
         $session_hash = $this->getDao()->createSession($user->getId(), $now);
         if (!$session_hash) {

@@ -21,16 +21,15 @@ require_once 'UserManager.class.php';
 
 class User_SOAPServer {
 
-    const PERMISSION_DENIED = "3300";
     private $userManager;
 
     public function __construct(UserManager $userManager) {
         $this->userManager = $userManager;
     }
     
-    public function loginAs($admin_session_hash, $username) {
+    public function loginAs($username) {
         try {
-            return $this->userManager->loginAs($admin_session_hash, $username);
+            return $this->userManager->loginAs($username);
         } catch (User_Not_Authorized_Exception $e) {
             return new SoapFault('3300', 'Permission denied');
         }catch (User_Not_Active_Exception $e) {

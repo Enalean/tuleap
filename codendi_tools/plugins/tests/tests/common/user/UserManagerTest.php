@@ -667,16 +667,15 @@ class UserManagerTest extends UnitTestCase {
         // Codendi 4.0 and new User, we should use this assertion:
         //$this->assertEqual(1789, $user->getUnixUid());
     }
-    function testLoginAsCallsGetCurrentUserWithTheProvidedHash() {
+    function testLoginAsCallsGetCurrentUser() {
         $ordinaryUser = new MockUser($this);
         $ordinaryUser->setReturnValue('isSuperUser', false);
-        $admin_session_hash = 'adminsessionhash';
         $um = $this->aUserManagerWithCurrentUser($ordinaryUser);
 
-        $um->expectOnce('getCurrentUser', array($admin_session_hash));
+        $um->expectOnce('getCurrentUser', array());
         
         $this->expectException('User_Not_Authorized_Exception');
-        $um->loginAs($admin_session_hash, null);
+        $um->loginAs(null);
     }
     
     function testLoginAsReturnsAnExceptionWhenNotCallByTheSuperUser() {
@@ -686,19 +685,17 @@ class UserManagerTest extends UnitTestCase {
         $um = $this->aUserManagerWithCurrentUser($ordinaryUser);
         
         $this->expectException('User_Not_Authorized_Exception');
-        $um->loginAs($hash_is_not_important, 'tlkjtj');
+        $um->loginAs('tlkjtj');
     }
     function testLoginAsReturnsAnExceptionWhenAccountIsNotInOrder() {
-        $hash_is_not_important = null;
         $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
         $this->injectUser($um, 'Johnny', 'D');
 
         $this->expectException('User_Not_Active_Exception');
-        $um->loginAs($hash_is_not_important, 'Johnny');
+        $um->loginAs('Johnny');
     }
     
     function testLoginAsReturnsAnExceptionWhenSessionIsNotCreated() {
-        $hash_is_not_important = null;
         $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
 
         $this->injectUser($um, 'Clooney', 'A');
@@ -708,11 +705,10 @@ class UserManagerTest extends UnitTestCase {
         $um->_userdao = $user_dao;
 
         $this->expectException('Session_Not_Created_Exception');
-        $um->loginAs($hash_is_not_important, 'Clooney');
+        $um->loginAs('Clooney');
     }
     
     function testLoginAsCreatesASessionAndReturnsASessionHash() {
-        $hash_is_not_important = null;
         $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
         
         $userLoginAs = $this->injectUser($um, 'Clooney', 'A');
@@ -721,7 +717,7 @@ class UserManagerTest extends UnitTestCase {
         $user_dao->setReturnValue('createSession', 'session_hash', array($userLoginAs->getId(), $_SERVER['REQUEST_TIME']));
         $um->_userdao = $user_dao;
         
-        $session_hash = $um->loginAs($hash_is_not_important, 'Clooney');
+        $session_hash = $um->loginAs('Clooney');
         $this->assertEqual($session_hash, 'session_hash');
         
     }
