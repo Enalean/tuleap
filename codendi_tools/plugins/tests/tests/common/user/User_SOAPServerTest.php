@@ -27,9 +27,9 @@ class User_SOAPServerTest extends UnitTestCase {
         $this->givenAUserManagerThatIsProgrammedToThrow(new UserNotAuthorizedException())
                 ->thenLoginAsReturns(new SoapFault('3300', 'Permission denied'));
         $this->givenAUserManagerThatIsProgrammedToThrow(new UserNotActiveException())
-                ->thenLoginAsReturns(new SoapFault('3301', 'User not active'));
+                ->thenLoginAsReturns(new SoapFault('3302', 'User not active'));
         $this->givenAUserManagerThatIsProgrammedToThrow(new SessionNotCreatedException())
-                ->thenLoginAsReturns(new SoapFault('3302', 'Temporary error creating a session, please try again in a couple of seconds'));
+                ->thenLoginAsReturns(new SoapFault('3303', 'Temporary error creating a session, please try again in a couple of seconds'));
     }
     
     public function testLoginAsReturnsASessionHash() {

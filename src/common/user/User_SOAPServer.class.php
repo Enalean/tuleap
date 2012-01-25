@@ -42,9 +42,9 @@ class User_SOAPServer {
         } catch (UserNotExistException $e) {
             return new SoapFault('3301', 'User not exist');
         }catch (UserNotActiveException $e) {
-            return new SoapFault('3301', 'User not active');
+            return new SoapFault('3302', 'User not active');
         } catch (SessionNotCreatedException $e) {
-            return new SoapFault('3302', 'Temporary error creating a session, please try again in a couple of seconds');
+            return new SoapFault('3303', 'Temporary error creating a session, please try again in a couple of seconds');
         }
     }
     
