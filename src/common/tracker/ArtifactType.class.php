@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once('common/include/Error.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/tracker/ArtifactFieldSetFactory.class.php');
 require_once('common/dao/ReferenceDao.class.php');

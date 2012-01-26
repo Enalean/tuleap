@@ -20,7 +20,9 @@
  * 
  */
 
+require_once 'common/project/Project.class.php';
 require_once 'common/system_event/SystemEvent.class.php';
+require_once 'common/tracker/ArtifactTypeFactory.class.php';
 
 /**
 * System Event classes
