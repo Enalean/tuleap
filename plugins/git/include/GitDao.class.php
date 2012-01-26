@@ -444,7 +444,7 @@ class GitDao extends DataAccessObject {
                   FROM ".$this->getTable()."
                   JOIN groups g ON group_id = project_id
                   WHERE repository_backend_type = ".$this->da->quoteSmart($backend)."
-                    AND repository_creation_date BETWEEN ".$this->da->quoteSmart($startDate)." AND ".$this->da->quoteSmart($endDate)."
+                    AND repository_creation_date BETWEEN CAST(".$this->da->quoteSmart($startDate)." AS DATETIME) AND CAST(".$this->da->quoteSmart($endDate)." AS DATETIME)
                     ".$condition."
                     AND status = 'A'
                     AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00'
