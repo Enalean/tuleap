@@ -2,7 +2,7 @@ Before do
   puts "reinit database"
   codendi_dir = "/usr/share/codendi"
   fixture_file = "codendi_tools/plugins/tests/functional/fixture.sql"
-  system "ssh root@#{$tuleap_host} -C \"mysql -B -pwelcome0 -uroot codendi < #{codendi_dir}/#{fixture_file}\"" 
+  system "ssh root@#{$tuleap_host} -C \"mysql -B -pwelcome0 -ucodendiadm codendi < #{codendi_dir}/#{fixture_file}\"" 
 end
 
 Before do
