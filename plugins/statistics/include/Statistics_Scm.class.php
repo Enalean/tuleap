@@ -23,8 +23,8 @@ require_once('www/project/export/project_export_utils.php');
  */
 class Statistics_Scm {
 
-    public $separator;
-    public $content;
+    private $separator;
+    protected $content;
     public $startDate;
     public $endDate;
     public $groupId = null;

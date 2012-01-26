@@ -23,8 +23,8 @@ require_once 'Statistics_Scm.class.php';
  */
 class Statistics_ScmFactory extends Statistics_Scm {
 
-    public $scm;
-    public $dao;
+    private $scm;
+    protected $dao;
 
     /**
      * Constructor of the class
