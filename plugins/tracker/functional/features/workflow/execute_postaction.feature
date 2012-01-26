@@ -18,7 +18,7 @@ Feature:
       Given I logon as "testuser" : "tuleap_pass"
       When I go to the bugs tracker of Test Project
       And I submit a new artifact
-      Then a message says that the field 'Start Date' as been set to the current date
+      Then a message says that the field 'Start Date' has been set to the current date
       #And the notification email display the 'Start Date' value
       And the artifact has 'Start Date' set to the current date
       
