@@ -34,8 +34,8 @@ EOT;
 
     public function up() {
         $this->log->warn('Following operations might take a while, please be patient...');
-        $sql = 'ALTER TABLE svn_commits'.
-               ' ADD INDEX idx_repositoryid_date (repositoryid, date)';
+        $sql = "ALTER TABLE svn_commits
+                ADD INDEX idx_repositoryid_date (repositoryid, date)";
         $this->db->addIndex('svn_commits', 'idx_repositoryid_date', $sql);
     }
 
