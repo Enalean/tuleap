@@ -8,7 +8,7 @@ $pm = ProjectManager::instance();
 
 echo '
 
-<P>Les listes de diffusion sont nommées selon le modèle suivant&nbsp;: <em>nom_projet-nom_liste@'. $GLOBALS['sys_lists_host'] .'</em>
+<P>Les listes de diffusion sont nommées selon le modèle suivant&nbsp;: <em>'.Config::get('sys_lists_prefix').'nom_projet-nom_liste'.Config::get('sys_lists_suffix').'@'. $sys_lists_domain .'</em>
 <P> Dans le but d\'harmoniser les pratiques en matière de création de liste de distribution sur '.$GLOBALS['sys_name'].' nous vous recommandons de créer les listes de distribution suivantes pour votre projet&nbsp;:<BR>
 <ul>
 <li><b>'.$pm->getProject($group_id)->getUnixName().'-interet</b>&nbsp;: pour les discussions générales entre utilisateurs.

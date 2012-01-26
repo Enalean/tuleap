@@ -69,6 +69,7 @@ an entity cannot be redefined. Hence this particular order  -->
   &ChapterContinuousIntegrationWithHudson;
   &ChapterWiki;
   &ChapterCommunicationServices;
+  &ChapterSurveyManager;
   &ChapterProjectWebSite;
   &ChapterOtherServices;
   &ChapterTrackerV5;

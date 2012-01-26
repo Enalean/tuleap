@@ -467,16 +467,10 @@ class FRSFile extends Error {
 
         // Make sure this URL is not cached anywhere otherwise download
         // would be wrong
-        // (Don't send the no-cache if IE and SSL - see
-        // http://support.microsoft.com/default.aspx?scid=kb;EN-US;q316431.
-        if(!(browser_is_ie() && session_issecure() &&
-             (strcmp(browser_get_version(), '5.5') ||
-              strcmp(browser_get_version(), '5.01') ||
-              strcmp(browser_get_version(), '6'))) ) {
-            header("Cache-Control: no-cache");  // HTTP 1.1 - must be on 2 lines or IE 5.0 error
-            header("Cache-Control: must-revalidate");  // HTTP 1.1
-            header("Pragma: no-cache");  // HTTP 1.0
-        }
+        header('Expires: Mon, 26 Nov 1962 00:00:00 GMT');
+        header('Pragma: private');
+        header('Cache-control: private, must-revalidate');
+        
         header("Content-Type: application/octet-stream");
         header('Content-Disposition: attachment; filename="'. basename($this->getFileName()) .'"');
         if ($file_size > 0){

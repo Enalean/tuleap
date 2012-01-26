@@ -48,8 +48,8 @@ class DataAccessObject {
      *
      * @return mixed either false if error or object DataAccessResult
      */
-    public function retrieve($sql) {
-        $result = $this->da->query($sql);
+    public function retrieve($sql, $params = array()) {
+        $result = $this->da->query($sql, $params);
         if ($error = $result->isError()) {
             $trace = debug_backtrace();
             $i = isset($trace[1]) ? 1 : 0;
@@ -67,8 +67,8 @@ class DataAccessObject {
      *
      * @return boolean true if success
      */
-    public function update($sql) {
-        $result = $this->da->query($sql);
+    public function update($sql, $params = array()) {
+        $result = $this->da->query($sql, $params);
         if ($error = $result->isError()) {
             $trace = debug_backtrace();
             $i = isset($trace[1]) ? 1 : 0;

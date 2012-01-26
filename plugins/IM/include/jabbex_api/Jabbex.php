@@ -27,7 +27,7 @@ class Jabbex implements JabbexInterface
 		//echo "JABBEX'S BEEN CREATED <br>";
 
 		// create an instance of the Jabber class
-		$display_debug_info = true; // Use this flag to __debug__
+		$display_debug_info = false; // Use this flag to __debug__
 		$this->jab = new Jabber($display_debug_info);
 
 		$this->check_parameters = new CheckParameters();

@@ -1,3 +1,6 @@
+Version 1.21 (Tuleap 4.0.26)
+    * Add unit test to verify behaviour of archive
+
 Version 1.20 (Tuleap 4.0.26)
     * Remove useless code
     * Allow some tests to be run in cli

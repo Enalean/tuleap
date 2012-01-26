@@ -102,5 +102,15 @@ class Config {
     public static function restore() {
         array_shift(self::$conf_stack);
     }
+    
+    /**
+     * Set a configuration value. Only useful for testing purpose. DON'T USE IT IN PRODUCTION
+     *
+     * @param $name String Variable name
+     * @param $value Mixed Variable value
+     */
+    public static function set($name, $value) {
+        self::$conf_stack[0][$name] = $value;
+    }
 }
 ?>

@@ -64,4 +64,7 @@ $sys_ldap_default_user_status = 'A';
 // Enable LDAP based authentication for SVN by default for new projects 
 $sys_ldap_svn_auth = 1;
 
+//Enable LDAP daily synchronization
+$sys_ldap_daily_sync = 1;
+
 ?>

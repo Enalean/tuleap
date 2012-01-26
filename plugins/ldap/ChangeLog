@@ -1,3 +1,7 @@
+Version 3.10 (Tuleap 4.0.26)
+    * Can now disable/enable LDAP daily synchronization in ldap.inc
+    * Add the Orange implementation of LDAP_UserSync
+    
 Version 3.9 (Tuleap 4.0.25)
     * Checkbox checked by default when importing an LDAP group (contrib STMicroelectronics)
     

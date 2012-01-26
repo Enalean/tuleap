@@ -535,7 +535,7 @@ class ArtifactTypeFactory extends Error {
          }
          
          if($this->isNameExists($name, $group_id)) {
-             $this->setError($Language->getText('tracker_common_type','name_already_exists',$itemname));
+             $this->setError($Language->getText('tracker_common_type','name_already_exists',$name));
              return false;
          }
          

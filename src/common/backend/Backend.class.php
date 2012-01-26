@@ -289,7 +289,7 @@ class Backend {
      * @return boolean true on success or false on failure
      */
     public function log($message, $level = 'info') {
-        return error_log(date('c')." [$level] $message.\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
+        return error_log(date('c')." [$level] $message\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
     }
 
     /** 

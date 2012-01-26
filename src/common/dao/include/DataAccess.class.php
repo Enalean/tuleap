@@ -114,9 +114,9 @@ class DataAccess {
      * @param $sql string the database query to run
      * @return object DataAccessResult
      */
-    public function query($sql) {
+    public function query($sql, $params = array()) {
         $time = microtime(1);
-        $res  = mysql_query($sql,$this->db);
+        $res  = $this->mysql_query_params($sql,$params);
 
         // If connexion was lost during last query, re-execute it
         // 2006 correspond to "MySQL server has gone away"
@@ -124,7 +124,7 @@ class DataAccess {
             if ($this->nbReco < self::MAX_RECO) {
                 $this->nbReco++;
                 $this->reconnect();
-                return $this->query($sql);
+                return $this->query($sql, $params);
             } else {
                 throw new DataAccessException('Unable to access the database ('. mysql_error($this->db) .' - '. mysql_errno() .'). Please contact your administrator.');
             }
@@ -140,7 +140,23 @@ class DataAccess {
         }
         return new DataAccessResult($this, $res);
     }
-    
+
+    /**
+     * Parameterised query implementation for MySQL (similar PostgreSQL's PHP function pg_query_params)
+     * Example: mysql_query_params( "SELECT * FROM my_table WHERE col1=$1 AND col2=$2", array( 42, "It's ok" ) );
+     */
+    function mysql_query_params($sql, $params) {
+	if(!empty($params)) {
+		for ($i=1 ; $i <= count($params) ; $i++) {
+	   		$args[] = "$". $i;	
+		}
+		return mysql_query(str_replace($args, $params, $sql), $this->db);
+	} else {
+		return mysql_query($sql, $this->db);
+	}
+    }
+
+
     /**
      * Return ID generated from the previous INSERT operation.
      *

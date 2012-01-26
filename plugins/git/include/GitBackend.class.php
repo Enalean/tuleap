@@ -50,6 +50,10 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $this->gitBackupDir = PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir');        
     }
 
+    public function setGitBackupDir($dir) {
+        $this->gitBackupDir = $dir;
+    }
+    
     public function setGitRootPath($gitRootPath) {
         $this->gitRootPath = $gitRootPath;
     }
@@ -297,14 +301,14 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      * @param <type> $repository
      * @return <type>
      */
-    protected function archive($repository) {
+    public function archive($repository) {
         chdir( $this->getGitRootPath() );
         $path = $repository->getPath();
         $name = $repository->getName();
         $date = $repository->getDeletionDate();
         $projectName = $repository->getProject()->getUnixName();
         $archiveName = $projectName.'_'.$name.'_'.strtotime($date).'.tar.bz2 ';
-        $cmd    = ' tar cjf '.$archiveName.' '.$path;
+        $cmd    = ' tar cjf '.$archiveName.' '.$path.' 2>&1';
         $rcode  = 0 ;
         $output = $this->system( $cmd, $rcode );        
         if ( $rcode != 0 ) {
