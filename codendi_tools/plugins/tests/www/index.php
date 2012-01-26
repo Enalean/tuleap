@@ -246,10 +246,10 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                                         foreach($test as $c => $t) {
                                             add_test_to_group($t, $c, array('group' => &$g, 'path' => $params['path']."/$categ/"));
                                         }
-                                        $params['group']->addTestCase($g);
+                                        $params['group']->add($g);
                                     } else if ($test) {
                                         $random[] = $params['path'] . $categ;
-                                        $params['group']->addTestFile($params['path'] . $categ);
+                                        $params['group']->addFile($params['path'] . $categ);
                                     }
                                 }
                             }

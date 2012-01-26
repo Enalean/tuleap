@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,23 +17,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'MalformedPathException.class.php';
+require_once 'SOAP_RequestLimitator.class.php';
+require_once 'dao/SOAP_RequestLimitatorDao.class.php';
 
-function notEmpty($e) {
-    return !empty($e) || $e === '0';
-}
+/**
+ * Create a SOAP_Limitator wired to the database and configured according to
+ * the configuration (local.inc)
+ */
+class SOAP_RequestLimitatorFactory {
 
-function unixPathJoin($elements) {
-    
-    $path = implode('/', array_filter($elements, 'notEmpty'));
-    return preg_replace('%/{1,}%',"/", $path);
-}
-
-function userRepoPath($username, $namespace) {
-    $path = unixPathJoin(array('u', $username, $namespace));
-    if (strpos($path, '..') !== false) {
-        throw new MalformedPathException();
+    /**
+     * Returns a Limitator object
+     * 
+     * @return SOAP_RequestLimitator
+     */
+    function getLimitator() {
+        return new SOAP_RequestLimitator(Config::get('sys_nb_sensitive_soap_calls_per_hour'), 3600, new SOAP_RequestLimitatorDao());
     }
-    return $path;
 }
+
 ?>

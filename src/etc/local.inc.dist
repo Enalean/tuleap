@@ -410,6 +410,10 @@ $zend_path = "/usr/share/zend";
 //Exchange policy URL
 $sys_exchange_policy_url = "/plugins/docman/?group_id=1";
 
+// Allow to limit the number of SOAP call that might be critical for the platform.
+// As of today it only impact Project::addProject but it might evolve.
+$sys_nb_sensitive_soap_calls_per_hour = 10;
+
 // The minimum length of mailing list name
 $sys_lists_name_min_length = 4;
 

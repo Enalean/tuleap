@@ -29,7 +29,7 @@ $soapLogin = new SoapClient($serverUrl.'/soap/?wsdl',
                             array('cache_wsdl' => WSDL_CACHE_NONE));
 
 $adminSessionHash     = $soapLogin->login('admin', 'siteadmin')->session_hash;
-$requesterSessionHash = $soapLogin->login('manuel', 'manuel')->session_hash;
+$requesterSessionHash = $soapLogin->loginAs($adminSessionHash, 'sandrae');
 
 $soapProject = new SoapClient($serverUrl.'/soap/project/?wsdl', 
                               array('cache_wsdl' => WSDL_CACHE_NONE));

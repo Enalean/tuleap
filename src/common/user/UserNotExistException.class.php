@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,23 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'MalformedPathException.class.php';
-
-function notEmpty($e) {
-    return !empty($e) || $e === '0';
-}
-
-function unixPathJoin($elements) {
-    
-    $path = implode('/', array_filter($elements, 'notEmpty'));
-    return preg_replace('%/{1,}%',"/", $path);
-}
-
-function userRepoPath($username, $namespace) {
-    $path = unixPathJoin(array('u', $username, $namespace));
-    if (strpos($path, '..') !== false) {
-        throw new MalformedPathException();
+class UserNotExistException extends Exception {
+    function __construct($message = 'user not exist') {
+        parent::__construct($message, 3300);
     }
-    return $path;
 }
 ?>

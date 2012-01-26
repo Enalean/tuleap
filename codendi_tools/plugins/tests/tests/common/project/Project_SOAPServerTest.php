@@ -25,6 +25,7 @@ Mock::generate('UserManager');
 Mock::generate('Project');
 Mock::generate('ProjectManager');
 Mock::generate('ProjectCreator');
+Mock::generate('SOAP_RequestLimitator');
 
 class Project_SOAPServerTest extends UnitTestCase {
     
@@ -89,6 +90,22 @@ class Project_SOAPServerTest extends UnitTestCase {
         $this->assertEqual($projectId, 3459);
     }
     
+    function testAddProjectShouldFailIfQuotaExceeded() {
+        $server = $this->GivenASOAPServerReadyToCreate();
+        $this->limitator->throwOn('logCallTo', new SOAP_NbRequestsExceedLimit_Exception());
+        
+        $sessionKey      = '123';
+        $adminSessionKey = '456';
+        $shortName       = 'toto';
+        $publicName      = 'Mon Toto';
+        $privacy         = 'public';
+        $templateId      = 100;
+        
+        $this->expectException('SoapFault');
+        $projectId = $server->addProject($sessionKey, $adminSessionKey, $shortName, $publicName, $privacy, $templateId);
+        $this->assertEqual($projectId, 3459);
+    }
+    
     /**
      *
      * @return Project_SOAPServer
@@ -126,9 +143,10 @@ class Project_SOAPServerTest extends UnitTestCase {
         $this->um->setReturnValue('getCurrentUser', $this->user, array('123'));
         $this->um->setReturnValue('getCurrentUser', $admin, array('456'));
         
-        $this->pm = new MockProjectManager();
-        $this->pc = new MockProjectCreator();
-        $server   = new Project_SOAPServer($this->pm, $this->pc, $this->um);
+        $this->pm        = new MockProjectManager();
+        $this->pc        = new MockProjectCreator();
+        $this->limitator = new MockSOAP_RequestLimitator();
+        $server          = new Project_SOAPServer($this->pm, $this->pc, $this->um, $this->limitator);
         return $server;
     }
 }

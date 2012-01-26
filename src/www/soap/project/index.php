@@ -21,6 +21,7 @@
 
 require_once 'pre.php';
 require_once 'common/project/Project_SOAPServer.class.php';
+require_once 'common/soap/SOAP_RequestLimitatorFactory.class.php';
 
 // Check if we the server is in secure mode or not.
 if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
@@ -37,16 +38,18 @@ if ($request->exist('wsdl')) {
     $wsdlGen = new SOAP_NusoapWSDL($serviceClass, 'TuleapProjectAPI', $uri);
     $wsdlGen->dumpWSDL();
 } else {
-    $userManager    = UserManager::instance();
-    $projectManager = ProjectManager::instance();
+    $userManager      = UserManager::instance();
+    $projectManager   = ProjectManager::instance();
+    $soapLimitFactory = new SOAP_RequestLimitatorFactory();
     
     $ruleShortName  = new Rule_ProjectName();
     $ruleFullName   = new Rule_ProjectFullName();
     $projectCreator = new ProjectCreator($projectManager, $ruleShortName, $ruleFullName);
+    $limitator      = $soapLimitFactory->getLimitator();
     
     $server = new SoapServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
-    $server->setClass($serviceClass, $projectManager, $projectCreator, $userManager);
+    $server->setClass($serviceClass, $projectManager, $projectCreator, $userManager, $limitator);
     $server->handle();
 }
 

@@ -19,6 +19,7 @@
 require_once 'ProjectManager.class.php';
 require_once 'ProjectCreator.class.php';
 require_once 'www/include/account.php';
+require_once 'common/soap/SOAP_RequestLimitator.class.php';
 
 /**
  * Wrapper for project related SOAP methods
@@ -42,10 +43,16 @@ class Project_SOAPServer {
      */
     private $userManager;
 
-    public function __construct(ProjectManager $projectManager, ProjectCreator $projectCreator, UserManager $userManager) {
+    /**
+     * @var SOAP_RequestLimitator 
+     */
+    private $limitator;
+
+    public function __construct(ProjectManager $projectManager, ProjectCreator $projectCreator, UserManager $userManager, SOAP_RequestLimitator $limitator) {
         $this->projectManager = $projectManager;
         $this->projectCreator = $projectCreator;
-        $this->userManager = $userManager;
+        $this->userManager    = $userManager;
+        $this->limitator      = $limitator;
     }
 
     /**
@@ -74,6 +81,7 @@ class Project_SOAPServer {
      * * 3102, Invalid short name
      * * 3103, Invalid full name
      * * 3104, Project is not a template
+     * * 4000, SOAP Call Quota exceeded (you created to much project during the last hour, according to configuration)
      * 
      * @param String  $sessionKey      Session key of the desired project admin
      * @param String  $adminSessionKey Session key of a site admin
@@ -89,6 +97,7 @@ class Project_SOAPServer {
         $requester = $this->continueSession($sessionKey);
         $template  = $this->getTemplateById($templateId, $requester);
         try {
+            $this->limitator->logCallTo('addProject');
             return $this->formatDataAndCreateProject($shortName, $publicName, $privacy, $template);
         } catch (Exception $e) {
             throw new SoapFault((string) $e->getCode(), $e->getMessage());

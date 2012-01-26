@@ -107,9 +107,9 @@ array_walk($GLOBALS['tests'], 'sort_tests');
 //}}}
 
 function &get_group_tests($tablo) {
-    $g =& new GroupTest("All Tests");
+    $g =& new TestSuite("All Tests");
     foreach($tablo as $plugin => $tests) {
-        $o =& new GroupTest($plugin .' Tests');
+        $o =& new TestSuite($plugin .' Tests');
         foreach($tests as $c => $t) {
             add_test_to_group($t, $c, 
                 array(
@@ -117,7 +117,7 @@ function &get_group_tests($tablo) {
                 'path' => $GLOBALS['config']['plugins_root'] . ($plugin == 'Codendi' ? 'tests' : $plugin) . $GLOBALS['config']['tests_root']
             ));
         }
-        $g->addTestCase($o);
+        $g->add($o);
     }
     return $g;
 }

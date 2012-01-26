@@ -63,7 +63,7 @@ class CodendiHtmlReporter extends HtmlReporter implements iCodeCoverageReporter 
     protected $coverage;
 
     function __construct($coverage) {
-        $this->HtmlReporter();
+        parent::__construct();
         $this->coverage = $coverage;
     }
 
