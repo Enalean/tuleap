@@ -76,7 +76,7 @@ class Statistics_Scm {
      *
      * @return String
      */
-    function getStats() {
+    function getCsvContent() {
         return $this->content;
     }
 

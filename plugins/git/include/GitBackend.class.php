@@ -402,7 +402,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $scmStats->addLine($gitShell);
         $scmStats->addLine($gitoliteIndex);
         $scmStats->addLine($gitolite);
-        $content = $scmStats->getStats();
+        $content = $scmStats->getCsvContent();
         $scmStats->clearContent();
         return $content;
     }

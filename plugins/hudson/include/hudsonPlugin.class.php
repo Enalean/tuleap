@@ -319,7 +319,7 @@ class hudsonPlugin extends Plugin {
             $scmStats->addLine(array());
             $scmStats->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'title')));
             $scmStats->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'job_count', array(date('Y-m-d'))), $count));
-            echo $scmStats->getStats();
+            echo $scmStats->getCsvContent();
             $scmStats->clearContent();
         }
     }
