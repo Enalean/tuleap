@@ -18,8 +18,8 @@
 
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Statistics_Formatter.class.php';
-require_once dirname(__FILE__).'/../include/Statistics_ScmCvs.class.php';
-require_once dirname(__FILE__).'/../include/Statistics_ScmSvn.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_Formatter_Cvs.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_Formatter_Svn.class.php';
 
 $pluginManager = PluginManager::instance();
 $p = $pluginManager->getPluginByName('statistics');
@@ -71,9 +71,9 @@ if ($request->valid($vGroupId)) {
 if (!$error && $request->exist('export')) {
     header('Content-Type: text/csv');
     header('Content-Disposition: filename=scm_stats_'.$startDate.'_'.$endDate.'.csv');
-    $statsSvn = new Statistics_ScmSvn($startDate, $endDate, $groupId);
+    $statsSvn = new Statistics_Formatter_Svn($startDate, $endDate, $groupId);
     echo $statsSvn->getStats();
-    $statsCvs = new Statistics_ScmCvs($startDate, $endDate, $groupId);
+    $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $groupId);
     echo $statsCvs->getStats();
     $em = EventManager::instance();
     $params['scm_formatter'] = new Statistics_Formatter($startDate, $endDate, $groupId);
