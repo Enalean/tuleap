@@ -27,6 +27,7 @@ Version 4.0.26 (Not released yet)
     * Fix (again) IE issue with file download (Contrib Xerox)
     * Fix cvs repository ownership issue (Contrib Xerox)
     * Re-add SurveyManager in the user guide (inadvertently removed)
+    * Fix project db export(Contrib STMicroelectronics)
     
     == Plugins ==
     * Git v1.22. See separated Changelog
@@ -46,7 +47,7 @@ Version 4.0.26 (Not released yet)
     * Add migration scripts to convert a Codendi 4.0 plateform (+ local 
       customization) to a Tuleap one.
     * Add a plugin google_analytics which helps to track visits on a Tuleap instance. (Contrib Xerox)
-    * Add a plugin orange that contains Orange specifities.
+    * Add a plugin orange that contains Orange specificities.
     * The default rpm package name is now Tuleap.
     * Add cgi-bin script for various statistics purpose. (Contrib Orange)
     

@@ -172,8 +172,8 @@ if ($export == 'artifact') {
 				if ($at->isError()) {
 					exit_error($Language->getText('global','error'),$at->getErrorMessage());
 				}
-				// Check if this tracker is valid (not deleted)
-				if ( !$at->isValid() ) {
+				// Check if this tracker is valid (not deleted) && the database has been exported
+				if ( !$at->isValid() && db_database_exist($dbname)) {
                     db_project_query($dbname,'DROP TABLE IF EXISTS '.$tbl_name);
                     db_project_query($dbname,'DROP TABLE IF EXISTS '."artifact_struct_".$at_arr[$j]->getItemName());
                     continue;

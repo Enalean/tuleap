@@ -915,6 +915,18 @@ function db_project_create($dbname) {
     }
 }
 
+/**
+ * Check if a given database already exists
+ * 
+ * @param String $dbname
+ * 
+ * @return Boolean
+ */
+function db_database_exist($dbname) {
+    $res = db_query("SHOW DATABASES LIKE '$dbname'");
+    return db_numrows($res) == 1;
+}
+
 function db_project_error() {
 	return @mysql_error();
 }
