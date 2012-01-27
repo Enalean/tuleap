@@ -33,7 +33,6 @@ class GitPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->_addHook('site_admin_option_hook',                          'siteAdminHooks',                  false);
         $this->_addHook('cssfile',                                         'cssFile',                         false);
         $this->_addHook('javascript_file',                                 'jsFile',                          false);
         $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                      false);
@@ -62,6 +61,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
+        $this->_addHook('statistics_collector',              'statistics_collector',                    false);
     }
 
     public function getPluginInfo() {
@@ -70,10 +70,6 @@ class GitPlugin extends Plugin {
             $this->pluginInfo = new GitPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-
-    public function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->getPluginPath().'/">Git</a></li>';
     }
 
     public function cssFile($params) {
@@ -362,6 +358,21 @@ class GitPlugin extends Plugin {
             // Delete all git repositories of the project
             $gitBackend = Backend::instance('Git','GitBackend');
             $gitBackend->deleteProjectRepositories($projectId);
+        }
+    }
+
+    /**
+     * Display git backend statistics in CSV format
+     *
+     * @param Array $params parameters of the event
+     *
+     * @return void
+     */
+    public function statistics_collector($params) {
+        if (!empty($params['formatter'])) {
+            $formatter = $params['formatter'];
+            $gitBackend = Backend::instance('Git','GitBackend');
+            echo $gitBackend->getBackendStatistics($formatter);
         }
     }
 

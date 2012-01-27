@@ -26,3 +26,30 @@ plugin_statistics_admin_page	disk_usage_period	From $1 to $2.
 plugin_statistics_admin_page	disk_usage_proportion	This project uses <b>$1</b> of the <b>$2</b> allowed quota. 
 plugin_statistics_admin_page	year	View statistics for the last $1 months
 plugin_statistics_admin_page	months	View statistics for the last year
+
+plugin_statistics	scm_title	SCM statistics
+plugin_statistics	scm_description	Display SCM statistics of the platform.
+plugin_statistics	scm_start	Start date
+plugin_statistics	scm_end	End date
+plugin_statistics	scm_project_id	Project Id
+plugin_statistics	scm_project_id_info	Project Id is optional, you can leave it empty to calculate statistics for the whole platform.
+plugin_statistics	scm_export_button	Export CSV
+plugin_statistics	scm_month	Month
+plugin_statistics	scm_svn_total_read	Total number of SVN read access
+plugin_statistics	scm_svn_read_project	Total number of projects with SVN read access
+plugin_statistics	scm_svn_read_user	Total number of users with SVN read access
+plugin_statistics	scm_svn_total_commit	Total number of SVN commits
+plugin_statistics	scm_svn_commit_project	Total number of projects with SVN commits
+plugin_statistics	scm_top_commit_project	Top projects
+plugin_statistics	scm_top_commit_project_commits	Top projects (number of commits)
+plugin_statistics	scm_svn_commit_user	Total number of users with SVN commits
+plugin_statistics	scm_top_commit_user	Top users
+plugin_statistics	scm_top_commit_user_commits	Top users (number of commits)
+plugin_statistics	scm_cvs_total_read	Total number of CVS read access
+plugin_statistics	scm_cvs_read_project	Total number of projects with CVS read access
+plugin_statistics	scm_cvs_read_user	Total number of users with CVS read access
+plugin_statistics	scm_cvs_total_commit	Total number of CVS commits
+plugin_statistics	scm_cvs_commit_project	Total number of projects with CVS commits
+plugin_statistics	scm_cvs_commit_user	Total number of users with CVS commits
+plugin_statistics	scm_repo_evolution	Number of repositories containing commits
+plugin_statistics	scm_repo_total	Total number of repositories containing commits

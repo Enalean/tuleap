@@ -45,7 +45,7 @@ echo '<h1>'.$title.'</h1>';
     <dd>Display various figures about number of <em>X</em> over a given <em>period</em>.
     For instance, the numbser of <em>new user account</em> per <em>month</em> within the last
     two years.</dd>
-    
+
     <dt><a href="usage_stat.php">Usage progress (CSV)</a></dt>
     <dd>Generate a CSV file that contains the progress of some data figures 
     (number of users, number of project) over the time. For each
@@ -53,6 +53,9 @@ echo '<h1>'.$title.'</h1>';
 
     <dt><a href="disk_usage.php">Disk usage (Data/Graphs)</a></dt>
     <dd>Display disk usage of the platform.</dd>
+
+    <dt><a href="scm_stats.php"><?php echo $GLOBALS['Language']->getText('plugin_statistics', 'scm_title'); ?> (CSV)</a></dt>
+    <dd><?php echo $GLOBALS['Language']->getText('plugin_statistics', 'scm_description'); ?></dd>
 </dl>
 
 <?php

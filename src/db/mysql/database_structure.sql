@@ -2417,6 +2417,7 @@ CREATE TABLE svn_commits (
   KEY whoid (whoid),
   KEY revision (revision),
   KEY idx_search (group_id, whoid, id),
+  KEY idx_repositoryid_date (repositoryid, date),
   FULLTEXT (description)
 );
 

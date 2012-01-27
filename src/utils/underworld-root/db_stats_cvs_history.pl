@@ -143,7 +143,7 @@ while(<LOGFILE>) {
 	    print STDERR "db_cvs_history.pl: bad unix_group_name \'$group\' \n";
 	  }
 
-	  $user_id = $users{$user};
+	  $user_id = $users{lc($user)};
 
 	  if ( $user_id == 0 ) {
 	    print STDERR "$_";

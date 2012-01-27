@@ -371,6 +371,45 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         //alphanums, underscores and dash
         return 'a-zA-Z0-9_.-';
     }
+
+    /**
+     * Obtain statistics about backend format for CSV export
+     *
+     * @param Statistics_Formatter $formatter instance of statistics formatter class
+     *
+     * @return String
+     */
+    public function getBackendStatistics(Statistics_Formatter $formatter) {
+        $dao = $this->getDao();
+        $formatter->clearContent();
+        $formatter->addEmptyLine();
+        $formatter->addHeader('Git');
+        $gitShellIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitShell[]      = "Git shell";
+        $gitoliteIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitolite[]      = "Gitolite";
+        $dar             = $dao->getBackendStatistics('gitshell', $formatter->startDate, $formatter->endDate, $formatter->groupId);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $gitShellIndex[] = $row['month']." ".$row['year'];
+                $gitShell[]      = intval($row['count']);
+            }
+        }
+        $dar = $dao->getBackendStatistics('gitolite', $formatter->startDate, $formatter->endDate, $formatter->groupId);
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $gitoliteIndex[] = $row['month']." ".$row['year'];
+                $gitolite[]      = intval($row['count']);
+            }
+        }
+        $formatter->addLine($gitShellIndex);
+        $formatter->addLine($gitShell);
+        $formatter->addLine($gitoliteIndex);
+        $formatter->addLine($gitolite);
+        $content = $formatter->getCsvContent();
+        $formatter->clearContent();
+        return $content;
+    }
 }
 
 ?>

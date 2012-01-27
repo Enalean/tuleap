@@ -30,14 +30,15 @@ Version 4.0.26 (Not released yet)
     * Fix project db export(Contrib STMicroelectronics)
     
     == Plugins ==
-    * Git v1.22. See separated Changelog
+    * Git v1.23. See separated Changelog
     * Tracker v0.8.10. See separated Changelog
     * GraphOnTrackersV5 v0.6.2. See separated Changelog
     * Cardwall v0.3. See separated Changelog
     * Docman v2.22. See separated Changelog
-    * Hudson v1.6. See separated Changelog
+    * Hudson v1.7. See separated Changelog
     * IM v1.5. See separated Changelog
     * Ldap v3.10. See separated Changelog
+    * Statistics v0.9. See separated Changelog
     
     == Tuleap Development ==
     * Allow randomization of execution of unit tests (to be sure that there is no inter dependencies)

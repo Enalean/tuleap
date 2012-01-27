@@ -1,3 +1,6 @@
+Version 0.9
+    * Export SVN and CVS statistics to CSV.
+    
 Version 0.8
     * For non project admins the graph in project statistics widget in project main page was not displayed
 
@@ -11,7 +14,7 @@ Version 0.6
 	== Bug fix ==
 	* Display a nice error message instead of default jpgraph one when no data are available.
 
-Version 0.5 (Codendi_ST 4.0.17) 
+Version 0.5 (Codendi_ST 4.0.17)
 	
 	What Changed?
 	============
