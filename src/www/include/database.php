@@ -99,8 +99,17 @@ function db_insertid($qhandle) {
     }
 }
 
+/**
+ * Display real error only if we are in Debug mode
+ * 
+ * @return String 
+ */
 function db_error() {
-	return @mysql_error();
+    $error = @mysql_error();
+    if ($error && !Config::get('DEBUG_MODE')) {
+        $error = 'DB error';
+    }
+    return $error;
 }
 
 /**

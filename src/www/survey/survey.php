@@ -9,6 +9,17 @@
 require_once('pre.php');
 require('../survey/survey_utils.php');
 
+$request = HTTPRequest::instance();
+$group_id = $request->get('group_id');
+$valid = new Valid_UInt();
+if (!$valid->validate($group_id)) {
+    $group_id = null;
+}
+
+$survey_id = $request->get('survey_id');
+if (!$valid->validate($survey_id)) {
+    $survey_id = null;
+}
 
 survey_header(array('title'=>$Language->getText('survey_s','s'),
 		    'help'=>'SurveyManager.html#PublishingaSurvey'));

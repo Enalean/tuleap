@@ -259,7 +259,8 @@ if (!$request->exist('set')) {
 		$set='open';
     }
 } else {
-    $set = $request->get('set');
+    $validSet = new Valid_WhiteList('set', array('my', 'open', 'custom', 'all'));
+    $set      = $request->getValidated('set', $validSet, '');
 }
 
 if ($set=='my') {

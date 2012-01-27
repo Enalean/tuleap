@@ -188,11 +188,17 @@ class DataAccess {
      * @return string a MySQL error
      */
     public function isError() {
+        $error = '';
         if ($this->db) {
-            return mysql_error($this->db);
+            $error = mysql_error($this->db);
         } else {
-            return mysql_error();
+            $error = mysql_error();
         }
+        // Display real error only in Debug mode (prevent DB info leaking)
+        if ($error && !Config::get('DEBUG_MODE')) {
+            $error = 'DB error';
+        }
+        return $error;
     }
     
     /**

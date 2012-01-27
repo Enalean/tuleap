@@ -876,13 +876,13 @@ function util_normalize_emails($adresses) {
       global $Language;
         $valid = true;
         $message = "";
-        
+        $purifier = Codendi_HTMLPurifier::instance();
         foreach($arr_email as $key => $cc) {
             // Make sure that the address is valid
             $ref = util_user_finder($cc, $strict);	  
             if(empty($ref)) {
                 $valid = false;
-                $message .= "'$cc'<br>";
+                $message .= "'".$purifier->purify($cc)."'<br>";
                 continue;
             }
             else {	    

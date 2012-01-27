@@ -344,13 +344,14 @@ class LdapPlugin extends Plugin {
             $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
             if(!$ldapUserDao->alreadyLoggedInOnce(user_getid())) {
                 $return_to_arg = "";
-                if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
-                    $return_to_arg ='?return_to='.urlencode($_REQUEST['return_to']);
+                $request = HTTPRequest::instance();
+                if($request->existAndNonEmpty('return_to')) {
+                    $return_to_arg ='?return_to='.urlencode($request->get('return_to'));
                     if (isset($pv) && $pv == 2) $return_to_arg .= '&pv='.$pv;
                 } else {
                     if (isset($pv) && $pv == 2) $return_to_arg .= '?pv='.$pv;
                 }
-                $_REQUEST['return_to'] = '/plugins/ldap/welcome.php'.$return_to_arg;
+                $request->set('return_to', '/plugins/ldap/welcome.php'.$return_to_arg);
             }
         }
     }

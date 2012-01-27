@@ -312,8 +312,9 @@ function account_redirect_after_login() {
     $em =& EventManager::instance();
     $em->processEvent('account_redirect_after_login', null);
 
-    if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
-        $returnToToken = parse_url($_REQUEST['return_to']);
+    $request = HTTPRequest::instance();
+    if($request->existAndNonEmpty('return_to')) {
+        $returnToToken = parse_url($request->get('return_to'));
         if(preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {
             util_return_to('/my/index.php');
         }
