@@ -1,3 +1,6 @@
+Version 0.3  - Tuleap 4.0.26
+    * Import font and make display of QR code configurable.
+
 Version 0.2
     * Can now export a Cardwall (import is still not possible)
 

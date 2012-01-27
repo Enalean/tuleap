@@ -122,3 +122,10 @@
   -moz-opacity: 0.2;
   opacity: 0.2;
 }
+
+@font-face {
+  font-family: 'Reenie Beanie';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Reenie Beanie'), local('ReenieBeanie'), url('../fonts/Reenie-Beanie-regular.woff') format('woff');
+}

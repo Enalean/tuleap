@@ -162,7 +162,7 @@ class Tracker_ReportDao extends DataAccessObject {
         
         if(!$user_is_superuser) {
             //artifact permissions
-            $from   .= " LEFT JOIN permissions ON (permissions.object_id = c.artifact_id AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS') ";
+            $from   .= " LEFT JOIN permissions ON (permissions.object_id = CAST(c.artifact_id AS CHAR) AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS') ";
             $where  .= " AND (artifact.use_artifact_permissions = 0 OR  (permissions.ugroup_id IN (". implode(', ', $ugroups) .")))";
         }
         

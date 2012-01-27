@@ -1,6 +1,9 @@
 DISCLAIMER: plugin still in beta, do not use it on production servers.
 DISCLAIMER: Your data might be trashed in a future update.
 
+Version 0.8.10 - Tuleap 4.0.26
+  * Fix performance issue on tracker report display.
+
 Version 0.8.9 - Tuleap 4.0.26
   * HTML email notifications (in collaboration with STMicroelectronics)
 

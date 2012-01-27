@@ -25,10 +25,10 @@ require_once('CardwallPluginDescriptor.class.php');
 /**
  * CardwallPluginInfo
  */
-class CardwallPluginInfo extends PluginInfo {
+class CardwallPluginInfo extends PluginFileInfo {
     
-    function CardwallPluginInfo(&$plugin) {
-        $this->PluginInfo($plugin);
+    function __construct($plugin) {
+        parent::__construct($plugin, 'config');
         $this->setPluginDescriptor(new CardwallPluginDescriptor());
     }
     

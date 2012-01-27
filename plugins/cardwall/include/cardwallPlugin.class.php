@@ -85,7 +85,8 @@ class cardwallPlugin extends Plugin {
                 $params['row']['name'],
                 $params['row']['description'],
                 $params['row']['rank'],
-                $row['field_id']
+                $row['field_id'],
+                $this->getPluginInfo()->getPropVal('display_qr_code')
             );
             if ($params['store_in_session']) {
                 $params['instance']->initiateSession();
@@ -106,7 +107,6 @@ class cardwallPlugin extends Plugin {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
-            echo '<link  href="http://fonts.googleapis.com/css?family=Reenie+Beanie:regular" rel="stylesheet" type="text/css" />';
         }
     }
     
