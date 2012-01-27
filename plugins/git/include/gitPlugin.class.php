@@ -378,8 +378,8 @@ class GitPlugin extends Plugin {
      * @return void
      */
     public function display_statistics($params) {
-        if (!empty($params['scm_stats'])) {
-            $scmFormatter = $params['scm_stats'];
+        if (!empty($params['scm_formatter'])) {
+            $scmFormatter = $params['scm_formatter'];
             $gitBackend = Backend::instance('Git','GitBackend');
             echo $gitBackend->getBackendStatistics($scmFormatter);
         }
