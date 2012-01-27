@@ -22,8 +22,11 @@ Feature:
       #And the notification email display the 'Start Date' value
       And the artifact has 'Start Date' set to the current date
       
-    #Scenario: Set the close date
-      When I set the 'Status' to 'Closed'
+    Scenario: Set the close date
+      Given I logon as "testuser" : "tuleap_pass"
+      When I go to the bugs tracker of Test Project
+      And I submit a new artifact
+      And I set the 'Status' to 'Closed'
       Then a message says that the field 'Closed Date' has been set to the current date
 #      And the notification email display the new 'Closed Date' value
       And the artifact has 'Closed Date' set to the current date
