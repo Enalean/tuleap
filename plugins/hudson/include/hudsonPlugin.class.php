@@ -306,21 +306,21 @@ class hudsonPlugin extends Plugin {
      */
     public function statistics_collector($params) {
         if (!empty($params['formatter'])) {
-            $scmFormatter = $params['formatter'];
+            $formatter = $params['formatter'];
             $jobDao = new PluginHudsonJobDao(CodendiDataAccess::instance());
-            $dar = $jobDao->countJobs($scmFormatter->groupId);
+            $dar = $jobDao->countJobs($formatter->groupId);
             $count = 0;
             if ($dar && !$dar->isError()) {
                 foreach ($dar as $row) {
                     $count += intval($row['count']);
                 }
             }
-            $scmFormatter->clearContent();
-            $scmFormatter->addEmptyLine();
-            $scmFormatter->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'title')));
-            $scmFormatter->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'job_count', array(date('Y-m-d'))), $count));
-            echo $scmFormatter->getCsvContent();
-            $scmFormatter->clearContent();
+            $formatter->clearContent();
+            $formatter->addEmptyLine();
+            $formatter->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'title')));
+            $formatter->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'job_count', array(date('Y-m-d'))), $count));
+            echo $formatter->getCsvContent();
+            $formatter->clearContent();
         }
     }
 
