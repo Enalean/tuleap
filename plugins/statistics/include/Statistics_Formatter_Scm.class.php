@@ -21,7 +21,7 @@ require_once 'Statistics_Formatter.class.php';
 /**
  * SCM statistics for SVN or CVS
  */
-class Statistics_ScmFactory extends Statistics_Formatter {
+class Statistics_Formatter_Scm extends Statistics_Formatter {
 
     private $scm;
     protected $dao;
