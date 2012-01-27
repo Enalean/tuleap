@@ -305,8 +305,8 @@ class hudsonPlugin extends Plugin {
      * @return void
      */
     public function display_statistics($params) {
-        if (!empty($params['scm_formatter'])) {
-            $scmFormatter = $params['scm_formatter'];
+        if (!empty($params['formatter'])) {
+            $scmFormatter = $params['formatter'];
             $jobDao = new PluginHudsonJobDao(CodendiDataAccess::instance());
             $dar = $jobDao->countJobs($scmFormatter->groupId);
             $count = 0;

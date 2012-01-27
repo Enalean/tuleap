@@ -76,7 +76,7 @@ if (!$error && $request->exist('export')) {
     $statsCvs = new Statistics_Formatter_Cvs($startDate, $endDate, $groupId);
     echo $statsCvs->getStats();
     $em = EventManager::instance();
-    $params['scm_formatter'] = new Statistics_Formatter($startDate, $endDate, $groupId);
+    $params['formatter'] = new Statistics_Formatter($startDate, $endDate, $groupId);
     $em->processEvent('statistics_collector', $params);
     exit;
 } else {
