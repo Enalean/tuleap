@@ -59,7 +59,7 @@ class Statistics_Formatter {
             $this->content .= tocsv($element).$this->separator;
         }
         $this->content = substr($this->content, 0, -1);
-        $this->content .= "\n";
+        $this->addEmptyLine();
     }
 
     /**
@@ -72,7 +72,7 @@ class Statistics_Formatter {
     function addHeader($title) {
         $this->content .= tocsv($title).$this->separator;
         $this->content = substr($this->content, 0, -1);
-        $this->content .= "\n";
+        $this->addEmptyLine();
     }
 
     /**
