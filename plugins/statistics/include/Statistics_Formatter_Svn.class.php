@@ -45,7 +45,7 @@ class Statistics_Formatter_Svn extends Statistics_Formatter_Scm {
      */
     function getStats() {
         $this->dao = new Statistics_ScmSvnDao(CodendiDataAccess::instance(), $this->groupId);
-        $this->addLine(array('SVN'));
+        $this->addHeader('SVN');
         return parent::getStats();
     }
 

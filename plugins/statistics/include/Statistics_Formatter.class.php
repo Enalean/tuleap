@@ -63,6 +63,19 @@ class Statistics_Formatter {
     }
 
     /**
+     * Add a header to the content
+     *
+     * @param String $title String containing the heading element
+     *
+     * @return void
+     */
+    function addHeader($title) {
+        $this->content .= tocsv($title).$this->separator;
+        $this->content = substr($this->content, 0, -1);
+        $this->content .= "\n";
+    }
+
+    /**
      * Add an empty line to the content
      *
      * @return void

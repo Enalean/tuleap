@@ -45,7 +45,7 @@ class Statistics_Formatter_Cvs extends Statistics_Formatter_Scm {
      */
     function getStats() {
         $this->dao = new Statistics_ScmCvsDao(CodendiDataAccess::instance(), $this->groupId);
-        $this->addLine(array('CVS'));
+        $this->addHeader('CVS');
         return parent::getStats();
     }
 

@@ -379,7 +379,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $dao = $this->getDao();
         $scmFormatter->clearContent();
         $scmFormatter->addEmptyLine();
-        $scmFormatter->addLine(array('Git'));
+        $scmFormatter->addHeader('Git');
         $gitShellIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitShell[]      = "Git shell";
         $gitoliteIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
