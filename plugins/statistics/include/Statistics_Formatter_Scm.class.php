@@ -103,13 +103,11 @@ class Statistics_Formatter_Scm extends Statistics_Formatter {
         $result['commits'][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_project_commits');
         $commitsDar = $this->dao->commitsByProject($this->startDate, $this->endDate);
         if ($commitsDar && !$commitsDar->isError()) {
-            $rank = 1;
-            while ($rank <= 10) {
-                if ($row = $commitsDar->getRow()) {
+            foreach ($commitsDar as $row) {
+                if ($row) {
                     $result['project'][] = $row['project'];
                     $result['commits'][] = $row['count'];
                 }
-                $rank ++;
             }
         }
         return $result;
@@ -125,13 +123,11 @@ class Statistics_Formatter_Scm extends Statistics_Formatter {
         $result['commits'][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_user_commits');
         $commitsDar = $this->dao->commitsByUser($this->startDate, $this->endDate);
         if ($commitsDar && !$commitsDar->isError()) {
-            $rank = 1;
-            while ($rank <= 10) {
-                if ($row = $commitsDar->getRow()) {
+            foreach ($commitsDar as $row) {
+                if ($row) {
                     $result['user'][]    = $row['user'];
                     $result['commits'][] = $row['count'];
                 }
-                $rank ++;
             }
         }
         return $result;
