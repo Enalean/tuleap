@@ -62,7 +62,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
-        $this->_addHook('statistics_collector',              'statistics_scm',                    false);
+        $this->_addHook('statistics_collector',              'display_statistics',                    false);
     }
 
     public function getPluginInfo() {
@@ -377,11 +377,11 @@ class GitPlugin extends Plugin {
      *
      * @return void
      */
-    public function statistics_scm($params) {
+    public function display_statistics($params) {
         if (!empty($params['scm_stats'])) {
-            $scmStats = $params['scm_stats'];
+            $scmFormatter = $params['scm_stats'];
             $gitBackend = Backend::instance('Git','GitBackend');
-            echo $gitBackend->getBackendStatistics($scmStats);
+            echo $gitBackend->getBackendStatistics($scmFormatter);
         }
     }
 
