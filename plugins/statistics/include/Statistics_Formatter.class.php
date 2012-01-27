@@ -70,9 +70,7 @@ class Statistics_Formatter {
      * @return void
      */
     function addHeader($title) {
-        $this->content .= tocsv($title).$this->separator;
-        $this->content = substr($this->content, 0, -1);
-        $this->addEmptyLine();
+        $this->addLine(array($title));
     }
 
     /**
