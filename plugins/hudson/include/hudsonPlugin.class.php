@@ -316,7 +316,7 @@ class hudsonPlugin extends Plugin {
                 }
             }
             $scmFormatter->clearContent();
-            $scmFormatter->addLine(array());
+            $scmFormatter->addEmptyLine();
             $scmFormatter->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'title')));
             $scmFormatter->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'job_count', array(date('Y-m-d'))), $count));
             echo $scmFormatter->getCsvContent();

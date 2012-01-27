@@ -44,7 +44,7 @@ class Statistics_Formatter {
         $this->startDate = $startDate;
         $this->endDate   = $endDate;
         $this->groupId   = $groupId;
-        $this->addLine(array());
+        $this->addEmptyLine();
     }
 
     /**
@@ -59,6 +59,15 @@ class Statistics_Formatter {
             $this->content .= tocsv($element).$this->separator;
         }
         $this->content = substr($this->content, 0, -1);
+        $this->content .= "\n";
+    }
+
+    /**
+     * Add an empty line to the content
+     *
+     * @return void
+     */
+    function addEmptyLine() {
         $this->content .= "\n";
     }
 
