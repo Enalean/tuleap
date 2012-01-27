@@ -35,6 +35,7 @@ class Statistics_Formatter_Svn extends Statistics_Formatter_Scm {
      * @return void
      */
     function __construct($startDate, $endDate, $groupId = null) {
+        $this->dao = new Statistics_ScmSvnDao(CodendiDataAccess::instance(), $this->groupId);
         parent::__construct('svn', $startDate, $endDate, $groupId);
     }
 
@@ -44,7 +45,6 @@ class Statistics_Formatter_Svn extends Statistics_Formatter_Scm {
      * @return String
      */
     function getStats() {
-        $this->dao = new Statistics_ScmSvnDao(CodendiDataAccess::instance(), $this->groupId);
         $this->addHeader('SVN');
         return parent::getStats();
     }
