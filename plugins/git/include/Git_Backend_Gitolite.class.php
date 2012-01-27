@@ -197,7 +197,12 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @return bool
      */
     public function save($repository) {
-        //TODO: change teh description in the driver (see gitshell driver)
+        $path          = $this->getGitRootPath().$repository->getPath();
+        $fsDescription = $this->getDriver()->getDescription($path);
+        $description   = $repository->getDescription();
+        if ($description != $fsDescription) {
+            $this->getDriver()->setDescription($path, $description);
+        }
         return $this->getDao()->save($repository);
     }
 

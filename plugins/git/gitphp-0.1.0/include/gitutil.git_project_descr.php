@@ -17,7 +17,8 @@ function git_project_descr($projectroot,$project,$trim = FALSE)
 	$desc = file_get_contents($projectroot . $project . "/description");
 	if ($trim && (strlen($desc) > GITPHP_TRIM_LENGTH))
 		$desc = substr($desc,0, GITPHP_TRIM_LENGTH) . "...";
-	return $desc;
+
+	return Codendi_HTMLPurifier::instance()->purify($desc, CODENDI_PURIFIER_CONVERT_HTML);
 }
 
 ?>

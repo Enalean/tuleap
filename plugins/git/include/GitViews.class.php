@@ -21,6 +21,7 @@
 
 require_once('mvc/PluginViews.class.php');
 require_once('GitDao.class.php');
+require_once('Git_LogDao.class.php');
 require_once('GitBackend.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('GitViewsRepositoriesTraversalStrategy_Selectbox.class.php');
@@ -478,13 +479,6 @@ class GitViews extends PluginViews {
     <label for="repo_name"><?= $this->getText('admin_reference_creation_input_name'); ?></label>
     <input id="repo_name" name="repo_name" class="" type="text" value=""/>
 
-    <?php if ($user->useLabFeatures()) : ?>
-    <div class="lab_features" title="<?= $this->getText('admin_reference_creation_lab_feature'); ?>">
-      <input id="repo_type" name="repo_type" type="checkbox" value="enable"/>
-      <label for="repo_type"><?= $this->getText('admin_reference_creation_input_type'); ?></label>
-    </div>
-    <?php endif; ?>
-
     <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>">
 </form>
 </p>
@@ -591,11 +585,9 @@ class GitViews extends PluginViews {
         echo ' | ';
         
         
-        if ($this->user->isMember($this->groupId) && $this->user->useLabFeatures()) {
-            echo '<span class="lab_features" title="'. $this->getText('admin_reference_creation_lab_feature') .'">';
+        if ($this->user->isMember($this->groupId)) {
             echo $this->linkTo( '<b>'.$this->getText('fork_repositories').'</b>', '/plugins/git/?group_id='.$this->groupId .'&action=fork_repositories', 'class=""');
             echo ' | ';
-            echo '</span>';
         }
         
         echo $this->linkTo( '<b>'.$this->getText('bread_crumb_help').'</b>', 'javascript:help_window(\'/documentation/user_guide/html/'.$this->user->getLocale().'/VersionControlWithGit.html\')');
@@ -639,8 +631,7 @@ class GitViews extends PluginViews {
         echo '<td class="last">&nbsp;</td>';
         echo '</tr>';
         echo '</thead>';
-        
-        
+                
         echo '<tbody><tr valign="top">';
         echo '<td class="first">';
         $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
@@ -693,8 +684,16 @@ class GitViews extends PluginViews {
                 echo '</p>';
                 echo '</form>';
             }
-            $this->help('tree', array('display'=>'none') );
-            $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($this);
+            $this->help('tree', array('display' => 'none'));
+
+
+            $lastPushes = array();
+            $dao = new Git_LogDao();
+            $dar = $dao->searchLastPushesForProject($this->groupId);
+            foreach ($dar as $row) {
+                $lastPushes[$row['repository_id']] = $row;
+            }
+            $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($this, $lastPushes);
             echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
         }
         else {

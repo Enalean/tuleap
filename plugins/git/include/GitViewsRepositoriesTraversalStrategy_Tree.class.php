@@ -33,9 +33,10 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
      *
      * @param GitViews $view The GitViews
      */
-    public function __construct(GitViews $view) {
+    public function __construct(GitViews $view, $lastPushes) {
         parent::__construct();
         $this->view = $view;
+        $this->lastPushes = $lastPushes;
     }
     
     /**
@@ -128,8 +129,9 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         // header
         $html .= '<thead>';
         $html .= '<tr>';
-        $html .= '<th>'. 'Repository' .'</th>';
-        $html .= '<th>'. 'Description' .'</th>';
+        $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_repository') .'</th>';
+        $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_description') .'</th>';
+        $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_last_push') .'</th>';
         $html .= '</tr>';
         $html .= '</thead>';
         
@@ -158,26 +160,38 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         $trclass     = 'boxitem';
         $label       = $this->view->_getRepositoryPageUrl($repository->getId(), $name);
         $description = $repository->getDescription();
-
-        return $this->fetchHTMLRow($trclass, $depth, $label, $description);
+        
+        $lastPush    = '&nbsp;';
+        if (isset($this->lastPushes[$repository->getId()])) {
+            $row = $this->lastPushes[$repository->getId()];
+            $lastPushDate = html_time_ago($row['push_date']);
+            $who = UserHelper::instance()->getLinkOnUserFromUserId($row['user_id']);
+            $lastPush = $GLOBALS['Language']->getText('plugin_git', 'tree_view_by', array($lastPushDate, $who));
+        }
+        
+        return $this->fetchHTMLRow($trclass, $depth, $label, $description, $lastPush);
     }
 
     protected function fetchFolderRow(array $children, $name, $depth) {
         $trclass     = 'boxitemalt';
         $description = '&nbsp;';
+        $lastPush    = '&nbsp;';
 
         $html  = '';
-        $html .= $this->fetchHTMLRow($trclass, $depth, $name, $description);
+        $html .= $this->fetchHTMLRow($trclass, $depth, $name, $description, $lastPush);
         $html .= $this->fetchRows($children, $depth + 1);
         
         return $html;
     }
 
-    protected function fetchHTMLRow($class, $depth, $label, $description) {
+    protected function fetchHTMLRow($class, $depth, $label, $description, $lastPush) {
+        $HTMLPurifier = Codendi_HTMLPurifier::instance();
+        $description = $HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML);
         $html = '';
         $html .= '<tr class="' . $class . '">';
         $html .= '<td style="padding-left: ' . ($depth + 1) . 'em;">' . $label . '</td>';
         $html .= '<td>' . $description . '</td>';
+        $html .= '<td>' . $lastPush . '</td>';
         $html .= '</tr>';
         return $html;
     }

@@ -18,10 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) .'/../include/Git_Backend_Gitolite.class.php';
+
 Mock::generate('GitViews');
 Mock::generate('User');
+Mock::generate('Git_Backend_Gitolite');
 
-abstract class GitViewsRepositoriesTraversalStrategyTest extends UnitTestCase {
+abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase {
     
     public function __construct($classname) {
         parent::__construct();

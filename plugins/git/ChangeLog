@@ -1,3 +1,8 @@
+Version 1.22 (Tuleap 4.0.26)
+    * Gitolite is new default. It's no longer possible to create gitshell based repositories (existing on are still available).
+    * Fix description escaping (contrib STMicroelectronics).
+    * Allow to log pushes in db  (contrib STMicroelectronics).
+
 Version 1.21 (Tuleap 4.0.26)
     * Add unit test to verify behaviour of archive
 

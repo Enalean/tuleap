@@ -27,7 +27,7 @@ require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
 require_once('pre.php');
 
 // Check script parameters
-if ($argc != 6) {
+if ($argc != 7) {
     error("Wrong number of arguments");
 }
 
@@ -38,12 +38,14 @@ foreach ($argv as $arg) {
     }
 }
 
-$repositoryName = $params['repo_name'];
+$repositoryName  = $params['repo_name'];
 $userTuleapLogin = $params['login'];
-$groupName  = $params['group_name'];
-$nbCommits = $params['commits_number'];
+$groupName       = $params['group_name'];
+$nbCommits       = $params['commits_number'];
+$gitoliteUser    = $params['gitolite_user'];
+$pushTimestamp   = $params['push_timestamp'];
 
-logGitPushes($repositoryName, $userTuleapLogin, $groupName, $nbCommits);
+logGitPushes($repositoryName, $userTuleapLogin, $groupName, $pushTimestamp, $nbCommits, $gitoliteUser);
 
 /**
  * Pint an error then exit
@@ -61,13 +63,15 @@ function error($msg) {
  * Store details about the push in the DB
  *
  * @param String  $repositoryName Name of the git repository
- * @param String  $identifier     Name of the user that performed the push
+ * @param String  $identifier     Name of the gitshell user that performed the push, retrived from whoami output.
  * @param String  $projectName    Unix name of the project
+ * @param Integer $pushTimestamp  Date of the commit
  * @param Integer $commitsNumber  Number of commits
+ * @param String  $gitoliteUser   Name of the gitolite user that performed the push, retrived from environment var $GL_USER.
  *
  * @return void
  */
-function logGitPushes($repositoryName, $identifier, $projectName, $commitsNumber) {
+function logGitPushes($repositoryName, $identifier, $projectName, $pushTimestamp, $commitsNumber, $gitoliteUser) {
     $repository = new GitRepository();
     $repoId = $repository->getRepositoryIDByName($repositoryName, $projectName);
     $repository->setId($repoId);
@@ -76,7 +80,7 @@ function logGitPushes($repositoryName, $identifier, $projectName, $commitsNumber
     } catch (Exception $e) {
         error("Unable to load repository");
     }
-    $repository->logGitPush($repositoryName, $identifier, $projectName, $commitsNumber);
+    $repository->logGitPush($identifier, $pushTimestamp, $commitsNumber, $gitoliteUser);
 }
 
 ?>

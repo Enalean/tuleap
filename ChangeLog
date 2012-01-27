@@ -29,7 +29,7 @@ Version 4.0.26 (Not released yet)
     * Re-add SurveyManager in the user guide (inadvertently removed)
     
     == Plugins ==
-    * Git v1.21. See separated Changelog
+    * Git v1.22. See separated Changelog
     * Tracker v0.8.10. See separated Changelog
     * GraphOnTrackersV5 v0.6.2. See separated Changelog
     * Cardwall v0.3. See separated Changelog

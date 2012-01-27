@@ -3,7 +3,7 @@ document.observe('dom:loaded', function () {
       , fork_repositories_prefix = $('fork_repositories_prefix');
 
     if ( repoDesc ) {
-        var span = new Element('span').update( repoDesc.value );
+        var span = new Element('span').update( repoDesc.value.escapeHTML() );
         repoDesc.insert({before:span});
         repoDesc.hide();
         var link = new Element('a',{href:'#'}).update( new Element('img', {src:'/themes/common/images/ic/edit.png',alt:'edit'}) );

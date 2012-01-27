@@ -502,7 +502,33 @@ class Git_GitoliteDriver {
         }
         return false;
     }
-    
+
+    /**
+     * Save repository description in the filesystem
+     *
+     * @param String $repoPath    Path of the git repository
+     * @param String $description Description of the git repository
+     *
+     * @return Boolean
+     */
+    public function setDescription($repoPath, $description) {
+        if( ! file_put_contents($repoPath.'/description', $description) ) {
+            throw new GitDriverErrorException('Unable to set description');
+        }
+        return true;
+    }
+
+    /**
+     * Otain the repository description from the filesystem
+     *
+     * @param String $repoPath Path of the git repository
+     *
+     * @return String
+     */
+    public function getDescription($repoPath) {
+        return file_get_contents($repoPath.'/description');
+    }
+
 }
 
 ?>

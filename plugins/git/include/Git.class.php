@@ -188,12 +188,7 @@ class Git extends PluginController {
            
             #ADD REF
             case 'add':
-                if ($user->useLabFeatures() && $this->request->existAndNonEmpty('repo_type')) {
-                    $backendType = GitDao::BACKEND_GITOLITE;
-                } else {
-                    $backendType = GitDao::BACKEND_GITSHELL;
-                }
-                $this->addAction('createReference', array($this->groupId, $repositoryName, $backendType) );
+                $this->addAction('createReference', array($this->groupId, $repositoryName) );
                 $this->addView('index');
                 break;
              #DELETE a repository

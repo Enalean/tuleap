@@ -341,17 +341,18 @@ class GitDao extends DataAccessObject {
     /**
      * This function log a Git Push in the database
      *
-     * @param Integer  $repoId        Id of the git repository
-     * @param Integer  $UserId        Id of the user that performed the push
+     * @param Integer $repoId        Id of the git repository
+     * @param Integer $UserId        Id of the user that performed the push
+     * @param Integer $pushTimestamp Date of the push
      * @param Integer $commitsNumber Number of commits
      *
      * @return Boolean
      */
-    public function logGitPush($repoId, $userId, $commitsNumber) {
+    public function logGitPush($repoId, $userId, $pushTimestamp, $commitsNumber) {
         $repositoryId  = $this->da->escapeInt($repoId);
         $userId        = $this->da->escapeInt($userId);
         $commitsNumber = $this->da->escapeInt($commitsNumber);
-        $pushDate      = $this->da->quoteSmart(date('Y-m-d H:i:s'));
+        $pushDate      = $this->da->escapeInt($pushTimestamp);
         $query         = "INSERT INTO plugin_git_log (".self::REPOSITORY_ID.",
                                                       user_id,
                                                       push_date,

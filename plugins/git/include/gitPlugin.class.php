@@ -54,7 +54,6 @@ class GitPlugin extends Plugin {
         
         $this->_addHook(Event::EDIT_SSH_KEYS, 'edit_ssh_keys', false);
         $this->_addHook(Event::DUMP_SSH_KEYS, 'dump_ssh_keys', false);
-        $this->_addHook(Event::LAB_FEATURES_DEFINITION_LIST, 'lab_features_definition_list', false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
         
         $this->_addHook('permission_get_name',               'permission_get_name',               false);
@@ -250,14 +249,6 @@ class GitPlugin extends Plugin {
             throw new Exception('Unable to dump ssh keys (error code: '.$retVal.'): '.implode('%%%', $output));
             return false;
         }
-    }
-    
-    public function lab_features_definition_list($params) {
-        $params['lab_features'][] = array(
-            'title'       => $GLOBALS['Language']->getText('plugin_git', 'gitolite_lab_feature_title'),
-            'description' => $GLOBALS['Language']->getText('plugin_git', 'gitolite_lab_feature_description'),
-            'image'       => $this->getPluginPath().'/lab_feature.png',
-        );
     }
     
     function permission_get_name($params) {
