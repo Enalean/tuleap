@@ -22,19 +22,17 @@ Feature:
       #And the notification email display the 'Start Date' value
       And the artifact has 'Start Date' set to the current date
       
-#    Scenario: Set the close date
-#      When I switch the field 'Status' from 'Open' to 'Closed'
-#      And I do not touch anything else
-#      And I submit the form
-#      Then a message says that the field 'Closed Date' as been set to the current date
+    #Scenario: Set the close date
+      When I set the 'Status' to 'Closed'
+      Then a message says that the field 'Closed Date' has been set to the current date
 #      And the notification email display the new 'Closed Date' value
-#      And the artifact has 'Closed Date' set to the current date
+      And the artifact has 'Closed Date' set to the current date
 #      
 #    Scenario: Clear the close date
 #      When I switch the field 'Status' from 'Closed' to 'Open'
 #      And I do not touch anything else
 #      And I submit the form
-#      Then a message says that the field 'Closed Date' as been cleared
+#      Then a message says that the field 'Closed Date' has been cleared
 #      And the notification email displays the new 'Closed Date' value
 #      And the artifact has 'Closed Date' cleared
 #      
@@ -42,7 +40,7 @@ Feature:
 #      When I choose a date (different from today) in the field 'Closed Date'
 #      And I switch the field 'Status' from 'Open' to 'Closed'
 #      And I submit the form
-#      Then a message says that the field 'Closed Date' as been set to the current date
+#      Then a message says that the field 'Closed Date' has been set to the current date
 #      And the artifact has 'Closed Date' set to the current date instead of the submitted date
 #      
 #    Scenario: No update perms, no change
