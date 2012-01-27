@@ -160,8 +160,9 @@ class Statistics_Formatter_Scm extends Statistics_Formatter {
         $count = 0;
         $dar = $this->dao->repositoriesWithCommit($this->startDate, $this->endDate);
         if ($dar && !$dar->isError() && $dar->rowCount()> 0) {
-            foreach ($dar as $row) {
-                $count += intval($row['count']);
+            $row = $dar->getRow();
+            if ($row) {
+                $count = $row['count'];
             }
         }
         $repositories[] = $count;

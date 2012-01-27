@@ -311,8 +311,10 @@ class hudsonPlugin extends Plugin {
             $dar = $jobDao->countJobs($formatter->groupId);
             $count = 0;
             if ($dar && !$dar->isError()) {
-                    $row   = $dar->getRow();
-                    $count = $row['count'];
+                    $row = $dar->getRow();
+                    if ($row) {
+                        $count = $row['count'];
+                    }
             }
             $formatter->clearContent();
             $formatter->addEmptyLine();
