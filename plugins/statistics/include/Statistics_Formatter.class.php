@@ -21,7 +21,7 @@ require_once('www/project/export/project_export_utils.php');
 /**
  * Render SCM statistics in csv format
  */
-class Statistics_Scm {
+class Statistics_Formatter {
 
     private $separator;
     protected $content;

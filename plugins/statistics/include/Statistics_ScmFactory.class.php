@@ -16,12 +16,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Statistics_Scm.class.php';
+require_once 'Statistics_Formatter.class.php';
 
 /**
  * SCM statistics for SVN or CVS
  */
-class Statistics_ScmFactory extends Statistics_Scm {
+class Statistics_ScmFactory extends Statistics_Formatter {
 
     private $scm;
     protected $dao;

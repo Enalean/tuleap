@@ -371,39 +371,39 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     /**
      * Obtain statistics about backend format for CSV export
      *
-     * @param Statistics_Scm $scmStats instance of statistics class
+     * @param Statistics_Formatter $scmFormatter instance of statistics formatter class
      *
      * @return String
      */
-    public function getBackendStatistics(Statistics_Scm $scmStats) {
+    public function getBackendStatistics(Statistics_Formatter $scmFormatter) {
         $dao = $this->getDao();
-        $scmStats->clearContent();
-        $scmStats->addLine(array());
-        $scmStats->addLine(array('Git'));
+        $scmFormatter->clearContent();
+        $scmFormatter->addLine(array());
+        $scmFormatter->addLine(array('Git'));
         $gitShellIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitShell[]      = "Git shell";
         $gitoliteIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitolite[]      = "Gitolite";
-        $dar             = $dao->getBackendStatistics('gitshell', $scmStats->startDate, $scmStats->endDate, $scmStats->groupId);
+        $dar             = $dao->getBackendStatistics('gitshell', $scmFormatter->startDate, $scmFormatter->endDate, $scmFormatter->groupId);
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
                 $gitShellIndex[] = $row['month']." ".$row['year'];
                 $gitShell[]      = intval($row['count']);
             }
         }
-        $dar = $dao->getBackendStatistics('gitolite', $scmStats->startDate, $scmStats->endDate, $scmStats->groupId);
+        $dar = $dao->getBackendStatistics('gitolite', $scmFormatter->startDate, $scmFormatter->endDate, $scmFormatter->groupId);
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
                 $gitoliteIndex[] = $row['month']." ".$row['year'];
                 $gitolite[]      = intval($row['count']);
             }
         }
-        $scmStats->addLine($gitShellIndex);
-        $scmStats->addLine($gitShell);
-        $scmStats->addLine($gitoliteIndex);
-        $scmStats->addLine($gitolite);
-        $content = $scmStats->getCsvContent();
-        $scmStats->clearContent();
+        $scmFormatter->addLine($gitShellIndex);
+        $scmFormatter->addLine($gitShell);
+        $scmFormatter->addLine($gitoliteIndex);
+        $scmFormatter->addLine($gitolite);
+        $content = $scmFormatter->getCsvContent();
+        $scmFormatter->clearContent();
         return $content;
     }
 }

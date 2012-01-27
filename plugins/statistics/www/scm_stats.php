@@ -17,7 +17,7 @@
  */
 
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/Statistics_Scm.class.php';
+require_once dirname(__FILE__).'/../include/Statistics_Formatter.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_ScmCvs.class.php';
 require_once dirname(__FILE__).'/../include/Statistics_ScmSvn.class.php';
 
@@ -76,7 +76,7 @@ if (!$error && $request->exist('export')) {
     $statsCvs = new Statistics_ScmCvs($startDate, $endDate, $groupId);
     echo $statsCvs->getStats();
     $em = EventManager::instance();
-    $params['scm_stats'] = new Statistics_Scm($startDate, $endDate, $groupId);
+    $params['scm_stats'] = new Statistics_Formatter($startDate, $endDate, $groupId);
     $em->processEvent('statistics_scm', $params);
     exit;
 } else {

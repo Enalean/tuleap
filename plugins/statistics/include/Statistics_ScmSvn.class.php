@@ -16,7 +16,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Statistics_Scm.class.php';
+require_once 'Statistics_Formatter.class.php';
 require_once 'Statistics_ScmSvnDao.class.php';
 require_once 'Statistics_ScmFactory.class.php';
 
