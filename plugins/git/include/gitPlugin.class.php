@@ -62,7 +62,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
-        $this->_addHook('statistics_scm',                    'statistics_scm',                    false);
+        $this->_addHook('statistics_collector',              'statistics_scm',                    false);
     }
 
     public function getPluginInfo() {

@@ -28,7 +28,7 @@ class hudsonPlugin extends Plugin {
         $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
         $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
         $this->_addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
-        $this->_addHook('statistics_scm',                'statistics_scm',           false);
+        $this->_addHook('statistics_collector',          'statistics_scm',           false);
     }
 
     function getPluginInfo() {

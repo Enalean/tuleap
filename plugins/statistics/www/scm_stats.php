@@ -77,7 +77,7 @@ if (!$error && $request->exist('export')) {
     echo $statsCvs->getStats();
     $em = EventManager::instance();
     $params['scm_stats'] = new Statistics_Formatter($startDate, $endDate, $groupId);
-    $em->processEvent('statistics_scm', $params);
+    $em->processEvent('statistics_collector', $params);
     exit;
 } else {
     $title = $GLOBALS['Language']->getText('plugin_statistics', 'scm_title');
