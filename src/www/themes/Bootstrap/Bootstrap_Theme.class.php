@@ -95,9 +95,21 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
         $this->addBreadcrumb('Installation &amp; Administration/How to install');
         echo $this->getBreadcrumbs();
         echo '<div class="container-fluid">';
+        $sidebar = false;
+        $expand  = 'expand';
+        if (isset($params['group']) && $params['group']) {
+            $project = ProjectManager::instance()->getProject($params['group']);
+            $sidebar = $this->projectSidebar($project, $params['toptab'], Codendi_HTMLPurifier::instance(), UserManager::instance()->getCurrentUser());
+            if ($sidebar) {
+                $expand = '';
+                echo $sidebar;
+            }
+        }
+        echo '<div class="content well '. $expand .'">';
     }
     
     public function footer($params) {
+        echo '</div>';
         echo '</div>';
         $this->generic_footer($params);
     }
@@ -142,6 +154,27 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
             }
             $html .= '</ul>';
         }
+        return $html;
+    }
+
+    public function projectSidebar(Project $project, $toptab, Codendi_HTMLPurifier $hp, User $user) {
+        $html = '';
+        $html .= '<div class="sidebar">';
+        $html .= '<div class="well">';
+        $html .= '<h5>'. $hp->purify($project->getPublicName()) .'</h5>';
+        $html .= '<ul>';
+        foreach ($this->_getProjectTabs($toptab, $project) as $tab) {
+            $active = '';
+            if ($tab['enabled']) {
+                $active = 'class="active"';
+            }
+            $html .= "<li $active>";
+            $html .= '<a href="'. $tab['link'] .'">'. $tab['label'] .'</a>';
+            $html .= '</li>';
+        }
+        $html .= '</ul>';
+        $html .= '</div>';
+        $html .= '</div>';
         return $html;
     }
 }

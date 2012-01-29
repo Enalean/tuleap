@@ -265,3 +265,7 @@ a.login {
 table {
     width: auto;
 }
+
+.container-fluid > .content.expand {
+    margin-left: 0px;
+}
