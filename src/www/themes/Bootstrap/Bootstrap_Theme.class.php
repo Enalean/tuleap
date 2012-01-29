@@ -77,17 +77,24 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
                       </p> 
                     </div> 
                   </div> 
-                </div> 
-             
+                </div>';
+        /*
+        echo '
                 <ul class="breadcrumb">
                     <li><a href="/my/">Home</a> <span class="divider">/</span></li>
                     <li><a href="/softwaremap/">Projects</a> <span class="divider">/</span></li>
                     <li><a href="#my">The Garden Project</a> <span class="divider">/</span></li>
                     <li><a href="#my">Project Documentation</a> <span class="divider">/</span></li>
                     <li class="active">Installation &amp; Administration/How to install</li>
-                </ul>
-                
-                <div class="container-fluid">';
+                </ul>';
+                */
+        $this->addBreadcrumb('<a href="/my/">Home</a>');
+        $this->addBreadcrumb('<a href="/softwaremap/">Projects</a>');
+        $this->addBreadcrumb('<a href="#my">The Garden Project</a>');
+        $this->addBreadcrumb('<a href="#my">Project Documentation</a>');
+        $this->addBreadcrumb('Installation &amp; Administration/How to install');
+        echo $this->getBreadcrumbs();
+        echo '<div class="container-fluid">';
     }
     
     public function footer($params) {
@@ -112,6 +119,30 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
         <link href="'. $this->root . '/google-code-prettify/professional.css" rel="stylesheet">';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'"  />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
+    }
+
+    public function getBreadCrumbs() {
+        $html = '';
+        $nb = count($this->breadcrumbs);
+        if ($nb) {
+            $html .= '<ul class="breadcrumb">';
+            $i = 0;
+            foreach ($this->breadcrumbs as $breadcrumb) {
+                $active = '';
+                if ($i == $nb - 1) {
+                    $active = 'class="active"';
+                }
+                $html .= "<li $active>";
+                $html .= $breadcrumb;
+                if (!$active) {
+                    $html .= ' <span class="divider">/</span>';
+                }
+                $html .= '</li>';
+                $i++;
+            }
+            $html .= '</ul>';
+        }
+        return $html;
     }
 }
 
