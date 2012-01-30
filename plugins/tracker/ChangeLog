@@ -1,6 +1,9 @@
 DISCLAIMER: plugin still in beta, do not use it on production servers.
 DISCLAIMER: Your data might be trashed in a future update.
 
+Version 0.8.11 - Tuleap 4.0.26
+  * Cucumberize the features
+
 Version 0.8.10 - Tuleap 4.0.26
   * Fix performance issue on tracker report display.
 

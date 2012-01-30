@@ -32,7 +32,7 @@ Version 4.0.26 (Not released yet)
     
     == Plugins ==
     * Git v1.23. See separated Changelog
-    * Tracker v0.8.10. See separated Changelog
+    * Tracker v0.8.11. See separated Changelog
     * GraphOnTrackers v1.4. See separated Changelog
     * GraphOnTrackersV5 v0.6.2. See separated Changelog
     * Cardwall v0.3. See separated Changelog
@@ -53,6 +53,7 @@ Version 4.0.26 (Not released yet)
     * Add a plugin orange that contains Orange specificities.
     * The default rpm package name is now Tuleap.
     * Add cgi-bin script for various statistics purpose. (Contrib Orange)
+    * Cucumber now run some of our tests
     
     == SOAP ==
     * SOAP API update to version 4.3, see src/www/soap/ChangeLog for details.
