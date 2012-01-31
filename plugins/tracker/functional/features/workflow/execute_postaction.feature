@@ -35,12 +35,12 @@ Feature:
       Then a message says that the field Closed Date has been cleared
       And the artifact has 'Closed Date' cleared
       
-#    Scenario: Workflow overrides submitted value
-#      When I choose a date (different from today) in the field 'Closed Date'
-#      And I switch the field 'Status' from 'Open' to 'Closed'
-#      And I submit the form
-#      Then a message says that the field 'Closed Date' has been set to the current date
-#      And the artifact has 'Closed Date' set to the current date instead of the submitted date
+    Scenario: Workflow overrides submitted value
+      When I submit a new artifact
+      When I provide a 'Closed Date' different from today
+      And I set the 'Status' to "Closed"
+      Then a message says that the field 'Closed Date' has been set to the current date
+      And the artifact has 'Closed Date' set to the current date
 #      
 #    Scenario: No update perms, no change
 #      Given I cannot update the field 'Closed Date'

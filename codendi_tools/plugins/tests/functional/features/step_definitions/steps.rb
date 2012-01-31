@@ -43,6 +43,10 @@ Then /^a message says that the field 'Closed Date' has been set to the current d
   end
 end
 
+def tracker_element_with(label)
+  "//label[@class='tracker_formelement_label' and text() = '#{label}']/.."
+end
+
 Then /^the artifact has '(.*)' cleared$/ do |label|
   find(:xpath, "//label[@class='tracker_formelement_label' and text() = '#{label}']/..").should have_xpath("./*/input[@value = '']")
 end
@@ -51,6 +55,12 @@ Then /^the artifact has 'Start Date' set to the current date$/ do
 end
 Then /^the artifact has 'Closed Date' set to the current date$/ do
   find(:xpath, "//label[@class='tracker_formelement_label']/..").should have_xpath("./*/input[@value='#{today}']")
+end
+
+When /^I provide a 'Closed Date' different from today$/ do
+  not_today = (Time.now.day + 1).remainder(28)
+  find(:xpath, tracker_element_with('Closed Date') + "//a[@class='date-picker-control']").click
+  find(:xpath, "//div[@class='datePicker'][2]//td[contains(@class, 'dm-#{not_today}')]").click
 end
 
 When /^I logon as "([^"]*)" : "([^"]*)"$/ do |user, pwd|
