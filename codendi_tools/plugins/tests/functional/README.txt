@@ -48,7 +48,7 @@ $> which gem
 /home/manuel/.rvm/rubies/ruby-1.8.7-head/bin/gem
 
 # Install gems
-gem install rspec cucumber capybara selenium
+gem install rspec cucumber capybara capybara-screenshot selenium
 
 Environement
 ============
@@ -62,6 +62,8 @@ Running with webkit (faster selenium)
 install webkit (or qt on mac)
 
 gem install capybara-webkit
+
+(you may have to install libqt4-dev before: sudo apt-get install libqt4-dev)
 
 # if the current gem of capybara webkit is still 0.7.2, you must build it to get the ssl_error_ignore option :
 git clone https://github.com/thoughtbot/capybara-webkit.git
