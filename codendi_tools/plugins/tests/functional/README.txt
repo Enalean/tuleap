@@ -63,12 +63,9 @@ you need to set your hosts file to point to your local vm
 
 Running with webkit (faster selenium)
 =======
-install webkit (or qt on mac)
+apt-get install libqt4-dev
 
+
+# Note: you need capybara-webkit-0.8 minimum
+gem install capybara-screenshot
 gem install capybara-webkit
-
-# if the current gem of capybara webkit is still 0.7.2, you must build it to get the ssl_error_ignore option :
-git clone https://github.com/thoughtbot/capybara-webkit.git
-cd capybara-webkit
-bundle && rake
-sudo gem install pkg/capybara-webkit-0.7.2.gem
