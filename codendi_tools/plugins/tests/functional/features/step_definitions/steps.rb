@@ -13,28 +13,42 @@ When /^I submit a new artifact$/ do
   page.should have_css("div#feedback") #click_button('submit_and_continue')
 end
 
+When /^I set the 'Status' to "([^"]*)"$/ do |status|
+  within(:xpath, "//label[text()='Status']/..") do
+    find(:xpath, "./select/option[text()='#{status}']").select_option
+  end
+  find("input[name='submit_and_stay']").click
+end
+
+Given /^a closed bug$/ do
+  steps %Q{
+    Given I submit a new artifact
+    Given I set the 'Status' to "Closed"
+  }
+end
+
+Then /^a message says that the field (.*) has been cleared$/ do |field|
+  within("div#feedback") do
+    find(:xpath, ".").should have_content("'#{field}' a été automatiquement effacé")
+  end
+end
 Then /^a message says that the field 'Start Date' has been set to the current date$/ do
   within("div#feedback") do
     find(:xpath, ".").should have_content(today)
   end
 end
-
-Then /^the artifact has 'Start Date' set to the current date$/ do
-  find(:xpath, "//label[@class='tracker_formelement_label']/..").should have_xpath("./*/input[@value='#{today}']")
-end
-When /^I set the 'Status' to 'Closed'$/ do
-  within(:xpath, "//label[text()='Status']/..") do
-    find(:xpath, "./select/option[text()='Closed']").select_option
-  end
-  find("input[name='submit_and_stay']").click
-end
-
 Then /^a message says that the field 'Closed Date' has been set to the current date$/ do
   within("div#feedback") do
     find(:xpath, ".").should have_content(today)
   end
 end
 
+Then /^the artifact has '(.*)' cleared$/ do |label|
+  find(:xpath, "//label[@class='tracker_formelement_label' and text() = '#{label}']/..").should have_xpath("./*/input[@value = '']")
+end
+Then /^the artifact has 'Start Date' set to the current date$/ do
+  find(:xpath, "//label[@class='tracker_formelement_label']/..").should have_xpath("./*/input[@value='#{today}']")
+end
 Then /^the artifact has 'Closed Date' set to the current date$/ do
   find(:xpath, "//label[@class='tracker_formelement_label']/..").should have_xpath("./*/input[@value='#{today}']")
 end
