@@ -92,3 +92,15 @@ Then /^the admin page is not reachable$/ do
     page.should have_content("Insufficient Group Access")
 end
 
+When /^I go to the service "([^"]*)"$/ do |service|
+    find(:xpath, "//a[text()='"+ service +"']").click
+    page.should have_content('Subversion Access')
+end
+
+Then /^the subversion admin page is not reachable$/ do
+    page.should_not have_xpath("//a[contains(@href, '/svn/admin/?group_id=')]")
+    # hack the url
+    visit(page.current_url().gsub(/\/svn\/\?group_id=/, '/svn/admin/?group_id='))
+    page.should have_content("Permission Denied")
+end
+
