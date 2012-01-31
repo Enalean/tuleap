@@ -2,6 +2,8 @@ require 'rubygems'
 require 'capybara/cucumber'
 require 'capybara-screenshot/cucumber'
 require 'capybara/dsl'
+require File.dirname(__FILE__) + '/svn.rb'
+
 include RSpec::Matchers
 include Capybara::DSL
 
