@@ -92,8 +92,8 @@ Then /^the admin page is not reachable$/ do
     page.should have_content("Insufficient Group Access")
 end
 
-When /^I go to the service "([^"]*)"$/ do |service|
-    find(:xpath, "//a[text()='"+ service +"']").click
+When /^I go to the service Subversion$/ do
+    find(:xpath, "//a[text()='Subversion']").click
     page.should have_content('Subversion Access')
 end
 
@@ -101,6 +101,19 @@ Then /^the subversion admin page is not reachable$/ do
     page.should_not have_xpath("//a[contains(@href, '/svn/admin/?group_id=')]")
     # hack the url
     visit(page.current_url().gsub(/\/svn\/\?group_id=/, '/svn/admin/?group_id='))
+    page.should have_content("Permission Denied")
+end
+
+When /^I go to the service Files$/ do
+    find(:xpath, "//li/a[text()='Files']").click
+    page.should have_content('Packages')
+end
+
+Then /^the file admin page is not reachable$/ do
+    page.should_not have_xpath("//a[contains(@href, '/file/admin/?group_id=')]")
+    # hack the url
+    url = page.current_url().gsub(/\/file\/showfiles.php\?group_id=/, '/file/admin/?group_id=')
+    visit(url)
     page.should have_content("Permission Denied")
 end
 

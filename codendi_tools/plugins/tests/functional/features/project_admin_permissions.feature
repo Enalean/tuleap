@@ -13,6 +13,12 @@ Scenario: Project members do not have access to the project admin
 Scenario: Project members do not have access to svn admin page
   Given I logon as "project_member" : "project_member" 
   When I go to The Garden Project
-  And I go to the service "Subversion"
+  And I go to the service Subversion
   Then the subversion admin page is not reachable
+
+Scenario: Project members do not have access to FRS admin page
+  Given I logon as "project_member" : "project_member" 
+  When I go to The Garden Project
+  And I go to the service Files
+  Then the file admin page is not reachable
 
