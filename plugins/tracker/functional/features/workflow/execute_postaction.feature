@@ -20,26 +20,26 @@ Feature:
 
     Scenario: The start date is set to the current date upon creation
       When I submit a new artifact
-      Then a message says that the field 'Start Date' has been set to the current date
+      Then a message says that 'Start Date' has been set to the current date
       And the artifact has 'Start Date' set to the current date
       
     Scenario: When a bug is closed the 'Closed Date' is set
       When I submit a new artifact
       And I set the 'Status' to "Closed"
-      Then a message says that the field 'Closed Date' has been set to the current date
+      Then a message says that 'Closed Date' has been set to the current date
       And the artifact has 'Closed Date' set to the current date
 
     Scenario: When a bug is reopened the 'Closed date' is cleared
       Given a closed bug
       When I set the 'Status' to "Open"
-      Then a message says that the field Closed Date has been cleared
+      Then a message says that Closed Date has been cleared
       And the artifact has 'Closed Date' cleared
       
     Scenario: Workflow overrides submitted value
       When I submit a new artifact
       When I provide a 'Closed Date' different from today
       And I set the 'Status' to "Closed"
-      Then a message says that the field 'Closed Date' has been set to the current date
+      Then a message says that 'Closed Date' has been set to the current date
       And the artifact has 'Closed Date' set to the current date
 #      
 #    Scenario: No update perms, no change
@@ -47,7 +47,7 @@ Feature:
 #      When I switch the field 'Status' from 'Closed' to 'Open'
 #      And I do not touch anything else
 #      And I submit the form
-#      Then a message says that the field 'Closed Date' cannot be update because of permissions settings
+#      Then a message says that 'Closed Date' cannot be update because of permissions settings
 #      And the field is not updated
 #      
 #    Scenario: No read perms, no change and no warning

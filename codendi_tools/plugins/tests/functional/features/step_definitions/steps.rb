@@ -27,17 +27,17 @@ Given /^a closed bug$/ do
   }
 end
 
-Then /^a message says that the field (.*) has been cleared$/ do |field|
+Then /^a message says that (.*) has been cleared$/ do |field|
   within("div#feedback") do
     find(:xpath, ".").should have_content("'#{field}' a été automatiquement effacé")
   end
 end
-Then /^a message says that the field 'Start Date' has been set to the current date$/ do
+Then /^a message says that 'Start Date' has been set to the current date$/ do
   within("div#feedback") do
     find(:xpath, ".").should have_content(today)
   end
 end
-Then /^a message says that the field 'Closed Date' has been set to the current date$/ do
+Then /^a message says that 'Closed Date' has been set to the current date$/ do
   within("div#feedback") do
     find(:xpath, ".").should have_content(today)
   end
