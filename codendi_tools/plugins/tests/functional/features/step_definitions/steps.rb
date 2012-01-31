@@ -32,12 +32,7 @@ Then /^a message says that (.*) has been cleared$/ do |field|
     find(:xpath, ".").should have_content("'#{field}' a été automatiquement effacé")
   end
 end
-Then /^a message says that 'Start Date' has been set to the current date$/ do
-  within("div#feedback") do
-    find(:xpath, ".").should have_content(today)
-  end
-end
-Then /^a message says that 'Closed Date' has been set to the current date$/ do
+Then /^a message says that '(.*)' has been set to the current date$/ do |ignored|
   within("div#feedback") do
     find(:xpath, ".").should have_content(today)
   end
@@ -48,13 +43,10 @@ def tracker_element_with(label)
 end
 
 Then /^the artifact has '(.*)' cleared$/ do |label|
-  find(:xpath, "//label[@class='tracker_formelement_label' and text() = '#{label}']/..").should have_xpath("./*/input[@value = '']")
+  find(:xpath, tracker_element_with(label)).should have_xpath("./*/input[@value = '']")
 end
-Then /^the artifact has 'Start Date' set to the current date$/ do
-  find(:xpath, "//label[@class='tracker_formelement_label']/..").should have_xpath("./*/input[@value='#{today}']")
-end
-Then /^the artifact has 'Closed Date' set to the current date$/ do
-  find(:xpath, "//label[@class='tracker_formelement_label']/..").should have_xpath("./*/input[@value='#{today}']")
+Then /^the artifact has '(.*)' set to the current date$/ do |ignored|
+  find(:xpath, tracker_element_with(ignored)).should have_xpath("./*/input[@value='#{today}']")
 end
 
 When /^I provide a 'Closed Date' different from today$/ do
