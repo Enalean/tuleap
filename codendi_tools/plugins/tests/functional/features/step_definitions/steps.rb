@@ -6,7 +6,7 @@ When /^I go to the bugs tracker of Test Project$/ do
 end
 When /^I submit a new artifact$/ do
   find(:xpath, '//a[contains(@href, "func=new-artifact")]').click
-  within (:xpath, "//fieldset/legend[@title='fieldset_default_desc_key']") do
+  within(:xpath, "//fieldset/legend[@title='fieldset_default_desc_key']") do
     find(:xpath, "../div/input[@type='text']").set("a bug title")
   end
   find("input[name='submit_and_stay']").click
@@ -71,5 +71,24 @@ end
 
 Then /^I am still logged on$/ do
   page.should have_content('admin')
+end
+
+When /^I go to The Garden Project/ do
+  visit('projects/garden/')
+  page.should have_content('The Garden Project')
+end
+
+Then /^the admin page is reachable/ do
+    find(:xpath, "//a[contains(@href, '/project/admin/?group_id=')]").click
+    find(:xpath, "//title").should have_content("Project Admin")
+end
+
+Then /^the admin page is not reachable$/ do
+    page.should_not have_xpath("//a[contains(@href, '/project/admin/?group_id=')]")
+    # hack the url
+    link_to_project_information = find(:xpath, "//a[contains(text(), '[More information...]')]")['href']
+    group_id = link_to_project_information.scan(/group_id=(\d+)/)[0][0]
+    visit('project/admin/?group_id=' + group_id)
+    page.should have_content("Insufficient Group Access")
 end
 
