@@ -62,4 +62,16 @@ Then /^the file admin page is not reachable$/ do
     page.should have_content("Permission Denied")
 end
 
+When /^I go to the service Wiki$/ do
+    find(:xpath, "//li/a[text()='Wiki']").click
+    page.should have_content('Wiki Documents')
+end
+
+Then /^the PhpWikiAdministration page is not reachable$/ do
+    find(:xpath, "//a[text()='Home Page' and contains(@href, 'wiki')]").click
+    page.should have_content('HomePage')
+    url = page.current_url().gsub(/HomePage/, 'PhpWikiAdministration')
+    visit(url)
+    page.should have_content("Permission Denied")
+end
 
