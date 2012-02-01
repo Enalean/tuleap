@@ -5,6 +5,9 @@ When /^I logon as "([^"]*)" : "([^"]*)"$/ do |user, pwd|
     find("input[name='login']").click
 end
 
+When /^I log out$/ do 
+    find(:xpath, "//a[@href='/account/logout.php']").click
+end
 Then /^I am on my personal page$/ do
     page.should have_content('Site Administrator')
 end

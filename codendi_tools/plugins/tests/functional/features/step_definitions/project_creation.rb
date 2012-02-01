@@ -10,7 +10,7 @@ end
 
 Then /^enter a project name and short name$/ do
   fill_in('form_full_name', :with => "Test Project")
-  fill_in('form_unix_name', :with => "atestproject")
+  fill_in('form_unix_name', :with => "testproject")
   click_button("project_register_next")
 end
 
@@ -29,5 +29,13 @@ Then /^enter a short and long description$/ do
   fill_in('form_short_description', :with => "A short description")
   fill_in('form_101', :with => "Some useful longer description")
   click_button("project_register_next")
+end
+#/admin/approve-pending.php
+Then /^the site admin has to validate Test Project$/ do
+  steps %Q{ 
+    When I log out
+    Given I logon as "admin" : "siteadmin"} 
+  find(:xpath, "//a[@href='/admin/approve-pending.php']").click
+  find(:xpath, "//input[@value='activate']/../input[@type='submit']").click
 end
 

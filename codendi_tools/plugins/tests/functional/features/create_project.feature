@@ -15,4 +15,7 @@ Scenario: I can submit a new project
   And accept default values for project services
   And accept default values for project services
   And confirm the project creation
-
+  Then the site admin has to validate Test Project
+# change services
+# fix the timeout project approval
+#fix the usage of a name for validation
