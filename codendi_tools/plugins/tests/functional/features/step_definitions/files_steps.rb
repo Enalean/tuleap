@@ -2,7 +2,7 @@
 
 # Package
 Given /^I go on Files page of Test project$/ do
-  find(:xpath, '//a[text()="MV Valid 4.0.26"]').click
+  find(:xpath, '//a[text()="The Garden Project"]').click
   find(:xpath, "//a[contains(@href, '/file/showfiles.php?group_id=')]").click
 end
 

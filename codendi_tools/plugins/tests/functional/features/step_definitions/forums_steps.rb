@@ -1,6 +1,6 @@
 # Forums
 Given /^I go on Forums page of Test project$/ do
-  find(:xpath, '//a[text()="MV Valid 4.0.26"]').click
+  find(:xpath, '//a[text()="The Garden Project"]').click
   find(:xpath, "//a[contains(@href, '/forum/?group_id=')]").click
 end
 
