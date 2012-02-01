@@ -36,8 +36,8 @@ begin
 rescue LoadError
 end
 
-#Capybara.default_driver = :firefox
+Capybara.default_driver = :firefox
 #Capybara.default_driver = :ie7
-Capybara.default_driver = :webkit_ignore_ssl
+#Capybara.default_driver = :webkit_ignore_ssl
 
 
