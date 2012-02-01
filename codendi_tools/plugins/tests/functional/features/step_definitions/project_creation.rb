@@ -31,11 +31,12 @@ Then /^enter a short and long description$/ do
   click_button("project_register_next")
 end
 #/admin/approve-pending.php
-Then /^the site admin has to validate Test Project$/ do
+Then /^the site admin has to validate the project$/ do
   steps %Q{ 
     When I log out
     Given I logon as "admin" : "siteadmin"} 
   find(:xpath, "//a[@href='/admin/approve-pending.php']").click
   find(:xpath, "//input[@value='activate']/../input[@type='submit']").click
+  page.should_not have_content("Timeout")
 end
 

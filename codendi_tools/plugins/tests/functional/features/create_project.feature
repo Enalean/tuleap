@@ -12,10 +12,7 @@ Scenario: I can submit a new project
   And accept default values for project template
   And enter a short and long description
   And accept default values for project services
-  And accept default values for project services
-  And accept default values for project services
+  And accept default values for project categorisation
+  And accept default values for project license
   And confirm the project creation
-  Then the site admin has to validate Test Project
-# change services
-# fix the timeout project approval
-#fix the usage of a name for validation
+  Then the site admin has to validate the project
