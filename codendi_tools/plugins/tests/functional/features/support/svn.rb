@@ -4,7 +4,7 @@ class Svn
     
     def initialize(user, pass)
         svn = `which svn`.strip
-        @svn = "#{svn} --username #{user} --password #{pass}"
+        @svn = "#{svn} --username #{user} --password #{pass} --no-auth-cache --non-interactive --trust-server-cert"
     end
     
     def commit(working_copy, message)
