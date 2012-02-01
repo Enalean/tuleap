@@ -793,6 +793,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
     
     /**
+     * @return bool say if the field is a unique one
+     */
+    public static function getFactoryUniqueField() {
+        return true;
+    }
+    
+    /**
      * Say if the value is valid. If not valid set the internal has_error to true.
      *
      * @param Tracker_Artifact $artifact The artifact 

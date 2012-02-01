@@ -547,7 +547,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<tr><td>';
-        $html .= Tracker_FormElementFactory::instance()->getFactoryButton(__CLASS__, 'add-formElement['. $this->id .']', $this->label, $this->description, $this->getFactoryIconUseIt());
+        $html .= Tracker_FormElementFactory::instance()->getFactoryButton(__CLASS__, 'add-formElement['. $this->id .']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
         $html .= '</td><td>';
         $html .= '<a href="'. $this->getAdminEditUrl() .'" title="'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','edit_field').'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
         $confirm = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','delete_field') .' '. addslashes($this->getLabel()) .'?';
@@ -1306,6 +1306,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      */
     public function setCachePermission($ugroup_id, $permission_type) {
         $this->cache_permissions[$ugroup_id][] = $permission_type;
+    }
+    
+    /**
+     * @return bool say if the field is a unique one
+     */
+    public static function getFactoryUniqueField() {
+        return false;
     }
 }
 ?>

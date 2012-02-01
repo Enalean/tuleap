@@ -46,6 +46,10 @@ interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface {
     public static function getFactoryIconCreate();
     
     /**
+     * @return bool say if the element is a unique one
+     */
+    public static function getFactoryUniqueField();
+    /**
      *  Get the id
      *
      * @return int

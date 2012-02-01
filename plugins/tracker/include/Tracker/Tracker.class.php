@@ -1548,7 +1548,7 @@ EOS;
         echo '<table cellspacing="4" cellpadding="0"><tr valign="top"><td>';
         echo '<div class="tracker-admin-palette">';
 
-        Tracker_FormElementFactory::instance()->displayFactories();
+        Tracker_FormElementFactory::instance()->displayFactories($this);
 
         $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','unused_elements'));
         $unused_elements_content = '';
