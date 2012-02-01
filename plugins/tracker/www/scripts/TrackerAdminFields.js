@@ -130,6 +130,12 @@ document.observe('dom:loaded', function () {
             });
         });
         
+        $$('a.button_disabled[name^=create]').each(function(button_disabled) {
+            button_disabled.observe('click', function (evt) {
+                alert('This field type cannot be added twice on a same tracker');
+            });
+        });
+        
         $$('.tracker-admin-field-controls a.edit-field').each(function (a) {
             var selected_element, 
                 element;

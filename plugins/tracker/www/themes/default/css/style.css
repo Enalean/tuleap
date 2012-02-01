@@ -775,12 +775,14 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 #tracker-admin-field-properties {
     background: #fcfcff;
 }
+
 .tracker-admin-palette button img,
 .tracker-admin-palette a.button img {
     vertical-align:middle;
     margin-right:0.5em;
 }
-.tracker-admin-palette button,
+.tracker-admin-palette button, 
+.tracker-admin-palette a.button_disabled,
 .tracker-admin-palette a.button {
     font-family: Corbel,
          "Lucida Grande",
@@ -805,6 +807,11 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
     padding:4px 8px 3px 5px;
     display:block;
 }
+.tracker-admin-palette a.button_disabled {
+    cursor:default;
+    opacity:0.5;
+}
+
 .tracker-admin-palette button:focus,
 .tracker-admin-palette button:hover,
 .tracker-admin-palette a.button:focus,

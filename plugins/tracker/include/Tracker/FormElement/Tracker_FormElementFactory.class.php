@@ -475,8 +475,8 @@ class Tracker_FormElementFactory {
      * @param mixed $type the type (string) or types (array of) you are looking for
      * @return array All text formElements used by the tracker
      */
-    public function getFormElementsByType($tracker, $type) {
-        return $this->getCachedInstancesFromDAR($this->getDao()->searchUsedByTrackerIdAndType($tracker->id, $type));
+    public function getFormElementsByType($tracker, $type, $used = null) {
+        return $this->getCachedInstancesFromDAR($this->getDao()->searchUsedByTrackerIdAndType($tracker->id, $type, $used));
     }
     
     /**
@@ -803,7 +803,7 @@ class Tracker_FormElementFactory {
         $hp = Codendi_HTMLPurifier::instance();
         //Waiting for PHP5.3 and $klass::staticMethod() and Late Static Binding
         $button = '';
-        
+        $button_class = 'button';
         if (!$label) {
             eval("\$label = $klass::getFactoryLabel();");
         }
@@ -817,19 +817,20 @@ class Tracker_FormElementFactory {
             eval("\$isUnique = $klass::getFactoryUniqueField();");
         }
         
-        $button = '';
         if ($isUnique) {
             $type = array_search($klass, $this->classnames);
-            $elements = $this->getFormElementsByType($tracker, $type);
+            $used = true;
+            $elements = $this->getFormElementsByType($tracker, $type, $used);
             if (!empty($elements)) {
-                
+                $button_class = 'button_disabled';
             }
-        } else {        
-            $button .= '<a class="button" name="'. $name .'" title="'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'"><span>';
-            $button .= '<img width="16" height="16" alt="" src="'. $icon .'" />';
-            $button .=  $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML);
-            $button .= '</span></a>';
         }
+        
+        $button .= '<a class="'.$button_class.'" name="'. $name .'" title="'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'"><span>';
+        $button .= '<img width="16" height="16" alt="" src="'. $icon .'" />';
+        $button .=  $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML);
+        $button .= '</span></a>';
+        
         return $button;
     }
     
