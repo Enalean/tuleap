@@ -74,3 +74,14 @@ end
 Then /^I should not see "([^"]*)"$/ do |text|
   page.should_not have_content(text)
 end
+
+When /^I delete the releases$/ do
+    find(".release a[title='Delete?']").click
+    find(".release a[title='Delete?']").click
+    find(".release a[title='Delete?']").click
+end
+
+When /^I delete the package$/ do
+    find(".package a[title='Delete?']").click
+end
+
