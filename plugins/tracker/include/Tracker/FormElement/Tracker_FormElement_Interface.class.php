@@ -26,10 +26,6 @@ require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
 interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface {
     
     /**
-     * @return bool say if the element is a unique one
-     */
-    public static function getFactoryUniqueField();
-    /**
      *  Get the id
      *
      * @return int

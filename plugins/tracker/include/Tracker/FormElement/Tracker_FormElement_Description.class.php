@@ -41,6 +41,11 @@ interface Tracker_FormElement_Description {
     public static function getFactoryIconCreate();
     
     /**
+     * @return bool say if the element is a unique one
+     */
+    public static function getFactoryUniqueField();
+    
+    /**
      * Display the form to create a new formElement
      * 
      * @param TrackerManager  $tracker_manager The service

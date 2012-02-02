@@ -51,6 +51,13 @@ class Tracker_FormElement_Shared implements Tracker_FormElement_Description {
     }
     
     /**
+     * @return bool say if the field is a unique one
+     */
+    public static function getFactoryUniqueField() {
+        return false;
+    }
+    
+    /**
      * Display the form to create a new formElement
      * 
      * @param TrackerManager  $tracker_manager The service
