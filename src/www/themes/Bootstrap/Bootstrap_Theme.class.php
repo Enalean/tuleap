@@ -39,15 +39,15 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
         echo $this->displaySyndicationElements();
         echo '</head>';
         echo '<body>
-                <div class="topbar" data-dropdown="dropdown"> 
-                  <div class="topbar-inner"> 
+                <div class="navbar navbar-fixed-top">
+                  <div class="navbar-inner"> 
                     <div class="container-fluid"> 
                       <a class="brand" href="index.php"><img src="'. $this->imgroot . 'organization_logo.png" alt="Tuleap" /></a> 
                       <ul class="nav"> 
                         <li><a href="/">Home</a></li> 
                         <li><a href="/my/">My personnal page</a></li> 
                         <li class="dropdown active">
-                            <a href="#contact" class="dropdown-toggle">Projects</a>
+                            <a href="#contact" class="dropdown-toggle" data-toggle="dropdown">Projects<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#p1"><img src="stuff/fav1.png" style="vertical-align:top;" /> Some Awesome</a></li>
                                 <li><a href="#p2"><img src="stuff/fav2.png" style="vertical-align:top;" /> Projects I Am</a></li>
@@ -60,10 +60,10 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
                         <li><a href="/search/?words=%%%&type_of_search=people">Users</a></li> 
                         <li><a href="/site/">Help</a></li> 
                       </ul>
-                      <form action="">
-                        <input type="text" placeholder="Search">
+                      <form action="" class="navbar-search pull-left">
+                        <input type="text" placeholder="Search" class="search-query" />
                       </form>
-                      <ul class="nav secondary-nav">
+                      <ul class="nav pull-right">
                             <li class="dropdown"><a href="#" class="dropdown-toggle"><span class="logged-in">Logged in as</span> Nicolas Terray</a>
                                 <ul class="dropdown-menu">
                                     <li><a href="#logout">Bookmark this page</a></li>
@@ -88,46 +88,44 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
                     <li class="active">Installation &amp; Administration/How to install</li>
                 </ul>';
                 */
-        $this->addBreadcrumb('<a href="/my/">Home</a>');
-        $this->addBreadcrumb('<a href="/softwaremap/">Projects</a>');
-        $this->addBreadcrumb('<a href="#my">The Garden Project</a>');
-        $this->addBreadcrumb('<a href="#my">Project Documentation</a>');
-        $this->addBreadcrumb('Installation &amp; Administration/How to install');
         echo $this->getBreadcrumbs();
+        echo $this->_getFeedback();
         echo '<div class="container-fluid">';
-        $sidebar = false;
-        $expand  = 'expand';
+        echo '<div class="row-fluid">';
         if (isset($params['group']) && $params['group']) {
             $project = ProjectManager::instance()->getProject($params['group']);
             $sidebar = $this->projectSidebar($project, $params['toptab'], Codendi_HTMLPurifier::instance(), UserManager::instance()->getCurrentUser());
             if ($sidebar) {
-                $expand = '';
                 echo $sidebar;
+                echo '<div class="span9">';
             }
         }
-        echo '<div class="content well '. $expand .'">';
+        echo '<div class="content well">';
+        echo $this->getToolbar();
     }
-    
+
     public function footer($params) {
+        echo '</div>';
+        echo '</div>';
         echo '</div>';
         echo '</div>';
         $this->generic_footer($params);
     }
-    
+
     public function displayJavascriptElements() {
         echo ' <!-- Le HTML5 shim, for IE6-8 support of HTML elements --> 
         <!--[if lt IE 9]>
           <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script> 
-        <script src="'. $this->root . '/bootstrap/js/bootstrap-dropdown.js"></script>
+        <script src="'. $this->root . '/jquery/jquery-1.7.1.min.js"></script> 
+        <script src="'. $this->root . '/bootstrap/js/bootstrap.js"></script>
         <script src="'. $this->root . '/google-code-prettify/prettify.js"></script> 
         <script>$(function () { prettyPrint() })</script> ';
         echo parent::displayJavascriptElements();
     }
-    
+
     public function displayCommonStylesheetElements($params) {
-        echo '<link rel="stylesheet" href="'. $this->root . '/bootstrap/bootstrap.css">
+        echo '<link rel="stylesheet" href="'. $this->root . '/bootstrap/css/bootstrap.css">
         <link href="'. $this->root . '/google-code-prettify/professional.css" rel="stylesheet">';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('style.css') .'"  />';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme('print.css') .'" media="print" />';
@@ -157,12 +155,28 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
         return $html;
     }
 
+    function getToolbar() {
+        $html = '';
+        if (count($this->toolbar)) {
+            $html .= '<ul class="nav nav-pills"><li>';
+            $html .= implode('</li><li>', $this->toolbar);
+            $html .= '</li></ul>';
+            $html .= '<div class="clearfix">';
+            $html .= '</div>';
+        }
+        return $html;
+    }
+
     public function projectSidebar(Project $project, $toptab, Codendi_HTMLPurifier $hp, User $user) {
         $html = '';
-        $html .= '<div class="sidebar">';
-        $html .= '<div class="well">';
+        $html .= '<div class="span3">';
+        $html .= '<div class="well sidebar-nav">';
+        $html .= '<div style="text-align:center">';
+        $html .= '<img src="http://placehold.it/176x76" />';
         $html .= '<h5>'. $hp->purify($project->getPublicName()) .'</h5>';
-        $html .= '<ul>';
+        $html .= '<p>'. $hp->purify($project->getDescription()) .'</p>';
+        $html .= '</div>';
+        $html .= '<ul class="nav nav-list">';
         foreach ($this->_getProjectTabs($toptab, $project) as $tab) {
             $active = '';
             if ($tab['enabled']) {

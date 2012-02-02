@@ -873,9 +873,17 @@ class Layout extends Response {
         return $this;
     }
     function addBreadcrumb($step) {
+        $this->addHomeStepInBreadcrumbsIfEmpty();
         $this->breadcrumbs[] = $step;
         return $this;
     }
+
+    function addHomeStepInBreadcrumbsIfEmpty() {
+        if (empty($this->breadcrumbs)) {
+            $this->breadcrumbs[] = '<a href="/">'. $GLOBALS['Language']->getText('menu','home') .'</a>';
+        }
+    }
+
     function getBreadCrumbs() {
         $html = '';
         if (count($this->breadcrumbs)) {

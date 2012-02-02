@@ -8,22 +8,30 @@
 
 
 function mail_header($params) {
-  global $group_id, $Language;
+    global $group_id, $Language;
 
-	//required for site_project_header
-	$params['group']=$group_id;
-	$params['toptab']='mail';
+    //required for site_project_header
+    $params['group']=$group_id;
+    $params['toptab']='mail';
 
-	$pm = ProjectManager::instance();
+    $pm = ProjectManager::instance();
     $project=$pm->getProject($group_id);
 
-	if (!$project->usesMail()) {
-		exit_error($Language->getText('global','error'),$Language->getText('mail_utils','mail_turned_off'));
-	}
+    if (!$project->usesMail()) {
+        exit_error($Language->getText('global','error'),$Language->getText('mail_utils','mail_turned_off'));
+    }
 
 
-	site_project_header($params);
-	echo '<P><B>';
+    $service = $project->getService('mail');
+    $breadcrumbs = array(
+                         array(
+                               'title' => $params['title'],
+                               'url'   => '/mail/?group_id='. (int)$group_id,
+                              )
+                        );
+    $service->displayHeader($params['title'], $breadcrumbs, array());
+
+    echo '<P><B>';
     // admin link is only displayed if the user is a project administrator
     if (user_ismember($group_id, 'A')) {
         echo '<A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('mail_utils','admin').'</A>';
@@ -49,7 +57,25 @@ function mail_header_admin($params) {
 	}
 
 
-	site_project_header($params);
+    $service = $project->getService('mail');
+    $breadcrumbs = array(
+                         array(
+                               'title' => $Language->getText('mail_index','mail_list_for'),
+                               'url'   => '/mail/?group_id='. (int)$group_id,
+                              ),
+                         array(
+                               'title' => $params['title'],
+                               'url'   => '/mail/?group_id='. (int)$group_id,
+                              )
+                        );
+    $toolbar = array(
+                     array(
+                           'title' => $Language->getText('mail_utils','admin'),
+                           'url'   => '/mail/admin/?group_id='.$group_id,
+                          ),
+                    );
+    $service->displayHeader($params['title'], $breadcrumbs, array());
+
 	echo '
 		<P><B><A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('mail_utils','admin').'</A></B>
  | <B><A HREF="/mail/admin/?group_id='.$group_id.'&add_list=1">'.$Language->getText('mail_utils','add_list').'</A></B>

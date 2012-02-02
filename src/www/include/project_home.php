@@ -30,7 +30,15 @@ if ($GLOBALS['sys_trove_cat_mandatory'] && $user->isMember($group_id, 'A') && !t
     $trove_url = '/project/admin/group_trove.php?group_id='.$group_id;
     $GLOBALS['Response']->addFeedback('warning',$GLOBALS['Language']->getText('include_html','no_trovcat',array($trove_url)), CODENDI_PURIFIER_DISABLED);
 }
-site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'));
+        $service = $project->getService('summary');
+        $breadcrumbs = array(
+            array(
+                'title' => $title,
+                'url'   => null,
+            )
+        );
+        $service->displayHeader($params['title'], $breadcrumbs, array());
+//site_project_header(array('title'=>$title,'group'=>$group_id,'toptab'=>'summary'));
 
 
 if ($project->getStatus() == 'H') {

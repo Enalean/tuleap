@@ -93,7 +93,16 @@ function forum_header($params) {
 		}
 	} else {
 		//this is just a regular forum, not a news item
-        site_project_header($params);
+        $project = ProjectManager::instance()->getProject($group_id);
+        $service = $project->getService('forum');
+        $breadcrumbs = array(
+            array(
+                'title' => $params['title'],
+                'url'   => '/forums/?group_id='. (int)$group_id,
+            )
+        );
+        $service->displayHeader($params['title'], $breadcrumbs, array());
+        //site_project_header($params);
 	}
 
 	/*

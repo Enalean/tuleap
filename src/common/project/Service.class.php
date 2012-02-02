@@ -125,6 +125,10 @@ class Service {
         $breadcrumbs = array_merge(
             array(
                 array(
+                    'title' => $GLOBALS['Language']->getText('menu','projectree'),
+                    'url'   => '/softwaremap/',
+                ),
+                array(
                     'title' => $this->project->getPublicName(),
                     'url'   => '/projects/'. $this->project->getUnixName() .'/',
                 )
