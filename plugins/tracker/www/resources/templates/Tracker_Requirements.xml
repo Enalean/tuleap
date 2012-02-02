@@ -308,10 +308,6 @@
           <label>Cross references</label>
           <description>List of items referenced by or referencing this item.</description>
         </formElement>
-        <formElement type="art_link" ID="F45" rank="1" use_it="0">
-          <name>references</name>
-          <label>References</label>
-        </formElement>
       </formElements>
     </formElement>
     <formElement type="fieldset" ID="F46" rank="312">
