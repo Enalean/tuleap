@@ -70,15 +70,32 @@ class Tracker_FormElement_Shared implements Tracker_FormElement_Description {
      * @return void
      */
     public function displayAdminCreate(TrackerManager $tracker_manager, $request, $current_user, $type, $factory_label) {
-        echo '<div>';
+        $hp = Codendi_HTMLPurifier::instance();
+        $url   = TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
+        echo '<form action="'. $url .'" method="POST">';
         
         echo '<p>Field id:';
-        echo '<input type="text" name="field_id" value="" />';
+        echo '<input type="text" name="formElement_data[field_id]" value="" />';
         echo '</p>';
         
         echo '<input type="submit" name="docreate-formElement" value="Submit" />';
         
-        echo '</div>';
+        echo '</form>';
+    }
+    
+    
+    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank) {
+        $this->id            = $id;
+        $this->tracker_id    = $tracker_id;
+        $this->parent_id     = $parent_id;
+        $this->name          = $name;
+        $this->label         = $label;
+        $this->description   = $description;
+        $this->use_it        = $use_it;
+        $this->scope         = $scope;
+        $this->required      = $required;
+        $this->notifications = $notifications;
+        $this->rank          = $rank;
     }
 }
 ?>

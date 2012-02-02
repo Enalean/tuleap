@@ -764,8 +764,6 @@ class Tracker_FormElementFactory {
     public function displayFactories(Tracker $tracker) {
         $hp = Codendi_HTMLPurifier::instance();
         
-        echo '<input type="submit" name="create-formElement[shared]" value="Use a shared field" />';
-        
         $klasses = $this->classnames;
         $special_klasses = $this->special_classnames;
         $all_klasses = array_merge($klasses, $special_klasses);
@@ -866,6 +864,15 @@ class Tracker_FormElementFactory {
     }
     
     public function createFormElement($tracker, $type, $formElement_data) {
+        if ($type == 'shared') {
+            $formElement_data = $this->getDao()->searchById($formElement_data['field_id'])->getRow();
+            $type = $formElement_data['formElement_type'];
+            unset($formElement_data['id']);
+            unset($formElement_data['old_id']);
+            unset($formElement_data['tracker_id']);
+            unset($formElement_data['name']);
+            unset($formElement_data['parent_id']);
+        }
         //Check that the label has been submitted
         if (isset($formElement_data['label']) && trim($formElement_data['label'])) {
             $label       = trim($formElement_data['label']);
