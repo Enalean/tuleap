@@ -58,33 +58,16 @@ if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
     define('IS_SCRIPT', true); 
 }
 
-//{{{ Sanitize $_REQUEST : remove cookies
-while(count($_REQUEST)) {
-    array_pop($_REQUEST);
-}
-if (!ini_get('variables_order')) {
-        $_REQUEST = array_merge($_GET, $_POST);
+//{{{ Sanitize $_REQUEST : remove cookies vars
+$var_order = ini_get('variables_order');
+$var_order = array_intersect(str_split(strtoupper($var_order)), array('P', 'G'));
+$req_vars = array('P'=>$_POST, 'G'=>$_GET);
+if (($key1 = array_shift($var_order))===false) {
+	$_REQUEST = array();
+} elseif (($key2 = array_shift($var_order))===false) {
+	$_REQUEST = $req_vars[$key1];
 } else {
-    $g_pos = strpos(strtolower(ini_get('variables_order')), 'g');
-    $p_pos = strpos(strtolower(ini_get('variables_order')), 'p');
-    if ($g_pos === FALSE) {
-        if ($p_pos !== FALSE) {
-            $_REQUEST = $_POST;
-        }
-    } else {
-        if ($p_pos === FALSE) {
-            $_REQUEST = $_GET;
-        } else {
-            if ($g_pos < $p_pos) {
-                $first = '_GET';
-                $second = '_POST';
-            } else {
-                $first = '_POST';
-                $second = '_GET';
-            }
-            $_REQUEST = array_merge($$first, $$second);
-        }
-    }
+	$_REQUEST = array_merge($req_vars[$key1], $req_vars[$key2]);
 }
 //Cast group_id as int.
 foreach(array(
