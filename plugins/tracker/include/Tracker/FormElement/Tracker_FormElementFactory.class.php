@@ -20,6 +20,7 @@
 
 require_once('dao/Tracker_FormElement_FieldDao.class.php');
 
+require_once('Tracker_FormElement_Shared.class.php');
 require_once('Tracker_FormElement_Field_Integer.class.php');
 require_once('Tracker_FormElement_Field_Float.class.php');
 require_once('Tracker_FormElement_Field_Text.class.php');
@@ -67,6 +68,7 @@ class Tracker_FormElementFactory {
         'tbl'      => 'Tracker_FormElement_Field_OpenList',
         'art_link' => 'Tracker_FormElement_Field_ArtifactLink',
         'perm'     => 'Tracker_FormElement_Field_PermissionsOnArtifact',
+        'shared'   => 'Tracker_FormElement_Shared',
     );
     
     protected $special_classnames     = array(
@@ -761,6 +763,9 @@ class Tracker_FormElementFactory {
      */
     public function displayFactories(Tracker $tracker) {
         $hp = Codendi_HTMLPurifier::instance();
+        
+        echo '<input type="submit" name="create-formElement[shared]" value="Use a shared field" />';
+        
         $klasses = $this->classnames;
         $special_klasses = $this->special_classnames;
         $all_klasses = array_merge($klasses, $special_klasses);

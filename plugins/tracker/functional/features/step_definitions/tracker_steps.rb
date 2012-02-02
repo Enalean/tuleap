@@ -1,9 +1,10 @@
 today = Time.now.localtime.strftime("%Y-%m-%d")
 
-When /^I go to the bugs tracker of Test Project$/ do
-  find(:xpath, '//a[text()="Test Project"]').click
-  find(:xpath, "//a[contains(@href, '/plugins/tracker/?tracker=')]").click
+When /^I go to the (.*) tracker of (.*)$/ do |tracker, project|
+  find(:xpath, "//a[text()='#{project}']").click
+  find(:xpath, "//a[contains(@href, '/plugins/tracker/?tracker=') and text() = '#{tracker}']").click
 end
+
 When /^I submit a new artifact$/ do
   find(:xpath, '//a[contains(@href, "func=new-artifact")]').click
   within(:xpath, "//fieldset/legend[@title='fieldset_default_desc_key']") do
