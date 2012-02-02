@@ -1,6 +1,10 @@
+Version 1.24 (Tuleap 4.0.26)
+    * Disable management of description for gitolite repositories.
+    * Fix bug on new display of directories.
+
 Version 1.23 (Tuleap 4.0.26)
     * Export Git Statistics to CSV
-    
+
 Version 1.22 (Tuleap 4.0.26)
     * Gitolite is new default. It's no longer possible to create gitshell based repositories (existing on are still available).
     * Fix description escaping (contrib STMicroelectronics).

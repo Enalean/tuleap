@@ -511,23 +511,23 @@ class Git_GitoliteDriver {
      *
      * @return Boolean
      */
-    public function setDescription($repoPath, $description) {
-        if( ! file_put_contents($repoPath.'/description', $description) ) {
-            throw new GitDriverErrorException('Unable to set description');
-        }
+    /*public function setDescription($repoPath, $description) {
+        // TODO: set the description in gitolite way
+        // be careful not to use file_put_contents() like in gitshell
         return true;
-    }
+    }*/
 
     /**
-     * Otain the repository description from the filesystem
+     * Obtain the repository description from the filesystem
      *
      * @param String $repoPath Path of the git repository
      *
      * @return String
      */
-    public function getDescription($repoPath) {
+    /*public function getDescription($repoPath) {
+        // TODO: Uncomment this when GIT_GitoliteDriver::setDescription() is ready
         return file_get_contents($repoPath.'/description');
-    }
+    }*/
 
 }
 

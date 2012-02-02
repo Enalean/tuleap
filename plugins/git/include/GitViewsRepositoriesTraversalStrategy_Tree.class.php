@@ -174,8 +174,8 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
 
     protected function fetchFolderRow(array $children, $name, $depth) {
         $trclass     = 'boxitemalt';
-        $description = '&nbsp;';
-        $lastPush    = '&nbsp;';
+        $description = '';
+        $lastPush    = '';
 
         $html  = '';
         $html .= $this->fetchHTMLRow($trclass, $depth, $name, $description, $lastPush);
@@ -190,8 +190,8 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         $html = '';
         $html .= '<tr class="' . $class . '">';
         $html .= '<td style="padding-left: ' . ($depth + 1) . 'em;">' . $label . '</td>';
-        $html .= '<td>' . $description . '</td>';
-        $html .= '<td>' . $lastPush . '</td>';
+        $html .= '<td>' . ($description ? $description : '&nbsp;') . '</td>';
+        $html .= '<td>' . ($lastPush    ? $lastPush    : '&nbsp;') . '</td>';
         $html .= '</tr>';
         return $html;
     }
