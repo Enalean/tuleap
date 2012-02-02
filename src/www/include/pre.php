@@ -36,7 +36,7 @@ require_once('common/include/URL.class.php');
  * Register zend framework path in include path if not already set
  * and load Zend Autoloader class
  */
-if (@include_once('Zend/Loader/Autoloader.php') == false ) {
+if ((@include_once 'Zend/Loader/Autoloader.php') === false) {
 	if (!isset($GLOBALS['zend_path'])) {
 		$GLOBALS['zend_path'] = '/usr/share/zend';
 	}
