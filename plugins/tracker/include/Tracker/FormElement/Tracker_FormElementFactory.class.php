@@ -759,7 +759,7 @@ class Tracker_FormElementFactory {
      *
      * @return void
      */
-    public function displayFactories(Tracker $tracker) {
+    public function displayFactories() {
         $hp = Codendi_HTMLPurifier::instance();
         $klasses = $this->classnames;
         $special_klasses = $this->special_classnames;
@@ -767,19 +767,19 @@ class Tracker_FormElementFactory {
         EventManager::instance()->processEvent('tracker_formElement_classnames', 
                                                array('classnames' => &$all_klasses));
         $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','fields'));
-        $w->setContent($this->fetchFactoryButtons($klasses, $tracker));
+        $w->setContent($this->fetchFactoryButtons($klasses));
         $w->display();
         
         $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','dynamic_fields'));
-        $w->setContent($this->fetchFactoryButtons($special_klasses, $tracker));
+        $w->setContent($this->fetchFactoryButtons($special_klasses));
         $w->display();
         
         $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin','structural_elements'));
-        $w->setContent($this->fetchFactoryButtons(array_merge($this->group_classnames, $this->staticfield_classnames), $tracker));
+        $w->setContent($this->fetchFactoryButtons(array_merge($this->group_classnames, $this->staticfield_classnames)));
         $w->display();
     }
     
-    protected function fetchFactoryButtons($klasses, $tracker) {
+    protected function fetchFactoryButtons($klasses) {
         $html = '';
         $html .= '<table class="tracker-admin-palette-content"><tr>';
         $i = 0;
@@ -788,7 +788,7 @@ class Tracker_FormElementFactory {
                 $html .= '</tr><tr>';
             }
             $html .= '<td>';
-            $html .= $this->getFactoryButton($klass, 'create-formElement['.  urlencode($type) .']', $tracker);
+            $html .= $this->getFactoryButton($klass, 'create-formElement['.  urlencode($type) .']');
             $html .= '</td>';
             ++$i;
         }
@@ -799,11 +799,10 @@ class Tracker_FormElementFactory {
         return $html;
     }
     
-    public function getFactoryButton($klass, $name, $tracker, $label = null, $description = null, $icon = null, $isUnique = null) {
+    public function getFactoryButton($klass, $name, $label = null, $description = null, $icon = null) {
         $hp = Codendi_HTMLPurifier::instance();
         //Waiting for PHP5.3 and $klass::staticMethod() and Late Static Binding
         $button = '';
-        
         if (!$label) {
             eval("\$label = $klass::getFactoryLabel();");
         }
@@ -813,20 +812,11 @@ class Tracker_FormElementFactory {
         if (!$icon) {
             eval("\$icon = $klass::getFactoryIconCreate();");
         }
-        if ($isUnique === null) {
-            eval("\$isUnique = $klass::getFactoryUniqueField();");
-        }
-        if ($isUnique) {
-            $type = array_search($klass, $this->classnames);
-            var_dump($this->getFormElementsByType($tracker, $type));
-        }
         $button = '';
-        if ($isUnique === false) {
-            $button .= '<a class="button" name="'. $name .'" title="'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'"><span>';
-            $button .= '<img width="16" height="16" alt="" src="'. $icon .'" />';
-            $button .=  $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML);
-            $button .= '</span></a>';
-        }
+        $button .= '<a class="button" name="'. $name .'" title="'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'"><span>';
+        $button .= '<img width="16" height="16" alt="" src="'. $icon .'" />';
+        $button .=  $hp->purify($label, CODENDI_PURIFIER_CONVERT_HTML);
+        $button .= '</span></a>';
         return $button;
     }
     
