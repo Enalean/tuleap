@@ -1,4 +1,4 @@
-Version 4.0.26 (Not released yet)
+Version 4.0.26 (Friday, February 3rd 2012)
     == Enhancement ==
     * Mailing list names enhancement: allow siteadmin to configure the prefered 
       format of mailing list through the following configuration variables:

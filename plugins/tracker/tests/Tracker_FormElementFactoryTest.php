@@ -168,6 +168,8 @@ class Tracker_FormElementFactoryTest extends UnitTestCase {
         $label = $tf->deductNameFromLabel($label);
         $this->assertEqual($label, 'titi_est_dans_la_brousse_avec_rominet');
     }
+    
+    public function testGet
 
 }
 ?>

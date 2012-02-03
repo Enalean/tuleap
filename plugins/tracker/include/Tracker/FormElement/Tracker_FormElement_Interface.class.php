@@ -45,6 +45,7 @@ interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface {
      */
     public static function getFactoryIconCreate();
     
+    public static function getFactoryUniqueField(/*Tracker $tracker*/);
     /**
      *  Get the id
      *

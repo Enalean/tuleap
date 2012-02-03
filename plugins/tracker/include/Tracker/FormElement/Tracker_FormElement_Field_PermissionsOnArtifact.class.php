@@ -385,6 +385,13 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     }
     
     /**
+     * @return bool say if the field is a unique one
+     */
+    public static function getFactoryUniqueField(/*Tracker $tracker*/) {
+        return true;
+    }
+    
+    /**
      * Fetch the html code to display the field value in tooltip
      * 
      * @param Tracker_Artifact $artifact
