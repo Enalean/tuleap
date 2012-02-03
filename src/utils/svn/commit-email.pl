@@ -337,48 +337,39 @@ if ($res_plugin_ldap && ($c_plugin_ldap->rows > 0)) {
 	    print STDERR "Codex uid: $codexuid\n";
 	}
     }
-}
-else
-{
-local ($login, $gecos);
-$login = $author;
-if (! $login)
-{
-    ($login, $gecos) = (getpwuid ($<))[0,6];
-}
-else
-{
-    $login = "nobody" if (! $login);
-    $gecos = (getpwnam ($login))[6];
-}
-
-# Determine the mailname and fullname.
-if ($gecos =~ /^([^<]*\s+)<(\S+@\S+)>/)
-{
-    $fullname = $1;
-    $mailname = $2;
-    $fullname =~ s/\s+$//;
-}
-else
-{
-    $fullname = $gecos;
-    $fullname =~ s/,.*$//;
-
-    local ($hostdomain, $hostname);
-    chop($hostdomain = `hostname -f`);
-    if ($hostdomain !~ /\./)
-    {
-        chop($hostname = `hostname`);
-        if ($hostname !~ /\./) {
-            chop($domainname = `domainname`);
-            $hostdomain = $hostname . "." . $domainname;
-        } else {
-            $hostdomain = $hostname;
-        }
+} else {
+    local ($login, $gecos);
+    $login = $author;
+    if (! $login) {
+	($login, $gecos) = (getpwuid ($<))[0,6];
+    } else {
+	$login = "nobody" if (! $login);
+	$gecos = (getpwnam ($login))[6];
     }
-    $mailname = "$login\@$hostdomain";
-}
-$codexuid = db_get_field('user','user_name', $author, 'user_id');
+
+    # Determine the mailname and fullname.
+    if ($gecos =~ /^([^<]*\s+)<(\S+@\S+)>/) {
+	$fullname = $1;
+	$mailname = $2;
+	$fullname =~ s/\s+$//;
+    } else {
+	$fullname = $gecos;
+	$fullname =~ s/,.*$//;
+
+	local ($hostdomain, $hostname);
+	chop($hostdomain = `hostname -f`);
+	if ($hostdomain !~ /\./) {
+	    chop($hostname = `hostname`);
+	    if ($hostname !~ /\./) {
+		chop($domainname = `domainname`);
+		$hostdomain = $hostname . "." . $domainname;
+	    } else {
+		$hostdomain = $hostname;
+	    }
+	}
+	$mailname = "$login\@$hostdomain";
+    }
+    $codexuid = db_get_field('user','user_name', $author, 'user_id');
 }
 
 if ($debug) {

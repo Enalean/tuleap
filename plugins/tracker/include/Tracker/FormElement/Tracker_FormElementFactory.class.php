@@ -560,7 +560,8 @@ class Tracker_FormElementFactory {
                                    $row['scope'], 
                                    $row['required'],
                                    $row['notifications'],
-                                   $row['rank']
+                                   $row['rank'],
+                                   $row['original_field_id']
             );
         } else {
             EventManager::instance()

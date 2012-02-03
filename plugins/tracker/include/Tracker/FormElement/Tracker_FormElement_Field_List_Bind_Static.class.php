@@ -241,13 +241,28 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      public function getCriteriaFrom($criteria_value) {         
          //Only filter query if criteria is valuated
         if ($criteria_value) {
+            $fields_id = array($this->field->id);
+            $values_id = array_values($criteria_value);
+            
+            /* Manage cross tracker query based on shared fields
+            $res = db_query('SELECT id FROM tracker_field WHERE original_field_id = '.$this->field->id.' AND id != original_field_id');
+            while ($row = db_fetch_array($res)) {
+                $fieldids[] = $row['id'];
+            }
+            
+            $res = db_query('SELECT id FROM tracker_field_list_bind_static_value WHERE original_value_id IN ('.implode(',', $values).') AND id != original_value_id');
+            while ($row = db_fetch_array($res)) {
+                $values[] = $row['id'];
+            }
+            */
+            
             $a = 'A_'. $this->field->id;
             $b = 'B_'. $this->field->id;
             $c = 'C_'. $this->field->id;
-            $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id = ". $this->field->id .")
+            $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id IN (".implode(',', $fields_id)."))
                      INNER JOIN tracker_changeset_value_list AS $c ON (
                         $c.changeset_value_id = $a.id 
-                        AND $c.bindvalue_id IN(". implode(',', array_values($criteria_value)) .")
+                        AND $c.bindvalue_id IN(". implode(',', $values_id) .")
                      ) ";
             return $sql;
         }

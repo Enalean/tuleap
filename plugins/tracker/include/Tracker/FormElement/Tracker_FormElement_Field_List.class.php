@@ -176,7 +176,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     
     /**
      * Return the dao of the criteria value used with this field.
-     * @return DataAccessObject
+     * @return Tracker_Report_Criteria_List_ValueDao
      */
     protected function getCriteriaDao() {
         return new Tracker_Report_Criteria_List_ValueDao();

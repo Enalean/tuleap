@@ -89,6 +89,12 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public $rank;
     
     /**
+     *
+     * @var int
+     */
+    public $original_field_id;
+    
+    /**
      * Base constructor
      * 
      * @param int    $id          The id of the field
@@ -101,10 +107,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @param string $scope       The scope of the plugin 'S' | 'P'
      * @param bool   $required    Is the element required? Todo: move this in field?
      * @param int    $rank        The rank of the field (in the parent)
+     * @param int    $original_field_id 
      * 
      * @return void
      */
-    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank) {
+    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field_id) {
         $this->id            = $id;
         $this->tracker_id    = $tracker_id;
         $this->parent_id     = $parent_id;
@@ -116,6 +123,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $this->required      = $required;
         $this->notifications = $notifications;
         $this->rank          = $rank;
+        $this->original_field_id = $original_field_id;
     }
     
     /**
