@@ -7,5 +7,5 @@ Feature: Use a field defined in another tracker
   Scenario: We can add a field defined in another tracker
     Given I logon as "testuser" : "tuleap_pass"
     And I go the fields admin page of the "Shared Field Tracker" of the project "Test Project"
-    When I add the field "Status" from the tracker "Bugs"
+    When I add the field "Status" from the tracker "Bugs" of the project "Test Project"
     Then the field "Status" is present and has at least the option "Reopened"
