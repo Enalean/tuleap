@@ -852,6 +852,7 @@ class Tracker_FormElementFactory {
                                                     'rank'              => null,
                                                     'required'          => 0,
                                                     'notifications'     => 0,
+                                                    'original_field_id' => null,
         ))) {
             $klasses = array_merge($this->classnames, $this->special_classnames, $this->group_classnames, $this->staticfield_classnames);
             EventManager::instance()->processEvent('tracker_formElement_classnames', 
@@ -865,14 +866,17 @@ class Tracker_FormElementFactory {
     }
     
     public function createFormElement($tracker, $type, $formElement_data) {
+        $original_field_id = null;
         if ($type == 'shared') {
-            $formElement_data = $this->getDao()->searchById($formElement_data['field_id'])->getRow();
-            $type = $formElement_data['formElement_type'];
-            unset($formElement_data['id']);
-            unset($formElement_data['old_id']);
-            unset($formElement_data['tracker_id']);
-            unset($formElement_data['name']);
-            unset($formElement_data['parent_id']);
+            if ($formElement_data = $this->getDao()->searchById($formElement_data['field_id'])->getRow()) {
+                $type              = $formElement_data['formElement_type'];
+                $original_field_id = $formElement_data['id'];
+                unset($formElement_data['id']);
+                unset($formElement_data['old_id']);
+                unset($formElement_data['tracker_id']);
+                unset($formElement_data['name']);
+                unset($formElement_data['parent_id']);
+            }
         }
         //Check that the label has been submitted
         if (isset($formElement_data['label']) && trim($formElement_data['label'])) {
@@ -926,7 +930,8 @@ class Tracker_FormElementFactory {
                                                      'P',
                                                      isset($formElement_data['required']) && $formElement_data['required'] ? 1 : 0,
                                                      isset($formElement_data['notifications']) && $formElement_data['notifications'] ? 1 : 0,
-                                                     $rank)) {
+                                                     $rank,
+                                                     $original_field_id)) {
                         //Set permissions
                         if (!array_key_exists($type, array_merge($this->group_classnames, $this->staticfield_classnames))) {
                             $ugroups_permissions = $this->getPermissionsFromFormElementData($id, $formElement_data);
