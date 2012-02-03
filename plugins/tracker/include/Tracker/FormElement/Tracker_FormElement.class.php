@@ -19,13 +19,14 @@
  */
 
 require_once('Tracker_FormElement_Interface.class.php');
+require_once('Tracker_FormElement_Description.class.php');
 
 require_once('json.php');
 
 /**
  * Base class for all fields in trackers, from fieldsets to selectboxes
  */
-abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
+abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_Description {
     /**
      * The field id
      */
