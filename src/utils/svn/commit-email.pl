@@ -323,8 +323,7 @@ if ($res_plugin_ldap && ($c_plugin_ldap->rows > 0)) {
 
     &ldap_connect;
 
-    if (ldap_enabled_for_project($group_id))
-    {
+    if (ldap_enabled_for_project($group_id)) {
 	($fullname, $mailname, $ldap_id) = ldap_get_svncommitinfo_from_login($author);
 	if ($ldap_id != -1) {
 	    $codexuid = db_get_field('user','ldap_id', $ldap_id, 'user_id');
@@ -337,7 +336,10 @@ if ($res_plugin_ldap && ($c_plugin_ldap->rows > 0)) {
 	    print STDERR "Codex uid: $codexuid\n";
 	}
     }
-} else {
+}
+ 
+# if no uid found yet, fallback to tuleap auth
+if (!$codexuid) {
     local ($login, $gecos);
     $login = $author;
     if (! $login) {
