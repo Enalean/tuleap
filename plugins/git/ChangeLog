@@ -1,3 +1,6 @@
+Version 1.25 (Tuleap 4.0.26)
+    * Do not display an mysterious error message when fail to find the repository for git push count.
+
 Version 1.24 (Tuleap 4.0.26)
     * Disable management of description for gitolite repositories.
     * Fix bug on new display of directories.

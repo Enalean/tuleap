@@ -77,10 +77,10 @@ function logGitPushes($repositoryName, $identifier, $projectName, $pushTimestamp
     $repository->setId($repoId);
     try {
         $repository->load();
+        $repository->logGitPush($identifier, $pushTimestamp, $commitsNumber, $gitoliteUser);
     } catch (Exception $e) {
-        error("Unable to load repository");
+        //error("Unable to load repository");
     }
-    $repository->logGitPush($identifier, $pushTimestamp, $commitsNumber, $gitoliteUser);
 }
 
 ?>

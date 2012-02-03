@@ -31,7 +31,7 @@ Version 4.0.26 (Not released yet)
     * Fix Security issue (Contrib STMicroelectronics)
     
     == Plugins ==
-    * Git v1.24. See separated Changelog
+    * Git v1.25. See separated Changelog
     * Tracker v0.8.12. See separated Changelog
     * GraphOnTrackers v1.4. See separated Changelog
     * GraphOnTrackersV5 v0.6.2. See separated Changelog
