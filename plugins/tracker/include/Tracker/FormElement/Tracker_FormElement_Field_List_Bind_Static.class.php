@@ -422,8 +422,14 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      * @return string html
      */
     public function fetchAdminEditForm() {
-        $hp = Codendi_HTMLPurifier::instance();
-        
+        if ($this->field->isModifiable()) {
+            return $this->fetchAdminEditFormModifiable();
+        } else {
+            return $this->fetchAdminEditFormNotModifiable();
+        }
+    }
+    
+    private function fetchAdminEditFormModifiable() {
         $html = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','static_values') .'</h3>';
         
@@ -433,78 +439,111 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         
         $html .= '<table cellpadding="2" cellspacing="0" border="0">';
         foreach ($this->getAllValues() as $v) {
-            $is_hidden = $v->isHidden();
-            
-            $html .= '<tr valign="top" class="'. ($is_hidden ? 'tracker_admin_static_value_hidden' : '') .'">';
-            
-            $html .= '<td>';
-            if (isset($this->decorators[$v->getId()])) {
-                $html .= $this->decorators[$v->getId()]->decorateEdit();
-            } else {
-                $html .= Tracker_FormElement_Field_List_BindDecorator::noDecoratorEdit($this->field->id, $v->getId());
-            }
-            $html .= '</td>';
-            
-            $html .= '<td>';
-            $html .= '<input type="text" name="bind[edit]['. $v->getId() .'][label]" value="'.  $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
-            $html .= '<textarea name="bind[edit]['. $v->getId() .'][description]" style="vertical-align:top;" cols="50" rows="3">'.  $hp->purify($v->getDescription(), CODENDI_PURIFIER_CONVERT_HTML)  .'</textarea>';
-            $html .= '</td>';
-            
-            //{{{ Actions
-            $html .= '<td style="white-space:nowrap;">';
-            
-            $img_params  = array();
-            $icon_suffix = '';
-            if ($this->canValueBeHidden($v)) {
-                $checked = '';
-                if ($is_hidden) {
-                    $icon_suffix = '-half';
-                } else {
-                    $checked = 'checked="checked"';
-                }
-                $html .= '<input type="hidden" name="bind[edit]['. $v->getId() .'][is_hidden]" value="1" />';
-                $html .= '<input type="checkbox" name="bind[edit]['. $v->getId() .'][is_hidden]" value="0" '. $checked .' class="tracker_admin_static_value_hidden_chk" />';
-                $img_params['alt']   = 'show/hide value';
-                $img_params['title'] = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'hide_value');
-            } else {
-                $icon_suffix         = '--exclamation-hidden';
-                $img_params['alt']   = 'cannot hide';
-                $img_params['title'] = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'hide_value_impossible');
-            }
-            $html .= $GLOBALS['HTML']->getImage('ic/eye'. $icon_suffix .'.png', $img_params);
-            
-            $html .= ' ';
-            
-            if ($this->canValueBeDeleted($v)) {
-                $html .= '<a title="Delete the value"
-                href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
-                    'tracker'            => $this->field->getTracker()->id,
-                    'func'               => 'admin-formElement-update',
-                    'formElement'        => $this->field->getId(),
-                    'bind-update'        => 1,
-                    'bind[delete]' => $v->getId(),
-                )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png') .'</a>';
-            } else {
-                $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('title' => "You can't delete"));
-            }
-            
-            $html .= '</td>';
-            //}}}
-            
-            $html .= '</tr>';
+            $html .= $this->fetchAdminEditRowModifiable($v);
         }
         $html .= '</table>';
         
         //Add new values
         $html .= '<p id="tracker-admin-bind-static-addnew">';
-        $html .= '<strong>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_new_values'). '</strong><br />';
+        $html .= '<strong>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_values') . '</strong><br />';
         $html .= '<textarea name="bind[add]" rows="5" cols="30"></textarea><br />';
-        $html .= '<span style="color:#999; font-size:0.8em;">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','add_row') .'</span><br />';
+        $html .= '<span style="color:#999; font-size:0.8em;">' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_row') . '</span><br />';
         $html .= '</p>';
-        
+
         //Select default values
         $html .= $this->getSelectDefaultValues();
         
+        return $html;
+    }
+        
+    private function fetchAdminEditRowModifiable(Tracker_FormElement_Field_List_Value $v) {
+        $html = '';
+        
+        $hp = Codendi_HTMLPurifier::instance();
+        
+        $is_hidden = $v->isHidden();
+
+        $html .= '<tr valign="top" class="' . ($is_hidden ? 'tracker_admin_static_value_hidden' : '') . '">';
+
+        $html .= '<td>';
+        if (isset($this->decorators[$v->getId()])) {
+            $html .= $this->decorators[$v->getId()]->decorateEdit();
+        } else {
+            $html .= Tracker_FormElement_Field_List_BindDecorator::noDecoratorEdit($this->field->id, $v->getId());
+        }
+        $html .= '</td>';
+
+        $html .= '<td>';
+        $html .= '<input type="text" name="bind[edit][' . $v->getId() . '][label]" value="' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
+        $html .= '<textarea name="bind[edit][' . $v->getId() . '][description]" style="vertical-align:top;" cols="50" rows="3">' . $hp->purify($v->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) . '</textarea>';
+        $html .= '</td>';
+
+        //{{{ Actions
+
+        $html .= '<td style="white-space:nowrap;">';
+
+        $img_params = array();
+        $icon_suffix = '';
+        if ($this->canValueBeHidden($v)) {
+            $checked = '';
+            if ($is_hidden) {
+                $icon_suffix = '-half';
+            } else {
+                $checked = 'checked="checked"';
+            }
+            $html .= '<input type="hidden" name="bind[edit][' . $v->getId() . '][is_hidden]" value="1" />';
+            $html .= '<input type="checkbox" name="bind[edit][' . $v->getId() . '][is_hidden]" value="0" ' . $checked . ' class="tracker_admin_static_value_hidden_chk" />';
+            $img_params['alt'] = 'show/hide value';
+            $img_params['title'] = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'hide_value');
+        } else {
+            $icon_suffix = '--exclamation-hidden';
+            $img_params['alt'] = 'cannot hide';
+            $img_params['title'] = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'hide_value_impossible');
+        }
+        $html .= $GLOBALS['HTML']->getImage('ic/eye' . $icon_suffix . '.png', $img_params);
+
+        $html .= ' ';
+
+        if ($this->canValueBeDeleted($v)) {
+            $html .= '<a title="Delete the value"
+                href="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
+                        'tracker' => $this->field->getTracker()->id,
+                        'func' => 'admin-formElement-update',
+                        'formElement' => $this->field->getId(),
+                        'bind-update' => 1,
+                        'bind[delete]' => $v->getId(),
+                    )) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png') . '</a>';
+        } else {
+            $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('title' => "You can't delete"));
+        }
+
+        $html .= '</td>';
+        //}}}
+
+        $html .= '</tr>';
+        return $html;
+    }
+    
+    private function fetchAdminEditFormNotModifiable() {
+        $html = '';
+        
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','static_values') .'</h3>';
+        $html .= '<table cellpadding="2" cellspacing="0" border="0">';
+        foreach ($this->getAllValues() as $v) {
+            $html .= $this->fetchAdminEditRowNotModifiable($v);
+        }
+        $html .= '</table>';
+        
+        // @todo: Show default value ?
+        
+        return $html;
+    }
+        
+    private function fetchAdminEditRowNotModifiable(Tracker_FormElement_Field_List_Value $v) {
+        $html = '';
+        $html .= '<tr valign="top" class="' . ($v->isHidden() ? 'tracker_admin_static_value_hidden' : '') . '">';
+        $html .= '<td>'.$this->formatChangesetValue(array('id' => $v->getId())).'</td>';
+        $html .= '</tr>';
         return $html;
     }
     
