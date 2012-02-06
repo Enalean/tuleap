@@ -29,7 +29,7 @@ class Tracker_SharedFormElementFactory {
     }
     public function createFormElement($tracker, $type, $formElement_data, User $user) {
         $field = $this->factory->getFormElementById($formElement_data['field_id']);
-        if ($field->userCanRead($user)) {
+        if ($field->userCanRead($user) && $field->getTracker()->userCanView($user)) {
             $data = $this->populateFormElementDataForASharedField($field);
             $type = $data['type'];
             return $this->factory->createFormElement($tracker, $type, $data, $user);

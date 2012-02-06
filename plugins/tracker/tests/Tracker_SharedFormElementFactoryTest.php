@@ -29,6 +29,7 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $originField = $this->GivenAFieldString();
         list($decorator, $factory, $tracker, $user) = $this->GivenASharedFormELementFactory($originField, 'string');
         $originField->setReturnValue('userCanRead', true, array($user));
+        $originField->getTracker()->setReturnValue('userCanView', true, array($user));
 
         $formElement_data = array(
             'field_id' => $originField->getId(),
@@ -60,15 +61,28 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $field = $this->GivenAFieldString();
         list($decorator, $factory, $tracker, $user) = $this->GivenASharedFormELementFactory($field, 'string');
         $field->setReturnValue('userCanRead', false, array($user));
+        $field->getTracker()->setReturnValue('userCanView', true, array($user));
+
+        $this->expectException();
+        $decorator->createFormElement($tracker, 'shared', array('field_id' => $field->getId()), $user);
+    }
+
+    public function testFieldInUnaccessibleTrackerCannotBeCopied() {
+        $field = $this->GivenAFieldString();
+        list($decorator, $factory, $tracker, $user) = $this->GivenASharedFormELementFactory($field, 'string');
+        $field->setReturnValue('userCanRead', true, array($user));
+        $field->getTracker()->setReturnValue('userCanView', false, array($user));
 
         $this->expectException();
         $decorator->createFormElement($tracker, 'shared', array('field_id' => $field->getId()), $user);
     }
 
     private function GivenAFieldString() {
+        $tracker = new MockTracker();
         $field = new MockTracker_FormElement_Field_String();
         $field->setReturnValue('getId', 321);
         $field->setReturnValue('getTrackerId', 101);
+        $field->setReturnValue('getTracker', $tracker);
         $field->setReturnValue('getParentId', 12);
         $field->setReturnValue('getName', 'NAME');
         $field->setReturnValue('getLabel', 'Label');
