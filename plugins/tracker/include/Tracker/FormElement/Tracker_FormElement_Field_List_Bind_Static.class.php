@@ -632,6 +632,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                         $new_value = trim(str_replace("\r", '', $new_value));
                         if ($new_value) {
                             if ($id = $value_dao->create($this->field->getId(), $new_value, '', 'end', 0)) {
+                                $this->propagateCreation($this->field, $id);
                                 $redirect = true;
                                 $this->values[$id] = $value_dao->searchById($id)->getRow();
                                 $valueMapping[] = $id;
@@ -651,6 +652,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             }
         }
         return parent::process($params, $no_redirect, $redirect);
+    }
+    
+    public function propagateCreation($field, $original_value_id) {
+        $value_dao = $this->getValueDao();
+        $value_dao->propagateCreation($field, $original_value_id);
     }
     
     /**

@@ -63,6 +63,19 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->updateAndGetLastId($sql);
     }
     
+    public function propagateCreation($field, $original_value_id) {
+        $field_id     = $this->da->escapeInt($field->id);
+        $original_value_id     = $this->da->escapeInt($original_value_id);
+        
+        $sql = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
+                SELECT target.id, original_value.label, original_value.description, original_value.rank, original_value.is_hidden, $original_value_id
+                    FROM tracker_field_list_bind_static_value AS original_value
+                    INNER JOIN tracker_field AS target ON (target.original_field_id = original_value.field_id)
+                    WHERE original_value.field_id = $field_id 
+                        AND original_value.id = $original_value_id 
+                        AND original_value.field_id != target.id";
+        return $this->retrieve($sql);
+    }
     
     public function save($id, $field_id, $label, $description, $rank, $is_hidden) {
         $id           = $this->da->escapeInt($id);
