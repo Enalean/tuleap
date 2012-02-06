@@ -55,10 +55,14 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject {
         $red       = $this->da->escapeInt($red);
         $green     = $this->da->escapeInt($green);
         $blue      = $this->da->escapeInt($blue);
+        
         $sql = "REPLACE INTO $this->table_name (field_id, value_id, red, green, blue)
-                VALUES ($field_id, $value_id, $red, $green, $blue)";
+            SELECT field_id, id, $red, $green, $blue
+            FROM tracker_field_list_bind_static_value
+            WHERE original_value_id = $value_id OR id = $value_id";
         return $this->update($sql);
     }
+    
     public function delete($field_id, $value_id) {
         $field_id  = $this->da->escapeInt($field_id);
         $value_id  = $this->da->escapeInt($value_id);
