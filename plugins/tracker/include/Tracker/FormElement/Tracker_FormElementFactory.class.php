@@ -1001,10 +1001,11 @@ class Tracker_FormElementFactory {
      * @param tracker $tracker of the created tracker
      * @param Object $formElement 
      * @param int $parent_id the id of the newly created parent formElement (0 when no parent)
-     * 
+     * @param User $user The current User
+     *
      * @return the id of the newly created FormElement
      */
-    public function saveObject($tracker, $formElement, $parent_id) {
+    public function saveObject($tracker, $formElement, $parent_id, User $user) {
         
         $properties = $formElement->getFlattenPropertiesValues();
         $formElement_data = array(  'name'          => $formElement->name,
@@ -1021,7 +1022,7 @@ class Tracker_FormElementFactory {
                                     'specific_properties' => $properties);
         $type = $this->getType($formElement);
         
-        if ($id = $this->createFormElement($tracker, $type, $formElement_data, UserManager::instance()->getCurrentUser())) {
+        if ($id = $this->createFormElement($tracker, $type, $formElement_data, $user)) {
             $formElement->setId($id);
             $formElement->afterSaveObject($tracker);
         }

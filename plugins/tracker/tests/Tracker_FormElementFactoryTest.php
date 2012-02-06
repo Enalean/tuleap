@@ -37,12 +37,14 @@ Mock::generate('Tracker_FormElement_Field_Date');
 
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
+Mock::generate('User');
 
 
 class Tracker_FormElementFactoryTest extends UnitTestCase {
 
     
     public function test_saveObject() {
+        $user          = new MockUser();
         $tracker       = new MockTracker();
         
         $a_formelement = new MockTracker_FormElement_Container_Fieldset();
@@ -54,7 +56,7 @@ class Tracker_FormElementFactoryTest extends UnitTestCase {
         $tff = new Tracker_FormElementFactoryTestVersion();
         $tff->setReturnValue('createFormElement', 66);
         
-        $this->assertEqual($tff->saveObject($tracker, $a_formelement, 0), 66);
+        $this->assertEqual($tff->saveObject($tracker, $a_formelement, 0, $user), 66);
     }
     
     public function testImportFormElement() {

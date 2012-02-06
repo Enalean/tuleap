@@ -34,9 +34,10 @@ class Tracker_FormElement_StaticField_SeparatorTest extends UnitTestCase {
         $required = false;
         $notifications = false;
         $rank = 25;
-        
-        $separator = new Tracker_FormElement_StaticField_Separator($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank);
-        
+        $original_field_id = $id;
+
+        $separator = new Tracker_FormElement_StaticField_Separator($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field_id);
+
         $this->assertEqual('Separator Label', $separator->getLabel());
         $this->assertEqual('', $separator->getDescription());
         $this->assertEqual('', $separator->fetchDescription());
