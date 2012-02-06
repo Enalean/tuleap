@@ -58,7 +58,7 @@ if (PHP_INT_SIZE == 4) {
 
 $GLOBALS['config']['plugins_root'] = $GLOBALS['sys_pluginsroot'];
 $GLOBALS['config']['tests_root']   = '/tests/';
-$GLOBALS['config']['excludes']     = array('.', '..', '.svn');
+$GLOBALS['config']['excludes']     = array('.', '..', '.svn', '.git');
 $GLOBALS['config']['suffix']       = 'Test.php';
 
 $GLOBALS['tests']                  = array();
