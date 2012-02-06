@@ -299,6 +299,20 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         }
         return false;
     }
+    
+    public function propagateUpdatedProperties($original_field, $shared_field_id) {
+        $sql = "UPDATE $this->table_name
+                SET label = ". $this->da->quoteSmart($original_field->label) ."
+                WHERE id = ". $shared_field_id;
+        return $this->update($sql);
+    }
+    
+    public function getSharedFields($field) {
+        $sql = "SELECT id
+                FROM $this->table_name
+                WHERE original_field_id = ". $this->da->escapeInt($field->id);
+        return $this->retrieve($sql);
+    }
 
     public function setType($field,$type) {
         $sql = "UPDATE $this->table_name

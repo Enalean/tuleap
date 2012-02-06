@@ -663,6 +663,9 @@ class Tracker_FormElementFactory {
         if ($formElement->updateProperties($formElement_data)) {
             $success = $this->getDao()->save($formElement);
         }
+        foreach($this->getDao()->getSharedFields($formElement) as $row) {
+            $success = $this->getDao()->propagateUpdatedProperties($formElement, $row['id']);
+        }
         return $success;
     }
    
