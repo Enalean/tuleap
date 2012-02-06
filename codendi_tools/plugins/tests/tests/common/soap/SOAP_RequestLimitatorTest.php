@@ -27,7 +27,7 @@ Mock::generate('SOAP_RequestLimitatorDao');
 class AboutOneHourAgoExpectation extends SimpleExpectation {
     
     public function test($input) {
-        $oneHourAgo = time() - 3600;
+        $oneHourAgo = $_SERVER['REQUEST_TIME'] - 3600;
         $delta = abs($input - $oneHourAgo);
         if ($delta <= 10) {
             return true;
@@ -36,7 +36,7 @@ class AboutOneHourAgoExpectation extends SimpleExpectation {
     }
     
     public function testMessage($input) {
-        $now = time();
+        $now = $_SERVER['REQUEST_TIME'];
         return 'The given value is not ~1 hour ago (Input: '.$input.' => '.date('c', $input).' <=> Now: '.$now.' => '.date('c', $now).')';
     }
 }
@@ -45,7 +45,8 @@ class SOAP_RequestLimitatorTest extends UnitTestCase {
 
     private function GivenThereWasAlreadyOneCallTheLastHour() {
         $dao = new MockSOAP_RequestLimitatorDao();
-        $time30minutesAgo = time() - 30 * 60;
+        $requestTime = $_SERVER['REQUEST_TIME'];
+        $time30minutesAgo = $requestTime - 30 * 60;
         $dar = TestHelper::arrayToDar(array('method_name' => 'addProject', 'date' => $time30minutesAgo));
         // Ensure we search into the db stuff ~1 hour agos  
         $dao->setReturnValue('searchFirstCallToMethod', $dar, array('addProject', new AboutOneHourAgoExpectation()));
@@ -53,7 +54,7 @@ class SOAP_RequestLimitatorTest extends UnitTestCase {
         $dao->setReturnValue('foundRows', 1);
         
         // Ensure the saved value is ~ the current time (more or less 10 sec)
-        $dao->expectOnce('saveCallToMethod', array('addProject', new WithinMarginExpectation(time(), 10)));
+        $dao->expectOnce('saveCallToMethod', array('addProject', new WithinMarginExpectation($requestTime, 10)));
         
         return $dao;
     }
@@ -87,7 +88,7 @@ class SOAP_RequestLimitatorTest extends UnitTestCase {
     private function GivenThereWasAlreadyTenCallToAddProject() {
         $dao = new MockSOAP_RequestLimitatorDao();
         
-        $time30minutesAgo = time() - 30 * 60;
+        $time30minutesAgo = $_SERVER['REQUEST_TIME'] - 30 * 60;
         $dar = TestHelper::arrayToDar(array('method_name' => 'addProject', 'date' => $time30minutesAgo));
         $dao->setReturnValue('searchFirstCallToMethod', $dar);
         $dao->setReturnValue('foundRows', 10);
