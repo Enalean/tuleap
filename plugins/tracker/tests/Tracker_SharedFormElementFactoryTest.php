@@ -19,11 +19,12 @@
  */
 require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php';
 require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php';
-
+require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindFactory.class.php';
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker');
 Mock::generate('User');
 Mock::generate('Tracker_FormElement_Field_String');
+Mock::generate('Tracker_FormElement_Field_List_BindFactory');
 class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
     public function testCreateFormElementDispatchesToFactory() {
         $originField = $this->GivenAFieldString();
