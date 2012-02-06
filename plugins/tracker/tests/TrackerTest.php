@@ -149,6 +149,9 @@ Mock::generate('Tracker_ArtifactFactory');
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php');
+Mock::generate('Tracker_SharedFormElementFactory');
+
 class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {
     public function exportToXML($root, &$xmlMapping, &$index) {
         $xmlMapping['F'. $index] = $this->getId();
@@ -1624,6 +1627,35 @@ class TrackerTest extends TuleapTestCase {
         
         $GLOBALS['Response']->expectNever('addFeedback', array('warning', '*', '*'));
         $tracker->isValidCSV($lines, $separator);
+    }
+    
+    public function testCreateFormElementDispatchesToOrdinaryFieldCreation() {
+        $data = array('type' => 'string');
+        
+        list($tracker, $factory, $sharedFactory) = $this->GivenATrackerAndItsFactories();
+        $factory->expectOnce('createFormElement', array($tracker , $data['type'], $data));
+        $sharedFactory->expectNever('createFormElement');
+        
+        $tracker->createFormElement($data['type'], $data);
+    }
+    
+    public function testCreateFormElementDispatchesToSharedField() {
+        $data = array('type' => 'shared');
+        
+        list($tracker, $factory, $sharedFactory) = $this->GivenATrackerAndItsFactories();
+        $factory->expectNever('createFormElement');
+        $sharedFactory->expectOnce('createFormElement', array($tracker , $data['type'], $data));
+        
+        $tracker->createFormElement($data['type'], $data);
+    }
+    
+    private function GivenATrackerAndItsFactories() {
+        $tracker = new Tracker(null, null, null, null, null, null, null, null, null, null, null, null);
+        $factory = new MockTracker_FormElementFactory();
+        $tracker->setFormElementFactory($factory);
+        $sharedFactory = new MockTracker_SharedFormElementFactory();
+        $tracker->setSharedFormElementFactory($sharedFactory);
+        return array($tracker, $factory, $sharedFactory);
     }
 }
 

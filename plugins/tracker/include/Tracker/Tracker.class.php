@@ -30,6 +30,7 @@ require_once('common/date/DateHelper.class.php');
 require_once('common/widget/Widget_Static.class.php');
 require_once(dirname(__FILE__).'/../tracker_permissions.php');
 require_once('Tracker_Dispatchable_Interface.class.php');
+require_once('FormElement/Tracker_SharedFormElementFactory.class.php');
 
 require_once('json.php');
 
@@ -47,6 +48,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
     public $deletion_date;
     public $instantiate_for_new_projects;
     public $stop_notification;
+    private $formElementFactory;
+    private $sharedFormElementFactory;
 
     // attributes necessary to to create an intermediate Tracker Object
     // (before Database import) during XML import
@@ -81,6 +84,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->deletion_date                = $deletion_date;
         $this->instantiate_for_new_projects = $instantiate_for_new_projects;
         $this->stop_notification            = $stop_notification;
+        $this->formElementFactory           = Tracker_FormElementFactory::instance();
+        $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory);
     }
 
     /**
@@ -371,7 +376,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     } else if (is_array($request->get('create-formElement'))) {
                         list($type,) = each($request->get('create-formElement'));
                         if ($request->get('docreate-formElement') && is_array($request->get('formElement_data'))) {
-                            Tracker_FormElementFactory::instance()->createFormElement($this, $type, $request->get('formElement_data'));
+                            $this->createFormElement($type, $request->get('formElement_data'));
                             $GLOBALS['Response']->redirect(
                                     TRACKER_BASE_URL.'/?'. http_build_query(
                                     array(
@@ -520,6 +525,14 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
         }
         return false;
+    }
+    
+    public function createFormElement($type, $formElement_data) {
+        $factory = $this->formElementFactory;
+        if ($type == 'shared') {
+            $factory = $this->sharedFormElementFactory;
+        }
+        $factory->createFormElement($this, $type, $formElement_data);
     }
     
     /**
@@ -2612,7 +2625,7 @@ EOS;
      * @return Tracker_FormElementFactory
      */
     protected function getFormElementFactory() {
-        return Tracker_FormElementFactory::instance();
+        return $this->formElementFactory;
     }
 
     /**
@@ -2891,6 +2904,14 @@ EOS;
         } else {
             return false;
         }      
+    }
+    
+    public function setFormElementFactory(Tracker_FormElementFactory $factory) {
+        $this->formElementFactory = $factory;
+    }
+    
+    public function setSharedFormElementFactory(Tracker_SharedFormElementFactory $factory) {
+        $this->sharedFormElementFactory = $factory;
     }
 
 }

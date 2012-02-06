@@ -13,7 +13,7 @@ When /^I add the field "([^"]*)" from the tracker "([^"]*)" of the project "([^"
 end
 
 Then /^the field "([^"]*)" is present and has at least the option "([^"]*)"$/ do |field, option|
-    page.should have_select(field)
+    page.should have_select(field, :options => [option])
     find(:xpath,"//label[contains(@title, '#{field}')]/..//a[contains(@href, 'func=admin-formElement-remove')]").click
 end
 
