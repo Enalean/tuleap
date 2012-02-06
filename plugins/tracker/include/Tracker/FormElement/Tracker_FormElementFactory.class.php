@@ -633,7 +633,6 @@ class Tracker_FormElementFactory {
     }
     
     public function updateFormElement($formElement, $formElement_data) {
-        $success = false;
         
         //check that the new name is not already used
         if (isset($formElement_data['name'])) {
@@ -661,12 +660,11 @@ class Tracker_FormElementFactory {
         $formElement_data['parent_id'] = $parent_id;
         $formElement_data['rank']      = $rank;
         if ($formElement->updateProperties($formElement_data)) {
-            $success = $this->getDao()->save($formElement);
+            if ($this->getDao()->save($formElement)) {
+                return $this->getDao()->propagateUpdatedProperties($formElement);
+            }
         }
-        foreach($this->getDao()->getSharedFields($formElement) as $row) {
-            $success = $this->getDao()->propagateUpdatedProperties($formElement, $row['id']);
-        }
-        return $success;
+        return false;
     }
    
     /**

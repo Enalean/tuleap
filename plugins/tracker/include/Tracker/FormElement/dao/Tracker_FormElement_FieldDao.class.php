@@ -300,20 +300,15 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return false;
     }
     
-    public function propagateUpdatedProperties($original_field, $shared_field_id) {
-        $sql = "UPDATE $this->table_name
-                SET label = ". $this->da->quoteSmart($original_field->label) ."
-                WHERE id = ". $shared_field_id;
+    public function propagateUpdatedProperties($original_field) {
+        $sql = "UPDATE $this->table_name AS original 
+                INNER JOIN $this->table_name AS target ON (target.original_field_id = original.id)
+                SET target.label = original.label,
+                    target.description = original.description
+                WHERE original.id = $original_field->id";
         return $this->update($sql);
     }
     
-    public function getSharedFields($field) {
-        $sql = "SELECT id
-                FROM $this->table_name
-                WHERE original_field_id = ". $this->da->escapeInt($field->id);
-        return $this->retrieve($sql);
-    }
-
     public function setType($field,$type) {
         $sql = "UPDATE $this->table_name
                 SET formElement_type = ". $this->da->quoteSmart($type) ."
