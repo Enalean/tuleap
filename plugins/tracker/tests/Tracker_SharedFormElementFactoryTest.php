@@ -18,35 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php';
+require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php';
 
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker');
-
+Mock::generate('User');
+Mock::generate('Tracker_FormElement_Field_String');
 class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
     public function testCreateFormElementDispatchesToFactory() {
-        $tracker = new MockTracker();
-        $factory = new MockTracker_FormElementFactory();
-        $decorator = new Tracker_SharedFormElementFactory($factory);
-        $tracker_id         = 101;
-        $parent_id          = 12;
-        $name               = 'NAME';
-        $label              = 'Label';
-        $description        = 'Description';
-        $use_it             = '1';
-        $scope              = 'P';
-        $required           = '1';
-        $notifications      = '1';
-        $rank               = '145';
-        $original_field_id  = null;
-        $id                 = 321;
-        $originField = new Tracker_FormElement_Field_String($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field_id);
-        $factory->setReturnValue('getType', 'string', array($originField));
-        $factory->setReturnValue('getFormElementById', $originField, array($id));
-        
+        $originField = $this->GivenAFieldString();
+        list($decorator, $factory, $tracker, $user) = $this->GivenASharedFormELementFactory($originField, 'string');
+        $originField->setReturnValue('userCanRead', true, array($user));
+
         $formElement_data = array(
-            'field_id' => 321,
+            'field_id' => $originField->getId(),
         );
-        
+
         $factory->expectOnce(
             'createFormElement', 
             array(
@@ -54,18 +41,55 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
                 'string', 
                 array(
                     'type'              => 'string',
-                    'label'             => $label,
-                    'description'       => $description,
-                    'use_it'            => $use_it,
-                    'scope'             => $scope,
-                    'required'          => $required,
-                    'notifications'     => $notifications,
-                    'original_field_id' => $id,
-                )
+                    'label'             => $originField->getLabel(),
+                    'description'       => $originField->getDescription(),
+                    'use_it'            => $originField->isUsed(),
+                    'scope'             => $originField->getScope(),
+                    'required'          => $originField->isRequired(),
+                    'notifications'     => $originField->hasNotifications(),
+                    'original_field_id' => $originField->getId(),
+                ),
+                $user
             )
         );
-        
-        $new_formElement_data = $decorator->createFormElement($tracker, 'shared', $formElement_data);
+
+        $decorator->createFormElement($tracker, 'shared', $formElement_data, $user);
     }
+
+    public function testUnreadableFieldCannotBeCopied() {
+        $field = $this->GivenAFieldString();
+        list($decorator, $factory, $tracker, $user) = $this->GivenASharedFormELementFactory($field, 'string');
+        $field->setReturnValue('userCanRead', false, array($user));
+
+        $this->expectException();
+        $decorator->createFormElement($tracker, 'shared', array('field_id' => $field->getId()), $user);
+    }
+
+    private function GivenAFieldString() {
+        $field = new MockTracker_FormElement_Field_String();
+        $field->setReturnValue('getId', 321);
+        $field->setReturnValue('getTrackerId', 101);
+        $field->setReturnValue('getParentId', 12);
+        $field->setReturnValue('getName', 'NAME');
+        $field->setReturnValue('getLabel', 'Label');
+        $field->setReturnValue('getDescription', 'Description');
+        $field->setReturnValue('isUsed', 1);
+        $field->setReturnValue('getScope', 'P');
+        $field->setReturnValue('isRequired', '1');
+        $field->setReturnValue('hasNotifications', '1');
+        $field->setReturnValue('getRank', '145');
+        $field->setReturnValue('getOriginalFieldId', 321);
+        return $field;
+    }
+    private function GivenASharedFormElementFactory($field, $type) {
+        $user = new MockUser();
+        $tracker = new MockTracker();
+        $factory = new MockTracker_FormElementFactory();
+        $decorator = new Tracker_SharedFormElementFactory($factory);
+        $factory->setReturnValue('getType', 'string', array($field));
+        $factory->setReturnValue('getFormElementById', $field, array($field->getId()));
+        return array($decorator, $factory, $tracker, $user);
+    }
+
 }
 ?>

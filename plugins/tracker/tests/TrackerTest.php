@@ -1632,21 +1632,21 @@ class TrackerTest extends TuleapTestCase {
     public function testCreateFormElementDispatchesToOrdinaryFieldCreation() {
         $data = array('type' => 'string');
         
-        list($tracker, $factory, $sharedFactory) = $this->GivenATrackerAndItsFactories();
-        $factory->expectOnce('createFormElement', array($tracker , $data['type'], $data));
+        list($tracker, $factory, $sharedFactory, $user) = $this->GivenATrackerAndItsFactories();
+        $factory->expectOnce('createFormElement', array($tracker , $data['type'], $data, $user));
         $sharedFactory->expectNever('createFormElement');
         
-        $tracker->createFormElement($data['type'], $data);
+        $tracker->createFormElement($data['type'], $data, $user);
     }
     
     public function testCreateFormElementDispatchesToSharedField() {
         $data = array('type' => 'shared');
         
-        list($tracker, $factory, $sharedFactory) = $this->GivenATrackerAndItsFactories();
+        list($tracker, $factory, $sharedFactory, $user) = $this->GivenATrackerAndItsFactories();
         $factory->expectNever('createFormElement');
-        $sharedFactory->expectOnce('createFormElement', array($tracker , $data['type'], $data));
+        $sharedFactory->expectOnce('createFormElement', array($tracker , $data['type'], $data, $user));
         
-        $tracker->createFormElement($data['type'], $data);
+        $tracker->createFormElement($data['type'], $data, $user);
     }
     
     private function GivenATrackerAndItsFactories() {
@@ -1655,7 +1655,8 @@ class TrackerTest extends TuleapTestCase {
         $tracker->setFormElementFactory($factory);
         $sharedFactory = new MockTracker_SharedFormElementFactory();
         $tracker->setSharedFormElementFactory($sharedFactory);
-        return array($tracker, $factory, $sharedFactory);
+        $user = new MockUser();
+        return array($tracker, $factory, $sharedFactory, $user);
     }
 }
 

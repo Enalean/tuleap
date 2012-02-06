@@ -27,23 +27,26 @@ class Tracker_SharedFormElementFactory {
     function __construct(Tracker_FormElementFactory $factory) {
         $this->factory = $factory;
     }
-    public function createFormElement($tracker, $type, $formElement_data) {
+    public function createFormElement($tracker, $type, $formElement_data, User $user) {
         $field = $this->factory->getFormElementById($formElement_data['field_id']);
-        $data = $this->populateFormElementDataForASharedField($field);
-        $type = $data['type'];
-        $this->factory->createFormElement($tracker, $type, $data);
+        if ($field->userCanRead($user)) {
+            $data = $this->populateFormElementDataForASharedField($field);
+            $type = $data['type'];
+            return $this->factory->createFormElement($tracker, $type, $data, $user);
+        }
+        throw new Exception('Permission denied');
     }
     
     private function populateFormElementDataForASharedField($originField) {
         return array(
             'type'              => $this->factory->getType($originField),
-            'label'             => $originField->label,
-            'description'       => $originField->description,
-            'label'             => $originField->label,
-            'use_it'            => $originField->use_it,
-            'scope'             => $originField->scope,
-            'required'          => $originField->required,
-            'notifications'     => $originField->notifications,
+            'label'             => $originField->getLabel(),
+            'description'       => $originField->getDescription(),
+            'label'             => $originField->getLabel(),
+            'use_it'            => $originField->isUsed(),
+            'scope'             => $originField->getScope(),
+            'required'          => $originField->isRequired(),
+            'notifications'     => $originField->hasNotifications(),
             'original_field_id' => $originField->getId(),
         );
     }

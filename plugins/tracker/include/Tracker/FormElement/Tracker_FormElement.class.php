@@ -132,6 +132,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $this->original_field_id = $original_field_id;
     }
     
+    public function getScope() { return $this->scope; }
+    public function getParentId() { return $this->parent_id; }
+    public function getRank() { return $this->rank; }
+    public function getOriginalFieldId() { return $this->original_field_id; }
+
     /**
      *  Return true if the field is used
      *

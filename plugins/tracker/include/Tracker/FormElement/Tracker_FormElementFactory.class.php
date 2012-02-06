@@ -866,7 +866,7 @@ class Tracker_FormElementFactory {
         }
     }
     
-    public function createFormElement($tracker, $type, $formElement_data) {
+    public function createFormElement($tracker, $type, $formElement_data, User $user) {
         //Check that the label has been submitted
         if (isset($formElement_data['label']) && trim($formElement_data['label'])) {
             $label       = trim($formElement_data['label']);
@@ -1021,7 +1021,7 @@ class Tracker_FormElementFactory {
                                     'specific_properties' => $properties);
         $type = $this->getType($formElement);
         
-        if ($id = $this->createFormElement($tracker, $type, $formElement_data)) {
+        if ($id = $this->createFormElement($tracker, $type, $formElement_data, UserManager::instance()->getCurrentUser())) {
             $formElement->setId($id);
             $formElement->afterSaveObject($tracker);
         }

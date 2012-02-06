@@ -376,7 +376,11 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     } else if (is_array($request->get('create-formElement'))) {
                         list($type,) = each($request->get('create-formElement'));
                         if ($request->get('docreate-formElement') && is_array($request->get('formElement_data'))) {
-                            $this->createFormElement($type, $request->get('formElement_data'));
+                            try {
+                                $this->createFormElement($type, $request->get('formElement_data'), $current_user);
+                            } catch (Exception $e) {
+                                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+                            }
                             $GLOBALS['Response']->redirect(
                                     TRACKER_BASE_URL.'/?'. http_build_query(
                                     array(
@@ -527,12 +531,12 @@ class Tracker implements Tracker_Dispatchable_Interface {
         return false;
     }
     
-    public function createFormElement($type, $formElement_data) {
+    public function createFormElement($type, $formElement_data, $user) {
         $factory = $this->formElementFactory;
         if ($type == 'shared') {
             $factory = $this->sharedFormElementFactory;
         }
-        $factory->createFormElement($this, $type, $formElement_data);
+        $factory->createFormElement($this, $type, $formElement_data, $user);
     }
     
     /**
