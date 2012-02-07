@@ -590,7 +590,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     }
                     break;
                 case 'delete':
-                    if (($row = $value_dao->searchById((int)$value)->getRow()) && $value_dao->delete($this->field->getId(), (int)$value)) {
+                    if (($row = $value_dao->searchById((int)$value)->getRow()) && $value_dao->delete((int)$value)) {
                         $redirect = true;
                         $GLOBALS['Response']->addFeedback('info', 'Value '.  $hp->purify($row['label'], CODENDI_PURIFIER_CONVERT_HTML)  .'deleted');
                     }

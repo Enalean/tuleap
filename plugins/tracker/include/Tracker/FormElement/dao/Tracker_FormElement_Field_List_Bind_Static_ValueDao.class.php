@@ -95,12 +95,12 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->update($sql);
     }
     
-    public function delete($field_id, $id) {
+    public function delete($id) {
         $id       = $this->da->escapeInt($id);
-        $field_id = $this->da->escapeInt($field_id);
         $sql = "DELETE FROM $this->table_name 
-                WHERE field_id = $field_id 
-                  AND id = $id";
+                WHERE id = $id 
+                   OR original_value_id = $id";
+        
         return $this->update($sql);
     }
     
