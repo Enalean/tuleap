@@ -695,7 +695,7 @@ class TrackerFactory {
             //create formElements
             foreach ($tracker->formElements as $formElement) {
                 // these fields have no parent
-                Tracker_FormElementFactory::instance()->saveObject($trackerDB, $formElement, 0, UserManager::instance()->getCurrentUser());
+                Tracker_FormElementFactory::instance()->saveObject($trackerDB, $formElement, 0);
             }
             //create report
             foreach ($tracker->reports as $report) {

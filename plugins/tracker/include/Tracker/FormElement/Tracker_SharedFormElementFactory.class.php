@@ -37,7 +37,7 @@ class Tracker_SharedFormElementFactory {
         if ($field->userCanRead($user) && $field->getTracker()->userCanView($user)) {
             $data = $this->populateFormElementDataForASharedField($field);
             $type = $data['type'];
-            $id = $this->factory->createFormElement($tracker, $type, $data, $user);
+            $id = $this->factory->createFormElement($tracker, $type, $data);
             $this->boundValuesFactory->duplicateByReference($field->getId(), $id);
             return $id;
         }

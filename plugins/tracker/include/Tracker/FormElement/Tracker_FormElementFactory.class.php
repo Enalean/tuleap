@@ -867,7 +867,7 @@ class Tracker_FormElementFactory {
         }
     }
     
-    public function createFormElement($tracker, $type, $formElement_data, User $user) {
+    public function createFormElement($tracker, $type, $formElement_data) {
         //Check that the label has been submitted
         if (isset($formElement_data['label']) && trim($formElement_data['label'])) {
             $label       = trim($formElement_data['label']);
@@ -1006,7 +1006,7 @@ class Tracker_FormElementFactory {
      *
      * @return the id of the newly created FormElement
      */
-    public function saveObject($tracker, $formElement, $parent_id, User $user) {
+    public function saveObject($tracker, $formElement, $parent_id) {
         
         $properties = $formElement->getFlattenPropertiesValues();
         $formElement_data = array(  'name'          => $formElement->name,
@@ -1023,7 +1023,7 @@ class Tracker_FormElementFactory {
                                     'specific_properties' => $properties);
         $type = $this->getType($formElement);
         
-        if ($id = $this->createFormElement($tracker, $type, $formElement_data, $user)) {
+        if ($id = $this->createFormElement($tracker, $type, $formElement_data)) {
             $formElement->setId($id);
             $formElement->afterSaveObject($tracker);
         }

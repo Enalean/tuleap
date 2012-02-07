@@ -50,8 +50,7 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
                     'required'          => $originField->isRequired(),
                     'notifications'     => $originField->hasNotifications(),
                     'original_field_id' => $originField->getId(),
-                ),
-                $user
+                )
             )
         );
 
