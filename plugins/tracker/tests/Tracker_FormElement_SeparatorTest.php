@@ -40,7 +40,6 @@ class Tracker_FormElement_StaticField_SeparatorTest extends UnitTestCase {
 
         $this->assertEqual('Separator Label', $separator->getLabel());
         $this->assertEqual('', $separator->getDescription());
-        $this->assertEqual('', $separator->fetchDescription());
         $this->assertTrue($separator->canBeUnused());
     }
 
