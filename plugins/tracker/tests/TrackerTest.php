@@ -1644,7 +1644,7 @@ class TrackerTest extends TuleapTestCase {
         
         list($tracker, $factory, $sharedFactory, $user) = $this->GivenATrackerAndItsFactories();
         $factory->expectNever('createFormElement');
-        $sharedFactory->expectOnce('createFormElement', array($tracker , $data['type'], $data, $user));
+        $sharedFactory->expectOnce('createFormElement', array($tracker , $data, $user));
         
         $tracker->createFormElement($data['type'], $data, $user);
     }

@@ -32,7 +32,7 @@ class Tracker_SharedFormElementFactory {
         $this->boundValuesFactory = $boundValuesFactory;
         $this->factory = $factory;
     }
-    public function createFormElement($tracker, $type, $formElement_data, User $user) {
+    public function createFormElement($tracker, $formElement_data, User $user) {
         $field = $this->factory->getFormElementById($formElement_data['field_id']);
         if ($field->userCanRead($user) && $field->getTracker()->userCanView($user)) {
             $data = $this->populateFormElementDataForASharedField($field);

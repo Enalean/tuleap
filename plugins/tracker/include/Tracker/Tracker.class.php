@@ -534,7 +534,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     
     public function createFormElement($type, $formElement_data, $user) {
         if ($type == 'shared') {
-            $this->sharedFormElementFactory->createFormElement($this, $type, $formElement_data, $user);
+            $this->sharedFormElementFactory->createFormElement($this, $formElement_data, $user);
         } else {
             $this->formElementFactory->createFormElement($this, $type, $formElement_data);
         }

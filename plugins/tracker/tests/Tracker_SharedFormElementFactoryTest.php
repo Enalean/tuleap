@@ -54,7 +54,7 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
             )
         );
 
-        $decorator->createFormElement($tracker, 'shared', $formElement_data, $user);
+        $decorator->createFormElement($tracker, $formElement_data, $user);
     }
 
     public function testUnreadableFieldCannotBeCopied() {
@@ -64,7 +64,7 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $field->getTracker()->setReturnValue('userCanView', true, array($user));
 
         $this->expectException();
-        $decorator->createFormElement($tracker, 'shared', array('field_id' => $field->getId()), $user);
+        $decorator->createFormElement($tracker, array('field_id' => $field->getId()), $user);
     }
 
     public function testFieldInUnaccessibleTrackerCannotBeCopied() {
@@ -74,7 +74,7 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $field->getTracker()->setReturnValue('userCanView', false, array($user));
 
         $this->expectException();
-        $decorator->createFormElement($tracker, 'shared', array('field_id' => $field->getId()), $user);
+        $decorator->createFormElement($tracker, array('field_id' => $field->getId()), $user);
     }
     public function testDuplicatesAnyValuesThatAreBoundToTheOriginalField() {
         $originField = $this->GivenAFieldString();
@@ -85,7 +85,7 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $factory->setReturnValue('createFormElement', $newFieldId);
         $boundValuesFactory->expectOnce('duplicateByReference', 
                 array($originField->getId(), $newFieldId));
-        $decorator->createFormElement($tracker, 'shared', array('field_id' => $originField->getId()), $user);
+        $decorator->createFormElement($tracker, array('field_id' => $originField->getId()), $user);
 
     }
 
