@@ -88,14 +88,27 @@ class Tracker_FormElement_Field_List_BindFactory {
         return $bind;
     }
     
-    
     /**
      * Duplicate a field. 
      * @param int $from_field_id
      * @param int $to_field_id
      * @return array the mapping between old values and new ones
      */
-    public function duplicate($from_field_id, $to_field_id, $by_reference = Tracker_FormElement_Field_List_Bind_Static_ValueDao::COPY_BY_VALUE) {
+    public function duplicate($from_field_id, $to_field_id) {
+        return $this->_duplicate($from_field_id, $to_field_id, Tracker_FormElement_Field_List_Bind_Static_ValueDao::COPY_BY_VALUE); 
+    }
+
+    /**
+     * Duplicate a field and keep a reference to the original Static Values. 
+     * @param int $from_field_id
+     * @param int $to_field_id
+     * @return array the mapping between old values and new ones
+     */
+    public function duplicateByReference($from_field_id, $to_field_id) {
+        return $this->_duplicate($from_field_id, $to_field_id, Tracker_FormElement_Field_List_Bind_Static_ValueDao::COPY_BY_REFERENCE); 
+    }
+    
+    private function _duplicate($from_field_id, $to_field_id, $by_reference) {
         
         //duplicate users info, if any
         $dao = new Tracker_FormElement_Field_List_Bind_UsersDao();

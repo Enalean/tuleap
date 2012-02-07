@@ -84,8 +84,8 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $originField->getTracker()->setReturnValue('userCanView', true, array($user));
         $newFieldId = 999;
         $factory->setReturnValue('createFormElement', $newFieldId);
-        $boundValuesFactory->expectOnce('duplicate', 
-                array($originField->getId(), $newFieldId, Tracker_FormElement_Field_List_Bind_Static_ValueDao::COPY_BY_REFERENCE));
+        $boundValuesFactory->expectOnce('duplicateByReference', 
+                array($originField->getId(), $newFieldId));
         $decorator->createFormElement($tracker, 'shared', array('field_id' => $originField->getId()), $user);
 
     }
