@@ -21,6 +21,9 @@
 require_once('common/dao/include/DataAccessObject.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObject {
+    const COPY_BY_REFERENCE = true;
+    const COPY_BY_VALUE = false;
+    
     function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_static_value';
@@ -42,15 +45,24 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                 ORDER BY ". ($is_rank_alpha ? 'label' : 'rank');
         return $this->retrieve($sql);
     }
-    public function duplicate($from_value_id, $to_field_id) {
+    public function duplicate($from_value_id, $to_field_id, $by_reference) {
         $from_value_id  = $this->da->escapeInt($from_value_id);
         $to_field_id    = $this->da->escapeInt($to_field_id);
-        $sql = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden)
-                SELECT $to_field_id, label, description, rank, is_hidden
+        if ($by_reference) {
+            $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
+                    SELECT $to_field_id, label, description, rank, is_hidden, $from_value_id";
+            
+        } else {
+            $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden)
+                    SELECT $to_field_id, label, description, rank, is_hidden";
+        }
+        $sql = $insert . "
                 FROM $this->table_name
                 WHERE id = $from_value_id";
+                
         return $this->updateAndGetLastId($sql);
     }
+
     public function create($field_id, $label, $description, $rank, $is_hidden) {
         $field_id     = $this->da->escapeInt($field_id);
         $label        = $this->da->quoteSmart($label);

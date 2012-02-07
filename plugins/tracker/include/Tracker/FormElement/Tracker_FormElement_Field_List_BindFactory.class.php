@@ -34,7 +34,7 @@ require_once('common/html/HTML_Element_Input_Radio.class.php');
 class Tracker_FormElement_Field_List_BindFactory {
     const STATIK  = 'static';
     const USERS   = 'users';
-    const COPY_BY_REFERENCE = true;
+
     
     /**
      * Build a binder associated to a list field.
@@ -95,7 +95,7 @@ class Tracker_FormElement_Field_List_BindFactory {
      * @param int $to_field_id
      * @return array the mapping between old values and new ones
      */
-    public function duplicate($from_field_id, $to_field_id) {
+    public function duplicate($from_field_id, $to_field_id, $by_reference = Tracker_FormElement_Field_List_Bind_Static_ValueDao::COPY_BY_VALUE) {
         
         //duplicate users info, if any
         $dao = new Tracker_FormElement_Field_List_Bind_UsersDao();
@@ -109,7 +109,7 @@ class Tracker_FormElement_Field_List_BindFactory {
         //duplicate Static value, if any
         $dao = new Tracker_FormElement_Field_List_Bind_Static_ValueDao();
         foreach($dao->searchByFieldId($from_field_id, 0) as $row) {
-            if ($id = $dao->duplicate($row['id'], $to_field_id)) {
+            if ($id = $dao->duplicate($row['id'], $to_field_id, $by_reference)) {
                 $value_mapping[$row['id']] = $id;
             }
         }

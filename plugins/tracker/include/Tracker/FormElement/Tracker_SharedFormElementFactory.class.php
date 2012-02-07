@@ -38,7 +38,7 @@ class Tracker_SharedFormElementFactory {
             $data = $this->populateFormElementDataForASharedField($field);
             $type = $data['type'];
             $id = $this->factory->createFormElement($tracker, $type, $data, $user);
-            $this->boundValuesFactory->duplicate($field->getId(), $id, Tracker_FormElement_Field_List_BindFactory::COPY_BY_REFERENCE);
+            $this->boundValuesFactory->duplicate($field->getId(), $id, Tracker_FormElement_Field_List_Bind_Static_ValueDao::COPY_BY_REFERENCE);
             return $id;
         }
         throw new Exception('Permission denied');

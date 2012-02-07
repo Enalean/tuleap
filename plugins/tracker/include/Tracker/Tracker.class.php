@@ -85,7 +85,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->instantiate_for_new_projects = $instantiate_for_new_projects;
         $this->stop_notification            = $stop_notification;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
-        $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory);
+        $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory
+                                                , new Tracker_FormElement_Field_List_BindFactory());
     }
 
     /**
