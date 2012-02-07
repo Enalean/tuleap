@@ -21,6 +21,8 @@
 require_once('Tracker_FormElement_Interface.class.php');
 require_once('Tracker_FormElement_Description.class.php');
 
+require_once 'admin/AdminFactory.class.php';
+
 require_once('json.php');
 
 /**
@@ -378,21 +380,19 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
 
         $html .= '</p>';
-        
-        //name
+
+        $adminElementFactory = new Tracker_FormElement_AdminFactory();
+        $formElementAdmin    = $adminElementFactory->getElement($this);
         if ($submit_name == 'update-formElement') {
-            $html .= '<p>';
-            $html .= '<label for="formElement_name">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'name') .': </label><br />';
-            $html .= '<input type="text" id="formElement_name" name="formElement_data[name]" value="'. $hp->purify($this->getName(), CODENDI_PURIFIER_CONVERT_HTML) .'" />';
-            $html .= '</p>';
+            if ($this->isModifiable()) {
+                $html .= $formElementAdmin->fetchAdminForUpdate();
+            } else {
+                $html .= $formElementAdmin->fetchAdminForShared();
+            }
+        } else if ($submit_name == 'docreate-formElement') {
+            $html .= $formElementAdmin->fetchAdminForCreate();
         }
-        
-        //label
-        $html .= $this->fetchLabel();
-        
-        // description
-        $html .= $this->fetchDescription();
-        
+
         //rank
         $html .= '<p>';
         $html .= '<label for="formElement_rank">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'rank_screen').': <font color="red">*</font></label>';
@@ -469,38 +469,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return $html;
     }
 
-    /**
-     * html form for the label 
-     *
-     * @return string html
-     */
-    protected function fetchLabel() {
-        $html = '';
-        $html .= '<p>';
-        $html .= '<label for="formElement_label">'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').': <font color="red">*</font></label> ';
-        $html .= '<br />';
-        $html .= '<input type="text" name="formElement_data[label]" id="formElement_label" value="'. $this->getLabel() .'" size="40" />';
-        $html .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
-        $html .= '</p>';
-        return $html;
-    }
-    
-    /**
-     * html form for the description 
-     *
-     * @return string html
-     */
-    protected function fetchDescription() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        $html .= '<p>';
-        $html .= '<label for="formElement_description">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'fieldset_desc').':</label>';
-        $html .= '<br />';
-        $html .= '<textarea name="formElement_data[description]" id="formElement_description" cols="40">'.  $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML)  .'</textarea>';
-        $html .= '</p>';
-        return $html;
-    }
-        
     /**
      * html form for the required checkbox 
      *

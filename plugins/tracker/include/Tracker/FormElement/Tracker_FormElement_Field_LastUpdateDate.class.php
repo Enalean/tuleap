@@ -95,14 +95,6 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     protected function getValueDao() {
         return null;
     }
-
-    public function fetchLabel() {
-        $html = parent::fetchLabel();
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_help');
-        $html .= '</span>';
-        return $html;
-    }
     
     /**
      * @return the label of the field (mainly used in admin part)

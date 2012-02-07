@@ -48,20 +48,6 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
         return $html;
     }
     
-    public function fetchLabel() {
-        $html = parent::fetchLabel();
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label_help');
-        $html .= '</span>';
-        return $html;
-    }
-    
-    public function fetchDescription() {
-        // there is no description for line break
-        $html = '';
-        return $html;
-    }
-    
     /**
      * Display the html field in the admin ui
      *

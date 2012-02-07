@@ -95,14 +95,6 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
     protected function getValueDao() {
         return null;
     }
-    
-    public function fetchLabel() {
-        $html = parent::fetchLabel();
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedon_help');
-        $html .= '</span>';
-        return $html;
-    }
 
     /**
      * @return the label of the field (mainly used in admin part)
