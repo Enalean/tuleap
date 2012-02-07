@@ -51,29 +51,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-combo-box--plus.png');
     }
-    
-    /**
-     * html form for the change type action
-     *
-     * @return string html
-     */
-    protected function fetchChangeType() {
-        $html = '';
         
-        //do not change from SB to MSB if the field is used to define the workflow
-        $wf = WorkflowFactory::instance();
-        if (!$wf->isWorkflowField($this)) {
-            $html = ' (<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
-                    'tracker'            => $this->tracker_id,
-                    'func'               => 'admin-formElement-update',
-                    'formElement'        => $this->id,
-                    'change-type'        => 'msb'
-                )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
-                   .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_msb').'</a>)';
-        }
-        return $html;
-    }
-    
     /**
      * Add some additionnal information beside the field in the artifact form.
      * This is up to the field. It can be html or inline javascript

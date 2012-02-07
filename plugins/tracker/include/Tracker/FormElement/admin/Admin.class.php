@@ -29,9 +29,44 @@ class Tracker_FormElement_Admin {
     
     public function fetchAdminForUpdate() {
         $html = '';
-        //$html .= $this->fetchNameForUpdate();
+        $html .= $this->fetchTypeForUpdate();
+        $html .= $this->fetchNameForUpdate();
         $html .= $this->fetchLabelForUpdate();
         $html .= $this->fetchDescriptionForUpdate();
+        return $html;
+    }
+    
+    public function fetchAdminForShared() {
+        $html = '';
+        $html .= $this->fetchTypeNotModifiable();
+        $html .= $this->fetchNameForShared();
+        $html .= $this->fetchLabelForShared();
+        $html .= $this->fetchDescriptionForShared();
+        return $html;
+    }
+    
+    public function fetchAdminForCreate() {
+        $html = '';
+        $html .= $this->fetchTypeNotModifiable();
+        $html .= $this->fetchLabelForUpdate();
+        $html .= $this->fetchDescriptionForUpdate();
+        return $html;
+    }
+    
+    protected function fetchTypeNotModifiable() {
+        $html = '';
+        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
+        $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
+        $html .= '</p>';
+        return $html;
+    }
+    
+    protected function fetchTypeForUpdate() {
+        $html = '';
+        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
+        $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
+
+        $html .= '</p>';
         return $html;
     }
     
@@ -79,15 +114,7 @@ class Tracker_FormElement_Admin {
         $html .= '</p>';
         return $html;
     }
-    
-    public function fetchAdminForShared() {
-        $html = '';
-        //$html .= $this->fetchNameForUpdate();
-        $html .= $this->fetchLabelForShared();
-        $html .= $this->fetchDescriptionForShared();
-        return $html;
-    }
-    
+        
     public function fetchNameForShared() {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -130,14 +157,7 @@ class Tracker_FormElement_Admin {
         $html .= '</p>';
         return $html;
     }
-    
-    public function fetchAdminForCreate() {
-        $html = '';
-        $html .= $this->fetchLabelForUpdate();
-        $html .= $this->fetchDescriptionForUpdate();
-        return $html;
-    }
-    
+        
     protected function fetchCustomHelp() {
         return '';
     }

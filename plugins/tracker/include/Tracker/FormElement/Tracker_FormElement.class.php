@@ -370,17 +370,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         
-        //type
-        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
-        $html .= '<img width="16" height="16" alt="" src="'. $this->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->getFactoryLabel(); //should not make call to static method thru an instance
-
-        if ($submit_name == 'update-formElement') {
-            //change type button (e.g. SB to MSB)
-            $html .= $this->fetchChangeType();
-        }
-
-        $html .= '</p>';
-
         $adminElementFactory = new Tracker_FormElement_AdminFactory();
         $formElementAdmin    = $adminElementFactory->getElement($this);
         if ($submit_name == 'update-formElement') {
@@ -456,16 +445,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $html .= ' ';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','edit_permissions') .'</a>';
         $html .= '</p>';
-        return $html;
-    }
-   
-    /**
-     * html form for the change type action
-     *
-     * @return string html
-     */
-    protected function fetchChangeType() {
-        $html = '';
         return $html;
     }
 

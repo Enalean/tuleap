@@ -24,12 +24,22 @@ require_once 'Admin_Field_LastUpdateDate.class.php';
 require_once 'Admin_Field_PermissionsOnArtifact.class.php';
 require_once 'Admin_Field_SubmittedBy.class.php';
 require_once 'Admin_Field_SubmittedOn.class.php';
+require_once 'Admin_Field_Selectbox.class.php';
+require_once 'Admin_Field_MultiSelectbox.class.php';
 
 
 class Tracker_FormElement_AdminFactory {
 
     public function getElement(Tracker_FormElement $element) {
         switch(get_class($element)) {
+            case 'Tracker_FormElement_Field_Selectbox':
+                $adminElement = new Tracker_FormElement_Admin_Field_Selectbox($element);
+                break;
+            
+            case 'Tracker_FormElement_Field_MultiSelectbox':
+                $adminElement = new Tracker_FormElement_Admin_Field_MultiSelectbox($element);
+                break;
+            
             case 'Tracker_FormElement_Field_SubmittedBy':
                 $adminElement = new Tracker_FormElement_Admin_Field_SubmittedBy($element);
                 break;
