@@ -154,10 +154,12 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
     public function canValueBeDeleted($field_id, $value_id) {
         $field_id = $this->da->escapeInt($field_id);
         $value_id = $this->da->escapeInt($value_id);
+        
         $sql = "SELECT null
                 FROM $this->table_name AS v
-                    INNER JOIN tracker_changeset_value_list AS cvl ON (v.id = cvl.bindvalue_id AND v.id = $value_id)
-                    INNER JOIN tracker_changeset_value AS cv ON (cv.id = cvl.changeset_value_id AND cv.field_id = v.field_id AND cv.field_id = $field_id)
+                    INNER JOIN tracker_changeset_value_list AS cvl ON (v.id = cvl.bindvalue_id)
+                    INNER JOIN tracker_changeset_value AS cv ON (cv.id = cvl.changeset_value_id AND cv.field_id = v.field_id)
+                WHERE v.original_value_id = $value_id OR v.id = $value_id
                 UNION
                 SELECT null
                 FROM $this->table_name AS v
