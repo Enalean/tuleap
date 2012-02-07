@@ -352,12 +352,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 WHERE tracker_id = $tracker_id
                     AND name LIKE $name_like";
         }
-        $id = $this->updateAndGetLastId($sql);
-        if (!$original_field_id) {
-            $sql = "UPDATE tracker_field SET original_field_id = id WHERE id = $id";
-            $this->update($sql);
-        }
-        return $id;
+        return $this->updateAndGetLastId($sql);
     }
 }
 
