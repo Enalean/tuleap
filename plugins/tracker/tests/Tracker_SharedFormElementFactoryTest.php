@@ -26,7 +26,7 @@ Mock::generate('User');
 Mock::generate('Tracker_FormElement_Field_String');
 Mock::generate('Tracker_FormElement_Field_List_BindFactory');
 class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
-    public function testCreateFormElementDispatchesToFactory() {
+    public function testCreateFormElementExtractsDataFromOriginalFieldThenForwardsToFactory() {
         $originField = $this->GivenAFieldString();
         list($decorator, $factory, $tracker, $user) = $this->GivenASharedFormELementFactory($originField, 'string');
         $originField->setReturnValue('userCanRead', true, array($user));
@@ -77,6 +77,18 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $this->expectException();
         $decorator->createFormElement($tracker, 'shared', array('field_id' => $field->getId()), $user);
     }
+    public function testDuplicatesAnyValuesThatAreBoundToTheOriginalField() {
+        $originField = $this->GivenAFieldString();
+        list($decorator, $factory, $tracker, $user, $boundValuesFactory) = $this->GivenASharedFormELementFactory($originField, 'string');
+        $originField->setReturnValue('userCanRead', true, array($user));
+        $originField->getTracker()->setReturnValue('userCanView', true, array($user));
+        $newFieldId = 999;
+        $factory->setReturnValue('createFormElement', $newFieldId);
+        $boundValuesFactory->expectOnce('duplicate', 
+                array($originField->getId(), $newFieldId, Tracker_FormElement_Field_List_BindFactory::COPY_BY_REFERENCE));
+        $decorator->createFormElement($tracker, 'shared', array('field_id' => $originField->getId()), $user);
+
+    }
 
     private function GivenAFieldString() {
         $tracker = new MockTracker();
@@ -100,10 +112,11 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $user = new MockUser();
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
-        $decorator = new Tracker_SharedFormElementFactory($factory);
+        $boundValuesFactory = new MockTracker_FormElement_Field_List_BindFactory();
+        $decorator = new Tracker_SharedFormElementFactory($factory, $boundValuesFactory);
         $factory->setReturnValue('getType', 'string', array($field));
         $factory->setReturnValue('getFormElementById', $field, array($field->getId()));
-        return array($decorator, $factory, $tracker, $user);
+        return array($decorator, $factory, $tracker, $user, $boundValuesFactory);
     }
 
 }

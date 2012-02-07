@@ -23,8 +23,13 @@ class Tracker_SharedFormElementFactory {
      * @var Tracker_FormElementFactory
      */
     protected $factory;
-    
-    function __construct(Tracker_FormElementFactory $factory) {
+    /**
+     * @var Tracker_FormElement_Field_List_BindFactory $boundValuesFactory 
+     */
+    private $boundValuesFactory;
+            
+    function __construct(Tracker_FormElementFactory $factory, Tracker_FormElement_Field_List_BindFactory $boundValuesFactory) {
+        $this->boundValuesFactory = $boundValuesFactory;
         $this->factory = $factory;
     }
     public function createFormElement($tracker, $type, $formElement_data, User $user) {
@@ -32,7 +37,9 @@ class Tracker_SharedFormElementFactory {
         if ($field->userCanRead($user) && $field->getTracker()->userCanView($user)) {
             $data = $this->populateFormElementDataForASharedField($field);
             $type = $data['type'];
-            return $this->factory->createFormElement($tracker, $type, $data, $user);
+            $id = $this->factory->createFormElement($tracker, $type, $data, $user);
+            $this->boundValuesFactory->duplicate($field->getId(), $id, Tracker_FormElement_Field_List_BindFactory::COPY_BY_REFERENCE);
+            return $id;
         }
         throw new Exception('Permission denied');
     }

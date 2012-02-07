@@ -34,6 +34,7 @@ require_once('common/html/HTML_Element_Input_Radio.class.php');
 class Tracker_FormElement_Field_List_BindFactory {
     const STATIK  = 'static';
     const USERS   = 'users';
+    const COPY_BY_REFERENCE = true;
     
     /**
      * Build a binder associated to a list field.
