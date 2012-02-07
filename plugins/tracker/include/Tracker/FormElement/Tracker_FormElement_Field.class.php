@@ -179,7 +179,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
             );
             $html .= '</td><td>';
         }
-        $html .= '<label for="tracker_report_criteria_'. $this->id .'">'. $this->getLabel();
+        $html .= '<label for="tracker_report_criteria_'. $this->id .'" title="#'.$this->id.'">'. $this->getLabel();
         $html .= '<input type="hidden" id="tracker_report_criteria_'. $this->id .'_parent" value="'. $this->parent_id .'" />';
         $html .= '</label>';
         
