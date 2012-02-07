@@ -598,6 +598,7 @@ class Tracker_FormElementFactory {
             'id'               => 0,
             'tracker_id'       => 0,
             'parent_id'        => 0,
+            'original_field_id'=> 0,
         );
         $curElem = $this->getInstanceFromRow($row);
         $xmlMapping[(string)$xml['ID']] = $curElem;
