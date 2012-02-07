@@ -30,7 +30,7 @@ end
 
 Then /^a message says that (.*) has been cleared$/ do |field|
   within("div#feedback") do
-    find(:xpath, ".").should have_content("'#{field}' a été automatiquement effacé")
+    find(:xpath, ".").should have_content("'#{field}' has been automatically cleared")
   end
 end
 Then /^a message says that '(.*)' has been set to the current date$/ do |ignored|

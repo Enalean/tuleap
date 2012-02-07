@@ -16,7 +16,7 @@ Feature:
 #      And this post action tells that the field 'Start Date' will take the current time
     Background: 
       Given I logon as "testuser" : "tuleap_pass"
-      When I go to the bugs tracker of Test Project
+      When I go to the Bugs tracker of Test Project
 
     Scenario: The start date is set to the current date upon creation
       When I submit a new artifact
