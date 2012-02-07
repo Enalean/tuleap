@@ -39,6 +39,7 @@ class Tracker_FormElement_Admin {
     public function fetchAdminForShared() {
         $html = '';
         $html .= $this->fetchTypeNotModifiable();
+        $html .= $this->fetchCustomHelpForShared();
         $html .= $this->fetchNameForShared();
         $html .= $this->fetchLabelForShared();
         $html .= $this->fetchDescriptionForShared();
@@ -160,6 +161,16 @@ class Tracker_FormElement_Admin {
         
     protected function fetchCustomHelp() {
         return '';
+    }
+  
+    protected function fetchCustomHelpForShared() {
+        $originalTrackerName = 'Xxx';
+        $originalProjectName = 'Yyy';
+        $html = '';
+        $html .= '<span class="tracker-admin-form-element-help">';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'field_copied_from', array($originalTrackerName, $originalProjectName));
+        $html .= '</span>';
+        return $html;
     }
 }
 
