@@ -1055,12 +1055,20 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
     
     public function getOriginalField() {
+        if (empty($this->original_field)) {
+            $this->original_field = Tracker_FormElementFactory::instance()->getFormElementById($this->original_field_id);
+        }
         return $this->original_field;
     }
     
     public function getOriginalTracker() {
-        //TODO
+        return $this->getOriginalField()->getTracker();
     }
+    
+    public function getOriginalProject() {
+        return $this->getOriginalTracker()->getProject();
+    }
+    
     
     public function isModifiable() {
         return ($this->original_field_id == $this->id);
