@@ -380,11 +380,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $html .= $formElementAdmin->fetchAdminForCreate();
         }
         
-        //submit button
-        $html .= '<p>';
-        $html .= '<input type="submit" name="'. $submit_name .'" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $html .= '</p>';
-        
         //link to permissions
         if ($submit_name !== 'docreate-formElement') {
             $html .= $this->fetchAdminFormPermissionLink();

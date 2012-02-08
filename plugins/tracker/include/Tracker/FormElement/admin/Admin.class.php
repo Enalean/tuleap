@@ -42,6 +42,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchRanking();
         $html .= $this->fetchAdminSpecificProperties();
         $html .= $this->fetchAfterAdminEditForm();
+        $html .= $this->fetchAdminButton('update-formElement');
         return $html;
     }
     
@@ -55,6 +56,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchRanking();
         $html .= $this->fetchAdminSpecificProperties();
         $html .= $this->fetchAfterAdminEditForm();
+        $html .= $this->fetchAdminButton('update-formElement');
         return $html;
     }
     
@@ -66,6 +68,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchRanking();
         $html .= $this->fetchAdminSpecificProperties();
         $html .= $this->fetchAfterAdminCreateForm();
+        $html .= $this->fetchAdminButton('docreate-formElement');
         return $html;
     }
     
@@ -308,6 +311,14 @@ class Tracker_FormElement_Admin {
      */
     protected function fetchAfterAdminCreateForm() {
         return '';
+    }
+    
+    protected function fetchAdminButton($name) {
+        $html  = '';
+        $html .= '<p>';
+        $html .= '<input type="submit" name="'. $name .'" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $html .= '</p>';
+        return $html;
     }
 }
 
