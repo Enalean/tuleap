@@ -20,6 +20,7 @@
 
 require_once('Tracker_FormElement_Interface.class.php');
 require_once('Tracker_FormElement_Description.class.php');
+require_once(dirname(__FILE__).'/../TrackerManager.class.php');
 
 require_once 'admin/AdminFactory.class.php';
 
