@@ -34,21 +34,25 @@ class Tracker_FormElementTest extends UnitTestCase {
         $original = new MockTracker_FormElement_Field_Selectbox();
         $original->setReturnValue('getTracker', $tracker);
         
-        $element = new Tracker_FormElement_Field_Selectbox(null, null, null, null, null, null, null, null, null, null, null, $original);
+        $element = $this->GivenAFormElementWithIdAndOriginalField(null, $original);
         
         $this->assertEqual($tracker, $element->getOriginalTracker());
         $this->assertEqual($project, $element->getOriginalProject());
     }
     
     function testGetOriginalFieldIdShouldReturnTheFieldId() {
-        $original = new Tracker_FormElement_Field_Selectbox(112, null, null, null, null, null, null, null, null, null, null, null);
-        $element = new Tracker_FormElement_Field_Selectbox(null, null, null, null, null, null, null, null, null, null, null, $original);
+        $original = $this->GivenAFormElementWithIdAndOriginalField(112, null);
+        $element = $this->GivenAFormElementWithIdAndOriginalField(null, $original);
         $this->assertEqual($element->getOriginalFieldId(), 112);
     }
     
     function testGetOriginalFieldIdShouldReturn0IfNoOriginalField() {
-        $element = new Tracker_FormElement_Field_Selectbox(null, null, null, null, null, null, null, null, null, null, null, null);
+        $element = $this->GivenAFormElementWithIdAndOriginalField(null, null);
         $this->assertEqual($element->getOriginalFieldId(), 0);
+    }
+    
+    private function GivenAFormElementWithIdAndOriginalField($id, $originalField) {
+        return new Tracker_FormElement_Field_Selectbox($id, null, null, null, null, null, null, null, null, null, null, $originalField);
     }
 }
 ?>
