@@ -163,17 +163,12 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
         return true;
     }
     
-    /**
-     * fetch permission link on admin form
-     *
-     * @return string html
-     */
-    protected function fetchAdminFormPermissionLink() {
-        return '';
-    }
-    
-    
     protected abstract function fetchReadOnly();
+    
+    public function getAdmin() {
+        include_once dirname(__FILE__).'/admin/Admin_StaticField.class.php';
+        return new Tracker_FormElement_Admin_StaticField($this, $this->getAllUsedElements());
+    }
 }
 
 ?>

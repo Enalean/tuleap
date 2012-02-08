@@ -17,18 +17,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Admin_Field.class.php';
+require_once 'Admin.class.php';
 
-class Tracker_FormElement_Admin_Field_PermissionsOnArtifact extends Tracker_FormElement_Admin_Field {
-
-    protected function fetchCustomHelp() {
-        $html = '';
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions_help');
-        $html .= '</span>';
-        return $html;
+class Tracker_FormElement_Admin_StaticField extends Tracker_FormElement_Admin {
+  
+    /**
+     * fetch permission link on admin form
+     *
+     * @return string html
+     */
+    protected function fetchAdminFormPermissionLink() {
+        return '';
     }
-
 }
 
 ?>

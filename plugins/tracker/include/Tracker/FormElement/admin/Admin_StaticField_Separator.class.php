@@ -17,7 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_FormElement_Admin_StaticField_Separator extends Tracker_FormElement_Admin {
+require_once 'Admin_StaticField.class.php';
+
+class Tracker_FormElement_Admin_StaticField_Separator extends Tracker_FormElement_Admin_StaticField {
   
     /**
      * html form for the description 

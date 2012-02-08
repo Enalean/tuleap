@@ -336,25 +336,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     protected function getAllUsedElements() {
         return Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->getTracker());
     }
-    
-    protected function getAdminFromType() {
-        $klassName      = get_class($this);
-        $elementType    = substr($klassName, strlen('Tracker_FormElement'));
-        $adminKlassName = 'Tracker_FormElement_Admin'.$elementType;
         
-        @include_once dirname(__FILE__).'/admin/Admin'.$elementType.'.class.php';
-        if (class_exists($adminKlassName)) {
-            return new $adminKlassName($this, $this->getAllUsedElements());
-        }
-        return null;
-    }
-    
     public function getAdmin() {
-        $adminElement = $this->getAdminFromType();
-        if ($adminElement === null) {
-            $adminElement = new Tracker_FormElement_Admin($this);
-        }
-        return $adminElement;
+        include_once dirname(__FILE__).'/admin/Admin.class.php';
+        return new Tracker_FormElement_Admin($this, $this->getAllUsedElements());
     }
     
     /**
@@ -366,7 +351,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @see displayAdminCreate
      */
     public function fetchAdminForm($submit_name) {
-        $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         
         $formElementAdmin    = $this->getAdmin();
@@ -379,49 +363,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         } else if ($submit_name == 'docreate-formElement') {
             $html .= $formElementAdmin->fetchAdminForCreate();
         }
-        
-        //link to permissions
-        if ($submit_name !== 'docreate-formElement') {
-            $html .= $this->fetchAdminFormPermissionLink();
-        }
-        
+               
         return $html;
     }
     
-    /**
-     * fetch permission link on admin form
-     *
-     * @return string html
-     */
-    protected function fetchAdminFormPermissionLink() {
-        $html = '';
-        $html .= '<p>';
-        $html .= '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
-            array(
-                'tracker'     => $this->tracker_id,
-                'func'        => 'admin-perms-fields',
-                'selected_id' => $this->id
-            )
-        ) .'">';
-        $html .= $GLOBALS['HTML']->getImage('ic/lock-small.png', array(
-            'style' => 'vertical-align:middle;',
-        ));
-        $html .= ' ';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','edit_permissions') .'</a>';
-        $html .= '</p>';
-        return $html;
-    }
-
-    /**
-     * html form for the required checkbox 
-     *
-     * @return string html
-     */
-    protected function fetchRequired() {
-        $html = '';
-        return $html;
-    }
-
     /**
      * Get the rank structure for the selectox
      *

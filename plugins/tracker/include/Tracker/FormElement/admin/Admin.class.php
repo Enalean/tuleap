@@ -43,6 +43,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchAdminSpecificProperties();
         $html .= $this->fetchAfterAdminEditForm();
         $html .= $this->fetchAdminButton('update-formElement');
+        $html .= $this->fetchAdminFormPermissionLink();
         return $html;
     }
     
@@ -57,6 +58,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchAdminSpecificProperties();
         $html .= $this->fetchAfterAdminEditForm();
         $html .= $this->fetchAdminButton('update-formElement');
+        $html .= $this->fetchAdminFormPermissionLink();
         return $html;
     }
     
@@ -317,6 +319,30 @@ class Tracker_FormElement_Admin {
         $html  = '';
         $html .= '<p>';
         $html .= '<input type="submit" name="'. $name .'" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $html .= '</p>';
+        return $html;
+    }
+    
+        /**
+     * fetch permission link on admin form
+     *
+     * @return string html
+     */
+    protected function fetchAdminFormPermissionLink() {
+        $html = '';
+        $html .= '<p>';
+        $html .= '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker'     => $this->formElement->tracker_id,
+                'func'        => 'admin-perms-fields',
+                'selected_id' => $this->formElement->id
+            )
+        ) .'">';
+        $html .= $GLOBALS['HTML']->getImage('ic/lock-small.png', array(
+            'style' => 'vertical-align:middle;',
+        ));
+        $html .= ' ';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','edit_permissions') .'</a>';
         $html .= '</p>';
         return $html;
     }

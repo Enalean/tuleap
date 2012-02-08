@@ -21,6 +21,7 @@
 require_once('dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php');
 require_once('dao/Tracker_FormElement_Field_List_Bind_StaticDao.class.php');
 require_once('Tracker_FormElement_Field_List.class.php');
+
 class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List {
     
 
@@ -227,6 +228,11 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
      */
     public function isNone($value) {
         return $value === null || $value === '' || $value === '100';
+    }
+    
+    public function getAdmin() {
+        include_once dirname(__FILE__).'/admin/Admin_Field_Selectbox.class.php';
+        return new Tracker_FormElement_Admin_Field_Selectbox($this, $this->getAllUsedElements());
     }
 }
 ?>

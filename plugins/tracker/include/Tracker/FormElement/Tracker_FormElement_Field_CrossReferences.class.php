@@ -420,5 +420,10 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
          $html = $this->fetchSubmitValueMassChange();
          return $html;
      }
+     
+     public function getAdmin() {
+        include_once dirname(__FILE__).'/admin/Admin_Field_CrossReferences.class.php';
+        return new Tracker_FormElement_Admin_Field_CrossReferences($this, $this->getAllUsedElements());
+    }
 }
 ?>
