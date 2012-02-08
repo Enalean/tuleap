@@ -13,6 +13,7 @@
 require_once('common/frs/FRSPackageFactory.class.php');
 require_once('common/frs/FRSReleaseFactory.class.php');
 require_once('common/reference/ReferenceManager.class.php');
+require_once('www/news/news_utils.php');
 
 function file_utils_header($params) {
     global $group_id,$Language;
@@ -826,7 +827,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         $release_news_subject = "";
     }
     
-    if($request->valid(new Valid_String('release_news_details'))) {
+    if($request->valid(new Valid_Text('release_news_details'))) {
         $release_news_details = $request->get('release_news_details');
     } else {
         $release_news_details = "";
@@ -1019,21 +1020,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
             
             //submit news if requested
             if ($release_id && user_ismember($group_id, 'A') && $release_submit_news) {
-                $new_id = forum_create_forum($GLOBALS['sys_news_group'], $release_news_subject, 1, 0);
-                $sql = sprintf('INSERT INTO news_bytes' .
-                '(group_id,submitted_by,is_approved,date,forum_id,summary,details)' .
-                'VALUES (%d, %d, %d, %d, %d, "%s", "%s")', db_ei($group_id), user_getid(), 0, time(), db_ei($new_id), db_es(htmlspecialchars($release_news_subject)), db_es(htmlspecialchars($release_news_details)));
-                $result = db_query($sql);
-
-                if (!$result) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit', 'insert_err'));
-                } else {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('news_submit', 'news_added'));
-                    // set permissions on this piece of news
-                    if ($private_news) {
-                        news_insert_permissions($new_id, $group_id);
-                    }
-                }
+            	news_submit($group_id, $release_news_subject, $release_news_details, $private_news, 3);
             }
 
             // Send notification

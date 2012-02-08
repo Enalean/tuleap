@@ -11,6 +11,7 @@ require_once('common/reference/ReferenceManager.class.php');
 require_once('common/valid/Rule.class.php');
 require_once('common/include/URL.class.php');
 require_once('common/include/Codendi_HTMLPurifier.class.php');
+require_once('common/date/DateHelper.class.php');
 
 // Part about CSV format export
 // The separator for CSV export can differ regarding the Excel version.
