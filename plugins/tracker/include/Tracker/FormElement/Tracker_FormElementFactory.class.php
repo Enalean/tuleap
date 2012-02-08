@@ -549,7 +549,11 @@ class Tracker_FormElementFactory {
         } else if (isset($this->staticfield_classnames[$row['formElement_type']])) {
             $klass = $this->staticfield_classnames[$row['formElement_type']];
         } 
-        if ($klass) {            
+        if ($klass) {
+            $original_field = null;
+            if ($row['original_field_id']) {
+                $original_field = $this->getFormElementById($row['original_field_id']);
+            }
             $instance = new $klass($row['id'], 
                                    $row['tracker_id'], 
                                    $row['parent_id'], 
@@ -561,7 +565,7 @@ class Tracker_FormElementFactory {
                                    $row['required'],
                                    $row['notifications'],
                                    $row['rank'],
-                                   $row['original_field_id']
+                                   $original_field
             );
         } else {
             EventManager::instance()
@@ -598,7 +602,7 @@ class Tracker_FormElementFactory {
             'id'               => 0,
             'tracker_id'       => 0,
             'parent_id'        => 0,
-            'original_field_id'=> 0,
+            'original_field_id'=> null,
         );
         $curElem = $this->getInstanceFromRow($row);
         $xmlMapping[(string)$xml['ID']] = $curElem;

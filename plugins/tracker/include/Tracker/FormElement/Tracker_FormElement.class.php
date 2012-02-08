@@ -93,12 +93,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     
     /**
      *
-     * @var int
-     */
-    public $original_field_id;
-    
-    /**
-     *
      * @var Tracker_FormElement
      */
     protected $original_field = null;
@@ -106,40 +100,39 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     /**
      * Base constructor
      * 
-     * @param int    $id                The id of the field
-     * @param int    $tracker_id        The id of the tracker this field belongs to
-     * @param int    $parent_id         The id of the parent element
-     * @param string $name              The short name of the field
-     * @param string $label             The label of the element
-     * @param string $description       The description of the element
-     * @param bool   $use_it            Is the element used?
-     * @param string $scope             The scope of the plugin 'S' | 'P'
-     * @param bool   $required          Is the element required? Todo: move this in field?
-     * @param int    $rank              The rank of the field (in the parent)
-     * @param int    $original_field_id Id of the field the current field is refering to (same as $id if no references)
+     * @param int    $id                          The id of the field
+     * @param int    $tracker_id                  The id of the tracker this field belongs to
+     * @param int    $parent_id                   The id of the parent element
+     * @param string $name                        The short name of the field
+     * @param string $label                       The label of the element
+     * @param string $description                 The description of the element
+     * @param bool   $use_it                      Is the element used?
+     * @param string $scope                       The scope of the plugin 'S' | 'P'
+     * @param bool   $required                    Is the element required? Todo: move this in field?
+     * @param int    $rank                        The rank of the field (in the parent)
+     * @param Tracker_FormElement $original_field The field the current field is refering to (null if no references)
      * 
      * @return void
      */
-    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field_id) {
-        $this->id                = $id;
-        $this->tracker_id        = $tracker_id;
-        $this->parent_id         = $parent_id;
-        $this->name              = $name;
-        $this->label             = $label;
-        $this->description       = $description;
-        $this->use_it            = $use_it;
-        $this->scope             = $scope;
-        $this->required          = $required;
-        $this->notifications     = $notifications;
-        $this->rank              = $rank;
-        $this->original_field_id = $original_field_id;
+    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, Tracker_FormElement $original_field = null) {
+        $this->id             = $id;
+        $this->tracker_id     = $tracker_id;
+        $this->parent_id      = $parent_id;
+        $this->name           = $name;
+        $this->label          = $label;
+        $this->description    = $description;
+        $this->use_it         = $use_it;
+        $this->scope          = $scope;
+        $this->required       = $required;
+        $this->notifications  = $notifications;
+        $this->rank           = $rank;
+        $this->original_field = $original_field;
     }
     
     public function getScope() { return $this->scope; }
     public function getParentId() { return $this->parent_id; }
     public function getRank() { return $this->rank; }
-    public function getOriginalFieldId() { return $this->original_field_id; }
-
+    
     /**
      *  Return true if the field is used
      *
@@ -1050,14 +1043,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return $this->notifications;
     }
     
-    public function setOriginalField(Tracker_FormElement $e) {
-        $this->original_field = $e;
+    public function getOriginalFieldId() { 
+        if ($this->original_field) {
+            return $this->original_field->getId();
+        }
+        return 0;
     }
     
     public function getOriginalField() {
-        if (empty($this->original_field)) {
-            $this->original_field = Tracker_FormElementFactory::instance()->getFormElementById($this->original_field_id);
-        }
         return $this->original_field;
     }
     
@@ -1071,7 +1064,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     
     
     public function isModifiable() {
-        return ($this->original_field_id == $this->id);
+        return $this->original_field !== null;
     }
     
     /**

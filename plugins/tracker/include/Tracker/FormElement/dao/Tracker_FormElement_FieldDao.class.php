@@ -291,7 +291,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                     notifications     = ". ($field->notifications ? 1 : "NULL") .", 
                     use_it            = ". $this->da->escapeInt($field->use_it ? 1 : 0) .", 
                     rank              = ". $this->da->escapeInt($rank) .",
-                    original_field_id = ". $this->da->escapeInt($field->original_field_id) ."
+                    original_field_id = ". $this->da->escapeInt($field->getOriginalFieldId()) ."
                 WHERE id = ". $this->da->escapeInt($field->id);
         if ($this->update($sql)) {
             $field->rank = $rank;
