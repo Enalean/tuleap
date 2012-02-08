@@ -1038,7 +1038,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     
     
     public function isModifiable() {
-        return $this->original_field !== null;
+        return $this->original_field === null;
     }
     
     /**
