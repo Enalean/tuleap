@@ -586,61 +586,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
     
     /**
-     * Fetch a unique property edit form
-     * 
-     * @param string $key      The key of the property
-     * @param array  $property The property to display
-     *
-     * @see fetchAdminSpecificProperties
-     * @return string html
-     */
-    protected function fetchAdminSpecificProperty($key, $property) {
-        $html = '';
-        switch ($property['type']) {
-        case 'string':
-            $html .= '<input type="text" 
-                             size="'. $property['size'] .'"
-                             name="formElement_data[specific_properties]['. $key .']" 
-                             id="formElement_properties_'. $key .'" 
-                             value="'. $property['value'] .'" />';
-            break;
-        case 'date':
-            $value = $property['value'] ? $this->formatDate($property['value']) : ''; //todo: formatDate should be part of this class
-            $html .= $GLOBALS['HTML']->getDatePicker("formElement_properties_".$key, "formElement_data[specific_properties][$key]", $value);
-            break;
-        case 'rich_text':
-            $html .= '<textarea
-                           class="tracker-field-richtext"
-                           cols="50" rows="10"  
-                           name="formElement_data[specific_properties]['. $key .']" 
-                           id="formElement_properties_'. $key .'">' .
-                       $property['value'] . '</textarea>';
-            break;
-        case 'radio':
-            foreach ($property['choices'] as $key_choice => $choice) {
-                $checked = '';
-                if ($this->getProperty($key) == $choice['radio_value']) {
-                    $checked = 'checked="checked"';
-                }
-                $html .= '<input type="radio" 
-                                 name="formElement_data[specific_properties]['. $key .']" 
-                                 value="'. $choice['radio_value'] .'" 
-                                 id="formElement_properties_'. $key_choice .'" 
-                                 '. $checked .' />';
-                $html .= $this->fetchAdminSpecificProperty($key_choice, $choice);
-                $html .= '<br />';
-            }
-            break;
-        case 'label':
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->getPropertyLabel($key) .'</label>';
-        default:
-            //Unknown type. raise exception?
-            break;
-        }
-        return $html;
-    }
-    
-    /**
      * Fetch the element for the submit new artifact form
      *
      * @return string html
