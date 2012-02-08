@@ -40,14 +40,14 @@ class Tracker_FormElement_Shared implements Tracker_FormElement_Description {
      * @return the path to the icon to use an element
      */
     public static function getFactoryIconUseIt() {
-        return $GLOBALS['HTML']->getImagePath('ic/bug-poo.png');
+        return $GLOBALS['HTML']->getImagePath('ic/-shared-field.png');
     }
     
     /**
      * @return the path to the icon to create an element
      */
     public static function getFactoryIconCreate() {
-        return $GLOBALS['HTML']->getImagePath('ic/bug-poo.png');
+        return $GLOBALS['HTML']->getImagePath('ic/ui-shared-field.png');
     }
     
     /**
