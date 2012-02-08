@@ -540,50 +540,14 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         
         return $html;
     }
-    
-    /**
-     * If the formElement has specific properties then this method 
-     * should return the html needed to update those properties
-     * 
-     * The html must be a (or many) html row(s) table (one column for the label, 
-     * another one for the property)
-     * 
-     * <code>
-     * <tr><td><label>Property 1:</label></td><td><input type="text" value="value 1" /></td></tr>
-     * <tr><td><label>Property 2:</label></td><td><input type="text" value="value 2" /></td></tr>
-     * </code>
-     * 
-     * @return string html
-     */
-    protected function fetchAdminSpecificProperties() {
-        $html = '';
         
-        //required
-        $html .= $this->fetchRequired();
-        
-        //notifications
-        $html .= $this->fetchNotifications();
-        
-        $html .= parent::fetchAdminSpecificProperties();
-        
-        return $html;
-    }
-    
-    /**
-     * Fetch the "notifications" part of field admin
-     *
-     * @return string html
-     */
-    protected function fetchNotifications() {
-        $html = '';
-        if ($this->isNotificationsSupported()) {
-            $html .=' <p>';
-            $html .= '<input type="hidden" name="formElement_data[notifications]" value="0" />';
-            $html .= '<input type="checkbox" name="formElement_data[notifications]" id="formElement_notifications" value="1" '. ($this->notifications ? 'checked="checked"' : '') .'" />';
-            $html .= '<label for="formElement_notifications">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'notifications');
-            $html .= '</p>';
+    public function getAdmin() {
+        $adminElement = $this->getAdminFromType();
+        if ($adminElement === null) {
+            include_once dirname(__FILE__).'/admin/Admin_Field.class.php';
+            $adminElement = new Tracker_FormElement_Admin_Field($this);
         }
-        return $html;
+        return $adminElement;
     }
     
     /**
@@ -593,21 +557,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
      */
     public function isNotificationsSupported() {
         return false;
-    }
-    
-    /**
-     * Fetch the "required" part of field admin
-     *
-     * @return string the HTML for the part of form for required checkbox
-     */
-    protected function fetchRequired() {
-        $html = '';
-        $html .= '<p>';
-        $html .= '<input type="hidden" name="formElement_data[required]" value="0" />';
-        $html .= '<input type="checkbox" name="formElement_data[required]" id="formElement_required" value="1" '. ($this->required ? 'checked="checked"' : '') .'" />';
-        $html .= '<label for="formElement_required">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'required');
-        $html .= '</p>';
-        return $html;
     }
     
     /**

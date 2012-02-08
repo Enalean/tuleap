@@ -17,16 +17,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_FormElement_Admin_Field_SubmittedBy extends Tracker_FormElement_Admin {
+class Tracker_FormElement_Admin_Field_ArtifactId extends Tracker_FormElement_Admin_Field {
 
-    protected function fetchCustomHelp() {
-        $html = '';
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_help');
-        $html .= '</span>';
-        return $html;
-    }
-
+    /**
+     * Fetch the "required" part of field admin
+     *
+     * @return string the HTML for the part of form for required checkbox
+     */
     protected function fetchRequired() {
         return '';
     }

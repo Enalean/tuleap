@@ -298,16 +298,6 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         return true;
     }
     
-    /**
-     * Fetch the "required" part of field admin
-     *
-     * @param string the HTML for the part of form for required checkbox
-     */
-    protected function fetchRequired() {
-        $html = '';
-        return $html;
-    }
-    
     public function fetchSubmit($submitted_values = array()) {
         // We do not display the field in the artifact submit form
         return '';

@@ -34,6 +34,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchLabelForUpdate();
         $html .= $this->fetchDescriptionForUpdate();
         $html .= $this->fetchRanking();
+        $html .= $this->fetchAdminSpecificProperties();
         return $html;
     }
     
@@ -45,6 +46,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchLabelForShared();
         $html .= $this->fetchDescriptionForShared();
         $html .= $this->fetchRanking();
+        $html .= $this->fetchAdminSpecificProperties();
         return $html;
     }
     
@@ -54,6 +56,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchLabelForUpdate();
         $html .= $this->fetchDescriptionForUpdate();
         $html .= $this->fetchRanking();
+        $html .= $this->fetchAdminSpecificProperties();
         return $html;
     }
     
@@ -181,7 +184,6 @@ class Tracker_FormElement_Admin {
         $html .= '<p>';
         $html .= '<label for="formElement_rank">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'rank_screen').': <font color="red">*</font></label>';
         $html .= '<br />';
-        $adminFactory = new Tracker_FormElement_AdminFactory();
         $items = array();
         foreach (Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->formElement->getTracker()) as $field) {
             $items[] = $field->getRankSelectboxDefinition();
@@ -196,6 +198,87 @@ class Tracker_FormElement_Admin {
             )
         );
         $html .= '</p>';
+        return $html;
+    }
+    
+        /**
+     * If the formElement has specific properties then this method 
+     * should return the html needed to update those properties
+     * 
+     * The html must be a (or many) html row(s) table (one column for the label, 
+     * another one for the property)
+     * 
+     * <code>
+     * <tr><td><label>Property 1:</label></td><td><input type="text" value="value 1" /></td></tr>
+     * <tr><td><label>Property 2:</label></td><td><input type="text" value="value 2" /></td></tr>
+     * </code>
+     * 
+     * @return string html
+     */
+    protected function fetchAdminSpecificProperties() {
+        $html = '';
+        foreach ($this->formElement->getProperties() as $key => $property) {
+            $html .= '<p>';
+            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>: ';
+            $html .= '<br />';
+            $html .= $this->fetchAdminSpecificProperty($key, $property);
+            $html .= '</p>';
+        }
+        return $html;
+    }
+    
+    /**
+     * Fetch a unique property edit form
+     * 
+     * @param string $key      The key of the property
+     * @param array  $property The property to display
+     *
+     * @see fetchAdminSpecificProperties
+     * @return string html
+     */
+    protected function fetchAdminSpecificProperty($key, $property) {
+        $html = '';
+        switch ($property['type']) {
+        case 'string':
+            $html .= '<input type="text" 
+                             size="'. $property['size'] .'"
+                             name="formElement_data[specific_properties]['. $key .']" 
+                             id="formElement_properties_'. $key .'" 
+                             value="'. $property['value'] .'" />';
+            break;
+        case 'date':
+            $value = $property['value'] ? $this->formElement->formatDate($property['value']) : '';
+            $html .= $GLOBALS['HTML']->getDatePicker("formElement_properties_".$key, "formElement_data[specific_properties][$key]", $value);
+            break;
+        case 'rich_text':
+            $html .= '<textarea
+                           class="tracker-field-richtext"
+                           cols="50" rows="10"  
+                           name="formElement_data[specific_properties]['. $key .']" 
+                           id="formElement_properties_'. $key .'">' .
+                       $property['value'] . '</textarea>';
+            break;
+        case 'radio':
+            foreach ($property['choices'] as $key_choice => $choice) {
+                $checked = '';
+                if ($this->formElement->getProperty($key) == $choice['radio_value']) {
+                    $checked = 'checked="checked"';
+                }
+                $html .= '<input type="radio" 
+                                 name="formElement_data[specific_properties]['. $key .']" 
+                                 value="'. $choice['radio_value'] .'" 
+                                 id="formElement_properties_'. $key_choice .'" 
+                                 '. $checked .' />';
+                $html .= $this->fetchAdminSpecificProperty($key_choice, $choice);
+                $html .= '<br />';
+            }
+            break;
+        case 'label':
+            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
+        default:
+            //Unknown type. raise exception?
+            break;
+        }
         return $html;
     }
 }

@@ -17,25 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Admin.class.php';
+class Tracker_FormElement_Admin_Field_CrossReferences extends Tracker_FormElement_Admin_Field {
 
-class Tracker_FormElement_AdminFactory {
-
-    public function getElement(Tracker_FormElement $element) {
-        $klassName      = get_class($element);
-        $elementType    = substr($klassName, strlen('Tracker_FormElement'));
-        $adminKlassName = 'Tracker_FormElement_Admin'.$elementType;
-        
-        @include_once dirname(__FILE__).'/Admin'.$elementType.'.class.php';
-        if (class_exists($adminKlassName)) {
-            $adminElement = new $adminKlassName($element);
-        } else {
-            $adminElement = new Tracker_FormElement_Admin($element);
-        }
-
-        return $adminElement;
+    /**
+     * Fetch the "required" part of field admin
+     *
+     * @return string the HTML for the part of form for required checkbox
+     */
+    protected function fetchRequired() {
+        return '';
     }
-
 }
 
 ?>

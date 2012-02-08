@@ -26,6 +26,15 @@ class Tracker_FormElement_Admin_Field_LastUpdateDate extends Tracker_FormElement
         $html .= '</span>';
         return $html;
     }
+    
+    /**
+     * Fetch the "required" part of field admin
+     *
+     * @return string the HTML for the part of form for required checkbox
+     */
+    protected function fetchRequired() {
+        return '';
+    }
 }
 
 ?>

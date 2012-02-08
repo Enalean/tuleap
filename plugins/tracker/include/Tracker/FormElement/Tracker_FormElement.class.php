@@ -22,7 +22,7 @@ require_once('Tracker_FormElement_Interface.class.php');
 require_once('Tracker_FormElement_Description.class.php');
 require_once(dirname(__FILE__).'/../TrackerManager.class.php');
 
-require_once 'admin/AdminFactory.class.php';
+require_once 'admin/Admin.class.php';
 
 require_once('json.php');
 
@@ -359,6 +359,26 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return '';
     }
     
+    protected function getAdminFromType() {
+        $klassName      = get_class($this);
+        $elementType    = substr($klassName, strlen('Tracker_FormElement'));
+        $adminKlassName = 'Tracker_FormElement_Admin'.$elementType;
+        
+        @include_once dirname(__FILE__).'/admin/Admin'.$elementType.'.class.php';
+        if (class_exists($adminKlassName)) {
+            return new $adminKlassName($this);
+        }
+        return null;
+    }
+    
+    public function getAdmin() {
+        $adminElement = $this->getAdminFromType();
+        if ($adminElement === null) {
+            $adminElement = new Tracker_FormElement_Admin($this);
+        }
+        return $adminElement;
+    }
+    
     /**
      * Build the form to edit a field
      *
@@ -371,8 +391,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         
-        $adminElementFactory = new Tracker_FormElement_AdminFactory();
-        $formElementAdmin    = $adminElementFactory->getElement($this);
+        //$adminElementFactory = new Tracker_FormElement_AdminFactory();
+        //$formElementAdmin    = $adminElementFactory->getElement($this);
+        $formElementAdmin    = $this->getAdmin();
         if ($submit_name == 'update-formElement') {
             if ($this->isModifiable()) {
                 $html .= $formElementAdmin->fetchAdminForUpdate();
@@ -383,8 +404,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $html .= $formElementAdmin->fetchAdminForCreate();
         }
 
-        // others
-        $html .= $this->fetchAdminSpecificProperties();
+        // others    
         
         if ($submit_name == 'docreate-formElement') {
             //Additional stuff (up to the field) at creation time
@@ -525,7 +545,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return mixed or null if not found
      */
-    protected function getProperty($key) {
+    public function getProperty($key) {
         return $this->getPropertyValueInCollection($this->getProperties(), $key);
     }
     
@@ -567,7 +587,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return array
      */
-    protected function getProperties() {
+    public function getProperties() {
         if (!$this->cache_specific_properties) {
             $this->cache_specific_properties = $this->default_properties;
             if ($this->getDao() && ($row = $this->getDao()->searchByFieldId($this->id)->getRow())) {
@@ -656,32 +676,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $this->cache_specific_properties = null; //force reload
         }
         return $success;
-    }
-    
-    /**
-     * If the formElement has specific properties then this method 
-     * should return the html needed to update those properties
-     * 
-     * The html must be a (or many) html row(s) table (one column for the label, 
-     * another one for the property)
-     * 
-     * <code>
-     * <tr><td><label>Property 1:</label></td><td><input type="text" value="value 1" /></td></tr>
-     * <tr><td><label>Property 2:</label></td><td><input type="text" value="value 2" /></td></tr>
-     * </code>
-     * 
-     * @return string html
-     */
-    protected function fetchAdminSpecificProperties() {
-        $html = '';
-        foreach ($this->getProperties() as $key => $property) {
-            $html .= '<p>';
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->getPropertyLabel($key) .'</label>: ';
-            $html .= '<br />';
-            $html .= $this->fetchAdminSpecificProperty($key, $property);
-            $html .= '</p>';
-        }
-        return $html;
     }
     
     /**
@@ -808,7 +802,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string the label 
      */
-    protected function getPropertyLabel($key) {
+    public function getPropertyLabel($key) {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', $key);
     }
     
@@ -1278,6 +1272,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public static function getFactoryUniqueField() {
         return false;
+    }
+    
+    /**
+     * Format a timestamp into Y-m-d format
+     */
+    public function formatDate($date) {
+        return format_date("Y-m-d", (float)$date, '');
     }
 }
 ?>

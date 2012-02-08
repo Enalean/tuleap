@@ -27,6 +27,9 @@ class Tracker_FormElement_Admin_Field_SubmittedOn extends Tracker_FormElement_Ad
         return $html;
     }
 
+    protected function fetchRequired() {
+        return '';
+    }
 }
 
 ?>

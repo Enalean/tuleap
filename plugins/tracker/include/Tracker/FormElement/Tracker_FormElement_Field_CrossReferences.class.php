@@ -420,16 +420,5 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
          $html = $this->fetchSubmitValueMassChange();
          return $html;
      }
-
-     /**
-     * Fetch the "required" part of field admin
-     *
-     * @param string the HTML for the part of form for required checkbox
-     */
-    protected function fetchRequired() {
-        $html = '';
-        return $html;
-    }
-
 }
 ?>

@@ -302,16 +302,6 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
     }
     
     /**
-     * Fetch the "required" part of field admin
-     *
-     * @param string the HTML for the part of form for required checkbox
-     */
-    protected function fetchRequired() {
-        $html = '';
-        return $html;
-    }
-    
-    /**
      * Display the html field in the admin ui
      *
      * @return string html

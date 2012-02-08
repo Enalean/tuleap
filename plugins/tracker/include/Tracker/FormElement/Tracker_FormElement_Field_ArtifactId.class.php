@@ -215,17 +215,5 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      public function fetchSubmitMasschange($submitted_values=array()) {
          return '';
      }
-
-
-     /**
-     * Fetch the "required" part of field admin
-     *
-     * @param string the HTML for the part of form for required checkbox
-     */
-    protected function fetchRequired() {
-        $html = '';
-        return $html;
-    }
-
 }
 ?>
