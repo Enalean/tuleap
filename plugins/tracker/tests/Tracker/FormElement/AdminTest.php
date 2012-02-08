@@ -22,6 +22,7 @@ require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_Fo
 Mock::generate('Tracker');
 Mock::generate('Project');
 class Tracker_FormElement_AdminTest extends TuleapTestCase {
+    
     public function setUp() {
         parent::setUp();
         $language = new BaseLanguage('en_US', 'en_US');
@@ -48,6 +49,7 @@ class Tracker_FormElement_AdminTest extends TuleapTestCase {
     }
 }
 class FakeFormElement extends Tracker_FormElement_Field_String {
+    
     public static function getFactoryIconUseIt() {
         // just here to avoid undesired behaviour in test
     }
