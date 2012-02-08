@@ -17,17 +17,28 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once('common/layout/Layout.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/admin/Admin.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php');
 Mock::generate('Tracker');
 Mock::generate('Project');
+Mock::generate('Layout');
+
 class Tracker_FormElement_AdminTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
         $language = new BaseLanguage('en_US', 'en_US');
+        $language->lang = 'en_US';
         $language->text_array['plugin_tracker_include_type']['field_copied_from'] = 'This field is shared from tracker $1 from project $2';
         $GLOBALS['Language'] = $language;
+        $GLOBALS['HTML'] = new MockLayout();
+    }
+    
+    public function tearDown() {
+         parent::tearDown();
+         unset($GLOBALS['HTML']);
     }
     
     public function testForSharedFieldsItDisplaysOriginalTrackerAndProjectName() {
@@ -45,15 +56,24 @@ class Tracker_FormElement_AdminTest extends TuleapTestCase {
         $element = new FakeFormElement(null, null, null, null, null, null, null, null, null, null, null, null);
         $element->setOriginalTracker($tracker);
         $element->setOriginalProject($project);
-        return new Tracker_FormElement_Admin($element);
+        return new Tracker_FormElement_Admin($element, array());
     }
 }
+
 class FakeFormElement extends Tracker_FormElement_Field_String {
     
     public static function getFactoryIconUseIt() {
         // just here to avoid undesired behaviour in test
     }
 
+    public static function getFactoryLabel() {
+        
+    }
+    
+    public function getProperties() {
+        return array();
+    }
+    
     public function setOriginalProject($project) {
         $this->originalProject = $project;
     }

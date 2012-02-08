@@ -17,7 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Tracker_FormElement_Admin_Field_SubmittedBy extends Tracker_FormElement_Admin {
+require_once 'Admin_Field_List.class.php';
+
+class Tracker_FormElement_Admin_Field_SubmittedBy extends Tracker_FormElement_Admin_Field_List {
 
     protected function fetchCustomHelp() {
         $html = '';
@@ -28,6 +30,26 @@ class Tracker_FormElement_Admin_Field_SubmittedBy extends Tracker_FormElement_Ad
     }
 
     protected function fetchRequired() {
+        return '';
+    }
+    
+    /**
+     * Fetch additionnal stuff to display below the create form
+     * Result if not empty must be enclosed in a <tr>
+     *
+     * @return string html
+     */
+    protected function fetchAfterAdminCreateForm() {
+        // Don't display the values because this is a special field
+        return '';
+    }
+    /**
+     * Fetch additionnal stuff to display below the edit form
+     *
+     * @return string html
+     */
+    protected function fetchAfterAdminEditForm() {
+        // Don't display the values because this is a special field
         return '';
     }
 }

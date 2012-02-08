@@ -545,7 +545,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         $adminElement = $this->getAdminFromType();
         if ($adminElement === null) {
             include_once dirname(__FILE__).'/admin/Admin_Field.class.php';
-            $adminElement = new Tracker_FormElement_Admin_Field($this);
+            $adminElement = new Tracker_FormElement_Admin_Field($this, $this->getAllUsedElements());
         }
         return $adminElement;
     }

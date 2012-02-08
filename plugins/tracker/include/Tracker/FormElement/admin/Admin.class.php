@@ -23,8 +23,14 @@ class Tracker_FormElement_Admin {
      */
     protected $formElement;
     
-    public function __construct(Tracker_FormElement $formElement) {
-        $this->formElement = $formElement;
+    /**
+     * @var 
+     */
+    protected $allUsedElements;
+    
+    public function __construct(Tracker_FormElement $formElement, $allUsedElements) {
+        $this->formElement     = $formElement;
+        $this->allUsedElements = $allUsedElements;
     }
     
     public function fetchAdminForUpdate() {
@@ -35,6 +41,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchDescriptionForUpdate();
         $html .= $this->fetchRanking();
         $html .= $this->fetchAdminSpecificProperties();
+        $html .= $this->fetchAfterAdminEditForm();
         return $html;
     }
     
@@ -47,6 +54,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchDescriptionForShared();
         $html .= $this->fetchRanking();
         $html .= $this->fetchAdminSpecificProperties();
+        $html .= $this->fetchAfterAdminEditForm();
         return $html;
     }
     
@@ -57,6 +65,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchDescriptionForUpdate();
         $html .= $this->fetchRanking();
         $html .= $this->fetchAdminSpecificProperties();
+        $html .= $this->fetchAfterAdminCreateForm();
         return $html;
     }
     
@@ -185,7 +194,7 @@ class Tracker_FormElement_Admin {
         $html .= '<label for="formElement_rank">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'rank_screen').': <font color="red">*</font></label>';
         $html .= '<br />';
         $items = array();
-        foreach (Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->formElement->getTracker()) as $field) {
+        foreach ($this->allUsedElements as $field) {
             $items[] = $field->getRankSelectboxDefinition();
         }
         $html .= $GLOBALS['HTML']->selectRank(
@@ -280,6 +289,25 @@ class Tracker_FormElement_Admin {
             break;
         }
         return $html;
+    }
+    
+    /**
+     * Fetch additionnal stuff to display below the edit form
+     *
+     * @return string html
+     */
+    protected function fetchAfterAdminEditForm() {
+        return '';
+    }
+    
+    /**
+     * Fetch additionnal stuff to display below the create form
+     * Result if not empty must be enclosed in a <tr>
+     *
+     * @return string html
+     */
+    protected function fetchAfterAdminCreateForm() {
+        return '';
     }
 }
 

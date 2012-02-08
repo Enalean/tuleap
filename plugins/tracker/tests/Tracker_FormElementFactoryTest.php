@@ -95,7 +95,7 @@ class Tracker_FormElementFactoryTest extends UnitTestCase {
                     'id'               => 0,
                     'tracker_id'       => 0,
                     'parent_id'        => 0,
-                    'original_field_id'=> 0,
+                    'original_field_id'=> null,
                 )
             )
         );

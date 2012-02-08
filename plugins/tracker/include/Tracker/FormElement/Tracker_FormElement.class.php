@@ -333,23 +333,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
     }
     
-    /**
-     * Fetch additionnal stuff to display below the edit form
-     *
-     * @return string html
-     */
-    protected function fetchAfterAdminEditForm() {
-        return '';
-    }
-    
-    /**
-     * Fetch additionnal stuff to display below the create form
-     * Result if not empty must be enclosed in a <tr>
-     *
-     * @return string html
-     */
-    protected function fetchAfterAdminCreateForm() {
-        return '';
+    protected function getAllUsedElements() {
+        return Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->getTracker());
     }
     
     protected function getAdminFromType() {
@@ -359,7 +344,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         
         @include_once dirname(__FILE__).'/admin/Admin'.$elementType.'.class.php';
         if (class_exists($adminKlassName)) {
-            return new $adminKlassName($this);
+            return new $adminKlassName($this, $this->getAllUsedElements());
         }
         return null;
     }
@@ -384,8 +369,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         
-        //$adminElementFactory = new Tracker_FormElement_AdminFactory();
-        //$formElementAdmin    = $adminElementFactory->getElement($this);
         $formElementAdmin    = $this->getAdmin();
         if ($submit_name == 'update-formElement') {
             if ($this->isModifiable()) {
@@ -395,15 +378,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             }
         } else if ($submit_name == 'docreate-formElement') {
             $html .= $formElementAdmin->fetchAdminForCreate();
-        }
-
-        // others    
-        
-        if ($submit_name == 'docreate-formElement') {
-            //Additional stuff (up to the field) at creation time
-            $html .= $this->fetchAfterAdminCreateForm();
-        } else if ($submit_name == 'update-formElement') {
-            $html .= $this->fetchAfterAdminEditForm();
         }
         
         //submit button
