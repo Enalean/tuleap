@@ -19,27 +19,50 @@
  */
 require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/admin/Admin.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php');
-Mock::generate('Tracker_FormElement_Field_String');
 Mock::generate('Tracker');
+Mock::generate('Project');
 class Tracker_FormElement_AdminTest extends TuleapTestCase {
-    public function testForSharedFieldsItDisplaysOriginalTrackerName() {
-        $originalTrackerName = 'Bugs';
-        $tracker = new MockTracker();
-        $tracker->setReturnValue('getName', $originalTrackerName);
-        $originalField = new MockTracker_FormElement_Field_String();
-        $originalField->setReturnValue('getTracker', $tracker);
-        $element = new FakeFormElement(null, null, null, null, null, null, null, null, null, null, null, null);
-        $element->setOriginalField($originalField);
-//        $element->setReturnValue('getOriginalField', $originalField);
-        
-        $admin = new Tracker_FormElement_Admin($element);
-        $this->assertPattern("%$originalTrackerName%", $admin->fetchAdminForShared());
+    public function setUp() {
+        parent::setUp();
+        $language = new BaseLanguage('en_US', 'en_US');
+        $language->text_array['plugin_tracker_include_type']['field_copied_from'] = 'This field is shared from tracker $1 from project $2';
+        $GLOBALS['Language'] = $language;
+    }
+    
+    public function testForSharedFieldsItDisplaysOriginalTrackerAndProjectName() {
+        $admin = $this->GivenAnAdminWithOriginalProjectAndTracker('Tuleap', 'Bugs');
+        $result = $admin->fetchAdminForShared();
+        $this->assertPattern("%Bugs%", $result);
+        $this->assertPattern("%Tuleap%", $result);
     }
 
+    public function GivenAnAdminWithOriginalProjectAndTracker($projectName, $trackerName) {
+        $tracker = new MockTracker();
+        $tracker->setReturnValue('getName', $trackerName);
+        $project = new MockProject();
+        $project->setReturnValue('getPublicName', $projectName);
+        $element = new FakeFormElement(null, null, null, null, null, null, null, null, null, null, null, null);
+        $element->setOriginalTracker($tracker);
+        $element->setOriginalProject($project);
+        return new Tracker_FormElement_Admin($element);
+    }
 }
 class FakeFormElement extends Tracker_FormElement_Field_String {
     public static function getFactoryIconUseIt() {
-        
+        // just here to avoid undesired behaviour in test
+    }
+
+    public function setOriginalProject($project) {
+        $this->originalProject = $project;
+    }
+    public function getOriginalProject() {
+        return $this->originalProject;
+    }
+    public function setOriginalTracker($tracker) {
+        $this->originalTracker = $tracker;
+    }
+    public function getOriginalTracker() {
+        return $this->originalTracker;
     }
 }
 ?>

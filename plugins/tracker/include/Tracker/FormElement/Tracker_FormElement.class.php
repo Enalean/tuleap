@@ -1064,6 +1064,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return $this->original_field;
     }
     
+    public function getOriginalTracker() {
+        //TODO
+    }
+    
     public function isModifiable() {
         return ($this->original_field_id == $this->id);
     }

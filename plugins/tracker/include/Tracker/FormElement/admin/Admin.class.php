@@ -167,8 +167,8 @@ class Tracker_FormElement_Admin {
     }
   
     protected function fetchCustomHelpForShared() {
-        $originalTrackerName = 'Xxx';
-        $originalProjectName = 'Yyy';
+        $originalTrackerName = $this->formElement->getOriginalTracker()->getName();
+        $originalProjectName = $this->formElement->getOriginalProject()->getPublicName();
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'field_copied_from', array($originalTrackerName, $originalProjectName));
