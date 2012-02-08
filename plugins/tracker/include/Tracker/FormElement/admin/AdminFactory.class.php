@@ -18,55 +18,21 @@
  */
 
 require_once 'Admin.class.php';
-require_once 'Admin_StaticField_LineBreak.class.php';
-require_once 'Admin_StaticField_Separator.class.php';
-require_once 'Admin_Field_LastUpdateDate.class.php';
-require_once 'Admin_Field_PermissionsOnArtifact.class.php';
-require_once 'Admin_Field_SubmittedBy.class.php';
-require_once 'Admin_Field_SubmittedOn.class.php';
-require_once 'Admin_Field_Selectbox.class.php';
-require_once 'Admin_Field_MultiSelectbox.class.php';
-
 
 class Tracker_FormElement_AdminFactory {
 
     public function getElement(Tracker_FormElement $element) {
-        switch(get_class($element)) {
-            case 'Tracker_FormElement_Field_Selectbox':
-                $adminElement = new Tracker_FormElement_Admin_Field_Selectbox($element);
-                break;
-            
-            case 'Tracker_FormElement_Field_MultiSelectbox':
-                $adminElement = new Tracker_FormElement_Admin_Field_MultiSelectbox($element);
-                break;
-            
-            case 'Tracker_FormElement_Field_SubmittedBy':
-                $adminElement = new Tracker_FormElement_Admin_Field_SubmittedBy($element);
-                break;
-            
-            case 'Tracker_FormElement_Field_SubmittedOn':
-                $adminElement = new Tracker_FormElement_Admin_Field_SubmittedOn($element);
-                break;
-            
-            case 'Tracker_FormElement_Field_PermissionsOnArtifact':
-                $adminElement = new Tracker_FormElement_Admin_Field_PermissionsOnArtifact($element);
-                break;
-            
-            case 'Tracker_FormElement_Field_LastUpdateDate':
-                $adminElement = new Tracker_FormElement_Admin_Field_LastUpdateDate($element);
-                break;
-            
-            case 'Tracker_FormElement_StaticField_LineBreak':
-                $adminElement = new Tracker_FormElement_Admin_StaticField_LineBreak($element);
-                break;
-            
-            case 'Tracker_FormElement_StaticField_Separator':
-                $adminElement = new Tracker_FormElement_Admin_StaticField_Separator($element);
-                break;
-            
-            default:
-                $adminElement = new Tracker_FormElement_Admin($element);
+        $klassName      = get_class($element);
+        $elementType    = substr($klassName, strlen('Tracker_FormElement'));
+        $adminKlassName = 'Tracker_FormElement_Admin'.$elementType;
+        
+        @include_once dirname(__FILE__).'/Admin'.$elementType.'.class.php';
+        if (class_exists($adminKlassName)) {
+            $adminElement = new $adminKlassName($element);
+        } else {
+            $adminElement = new Tracker_FormElement_Admin($element);
         }
+
         return $adminElement;
     }
 

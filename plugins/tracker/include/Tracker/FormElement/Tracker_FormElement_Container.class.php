@@ -63,7 +63,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
             $field->prepareForDisplay();
         }
     }
-
+    
     public function getRankSelectboxDefinition() {
         $def = parent::getRankSelectboxDefinition();
         $def['subitems'] = array(); 
@@ -72,7 +72,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         }
         return $def;
     }
-
+    
     /**
      * Fetch the "add criteria" box
      *

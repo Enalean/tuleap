@@ -382,25 +382,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $html .= $formElementAdmin->fetchAdminForCreate();
         }
 
-        //rank
-        $html .= '<p>';
-        $html .= '<label for="formElement_rank">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'rank_screen').': <font color="red">*</font></label>';
-        $html .= '<br />';
-        $items = array();
-        foreach (Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->getTracker()) as $field) {
-            $items[] = $field->getRankSelectboxDefinition();
-        }
-        $html .= $GLOBALS['HTML']->selectRank(
-            $this->id, 
-            $this->rank, 
-            $items, 
-            array(
-                'id'   => 'formElement_rank',
-                'name' => 'formElement_data[rank]'
-            )
-        );
-        $html .= '</p>';
-        
         // others
         $html .= $this->fetchAdminSpecificProperties();
         
@@ -457,7 +438,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $html = '';
         return $html;
     }
-    
+
     /**
      * Get the rank structure for the selectox
      *

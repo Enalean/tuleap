@@ -33,6 +33,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchNameForUpdate();
         $html .= $this->fetchLabelForUpdate();
         $html .= $this->fetchDescriptionForUpdate();
+        $html .= $this->fetchRanking();
         return $html;
     }
     
@@ -43,6 +44,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchNameForShared();
         $html .= $this->fetchLabelForShared();
         $html .= $this->fetchDescriptionForShared();
+        $html .= $this->fetchRanking();
         return $html;
     }
     
@@ -51,6 +53,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchTypeNotModifiable();
         $html .= $this->fetchLabelForUpdate();
         $html .= $this->fetchDescriptionForUpdate();
+        $html .= $this->fetchRanking();
         return $html;
     }
     
@@ -170,6 +173,29 @@ class Tracker_FormElement_Admin {
         $html .= '<span class="tracker-admin-form-element-help">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'field_copied_from', array($originalTrackerName, $originalProjectName));
         $html .= '</span>';
+        return $html;
+    }
+    
+    protected function fetchRanking() {
+        $html = '';
+        $html .= '<p>';
+        $html .= '<label for="formElement_rank">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'rank_screen').': <font color="red">*</font></label>';
+        $html .= '<br />';
+        $adminFactory = new Tracker_FormElement_AdminFactory();
+        $items = array();
+        foreach (Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->formElement->getTracker()) as $field) {
+            $items[] = $field->getRankSelectboxDefinition();
+        }
+        $html .= $GLOBALS['HTML']->selectRank(
+            $this->formElement->id, 
+            $this->formElement->rank, 
+            $items, 
+            array(
+                'id'   => 'formElement_rank',
+                'name' => 'formElement_data[rank]'
+            )
+        );
+        $html .= '</p>';
         return $html;
     }
 }
