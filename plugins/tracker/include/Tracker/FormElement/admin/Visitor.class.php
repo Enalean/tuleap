@@ -230,26 +230,34 @@ class Tracker_FormElement_Admin_Visitor implements Tracker_FormElement_Visitor {
         echo $this->displayAdminForm($tracker_manager, $request, $this->fetchUpdateForm(), $breadcrumbsLabel, $url, $title);
     }
     
-    public function displayAdminForm(TrackerManager $tracker_manager, $request, $form, $breadcrumbsLabel, $url, $title) {
+    private function displayAdminForm(TrackerManager $tracker_manager, $request, $form, $breadcrumbsLabel, $url, $title) {
+        $html  = '<form name="form1" method="POST" action="'. $url .'">';
+        $html .= $form;
+        $html .= '</form>';
+        
+        if ($request->isAjax()) {
+            $this->displayAjax($title, $html);
+        } else {
+            $this->displayFullPage($tracker_manager, $breadcrumbsLabel, $url, $title, $html);
+        }
+    }
+    
+    private function displayAjax($title, $form) {
+        header(json_header(array('dialog-title' => $title)));
+        echo $form;
+    }
+    
+    private function displayFullPage(TrackerManager $tracker_manager, $label, $url, $title, $form) {
         $breadcrumbs = array(
             array(
-                'title' => $breadcrumbsLabel,
+                'title' => $label,
                 'url'   => $url,
             ),
         );
-        if (!$request->isAjax()) {
-            $this->element->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
-            echo '<h2>'. $title .'</h2>';
-        } else {
-            header(json_header(array('dialog-title' => $title)));
-        }
-        echo '<form name="form1" method="POST" action="'. $url .'">';
+        $this->element->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
+        echo '<h2>'. $title .'</h2>';
         echo $form;
-        echo '</form>';
-        
-        if (!$request->isAjax()) {
-            $this->element->getTracker()->displayFooter($tracker_manager);
-        }
+        $this->element->getTracker()->displayFooter($tracker_manager);
     }
 }
 
