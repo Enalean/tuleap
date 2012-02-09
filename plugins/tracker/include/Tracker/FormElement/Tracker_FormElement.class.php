@@ -22,7 +22,7 @@ require_once('Tracker_FormElement_Interface.class.php');
 require_once('Tracker_FormElement_Description.class.php');
 require_once(dirname(__FILE__).'/../TrackerManager.class.php');
 
-require_once 'admin/Admin.class.php';
+require_once 'admin/Visitor.class.php';
 
 require_once('json.php');
 
@@ -333,15 +333,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
     }
     
-    protected function getAllUsedElements() {
-        return Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->getTracker());
-    }
-        
-    public function getAdmin() {
-        include_once dirname(__FILE__).'/admin/Admin.class.php';
-        return new Tracker_FormElement_Admin($this, $this->getAllUsedElements());
-    }
-    
     /**
      * Build the form to edit a field
      *
@@ -351,20 +342,19 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @see displayAdminCreate
      */
     public function fetchAdminForm($submit_name) {
-        $html = '';
-        
-        $formElementAdmin    = $this->getAdmin();
-        if ($submit_name == 'update-formElement') {
-            if ($this->isModifiable()) {
-                $html .= $formElementAdmin->fetchAdminForUpdate();
-            } else {
-                $html .= $formElementAdmin->fetchAdminForShared();
-            }
-        } else if ($submit_name == 'docreate-formElement') {
-            $html .= $formElementAdmin->fetchAdminForCreate();
-        }
-               
-        return $html;
+        $allUsedElements = Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->getTracker());
+        $visitor         = new Tracker_FormElement_Admin_Visitor($allUsedElements);
+        $this->accept($visitor);
+        return $visitor->getAdminForm($submit_name);
+    }
+    
+    /**
+     * Accessor for visitors
+     * 
+     * @param type $visitor
+     */
+    public function accept($visitor) {
+        $visitor->visit($this);
     }
     
     /**

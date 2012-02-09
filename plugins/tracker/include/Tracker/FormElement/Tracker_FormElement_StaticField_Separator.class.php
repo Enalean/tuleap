@@ -106,11 +106,6 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-splitter-horizontal--plus.png');
     }
-
-    public function getAdmin() {
-        include_once dirname(__FILE__).'/admin/Admin_StaticField_Separator.class.php';
-        return new Tracker_FormElement_Admin_StaticField_Separator($this, $this->getAllUsedElements());
-    }
 }
 
 ?>

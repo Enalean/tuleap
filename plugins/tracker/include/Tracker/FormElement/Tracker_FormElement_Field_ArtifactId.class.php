@@ -215,10 +215,5 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      public function fetchSubmitMasschange($submitted_values=array()) {
          return '';
      }
-     
-     public function getAdmin() {
-        include_once dirname(__FILE__).'/admin/Admin_Field_ArtifactId.class.php';
-        return new Tracker_FormElement_Admin_Field_ArtifactId($this, $this->getAllUsedElements());
-    }
 }
 ?>

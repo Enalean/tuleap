@@ -122,10 +122,5 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     public function isNone($value) {
         return $value === null || $value === '' || (is_array($value) && count($value) ==1 && $value[0] == '100');
     }
-
-    public function getAdmin() {
-        include_once dirname(__FILE__).'/admin/Admin_Field_MultiSelectbox.class.php';
-        return new Tracker_FormElement_Admin_Field_MultiSelectbox($this, $this->getAllUsedElements());
-    }
 }
 ?>

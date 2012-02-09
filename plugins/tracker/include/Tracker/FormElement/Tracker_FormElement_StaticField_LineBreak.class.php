@@ -106,11 +106,6 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/arrow-curve-180-gray--plus.png');
-    }    
-
-    public function getAdmin() {
-        include_once dirname(__FILE__).'/admin/Admin_StaticField_LineBreak.class.php';
-        return new Tracker_FormElement_Admin_StaticField_LineBreak($this, $this->getAllUsedElements());
     }
 }
 

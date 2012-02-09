@@ -731,10 +731,5 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         }
         return true;
     }
-
-    public function getAdmin() {
-        include_once dirname(__FILE__).'/admin/Admin_Field_PermissionsOnArtifact.class.php';
-        return new Tracker_FormElement_Admin_Field_PermissionsOnArtifact($this, $this->getAllUsedElements());
-    }
 }
 ?>

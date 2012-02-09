@@ -229,10 +229,5 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     public function isNone($value) {
         return $value === null || $value === '' || $value === '100';
     }
-    
-    public function getAdmin() {
-        include_once dirname(__FILE__).'/admin/Admin_Field_Selectbox.class.php';
-        return new Tracker_FormElement_Admin_Field_Selectbox($this, $this->getAllUsedElements());
-    }
 }
 ?>

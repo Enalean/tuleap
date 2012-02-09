@@ -345,10 +345,5 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     protected function fetchArtifactContent(array $content) {
         return implode('', $content);
     }
-    
-    public function getAdmin() {
-        include_once dirname(__FILE__).'/admin/Admin_Container.class.php';
-        return new Tracker_FormElement_Admin_Container($this, $this->getAllUsedElements());
-    }
 }
 ?>

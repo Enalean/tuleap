@@ -540,11 +540,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         
         return $html;
     }
-        
-    public function getAdmin() {
-        include_once dirname(__FILE__).'/admin/Admin_Field.class.php';
-        return new Tracker_FormElement_Admin_Field($this, $this->getAllUsedElements());
-    }
     
     /**
      * Say if this fields suport notifications

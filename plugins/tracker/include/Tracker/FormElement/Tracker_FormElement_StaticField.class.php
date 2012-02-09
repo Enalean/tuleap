@@ -164,11 +164,6 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
     }
     
     protected abstract function fetchReadOnly();
-    
-    public function getAdmin() {
-        include_once dirname(__FILE__).'/admin/Admin_StaticField.class.php';
-        return new Tracker_FormElement_Admin_StaticField($this, $this->getAllUsedElements());
-    }
 }
 
 ?>
