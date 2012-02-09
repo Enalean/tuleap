@@ -32,9 +32,10 @@ class Tracker_SharedFormElementFactory {
         $this->boundValuesFactory = $boundValuesFactory;
         $this->factory = $factory;
     }
-    public function createFormElement($tracker, $formElement_data, User $user) {
+    
+    public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {
         $field = $this->factory->getFormElementById($formElement_data['field_id']);
-        if ($field->userCanRead($user) && $field->getTracker()->userCanView($user)) {
+        if ($this->fieldCanBeCopied($field, $user)) {
             $data = $this->populateFormElementDataForASharedField($field);
             $type = $data['type'];
             $id = $this->factory->createFormElement($tracker, $type, $data);
@@ -42,6 +43,14 @@ class Tracker_SharedFormElementFactory {
             return $id;
         }
         throw new Exception('Permission denied');
+    }
+    
+    private function fieldCanBeCopied(Tracker_FormElement $field, User $user) {
+        $allowed_types = array('Tracker_', 'msb');
+        return $field->userCanRead($user) 
+                && $field->getTracker()->userCanView($user) 
+                && $field instanceof Tracker_FormElement_Field_Selectbox
+                && $field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static;
     }
     
     private function populateFormElementDataForASharedField($originField) {

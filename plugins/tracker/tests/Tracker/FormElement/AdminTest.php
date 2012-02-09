@@ -20,7 +20,7 @@
 
 require_once('common/layout/Layout.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php');
-require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/View/Admin/Admin.class.php');
+require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/View/Admin.class.php');
 Mock::generate('Tracker');
 Mock::generate('Project');
 Mock::generate('Layout');
