@@ -102,8 +102,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                     description = $description,
                     rank = $rank, 
                     is_hidden = $is_hidden
-                WHERE field_id = $field_id
-                  AND id = $id";
+                WHERE id = $id
+                  OR original_value_id = $id";
         return $this->update($sql);
     }
     
@@ -136,8 +136,16 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         $value_id = $this->da->escapeInt($value_id);
         $sql = "SELECT null
                 FROM $this->table_name AS v
-                    INNER JOIN tracker_workflow_transition AS wt ON ((wt.from_id = v.id OR wt.from_id = v.original_value_id) AND (v.id = $value_id OR v.original_value_id = $value_id))
-                    INNER JOIN tracker_workflow AS w ON (w.workflow_id = wt.workflow_id AND v.field_id = w.field_id)
+                    INNER JOIN tracker_workflow AS w ON (
+                        v.field_id = w.field_id
+                        AND 
+                        (v.id = $value_id OR v.original_value_id = $value_id)
+                    )
+                    INNER JOIN tracker_workflow_transition AS wt ON (
+                        w.workflow_id = wt.workflow_id 
+                        AND
+                        (wt.from_id = v.id AND (v.original_value_id <> 0 OR wt.from_id = v.original_value_id)) 
+                    )
                 UNION
                 SELECT null
                 FROM $this->table_name AS v
