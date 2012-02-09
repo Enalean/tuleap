@@ -205,29 +205,11 @@ class Tracker_FormElement_Admin_Visitor implements Tracker_FormElement_Visitor {
      * @return void
      */
     public function displayAdminCreate(TrackerManager $tracker_manager, HTTPRequest $request, $type, $factory_label) {
-        $hp = Codendi_HTMLPurifier::instance();
+        $hp    = Codendi_HTMLPurifier::instance();
         $title = 'Create a new '. $factory_label;
         $url   = TRACKER_BASE_URL.'/?tracker='. (int)$this->element->getTracker()->getId() .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
-        $breadcrumbs = array(
-            array(
-                'title' => $title,
-                'url'   => $url,
-            ),
-        );
-        if (!$request->isAjax()) {
-            $this->element->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
-            echo '<h2>'. $title .'</h2>';
-        } else {
-            header(json_header(array('dialog-title' => $title)));
-        }
-        
-        echo '<form name="form1" method="POST" action="'. $url .'">';
-        echo $this->fetchCreateForm();
-        echo '</form>';
-        
-        if (!$request->isAjax()) {
-            $this->element->getTracker()->displayFooter($tracker_manager);
-        }
+        $breadcrumbsLabel = $title;
+        echo $this->displayAdminForm($tracker_manager, $request, $this->fetchCreateForm(), $breadcrumbsLabel, $url, $title);
     }
     
     
@@ -240,14 +222,18 @@ class Tracker_FormElement_Admin_Visitor implements Tracker_FormElement_Visitor {
      * 
      * @return void
      */
-    public function displayAdminFormElement(TrackerManager $tracker_manager, $request, $current_user) {
-        $hp = Codendi_HTMLPurifier::instance();
+    public function displayAdminFormElement(TrackerManager $tracker_manager, $request) {
         $label = $this->element->getLabel();
         $title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'upd_label', $label);
         $url   = $this->element->getAdminEditUrl();
+        $breadcrumbsLabel = $label;
+        echo $this->displayAdminForm($tracker_manager, $request, $this->fetchUpdateForm(), $breadcrumbsLabel, $url, $title);
+    }
+    
+    public function displayAdminForm(TrackerManager $tracker_manager, $request, $form, $breadcrumbsLabel, $url, $title) {
         $breadcrumbs = array(
             array(
-                'title' => $label,
+                'title' => $breadcrumbsLabel,
                 'url'   => $url,
             ),
         );
@@ -258,13 +244,12 @@ class Tracker_FormElement_Admin_Visitor implements Tracker_FormElement_Visitor {
             header(json_header(array('dialog-title' => $title)));
         }
         echo '<form name="form1" method="POST" action="'. $url .'">';
-        echo $this->fetchUpdateForm();
+        echo $form;
         echo '</form>';
         
         if (!$request->isAjax()) {
             $this->element->getTracker()->displayFooter($tracker_manager);
         }
-        
     }
 }
 

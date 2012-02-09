@@ -327,7 +327,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $allUsedElements = $this->getFormElementFactory()->getUsedFormElementForTracker($this->getTracker());
         $visitor         = new Tracker_FormElement_Admin_Visitor($allUsedElements);
         $this->accept($visitor);
-        $visitor->displayAdminFormElement($tracker_manager, $request, $current_user);
+        $visitor->displayAdminFormElement($tracker_manager, $request);
     }
     
     public function setFormElementFactory(Tracker_FormElementFactory $factory) {
