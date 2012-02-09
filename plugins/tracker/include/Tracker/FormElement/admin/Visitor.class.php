@@ -174,9 +174,7 @@ class Tracker_FormElement_Admin_Visitor implements Tracker_FormElement_Visitor {
     }
     
     /**
-     * Return html corresponding to the element administration
-     * 
-     * @param String $submit_name Nature of form (update or create)
+     * Return html corresponding to FormElement creation
      * 
      * @return String
      */
@@ -184,6 +182,11 @@ class Tracker_FormElement_Admin_Visitor implements Tracker_FormElement_Visitor {
         return $this->adminElement->fetchAdminForCreate();
     }
     
+    /**
+     * Return html corresponding to FormElement update
+     * 
+     * @return String
+     */
     public function fetchUpdateForm() {
         if ($this->element->isModifiable()) {
             return $this->adminElement->fetchAdminForUpdate();
@@ -204,12 +207,12 @@ class Tracker_FormElement_Admin_Visitor implements Tracker_FormElement_Visitor {
      *
      * @return void
      */
-    public function displayAdminCreate(TrackerManager $tracker_manager, HTTPRequest $request, $type, $factory_label) {
-        $hp    = Codendi_HTMLPurifier::instance();
-        $title = 'Create a new '. $factory_label;
-        $url   = TRACKER_BASE_URL.'/?tracker='. (int)$this->element->getTracker()->getId() .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
+    public function displayCreateForm(TrackerManager $tracker_manager, HTTPRequest $request, $type, $factory_label) {
+        $hp               = Codendi_HTMLPurifier::instance();
+        $title            = 'Create a new '. $factory_label;
+        $url              = TRACKER_BASE_URL.'/?tracker='. (int)$this->element->getTracker()->getId() .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
         $breadcrumbsLabel = $title;
-        echo $this->displayAdminForm($tracker_manager, $request, $this->fetchCreateForm(), $breadcrumbsLabel, $url, $title);
+        echo $this->displayForm($tracker_manager, $request, $breadcrumbsLabel, $url, $title, $this->fetchCreateForm());
     }
     
     
@@ -217,28 +220,27 @@ class Tracker_FormElement_Admin_Visitor implements Tracker_FormElement_Visitor {
      * Display the form to administrate the element
      * 
      * @param TrackerManager  $tracker_manager The tracker manager
-     * @param Codendi_Request $request         The data coming from the user
-     * @param User            $current_user    The user who mades the request
+     * @param HTTPRequest     $request         The data coming from the user
      * 
      * @return void
      */
-    public function displayAdminFormElement(TrackerManager $tracker_manager, $request) {
-        $label = $this->element->getLabel();
-        $title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'upd_label', $label);
-        $url   = $this->element->getAdminEditUrl();
+    public function displayUpdateForm(TrackerManager $tracker_manager, HTTPRequest $request) {
+        $label            = $this->element->getLabel();
+        $title            = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'upd_label', $label);
+        $url              = $this->element->getAdminEditUrl();
         $breadcrumbsLabel = $label;
-        echo $this->displayAdminForm($tracker_manager, $request, $this->fetchUpdateForm(), $breadcrumbsLabel, $url, $title);
+        echo $this->displayForm($tracker_manager, $request, $breadcrumbsLabel, $url, $title, $this->fetchUpdateForm());
     }
     
-    private function displayAdminForm(TrackerManager $tracker_manager, $request, $form, $breadcrumbsLabel, $url, $title) {
-        $html  = '<form name="form1" method="POST" action="'. $url .'">';
-        $html .= $form;
-        $html .= '</form>';
+    private function displayForm(TrackerManager $tracker_manager, HTTPRequest $request, $breadcrumbsLabel, $url, $title, $formContent) {
+        $form  = '<form name="form1" method="POST" action="'. $url .'">';
+        $form .= $formContent;
+        $form .= '</form>';
         
         if ($request->isAjax()) {
-            $this->displayAjax($title, $html);
+            $this->displayAjax($title, $form);
         } else {
-            $this->displayFullPage($tracker_manager, $breadcrumbsLabel, $url, $title, $html);
+            $this->displayFullPage($tracker_manager, $breadcrumbsLabel, $url, $title, $form);
         }
     }
     
@@ -247,10 +249,10 @@ class Tracker_FormElement_Admin_Visitor implements Tracker_FormElement_Visitor {
         echo $form;
     }
     
-    private function displayFullPage(TrackerManager $tracker_manager, $label, $url, $title, $form) {
+    private function displayFullPage(TrackerManager $tracker_manager, $breadcrumbsLabel, $url, $title, $form) {
         $breadcrumbs = array(
             array(
-                'title' => $label,
+                'title' => $breadcrumbsLabel,
                 'url'   => $url,
             ),
         );

@@ -874,7 +874,7 @@ class Tracker_FormElementFactory {
             $allUsedElements = $this->getUsedFormElementForTracker($tracker);
             $visitor         = new Tracker_FormElement_Admin_Visitor($allUsedElements);
             $formElement->accept($visitor);  
-            echo $visitor->displayAdminCreate($tracker_manager, $request, $type, $label);
+            echo $visitor->displayCreateForm($tracker_manager, $request, $type, $label);
         }
     }
     
