@@ -196,22 +196,34 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
     }
 
     public function testDisplayCreateFormShouldDisplayAForm() {
+        $factory = $this->GivenAFormElementFactory();
+        $content = $this->WhenIDisplayCreateFormElement($factory);
+
+        $this->assertPattern('%Create a new Separator%', $content);
+        $this->assertPattern('%</form>%', $content);
+    }
+    
+    private function GivenAFormElementFactory() {
+        $factory         = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getUsedFormElementForTracker', 'getEventManager'));
+        $factory->setReturnValue('getUsedFormElementForTracker', array());
+        $factory->setReturnValue('getEventManager', new MockEventManager());
+        return $factory;
+    }
+    
+    private function WhenIDisplayCreateFormElement($factory) {
         $GLOBALS['Language']->setReturnValue('getText', 'Separator', array('plugin_tracker_formelement_admin','separator_label'));
+        
         $tracker_manager = new MockTrackerManager();
         $user            = new MockUser();
         $request         = new MockHTTPRequest();
         $tracker         = new MockTracker();
-        $factory         = TestHelper::getPartialMock('Tracker_FormELementFactory', array('getUsedFormElementForTracker', 'getEventManager'));
-        
-        $factory->setReturnValue('getUsedFormElementForTracker', array());
-        $factory->setReturnValue('getEventManager', new MockEventManager());
         
         ob_start();
         $factory->displayAdminCreateFormElement($tracker_manager, $request, $user, 'separator', $tracker);
         $content = ob_get_contents();
         ob_end_clean();
-        $this->assertPattern('%Create a new Separator%', $content);
-        $this->assertPattern('%</form>%', $content);
+        
+        return $content;
     }
 }
 ?>
