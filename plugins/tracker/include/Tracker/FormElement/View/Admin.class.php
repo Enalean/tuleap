@@ -20,8 +20,6 @@
 require_once dirname(__FILE__) .'/../Tracker_FormElement.class.php';
 
 class Tracker_FormElement_View_Admin {
-    const SUBMIT_UPDATE = 'update-formElement';
-    const SUBMIT_CREATE = 'docreate-formElement';
     
     /**
      * @var Tracker_FormElement
@@ -38,47 +36,6 @@ class Tracker_FormElement_View_Admin {
         $this->allUsedElements = $allUsedElements;
     }
     
-    public function fetchAdminForUpdate() {
-        $html = '';
-        $html .= $this->fetchTypeForUpdate();
-        $html .= $this->fetchNameForUpdate();
-        $html .= $this->fetchLabelForUpdate();
-        $html .= $this->fetchDescriptionForUpdate();
-        $html .= $this->fetchRanking();
-        $html .= $this->fetchAdminSpecificProperties();
-        $html .= $this->fetchAfterAdminEditForm();
-        $html .= $this->fetchAdminButton(self::SUBMIT_UPDATE);
-        $html .= $this->fetchAdminFormPermissionLink();
-        return $html;
-    }
-    
-    public function fetchAdminForShared() {
-        $html = '';
-        $html .= $this->fetchTypeNotModifiable();
-        $html .= $this->fetchCustomHelpForShared();
-        $html .= $this->fetchNameForShared();
-        $html .= $this->fetchLabelForShared();
-        $html .= $this->fetchDescriptionForShared();
-        $html .= $this->fetchRanking();
-        $html .= $this->fetchAdminSpecificProperties();
-        $html .= $this->fetchAfterAdminEditForm();
-        $html .= $this->fetchAdminButton(self::SUBMIT_UPDATE);
-        $html .= $this->fetchAdminFormPermissionLink();
-        return $html;
-    }
-    
-    public function fetchAdminForCreate() {
-        $html = '';
-        $html .= $this->fetchTypeNotModifiable();
-        $html .= $this->fetchLabelForUpdate();
-        $html .= $this->fetchDescriptionForUpdate();
-        $html .= $this->fetchRanking();
-        $html .= $this->fetchAdminSpecificProperties();
-        $html .= $this->fetchAfterAdminCreateForm();
-        $html .= $this->fetchAdminButton(self::SUBMIT_CREATE);
-        return $html;
-    }
-     
     protected function fetchTypeNotModifiable() {
         $html = '';
         $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';

@@ -19,6 +19,7 @@
  */
 
 require_once('dao/Tracker_FormElement_FieldDao.class.php');
+require_once('View/Admin/CreateVisitor.class.php');
 
 require_once('Tracker_FormElement_Shared.class.php');
 require_once('Tracker_FormElement_Field_Integer.class.php');
@@ -42,6 +43,7 @@ require_once('Tracker_FormElement_Container_Column.class.php');
 require_once('Tracker_FormElement_StaticField_LineBreak.class.php');
 require_once('Tracker_FormElement_StaticField_Separator.class.php');
 require_once('Tracker_FormElement_StaticField_RichText.class.php');
+
 require_once('common/widget/Widget_Static.class.php');
 
 class Tracker_FormElementFactory {
@@ -872,9 +874,12 @@ class Tracker_FormElementFactory {
             $label           = $getFactoryLabel->invoke(null);
             
             $allUsedElements = $this->getUsedFormElementForTracker($tracker);
-            $visitor         = new Tracker_FormElement_View_Admin_Visitor($allUsedElements);
+            $visitor         = new Tracker_FormElement_View_Admin_CreateVisitor($allUsedElements);
+	    $visitor->setType($type);
+	    $visitor->setLabel($label);
+
             $formElement->accept($visitor);  
-            echo $visitor->displayCreateForm($tracker_manager, $request, $type, $label);
+            $visitor->display($tracker_manager, $request);
         }
     }
     

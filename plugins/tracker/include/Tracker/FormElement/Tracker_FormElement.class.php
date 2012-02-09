@@ -23,7 +23,7 @@ require_once('Tracker_FormElement_Description.class.php');
 require_once('Tracker_FormElementFactory.class.php');
 require_once(dirname(__FILE__).'/../TrackerManager.class.php');
 
-require_once 'View/Admin/Visitor.class.php';
+require_once 'View/Admin/UpdateVisitor.class.php';
 
 require_once('json.php');
 
@@ -325,9 +325,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function displayAdminFormElement(TrackerManager $tracker_manager, $request, $current_user) {
         $allUsedElements = $this->getFormElementFactory()->getUsedFormElementForTracker($this->getTracker());
-        $visitor         = new Tracker_FormElement_View_Admin_Visitor($allUsedElements);
+	if ($this->isModifiable()) {
+	  $visitor = new Tracker_FormElement_View_Admin_UpdateVisitor($allUsedElements);
+	} else {
+	  $visitor = new Tracker_FormElement_View_Admin_UpdateSharedVisitor($allUsedElements);
+	}
         $this->accept($visitor);
-        $visitor->displayUpdateForm($tracker_manager, $request);
+        $visitor->display($tracker_manager, $request);
     }
     
     public function setFormElementFactory(Tracker_FormElementFactory $factory) {

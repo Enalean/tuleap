@@ -23,6 +23,9 @@ require_once dirname(__FILE__).'/../../Tracker_FormElement_Visitor.class.php';
  * Can visit a FormElement and provides the corresponding administration element 
  */
 class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visitor {
+    const SUBMIT_UPDATE = 'update-formElement';
+    const SUBMIT_CREATE = 'docreate-formElement';
+
     /**
      * @var Tracker_FormElement_View_Admin
      */
@@ -173,66 +176,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         return $this->adminElement;
     }
     
-    /**
-     * Return html corresponding to FormElement creation
-     * 
-     * @return String
-     */
-    public function fetchCreateForm() {
-        return $this->adminElement->fetchAdminForCreate();
-    }
-    
-    /**
-     * Return html corresponding to FormElement update
-     * 
-     * @return String
-     */
-    public function fetchUpdateForm() {
-        if ($this->element->isModifiable()) {
-            return $this->adminElement->fetchAdminForUpdate();
-        } else {
-            return $this->adminElement->fetchAdminForShared();
-        }
-    }
-    
-    
-    /**
-     * Display the form to create a new formElement
-     * 
-     * @param TrackerManager  $tracker_manager The service
-     * @param HTTPRequest     $request         The data coming from the user
-     * @param string          $type            The internal name of type of the field
-     * @param string          $factory_label   The label of the field (At factory 
-     *                                         level 'Selectbox, File, ...')
-     *
-     * @return void
-     */
-    public function displayCreateForm(TrackerManager $tracker_manager, HTTPRequest $request, $type, $factory_label) {
-        $hp               = Codendi_HTMLPurifier::instance();
-        $title            = 'Create a new '. $factory_label;
-        $url              = TRACKER_BASE_URL.'/?tracker='. (int)$this->element->getTracker()->getId() .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
-        $breadcrumbsLabel = $title;
-        echo $this->displayForm($tracker_manager, $request, $breadcrumbsLabel, $url, $title, $this->fetchCreateForm());
-    }
-    
-    
-    /**
-     * Display the form to administrate the element
-     * 
-     * @param TrackerManager  $tracker_manager The tracker manager
-     * @param HTTPRequest     $request         The data coming from the user
-     * 
-     * @return void
-     */
-    public function displayUpdateForm(TrackerManager $tracker_manager, HTTPRequest $request) {
-        $label            = $this->element->getLabel();
-        $title            = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'upd_label', $label);
-        $url              = $this->element->getAdminEditUrl();
-        $breadcrumbsLabel = $label;
-        echo $this->displayForm($tracker_manager, $request, $breadcrumbsLabel, $url, $title, $this->fetchUpdateForm());
-    }
-    
-    private function displayForm(TrackerManager $tracker_manager, HTTPRequest $request, $breadcrumbsLabel, $url, $title, $formContent) {
+    protected function displayForm(TrackerManager $tracker_manager, HTTPRequest $request, $breadcrumbsLabel, $url, $title, $formContent) {
         $form  = '<form name="form1" method="POST" action="'. $url .'">';
         $form .= $formContent;
         $form .= '</form>';
@@ -244,12 +188,12 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
         }
     }
     
-    private function displayAjax($title, $form) {
+    protected function displayAjax($title, $form) {
         header(json_header(array('dialog-title' => $title)));
         echo $form;
     }
     
-    private function displayFullPage(TrackerManager $tracker_manager, $breadcrumbsLabel, $url, $title, $form) {
+    protected function displayFullPage(TrackerManager $tracker_manager, $breadcrumbsLabel, $url, $title, $form) {
         $breadcrumbs = array(
             array(
                 'title' => $breadcrumbsLabel,
