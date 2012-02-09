@@ -35,22 +35,32 @@ class Tracker_SharedFormElementFactory {
     
     public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {
         $field = $this->factory->getFormElementById($formElement_data['field_id']);
-        if ($this->fieldCanBeCopied($field, $user)) {
-            $data = $this->populateFormElementDataForASharedField($field);
-            $type = $data['type'];
-            $id = $this->factory->createFormElement($tracker, $type, $data);
-            $this->boundValuesFactory->duplicateByReference($field->getId(), $id);
-            return $id;
-        }
-        throw new Exception('Permission denied');
+        $this->assertFieldCanBeCopied($field, $user);
+        
+        $data = $this->populateFormElementDataForASharedField($field);
+        $type = $data['type'];
+        $id = $this->factory->createFormElement($tracker, $type, $data);
+        $this->boundValuesFactory->duplicateByReference($field->getId(), $id);
+        return $id;
     }
     
-    private function fieldCanBeCopied(Tracker_FormElement $field, User $user) {
-        $allowed_types = array('Tracker_', 'msb');
-        return $field->userCanRead($user) 
-                && $field->getTracker()->userCanView($user) 
-                && $field instanceof Tracker_FormElement_Field_Selectbox
-                && $field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static;
+    private function assertFieldCanBeCopied(Tracker_FormElement $field, User $user) {
+        $this->assertFieldIsReadable($field, $user);
+        $this->assertFieldIsStaticSelectbox($field);
+    }
+    
+    private function assertFieldIsReadable(Tracker_FormElement $field, User $user) {
+        if ( ! ($field->userCanRead($user) 
+              && $field->getTracker()->userCanView($user))) {
+            throw new Exception('Permission denied');
+        }
+    }
+    
+    private function assertFieldIsStaticSelectbox(Tracker_FormElement $field) {
+        if ( ! ($field instanceof Tracker_FormElement_Field_Selectbox
+                && $field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static)) {
+            throw new Exception('Can only share static selectbox fields');
+        }
     }
     
     private function populateFormElementDataForASharedField($originField) {
