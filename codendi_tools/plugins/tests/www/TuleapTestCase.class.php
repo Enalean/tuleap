@@ -25,6 +25,9 @@ Mock::generate('BaseLanguage');
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
+require_once 'common/layout/Layout.class.php';
+Mock::generate('Layout');
+
 /**
  * Abstract class to use for unit tests inside Tuleap.
  *
@@ -47,6 +50,7 @@ abstract class TuleapTestCase extends UnitTestCase {
         }
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
+        $GLOBALS['HTML']     = new MockLayout();
     }
     
     /**
@@ -55,6 +59,7 @@ abstract class TuleapTestCase extends UnitTestCase {
     function tearDown() {
         unset($GLOBALS['Response']);
         unset($GLOBALS['Language']);
+        unset($GLOBALS['HTML']);
         $GLOBALS = $this->globals;
     }
     

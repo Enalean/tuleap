@@ -25,8 +25,10 @@ require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElem
 Mock::generate('Project');
 Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Field_Selectbox');
+Mock::generate('Tracker_FormElementFactory');
 
-class Tracker_FormElementTest extends UnitTestCase {
+class Tracker_FormElementTest extends TuleapTestCase {
+    
     function testGetOriginalProjectAndOriginalTracker() {
         $project = new MockProject();
         $tracker = new MockTracker();
@@ -52,7 +54,37 @@ class Tracker_FormElementTest extends UnitTestCase {
     }
     
     private function GivenAFormElementWithIdAndOriginalField($id, $originalField) {
-        return new Tracker_FormElement_Field_Selectbox($id, null, null, null, null, null, null, null, null, null, null, $originalField);
+        return new Tracker_FormElement_StaticField_Separator($id, null, null, null, null, null, null, null, null, null, null, $originalField);
+    }
+    
+    public function testDisplayUpdateFormShouldDisplayAForm() {
+        $formElement = $this->GivenAFormElementWithIdAndOriginalField(null, null);
+        
+        $factory = new MockTracker_FormElementFactory();
+        $factory->setReturnValue('getUsedFormElementForTracker', array());
+        
+        $formElement->setTracker(new MockTracker());
+        $formElement->setFormElementFactory($factory);
+        
+        $content     = $this->WhenIDisplayAdminFormElement($formElement);
+
+        $this->assertPattern('%Update%', $content);
+        $this->assertPattern('%</form>%', $content);
+    }
+    
+    private function WhenIDisplayAdminFormElement($formElement) {
+        $GLOBALS['Language']->setReturnValue('getText', 'Update', array('plugin_tracker_include_type', 'upd_label', '*'));
+        
+        $tracker_manager = new MockTrackerManager();
+        $user            = new MockUser();
+        $request         = new MockHTTPRequest();
+        
+        ob_start();
+        $formElement->displayAdminFormElement($tracker_manager, $request, $user);
+        $content = ob_get_contents();
+        ob_end_clean();
+        
+        return $content;
     }
 }
 ?>

@@ -43,9 +43,6 @@ Mock::generate('User');
 require_once 'common/include/HTTPRequest.class.php';
 Mock::generate('HTTPRequest');
 
-require_once 'common/layout/Layout.class.php';
-Mock::generate('Layout');
-
 require_once 'common/event/EventManager.class.php';
 Mock::generate('EventManager');
 
@@ -54,17 +51,6 @@ if (!defined('TRACKER_BASE_URL')) {
 }
 
 class Tracker_FormElementFactoryTest extends TuleapTestCase {
-
-    public function setUp() {
-        parent::setUp();
-        $GLOBALS['HTML'] = new MockLayout();
-    }
-    
-    public function tearDown() {
-        parent::tearDown();
-        unset($GLOBALS['HTML']);
-    }
-
 
     public function test_saveObject() {
         $user          = new MockUser();

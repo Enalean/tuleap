@@ -20,6 +20,7 @@
 
 require_once('Tracker_FormElement_Interface.class.php');
 require_once('Tracker_FormElement_Description.class.php');
+require_once('Tracker_FormElementFactory.class.php');
 require_once(dirname(__FILE__).'/../TrackerManager.class.php');
 
 require_once 'admin/Visitor.class.php';
@@ -97,10 +98,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public $rank;
     
     /**
-     *
      * @var Tracker_FormElement
      */
     protected $original_field = null;
+    
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formElementFactory;
     
     /**
      * Base constructor
@@ -318,34 +323,25 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * 
      * @return void
      */
-    protected function displayAdminFormElement(TrackerManager $tracker_manager, $request, $current_user) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'upd_label', $this->getLabel());
-        $url   = $this->getAdminEditUrl();
-        $breadcrumbs = array(
-            array(
-                'title' => $this->getLabel(),
-                'url'   => $url,
-            ),
-        );
-        if (!$request->isAjax()) {
-            $this->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
-            echo '<h2>'. $title .'</h2>';
-        } else {
-            header(json_header(array('dialog-title' => $title)));
-        }
-        
-        $allUsedElements = Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->getTracker());
+    public function displayAdminFormElement(TrackerManager $tracker_manager, $request, $current_user) {
+        $allUsedElements = $this->getFormElementFactory()->getUsedFormElementForTracker($this->getTracker());
         $visitor         = new Tracker_FormElement_Admin_Visitor($allUsedElements);
         $this->accept($visitor);
-        
-        echo '<form name="form1" method="POST" action="'. $url .'">';
-        echo $visitor->fetchUpdateForm();
-        echo '</form>';
-        
-        if (!$request->isAjax()) {
-            $this->getTracker()->displayFooter($tracker_manager);
+        $visitor->displayAdminFormElement($tracker_manager, $request, $current_user);
+    }
+    
+    public function setFormElementFactory(Tracker_FormElementFactory $factory) {
+        $this->formElementFactory = $factory;
+    }
+    
+    /**
+     * @return Tracker_FormElementFactory
+     */
+    protected function getFormElementFactory() {
+        if (!$this->formElementFactory) {
+            $this->formElementFactory = Tracker_FormElementFactory::instance();
         }
+        return $this->formElementFactory;
     }
     
     /**
@@ -673,7 +669,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return string url to display in html (&amp; instead of &)
      */
-    protected function getAdminEditUrl() {
+    public function getAdminEditUrl() {
         return TRACKER_BASE_URL.'/?tracker='. (int)$this->getTracker()->id .'&amp;func=admin-formElement-update&amp;formElement='. $this->id;
     }
     

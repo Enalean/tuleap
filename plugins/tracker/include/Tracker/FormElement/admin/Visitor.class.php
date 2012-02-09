@@ -229,6 +229,43 @@ class Tracker_FormElement_Admin_Visitor implements Tracker_FormElement_Visitor {
             $this->element->getTracker()->displayFooter($tracker_manager);
         }
     }
+    
+    
+    /**
+     * Display the form to administrate the element
+     * 
+     * @param TrackerManager  $tracker_manager The tracker manager
+     * @param Codendi_Request $request         The data coming from the user
+     * @param User            $current_user    The user who mades the request
+     * 
+     * @return void
+     */
+    public function displayAdminFormElement(TrackerManager $tracker_manager, $request, $current_user) {
+        $hp = Codendi_HTMLPurifier::instance();
+        $label = $this->element->getLabel();
+        $title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'upd_label', $label);
+        $url   = $this->element->getAdminEditUrl();
+        $breadcrumbs = array(
+            array(
+                'title' => $label,
+                'url'   => $url,
+            ),
+        );
+        if (!$request->isAjax()) {
+            $this->element->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
+            echo '<h2>'. $title .'</h2>';
+        } else {
+            header(json_header(array('dialog-title' => $title)));
+        }
+        echo '<form name="form1" method="POST" action="'. $url .'">';
+        echo $this->fetchUpdateForm();
+        echo '</form>';
+        
+        if (!$request->isAjax()) {
+            $this->element->getTracker()->displayFooter($tracker_manager);
+        }
+        
+    }
 }
 
 ?>
