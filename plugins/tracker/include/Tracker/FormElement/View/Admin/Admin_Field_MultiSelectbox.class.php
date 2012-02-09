@@ -19,7 +19,7 @@
 
 require_once 'Admin_Field_Selectbox.class.php';
 
-class Tracker_FormElement_Admin_Field_MultiSelectbox extends Tracker_FormElement_Admin_Field_Selectbox {
+class Tracker_FormElement_View_Admin_Field_MultiSelectbox extends Tracker_FormElement_View_Admin_Field_Selectbox {
 
      protected function fetchTypeForUpdate() {
         $html = '';

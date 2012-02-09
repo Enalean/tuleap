@@ -19,7 +19,7 @@
 
 require_once 'Admin.class.php';
 
-class Tracker_FormElement_Admin_Field extends Tracker_FormElement_Admin {
+class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admin {
 
     /**
      * If the formElement has specific properties then this method 

@@ -20,7 +20,7 @@
 
 require_once 'Admin.class.php';
 
-class Tracker_FormElement_Admin_Shared extends Tracker_FormElement_Admin {
+class Tracker_FormElement_View_Admin_Shared extends Tracker_FormElement_View_Admin {
 
     public function __construct(Tracker_FormElement_Shared $formElement, $allUsedElements) {
         $this->formElement     = $formElement;

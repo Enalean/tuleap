@@ -20,7 +20,7 @@
 
 require_once('common/layout/Layout.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php');
-require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/admin/Admin.class.php');
+require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/View/Admin/Admin.class.php');
 Mock::generate('Tracker');
 Mock::generate('Project');
 Mock::generate('Layout');
@@ -65,7 +65,7 @@ class Tracker_FormElement_AdminTest extends TuleapTestCase {
         $element = new FakeFormElement(null, null, null, null, null, null, null, null, null, null, null, null);
         $element->setOriginalTracker($tracker);
         $element->setOriginalProject($project);
-        return new Tracker_FormElement_Admin($element, array());
+        return new Tracker_FormElement_View_Admin($element, array());
     }
 }
 

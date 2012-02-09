@@ -19,7 +19,7 @@
 
 require_once 'Admin_Field.class.php';
 
-class Tracker_FormElement_Admin_Field_List extends Tracker_FormElement_Admin_Field {
+class Tracker_FormElement_View_Admin_Field_List extends Tracker_FormElement_View_Admin_Field {
     /**
      * Fetch additionnal stuff to display below the edit form
      *

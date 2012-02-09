@@ -19,7 +19,7 @@
 
 require_once 'Admin_StaticField.class.php';
 
-class Tracker_FormElement_Admin_StaticField_Separator extends Tracker_FormElement_Admin_StaticField {
+class Tracker_FormElement_View_Admin_StaticField_Separator extends Tracker_FormElement_View_Admin_StaticField {
   
     /**
      * html form for the description 

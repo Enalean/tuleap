@@ -19,7 +19,7 @@
 
 require_once 'Admin.class.php';
 
-class Tracker_FormElement_Admin_Container extends Tracker_FormElement_Admin {
+class Tracker_FormElement_View_Admin_Container extends Tracker_FormElement_View_Admin {
 
     /**
      * fetch permission link on admin form

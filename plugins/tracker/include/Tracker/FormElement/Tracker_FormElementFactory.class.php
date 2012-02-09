@@ -872,7 +872,7 @@ class Tracker_FormElementFactory {
             $label           = $getFactoryLabel->invoke(null);
             
             $allUsedElements = $this->getUsedFormElementForTracker($tracker);
-            $visitor         = new Tracker_FormElement_Admin_Visitor($allUsedElements);
+            $visitor         = new Tracker_FormElement_View_Admin_Visitor($allUsedElements);
             $formElement->accept($visitor);  
             echo $visitor->displayCreateForm($tracker_manager, $request, $type, $label);
         }
