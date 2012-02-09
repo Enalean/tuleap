@@ -19,20 +19,29 @@
  */
 
 require_once('common/layout/Layout.class.php');
-require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/admin/Admin.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php');
+require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/admin/Admin.class.php');
 Mock::generate('Tracker');
 Mock::generate('Project');
 Mock::generate('Layout');
+
+if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/plugins/tracker/');
+}
 
 class Tracker_FormElement_AdminTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $language = new BaseLanguage('en_US', 'en_US');
-        $language->lang = 'en_US';
-        $language->text_array['plugin_tracker_include_type']['field_copied_from'] = 'This field is shared from tracker $1 from project $2';
-        $GLOBALS['Language'] = $language;
+        $GLOBALS['Language']->setReturnValue(
+            'getText', 
+            'This field is shared from tracker Bugs from project Tuleap', 
+            array(
+                'plugin_tracker_include_type', 
+                'field_copied_from', 
+                array('Bugs', 'Tuleap')
+            )
+        );
         $GLOBALS['HTML'] = new MockLayout();
     }
     
