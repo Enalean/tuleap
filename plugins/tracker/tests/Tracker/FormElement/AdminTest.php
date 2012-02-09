@@ -29,7 +29,7 @@ if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker/');
 }
 
-class Tracker_FormElement_AdminTest extends TuleapTestCase {
+class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
@@ -42,12 +42,10 @@ class Tracker_FormElement_AdminTest extends TuleapTestCase {
                 array('Bugs', 'Tuleap')
             )
         );
-        $GLOBALS['HTML'] = new MockLayout();
     }
     
     public function tearDown() {
          parent::tearDown();
-         unset($GLOBALS['HTML']);
     }
     
     public function testForSharedFieldsItDisplaysOriginalTrackerAndProjectName() {

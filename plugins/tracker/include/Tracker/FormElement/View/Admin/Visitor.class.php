@@ -24,7 +24,7 @@ require_once dirname(__FILE__).'/../../Tracker_FormElement_Visitor.class.php';
  */
 class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visitor {
     /**
-     * @var Tracker_FormElement_Admin
+     * @var Tracker_FormElement_View_Admin
      */
     private $adminElement = null;
     
@@ -167,7 +167,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
      * 
      * Mostly used for tests.
      * 
-     * @return Tracker_FormElement_Admin
+     * @return Tracker_FormElement_View_Admin
      */
     public function getAdmin() {
         return $this->adminElement;
