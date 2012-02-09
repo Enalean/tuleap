@@ -17,6 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+/**
+ * Can visit a FormElement and provides the corresponding administration element 
+ */
 class Tracker_FormElement_Admin_Visitor {
     /**
      * @var Tracker_FormElement_Admin
@@ -30,12 +33,18 @@ class Tracker_FormElement_Admin_Visitor {
     
     private $allUsedElements = array();
     
+    /**
+     * Constructor needs the list all used FormElements (to rank the element in the page)
+     * 
+     * @param Array $allUsedElements 
+     */
     public function __construct($allUsedElements) {
         $this->allUsedElements = $allUsedElements;
     }
     
     /**
-     *
+     * Inspect the element
+     * 
      * @param Tracker_FormElement $element 
      */
     public function visit(Tracker_FormElement $element) {
@@ -144,10 +153,24 @@ class Tracker_FormElement_Admin_Visitor {
         $this->adminElement = new Tracker_FormElement_Admin_StaticField_Separator($element, $this->allUsedElements);
     }
     
+    /**
+     * Return the AdminEdition element corresponding to the visited element
+     * 
+     * Mostly used for tests.
+     * 
+     * @return Tracker_FormElement_Admin
+     */
     public function getAdmin() {
         return $this->adminElement;
     }
     
+    /**
+     * Return html corresponding to the element administration
+     * 
+     * @param String $submit_name Nature of form (update or create)
+     * 
+     * @return String
+     */
     public function getAdminForm($submit_name) {
         if ($submit_name == 'update-formElement') {
             if ($this->element->isModifiable()) {
