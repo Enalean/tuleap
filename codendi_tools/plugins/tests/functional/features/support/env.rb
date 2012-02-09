@@ -4,8 +4,8 @@ require 'capybara-screenshot/cucumber'
 require 'capybara/dsl'
 require File.dirname(__FILE__) + '/svn.rb'
 
-require 'ruby-debug'
-Debugger.start
+#require 'ruby-debug'
+#Debugger.start
 
 include RSpec::Matchers
 include Capybara::DSL
