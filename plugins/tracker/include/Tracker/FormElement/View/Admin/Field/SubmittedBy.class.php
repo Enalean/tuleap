@@ -17,19 +17,39 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Admin_Field.class.php';
+require_once dirname(__FILE__) .'/../Field.class.php';
 
-class Tracker_FormElement_View_Admin_Field_SubmittedOn extends Tracker_FormElement_View_Admin_Field {
+class Tracker_FormElement_View_Admin_Field_SubmittedBy extends Tracker_FormElement_View_Admin_Field_List {
 
     protected function fetchCustomHelp() {
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedon_help');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_help');
         $html .= '</span>';
         return $html;
     }
 
     protected function fetchRequired() {
+        return '';
+    }
+    
+    /**
+     * Fetch additionnal stuff to display below the create form
+     * Result if not empty must be enclosed in a <tr>
+     *
+     * @return string html
+     */
+    protected function fetchAfterAdminCreateForm() {
+        // Don't display the values because this is a special field
+        return '';
+    }
+    /**
+     * Fetch additionnal stuff to display below the edit form
+     *
+     * @return string html
+     */
+    protected function fetchAfterAdminEditForm() {
+        // Don't display the values because this is a special field
         return '';
     }
 }

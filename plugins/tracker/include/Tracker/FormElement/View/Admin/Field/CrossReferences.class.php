@@ -17,16 +17,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Admin.class.php';
+require_once dirname(__FILE__) .'/../Field.class.php';
 
-class Tracker_FormElement_View_Admin_StaticField extends Tracker_FormElement_View_Admin {
-  
+class Tracker_FormElement_View_Admin_Field_CrossReferences extends Tracker_FormElement_View_Admin_Field {
+
     /**
-     * fetch permission link on admin form
+     * Fetch the "required" part of field admin
      *
-     * @return string html
+     * @return string the HTML for the part of form for required checkbox
      */
-    protected function fetchAdminFormPermissionLink() {
+    protected function fetchRequired() {
         return '';
     }
 }

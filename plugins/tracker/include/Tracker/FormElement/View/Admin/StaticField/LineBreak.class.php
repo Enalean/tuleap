@@ -17,25 +17,34 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Admin_Field.class.php';
+require_once dirname(__FILE__) .'/../StaticField.class.php';
 
-class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormElement_View_Admin_Field {
+class Tracker_FormElement_View_Admin_StaticField_LineBreak extends Tracker_FormElement_View_Admin_StaticField {
   
-    protected function fetchCustomHelp() {
-        $html = '';
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_help');
-        $html .= '</span>';
-        return $html;
+    /**
+     * html form for the description 
+     *
+     * @return string html
+     */
+    public function fetchDescriptionForUpdate() {
+        return '';
     }
     
     /**
-     * Fetch the "required" part of field admin
+     * html form for the description 
      *
-     * @return string the HTML for the part of form for required checkbox
+     * @return string html
      */
-    protected function fetchRequired() {
+    public function fetchDescriptionForShared() {
         return '';
+    }
+    
+    protected function fetchCustomHelp() {
+        $html = '';
+        $html .= '<span class="tracker-admin-form-element-help">';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label_help');
+        $html .= '</span>';
+        return $html;
     }
 }
 

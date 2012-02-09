@@ -17,34 +17,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Admin_StaticField.class.php';
+require_once dirname(__FILE__) .'/../Admin.class.php';
 
-class Tracker_FormElement_View_Admin_StaticField_LineBreak extends Tracker_FormElement_View_Admin_StaticField {
+class Tracker_FormElement_View_Admin_StaticField extends Tracker_FormElement_View_Admin {
   
     /**
-     * html form for the description 
+     * fetch permission link on admin form
      *
      * @return string html
      */
-    public function fetchDescriptionForUpdate() {
+    protected function fetchAdminFormPermissionLink() {
         return '';
-    }
-    
-    /**
-     * html form for the description 
-     *
-     * @return string html
-     */
-    public function fetchDescriptionForShared() {
-        return '';
-    }
-    
-    protected function fetchCustomHelp() {
-        $html = '';
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label_help');
-        $html .= '</span>';
-        return $html;
     }
 }
 

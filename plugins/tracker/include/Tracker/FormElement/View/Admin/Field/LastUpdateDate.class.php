@@ -17,10 +17,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Admin_Field.class.php';
+require_once dirname(__FILE__) .'/../Field.class.php';
 
-class Tracker_FormElement_View_Admin_Field_ArtifactId extends Tracker_FormElement_View_Admin_Field {
-
+class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormElement_View_Admin_Field {
+  
+    protected function fetchCustomHelp() {
+        $html = '';
+        $html .= '<span class="tracker-admin-form-element-help">';
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_help');
+        $html .= '</span>';
+        return $html;
+    }
+    
     /**
      * Fetch the "required" part of field admin
      *

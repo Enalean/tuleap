@@ -88,77 +88,77 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     }
 
     private function visitField(Tracker_FormElement_Field $element) {
-        include_once 'Admin_Field.class.php';
+        include_once 'Field.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field($element, $this->allUsedElements);
     }
     
     private function visitArtifactId(Tracker_FormElement_Field_ArtifactId $element) {
-        include_once 'Admin_Field_ArtifactId.class.php';
+        include_once 'Field/ArtifactId.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_ArtifactId($element, $this->allUsedElements);
     }
     
     private function visitCrossReferences(Tracker_FormElement_Field_CrossReferences $element) {
-        include_once 'Admin_Field_CrossReferences.class.php';
+        include_once 'Field/CrossReferences.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_CrossReferences($element, $this->allUsedElements);
     }
     
     private function visitLastUpdateDate(Tracker_FormElement_Field_LastUpdateDate $element) {
-        include_once 'Admin_Field_LastUpdateDate.class.php';
+        include_once 'Field/LastUpdateDate.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_LastUpdateDate($element, $this->allUsedElements);
     }
     
     private function visitPermissionsOnArtifact(Tracker_FormElement_Field_PermissionsOnArtifact $element) {
-        include_once 'Admin_Field_PermissionsOnArtifact.class.php';
+        include_once 'Field/PermissionsOnArtifact.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_PermissionsOnArtifact($element, $this->allUsedElements);
     }
     
     private function visitList(Tracker_FormElement_Field_List $element) {
-        include_once 'Admin_Field_List.class.php';
+        include_once 'Field/List.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_List($element, $this->allUsedElements);
     }
     
     private function visitSelectbox(Tracker_FormElement_Field_Selectbox $element) {
-        include_once 'Admin_Field_Selectbox.class.php';
+        include_once 'Field/Selectbox.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_Selectbox($element, $this->allUsedElements);
     }
 
     private function visitSubmittedBy(Tracker_FormElement_Field_SubmittedBy $element) {
-        include_once 'Admin_Field_SubmittedBy.class.php';
+        include_once 'Field/SubmittedBy.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_SubmittedBy($element, $this->allUsedElements);
     }
     
     private function visitSubmittedOn(Tracker_FormElement_Field_SubmittedOn $element) {
-        include_once 'Admin_Field_SubmittedOn.class.php';
+        include_once 'Field/SubmittedOn.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_SubmittedOn($element, $this->allUsedElements);
     }
     
     private function visitMultiSelectbox(Tracker_FormElement_Field_MultiSelectbox $element) {
-        include_once 'Admin_Field_MultiSelectbox.class.php';
+        include_once 'Field/MultiSelectbox.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Field_MultiSelectbox($element, $this->allUsedElements);
     }
     
     private function visitContainer(Tracker_FormElement_Container $element) {
-        include_once 'Admin_Container.class.php';
+        include_once 'Container.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Container($element, $this->allUsedElements);
     }
     
     private function visitStaticField(Tracker_FormElement_StaticField $element) {
-        include_once 'Admin_StaticField.class.php';
+        include_once 'StaticField.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_StaticField($element, $this->allUsedElements);
     }
     
     private function visitLineBreak(Tracker_FormElement_StaticField_LineBreak $element) {
-        include_once 'Admin_StaticField_LineBreak.class.php';
+        include_once 'StaticField/LineBreak.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_StaticField_LineBreak($element, $this->allUsedElements);
     }
     
     private function visitSeparator(Tracker_FormElement_StaticField_Separator $element) {
-        include_once 'Admin_StaticField_Separator.class.php';
+        include_once 'StaticField/Separator.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_StaticField_Separator($element, $this->allUsedElements);
     }
     
     private function visitShared(Tracker_FormElement_Shared $element) {
-        include_once 'Admin_Shared.class.php';
+        include_once 'Shared.class.php';
         $this->adminElement = new Tracker_FormElement_View_Admin_Shared($element, $this->allUsedElements);
     }
     

@@ -17,30 +17,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'Admin_Field_List.class.php';
+require_once dirname(__FILE__) .'/../Field.class.php';
 
-class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement_View_Admin_Field_List {
+class Tracker_FormElement_View_Admin_Field_MultiSelectbox extends Tracker_FormElement_View_Admin_Field_Selectbox {
 
-    protected function fetchTypeForUpdate() {
+     protected function fetchTypeForUpdate() {
         $html = '';
         $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
         $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
 
-           //do not change from SB to MSB if the field is used to define the workflow
-        $wf = WorkflowFactory::instance();
-        if (!$wf->isWorkflowField($this->formElement)) {
-            $html .= ' (<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
-                    'tracker'            => $this->formElement->tracker_id,
-                    'func'               => 'admin-formElement-update',
-                    'formElement'        => $this->formElement->id,
-                    'change-type'        => 'msb'
-                )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
-                   .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_msb').'</a>)';
-        }
+        $html .= ' (<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
+                        'tracker'            => $this->formElement->tracker_id,
+                        'func'               => 'admin-formElement-update',
+                        'formElement'        => $this->formElement->id,
+                        'change-type'        => 'sb'
+                    )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
+               .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_sb').'</a>)';
 
         $html .= '</p>';
         return $html;
     }
+
 }
 
 ?>

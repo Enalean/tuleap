@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Admin.class.php';
+require_once dirname(__FILE__) .'/../Admin.class.php';
 
 class Tracker_FormElement_View_Admin_Shared extends Tracker_FormElement_View_Admin {
 
