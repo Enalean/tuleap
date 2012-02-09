@@ -39,6 +39,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * The tracker id
      */
     public $tracker_id;
+
+    /**
+     * @var Tracker
+     */
+    private $tracker;
     
     /**
      * Id of the fieldcomposite this field belongs to
@@ -221,7 +226,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return Tracker
      */
     public function getTracker() {
-        return TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+        if (!$this->tracker) {
+            $this->tracker = TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+        }
+        return $this->tracker;
+    }
+    
+    public function setTracker(Tracker $tracker) {
+        $this->tracker = $tracker;
     }
     
     /**
@@ -298,79 +310,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
     
     /**
-     * Display the form to create a new formElement
-     * 
-     * @param TrackerManager  $tracker_manager The service
-     * @param Codendi_Request $request         The data coming from the user
-     * @param User            $current_user    The user who mades the request
-     * @param string          $type            The internal name of type of the field
-     * @param string          $factory_label   The label of the field (At factory 
-     *                                         level 'Selectbox, File, ...')
-     *
-     * @return void
-     */
-    public function displayAdminCreate(TrackerManager $tracker_manager, $request, $current_user, $type, $factory_label) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $title = 'Create a new '. $factory_label;
-        $url   = TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
-        $breadcrumbs = array(
-            array(
-                'title' => $title,
-                'url'   => $url,
-            ),
-        );
-        if (!$request->isAjax()) {
-            $this->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
-            echo '<h2>'. $title .'</h2>';
-        } else {
-            header(json_header(array('dialog-title' => $title)));
-        }
-        echo '<form name="form1" method="POST" action="'. $url .'">';
-        echo $this->fetchAdminForm('docreate-formElement');
-        echo '</form>';
-        if (!$request->isAjax()) {
-            $this->getTracker()->displayFooter($tracker_manager);
-        }
-    }
-    
-    /**
-     * Build the form to edit a field
-     *
-     * @param string $submit_name The name of the input type="submit" html element
-     *
-     * @return string html 
-     * @see displayAdminCreate
-     */
-    public function fetchAdminForm($submit_name) {
-        $allUsedElements = Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->getTracker());
-        $visitor         = new Tracker_FormElement_Admin_Visitor($allUsedElements);
-        $this->accept($visitor);
-        return $visitor->getAdminForm($submit_name);
-    }
-    
-    /**
-     * Accessor for visitors
-     * 
-     * @param type $visitor
-     */
-    public function accept($visitor) {
-        $visitor->visit($this);
-    }
-    
-    /**
-     * Get the rank structure for the selectox
-     *
-     * @return array html
-     */
-    public function getRankSelectboxDefinition() {
-        return array(
-            'id'   => $this->id,
-            'name' => $this->getLabel(),
-            'rank' => $this->rank,
-        );
-    }
-    
-    /**
      * Display the form to administrate the element
      * 
      * @param TrackerManager  $tracker_manager The tracker manager
@@ -395,8 +334,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         } else {
             header(json_header(array('dialog-title' => $title)));
         }
+        
+        $allUsedElements = Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->getTracker());
+        $visitor         = new Tracker_FormElement_Admin_Visitor($allUsedElements);
+        $this->accept($visitor);
+        
         echo '<form name="form1" method="POST" action="'. $url .'">';
-        echo $this->fetchAdminForm('update-formElement');
+        echo $visitor->fetchUpdateForm();
         echo '</form>';
         
         if (!$request->isAjax()) {
@@ -404,6 +348,28 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
     }
     
+    /**
+     * Accessor for visitors
+     * 
+     * @param Tracker_FormElement_Visitor $visitor
+     */
+    public function accept(Tracker_FormElement_Visitor $visitor) {
+        $visitor->visit($this);
+    }
+    
+    /**
+     * Get the rank structure for the selectox
+     *
+     * @return array html
+     */
+    public function getRankSelectboxDefinition() {
+        return array(
+            'id'   => $this->id,
+            'name' => $this->getLabel(),
+            'rank' => $this->rank,
+        );
+    }
+        
     /**
      * Get the use_it row for the element
      *

@@ -17,10 +17,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once dirname(__FILE__).'/../Tracker_FormElement_Visitor.class.php';
+
 /**
  * Can visit a FormElement and provides the corresponding administration element 
  */
-class Tracker_FormElement_Admin_Visitor {
+class Tracker_FormElement_Admin_Visitor implements Tracker_FormElement_Visitor {
     /**
      * @var Tracker_FormElement_Admin
      */
@@ -47,7 +49,7 @@ class Tracker_FormElement_Admin_Visitor {
      * 
      * @param Tracker_FormElement $element 
      */
-    public function visit(Tracker_FormElement $element) {
+    public function visit(/*Tracker_FormElement*/ $element) {
         $this->element = $element;
         
         if ($element instanceof Tracker_FormElement_Field_MultiSelectbox) {
@@ -78,6 +80,8 @@ class Tracker_FormElement_Admin_Visitor {
             $this->visitSeparator($element);
         } elseif ($element instanceof Tracker_FormElement_StaticField) {
             $this->visitStaticField($element);
+        } elseif ($element instanceof Tracker_FormElement_Shared) {
+            $this->visitShared($element);
         } else {
             throw new Exception("Cannot visit unknown type");
         }
@@ -153,6 +157,11 @@ class Tracker_FormElement_Admin_Visitor {
         $this->adminElement = new Tracker_FormElement_Admin_StaticField_Separator($element, $this->allUsedElements);
     }
     
+    private function visitShared(Tracker_FormElement_Shared $element) {
+        include_once 'Admin_Shared.class.php';
+        $this->adminElement = new Tracker_FormElement_Admin_Shared($element, $this->allUsedElements);
+    }
+    
     /**
      * Return the AdminEdition element corresponding to the visited element
      * 
@@ -171,19 +180,55 @@ class Tracker_FormElement_Admin_Visitor {
      * 
      * @return String
      */
-    public function getAdminForm($submit_name) {
-        if ($submit_name == 'update-formElement') {
-            if ($this->element->isModifiable()) {
-                $html = $this->adminElement->fetchAdminForUpdate();
-            } else {
-                $html = $this->adminElement->fetchAdminForShared();
-            }
-        } else if ($submit_name == 'docreate-formElement') {
-            $html = $this->adminElement->fetchAdminForCreate();
-        }
-        return $html;
+    public function fetchCreateForm() {
+        return $this->adminElement->fetchAdminForCreate();
     }
     
+    public function fetchUpdateForm() {
+        if ($this->element->isModifiable()) {
+            return $this->adminElement->fetchAdminForUpdate();
+        } else {
+            return $this->adminElement->fetchAdminForShared();
+        }
+    }
+    
+    
+    /**
+     * Display the form to create a new formElement
+     * 
+     * @param TrackerManager  $tracker_manager The service
+     * @param HTTPRequest     $request         The data coming from the user
+     * @param string          $type            The internal name of type of the field
+     * @param string          $factory_label   The label of the field (At factory 
+     *                                         level 'Selectbox, File, ...')
+     *
+     * @return void
+     */
+    public function displayAdminCreate(TrackerManager $tracker_manager, HTTPRequest $request, $type, $factory_label) {
+        $hp = Codendi_HTMLPurifier::instance();
+        $title = 'Create a new '. $factory_label;
+        $url   = TRACKER_BASE_URL.'/?tracker='. (int)$this->element->getTracker()->getId() .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
+        $breadcrumbs = array(
+            array(
+                'title' => $title,
+                'url'   => $url,
+            ),
+        );
+        if (!$request->isAjax()) {
+            $this->element->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
+            echo '<h2>'. $title .'</h2>';
+        } else {
+            header(json_header(array('dialog-title' => $title)));
+        }
+        
+        echo '<form name="form1" method="POST" action="'. $url .'">';
+        echo $this->fetchCreateForm();
+        echo '</form>';
+        
+        if (!$request->isAjax()) {
+            $this->element->getTracker()->displayFooter($tracker_manager);
+        }
+    }
 }
 
 ?>

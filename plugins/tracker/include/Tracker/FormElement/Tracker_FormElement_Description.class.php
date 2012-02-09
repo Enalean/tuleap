@@ -44,20 +44,6 @@ interface Tracker_FormElement_Description {
      * @return bool say if the element is a unique one
      */
     public static function getFactoryUniqueField();
-    
-    /**
-     * Display the form to create a new formElement
-     * 
-     * @param TrackerManager  $tracker_manager The service
-     * @param Codendi_Request $request         The data coming from the user
-     * @param User            $current_user    The user who mades the request
-     * @param string          $type            The internal name of type of the field
-     * @param string          $factory_label   The label of the field (At factory 
-     *                                         level 'Selectbox, File, ...')
-     *
-     * @return void
-     */
-    public function displayAdminCreate(TrackerManager $tracker_manager, $request, $current_user, $type, $factory_label);
 
 }
 ?>

@@ -844,11 +844,11 @@ class Tracker_FormElementFactory {
         return $button;
     }
     
-    public function displayAdminCreateFormElement(TrackerManager $tracker_manager, $request, $current_user, $type) {
+    public function displayAdminCreateFormElement(TrackerManager $tracker_manager, Codendi_Request $request, User $current_user, $type, Tracker $tracker) {
         if ($formElement = $this->getInstanceFromRow(array(
                                                     'formElement_type'  => $type,
                                                     'id'                => 0, 
-                                                    'tracker_id'        => $request->get('tracker'), 
+                                                    'tracker_id'        => $tracker->getId(), 
                                                     'parent_id'         => null, 
                                                     'name'              => null, 
                                                     'label'             => null, 
@@ -860,15 +860,29 @@ class Tracker_FormElementFactory {
                                                     'notifications'     => 0,
                                                     'original_field_id' => null,
         ))) {
+            $formElement->setTracker($tracker);
+            
             $klasses = array_merge($this->classnames, $this->special_classnames, $this->group_classnames, $this->staticfield_classnames);
-            EventManager::instance()->processEvent('tracker_formElement_classnames', 
+            $this->getEventManager()->processEvent('tracker_formElement_classnames', 
                                                    array('classnames' => &$klasses));
             $klass = $klasses[$type];
+
             //Waiting for PHP5.3 and $klass::staticMethod()
-            $label = $description = '';
-            eval("\$label = $klass::getFactoryLabel();");
-            $formElement->displayAdminCreate($tracker_manager, $request, $current_user, $type, $label);
+            $getFactoryLabel = new ReflectionMethod($klass, 'getFactoryLabel');
+            $label           = $getFactoryLabel->invoke(null);
+            
+            $allUsedElements = $this->getUsedFormElementForTracker($tracker);
+            $visitor         = new Tracker_FormElement_Admin_Visitor($allUsedElements);
+            $formElement->accept($visitor);  
+            echo $visitor->displayAdminCreate($tracker_manager, $request, $type, $label);
         }
+    }
+    
+    /**
+     * @return EventManager 
+     */
+    protected function getEventManager() {
+        return EventManager::instance();
     }
     
     public function createFormElement($tracker, $type, $formElement_data) {

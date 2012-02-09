@@ -20,6 +20,9 @@
 require_once dirname(__FILE__) .'/../Tracker_FormElement.class.php';
 
 class Tracker_FormElement_Admin {
+    const SUBMIT_UPDATE = 'update-formElement';
+    const SUBMIT_CREATE = 'docreate-formElement';
+    
     /**
      * @var Tracker_FormElement
      */
@@ -44,7 +47,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchRanking();
         $html .= $this->fetchAdminSpecificProperties();
         $html .= $this->fetchAfterAdminEditForm();
-        $html .= $this->fetchAdminButton('update-formElement');
+        $html .= $this->fetchAdminButton(self::SUBMIT_UPDATE);
         $html .= $this->fetchAdminFormPermissionLink();
         return $html;
     }
@@ -59,7 +62,7 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchRanking();
         $html .= $this->fetchAdminSpecificProperties();
         $html .= $this->fetchAfterAdminEditForm();
-        $html .= $this->fetchAdminButton('update-formElement');
+        $html .= $this->fetchAdminButton(self::SUBMIT_UPDATE);
         $html .= $this->fetchAdminFormPermissionLink();
         return $html;
     }
@@ -72,10 +75,10 @@ class Tracker_FormElement_Admin {
         $html .= $this->fetchRanking();
         $html .= $this->fetchAdminSpecificProperties();
         $html .= $this->fetchAfterAdminCreateForm();
-        $html .= $this->fetchAdminButton('docreate-formElement');
+        $html .= $this->fetchAdminButton(self::SUBMIT_CREATE);
         return $html;
     }
-    
+     
     protected function fetchTypeNotModifiable() {
         $html = '';
         $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';

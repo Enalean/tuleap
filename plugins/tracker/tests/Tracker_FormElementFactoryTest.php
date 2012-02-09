@@ -37,12 +37,35 @@ Mock::generate('Tracker_FormElement_Field_Date');
 
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
+Mock::generate('TrackerManager');
 Mock::generate('User');
 
+require_once 'common/include/HTTPRequest.class.php';
+Mock::generate('HTTPRequest');
 
-class Tracker_FormElementFactoryTest extends UnitTestCase {
+require_once 'common/layout/Layout.class.php';
+Mock::generate('Layout');
 
+require_once 'common/event/EventManager.class.php';
+Mock::generate('EventManager');
+
+if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/coin');
+}
+
+class Tracker_FormElementFactoryTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $GLOBALS['HTML'] = new MockLayout();
+    }
     
+    public function tearDown() {
+        parent::tearDown();
+        unset($GLOBALS['HTML']);
+    }
+
+
     public function test_saveObject() {
         $user          = new MockUser();
         $tracker       = new MockTracker();
@@ -172,5 +195,23 @@ class Tracker_FormElementFactoryTest extends UnitTestCase {
         $this->assertEqual($label, 'titi_est_dans_la_brousse_avec_rominet');
     }
 
+    public function testDisplayCreateFormShouldDisplayAForm() {
+        $GLOBALS['Language']->setReturnValue('getText', 'Separator', array('plugin_tracker_formelement_admin','separator_label'));
+        $tracker_manager = new MockTrackerManager();
+        $user            = new MockUser();
+        $request         = new MockHTTPRequest();
+        $tracker         = new MockTracker();
+        $factory         = TestHelper::getPartialMock('Tracker_FormELementFactory', array('getUsedFormElementForTracker', 'getEventManager'));
+        
+        $factory->setReturnValue('getUsedFormElementForTracker', array());
+        $factory->setReturnValue('getEventManager', new MockEventManager());
+        
+        ob_start();
+        $factory->displayAdminCreateFormElement($tracker_manager, $request, $user, 'separator', $tracker);
+        $content = ob_get_contents();
+        ob_end_clean();
+        $this->assertPattern('%Create a new Separator%', $content);
+        $this->assertPattern('%</form>%', $content);
+    }
 }
 ?>

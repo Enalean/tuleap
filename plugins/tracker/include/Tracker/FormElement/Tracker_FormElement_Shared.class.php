@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,9 +19,14 @@
  */
 
 require_once 'Tracker_FormElement_Description.class.php';
+require_once 'Tracker_FormElement_Visitor.class.php';
 
 class Tracker_FormElement_Shared implements Tracker_FormElement_Description {
-
+    /**
+     * @var Tracker 
+     */
+    private $tracker;
+    
     /**
      * @return the label of the formElement (mainly used in admin part)
      */
@@ -58,31 +63,25 @@ class Tracker_FormElement_Shared implements Tracker_FormElement_Description {
     }
     
     /**
-     * Display the form to create a new formElement
-     * 
-     * @param TrackerManager  $tracker_manager The service
-     * @param Codendi_Request $request         The data coming from the user
-     * @param User            $current_user    The user who mades the request
-     * @param string          $type            The internal name of type of the field
-     * @param string          $factory_label   The label of the field (At factory 
-     *                                         level 'Selectbox, File, ...')
-     *
-     * @return void
+     * @return Tracker
      */
-    public function displayAdminCreate(TrackerManager $tracker_manager, $request, $current_user, $type, $factory_label) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $url   = TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
-        echo '<form action="'. $url .'" method="POST">';
-        
-        echo '<p>Field id:';
-        echo '<input type="text" name="formElement_data[field_id]" value="" />';
-        echo '</p>';
-        
-        echo '<input type="submit" name="docreate-formElement" value="Submit" />';
-        
-        echo '</form>';
+    public function getTracker() {
+        return $this->tracker;
     }
     
+    /**
+     * @param Tracker $tracker 
+     */
+    public function setTracker(Tracker $tracker) {
+        $this->tracker = $tracker;
+    }
+    
+    /**
+     * @param Tracker_FormElement_Visitor $visitor 
+     */
+    public function accept(Tracker_FormElement_Visitor $visitor) {
+        $visitor->visit($this);
+    }
     
     public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank) {
         $this->id            = $id;

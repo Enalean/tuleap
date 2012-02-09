@@ -391,7 +391,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                                     )
                             );
                         } else {
-                            Tracker_FormElementFactory::instance()->displayAdminCreateFormElement($tracker_manager, $request, $current_user, $type);
+                            Tracker_FormElementFactory::instance()->displayAdminCreateFormElement($tracker_manager, $request, $current_user, $type, $this);
                             exit;
                         }
                     }
