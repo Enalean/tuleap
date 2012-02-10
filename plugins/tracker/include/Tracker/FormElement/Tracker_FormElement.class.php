@@ -675,7 +675,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return string url to display in html (&amp; instead of &)
      */
     public function getAdminEditUrl() {
-        return TRACKER_BASE_URL.'/?tracker='. (int)$this->getTracker()->id .'&amp;func=admin-formElement-update&amp;formElement='. $this->id;
+        return TRACKER_BASE_URL.'/?tracker='. (int)$this->getTracker()->getId() .'&amp;func=admin-formElement-update&amp;formElement='. $this->id;
     }
     
     /**

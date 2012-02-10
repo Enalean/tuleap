@@ -611,7 +611,7 @@ plugin_tracker_include_type	info_gn_default_not_added	Notification globale par d
 plugin_tracker_include_type	info_gn_deleted	Notification globale supprimée
 plugin_tracker_include_type	error_uniq_name	Impossible de changer le nom du champ car il est utilisé ailleurs
 
-plugin_tracker_include_type	field_copied_from	Ce champ est partagé depuis l'outil de suivi $1 du projet $2
+plugin_tracker_include_type	field_copied_from	Ce champ est partagé depuis l'outil de suivi <a href="$3">$1</a> du projet $2
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class.php

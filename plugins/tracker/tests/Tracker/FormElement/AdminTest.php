@@ -24,22 +24,24 @@ require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/View/Admin
 Mock::generate('Tracker');
 Mock::generate('Project');
 Mock::generate('Layout');
+Mock::generate('Tracker_FormElement_Field_String');
 
 if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker/');
+    define('TRACKER_BASE_URL', '/plugins/tracker');
 }
 
 class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
+        $expected_url = TRACKER_BASE_URL .'/?tracker=101&amp;func=admin-formElement-update&amp;formElement=666';
         $GLOBALS['Language']->setReturnValue(
             'getText', 
-            'This field is shared from tracker Bugs from project Tuleap', 
+            'This field is shared from tracker <a href="'. $expected_url .'">Bugs from project Tuleap</a>', 
             array(
                 'plugin_tracker_include_type', 
                 'field_copied_from', 
-                array('Bugs', 'Tuleap')
+                array('Bugs', 'Tuleap', $expected_url)
             )
         );
     }
@@ -53,16 +55,22 @@ class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
         $result = $admin->fetchCustomHelpForShared();
         $this->assertPattern("%Bugs%", $result);
         $this->assertPattern("%Tuleap%", $result);
+        $this->assertPattern('%<a href="'. TRACKER_BASE_URL .'/\?tracker=101&amp;func=admin-formElement-update&amp;formElement=666"%', $result);
     }
 
     public function GivenAnAdminWithOriginalProjectAndTracker($projectName, $trackerName) {
-        $tracker = new MockTracker();
-        $tracker->setReturnValue('getName', $trackerName);
         $project = new MockProject();
         $project->setReturnValue('getPublicName', $projectName);
-        $element = new FakeFormElement(null, null, null, null, null, null, null, null, null, null, null, null);
-        $element->setOriginalTracker($tracker);
-        $element->setOriginalProject($project);
+        
+        $tracker = new MockTracker();
+        $tracker->setReturnValue('getName', $trackerName);
+        $tracker->setReturnValue('getId', 101);
+        $tracker->setReturnValue('getProject', $project);
+        
+        $original = new FakeFormElement(666, null, null, null, null, null, null, null, null, null, null, null);
+        $original->setTracker($tracker);
+        
+        $element = new FakeFormElement(null, null, null, null, null, null, null, null, null, null, null, $original);
         return new Tracker_FormElement_View_Admin($element, array());
     }
 }
@@ -75,23 +83,6 @@ class FakeFormElement extends Tracker_FormElement_Field_String {
 
     public static function getFactoryLabel() {
         
-    }
-    
-    public function getProperties() {
-        return array();
-    }
-    
-    public function setOriginalProject($project) {
-        $this->originalProject = $project;
-    }
-    public function getOriginalProject() {
-        return $this->originalProject;
-    }
-    public function setOriginalTracker($tracker) {
-        $this->originalTracker = $tracker;
-    }
-    public function getOriginalTracker() {
-        return $this->originalTracker;
     }
 }
 ?>
