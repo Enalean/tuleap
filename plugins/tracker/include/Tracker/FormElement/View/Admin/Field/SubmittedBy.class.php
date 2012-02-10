@@ -39,7 +39,7 @@ class Tracker_FormElement_View_Admin_Field_SubmittedBy extends Tracker_FormEleme
      *
      * @return string html
      */
-    protected function fetchAfterAdminCreateForm() {
+    public function fetchAfterAdminCreateForm() {
         // Don't display the values because this is a special field
         return '';
     }
@@ -48,7 +48,7 @@ class Tracker_FormElement_View_Admin_Field_SubmittedBy extends Tracker_FormEleme
      *
      * @return string html
      */
-    protected function fetchAfterAdminEditForm() {
+    public function fetchAfterAdminEditForm() {
         // Don't display the values because this is a special field
         return '';
     }

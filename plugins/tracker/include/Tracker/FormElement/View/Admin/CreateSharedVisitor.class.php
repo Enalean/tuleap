@@ -17,26 +17,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__) .'/../Field.class.php';
+require_once 'CreateVisitor.class.php';
 
-class Tracker_FormElement_View_Admin_Field_LastUpdateDate extends Tracker_FormElement_View_Admin_Field {
-  
-    public function fetchCustomHelp() {
+/**
+ * Can visit a FormElement and provides the corresponding administration element 
+ */
+class Tracker_FormElement_View_Admin_CreateSharedVisitor extends Tracker_FormElement_View_Admin_CreateVisitor {
+
+    protected function fetchForm() {
         $html = '';
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_help');
-        $html .= '</span>';
+        $html .= '<p>Field id:';
+        $html .=  '<input type="text" name="formElement_data[field_id]" value="" />';
+        $html .=  '</p>';
+        $html .= $this->adminElement->fetchAdminButton(self::SUBMIT_CREATE);
         return $html;
     }
-    
-    /**
-     * Fetch the "required" part of field admin
-     *
-     * @return string the HTML for the part of form for required checkbox
-     */
-    protected function fetchRequired() {
-        return '';
-    }
+
 }
 
 ?>

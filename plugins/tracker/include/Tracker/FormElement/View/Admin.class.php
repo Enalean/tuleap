@@ -36,7 +36,7 @@ class Tracker_FormElement_View_Admin {
         $this->allUsedElements = $allUsedElements;
     }
     
-    protected function fetchTypeNotModifiable() {
+    public function fetchTypeNotModifiable() {
         $html = '';
         $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
         $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
@@ -44,7 +44,7 @@ class Tracker_FormElement_View_Admin {
         return $html;
     }
     
-    protected function fetchTypeForUpdate() {
+    public function fetchTypeForUpdate() {
         $html = '';
         $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
         $html .= '<img width="16" height="16" alt="" src="'. $this->formElement->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->formElement->getFactoryLabel();
@@ -145,7 +145,7 @@ class Tracker_FormElement_View_Admin {
         return '';
     }
   
-    protected function fetchCustomHelpForShared() {
+    public function fetchCustomHelpForShared() {
         $originalTrackerName = $this->formElement->getOriginalTracker()->getName();
         $originalProjectName = $this->formElement->getOriginalProject()->getPublicName();
         $html = '';
@@ -155,7 +155,7 @@ class Tracker_FormElement_View_Admin {
         return $html;
     }
     
-    protected function fetchRanking() {
+    public function fetchRanking() {
         $html = '';
         $html .= '<p>';
         $html .= '<label for="formElement_rank">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'rank_screen').': <font color="red">*</font></label>';
@@ -177,7 +177,7 @@ class Tracker_FormElement_View_Admin {
         return $html;
     }
     
-        /**
+    /**
      * If the formElement has specific properties then this method 
      * should return the html needed to update those properties
      * 
@@ -191,7 +191,7 @@ class Tracker_FormElement_View_Admin {
      * 
      * @return string html
      */
-    protected function fetchAdminSpecificProperties() {
+    public function fetchAdminSpecificProperties() {
         $html = '';
         foreach ($this->formElement->getProperties() as $key => $property) {
             $html .= '<p>';
@@ -263,7 +263,7 @@ class Tracker_FormElement_View_Admin {
      *
      * @return string html
      */
-    protected function fetchAfterAdminEditForm() {
+    public function fetchAfterAdminEditForm() {
         return '';
     }
     
@@ -273,11 +273,11 @@ class Tracker_FormElement_View_Admin {
      *
      * @return string html
      */
-    protected function fetchAfterAdminCreateForm() {
+    public function fetchAfterAdminCreateForm() {
         return '';
     }
     
-    protected function fetchAdminButton($name) {
+    public function fetchAdminButton($name) {
         $html  = '';
         $html .= '<p>';
         $html .= '<input type="submit" name="'. $name .'" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
@@ -285,12 +285,12 @@ class Tracker_FormElement_View_Admin {
         return $html;
     }
     
-        /**
+    /**
      * fetch permission link on admin form
      *
      * @return string html
      */
-    protected function fetchAdminFormPermissionLink() {
+    public function fetchAdminFormPermissionLink() {
         $html = '';
         $html .= '<p>';
         $html .= '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(

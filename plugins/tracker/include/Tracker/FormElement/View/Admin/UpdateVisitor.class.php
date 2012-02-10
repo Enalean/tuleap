@@ -22,43 +22,16 @@ require_once 'Visitor.class.php';
 /**
  * Can visit a FormElement and provides the corresponding administration element 
  */
-class Tracker_FormElement_View_Admin_UpdateVisitor implements Tracker_FormElement_View_Admin_Visitor {
+class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_View_Admin_Visitor {
 
-    /**
-     * Return html corresponding to FormElement update
-     * 
-     * @return String
-     */
-    public function fetchForm() {
-        if ($this->element->isModifiable()) {
-            return $this->fetchAdminForUpdate();
-        } else {
-            return $this->fetchAdminForShared();
-        }
-    }
-    
-
-    public function fetchAdminForUpdate() {
+    protected function fetchForm() {
         $html = '';
+        
         $html .= $this->adminElement->fetchTypeForUpdate();
         $html .= $this->adminElement->fetchNameForUpdate();
         $html .= $this->adminElement->fetchLabelForUpdate();
         $html .= $this->adminElement->fetchDescriptionForUpdate();
-        $html .= $this->adminElement->fetchRanking();
-        $html .= $this->adminElement->fetchAdminSpecificProperties();
-        $html .= $this->adminElement->fetchAfterAdminEditForm();
-        $html .= $this->adminElement->fetchAdminButton(self::SUBMIT_UPDATE);
-        $html .= $this->adminElement->fetchAdminFormPermissionLink();
-        return $html;
-    }
-
-    public function fetchAdminForShared() {
-        $html = '';
-        $html .= $this->adminElement->fetchTypeNotModifiable();
-        $html .= $this->adminElement->fetchCustomHelpForShared();
-        $html .= $this->adminElement->fetchNameForShared();
-        $html .= $this->adminElement->fetchLabelForShared();
-        $html .= $this->adminElement->fetchDescriptionForShared();
+        
         $html .= $this->adminElement->fetchRanking();
         $html .= $this->adminElement->fetchAdminSpecificProperties();
         $html .= $this->adminElement->fetchAfterAdminEditForm();

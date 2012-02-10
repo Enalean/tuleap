@@ -29,14 +29,14 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
     /**
      * @var Tracker_FormElement_View_Admin
      */
-    private $adminElement = null;
+    protected $adminElement = null;
     
     /**
      * @var Tracker_FormElement 
      */
-    private $element = null;
+    protected $element = null;
     
-    private $allUsedElements = array();
+    protected $allUsedElements = array();
     
     /**
      * Constructor needs the list all used FormElements (to rank the element in the page)

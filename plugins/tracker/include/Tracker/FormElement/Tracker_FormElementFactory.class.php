@@ -19,7 +19,9 @@
  */
 
 require_once('dao/Tracker_FormElement_FieldDao.class.php');
+
 require_once('View/Admin/CreateVisitor.class.php');
+require_once('View/Admin/CreateSharedVisitor.class.php');
 
 require_once('Tracker_FormElement_Shared.class.php');
 require_once('Tracker_FormElement_Field_Integer.class.php');
@@ -874,8 +876,13 @@ class Tracker_FormElementFactory {
             $label           = $getFactoryLabel->invoke(null);
             
             $allUsedElements = $this->getUsedFormElementForTracker($tracker);
-            $visitor         = new Tracker_FormElement_View_Admin_CreateVisitor($allUsedElements);
-	    $visitor->setType($type);
+            if ($formElement instanceof Tracker_FormElement_Shared) {
+                $visitor = new Tracker_FormElement_View_Admin_CreateSharedVisitor($allUsedElements);
+            } else {
+                $visitor = new Tracker_FormElement_View_Admin_CreateVisitor($allUsedElements);
+            }
+            
+            $visitor->setType($type);
 	    $visitor->setLabel($label);
 
             $formElement->accept($visitor);  

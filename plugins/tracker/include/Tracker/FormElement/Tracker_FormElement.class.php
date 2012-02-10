@@ -24,6 +24,7 @@ require_once('Tracker_FormElementFactory.class.php');
 require_once(dirname(__FILE__).'/../TrackerManager.class.php');
 
 require_once 'View/Admin/UpdateVisitor.class.php';
+require_once 'View/Admin/UpdateSharedVisitor.class.php';
 
 require_once('json.php');
 

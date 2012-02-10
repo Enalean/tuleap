@@ -22,9 +22,11 @@ require_once 'Visitor.class.php';
 /**
  * Can visit a FormElement and provides the corresponding administration element 
  */
-class Tracker_FormElement_View_Admin_CreateVisitor implements Tracker_FormElement_View_Visitor {
+class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_View_Admin_Visitor {
+    private $type;
+    private $label;
     
-    public function fetchForm() {
+    protected function fetchForm() {
         $html = '';
         $html .= $this->adminElement->fetchTypeNotModifiable();
         $html .= $this->adminElement->fetchLabelForUpdate();
@@ -36,11 +38,11 @@ class Tracker_FormElement_View_Admin_CreateVisitor implements Tracker_FormElemen
         return $html;
     }
     
-    function setType() {
+    public function setType($type) {
       $this->type = $type;
     }
 
-    function setLabel() {
+    public function setLabel($label) {
       $this->label = $label;
     }
 

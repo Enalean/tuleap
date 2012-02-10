@@ -50,7 +50,7 @@ class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
     
     public function testForSharedFieldsItDisplaysOriginalTrackerAndProjectName() {
         $admin = $this->GivenAnAdminWithOriginalProjectAndTracker('Tuleap', 'Bugs');
-        $result = $admin->fetchAdminForShared();
+        $result = $admin->fetchCustomHelpForShared();
         $this->assertPattern("%Bugs%", $result);
         $this->assertPattern("%Tuleap%", $result);
     }

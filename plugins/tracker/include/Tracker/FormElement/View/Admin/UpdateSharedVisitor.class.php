@@ -22,20 +22,22 @@ require_once 'UpdateVisitor.class.php';
 /**
  * Can visit a FormElement and provides the corresponding administration element 
  */
-class Tracker_FormElement_View_Admin_UpdateSharedVisitor implements Tracker_FormElement_View_Admin_UpdateVisitor {
+class Tracker_FormElement_View_Admin_UpdateSharedVisitor extends Tracker_FormElement_View_Admin_UpdateVisitor {
 
     /**
      * Return html corresponding to FormElement update
      * 
      * @return String
      */
-    public function fetchForm() {
+    protected function fetchForm() {
         $html = '';
+        
         $html .= $this->adminElement->fetchTypeNotModifiable();
         $html .= $this->adminElement->fetchCustomHelpForShared();
         $html .= $this->adminElement->fetchNameForShared();
         $html .= $this->adminElement->fetchLabelForShared();
         $html .= $this->adminElement->fetchDescriptionForShared();
+        
         $html .= $this->adminElement->fetchRanking();
         $html .= $this->adminElement->fetchAdminSpecificProperties();
         $html .= $this->adminElement->fetchAfterAdminEditForm();
