@@ -1,6 +1,6 @@
--- MySQL dump 10.11
+-- MySQL dump 10.13  Distrib 5.1.49, for apple-darwin10.4.0 (i386)
 --
--- Host: localhost    Database: codendi
+-- Host: piton    Database: codendi
 -- ------------------------------------------------------
 -- Server version	5.0.77-log
 
@@ -16,12 +16,16 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Not dumping tablespaces as no INFORMATION_SCHEMA.FILES table on this server
+--
+
+--
 -- Table structure for table `activity_log`
 --
 
 DROP TABLE IF EXISTS `activity_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `activity_log` (
   `day` int(11) NOT NULL default '0',
   `hour` int(11) NOT NULL default '0',
@@ -36,7 +40,7 @@ CREATE TABLE `activity_log` (
   KEY `idx_activity_log_group` (`group_id`),
   KEY `type_idx` (`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `activity_log`
@@ -53,8 +57,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `activity_log_old`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `activity_log_old` (
   `day` int(11) NOT NULL default '0',
   `hour` int(11) NOT NULL default '0',
@@ -69,7 +73,7 @@ CREATE TABLE `activity_log_old` (
   KEY `idx_activity_log_group` (`group_id`),
   KEY `type_idx` (`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `activity_log_old`
@@ -86,8 +90,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `activity_log_old_old`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `activity_log_old_old` (
   `day` int(11) NOT NULL default '0',
   `hour` int(11) NOT NULL default '0',
@@ -102,7 +106,7 @@ CREATE TABLE `activity_log_old_old` (
   KEY `idx_activity_log_group` (`group_id`),
   KEY `type_idx` (`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `activity_log_old_old`
@@ -118,8 +122,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact` (
   `artifact_id` int(11) NOT NULL auto_increment,
   `group_artifact_id` int(11) NOT NULL,
@@ -137,7 +141,7 @@ CREATE TABLE `artifact` (
   KEY `idx_fk_status_id` (`status_id`),
   KEY `idx_fk_submitted_by` (`submitted_by`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact`
@@ -154,8 +158,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_canned_responses`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_canned_responses` (
   `artifact_canned_id` int(11) NOT NULL auto_increment,
   `group_artifact_id` int(11) NOT NULL default '0',
@@ -164,7 +168,7 @@ CREATE TABLE `artifact_canned_responses` (
   PRIMARY KEY  (`artifact_canned_id`),
   KEY `idx_artifact_canned_response_group_artifact_id` (`group_artifact_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_canned_responses`
@@ -180,8 +184,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_cc`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_cc` (
   `artifact_cc_id` int(11) NOT NULL auto_increment,
   `artifact_id` int(11) NOT NULL default '0',
@@ -192,7 +196,7 @@ CREATE TABLE `artifact_cc` (
   PRIMARY KEY  (`artifact_cc_id`),
   KEY `artifact_id_idx` (`artifact_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_cc`
@@ -208,8 +212,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_dependencies`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_dependencies` (
   `artifact_depend_id` int(11) NOT NULL auto_increment,
   `artifact_id` int(11) NOT NULL default '0',
@@ -218,7 +222,7 @@ CREATE TABLE `artifact_dependencies` (
   KEY `idx_artifact_dependencies_artifact_id` (`artifact_id`),
   KEY `idx_actifact_is_dependent_on_artifact_id` (`is_dependent_on_artifact_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_dependencies`
@@ -234,8 +238,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_field` (
   `field_id` int(11) NOT NULL auto_increment,
   `group_artifact_id` int(11) NOT NULL,
@@ -258,7 +262,7 @@ CREATE TABLE `artifact_field` (
   KEY `idx_fk_group_artifact_id` (`group_artifact_id`),
   KEY `idx_fname_grp` (`field_name`(20),`group_artifact_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_field`
@@ -275,8 +279,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_field_set`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_field_set` (
   `field_set_id` int(11) unsigned NOT NULL auto_increment,
   `group_artifact_id` int(11) unsigned NOT NULL default '0',
@@ -286,7 +290,7 @@ CREATE TABLE `artifact_field_set` (
   PRIMARY KEY  (`field_set_id`),
   KEY `idx_fk_group_artifact_id` (`group_artifact_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_field_set`
@@ -303,8 +307,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_field_usage`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_field_usage` (
   `field_id` int(11) NOT NULL default '0',
   `group_artifact_id` int(11) NOT NULL default '0',
@@ -312,7 +316,7 @@ CREATE TABLE `artifact_field_usage` (
   `place` int(11) default NULL,
   KEY `idx_fk` (`field_id`,`group_artifact_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_field_usage`
@@ -329,8 +333,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_field_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_field_value` (
   `field_id` int(11) NOT NULL,
   `artifact_id` int(11) NOT NULL,
@@ -341,7 +345,7 @@ CREATE TABLE `artifact_field_value` (
   KEY `idx_valueInt` (`artifact_id`,`field_id`,`valueInt`),
   KEY `xtrk_valueInt` (`valueInt`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_field_value`
@@ -358,8 +362,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_field_value_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_field_value_list` (
   `field_id` int(11) NOT NULL default '0',
   `group_artifact_id` int(11) NOT NULL default '0',
@@ -373,7 +377,7 @@ CREATE TABLE `artifact_field_value_list` (
   KEY `idx_fv_value_id` (`value_id`),
   KEY `idx_fv_status` (`status`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_field_value_list`
@@ -390,8 +394,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_file`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_file` (
   `id` int(11) NOT NULL auto_increment,
   `artifact_id` int(11) NOT NULL default '0',
@@ -405,7 +409,7 @@ CREATE TABLE `artifact_file` (
   PRIMARY KEY  (`id`),
   KEY `artifact_id` (`artifact_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 MAX_ROWS=1000000 AVG_ROW_LENGTH=1000000;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_file`
@@ -421,8 +425,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_global_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_global_notification` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `tracker_id` int(11) NOT NULL,
@@ -432,7 +436,7 @@ CREATE TABLE `artifact_global_notification` (
   PRIMARY KEY  (`id`),
   KEY `tracker_id` (`tracker_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_global_notification`
@@ -448,8 +452,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_group_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_group_list` (
   `group_artifact_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL,
@@ -466,7 +470,7 @@ CREATE TABLE `artifact_group_list` (
   PRIMARY KEY  (`group_artifact_id`),
   KEY `idx_fk_group_id` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=110 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_group_list`
@@ -483,8 +487,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_history` (
   `artifact_history_id` int(11) NOT NULL auto_increment,
   `artifact_id` int(11) NOT NULL default '0',
@@ -500,7 +504,7 @@ CREATE TABLE `artifact_history` (
   KEY `idx_artifact_history_artifact_id` (`artifact_id`),
   KEY `field_name` (`field_name`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_history`
@@ -516,8 +520,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_notification` (
   `user_id` int(11) NOT NULL default '0',
   `group_artifact_id` int(11) NOT NULL default '0',
@@ -527,7 +531,7 @@ CREATE TABLE `artifact_notification` (
   KEY `user_id_idx` (`user_id`),
   KEY `group_artifact_id_idx` (`group_artifact_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_notification`
@@ -543,8 +547,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_notification_event`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_notification_event` (
   `event_id` int(11) NOT NULL default '0',
   `group_artifact_id` int(11) NOT NULL default '0',
@@ -555,7 +559,7 @@ CREATE TABLE `artifact_notification_event` (
   KEY `event_id_idx` (`event_id`),
   KEY `group_artifact_id_idx` (`group_artifact_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_notification_event`
@@ -572,8 +576,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_notification_event_default`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_notification_event_default` (
   `event_id` int(11) NOT NULL default '0',
   `event_label` varchar(255) default NULL,
@@ -582,7 +586,7 @@ CREATE TABLE `artifact_notification_event_default` (
   `description_msg` varchar(255) default NULL,
   KEY `event_id_idx` (`event_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_notification_event_default`
@@ -599,8 +603,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_notification_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_notification_role` (
   `role_id` int(11) NOT NULL default '0',
   `group_artifact_id` int(11) NOT NULL default '0',
@@ -611,7 +615,7 @@ CREATE TABLE `artifact_notification_role` (
   KEY `role_id_idx` (`role_id`),
   KEY `group_artifact_id_idx` (`group_artifact_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_notification_role`
@@ -628,8 +632,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_notification_role_default`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_notification_role_default` (
   `role_id` int(11) NOT NULL default '0',
   `role_label` varchar(255) default NULL,
@@ -638,7 +642,7 @@ CREATE TABLE `artifact_notification_role_default` (
   `description_msg` varchar(255) default NULL,
   KEY `role_id_idx` (`role_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_notification_role_default`
@@ -655,8 +659,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_perm`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_perm` (
   `id` int(11) NOT NULL auto_increment,
   `group_artifact_id` int(11) NOT NULL,
@@ -665,7 +669,7 @@ CREATE TABLE `artifact_perm` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `unique_user` (`group_artifact_id`,`user_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_perm`
@@ -682,8 +686,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_report`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_report` (
   `report_id` int(11) NOT NULL auto_increment,
   `group_artifact_id` int(11) NOT NULL default '100',
@@ -697,7 +701,7 @@ CREATE TABLE `artifact_report` (
   KEY `user_id_idx` (`user_id`),
   KEY `scope_idx` (`scope`)
 ) ENGINE=MyISAM AUTO_INCREMENT=109 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_report`
@@ -714,8 +718,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_report_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_report_field` (
   `report_id` int(11) NOT NULL default '100',
   `field_name` varchar(255) default NULL,
@@ -727,7 +731,7 @@ CREATE TABLE `artifact_report_field` (
   KEY `profile_id_idx` (`report_id`),
   KEY `field_name_idx` (`field_name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_report_field`
@@ -744,8 +748,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_rule`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_rule` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `group_artifact_id` int(11) unsigned NOT NULL default '0',
@@ -757,7 +761,7 @@ CREATE TABLE `artifact_rule` (
   PRIMARY KEY  (`id`),
   KEY `group_artifact_id` (`group_artifact_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_rule`
@@ -773,8 +777,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `artifact_watcher`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `artifact_watcher` (
   `user_id` int(11) NOT NULL default '0',
   `watchee_id` int(11) NOT NULL default '0',
@@ -782,7 +786,7 @@ CREATE TABLE `artifact_watcher` (
   KEY `watchee_id_idx` (`watchee_id`,`artifact_group_id`),
   KEY `user_id_idx` (`user_id`,`artifact_group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `artifact_watcher`
@@ -798,8 +802,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug` (
   `bug_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -869,7 +873,7 @@ CREATE TABLE `bug` (
   PRIMARY KEY  (`bug_id`),
   KEY `idx_bug_group_id` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug`
@@ -886,8 +890,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_bug_dependencies`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_bug_dependencies` (
   `bug_depend_id` int(11) NOT NULL auto_increment,
   `bug_id` int(11) NOT NULL default '0',
@@ -896,7 +900,7 @@ CREATE TABLE `bug_bug_dependencies` (
   KEY `idx_bug_bug_dependencies_bug_id` (`bug_id`),
   KEY `idx_bug_bug_is_dependent_on_task_id` (`is_dependent_on_bug_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_bug_dependencies`
@@ -912,8 +916,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_canned_responses`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_canned_responses` (
   `bug_canned_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -922,7 +926,7 @@ CREATE TABLE `bug_canned_responses` (
   PRIMARY KEY  (`bug_canned_id`),
   KEY `idx_bug_canned_response_group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_canned_responses`
@@ -938,8 +942,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_cc`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_cc` (
   `bug_cc_id` int(11) NOT NULL auto_increment,
   `bug_id` int(11) NOT NULL default '0',
@@ -950,7 +954,7 @@ CREATE TABLE `bug_cc` (
   PRIMARY KEY  (`bug_cc_id`),
   KEY `bug_id_idx` (`bug_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_cc`
@@ -966,8 +970,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_field` (
   `bug_field_id` int(11) NOT NULL auto_increment,
   `field_name` varchar(255) NOT NULL default '',
@@ -985,7 +989,7 @@ CREATE TABLE `bug_field` (
   PRIMARY KEY  (`bug_field_id`),
   KEY `idx_bug_field_name` (`field_name`)
 ) ENGINE=MyISAM AUTO_INCREMENT=605 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_field`
@@ -1002,8 +1006,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_field_usage`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_field_usage` (
   `bug_field_id` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
@@ -1020,7 +1024,7 @@ CREATE TABLE `bug_field_usage` (
   KEY `idx_bug_fu_field_id` (`bug_field_id`),
   KEY `idx_bug_fu_group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_field_usage`
@@ -1037,8 +1041,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_field_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_field_value` (
   `bug_fv_id` int(11) NOT NULL auto_increment,
   `bug_field_id` int(11) NOT NULL default '0',
@@ -1054,7 +1058,7 @@ CREATE TABLE `bug_field_value` (
   KEY `idx_bug_fv_value_id` (`value_id`),
   KEY `idx_bug_fv_status` (`status`)
 ) ENGINE=MyISAM AUTO_INCREMENT=410 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_field_value`
@@ -1071,8 +1075,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_file`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_file` (
   `bug_file_id` int(11) NOT NULL auto_increment,
   `bug_id` int(11) NOT NULL default '0',
@@ -1086,7 +1090,7 @@ CREATE TABLE `bug_file` (
   PRIMARY KEY  (`bug_file_id`),
   KEY `bug_id_idx` (`bug_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_file`
@@ -1102,8 +1106,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_filter`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_filter` (
   `filter_id` int(11) NOT NULL auto_increment,
   `user_id` int(11) NOT NULL default '0',
@@ -1112,7 +1116,7 @@ CREATE TABLE `bug_filter` (
   `is_active` int(11) NOT NULL default '0',
   PRIMARY KEY  (`filter_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_filter`
@@ -1128,8 +1132,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_history` (
   `bug_history_id` int(11) NOT NULL auto_increment,
   `bug_id` int(11) NOT NULL default '0',
@@ -1141,7 +1145,7 @@ CREATE TABLE `bug_history` (
   PRIMARY KEY  (`bug_history_id`),
   KEY `idx_bug_history_bug_id` (`bug_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_history`
@@ -1157,8 +1161,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_notification` (
   `user_id` int(11) NOT NULL default '0',
   `role_id` int(11) NOT NULL default '0',
@@ -1166,7 +1170,7 @@ CREATE TABLE `bug_notification` (
   `notify` int(11) NOT NULL default '1',
   KEY `user_id_idx` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_notification`
@@ -1182,8 +1186,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_notification_event`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_notification_event` (
   `event_id` int(11) NOT NULL default '0',
   `event_label` varchar(255) default NULL,
@@ -1192,7 +1196,7 @@ CREATE TABLE `bug_notification_event` (
   `rank` int(11) NOT NULL default '0',
   KEY `event_id_idx` (`event_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_notification_event`
@@ -1209,8 +1213,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_notification_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_notification_role` (
   `role_id` int(11) NOT NULL default '0',
   `role_label` varchar(255) default NULL,
@@ -1219,7 +1223,7 @@ CREATE TABLE `bug_notification_role` (
   `rank` int(11) NOT NULL default '0',
   KEY `role_id_idx` (`role_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_notification_role`
@@ -1236,8 +1240,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_report`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_report` (
   `report_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '100',
@@ -1250,7 +1254,7 @@ CREATE TABLE `bug_report` (
   KEY `user_id_idx` (`user_id`),
   KEY `scope_idx` (`scope`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_report`
@@ -1267,8 +1271,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_report_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_report_field` (
   `report_id` int(11) NOT NULL default '100',
   `field_name` varchar(255) default NULL,
@@ -1279,7 +1283,7 @@ CREATE TABLE `bug_report_field` (
   `col_width` int(11) default NULL,
   KEY `profile_id_idx` (`report_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_report_field`
@@ -1296,8 +1300,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_task_dependencies`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_task_dependencies` (
   `bug_depend_id` int(11) NOT NULL auto_increment,
   `bug_id` int(11) NOT NULL default '0',
@@ -1306,7 +1310,7 @@ CREATE TABLE `bug_task_dependencies` (
   KEY `idx_bug_task_dependencies_bug_id` (`bug_id`),
   KEY `idx_bug_task_is_dependent_on_task_id` (`is_dependent_on_task_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_task_dependencies`
@@ -1322,15 +1326,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `bug_watcher`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bug_watcher` (
   `user_id` int(11) NOT NULL default '0',
   `watchee_id` int(11) NOT NULL default '0',
   KEY `user_id_idx` (`user_id`),
   KEY `watchee_id_idx` (`watchee_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `bug_watcher`
@@ -1346,8 +1350,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cross_references`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cross_references` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `created_at` int(11) NOT NULL default '0',
@@ -1362,7 +1366,7 @@ CREATE TABLE `cross_references` (
   `target_gid` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cross_references`
@@ -1378,15 +1382,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cvs_branches`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cvs_branches` (
   `id` mediumint(9) NOT NULL auto_increment,
   `branch` varchar(64) character set utf8 collate utf8_bin NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `branch` (`branch`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cvs_branches`
@@ -1402,8 +1406,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cvs_checkins`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cvs_checkins` (
   `type` enum('Change','Add','Remove') default NULL,
   `ci_when` datetime NOT NULL default '0000-00-00 00:00:00',
@@ -1426,7 +1430,7 @@ CREATE TABLE `cvs_checkins` (
   KEY `branchid` (`branchid`),
   KEY `commitid` (`commitid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cvs_checkins`
@@ -1442,8 +1446,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cvs_commits`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cvs_commits` (
   `id` mediumint(9) NOT NULL auto_increment,
   `comm_when` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
@@ -1451,7 +1455,7 @@ CREATE TABLE `cvs_commits` (
   PRIMARY KEY  (`id`),
   KEY `whoid` (`whoid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cvs_commits`
@@ -1467,8 +1471,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cvs_descs`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cvs_descs` (
   `id` mediumint(9) NOT NULL auto_increment,
   `description` text,
@@ -1476,7 +1480,7 @@ CREATE TABLE `cvs_descs` (
   PRIMARY KEY  (`id`),
   KEY `hash` (`hash`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cvs_descs`
@@ -1492,15 +1496,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cvs_dirs`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cvs_dirs` (
   `id` mediumint(9) NOT NULL auto_increment,
   `dir` varchar(128) character set utf8 collate utf8_bin NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `dir` (`dir`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cvs_dirs`
@@ -1516,15 +1520,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cvs_files`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cvs_files` (
   `id` mediumint(9) NOT NULL auto_increment,
   `file` varchar(128) character set utf8 collate utf8_bin NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `file` (`file`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cvs_files`
@@ -1540,15 +1544,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cvs_repositories`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cvs_repositories` (
   `id` mediumint(9) NOT NULL auto_increment,
   `repository` varchar(64) character set utf8 collate utf8_bin NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `repository` (`repository`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cvs_repositories`
@@ -1564,8 +1568,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `cvs_tags`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cvs_tags` (
   `repositoryid` mediumint(9) NOT NULL default '0',
   `branchid` mediumint(9) NOT NULL default '0',
@@ -1577,7 +1581,7 @@ CREATE TABLE `cvs_tags` (
   KEY `fileid` (`fileid`),
   KEY `branchid` (`branchid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cvs_tags`
@@ -1593,8 +1597,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `db_images`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `db_images` (
   `id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -1608,7 +1612,7 @@ CREATE TABLE `db_images` (
   PRIMARY KEY  (`id`),
   KEY `idx_db_images_group` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `db_images`
@@ -1624,8 +1628,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `doc_data`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `doc_data` (
   `docid` int(11) NOT NULL auto_increment,
   `title` varchar(255) NOT NULL default '',
@@ -1642,7 +1646,7 @@ CREATE TABLE `doc_data` (
   PRIMARY KEY  (`docid`),
   KEY `idx_doc_group_doc_group` (`doc_group`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `doc_data`
@@ -1658,8 +1662,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `doc_groups`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `doc_groups` (
   `doc_group` int(12) NOT NULL auto_increment,
   `groupname` varchar(255) NOT NULL default '',
@@ -1668,7 +1672,7 @@ CREATE TABLE `doc_groups` (
   PRIMARY KEY  (`doc_group`),
   KEY `idx_doc_groups_group` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `doc_groups`
@@ -1685,8 +1689,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `doc_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `doc_log` (
   `user_id` int(11) NOT NULL default '0',
   `docid` int(11) NOT NULL default '0',
@@ -1695,7 +1699,7 @@ CREATE TABLE `doc_log` (
   KEY `time_idx` (`time`),
   KEY `docid_idx` (`docid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `doc_log`
@@ -1711,15 +1715,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `feedback`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `feedback` (
   `session_hash` char(32) NOT NULL,
   `feedback` text NOT NULL,
   `created_at` datetime NOT NULL,
   PRIMARY KEY  (`session_hash`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `feedback`
@@ -1735,8 +1739,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `filedownload_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `filedownload_log` (
   `user_id` int(11) NOT NULL default '0',
   `filerelease_id` int(11) NOT NULL default '0',
@@ -1745,7 +1749,7 @@ CREATE TABLE `filedownload_log` (
   KEY `time_idx` (`time`),
   KEY `filerelease_id_idx` (`filerelease_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `filedownload_log`
@@ -1761,8 +1765,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `filemodule`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `filemodule` (
   `filemodule_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -1771,7 +1775,7 @@ CREATE TABLE `filemodule` (
   PRIMARY KEY  (`filemodule_id`),
   KEY `idx_filemodule_group_id` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `filemodule`
@@ -1788,14 +1792,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `filemodule_monitor`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `filemodule_monitor` (
   `filemodule_id` int(11) NOT NULL default '0',
   `user_id` int(11) NOT NULL default '0',
   KEY `idx_filemodule_monitor_id` (`filemodule_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `filemodule_monitor`
@@ -1811,8 +1815,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `filerelease`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `filerelease` (
   `filerelease_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -1840,7 +1844,7 @@ CREATE TABLE `filerelease` (
   KEY `post_time_idx` (`post_time`),
   KEY `idx_release_time` (`release_time`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `filerelease`
@@ -1856,8 +1860,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `forge_upgrade_bucket`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `forge_upgrade_bucket` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `script` varchar(255) NOT NULL default '',
@@ -1866,7 +1870,7 @@ CREATE TABLE `forge_upgrade_bucket` (
   `status` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `forge_upgrade_bucket`
@@ -1883,8 +1887,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `forge_upgrade_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `forge_upgrade_log` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `bucket_id` int(11) unsigned default NULL,
@@ -1899,7 +1903,7 @@ CREATE TABLE `forge_upgrade_log` (
   KEY `bucket_id` (`bucket_id`),
   CONSTRAINT `forge_upgrade_log_ibfk_1` FOREIGN KEY (`bucket_id`) REFERENCES `forge_upgrade_bucket` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `forge_upgrade_log`
@@ -1916,8 +1920,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `forum`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `forum` (
   `msg_id` int(11) NOT NULL auto_increment,
   `group_forum_id` int(11) NOT NULL default '0',
@@ -1936,7 +1940,7 @@ CREATE TABLE `forum` (
   KEY `idx_forum_id_date_followup` (`group_forum_id`,`date`,`is_followup_to`),
   KEY `idx_forum_thread_date_followup` (`thread_id`,`date`,`is_followup_to`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `forum`
@@ -1953,14 +1957,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `forum_agg_msg_count`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `forum_agg_msg_count` (
   `group_forum_id` int(11) NOT NULL,
   `count` int(11) NOT NULL,
   PRIMARY KEY  (`group_forum_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `forum_agg_msg_count`
@@ -1977,8 +1981,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `forum_group_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `forum_group_list` (
   `group_forum_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -1989,7 +1993,7 @@ CREATE TABLE `forum_group_list` (
   KEY `idx_forum_group_list_group_id` (`group_id`),
   FULLTEXT KEY `description` (`description`)
 ) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `forum_group_list`
@@ -2006,8 +2010,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `forum_monitored_forums`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `forum_monitored_forums` (
   `monitor_id` int(11) NOT NULL auto_increment,
   `forum_id` int(11) NOT NULL default '0',
@@ -2016,7 +2020,7 @@ CREATE TABLE `forum_monitored_forums` (
   KEY `idx_forum_monitor_thread_id` (`forum_id`),
   KEY `idx_forum_monitor_combo_id` (`forum_id`,`user_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `forum_monitored_forums`
@@ -2033,8 +2037,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `forum_monitored_threads`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `forum_monitored_threads` (
   `thread_monitor_id` int(11) NOT NULL auto_increment,
   `forum_id` int(11) NOT NULL default '0',
@@ -2042,7 +2046,7 @@ CREATE TABLE `forum_monitored_threads` (
   `user_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`thread_monitor_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `forum_monitored_threads`
@@ -2058,8 +2062,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `forum_saved_place`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `forum_saved_place` (
   `saved_place_id` int(11) NOT NULL auto_increment,
   `user_id` int(11) NOT NULL default '0',
@@ -2067,7 +2071,7 @@ CREATE TABLE `forum_saved_place` (
   `save_date` int(11) NOT NULL default '0',
   PRIMARY KEY  (`saved_place_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `forum_saved_place`
@@ -2083,13 +2087,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `forum_thread_id`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `forum_thread_id` (
   `thread_id` int(11) NOT NULL auto_increment,
   PRIMARY KEY  (`thread_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `forum_thread_id`
@@ -2106,8 +2110,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_dlstats_agg`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_dlstats_agg` (
   `file_id` int(11) NOT NULL default '0',
   `day` int(11) NOT NULL default '0',
@@ -2118,7 +2122,7 @@ CREATE TABLE `frs_dlstats_agg` (
   KEY `downloads_http_idx` (`downloads_http`),
   KEY `downloads_ftp_idx` (`downloads_ftp`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_dlstats_agg`
@@ -2134,8 +2138,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_dlstats_file_agg`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_dlstats_file_agg` (
   `file_id` int(11) NOT NULL default '0',
   `day` int(11) NOT NULL default '0',
@@ -2144,7 +2148,7 @@ CREATE TABLE `frs_dlstats_file_agg` (
   KEY `idx_dlstats_file_day` (`day`),
   KEY `idx_dlstats_file_down` (`downloads`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_dlstats_file_agg`
@@ -2161,14 +2165,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_dlstats_filetotal_agg`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_dlstats_filetotal_agg` (
   `file_id` int(11) NOT NULL default '0',
   `downloads` int(11) NOT NULL default '0',
   KEY `idx_stats_agr_tmp_fid` (`file_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_dlstats_filetotal_agg`
@@ -2184,8 +2188,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_dlstats_group_agg`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_dlstats_group_agg` (
   `group_id` int(11) NOT NULL default '0',
   `day` int(11) NOT NULL default '0',
@@ -2194,7 +2198,7 @@ CREATE TABLE `frs_dlstats_group_agg` (
   KEY `day_idx` (`day`),
   KEY `downloads_idx` (`downloads`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_dlstats_group_agg`
@@ -2210,14 +2214,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_dlstats_grouptotal_agg`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_dlstats_grouptotal_agg` (
   `group_id` int(11) NOT NULL default '0',
   `downloads` int(11) NOT NULL default '0',
   KEY `idx_stats_agr_tmp_gid` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_dlstats_grouptotal_agg`
@@ -2234,8 +2238,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_file`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_file` (
   `file_id` int(11) NOT NULL auto_increment,
   `filename` text,
@@ -2257,7 +2261,7 @@ CREATE TABLE `frs_file` (
   KEY `idx_frs_file_processor` (`processor_id`),
   KEY `idx_frs_file_name` (`filename`(45))
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_file`
@@ -2273,8 +2277,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_file_deleted`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_file_deleted` (
   `file_id` int(11) NOT NULL,
   `filename` text,
@@ -2295,7 +2299,7 @@ CREATE TABLE `frs_file_deleted` (
   KEY `idx_delete_date` (`delete_date`),
   KEY `idx_purge_date` (`purge_date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_file_deleted`
@@ -2311,14 +2315,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_filetype`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_filetype` (
   `type_id` int(11) NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`type_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_filetype`
@@ -2335,8 +2339,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_log` (
   `log_id` int(11) NOT NULL auto_increment,
   `time` int(11) NOT NULL default '0',
@@ -2347,7 +2351,7 @@ CREATE TABLE `frs_log` (
   PRIMARY KEY  (`log_id`),
   KEY `idx_frs_log_group_item` (`group_id`,`item_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_log`
@@ -2363,8 +2367,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_package`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_package` (
   `package_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -2375,7 +2379,7 @@ CREATE TABLE `frs_package` (
   PRIMARY KEY  (`package_id`),
   KEY `idx_package_group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_package`
@@ -2391,8 +2395,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_processor`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_processor` (
   `processor_id` int(11) NOT NULL auto_increment,
   `name` text,
@@ -2400,7 +2404,7 @@ CREATE TABLE `frs_processor` (
   `group_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`processor_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_processor`
@@ -2417,8 +2421,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `frs_release`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `frs_release` (
   `release_id` int(11) NOT NULL auto_increment,
   `package_id` int(11) NOT NULL default '0',
@@ -2434,7 +2438,7 @@ CREATE TABLE `frs_release` (
   KEY `idx_frs_release_date` (`release_date`),
   KEY `idx_frs_release_package` (`package_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `frs_release`
@@ -2450,8 +2454,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_cvs_full_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_cvs_full_history` (
   `group_id` int(11) NOT NULL default '0',
   `user_id` int(11) NOT NULL default '0',
@@ -2464,7 +2468,7 @@ CREATE TABLE `group_cvs_full_history` (
   KEY `user_id_idx` (`user_id`),
   KEY `day_idx` (`day`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `group_cvs_full_history`
@@ -2480,8 +2484,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_cvs_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_cvs_history` (
   `group_id` int(11) NOT NULL default '0',
   `user_name` varchar(80) NOT NULL default '',
@@ -2492,7 +2496,7 @@ CREATE TABLE `group_cvs_history` (
   KEY `group_id_idx` (`group_id`),
   KEY `user_name_idx` (`user_name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `group_cvs_history`
@@ -2508,8 +2512,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_desc`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_desc` (
   `group_desc_id` int(11) NOT NULL auto_increment,
   `desc_required` tinyint(1) NOT NULL default '0',
@@ -2520,7 +2524,7 @@ CREATE TABLE `group_desc` (
   PRIMARY KEY  (`group_desc_id`),
   UNIQUE KEY `desc_name` (`desc_name`)
 ) ENGINE=MyISAM AUTO_INCREMENT=105 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `group_desc`
@@ -2537,8 +2541,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_desc_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_desc_value` (
   `desc_value_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL,
@@ -2546,7 +2550,7 @@ CREATE TABLE `group_desc_value` (
   `value` text NOT NULL,
   PRIMARY KEY  (`desc_value_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `group_desc_value`
@@ -2563,8 +2567,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_history` (
   `group_history_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -2575,7 +2579,7 @@ CREATE TABLE `group_history` (
   PRIMARY KEY  (`group_history_id`),
   KEY `idx_group_history_group_id` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `group_history`
@@ -2592,8 +2596,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_svn_full_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_svn_full_history` (
   `group_id` int(11) NOT NULL default '0',
   `user_id` int(11) NOT NULL default '0',
@@ -2609,7 +2613,7 @@ CREATE TABLE `group_svn_full_history` (
   KEY `user_id_idx` (`user_id`),
   KEY `day_idx` (`day`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `group_svn_full_history`
@@ -2625,14 +2629,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `group_type`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `group_type` (
   `type_id` int(11) NOT NULL,
   `name` text NOT NULL,
   PRIMARY KEY  (`type_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `group_type`
@@ -2649,8 +2653,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `groups`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `groups` (
   `group_id` int(11) NOT NULL auto_increment,
   `group_name` varchar(255) default NULL,
@@ -2700,7 +2704,7 @@ CREATE TABLE `groups` (
   KEY `idx_groups_unix` (`unix_group_name`),
   KEY `idx_groups_type` (`type`)
 ) ENGINE=MyISAM AUTO_INCREMENT=103 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `groups`
@@ -2717,14 +2721,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `groups_notif_delegation`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `groups_notif_delegation` (
   `group_id` int(11) NOT NULL default '0',
   `ugroup_id` int(11) NOT NULL,
   PRIMARY KEY  (`group_id`,`ugroup_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `groups_notif_delegation`
@@ -2740,14 +2744,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `groups_notif_delegation_message`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `groups_notif_delegation_message` (
   `group_id` int(11) NOT NULL default '0',
   `msg_to_requester` text NOT NULL,
   PRIMARY KEY  (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `groups_notif_delegation_message`
@@ -2764,8 +2768,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `image`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `image` (
   `image_id` int(11) NOT NULL auto_increment,
   `image_category` int(11) NOT NULL default '1',
@@ -2780,7 +2784,7 @@ CREATE TABLE `image` (
   KEY `image_type_idx` (`image_type`),
   KEY `group_id_idx` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `image`
@@ -2796,8 +2800,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `layouts`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `layouts` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `name` varchar(255) NOT NULL default '',
@@ -2805,7 +2809,7 @@ CREATE TABLE `layouts` (
   `scope` char(1) NOT NULL default 'S',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `layouts`
@@ -2822,8 +2826,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `layouts_contents`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `layouts_contents` (
   `owner_id` int(11) unsigned NOT NULL default '0',
   `owner_type` varchar(1) NOT NULL default 'u',
@@ -2837,7 +2841,7 @@ CREATE TABLE `layouts_contents` (
   `content_id` int(11) unsigned NOT NULL default '0',
   KEY `user_id` (`owner_id`,`owner_type`,`layout_id`,`name`,`content_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `layouts_contents`
@@ -2854,8 +2858,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `layouts_rows`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `layouts_rows` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `layout_id` int(11) unsigned NOT NULL default '0',
@@ -2863,7 +2867,7 @@ CREATE TABLE `layouts_rows` (
   PRIMARY KEY  (`id`),
   KEY `layout_id` (`layout_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `layouts_rows`
@@ -2880,8 +2884,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `layouts_rows_columns`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `layouts_rows_columns` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `layout_row_id` int(11) unsigned NOT NULL default '0',
@@ -2889,7 +2893,7 @@ CREATE TABLE `layouts_rows_columns` (
   PRIMARY KEY  (`id`),
   KEY `layout_row_id` (`layout_row_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `layouts_rows_columns`
@@ -2906,8 +2910,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `mail_group_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `mail_group_list` (
   `group_list_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -2920,7 +2924,7 @@ CREATE TABLE `mail_group_list` (
   PRIMARY KEY  (`group_list_id`),
   KEY `idx_mail_group_list_group` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `mail_group_list`
@@ -2937,8 +2941,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `news_bytes`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `news_bytes` (
   `id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -2953,7 +2957,7 @@ CREATE TABLE `news_bytes` (
   KEY `idx_news_bytes_group` (`group_id`),
   KEY `idx_news_bytes_approved` (`is_approved`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `news_bytes`
@@ -2969,15 +2973,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `notifications`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `notifications` (
   `user_id` int(11) NOT NULL default '0',
   `object_id` int(11) NOT NULL default '0',
   `type` varchar(100) NOT NULL default '',
   PRIMARY KEY  (`user_id`,`object_id`,`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `notifications`
@@ -2993,8 +2997,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `owner_layouts`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `owner_layouts` (
   `owner_id` int(11) unsigned NOT NULL default '0',
   `owner_type` varchar(1) NOT NULL default 'u',
@@ -3002,7 +3006,7 @@ CREATE TABLE `owner_layouts` (
   `is_default` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`owner_id`,`owner_type`,`layout_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `owner_layouts`
@@ -3019,8 +3023,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `patch`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `patch` (
   `patch_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -3038,7 +3042,7 @@ CREATE TABLE `patch` (
   PRIMARY KEY  (`patch_id`),
   KEY `idx_patch_group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `patch`
@@ -3054,8 +3058,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `patch_category`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `patch_category` (
   `patch_category_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -3063,7 +3067,7 @@ CREATE TABLE `patch_category` (
   PRIMARY KEY  (`patch_category_id`),
   KEY `idx_patch_group_group_id` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `patch_category`
@@ -3080,8 +3084,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `patch_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `patch_history` (
   `patch_history_id` int(11) NOT NULL auto_increment,
   `patch_id` int(11) NOT NULL default '0',
@@ -3092,7 +3096,7 @@ CREATE TABLE `patch_history` (
   PRIMARY KEY  (`patch_history_id`),
   KEY `idx_patch_history_patch_id` (`patch_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `patch_history`
@@ -3108,14 +3112,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `patch_status`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `patch_status` (
   `patch_status_id` int(11) NOT NULL auto_increment,
   `status_name` text,
   PRIMARY KEY  (`patch_status_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `patch_status`
@@ -3132,14 +3136,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `people_skill`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `people_skill` (
   `skill_id` int(11) NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`skill_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `people_skill`
@@ -3156,8 +3160,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `people_skill_inventory`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `people_skill_inventory` (
   `skill_inventory_id` int(11) NOT NULL auto_increment,
   `user_id` int(11) NOT NULL default '0',
@@ -3166,7 +3170,7 @@ CREATE TABLE `people_skill_inventory` (
   `skill_year_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`skill_inventory_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `people_skill_inventory`
@@ -3182,14 +3186,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `people_skill_level`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `people_skill_level` (
   `skill_level_id` int(11) NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`skill_level_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `people_skill_level`
@@ -3206,14 +3210,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `people_skill_year`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `people_skill_year` (
   `skill_year_id` int(11) NOT NULL auto_increment,
   `name` text,
   PRIMARY KEY  (`skill_year_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `people_skill_year`
@@ -3230,15 +3234,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `permissions`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permissions` (
   `permission_type` varchar(255) NOT NULL,
   `object_id` varchar(255) NOT NULL,
   `ugroup_id` int(11) NOT NULL,
   KEY `object_id` (`object_id`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `permissions`
@@ -3255,14 +3259,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `permissions_values`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `permissions_values` (
   `permission_type` text NOT NULL,
   `ugroup_id` int(11) NOT NULL,
   `is_default` int(11) NOT NULL default '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `permissions_values`
@@ -3279,8 +3283,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(100) NOT NULL,
@@ -3289,7 +3293,7 @@ CREATE TABLE `plugin` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin`
@@ -3306,8 +3310,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_approval`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_approval` (
   `table_id` int(11) unsigned NOT NULL auto_increment,
   `item_id` int(11) unsigned default NULL,
@@ -3323,7 +3327,7 @@ CREATE TABLE `plugin_docman_approval` (
   UNIQUE KEY `version_id` (`version_id`),
   UNIQUE KEY `item_id` (`item_id`,`wiki_version_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_approval`
@@ -3339,8 +3343,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_approval_user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_approval_user` (
   `table_id` int(11) unsigned NOT NULL,
   `reviewer_id` int(11) unsigned NOT NULL,
@@ -3353,7 +3357,7 @@ CREATE TABLE `plugin_docman_approval_user` (
   KEY `rank` (`rank`),
   KEY `idx_reviewer` (`reviewer_id`,`table_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_approval_user`
@@ -3369,8 +3373,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_item`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_item` (
   `item_id` int(11) unsigned NOT NULL auto_increment,
   `parent_id` int(11) unsigned default NULL,
@@ -3397,7 +3401,7 @@ CREATE TABLE `plugin_docman_item` (
   FULLTEXT KEY `fltxt_description` (`description`),
   FULLTEXT KEY `fltxt` (`title`,`description`)
 ) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_item`
@@ -3414,8 +3418,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_item_deleted`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_item_deleted` (
   `item_id` int(11) unsigned NOT NULL,
   `parent_id` int(11) unsigned default NULL,
@@ -3436,7 +3440,7 @@ CREATE TABLE `plugin_docman_item_deleted` (
   `file_is_embedded` int(11) unsigned default NULL,
   PRIMARY KEY  (`item_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_item_deleted`
@@ -3452,15 +3456,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_item_lock`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_item_lock` (
   `item_id` int(11) unsigned NOT NULL default '0',
   `user_id` int(11) NOT NULL default '0',
   `lock_date` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`item_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_item_lock`
@@ -3476,8 +3480,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_log` (
   `time` int(11) unsigned NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
@@ -3491,7 +3495,7 @@ CREATE TABLE `plugin_docman_log` (
   KEY `item_id` (`item_id`),
   KEY `group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_log`
@@ -3508,8 +3512,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_metadata`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_metadata` (
   `field_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL,
@@ -3527,7 +3531,7 @@ CREATE TABLE `plugin_docman_metadata` (
   KEY `idx_name` (`name`(10)),
   KEY `idx_group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_metadata`
@@ -3543,8 +3547,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_metadata_love`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_metadata_love` (
   `value_id` int(11) NOT NULL auto_increment,
   `name` text NOT NULL,
@@ -3556,7 +3560,7 @@ CREATE TABLE `plugin_docman_metadata_love` (
   KEY `name` (`name`(10)),
   KEY `idx_fv_status` (`status`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_metadata_love`
@@ -3573,14 +3577,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_metadata_love_md`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_metadata_love_md` (
   `field_id` int(11) NOT NULL default '0',
   `value_id` int(11) NOT NULL default '0',
   PRIMARY KEY  (`field_id`,`value_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_metadata_love_md`
@@ -3596,8 +3600,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_metadata_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_metadata_value` (
   `field_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
@@ -3610,7 +3614,7 @@ CREATE TABLE `plugin_docman_metadata_value` (
   FULLTEXT KEY `fltxt_txt` (`valueText`),
   FULLTEXT KEY `fltxt_str` (`valueString`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_metadata_value`
@@ -3626,8 +3630,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_project_settings`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_project_settings` (
   `group_id` int(11) NOT NULL default '0',
   `view` varchar(255) default NULL,
@@ -3635,7 +3639,7 @@ CREATE TABLE `plugin_docman_project_settings` (
   `use_status` tinyint(4) NOT NULL default '0',
   KEY `group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_project_settings`
@@ -3652,8 +3656,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_report`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_report` (
   `report_id` int(11) NOT NULL auto_increment,
   `name` varchar(255) default NULL,
@@ -3670,7 +3674,7 @@ CREATE TABLE `plugin_docman_report` (
   KEY `group_idx` (`group_id`),
   KEY `user_idx` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_report`
@@ -3686,8 +3690,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_report_filter`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_report_filter` (
   `report_id` int(11) NOT NULL,
   `label` varchar(255) NOT NULL,
@@ -3698,7 +3702,7 @@ CREATE TABLE `plugin_docman_report_filter` (
   `value_date_op` tinyint(2) default NULL,
   KEY `report_label_idx` (`report_id`,`label`(10))
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_report_filter`
@@ -3714,8 +3718,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_tokens`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_tokens` (
   `user_id` int(11) NOT NULL,
   `token` char(32) NOT NULL,
@@ -3723,7 +3727,7 @@ CREATE TABLE `plugin_docman_tokens` (
   `created_at` datetime NOT NULL,
   PRIMARY KEY  (`user_id`,`token`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_tokens`
@@ -3739,8 +3743,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_version`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_version` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `item_id` int(11) unsigned default NULL,
@@ -3757,7 +3761,7 @@ CREATE TABLE `plugin_docman_version` (
   KEY `item_id` (`item_id`),
   FULLTEXT KEY `fltxt` (`label`,`changelog`,`filename`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_version`
@@ -3774,8 +3778,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_version_deleted`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_version_deleted` (
   `id` int(11) unsigned NOT NULL,
   `item_id` int(11) unsigned default NULL,
@@ -3793,7 +3797,7 @@ CREATE TABLE `plugin_docman_version_deleted` (
   PRIMARY KEY  (`id`),
   KEY `item_id` (`item_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_version_deleted`
@@ -3810,8 +3814,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_docman_widget_embedded`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_docman_widget_embedded` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `owner_id` int(11) unsigned NOT NULL,
@@ -3821,7 +3825,7 @@ CREATE TABLE `plugin_docman_widget_embedded` (
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_docman_widget_embedded`
@@ -3837,8 +3841,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_forumml_attachment`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_forumml_attachment` (
   `id_attachment` int(10) unsigned NOT NULL auto_increment,
   `id_message` int(10) unsigned NOT NULL,
@@ -3850,7 +3854,7 @@ CREATE TABLE `plugin_forumml_attachment` (
   PRIMARY KEY  (`id_attachment`),
   KEY `idx_fk_id_message` (`id_message`,`content_id`(10))
 ) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_forumml_attachment`
@@ -3867,15 +3871,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_forumml_header`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_forumml_header` (
   `id_header` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY  (`id_header`),
   KEY `idx_name` (`name`(20))
 ) ENGINE=MyISAM AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_forumml_header`
@@ -3892,8 +3896,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_forumml_message`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_forumml_message` (
   `id_message` int(10) unsigned NOT NULL auto_increment,
   `id_list` int(10) unsigned NOT NULL,
@@ -3906,7 +3910,7 @@ CREATE TABLE `plugin_forumml_message` (
   KEY `idx_fk_id_list` (`id_list`),
   KEY `idx_fk_id_parent` (`id_parent`)
 ) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_forumml_message`
@@ -3923,15 +3927,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_forumml_messageheader`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_forumml_messageheader` (
   `id_message` int(10) unsigned NOT NULL,
   `id_header` int(10) unsigned NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY  (`id_message`,`id_header`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_forumml_messageheader`
@@ -3948,8 +3952,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_git`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_git` (
   `repository_id` int(10) unsigned NOT NULL auto_increment,
   `repository_name` varchar(255) NOT NULL,
@@ -3969,7 +3973,7 @@ CREATE TABLE `plugin_git` (
   PRIMARY KEY  (`repository_id`),
   KEY `project_id` (`project_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_git`
@@ -3986,8 +3990,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_git_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_git_log` (
   `repository_id` int(10) unsigned NOT NULL,
   `user_id` int(11) unsigned default NULL,
@@ -3995,7 +3999,7 @@ CREATE TABLE `plugin_git_log` (
   `commits_number` int(11) default NULL,
   KEY `idx_repository_user` (`repository_id`,`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_git_log`
@@ -4011,14 +4015,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_git_post_receive_mail`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_git_post_receive_mail` (
   `recipient_mail` varchar(255) NOT NULL,
   `repository_id` int(10) NOT NULL,
   KEY `repository_id` (`repository_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_git_post_receive_mail`
@@ -4034,15 +4038,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_graphontrackers_bar_chart`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_graphontrackers_bar_chart` (
   `id` int(11) NOT NULL,
   `field_base` varchar(255) default NULL,
   `field_group` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_graphontrackers_bar_chart`
@@ -4059,8 +4063,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_graphontrackers_chart`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_graphontrackers_chart` (
   `id` int(11) NOT NULL auto_increment,
   `report_graphic_id` int(11) NOT NULL,
@@ -4074,7 +4078,7 @@ CREATE TABLE `plugin_graphontrackers_chart` (
   KEY `report_graphic_id` (`report_graphic_id`),
   KEY `chart_type` (`chart_type`)
 ) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_graphontrackers_chart`
@@ -4091,8 +4095,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_graphontrackers_gantt_chart`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_graphontrackers_gantt_chart` (
   `id` int(11) NOT NULL,
   `field_start` varchar(255) default NULL,
@@ -4105,7 +4109,7 @@ CREATE TABLE `plugin_graphontrackers_gantt_chart` (
   `summary` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_graphontrackers_gantt_chart`
@@ -4122,14 +4126,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_graphontrackers_pie_chart`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_graphontrackers_pie_chart` (
   `id` int(11) NOT NULL,
   `field_base` varchar(255) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_graphontrackers_pie_chart`
@@ -4146,8 +4150,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `plugin_graphontrackers_report_graphic`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `plugin_graphontrackers_report_graphic` (
   `report_graphic_id` int(11) NOT NULL auto_increment,
   `group_artifact_id` int(11) default NULL,
@@ -4157,7 +4161,7 @@ CREATE TABLE `plugin_graphontrackers_report_graphic` (
   `scope` char(1) default NULL,
   PRIMARY KEY  (`report_graphic_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `plugin_graphontrackers_report_graphic`
@@ -4174,14 +4178,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `priority_plugin_hook`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `priority_plugin_hook` (
   `plugin_id` int(11) NOT NULL,
   `hook` varchar(100) NOT NULL,
   `priority` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `priority_plugin_hook`
@@ -4197,8 +4201,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_assigned_to`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_assigned_to` (
   `project_assigned_id` int(11) NOT NULL auto_increment,
   `project_task_id` int(11) NOT NULL default '0',
@@ -4207,7 +4211,7 @@ CREATE TABLE `project_assigned_to` (
   KEY `idx_project_assigned_to_task_id` (`project_task_id`),
   KEY `idx_project_assigned_to_assigned_to` (`assigned_to_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_assigned_to`
@@ -4223,8 +4227,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_cc`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_cc` (
   `project_cc_id` int(11) NOT NULL auto_increment,
   `project_task_id` int(11) NOT NULL default '0',
@@ -4235,7 +4239,7 @@ CREATE TABLE `project_cc` (
   PRIMARY KEY  (`project_cc_id`),
   KEY `project_id_idx` (`project_task_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_cc`
@@ -4251,14 +4255,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_counts_tmp`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_counts_tmp` (
   `group_id` int(11) default NULL,
   `type` text,
   `count` float(8,5) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_counts_tmp`
@@ -4275,14 +4279,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_counts_weekly_tmp`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_counts_weekly_tmp` (
   `group_id` int(11) default NULL,
   `type` text,
   `count` float(8,5) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_counts_weekly_tmp`
@@ -4298,8 +4302,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_dependencies`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_dependencies` (
   `project_depend_id` int(11) NOT NULL auto_increment,
   `project_task_id` int(11) NOT NULL default '0',
@@ -4308,7 +4312,7 @@ CREATE TABLE `project_dependencies` (
   KEY `idx_project_dependencies_task_id` (`project_task_id`),
   KEY `idx_project_is_dependent_on_task_id` (`is_dependent_on_task_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_dependencies`
@@ -4324,8 +4328,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_field` (
   `project_field_id` int(11) NOT NULL auto_increment,
   `field_name` varchar(255) NOT NULL default '',
@@ -4342,7 +4346,7 @@ CREATE TABLE `project_field` (
   PRIMARY KEY  (`project_field_id`),
   KEY `idx_project_field_name` (`field_name`)
 ) ENGINE=MyISAM AUTO_INCREMENT=104 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_field`
@@ -4359,8 +4363,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_field_usage`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_field_usage` (
   `project_field_id` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
@@ -4376,7 +4380,7 @@ CREATE TABLE `project_field_usage` (
   KEY `idx_project_fu_field_id` (`project_field_id`),
   KEY `idx_project_fu_group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_field_usage`
@@ -4393,8 +4397,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_field_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_field_value` (
   `project_fv_id` int(11) NOT NULL auto_increment,
   `project_field_id` int(11) NOT NULL default '0',
@@ -4410,7 +4414,7 @@ CREATE TABLE `project_field_value` (
   KEY `idx_project_fv_value_id` (`value_id`),
   KEY `idx_project_fv_status` (`status`)
 ) ENGINE=MyISAM AUTO_INCREMENT=135 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_field_value`
@@ -4427,8 +4431,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_file`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_file` (
   `project_file_id` int(11) NOT NULL auto_increment,
   `project_task_id` int(11) NOT NULL default '0',
@@ -4442,7 +4446,7 @@ CREATE TABLE `project_file` (
   PRIMARY KEY  (`project_file_id`),
   KEY `project_task_id_idx` (`project_task_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_file`
@@ -4458,8 +4462,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_group_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_group_list` (
   `group_project_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -4470,7 +4474,7 @@ CREATE TABLE `project_group_list` (
   PRIMARY KEY  (`group_project_id`),
   KEY `idx_project_group_list_group_id` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_group_list`
@@ -4487,8 +4491,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_history` (
   `project_history_id` int(11) NOT NULL auto_increment,
   `project_task_id` int(11) NOT NULL default '0',
@@ -4499,7 +4503,7 @@ CREATE TABLE `project_history` (
   PRIMARY KEY  (`project_history_id`),
   KEY `idx_project_history_task_id` (`project_task_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_history`
@@ -4515,8 +4519,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_metric`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_metric` (
   `ranking` int(11) NOT NULL auto_increment,
   `percentile` float(8,2) default NULL,
@@ -4524,7 +4528,7 @@ CREATE TABLE `project_metric` (
   PRIMARY KEY  (`ranking`),
   KEY `idx_project_metric_group` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_metric`
@@ -4541,15 +4545,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_metric_tmp1`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_metric_tmp1` (
   `ranking` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL,
   `value` float(8,5) default NULL,
   PRIMARY KEY  (`ranking`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_metric_tmp1`
@@ -4566,15 +4570,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_metric_weekly_tmp1`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_metric_weekly_tmp1` (
   `ranking` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
   `value` float(8,5) default NULL,
   PRIMARY KEY  (`ranking`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_metric_weekly_tmp1`
@@ -4590,8 +4594,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_notification` (
   `user_id` int(11) NOT NULL default '0',
   `role_id` int(11) NOT NULL default '0',
@@ -4599,7 +4603,7 @@ CREATE TABLE `project_notification` (
   `notify` int(11) NOT NULL default '1',
   KEY `user_id_idx` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_notification`
@@ -4615,8 +4619,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_notification_event`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_notification_event` (
   `event_id` int(11) NOT NULL default '0',
   `event_label` varchar(255) default NULL,
@@ -4625,7 +4629,7 @@ CREATE TABLE `project_notification_event` (
   `rank` int(11) NOT NULL default '0',
   KEY `event_id_idx` (`event_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_notification_event`
@@ -4642,8 +4646,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_notification_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_notification_role` (
   `role_id` int(11) NOT NULL default '0',
   `role_label` varchar(255) default NULL,
@@ -4652,7 +4656,7 @@ CREATE TABLE `project_notification_role` (
   `rank` int(11) NOT NULL default '0',
   KEY `role_id_idx` (`role_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_notification_role`
@@ -4669,8 +4673,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_plugin`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_plugin` (
   `project_id` int(11) NOT NULL,
   `plugin_id` int(11) NOT NULL,
@@ -4678,7 +4682,7 @@ CREATE TABLE `project_plugin` (
   KEY `project_id_idx` (`project_id`),
   KEY `plugin_id_idx` (`plugin_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_plugin`
@@ -4694,14 +4698,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_status`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_status` (
   `status_id` int(11) NOT NULL auto_increment,
   `status_name` text NOT NULL,
   PRIMARY KEY  (`status_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_status`
@@ -4718,8 +4722,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_task`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_task` (
   `project_task_id` int(11) NOT NULL auto_increment,
   `group_project_id` int(11) NOT NULL default '0',
@@ -4735,7 +4739,7 @@ CREATE TABLE `project_task` (
   PRIMARY KEY  (`project_task_id`),
   KEY `idx_project_task_group_project_id` (`group_project_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_task`
@@ -4752,15 +4756,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_watcher`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_watcher` (
   `user_id` int(11) NOT NULL default '0',
   `watchee_id` int(11) NOT NULL default '0',
   KEY `user_id_idx` (`user_id`),
   KEY `watchee_id_idx` (`watchee_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_watcher`
@@ -4776,8 +4780,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `project_weekly_metric`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `project_weekly_metric` (
   `ranking` int(11) NOT NULL auto_increment,
   `percentile` float(8,2) default NULL,
@@ -4785,7 +4789,7 @@ CREATE TABLE `project_weekly_metric` (
   PRIMARY KEY  (`ranking`),
   KEY `idx_project_metric_weekly_group` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `project_weekly_metric`
@@ -4801,8 +4805,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `reference`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `reference` (
   `id` int(11) NOT NULL auto_increment,
   `keyword` varchar(25) NOT NULL,
@@ -4815,7 +4819,7 @@ CREATE TABLE `reference` (
   KEY `keyword_idx` (`keyword`),
   KEY `scope_idx` (`scope`)
 ) ENGINE=MyISAM AUTO_INCREMENT=112 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `reference`
@@ -4832,8 +4836,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `reference_group`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `reference_group` (
   `id` int(11) NOT NULL auto_increment,
   `reference_id` int(11) NOT NULL default '0',
@@ -4842,7 +4846,7 @@ CREATE TABLE `reference_group` (
   PRIMARY KEY  (`id`),
   KEY `group_id_idx` (`group_id`,`is_active`)
 ) ENGINE=MyISAM AUTO_INCREMENT=100 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `reference_group`
@@ -4859,8 +4863,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `server`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `server` (
   `id` int(11) unsigned NOT NULL,
   `name` varchar(255) NOT NULL,
@@ -4870,7 +4874,7 @@ CREATE TABLE `server` (
   `is_master` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `server`
@@ -4886,8 +4890,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `service`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `service` (
   `service_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL,
@@ -4905,7 +4909,7 @@ CREATE TABLE `service` (
   PRIMARY KEY  (`service_id`),
   KEY `idx_group_id` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=154 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `service`
@@ -4922,8 +4926,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `session`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `session` (
   `user_id` int(11) NOT NULL default '0',
   `session_hash` char(32) NOT NULL default '',
@@ -4934,7 +4938,7 @@ CREATE TABLE `session` (
   KEY `time_idx` (`time`),
   KEY `idx_session_time` (`time`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `session`
@@ -4951,8 +4955,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `snippet`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `snippet` (
   `snippet_id` int(11) NOT NULL auto_increment,
   `created_by` int(11) NOT NULL default '0',
@@ -4966,7 +4970,7 @@ CREATE TABLE `snippet` (
   KEY `idx_snippet_language` (`language`),
   KEY `idx_snippet_category` (`category`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `snippet`
@@ -4982,13 +4986,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `snippet_category`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `snippet_category` (
   `category_id` int(11) NOT NULL,
   `category_name` varchar(255) NOT NULL default ''
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `snippet_category`
@@ -5005,13 +5009,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `snippet_language`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `snippet_language` (
   `language_id` int(11) NOT NULL,
   `language_name` varchar(255) NOT NULL default ''
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `snippet_language`
@@ -5028,13 +5032,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `snippet_license`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `snippet_license` (
   `license_id` int(11) NOT NULL,
   `license_name` varchar(255) NOT NULL default ''
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `snippet_license`
@@ -5051,8 +5055,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `snippet_package`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `snippet_package` (
   `snippet_package_id` int(11) NOT NULL auto_increment,
   `created_by` int(11) NOT NULL default '0',
@@ -5064,7 +5068,7 @@ CREATE TABLE `snippet_package` (
   KEY `idx_snippet_package_language` (`language`),
   KEY `idx_snippet_package_category` (`category`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `snippet_package`
@@ -5080,8 +5084,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `snippet_package_item`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `snippet_package_item` (
   `snippet_package_item_id` int(11) NOT NULL auto_increment,
   `snippet_package_version_id` int(11) NOT NULL default '0',
@@ -5089,7 +5093,7 @@ CREATE TABLE `snippet_package_item` (
   PRIMARY KEY  (`snippet_package_item_id`),
   KEY `idx_snippet_package_item_pkg_ver` (`snippet_package_version_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `snippet_package_item`
@@ -5105,8 +5109,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `snippet_package_version`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `snippet_package_version` (
   `snippet_package_version_id` int(11) NOT NULL auto_increment,
   `snippet_package_id` int(11) NOT NULL default '0',
@@ -5117,7 +5121,7 @@ CREATE TABLE `snippet_package_version` (
   PRIMARY KEY  (`snippet_package_version_id`),
   KEY `idx_snippet_package_version_pkg_id` (`snippet_package_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `snippet_package_version`
@@ -5133,13 +5137,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `snippet_type`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `snippet_type` (
   `type_id` int(11) NOT NULL,
   `type_name` varchar(255) NOT NULL default ''
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `snippet_type`
@@ -5156,8 +5160,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `snippet_version`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `snippet_version` (
   `snippet_version_id` int(11) NOT NULL auto_increment,
   `snippet_id` int(11) NOT NULL default '0',
@@ -5172,7 +5176,7 @@ CREATE TABLE `snippet_version` (
   PRIMARY KEY  (`snippet_version_id`),
   KEY `idx_snippet_version_snippet_id` (`snippet_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `snippet_version`
@@ -5188,14 +5192,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `soap_call_counter`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `soap_call_counter` (
   `method_name` varchar(255) NOT NULL,
   `date` int(11) unsigned NOT NULL,
   KEY `method_name` (`method_name`,`date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `soap_call_counter`
@@ -5211,13 +5215,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_agg_logo_by_day`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_agg_logo_by_day` (
   `day` int(11) default NULL,
   `count` int(11) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_agg_logo_by_day`
@@ -5233,14 +5237,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_agg_logo_by_group`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_agg_logo_by_group` (
   `day` int(11) default NULL,
   `group_id` int(11) default NULL,
   `count` int(11) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_agg_logo_by_group`
@@ -5256,13 +5260,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_agg_pages_by_browser`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_agg_pages_by_browser` (
   `browser` varchar(8) default NULL,
   `count` int(11) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_agg_pages_by_browser`
@@ -5278,14 +5282,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_agg_pages_by_day`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_agg_pages_by_day` (
   `day` int(11) NOT NULL default '0',
   `count` int(11) NOT NULL default '0',
   KEY `idx_pages_by_day_day` (`day`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_agg_pages_by_day`
@@ -5302,13 +5306,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_agg_pages_by_day_old`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_agg_pages_by_day_old` (
   `day` int(11) default NULL,
   `count` int(11) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_agg_pages_by_day_old`
@@ -5324,13 +5328,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_agg_site_by_day`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_agg_site_by_day` (
   `day` int(11) NOT NULL default '0',
   `count` int(11) NOT NULL default '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_agg_site_by_day`
@@ -5347,14 +5351,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_agg_site_by_group`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_agg_site_by_group` (
   `day` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
   `count` int(11) NOT NULL default '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_agg_site_by_group`
@@ -5371,8 +5375,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_agr_filerelease`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_agr_filerelease` (
   `filerelease_id` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
@@ -5380,7 +5384,7 @@ CREATE TABLE `stats_agr_filerelease` (
   KEY `idx_stats_agr_tmp_fid` (`filerelease_id`),
   KEY `idx_stats_agr_tmp_gid` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_agr_filerelease`
@@ -5396,8 +5400,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_agr_project`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_agr_project` (
   `group_id` int(11) NOT NULL default '0',
   `group_ranking` int(11) NOT NULL default '0',
@@ -5427,7 +5431,7 @@ CREATE TABLE `stats_agr_project` (
   `svn_access_count` smallint(6) NOT NULL default '0',
   KEY `idx_project_agr_log_group` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_agr_project`
@@ -5443,8 +5447,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_ftp_downloads`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_ftp_downloads` (
   `day` int(11) NOT NULL default '0',
   `filerelease_id` int(11) NOT NULL default '0',
@@ -5454,7 +5458,7 @@ CREATE TABLE `stats_ftp_downloads` (
   KEY `idx_ftpdl_fid` (`filerelease_id`),
   KEY `idx_ftpdl_group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_ftp_downloads`
@@ -5470,8 +5474,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_http_downloads`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_http_downloads` (
   `day` int(11) NOT NULL default '0',
   `filerelease_id` int(11) NOT NULL default '0',
@@ -5481,7 +5485,7 @@ CREATE TABLE `stats_http_downloads` (
   KEY `idx_httpdl_fid` (`filerelease_id`),
   KEY `idx_httpdl_group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_http_downloads`
@@ -5497,8 +5501,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_project`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_project` (
   `month` int(11) NOT NULL default '0',
   `week` int(11) NOT NULL default '0',
@@ -5537,7 +5541,7 @@ CREATE TABLE `stats_project` (
   KEY `idx_archive_project_day` (`day`),
   KEY `idx_archive_project_monthday` (`month`,`day`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_project`
@@ -5554,8 +5558,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_project_tmp`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_project_tmp` (
   `month` int(11) NOT NULL default '0',
   `week` int(11) NOT NULL default '0',
@@ -5593,7 +5597,7 @@ CREATE TABLE `stats_project_tmp` (
   KEY `idx_project_stats_week` (`week`),
   KEY `idx_project_stats_month` (`month`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_project_tmp`
@@ -5610,8 +5614,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `stats_site`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stats_site` (
   `month` int(11) NOT NULL default '0',
   `week` int(11) NOT NULL default '0',
@@ -5629,7 +5633,7 @@ CREATE TABLE `stats_site` (
   KEY `idx_stats_site_day` (`day`),
   KEY `idx_stats_site_monthday` (`month`,`day`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `stats_site`
@@ -5646,8 +5650,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `support`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `support` (
   `support_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -5662,7 +5666,7 @@ CREATE TABLE `support` (
   PRIMARY KEY  (`support_id`),
   KEY `idx_support_group_id` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `support`
@@ -5679,8 +5683,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `support_canned_responses`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `support_canned_responses` (
   `support_canned_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -5689,7 +5693,7 @@ CREATE TABLE `support_canned_responses` (
   PRIMARY KEY  (`support_canned_id`),
   KEY `idx_support_canned_response_group_id` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `support_canned_responses`
@@ -5706,8 +5710,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `support_category`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `support_category` (
   `support_category_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -5715,7 +5719,7 @@ CREATE TABLE `support_category` (
   PRIMARY KEY  (`support_category_id`),
   KEY `idx_support_group_group_id` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `support_category`
@@ -5732,8 +5736,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `support_history`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `support_history` (
   `support_history_id` int(11) NOT NULL auto_increment,
   `support_id` int(11) NOT NULL default '0',
@@ -5744,7 +5748,7 @@ CREATE TABLE `support_history` (
   PRIMARY KEY  (`support_history_id`),
   KEY `idx_support_history_support_id` (`support_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `support_history`
@@ -5760,8 +5764,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `support_messages`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `support_messages` (
   `support_message_id` int(11) NOT NULL auto_increment,
   `support_id` int(11) NOT NULL default '0',
@@ -5771,7 +5775,7 @@ CREATE TABLE `support_messages` (
   PRIMARY KEY  (`support_message_id`),
   KEY `idx_support_messages_support_id` (`support_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `support_messages`
@@ -5788,14 +5792,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `support_status`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `support_status` (
   `support_status_id` int(11) NOT NULL auto_increment,
   `status_name` text,
   PRIMARY KEY  (`support_status_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `support_status`
@@ -5812,15 +5816,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `survey_question_types`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `survey_question_types` (
   `id` int(11) NOT NULL auto_increment,
   `type` text NOT NULL,
   `rank` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `survey_question_types`
@@ -5837,8 +5841,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `survey_questions`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `survey_questions` (
   `question_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -5847,7 +5851,7 @@ CREATE TABLE `survey_questions` (
   PRIMARY KEY  (`question_id`),
   KEY `idx_survey_questions_group` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `survey_questions`
@@ -5863,8 +5867,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `survey_radio_choices`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `survey_radio_choices` (
   `choice_id` int(11) NOT NULL auto_increment,
   `question_id` int(11) NOT NULL default '0',
@@ -5873,7 +5877,7 @@ CREATE TABLE `survey_radio_choices` (
   PRIMARY KEY  (`choice_id`),
   KEY `idx_survey_radio_choices_question_id` (`question_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `survey_radio_choices`
@@ -5889,8 +5893,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `survey_rating_aggregate`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `survey_rating_aggregate` (
   `type` int(11) NOT NULL,
   `id` int(11) NOT NULL,
@@ -5898,7 +5902,7 @@ CREATE TABLE `survey_rating_aggregate` (
   `count` int(11) NOT NULL,
   KEY `idx_survey_rating_aggregate_type_id` (`type`,`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `survey_rating_aggregate`
@@ -5914,8 +5918,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `survey_rating_response`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `survey_rating_response` (
   `user_id` int(11) NOT NULL default '0',
   `type` int(11) NOT NULL default '0',
@@ -5925,7 +5929,7 @@ CREATE TABLE `survey_rating_response` (
   KEY `idx_survey_rating_responses_user_type_id` (`user_id`,`type`,`id`),
   KEY `idx_survey_rating_responses_type_id` (`type`,`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `survey_rating_response`
@@ -5941,8 +5945,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `survey_responses`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `survey_responses` (
   `user_id` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
@@ -5955,7 +5959,7 @@ CREATE TABLE `survey_responses` (
   KEY `idx_survey_responses_survey_question` (`survey_id`,`question_id`),
   KEY `idx_survey_responses_group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `survey_responses`
@@ -5971,8 +5975,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `surveys`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `surveys` (
   `survey_id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -5983,7 +5987,7 @@ CREATE TABLE `surveys` (
   PRIMARY KEY  (`survey_id`),
   KEY `idx_surveys_group` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `surveys`
@@ -6000,8 +6004,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `svn_checkins`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `svn_checkins` (
   `id` int(11) NOT NULL auto_increment,
   `type` enum('Change','Add','Delete') default NULL,
@@ -6015,7 +6019,7 @@ CREATE TABLE `svn_checkins` (
   KEY `dirid` (`dirid`),
   KEY `fileid` (`fileid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `svn_checkins`
@@ -6031,8 +6035,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `svn_commits`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `svn_commits` (
   `id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -6049,7 +6053,7 @@ CREATE TABLE `svn_commits` (
   KEY `idx_repositoryid_date` (`repositoryid`,`date`),
   FULLTEXT KEY `description` (`description`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `svn_commits`
@@ -6065,15 +6069,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `svn_dirs`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `svn_dirs` (
   `id` int(11) NOT NULL auto_increment,
   `dir` varchar(255) character set utf8 collate utf8_bin NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uniq_dir_idx` (`dir`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `svn_dirs`
@@ -6089,15 +6093,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `svn_files`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `svn_files` (
   `id` int(11) NOT NULL auto_increment,
   `file` varchar(255) character set utf8 collate utf8_bin NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uniq_file_idx` (`file`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `svn_files`
@@ -6113,15 +6117,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `svn_repositories`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `svn_repositories` (
   `id` int(11) NOT NULL auto_increment,
   `repository` varchar(255) character set utf8 collate utf8_bin NOT NULL default '',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `uniq_repository_idx` (`repository`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `svn_repositories`
@@ -6137,8 +6141,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `system_event`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `system_event` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `type` varchar(255) NOT NULL default '',
@@ -6151,7 +6155,7 @@ CREATE TABLE `system_event` (
   `log` text,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=278 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `system_event`
@@ -6168,15 +6172,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `system_events_followers`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `system_events_followers` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `emails` text NOT NULL,
   `types` varchar(31) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `system_events_followers`
@@ -6193,15 +6197,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tmp_projs_releases_tmp`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tmp_projs_releases_tmp` (
   `year` int(11) NOT NULL default '0',
   `month` int(11) NOT NULL default '0',
   `total_proj` int(11) NOT NULL default '0',
   `total_releases` int(11) NOT NULL default '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tmp_projs_releases_tmp`
@@ -6217,8 +6221,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `top_group`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `top_group` (
   `group_id` int(11) NOT NULL default '0',
   `group_name` varchar(40) default NULL,
@@ -6243,7 +6247,7 @@ CREATE TABLE `top_group` (
   KEY `rank_forumposts_week_idx` (`rank_forumposts_week`),
   KEY `pageviews_proj_idx` (`pageviews_proj`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `top_group`
@@ -6260,8 +6264,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker` (
   `id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL,
@@ -6278,7 +6282,7 @@ CREATE TABLE `tracker` (
   PRIMARY KEY  (`id`),
   KEY `idx_fk_group_id` (`group_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=111 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker`
@@ -6295,8 +6299,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_artifact`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_artifact` (
   `id` int(11) NOT NULL auto_increment,
   `tracker_id` int(11) NOT NULL,
@@ -6308,7 +6312,7 @@ CREATE TABLE `tracker_artifact` (
   KEY `idx_tracker_id` (`tracker_id`),
   KEY `idx_my` (`submitted_by`,`tracker_id`,`last_changeset_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_artifact`
@@ -6325,8 +6329,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_canned_response`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_canned_response` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `tracker_id` int(11) NOT NULL,
@@ -6335,7 +6339,7 @@ CREATE TABLE `tracker_canned_response` (
   PRIMARY KEY  (`id`),
   KEY `tracker_id_idx` (`tracker_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_canned_response`
@@ -6351,8 +6355,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset` (
   `id` int(11) NOT NULL auto_increment,
   `artifact_id` int(11) NOT NULL,
@@ -6362,7 +6366,7 @@ CREATE TABLE `tracker_changeset` (
   PRIMARY KEY  (`id`),
   KEY `artifact_idx` (`artifact_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset`
@@ -6379,8 +6383,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset_comment`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset_comment` (
   `id` int(11) NOT NULL auto_increment,
   `changeset_id` int(11) NOT NULL,
@@ -6394,7 +6398,7 @@ CREATE TABLE `tracker_changeset_comment` (
   PRIMARY KEY  (`id`),
   KEY `changeset_idx` (`changeset_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset_comment`
@@ -6411,8 +6415,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset_value` (
   `id` int(11) NOT NULL auto_increment,
   `changeset_id` int(11) NOT NULL,
@@ -6422,7 +6426,7 @@ CREATE TABLE `tracker_changeset_value` (
   KEY `value_idx` (`changeset_id`,`field_id`),
   KEY `field_idx` (`field_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset_value`
@@ -6439,8 +6443,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset_value_artifactlink`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset_value_artifactlink` (
   `changeset_value_id` int(11) NOT NULL,
   `artifact_id` int(11) NOT NULL,
@@ -6448,7 +6452,7 @@ CREATE TABLE `tracker_changeset_value_artifactlink` (
   `group_id` int(11) NOT NULL,
   PRIMARY KEY  (`changeset_value_id`,`artifact_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset_value_artifactlink`
@@ -6464,14 +6468,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset_value_date`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset_value_date` (
   `changeset_value_id` int(11) NOT NULL,
   `value` int(11) default NULL,
   PRIMARY KEY  (`changeset_value_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset_value_date`
@@ -6488,14 +6492,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset_value_file`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset_value_file` (
   `changeset_value_id` int(11) NOT NULL,
   `fileinfo_id` int(11) NOT NULL,
   PRIMARY KEY  (`changeset_value_id`,`fileinfo_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset_value_file`
@@ -6511,14 +6515,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset_value_float`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset_value_float` (
   `changeset_value_id` int(11) NOT NULL,
   `value` float(10,4) default NULL,
   PRIMARY KEY  (`changeset_value_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset_value_float`
@@ -6534,14 +6538,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset_value_int`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset_value_int` (
   `changeset_value_id` int(11) NOT NULL,
   `value` int(11) default NULL,
   PRIMARY KEY  (`changeset_value_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset_value_int`
@@ -6557,14 +6561,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset_value_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset_value_list` (
   `changeset_value_id` int(11) NOT NULL,
   `bindvalue_id` int(11) NOT NULL,
   PRIMARY KEY  (`changeset_value_id`,`bindvalue_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset_value_list`
@@ -6581,8 +6585,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset_value_openlist`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset_value_openlist` (
   `changeset_value_id` int(11) NOT NULL,
   `bindvalue_id` int(11) default NULL,
@@ -6591,7 +6595,7 @@ CREATE TABLE `tracker_changeset_value_openlist` (
   PRIMARY KEY  (`insertion_order`),
   UNIQUE KEY `idx` (`changeset_value_id`,`bindvalue_id`,`openvalue_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset_value_openlist`
@@ -6607,14 +6611,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset_value_permissionsonartifact`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset_value_permissionsonartifact` (
   `changeset_value_id` int(11) NOT NULL,
   `use_perm` tinyint(1) NOT NULL,
   `ugroup_id` int(11) NOT NULL
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset_value_permissionsonartifact`
@@ -6630,14 +6634,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_changeset_value_text`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_changeset_value_text` (
   `changeset_value_id` int(11) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY  (`changeset_value_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_changeset_value_text`
@@ -6654,8 +6658,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `old_id` int(11) unsigned default NULL,
@@ -6676,7 +6680,7 @@ CREATE TABLE `tracker_field` (
   KEY `idx_fk_tracker_id` (`tracker_id`),
   KEY `idx_fk_parent_id` (`parent_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=137 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field`
@@ -6693,15 +6697,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_date`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_date` (
   `field_id` int(11) NOT NULL,
   `default_value` int(11) default NULL,
   `default_value_type` tinyint(1) default NULL,
   PRIMARY KEY  (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_date`
@@ -6718,8 +6722,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_float`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_float` (
   `field_id` int(11) NOT NULL,
   `default_value` float(10,4) default NULL,
@@ -6727,7 +6731,7 @@ CREATE TABLE `tracker_field_float` (
   `size` int(11) NOT NULL,
   PRIMARY KEY  (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_float`
@@ -6743,8 +6747,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_int`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_int` (
   `field_id` int(11) NOT NULL,
   `default_value` int(11) default NULL,
@@ -6752,7 +6756,7 @@ CREATE TABLE `tracker_field_int` (
   `size` int(11) NOT NULL,
   PRIMARY KEY  (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_int`
@@ -6769,14 +6773,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_list` (
   `field_id` int(11) NOT NULL,
   `bind_type` varchar(255) NOT NULL,
   PRIMARY KEY  (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_list`
@@ -6793,8 +6797,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_list_bind_decorator`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_list_bind_decorator` (
   `field_id` int(11) NOT NULL,
   `value_id` int(11) NOT NULL,
@@ -6803,7 +6807,7 @@ CREATE TABLE `tracker_field_list_bind_decorator` (
   `blue` tinyint(3) unsigned NOT NULL,
   PRIMARY KEY  (`field_id`,`value_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_list_bind_decorator`
@@ -6820,14 +6824,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_list_bind_defaultvalue`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_list_bind_defaultvalue` (
   `field_id` int(11) NOT NULL,
   `value_id` int(11) NOT NULL,
   PRIMARY KEY  (`field_id`,`value_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_list_bind_defaultvalue`
@@ -6843,14 +6847,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_list_bind_static`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_list_bind_static` (
   `field_id` int(11) NOT NULL,
   `is_rank_alpha` tinyint(1) NOT NULL,
   PRIMARY KEY  (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_list_bind_static`
@@ -6867,8 +6871,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_list_bind_static_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_list_bind_static_value` (
   `id` int(11) NOT NULL auto_increment,
   `old_id` int(11) default NULL,
@@ -6881,7 +6885,7 @@ CREATE TABLE `tracker_field_list_bind_static_value` (
   PRIMARY KEY  (`id`),
   KEY `field_id_idx` (`field_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=139 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_list_bind_static_value`
@@ -6898,14 +6902,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_list_bind_users`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_list_bind_users` (
   `field_id` int(11) NOT NULL,
   `value_function` text,
   PRIMARY KEY  (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_list_bind_users`
@@ -6922,14 +6926,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_msb`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_msb` (
   `field_id` int(11) NOT NULL,
   `size` int(11) NOT NULL,
   PRIMARY KEY  (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_msb`
@@ -6946,14 +6950,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_openlist`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_openlist` (
   `field_id` int(11) NOT NULL,
   `hint` varchar(255) NOT NULL,
   PRIMARY KEY  (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_openlist`
@@ -6969,8 +6973,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_openlist_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_openlist_value` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `field_id` int(11) unsigned NOT NULL,
@@ -6978,7 +6982,7 @@ CREATE TABLE `tracker_field_openlist_value` (
   PRIMARY KEY  (`id`),
   KEY `idx_search` (`field_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_openlist_value`
@@ -6994,8 +6998,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_string`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_string` (
   `field_id` int(11) NOT NULL,
   `default_value` text,
@@ -7003,7 +7007,7 @@ CREATE TABLE `tracker_field_string` (
   `size` int(11) NOT NULL,
   PRIMARY KEY  (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_string`
@@ -7020,8 +7024,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_field_text`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_field_text` (
   `field_id` int(11) NOT NULL,
   `default_value` text,
@@ -7029,7 +7033,7 @@ CREATE TABLE `tracker_field_text` (
   `cols` int(11) NOT NULL,
   PRIMARY KEY  (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_field_text`
@@ -7046,8 +7050,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_fileinfo`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_fileinfo` (
   `id` int(11) NOT NULL auto_increment,
   `old_id` int(11) default NULL,
@@ -7059,7 +7063,7 @@ CREATE TABLE `tracker_fileinfo` (
   PRIMARY KEY  (`id`),
   FULLTEXT KEY `fltxt` (`description`,`filename`)
 ) ENGINE=MyISAM AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_fileinfo`
@@ -7075,8 +7079,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_global_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_global_notification` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `tracker_id` int(11) NOT NULL,
@@ -7086,7 +7090,7 @@ CREATE TABLE `tracker_global_notification` (
   PRIMARY KEY  (`id`),
   KEY `tracker_id` (`tracker_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_global_notification`
@@ -7102,13 +7106,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_idsharing_artifact`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_idsharing_artifact` (
   `id` int(11) NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_idsharing_artifact`
@@ -7125,13 +7129,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_idsharing_tracker`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_idsharing_tracker` (
   `id` int(11) NOT NULL auto_increment,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=111 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_idsharing_tracker`
@@ -7148,8 +7152,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_notification`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_notification` (
   `user_id` int(11) NOT NULL,
   `tracker_id` int(11) NOT NULL,
@@ -7159,7 +7163,7 @@ CREATE TABLE `tracker_notification` (
   KEY `user_id_idx` (`user_id`),
   KEY `tracker_id_idx` (`tracker_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_notification`
@@ -7175,8 +7179,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_notification_event`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_notification_event` (
   `event_id` int(11) NOT NULL,
   `tracker_id` int(11) NOT NULL,
@@ -7187,7 +7191,7 @@ CREATE TABLE `tracker_notification_event` (
   KEY `event_id_idx` (`event_id`),
   KEY `tracker_id_idx` (`tracker_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_notification_event`
@@ -7203,8 +7207,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_notification_event_default`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_notification_event_default` (
   `event_id` int(11) NOT NULL,
   `event_label` varchar(255) default NULL,
@@ -7213,7 +7217,7 @@ CREATE TABLE `tracker_notification_event_default` (
   `description_msg` varchar(255) default NULL,
   KEY `event_id_idx` (`event_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_notification_event_default`
@@ -7229,8 +7233,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_notification_role`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_notification_role` (
   `role_id` int(11) NOT NULL,
   `tracker_id` int(11) NOT NULL,
@@ -7241,7 +7245,7 @@ CREATE TABLE `tracker_notification_role` (
   KEY `role_id_idx` (`role_id`),
   KEY `tracker_id_idx` (`tracker_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_notification_role`
@@ -7257,8 +7261,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_notification_role_default`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_notification_role_default` (
   `role_id` int(11) NOT NULL,
   `role_label` varchar(255) default NULL,
@@ -7267,7 +7271,7 @@ CREATE TABLE `tracker_notification_role_default` (
   `description_msg` varchar(255) default NULL,
   KEY `role_id_idx` (`role_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_notification_role_default`
@@ -7283,8 +7287,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_perm`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_perm` (
   `id` int(11) NOT NULL auto_increment,
   `tracker_id` int(11) NOT NULL,
@@ -7293,7 +7297,7 @@ CREATE TABLE `tracker_perm` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `unique_user` (`tracker_id`,`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_perm`
@@ -7309,8 +7313,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report` (
   `id` int(11) NOT NULL auto_increment,
   `old_id` int(11) default NULL,
@@ -7328,7 +7332,7 @@ CREATE TABLE `tracker_report` (
   PRIMARY KEY  (`id`),
   KEY `tracker_idx` (`tracker_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=104 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report`
@@ -7345,8 +7349,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_criteria`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_criteria` (
   `id` int(11) NOT NULL auto_increment,
   `report_id` int(11) NOT NULL,
@@ -7357,7 +7361,7 @@ CREATE TABLE `tracker_report_criteria` (
   KEY `report_idx` (`report_id`),
   KEY `report_field_idx` (`report_id`,`field_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=115 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_criteria`
@@ -7374,14 +7378,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_criteria_alphanum_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_criteria_alphanum_value` (
   `criteria_id` int(11) NOT NULL,
   `value` varchar(255) NOT NULL,
   PRIMARY KEY  (`criteria_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_criteria_alphanum_value`
@@ -7397,8 +7401,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_criteria_date_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_criteria_date_value` (
   `criteria_id` int(11) NOT NULL,
   `op` char(1) default NULL,
@@ -7406,7 +7410,7 @@ CREATE TABLE `tracker_report_criteria_date_value` (
   `to_date` int(11) default NULL,
   PRIMARY KEY  (`criteria_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_criteria_date_value`
@@ -7422,14 +7426,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_criteria_file_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_criteria_file_value` (
   `criteria_id` int(11) NOT NULL,
   `value` varchar(255) NOT NULL,
   PRIMARY KEY  (`criteria_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_criteria_file_value`
@@ -7445,14 +7449,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_criteria_list_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_criteria_list_value` (
   `criteria_id` int(11) NOT NULL,
   `value` int(11) NOT NULL,
   PRIMARY KEY  (`criteria_id`,`value`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_criteria_list_value`
@@ -7468,14 +7472,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_criteria_openlist_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_criteria_openlist_value` (
   `criteria_id` int(11) NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY  (`criteria_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_criteria_openlist_value`
@@ -7491,13 +7495,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_criteria_permissionsonartifact_value`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_criteria_permissionsonartifact_value` (
   `criteria_id` int(11) NOT NULL,
   `value` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_criteria_permissionsonartifact_value`
@@ -7513,8 +7517,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_renderer`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_renderer` (
   `id` int(11) NOT NULL auto_increment,
   `old_id` int(11) default NULL,
@@ -7526,7 +7530,7 @@ CREATE TABLE `tracker_report_renderer` (
   PRIMARY KEY  (`id`),
   KEY `report_idx` (`report_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=104 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_renderer`
@@ -7543,15 +7547,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_renderer_table`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_renderer_table` (
   `renderer_id` int(11) NOT NULL,
   `chunksz` mediumint(9) NOT NULL,
   `multisort` tinyint(1) NOT NULL,
   PRIMARY KEY  (`renderer_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_renderer_table`
@@ -7568,8 +7572,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_renderer_table_columns`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_renderer_table_columns` (
   `renderer_id` int(11) NOT NULL,
   `field_id` int(11) NOT NULL,
@@ -7577,7 +7581,7 @@ CREATE TABLE `tracker_report_renderer_table_columns` (
   `width` tinyint(4) NOT NULL,
   PRIMARY KEY  (`renderer_id`,`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_renderer_table_columns`
@@ -7594,15 +7598,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_renderer_table_functions_aggregates`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_renderer_table_functions_aggregates` (
   `renderer_id` int(11) NOT NULL,
   `field_id` int(11) NOT NULL,
   `aggregate` varchar(10) NOT NULL,
   PRIMARY KEY  (`renderer_id`,`field_id`,`aggregate`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_renderer_table_functions_aggregates`
@@ -7618,8 +7622,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_report_renderer_table_sort`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_report_renderer_table_sort` (
   `renderer_id` int(11) NOT NULL,
   `field_id` int(11) NOT NULL,
@@ -7627,7 +7631,7 @@ CREATE TABLE `tracker_report_renderer_table_sort` (
   `rank` int(11) NOT NULL,
   PRIMARY KEY  (`renderer_id`,`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_report_renderer_table_sort`
@@ -7643,8 +7647,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_rule`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_rule` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `tracker_id` int(11) unsigned NOT NULL default '0',
@@ -7656,7 +7660,7 @@ CREATE TABLE `tracker_rule` (
   PRIMARY KEY  (`id`),
   KEY `tracker_id` (`tracker_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_rule`
@@ -7672,15 +7676,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_semantic_contributor`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_semantic_contributor` (
   `tracker_id` int(11) NOT NULL,
   `field_id` int(11) NOT NULL,
   PRIMARY KEY  (`tracker_id`),
   KEY `filed_id_idx` (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_semantic_contributor`
@@ -7697,15 +7701,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_semantic_status`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_semantic_status` (
   `tracker_id` int(11) NOT NULL,
   `field_id` int(11) NOT NULL,
   `open_value_id` int(11) NOT NULL,
   KEY `idx` (`tracker_id`,`field_id`,`open_value_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_semantic_status`
@@ -7722,15 +7726,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_semantic_title`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_semantic_title` (
   `tracker_id` int(11) NOT NULL,
   `field_id` int(11) NOT NULL,
   PRIMARY KEY  (`tracker_id`),
   KEY `filed_id_idx` (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_semantic_title`
@@ -7747,14 +7751,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_staticfield_richtext`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_staticfield_richtext` (
   `field_id` int(11) NOT NULL,
   `static_value` text,
   PRIMARY KEY  (`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_staticfield_richtext`
@@ -7770,15 +7774,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_tooltip`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_tooltip` (
   `tracker_id` int(11) NOT NULL,
   `field_id` int(11) NOT NULL,
   `rank` int(11) NOT NULL,
   PRIMARY KEY  (`tracker_id`,`field_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_tooltip`
@@ -7795,8 +7799,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_watcher`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_watcher` (
   `user_id` int(11) NOT NULL default '0',
   `watchee_id` int(11) NOT NULL default '0',
@@ -7804,7 +7808,7 @@ CREATE TABLE `tracker_watcher` (
   KEY `watchee_id_idx` (`watchee_id`,`tracker_id`),
   KEY `user_id_idx` (`user_id`,`tracker_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_watcher`
@@ -7820,8 +7824,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_widget_renderer`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_widget_renderer` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `owner_id` int(11) unsigned NOT NULL default '0',
@@ -7831,7 +7835,7 @@ CREATE TABLE `tracker_widget_renderer` (
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_widget_renderer`
@@ -7847,8 +7851,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_workflow`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_workflow` (
   `workflow_id` int(11) NOT NULL auto_increment,
   `tracker_id` int(11) NOT NULL,
@@ -7858,7 +7862,7 @@ CREATE TABLE `tracker_workflow` (
   KEY `idx_wf_tracker_id` (`tracker_id`),
   KEY `idx_wf_field_id` (`field_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_workflow`
@@ -7875,8 +7879,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_workflow_transition`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_workflow_transition` (
   `transition_id` int(11) NOT NULL auto_increment,
   `from_id` int(11) default NULL,
@@ -7885,7 +7889,7 @@ CREATE TABLE `tracker_workflow_transition` (
   PRIMARY KEY  (`transition_id`),
   KEY `idx_wf_workflow_id` (`workflow_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_workflow_transition`
@@ -7902,8 +7906,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `tracker_workflow_transition_postactions_field_date`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tracker_workflow_transition_postactions_field_date` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `transition_id` int(11) NOT NULL,
@@ -7912,7 +7916,7 @@ CREATE TABLE `tracker_workflow_transition_postactions_field_date` (
   PRIMARY KEY  (`id`),
   KEY `idx_wf_transition_id` (`transition_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `tracker_workflow_transition_postactions_field_date`
@@ -7929,8 +7933,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `trove_cat`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `trove_cat` (
   `trove_cat_id` int(11) NOT NULL auto_increment,
   `version` int(11) NOT NULL default '0',
@@ -7948,7 +7952,7 @@ CREATE TABLE `trove_cat` (
   KEY `root_parent_idx` (`root_parent`),
   KEY `version_idx` (`version`)
 ) ENGINE=MyISAM AUTO_INCREMENT=283 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `trove_cat`
@@ -7965,8 +7969,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `trove_group_link`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `trove_group_link` (
   `trove_group_id` int(11) NOT NULL auto_increment,
   `trove_cat_id` int(11) NOT NULL default '0',
@@ -7977,7 +7981,7 @@ CREATE TABLE `trove_group_link` (
   KEY `idx_trove_group_link_group_id` (`group_id`),
   KEY `idx_trove_group_link_cat_id` (`trove_cat_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `trove_group_link`
@@ -7993,8 +7997,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ugroup`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ugroup` (
   `ugroup_id` int(11) NOT NULL auto_increment,
   `name` text NOT NULL,
@@ -8002,7 +8006,7 @@ CREATE TABLE `ugroup` (
   `group_id` int(11) NOT NULL,
   PRIMARY KEY  (`ugroup_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=102 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ugroup`
@@ -8019,15 +8023,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ugroup_mapping`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ugroup_mapping` (
   `to_group_id` int(11) NOT NULL,
   `src_ugroup_id` int(11) NOT NULL,
   `dst_ugroup_id` int(11) NOT NULL,
   PRIMARY KEY  (`to_group_id`,`src_ugroup_id`,`dst_ugroup_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ugroup_mapping`
@@ -8043,13 +8047,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `ugroup_user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ugroup_user` (
   `ugroup_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ugroup_user`
@@ -8065,8 +8069,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `user_id` int(11) NOT NULL auto_increment,
   `user_name` text NOT NULL,
@@ -8101,7 +8105,7 @@ CREATE TABLE `user` (
   KEY `idx_user_name` (`user_name`(10)),
   KEY `idx_user_user` (`status`)
 ) ENGINE=MyISAM AUTO_INCREMENT=107 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `user`
@@ -8118,8 +8122,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_access`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_access` (
   `user_id` int(11) NOT NULL default '0',
   `last_access_date` int(11) NOT NULL default '0',
@@ -8129,7 +8133,7 @@ CREATE TABLE `user_access` (
   `nb_auth_failure` int(11) NOT NULL default '0',
   PRIMARY KEY  (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `user_access`
@@ -8146,8 +8150,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_bookmarks`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_bookmarks` (
   `bookmark_id` int(11) NOT NULL auto_increment,
   `user_id` int(11) NOT NULL default '0',
@@ -8156,7 +8160,7 @@ CREATE TABLE `user_bookmarks` (
   PRIMARY KEY  (`bookmark_id`),
   KEY `idx_user_bookmark_user_id` (`user_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `user_bookmarks`
@@ -8172,8 +8176,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_group`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_group` (
   `user_group_id` int(11) NOT NULL auto_increment,
   `user_id` int(11) NOT NULL default '0',
@@ -8197,7 +8201,7 @@ CREATE TABLE `user_group` (
   KEY `project_flags_idx` (`project_flags`),
   KEY `admin_flags_idx` (`admin_flags`)
 ) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `user_group`
@@ -8214,13 +8218,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_plugin`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_plugin` (
   `user_id` int(11) NOT NULL,
   `plugin_id` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `user_plugin`
@@ -8236,15 +8240,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_preferences`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user_preferences` (
   `user_id` int(11) NOT NULL default '0',
   `preference_name` varchar(255) NOT NULL default '',
   `preference_value` text,
   PRIMARY KEY  (`user_id`,`preference_name`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `user_preferences`
@@ -8261,8 +8265,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `widget_image`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `widget_image` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `owner_id` int(11) unsigned NOT NULL default '0',
@@ -8272,7 +8276,7 @@ CREATE TABLE `widget_image` (
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `widget_image`
@@ -8288,8 +8292,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `widget_rss`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `widget_rss` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `owner_id` int(11) unsigned NOT NULL default '0',
@@ -8299,7 +8303,7 @@ CREATE TABLE `widget_rss` (
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `widget_rss`
@@ -8315,8 +8319,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `widget_twitterfollow`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `widget_twitterfollow` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `owner_id` int(11) unsigned NOT NULL default '0',
@@ -8326,7 +8330,7 @@ CREATE TABLE `widget_twitterfollow` (
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `widget_twitterfollow`
@@ -8342,8 +8346,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `widget_wikipage`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `widget_wikipage` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `owner_id` int(11) unsigned NOT NULL default '0',
@@ -8354,7 +8358,7 @@ CREATE TABLE `widget_wikipage` (
   PRIMARY KEY  (`id`),
   KEY `owner_id` (`owner_id`,`owner_type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `widget_wikipage`
@@ -8370,8 +8374,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `wiki_attachment`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_attachment` (
   `id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL,
@@ -8380,7 +8384,7 @@ CREATE TABLE `wiki_attachment` (
   `delete_date` int(11) unsigned default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `wiki_attachment`
@@ -8396,8 +8400,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `wiki_attachment_deleted`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_attachment_deleted` (
   `id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL,
@@ -8409,7 +8413,7 @@ CREATE TABLE `wiki_attachment_deleted` (
   KEY `idx_delete_date` (`delete_date`),
   KEY `idx_purge_date` (`purge_date`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `wiki_attachment_deleted`
@@ -8425,8 +8429,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `wiki_attachment_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_attachment_log` (
   `user_id` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
@@ -8437,7 +8441,7 @@ CREATE TABLE `wiki_attachment_log` (
   KEY `time_idx` (`time`),
   KEY `group_id_idx` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `wiki_attachment_log`
@@ -8453,8 +8457,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `wiki_attachment_revision`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_attachment_revision` (
   `id` int(11) NOT NULL auto_increment,
   `attachment_id` int(11) NOT NULL,
@@ -8465,7 +8469,7 @@ CREATE TABLE `wiki_attachment_revision` (
   `size` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `wiki_attachment_revision`
@@ -8481,8 +8485,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `wiki_group_list`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_group_list` (
   `id` int(11) NOT NULL auto_increment,
   `group_id` int(11) NOT NULL default '0',
@@ -8493,7 +8497,7 @@ CREATE TABLE `wiki_group_list` (
   `language_id` varchar(17) NOT NULL default 'en_US',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `wiki_group_list`
@@ -8510,15 +8514,15 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `wiki_link`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_link` (
   `linkfrom` int(11) NOT NULL,
   `linkto` int(11) NOT NULL,
   KEY `linkfrom` (`linkfrom`),
   KEY `linkto` (`linkto`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `wiki_link`
@@ -8535,8 +8539,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `wiki_log`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_log` (
   `user_id` int(11) NOT NULL default '0',
   `group_id` int(11) NOT NULL default '0',
@@ -8546,7 +8550,7 @@ CREATE TABLE `wiki_log` (
   KEY `time_idx` (`time`),
   KEY `group_id_idx` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `wiki_log`
@@ -8562,13 +8566,13 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `wiki_nonempty`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_nonempty` (
   `id` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `wiki_nonempty`
@@ -8585,8 +8589,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `wiki_page`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_page` (
   `id` int(11) NOT NULL auto_increment,
   `pagename` varchar(100) character set utf8 collate utf8_bin NOT NULL,
@@ -8597,7 +8601,7 @@ CREATE TABLE `wiki_page` (
   PRIMARY KEY  (`id`),
   KEY `idx_page_group` (`group_id`,`pagename`(10))
 ) ENGINE=MyISAM AUTO_INCREMENT=246 DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `wiki_page`
@@ -8614,8 +8618,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `wiki_recent`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_recent` (
   `id` int(11) NOT NULL,
   `latestversion` int(11) default NULL,
@@ -8623,7 +8627,7 @@ CREATE TABLE `wiki_recent` (
   `latestminor` int(11) default NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `wiki_recent`
@@ -8640,8 +8644,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `wiki_version`;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `wiki_version` (
   `id` int(11) NOT NULL,
   `version` int(11) NOT NULL,
@@ -8652,7 +8656,7 @@ CREATE TABLE `wiki_version` (
   PRIMARY KEY  (`id`,`version`),
   KEY `mtime` (`mtime`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-SET character_set_client = @saved_cs_client;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `wiki_version`
@@ -8673,4 +8677,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-02-10 11:36:29
+-- Dump completed on 2012-02-10 18:22:12
