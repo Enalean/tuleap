@@ -73,6 +73,43 @@ class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
         $element = new FakeFormElement(null, null, null, null, null, null, null, null, null, null, null, $original);
         return new Tracker_FormElement_View_Admin($element, array());
     }
+    
+    public function testSharedUsageShouldDisplayAllTrackershatShareMe() {
+        $element = $this->GivenAnElementWithManyCopies();
+        $admin   = new Tracker_FormElement_View_Admin($element, array());
+        $content = $admin->fetchSharedUsage();
+        $this->assertPattern('/Canard/', $content);
+        $this->assertPattern('/Saucisse/', $content);
+    }
+    
+    private function GivenAnElementWithManyCopies() {
+        $factory = new MockTracker_FormElementFactory();
+        
+        $project = new MockProject();
+        $project->setReturnValue('getPublicName', 'Project');
+        
+        $element = new FakeFormElement(1, null, null, null, null, null, null, null, null, null, null, null);
+        $element->setFormElementFactory($factory);
+        
+        $tracker1 = new MockTracker();
+        $tracker1->setReturnValue('getId', '123');
+        $tracker1->setReturnValue('getName', 'Canard');
+        $tracker1->setReturnValue('getProject', $project);
+        $copy1    = new FakeFormElement(10, null, null, null, null, null, null, null, null, null, null, $element);
+        $copy2    = new FakeFormElement(20, null, null, null, null, null, null, null, null, null, null, $element);
+        $copy1->setTracker($tracker1);
+        $copy2->setTracker($tracker1);
+        
+        $tracker3 = new MockTracker();
+        $tracker3->setReturnValue('getId', '124');
+        $tracker3->setReturnValue('getName', 'Saucisse');
+        $tracker3->setReturnValue('getProject', $project);
+        $copy3    = new FakeFormElement(30, null, null, null, null, null, null, null, null, null, null, $element);
+        $copy3->setTracker($tracker3);
+        
+        $factory->setReturnValue('getSharedCopies', array($copy1, $copy2, $copy3), array($element));
+        return $element;
+    }
 }
 
 class FakeFormElement extends Tracker_FormElement_Field_String {
@@ -83,6 +120,10 @@ class FakeFormElement extends Tracker_FormElement_Field_String {
 
     public static function getFactoryLabel() {
         
+    }
+    
+    public function setSharedCopies($fields) {
+        $this->sharedCopies = $fields;
     }
 }
 ?>

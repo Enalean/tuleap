@@ -883,6 +883,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return $this->original_field === null;
     }
     
+    public function getSharedCopies() {
+        return $this->getFormElementFactory()->getSharedCopies($this);
+    }
+    
     /**
      * Get a recipients list for notifications. This is filled by users fields for example.
      *

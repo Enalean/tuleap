@@ -310,6 +310,23 @@ class Tracker_FormElement_View_Admin {
         $html .= '</p>';
         return $html;
     }
+    
+    public function fetchSharedUsage() {
+        $html = '';
+        $fields = $this->formElement->getSharedCopies();
+        if ($fields) {
+            $trackers = array();
+            foreach ($fields as $field) {
+                $t = $field->getTracker();
+                $trackers[$t->getId()] = '<a href="'. TRACKER_BASE_URL.'/?tracker='. $t->getId() .'">'. $t->getName() .' ('. $t->getProject()->getPublicName() .')</a>';
+            }
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'field_copied_to');
+            $html .= '<ul><li>';
+            $html .= implode('</li><li>', $trackers);
+            $html .= '</li></ul>';
+        }
+        return $html;
+    }
 }
 
 ?>

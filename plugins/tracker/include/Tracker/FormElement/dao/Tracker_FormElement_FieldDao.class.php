@@ -325,6 +325,12 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->update($sql);
     }
     
+    public function searchSharedCopies($id) {
+        $id  = $this->da->escapeInt($id);
+        $sql = "SELECT id FROM tracker_field WHERE original_field_id = $id";
+        return $this->retrieve($sql);
+    }
+    
     public function create($type, $tracker_id, $parent_id, $name, $prefix_name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field_id) {
         $type              = $this->da->quoteSmart($type);
         $tracker_id        = $this->da->escapeInt($tracker_id);

@@ -37,6 +37,7 @@ class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_V
         $html .= $this->adminElement->fetchAfterAdminEditForm();
         $html .= $this->adminElement->fetchAdminButton(self::SUBMIT_UPDATE);
         $html .= $this->adminElement->fetchAdminFormPermissionLink();
+        $html .= $this->adminElement->fetchSharedUsage();
         return $html;
     }
 

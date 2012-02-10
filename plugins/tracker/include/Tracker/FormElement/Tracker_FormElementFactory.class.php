@@ -641,6 +641,14 @@ class Tracker_FormElementFactory {
         return $label;
     }
     
+    public function getSharedCopies(Tracker_FormElement $element) {
+        $fields = array();
+        foreach ($this->getDao()->searchSharedCopies($element->getId()) as $row) {
+            $fields[] = $this->getFormElementById($row['id']);
+        }
+        return $fields;
+    }
+    
     public function updateFormElement($formElement, $formElement_data) {
         
         //check that the new name is not already used
