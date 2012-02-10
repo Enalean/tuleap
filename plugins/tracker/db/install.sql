@@ -77,7 +77,7 @@ CREATE TABLE tracker_field(
     scope CHAR( 1 ) NOT NULL,
     required TINYINT(1) NULL,
     notifications TINYINT(1) NULL,
-    original_field_id INT( 11 ) UNSIGNED NOT NULL,
+    original_field_id INT( 11 ) UNSIGNED NOT NULL DEFAULT '0',
     INDEX idx_fk_old_id( old_id ),
     INDEX idx_fk_tracker_id( tracker_id ),
     INDEX idx_fk_parent_id( parent_id )
@@ -168,7 +168,7 @@ CREATE TABLE tracker_field_list_bind_static_value(
     description TEXT NOT NULL,
     rank INT(11) NOT NULL,
     is_hidden TINYINT(1) NOT NULL,
-    original_value_id INT(11) NOT NULL,
+    original_value_id INT(11) NOT NULL DEFAULT '0',
     INDEX field_id_idx(field_id)
 )AUTO_INCREMENT=101;
 
