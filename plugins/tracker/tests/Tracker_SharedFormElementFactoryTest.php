@@ -35,7 +35,7 @@ Mock::generate('Tracker_FormElement_Field_List_Bind_Users');
 class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
 
     public function testCreateFormElementExtractsDataFromOriginalFieldThenForwardsToFactory() {
-        $originField = $this->GivenAFieldSelectbox();
+        $originField = $this->GivenAFieldSelectbox(321, null);
         list($decorator, $factory, $tracker, $user) = $this->GivenASharedFormElementFactory($originField, 'string');
         $originField->setReturnValue('userCanRead', true, array($user));
         $originField->getTracker()->setReturnValue('userCanView', true, array($user));
@@ -66,7 +66,7 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
     }
 
     public function testUnreadableFieldCannotBeCopied() {
-        $field = $this->GivenAFieldSelectbox();
+        $field = $this->GivenAFieldSelectbox(321, null);
         list($decorator, $factory, $tracker, $user) = $this->GivenASharedFormElementFactory($field, 'string');
         $field->setReturnValue('userCanRead', false, array($user));
         $field->getTracker()->setReturnValue('userCanView', true, array($user));
@@ -76,7 +76,7 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
     }
 
     public function testFieldInUnaccessibleTrackerCannotBeCopied() {
-        $field = $this->GivenAFieldSelectbox();
+        $field = $this->GivenAFieldSelectbox(321, null);
         list($decorator, $factory, $tracker, $user) = $this->GivenASharedFormElementFactory($field, 'string');
         $field->setReturnValue('userCanRead', true, array($user));
         $field->getTracker()->setReturnValue('userCanView', false, array($user));
@@ -86,7 +86,7 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
     }
 
     public function testDuplicatesAnyValuesThatAreBoundToTheOriginalField() {
-        $originField = $this->GivenAFieldSelectbox();
+        $originField = $this->GivenAFieldSelectbox(321, null);
         list($decorator, $factory, $tracker, $user, $boundValuesFactory) = $this->GivenASharedFormElementFactory($originField, 'string');
         $originField->setReturnValue('userCanRead', true, array($user));
         $originField->getTracker()->setReturnValue('userCanView', true, array($user));
@@ -98,10 +98,59 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
 
     }
 
-    private function GivenAFieldSelectbox() {
+    public function testSharedFieldsShouldRespectChaslesTheorem() {
+        list($originalField, $originalFieldOfOriginalField, $tracker, $decorator, $factory, $user) = $this->GivenTwoFieldsThatAreShared();
+        $formElement_data = $this->WhenIShareTheCopy($originalField);
+        $this->ThenTheOriginalShouldBeUsed($factory, $originalFieldOfOriginalField, $decorator, $tracker, $formElement_data, $user);
+    }
+
+    private function GivenTwoFieldsThatAreShared() {
+        $originalFieldOfOriginalField = $this->GivenAFieldSelectbox(123, null);
+        $originalFieldOfOriginalField->setReturnValue('userCanRead', true);
+        $originalFieldOfOriginalField->getTracker()->setReturnValue('userCanView', true);
+
+        $originalField                = $this->GivenAFieldSelectbox(456, $originalFieldOfOriginalField);
+        $originalField->setReturnValue('userCanRead', true);
+        $originalField->getTracker()->setReturnValue('userCanView', true);
+
+        list($decorator, $factory, $tracker, $user, $boundValuesFactory) = $this->GivenASharedFormElementFactory($originalField, 'string');
+        $factory->setReturnValue('getType', 'string', array($originalFieldOfOriginalField));
+
+        return array($originalField, $originalFieldOfOriginalField, $tracker, $decorator, $factory, $user);
+    }
+    
+    private function WhenIShareTheCopy($originalField) {
+        $formElement_data = array(
+            'field_id' => $originalField->getId(),
+        );
+        return $formElement_data;
+    }
+
+    private function ThenTheOriginalShouldBeUsed($factory, $originalFieldOfOriginalField, $decorator, $tracker, $formElement_data, $user) {
+        $factory->expectOnce(
+            'createFormElement', 
+            array(
+                $tracker, 
+                'string', 
+                array(
+                    'type'              => 'string',
+                    'label'             => $originalFieldOfOriginalField->getLabel(),
+                    'description'       => $originalFieldOfOriginalField->getDescription(),
+                    'use_it'            => $originalFieldOfOriginalField->isUsed(),
+                    'scope'             => $originalFieldOfOriginalField->getScope(),
+                    'required'          => $originalFieldOfOriginalField->isRequired(),
+                    'notifications'     => $originalFieldOfOriginalField->hasNotifications(),
+                    'original_field_id' => $originalFieldOfOriginalField->getId(),
+                )
+            )
+        );
+        $decorator->createFormElement($tracker, $formElement_data, $user);
+    }
+
+    private function GivenAFieldSelectbox($id, $originalField) {
         $tracker = new MockTracker();
         $field = new MockTracker_FormElement_Field_Selectbox();
-        $field->setReturnValue('getId', 321);
+        $field->setReturnValue('getId', $id);
         $field->setReturnValue('getTrackerId', 101);
         $field->setReturnValue('getTracker', $tracker);
         $field->setReturnValue('getParentId', 12);
@@ -115,6 +164,10 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $field->setReturnValue('getRank', '145');
         $field->setReturnValue('getOriginalFieldId', 321);
         $field->setReturnValue('getBind', new MockTracker_FormElement_Field_List_Bind_Static());
+        $field->setReturnValue('getOriginalField', $originalField);
+        if ($originalField) {
+            $field->setReturnValue('getOriginalFieldId', $originalField->getId());
+        }
         return $field;
     }
 

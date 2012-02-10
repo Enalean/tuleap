@@ -34,7 +34,7 @@ class Tracker_SharedFormElementFactory {
     }
     
     public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {
-        $field = $this->factory->getFormElementById($formElement_data['field_id']);
+        $field = $this->getRootOriginalField($this->factory->getFormElementById($formElement_data['field_id']));
         $this->assertFieldCanBeCopied($field, $user);
         
         $data = $this->populateFormElementDataForASharedField($field);
@@ -42,6 +42,14 @@ class Tracker_SharedFormElementFactory {
         $id = $this->factory->createFormElement($tracker, $type, $data);
         $this->boundValuesFactory->duplicateByReference($field->getId(), $id);
         return $id;
+    }
+
+    private function getRootOriginalField(Tracker_FormElement $field) {
+        $originalField = $field->getOriginalField();
+        if ($originalField === null) {
+            return $field;
+        }
+        return $this->getRootOriginalField($originalField);
     }
     
     private function assertFieldCanBeCopied(Tracker_FormElement $field, User $user) {
