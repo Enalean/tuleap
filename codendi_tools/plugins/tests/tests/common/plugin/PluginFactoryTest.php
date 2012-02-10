@@ -22,14 +22,7 @@ class customPlugin extends Plugin {
  * Tests the class PluginFactory
  */
 class PluginFactoryTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function PluginFactoryTest($name = 'PluginFactory test') {
-        $this->UnitTestCase($name);
-    }
-    
+
     function testGetPluginById() {
         $plugin_dao    = new MockPluginDao($this);
         $access_result = new MockDataAccessResult($this);

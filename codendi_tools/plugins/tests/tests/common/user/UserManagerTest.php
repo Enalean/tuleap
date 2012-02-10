@@ -48,13 +48,6 @@ class MockEM4UserManager extends BaseMockEventManager {
  * Tests the class User
  */
 class UserManagerTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function UserManagerTest($name = 'User Manager test') {
-        $this->UnitTestCase($name);
-    }
     
     function setUp() {
         $GLOBALS['Response'] = new MockResponse($this);

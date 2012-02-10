@@ -11,13 +11,6 @@ require_once('www/file/file_utils.php');
  */
 
 class FileUtils extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function FileUtils($name = 'FileUtils test') {
-        $this->UnitTestCase($name);
-    }
 
     function testFileUtilsGetSize_1_Mo_File() {
         $file = dirname(__FILE__) . '/_fixtures/File_1_Mo';

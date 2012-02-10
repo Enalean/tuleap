@@ -30,10 +30,6 @@ Mock::generatePartial('Docman_FilterFactory', 'Docman_FilterFactoryTestVersion',
 
 class Docman_FilterFactoryTest extends UnitTestCase {
 
-    function Docman_FilterFactoryTest ($name = 'Docman_FilterFactory test') {
-        $this->UnitTestCase($name);
-    }
-
     function testCloneFilter() {
         $mdFactory =  new MockDocman_MetadataFactory();
         $mdFactory->setReturnValue('isRealMetadata', false);

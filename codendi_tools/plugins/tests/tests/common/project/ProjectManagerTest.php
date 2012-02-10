@@ -33,9 +33,6 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class ProjectManagerTest extends UnitTestCase {
-    function __construct($name = 'ProjectManager test') {
-        $this->UnitTestCase($name);
-    }
 
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage();

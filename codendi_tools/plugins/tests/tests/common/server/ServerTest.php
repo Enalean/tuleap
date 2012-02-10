@@ -7,10 +7,7 @@
 require_once('common/server/Server.class.php');
 
 class ServerTest extends UnitTestCase {
-    function ServerTest($name = 'Server test') {
-        $this->UnitTestCase($name);
-    }
-    
+
     function testGetUrl() {
         $http = 'http url';
         $https = 'https url';

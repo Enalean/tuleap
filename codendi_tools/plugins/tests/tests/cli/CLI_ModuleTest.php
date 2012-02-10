@@ -15,9 +15,6 @@ Mock::generatePartial('CLI_Module', 'CLI_ModuleTestVersion', array('help'));
 
 
 class CLI_ModuleTest extends UnitTestCase {
-    function CLI_ModuleTest($name = 'CLI_Module test') {
-        $this->UnitTestCase($name);
-    }
     
     function test_get_parameter() {
         $params = explode(' ', '-v --name=john -l doe -abc --content=/tracker/?group_id=1');
