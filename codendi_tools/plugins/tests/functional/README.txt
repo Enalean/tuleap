@@ -4,8 +4,8 @@ Launch tests
 Cucumber tests
 --------------
 
-$> cd feature
-$> cucumber
+$> cd tuleap
+$> cucumber 
 Feature: Make cucumber work
 
   Scenario: A user can logon              # features/test.feature:3
@@ -17,6 +17,12 @@ Feature: Make cucumber work
 3 steps (3 passed)
 0m13.740s
 
+There are preconfigured profiles for cucumber (in .config/cucumber.yml) you can use them by
+$> cucumber -p <profile>
+for a list of profiles just enter a non existing profile, cucumber will show which ones are available
+for instance 
+$> cucumber -p blabla
+More documentation https://github.com/cucumber/cucumber/wiki/cucumber.yml
 
 Installation & Setup
 ====================
