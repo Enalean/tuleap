@@ -29,6 +29,8 @@ enabled=1
 gpgcheck=0
 EOF
 
+yum install php-pecl-json
+yum install php-zendframework
 
 # install rpms
 # local centos mirror may produce ftp io errors
