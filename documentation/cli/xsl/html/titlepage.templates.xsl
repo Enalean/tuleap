@@ -14,7 +14,7 @@
 <xsl:template name="book.titlepage.recto">
   <!-- CX-SBT: Add the Codendi logo + Version/Date -->
   <div align="center">
-    <img src="../../icons/codendi.png"/><br/><br/>
+    <img src="../../icons/logo.png"/><br/><br/>
   <xsl:choose>
     <xsl:when test="bookinfo/title">
       <xsl:apply-templates mode="book.titlepage.recto.auto.mode" select="bookinfo/title"/>
