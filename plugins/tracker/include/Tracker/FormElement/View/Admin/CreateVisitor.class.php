@@ -20,7 +20,7 @@
 require_once 'Visitor.class.php';
 
 /**
- * Can visit a FormElement and provides the corresponding administration element 
+ * Visit a FormElement and provides a create view
  */
 class Tracker_FormElement_View_Admin_CreateVisitor extends Tracker_FormElement_View_Admin_Visitor {
     private $type;

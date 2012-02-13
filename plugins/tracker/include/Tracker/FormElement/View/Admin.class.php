@@ -19,6 +19,11 @@
  
 require_once dirname(__FILE__) .'/../Tracker_FormElement.class.php';
 
+/**
+ * Manage display of FormElement administration (creation / update).
+ * 
+ * This is the top most element of the hierarchy and correspond to Tracker_FormElement
+ */
 class Tracker_FormElement_View_Admin {
     
     /**

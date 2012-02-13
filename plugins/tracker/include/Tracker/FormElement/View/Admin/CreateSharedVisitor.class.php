@@ -20,7 +20,7 @@
 require_once 'CreateVisitor.class.php';
 
 /**
- * Can visit a FormElement and provides the corresponding administration element 
+ * Visit a target shared element and provide a creation view
  */
 class Tracker_FormElement_View_Admin_CreateSharedVisitor extends Tracker_FormElement_View_Admin_CreateVisitor {
 
