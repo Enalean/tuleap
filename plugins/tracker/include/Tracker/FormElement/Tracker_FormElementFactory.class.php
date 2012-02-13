@@ -478,8 +478,10 @@ class Tracker_FormElementFactory {
     
     /**
      * @param Tracker $tracker
-     * @param mixed $type the type (string) or types (array of) you are looking for
-     * @return array All text formElements used by the tracker
+     * @param mixed   $type    The type (string) or types (array of) you are looking for
+     * @param Boolean $used    Check if the type is used or not
+     * 
+     * @return Array of Tracker_FormElement All formElements used by the tracker
      */
     public function getFormElementsByType($tracker, $type, $used = null) {
         return $this->getCachedInstancesFromDAR($this->getDao()->searchUsedByTrackerIdAndType($tracker->id, $type, $used));
