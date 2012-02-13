@@ -25,6 +25,7 @@ Mock::generate('Tracker');
 Mock::generate('Project');
 Mock::generate('Layout');
 Mock::generate('Tracker_FormElement_Field_String');
+Mock::generate('Tracker_FormElementFactory');
 
 if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker');
@@ -107,7 +108,7 @@ class Tracker_FormElement_View_AdminTest extends TuleapTestCase {
         $copy3    = new FakeFormElement(30, null, null, null, null, null, null, null, null, null, null, $element);
         $copy3->setTracker($tracker3);
         
-        $factory->setReturnValue('getSharedCopies', array($copy1, $copy2, $copy3), array($element));
+        $factory->setReturnValue('getSharedTargets', array($copy1, $copy2, $copy3), array($element));
         return $element;
     }
 }
