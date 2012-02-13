@@ -1040,7 +1040,6 @@ class Tracker_FormElementFactory {
      * @param tracker $tracker of the created tracker
      * @param Object $formElement 
      * @param int $parent_id the id of the newly created parent formElement (0 when no parent)
-     * @param User $user The current User
      *
      * @return the id of the newly created FormElement
      */
