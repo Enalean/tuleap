@@ -326,11 +326,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function displayAdminFormElement(TrackerManager $tracker_manager, $request, $current_user) {
         $allUsedElements = $this->getFormElementFactory()->getUsedFormElementForTracker($this->getTracker());
-	if ($this->isModifiable()) {
-	  $visitor = new Tracker_FormElement_View_Admin_UpdateVisitor($allUsedElements);
-	} else {
-	  $visitor = new Tracker_FormElement_View_Admin_UpdateSharedVisitor($allUsedElements);
-	}
+        if ($this->isTargetSharedField()) {
+            $visitor = new Tracker_FormElement_View_Admin_UpdateSharedVisitor($allUsedElements);
+        } else {
+            $visitor = new Tracker_FormElement_View_Admin_UpdateVisitor($allUsedElements);
+        }
         $this->accept($visitor);
         $visitor->display($tracker_manager, $request);
     }
@@ -878,9 +878,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return $this->getOriginalTracker()->getProject();
     }
     
-    
-    public function isModifiable() {
-        return $this->original_field === null;
+    /**
+     * Returns true if the field is a copy of another one
+     * 
+     * @return Boolean
+     */
+    public function isTargetSharedField() {
+        return $this->original_field !== null;
     }
     
     public function getSharedCopies() {

@@ -422,10 +422,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      * @return string html
      */
     public function fetchAdminEditForm() {
-        if ($this->field->isModifiable()) {
-            return $this->fetchAdminEditFormModifiable();
-        } else {
+        if ($this->field->isTargetSharedField()) {
             return $this->fetchAdminEditFormNotModifiable();
+        } else {
+            return $this->fetchAdminEditFormModifiable();
+            
         }
     }
     
