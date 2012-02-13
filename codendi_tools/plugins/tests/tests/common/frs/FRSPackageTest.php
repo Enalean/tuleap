@@ -10,15 +10,6 @@ require_once('common/frs/FRSPackage.class.php');
  * Tests the FRSPackage class
  */
 class FRSPackageTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function FRSPackageTest($name = 'FRSPackage test') {
-        global $GLOBALS;
-        
-        $this->UnitTestCase($name);
-    }
 
     function testIsActive() {
         global $GLOBALS;

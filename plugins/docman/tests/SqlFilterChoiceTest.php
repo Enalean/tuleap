@@ -28,10 +28,6 @@ Mock::generatePartial('Docman_SqlFilter', 'Docman_SqlFilterTestVersion', array()
 
 class SqlFilterChoiceTest extends UnitTestCase {
     
-    function __construct($name = 'Docman_SqlFilter test') {
-    }
-
-
     function testSqlFilterChoicePerPattern() {
         $docmanSf = new Docman_SqlFilterTestVersion($this);
 

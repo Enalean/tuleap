@@ -52,14 +52,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         //return $this->getDao()->delete($this->id);
     }
     
-    public function fetchLabel() {
-        $html = parent::fetchLabel();
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions_help');
-        $html .= '</span>';
-        return $html;
-    }
-    
     /**
      * Display the field as a Changeset value.
      * Used in report table
@@ -382,6 +374,13 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/lock--plus.png');
+    }
+    
+    /**
+     * @return bool say if the field is a unique one
+     */
+    public static function getFactoryUniqueField() {
+        return true;
     }
     
     /**
@@ -732,6 +731,5 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         }
         return true;
     }
-
 }
 ?>

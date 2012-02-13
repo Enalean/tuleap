@@ -33,10 +33,6 @@ Mock::generatePartial('Docman_MetadataListOfValuesElementDao', 'MetadataListOfVa
 
 class MetadataListOfValuesElementDaoTest extends UnitTestCase {
     
-    function MetadataListOfValuesElementDaoTest($name = 'Docman_MetadataListOfValuesElementDao test') {
-
-    }
-
     function testUpdate() {
         // Data
         $metadataId = 1444;

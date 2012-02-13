@@ -4,6 +4,9 @@ require 'capybara-screenshot/cucumber'
 require 'capybara/dsl'
 require File.dirname(__FILE__) + '/svn.rb'
 
+#require 'ruby-debug'
+#Debugger.start
+
 include RSpec::Matchers
 include Capybara::DSL
 
@@ -36,8 +39,8 @@ begin
 rescue LoadError
 end
 
-#Capybara.default_driver = :firefox
+Capybara.default_driver = :firefox
 #Capybara.default_driver = :ie7
-Capybara.default_driver = :webkit_ignore_ssl
+#Capybara.default_driver = :webkit_ignore_ssl
 
 

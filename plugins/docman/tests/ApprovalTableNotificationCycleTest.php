@@ -39,10 +39,6 @@ Mock::generate('Docman_ApprovalTable');
 
 class ApprovalTableNotificationCycleTest extends UnitTestCase {
 
-    function ApprovalTableNotificationCycleTest($name = 'Docman_ApprovalTableNotificationCycleTest test') {
-        $this->UnitTestCase($name);
-    }
-
     function setUp() {
         //$GLOBALS['Language'] =& new MockBaseLanguage($this);
     }
@@ -165,8 +161,6 @@ class ApprovalTableNotificationCycleTest extends UnitTestCase {
         $isLastReviewer = true;
         $withComments = "";
         $cycle->reviewerApprove($reviewer, $isLastReviewer, $withComments);
-
-        $cycle->tally();
     }
 
 }

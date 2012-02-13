@@ -88,14 +88,6 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         return $this->name;
     }
 
-    public function fetchLabel() {
-        $html = parent::fetchLabel();
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_help');
-        $html .= '</span>';
-        return $html;
-    }
-
     /**
      * @return the label of the field (mainly used in admin part)
      */
@@ -271,16 +263,6 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
     }
     
     /**
-     * Fetch the "required" part of field admin
-     *
-     * @param string the HTML for the part of form for required checkbox
-     */
-    protected function fetchRequired() {
-        $html = '';
-        return $html;
-    }
-
-    /**
      * Display the html field in the admin ui
      *
      * @return string html
@@ -293,26 +275,6 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
         $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_help');
         $html .= '</span>';
         return $html;
-    }
-
-    /**
-     * Fetch additionnal stuff to display below the create form
-     * Result if not empty must be enclosed in a <tr>
-     *
-     * @return string html
-     */
-    protected function fetchAfterAdminCreateForm() {
-        // Don't display the values because this is a special field
-        return '';
-    }
-    /**
-     * Fetch additionnal stuff to display below the edit form
-     *
-     * @return string html
-     */
-    protected function fetchAfterAdminEditForm() {
-        // Don't display the values because this is a special field
-        return '';
     }
 
     /**
@@ -381,6 +343,5 @@ class Tracker_FormElement_Field_SubmittedBy extends Tracker_FormElement_Field_Li
             return null;
         }
     }
-
 }
 ?>

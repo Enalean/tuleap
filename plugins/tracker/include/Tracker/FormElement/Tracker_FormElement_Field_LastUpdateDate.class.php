@@ -95,14 +95,6 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     protected function getValueDao() {
         return null;
     }
-
-    public function fetchLabel() {
-        $html = parent::fetchLabel();
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_help');
-        $html .= '</span>';
-        return $html;
-    }
     
     /**
      * @return the label of the field (mainly used in admin part)
@@ -304,16 +296,6 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     public function isValid(Tracker_Artifact $artifact, $value) {
         // this field is always valid as it is not filled by users.
         return true;
-    }
-    
-    /**
-     * Fetch the "required" part of field admin
-     *
-     * @param string the HTML for the part of form for required checkbox
-     */
-    protected function fetchRequired() {
-        $html = '';
-        return $html;
     }
     
     public function fetchSubmit($submitted_values = array()) {

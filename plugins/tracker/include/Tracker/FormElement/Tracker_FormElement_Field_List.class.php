@@ -176,7 +176,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     
     /**
      * Return the dao of the criteria value used with this field.
-     * @return DataAccessObject
+     * @return Tracker_Report_Criteria_List_ValueDao
      */
     protected function getCriteriaDao() {
         return new Tracker_Report_Criteria_List_ValueDao();
@@ -735,31 +735,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
         return $html;
     }
-    
-    /**
-     * Fetch additionnal stuff to display below the edit form
-     *
-     * @return string html
-     */
-    protected function fetchAfterAdminEditForm() {
-        return $this->getBind()->fetchAdminEditForm();
-    }
-    
-    /**
-     * Fetch additionnal stuff to display below the create form
-     * Result if not empty must be enclosed in a <tr>
-     *
-     * @return string html
-     */
-    protected function fetchAfterAdminCreateForm() {
-        $bf = new Tracker_FormElement_Field_List_BindFactory();
-        $html = '';
-        $html .= '<tr valign="top"><td colspan="2">';
-        $html .= $bf->fetchCreateABind($this);
-        $html .= '</td></tr>';
-        return $html;
-    }
-    
+        
     /**
      * Update the form element.
      * Override the parent function to handle binds
@@ -1046,6 +1022,5 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
         return !$this->has_errors;
     }
-
 }
 ?>

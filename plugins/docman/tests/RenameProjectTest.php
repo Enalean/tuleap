@@ -32,10 +32,6 @@ Mock::generate('Project');
 
 class RenameProjectTest extends UnitTestCase {
 
-    function __construct($name = 'RenameProject test') {
-        parent::__construct($name);
-    }
-
     function testRenameProjectTest() {
 
         $rem  = new Docman_VersionFactoryTestVersion2($this);

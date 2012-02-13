@@ -65,13 +65,6 @@ Mock::generate('ArtifactType');
  * Tests the class ArtifactImport
  */
 class ArtifactImportTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function ArtifactImportTest($name = 'ArtifactImport test') {
-        $this->UnitTestCase($name);
-    }
 
     function testALL() {
 

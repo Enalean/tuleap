@@ -93,6 +93,12 @@ class CodendiHtmlReporter extends HtmlReporter implements iCodeCoverageReporter 
             print " -&gt; " . $this->_htmlEntities($message) . "<br />\n";
         }
     }
+    
+    function paintException($exception) {
+        parent::paintException($exception);
+        echo '<pre>'. $exception->getTraceAsString() .'</pre>';
+    }
+    
     function paintFail($message) {
         echo '<p><input type="checkbox" onclick="$(this).siblings().invoke(\'toggle\');" /><span>';
         parent::paintFail($message);

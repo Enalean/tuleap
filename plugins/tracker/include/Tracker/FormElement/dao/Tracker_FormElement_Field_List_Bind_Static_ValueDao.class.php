@@ -21,6 +21,9 @@
 require_once('common/dao/include/DataAccessObject.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObject {
+    const COPY_BY_REFERENCE = true;
+    const COPY_BY_VALUE = false;
+    
     function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_field_list_bind_static_value';
@@ -42,15 +45,24 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                 ORDER BY ". ($is_rank_alpha ? 'label' : 'rank');
         return $this->retrieve($sql);
     }
-    public function duplicate($from_value_id, $to_field_id) {
+    public function duplicate($from_value_id, $to_field_id, $by_reference) {
         $from_value_id  = $this->da->escapeInt($from_value_id);
         $to_field_id    = $this->da->escapeInt($to_field_id);
-        $sql = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden)
-                SELECT $to_field_id, label, description, rank, is_hidden
+        if ($by_reference) {
+            $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
+                    SELECT $to_field_id, label, description, rank, is_hidden, $from_value_id";
+            
+        } else {
+            $insert = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden)
+                    SELECT $to_field_id, label, description, rank, is_hidden";
+        }
+        $sql = $insert . "
                 FROM $this->table_name
                 WHERE id = $from_value_id";
+                
         return $this->updateAndGetLastId($sql);
     }
+
     public function create($field_id, $label, $description, $rank, $is_hidden) {
         $field_id     = $this->da->escapeInt($field_id);
         $label        = $this->da->quoteSmart($label);
@@ -63,6 +75,19 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         return $this->updateAndGetLastId($sql);
     }
     
+    public function propagateCreation($field, $original_value_id) {
+        $field_id     = $this->da->escapeInt($field->id);
+        $original_value_id     = $this->da->escapeInt($original_value_id);
+        
+        $sql = "INSERT INTO $this->table_name (field_id, label, description, rank, is_hidden, original_value_id)
+                SELECT target.id, original_value.label, original_value.description, original_value.rank, original_value.is_hidden, $original_value_id
+                    FROM tracker_field_list_bind_static_value AS original_value
+                    INNER JOIN tracker_field AS target ON (target.original_field_id = original_value.field_id)
+                    WHERE original_value.field_id = $field_id 
+                        AND original_value.id = $original_value_id 
+                        AND original_value.field_id != target.id";
+        return $this->retrieve($sql);
+    }
     
     public function save($id, $field_id, $label, $description, $rank, $is_hidden) {
         $id           = $this->da->escapeInt($id);
@@ -77,17 +102,17 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                     description = $description,
                     rank = $rank, 
                     is_hidden = $is_hidden
-                WHERE field_id = $field_id
-                  AND id = $id";
+                WHERE id = $id
+                  OR original_value_id = $id";
         return $this->update($sql);
     }
     
-    public function delete($field_id, $id) {
+    public function delete($id) {
         $id       = $this->da->escapeInt($id);
-        $field_id = $this->da->escapeInt($field_id);
         $sql = "DELETE FROM $this->table_name 
-                WHERE field_id = $field_id 
-                  AND id = $id";
+                WHERE id = $id 
+                   OR original_value_id = $id";
+        
         return $this->update($sql);
     }
     
@@ -111,21 +136,28 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
         $value_id = $this->da->escapeInt($value_id);
         $sql = "SELECT null
                 FROM $this->table_name AS v
-                    INNER JOIN tracker_workflow_transition AS wt ON (wt.from_id = v.id AND v.id = $value_id)
-                    INNER JOIN tracker_workflow AS w ON (w.workflow_id = wt.workflow_id AND v.field_id = w.field_id AND w.field_id = $field_id)
-                UNION 
+                    INNER JOIN tracker_workflow AS w ON (
+                        v.field_id = w.field_id
+                        AND 
+                        (v.id = $value_id OR v.original_value_id = $value_id)
+                    )
+                    INNER JOIN tracker_workflow_transition AS wt ON (
+                        w.workflow_id = wt.workflow_id 
+                        AND
+                        (wt.from_id = v.id AND (v.original_value_id <> 0 OR wt.from_id = v.original_value_id)) 
+                    )
+                UNION
                 SELECT null
                 FROM $this->table_name AS v
-                    INNER JOIN tracker_workflow_transition AS wt ON (wt.to_id = v.id AND v.id = $value_id)
-                    INNER JOIN tracker_workflow AS w ON (w.workflow_id = wt.workflow_id AND v.field_id = w.field_id AND w.field_id = $field_id)
+                    INNER JOIN tracker_workflow_transition AS wt ON ((wt.to_id = v.id OR wt.to_id = v.original_value_id) AND (v.id = $value_id OR v.original_value_id = $value_id))
+                    INNER JOIN tracker_workflow AS w ON (w.workflow_id = wt.workflow_id AND v.field_id = w.field_id)
                 UNION 
                 SELECT null
                 FROM $this->table_name AS v
                     INNER JOIN tracker_semantic_status AS s 
-                    ON (s.open_value_id = v.id 
-                        AND v.id = $value_id 
-                        AND s.field_id = v.field_id 
-                        AND s.field_id = $field_id)
+                    ON ((s.open_value_id = v.id OR s.open_value_id = v.original_value_id)
+                        AND (v.id = $value_id OR v.original_value_id = $value_id)
+                        AND s.field_id = v.field_id)
                 UNION 
                 SELECT null
                 FROM $this->table_name AS v
@@ -133,7 +165,16 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                     ON ( v.id = $value_id 
                         AND (tr.source_field_id = v.field_id OR tr.target_field_id = v.field_id)
                         AND ((tr.source_field_id = $field_id AND tr.source_value_id = $value_id) OR (tr.target_field_id = $field_id AND tr.target_value_id = $value_id)))
-                
+                UNION
+                SELECT null
+                FROM tracker_field AS original
+                    INNER JOIN tracker_field AS copied_field ON(original.id = copied_field.original_field_id AND original.id = $field_id)
+                    INNER JOIN tracker_field_list_bind_static_value AS copied_value ON (copied_value.field_id = copied_field.id AND copied_value.original_value_id = $value_id)
+                    INNER JOIN tracker_rule AS tr ON (
+                        (tr.source_field_id = copied_field.id AND tr.source_value_id = copied_value.id)
+                        OR
+                        (tr.target_field_id = copied_field.id AND tr.target_value_id = copied_value.id)
+                    )
                 ";
         return count($this->retrieve($sql)) == 0;
     }
@@ -141,10 +182,12 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
     public function canValueBeDeleted($field_id, $value_id) {
         $field_id = $this->da->escapeInt($field_id);
         $value_id = $this->da->escapeInt($value_id);
+        
         $sql = "SELECT null
                 FROM $this->table_name AS v
-                    INNER JOIN tracker_changeset_value_list AS cvl ON (v.id = cvl.bindvalue_id AND v.id = $value_id)
-                    INNER JOIN tracker_changeset_value AS cv ON (cv.id = cvl.changeset_value_id AND cv.field_id = v.field_id AND cv.field_id = $field_id)
+                    INNER JOIN tracker_changeset_value_list AS cvl ON (v.id = cvl.bindvalue_id)
+                    INNER JOIN tracker_changeset_value AS cv ON (cv.id = cvl.changeset_value_id AND cv.field_id = v.field_id)
+                WHERE v.original_value_id = $value_id OR v.id = $value_id
                 UNION
                 SELECT null
                 FROM $this->table_name AS v

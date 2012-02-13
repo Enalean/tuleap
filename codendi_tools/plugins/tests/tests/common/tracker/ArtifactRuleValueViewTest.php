@@ -11,13 +11,6 @@ Mock::generate('ArtifactRuleValue');
  * Tests the class ArtifactRuleValueView
  */
 class ArtifactRuleValueViewTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function ArtifactRuleValueViewTest($name = 'ArtifactRuleValueView test') {
-        $this->UnitTestCase($name);
-    }
 
     function testFetch() {
         $rule =& new MockArtifactRuleValue($this);

@@ -15,13 +15,6 @@ Mock::generate('Plugin');
  * Tests the class PluginHookPriorityManager
  */
 class PluginHookPriorityManagerTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function PluginHookPriorityManagerTest($name = 'PluginHookPriorityManager test') {
-        $this->UnitTestCase($name);
-    }
 
     function testGetPriorityForPluginHook() {
         $plugin       = new MockPlugin($this);
@@ -38,8 +31,6 @@ class PluginHookPriorityManagerTest extends UnitTestCase {
         $phgm->setReturnReference('_getPriorityPluginHookDao', $priority_dao);
 
         $this->assertEqual(10, $phgm->getPriorityForPluginHook($plugin, 'hook'));
-        
-        $priority_dao->tally();
     }
     
     function testSetPriorityForPluginHook() {
@@ -55,8 +46,6 @@ class PluginHookPriorityManagerTest extends UnitTestCase {
         $phgm->setReturnReference('_getPriorityPluginHookDao', $priority_dao);
 
         $this->assertTrue($phgm->setPriorityForPluginHook($plugin, 'hook', 15));
-        
-        $priority_dao->tally();
     }
     
     function testRemovePlugin() {
@@ -72,8 +61,6 @@ class PluginHookPriorityManagerTest extends UnitTestCase {
         $phgm->setReturnReference('_getPriorityPluginHookDao', $priority_dao);
 
         $this->assertTrue($phgm->removePlugin($plugin));
-        
-        $priority_dao->tally();
     }
 }
 ?>

@@ -19,13 +19,19 @@
  */
 
 require_once('Tracker_FormElement_Interface.class.php');
+require_once('Tracker_FormElement_Description.class.php');
+require_once('Tracker_FormElementFactory.class.php');
+require_once(dirname(__FILE__).'/../TrackerManager.class.php');
+
+require_once 'View/Admin/UpdateVisitor.class.php';
+require_once 'View/Admin/UpdateSharedVisitor.class.php';
 
 require_once('json.php');
 
 /**
  * Base class for all fields in trackers, from fieldsets to selectboxes
  */
-abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
+abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_Description {
     /**
      * The field id
      */
@@ -35,6 +41,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      * The tracker id
      */
     public $tracker_id;
+
+    /**
+     * @var Tracker
+     */
+    private $tracker;
     
     /**
      * Id of the fieldcomposite this field belongs to
@@ -88,34 +99,50 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
     public $rank;
     
     /**
+     * @var Tracker_FormElement
+     */
+    protected $original_field = null;
+    
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formElementFactory;
+    
+    /**
      * Base constructor
      * 
-     * @param int    $id          The id of the field
-     * @param int    $tracker_id  The id of the tracker this field belongs to
-     * @param int    $parent_id   The id of the parent element
-     * @param string $name        The short name of the field
-     * @param string $label       The label of the element
-     * @param string $description The description of the element
-     * @param bool   $use_it      Is the element used?
-     * @param string $scope       The scope of the plugin 'S' | 'P'
-     * @param bool   $required    Is the element required? Todo: move this in field?
-     * @param int    $rank        The rank of the field (in the parent)
+     * @param int    $id                          The id of the field
+     * @param int    $tracker_id                  The id of the tracker this field belongs to
+     * @param int    $parent_id                   The id of the parent element
+     * @param string $name                        The short name of the field
+     * @param string $label                       The label of the element
+     * @param string $description                 The description of the element
+     * @param bool   $use_it                      Is the element used?
+     * @param string $scope                       The scope of the plugin 'S' | 'P'
+     * @param bool   $required                    Is the element required? Todo: move this in field?
+     * @param int    $rank                        The rank of the field (in the parent)
+     * @param Tracker_FormElement $original_field The field the current field is refering to (null if no references)
      * 
      * @return void
      */
-    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank) {
-        $this->id            = $id;
-        $this->tracker_id    = $tracker_id;
-        $this->parent_id     = $parent_id;
-        $this->name          = $name;
-        $this->label         = $label;
-        $this->description   = $description;
-        $this->use_it        = $use_it;
-        $this->scope         = $scope;
-        $this->required      = $required;
-        $this->notifications = $notifications;
-        $this->rank          = $rank;
+    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, Tracker_FormElement $original_field = null) {
+        $this->id             = $id;
+        $this->tracker_id     = $tracker_id;
+        $this->parent_id      = $parent_id;
+        $this->name           = $name;
+        $this->label          = $label;
+        $this->description    = $description;
+        $this->use_it         = $use_it;
+        $this->scope          = $scope;
+        $this->required       = $required;
+        $this->notifications  = $notifications;
+        $this->rank           = $rank;
+        $this->original_field = $original_field;
     }
+    
+    public function getScope() { return $this->scope; }
+    public function getParentId() { return $this->parent_id; }
+    public function getRank() { return $this->rank; }
     
     /**
      *  Return true if the field is used
@@ -205,7 +232,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      * @return Tracker
      */
     public function getTracker() {
-        return TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+        if (!$this->tracker) {
+            $this->tracker = TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+        }
+        return $this->tracker;
+    }
+    
+    public function setTracker(Tracker $tracker) {
+        $this->tracker = $tracker;
     }
     
     /**
@@ -282,213 +316,46 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
     }
     
     /**
-     * Display the form to create a new formElement
+     * Display the form to administrate the element
      * 
-     * @param TrackerManager  $tracker_manager The service
+     * @param TrackerManager  $tracker_manager The tracker manager
      * @param Codendi_Request $request         The data coming from the user
      * @param User            $current_user    The user who mades the request
-     * @param string          $type            The internal name of type of the field
-     * @param string          $factory_label   The label of the field (At factory 
-     *                                         level 'Selectbox, File, ...')
-     *
+     * 
      * @return void
      */
-    public function displayAdminCreate(TrackerManager $tracker_manager, $request, $current_user, $type, $factory_label) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $title = 'Create a new '. $factory_label;
-        $url   = TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&amp;func=admin-formElements&amp;create-formElement['.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML) .']=1';
-        $breadcrumbs = array(
-            array(
-                'title' => $title,
-                'url'   => $url,
-            ),
-        );
-        if (!$request->isAjax()) {
-            $this->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
-            echo '<h2>'. $title .'</h2>';
+    public function displayAdminFormElement(TrackerManager $tracker_manager, $request, $current_user) {
+        $allUsedElements = $this->getFormElementFactory()->getUsedFormElementForTracker($this->getTracker());
+        if ($this->isTargetSharedField()) {
+            $visitor = new Tracker_FormElement_View_Admin_UpdateSharedVisitor($allUsedElements);
         } else {
-            header(json_header(array('dialog-title' => $title)));
+            $visitor = new Tracker_FormElement_View_Admin_UpdateVisitor($allUsedElements);
         }
-        echo '<form name="form1" method="POST" action="'. $url .'">';
-        echo $this->fetchAdminForm('docreate-formElement');
-        echo '</form>';
-        if (!$request->isAjax()) {
-            $this->getTracker()->displayFooter($tracker_manager);
-        }
+        $this->accept($visitor);
+        $visitor->display($tracker_manager, $request);
+    }
+    
+    public function setFormElementFactory(Tracker_FormElementFactory $factory) {
+        $this->formElementFactory = $factory;
     }
     
     /**
-     * Fetch additionnal stuff to display below the edit form
-     *
-     * @return string html
+     * @return Tracker_FormElementFactory
      */
-    protected function fetchAfterAdminEditForm() {
-        return '';
+    protected function getFormElementFactory() {
+        if (!$this->formElementFactory) {
+            $this->formElementFactory = Tracker_FormElementFactory::instance();
+        }
+        return $this->formElementFactory;
     }
     
     /**
-     * Fetch additionnal stuff to display below the create form
-     * Result if not empty must be enclosed in a <tr>
-     *
-     * @return string html
+     * Accessor for visitors
+     * 
+     * @param Tracker_FormElement_Visitor $visitor
      */
-    protected function fetchAfterAdminCreateForm() {
-        return '';
-    }
-    
-    /**
-     * Build the form to edit a field
-     *
-     * @param string $submit_name The name of the input type="submit" html element
-     *
-     * @return string html 
-     * @see displayAdminCreate
-     */
-    public function fetchAdminForm($submit_name) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        
-        //type
-        $html .= '<p><label for="formElement_type">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') .': </label><br />';
-        $html .= '<img width="16" height="16" alt="" src="'. $this->getFactoryIconUseIt() .'" style="vertical-align:middle"/> '. $this->getFactoryLabel(); //should not make call to static method thru an instance
-
-        if ($submit_name == 'update-formElement') {
-            //change type button (e.g. SB to MSB)
-            $html .= $this->fetchChangeType();
-        }
-
-        $html .= '</p>';
-        
-        //name
-        if ($submit_name == 'update-formElement') {
-            $html .= '<p>';
-            $html .= '<label for="formElement_name">'. $GLOBALS['Language']->getText('plugin_tracker_include_type', 'name') .': </label><br />';
-            $html .= '<input type="text" id="formElement_name" name="formElement_data[name]" value="'. $hp->purify($this->getName(), CODENDI_PURIFIER_CONVERT_HTML) .'" />';
-            $html .= '</p>';
-        }
-        
-        //label
-        $html .= $this->fetchLabel();
-        
-        // description
-        $html .= $this->fetchDescription();
-        
-        //rank
-        $html .= '<p>';
-        $html .= '<label for="formElement_rank">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'rank_screen').': <font color="red">*</font></label>';
-        $html .= '<br />';
-        $items = array();
-        foreach (Tracker_FormElementFactory::instance()->getUsedFormElementForTracker($this->getTracker()) as $field) {
-            $items[] = $field->getRankSelectboxDefinition();
-        }
-        $html .= $GLOBALS['HTML']->selectRank(
-            $this->id, 
-            $this->rank, 
-            $items, 
-            array(
-                'id'   => 'formElement_rank',
-                'name' => 'formElement_data[rank]'
-            )
-        );
-        $html .= '</p>';
-        
-        // others
-        $html .= $this->fetchAdminSpecificProperties();
-        
-        if ($submit_name == 'docreate-formElement') {
-            //Additional stuff (up to the field) at creation time
-            $html .= $this->fetchAfterAdminCreateForm();
-        } else if ($submit_name == 'update-formElement') {
-            $html .= $this->fetchAfterAdminEditForm();
-        }
-        
-        //submit button
-        $html .= '<p>';
-        $html .= '<input type="submit" name="'. $submit_name .'" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        $html .= '</p>';
-        
-        //link to permissions
-        if ($submit_name !== 'docreate-formElement') {
-            $html .= $this->fetchAdminFormPermissionLink();
-        }
-        
-        return $html;
-    }
-    
-    /**
-     * fetch permission link on admin form
-     *
-     * @return string html
-     */
-    protected function fetchAdminFormPermissionLink() {
-        $html = '';
-        $html .= '<p>';
-        $html .= '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
-            array(
-                'tracker'     => $this->tracker_id,
-                'func'        => 'admin-perms-fields',
-                'selected_id' => $this->id
-            )
-        ) .'">';
-        $html .= $GLOBALS['HTML']->getImage('ic/lock-small.png', array(
-            'style' => 'vertical-align:middle;',
-        ));
-        $html .= ' ';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','edit_permissions') .'</a>';
-        $html .= '</p>';
-        return $html;
-    }
-   
-    /**
-     * html form for the change type action
-     *
-     * @return string html
-     */
-    protected function fetchChangeType() {
-        $html = '';
-        return $html;
-    }
-
-    /**
-     * html form for the label 
-     *
-     * @return string html
-     */
-    protected function fetchLabel() {
-        $html = '';
-        $html .= '<p>';
-        $html .= '<label for="formElement_label">'.$GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').': <font color="red">*</font></label> ';
-        $html .= '<br />';
-        $html .= '<input type="text" name="formElement_data[label]" id="formElement_label" value="'. $this->getLabel() .'" size="40" />';
-        $html .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
-        $html .= '</p>';
-        return $html;
-    }
-    
-    /**
-     * html form for the description 
-     *
-     * @return string html
-     */
-    protected function fetchDescription() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $html = '';
-        $html .= '<p>';
-        $html .= '<label for="formElement_description">'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'fieldset_desc').':</label>';
-        $html .= '<br />';
-        $html .= '<textarea name="formElement_data[description]" id="formElement_description" cols="40">'.  $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML)  .'</textarea>';
-        $html .= '</p>';
-        return $html;
-    }
-        
-    /**
-     * html form for the required checkbox 
-     *
-     * @return string html
-     */
-    protected function fetchRequired() {
-        $html = '';
-        return $html;
+    public function accept(Tracker_FormElement_Visitor $visitor) {
+        $visitor->visit($this);
     }
     
     /**
@@ -503,41 +370,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
             'rank' => $this->rank,
         );
     }
-    
-    /**
-     * Display the form to administrate the element
-     * 
-     * @param TrackerManager  $tracker_manager The tracker manager
-     * @param Codendi_Request $request         The data coming from the user
-     * @param User            $current_user    The user who mades the request
-     * 
-     * @return void
-     */
-    protected function displayAdminFormElement(TrackerManager $tracker_manager, $request, $current_user) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'upd_label', $this->getLabel());
-        $url   = $this->getAdminEditUrl();
-        $breadcrumbs = array(
-            array(
-                'title' => $this->getLabel(),
-                'url'   => $url,
-            ),
-        );
-        if (!$request->isAjax()) {
-            $this->getTracker()->displayAdminFormElementsHeader($tracker_manager, $title, $breadcrumbs);
-            echo '<h2>'. $title .'</h2>';
-        } else {
-            header(json_header(array('dialog-title' => $title)));
-        }
-        echo '<form name="form1" method="POST" action="'. $url .'">';
-        echo $this->fetchAdminForm('update-formElement');
-        echo '</form>';
         
-        if (!$request->isAjax()) {
-            $this->getTracker()->displayFooter($tracker_manager);
-        }
-    }
-    
     /**
      * Get the use_it row for the element
      *
@@ -547,7 +380,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<tr><td>';
-        $html .= Tracker_FormElementFactory::instance()->getFactoryButton(__CLASS__, 'add-formElement['. $this->id .']', $this->label, $this->description, $this->getFactoryIconUseIt());
+        $html .= Tracker_FormElementFactory::instance()->getFactoryButton(__CLASS__, 'add-formElement['. $this->id .']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
         $html .= '</td><td>';
         $html .= '<a href="'. $this->getAdminEditUrl() .'" title="'.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','edit_field').'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
         $confirm = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','delete_field') .' '. addslashes($this->getLabel()) .'?';
@@ -576,7 +409,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      *
      * @return mixed or null if not found
      */
-    protected function getProperty($key) {
+    public function getProperty($key) {
         return $this->getPropertyValueInCollection($this->getProperties(), $key);
     }
     
@@ -618,7 +451,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      *
      * @return array
      */
-    protected function getProperties() {
+    public function getProperties() {
         if (!$this->cache_specific_properties) {
             $this->cache_specific_properties = $this->default_properties;
             if ($this->getDao() && ($row = $this->getDao()->searchByFieldId($this->id)->getRow())) {
@@ -710,87 +543,6 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
     }
     
     /**
-     * If the formElement has specific properties then this method 
-     * should return the html needed to update those properties
-     * 
-     * The html must be a (or many) html row(s) table (one column for the label, 
-     * another one for the property)
-     * 
-     * <code>
-     * <tr><td><label>Property 1:</label></td><td><input type="text" value="value 1" /></td></tr>
-     * <tr><td><label>Property 2:</label></td><td><input type="text" value="value 2" /></td></tr>
-     * </code>
-     * 
-     * @return string html
-     */
-    protected function fetchAdminSpecificProperties() {
-        $html = '';
-        foreach ($this->getProperties() as $key => $property) {
-            $html .= '<p>';
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->getPropertyLabel($key) .'</label>: ';
-            $html .= '<br />';
-            $html .= $this->fetchAdminSpecificProperty($key, $property);
-            $html .= '</p>';
-        }
-        return $html;
-    }
-    
-    /**
-     * Fetch a unique property edit form
-     * 
-     * @param string $key      The key of the property
-     * @param array  $property The property to display
-     *
-     * @see fetchAdminSpecificProperties
-     * @return string html
-     */
-    protected function fetchAdminSpecificProperty($key, $property) {
-        $html = '';
-        switch ($property['type']) {
-        case 'string':
-            $html .= '<input type="text" 
-                             size="'. $property['size'] .'"
-                             name="formElement_data[specific_properties]['. $key .']" 
-                             id="formElement_properties_'. $key .'" 
-                             value="'. $property['value'] .'" />';
-            break;
-        case 'date':
-            $value = $property['value'] ? $this->formatDate($property['value']) : ''; //todo: formatDate should be part of this class
-            $html .= $GLOBALS['HTML']->getDatePicker("formElement_properties_".$key, "formElement_data[specific_properties][$key]", $value);
-            break;
-        case 'rich_text':
-            $html .= '<textarea
-                           class="tracker-field-richtext"
-                           cols="50" rows="10"  
-                           name="formElement_data[specific_properties]['. $key .']" 
-                           id="formElement_properties_'. $key .'">' .
-                       $property['value'] . '</textarea>';
-            break;
-        case 'radio':
-            foreach ($property['choices'] as $key_choice => $choice) {
-                $checked = '';
-                if ($this->getProperty($key) == $choice['radio_value']) {
-                    $checked = 'checked="checked"';
-                }
-                $html .= '<input type="radio" 
-                                 name="formElement_data[specific_properties]['. $key .']" 
-                                 value="'. $choice['radio_value'] .'" 
-                                 id="formElement_properties_'. $key_choice .'" 
-                                 '. $checked .' />';
-                $html .= $this->fetchAdminSpecificProperty($key_choice, $choice);
-                $html .= '<br />';
-            }
-            break;
-        case 'label':
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->getPropertyLabel($key) .'</label>';
-        default:
-            //Unknown type. raise exception?
-            break;
-        }
-        return $html;
-    }
-    
-    /**
      * Fetch the element for the submit new artifact form
      *
      * @return string html
@@ -859,7 +611,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      *
      * @return string the label 
      */
-    protected function getPropertyLabel($key) {
+    public function getPropertyLabel($key) {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', $key);
     }
     
@@ -922,8 +674,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      *
      * @return string url to display in html (&amp; instead of &)
      */
-    protected function getAdminEditUrl() {
-        return TRACKER_BASE_URL.'/?tracker='. (int)$this->getTracker()->id .'&amp;func=admin-formElement-update&amp;formElement='. $this->id;
+    public function getAdminEditUrl() {
+        return TRACKER_BASE_URL.'/?tracker='. (int)$this->getTracker()->getId() .'&amp;func=admin-formElement-update&amp;formElement='. $this->id;
     }
     
     /**
@@ -1105,6 +857,43 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      */
     public function hasNotifications() {
         return $this->notifications;
+    }
+    
+    public function getOriginalFieldId() { 
+        if ($this->original_field) {
+            return $this->original_field->getId();
+        }
+        return 0;
+    }
+    
+    public function getOriginalField() {
+        return $this->original_field;
+    }
+    
+    public function getOriginalTracker() {
+        return $this->getOriginalField()->getTracker();
+    }
+    
+    public function getOriginalProject() {
+        return $this->getOriginalTracker()->getProject();
+    }
+    
+    /**
+     * Returns true if the field is a copy of another one
+     * 
+     * @return Boolean
+     */
+    public function isTargetSharedField() {
+        return $this->original_field !== null;
+    }
+    
+    /**
+     * Returns FormElements that are a copy of the current FormElement
+     * 
+     * @return Array of FormElement 
+     */
+    public function getSharedTargets() {
+        return $this->getFormElementFactory()->getSharedTargets($this);
     }
     
     /**
@@ -1306,6 +1095,20 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface {
      */
     public function setCachePermission($ugroup_id, $permission_type) {
         $this->cache_permissions[$ugroup_id][] = $permission_type;
+    }
+    
+    /**
+     * @return bool say if the field is a unique one
+     */
+    public static function getFactoryUniqueField() {
+        return false;
+    }
+    
+    /**
+     * Format a timestamp into Y-m-d format
+     */
+    public function formatDate($date) {
+        return format_date("Y-m-d", (float)$date, '');
     }
 }
 ?>

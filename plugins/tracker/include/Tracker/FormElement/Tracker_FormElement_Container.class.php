@@ -63,7 +63,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
             $field->prepareForDisplay();
         }
     }
-
+    
     public function getRankSelectboxDefinition() {
         $def = parent::getRankSelectboxDefinition();
         $def['subitems'] = array(); 
@@ -72,7 +72,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         }
         return $def;
     }
-
+    
     /**
      * Fetch the "add criteria" box
      *
@@ -328,15 +328,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return true;
     }
     
-    /**
-     * fetch permission link on admin form
-     *
-     * @return string html
-     */
-    protected function fetchAdminFormPermissionLink() {
-        return '';
-    }
-
     protected abstract function fetchArtifactPrefix();
     protected abstract function fetchArtifactSuffix();
     protected abstract function fetchMailArtifactPrefix($format);

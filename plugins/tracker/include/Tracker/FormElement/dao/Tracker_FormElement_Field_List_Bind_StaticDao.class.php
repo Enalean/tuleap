@@ -33,7 +33,7 @@ class Tracker_FormElement_Field_List_Bind_StaticDao extends DataAccessObject {
     public function duplicate($from_field_id, $to_field_id) {
         $from_field_id  = $this->da->escapeInt($from_field_id);
         $to_field_id    = $this->da->escapeInt($to_field_id);
-        $sql = "INSERT INTO $this->table_name (field_id, is_rank_alpha)
+        $sql = "REPLACE INTO $this->table_name (field_id, is_rank_alpha)
                 SELECT $to_field_id, is_rank_alpha
                 FROM $this->table_name
                 WHERE field_id = $from_field_id";

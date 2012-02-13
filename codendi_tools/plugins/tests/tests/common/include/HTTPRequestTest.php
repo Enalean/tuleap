@@ -14,12 +14,6 @@ Mock::generatePartial('Valid_File', 'Valid_FileTest', array('getKey', 'validate'
  */
 class HTTPRequestTest extends UnitTestCase {
     
-    
-    
-    function UnitTestCase($name = 'HTTPRequest test') {
-        $this->UnitTestCase($name);
-    }
-
     function setUp() {
         $_REQUEST['exists'] = '1';
         $_REQUEST['exists_empty'] = '';
@@ -124,7 +118,6 @@ class HTTPRequestTest extends UnitTestCase {
         $v->expectOnce('isValid', array('testvalue'));
         $r =& new HTTPRequest();
         $r->validKey('testkey', $v);
-        $v->tally();
     }
 
     function testValid() {
@@ -134,7 +127,6 @@ class HTTPRequestTest extends UnitTestCase {
         $v->expectAtLeastOnce('getKey');
         $r =& new HTTPRequest();
         $r->valid($v);
-        $v->tally();
     }
 
     function testValidTrue() {
@@ -160,7 +152,6 @@ class HTTPRequestTest extends UnitTestCase {
         $v->expectOnce('validate', array('testvalue'));
         $r =& new HTTPRequest();
         $r->valid($v);
-        $v->tally();
     }
 
     function testValidArray() {
@@ -170,7 +161,6 @@ class HTTPRequestTest extends UnitTestCase {
         $v->expectAtLeastOnce('getKey');
         $r =& new HTTPRequest();
         $r->validArray($v);
-        $v->tally();
     }
 
     function testValidArrayTrue() {
@@ -199,7 +189,6 @@ class HTTPRequestTest extends UnitTestCase {
         $v->expectCallCount('validate', 3);
         $r =& new HTTPRequest();
         $r->validArray($v);
-        $v->tally();
     }
 
     function testValidArrayArgNotArray() {
@@ -286,7 +275,6 @@ class HTTPRequestTest extends UnitTestCase {
         $v->expectOnce('validate', array('valuekey1'));
         $r =& new HTTPRequest();
         $r->validInArray('testarray', $v);
-        $v->tally();
     }
 
     function testValidFileNoFileValidator() {
@@ -302,7 +290,6 @@ class HTTPRequestTest extends UnitTestCase {
         $v->expectOnce('validate', array(array('file1' => array('name' => 'Test file 1')), 'file1'));
         $r =& new HTTPRequest();
         $r->validFile($v);
-        $v->tally();
     }
     
     function testGetValidated() {

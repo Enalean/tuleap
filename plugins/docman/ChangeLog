@@ -1,3 +1,6 @@
+Version 2.23 - Tuleap 4.0.27
+    Fix unit tests to prepare for simpletest 1.1
+
 Version 2.22 - Tuleap 4.0.26
     Fix behaviour on permission denied when accessing document: when no one to notify, notify admin (contrib STMicroelectronics).
 

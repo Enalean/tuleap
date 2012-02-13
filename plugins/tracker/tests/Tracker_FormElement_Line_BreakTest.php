@@ -34,12 +34,12 @@ class Tracker_FormElement_StaticField_LineBreakTest extends UnitTestCase {
         $required = false;
         $notififcations = false;
         $rank = 25;
-        
-        $line_break = new Tracker_FormElement_StaticField_LineBreak($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notififcations, $rank);
-        
+        $original_field = null;
+
+        $line_break = new Tracker_FormElement_StaticField_LineBreak($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notififcations, $rank, $original_field);
+
         $this->assertEqual('Line Break Label', $line_break->getLabel());
         $this->assertEqual('', $line_break->getDescription());
-        $this->assertEqual('', $line_break->fetchDescription());
         $this->assertTrue($line_break->canBeUnused());
     }
 

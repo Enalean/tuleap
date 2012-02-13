@@ -37,12 +37,23 @@ Mock::generate('Tracker_FormElement_Field_Date');
 
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
+Mock::generate('TrackerManager');
+Mock::generate('User');
 
+require_once 'common/include/HTTPRequest.class.php';
+Mock::generate('HTTPRequest');
 
-class Tracker_FormElementFactoryTest extends UnitTestCase {
+require_once 'common/event/EventManager.class.php';
+Mock::generate('EventManager');
 
-    
+if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/coin');
+}
+
+class Tracker_FormElementFactoryTest extends TuleapTestCase {
+
     public function test_saveObject() {
+        $user          = new MockUser();
         $tracker       = new MockTracker();
         
         $a_formelement = new MockTracker_FormElement_Container_Fieldset();
@@ -54,7 +65,7 @@ class Tracker_FormElementFactoryTest extends UnitTestCase {
         $tff = new Tracker_FormElementFactoryTestVersion();
         $tff->setReturnValue('createFormElement', 66);
         
-        $this->assertEqual($tff->saveObject($tracker, $a_formelement, 0), 66);
+        $this->assertEqual($tff->saveObject($tracker, $a_formelement, 0, $user), 66);
     }
     
     public function testImportFormElement() {
@@ -93,6 +104,7 @@ class Tracker_FormElementFactoryTest extends UnitTestCase {
                     'id'               => 0,
                     'tracker_id'       => 0,
                     'parent_id'        => 0,
+                    'original_field_id'=> null,
                 )
             )
         );
@@ -169,5 +181,35 @@ class Tracker_FormElementFactoryTest extends UnitTestCase {
         $this->assertEqual($label, 'titi_est_dans_la_brousse_avec_rominet');
     }
 
+    public function testDisplayCreateFormShouldDisplayAForm() {
+        $factory = $this->GivenAFormElementFactory();
+        $content = $this->WhenIDisplayCreateFormElement($factory);
+
+        $this->assertPattern('%Create a new Separator%', $content);
+        $this->assertPattern('%</form>%', $content);
+    }
+    
+    private function GivenAFormElementFactory() {
+        $factory         = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getUsedFormElementForTracker', 'getEventManager'));
+        $factory->setReturnValue('getUsedFormElementForTracker', array());
+        $factory->setReturnValue('getEventManager', new MockEventManager());
+        return $factory;
+    }
+    
+    private function WhenIDisplayCreateFormElement($factory) {
+        $GLOBALS['Language']->setReturnValue('getText', 'Separator', array('plugin_tracker_formelement_admin','separator_label'));
+        
+        $tracker_manager = new MockTrackerManager();
+        $user            = new MockUser();
+        $request         = new MockHTTPRequest();
+        $tracker         = new MockTracker();
+        
+        ob_start();
+        $factory->displayAdminCreateFormElement($tracker_manager, $request, $user, 'separator', $tracker);
+        $content = ob_get_contents();
+        ob_end_clean();
+        
+        return $content;
+    }
 }
 ?>

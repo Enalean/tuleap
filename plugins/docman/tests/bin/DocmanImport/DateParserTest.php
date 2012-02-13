@@ -3,10 +3,6 @@
 require_once(dirname(__FILE__).'/../../../bin/DocmanImport/DateParser.class.php');
 
 class DateParserTest extends UnitTestCase {
-    
-    function DateParserTest($name = 'DateParser test') {
-        $this->UnitTestCase($name);
-    }
 
     public function testParseIso8601 () {
         $currentTimeStamp = time();

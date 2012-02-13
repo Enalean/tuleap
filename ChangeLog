@@ -2,6 +2,9 @@ Version 4.0.27 - NOT RELEASED YET
    == Enhancement ==
    * Themes Tuleap 2.0. Official logo & colors.
 
+   == Plugins ==
+   Tracker v0.9. See separte ChangeLog.
+
 Version 4.0.26.1 (Wednesday, February 8th 2012)
     == Bug Fix ==
     * Fix issue with site news approval (Thanks to Régis Houssin and Grégory

@@ -1,6 +1,9 @@
 DISCLAIMER: plugin still in beta, do not use it on production servers.
 DISCLAIMER: Your data might be trashed in a future update.
 
+Version 0.9.0 - Tuleap 4.0.27
+  * Add shared field: a tracker can re-use a field (select box or multi selectbox) defined in another tracker.
+
 Version 0.8.12 - Tuleap 4.0.26
   * Add tests for workflow postactions
 

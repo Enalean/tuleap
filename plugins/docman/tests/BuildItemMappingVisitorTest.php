@@ -30,10 +30,6 @@ Mock::generatePartial('Docman_BuildItemMappingVisitor', 'BuildItemMappingVisitor
 
 class BuildItemMappingVisitorTest extends UnitTestCase {
 
-    function BuildItemMappingVisitorTest($name = 'BuildItemMappingVisitorTest test') {
-        $this->UnitTestCase($name);
-    }
-
     function setUp() {
     }
 

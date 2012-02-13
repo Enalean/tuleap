@@ -12,8 +12,8 @@ require_once(CODENDI_CLI_DIR .'/include/CLI_Module.class.php');
 
 class CLI_ModuleFactoryTest extends UnitTestCase {
     var $fixtures;
-    function CLI_ModuleFactoryTest($name = 'CLI_ModuleFactory test') {
-        $this->UnitTestCase($name);
+    
+    function setUp() {
         $this->fixtures = dirname(__FILE__).'/_fixtures/';
     }
     

@@ -323,8 +323,7 @@ if ($res_plugin_ldap && ($c_plugin_ldap->rows > 0)) {
 
     &ldap_connect;
 
-    if (ldap_enabled_for_project($group_id))
-    {
+    if (ldap_enabled_for_project($group_id)) {
 	($fullname, $mailname, $ldap_id) = ldap_get_svncommitinfo_from_login($author);
 	if ($ldap_id != -1) {
 	    $codexuid = db_get_field('user','ldap_id', $ldap_id, 'user_id');
@@ -338,47 +337,41 @@ if ($res_plugin_ldap && ($c_plugin_ldap->rows > 0)) {
 	}
     }
 }
-else
-{
-local ($login, $gecos);
-$login = $author;
-if (! $login)
-{
-    ($login, $gecos) = (getpwuid ($<))[0,6];
-}
-else
-{
-    $login = "nobody" if (! $login);
-    $gecos = (getpwnam ($login))[6];
-}
-
-# Determine the mailname and fullname.
-if ($gecos =~ /^([^<]*\s+)<(\S+@\S+)>/)
-{
-    $fullname = $1;
-    $mailname = $2;
-    $fullname =~ s/\s+$//;
-}
-else
-{
-    $fullname = $gecos;
-    $fullname =~ s/,.*$//;
-
-    local ($hostdomain, $hostname);
-    chop($hostdomain = `hostname -f`);
-    if ($hostdomain !~ /\./)
-    {
-        chop($hostname = `hostname`);
-        if ($hostname !~ /\./) {
-            chop($domainname = `domainname`);
-            $hostdomain = $hostname . "." . $domainname;
-        } else {
-            $hostdomain = $hostname;
-        }
+ 
+# if no uid found yet, fallback to tuleap auth
+if (!$codexuid) {
+    local ($login, $gecos);
+    $login = $author;
+    if (! $login) {
+	($login, $gecos) = (getpwuid ($<))[0,6];
+    } else {
+	$login = "nobody" if (! $login);
+	$gecos = (getpwnam ($login))[6];
     }
-    $mailname = "$login\@$hostdomain";
-}
-$codexuid = db_get_field('user','user_name', $author, 'user_id');
+
+    # Determine the mailname and fullname.
+    if ($gecos =~ /^([^<]*\s+)<(\S+@\S+)>/) {
+	$fullname = $1;
+	$mailname = $2;
+	$fullname =~ s/\s+$//;
+    } else {
+	$fullname = $gecos;
+	$fullname =~ s/,.*$//;
+
+	local ($hostdomain, $hostname);
+	chop($hostdomain = `hostname -f`);
+	if ($hostdomain !~ /\./) {
+	    chop($hostname = `hostname`);
+	    if ($hostname !~ /\./) {
+		chop($domainname = `domainname`);
+		$hostdomain = $hostname . "." . $domainname;
+	    } else {
+		$hostdomain = $hostname;
+	    }
+	}
+	$mailname = "$login\@$hostdomain";
+    }
+    $codexuid = db_get_field('user','user_name', $author, 'user_id');
 }
 
 if ($debug) {
