@@ -5,7 +5,7 @@ Given /^I go the fields admin page of the "([^"]*)" of the project "([^"]*)"$/ d
 end
 
 When /^I add the field "([^"]*)" from the tracker "([^"]*)" of the project "([^"]*)"$/ do |field, tracker, project|
-    page.should_not have_select(field)
+    page.should_not have_xpath("//label[contains(text(), '#{field}')]/../select")
     field_id = search_id_of(field, tracker, project)
     find(:xpath, "//a[@name='create-formElement[shared]']").click
     fill_in('formElement_data[field_id]', :with => field_id)
@@ -13,7 +13,7 @@ When /^I add the field "([^"]*)" from the tracker "([^"]*)" of the project "([^"
 end
 
 Then /^the field "([^"]*)" is present and has at least the option "([^"]*)"$/ do |field, option|
-    page.should have_select(field, :options => [option])
+    page.should have_xpath("//label[contains(text(), '#{field}')]/../select/option[contains(text(), '#{option}')]")
     find(:xpath,"//label[contains(@title, '#{field}')]/..//a[contains(@href, 'func=admin-formElement-remove')]").click
 end
 
