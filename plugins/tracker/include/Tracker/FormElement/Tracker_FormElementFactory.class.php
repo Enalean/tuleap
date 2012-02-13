@@ -641,9 +641,16 @@ class Tracker_FormElementFactory {
         return $label;
     }
     
-    public function getSharedCopies(Tracker_FormElement $element) {
+    /**
+     * Returns the FormElements that are a copy of given element
+     * 
+     * @param Tracker_FormElement $element
+     * 
+     * @return Array of Tracker_FormElement
+     */
+    public function getSharedTargets(Tracker_FormElement $element) {
         $fields = array();
-        foreach ($this->getDao()->searchSharedCopies($element->getId()) as $row) {
+        foreach ($this->getDao()->searchSharedTargets($element->getId()) as $row) {
             $fields[] = $this->getFormElementById($row['id']);
         }
         return $fields;

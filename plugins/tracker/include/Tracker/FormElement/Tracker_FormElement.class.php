@@ -887,8 +887,13 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return $this->original_field !== null;
     }
     
-    public function getSharedCopies() {
-        return $this->getFormElementFactory()->getSharedCopies($this);
+    /**
+     * Returns FormElements that are a copy of the current FormElement
+     * 
+     * @return Array of FormElement 
+     */
+    public function getSharedTargets() {
+        return $this->getFormElementFactory()->getSharedTargets($this);
     }
     
     /**

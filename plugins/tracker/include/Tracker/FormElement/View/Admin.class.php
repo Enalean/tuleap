@@ -313,7 +313,7 @@ class Tracker_FormElement_View_Admin {
     
     public function fetchSharedUsage() {
         $html = '';
-        $fields = $this->formElement->getSharedCopies();
+        $fields = $this->formElement->getSharedTargets();
         if ($fields) {
             $trackers = array();
             foreach ($fields as $field) {
