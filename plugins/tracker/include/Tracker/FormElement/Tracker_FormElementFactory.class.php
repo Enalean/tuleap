@@ -835,17 +835,8 @@ class Tracker_FormElementFactory {
         if (!$icon) {
             eval("\$icon = $klass::getFactoryIconCreate();");
         }
-        if ($isUnique === null) {
-            eval("\$isUnique = $klass::getFactoryUniqueField();");
-        }
-        
-        if ($isUnique) {
-            $type = array_search($klass, $this->classnames);
-            $used = true;
-            $elements = $this->getFormElementsByType($tracker, $type, $used);
-            if (!empty($elements)) {
-                $button_class = 'button_disabled';
-            }
+        if ($this->isFieldUniqueAndAlreadyUsed($klass, $tracker, $isUnique)) {
+            $button_class = 'button_disabled';
         }
         
         $button .= '<a class="'.$button_class.'" name="'. $name .'" title="'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'"><span>';
@@ -854,6 +845,22 @@ class Tracker_FormElementFactory {
         $button .= '</span></a>';
         
         return $button;
+    }
+    
+    private function isFieldUniqueAndAlreadyUsed($klass, Tracker $tracker, $isUnique) {
+        if ($isUnique === null) {
+            eval("\$isUnique = $klass::getFactoryUniqueField();");
+        }
+        
+        if ($isUnique) {
+            $type = array_search($klass, $this->classnames);
+            $used = true;
+            $elements = $this->getFormElementsByType($tracker, $type, $used);
+            if ($elements) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public function displayAdminCreateFormElement(TrackerManager $tracker_manager, Codendi_Request $request, User $current_user, $type, Tracker $tracker) {
