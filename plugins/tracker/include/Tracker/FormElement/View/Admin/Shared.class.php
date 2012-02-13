@@ -22,20 +22,6 @@ require_once dirname(__FILE__) .'/../Admin.class.php';
 
 class Tracker_FormElement_View_Admin_Shared extends Tracker_FormElement_View_Admin {
 
-    public function __construct(Tracker_FormElement_Shared $formElement, $allUsedElements) {
-        $this->formElement     = $formElement;
-        $this->allUsedElements = $allUsedElements;
-    }
-    
-     public function fetchAdminForCreate() {
-        $html = '';
-        $html .= '<p>Field id:';
-        $html .=  '<input type="text" name="formElement_data[field_id]" value="" />';
-        $html .=  '</p>';
-        $html .= $this->fetchAdminButton(self::SUBMIT_CREATE);
-        return $html;
-    }
-
 }
 
 ?>
