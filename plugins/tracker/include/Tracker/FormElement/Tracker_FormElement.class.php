@@ -19,7 +19,7 @@
  */
 
 require_once('Tracker_FormElement_Interface.class.php');
-require_once('Tracker_FormElement_Description.class.php');
+require_once('IProvideFactoryButtonInformation.class.php');
 require_once('Tracker_FormElementFactory.class.php');
 require_once(dirname(__FILE__).'/../TrackerManager.class.php');
 
@@ -31,7 +31,7 @@ require_once('json.php');
 /**
  * Base class for all fields in trackers, from fieldsets to selectboxes
  */
-abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_Description {
+abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_IProvideFactoryButtonInformation {
     /**
      * The field id
      */

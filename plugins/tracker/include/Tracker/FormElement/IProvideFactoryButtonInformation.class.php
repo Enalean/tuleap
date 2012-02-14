@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Tracker_FormElement_Description {
+interface Tracker_FormElement_IProvideFactoryButtonInformation {
     
     /**
      * @return the label of the formElement (mainly used in admin part)

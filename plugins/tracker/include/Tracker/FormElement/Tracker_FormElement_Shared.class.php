@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Tracker_FormElement_Description.class.php';
+require_once 'IProvideFactoryButtonInformation.class.php';
 require_once 'Tracker_FormElement_Visitor.class.php';
 
-class Tracker_FormElement_Shared implements Tracker_FormElement_Description {
+class Tracker_FormElement_Shared implements Tracker_FormElement_IProvideFactoryButtonInformation {
     /**
      * @var Tracker 
      */
