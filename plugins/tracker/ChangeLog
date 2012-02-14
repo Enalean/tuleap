@@ -1,6 +1,10 @@
 DISCLAIMER: plugin still in beta, do not use it on production servers.
 DISCLAIMER: Your data might be trashed in a future update.
 
+Version 0.9.1 - Tuleap 4.0.27
+  * Refactoring: better naming
+  * Fix issue: label should not contain input elements
+
 Version 0.9.0 - Tuleap 4.0.27
   * Add shared field: a tracker can re-use a field (select box or multi selectbox) defined in another tracker.
 

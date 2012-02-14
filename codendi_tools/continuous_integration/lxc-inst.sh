@@ -7,6 +7,7 @@ repo_base_url=$1
 # Take the local centos mirror
 perl -pi -e 's%baseurl=http://mirror.bytemark.co.uk/centos%baseurl=ftp://degaine.cro.enalean.com/ftp.centos.org%' /etc/yum.repos.d/CentOS-Base.repo
 
+# install rpms
 # Configure the Tuleap repositories
 # - Tuleap: the main repo for dependencies
 # - Tuleap-dev: the fresh one
@@ -29,10 +30,6 @@ enabled=1
 gpgcheck=0
 EOF
 
-yum install php-pecl-json
-yum install php-zendframework
-
-# install rpms
 # local centos mirror may produce ftp io errors
 # => we need to retry install
 maxretry=10
@@ -41,7 +38,7 @@ until [ -d "/usr/share/tuleap-install" ]; do
         echo "*** Error: cannot install Tuleap after 10 attempts";
         exit 1
     fi
-    yum install -y --disablerepo=epel php-pecl-json tuleap-all
+    yum install -y --disablerepo=epel php-pecl-json php-zendframework tuleap-all
     maxretry=$(($maxretry-1))
 done
 
