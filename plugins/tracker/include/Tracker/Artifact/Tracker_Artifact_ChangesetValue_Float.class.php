@@ -52,7 +52,7 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
      */
     public function getValue() {
         if ($this->getFloat() !== null) {
-            return number_format($this->getFloat(), Tracker_FormElement_Field_Float::FLOAT_DECIMALS);
+            return number_format($this->getFloat(), Tracker_FormElement_Field_Float::FLOAT_DECIMALS, '.', '');
         } else {
             return '';
         }

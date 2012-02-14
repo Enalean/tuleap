@@ -2,6 +2,9 @@ DISCLAIMER: plugin still in beta, do not use it on production servers.
 DISCLAIMER: Your data might be trashed in a future update.
 
 Version 0.9.1 - Tuleap 4.0.27
+  * Fix issue: float fields and number > 1000
+
+Version 0.9.1 - Tuleap 4.0.27
   * Refactoring: better naming
   * Fix issue: label should not contain input elements
 

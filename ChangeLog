@@ -1,9 +1,12 @@
 Version 4.0.27 - NOT RELEASED YET
    == Enhancement ==
-   * Themes Tuleap 2.0. Official logo & colors.
+   * Themes Tuleap 2.0: Official logo & colors.
 
    == Plugins ==
-   Tracker v0.9.1. See separte ChangeLog.
+   * Tracker v0.9.2: See separte ChangeLog.
+
+   == Development ==
+   * Fix issue in CI: lxc installation was missing yum repository generation
 
 Version 4.0.26.1 (Wednesday, February 8th 2012)
     == Bug Fix ==
