@@ -159,6 +159,11 @@ clean:
 
 all: clean rpmprep codendi custom_codendi codendi-all-deps tuleap-all
 
+dist: 
+	mkdir -p $(RPM_TMP)/yum
+	cp -ar $(RPM_TMP)/RPMS/* $(RPM_TMP)/yum
+	createrepo $(RPM_TMP)/yum
+
 build-depends: /usr/bin/rpmbuild /usr/bin/createrepo /usr/bin/zip $(DOCBOOK_TOOLS_DIR)
 
 /usr/bin/rpmbuild:
@@ -173,3 +178,4 @@ build-depends: /usr/bin/rpmbuild /usr/bin/createrepo /usr/bin/zip $(DOCBOOK_TOOL
 $(DOCBOOK_TOOLS_DIR):
 	@echo "Using DOCBOOK_TOOLS_DIR=$@"
 	@[ ! -d $@ ] && echo "DOCBOOK_TOOLS_DIR is missing, I suggest you take tarball from $(DOCBOOKTARBALL)" ; exit 1
+

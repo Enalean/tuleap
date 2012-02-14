@@ -109,7 +109,7 @@ $remotecmd chown root:root -R /root/$src_dir
 rsync -az --delete /var/lib/jenkins/docbook $build_host:/root
 
 # Build rpms
-time $remotecmd DOCBOOK_TOOLS_DIR=/root/docbook make -C /root/tuleap/codendi_tools/rpm all PKG_NAME=tuleap
+time $remotecmd DOCBOOK_TOOLS_DIR=/root/docbook make -C /root/tuleap/codendi_tools/rpm all dist PKG_NAME=tuleap
 
 # Clean up the local dir
 rm -rf yum
