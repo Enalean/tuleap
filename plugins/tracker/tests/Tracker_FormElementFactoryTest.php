@@ -223,10 +223,7 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
         
         $factory = $this->GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id);
 
-        $project = new MockProject();
-        $project->setReturnValue('getId', $project_id);
-        
-        $this->assertEqual($factory->getProjectSharedFields($project), array());
+        $this->ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, array());
     }
 
     public function testGetAllSharedFieldsOfATrackerReturnsAllSharedFieldsThatTheTrackerExports() {
@@ -242,12 +239,16 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
         $textField = new Tracker_FormElement_Field_Text(999, null, null, null, null, null, null, null, null, null, null, null);
         $dateField = new Tracker_FormElement_Field_Date(666, null, null, null, null, null, null, null, null, null, null, null);
 
+        $this->ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, array($textField, $dateField));
+    }
+
+    private function ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, $expectedResult) {
         $project = new MockProject();
         $project->setReturnValue('getId', $project_id);
         
-        $this->assertEqual($factory->getProjectSharedFields($project), array($textField, $dateField));
+        $this->assertEqual($factory->getProjectSharedFields($project), $expectedResult);
     }
-
+    
     private function GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id) {
         $dao = new MockTracker_FormElement_FieldDao();
         $dao->setReturnValue('searchAllSharedTargetsOfProject', $dar, array($project_id));
