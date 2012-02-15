@@ -331,12 +331,13 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function searchAllSharedTargetsOfTracker($tracker_id) {
-        $tracker_id  = $this->da->escapeInt($tracker_id);
+    public function searchAllSharedTargetsOfProject($project_id) {
+        $project_id  = $this->da->escapeInt($project_id);
         $sql = "SELECT f_target.*
                 FROM tracker_field f_target 
                   JOIN tracker_field f_src ON (f_target.original_field_id = f_src.id) 
-                WHERE f_src.tracker_id = $tracker_id";
+                  JOIN tracker ON (f_src.tracker_id = tracker.id)
+                WHERE tracker.group_id = $project_id";
         return $this->retrieve($sql);
     }
     

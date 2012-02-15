@@ -677,8 +677,8 @@ class Tracker_FormElementFactory {
      * 
      * @return Array of Tracker_FormElement
      */
-    public function getAllTrackerSharedFields(Tracker $tracker) {
-        $dar = $this->getDao()->searchAllSharedTargetsOfTracker($tracker->getId());
+    public function getProjectSharedFields(Project $project) {
+        $dar = $this->getDao()->searchAllSharedTargetsOfProject($project->getId());
         return $this->getInstancesFromRows($dar);
     }
 
