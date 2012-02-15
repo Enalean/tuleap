@@ -39,7 +39,7 @@ class AgileDashboardPluginTest extends TuleapTestCase {
         $request = new Codendi_Request(array('group_id' => '66'));
         
         $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('displayService'));
-        $plugin->expectOnce('displayService', array($service));
+        $plugin->expectOnce('displayService');
         
         $plugin->process($request, $manager, $GLOBALS['Language']);
     }
