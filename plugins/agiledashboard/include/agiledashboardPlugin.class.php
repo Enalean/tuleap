@@ -62,6 +62,7 @@ class AgileDashboardPlugin extends Plugin {
         return new AgileDashboardController(
             HTTPRequest::instance(),
             ProjectManager::instance(),
+            Tracker_FormElementFactory::instance(),
             $GLOBALS['Language'],
             $GLOBALS['Response']
         );

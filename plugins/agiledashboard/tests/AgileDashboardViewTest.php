@@ -21,6 +21,7 @@
 require_once dirname(__FILE__) .'/../include/AgileDashboardView.class.php';
 
 Mock::generate('Service');
+Mock::generate('Project');
 
 class AgileDashboardViewTest extends TuleapTestCase {
     
@@ -28,8 +29,9 @@ class AgileDashboardViewTest extends TuleapTestCase {
         $service = new MockService();
         $service->expectOnce('displayHeader');
         $service->expectOnce('displayFooter');
+        $project = new MockProject();
         
-        $view = new AgileDashboardView($service, $GLOBALS['Language']);
+        $view = new AgileDashboardView($service, $GLOBALS['Language'], $project);
         
         ob_start();
         $view->render();

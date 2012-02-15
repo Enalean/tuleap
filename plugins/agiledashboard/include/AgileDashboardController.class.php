@@ -43,11 +43,21 @@ class AgileDashboardController {
      */
     private $layout;
     
-    public function __construct(Codendi_Request $request, ProjectManager $projectManager, BaseLanguage $language, Layout $layout) {
-        $this->request        = $request;
-        $this->projectManager = $projectManager;
-        $this->language       = $language;
-        $this->layout         = $layout;
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formElementFactory;
+    
+    public function __construct(Codendi_Request $request,
+                                ProjectManager $projectManager, 
+                                Tracker_FormElementFactory $formElementFactory, 
+                                BaseLanguage $language, 
+                                Layout $layout) {
+        $this->request            = $request;
+        $this->projectManager     = $projectManager;
+        $this->language           = $language;
+        $this->layout             = $layout;
+        $this->formElementFactory = $formElementFactory;
     }
     
     public function index() {
@@ -56,7 +66,8 @@ class AgileDashboardController {
         try {
             $project = $this->getProject($projectId);
             $service = $this->getService($project);
-            $view    = $this->getView($service, $this->language);
+            $criteria = $this->formElementFactory->getProjectSharedFields($project);
+            $view    = $this->getView($service, $this->language, $criteria);
             $view->render();
         } catch (ProjectNotFoundException $e) {
             $this->layout->addFeedback('error', $e->getMessage());
@@ -95,8 +106,8 @@ class AgileDashboardController {
         }
     }
     
-    protected function getView(Service $service, BaseLanguage $language) {
-        return new AgileDashboardView($service, $language);
+    protected function getView(Service $service, BaseLanguage $language, $criteria) {
+        return new AgileDashboardView($service, $language, $criteria);
     }
 }
 ?>

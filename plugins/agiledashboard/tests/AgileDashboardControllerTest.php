@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) . '/../../tracker/tests/Test_Tracker_FormElement_Builder.php';
+
 require_once dirname(__FILE__) . '/../include/AgileDashboardController.class.php';
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'common/project/ProjectManager.class.php';
@@ -26,40 +28,45 @@ Mock::generate('Project');
 Mock::generate('Service');
 Mock::generate('AgileDashboardView');
 
-class AgileDashboardControllerTest extends TuleapTestCase {
+Mock::generate('Tracker_FormElementFactory');
+
+class AgileDashboardControllerIndexTest extends TuleapTestCase {
     
-    function testIndexShouldRenderViewForService() {
+    public function setUp() {
+        parent::setUp();
+        
+        $this->service = new MockService();
+        $this->project = new MockProject();
+        $this->manager = new MockProjectManager();
+        $this->request = new Codendi_Request(array('group_id' => '66'));
+        $this->formElementFactory = new MockTracker_FormElementFactory();
+    }
+    
+    function testRendersViewForServiceWithCriteria() {
         $view = new MockAgileDashboardView();
         $view->expectOnce('render');
+                
+        $this->project->setReturnValue('getService', $this->service, array('plugin_agiledashboard'));
         
-        $service = new MockService();
+        $this->manager->setReturnValue('getProject', $this->project, array('66'));
         
-        $project = new MockProject();
-        $project->setReturnValue('getService', $service, array('plugin_agiledashboard'));
-        
-        $manager = new MockProjectManager();
-        $manager->setReturnValue('getProject', $project, array('66'));
-        
-        $request = new Codendi_Request(array('group_id' => '66'));
+        $fields = array(aTextField(), aStringField());
+        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields, array($this->project));
         
         $controller = TestHelper::getPartialMock('AgileDashboardController', array('getView'));
-        $controller->__construct($request, $manager, $GLOBALS['Language'], $GLOBALS['HTML']);
-        $controller->setReturnValue('getView', $view, array($service, $GLOBALS['Language']));
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML']);
+        $controller->setReturnValue('getView', $view, array($this->service, $GLOBALS['Language'], $fields));
         
         $controller->index();
     }
     
-    public function testIndexShouldRedirectWithErrorMessageIfServiceIsNotUsed() {
-        $project = new MockProject();
-        $project->setReturnValue('getService', null, array('plugin_agiledashboard'));
-        $project->setReturnValue('getUnixName', 'coin');
+    public function testRedirectsWithErrorMessageIfServiceIsNotUsed() {
+        $this->project->setReturnValue('getService', null, array('plugin_agiledashboard'));
+        $this->project->setReturnValue('getUnixName', 'coin');
         
-        $manager = new MockProjectManager();
-        $manager->setReturnValue('getProject', $project, array('66'));
+        $this->manager->setReturnValue('getProject', $this->project, array('66'));
         
-        $request = new Codendi_Request(array('group_id' => '66'));
-        
-        $controller = new AgileDashboardController($request, $manager, $GLOBALS['Language'], $GLOBALS['HTML']);
+        $controller = new AgileDashboardController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML']);
         
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
@@ -67,19 +74,17 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         $controller->index();
     }
     
-    public function testIndexShouldRedirectToHomepageWhenProjectDoesNotExist() {
-        $error = new MockProject();
-        $error->setReturnValue('isError', true);
+    public function testRedirectsToHomepageWhenProjectDoesNotExist() {
+        $this->project->setReturnValue('isError', true);
         
-        $manager = new MockProjectManager();
-        $manager->setReturnValue('getProject', $error, array('invalid_project_id'));
+        $this->manager->setReturnValue('getProject', $this->project, array('invalid_project_id'));
         
-        $request = new Codendi_Request(array('group_id' => 'invalid_project_id'));
+        $this->request = new Codendi_Request(array('group_id' => 'invalid_project_id'));
         
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/'));
         
-        $controller = new AgileDashboardController($request, $manager, $GLOBALS['Language'], $GLOBALS['HTML']);
+        $controller = new AgileDashboardController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML']);
         
         $controller->index();
     }

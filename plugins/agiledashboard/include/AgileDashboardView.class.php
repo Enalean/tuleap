@@ -30,16 +30,46 @@ class AgileDashboardView {
      */
     private $language;
     
-    function __construct(Service $service, BaseLanguage $language) {
+    /**
+     * @var Project $project 
+     */
+    private $fields;
+    
+    public function __construct(Service $service, BaseLanguage $language, array $fields) {
         $this->language = $language;
         $this->service  = $service;
+        $this->fields   = $fields;
     }
     
-    function render() {
+    public function render() {
         $title = $this->language->getText('plugin_agiledashboard', 'title');
         
         $this->service->displayHeader($title, array(), array());
+        
+        $this->displayCriteria();
+        
         $this->service->displayFooter();
+    }
+    
+    private function displayCriteria() {
+        foreach ($this->getCriteria() as $criteria) {
+            echo $criteria->fetch();
+        }
+    }
+    
+    private function getCriteria() {
+        $criteria = array();
+        $report_id = $name = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $is_query_displayed = $updated_by = $updated_at = 0;
+        $report = new Tracker_Report($report_id, $name, $description, $current_renderer_id, $parent_report_id, $user_id, $is_default, $tracker_id, $is_query_displayed, $updated_by, $updated_at);
+
+        foreach ($this->fields as $field) {
+            $id = null;
+            $rank = 0;
+            $is_advanced = false;
+
+            $criteria[] = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
+        }
+        return $criteria;
     }
     
 }
