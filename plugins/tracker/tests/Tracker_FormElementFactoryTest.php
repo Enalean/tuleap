@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
+require_once 'Test_Tracker_FormElement_Builder.php';
 
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generatePartial(
@@ -236,8 +236,8 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
         
         $factory = $this->GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id);
         
-        $textField = new Tracker_FormElement_Field_Text(999, null, null, null, null, null, null, null, null, null, null, null);
-        $dateField = new Tracker_FormElement_Field_Date(666, null, null, null, null, null, null, null, null, null, null, null);
+        $textField = aTextField()->withId(999)->build();
+        $dateField = aDateField()->withId(666)->build();
 
         $this->ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, array($textField, $dateField));
     }
@@ -248,7 +248,7 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
         
         $this->assertEqual($factory->getProjectSharedFields($project), $expectedResult);
     }
-    
+
     private function GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id) {
         $dao = new MockTracker_FormElement_FieldDao();
         $dao->setReturnValue('searchAllSharedTargetsOfProject', $dar, array($project_id));
@@ -275,4 +275,5 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
                      'original_field_id' => null);
     }
 }
+
 ?>
