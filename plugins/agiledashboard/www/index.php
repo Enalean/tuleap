@@ -28,10 +28,12 @@
 require_once('pre.php');
 require_once('common/plugin/PluginManager.class.php');
 
-$plugin_manager =& PluginManager::instance();
-$p =& $plugin_manager->getPluginByName('agiledashboard');
+$plugin_manager = PluginManager::instance();
+$p = $plugin_manager->getPluginByName('agiledashboard');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $p->process();
+    $request = HTTPRequest::instance();
+    $projectManager = ProjectManager::instance();
+    echo $p->process($request, $projectManager, $GLOBALS['Language']);
 } else {
     header('Location: '.get_server_url());
 }

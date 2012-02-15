@@ -53,8 +53,13 @@ class AgileDashboardPlugin extends Plugin {
         }
     }
     
-    function process() {
-        echo 'Hello from Agile Dashboard Plugin!';
+    function process(Codendi_Request $request, ProjectManager $manager, BaseLanguage $language) {
+        $project = $manager->getProject($request->get('group_id'));
+        $service = $project->getService('plugin_agiledashboard');
+        $title = $language->getText('plugin_agiledashboard', 'title');
+        $service->displayHeader($title, array(), array()); 
+        echo 'Hello from AgileDashboardPlugin';
+        $service->displayFooter();
     }
 }
 
