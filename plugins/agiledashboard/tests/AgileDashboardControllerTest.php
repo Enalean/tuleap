@@ -24,9 +24,13 @@ require_once 'common/project/ProjectManager.class.php';
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('Service');
+Mock::generate('AgileDashboardView');
 
 class AgileDashboardControllerTest extends TuleapTestCase {
-    function testIndexShouldDisplayTheService() {
+    
+    function testIndexShouldRenderViewForService() {
+        $view = new MockAgileDashboardView();
+        $view->expectOnce('render');
         
         $service = new MockService();
         
@@ -38,14 +42,14 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         
         $request = new Codendi_Request(array('group_id' => '66'));
         
-        $controller = TestHelper::getPartialMock('AgileDashboardController', array('displayService'));
+        $controller = TestHelper::getPartialMock('AgileDashboardController', array('getView'));
         $controller->__construct($request, $manager, $GLOBALS['Language'], $GLOBALS['HTML']);
-        $controller->expectOnce('displayService');
+        $controller->setReturnValue('getView', $view, array($service, $GLOBALS['Language']));
         
         $controller->index();
     }
     
-    public function testIndexShouldDisplayAnErrorMessageIfServiceIsNotUsed() {
+    public function testIndexShouldRedirectWithErrorMessageIfServiceIsNotUsed() {
         $project = new MockProject();
         $project->setReturnValue('getService', null, array('plugin_agiledashboard'));
         $project->setReturnValue('getUnixName', 'coin');

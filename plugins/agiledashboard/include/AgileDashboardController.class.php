@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'AgileDashboardView.class.php';
+
 class AgileDashboardController {
     /**
      * @var Codendi_Request
@@ -52,7 +54,8 @@ class AgileDashboardController {
         $service   = $project->getService('plugin_agiledashboard');
         
         if ($service) {
-            $this->displayService($service, $this->language);
+            $view = $this->getView($service, $this->language);
+            $view->render();
         } else {
             $serviceLabel = $this->language->getText('plugin_agiledashboard', 'title');
             $errorMessage = $this->language->getText('project_service', 'service_not_used', array($serviceLabel));
@@ -62,12 +65,8 @@ class AgileDashboardController {
         }
     }
     
-    protected function displayService(Service $service, BaseLanguage $language) {
-        $title = $language->getText('plugin_agiledashboard', 'title');
-        
-        $service->displayHeader($title, array(), array()); 
-        echo 'Hello from AgileDashboardPlugin';
-        $service->displayFooter();
+    protected function getView(Service $service, BaseLanguage $language) {
+        return new AgileDashboardView($service, $language);
     }
 }
 ?>
