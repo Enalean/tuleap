@@ -59,9 +59,7 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         
         $request = new Codendi_Request(array('group_id' => '66'));
         
-        $controller = TestHelper::getPartialMock('AgileDashboardController', array('displayService'));
-        $controller->__construct($request, $manager, $GLOBALS['Language'], $GLOBALS['HTML']);
-        $controller->expectNever('displayService');
+        $controller = new AgileDashboardController($request, $manager, $GLOBALS['Language'], $GLOBALS['HTML']);
         
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
