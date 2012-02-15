@@ -35,7 +35,7 @@ class Tracker_Report_Criteria {
      * @param int $rank the rank
      * @param int $is_advanced use advanced search for this field
      */
-     public function __construct($id, $report, $field, $rank, $is_advanced) {
+     public function __construct($id, Tracker_Report $report, Tracker_FormElement_Field $field, $rank, $is_advanced) {
         $this->id          = $id;
         $this->report      = $report;
         $this->field       = $field;

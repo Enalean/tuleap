@@ -541,6 +541,7 @@ class Tracker_FormElementFactory {
     
     /**
      * @param array the row allowing the construction of a Tracker_FormElement
+     * 
      * @return Tracker_FormElement Object
      */
     public function getInstanceFromRow($row) {
@@ -585,6 +586,21 @@ class Tracker_FormElementFactory {
     }
     
     /**
+     * Create an array of FormElement based on a array of field definitions (database row for instance).
+     * 
+     * @param array $rows
+     * 
+     * @return Array of Tracker_FormElement
+     */
+    private function getInstancesFromRows($rows) {
+        $fields = array();
+        foreach ($rows as $row) {
+            $fields[] = $this->getInstanceFromRow($row);
+        }
+        return $fields;
+    }
+    
+    /**
      * Creates a Tracker_FormElement Object
      * 
      * @param SimpleXMLElement $xml         containing the structure of the imported Tracker_FormElement
@@ -619,6 +635,7 @@ class Tracker_FormElementFactory {
     protected function getDao() {
         return new Tracker_FormElement_FieldDao();
     }
+    
     /**
      * format a tracker field short name
      * @todo move this function in a utility class
@@ -651,13 +668,20 @@ class Tracker_FormElementFactory {
      * @return Array of Tracker_FormElement
      */
     public function getSharedTargets(Tracker_FormElement $element) {
-        $fields = array();
-        foreach ($this->getDao()->searchSharedTargets($element->getId()) as $row) {
-            $fields[] = $this->getFormElementById($row['id']);
-        }
-        return $fields;
+        $dar = $this->getDao()->searchSharedTargets($element->getId());
+        return $this->getInstancesFromRows($dar);
     }
     
+    /**
+     * Returns the FormElements that are exported by this tracker
+     * 
+     * @return Array of Tracker_FormElement
+     */
+    public function getAllTrackerSharedFields(Tracker $tracker) {
+        $dar = $this->getDao()->searchAllSharedTargetsOfTracker($tracker->getId());
+        return $this->getInstancesFromRows($dar);
+    }
+
     public function updateFormElement($formElement, $formElement_data) {
         
         //check that the new name is not already used
