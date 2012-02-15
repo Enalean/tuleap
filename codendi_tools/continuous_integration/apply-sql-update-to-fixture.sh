@@ -10,7 +10,7 @@ shift
 mysqlpass=$1
 shift
 mysqlcmd=$1
-mysql -h$mysqlhost -B -pwelcome0 -ucodendiadm codendi < codendi_tools/plugins/tests/functional/fixture.sql
+mysql -h$mysqlhost -B -p$mysqlpass -u$mysqluser codendi < codendi_tools/plugins/tests/functional/fixture.sql
 echo $mysqlcmd | mysql -B -h$mysqlhost -p$mysqlpass -u$mysqluser codendi
-mysqldump -h$mysqlhost -pwelcome0 -ucodendiadm codendi > codendi_tools/plugins/tests/functional/fixture.sql
+mysqldump -h$mysqlhost -p$mysqlpass -u$mysqluser codendi > codendi_tools/plugins/tests/functional/fixture.sql
 
