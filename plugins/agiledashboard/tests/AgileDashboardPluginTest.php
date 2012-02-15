@@ -19,48 +19,20 @@
  */
 
 require_once dirname(__FILE__) .'/../include/agiledashboardPlugin.class.php';
-require_once 'common/include/Codendi_Request.class.php';
-require_once 'common/project/ProjectManager.class.php';
-Mock::generate('ProjectManager');
-Mock::generate('Project');
-Mock::generate('Service');
 
-class AgileDashboardPluginTest extends TuleapTestCase {
+require_once dirname(__FILE__) .'/../include/AgileDashboardController.class.php';
+Mock::generate('AgileDashboardController');
+
+class AgileDashboardPluginTest extends UnitTestCase {
     
-    public function testProcessShouldDisplayTheService() {
-        $service = new MockService();
+    public function testProcessShouldRunActionIndexOfAgileDashboardController() {
+        $controller = new MockAgileDashboardController();
+        $controller->expectOnce('index');
         
-        $project = new MockProject();
-        $project->setReturnValue('getService', $service, array('plugin_agiledashboard'));
+        $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('getController'));
+        $plugin->setReturnValue('getController', $controller);
         
-        $manager = new MockProjectManager();
-        $manager->setReturnValue('getProject', $project, array('66'));
-        
-        $request = new Codendi_Request(array('group_id' => '66'));
-        
-        $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('displayService'));
-        $plugin->expectOnce('displayService');
-        
-        $plugin->process($request, $manager, $GLOBALS['Language'], $GLOBALS['HTML']);
-    }
-    
-    public function testProcessShouldDisplayAnErrorMessageIfServiceIsNotUsed() {
-        $project = new MockProject();
-        $project->setReturnValue('getService', null, array('plugin_agiledashboard'));
-        $project->setReturnValue('getUnixName', 'coin');
-        
-        $manager = new MockProjectManager();
-        $manager->setReturnValue('getProject', $project, array('66'));
-        
-        $request = new Codendi_Request(array('group_id' => '66'));
-        
-        $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('displayService'));
-        $plugin->expectNever('displayService');
-        
-        $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
-        $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
-        
-        $plugin->process($request, $manager, $GLOBALS['Language'], $GLOBALS['HTML']);
+        $plugin->process();
     }
 }
 ?>

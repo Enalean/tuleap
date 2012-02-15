@@ -31,9 +31,7 @@ require_once('common/plugin/PluginManager.class.php');
 $plugin_manager = PluginManager::instance();
 $p = $plugin_manager->getPluginByName('agiledashboard');
 if ($p && $plugin_manager->isPluginAvailable($p)) {
-    $request = HTTPRequest::instance();
-    $projectManager = ProjectManager::instance();
-    echo $p->process($request, $projectManager, $GLOBALS['Language'], $GLOBALS['Response']);
+    $p->process();
 } else {
     header('Location: '.get_server_url());
 }

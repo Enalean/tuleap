@@ -53,26 +53,18 @@ class AgileDashboardPlugin extends Plugin {
         }
     }
     
-    function process(Codendi_Request $request, ProjectManager $manager, BaseLanguage $language, Layout $layout) {
-        $project = $manager->getProject($request->get('group_id'));
-        $service = $project->getService('plugin_agiledashboard');
-        
-        if ($service) {
-            $this->displayService($service, $language);
-        } else {
-            $serviceLabel = $language->getText('plugin_agiledashboard', 'title');
-            $errorMessage = $language->getText('project_service', 'service_not_used', array($serviceLabel));
-            $layout->addFeedback('error', $errorMessage);
-            $layout->redirect('/projects/' . $project->getUnixName() . '/');
-        }
+    public function process() {
+        $this->getController()->index();
     }
     
-    function displayService(Service $service, BaseLanguage $language) {
-        $title = $language->getText('plugin_agiledashboard', 'title');
-        
-        $service->displayHeader($title, array(), array()); 
-        echo 'Hello from AgileDashboardPlugin';
-        $service->displayFooter();
+    protected function getController() {
+        require_once 'AgileDashboardController.class.php';
+        return new AgileDashboardController(
+            HTTPRequest::instance(),
+            ProjectManager::instance(),
+            $GLOBALS['Language'],
+            $GLOBALS['Response']
+        );
     }
 }
 
