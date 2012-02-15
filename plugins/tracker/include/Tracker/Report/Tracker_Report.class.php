@@ -190,61 +190,61 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     protected $matching_ids;
     public function getMatchingIds($request = null, $use_data_from_db = false) {
         if (!$this->matching_ids) {
-            $this->matching_ids = array();
-
             $u = UserManager::instance()->getCurrentUser();
-            $group_id = $this->getTracker()->getGroupId();
-            
-            
-            $instances       = array('artifact_type' => $this->tracker_id);
-            $ugroups = $u->getUgroups($group_id, $instances);
-            $static_ugroups  = $u->getStaticUgroups($group_id);
-            $dynamic_ugroups = $u->getDynamicUgroups($group_id, $instances);
-            $pm              = PermissionsManager::instance();
-            $permissions     = $pm->getPermissionsAndUgroupsByObjectid($this->tracker_id, $ugroups);
-            
-            $contributor_field    = $this->getTracker()->getContributorField();
-            $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
-            
-            $additional_from  = array();
-            $additional_where = array();
-            
             if ($use_data_from_db) {
                 $criteria = $this->getCriteriaFromDb();
             } else {
                 $criteria = $this->getCriteria();
             }
-            
-            /*
-             Manage multitracker queries
-            $tracker_ids = array($this->tracker_id);
-            $res = db_query("SELECT f_dest.tracker_id
-                             FROM tracker_field f_dest
-                             INNER JOIN tracker_field f 
-                                ON (f_dest.original_field_id = f.id AND f_dest.id != f_dest.original_field_id) 
-                             WHERE f.tracker_id = ".$this->tracker_id);
-            while ($row = db_fetch_array($res)) {
-                $tracker_ids[] = $row['tracker_id'];
-            }*/
-            
-            foreach($criteria as $c) {
-                if ($f = $c->getFrom()) {
-                    $additional_from[]  = $f;
-                }
-                
-                if ($w = $c->getWhere()) {
-                    $additional_where[] = $w;
-                }
-            }
-            $this->matching_ids = $this->getDao()->searchMatchingIds($group_id, $this->tracker_id, $additional_from, $additional_where, $u->isSuperUser(), $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)->getRow();
-            if (substr($this->matching_ids['id'], -1) === ',') {
-                $this->matching_ids['id'] = substr($this->matching_ids['id'], 0, -1);
-            }
-            if (substr($this->matching_ids['last_changeset_id'], -1) === ',') {
-                $this->matching_ids['last_changeset_id'] = substr($this->matching_ids['last_changeset_id'], 0, -1);
-            }
+            $this->matching_ids = $this->getMatchingIdsInDb($this->getDao(), PermissionsManager::instance(), $this->getTracker(), $u, $criteria);
        }
        return $this->matching_ids;
+    }
+    
+    protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
+        $matching_ids = array();
+        
+        $group_id             = $tracker->getGroupId();
+        $instances            = array('artifact_type' => $tracker->getId());
+        $ugroups              = $user->getUgroups($group_id, $instances);
+        $static_ugroups       = $user->getStaticUgroups($group_id);
+        $dynamic_ugroups      = $user->getDynamicUgroups($group_id, $instances);
+        $permissions          = $permissionManager->getPermissionsAndUgroupsByObjectid($tracker->getId(), $ugroups);
+        $contributor_field    = $tracker->getContributorField();
+        $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
+        
+        /*
+         Manage multitracker queries
+        $tracker_ids = array($this->tracker_id);
+        $res = db_query("SELECT f_dest.tracker_id
+                         FROM tracker_field f_dest
+                         INNER JOIN tracker_field f 
+                            ON (f_dest.original_field_id = f.id AND f_dest.id != f_dest.original_field_id) 
+                         WHERE f.tracker_id = ".$this->tracker_id);
+        while ($row = db_fetch_array($res)) {
+            $tracker_ids[] = $row['tracker_id'];
+        }*/
+        
+        $additional_from  = array();
+        $additional_where = array();
+        foreach($criteria as $c) {
+            if ($f = $c->getFrom()) {
+                $additional_from[]  = $f;
+            }
+            
+            if ($w = $c->getWhere()) {
+                $additional_where[] = $w;
+            }
+        }
+        
+        $matching_ids = $this->getDao()->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user->isSuperUser(), $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)->getRow();
+        if (substr($matching_ids['id'], -1) === ',') {
+            $matching_ids['id'] = substr($matching_ids['id'], 0, -1);
+        }
+        if (substr($matching_ids['last_changeset_id'], -1) === ',') {
+            $matching_ids['last_changeset_id'] = substr($matching_ids['last_changeset_id'], 0, -1);
+        }
+        return $matching_ids;
     }
     
     /**
