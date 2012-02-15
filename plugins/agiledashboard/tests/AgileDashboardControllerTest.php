@@ -66,5 +66,22 @@ class AgileDashboardControllerTest extends TuleapTestCase {
         
         $controller->index();
     }
+    
+    public function testIndexShouldRedirectToHomepageWhenProjectDoesNotExist() {
+        $error = new MockProject();
+        $error->setReturnValue('isError', true);
+        
+        $manager = new MockProjectManager();
+        $manager->setReturnValue('getProject', $error, array('invalid_project_id'));
+        
+        $request = new Codendi_Request(array('group_id' => 'invalid_project_id'));
+        
+        $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
+        $GLOBALS['HTML']->expectOnce('redirect', array('/'));
+        
+        $controller = new AgileDashboardController($request, $manager, $GLOBALS['Language'], $GLOBALS['HTML']);
+        
+        $controller->index();
+    }
 }
 ?>

@@ -19,6 +19,8 @@
  */
 
 require_once 'AgileDashboardView.class.php';
+require_once 'ServiceNotUsedException.class.php';
+require_once 'ProjectNotFoundException.class.php';
 
 class AgileDashboardController {
     /**
@@ -50,18 +52,46 @@ class AgileDashboardController {
     
     public function index() {
         $projectId = $this->request->get('group_id');
-        $project   = $this->projectManager->getProject($projectId);
-        $service   = $project->getService('plugin_agiledashboard');
         
-        if ($service) {
-            $view = $this->getView($service, $this->language);
+        try {
+            $project = $this->getProject($projectId);
+            $service = $this->getService($project);
+            $view    = $this->getView($service, $this->language);
             $view->render();
+        } catch (ProjectNotFoundException $e) {
+            $this->layout->addFeedback('error', $e->getMessage());
+            $this->layout->redirect('/');
+        } catch (ServiceNotUsedException $e) {
+            $this->layout->addFeedback('error', $e->getMessage());
+            $this->layout->redirect('/projects/' . $project->getUnixName() . '/');
+        }
+    }
+    
+    /**
+     * @return Project
+     */
+    protected function getProject($projectId) {
+        $project = $this->projectManager->getProject($projectId);
+        if ($project->isError()) {
+            $errorMessage = $this->language->getText('project', 'does_not_exist');
+            throw new ProjectNotFoundException($errorMessage);
+        } else {
+            return $project;
+        }
+    }
+    
+    /**
+     * @return Service
+     */
+    protected function getService(Project $project) {
+        $service = $project->getService('plugin_agiledashboard');
+        if ($service) {
+            return $service;
         } else {
             $serviceLabel = $this->language->getText('plugin_agiledashboard', 'title');
             $errorMessage = $this->language->getText('project_service', 'service_not_used', array($serviceLabel));
             
-            $this->layout->addFeedback('error', $errorMessage);
-            $this->layout->redirect('/projects/' . $project->getUnixName() . '/');
+            throw new ServiceNotUsedException($errorMessage);
         }
     }
     

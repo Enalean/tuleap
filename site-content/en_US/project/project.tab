@@ -965,3 +965,4 @@ project_privacy	tooltip_public_wo_anon	<p>Project privacy set to <big><strong>pu
 
 
 project_service	service_not_used	$1 service is not enabled
+project	does_not_exist	The project doesn't exist
