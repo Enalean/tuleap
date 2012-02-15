@@ -1,3 +1,10 @@
+Version 3.12 - Tuleap 4.0.27
+    * Add 2 new variables for fine grain LDAP plugin behaviour:
+      * $sys_ldap_user_management: Enable usage of LDAP for people management. For instance autocompletion on  user list, automatic creation of users not already referenced in the forge.
+      * $sys_ldap_grp_enabled: This allows to mirror a LDAP group defined in LDAP directory within the forge.
+    * Note: for backward compatibility reasons, if the variables are not defined
+      the default behaviour is to enable the corresponding feature.
+
 Version 3.11 (Tuleap 4.0.26)
     * Fix Security issue (Contrib STMicroelectronics)
 

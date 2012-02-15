@@ -23,8 +23,8 @@
  */
 
 require_once('pre.php');
-require('../survey_data.php');
-require('../survey_utils.php');
+require_once('../survey_data.php');
+require_once('../survey_utils.php');
 
 
 if (!user_isloggedin() || !user_ismember($group_id,'A')) {

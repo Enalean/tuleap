@@ -146,6 +146,12 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                 $backendSVN->checkSVNMode($project);
             }
         }
+        
+        // If no codendi_svnroot.conf file, force recreate.
+        if (!is_file($GLOBALS['svn_root_file'])) {
+            $backendSVN->setSVNApacheConfNeedUpdate();
+        }
+        
         $this->done();
         return true;
     }

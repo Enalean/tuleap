@@ -7,7 +7,7 @@
 // 
 
 require_once('pre.php');
-require('../forum/forum_utils.php');
+require_once('../forum/forum_utils.php');
 
 $request =& HTTPRequest::instance();
 

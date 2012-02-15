@@ -7,7 +7,7 @@
 // 
 
 require_once('pre.php');
-require('../news/news_utils.php');
+require_once('../news/news_utils.php');
 
 $request =& HTTPRequest::instance();
 

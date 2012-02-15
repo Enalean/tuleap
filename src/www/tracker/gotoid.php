@@ -18,7 +18,7 @@
    ********************************************************************/
 
  
-require('../svn/svn_data.php');
+require_once('../svn/svn_data.php');
 
 // Redirect function for legacy trackers (bug, task and SR)
 function legacy_redirect($location,$aid, $group_id, $atn) {

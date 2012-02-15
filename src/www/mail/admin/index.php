@@ -7,7 +7,7 @@
 // 
 
 require_once('pre.php');
-require('../mail_utils.php');
+require_once('../mail_utils.php');
 
 $sys_lists_domain = Config::get('sys_lists_domain');
 if ($sys_lists_domain == 'lists.%sys_default_domain%') {

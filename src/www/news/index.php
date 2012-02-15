@@ -8,7 +8,7 @@
 
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
-require('../forum/forum_utils.php');
+require_once('../forum/forum_utils.php');
 
 
 $request =& HTTPRequest::instance();
