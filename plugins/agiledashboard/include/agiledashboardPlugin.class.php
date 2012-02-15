@@ -57,6 +57,10 @@ class AgileDashboardPlugin extends Plugin {
         $project = $manager->getProject($request->get('group_id'));
         $service = $project->getService('plugin_agiledashboard');
         $title = $language->getText('plugin_agiledashboard', 'title');
+        $this->displayService($service);
+    }
+    
+    function displayService(Service $service) {
         $service->displayHeader($title, array(), array()); 
         echo 'Hello from AgileDashboardPlugin';
         $service->displayFooter();
