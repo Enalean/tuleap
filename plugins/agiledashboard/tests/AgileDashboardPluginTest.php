@@ -41,7 +41,26 @@ class AgileDashboardPluginTest extends TuleapTestCase {
         $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('displayService'));
         $plugin->expectOnce('displayService');
         
-        $plugin->process($request, $manager, $GLOBALS['Language']);
+        $plugin->process($request, $manager, $GLOBALS['Language'], $GLOBALS['HTML']);
+    }
+    
+    public function testProcessShouldDisplayAnErrorMessageIfServiceIsNotUsed() {
+        $project = new MockProject();
+        $project->setReturnValue('getService', null, array('plugin_agiledashboard'));
+        $project->setReturnValue('getUnixName', 'coin');
+        
+        $manager = new MockProjectManager();
+        $manager->setReturnValue('getProject', $project, array('66'));
+        
+        $request = new Codendi_Request(array('group_id' => '66'));
+        
+        $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('displayService'));
+        $plugin->expectNever('displayService');
+        
+        $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
+        $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
+        
+        $plugin->process($request, $manager, $GLOBALS['Language'], $GLOBALS['HTML']);
     }
 }
 ?>

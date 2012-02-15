@@ -53,10 +53,18 @@ class AgileDashboardPlugin extends Plugin {
         }
     }
     
-    function process(Codendi_Request $request, ProjectManager $manager, BaseLanguage $language) {
+    function process(Codendi_Request $request, ProjectManager $manager, BaseLanguage $language, Layout $layout) {
         $project = $manager->getProject($request->get('group_id'));
         $service = $project->getService('plugin_agiledashboard');
-        $this->displayService($service, $language);
+        
+        if ($service) {
+            $this->displayService($service, $language);
+        } else {
+            $serviceLabel = $language->getText('plugin_agiledashboard', 'title');
+            $errorMessage = $language->getText('project_service', 'service_not_used', array($serviceLabel));
+            $layout->addFeedback('error', $errorMessage);
+            $layout->redirect('/projects/' . $project->getUnixName() . '/');
+        }
     }
     
     function displayService(Service $service, BaseLanguage $language) {

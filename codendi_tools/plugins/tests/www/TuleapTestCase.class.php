@@ -48,9 +48,9 @@ abstract class TuleapTestCase extends UnitTestCase {
         foreach ($GLOBALS as $key => $value) {
             $this->globals[$key] = $value;
         }
-        $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
         $GLOBALS['HTML']     = new MockLayout();
+        $GLOBALS['Response'] = $GLOBALS['HTML'];
     }
     
     /**
