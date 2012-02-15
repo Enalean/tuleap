@@ -29,6 +29,10 @@ function aTextField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Text');
 }
 
+function aStringField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_String');
+}
+
 function aDateField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Date');
 }
