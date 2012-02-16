@@ -18,13 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboardSearchResultView {
-    function __construct($matchingIds) {
-        $this->matchingIds = $matchingIds;
-    }
-    
-    function render() {
-        var_dump($this->matchingIds);
+class AgileDashboardSearch {
+    function getMatchingIds($criteria) {
     }
 }
 ?>

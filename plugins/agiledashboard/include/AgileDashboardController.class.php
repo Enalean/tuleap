@@ -22,6 +22,7 @@ require_once 'AgileDashboardView.class.php';
 require_once 'AgileDashboardSearchResultView.class.php';
 require_once 'ServiceNotUsedException.class.php';
 require_once 'ProjectNotFoundException.class.php';
+require_once 'AgileDashboardSearch.class.php';
 
 class AgileDashboardController {
     /**
@@ -49,16 +50,23 @@ class AgileDashboardController {
      */
     private $formElementFactory;
     
+    /**
+     * @var AgileDashboardSearch
+     */
+    private $search;
+    
     public function __construct(Codendi_Request $request,
                                 ProjectManager $projectManager, 
                                 Tracker_FormElementFactory $formElementFactory, 
                                 BaseLanguage $language, 
-                                Layout $layout) {
+                                Layout $layout,
+                                AgileDashboardSearch $search) {
         $this->request            = $request;
         $this->projectManager     = $projectManager;
         $this->language           = $language;
         $this->layout             = $layout;
         $this->formElementFactory = $formElementFactory;
+        $this->search             = $search;
     }
     
     public function index() {
@@ -84,7 +92,8 @@ class AgileDashboardController {
     
     public function search() {
         $criteria = $this->request->get('criteria');
-        $view = $this->getSearchResultView($criteria);
+        $matchingIds = $this->search->getMatchingIds($criteria);
+        $view = $this->getSearchResultView($matchingIds);
         $view->render();
     }
     
@@ -151,10 +160,10 @@ class AgileDashboardController {
     
     protected function getView(Service $service, BaseLanguage $language, Tracker_Report $report, $criteria) {
         return new AgileDashboardView($service, $language, $report, $criteria);
-    }
+    } 
     
-    protected function getSearchResultView($criteria) {
-        return new AgileDashboardSearchResultView($criteria);
+    protected function getSearchResultView($matchingIds) {
+        return new AgileDashboardSearchResultView($matchingIds);
     }
 }
 ?>
