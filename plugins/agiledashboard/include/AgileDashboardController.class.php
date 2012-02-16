@@ -19,6 +19,7 @@
  */
 
 require_once 'AgileDashboardView.class.php';
+require_once 'AgileDashboardSearchResultView.class.php';
 require_once 'ServiceNotUsedException.class.php';
 require_once 'ProjectNotFoundException.class.php';
 
@@ -81,6 +82,12 @@ class AgileDashboardController {
         }
     }
     
+    public function search() {
+        $criteria = $this->request->get('criteria');
+        $view = $this->getSearchResultView($criteria);
+        $view->render();
+    }
+    
     private function getReport() {
         $name = "Shared field search";
         $is_query_displayed = true;
@@ -114,8 +121,6 @@ class AgileDashboardController {
         return $criteria;
     }
     
-    public function search() {}
-    
     /**
      * @return Project
      */
@@ -146,6 +151,10 @@ class AgileDashboardController {
     
     protected function getView(Service $service, BaseLanguage $language, Tracker_Report $report, $criteria) {
         return new AgileDashboardView($service, $language, $report, $criteria);
+    }
+    
+    protected function getSearchResultView($criteria) {
+        return new AgileDashboardSearchResultView($criteria);
     }
 }
 ?>

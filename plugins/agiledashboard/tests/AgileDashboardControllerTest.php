@@ -27,6 +27,7 @@ Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('Service');
 Mock::generate('AgileDashboardView');
+Mock::generate('AgileDashboardSearchResultView');
 
 Mock::generate('Tracker_FormElementFactory');
 
@@ -87,6 +88,20 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         $controller = new AgileDashboardController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML']);
         
         $controller->index();
+    }
+    
+    public function testSearchDisplaysCriteria() {
+        $view = new MockAgileDashboardSearchResultView();
+        $view->expectOnce('render');
+        
+        $criteria = array();
+        $this->request = new Codendi_Request(array('criteria' => $criteria));
+        
+        $controller = TestHelper::getPartialMock('AgileDashboardController', array('getSearchResultView'));
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML']);
+        $controller->setReturnValue('getSearchResultView', $view, array($criteria));
+        
+        $controller->search();
     }
 }
 ?>
