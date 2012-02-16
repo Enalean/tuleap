@@ -312,7 +312,7 @@ class Tracker_ReportDao extends DataAccessObject {
         //// Warning group_concat is truncated by group_concat_max_len system variable
         //// Please adjust the settings in /etc/my.cnf to be sure to retrieve all matching artifacts.
         //// The default is 1024 (1K) wich is not enough. For example 50000 matching artifacts take ~ 500K
-        $sql = "SET SESSION group_concat_max_len = 50000";
+        $sql = "SET SESSION group_concat_max_len = 134217728";
         $this->retrieve($sql);
         
         $sql = " SELECT GROUP_CONCAT(DISTINCT id) AS id, GROUP_CONCAT(DISTINCT last_changeset_id) AS last_changeset_id ";
