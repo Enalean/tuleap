@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/ProjectDao.class.php');
-require_once('common/dao/ArtifactDao.class.php');
-require_once('common/dao/ForumDao.class.php');
-require_once('common/dao/NewsBytesDao.class.php');
-
 class URL {
 
     /**

@@ -18,9 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('browser.php');
-require_once('common/include/Codendi_Request.class.php');
-require_once('common/valid/Valid.class.php');
+require_once 'Codendi_Request.class.php';
 
 /**
  * @package Codendi
@@ -67,6 +65,7 @@ class HTTPRequest extends Codendi_Request {
      * @return boolean
      */
     function browserIsNetscape4() {
+        require_once('browser.php');
         return browser_is_netscape4();
     }
 

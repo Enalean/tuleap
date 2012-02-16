@@ -18,14 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('FRSPackage.class.php');
-require_once('common/dao/FRSPackageDao.class.php');
-require_once('common/user/UserManager.class.php');
-require_once('common/permission/PermissionsManager.class.php');
-require_once('FRSReleaseFactory.class.php');
-require_once('www/project/admin/ugroup_utils.php');
-require_once ('common/frs/FRSLog.class.php');
-
 /**
  * 
  */

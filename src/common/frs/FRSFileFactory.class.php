@@ -17,12 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once 'FRSFile.class.php';
-require_once 'FRSLog.class.php';
-require_once 'common/dao/FRSFileDao.class.php';
+    
 require_once 'Exceptions.class.php';
-require_once 'common/valid/Rule.class.php';
 
 /**
  *

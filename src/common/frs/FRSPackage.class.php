@@ -18,10 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/Error.class.php');
-require_once('common/frs/FRSReleaseFactory.class.php');
-require_once('common/frs/FRSPackageFactory.class.php');
-
 /**
  *
  * FRSPackage.class.php - File Release System Package class

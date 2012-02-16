@@ -27,11 +27,6 @@ if (isset($GLOBALS['DEBUG_MODE'])) {
 
 define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/usr/share/fonts/');
 
-require_once('common/include/CookieManager.class.php');
-require_once('common/include/HTTPRequest.class.php');
-require_once('common/include/SimpleSanitizer.class.php');
-require_once('common/include/URL.class.php');
-
 /**
  * Method called when a class is not defined.
  *
@@ -41,7 +36,7 @@ require_once('common/include/URL.class.php');
  *
  * @return void
  */
-function __autoload($className) {
+function tuleap_autoload($className) {
     global $Language;
     if (strpos($className, 'Zend') === 0 && !class_exists($className)) {
         if (isset($GLOBALS['zend_path'])) {
@@ -56,7 +51,63 @@ function __autoload($className) {
             exit_error($Language->getText('global','error'),$Language->getText('include_pre','zend_path_not_set',$GLOBALS['sys_email_admin']));
         }
     }
+    
+    // Backend
+    if (strpos($className, 'Backend') === 0 && !class_exists($className)) {
+        $path = 'common/backend/'.$className.'.class.php';
+        require_once $path;
+    }
+    
+    if (strpos($className, 'SystemEvent_') === 0 && !class_exists($className)) {
+        $path = 'common/system_event/include/'.$className.'.class.php';
+        require_once $path;
+    }
+    
+    $paths = array('FRSRelease' => 'common/frs',
+                   'FRSReleaseDao' => 'common/dao',
+                   'FRSFileFactory' => 'common/frs',
+                   'FRSPackageFactory' => 'common/frs',
+                   'FRSLog' => 'common/frs',
+                   'FRSReleaseFactory' => 'common/frs',
+                   'Codendi_HTTP_Download' => 'common/include',
+                   'Error' => 'common/include',
+                   'FRSFile' => 'common/frs',
+                   'FRSFileDao' => 'common/dao',
+                   'FRSLogDao' => 'common/dao',
+                   'FRSPackage' => 'common/frs',
+                   'FileModuleMonitorFactory' => 'common/frs',
+                   'FileModuleMonitorDao' => 'common/dao',
+                   'FRSPackageDao' => 'common/dao',
+                   'UserManager' => 'common/user',
+                   'PermissionsManager' => 'common/permission',
+                   'EventManager' => 'common/event',
+                   'CodendiDataAccess' => 'common/dao',
+                   'SystemEventDao' => 'common/dao',
+                   'SimpleSanitizer' => 'common/include',
+                   'CookieManager' => 'common/include',
+                   'HTTPRequest' => 'common/include',
+                   'URL' => 'common/include',
+                   'ProjectDao' =>'common/dao',
+                   'ArtifactDao' => 'common/dao',
+                   'ForumDao' => 'common/dao',
+                   'NewsBytesDao' => 'common/dao',
+                   'SystemEvent' => 'common/system_event',
+                   'PluginInfo' => 'common/plugin',
+                   'Map' => 'common/collection',
+                   'PluginManager' => 'common/plugin',
+                   'MailManager' => 'common/mail',
+                   'Mail' => 'common/mail',
+                   'Project' => 'common/project',
+                   'User' => 'common/user'
+    );
+    if (isset($paths[$className])) {
+        $path = $paths[$className].'/'.$className.'.class.php';
+        require_once $path;
+    }
+    //extra: Rule & Valid
 }
+
+spl_autoload_register('tuleap_autoload');
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
@@ -133,6 +184,7 @@ $system_event_manager = SystemEventManager::instance();
 require_once('common/plugin/PluginManager.class.php');
 $plugin_manager =& PluginManager::instance();
 $plugin_manager->loadPlugins();
+
 
 $feedback=''; // Initialize global var
 

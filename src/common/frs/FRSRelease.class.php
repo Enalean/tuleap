@@ -18,12 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-require_once('common/include/Error.class.php');
-require_once('common/frs/FRSFileFactory.class.php');
-
-
-
 class FRSRelease extends Error {
     const PERM_READ      = 'RELEASE_READ';
 

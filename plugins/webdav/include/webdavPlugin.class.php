@@ -21,8 +21,6 @@
 
 require_once ('common/plugin/Plugin.class.php');
 require_once ('ResolvPHP-5.1.6-Compatibility.php');
-require_once ('WebDAVAuthentication.class.php');
-require_once ('Webdav_URLVerification.class.php');
 
 class WebDAVPlugin extends Plugin {
 
@@ -37,8 +35,16 @@ class WebDAVPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
         $this->_addHook('url_verification_instance', 'urlVerification', false);
+        spl_autoload_register(array($this, 'autoload'));
     }
-
+    
+    function autoload($class_name) {
+        $paths = array('WebDAVAuthentication' => true,
+                       'Webdav_URLVerification' => true);
+        if (isset($paths[$class_name])) {
+            require_once $class_name.'.class.php';
+        }
+    }
     /**
      * Returns information about the plugin
      *

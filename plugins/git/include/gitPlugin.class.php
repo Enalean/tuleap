@@ -20,9 +20,6 @@
  */
 
 require_once('common/plugin/Plugin.class.php');
-require_once('common/system_event/SystemEvent.class.php');
-require_once('GitActions.class.php');
-require_once('Git_PostReceiveMailManager.class.php');
 
 /**
  * GitPlugin
@@ -63,7 +60,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
         $this->_addHook('statistics_collector',              'statistics_collector',                    false);
     }
-
+    
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'GitPluginInfo')) {
             require_once('GitPluginInfo.class.php');
@@ -129,16 +126,19 @@ class GitPlugin extends Plugin {
     }
 
     public function changeProjectRepositoriesAccess($params) {
+        require_once('GitActions.class.php');
         $groupId   = $params[0];
         $isPrivate = $params[1];
         GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate);
     }
 
     public function systemEventProjectRename($params) {
+        require_once('GitActions.class.php');
         GitActions::renameProject($params['project'], $params['new_name']);
     }
 
     public function file_exists_in_data_dir($params) {
+        require_once('GitActions.class.php');
         $params['result'] = GitActions::isNameAvailable($params['new_name'], $params['error']);
     }
 
@@ -198,6 +198,8 @@ class GitPlugin extends Plugin {
      * @return void
      */
     function projectRemoveUserFromNotification($params) {
+        require_once('Git_PostReceiveMailManager.class.php');
+        
         $groupId = $params['group_id'];
         $userId = $params['user_id'];
 

@@ -23,9 +23,6 @@
  * 
  */
 require_once('common/plugin/Plugin.class.php');
-require_once('Docman_VersionFactory.class.php');
-require_once('Docman_ItemFactory.class.php');
-require_once('Docman_NotificationsManager.class.php');
 
 class DocmanPlugin extends Plugin {
     /**
@@ -91,6 +88,17 @@ class DocmanPlugin extends Plugin {
 
         $this->_addHook('fill_project_history_sub_events', 'fillProjectHistorySubEvents', false);
         $this->_addHook('project_is_deleted', 'project_is_deleted', false);
+        
+        spl_autoload_register(array($this, 'autoload'));
+    }
+    
+    function autoload($class_name) {
+        $paths = array('Docman_VersionFactory' => true,
+                       'Docman_ItemFactory' => true,
+                       'Docman_NotificationsManager' => true);
+        if (isset($paths[$class_name])) {
+            require_once dirname(__FILE__).$class_name.'.class.php';
+        }
     }
 
     function permission_get_name($params) {

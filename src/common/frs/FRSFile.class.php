@@ -18,10 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/include/Error.class.php');
-require_once('FRSReleaseFactory.class.php');
-require_once('common/include/Codendi_HTTP_Download.php');
-
 class FRSFile extends Error {
 
     const EVT_CREATE  = 301;

@@ -21,16 +21,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once 'common/plugin/Plugin.class.php';
-require_once 'common/dao/CodendiDataAccess.class.php';
-require_once 'LdapPluginInfo.class.php';
-require_once 'LDAP_UserManager.class.php';
-require_once 'LDAP_UserDao.class.php';
-require_once 'LDAP_GroupManager.class.php';
-require_once 'LDAP_UserGroupManager.class.php';
-require_once 'LDAP_ProjectGroupManager.class.php';
-require_once 'LDAP.class.php';
-require_once 'LDAP_BackendSVN.class.php';
-require_once 'LDAP_DirectorySynchronization.class.php';
 
 class LdapPlugin extends Plugin {
     /**
@@ -116,12 +106,31 @@ class LdapPlugin extends Plugin {
         // SystemEvent
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
+        
+        spl_autoload_register(array($this, 'autoload'));
+    }
+    
+    function autoload($class_name) {
+        $paths = array(
+            'LDAP_UserManager' => 'LDAP_UserManager.class.php',
+            'LDAP_UserDao' => 'LDAP_UserDao.class.php',
+            'LDAP_GroupManager' => 'LDAP_GroupManager.class.php',
+            'LDAP_UserGroupManager' => 'LDAP_UserGroupManager.class.php',
+            'LDAP_ProjectGroupManager' => 'LDAP_ProjectGroupManager.class.php',
+            'LDAP' => 'LDAP.class.php',
+            'LDAP_BackendSVN' => 'LDAP_BackendSVN.class.php',
+            'LDAP_DirectorySynchronization' => 'LDAP_DirectorySynchronization.class.php');
+        if (isset($paths[$class_name])) {
+            $path = $paths[$class_name];
+            require_once dirname(__FILE__).$path.'.class.php';
+        }
     }
     
     /**
      * @return LdapPluginInfo
      */
     function getPluginInfo() {
+        require_once 'LdapPluginInfo.class.php';
         if (! $this->pluginInfo instanceof LdapPluginInfo) {
             $this->pluginInfo = new LdapPluginInfo($this);
         }
