@@ -29,9 +29,9 @@ class AgileDashboardViewTest extends TuleapTestCase {
         $service = new MockService();
         $service->expectOnce('displayHeader');
         $service->expectOnce('displayFooter');
-        $project = new MockProject();
+        $fields = array();
         
-        $view = new AgileDashboardView($service, $GLOBALS['Language'], $project);
+        $view = new AgileDashboardView($service, $GLOBALS['Language'], $fields);
         
         ob_start();
         $view->render();
