@@ -78,6 +78,8 @@ class AgileDashboardController {
         }
     }
     
+    public function search() {}
+    
     /**
      * @return Project
      */

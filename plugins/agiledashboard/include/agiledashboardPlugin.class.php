@@ -53,14 +53,21 @@ class AgileDashboardPlugin extends Plugin {
         }
     }
     
-    public function process() {
-        $this->getController()->index();
+    public function process(Codendi_Request $request) {
+        $controller = $this->getController($request);
+        switch ($request->get('action')) {
+            case 'search':
+                $controller->search();
+                break;
+            default:
+                $controller->index();
+        }
     }
     
-    protected function getController() {
+    protected function getController(Codendi_Request $request) {
         require_once 'AgileDashboardController.class.php';
         return new AgileDashboardController(
-            HTTPRequest::instance(),
+            $request,
             ProjectManager::instance(),
             Tracker_FormElementFactory::instance(),
             $GLOBALS['Language'],
