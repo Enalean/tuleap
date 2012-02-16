@@ -39,7 +39,7 @@ class AgileDashboardViewTest extends TuleapTestCase {
         
         ob_start();
         $view->render();
-        ob_end_flush();
+        ob_end_clean();
     }
 }
 ?>
