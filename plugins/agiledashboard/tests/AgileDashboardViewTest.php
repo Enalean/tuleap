@@ -22,6 +22,7 @@ require_once dirname(__FILE__) .'/../include/AgileDashboardView.class.php';
 
 Mock::generate('Service');
 Mock::generate('Project');
+Mock::generate('Tracker_Report');
 
 class AgileDashboardViewTest extends TuleapTestCase {
     
@@ -29,9 +30,12 @@ class AgileDashboardViewTest extends TuleapTestCase {
         $service = new MockService();
         $service->expectOnce('displayHeader');
         $service->expectOnce('displayFooter');
-        $fields = array();
+        $criteria = array();
         
-        $view = new AgileDashboardView($service, $GLOBALS['Language'], $fields);
+        $report = new MockTracker_Report();
+        $report->setReturnValue('fetchDisplayQuery', "some query");
+        
+        $view = new AgileDashboardView($service, $GLOBALS['Language'], $report, $criteria);
         
         ob_start();
         $view->render();

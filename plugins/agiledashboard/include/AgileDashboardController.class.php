@@ -66,8 +66,11 @@ class AgileDashboardController {
         try {
             $project = $this->getProject($projectId);
             $service = $this->getService($project);
-            $criteria = $this->formElementFactory->getProjectSharedFields($project);
-            $view    = $this->getView($service, $this->language, $criteria);
+            
+            $report   = $this->getReport();
+            $criteria = $this->getCriteria($project, $report);
+            
+            $view     = $this->getView($service, $this->language, $report, $criteria);
             $view->render();
         } catch (ProjectNotFoundException $e) {
             $this->layout->addFeedback('error', $e->getMessage());
@@ -76,6 +79,39 @@ class AgileDashboardController {
             $this->layout->addFeedback('error', $e->getMessage());
             $this->layout->redirect('/projects/' . $project->getUnixName() . '/');
         }
+    }
+    
+    private function getReport() {
+        $name = "Shared field search";
+        $is_query_displayed = true;
+        $report_id = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $updated_by = $updated_at = 0;
+        
+        $report = new Tracker_Report($report_id, 
+                                     $name, 
+                                     $description, 
+                                     $current_renderer_id, 
+                                     $parent_report_id, 
+                                     $user_id, 
+                                     $is_default, 
+                                     $tracker_id, 
+                                     $is_query_displayed, 
+                                     $updated_by, 
+                                     $updated_at);
+        
+        return $report;
+    }
+    
+    private function getCriteria(Project $project, Tracker_Report $report) {
+        $fields = $this->formElementFactory->getProjectSharedFields($project);
+
+        $criteria = array();
+        foreach ($fields as $field) {
+            $id          = null;
+            $rank        = 0;
+            $is_advanced = false;
+            $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
+        }
+        return $criteria;
     }
     
     public function search() {}
@@ -108,8 +144,8 @@ class AgileDashboardController {
         }
     }
     
-    protected function getView(Service $service, BaseLanguage $language, $criteria) {
-        return new AgileDashboardView($service, $language, $criteria);
+    protected function getView(Service $service, BaseLanguage $language, Tracker_Report $report, $criteria) {
+        return new AgileDashboardView($service, $language, $report, $criteria);
     }
 }
 ?>

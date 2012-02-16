@@ -50,12 +50,12 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
         
-        $fields = array(aTextField(), aStringField());
+        $fields = array(aTextField()->build(), aStringField()->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields, array($this->project));
         
         $controller = TestHelper::getPartialMock('AgileDashboardController', array('getView'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML']);
-        $controller->setReturnValue('getView', $view, array($this->service, $GLOBALS['Language'], $fields));
+        $controller->setReturnValue('getView', $view);
         
         $controller->index();
     }

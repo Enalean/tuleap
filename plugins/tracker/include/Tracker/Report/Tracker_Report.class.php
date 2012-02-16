@@ -422,6 +422,37 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $i;
     }
+    
+    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, User $current_user = null) {
+        $hp = Codendi_HTMLPurifier::instance();
+        $html = '';
+        
+        $html .= '<div class="tracker_report_query">';
+        $html .= '<form action="" method="POST" id="tracker_report_query_form">';
+        $html .= '<input type="hidden" name="report" value="' . $this->id . '" />';
+        $id = 'tracker_report_query_' . $this->id;
+        $html .= '<h3 class="' . Toggler::getClassname($id, $this->is_query_displayed ? true : false) . '" id="' . $id . '">';
+
+        //  Query title
+        $html .= $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '</h3>';
+
+        $used = array();
+        $criteria_fetched = array();
+        foreach ($criteria as $criterion) {
+            if ($criterion->field->isUsed()) {
+                $criteria_fetched[] = '<li id="tracker_report_crit_' . $criterion->field->id . '">' . $criterion->fetch() . '</li>';
+                $used[$criterion->field->id] = $criterion->field;
+            }
+        }
+        if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
+            $html .= '<div id="tracker_report_addcriteria_panel">' . $this->_fetchAddCriteria($used) . '</div>';
+        }
+        $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched) . '</ul>';
+        $html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
+        $html .= '</form>';
+        $html .= '</div>';
+        return $html;
+    }
 
     public function display(TrackerManager $tracker_manager, $request, $current_user) {
         
@@ -481,41 +512,20 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $html = '';
             
             //Display Criteria
-            $html .= '<div class="tracker_report_query">';
-            $html .= '<form action="" method="POST" id="tracker_report_query_form">';
-            $html .= '<input type="hidden" name="report" value="'. $this->id .'" />';
-            $id = 'tracker_report_query_'. $this->id;
-            $html .= '<h3 class="'. Toggler::getClassname($id, $this->is_query_displayed ? true : false) .'" id="'. $id .'">';
-            
-            //  Query title
-            $html .= $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) .'</h3>';
-            
-            $used             = array();
-            $criteria_fetched = array();
+            $registered_criteria = array();
             $this->getCriteria();
             $session_criteria = $this->report_session->getCriteria();
             if ($session_criteria) {
-                foreach( $session_criteria as $key=>$session_criterion) {
-                    if ( !empty($session_criterion['is_removed']) ) {
+                foreach ($session_criteria as $key => $session_criterion) {
+                    if (!empty($session_criterion['is_removed'])) {
                         continue;
-                    }                        
-                    if ( !empty($this->criteria[$key]) ) {
-                        $c = $this->criteria[$key];
-                        
-                        if($c->field->isUsed()) {
-                            $criteria_fetched[] = '<li id="tracker_report_crit_'. $c->field->id .'">'. $c->fetch() .'</li>';
-                            $used[$c->field->id] = $c->field;
-                        }
+                    }
+                    if (!empty($this->criteria[$key])) {
+                        $registered_criteria[] = $this->criteria[$key];
                     }
                 }
             }
-            if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
-                $html .= '<div id="tracker_report_addcriteria_panel">'. $this->_fetchAddCriteria($used) .'</div>';
-            }
-            $html .= '<ul id="tracker_query">'. implode('', $criteria_fetched) .'</ul>';
-            $html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></div>';
-            $html .= '</form>';
-            $html .= '</div>';
+            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $current_user);
             
             //Display Renderers
             $html .= '<div>';

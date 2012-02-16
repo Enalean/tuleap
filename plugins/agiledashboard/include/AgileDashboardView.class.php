@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/project/Service.class.php';
+require_once dirname(__FILE__).'/../../tracker/include/Tracker/Report/Tracker_Report.class.php';
+
 class AgileDashboardView {
     
     /**
@@ -31,14 +34,20 @@ class AgileDashboardView {
     private $language;
     
     /**
-     * @var Project $project 
+     * @var Tracker_Report
      */
-    private $fields;
+    private $report;
     
-    public function __construct(Service $service, BaseLanguage $language, array $fields) {
+    /**
+     * @var Array of Tracker_Report_Criteria
+     */
+    private $criteria;
+    
+    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria) {
         $this->language = $language;
         $this->service  = $service;
-        $this->fields   = $fields;
+        $this->report   = $report;
+        $this->criteria = $criteria;
     }
     
     public function render() {
@@ -46,31 +55,10 @@ class AgileDashboardView {
         
         $this->service->displayHeader($title, array(), array());
         
-        $this->displayCriteria();
+        $report_can_be_modified = false;
+        echo $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
         
         $this->service->displayFooter();
     }
-    
-    private function displayCriteria() {
-        foreach ($this->getCriteria() as $criteria) {
-            echo $criteria->fetch();
-        }
-    }
-    
-    private function getCriteria() {
-        $criteria = array();
-        $report_id = $name = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $is_query_displayed = $updated_by = $updated_at = 0;
-        $report = new Tracker_Report($report_id, $name, $description, $current_renderer_id, $parent_report_id, $user_id, $is_default, $tracker_id, $is_query_displayed, $updated_by, $updated_at);
-
-        foreach ($this->fields as $field) {
-            $id = null;
-            $rank = 0;
-            $is_advanced = false;
-
-            $criteria[] = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
-        }
-        return $criteria;
-    }
-    
 }
 ?>

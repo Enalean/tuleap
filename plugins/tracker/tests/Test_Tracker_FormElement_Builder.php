@@ -38,6 +38,8 @@ function aDateField() {
 }
 
 class Test_Tracker_FormElement_Builder {
+    private $id;
+    
     public function __construct($klass) {
         $this->name = $klass;
     }
