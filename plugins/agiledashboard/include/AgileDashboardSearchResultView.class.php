@@ -19,12 +19,12 @@
  */
 
 class AgileDashboardSearchResultView {
-    function __construct($matchingIds) {
-        $this->matchingIds = $matchingIds;
+    function __construct($artifacts) {
+        $this->artifacts = $artifacts;
     }
     
     function render() {
-        var_dump($this->matchingIds);
+        foreach ($this->artifacts as $row) { var_dump($row); }
     }
 }
 ?>

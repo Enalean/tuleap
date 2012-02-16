@@ -96,15 +96,22 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         $view->expectOnce('render');
         
         $criteria = array();
-        $this->request = new Codendi_Request(array('criteria' => $criteria));
+        $this->request = new Codendi_Request(array(
+            'group_id' => '66', 
+            'criteria' => $criteria
+        ));
+        
+        $this->manager->setReturnValue('getProject', $this->project, array('66'));
         
         $matchingIds = array(array('artifactId1', 'artifactId2'), array('changesetId1', 'changesetId2'));
         
-        $this->search->setReturnValue('getMatchingIds', $matchingIds, array($criteria));
+        $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
+        $this->search->expectOnce('getMatchingArtifacts', array($this->project, $criteria));
         
         $controller = TestHelper::getPartialMock('AgileDashboardController', array('getSearchResultView'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
-        $controller->setReturnValue('getSearchResultView', $view, array($matchingIds));
+        $controller->setReturnValue('getSearchResultView', $view);
+        $controller->setReturnValue('getSearchResultView', array($matchingIds));
         
         $controller->search();
     }

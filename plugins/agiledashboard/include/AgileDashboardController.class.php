@@ -91,9 +91,13 @@ class AgileDashboardController {
     }
     
     public function search() {
+        $projectId = $this->request->get('group_id');
+        
+        $project = $this->getProject($projectId);
+        
         $criteria = $this->request->get('criteria');
-        $matchingIds = $this->search->getMatchingIds($criteria);
-        $view = $this->getSearchResultView($matchingIds);
+        $artifacts = $this->search->getMatchingArtifacts($project, $criteria);
+        $view = $this->getSearchResultView($artifacts);
         $view->render();
     }
     
@@ -162,8 +166,8 @@ class AgileDashboardController {
         return new AgileDashboardView($service, $language, $report, $criteria);
     } 
     
-    protected function getSearchResultView($matchingIds) {
-        return new AgileDashboardSearchResultView($matchingIds);
+    protected function getSearchResultView($artifacts) {
+        return new AgileDashboardSearchResultView($artifacts);
     }
 }
 ?>
