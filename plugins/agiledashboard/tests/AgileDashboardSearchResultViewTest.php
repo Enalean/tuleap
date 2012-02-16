@@ -18,13 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboardSearchResultView {
-    function __construct($criteria) {
-        $this->criteria = $criteria;
-    }
-    
-    function render() {
-        var_dump($this->criteria);
+class AgileDashboardSearchResultViewTest extends TuleapTestCase {
+    function testRenderDisplaysTheSearchCriteria() {
+        $criteria = array('priority' => array ('values' => array('214')));
+        $view = new AgileDashboardSearchResultView($criteria);
+        
+        ob_start();
+        $view->render();
+        $output = ob_get_clean();
+        
+        $this->assertPattern('/214/', $output);
     }
 }
+
 ?>

@@ -90,7 +90,7 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         $controller->index();
     }
     
-    public function testSearchDisplaysCriteria() {
+    public function testRendersTheSearchResultView() {
         $view = new MockAgileDashboardSearchResultView();
         $view->expectOnce('render');
         
