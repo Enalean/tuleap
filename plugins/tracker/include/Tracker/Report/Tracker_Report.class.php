@@ -237,7 +237,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             }
         }
         
-        $matching_ids = $this->getDao()->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user->isSuperUser(), $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)->getRow();
+        $matching_ids = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user->isSuperUser(), $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)->getRow();
         if (substr($matching_ids['id'], -1) === ',') {
             $matching_ids['id'] = substr($matching_ids['id'], 0, -1);
         }
