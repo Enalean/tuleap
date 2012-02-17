@@ -96,7 +96,7 @@ class AgileDashboardController {
         $project = $this->getProject($projectId);
         
         $criteria = $this->request->get('criteria');
-        $artifacts = $this->search->getMatchingArtifacts($project, $criteria);
+        $artifacts = $this->search->getMatchingArtifacts($criteria);
         $view = $this->getSearchResultView($artifacts);
         $view->render();
     }
