@@ -22,29 +22,52 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 
 class AgileDashboardSearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts($valueIds) {
-        $valueIds   = implode(',', $valueIds);
-        $sql = "SELECT ta.id, CVT.value AS title
-                FROM (
-                    SELECT *
-                    FROM tracker_changeset_value_list
-                    WHERE bindvalue_id IN ($valueIds)
-                ) AS tcvl
-                INNER JOIN tracker_changeset_value AS tcv ON tcvl.changeset_value_id = tcv.id
-                INNER JOIN tracker_changeset       AS tc  ON tcv.changeset_id        = tc.id
-                INNER JOIN tracker_artifact        AS ta  ON tc.artifact_id          = ta.id
-
-                LEFT JOIN (
-                    tracker_changeset_value AS CV2
-                    INNER JOIN tracker_semantic_title       AS ST  ON (CV2.field_id = ST.field_id)
-                    INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id       = CVT.changeset_value_id)
-                ) ON (tc.id = CV2.changeset_id)
+    public function searchMatchingArtifacts($valueIdsList) {
+        $sql = "
+            SELECT artifact.id, CVT.value AS title
+            FROM tracker_artifact AS artifact
+            INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
+            " . $this->getSharedFieldsSqlFragment($valueIdsList) . "
+            LEFT JOIN (
+                tracker_changeset_value AS CV
+                    INNER JOIN tracker_semantic_title       AS ST  ON (CV.field_id = ST.field_id)
+                    INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id       = CVT.changeset_value_id)
+            ) ON (c.id = CV.changeset_id)
+            WHERE artifact.use_artifact_permissions = 0
+        ";
         
-                WHERE ta.use_artifact_permissions = 0";
         echo "<pre>$sql</pre>";
         return $this->retrieve($sql);
     }
     
+    protected function getSharedFieldsSqlFragment($valueIdsList) {
+        $fragmentNumber = 0;
+        foreach ($valueIdsList as $valueIds) {
+            $sqlFragments[] = $this->getSharedFieldFragment($fragmentNumber++, $valueIds);
+        }
+        return implode(' ', $sqlFragments);
+    }
+    
+    protected function getSharedFieldFragment($fragmentNumber, $valueIds) {
+        $valueIds   = implode(',', $valueIds);
+        
+        // Table aliases
+        $changeset_value      = "CV_$fragmentNumber";
+        $changeset_value_list = "CVL_$fragmentNumber";
+        
+        $sqlFragment = "
+            INNER JOIN tracker_changeset_value AS $changeset_value ON (
+                $changeset_value.changeset_id = c.id 
+            )
+            INNER JOIN tracker_changeset_value_list AS $changeset_value_list ON (
+                    $changeset_value_list.changeset_value_id = $changeset_value.id
+                AND $changeset_value_list.bindvalue_id       IN ($valueIds)
+            )
+        ";
+        
+        return $sqlFragment;
+    }
+
     function searchSharedValueIds($sourceOrTargetValueIds) {
         $sourceOrTargetValueIds = implode(',', $sourceOrTargetValueIds);
         

@@ -25,7 +25,6 @@ class AgileDashboardSearch {
     
     function getMatchingArtifacts(array $criteria) {
         $valueIds   = $this->extractValueIds($criteria);
-        
         return $this->getDao()->searchMatchingArtifacts($valueIds);
     }
 
@@ -36,11 +35,19 @@ class AgileDashboardSearch {
                 $sourceOrTargetValueIds[] = (int)$valueId;
             }
         }
-        $valueIds = array();
-        foreach ($this->getDao()->searchSharedValueIds($sourceOrTargetValueIds) as $row) {
-            $valueIds[] = $row['id'];
+        $valueIdsList = array();
+        
+        foreach ($sourceOrTargetValueIds as $sourceOrTargetValueId) {
+            $valueIds = array();
+            
+            foreach ($this->getDao()->searchSharedValueIds(array($sourceOrTargetValueId)) as $row) {
+                $valueIds[] = $row['id'];
+            }
+            
+            $valueIdsList[] = $valueIds;
         }
-        return $valueIds;
+        
+        return $valueIdsList;
     }
     
     /**
