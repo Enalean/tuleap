@@ -29,13 +29,16 @@ class Tracker_Report_Criteria {
     /**
      * Constructor
      *
+     * WARNING: cannot add typehinting on parameters as sometimes they might be
+     * null (and it's crappy to have null args in the middle of arg list).
+     * 
      * @param int $id the id of the criteria
      * @param Tracker_Report $report the id of the report
      * @param Tracker_FormElement_Field $field the name of the renderer
      * @param int $rank the rank
      * @param int $is_advanced use advanced search for this field
      */
-     public function __construct($id, Tracker_Report $report, Tracker_FormElement_Field $field, $rank, $is_advanced) {
+     public function __construct($id, $report, $field, $rank, $is_advanced) {
         $this->id          = $id;
         $this->report      = $report;
         $this->field       = $field;
