@@ -33,13 +33,37 @@ class AgileDashboardViewTest extends TuleapTestCase {
         $criteria = array();
         
         $report = new MockTracker_Report();
-        $report->setReturnValue('fetchDisplayQuery', "some query");
         
-        $view = new AgileDashboardView($service, $GLOBALS['Language'], $report, $criteria);
+        $view = new AgileDashboardView($service, $GLOBALS['Language'], $report, $criteria, array());
         
         ob_start();
         $view->render();
         ob_end_clean();
+    }
+    
+    function testRenderShouldDisplayArtifacts() {
+        $service = new MockService();
+        $criteria = array();
+        $report = new MockTracker_Report();
+        $artifacts = array(
+            array(
+                'id' => 6,
+                'title' => 'As a user I want to search on shared fields',
+            ),
+            array(
+                'id' => 8,
+                'title' => 'Add the form',
+            )
+        );
+        
+        $view = new AgileDashboardView($service, $GLOBALS['Language'], $report, $criteria, $artifacts);
+        
+        ob_start();
+        $view->render();
+        $output = ob_get_clean();
+        
+        $this->assertPattern('/As a user I want to search on shared fields/', $output);
+        $this->assertPattern('/Add the form/', $output);
     }
 }
 ?>

@@ -74,13 +74,7 @@ class AgileDashboardController {
         
         try {
             $project = $this->getProject($projectId);
-            $service = $this->getService($project);
-            
-            $report   = $this->getReport();
-            $criteria = $this->getCriteria($project, $report);
-            
-            $view     = $this->getView($service, $this->language, $report, $criteria);
-            $view->render();
+            $this->renderView($project, array());
         } catch (ProjectNotFoundException $e) {
             $this->layout->addFeedback('error', $e->getMessage());
             $this->layout->redirect('/');
@@ -92,12 +86,21 @@ class AgileDashboardController {
     
     public function search() {
         $projectId = $this->request->get('group_id');
-        
         $project = $this->getProject($projectId);
         
         $criteria = $this->request->get('criteria');
         $artifacts = $this->search->getMatchingArtifacts($criteria);
-        $view = $this->getSearchResultView($artifacts);
+        
+        $this->renderView($project, $artifacts);
+    }
+    
+    private function renderView(Project $project, $artifacts) {        
+        $service = $this->getService($project);
+
+        $report   = $this->getReport();
+        $criteria = $this->getCriteria($project, $report);
+
+        $view     = $this->getView($service, $this->language, $report, $criteria, $artifacts);
         $view->render();
     }
     
@@ -162,8 +165,8 @@ class AgileDashboardController {
         }
     }
     
-    protected function getView(Service $service, BaseLanguage $language, Tracker_Report $report, $criteria) {
-        return new AgileDashboardView($service, $language, $report, $criteria);
+    protected function getView(Service $service, BaseLanguage $language, Tracker_Report $report, $criteria, $artifacts) {
+        return new AgileDashboardView($service, $language, $report, $criteria, $artifacts);
     } 
     
     protected function getSearchResultView($artifacts) {

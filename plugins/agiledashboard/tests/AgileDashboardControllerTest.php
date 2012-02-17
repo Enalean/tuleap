@@ -27,7 +27,6 @@ Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('Service');
 Mock::generate('AgileDashboardView');
-Mock::generate('AgileDashboardSearchResultView');
 Mock::generate('AgileDashboardSearch');
 Mock::generate('Tracker_FormElementFactory');
 
@@ -91,8 +90,8 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         $controller->index();
     }
     
-    public function testSearchActionRendersTheSearchResultView() {
-        $view = new MockAgileDashboardSearchResultView();
+    public function testSearchActionRendersTheSearchView() {
+        $view = new MockAgileDashboardView();
         $view->expectOnce('render');
         
         $criteria = array();
@@ -101,17 +100,21 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
             'criteria' => $criteria
         ));
         
+        $this->project->setReturnValue('getService', $this->service, array('plugin_agiledashboard'));
+        
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
+        
+        //$fields = array(aTextField()->build(), aStringField()->build());
+        $this->formElementFactory->setReturnValue('getProjectSharedFields', array());
         
         $matchingIds = array(array('artifactId1', 'artifactId2'), array('changesetId1', 'changesetId2'));
         
         $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
         $this->search->expectOnce('getMatchingArtifacts', array($criteria));
         
-        $controller = TestHelper::getPartialMock('AgileDashboardController', array('getSearchResultView'));
+        $controller = TestHelper::getPartialMock('AgileDashboardController', array('getView'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
-        $controller->setReturnValue('getSearchResultView', $view);
-        $controller->setReturnValue('getSearchResultView', array($matchingIds));
+        $controller->setReturnValue('getView', $view);
         
         $controller->search();
     }

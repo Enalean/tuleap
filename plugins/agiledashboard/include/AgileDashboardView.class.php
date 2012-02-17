@@ -43,11 +43,17 @@ class AgileDashboardView {
      */
     private $criteria;
     
-    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria) {
-        $this->language = $language;
-        $this->service  = $service;
-        $this->report   = $report;
-        $this->criteria = $criteria;
+    /**
+     * @var Array of artifacts rows
+     */
+    private $artifacts;
+    
+    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts) {
+        $this->language  = $language;
+        $this->service   = $service;
+        $this->report    = $report;
+        $this->criteria  = $criteria;
+        $this->artifacts = $artifacts;
     }
     
     public function render() {
@@ -57,6 +63,8 @@ class AgileDashboardView {
         
         $report_can_be_modified = false;
         echo $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
+        
+        foreach ($this->artifacts as $row) { var_dump($row); }
         
         $this->service->displayFooter();
     }
