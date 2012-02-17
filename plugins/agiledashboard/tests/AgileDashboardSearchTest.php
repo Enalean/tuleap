@@ -28,7 +28,7 @@ Mock::generate('Tracker_FormElement_Field_String');
 
 class AgileDashboardSearchTest extends UnitTestCase {
 
-    function _testGetMatchingArtifactsWhenOneCriterion() {
+    function testGetMatchingArtifactsWhenOneCriterion() {
         $dar = array(
             array(
                 'id' => 6,
@@ -50,7 +50,7 @@ class AgileDashboardSearchTest extends UnitTestCase {
         );
         $dao = new MockAgileDashboardSearchDao();
         $dao->setReturnValue('searchMatchingArtifacts', $dar);
-        $dao->expectOnce('searchMatchingArtifacts', array(array(214,143)));
+        $dao->expectOnce('searchMatchingArtifacts', array(array(array(214,143))));
         
         $dao->setReturnValue('searchSharedValueIds', $sharedValueDar);
         $dao->expectOnce('searchSharedValueIds', array(array(214)));

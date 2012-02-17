@@ -35,8 +35,6 @@ class AgileDashboardSearchDao extends DataAccessObject {
             ) ON (c.id = CV.changeset_id)
             WHERE artifact.use_artifact_permissions = 0
         ";
-        
-        echo "<pre>$sql</pre>";
         return $this->retrieve($sql);
     }
     
@@ -84,7 +82,6 @@ class AgileDashboardSearchDao extends DataAccessObject {
         
         $sql = $sql_original_ids.' UNION '.$sql_target_ids;
         
-        echo "<pre>$sql</pre>";
         return $this->retrieve($sql);
     }
 

@@ -24,7 +24,6 @@ require_once 'common/project/Project.class.php';
 class AgileDashboardSearch {
     
     function getMatchingArtifacts(array $criteria) {
-        var_dump($criteria);
         $valueIds   = $this->extractValueIds($criteria);
         return $this->getDao()->searchMatchingArtifacts($valueIds);
     }
@@ -33,7 +32,6 @@ class AgileDashboardSearch {
         $sourceOrTargetValueIds   = array();
         foreach ($criteria as $fieldId => $data) {
             foreach ($data['values'] as $valueId) {
-                // XXX: Why does it work with both null and '' (empty string) ???
                 if ($valueId != null)
                     $sourceOrTargetValueIds[] = (int)$valueId;
             }
