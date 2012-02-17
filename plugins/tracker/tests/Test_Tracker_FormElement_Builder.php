@@ -39,6 +39,7 @@ function aDateField() {
 
 class Test_Tracker_FormElement_Builder {
     private $id;
+    private $tracker;
     
     public function __construct($klass) {
         $this->name = $klass;
@@ -49,9 +50,18 @@ class Test_Tracker_FormElement_Builder {
         return $this;
     }
     
+    public function withTracker($tracker) {
+        $this->tracker = $tracker;
+        return $this;
+    }
+    
     public function build() {
-        $klass = $this->name;
-        return new $klass($this->id, null, null, null, null, null, null, null, null, null, null, null);
+        $klass  = $this->name;
+        $object = new $klass($this->id, null, null, null, null, null, null, null, null, null, null, null);
+        if ($this->tracker) {
+            $object->setTracker($this->tracker);
+        }
+        return $object;
     }
 }
 

@@ -50,45 +50,21 @@ class AgileDashboardSearchTest extends UnitTestCase {
         );
         $dao = new MockAgileDashboardSearchDao();
         $dao->setReturnValue('searchMatchingArtifacts', $dar);
-        $dao->expectOnce('searchMatchingArtifacts', array(array(123,456), array(220,150), array(214,143)));
+        $dao->expectOnce('searchMatchingArtifacts', array(array(214,143)));
+        
         $dao->setReturnValue('searchSharedValueIds', $sharedValueDar);
         $dao->expectOnce('searchSharedValueIds', array(array(214)));
         
         $criteria = array('220' => array('values' => array('214')));
         
-        $project = new MockProject();
-        $factory = $this->GivenAFormElementFactory($project);
         
-        $search = TestHelper::getPartialMock('AgileDashboardSearch', array('getDao', 'getFormElementFactory'));
+        $search = TestHelper::getPartialMock('AgileDashboardSearch', array('getDao'));
         $search->setReturnValue('getDao', $dao);
-        $search->setReturnValue('getFormElementFactory', $factory);
         
-        $artifacts = $search->getMatchingArtifacts($project, $criteria);
+        $artifacts = $search->getMatchingArtifacts($criteria);
         $this->assertEqual($artifacts[0]['id'], 6);
         $this->assertEqual($artifacts[1]['title'], 'Add the form');
     }
-    
-    private function GivenAFormElementFactory($project) {
-        $field1   = new MockTracker_FormElement_Field_String();
-        $tracker1 = new MockTracker();
-        
-        $tracker1->setReturnValue('getId', 123);
-        $field1->setReturnValue('getId', 220);
-        $field1->setReturnValue('getTracker', $tracker1);
-        
-        $field2   = new MockTracker_FormElement_Field_String();
-        $tracker2 = new MockTracker();
-        
-        $tracker2->setReturnValue('getId', 456);
-        $field2->setReturnValue('getId', 150);
-        $field2->setReturnValue('getTracker', $tracker2);
-        
-        $fields = array($field1, $field2);
-        
-        $factory = new MockTracker_FormElementFactory();
-        $factory->setReturnValue('getProjectSharedFields', $fields, array($project));
-        
-        return $factory;
-    }
+
 }
 ?>

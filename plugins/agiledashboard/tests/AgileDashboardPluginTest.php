@@ -44,7 +44,7 @@ class AgileDashboardPluginTest extends UnitTestCase {
         $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('getController'));
         $plugin->setReturnValue('getController', $controller);
         
-        $request = new Codendi_Request(array('action' => 'search'));
+        $request = new Codendi_Request(array('tracker_query_submit' => 'WAT'));
         
         $plugin->process($request);
     }

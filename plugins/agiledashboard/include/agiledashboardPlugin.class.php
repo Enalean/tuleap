@@ -55,12 +55,10 @@ class AgileDashboardPlugin extends Plugin {
     
     public function process(Codendi_Request $request) {
         $controller = $this->getController($request);
-        switch ($request->get('action')) {
-            case 'search':
-                $controller->search();
-                break;
-            default:
-                $controller->index();
+        if ($request->existAndNonEmpty('tracker_query_submit')) {
+            $controller->search();
+        } else {
+            $controller->index();
         }
     }
     

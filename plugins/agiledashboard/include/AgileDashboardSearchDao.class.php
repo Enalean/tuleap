@@ -22,40 +22,46 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 
 class AgileDashboardSearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts($trackerIds, $fieldIds, $valueIds) {
-        $trackerIds = implode(',', $trackerIds);
-        $fieldIds   = implode(',', $fieldIds);
+    public function searchMatchingArtifacts($valueIds) {
         $valueIds   = implode(',', $valueIds);
-        echo $sql = "SELECT artifact.id, CVT.value AS title
-                FROM tracker_artifact AS artifact
-                     INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id) 
-                     
-                     INNER JOIN tracker_changeset_value AS value ON (
-                            value.changeset_id = c.id 
-                        AND value.field_id IN ($fieldIds)
-                     )
-                     INNER JOIN tracker_changeset_value_list AS value_list ON (
-                                value_list.changeset_value_id = value.id 
-                                AND value_list.bindvalue_id IN ($valueIds)
-                     )
-                     
-                     LEFT JOIN (                         -- For the /title/ if any
-                        tracker_changeset_value AS CV2
-                        INNER JOIN tracker_semantic_title as ST ON (CV2.field_id = ST.field_id)
-                        INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id = CVT.changeset_value_id)
-                    ) ON (c.id = CV2.changeset_id)
-                
-                WHERE artifact.tracker_id IN ($trackerIds)  AND (artifact.use_artifact_permissions = 0)";
+        $sql = "SELECT ta.id, CVT.value AS title
+                FROM (
+                    SELECT *
+                    FROM tracker_changeset_value_list
+                    WHERE bindvalue_id IN ($valueIds)
+                ) AS tcvl
+                INNER JOIN tracker_changeset_value AS tcv ON tcvl.changeset_value_id = tcv.id
+                INNER JOIN tracker_changeset       AS tc  ON tcv.changeset_id        = tc.id
+                INNER JOIN tracker_artifact        AS ta  ON tc.artifact_id          = ta.id
+
+                LEFT JOIN (
+                    tracker_changeset_value AS CV2
+                    INNER JOIN tracker_semantic_title       AS ST  ON (CV2.field_id = ST.field_id)
+                    INNER JOIN tracker_changeset_value_text AS CVT ON (CV2.id       = CVT.changeset_value_id)
+                ) ON (tc.id = CV2.changeset_id)
+        
+                WHERE ta.use_artifact_permissions = 0";
+        echo "<pre>$sql</pre>";
         return $this->retrieve($sql);
     }
     
     function searchSharedValueIds($sourceOrTargetValueIds) {
         $sourceOrTargetValueIds = implode(',', $sourceOrTargetValueIds);
-        $sql = "SELECT target.id
+        
+        $sql_original_ids = "SELECT original.id
+                FROM tracker_field_list_bind_static_value AS v
+                    INNER JOIN tracker_field_list_bind_static_value AS original ON (v.original_value_id = original.id)
+                WHERE v.id IN ($sourceOrTargetValueIds)";
+        
+        $sql_target_ids = "SELECT target.id
                 FROM tracker_field_list_bind_static_value AS v
                      INNER JOIN tracker_field_list_bind_static_value AS original ON (v.original_value_id = original.id OR (v.id = original.id))
                      INNER JOIN tracker_field_list_bind_static_value AS target ON (original.id = target.original_value_id)
                 WHERE v.id IN ($sourceOrTargetValueIds)";
+        
+        $sql = $sql_original_ids.' UNION '.$sql_target_ids;
+        
+        echo "<pre>$sql</pre>";
         return $this->retrieve($sql);
     }
 
