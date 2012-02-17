@@ -115,11 +115,13 @@ if  ! lxc-ls | egrep -wq "$lxc_name" || [ $install_mode = "clean-install" ] ; th
     # Install
     $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
 elif [ $install_mode = "upgrade" ] ; then
+    $remotecmd yum clean metadate
     $remotecmd yum install tuleap -y --disablerepo=epel php-pecl-json tuleap-all
     $remotecmd service httpd restart
 else 
     # the server already exists and we suppose this is a reinstall
     # ==========>>> Warning : yum reinstall probably wont work very well with parts of tuleap that doesnt support yum remove but we havent run into problems yet <<<<<==========
+    $remotecmd yum clean metadata
     $remotecmd yum reinstall tuleap -y --disablerepo=epel php-pecl-json tuleap-all
     $remotecmd service httpd restart
 fi
