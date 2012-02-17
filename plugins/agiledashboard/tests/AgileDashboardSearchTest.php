@@ -116,5 +116,53 @@ class AgileDashboardSearchTest extends UnitTestCase {
         $this->assertEqual($artifacts[0]['id'], 6);
         $this->assertEqual($artifacts[1]['title'], 'Add the form');
     }
+    
+    function testGetMatchingArtifactsWithBlankCriterion() {
+        $dar = array(
+            array(
+                'id' => 6,
+                'title' => 'As a user I want to search on shared fields',
+            ),
+            array(
+                'id' => 8,
+                'title' => 'Add the form',
+            )
+        );
+        
+        $sharedValueDar214 = array(
+            array(
+                'id' => 214,
+            ),
+            array(
+                'id' => 241,
+            ),
+        );
+        $sharedValueDar250 = array(
+            array(
+                'id' => 250,
+            ),
+            array(
+                'id' => 252,
+            ),
+        );
+        
+        $dao = new MockAgileDashboardSearchDao();
+        $dao->setReturnValue('searchMatchingArtifacts', $dar);
+        $dao->expectOnce('searchMatchingArtifacts', array(array(array(214,241))));
+        
+        $dao->setReturnValueAt(0, 'searchSharedValueIds', $sharedValueDar214);
+        $dao->expectAt(0, 'searchSharedValueIds', array(array(214)));
+        
+        $criteria = array('320' => array('values' => array('214')),
+                          '330' => array('values' => array('')));
+        
+        
+        $search = TestHelper::getPartialMock('AgileDashboardSearch', array('getDao'));
+        $search->setReturnValue('getDao', $dao);
+        
+        $artifacts = $search->getMatchingArtifacts($criteria);
+        $this->assertEqual($artifacts[0]['id'], 6);
+        $this->assertEqual($artifacts[1]['title'], 'Add the form');
+    }
 }
 ?>
