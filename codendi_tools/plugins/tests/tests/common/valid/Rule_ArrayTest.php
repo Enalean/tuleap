@@ -43,4 +43,3 @@ class Rule_ArrayTest extends UnitTestCase {
 
 }
 ?>
-find
