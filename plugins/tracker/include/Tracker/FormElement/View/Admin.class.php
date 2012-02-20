@@ -323,7 +323,7 @@ class Tracker_FormElement_View_Admin {
             $trackers = array();
             foreach ($fields as $field) {
                 $t = $field->getTracker();
-                $trackers[$t->getId()] = '<a href="'. TRACKER_BASE_URL.'/?tracker='. $t->getId() .'">'. $t->getName() .' ('. $t->getProject()->getPublicName() .')</a>';
+                $trackers[$t->getId()] = '<a href="'. TRACKER_BASE_URL.'/?tracker='. $t->getId() .'&func=admin-formElements">'. $t->getName() .' ('. $t->getProject()->getPublicName() .')</a>';
             }
             $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'field_copied_to');
             $html .= '<ul><li>';
