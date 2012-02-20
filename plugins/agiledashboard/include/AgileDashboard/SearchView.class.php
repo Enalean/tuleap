@@ -73,7 +73,14 @@ class AgileDashboard_SearchView {
         
         $html = '';
         $html .= '<table>';
-        $html .= $this->fetchHeader();
+        $html .= $this->fetchTHead();
+        $html .= $this->fetchTBody();
+        $html .= '</table>';
+        return $html;
+    }
+    
+    private function fetchTBody() {
+        $html = '';
         $html .= '<tbody>';
         foreach ($this->artifacts as $row) {
             $html .= '<tr>';
@@ -86,11 +93,10 @@ class AgileDashboard_SearchView {
             $html .= '</tr>';
         }
         $html .= '</tbody>';
-        $html .= '</table>';
         return $html;
     }
     
-    private function fetchHeader() {
+    private function fetchTHead() {
         $html = '';
         $html .= '<thead>';
         $html .= '<tr>';
