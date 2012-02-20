@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../../../src/common/valid/ValidFactory.class.ph
 require_once(dirname(__FILE__).'/../../../src/common/user/UserManager.class.php');
 Mock::generatePartial('Git', 'GitSpy', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView'));
 Mock::generate('UserManager');
-class GitTest extends UnitTestCase {
+class GitTest extends TuleapTestCase {
     public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView() {
         $git = new GitSpy();
         $git->expectOnce('addAction', array('deleteRepository', '*'));
@@ -32,16 +32,28 @@ class GitTest extends UnitTestCase {
         $unimportantGroupId = 101;
         $request = new HTTPRequest();
 
-        $git->_initForTest($request, $usermanager, 'del', array('del'), $unimportantGroupId);
+        $git->_addInstanceVars($request, $usermanager, 'del', array('del'), $unimportantGroupId);
         $git->request();
     }
     
-//    public function testTheForkExternalRouteExecutesForkExternalRepositoryWithForkRepositoriesView() {
-//        $git = new GitSpy();
-//        $git->expectOnce('addAction', array('forkExternal', '*'));
-//        $git->expectOnce('addView', array('forkRepositories'));
-//        
-//    }
+    public function testTheForkExternalRouteExecutesForkExternalRepositoryWithForkRepositoriesView() {
+        $user = new User();
+        $toProject = 100;
+        $repos = array('my-repo');
+        $usermanager = new MockUserManager();
+        $usermanager->setReturnValue('getCurrentUser', $user);
+
+        $git = new GitSpy();
+        $git->expectOnce('addAction', array('forkExternals', array($toProject, $repos, $user)));
+        $git->expectOnce('addView', array('forkRepositories'));
+
+        $request = new Codendi_Request(array(
+                                        'to_project' => $toProject,
+                                        'repos' => $repos));
+
+        $git->_addInstanceVars($request, $usermanager);
+        $git->_dispatchActionAndView('fork_externals', null, null, $user);
+    }
 }
 
 

@@ -100,7 +100,11 @@ class Git extends PluginController {
 
         $this->permittedActions = array();
     }
-    public function _initForTest($request, $userManager, $action, $permittedActions, $groupId) {
+    
+    /**
+     * Added for testing
+     */
+    public function _addInstanceVars($request, $userManager, $action = null, $permittedActions = null, $groupId = null) {
         $this->request = $request;
         $this->userManager = $userManager;
         $this->action = $action;
@@ -371,6 +375,12 @@ class Git extends PluginController {
                 } catch (MalformedPathException $e) {
                     $this->addError($this->getText('fork_malformed_path'));
                 }
+                $this->addView('forkRepositories');
+                break;
+            case 'fork_externals': 
+                $toProject = $this->request->get('to_project');
+                $repos = $this->request->get('repos');
+                $this->addAction('forkExternals', array($toProject, $repos, $user));
                 $this->addView('forkRepositories');
                 break;
             #LIST
