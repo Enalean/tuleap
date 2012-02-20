@@ -19,9 +19,9 @@
  */
 
 require_once 'common/project/Service.class.php';
-require_once dirname(__FILE__).'/../../tracker/include/Tracker/Report/Tracker_Report.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Report/Tracker_Report.class.php';
 
-class AgileDashboardView {
+class AgileDashboard_SearchView {
     
     /**
      * @var Service

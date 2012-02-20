@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../include/AgileDashboardView.class.php';
+require_once dirname(__FILE__) .'/../include/AgileDashboard/SearchView.class.php';
 
 Mock::generate('Service');
 Mock::generate('Project');
@@ -34,7 +34,7 @@ class AgileDashboardViewTest extends TuleapTestCase {
         
         $report = new MockTracker_Report();
         
-        $view = new AgileDashboardView($service, $GLOBALS['Language'], $report, $criteria, array());
+        $view = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, array());
         
         ob_start();
         $view->render();
@@ -56,7 +56,7 @@ class AgileDashboardViewTest extends TuleapTestCase {
             )
         );
         
-        $view = new AgileDashboardView($service, $GLOBALS['Language'], $report, $criteria, $artifacts);
+        $view = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts);
         
         ob_start();
         $view->render();

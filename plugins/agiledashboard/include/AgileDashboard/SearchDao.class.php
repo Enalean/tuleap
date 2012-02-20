@@ -20,7 +20,7 @@
 
 require_once 'common/dao/include/DataAccessObject.class.php';
 
-class AgileDashboardSearchDao extends DataAccessObject {
+class AgileDashboard_SearchDao extends DataAccessObject {
     
     public function searchMatchingArtifacts($valueIdsList) {
         $sql = "

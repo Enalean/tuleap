@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ProjectNotFoundException extends Exception {
+class AgileDashboard_ServiceNotUsedException extends Exception {
 }
-
 ?>

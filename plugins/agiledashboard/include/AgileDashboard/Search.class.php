@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'AgileDashboardSearchDao.class.php';
+require_once 'SearchDao.class.php';
 require_once 'common/project/Project.class.php';
 
-class AgileDashboardSearch {
+class AgileDashboard_Search {
     
     function getMatchingArtifacts(array $criteria) {
         $valueIds   = $this->extractValueIds($criteria);
@@ -56,7 +56,7 @@ class AgileDashboardSearch {
      * @return AgileDashboardSearchDao
      */
     protected function getDao() {
-        return new AgileDashboardSearchDao();
+        return new AgileDashboard_SearchDao();
     }
 
 }

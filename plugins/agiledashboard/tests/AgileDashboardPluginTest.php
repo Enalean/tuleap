@@ -20,13 +20,13 @@
 
 require_once dirname(__FILE__) .'/../include/agiledashboardPlugin.class.php';
 
-require_once dirname(__FILE__) .'/../include/AgileDashboardController.class.php';
-Mock::generate('AgileDashboardController');
+require_once dirname(__FILE__) .'/../include/AgileDashboard/SearchController.class.php';
+Mock::generate('AgileDashboard_SearchController');
 
 class AgileDashboardPluginTest extends UnitTestCase {
     
     public function testProcessShouldRunActionIndexOfAgileDashboardControllerByDefault() {
-        $controller = new MockAgileDashboardController();
+        $controller = new MockAgileDashboard_SearchController();
         $controller->expectOnce('index');
         
         $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('getController'));
@@ -38,7 +38,7 @@ class AgileDashboardPluginTest extends UnitTestCase {
     }
     
     public function testProcessShouldRunActionOfAgileDashboardControllerMatchingRequest() {
-        $controller = new MockAgileDashboardController();
+        $controller = new MockAgileDashboard_SearchController();
         $controller->expectOnce('search');
         
         $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('getController'));

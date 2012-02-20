@@ -20,14 +20,14 @@
 
 require_once dirname(__FILE__) . '/../../tracker/tests/Test_Tracker_FormElement_Builder.php';
 
-require_once dirname(__FILE__) . '/../include/AgileDashboardController.class.php';
+require_once dirname(__FILE__) . '/../include/AgileDashboard/SearchController.class.php';
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'common/project/ProjectManager.class.php';
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('Service');
-Mock::generate('AgileDashboardView');
-Mock::generate('AgileDashboardSearch');
+Mock::generate('AgileDashboard_SearchView');
+Mock::generate('AgileDashboard_Search');
 Mock::generate('Tracker_FormElementFactory');
 
 class AgileDashboardControllerIndexTest extends TuleapTestCase {
@@ -40,11 +40,11 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         $this->manager = new MockProjectManager();
         $this->request = new Codendi_Request(array('group_id' => '66'));
         $this->formElementFactory = new MockTracker_FormElementFactory();
-        $this->search = new MockAgileDashboardSearch();
+        $this->search = new MockAgileDashboard_Search();
     }
     
     function testIndexActionRendersViewForServiceWithCriteria() {
-        $view = new MockAgileDashboardView();
+        $view = new MockAgileDashboard_SearchView();
         $view->expectOnce('render');
                 
         $this->project->setReturnValue('getService', $this->service, array('plugin_agiledashboard'));
@@ -54,7 +54,7 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         $fields = array(aTextField()->build(), aStringField()->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields, array($this->project));
         
-        $controller = TestHelper::getPartialMock('AgileDashboardController', array('getView'));
+        $controller = TestHelper::getPartialMock('AgileDashboard_SearchController', array('getView'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
         $controller->setReturnValue('getView', $view);
         
@@ -67,7 +67,7 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
         
-        $controller = new AgileDashboardController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
         
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
@@ -85,13 +85,13 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/'));
         
-        $controller = new AgileDashboardController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
         
         $controller->index();
     }
     
     public function testSearchActionRendersTheSearchView() {
-        $view = new MockAgileDashboardView();
+        $view = new MockAgileDashboard_SearchView();
         $view->expectOnce('render');
         
         $criteria = array();
@@ -112,7 +112,7 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
         $this->search->expectOnce('getMatchingArtifacts', array($criteria));
         
-        $controller = TestHelper::getPartialMock('AgileDashboardController', array('getView'));
+        $controller = TestHelper::getPartialMock('AgileDashboard_SearchController', array('getView'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
         $controller->setReturnValue('getView', $view);
         

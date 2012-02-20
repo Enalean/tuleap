@@ -18,17 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboardSearchResultViewTest extends TuleapTestCase {
-    function testRenderDisplaysTheSearchCriteria() {
-        $criteria = array('priority' => array ('values' => array('214')));
-        $view = new AgileDashboardSearchResultView($criteria);
-        
-        ob_start();
-        $view->render();
-        $output = ob_get_clean();
-        
-        $this->assertPattern('/214/', $output);
-    }
+class AgileDashboard_ProjectNotFoundException extends Exception {
 }
 
 ?>

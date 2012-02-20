@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../include/AgileDashboardSearch.class.php';
+require_once dirname(__FILE__) .'/../include/AgileDashboard/Search.class.php';
 require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php';
 Mock::generate('Project');
 Mock::generate('Tracker');
-Mock::generate('AgileDashboardSearchDao');
+Mock::generate('AgileDashboard_SearchDao');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_FormElement_Field_String');
 
@@ -48,7 +48,7 @@ class AgileDashboardSearchTest extends UnitTestCase {
                 'id' => 143,
             )
         );
-        $dao = new MockAgileDashboardSearchDao();
+        $dao = new MockAgileDashboard_SearchDao();
         $dao->setReturnValue('searchMatchingArtifacts', $dar);
         $dao->expectOnce('searchMatchingArtifacts', array(array(array(214,143))));
         
@@ -58,7 +58,7 @@ class AgileDashboardSearchTest extends UnitTestCase {
         $criteria = array('220' => array('values' => array('214')));
         
         
-        $search = TestHelper::getPartialMock('AgileDashboardSearch', array('getDao'));
+        $search = TestHelper::getPartialMock('AgileDashboard_Search', array('getDao'));
         $search->setReturnValue('getDao', $dao);
         
         $artifacts = $search->getMatchingArtifacts($criteria);
@@ -95,7 +95,7 @@ class AgileDashboardSearchTest extends UnitTestCase {
             ),
         );
         
-        $dao = new MockAgileDashboardSearchDao();
+        $dao = new MockAgileDashboard_SearchDao();
         $dao->setReturnValue('searchMatchingArtifacts', $dar);
         $dao->expectOnce('searchMatchingArtifacts', array(array(array(214,241), array(250, 252))));
         
@@ -109,7 +109,7 @@ class AgileDashboardSearchTest extends UnitTestCase {
                           '330' => array('values' => array('250')));
         
         
-        $search = TestHelper::getPartialMock('AgileDashboardSearch', array('getDao'));
+        $search = TestHelper::getPartialMock('AgileDashboard_Search', array('getDao'));
         $search->setReturnValue('getDao', $dao);
         
         $artifacts = $search->getMatchingArtifacts($criteria);
@@ -146,7 +146,7 @@ class AgileDashboardSearchTest extends UnitTestCase {
             ),
         );
         
-        $dao = new MockAgileDashboardSearchDao();
+        $dao = new MockAgileDashboard_SearchDao();
         $dao->setReturnValue('searchMatchingArtifacts', $dar);
         $dao->expectOnce('searchMatchingArtifacts', array(array(array(214,241))));
         
@@ -157,7 +157,7 @@ class AgileDashboardSearchTest extends UnitTestCase {
                           '330' => array('values' => array('')));
         
         
-        $search = TestHelper::getPartialMock('AgileDashboardSearch', array('getDao'));
+        $search = TestHelper::getPartialMock('AgileDashboard_Search', array('getDao'));
         $search->setReturnValue('getDao', $dao);
         
         $artifacts = $search->getMatchingArtifacts($criteria);
