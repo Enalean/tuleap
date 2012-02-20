@@ -37,15 +37,8 @@ class Git extends PluginController {
      */
     protected $factory;
     
-    /**
-     * @var UserManager
-     */
-    private $userManager;
-    
     public function __construct(GitPlugin $plugin) {
         parent::__construct();
-        
-        $this->userManager = UserManager::instance();
         
         $this->factory = new GitRepositoryFactory();
         
@@ -99,18 +92,6 @@ class Git extends PluginController {
         }
 
         $this->permittedActions = array();
-    }
-    
-    /**
-     * Added for testing
-     */
-    public function _addInstanceVars($request, $userManager, $action = null, $permittedActions = null, $groupId = null) {
-        $this->request = $request;
-        $this->userManager = $userManager;
-        $this->action = $action;
-        $this->permittedActions = $permittedActions;
-        $this->groupId = $groupId;
-        
     }
 
     protected function getText($key, $params = array()) {
@@ -169,7 +150,6 @@ class Git extends PluginController {
     public function request() {
         $valid = new Valid_String('repo_name');
         $valid->required();
-        $repositoryName = null;
         if($this->request->valid($valid)) {
             $repositoryName = trim($this->request->get('repo_name'));
         }
@@ -181,7 +161,7 @@ class Git extends PluginController {
             $repoId = 0;
         }
 
-        $user = $this->userManager->getCurrentUser();
+        $user = UserManager::instance()->getCurrentUser();
 
         //define access permissions
         $this->definePermittedActions($repoId, $user);
@@ -194,12 +174,8 @@ class Git extends PluginController {
         }
 
         $this->_informAboutPendingEvents($repoId);
-        $this->_dispatchActionAndView($this->action, $repoId, $repositoryName, $user);
 
-    }
-    
-    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
-        switch ($action) {
+        switch ($this->action) {
             #CREATE REF
             case 'create':
                 $this->addView('create');
@@ -377,12 +353,6 @@ class Git extends PluginController {
                 }
                 $this->addView('forkRepositories');
                 break;
-            case 'fork_externals': 
-                $toProject = $this->request->get('to_project');
-                $repos = $this->request->get('repos');
-                $this->addAction('forkExternals', array($toProject, $repos, $user));
-                $this->addView('forkRepositories');
-                break;
             #LIST
             default:
                 
@@ -397,8 +367,6 @@ class Git extends PluginController {
                 $this->addView('index');
                 break;
         }
-        
-        
     }
 
     protected function _informAboutPendingEvents($repoId) {
