@@ -18,26 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_SharedField {
+class AgileDashboard_SharedFieldDao {
     
-    private $fieldIds  = array();
-    private $valuesIds = array();
-    
-    public function addFieldId($id) {
-        $this->fieldIds[] = $id;
-    }
-    
-    public function getFieldIds() {
-        return $this->fieldIds;
-    }
-    
-    public function addValueId($id) {
-        $this->valueIds[] = $id;
-    }
-    
-    public function getValueIds() {
-        return $this->valueIds;
-    }
+    public function searchSharedFieldIds($fieldId) {}
+    public function searchSharedValueIds($valueId) {}
 }
 
 ?>

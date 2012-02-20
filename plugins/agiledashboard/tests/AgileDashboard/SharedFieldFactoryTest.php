@@ -18,36 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_SharedFieldDao {
-    public function searchSharedFieldIds($fieldId) {}
-    public function searchSharedValueIds($valueId) {}
-}
-
-class AgileDashboard_SharedFieldFactory {
-    public function getSharedFields($criteria) {
-        $sharedFields = array();
-        
-        if ($criteria) {
-            foreach($criteria as $fieldId => $data) {
-                $valueId = $data['values'][0];
-            
-                $sharedField = new AgileDashboard_SharedField();
-                
-                foreach ($this->getDao()->searchSharedFieldIds($fieldId) as $row) {
-                    $sharedField->addFieldId($row['id']);
-                }
-                
-                foreach ($this->getDao()->searchSharedValueIds($valueId) as $row) {
-                    $sharedField->addValueId($row['id']);
-                }
-                
-                $sharedFields[] = $sharedField;
-            }
-        }
-        
-        return $sharedFields;
-    }
-}
+require_once dirname(__FILE__).'/../../include/AgileDashboard/SharedFieldFactory.class.php';
 
 Mock::generate('AgileDashboard_SharedFieldDao');
 
@@ -88,7 +59,22 @@ class AgileDashboard_SharedFieldFactoryTest extends UnitTestCase {
         $this->assertEqual($sharedFields[0]->getValueIds(), array(350, 351, 360, 361));
     }
     
-    function testWithValuesForTwoFields() {}
+    function testWithValuesForTwoFields() {
+        $criteria = array('220' => array('values' => array('350', '351')),
+                          '221' => array('values' => array('352')));
+        
+        $this->dao->setReturnValueAt(0, 'searchSharedFieldIds', $this->darFromIds(220, 230));
+        $this->dao->setReturnValueAt(1, 'searchSharedFieldIds', $this->darFromIds(221, 231));
+        $this->dao->setReturnValueAt(0, 'searchSharedValueIds', $this->darFromIds(350, 351, 360, 361));
+        $this->dao->setReturnValueAt(1, 'searchSharedValueIds', $this->darFromIds(352, 362));
+        
+        $sharedFields = $this->factory->getSharedFields($criteria);
+        $this->assertEqual(count($sharedFields), 2);
+        $this->assertEqual($sharedFields[0]->getFieldIds(), array(220, 230));
+        $this->assertEqual($sharedFields[0]->getValueIds(), array(350, 351, 360, 361));
+        $this->assertEqual($sharedFields[1]->getFieldIds(), array(221, 231));
+        $this->assertEqual($sharedFields[1]->getValueIds(), array(352, 362));
+    }
     
     /**
      * Returns a Dar object that would contains rows with 'id' parameter.
