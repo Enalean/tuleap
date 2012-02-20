@@ -362,6 +362,28 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    public function searchGoodField($tracker_id, $shared_field_id) {
+        $tracker_id      = $this->da->escapeInt($tracker_id);
+        $shared_field_id = $this->da->escapeInt($shared_field_id);
+        
+        $sql = "SELECT f1.id
+                FROM tracker_field AS f1
+                INNER JOIN tracker_field AS f2 ON (
+                        f2.id = $shared_field_id
+                    AND (
+                            f2.id = f1.id
+                        OR
+                            f2.original_field_id = f1.id
+                        OR
+                            f2.id = f1.original_field_id
+                        OR
+                            (f2.original_field_id = f1.original_field_id AND f1.original_field_id <> 0)
+                        )
+                )
+                WHERE f1.tracker_id = $tracker_id";
+        return $this->retrieve($sql);
+    }
+    
     public function create($type, $tracker_id, $parent_id, $name, $prefix_name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field_id) {
         $type              = $this->da->quoteSmart($type);
         $tracker_id        = $this->da->escapeInt($tracker_id);

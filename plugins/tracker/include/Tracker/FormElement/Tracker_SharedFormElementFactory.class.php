@@ -27,10 +27,21 @@ class Tracker_SharedFormElementFactory {
      * @var Tracker_FormElement_Field_List_BindFactory $boundValuesFactory 
      */
     private $boundValuesFactory;
+    
+    private $dao;
             
     function __construct(Tracker_FormElementFactory $factory, Tracker_FormElement_Field_List_BindFactory $boundValuesFactory) {
         $this->boundValuesFactory = $boundValuesFactory;
         $this->factory = $factory;
+        $this->dao = new Tracker_FormElement_FieldDao();
+    }
+    
+    public function setDao($dao) {
+        $this->dao = $dao;
+    }
+    
+    public function getDao() {
+        return $this->dao;
     }
     
     public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {
@@ -43,7 +54,7 @@ class Tracker_SharedFormElementFactory {
         $this->boundValuesFactory->duplicateByReference($field->getId(), $id);
         return $id;
     }
-
+    
     private function getRootOriginalField(Tracker_FormElement $field) {
         $originalField = $field->getOriginalField();
         if ($originalField === null) {
@@ -83,6 +94,19 @@ class Tracker_SharedFormElementFactory {
             'notifications'     => $originField->hasNotifications(),
             'original_field_id' => $originField->getId(),
         );
+    }
+    
+    /**
+     * @return Tracker_FormElement
+     */
+    public function getGoodField(Tracker $tracker, Tracker_FormElement $shared) {
+        $dar = $this->getDao()->searchGoodField($tracker->getId(), $shared->getId());
+        $row = $dar->getRow();
+        if ($row) {
+            $field_id = $row['id'];
+            return $this->factory->getFormElementById($field_id);
+        }
+        return null;
     }
 }
 
