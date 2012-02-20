@@ -91,6 +91,18 @@ extends Valid_Text {
 }
 
 /**
+ * Check that value is a string with neither carrige return nor null char.
+ */
+class Valid_Array
+extends Valid {
+    function validate($value) {
+        $this->addRule(new Rule_Array());
+        return parent::validate($value);
+    }
+}
+
+
+/**
  * Wrapprt for 'WhiteList' rule
  */
 class Valid_WhiteList

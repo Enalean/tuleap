@@ -205,6 +205,16 @@ extends Rule {
 }
 
 /**
+ * Check that given value is an array.
+ */
+class Rule_Array
+extends Rule {
+    function isValid($val) {
+        return is_array($val);
+    }
+}
+
+/**
  * Check if given string contains neither a carrige return nor a null char.
  */
 class Rule_NoCr
