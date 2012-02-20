@@ -20,6 +20,7 @@
 
 require_once 'common/project/Service.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Report/Tracker_Report.class.php';
+require_once 'html.php';
 
 class AgileDashboard_SearchView {
     
@@ -103,7 +104,7 @@ class AgileDashboard_SearchView {
     private function fetchTHead() {
         $html = '';
         $html .= '<thead>';
-        $html .= '<tr>';
+        $html .= '<tr class="boxtable">';
         $html .= '<td>id</td>';
         $html .= '<td>title</td>';
         foreach ($this->criteria as $header) {

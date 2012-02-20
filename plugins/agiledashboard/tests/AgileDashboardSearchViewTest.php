@@ -36,9 +36,7 @@ class AgileDashboardViewTest extends TuleapTestCase {
         $service->expectOnce('displayFooter');
         $criteria = array();
         
-        $report = new MockTracker_Report();
-        
-        $view = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, array());
+        $view = $this->GivenASearchView($service, $criteria, array());
         
         ob_start();
         $view->render();
@@ -48,7 +46,6 @@ class AgileDashboardViewTest extends TuleapTestCase {
     function testRenderShouldDisplayArtifacts() {
         $service = new MockService();
         $criteria = array();
-        $report = new MockTracker_Report();
         $artifacts = array(
             array(
                 'id' => 6,
@@ -60,7 +57,7 @@ class AgileDashboardViewTest extends TuleapTestCase {
             )
         );
         
-        $view = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts);
+        $view = $this->GivenASearchView($service, $criteria, $artifacts);
         
         ob_start();
         $view->render();
@@ -69,6 +66,30 @@ class AgileDashboardViewTest extends TuleapTestCase {
         $this->assertPattern('/As a user I want to search on shared fields/', $output);
         $this->assertPattern('/Add the form/', $output);
         $this->assertPattern('%<a href="'. preg_quote(TRACKER_BASE_URL .'/?aid=6') .'%', $output);
+    }
+    
+    function _testRenderShouldDisplaySharedFieldsValues() {
+        $service = new MockService();
+        $criteria = array();
+        $artifacts = array(
+            array(
+                'id' => 6,
+                'title' => 'As a user I want to search on shared fields',
+            )
+        );
+        $view = $this->GivenASearchView($service, $criteria, $artifacts);
+        
+        ob_start();
+        $view->render();
+        $output = ob_get_clean();
+        
+        $this->assertPattern('/Value of a shared field/', $output);
+    }
+    
+    private function GivenASearchView($service, $criteria, $artifacts) {
+        $report = new MockTracker_Report();
+        $view = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts);
+        return $view;
     }
 }
 ?>
