@@ -82,14 +82,18 @@ class AgileDashboard_SearchView {
     private function fetchTBody() {
         $html = '';
         $html .= '<tbody>';
+        $i = 0;
         foreach ($this->artifacts as $row) {
-            $html .= '<tr>';
+            $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
             $html .= '<td>';
             $html .= '<a href="'.TRACKER_BASE_URL.'/?aid='.$row['id'].'"> '.$row['id'].'</a>';
             $html .= '</td>';
             $html .= '<td>';
             $html .= $row['title'];
             $html .= '</td>';
+        foreach ($this->criteria as $header) {
+            $html .= '<td>'. '' .'</td>';
+        }
             $html .= '</tr>';
         }
         $html .= '</tbody>';
