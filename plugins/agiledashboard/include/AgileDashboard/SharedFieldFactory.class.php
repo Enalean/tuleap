@@ -25,26 +25,32 @@ class AgileDashboard_SharedFieldFactory {
     
     public function getSharedFields($criteria) {
         $sharedFields = array();
-        
+
         if ($criteria) {
             foreach($criteria as $fieldId => $data) {
-                $valueId = $data['values'][0];
-            
-                $sharedField = new AgileDashboard_SharedField();
-                
-                foreach ($this->getDao()->searchSharedFieldIds($fieldId) as $row) {
-                    $sharedField->addFieldId($row['id']);
+                $valueIds    = $data['values'];
+                if ($valueIds != array('')) {
+                    //var_dump($valueIds);
+                    $sharedField = new AgileDashboard_SharedField();
+
+                    foreach ($this->getDao()->searchSharedFieldIds($fieldId) as $row) {
+                        $sharedField->addFieldId($row['id']);
+                    }
+
+                    foreach ($this->getDao()->searchSharedValueIds($valueIds) as $row) {
+                        $sharedField->addValueId($row['id']);
+                    }
+
+                    $sharedFields[] = $sharedField;
                 }
-                
-                foreach ($this->getDao()->searchSharedValueIds($valueId) as $row) {
-                    $sharedField->addValueId($row['id']);
-                }
-                
-                $sharedFields[] = $sharedField;
             }
         }
         
         return $sharedFields;
+    }
+    
+    protected function getDao() {
+        return new AgileDashboard_SharedFieldDao();
     }
 }
 

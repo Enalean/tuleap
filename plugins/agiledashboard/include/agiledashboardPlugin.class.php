@@ -60,13 +60,19 @@ class AgileDashboardPlugin extends Plugin {
     
     protected function getController(Codendi_Request $request) {
         require_once 'AgileDashboard/SearchController.class.php';
+        require_once 'AgileDashboard/Search.class.php';
+        
+        $sharedFieldFactory = new AgileDashboard_SharedFieldFactory();
+        $dao                = new AgileDashboard_SearchDao();
+        $search             = new AgileDashboard_Search($sharedFieldFactory, $dao);
+        
         return new AgileDashboard_SearchController(
             $request,
             ProjectManager::instance(),
             Tracker_FormElementFactory::instance(),
             $GLOBALS['Language'],
             $GLOBALS['Response'],
-            new AgileDashboard_Search()
+            $search
         );
     }
 }

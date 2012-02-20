@@ -18,10 +18,50 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_SharedFieldDao {
+class AgileDashboard_SharedFieldDao extends DataAccessObject {
     
-    public function searchSharedFieldIds($fieldId) {}
-    public function searchSharedValueIds($valueId) {}
+    public function searchSharedFieldIds($sourceOrTargetFieldIds) {
+        $sourceOrTargetFieldIds = $this->da->escapeInt($sourceOrTargetFieldIds);
+        
+        $sql_original_ids = "
+            SELECT original.id
+            FROM tracker_field AS f
+                INNER JOIN tracker_field AS original ON (f.original_field_id = original.id)
+            WHERE f.id = $sourceOrTargetFieldIds
+        ";
+        
+        $sql_target_ids = "
+            SELECT target.id
+            FROM tracker_field AS f
+                INNER JOIN tracker_field AS original ON (   f.original_field_id = original.id
+                                                         OR f.id                = original.id)
+                INNER JOIN tracker_field AS target   ON (   original.id         = target.original_field_id)
+            WHERE f.id = $sourceOrTargetFieldIds
+        ";
+        
+        $sql = $sql_original_ids.' UNION '.$sql_target_ids;
+        
+        return $this->retrieve($sql);
+    }
+
+    public function searchSharedValueIds(array $sourceOrTargetValueIds) {
+        $sourceOrTargetValueIds = implode(',', $sourceOrTargetValueIds);
+        
+        $sql_original_ids = "SELECT original.id
+                FROM tracker_field_list_bind_static_value AS v
+                    INNER JOIN tracker_field_list_bind_static_value AS original ON (v.original_value_id = original.id)
+                WHERE v.id IN ($sourceOrTargetValueIds)";
+        
+        $sql_target_ids = "SELECT target.id
+                FROM tracker_field_list_bind_static_value AS v
+                     INNER JOIN tracker_field_list_bind_static_value AS original ON (v.original_value_id = original.id OR (v.id = original.id))
+                     INNER JOIN tracker_field_list_bind_static_value AS target   ON (original.id         = target.original_value_id)
+                WHERE v.id IN ($sourceOrTargetValueIds)";
+        
+        $sql = $sql_original_ids.' UNION '.$sql_target_ids;
+        
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

@@ -20,8 +20,8 @@
 
 class AgileDashboard_SharedField {
     
-    private $fieldIds  = array();
-    private $valuesIds = array();
+    private $fieldIds = array();
+    private $valueIds = array();
     
     public function addFieldId($id) {
         $this->fieldIds[] = $id;

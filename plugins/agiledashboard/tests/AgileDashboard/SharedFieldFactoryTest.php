@@ -47,7 +47,7 @@ class AgileDashboard_SharedFieldFactoryTest extends UnitTestCase {
         $this->assertEqual($sharedFields[0]->getValueIds(), array(350, 360));
     }
     
-    function _testWithTwoValuesForOneField() {
+    function testWithTwoValuesForOneField() {
         $criteria = array('220' => array('values' => array('350', '351')));
         
         $this->dao->setReturnValue('searchSharedFieldIds', $this->darFromIds(220, 230));
@@ -65,8 +65,8 @@ class AgileDashboard_SharedFieldFactoryTest extends UnitTestCase {
         
         $this->dao->setReturnValueAt(0, 'searchSharedFieldIds', $this->darFromIds(220, 230));
         $this->dao->setReturnValueAt(1, 'searchSharedFieldIds', $this->darFromIds(221, 231));
-        $this->dao->setReturnValueAt(0, 'searchSharedValueIds', $this->darFromIds(350, 351, 360, 361));
-        $this->dao->setReturnValueAt(1, 'searchSharedValueIds', $this->darFromIds(352, 362));
+        $this->dao->setReturnValueAt(0, 'searchSharedValueIds', $this->darFromIds(350, 351, 360, 361), array(array('350', '351')));
+        $this->dao->setReturnValueAt(1, 'searchSharedValueIds', $this->darFromIds(352, 362), array(array('352')));
         
         $sharedFields = $this->factory->getSharedFields($criteria);
         $this->assertEqual(count($sharedFields), 2);
@@ -76,6 +76,15 @@ class AgileDashboard_SharedFieldFactoryTest extends UnitTestCase {
         $this->assertEqual($sharedFields[1]->getValueIds(), array(352, 362));
     }
     
+    function testWithOneFieldWithNoValues() {
+        $criteria = array('220' => array('values' => array(0 => '')));
+        
+        $this->dao->expectNever('searchSharedFieldIds');
+        $this->dao->expectNever('searchSharedValueIds');
+        
+        $sharedFields = $this->factory->getSharedFields($criteria);
+        $this->assertEqual($sharedFields, array());
+    }
     /**
      * Returns a Dar object that would contains rows with 'id' parameter.
      * 

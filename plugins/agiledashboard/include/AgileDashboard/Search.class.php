@@ -18,46 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'SharedFieldFactory.class.php';
 require_once 'SearchDao.class.php';
-require_once 'common/project/Project.class.php';
 
 class AgileDashboard_Search {
     
-    function getMatchingArtifacts(array $criteria) {
-        $valueIds   = $this->extractValueIds($criteria);
-        return $this->getDao()->searchMatchingArtifacts($valueIds);
-    }
-
-    protected function extractValueIds(array $criteria) {
-        $sourceOrTargetValueIds   = array();
-        foreach ($criteria as $fieldId => $data) {
-            foreach ($data['values'] as $valueId) {
-                if ($valueId != null)
-                    $sourceOrTargetValueIds[] = (int)$valueId;
-            }
-        }
-        $valueIdsList = array();
-        
-        foreach ($sourceOrTargetValueIds as $sourceOrTargetValueId) {
-            $valueIds = array();
-            
-            foreach ($this->getDao()->searchSharedValueIds(array($sourceOrTargetValueId)) as $row) {
-                $valueIds[] = $row['id'];
-            }
-            
-            $valueIdsList[] = $valueIds;
-        }
-        
-        return $valueIdsList;
-    }
+    /**
+     * @var AgileDashboard_SharedFieldFactory
+     */
+    private $sharedFieldFactory;
     
     /**
-     * Wrapper for tests
-     * @return AgileDashboardSearchDao
+     * @var AgileDashboard_SearchDao
      */
-    protected function getDao() {
-        return new AgileDashboard_SearchDao();
+    private $dao;
+    
+    function __construct(AgileDashboard_SharedFieldFactory $factory,
+                         AgileDashboard_SearchDao          $dao) {
+        $this->sharedFieldFactory = $factory;
+        $this->dao                = $dao;
     }
-
+    
+    function getMatchingArtifacts(array $criteria) {
+        $sharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
+        return $this->dao->searchMatchingArtifacts($sharedFields);
+    }
 }
 ?>

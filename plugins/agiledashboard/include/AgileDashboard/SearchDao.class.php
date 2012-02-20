@@ -50,12 +50,9 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         return implode(' ', $sqlFragments);
     }
     
-    protected function getSharedFieldFragment($fragmentNumber, AgileDashboard_SharedFieldCriterion $sharedField) {
+    protected function getSharedFieldFragment($fragmentNumber, AgileDashboard_SharedField $sharedField) {
         $fieldIds = implode(',', $sharedField->getFieldIds());
         $valueIds = implode(',', $sharedField->getValueIds());
-        
-        /*$fieldIds = implode(',', $fieldIds);
-        */
         
         // Table aliases
         $changeset_value      = "CV_$fragmentNumber";
@@ -77,25 +74,5 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         
         return $sqlFragment;
     }
-
-    function searchSharedValueIds($sourceOrTargetValueIds) {
-        $sourceOrTargetValueIds = implode(',', $sourceOrTargetValueIds);
-        
-        $sql_original_ids = "SELECT original.id
-                FROM tracker_field_list_bind_static_value AS v
-                    INNER JOIN tracker_field_list_bind_static_value AS original ON (v.original_value_id = original.id)
-                WHERE v.id IN ($sourceOrTargetValueIds)";
-        
-        $sql_target_ids = "SELECT target.id
-                FROM tracker_field_list_bind_static_value AS v
-                     INNER JOIN tracker_field_list_bind_static_value AS original ON (v.original_value_id = original.id OR (v.id = original.id))
-                     INNER JOIN tracker_field_list_bind_static_value AS target   ON (original.id         = target.original_value_id)
-                WHERE v.id IN ($sourceOrTargetValueIds)";
-        
-        $sql = $sql_original_ids.' UNION '.$sql_target_ids;
-        
-        return $this->retrieve($sql);
-    }
-
 }
 ?>
