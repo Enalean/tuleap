@@ -3,9 +3,8 @@ Before do
         puts "reinit database"
         codendi_dir = "/usr/share/codendi"
         fixture_file = "codendi_tools/plugins/tests/functional/fixture.sql"
-	mysql_pass = "mysql-root"
-	mysql_user = "root"
-        system "ssh root@#{$tuleap_host} -C \"mysql -B -p#{mysql_pass} -u#{mysql_user} codendi < #{codendi_dir}/#{fixture_file}\"" 
+        mysql_pass = (ENV['TULEAP_MYSQL_PASS'] || "welcome0") 
+        system "ssh root@#{$tuleap_host} -C \"mysql -B -p#{mysql_pass} -ucodendiadm codendi < #{codendi_dir}/#{fixture_file}\"" 
         #to export the state of the base and replace the current fixture file
         #ssh root@piton -C "mysqldump -pwelcome0 -ucodendiadm codendi > /usr/share/codendi/codendi_tools/plugins/tests/functional/fixture.sql"
     end
@@ -32,4 +31,3 @@ end
 #     @before_feature_hooks[@current_feature_name].each { |hook| hook.call } 
 #   end 
 #end 
-

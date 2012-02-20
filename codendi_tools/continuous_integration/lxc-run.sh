@@ -139,5 +139,8 @@ else
     exit 1
 fi
 
+# Get the mysql password from the install
+mysql_pass=$($remotecmd awk -F\" '/sys_dbpasswd/ {print $2}' /etc/codendi/conf/database.inc)
+
 # And test!
-TULEAP_HOST=$lxc_ip cucumber -f junit -o test_results $src_dir/codendi_tools/plugins/tests/functional/features
+TULEAP_HOST=$lxc_ip TULEAP_ENV=aci TULEAP_MYSQL_PASS=$mysql_pass cucumber -f junit -o test_results $src_dir/codendi_tools/plugins/tests/functional/features
