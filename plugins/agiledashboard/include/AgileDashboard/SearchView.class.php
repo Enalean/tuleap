@@ -64,9 +64,35 @@ class AgileDashboard_SearchView {
         $report_can_be_modified = false;
         echo $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
         
-        foreach ($this->artifacts as $row) { var_dump($row); }
+        echo $this->fetchTable();
         
         $this->service->displayFooter();
+    }
+    
+    private function fetchTable() {
+        
+        $html = '';
+        $html .= '<table>';
+        $html .= '<thead>';
+        $html .= '<tr>';
+        $html .= '<td>id</td>';
+        $html .= '<td>title</td>';
+        $html .= '</tr>';
+        $html .= '</thead>';
+        $html .= '<tbody>';
+        foreach ($this->artifacts as $row) {
+            $html .= '<tr>';
+            $html .= '<td>';
+            $html .= '<a href="'.TRACKER_BASE_URL.'/?aid='.$row['id'].'"> '.$row['id'].'</a>';
+            $html.= '</td>';
+            $html.= '<td>';
+            $html .= $row['title'];
+            $html.= '</td>';
+            $html.= '</tr>';
+        }
+        $html .= '</tbody>';
+        $html .= '</table>';
+        return $html;
     }
 }
 ?>

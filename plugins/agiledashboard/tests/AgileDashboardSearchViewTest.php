@@ -24,6 +24,10 @@ Mock::generate('Service');
 Mock::generate('Project');
 Mock::generate('Tracker_Report');
 
+if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/plugins/tracker');
+}
+
 class AgileDashboardViewTest extends TuleapTestCase {
     
     function testRenderShouldDisplayServiceHeaderAndFooter() {
@@ -64,6 +68,7 @@ class AgileDashboardViewTest extends TuleapTestCase {
         
         $this->assertPattern('/As a user I want to search on shared fields/', $output);
         $this->assertPattern('/Add the form/', $output);
+        $this->assertPattern('%<a href="'. preg_quote(TRACKER_BASE_URL .'/?aid=6') .'%', $output);
     }
 }
 ?>
