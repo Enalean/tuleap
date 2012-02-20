@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
- * This file is a part of Codendi.
+ * This file is a part of Tuleap.
  *
  * Codendi is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ require_once (dirname(__FILE__).'/../include/Git.class.php');
 require_once(dirname(__FILE__).'/../../../src/common/valid/ValidFactory.class.php');
 require_once(dirname(__FILE__).'/../../../src/common/user/UserManager.class.php');
 Mock::generatePartial('Git', 'GitSpy', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView'));
+Mock::generatePartial('Git', 'GitSpyForErrors', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect'));
 Mock::generate('UserManager');
 class GitTest extends TuleapTestCase {
     public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView() {
@@ -53,6 +54,48 @@ class GitTest extends TuleapTestCase {
 
         $git->_addInstanceVars($request, $usermanager);
         $git->_dispatchActionAndView('fork_externals', null, null, $user);
+    }
+    
+    public function testAddsErrorWhenRepositoriesAreMissing() {
+        $git = new GitSpyForErrors();
+        $group_id = 11;
+        $invalidRequestError = 'Invalid request';
+        $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter', array('repos')));
+        
+        $git->_addInstanceVars(null, null, null, null, $group_id);
+        $git->expectOnce('addError', array($invalidRequestError));
+        $git->expectOnce('redirect', array('/plugins/git?group_id='.$group_id));
+
+        $request = new Codendi_Request(array(
+                                        'to_project' => 234));
+
+        $git->_dispatchForkExternals($request, null);
+    }
+    public function testAddsErrorWhenDestinationProjectIsMissing() {
+        $git = new GitSpyForErrors();
+        $group_id = 11;
+        $invalidRequestError = 'Invalid request';
+        $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter', array('to_project')));
+
+        $git->_addInstanceVars(null, null, null, null, $group_id);
+        $git->expectOnce('addError', array($invalidRequestError));
+        $git->expectOnce('redirect', array('/plugins/git?group_id='.$group_id));
+
+        $request = new Codendi_Request(array(
+                                        'repos' => array('qdfj')));
+
+        $git->_dispatchForkExternals($request, null);
+    }
+    public function testBla() {
+        $toProject = 100;
+        $repos = array('my-repo');
+
+        $request = new Codendi_Request(array(
+                                        'to_project' => $toProject,
+                                        'repos' => $repos));
+        $valid_Array = new Valid_Array('repos');
+        $valid_Array->required();
+        $this->assertTrue($request->valid($valid_Array));
     }
 }
 

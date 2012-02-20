@@ -378,10 +378,7 @@ class Git extends PluginController {
                 $this->addView('forkRepositories');
                 break;
             case 'fork_externals': 
-                $toProject = $this->request->get('to_project');
-                $repos = $this->request->get('repos');
-                $this->addAction('forkExternals', array($toProject, $repos, $user));
-                $this->addView('forkRepositories');
+                $this->_dispatchForkExternals($this->request, $user);
                 break;
             #LIST
             default:
@@ -442,6 +439,27 @@ class Git extends PluginController {
      */
     protected function instantiateAction($action) {
         return new $action($this, $this->factory, SystemEventManager::instance());
+    }
+
+    public function _dispatchForkExternals($request, $user) {
+
+        $validProject = new Valid_UInt('to_project');
+        $validProject->required();
+        $validRepos = new Valid_Array('repos');
+        $validRepos->required();
+        if (!$request->valid($validRepos)) {
+            $this->addError($this->getText('missing_parameter', array($validRepos->key)));
+            $this->redirect('/plugins/git?group_id='.$this->groupId);
+        } else 
+        if (!$request->valid($validProject)) {
+            $this->addError($this->getText('missing_parameter', array($validProject->key)));
+            $this->redirect('/plugins/git?group_id='.$this->groupId);
+        } else {
+            $toProject = $request->get('to_project');
+            $repos = $request->get('repos');
+            $this->addAction('forkExternals', array($toProject, $repos, $user));
+            $this->addView('forkRepositories');
+        }
     }
 }
 
