@@ -161,7 +161,8 @@ class AgileDashboard_SearchController {
     }
     
     protected function getView(Service $service, BaseLanguage $language, Tracker_Report $report, $criteria, $artifacts) {
-        return new AgileDashboard_SearchView($service, $language, $report, $criteria, $artifacts);
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        return new AgileDashboard_SearchView($service, $language, $report, $criteria, $artifacts, $artifact_factory);
     }
 }
 ?>

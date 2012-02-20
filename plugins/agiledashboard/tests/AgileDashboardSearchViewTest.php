@@ -23,6 +23,9 @@ require_once dirname(__FILE__) .'/../include/AgileDashboard/SearchView.class.php
 Mock::generate('Service');
 Mock::generate('Project');
 Mock::generate('Tracker_Report');
+Mock::generate('Tracker_ArtifactFactory');
+Mock::generate('Tracker_Artifact');
+Mock::generate('Tracker');
 
 if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker');
@@ -48,11 +51,11 @@ class AgileDashboardViewTest extends TuleapTestCase {
         $criteria = array();
         $artifacts = array(
             array(
-                'id' => 6,
+                'id' => '6',
                 'title' => 'As a user I want to search on shared fields',
             ),
             array(
-                'id' => 8,
+                'id' => '8',
                 'title' => 'Add the form',
             )
         );
@@ -65,31 +68,28 @@ class AgileDashboardViewTest extends TuleapTestCase {
         
         $this->assertPattern('/As a user I want to search on shared fields/', $output);
         $this->assertPattern('/Add the form/', $output);
-        $this->assertPattern('%<a href="'. preg_quote(TRACKER_BASE_URL .'/?aid=6') .'%', $output);
-    }
-    
-    function _testRenderShouldDisplaySharedFieldsValues() {
-        $service = new MockService();
-        $criteria = array();
-        $artifacts = array(
-            array(
-                'id' => 6,
-                'title' => 'As a user I want to search on shared fields',
-            )
-        );
-        $view = $this->GivenASearchView($service, $criteria, $artifacts);
-        
-        ob_start();
-        $view->render();
-        $output = ob_get_clean();
-        
-        $this->assertPattern('/Value of a shared field/', $output);
     }
     
     private function GivenASearchView($service, $criteria, $artifacts) {
         $report = new MockTracker_Report();
-        $view = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts);
+        $factory = $this->GivenAnArtifactFactory($artifacts);
+        $view = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $factory);
         return $view;
+    }
+    
+    private function GivenAnArtifactFactory($artifacts) {
+        $factory = new MockTracker_ArtifactFactory();
+        foreach ($artifacts as $row) {
+            $artifact = $this->GivenAnArtifact($row['id']);
+            $factory->setReturnValue('getArtifactById', $artifact, array($row['id']));
+        }
+        return $factory;
+    }
+    
+    private function GivenAnArtifact() {
+        $artifact = new MockTracker_Artifact();
+        $artifact->expectOnce('fetchDirectLinkToArtifact');
+        return $artifact;
     }
 }
 ?>

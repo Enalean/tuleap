@@ -49,12 +49,18 @@ class AgileDashboard_SearchView {
      */
     private $artifacts;
     
-    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts) {
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    
+    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts, Tracker_ArtifactFactory $artifact_factory) {
         $this->language  = $language;
         $this->service   = $service;
         $this->report    = $report;
         $this->criteria  = $criteria;
         $this->artifacts = $artifacts;
+        $this->artifact_factory = $artifact_factory;
     }
     
     public function render() {
@@ -85,17 +91,19 @@ class AgileDashboard_SearchView {
         $html .= '<tbody>';
         $i = 0;
         foreach ($this->artifacts as $row) {
-            $html .= '<tr class="'. html_get_alt_row_color($i++) .'">';
-            $html .= '<td>';
-            $html .= '<a href="'.TRACKER_BASE_URL.'/?aid='.$row['id'].'"> '.$row['id'].'</a>';
-            $html .= '</td>';
-            $html .= '<td>';
-            $html .= $row['title'];
-            $html .= '</td>';
-        foreach ($this->criteria as $header) {
-            $html .= '<td>'. '' .'</td>';
-        }
-            $html .= '</tr>';
+            $artifact = $this->artifact_factory->getArtifactById($row['id']);
+            if ($artifact) {
+                $tracker = $artifact->getTracker();
+                $html .= '<tr class="' . html_get_alt_row_color($i++) . '">';
+                $html .= '<td>';
+                $html .= $artifact->fetchDirectLinkToArtifact();
+                $html .= '</td>';
+                $html .= '<td>';
+                $html .= $row['title'];
+                $html .= '</td>';
+                $html .= $this->fetchColumnsValues($artifact);
+                $html .= '</tr>';
+            }
         }
         $html .= '</tbody>';
         return $html;
@@ -112,6 +120,15 @@ class AgileDashboard_SearchView {
         }
         $html .= '</tr>';
         $html .= '</thead>';
+        return $html;
+    }
+    
+    private function fetchColumnsValues(Tracker_Artifact $artifact) {
+        $html = '';
+        foreach ($this->criteria as $criterion) {
+            $value = '';
+            $html .= '<td>'. $value .'</td>';
+        }
         return $html;
     }
 }
