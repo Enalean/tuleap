@@ -40,6 +40,7 @@ class AgileDashboardSearchDao extends DataAccessObject {
     
     protected function getSharedFieldsSqlFragment($valueIdsList) {
         $fragmentNumber = 0;
+        $sqlFragments   = array();
         foreach ($valueIdsList as $valueIds) {
             $sqlFragments[] = $this->getSharedFieldFragment($fragmentNumber++, $valueIds);
         }
