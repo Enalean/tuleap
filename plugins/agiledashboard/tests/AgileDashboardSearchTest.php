@@ -164,5 +164,42 @@ class AgileDashboardSearchTest extends UnitTestCase {
         $this->assertEqual($artifacts[0]['id'], 6);
         $this->assertEqual($artifacts[1]['title'], 'Add the form');
     }
+    
+    function _testGetSearchCriteriaWhenOneCriterion() {
+        $dao = new MockAgileDashboard_SearchDao();
+        
+        $search = TestHelper::getPartialMock('AgileDashboard_Search', array('getDao'));
+        $search->setReturnValue('getDao', $dao);
+
+        $sharedValuesDar = array(
+            array(
+                'id' => 210,
+            ),
+            array(
+                'id' => 220,
+            )
+        );
+        $dao->setReturnValue('searchSharedValueIds', $sharedValuesDar);
+        
+        $sharedFieldsDar = array(
+            array(
+                'id' => 350,
+            ),
+            array(
+                'id' => 360,
+            )
+        );
+        $dao->setReturnValue('searchSharedFieldIds', $sharedFieldsDar);
+
+        $criteria = array('220' => array('values' => array('214')));
+        
+        $searchCriteria = $search->getSearchCriteriaFromRequestCriteria($criteria);
+        $this->assertEqual(count($searchCriteria), 1);
+        
+        $searchCriterion = $searchCriteria[0];
+        
+        $this->assertEquals($searchCriterion->getFieldIds(), array(350, 360));
+        $this->assertEquals($searchCriterion->getValueIds(), array(210, 220));
+    }
 }
 ?>

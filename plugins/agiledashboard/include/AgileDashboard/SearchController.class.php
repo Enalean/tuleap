@@ -72,9 +72,9 @@ class AgileDashboard_SearchController {
         try {
             $project   = $this->getProject();
             $service   = $this->getService($project);
-            $artifacts = $this->getArtifacts();
             $report    = $this->getReport();
             $criteria  = $this->getCriteria($project, $report);
+            $artifacts = $this->getArtifacts();
             
             $view = $this->getView($service, $this->language, $report, $criteria, $artifacts);
             $view->render();

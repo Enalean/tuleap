@@ -19,15 +19,16 @@
  */
 
 require_once 'common/dao/include/DataAccessObject.class.php';
+require_once 'SharedField.class.php';
 
 class AgileDashboard_SearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts($valueIdsList) {
+    public function searchMatchingArtifacts(array $sharedFields) {
         $sql = "
             SELECT artifact.id, CVT.value AS title
             FROM tracker_artifact AS artifact
             INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
-            " . $this->getSharedFieldsSqlFragment($valueIdsList) . "
+            " . $this->getSharedFieldsSqlFragment($sharedFields) . "
             LEFT JOIN (
                 tracker_changeset_value AS CV
                     INNER JOIN tracker_semantic_title       AS ST  ON (CV.field_id = ST.field_id)
@@ -38,17 +39,23 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    protected function getSharedFieldsSqlFragment($valueIdsList) {
+    protected function getSharedFieldsSqlFragment(array $sharedFields) {
         $fragmentNumber = 0;
         $sqlFragments   = array();
-        foreach ($valueIdsList as $valueIds) {
-            $sqlFragments[] = $this->getSharedFieldFragment($fragmentNumber++, $valueIds);
+        
+        foreach ($sharedFields as $sharedField) {
+            $sqlFragments[] = $this->getSharedFieldFragment($fragmentNumber++, $sharedField);
         }
+        
         return implode(' ', $sqlFragments);
     }
     
-    protected function getSharedFieldFragment($fragmentNumber, $valueIds) {
-        $valueIds   = implode(',', $valueIds);
+    protected function getSharedFieldFragment($fragmentNumber, AgileDashboard_SharedFieldCriterion $sharedField) {
+        $fieldIds = implode(',', $sharedField->getFieldIds());
+        $valueIds = implode(',', $sharedField->getValueIds());
+        
+        /*$fieldIds = implode(',', $fieldIds);
+        */
         
         // Table aliases
         $changeset_value      = "CV_$fragmentNumber";
@@ -56,7 +63,8 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         
         $sqlFragment = "
             INNER JOIN tracker_changeset_value AS $changeset_value ON (
-                $changeset_value.changeset_id = c.id 
+                    $changeset_value.changeset_id = c.id
+                AND $changeset_value.field_id IN ($fieldIds)
             )
             INNER JOIN tracker_changeset_value_list AS $changeset_value_list ON (
                     $changeset_value_list.changeset_value_id = $changeset_value.id
@@ -78,7 +86,7 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         $sql_target_ids = "SELECT target.id
                 FROM tracker_field_list_bind_static_value AS v
                      INNER JOIN tracker_field_list_bind_static_value AS original ON (v.original_value_id = original.id OR (v.id = original.id))
-                     INNER JOIN tracker_field_list_bind_static_value AS target ON (original.id = target.original_value_id)
+                     INNER JOIN tracker_field_list_bind_static_value AS target   ON (original.id         = target.original_value_id)
                 WHERE v.id IN ($sourceOrTargetValueIds)";
         
         $sql = $sql_original_ids.' UNION '.$sql_target_ids;
