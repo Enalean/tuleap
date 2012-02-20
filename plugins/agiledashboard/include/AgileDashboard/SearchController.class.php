@@ -67,26 +67,17 @@ class AgileDashboard_SearchController {
         $this->formElementFactory = $formElementFactory;
         $this->search             = $search;
     }
-    
-    public function index() {
-        try {
-            $project   = $this->getProject();
-            
-            $this->renderView($project);
-        } catch (AgileDashboard_ProjectNotFoundException $e) {
-            $this->layout->addFeedback('error', $e->getMessage());
-            $this->layout->redirect('/');
-        } catch (AgileDashboard_ServiceNotUsedException $e) {
-            $this->layout->addFeedback('error', $e->getMessage());
-            $this->layout->redirect('/projects/' . $project->getUnixName() . '/');
-        }
-    }
-    
+
     public function search() {
         try {
             $project   = $this->getProject();
+            $service   = $this->getService($project);
+            $artifacts = $this->getArtifacts();
+            $report    = $this->getReport();
+            $criteria  = $this->getCriteria($project, $report);
             
-            $this->renderView($project);
+            $view = $this->getView($service, $this->language, $report, $criteria, $artifacts);
+            $view->render();
         }
         catch (AgileDashboard_ProjectNotFoundException $e) {
             $this->layout->addFeedback('error', $e->getMessage());
@@ -98,23 +89,14 @@ class AgileDashboard_SearchController {
         }
     }
     
-    protected function getArtifacts() {
+    private function getArtifacts() {
         if ($this->request->exist('criteria')) {
-            $this->search->getMatchingArtifacts($this->request->get('criteria'));
+            return $this->search->getMatchingArtifacts($this->request->get('criteria'));
         } else {
             return array();
         }
     }
     
-    private function renderView(Project $project) {        
-        $service   = $this->getService($project);
-        $artifacts = $this->getArtifacts();
-        $report    = $this->getReport();
-        $criteria  = $this->getCriteria($project, $report);
-        $view      = $this->getView($service, $this->language, $report, $criteria, $artifacts);
-        
-        $view->render();
-    }
     
     private function getReport() {
         $name = "Shared field search";
@@ -152,7 +134,7 @@ class AgileDashboard_SearchController {
     /**
      * @return Project
      */
-    protected function getProject() {
+    private function getProject() {
         $projectId = $this->request->get('group_id');
         $project   = $this->projectManager->getProject($projectId);
         if ($project->isError()) {
@@ -166,7 +148,7 @@ class AgileDashboard_SearchController {
     /**
      * @return Service
      */
-    protected function getService(Project $project) {
+    private function getService(Project $project) {
         $service = $project->getService('plugin_agiledashboard');
         if ($service) {
             return $service;

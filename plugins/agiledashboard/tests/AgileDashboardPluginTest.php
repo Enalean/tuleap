@@ -27,24 +27,12 @@ class AgileDashboardPluginTest extends UnitTestCase {
     
     public function testProcessShouldRunActionIndexOfAgileDashboardControllerByDefault() {
         $controller = new MockAgileDashboard_SearchController();
-        $controller->expectOnce('index');
-        
-        $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('getController'));
-        $plugin->setReturnValue('getController', $controller);
-        
-        $request = new Codendi_Request(array());
-        
-        $plugin->process($request);
-    }
-    
-    public function testProcessShouldRunActionOfAgileDashboardControllerMatchingRequest() {
-        $controller = new MockAgileDashboard_SearchController();
         $controller->expectOnce('search');
         
         $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('getController'));
         $plugin->setReturnValue('getController', $controller);
         
-        $request = new Codendi_Request(array('tracker_query_submit' => 'WAT'));
+        $request = new Codendi_Request(array());
         
         $plugin->process($request);
     }

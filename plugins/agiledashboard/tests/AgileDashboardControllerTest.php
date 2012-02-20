@@ -58,18 +58,10 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
         $controller->setReturnValue('getView', $view);
         
-        $controller->index();
-    }
-    
-    public function testIndexRedirectsWithErrorMessageIfServiceIsNotUsed() {
-        $this->actionRedirectsWithErrorMessageIfServiceIsNotUsed('index');
+        $controller->search();
     }
     
     public function testSearchRedirectsWithErrorMessageIfServiceIsNotUsed() {
-        $this->actionRedirectsWithErrorMessageIfServiceIsNotUsed('search');
-    }
-    
-    protected function actionRedirectsWithErrorMessageIfServiceIsNotUsed($action) {
         $this->project->setReturnValue('getService', null, array('plugin_agiledashboard'));
         $this->project->setReturnValue('getUnixName', 'coin');
 
@@ -80,18 +72,10 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
 
-        $controller->$action();
+        $controller->search();
     }
     
-    public function testIndexActionRedirectsToHomepageWhenProjectDoesNotExist() {
-        $this->actionRedirectsToHomepageWhenProjectDoesNotExist('index');
-    }
-    
-    public function testSearchActionRedirectsToHomepageWhenProjectDoesNotExist() {
-        $this->actionRedirectsToHomepageWhenProjectDoesNotExist('search');
-    }
-    
-    public function actionRedirectsToHomepageWhenProjectDoesNotExist($action) {
+    public function testSearchRedirectsToHomepageWhenProjectDoesNotExist() {
         $this->project->setReturnValue('isError', true);
         
         $this->manager->setReturnValue('getProject', $this->project, array('invalid_project_id'));
@@ -103,7 +87,7 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         
         $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
         
-        $controller->$action();
+        $controller->search();
     }
     
     public function testSearchActionRendersTheSearchView() {
