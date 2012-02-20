@@ -19,12 +19,17 @@
  */
 
 class AgileDashboard_SharedField {
+    public function __construct($fieldIds, $valueIds) {
+        $this->fieldIds = $fieldIds;
+        $this->valueIds = $valueIds;
+    }
+    
     public function getFieldIds() {
-        return array();
+        return $this->fieldIds;
     }
     
     public function getValueIds() {
-        return array();
+        return $this->valueIds;
     }
 }
 
