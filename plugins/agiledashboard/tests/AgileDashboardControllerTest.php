@@ -61,21 +61,37 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         $controller->index();
     }
     
-    public function testIndexActionRedirectsWithErrorMessageIfServiceIsNotUsed() {
+    public function testIndexRedirectsWithErrorMessageIfServiceIsNotUsed() {
+        $this->actionRedirectsWithErrorMessageIfServiceIsNotUsed('index');
+    }
+    
+    public function testSearchRedirectsWithErrorMessageIfServiceIsNotUsed() {
+        $this->actionRedirectsWithErrorMessageIfServiceIsNotUsed('search');
+    }
+    
+    protected function actionRedirectsWithErrorMessageIfServiceIsNotUsed($action) {
         $this->project->setReturnValue('getService', null, array('plugin_agiledashboard'));
         $this->project->setReturnValue('getUnixName', 'coin');
-        
+
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
-        
+
         $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
-        
+
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
-        
-        $controller->index();
+
+        $controller->$action();
     }
     
     public function testIndexActionRedirectsToHomepageWhenProjectDoesNotExist() {
+        $this->actionRedirectsToHomepageWhenProjectDoesNotExist('index');
+    }
+    
+    public function testSearchActionRedirectsToHomepageWhenProjectDoesNotExist() {
+        $this->actionRedirectsToHomepageWhenProjectDoesNotExist('search');
+    }
+    
+    public function actionRedirectsToHomepageWhenProjectDoesNotExist($action) {
         $this->project->setReturnValue('isError', true);
         
         $this->manager->setReturnValue('getProject', $this->project, array('invalid_project_id'));
@@ -87,7 +103,7 @@ class AgileDashboardControllerIndexTest extends TuleapTestCase {
         
         $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
         
-        $controller->index();
+        $controller->$action();
     }
     
     public function testSearchActionRendersTheSearchView() {
