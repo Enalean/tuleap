@@ -125,7 +125,7 @@ class AgileDashboard_SearchController {
         foreach ($fields as $field) {
             $id          = null;
             $rank        = 0;
-            $is_advanced = false;
+            $is_advanced = true;
             $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
         }
         return $criteria;
