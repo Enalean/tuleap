@@ -350,35 +350,15 @@ class Git extends PluginController {
                 break;
             case 'do_fork_repositories':
                 try {
-                    $this->addAction('getProjectRepositoryList', array($this->groupId));
-                    $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
-                    $token->check();
-
-                    $repos_ids = array();
-
-                    $valid = new Valid_String('path');
-                    $valid->required();
-
-                    $path      = '';
-                    if($this->request->valid($valid)) {
-                        $path = trim($this->request->get('path'));
-                    }
-                    $path = userRepoPath($user->getUserName(), $path);
-                    
-                    $valid = new Valid_UInt('repos');
-                    $valid->required();
-                    if($this->request->validArray($valid)) {
-                        $repos_ids = $this->request->get('repos');
-                    }
-
-                    $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path, $user, $GLOBALS['HTML']));
+                    $this->_doDispatchForkRepositories($this->request, $user);
                 } catch (MalformedPathException $e) {
                     $this->addError($this->getText('fork_malformed_path'));
                 }
                 $this->addView('forkRepositories');
                 break;
             case 'fork_cross_project': 
-                $this->_dispatchForkCrossProject($this->request, $user);
+                $this->_doDispatchForkCrossProject($this->request, $user);
+                $this->addView('forkRepositories');
                 break;
             #LIST
             default:
@@ -441,7 +421,7 @@ class Git extends PluginController {
         return new $action($this, $this->factory, SystemEventManager::instance());
     }
 
-    public function _dispatchForkCrossProject($request, $user) {
+    public function _doDispatchForkCrossProject($request, $user) {
         $validators = array(new Valid_UInt('to_project'), new Valid_Array('repos'));
         foreach ($validators as $validator) {
             $validator->required();
@@ -451,10 +431,35 @@ class Git extends PluginController {
                 return;
             }
         }
-        $toProject = $request->get('to_project');
-        $repos = $request->get('repos');
-        $this->addAction('forkCrossProject', array($toProject, $repos, $user));
-        $this->addView('forkRepositories');
+        $toProjectId = $request->get('to_project');
+        $repoIds = $request->get('repos');
+        $this->addAction('forkCrossProject', array($toProjectId, $repoIds, $user));
+    }
+
+    public function _doDispatchForkRepositories($request, $user) {
+        $this->addAction('getProjectRepositoryList', array($this->groupId));
+        $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
+        $token->check();
+
+        $repos_ids = array();
+
+        $valid = new Valid_String('path');
+        $valid->required();
+
+        $path      = '';
+        if($request->valid($valid)) {
+            $path = trim($request->get('path'));
+        }
+        $path = userRepoPath($user->getUserName(), $path);
+
+        $valid = new Valid_UInt('repos');
+        $valid->required();
+        if($request->validArray($valid)) {
+            $repos_ids = $request->get('repos');
+        }
+
+        $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path, $user, $GLOBALS['HTML']));
+        
     }
 }
 

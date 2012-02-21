@@ -70,7 +70,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $request = new Codendi_Request(array(
                                         'to_project' => 234));
 
-        $git->_dispatchForkCrossProject($request, null);
+        $git->_doDispatchForkCrossProject($request, null);
     }
     public function testAddsErrorWhenDestinationProjectIsMissing() {
         $git = new GitSpyForErrors();
@@ -85,7 +85,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $request = new Codendi_Request(array(
                                         'repos' => array('qdfj')));
 
-        $git->_dispatchForkCrossProject($request, null);
+        $git->_doDispatchForkCrossProject($request, null);
     }
 }
 
