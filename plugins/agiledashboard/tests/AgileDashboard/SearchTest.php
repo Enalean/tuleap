@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../include/AgileDashboard/Search.class.php';
+require_once dirname(__FILE__) .'/../../include/AgileDashboard/Search.class.php';
 Mock::generate('AgileDashboard_SharedFieldFactory');
 Mock::generate('AgileDashboard_SearchDao');
 
-class AgileDashboardSearchTest extends UnitTestCase {
+class AgileDashboard_SearchTest extends UnitTestCase {
     
     function testGetMatchingArtifactsDelegatesToSharedFieldFactoryAndSearchDao() {
         $criteria  = array('220' => array('values' => array('350')));

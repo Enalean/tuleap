@@ -54,12 +54,13 @@ class AgileDashboard_SearchController {
      */
     private $search;
     
-    public function __construct(Codendi_Request $request,
-                                ProjectManager $projectManager, 
+    public function __construct(Codendi_Request            $request,
+                                ProjectManager             $projectManager, 
                                 Tracker_FormElementFactory $formElementFactory, 
-                                BaseLanguage $language, 
-                                Layout $layout,
-                                AgileDashboard_Search $search) {
+                                BaseLanguage               $language, 
+                                Layout                     $layout,
+                                AgileDashboard_Search      $search) {
+        
         $this->request            = $request;
         $this->projectManager     = $projectManager;
         $this->language           = $language;

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../include/AgileDashboard/SearchView.class.php';
+require_once dirname(__FILE__) .'/../../include/AgileDashboard/SearchView.class.php';
 
 Mock::generate('Service');
 Mock::generate('Project');
@@ -30,7 +30,7 @@ Mock::generate('Tracker_FormElement_Field_List');
 Mock::generate('Tracker_SharedFormElementFactory');
 Mock::generate('Tracker_Artifact_Changeset');
 
-class AgileDashboardViewTest extends TuleapTestCase {
+class AgileDashboard_SearchViewTest extends TuleapTestCase {
     
     function testRenderShouldDisplayServiceHeaderAndFooter() {
         $service = new MockService();

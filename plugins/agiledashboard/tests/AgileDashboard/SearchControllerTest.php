@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) . '/../../tracker/tests/Test_Tracker_FormElement_Builder.php';
+require_once dirname(__FILE__) . '/../../../tracker/tests/Test_Tracker_FormElement_Builder.php';
 
-require_once dirname(__FILE__) . '/../include/AgileDashboard/SearchController.class.php';
+require_once dirname(__FILE__) . '/../../include/AgileDashboard/SearchController.class.php';
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'common/project/ProjectManager.class.php';
 Mock::generate('ProjectManager');
@@ -30,20 +30,20 @@ Mock::generate('AgileDashboard_SearchView');
 Mock::generate('AgileDashboard_Search');
 Mock::generate('Tracker_FormElementFactory');
 
-class AgileDashboardControllerIndexTest extends TuleapTestCase {
+class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
         
-        $this->service = new MockService();
-        $this->project = new MockProject();
-        $this->manager = new MockProjectManager();
-        $this->request = new Codendi_Request(array('group_id' => '66'));
+        $this->service            = new MockService();
+        $this->project            = new MockProject();
+        $this->manager            = new MockProjectManager();
+        $this->request            = new Codendi_Request(array('group_id' => '66'));
         $this->formElementFactory = new MockTracker_FormElementFactory();
-        $this->search = new MockAgileDashboard_Search();
+        $this->search             = new MockAgileDashboard_Search();
     }
     
-    function testIndexActionRendersViewForServiceWithCriteria() {
+    function testSearchRendersViewForServiceWithCriteria() {
         $view = new MockAgileDashboard_SearchView();
         $view->expectOnce('render');
                 
