@@ -104,7 +104,6 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
         
-        //$fields = array(aTextField()->build(), aStringField()->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', array());
         
         $matchingIds = array(array('artifactId1', 'artifactId2'), array('changesetId1', 'changesetId2'));

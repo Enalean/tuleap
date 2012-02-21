@@ -62,7 +62,7 @@ class AgileDashboard_SharedFieldDao extends DataAccessObject {
                 WHERE v.id IN ($sourceOrTargetValueIds)";
         
         $sql = $sql_original_ids.' UNION '.$sql_target_ids;
-        echo '<pre>'.$sql;
+        
         return $this->retrieve($sql);
     }
 }
