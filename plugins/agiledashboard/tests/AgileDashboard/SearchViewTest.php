@@ -36,7 +36,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $service = new MockService();
         $service->expectOnce('displayHeader');
         $service->expectOnce('displayFooter');
-        $criteria = array();
+        $criteria = $this->GivenCriteria();
         
         $view = $this->GivenASearchView($service, $criteria, array());
         
@@ -46,8 +46,8 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
     }
     
     function testRenderShouldNotDisplayTableWhenNoMatchingArtifacts() {
-        $service = new MockService();
-        $criteria = array();
+        $service   = new MockService();
+        $criteria  = $this->GivenCriteria();
         $artifacts = array();
         $view = $this->GivenASearchView($service, $criteria, $artifacts);
         
@@ -55,13 +55,12 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $view->render();
         $output = ob_get_clean();
         
-        $this->assertNoPattern('/table/', $output);
         $this->assertPattern('/No artifact/', $output);
     }
     
     function testRenderShouldDisplayArtifacts() {
-        $service = new MockService();
-        $criteria = array();
+        $service   = new MockService();
+        $criteria  = $this->GivenCriteria();
         $artifacts = array(
             array(
                 'id' => '6',
@@ -84,12 +83,8 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
     }
     
     function testRenderShouldDisplaySharedFieldValue() {
-        $service = new MockService();
-        $criterion = new stdClass();
-        $criterion->field = new MockTracker_FormElement_Field_List();
-        $criterion->field->setReturnValue('fetchChangesetValue', 'shared field value', array('6', '12345', null));
-        $criteria = array($criterion);
-        
+        $service   = new MockService();
+        $criteria  = $this->GivenCriteria();
         $artifacts = array(
             array(
                 'id' => '6',
@@ -108,10 +103,10 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
     }
     
     private function GivenASearchView($service, $criteria, $artifacts) {
-        $report = new MockTracker_Report();
+        $report           = new MockTracker_Report();
         $artifact_factory = $this->GivenAnArtifactFactory($artifacts);
-        $shared_factory = $this->GivenASharedFactory($criteria);
-        $view = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $artifact_factory, $shared_factory);
+        $shared_factory   = $this->GivenASharedFactory($criteria);
+        $view             = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $artifact_factory, $shared_factory);
         return $view;
     }
     
@@ -134,7 +129,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
     
     private function GivenAnArtifact($id) {
         $changeset = $this->GivenALastChangeset();
-        $artifact = new MockTracker_Artifact();
+        $artifact  = new MockTracker_Artifact();
         $artifact->expectOnce('fetchDirectLinkToArtifact');
         $artifact->setReturnValue('getLastChangeset', $changeset);
         $artifact->setReturnValue('getId', $id);
@@ -145,6 +140,14 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('getId', '12345');
         return $changeset;
+    }
+    
+    private function GivenCriteria() {
+        $criterion        = new stdClass();
+        $criterion->field = new MockTracker_FormElement_Field_List();
+        $criterion->field->setReturnValue('fetchChangesetValue', 'shared field value', array('6', '12345', null));
+        $criteria = array($criterion);
+        return $criteria;
     }
 }
 ?>
