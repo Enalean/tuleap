@@ -40,9 +40,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         
         $view = $this->GivenASearchView($service, $criteria, array());
         
-        ob_start();
-        $view->render();
-        ob_end_clean();
+        $output = $this->renderAndGetContent($view);
     }
     
     function testRenderShouldNotDisplayTableWhenNoMatchingArtifacts() {
@@ -51,9 +49,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $artifacts = array();
         $view = $this->GivenASearchView($service, $criteria, $artifacts);
         
-        ob_start();
-        $view->render();
-        $output = ob_get_clean();
+        $output = $this->renderAndGetContent($view);
         
         $this->assertPattern('/No artifact/', $output);
     }
@@ -74,9 +70,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         
         $view = $this->GivenASearchView($service, $criteria, $artifacts);
         
-        ob_start();
-        $view->render();
-        $output = ob_get_clean();
+        $output = $this->renderAndGetContent($view);
         
         $this->assertPattern('/As a user I want to search on shared fields/', $output);
         $this->assertPattern('/Add the form/', $output);
@@ -93,10 +87,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         );
         $view = $this->GivenASearchView($service, $criteria, $artifacts);
         
-        
-        ob_start();
-        $view->render();
-        $output = ob_get_clean();
+        $output = $this->renderAndGetContent($view);
         
         $this->assertPattern('/As a user I want to search on shared fields/', $output);
         $this->assertPattern('/shared field value/', $output);
@@ -148,6 +139,13 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $criterion->field->setReturnValue('fetchChangesetValue', 'shared field value', array('6', '12345', null));
         $criteria = array($criterion);
         return $criteria;
+    }
+    
+    private function renderAndGetContent($view) {
+        ob_start();
+        $view->render();
+        $output = ob_get_clean();
+        return $output;
     }
 }
 ?>
