@@ -36,8 +36,9 @@ class GitTest extends TuleapTestCase {
         $git->_addInstanceVars($request, $usermanager, 'del', array('del'), $unimportantGroupId);
         $git->request();
     }
-    
-    public function testTheForkExternalRouteExecutesForkExternalRepositoryWithForkRepositoriesView() {
+}
+class Git_ForkCrossProject_Test extends TuleapTestCase {
+    public function testExecutes_ForkCrossProject_ActionWithForkRepositoriesView() {
         $user = new User();
         $toProject = 100;
         $repos = array('my-repo');
@@ -85,17 +86,6 @@ class GitTest extends TuleapTestCase {
                                         'repos' => array('qdfj')));
 
         $git->_dispatchForkCrossProject($request, null);
-    }
-    public function testBla() {
-        $toProject = 100;
-        $repos = array('my-repo');
-
-        $request = new Codendi_Request(array(
-                                        'to_project' => $toProject,
-                                        'repos' => $repos));
-        $valid_Array = new Valid_Array('repos');
-        $valid_Array->required();
-        $this->assertTrue($request->valid($valid_Array));
     }
 }
 
