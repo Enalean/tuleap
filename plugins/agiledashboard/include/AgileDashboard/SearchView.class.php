@@ -104,7 +104,6 @@ class AgileDashboard_SearchView {
             $html .= '<table><tr valign="top"><td>';
             $report_can_be_modified = false;
             $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
-            $html .= '</td><td>';
             $html .= $this->fetchResults();
             $html .= '</td></tr></table>';
             return $html;
@@ -114,7 +113,7 @@ class AgileDashboard_SearchView {
     
     private function fetchResults() {
         $html = '';
-        $html .= '<div class="">';
+        $html .= '<div class="tracker_report_renderer">';
         try {
             $html .= $this->fetchTable();
         } catch (Exception $e) {
