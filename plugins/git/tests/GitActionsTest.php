@@ -541,34 +541,20 @@ class GitActionsTest extends UnitTestCase {
     
     function testForkRepositoriesShouldNotForkOutsideProjectRepositories() {
         $id1 = '1';
-        $id2 = '2';
-        $repositories = array($id1, $id2);
+        $repositories = array($id1);
         $path = 'toto';
         $group_id = 101;
-        $other_group_id = 102;
         
         $user = new MockUser();
         
         $controller = new MockGit($this);
         
         $factory = new MockGitRepositoryFactory();
-        $repo1 = new MockGitRepository();
-        $repo1->setReturnValue('getId', $id1);
-        $repo1->setReturnValue('userCanRead', true, array($user));
-        $repo1->expectNever('fork');
-        $factory->setReturnValue('getRepository', $repo1, array($other_group_id, $id1));
         $factory->setReturnValue('getRepository', null, array($group_id, $id1));
-        
-        $repo2 = new MockGitRepository();
-        $repo2->setReturnValue('getId', $id2);
-        $repo2->setReturnValue('userCanRead', true, array($user));
-        $repo2->expectOnce('fork', array($path, $user));
-        $factory->setReturnValue('getRepository', $repo2, array($group_id, $id2));
-        $factory->setReturnValue('getRepository', null, array($other_group_id, $id2));
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
-        $layout->expectOnce('redirect');
+        $layout->expectNever('redirect');
         
         $action = new GitActions($controller, $factory, $systemEventManager);
         $action->forkRepositories($group_id, $repositories, $path, $user, $layout);
