@@ -377,8 +377,8 @@ class Git extends PluginController {
                 }
                 $this->addView('forkRepositories');
                 break;
-            case 'fork_externals': 
-                $this->_dispatchForkExternals($this->request, $user);
+            case 'fork_cross_project': 
+                $this->_dispatchForkCrossProject($this->request, $user);
                 break;
             #LIST
             default:
@@ -441,7 +441,7 @@ class Git extends PluginController {
         return new $action($this, $this->factory, SystemEventManager::instance());
     }
 
-    public function _dispatchForkExternals($request, $user) {
+    public function _dispatchForkCrossProject($request, $user) {
         $validators = array(new Valid_UInt('to_project'), new Valid_Array('repos'));
         foreach ($validators as $validator) {
             $validator->required();
@@ -453,7 +453,7 @@ class Git extends PluginController {
         }
         $toProject = $request->get('to_project');
         $repos = $request->get('repos');
-        $this->addAction('forkExternals', array($toProject, $repos, $user));
+        $this->addAction('forkCrossProject', array($toProject, $repos, $user));
         $this->addView('forkRepositories');
     }
 }

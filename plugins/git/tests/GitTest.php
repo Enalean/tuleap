@@ -45,7 +45,7 @@ class GitTest extends TuleapTestCase {
         $usermanager->setReturnValue('getCurrentUser', $user);
 
         $git = new GitSpy();
-        $git->expectOnce('addAction', array('forkExternals', array($toProject, $repos, $user)));
+        $git->expectOnce('addAction', array('forkCrossProject', array($toProject, $repos, $user)));
         $git->expectOnce('addView', array('forkRepositories'));
 
         $request = new Codendi_Request(array(
@@ -53,7 +53,7 @@ class GitTest extends TuleapTestCase {
                                         'repos' => $repos));
 
         $git->_addInstanceVars($request, $usermanager);
-        $git->_dispatchActionAndView('fork_externals', null, null, $user);
+        $git->_dispatchActionAndView('fork_cross_project', null, null, $user);
     }
     
     public function testAddsErrorWhenRepositoriesAreMissing() {
@@ -69,7 +69,7 @@ class GitTest extends TuleapTestCase {
         $request = new Codendi_Request(array(
                                         'to_project' => 234));
 
-        $git->_dispatchForkExternals($request, null);
+        $git->_dispatchForkCrossProject($request, null);
     }
     public function testAddsErrorWhenDestinationProjectIsMissing() {
         $git = new GitSpyForErrors();
@@ -84,7 +84,7 @@ class GitTest extends TuleapTestCase {
         $request = new Codendi_Request(array(
                                         'repos' => array('qdfj')));
 
-        $git->_dispatchForkExternals($request, null);
+        $git->_dispatchForkCrossProject($request, null);
     }
     public function testBla() {
         $toProject = 100;
