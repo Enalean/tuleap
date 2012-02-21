@@ -232,7 +232,8 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         
         $factory->setReturnValue('getFormElementById', $field2, array($field2->getId()));
         
-        $dar = TestHelper::arrayToDar(array('id' => 456));
+        $dar = new MockDataAccessResult();
+        $dar->setReturnValue('getRow', array('id' => 456));
         $dao = new MockTracker_FormElement_FieldDao();
         $dao->setReturnValue('searchGoodField', $dar, array(66, 123));
         $dao->expectOnce('searchGoodField', array(66, 123));
