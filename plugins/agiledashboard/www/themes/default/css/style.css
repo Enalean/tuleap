@@ -1,0 +1,17 @@
+.agiledashboard #tracker_query > li {
+    display:block;
+    padding-right: 0;
+    padding-bottom: 1em;
+}
+
+.agiledashboard .tracker_report_criteria_advanced_toggle {
+    display: none;
+}
+.agiledashboard .tracker_report_query {
+    border-bottom: 1px solid #CCC;
+}
+
+.agiledashboard .tracker_report_query table,
+.agiledashboard .tracker_report_query select {
+    width: 100%;
+}

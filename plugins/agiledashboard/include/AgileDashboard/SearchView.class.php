@@ -82,21 +82,26 @@ class AgileDashboard_SearchView {
         
         $this->service->displayHeader($title, $breadcrumbs, array());
         
+        echo '<div class="agiledashboard">';
+        echo '<h1>'. $title .'</h1>';
+        echo '<table><tr valign="top"><td>';
         $report_can_be_modified = false;
         echo $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
-        
+        echo '</td><td>';
         echo $this->fetchResults();
+        echo '</td></tr></table>';
+        echo '</div>';
         
         $this->service->displayFooter();
     }
     
     private function fetchResults() {
         $html = '';
-        $html .= '<div class="tracker_report_renderer">';
+        $html .= '<div class="">';
         try {
             $html .= $this->fetchTable();
         } catch (Exception $e) {
-            $html .= $e->getMessage();
+            $html .= '<em>'. $e->getMessage() .'</em>';
         }
         $html .= '</div>';
         return $html;
