@@ -85,6 +85,31 @@ class AgileDashboard_SharedFieldFactoryTest extends UnitTestCase {
         $sharedFields = $this->factory->getSharedFields($criteria);
         $this->assertEqual($sharedFields, array());
     }
+    
+    function testWithValueNoneSelected() {
+        $criteria = array('220' => array('values' => array(0 => '100')));
+        
+        $this->dao->setReturnValue('searchSharedFieldIds', $this->darFromIds(220, 230));
+        $this->dao->setReturnValue('searchSharedValueIds', array());
+        
+        $sharedFields = $this->factory->getSharedFields($criteria);
+        $this->assertEqual(count($sharedFields), 1);
+        $this->assertEqual($sharedFields[0]->getFieldIds(), array(220, 230));
+        $this->assertEqual($sharedFields[0]->getValueIds(), array(100));
+    }
+    
+    function testWithValueNoneSelectedAndAnotherOne() {
+        $criteria = array('220' => array('values' => array('100', '350')));
+        
+        $this->dao->setReturnValue('searchSharedFieldIds', $this->darFromIds(220, 230));
+        $this->dao->setReturnValue('searchSharedValueIds', $this->darFromIds(350, 360));
+        
+        $sharedFields = $this->factory->getSharedFields($criteria);
+        $this->assertEqual(count($sharedFields), 1);
+        $this->assertEqual($sharedFields[0]->getFieldIds(), array(220, 230));
+        $this->assertEqual($sharedFields[0]->getValueIds(), array(100, 350, 360));
+    }
+    
     /**
      * Returns a Dar object that would contains rows with 'id' parameter.
      * 

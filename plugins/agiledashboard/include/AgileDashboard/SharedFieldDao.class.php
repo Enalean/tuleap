@@ -45,6 +45,9 @@ class AgileDashboard_SharedFieldDao extends DataAccessObject {
     }
 
     public function searchSharedValueIds(array $sourceOrTargetValueIds) {
+        if (count($sourceOrTargetValueIds) == 0) {
+            return array();
+        }
         $sourceOrTargetValueIds = implode(',', $sourceOrTargetValueIds);
         
         $sql_original_ids = "SELECT original.id
@@ -59,7 +62,7 @@ class AgileDashboard_SharedFieldDao extends DataAccessObject {
                 WHERE v.id IN ($sourceOrTargetValueIds)";
         
         $sql = $sql_original_ids.' UNION '.$sql_target_ids;
-        
+        echo '<pre>'.$sql;
         return $this->retrieve($sql);
     }
 }

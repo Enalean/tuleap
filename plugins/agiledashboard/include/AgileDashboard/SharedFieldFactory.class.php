@@ -22,6 +22,7 @@ require_once 'SharedFieldDao.class.php';
 require_once 'SharedField.class.php';
 
 class AgileDashboard_SharedFieldFactory {
+    const VALUE_NONE = 100;
     
     public function getSharedFields($criteria) {
         $sharedFields = array();
@@ -29,14 +30,21 @@ class AgileDashboard_SharedFieldFactory {
         if ($criteria) {
             foreach($criteria as $fieldId => $data) {
                 $valueIds    = $data['values'];
+                
                 if ($valueIds != array('')) {
                     //var_dump($valueIds);
+                    
                     $sharedField = new AgileDashboard_SharedField();
 
                     foreach ($this->getDao()->searchSharedFieldIds($fieldId) as $row) {
                         $sharedField->addFieldId($row['id']);
                     }
 
+                    if (in_array(self::VALUE_NONE, $valueIds)) {
+                        $sharedField->addValueId(self::VALUE_NONE);
+                        $valueIds = array_filter($valueIds, array($this, 'isNotValueNone'));
+                    }
+                    
                     foreach ($this->getDao()->searchSharedValueIds($valueIds) as $row) {
                         $sharedField->addValueId($row['id']);
                     }
@@ -47,6 +55,10 @@ class AgileDashboard_SharedFieldFactory {
         }
         
         return $sharedFields;
+    }
+    
+    public function isNotValueNone($value) {
+        return $value != self::VALUE_NONE;
     }
     
     protected function getDao() {
