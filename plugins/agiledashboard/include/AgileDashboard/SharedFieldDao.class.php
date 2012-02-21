@@ -45,6 +45,7 @@ class AgileDashboard_SharedFieldDao extends DataAccessObject {
     }
 
     public function searchSharedValueIds(array $sourceOrTargetValueIds) {
+        $sourceOrTargetValueIds = array_filter($sourceOrTargetValueIds);
         if (count($sourceOrTargetValueIds) == 0) {
             return array();
         }
