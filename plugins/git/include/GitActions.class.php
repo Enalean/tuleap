@@ -518,22 +518,18 @@ class GitActions extends PluginActions {
     }
     
     function _forkRepos($forkCommand, $groupId, array $repos_ids, User $user, Layout $response) {
-        $nb_forked = 0;
+        $repos = array();
         foreach ($repos_ids as $id) {
-            $repo = $this->factory->getRepository($groupId, $id);
-            if ($repo && $repo->userCanRead($user)) {
-                $forkCommand->fork($repo, $user);
-                $nb_forked++;
-            }
+            $repos[] = $this->factory->getRepository($groupId, $id);
         }
+        $forked = $forkCommand->fork($repos, $user);
 
-        if ($nb_forked > 0) {
+        if ($forked) {
             $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
-            return true;
         } else {
             $this->_addError('actions_no_repository_selected');
-            return false;
         }
+        return $forked;
     }
     
     
@@ -563,27 +559,41 @@ class GitActions extends PluginActions {
             
         
 }
+
 interface ForkCommand {
-    function fork($repo, User $user);
+    function fork($repos, User $user);
 }
-class ForkExternalCommand implements ForkCommand {
+abstract class CanReadFork implements ForkCommand {
+    function fork($repos, User $user) {
+        $forked = false;
+        foreach($repos as $repo) {
+            if ($repo && $repo->userCanRead($user)) {
+                $this->dofork($repo, $user);
+                $forked = true;
+            }
+        }
+        return $forked;
+
+    }
+    public abstract function dofork($repo, User $user);
+}
+class ForkExternalCommand extends CanReadFork {
     public function __construct($to_project) {
         $this->to_project = $to_project;
     }
     
-    public function fork($repo, User $user) {
+    public function dofork($repo, User $user) {
         $repo->forkExternal($this->to_project, $user);
     }
 }
 
-class ForkIndividualCommand implements ForkCommand {
+class ForkIndividualCommand extends CanReadFork{
     public function __construct($path) {
         $this->path = $path;
     }
     
-    public function fork($repo, User $user) {
+    public function dofork($repo, User $user) {
         $repo->fork($this->path, $user);
-
     }
 }
 
