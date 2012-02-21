@@ -161,8 +161,11 @@ class AgileDashboard_SearchController {
     }
     
     protected function getView(Service $service, BaseLanguage $language, Tracker_Report $report, $criteria, $artifacts) {
-        $artifact_factory = Tracker_ArtifactFactory::instance();
-        return new AgileDashboard_SearchView($service, $language, $report, $criteria, $artifacts, $artifact_factory);
+        $artifact_factory   = Tracker_ArtifactFactory::instance();
+        $formElementFactory = Tracker_FormElementFactory::instance();
+        $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
+        $shared_factory     = new Tracker_SharedFormElementFactory($formElementFactory, $bindFactory);
+        return new AgileDashboard_SearchView($service, $language, $report, $criteria, $artifacts, $artifact_factory, $shared_factory);
     }
 }
 ?>

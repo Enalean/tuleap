@@ -26,10 +26,9 @@ Mock::generate('Tracker_Report');
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker');
-
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker');
-}
+Mock::generate('Tracker_FormElement_Field_List');
+Mock::generate('Tracker_SharedFormElementFactory');
+Mock::generate('Tracker_Artifact_Changeset');
 
 class AgileDashboardViewTest extends TuleapTestCase {
     
@@ -70,11 +69,44 @@ class AgileDashboardViewTest extends TuleapTestCase {
         $this->assertPattern('/Add the form/', $output);
     }
     
+    function testRenderShouldDisplaySharedFieldValue() {
+        $service = new MockService();
+        $criterion = new stdClass();
+        $criterion->field = new MockTracker_FormElement_Field_List();
+        $criterion->field->setReturnValue('fetchChangesetValue', 'shared field value', array('6', '12345', null));
+        $criteria = array($criterion);
+        
+        $artifacts = array(
+            array(
+                'id' => '6',
+                'title' => 'As a user I want to search on shared fields',
+            )
+        );
+        $view = $this->GivenASearchView($service, $criteria, $artifacts);
+        
+        
+        ob_start();
+        $view->render();
+        $output = ob_get_clean();
+        
+        $this->assertPattern('/As a user I want to search on shared fields/', $output);
+        $this->assertPattern('/shared field value/', $output);
+    }
+    
     private function GivenASearchView($service, $criteria, $artifacts) {
         $report = new MockTracker_Report();
-        $factory = $this->GivenAnArtifactFactory($artifacts);
-        $view = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $factory);
+        $artifact_factory = $this->GivenAnArtifactFactory($artifacts);
+        $shared_factory = $this->GivenASharedFactory($criteria);
+        $view = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $artifact_factory, $shared_factory);
         return $view;
+    }
+    
+    private function GivenASharedFactory($criteria) {
+        $shared_factory = new MockTracker_SharedFormElementFactory();
+        foreach ($criteria as $criterion) {
+            $shared_factory->setReturnValue('getGoodField', $criterion->field, array('*', $criterion->field));
+        }
+        return $shared_factory;
     }
     
     private function GivenAnArtifactFactory($artifacts) {
@@ -86,10 +118,19 @@ class AgileDashboardViewTest extends TuleapTestCase {
         return $factory;
     }
     
-    private function GivenAnArtifact() {
+    private function GivenAnArtifact($id) {
+        $changeset = $this->GivenALastChangeset();
         $artifact = new MockTracker_Artifact();
         $artifact->expectOnce('fetchDirectLinkToArtifact');
+        $artifact->setReturnValue('getLastChangeset', $changeset);
+        $artifact->setReturnValue('getId', $id);
         return $artifact;
+    }
+    
+    private function GivenALastChangeset() {
+        $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('getId', '12345');
+        return $changeset;
     }
 }
 ?>
