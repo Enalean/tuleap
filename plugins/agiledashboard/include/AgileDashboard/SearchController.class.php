@@ -121,12 +121,10 @@ class AgileDashboard_SearchController {
     
     public function getCriteria(Project $project, Tracker_Report $report) {
         $fields           = $this->formElementFactory->getProjectSharedFields($project);
-        $request_criteria = $this->request->get('criteria');
         
         $criteria = array();
         foreach ($fields as $field) {
-            $currentValue     = $request_criteria[$field->getId()]['values'];
-            $field->setCriteriaValue($currentValue);
+            $field->setCriteriaValue($this->getSelectedValues($field));
             
             $id          = null;
             $rank        = 0;
@@ -134,6 +132,15 @@ class AgileDashboard_SearchController {
             $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
         }
         return $criteria;
+    }
+    
+    private function getSelectedValues(Tracker_FormElement_Field $field) {
+        $request_criteria = $this->request->get('criteria');
+        $currentValue     = $request_criteria[$field->getId()]['values'];
+        if (!$currentValue) {
+            $currentValue = array();
+        }
+        return $currentValue;
     }
     
     /**

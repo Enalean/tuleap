@@ -57,7 +57,7 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         // Table aliases
         $changeset_value      = "CV_$fragmentNumber";
         $changeset_value_list = "CVL_$fragmentNumber";
-        $bind_static_value = "BSV_$fragmentNumber";
+        
         $sqlFragment = "
             INNER JOIN tracker_changeset_value AS $changeset_value ON (
                     $changeset_value.changeset_id = c.id

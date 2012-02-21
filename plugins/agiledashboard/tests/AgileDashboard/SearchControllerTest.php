@@ -119,7 +119,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $controller->search();
     }
     
-    public function testNoSubmittedValueShouldNotSelecteAnythingInCriterion() {
+    public function testNoValueSubmittedShouldNotSelectAnythingInCriterion() {
         $this->request = new Codendi_Request(array(
             'group_id' => '66'
         ));
