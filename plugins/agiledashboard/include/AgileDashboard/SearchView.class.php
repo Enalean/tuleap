@@ -93,14 +93,25 @@ class AgileDashboard_SearchView {
     private function fetchResults() {
         $html = '';
         $html .= '<div class="tracker_report_renderer">';
+        try {
+            $html .= $this->fetchTable();
+        } catch (Exception $e) {
+            $html .= $e->getMessage();
+        }
+        $html .= '</div>';
+        return $html;
+    }
+    
+    private function fetchTable() {
         if (count($this->artifacts)) {
+            $html = '';
             $html .= '<table>';
             $html .= $this->fetchTHead();
             $html .= $this->fetchTBody();
             $html .= '</table>';
+            return $html;
         }
-        $html .= '</div>';
-        return $html;
+        throw new Exception('No artifact match your query');
     }
     
     private function fetchTBody() {

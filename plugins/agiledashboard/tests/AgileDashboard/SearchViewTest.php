@@ -56,6 +56,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $output = ob_get_clean();
         
         $this->assertNoPattern('/table/', $output);
+        $this->assertPattern('/No artifact/', $output);
     }
     
     function testRenderShouldDisplayArtifacts() {
