@@ -442,24 +442,19 @@ class Git extends PluginController {
     }
 
     public function _dispatchForkExternals($request, $user) {
-
-        $validProject = new Valid_UInt('to_project');
-        $validProject->required();
-        $validRepos = new Valid_Array('repos');
-        $validRepos->required();
-        if (!$request->valid($validRepos)) {
-            $this->addError($this->getText('missing_parameter', array($validRepos->key)));
-            $this->redirect('/plugins/git?group_id='.$this->groupId);
-        } else 
-        if (!$request->valid($validProject)) {
-            $this->addError($this->getText('missing_parameter', array($validProject->key)));
-            $this->redirect('/plugins/git?group_id='.$this->groupId);
-        } else {
-            $toProject = $request->get('to_project');
-            $repos = $request->get('repos');
-            $this->addAction('forkExternals', array($toProject, $repos, $user));
-            $this->addView('forkRepositories');
+        $validators = array(new Valid_UInt('to_project'), new Valid_Array('repos'));
+        foreach ($validators as $validator) {
+            $validator->required();
+            if (!$request->valid($validator)) {
+                $this->addError($this->getText('missing_parameter', array($validator->key)));
+                $this->redirect('/plugins/git?group_id='.$this->groupId);
+                return;
+            }
         }
+        $toProject = $request->get('to_project');
+        $repos = $request->get('repos');
+        $this->addAction('forkExternals', array($toProject, $repos, $user));
+        $this->addView('forkRepositories');
     }
 }
 
