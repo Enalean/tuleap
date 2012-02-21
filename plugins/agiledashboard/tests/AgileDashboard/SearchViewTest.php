@@ -45,6 +45,19 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         ob_end_clean();
     }
     
+    function testRenderShouldNotDisplayTableWhenNoMatchingArtifacts() {
+        $service = new MockService();
+        $criteria = array();
+        $artifacts = array();
+        $view = $this->GivenASearchView($service, $criteria, $artifacts);
+        
+        ob_start();
+        $view->render();
+        $output = ob_get_clean();
+        
+        $this->assertNoPattern('/table/', $output);
+    }
+    
     function testRenderShouldDisplayArtifacts() {
         $service = new MockService();
         $criteria = array();

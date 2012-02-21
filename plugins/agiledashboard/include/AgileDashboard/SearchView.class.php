@@ -73,7 +73,14 @@ class AgileDashboard_SearchView {
     public function render() {
         $title = $this->language->getText('plugin_agiledashboard', 'title');
         
-        $this->service->displayHeader($title, array(), array());
+        $breadcrumbs = array(
+            array(
+                'url' => null,
+                'title' => $title,
+            )
+        );
+        
+        $this->service->displayHeader($title, $breadcrumbs, array());
         
         $report_can_be_modified = false;
         echo $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
@@ -86,10 +93,12 @@ class AgileDashboard_SearchView {
     private function fetchResults() {
         $html = '';
         $html .= '<div class="tracker_report_renderer">';
-        $html .= '<table>';
-        $html .= $this->fetchTHead();
-        $html .= $this->fetchTBody();
-        $html .= '</table>';
+        if (count($this->artifacts)) {
+            $html .= '<table>';
+            $html .= $this->fetchTHead();
+            $html .= $this->fetchTBody();
+            $html .= '</table>';
+        }
         $html .= '</div>';
         return $html;
     }
