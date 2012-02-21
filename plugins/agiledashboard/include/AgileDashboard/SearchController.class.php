@@ -75,7 +75,7 @@ class AgileDashboard_SearchController {
             $service   = $this->getService($project);
             $report    = $this->getReport();
             $criteria  = $this->getCriteria($project, $report);
-            $artifacts = $this->getArtifacts();
+            $artifacts = $this->getArtifacts($project);
             
             $view = $this->getView($service, $this->language, $report, $criteria, $artifacts);
             $view->render();
@@ -90,9 +90,9 @@ class AgileDashboard_SearchController {
         }
     }
     
-    private function getArtifacts() {
+    private function getArtifacts(Project $project) {
         if ($this->request->exist('criteria')) {
-            return $this->search->getMatchingArtifacts($this->request->get('criteria'));
+            return $this->search->getMatchingArtifacts($project, $this->request->get('criteria'));
         } else {
             return array();
         }

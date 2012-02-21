@@ -70,14 +70,16 @@ class AgileDashboardPlugin extends Plugin {
         require_once 'AgileDashboard/SearchController.class.php';
         require_once 'AgileDashboard/Search.class.php';
         
+        $formElementFactory = Tracker_FormElementFactory::instance();
+        
         $sharedFieldFactory = new AgileDashboard_SharedFieldFactory();
         $dao                = new AgileDashboard_SearchDao();
-        $search             = new AgileDashboard_Search($sharedFieldFactory, $dao);
+        $search             = new AgileDashboard_Search($sharedFieldFactory, $dao, $formElementFactory);
         
         return new AgileDashboard_SearchController(
             $request,
             ProjectManager::instance(),
-            Tracker_FormElementFactory::instance(),
+            $formElementFactory,
             $GLOBALS['Language'],
             $GLOBALS['Response'],
             $search

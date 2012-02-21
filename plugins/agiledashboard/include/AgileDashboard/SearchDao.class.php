@@ -71,5 +71,9 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         
         return $sqlFragment;
     }
+    
+    public function searchArtifactsFromTrackers(array $trackerIds) {
+        return array();
+    }
 }
 ?>

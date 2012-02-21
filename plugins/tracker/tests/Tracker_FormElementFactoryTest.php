@@ -244,7 +244,7 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
     
     private function GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id) {
         $dao = new MockTracker_FormElement_FieldDao();
-        $dao->setReturnValue('searchAllSharedFieldsOfProject', $dar, array($project_id));
+        $dao->setReturnValue('searchProjectSharedFieldsOriginals', $dar, array($project_id));
         
         $factory = $this->GivenAFormElementFactory();
         $factory->setReturnValue('getDao', $dao);

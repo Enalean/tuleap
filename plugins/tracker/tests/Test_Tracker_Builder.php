@@ -25,51 +25,21 @@
 
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 
-function aTextField() {
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Text');
+function aTracker() {
+    return new Test_Tracker_Builder();
 }
 
-function aStringField() {
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_String');
-}
-
-function aDateField() {
-    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Date');
-}
-
-class Test_Tracker_FormElement_Builder {
-    private $name;
-    
+class Test_Tracker_Builder {
     private $id;
-    private $tracker;
-    private $trackerId;
-    
-    public function __construct($klass) {
-        $this->name = $klass;
-    }
     
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
-    
-    public function withTracker($tracker) {
-        $this->tracker = $tracker;
-        return $this;
-    }
-    
-    public function withTrackerId($trackerId) {
-        $this->trackerId = $trackerId;
-        return $this;
-    }
-    
+        
     public function build() {
-        $klass  = $this->name;
-        $object = new $klass($this->id, $this->trackerId, null, null, null, null, null, null, null, null, null, null);
-        if ($this->tracker) {
-            $object->setTracker($this->tracker);
-        }
-        return $object;
+        $tracker = new Tracker($this->id, null, null, null, null, null, null, null, null, null, null, null);
+        return $tracker;
     }
 }
 

@@ -331,7 +331,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    private function searchAllSharedTargetsOfProject($project_id) {
+    private function getSqlForAllSharedTargetsOfProject($project_id) {
         $project_id  = $this->da->escapeInt($project_id);
         $sql = "SELECT f_target.*
                 FROM tracker_field f_target 
@@ -342,7 +342,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $sql;
     }
     
-    private function searchAllSharedSourcesOfProject($project_id) {
+    private function getSqlForAllSharedSourcesOfProject($project_id) {
         $project_id  = $this->da->escapeInt($project_id);
         $sql = "SELECT tracker_field.*
                 FROM tracker_field 
@@ -353,12 +353,21 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $sql;
     }
     
-    public function searchAllSharedFieldsOfProject($project_id) {
-        $source_sql = $this->searchAllSharedSourcesOfProject($project_id);
-        $target_sql = $this->searchAllSharedTargetsOfProject($project_id);
+    private function getSqlForAllSharedFieldsOfProject($project_id) {
+        $source_sql = $this->getSqlForAllSharedSourcesOfProject($project_id);
+        $target_sql = $this->getSqlForAllSharedTargetsOfProject($project_id);
         
-        $sql = "SELECT * FROM (($source_sql) UNION ($target_sql)) AS combined
-                GROUP BY original_field_id";
+        $sql = "SELECT * FROM (($source_sql) UNION ($target_sql)) AS combined";
+        return $sql;
+    }
+    
+    public function searchProjectSharedFieldsOriginals($project_id) {
+        $sql = $this->getSqlForAllSharedFieldsOfProject($project_id)." GROUP BY original_field_id";
+        return $this->retrieve($sql);
+    }
+    
+    public function searchAllSharedFieldsOfProject($project_id) {
+        $sql = $this->getSqlForAllSharedFieldsOfProject($project_id);
         return $this->retrieve($sql);
     }
     
