@@ -509,27 +509,24 @@ class GitActions extends PluginActions {
      */
     function forkRepositories($groupId, array $repos_ids, $path, User $user, Layout $response) {
         $c = $this->getController();
-        if(empty($repos_ids)){
-            $c->addError($this->getText('actions_no_repository_selected'));
-            $success = false;
-        } else {
-            $nb_forked = 0;
-            foreach ($repos_ids as $id) {
-                if ($repo = $this->factory->getRepository($groupId, $id)) {
-                    if ($repo->userCanRead($user)) {
-                        $repo->fork($path, $user);
-                        $nb_forked++;
-                    }
-                }
+        $nb_forked = 0;
+        foreach ($repos_ids as $id) {
+            $repo = $this->factory->getRepository($groupId, $id);
+            if ($repo && $repo->userCanRead($user)) {
+                $repo->fork($path, $user);
+                $nb_forked++;
             }
-            $success = $nb_forked > 0;
         }
-        if ($success) {
-            $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
-        }
-        return $success;
-    }
 
+        if ($nb_forked > 0) {
+            $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
+            return true;
+        } else {
+            $c->addError($this->getText('actions_no_repository_selected'));
+            return false;
+        }
+    }
+    
 }
 
 
