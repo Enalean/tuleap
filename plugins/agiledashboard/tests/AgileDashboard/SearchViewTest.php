@@ -59,12 +59,14 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $criteria  = $this->GivenCriteria();
         $artifacts = array(
             array(
-                'id' => '6',
-                'title' => 'As a user I want to search on shared fields',
+                'id'                => '6',
+                'last_changeset_id' => '12345',
+                'title'             => 'As a user I want to search on shared fields',
             ),
             array(
-                'id' => '8',
-                'title' => 'Add the form',
+                'id'                => '8',
+                'last_changeset_id' => '56789',
+                'title'             => 'Add the form',
             )
         );
         
@@ -81,8 +83,9 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $criteria  = $this->GivenCriteria();
         $artifacts = array(
             array(
-                'id' => '6',
-                'title' => 'As a user I want to search on shared fields',
+                'id'                => '6',
+                'last_changeset_id' => '12345',
+                'title'             => 'As a user I want to search on shared fields',
             )
         );
         $view = $this->GivenASearchView($service, $criteria, $artifacts);
@@ -119,18 +122,10 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
     }
     
     private function GivenAnArtifact($id) {
-        $changeset = $this->GivenALastChangeset();
         $artifact  = new MockTracker_Artifact();
         $artifact->expectOnce('fetchDirectLinkToArtifact');
-        $artifact->setReturnValue('getLastChangeset', $changeset);
         $artifact->setReturnValue('getId', $id);
         return $artifact;
-    }
-    
-    private function GivenALastChangeset() {
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('getId', '12345');
-        return $changeset;
     }
     
     private function GivenCriteria() {

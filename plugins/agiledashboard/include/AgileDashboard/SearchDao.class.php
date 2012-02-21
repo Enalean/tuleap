@@ -25,7 +25,7 @@ class AgileDashboard_SearchDao extends DataAccessObject {
     
     public function searchMatchingArtifacts(array $sharedFields) {
         $sql = "
-            SELECT artifact.id, CVT.value AS title
+            SELECT artifact.id, artifact.last_changeset_id, CVT.value AS title
             FROM tracker_artifact AS artifact
             INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
             " . $this->getSharedFieldsSqlFragment($sharedFields) . "

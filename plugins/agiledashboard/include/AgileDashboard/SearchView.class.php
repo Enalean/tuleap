@@ -151,7 +151,7 @@ class AgileDashboard_SearchView {
                 $html .= '<td>';
                 $html .= $row['title'];
                 $html .= '</td>';
-                $html .= $this->fetchColumnsValues($artifact);
+                $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
                 $html .= '</tr>';
             }
         }
@@ -173,12 +173,12 @@ class AgileDashboard_SearchView {
         return $html;
     }
     
-    private function fetchColumnsValues(Tracker_Artifact $artifact) {
+    private function fetchColumnsValues(Tracker_Artifact $artifact, $last_changeset_id) {
         $html = '';
         foreach ($this->criteria as $criterion) {
             $value = '';
             if ($field = $this->shared_factory->getGoodField($artifact->getTracker(), $criterion->field)) {
-                $value = $field->fetchChangesetValue($artifact->getId(), $artifact->getLastChangeset()->getId(), null);
+                $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
             }
             $html .= '<td>'. $value .'</td>';
         }
