@@ -508,7 +508,6 @@ class GitActions extends PluginActions {
      * @return bool false if no repository has been cloned
      */
     function forkRepositories($groupId, array $repos_ids, $path, User $user, Layout $response) {
-        $c = $this->getController();
         $nb_forked = 0;
         foreach ($repos_ids as $id) {
             $repo = $this->factory->getRepository($groupId, $id);
@@ -522,11 +521,53 @@ class GitActions extends PluginActions {
             $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
             return true;
         } else {
-            $c->addError($this->getText('actions_no_repository_selected'));
+            $this->_addError('actions_no_repository_selected');
             return false;
         }
     }
+
+    function forkCrossProject($groupId, array $repos_ids, $to_project, User $user, Layout $response) {
+        $nb_fork = 0;
+        foreach ($repos_ids as $repo_id) {
+            $repo = $this->factory->getRepository($groupId, $repo_id);
+            if ($repo && $repo->userCanRead($user)) {
+                $repo->forkExternal($to_project, $user);
+                $nb_fork++;
+            }
+            
+        }
+        if ($nb_fork > 0) {
+            $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
+        } else {
+            $this->_addError('actions_no_repository_selected');
+        }
+    }
     
+    protected function _addError($error) {
+        
+        $controler = $this->getController();
+        $controler->addError($this->getText($error));
+    }
+    
+    
+        
+
+    /**
+     * Fork a bunch of repositories in a project for a given user
+     *
+     * Repositories that the user cannot access won't be forked as well as 
+     * those that don't belong to the project.
+     * 
+     * @param int    $groupId    The project id
+     * @param array  $repos_ids  The array of id of repositories to fork
+     * @param string $to_project The path where the new repositories will live
+     * @param User   $user       The owner of those new repositories
+     * @param Layout $response   The response object
+     *
+     * @return bool false if no repository has been cloned
+     */
+            
+        
 }
 
 
