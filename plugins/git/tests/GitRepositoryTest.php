@@ -328,6 +328,29 @@ class GitRepositoryTest extends UnitTestCase {
         
         $this->assertFalse($repo->belongsTo($user));
     }
+    
+    public function testForkExternalsClonesTheExistingRepoByChangingTheProjectAndSettingTheNamespaceToNothing() {
+        $user = $this->_newUser("sandra");
+        $backend = new MockGit_Backend_Gitolite();
+        $project = new Mockproject();
+        $project->setReturnValue('getUnixName', 'tulip');
+
+        $to_project = new Mockproject();
+        $to_project->setReturnValue('getUnixName', 'blabla');
+
+        $repo    = new GitRepository();
+        $repo->setBackend($backend);
+        $repo->setProject($project);
+
+        $expectedRepo = new GitRepository();
+        $expectedRepo->setBackend($backend);
+        $expectedRepo->setProject($to_project);
+
+        $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($expectedRepo)));
+        
+        $repo->forkExternal($to_project, $user);
+    }
+
 }
 
 ?>

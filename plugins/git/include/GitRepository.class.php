@@ -631,6 +631,11 @@ class GitRepository implements DVCSRepository {
     }
     
 
+    public function forkExternal($project, $user) {
+        $clone = clone $this;
+        $clone->setProject($project);
+        $this->getBackend()->fork($this, $clone);
+    }
     /**
      * Create a reference repository
      */
