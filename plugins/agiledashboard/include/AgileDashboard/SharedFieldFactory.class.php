@@ -32,24 +32,7 @@ class AgileDashboard_SharedFieldFactory {
                 $valueIds    = $data['values'];
                 
                 if ($valueIds != array('')) {
-                    //var_dump($valueIds);
-                    
-                    $sharedField = new AgileDashboard_SharedField();
-
-                    foreach ($this->getDao()->searchSharedFieldIds($fieldId) as $row) {
-                        $sharedField->addFieldId($row['id']);
-                    }
-
-                    if (in_array(self::VALUE_NONE, $valueIds)) {
-                        $sharedField->addValueId(self::VALUE_NONE);
-                        $valueIds = array_filter($valueIds, array($this, 'isNotValueNone'));
-                    }
-                    
-                    foreach ($this->getDao()->searchSharedValueIds($valueIds) as $row) {
-                        $sharedField->addValueId($row['id']);
-                    }
-
-                    $sharedFields[] = $sharedField;
+                    $sharedFields[] = $this->getSharedField($fieldId, $valueIds);
                 }
             }
         }
@@ -57,8 +40,41 @@ class AgileDashboard_SharedFieldFactory {
         return $sharedFields;
     }
     
-    public function isNotValueNone($value) {
-        return $value != self::VALUE_NONE;
+    private function getSharedField($fieldId, $valueIds) {
+        $sharedField = new AgileDashboard_SharedField();
+        
+        $this->addSharedFieldId($sharedField, $fieldId);
+        $this->addSharedValueIds($sharedField, $valueIds);
+
+        return $sharedField;
+    }
+    
+    private function addSharedFieldId(AgileDashboard_SharedField $sharedField, $fieldId) {
+        foreach ($this->getDao()->searchSharedFieldIds($fieldId) as $row) {
+            $sharedField->addFieldId($row['id']);
+        }
+    }
+    
+    private function addSharedValueIds(AgileDashboard_SharedField $sharedField, array $valueIds) {
+        $notNoneValueIds = $this->filterAndAddNoneValueIds($sharedField, $valueIds);
+
+        foreach ($this->getDao()->searchSharedValueIds($notNoneValueIds ) as $row) {
+            $sharedField->addValueId($row['id']);
+        }
+    }
+    
+    private function filterAndAddNoneValueIds(AgileDashboard_SharedField $sharedField, array $valueIds) {
+        $notNoneValueIds = array();
+        
+        foreach($valueIds as $valueId) {
+            if ($valueId == self::VALUE_NONE) {
+                $sharedField->addValueId($valueId);
+            } else {
+                $notNoneValueIds[] = $valueId;
+            }
+        }
+        
+        return $notNoneValueIds;
     }
     
     protected function getDao() {
