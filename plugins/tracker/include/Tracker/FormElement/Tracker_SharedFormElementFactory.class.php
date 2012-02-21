@@ -27,21 +27,14 @@ class Tracker_SharedFormElementFactory {
      * @var Tracker_FormElement_Field_List_BindFactory $boundValuesFactory 
      */
     private $boundValuesFactory;
-    
-    private $dao;
             
     function __construct(Tracker_FormElementFactory $factory, Tracker_FormElement_Field_List_BindFactory $boundValuesFactory) {
         $this->boundValuesFactory = $boundValuesFactory;
         $this->factory = $factory;
-        $this->dao = new Tracker_FormElement_FieldDao();
-    }
-    
-    public function setDao($dao) {
-        $this->dao = $dao;
     }
     
     public function getDao() {
-        return $this->dao;
+        return new Tracker_FormElement_FieldDao();
     }
     
     public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {

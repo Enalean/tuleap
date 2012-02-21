@@ -178,7 +178,8 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
         $boundValuesFactory = new MockTracker_FormElement_Field_List_BindFactory();
-        $decorator = new Tracker_SharedFormElementFactory($factory, $boundValuesFactory);
+        $decorator = TestHelper::getPartialMock('Tracker_SharedFormElementFactory', array('getDao'));
+        $decorator->__construct($factory, $boundValuesFactory);
         $factory->setReturnValue('getType', 'string', array($field));
         $factory->setReturnValue('getFormElementById', $field, array($field->getId()));
         return array($decorator, $factory, $tracker, $user, $boundValuesFactory);
@@ -238,7 +239,7 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $dao->setReturnValue('searchGoodField', $dar, array(66, 123));
         $dao->expectOnce('searchGoodField', array(66, 123));
         
-        $sharedFormElementFactory->setDao($dao);
+        $sharedFormElementFactory->setReturnValue('getDao', $dao);
         
         $this->assertEqual($sharedFormElementFactory->getGoodField($tracker, $field1), $field2);
     }
