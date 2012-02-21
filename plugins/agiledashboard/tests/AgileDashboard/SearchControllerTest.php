@@ -29,6 +29,7 @@ Mock::generate('Service');
 Mock::generate('AgileDashboard_SearchView');
 Mock::generate('AgileDashboard_Search');
 Mock::generate('Tracker_FormElementFactory');
+Mock::generate('Tracker_Report');
 
 class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
     
@@ -43,7 +44,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $this->search             = new MockAgileDashboard_Search();
     }
     
-    function testSearchRendersViewForServiceWithCriteria() {
+    public function testSearchRendersViewForServiceWithCriteria() {
         $view = new MockAgileDashboard_SearchView();
         $view->expectOnce('render');
                 
@@ -116,6 +117,60 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $controller->setReturnValue('getView', $view);
         
         $controller->search();
+    }
+    
+    public function testNoSubmittedValueShouldNotSelecteAnythingInCriterion() {
+        $this->request = new Codendi_Request(array(
+            'group_id' => '66'
+        ));
+        
+        $project = new MockProject();
+        $report  = new MockTracker_Report();
+        
+        $fields = array(aTextField()->withId(220)->build());
+        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
+        
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
+        $criteria = $controller->getCriteria($project, $report);
+        $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array());
+    }
+    
+    public function testSubmittedValueIsSelectedInCriterion() {
+        $this->request = new Codendi_Request(array(
+            'group_id' => '66', 
+            'criteria' => array('220' => array('values' => array('350')))
+        ));
+        
+        $project = new MockProject();
+        $report  = new MockTracker_Report();
+        
+        $fields = array(aTextField()->withId(220)->build());
+        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
+        
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
+        $criteria = $controller->getCriteria($project, $report);
+        $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350));
+    }
+    
+    public function testSubmittedValuesAreSelectedInCriterion() {
+        $this->request = new Codendi_Request(array(
+            'group_id' => '66', 
+            'criteria' => array('220' => array('values' => array('350', '351')),
+                                '221' => array('values' => array('352')))
+        ));
+        
+        $project = new MockProject();
+        $report  = new MockTracker_Report();
+        
+        $fields = array(aTextField()->withId(220)->build(),
+                        aTextField()->withId(221)->build());
+        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
+        
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
+        $criteria = $controller->getCriteria($project, $report);
+        $this->assertEqual(count($criteria), 2);
+        $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350, 351));
+        $this->assertEqual($criteria[1]->field->getCriteriaValue($criteria[1]), array(352));
     }
 }
 ?>
