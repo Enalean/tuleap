@@ -370,6 +370,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
                 FROM tracker_field AS f1
                 INNER JOIN tracker_field AS f2 ON (
                         f2.id = $shared_field_id
+                    AND f1.use_it = 1
                     AND (
                             f2.id = f1.id
                         OR
