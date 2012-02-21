@@ -368,6 +368,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
     
     public function searchAllSharedFieldsOfProject($project_id) {
         $sql = $this->getSqlForAllSharedFieldsOfProject($project_id);
+        //echo '<pre>'.$sql;
         return $this->retrieve($sql);
     }
     

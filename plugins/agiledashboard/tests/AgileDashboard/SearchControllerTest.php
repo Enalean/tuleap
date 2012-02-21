@@ -110,7 +110,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $matchingIds = array(array('artifactId1', 'artifactId2'), array('changesetId1', 'changesetId2'));
         
         $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
-        $this->search->expectOnce('getMatchingArtifacts', array($criteria));
+        $this->search->expectOnce('getMatchingArtifacts', array($this->project, $criteria));
         
         $controller = TestHelper::getPartialMock('AgileDashboard_SearchController', array('getView'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
