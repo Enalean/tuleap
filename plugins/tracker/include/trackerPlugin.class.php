@@ -21,6 +21,7 @@ require_once('common/plugin/Plugin.class.php');
 
 define('TRACKER_BASE_URL', '/plugins/tracker');
 define('TRACKER_BASE_DIR', dirname(__FILE__));
+define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
 
 /**
  * trackerPlugin
@@ -70,9 +71,12 @@ class trackerPlugin extends Plugin {
     }
 
     public function cssFile($params) {
+        $include_tracker_css_file = false;
+        EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
         // Only show the stylesheet if we're actually in the tracker pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+        if ($include_tracker_css_file ||
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {

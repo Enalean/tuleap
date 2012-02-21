@@ -31,7 +31,11 @@ class AgileDashboardPlugin extends Plugin {
     function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
-        $this->_addHook('cssfile', 'cssfile', false);
+        // Do not load the plugin if tracker is not installed & active
+        if (defined('TRACKER_BASE_URL')) {
+            $this->_addHook('cssfile', 'cssfile', false);
+            $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
+        }
     }
 
     /**
@@ -51,6 +55,10 @@ class AgileDashboardPlugin extends Plugin {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
+    }
+    
+    function tracker_event_include_css_file($params) {
+        $params['include_tracker_css_file'] = true;
     }
     
     public function process(Codendi_Request $request) {
