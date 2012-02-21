@@ -440,13 +440,13 @@ class GitActionsTest extends UnitTestCase {
         $controller = new MockGit($this);
         $controller->expectOnce('addError', array('actions_no_repository_selected'));
 
-        $factory = new MockGitRepositoryFactory();
+        $factory = array();
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectNever('redirect');
         
-        $action = new GitActions($controller, $factory, $systemEventManager);
-        $action->forkRepositories($group_id, $repositories, $path, $user, $layout);
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkRepositories($group_id, $factory, $path, $user, $layout);
     }
     
     function testForkShouldCloneOneRepository() {
@@ -458,14 +458,14 @@ class GitActionsTest extends UnitTestCase {
         $user->setReturnValue('getId', 123);
         
         $controller = new MockGit($this);
-        $factory = $this->getFactoryFor('fork', array($path, $user), $group_id, $repositories, $user);
+        $factory = $this->getRepoCollectionFor('fork', array($path, $user), $group_id, $repositories, $user);
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
         
-        $action = new GitActions($controller, $factory, $systemEventManager);
-        $action->forkRepositories($group_id, $repositories, $path, $user, $layout);
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkRepositories($group_id, $factory, $path, $user, $layout);
     }
     
     function testForkShouldCloneManyRepositories() {
@@ -477,14 +477,14 @@ class GitActionsTest extends UnitTestCase {
         
         $controller = new MockGit($this);
         
-        $factory = $this->getFactoryFor('fork', array($path, $user), $group_id, $repositories, $user);
+        $factory = $this->getRepoCollectionFor('fork', array($path, $user), $group_id, $repositories, $user);
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectOnce('redirect');
         
-        $action = new GitActions($controller, $factory, $systemEventManager);
-        $action->forkRepositories($group_id, $repositories, $path, $user, $layout);
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkRepositories($group_id, $factory, $path, $user, $layout);
     }
     
     function testForkShouldCloneManyRepositoriesExceptNonExistentOne() {
@@ -495,14 +495,14 @@ class GitActionsTest extends UnitTestCase {
         $user = new MockUser();
         
         $controller = new MockGit($this);
-        $factory = $this->getFactoryFor('fork', array($path, $user), $group_id, $repositories, $user);
+        $factory = $this->getRepoCollectionFor('fork', array($path, $user), $group_id, $repositories, $user);
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectOnce('redirect');
         
-        $action = new GitActions($controller, $factory, $systemEventManager);
-        $action->forkRepositories($group_id, array('1', '2', '3', '4'), $path, $user, $layout);
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkRepositories($group_id, $factory, $path, $user, $layout);
     }
     
     function testForkShouldNotCloneAnyNonExistentRepositories() {
@@ -513,14 +513,14 @@ class GitActionsTest extends UnitTestCase {
         $user = new MockUser();
         
         $controller = new MockGit($this);
-        $factory = $this->getFactoryFor('fork', array($path, $user), $group_id, $repositories, $user);
+        $factory = $this->getRepoCollectionFor('fork', array($path, $user), $group_id, $repositories, $user);
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectNever('redirect');
         
-        $action = new GitActions($controller, $factory, $systemEventManager);
-        $action->forkRepositories($group_id, array('1', '2', '3', '4'), $path, $user, $layout);
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkRepositories($group_id, $factory, $path, $user, $layout);
     }
     
     function testForkRepositoriesShouldNotForkUnreadableRepositories() {
@@ -531,14 +531,14 @@ class GitActionsTest extends UnitTestCase {
         $user = new MockUser();
         
         $controller = new MockGit($this);
-        $factory = $this->getFactoryUnreadableFor('fork', $group_id, $repositories, $user);
+        $factory = $this->getRepoCollectionUnreadableFor('fork', $group_id, $repositories, $user);
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectNever('redirect');
         
-        $action = new GitActions($controller, $factory, $systemEventManager);
-        $action->forkRepositories($group_id, $repositories, $path, $user, $layout);
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkRepositories($group_id, $factory, $path, $user, $layout);
     }
     
     function testForkRepositoriesShouldNotForkOutsideProjectRepositories() {
@@ -551,15 +551,15 @@ class GitActionsTest extends UnitTestCase {
         
         $controller = new MockGit($this);
         
-        $factory = new MockGitRepositoryFactory();
-        $factory->setReturnValue('getRepository', null, array($group_id, $id1));
+
+        $factory =  array();
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectNever('redirect');
         
-        $action = new GitActions($controller, $factory, $systemEventManager);
-        $action->forkRepositories($group_id, $repositories, $path, $user, $layout);
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkRepositories($group_id, $factory, $path, $user, $layout);
     }
     
     
@@ -572,13 +572,13 @@ class GitActionsTest extends UnitTestCase {
         $controller = new MockGit($this);
         $controller->expectOnce('addError', array('actions_no_repository_selected'));
 
-        $factory = new MockGitRepositoryFactory();
+        $factory = array();
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectNever('redirect');
         $project_id = null;
-        $action = new GitActions($controller, $factory, $systemEventManager);
-        $action->forkCrossProject($group_id, $repositories, $project_id, $user, $layout);
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkCrossProject($group_id, $factory, $project_id, $user, $layout);
     }
     function testForkCrossProjectShouldCloneOneRepository() {
         $id = '1';
@@ -591,20 +591,19 @@ class GitActionsTest extends UnitTestCase {
         $to_project->setReturnValue('getId', 2);
         
         $controller = new MockGit($this);
-        $factory = new MockGitRepositoryFactory();
         $repo = new MockGitRepository();
         $repo->setReturnValue('getId', $id);
         $repo->setReturnValue('userCanRead', true, array($user));
         $repo->expectOnce('forkExternal', array($to_project, $user));
-        $factory->setReturnValue('getRepository', $repo, array($group_id, $id));
+        $factory = array($repo);
 
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
         
-        $action = new GitActions($controller, $factory, $systemEventManager);
-        $action->forkCrossProject($group_id, $repositories, $to_project, $user, $layout);
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkCrossProject($group_id, $factory, $to_project, $user, $layout);
     }
     
     function testForkCrossProjectShouldCloneManyRepositories() {
@@ -617,15 +616,15 @@ class GitActionsTest extends UnitTestCase {
         $to_project->setReturnValue('getId', 2);
         
         $controller = new MockGit($this);
-        $factory = $this->getFactoryFor('forkExternal', array($to_project, $user), $group_id, $repositories, $user);
+        $factory = $this->getRepoCollectionFor('forkExternal', array($to_project, $user), $group_id, $repositories, $user);
 
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
         
-        $action = new GitActions($controller, $factory, $systemEventManager);
-        $action->forkCrossProject($group_id, $repositories, $to_project, $user, $layout);
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkCrossProject($group_id, $factory, $to_project, $user, $layout);
     }
     function testForkCrossProjectShouldCloneUnreadableRepos() {
         $repositories = array('1', '2', '3');
@@ -637,40 +636,40 @@ class GitActionsTest extends UnitTestCase {
         $to_project->setReturnValue('getId', 2);
         
         $controller = new MockGit($this);
-        $factory = $this->getFactoryUnreadableFor('forkExternal', $group_id, $repositories, $user);
+        $factory = $this->getRepoCollectionUnreadableFor('forkExternal', $group_id, $repositories, $user);
 
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectNever('redirect');
         
-        $action = new GitActions($controller, $factory, $systemEventManager);
-        $action->forkCrossProject($group_id, $repositories, $to_project, $user, $layout);
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkCrossProject($group_id, $factory, $to_project, $user, $layout);
     }
     
-    protected function getFactoryUnreadableFor($method, $group_id, $repo_ids, $user) {
-        $factory = new MockGitRepositoryFactory();
+    protected function getRepoCollectionUnreadableFor($method, $group_id, $repo_ids, $user) {
+        $return = array();
         foreach ($repo_ids as $id) {
             $repo = new MockGitRepository();
             $repo->setReturnValue('getId', $id);
             $repo->setReturnValue('userCanRead', false, array($user));
             $repo->expectNever($method);
-            $factory->setReturnValue('getRepository', $repo, array($group_id, $id));
+            $return[] = $repo;
         }
-        return $factory;
+        return $return;
     }
     
-    protected function getFactoryFor($method, $expectedArgs, $group_id, $repo_ids, $user ) {
-        $factory = new MockGitRepositoryFactory();
+    protected function getRepoCollectionFor($method, $expectedArgs, $group_id, $repo_ids, $user ) {
+        $return = array();
         foreach ($repo_ids as $id) {
             $repo = new MockGitRepository();
             $repo->setReturnValue('getId', $id);
             $repo->setReturnValue('userCanRead', true, array($user));
             $repo->expectOnce($method, $expectedArgs);
             
-            $factory->setReturnValue('getRepository', $repo, array($group_id, $id));
+            $return[] = $repo;
         }
-        return $factory;
+        return $return;
     }
 
 }

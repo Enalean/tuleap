@@ -41,11 +41,6 @@ require_once('common/layout/Layout.class.php');
 class GitActions extends PluginActions {
 
     /**
-     * @var GitRepositoryFactory
-     */
-    protected $factory;
-
-    /**
      * @var SystemEventManager
      */
     protected $systemEventManager;
@@ -57,9 +52,8 @@ class GitActions extends PluginActions {
      * @param GitRepositoryFactory $factory            The factory to manage repositories
      * @param SystemEventManager   $systemEventManager The system manager
      */
-    public function __construct($controller, GitRepositoryFactory $factory, SystemEventManager $systemEventManager) {
+    public function __construct($controller, SystemEventManager $systemEventManager) {
         parent::__construct($controller);
-        $this->factory = $factory;
         $this->systemEventManager = $systemEventManager;
 
     }
@@ -507,23 +501,18 @@ class GitActions extends PluginActions {
      *
      * @return bool false if no repository has been cloned
      */
-    function forkRepositories($groupId, array $repos_ids, $path, User $user, Layout $response) {
+    function forkRepositories($groupId, array $repos, $path, User $user, Layout $response) {
         $forkCommand = new ForkIndividualCommand($path);
-        $this->_forkRepos($forkCommand, $groupId, $repos_ids, $user, $response);
+        $this->_forkRepos($forkCommand, $groupId, $repos, $user, $response);
     }
 
-    function forkCrossProject($groupId, array $repos_ids, $to_project, User $user, Layout $response) {
+    function forkCrossProject($groupId, array $repos, $to_project, User $user, Layout $response) {
         $forkCommand = new ForkExternalCommand($to_project);
-        $this->_forkRepos($forkCommand, $groupId, $repos_ids, $user, $response);
+        $this->_forkRepos($forkCommand, $groupId, $repos, $user, $response);
     }
     
-    function _forkRepos($forkCommand, $groupId, array $repos_ids, User $user, Layout $response) {
-        $repos = array();
-        foreach ($repos_ids as $id) {
-            $repos[] = $this->factory->getRepository($groupId, $id);
-        }
+    function _forkRepos($forkCommand, $groupId, array $repos, User $user, Layout $response) {
         $forked = $forkCommand->fork($repos, $user);
-
         if ($forked) {
             $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
         } else {

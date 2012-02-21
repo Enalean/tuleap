@@ -23,6 +23,7 @@ require_once(dirname(__FILE__).'/../../../src/common/user/UserManager.class.php'
 Mock::generatePartial('Git', 'GitSpy', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView'));
 Mock::generatePartial('Git', 'GitSpyForErrors', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect'));
 Mock::generate('UserManager');
+Mock::generate('GitRepositoryFactory');
 class GitTest extends TuleapTestCase {
     public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView() {
         $git = new GitSpy();
@@ -37,6 +38,8 @@ class GitTest extends TuleapTestCase {
         $git->request();
     }
 }
+//TODO add requirement about the repos and git command passed to the action
+//Todo pass on a real project instead of a project id
 class Git_ForkCrossProject_Test extends TuleapTestCase {
     public function testExecutes_ForkCrossProject_ActionWithForkRepositoriesView() {
         $user = new User();
@@ -54,6 +57,8 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
                                         'repos' => $repos));
 
         $git->_addInstanceVars($request, $usermanager);
+        $git->setFactory(new MockGitRepositoryFactory());
+
         $git->_dispatchActionAndView('fork_cross_project', null, null, $user);
     }
     
@@ -64,6 +69,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter', array('repos')));
         
         $git->_addInstanceVars(null, null, null, null, $group_id);
+        $git->setFactory(new MockGitRepositoryFactory());
         $git->expectOnce('addError', array($invalidRequestError));
         $git->expectOnce('redirect', array('/plugins/git?group_id='.$group_id));
 

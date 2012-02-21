@@ -101,6 +101,9 @@ class Git extends PluginController {
         $this->permittedActions = array();
     }
     
+    public function setFactory(GitRepositoryFactory $factory) {
+        $this->factory = $factory;
+    }
     /**
      * Added for testing
      */
@@ -110,7 +113,6 @@ class Git extends PluginController {
         $this->action = $action;
         $this->permittedActions = $permittedActions;
         $this->groupId = $groupId;
-        
     }
 
     protected function getText($key, $params = array()) {
@@ -418,7 +420,7 @@ class Git extends PluginController {
      * @return PluginActions
      */
     protected function instantiateAction($action) {
-        return new $action($this, $this->factory, SystemEventManager::instance());
+        return new $action($this, SystemEventManager::instance());
     }
 
     public function _doDispatchForkCrossProject($request, $user) {
@@ -433,6 +435,10 @@ class Git extends PluginController {
         }
         $toProjectId = $request->get('to_project');
         $repoIds = $request->get('repos');
+        $repos = array();
+        foreach ($repoIds as $id) {
+            $repos[] = $this->factory->getRepository($this->groupId, $id);
+        }
         $this->addAction('forkCrossProject', array($toProjectId, $repoIds, $user));
     }
 
