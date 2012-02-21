@@ -78,18 +78,19 @@ class AgileDashboard_SearchView {
         $report_can_be_modified = false;
         echo $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
         
-        echo $this->fetchTable();
+        echo $this->fetchResults();
         
         $this->service->displayFooter();
     }
     
-    private function fetchTable() {
-        
+    private function fetchResults() {
         $html = '';
+        $html .= '<div class="tracker_report_renderer">';
         $html .= '<table>';
         $html .= $this->fetchTHead();
         $html .= $this->fetchTBody();
         $html .= '</table>';
+        $html .= '</div>';
         return $html;
     }
     
@@ -120,10 +121,10 @@ class AgileDashboard_SearchView {
         $html = '';
         $html .= '<thead>';
         $html .= '<tr class="boxtable">';
-        $html .= '<td>id</td>';
-        $html .= '<td>title</td>';
+        $html .= '<td class="boxtitle">id</td>';
+        $html .= '<td class="boxtitle">title</td>';
         foreach ($this->criteria as $header) {
-            $html .= '<td>'. $header->field->getLabel().'</td>';
+            $html .= '<td class="boxtitle">'. $header->field->getLabel().'</td>';
         }
         $html .= '</tr>';
         $html .= '</thead>';
