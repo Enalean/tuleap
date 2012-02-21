@@ -508,11 +508,21 @@ class GitActions extends PluginActions {
      * @return bool false if no repository has been cloned
      */
     function forkRepositories($groupId, array $repos_ids, $path, User $user, Layout $response) {
+        $forkCommand = new ForkIndividualCommand($path);
+        $this->_forkRepos($forkCommand, $groupId, $repos_ids, $user, $response);
+    }
+
+    function forkCrossProject($groupId, array $repos_ids, $to_project, User $user, Layout $response) {
+        $forkCommand = new ForkExternalCommand($to_project);
+        $this->_forkRepos($forkCommand, $groupId, $repos_ids, $user, $response);
+    }
+    
+    function _forkRepos($forkCommand, $groupId, array $repos_ids, User $user, Layout $response) {
         $nb_forked = 0;
         foreach ($repos_ids as $id) {
             $repo = $this->factory->getRepository($groupId, $id);
             if ($repo && $repo->userCanRead($user)) {
-                $repo->fork($path, $user);
+                $forkCommand->fork($repo, $user);
                 $nb_forked++;
             }
         }
@@ -525,23 +535,7 @@ class GitActions extends PluginActions {
             return false;
         }
     }
-
-    function forkCrossProject($groupId, array $repos_ids, $to_project, User $user, Layout $response) {
-        $nb_fork = 0;
-        foreach ($repos_ids as $repo_id) {
-            $repo = $this->factory->getRepository($groupId, $repo_id);
-            if ($repo && $repo->userCanRead($user)) {
-                $repo->forkExternal($to_project, $user);
-                $nb_fork++;
-            }
-            
-        }
-        if ($nb_fork > 0) {
-            $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
-        } else {
-            $this->_addError('actions_no_repository_selected');
-        }
-    }
+    
     
     protected function _addError($error) {
         
@@ -569,6 +563,28 @@ class GitActions extends PluginActions {
             
         
 }
+interface ForkCommand {
+    function fork($repo, User $user);
+}
+class ForkExternalCommand implements ForkCommand {
+    public function __construct($to_project) {
+        $this->to_project = $to_project;
+    }
+    
+    public function fork($repo, User $user) {
+        $repo->forkExternal($this->to_project, $user);
+    }
+}
 
+class ForkIndividualCommand implements ForkCommand {
+    public function __construct($path) {
+        $this->path = $path;
+    }
+    
+    public function fork($repo, User $user) {
+        $repo->fork($this->path, $user);
+
+    }
+}
 
 ?>
