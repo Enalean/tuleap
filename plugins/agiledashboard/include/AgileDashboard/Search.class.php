@@ -48,7 +48,7 @@ class AgileDashboard_Search {
         $this->formElementFactory = $formElementFactory;
     }
     
-    public function getMatchingArtifacts(Project $project, array $criteria) {
+    public function getMatchingArtifacts(Project $project, $criteria=null) {
         $sharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
         if (count($sharedFields) > 0) { 
             return $this->dao->searchMatchingArtifacts($sharedFields);
