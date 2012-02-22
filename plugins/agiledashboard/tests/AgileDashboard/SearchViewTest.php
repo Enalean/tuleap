@@ -107,7 +107,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
     private function GivenASharedFactory($criteria) {
         $shared_factory = new MockTracker_SharedFormElementFactory();
         foreach ($criteria as $criterion) {
-            $shared_factory->setReturnValue('getGoodField', $criterion->field, array('*', $criterion->field));
+            $shared_factory->setReturnValue('getFieldFromTrackerAndSharedField', $criterion->field, array('*', $criterion->field));
         }
         return $shared_factory;
     }

@@ -220,7 +220,7 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         return $field;
     }
     
-    public function testGetGoodFieldToRetrieveFieldValueFromSearchCriterion() {
+    public function testGetFieldFromTrackerAndSharedFieldToRetrieveFieldValueFromSearchCriterion() {
         $field1 = $this->GivenAUserSelectbox();
         $field1->setReturnValue('getId', 123);
         
@@ -236,12 +236,12 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $dar = new MockDataAccessResult();
         $dar->setReturnValue('getRow', array('id' => 456));
         $dao = new MockTracker_FormElement_FieldDao();
-        $dao->setReturnValue('searchGoodField', $dar, array(66, 123));
-        $dao->expectOnce('searchGoodField', array(66, 123));
+        $dao->setReturnValue('searchFieldFromTrackerIdAndSharedFieldId', $dar, array(66, 123));
+        $dao->expectOnce('searchFieldFromTrackerIdAndSharedFieldId', array(66, 123));
         
         $sharedFormElementFactory->setReturnValue('getDao', $dao);
         
-        $this->assertEqual($sharedFormElementFactory->getGoodField($tracker, $field1), $field2);
+        $this->assertEqual($sharedFormElementFactory->getFieldFromTrackerAndSharedField($tracker, $field1), $field2);
     }
 }
 ?>

@@ -175,7 +175,7 @@ class AgileDashboard_SearchView {
         $html = '';
         foreach ($this->criteria as $criterion) {
             $value = '';
-            $field = $this->shared_factory->getGoodField($artifact->getTracker(), $criterion->field);
+            $field = $this->shared_factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
             if ($field) {
                 $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
             }

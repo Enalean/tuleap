@@ -396,7 +396,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function searchGoodField($tracker_id, $shared_field_id) {
+    public function searchFieldFromTrackerIdAndSharedFieldId($tracker_id, $shared_field_id) {
         $tracker_id      = $this->da->escapeInt($tracker_id);
         $shared_field_id = $this->da->escapeInt($shared_field_id);
         
