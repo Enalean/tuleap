@@ -57,7 +57,9 @@ class AgileDashboard_Search {
         if (count($searchedSharedFields) > 0) { 
             return $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
         } else {
-            return $this->dao->searchArtifactsFromTrackers($trackerIds);
+            if (count($trackerIds) > 0) {
+                return $this->dao->searchArtifactsFromTrackers($trackerIds);
+            }
         }
     }
     

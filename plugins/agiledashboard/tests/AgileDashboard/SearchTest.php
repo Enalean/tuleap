@@ -71,5 +71,20 @@ class AgileDashboard_SearchTest extends UnitTestCase {
 
         $this->search->getMatchingArtifacts($this->project, $criteria);
     }
+    
+    function testGetProjectArtifactsWhenNoArtifactsAndNoTrackers() {
+        $criteria   = array('220' => array('values' => array('')));
+        
+        // No fields found
+        $fields     = array();
+        $trackerIds = array();
+        
+        $this->formElementFactory->setReturnValue('getAllProjectSharedFields', $fields, array($this->project));
+        
+        
+        $this->searchDao->expectNever('searchArtifactsFromTrackers');
+
+        $this->search->getMatchingArtifacts($this->project, $criteria);
+    }
 }
 ?>

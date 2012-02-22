@@ -91,7 +91,8 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         
             ) ON CV.changeset_id = c.id
 
-            WHERE artifact.tracker_id IN ($trackerIds)
+            WHERE artifact.use_artifact_permissions = 0
+            AND   artifact.tracker_id IN ($trackerIds)
             ORDER BY title
         ";
         return $this->retrieve($sql);
