@@ -35,6 +35,7 @@ class AgileDashboard_SearchDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id       = CVT.changeset_value_id)
             ) ON (c.id = CV.changeset_id)
             WHERE artifact.use_artifact_permissions = 0
+            ORDER BY title
         ";
         return $this->retrieve($sql);
     }
@@ -73,7 +74,6 @@ class AgileDashboard_SearchDao extends DataAccessObject {
     }
     
     public function searchArtifactsFromTrackers(array $trackerIds) {
-        var_dump($trackerIds);
         $trackerIds = implode(',', $trackerIds);
         $sql = "
             SELECT ta.id,
@@ -90,6 +90,7 @@ class AgileDashboard_SearchDao extends DataAccessObject {
             ) ON tcv.changeset_id = tc.id
 
             WHERE ta.tracker_id IN ($trackerIds)
+            ORDER BY title
         ";
         return $this->retrieve($sql);
     }

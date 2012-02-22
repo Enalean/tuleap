@@ -367,7 +367,25 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
     }
     
     public function searchAllSharedFieldsOfProject($project_id) {
-        $sql = $this->getSqlForAllSharedFieldsOfProject($project_id);
+        $project_id  = $this->da->escapeInt($project_id);
+        $sql = "SELECT * FROM
+                ((SELECT f_original.*
+                  FROM tracker_field f_original
+                    JOIN tracker_field f_target ON (f_original.id = f_target.original_field_id)
+                    JOIN tracker_field f_src ON (f_target.original_field_id = f_src.id) 
+                    JOIN tracker ON (f_src.tracker_id = tracker.id)
+                  WHERE tracker.group_id = $project_id
+                  AND f_target.use_it = 1)
+
+                UNION
+
+                (SELECT f_target.*
+                 FROM tracker_field f_target 
+                    JOIN tracker_field f_src ON (f_target.original_field_id = f_src.id) 
+                    JOIN tracker ON (f_src.tracker_id = tracker.id)
+                 WHERE tracker.group_id = $project_id
+                 AND f_target.use_it = 1)
+                ) as combined";
         //echo '<pre>'.$sql;
         return $this->retrieve($sql);
     }
