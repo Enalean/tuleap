@@ -58,6 +58,12 @@ document.observe('dom:loaded', function () {
         
         $$('a.button[name^=create]').each(function (button) {
             button.observe('click', function (evt) {
+                // Replace button icon with spinner
+                var spinnerUrl = codendi.imgroot + '/ic/spinner-16.gif';
+                var buttonImg  = button.down('img');
+                var buttonIcon = buttonImg.src;
+                buttonImg.src  = spinnerUrl;
+                			
                 $$('.tracker-admin-field-selected').each(function (selected_element) {
                     if (selected_element.visible()) {
                         var element = selected_element.up('.tracker-admin-field');
@@ -123,6 +129,9 @@ document.observe('dom:loaded', function () {
                             
                             //Edit list values
                             var e = new codendi.tracker.bind.Editor(admin_field_properties);
+                            
+                            // Restore button icon
+                            buttonImg.src = buttonIcon;
                         }
                     }
                 );
