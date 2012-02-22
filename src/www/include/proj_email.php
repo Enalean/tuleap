@@ -81,8 +81,10 @@ function send_new_user_email($to,$confirm_hash, $username)
     
     include($Language->getContent('include/new_user_email'));
     
-    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-    $mail =& new Mail();
+    $host_part = explode(':',$GLOBALS['sys_default_domain']);
+    $host = $host_part[0];
+
+    $mail = new Mail();
     $mail->setTo($to);
     $mail->setSubject($Language->getText('include_proj_email','account_register',$GLOBALS['sys_name']));
     $mail->setBody($message);
