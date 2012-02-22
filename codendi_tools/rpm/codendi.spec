@@ -9,7 +9,7 @@
 %define APP_DATA_DIR %{_localstatedir}/lib/%{APP_NAME}
 %define APP_CACHE_DIR %{_localstatedir}/tmp/%{APP_NAME}_cache
 
-# Check values in Codendi's mailman .spec file
+# Check values in Tuleap's mailman .spec file
 %define mailman_groupid  106
 %define mailman_group    mailman
 %define mailman_userid   106
@@ -69,7 +69,7 @@ Requires: libnss-mysql, mod_auth_mysql, nss, nscd
 Requires: forgeupgrade >= 1.2
 
 %description
-Codendi is a web based application that address all the aspects of product development.
+Tuleap is a web based application that address all the aspects of product development.
 
 #
 ## Core component definitions
@@ -101,7 +101,7 @@ Requires: mailman-%{PKG_NAME}
 Provides: tuleap-core-mailman
 %endif
 %description core-mailman
-Manage dependencies for Codendi mailman integration
+Manage dependencies for Tuleap mailman integration
 
 %package core-subversion
 Summary: Subversion component for codendi
@@ -118,7 +118,7 @@ Requires: viewvc-%{PKG_NAME}
 Provides: tuleap-core-subversion
 %endif
 %description core-subversion
-Manage dependencies for Codendi Subversion integration
+Manage dependencies for Tuleap Subversion integration
 
 %package core-subversion-modperl
 Summary: Subversion with mod_perl authentication
@@ -150,14 +150,14 @@ Requires: cvs-%{PKG_NAME}
 Provides: tuleap-core-cvs
 %endif
 %description core-cvs
-Manage dependencies for Codendi CVS integration
+Manage dependencies for Tuleap CVS integration
 
 #
 ## Plugins
 #
 
 %package plugin-forumml
-Summary: ForumML plugin for Codendi
+Summary: ForumML plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: 1%{?dist}
@@ -170,11 +170,11 @@ Requires: tuleap-core-mailman
 Provides: tuleap-plugin-forumml = %{version}
 %endif
 %description plugin-forumml
-ForumML brings to Codendi a very nice mail archive viewer and the possibility
+ForumML brings to Tuleap a very nice mail archive viewer and the possibility
 to send mails through the web interface. It can replace the forums.
 
 %package plugin-git
-Summary: Git plugin for Codendi
+Summary: Git plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: 1%{?dist}
@@ -186,10 +186,10 @@ Provides: tuleap-plugin-git = %{version}
 %endif
 %description plugin-git
 Integration of git distributed software configuration management tool together
-with Codendi
+with Tuleap
 
 %package plugin-svntodimensions
-Summary: Codendi plugin for svntodimensions
+Summary: Tuleap plugin for svntodimensions
 Group: Development/Tools
 Version: @@PLUGIN_SVNTODIMENSIONS_VERSION@@
 Release: 1%{?dist}
@@ -200,10 +200,10 @@ Provides: codendi-plugin-svntodimensions = %{version}
 Provides: tuleap-plugin-svntodimensions = %{version}
 %endif
 %description plugin-svntodimensions
-Codendi plugin for svntodimensions
+Tuleap plugin for svntodimensions
 
 %package plugin-cvstodimensions
-Summary: Codendi plugin for cvstodimensions
+Summary: Tuleap plugin for cvstodimensions
 Group: Development/Tools
 Version: @@PLUGIN_CVSTODIMENSIONS_VERSION@@
 Release: 1%{?dist}
@@ -214,10 +214,10 @@ Provides: codendi-plugin-cvstodimensions = %{version}
 Provides: tuleap-plugin-cvstodimensions = %{version}
 %endif
 %description plugin-cvstodimensions
-Codendi plugin for cvstodimensions
+Tuleap plugin for cvstodimensions
 
 %package plugin-docmanwatermark
-Summary: Codendi plugin for PDF watermarking
+Summary: Tuleap plugin for PDF watermarking
 Group: Development/Tools
 Version: @@PLUGIN_DOCMANWATERMARK_VERSION@@
 Release: 1%{?dist}
@@ -232,7 +232,7 @@ PDF Watermark plugin. Provide the possibility to add a customizable banner to
 PDF file uploaded in Docman
 
 %package plugin-ldap
-Summary: Codendi plugin to manage LDAP integration
+Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: 1%{?dist}
@@ -243,11 +243,11 @@ Provides: codendi-plugin-ldap = %{version}
 Provides: tuleap-plugin-ldap = %{version}
 %endif
 %description plugin-ldap
-LDAP Plugin for Codendi. Provides LDAP information, LDAP
+LDAP Plugin for Tuleap. Provides LDAP information, LDAP
 authentication, user and group management.
 
 %package plugin-im
-Summary: Instant Messaging Plugin for Codendi
+Summary: Instant Messaging Plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: 1%{?dist}
@@ -261,7 +261,7 @@ Provides: tuleap-plugin-im = %{version}
 Provides instant messaging capabilities, based on a Jabber/XMPP server.
 
 %package plugin-jri
-Summary: Codendi Java Remote Interface plugin
+Summary: Tuleap Java Remote Interface plugin
 Group: Development/Tools
 Version: @@PLUGIN_JRI_VERSION@@
 Release: 1%{?dist}
@@ -272,10 +272,10 @@ Provides: codendi-plugin-jri = %{version}
 Provides: tuleap-plugin-jri = %{version}
 %endif
 %description plugin-jri
-Codendi Java Remote Interface: the java API for Codendi
+Tuleap Java Remote Interface: the java API for Tuleap
 
 %package plugin-eclipse
-Summary: Eclipse plugin for Codendi
+Summary: Eclipse plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_ECLIPSE_VERSION@@
 Release: 1%{?dist}
@@ -286,10 +286,10 @@ Provides: codendi-plugin-eclipse = %{version}
 Provides: tuleap-plugin-eclipse = %{version}
 %endif
 %description plugin-eclipse
-Plugin to install the Codendi Eclipse plugin and access the documentation
+Plugin to install the Tuleap Eclipse plugin and access the documentation
 
 %package plugin-hudson
-Summary: Hudson plugin for Codendi
+Summary: Hudson plugin for Tuleap
 Group: Development/Tools/Building
 Version: @@PLUGIN_HUDSON_VERSION@@
 Release: 1%{?dist}
@@ -300,10 +300,10 @@ Provides: codendi-plugin-hudson = %{version}
 Provides: tuleap-plugin-hudson = %{version}
 %endif
 %description plugin-hudson
-Plugin to install the Codendi Hudson plugin for continuous integration
+Plugin to install the Tuleap Hudson plugin for continuous integration
 
 %package plugin-webdav
-Summary: WebDAV plugin for Codendi
+Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
 Release: 1%{?dist}
@@ -361,67 +361,67 @@ Fancy cardwall output on top of Tracker v5
 ## Themes
 #
 %package theme-codex
-Summary: Codex theme for Codendi
+Summary: Codex theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_CODEX_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
 %description theme-codex
-Original theme for Codendi
+Original theme for Tuleap
 
 %package theme-codextab
-Summary: CodexTab theme for Codendi
+Summary: CodexTab theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_CODEXTAB_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
 %description theme-codextab
-CodexTab theme for Codendi
+CodexTab theme for Tuleap
 
 %package theme-dawn
-Summary: Dawn theme for Codendi
+Summary: Dawn theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_DAWN_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
 %description theme-dawn
-Dawn theme for Codendi
+Dawn theme for Tuleap
 
 %package theme-savannah
-Summary: Savannah theme for Codendi
+Summary: Savannah theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_SAVANNAH_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
 %description theme-savannah
-Savannah theme for Codendi
+Savannah theme for Tuleap
 
 %package theme-sttab
-Summary: STTab theme for Codendi
+Summary: STTab theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_STTAB_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
 %description theme-sttab
-STMicroelectronics theme for Codendi
+STMicroelectronics theme for Tuleap
 
 %package theme-codexstn
-Summary: CodexSTN theme for Codendi
+Summary: CodexSTN theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_CODEXSTN_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
 %description theme-codexstn
-ST-Ericsson theme for Codendi
+ST-Ericsson theme for Tuleap
 
 %package theme-steerforge
-Summary: SteerForge theme for Codendi
+Summary: SteerForge theme for Tuleap
 Group: Development/Tools
 Version: @@THEME_STEERFORGE_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
 %description theme-steerforge
-SteerForge theme for Codendi
+SteerForge theme for Tuleap
 
 %package theme-tuleap
 Summary: Tuleap theme
@@ -465,7 +465,7 @@ done
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap-install
 %{__install} -m 755 codendi_tools/codendi_install.sh $RPM_BUILD_ROOT/%{_datadir}/tuleap-install/setup.sh
 #
-# Install Codendi executables
+# Install Tuleap executables
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/gotohell $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} src/utils/backup_job $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -558,9 +558,9 @@ if [ "$1" -eq "1" ]; then
     # codendiadm
     # mailman group needed to write in /var/log/mailman/ directory
     if id %{app_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'Owner of Codendi directories'    -d '/home/codendiadm'    -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group},%{mailman_group} %{app_user}
+        /usr/sbin/usermod -c 'Owner of Tuleap directories'    -d '/home/codendiadm'    -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group},%{mailman_group} %{app_user}
     else
-        /usr/sbin/useradd -c 'Owner of Codendi directories' -M -d '/home/codendiadm' -r -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group},%{mailman_group} %{app_user}
+        /usr/sbin/useradd -c 'Owner of Tuleap directories' -M -d '/home/codendiadm' -r -g "%{app_group}" -s '/bin/bash' -G %{ftpadmin_group},%{mailman_group} %{app_user}
     fi
     # mailman
     if id %{mailman_user} >/dev/null 2>&1; then
@@ -582,9 +582,9 @@ if [ "$1" -eq "1" ]; then
     fi
     # dummy
     if id %{dummy_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'Dummy Codendi User'    -d '/var/lib/codendi/dumps'    -g %{dummy_group} %{dummy_user}
+        /usr/sbin/usermod -c 'Dummy Tuleap User'    -d '/var/lib/codendi/dumps'    -g %{dummy_group} %{dummy_user}
     else
-        /usr/sbin/useradd -c 'Dummy Codendi User' -M -d '/var/lib/codendi/dumps' -r -g %{dummy_group} %{dummy_user}
+        /usr/sbin/useradd -c 'Dummy Tuleap User' -M -d '/var/lib/codendi/dumps' -r -g %{dummy_group} %{dummy_user}
     fi
 else
     # Stop the services

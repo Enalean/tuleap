@@ -28,13 +28,6 @@ define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
  */
 class trackerPlugin extends Plugin {
     
-    /**
-     * @var bool True if the plugin should be disabled for all projects on installation
-     *
-     * Usefull only for plugins with scope == SCOPE_PROJECT
-     */
-    public $isRestrictedByDefault = true; //until the plugin becomes stable
-    
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
