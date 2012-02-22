@@ -429,26 +429,10 @@ class GitActionsTest extends UnitTestCase {
         $action->getProjectRepositoryList($projectId);
         $action->getProjectRepositoryList($projectId, $userId);
     }
-    
-    function testFork_selectNoRepositoryToCloneShouldDisplayAWarning() {
-        $repositories = array();
-        $path = 'toto';
-        $group_id = 101;
-        
-        $user = new MockUser();
-        
-        $controller = new MockGit($this);
-        $controller->expectOnce('addError', array('actions_no_repository_selected'));
 
-        $repos = array();
-        $systemEventManager = new MockSystemEventManager();
-        $layout = new MockLayout();
-        $layout->expectNever('redirect');
-        
-        $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepositories($group_id, $repos, $path, $user, $layout);
-    }
-    
+    /**
+     *TOdo use partial mock to just verify that it calls forkRepos() ? 
+     */
     function testForkShouldCloneOneRepository() {
         $repositories = array('1');
         $path = 'toto';
@@ -487,90 +471,17 @@ class GitActionsTest extends UnitTestCase {
         $action->forkRepositories($group_id, $repos, $path, $user, $layout);
     }
     
-    function testForkShouldCloneManyRepositoriesExceptNonExistentOne() {
-        $repositories = array('1', '2', '3');
-        $path = 'toto';
-        $group_id = 101;
-        
-        $user = new MockUser();
-        
-        $controller = new MockGit($this);
-        $repos = $this->getRepoCollectionFor('fork', array($path, $user), $repositories, $user);
-        
-        $systemEventManager = new MockSystemEventManager();
-        $layout = new MockLayout();
-        $layout->expectOnce('redirect');
-        
-        $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepositories($group_id, $repos, $path, $user, $layout);
-    }
-    
-    function testForkShouldNotCloneAnyNonExistentRepositories() {
-        $repositories = array();
-        $path = 'toto';
-        $group_id = 101;
-        
-        $user = new MockUser();
-        
-        $controller = new MockGit($this);
-        $repos = $this->getRepoCollectionFor('fork', array($path, $user), $repositories, $user);
-        
-        $systemEventManager = new MockSystemEventManager();
-        $layout = new MockLayout();
-        $layout->expectNever('redirect');
-        
-        $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepositories($group_id, $repos, $path, $user, $layout);
-    }
-    
-    function testForkRepositoriesShouldNotForkUnreadableRepositories() {
-        $repositories = array('1');
-        $path = 'toto';
-        $group_id = 101;
-        
-        $user = new MockUser();
-        
-        $controller = new MockGit($this);
-        $repos = $this->getRepoCollectionUnreadableFor('fork', $repositories, $user);
-        
-        $systemEventManager = new MockSystemEventManager();
-        $layout = new MockLayout();
-        $layout->expectNever('redirect');
-        
-        $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepositories($group_id, $repos, $path, $user, $layout);
-    }
-    
-    function testForkRepositoriesShouldNotForkOutsideProjectRepositories() {
-        $id1 = '1';
-        $path = 'toto';
-        $group_id = 101;
-        
-        $user = new MockUser();
-        
-        $controller = new MockGit($this);
-
-        $noRepos =  array();
-        
-        $systemEventManager = new MockSystemEventManager();
-        $layout = new MockLayout();
-        $layout->expectNever('redirect');
-        
-        $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepositories($group_id, $noRepos, $path, $user, $layout);
-    }
-    
-    
     function testForkRepos_selectNoRepositoryToCloneShouldDisplayAWarning() {
         $group_id = 101;
-        
         $controller = new MockGit($this);
-        $controller->expectOnce('addError', array('actions_no_repository_selected'));
 
         $repos = array();
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
+        
+        $controller->expectOnce('addError', array('actions_no_repository_selected'));
         $layout->expectNever('redirect');
+        
         $action = new GitActions($controller, $systemEventManager);
         $action->forkRepos(new ForkIndividualCommand(''), $group_id, $repos, new MockUser(), $layout);
     }
@@ -619,7 +530,8 @@ class GitActionsTest extends UnitTestCase {
         $action = new GitActions($controller, $systemEventManager);
         $action->forkRepos(new ForkExternalCommand($to_project), $group_id, $repos, $user, $layout);
     }
-    function testForkCrossProjectShouldCloneUnreadableRepos() {
+    
+    function testForkCrossProjectShouldNotCloneUnreadableRepos() {
         $repositories = array('1', '2', '3');
         $group_id = 101;
         
@@ -640,7 +552,6 @@ class GitActionsTest extends UnitTestCase {
         $action = new GitActions($controller, $systemEventManager);
         $action->forkCrossProject($group_id, $repos, $to_project, $user, $layout);
     }
-    
     function testForkCrossProjectRequiresTheUserToBeAdminOfTheDestinationProject() {
         $controller = new MockGit($this);
         $action = new GitActions($controller, new MockSystemEventManager());
@@ -683,6 +594,27 @@ class GitActionsTest extends UnitTestCase {
             $return[] = $repo;
         }
         return $return;
+    }
+
+     /** 
+      * Todo : move to Forkcommmand or git.class? 
+      */   
+    function testForkShouldNotCloneAnyNonExistentRepositories() {
+        $repositories = array();
+        $path = 'toto';
+        $group_id = 101;
+        
+        $user = new MockUser();
+        
+        $controller = new MockGit($this);
+        $repos = $this->getRepoCollectionFor('fork', array($path, $user), $repositories, $user);
+        
+        $systemEventManager = new MockSystemEventManager();
+        $layout = new MockLayout();
+        $layout->expectNever('redirect');
+        
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkRepos(new ForkIndividualCommand(''), $group_id, $repos, $user, $layout);
     }
 
 }
