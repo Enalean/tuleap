@@ -45,10 +45,11 @@ THEME_STEERFORGE_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/SteerForg
 THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSION)
 
 PKG_NAME=tuleap
+SPEC_FILE=tuleap.spec
 
 default: all
 
-all: clean build-depends codendi custom_codendi codendi-all-deps
+all: clean rpmprep rpm custom_rpm rpm-all-deps tuleap-all
 
 ##
 ## Setup environment
@@ -87,10 +88,10 @@ $(RPM_TMP)/SOURCES/$(PKG_NAME)-$(version).tar.gz:
 ## Build RPM
 ##
 
-codendi: tarball $(RPM_TMP)/RPMS/noarch/codendi_st-$(version)-1.noarch.rpm
+rpm: tarball $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-1.noarch.rpm
 
-$(RPM_TMP)/RPMS/noarch/codendi_st-$(version)-1.noarch.rpm: codendi.spec
-	cat codendi.spec |\
+$(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-1.noarch.rpm: $(SPEC_FILE)
+	cat $(SPEC_FILE) |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@CORE_MAILMAN_VERSION@@/$(CORE_MAILMAN_VERSION)/g' |\
 		sed -e 's/@@CORE_SUBVERSION_VERSION@@/$(CORE_SUBVERSION_VERSION)/g' |\
@@ -120,10 +121,10 @@ $(RPM_TMP)/RPMS/noarch/codendi_st-$(version)-1.noarch.rpm: codendi.spec
 		sed -e 's/@@THEME_STEERFORGE_VERSION@@/$(THEME_STEERFORGE_VERSION)/g' |\
 		sed -e 's/@@THEME_TULEAP_VERSION@@/$(THEME_TULEAP_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
-		> $(RPM_TMP)/SPECS/codendi.spec
-	rpmbuild -bb $(RPM_TMP)/SPECS/codendi.spec
+		> $(RPM_TMP)/SPECS/$(SPEC_FILE)
+	rpmbuild -bb $(RPM_TMP)/SPECS/$(SPEC_FILE)
 
-custom_codendi: tarball
+custom_rpm: tarball
 	cat codendi-customization.spec |\
 		sed -e 's/@@PLATFORM@@/default/' |\
 		sed -e 's/@@SYS_DEFAULT_DOMAIN@@/tuleap.net/' |\
@@ -135,7 +136,7 @@ custom_codendi: tarball
 	cp $(BASE_DIR)/src/www/themes/common/images/organization_logo.png $(RPM_TMP)/SOURCES/organization_logo.png
 	export DOCBOOK_TOOLS_DIR=$(DOCBOOK_TOOLS_DIR); rpmbuild -bb $(RPM_TMP)/SPECS/codendi-customization.spec
 
-codendi-all-deps: codendi-all-deps.spec
+rpm-all-deps: codendi-all-deps.spec
 	cat $< |\
 		sed -e 's/@@VERSION@@/$(version)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
@@ -159,8 +160,6 @@ clean:
 	-rm -f /tmp/log_xml2html_*
 	-rm -f /tmp/log_xml2pdf_*
 
-all: clean rpmprep codendi custom_codendi codendi-all-deps tuleap-all
-
 build-depends: /usr/bin/rpmbuild /usr/bin/createrepo /usr/bin/zip $(DOCBOOK_TOOLS_DIR)
 
 /usr/bin/rpmbuild:
@@ -175,3 +174,8 @@ build-depends: /usr/bin/rpmbuild /usr/bin/createrepo /usr/bin/zip $(DOCBOOK_TOOL
 $(DOCBOOK_TOOLS_DIR):
 	@echo "Using DOCBOOK_TOOLS_DIR=$@"
 	@[ ! -d $@ ] && echo "DOCBOOK_TOOLS_DIR is missing, I suggest you take tarball from $(DOCBOOKTARBALL)" ; exit 1
+
+# Legacy naming
+codendi: rpm
+custom_codendi: custom_rpm
+codendi-all-deps: rpm-all-deps
