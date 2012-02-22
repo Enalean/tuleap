@@ -563,22 +563,18 @@ class GitActionsTest extends UnitTestCase {
     }
     
     
-    function testForkCrossProject_selectNoRepositoryToCloneShouldDisplayAWarning() {
-        $repositories = array();
+    function testForkRepos_selectNoRepositoryToCloneShouldDisplayAWarning() {
         $group_id = 101;
-        
-        $user = new MockUser();
         
         $controller = new MockGit($this);
         $controller->expectOnce('addError', array('actions_no_repository_selected'));
 
-        $factory = array();
+        $repos = array();
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectNever('redirect');
-        $project_id = null;
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkCrossProject($group_id, $factory, $project_id, $user, $layout);
+        $action->forkRepos(new ForkIndividualCommand(''), $group_id, $repos, new MockUser(), $layout);
     }
     function testForkCrossProjectShouldCloneOneRepository() {
         $id = '1';
@@ -603,7 +599,7 @@ class GitActionsTest extends UnitTestCase {
         $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkCrossProject($group_id, $factory, $to_project, $user, $layout);
+        $action->forkRepos(new ForkExternalCommand($to_project), $group_id, $factory, $user, $layout);
     }
     
     function testForkCrossProjectShouldCloneManyRepositories() {
@@ -616,7 +612,7 @@ class GitActionsTest extends UnitTestCase {
         $to_project->setReturnValue('getId', 2);
         
         $controller = new MockGit($this);
-        $factory = $this->getRepoCollectionFor('forkExternal', array($to_project, $user), $group_id, $repositories, $user);
+        $repos = $this->getRepoCollectionFor('forkExternal', array($to_project, $user), $group_id, $repositories, $user);
 
         
         $systemEventManager = new MockSystemEventManager();
@@ -624,7 +620,7 @@ class GitActionsTest extends UnitTestCase {
         $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkCrossProject($group_id, $factory, $to_project, $user, $layout);
+        $action->forkRepos(new ForkExternalCommand($to_project), $group_id, $repos, $user, $layout);
     }
     function testForkCrossProjectShouldCloneUnreadableRepos() {
         $repositories = array('1', '2', '3');
@@ -641,10 +637,28 @@ class GitActionsTest extends UnitTestCase {
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
-        $layout->expectNever('redirect');
+         $layout->expectNever('redirect');
         
         $action = new GitActions($controller, $systemEventManager);
         $action->forkCrossProject($group_id, $factory, $to_project, $user, $layout);
+    }
+    
+    function testForkCrossProjectRequiresTheUserToBeAdminOfTheDestinationProject() {
+        $controller = new MockGit($this);
+        $action = new GitActions($controller, new MockSystemEventManager());
+//        $command->expectNever('fork');
+        $layout = new MockLayout();
+
+        $to_project = new MockProject();
+        $to_project->setReturnValue('getId', 2);
+        
+        $user = new MockUser();
+        $user->setReturnValue('isMember', false, array($to_project->getId(), 'A'));
+        $layout->expectNever('redirect');
+
+        $GLOBALS['Language']->setReturnValue('getText', 'must_be_admin_to_create_project_repo', array('plugin_git', 'must_be_admin_to_create_project_repo', '*'));
+        $controller->expectOnce('addError', array('must_be_admin_to_create_project_repo'));
+        $action->forkCrossProject(null, array(), $to_project, $user, $layout);
     }
     
     protected function getRepoCollectionUnreadableFor($method, $group_id, $repo_ids, $user) {

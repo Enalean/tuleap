@@ -41,13 +41,13 @@ class GitTest extends TuleapTestCase {
     }
 }
 //TODO 
-// - add requirement about the repos and git command passed to the action
-// - pass on a real project instead of a project id
 // - verify that the user is admin of the project
-// - move fork methods from gitrepository to gitforkcommands
 // - clean gitaction tests of duplication
 // - Ask the user to which project he wants to fork by listing all projects of which he is admin
+// - move fork methods from gitrepository to gitforkcommands
 //
+// - add requirement about the repos and git command passed to the action
+// - pass on a real project instead of a project id
 
 class Git_ForkCrossProject_Test extends TuleapTestCase {
     public function testExecutes_ForkCrossProject_ActionWithForkRepositoriesView() {

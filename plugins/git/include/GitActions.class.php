@@ -507,8 +507,13 @@ class GitActions extends PluginActions {
     }
 
     function forkCrossProject($groupId, array $repos, $to_project, User $user, Layout $response) {
-        $forkCommand = new ForkExternalCommand($to_project);
-        $this->forkRepos($forkCommand, $groupId, $repos, $user, $response);
+        if (!$user->isMember($to_project->getId(), 'A')) {
+            $this->_addError('must_be_admin_to_create_project_repo');
+        } else {
+            $forkCommand = new ForkExternalCommand($to_project);
+            $this->forkRepos($forkCommand, $groupId, $repos, $user, $response);
+        }
+                
     }
     
     function forkRepos($forkCommand, $groupId, array $repos, User $user, Layout $response) {
