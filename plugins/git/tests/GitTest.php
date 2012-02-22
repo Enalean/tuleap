@@ -21,7 +21,7 @@ require_once (dirname(__FILE__).'/../include/Git.class.php');
 require_once(dirname(__FILE__).'/../../../src/common/valid/ValidFactory.class.php');
 require_once(dirname(__FILE__).'/../../../src/common/user/UserManager.class.php');
 Mock::generatePartial('Git', 'GitSpy', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
-Mock::generatePartial('Git', 'GitSpyForErrors', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect'));
+Mock::generatePartial('Git', 'GitSpyForErrors', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect', 'checkSynchronizerToken'));
 Mock::generate('UserManager');
 Mock::generate('Project');
 Mock::generate('ProjectManager');
@@ -41,12 +41,12 @@ class GitTest extends TuleapTestCase {
     }
 }
 //TODO 
-// - add token to forkcrossproject
 // - Ask the user to which project he wants to fork by listing all projects of which he is admin
 // - move fork methods from gitrepository to gitforkcommands
 // - treat todos in GitActionsTest
 // - in git->_doDispatchForkInternal and external do not pass on non existing repos  and remove the corresponding check in ForkCommands
 //
+// - add token to forkcrossproject
 // - add requirement about the repos and git command passed to the action
 // - pass on a real project instead of a project id
 // - verify that the user is admin of the project
@@ -80,6 +80,16 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $git->_addInstanceVars(null, null, null, null, $groupId);
         $git->setFactory($factory);
         $git->_doDispatchForkRepositories($request, $user);
+    }
+    
+    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() {
+        Mock::generatePartial('Git', 'GitSpyToken', array('checkSynchronizerToken'));
+        $git = new GitSpyToken();
+        $git->throwOn('checkSynchronizerToken', new Exception());
+        $git->_addInstanceVars(null, null, null, null, 101);
+        $this->expectException();
+        $git->_doDispatchForkRepositories(null, null);
+
     }
     
 }
@@ -147,6 +157,15 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
 
         $git->_doDispatchForkCrossProject($request, null);
     }
+    public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() {
+        $git = new GitSpyToken();
+        $git->throwOn('checkSynchronizerToken', new Exception());
+        $git->_addInstanceVars(null, null, null, null, 101);
+        $this->expectException();
+        $git->_doDispatchForkCrossProject(null, null);
+
+    }
+
 }
 
 

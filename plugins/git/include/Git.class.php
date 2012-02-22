@@ -435,7 +435,9 @@ class Git extends PluginController {
     }
 
     public function _doDispatchForkCrossProject($request, $user) {
+        $this->checkSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
         $validators = array(new Valid_UInt('to_project'), new Valid_Array('repos'));
+
         foreach ($validators as $validator) {
             $validator->required();
             if (!$request->valid($validator)) {
