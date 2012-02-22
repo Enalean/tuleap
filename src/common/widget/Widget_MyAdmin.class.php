@@ -74,7 +74,7 @@ class Widget_MyAdmin extends Widget {
 
         
         $i = 0;
-        $html_my_admin .= '<table width="100%">';
+        $html_my_admin .= '<table class="table table-bordered table-striped table-condensed" width="100%">';
         $html_my_admin .= $this->_get_admin_row(
             $i++, 
             $GLOBALS['Language']->getText('admin_main', 'pending_user',array("/admin/approve_pending_users.php?page=pending")),

@@ -48,7 +48,7 @@ class Widget_MyProjects extends Widget {
         if (!$result || $rows < 1) {
             $html .= $GLOBALS['Language']->getText('my_index', 'not_member');
         } else {
-            $html .= '<table cellspacing="0" class="widget_my_projects">';
+            $html .= '<table class="table table-bordered table-striped table-condensed widget_my_projects">';
             $i     = 0;
             $prevIsPublic = -1;
             while ($row = db_fetch_array($result)) {

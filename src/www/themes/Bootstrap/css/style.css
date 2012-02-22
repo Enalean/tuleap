@@ -262,9 +262,6 @@ a.login {
 #footer_debug pre {
     color: #404040;
 }
-table {
-    width: auto;
-}
 
 .container-fluid > .content.expand {
     margin-left: 0px;

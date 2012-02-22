@@ -55,7 +55,7 @@ class Widget_MyMonitoredForums extends Widget {
             $html_my_monitored_forums .= $GLOBALS['Language']->getText('my_index', 'my_forums_msg');
         } else {
             $request =& HTTPRequest::instance();
-            $html_my_monitored_forums .= '<table style="width:100%">';
+            $html_my_monitored_forums .= '<table class="table table-bordered table-striped table-condensed" style="width:100%">';
             for ($j=0; $j<$rows; $j++) {
                 $group_id = db_result($result,$j,'group_id');
         

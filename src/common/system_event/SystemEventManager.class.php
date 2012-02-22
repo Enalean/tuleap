@@ -422,7 +422,7 @@ class SystemEventManager {
     public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false, $filter_status = false, $filter_type = false) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
-        $html .= '<table width="100%">';
+        $html .= '<table class="table table-bordered table-striped table-condensed" width="100%">';
         
         if ($full) {
             $html .= '<thead><tr>';

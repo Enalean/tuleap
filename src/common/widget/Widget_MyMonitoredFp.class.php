@@ -54,7 +54,7 @@ class Widget_MyMonitoredFp extends Widget {
         if (!$result || $rows < 1) {
             $html_my_monitored_fp .= $GLOBALS['Language']->getText('my_index', 'my_files_msg');
         } else {
-            $html_my_monitored_fp .= '<table style="width:100%">';
+            $html_my_monitored_fp .= '<table class="table table-bordered table-striped table-condensed" style="width:100%">';
             $request =& HTTPRequest::instance();
             for ($j=0; $j<$rows; $j++) {
                 $group_id = db_result($result,$j,'group_id');

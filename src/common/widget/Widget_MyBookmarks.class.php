@@ -41,7 +41,7 @@ class Widget_MyBookmarks extends Widget {
             $html_my_bookmarks .= $GLOBALS['Language']->getText('my_index', 'no_bookmark');
             $html_my_bookmarks .= db_error();
         } else {
-            $html_my_bookmarks .= '<table style="width:100%">';
+            $html_my_bookmarks .= '<table class="table table-bordered table-striped table-condensed" style="width:100%">';
             for ($i=0; $i<$rows; $i++) {
                 $html_my_bookmarks .= '<TR class="'. util_get_alt_row_color($i) .'"><TD>';
                 $html_my_bookmarks .= '<A HREF="'. db_result($result,$i,'bookmark_url') .'">'. db_result($result,$i,'bookmark_title') .'</A> ';
