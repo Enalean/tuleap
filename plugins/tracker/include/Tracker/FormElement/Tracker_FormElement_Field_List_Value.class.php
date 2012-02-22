@@ -40,11 +40,9 @@ abstract class Tracker_FormElement_Field_List_Value {
      * @return string
      */
     public function fetchJson() {
-        return json_encode(
-            array(
-                'value'   => $this->getJsonId(),
-                'caption' => $this->getLabel(),
-            )
+        return array(
+            'value'   => $this->getJsonId(),
+            'caption' => $this->getLabel(),
         );
     }
     
