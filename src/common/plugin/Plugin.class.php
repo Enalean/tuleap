@@ -219,15 +219,7 @@ class Plugin {
      * @return String
      */
     public function getReadme() {
-        $file = $this->getFilesystemPath().'/README.txt';
-        if (is_file($file)) {
-            return file_get_contents($file);
-        }
-        $file = $this->getFilesystemPath().'/README';
-        if (is_file($file)) {
-            return file_get_contents($file);
-        }
-        return '';
+        return $this->getFilesystemPath().'/README';
     }
 }
 ?>
