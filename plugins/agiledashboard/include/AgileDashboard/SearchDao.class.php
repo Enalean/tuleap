@@ -78,20 +78,20 @@ class AgileDashboard_SearchDao extends DataAccessObject {
     public function searchArtifactsFromTrackers(array $trackerIds) {
         $trackerIds = implode(',', $trackerIds);
         $sql = "
-            SELECT ta.id,
-                   ta.last_changeset_id,
-                   tcvt.value AS title
+            SELECT artifact.id,
+                   artifact.last_changeset_id,
+                   CVT.value AS title
         
-            FROM       tracker_artifact  AS ta
-            INNER JOIN tracker_changeset AS tc ON tc.id = ta.last_changeset_id
+            FROM       tracker_artifact  AS artifact
+            INNER JOIN tracker_changeset AS c ON c.id = artifact.last_changeset_id
             LEFT JOIN (
-                           tracker_changeset_value      AS tcv
-                INNER JOIN tracker_changeset_value_text AS tcvt ON tcvt.changeset_value_id = tcv.id
-                INNER JOIN tracker_semantic_title       AS tst  ON tst.field_id            = tcv.field_id
+                           tracker_changeset_value      AS CV
+                INNER JOIN tracker_changeset_value_text AS CVT ON CVT.changeset_value_id = CV.id
+                INNER JOIN tracker_semantic_title       AS ST  ON ST.field_id            = CV.field_id
         
-            ) ON tcv.changeset_id = tc.id
+            ) ON CV.changeset_id = c.id
 
-            WHERE ta.tracker_id IN ($trackerIds)
+            WHERE artifact.tracker_id IN ($trackerIds)
             ORDER BY title
         ";
         return $this->retrieve($sql);
