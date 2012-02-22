@@ -23,7 +23,8 @@ require_once 'SharedField.class.php';
 
 class AgileDashboard_SearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts(array $sharedFields) {
+    public function searchMatchingArtifacts(array $trackerIds, array $sharedFields) {
+        $trackerIds = $this->da->quoteSmartImplode(',', $trackerIds);
         $sql = "
             SELECT artifact.id, artifact.last_changeset_id, CVT.value AS title
             FROM tracker_artifact AS artifact
@@ -35,6 +36,7 @@ class AgileDashboard_SearchDao extends DataAccessObject {
                     INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id       = CVT.changeset_value_id)
             ) ON (c.id = CV.changeset_id)
             WHERE artifact.use_artifact_permissions = 0
+            AND   artifact.tracker_id IN ($trackerIds)
             ORDER BY title
         ";
         return $this->retrieve($sql);

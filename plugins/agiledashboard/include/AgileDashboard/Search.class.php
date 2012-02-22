@@ -49,13 +49,14 @@ class AgileDashboard_Search {
     }
     
     public function getMatchingArtifacts(Project $project, $criteria=null) {
-        $sharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
-        if (count($sharedFields) > 0) { 
-            return $this->dao->searchMatchingArtifacts($sharedFields);
+        $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
+        
+        $projectSharedFields = $this->formElementFactory->getAllProjectSharedFields($project);
+        $trackerIds          = array_map(array($this, 'getTrackerId'), $projectSharedFields);
+        
+        if (count($searchedSharedFields) > 0) { 
+            return $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
         } else {
-            $fields     = $this->formElementFactory->getAllProjectSharedFields($project);
-            $trackerIds = array_map(array($this, 'getTrackerId'), $fields);
-            
             return $this->dao->searchArtifactsFromTrackers($trackerIds);
         }
     }

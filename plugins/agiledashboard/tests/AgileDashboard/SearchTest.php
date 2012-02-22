@@ -39,12 +39,19 @@ class AgileDashboard_SearchTest extends UnitTestCase {
     function testGetMatchingArtifactsDelegatesToSharedFieldFactoryAndSearchDao() {
         $criteria  = array('220' => array('values' => array('350')));
         
+        $fields = array(aTextField()->withTrackerId(201)->build(),
+                        aStringField()->withTrackerId(202)->build());
+        
+        $trackerIds = array (201, 202);
+        
+        $this->formElementFactory->setReturnValue('getAllProjectSharedFields', $fields, array($this->project));
+        
         $sharedFields = array(new AgileDashboard_SharedField());
         
         $this->sharedFieldFactory->expectOnce('getSharedFields', array($criteria));
         $this->sharedFieldFactory->setReturnValue('getSharedFields', $sharedFields);
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array($sharedFields));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array($trackerIds, $sharedFields));
         
         $this->search->getMatchingArtifacts($this->project, $criteria);
     }

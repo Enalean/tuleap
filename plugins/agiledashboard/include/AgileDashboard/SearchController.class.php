@@ -91,11 +91,7 @@ class AgileDashboard_SearchController {
     }
     
     private function getArtifacts(Project $project) {
-        if ($this->request->exist('criteria')) {
-            return $this->search->getMatchingArtifacts($project, $this->request->get('criteria'));
-        } else {
-            return array();
-        }
+        return $this->search->getMatchingArtifacts($project, $this->request->get('criteria'));
     }
     
     
