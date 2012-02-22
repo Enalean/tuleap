@@ -1,5 +1,5 @@
-DISCLAIMER: plugin still in beta, do not use it on production servers.
-DISCLAIMER: Your data might be trashed in a future update.
+Version 5.0 - Tuleap 4.0.27
+  * Change version number
 
 Version 0.9.1 - Tuleap 4.0.27
   * Refactoring: better naming

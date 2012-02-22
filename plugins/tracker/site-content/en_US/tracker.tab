@@ -1,10 +1,10 @@
-plugin_tracker	descriptor_description	Next gen Trackers
+plugin_tracker	descriptor_description	Trackers new generation
 plugin_tracker	descriptor_name	Tracker
 
 plugin_tracker	title	Tracker
 
-plugin_tracker	service_lbl_key	Trackers v5
-plugin_tracker	service_desc_key	Project Trackers v5
+plugin_tracker	service_lbl_key	Trackers
+plugin_tracker	service_desc_key	Project Trackers
 
 #/**
 #  *

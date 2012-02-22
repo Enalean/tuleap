@@ -1,9 +1,13 @@
 Version 4.0.27 - NOT RELEASED YET
    == Enhancement ==
    * Themes Tuleap 2.0. Official logo & colors.
+   * Rename 'Tracker' service into 'Tracker v3'. 
+   ** For trackerv3, it can be customized into 'site-content/<lang>/project/project.tab' with key (project_admin_editservice, service_tracker_lbl_key)
+   ** For trackerv5, it can be customized into 'plugins/tracker/site-content/<lang>/tracker.tab' with key (plugin_tracker, service_lbl_key)
 
    == Plugins ==
-   Tracker v0.9.1. See separte ChangeLog.
+   * Tracker v5.0 See separate ChangeLog.
+   * GraphOnTrackerV5 v5.0 See separate ChangeLog.
 
 Version 4.0.26.1 (Wednesday, February 8th 2012)
     == Bug Fix ==

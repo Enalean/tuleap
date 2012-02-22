@@ -82,8 +82,8 @@ project_admin_editservice	service_cvs_lbl_key	CVS
 project_admin_editservice	service_cvs_desc_key	Accès CVS
 project_admin_editservice	service_file_lbl_key	Fichiers
 project_admin_editservice	service_file_desc_key	Publication de fichiers
-project_admin_editservice	service_tracker_lbl_key	Suivi
-project_admin_editservice	service_tracker_desc_key	Outils de suivi du projet
+project_admin_editservice	service_tracker_lbl_key	Suivi v3
+project_admin_editservice	service_tracker_desc_key	Outils de suivi (version 3) du projet
 project_admin_editservice	service_svn_lbl_key	Subversion
 project_admin_editservice	service_svn_desc_key	Accès Subversion
 project_admin_editservice	service_wiki_lbl_key	Wiki
