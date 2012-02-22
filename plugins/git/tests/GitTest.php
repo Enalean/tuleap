@@ -20,7 +20,7 @@
 require_once (dirname(__FILE__).'/../include/Git.class.php');
 require_once(dirname(__FILE__).'/../../../src/common/valid/ValidFactory.class.php');
 require_once(dirname(__FILE__).'/../../../src/common/user/UserManager.class.php');
-Mock::generatePartial('Git', 'GitSpy', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView'));
+Mock::generatePartial('Git', 'GitSpy', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
 Mock::generatePartial('Git', 'GitSpyForErrors', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect'));
 Mock::generate('UserManager');
 Mock::generate('Project');
@@ -41,14 +41,48 @@ class GitTest extends TuleapTestCase {
     }
 }
 //TODO 
-// - verify that the user is admin of the project
-// - clean gitaction tests of duplication
+// - add token to forkcrossproject
 // - Ask the user to which project he wants to fork by listing all projects of which he is admin
 // - move fork methods from gitrepository to gitforkcommands
+// - treat todos in GitActionsTest
+// - in git->_doDispatchForkInternal and external do not pass on non existing repos  and remove the corresponding check in ForkCommands
 //
 // - add requirement about the repos and git command passed to the action
 // - pass on a real project instead of a project id
+// - verify that the user is admin of the project
+// - clean gitaction tests of duplication
+class Git_ForkRepositories_Test extends TuleapTestCase {
+    public function testRenders_ForkRepositories_View() {
+        Mock::generatePartial('Git', 'GitSpy2', array('_doDispatchForkRepositories', 'addView'));
+        $git = new GitSpy2();
+        $request = new Codendi_Request(array());
+        $git->_addInstanceVars($request, null);
+        $git->expectOnce('addView', array('forkRepositories'));
+        $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
 
+    }
+    public function testExecutes_ForkRepositories_ActionWithAListOfRepos() {
+        $groupId = 101;
+        $repo = new GitRepository();
+        $repos = array($repo);
+        $user = new User();
+        $user->setUserName('Ben');
+        $path = userRepoPath('Ben', 'toto');
+        
+        $factory = new MockGitRepositoryFactory();
+        $factory->setReturnValue('getRepository', $repo);
+        
+        $git = new GitSpy();
+        $git->expectAt(0, 'addAction', array('getProjectRepositoryList', array($groupId)));
+        $git->expectAt(1,'addAction', array('forkRepositories', array($groupId, $repos, $path, $user, $GLOBALS['HTML'])));
+        $request = new Codendi_Request(array('repos' => array('1001'),
+            'path' => 'toto'));
+        $git->_addInstanceVars(null, null, null, null, $groupId);
+        $git->setFactory($factory);
+        $git->_doDispatchForkRepositories($request, $user);
+    }
+    
+}
 class Git_ForkCrossProject_Test extends TuleapTestCase {
     public function testExecutes_ForkCrossProject_ActionWithForkRepositoriesView() {
         $user = new User();

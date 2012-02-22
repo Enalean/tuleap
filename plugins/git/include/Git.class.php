@@ -454,10 +454,14 @@ class Git extends PluginController {
         $this->addAction('forkCrossProject', array($this->groupId, $repos, $to_project, $user, $GLOBALS['HTML']));
     }
 
+    public function checkSynchronizerToken($url) {
+        $token = new CSRFSynchronizerToken($url);  
+        $token->check();
+    } 
+    
     public function _doDispatchForkRepositories($request, $user) {
         $this->addAction('getProjectRepositoryList', array($this->groupId));
-        $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
-        $token->check();
+        $this->checkSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
 
         $repos_ids = array();
 
@@ -475,8 +479,11 @@ class Git extends PluginController {
         if($request->validArray($valid)) {
             $repos_ids = $request->get('repos');
         }
-
-        $this->addAction('forkRepositories', array($this->groupId, $repos_ids, $path, $user, $GLOBALS['HTML']));
+        $repos = array();
+        foreach ($repos_ids as $id) {
+            $repos[] = $this->factory->getRepository($this->groupId, $id);
+        }
+        $this->addAction('forkRepositories', array($this->groupId, $repos, $path, $user, $GLOBALS['HTML']));
         
     }
 }
