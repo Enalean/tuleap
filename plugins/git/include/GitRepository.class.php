@@ -617,25 +617,29 @@ class GitRepository implements DVCSRepository {
         $this->getBackend()->createFork($clone);
     }
         
-    public function fork($namespace, $user) {
+    public function forkIndividual($namespace, $user) {
+        $scope = self::REPO_SCOPE_INDIVIDUAL;
+        $this->_fork($user, $namespace, $scope, $this->project);
+    }
+
+    public function forkCrossProject($project, $user) {
+        $scope = self::REPO_SCOPE_PROJECT;
+        $this->_fork($user, '', $scope, $project);
+    }
+    
+    private function _fork($user, $namespace, $scope, $project) {
         $clone = clone $this;
-                
+        $clone->setProject($project);
         $clone->setCreator($user);
         $clone->setParent($this);
         $clone->setNamespace($namespace);
         $clone->setId(null);
-        $path = unixPathJoin(array($this->project->getUnixName(), $namespace, $this->getName())).'.git';
+        $path = unixPathJoin(array($project->getUnixName(), $namespace, $this->getName())).'.git';
         $clone->setPath($path);
-        $clone->setScope(self::REPO_SCOPE_INDIVIDUAL);
+        $clone->setScope($scope);
         $this->getBackend()->fork($this, $clone);
     }
     
-
-    public function forkExternal($project, $user) {
-        $clone = clone $this;
-        $clone->setProject($project);
-        $this->getBackend()->fork($this, $clone);
-    }
     /**
      * Create a reference repository
      */

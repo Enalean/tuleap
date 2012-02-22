@@ -577,7 +577,7 @@ class ForkExternalCommand extends CanReadFork {
     }
     
     public function dofork($repo, User $user) {
-        $repo->forkExternal($this->to_project, $user);
+        $repo->forkCrossProject($this->to_project, $user);
     }
 }
 
@@ -587,7 +587,7 @@ class ForkIndividualCommand extends CanReadFork{
     }
     
     public function dofork($repo, User $user) {
-        $repo->fork($this->path, $user);
+        $repo->forkIndividual($this->path, $user);
     }
 }
 

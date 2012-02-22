@@ -445,7 +445,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $user->setReturnValue('getId', 123);
         
         $controller = new MockGit($this);
-        $repos = $this->getRepoCollectionFor('fork', array($path, $user), $repositories, $user);
+        $repos = $this->getRepoCollectionFor('forkIndividual', array($path, $user), $repositories, $user);
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
@@ -464,7 +464,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         
         $controller = new MockGit($this);
         
-        $repos = $this->getRepoCollectionFor('fork', array($path, $user), $repositories, $user);
+        $repos = $this->getRepoCollectionFor('forkIndividual', array($path, $user), $repositories, $user);
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
@@ -483,7 +483,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $to_project->setReturnValue('getId', 2);
         
         $controller = new MockGit($this);
-        $repos = $this->getRepoCollectionFor('forkExternal', array($to_project, $user), $repositories, $user);
+        $repos = $this->getRepoCollectionFor('forkCrossProject', array($to_project, $user), $repositories, $user);
 
         
         $systemEventManager = new MockSystemEventManager();
@@ -521,9 +521,8 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $repo = new MockGitRepository();
         $repo->setReturnValue('getId', $id);
         $repo->setReturnValue('userCanRead', true, array($user));
-        $repo->expectOnce('forkExternal', array($to_project, $user));
+        $repo->expectOnce('forkCrossProject', array($to_project, $user));
         $repos = array($repo);
-
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
@@ -540,7 +539,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         
         $user = new MockUser();
         $user->setReturnValue('getId', 123);
-        $repos = $this->getRepoCollectionUnreadableFor('forkExternal', $repositories, $user);
+        $repos = $this->getRepoCollectionUnreadableFor('forkCrossProject', $repositories, $user);
         
         $to_project = new MockProject();
         $to_project->setReturnValue('getId', 2);
@@ -609,7 +608,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $user = new MockUser();
         
         $controller = new MockGit($this);
-        $repos = $this->getRepoCollectionFor('fork', array($path, $user), $repositories, $user);
+        $repos = $this->getRepoCollectionFor('forkIndividual', array($path, $user), $repositories, $user);
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
