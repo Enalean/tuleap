@@ -23,6 +23,8 @@ require_once(dirname(__FILE__).'/../../../src/common/user/UserManager.class.php'
 Mock::generatePartial('Git', 'GitSpy', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView'));
 Mock::generatePartial('Git', 'GitSpyForErrors', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect'));
 Mock::generate('UserManager');
+Mock::generate('Project');
+Mock::generate('ProjectManager');
 Mock::generate('GitRepositoryFactory');
 class GitTest extends TuleapTestCase {
     public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView() {
@@ -38,26 +40,44 @@ class GitTest extends TuleapTestCase {
         $git->request();
     }
 }
-//TODO add requirement about the repos and git command passed to the action
-//Todo pass on a real project instead of a project id
+//TODO 
+// - add requirement about the repos and git command passed to the action
+// - pass on a real project instead of a project id
+// - verify that the user is admin of the project
+// - move fork methods from gitrepository to gitforkcommands
+// - clean gitaction tests of duplication
+// - Ask the user to which project he wants to fork by listing all projects of which he is admin
+//
+
 class Git_ForkCrossProject_Test extends TuleapTestCase {
     public function testExecutes_ForkCrossProject_ActionWithForkRepositoriesView() {
         $user = new User();
-        $toProject = 100;
-        $repos = array('my-repo');
+        $toProjectId = 100;
+        $toProject = new MockProject();
+        $toProject->setReturnValue('getId', $toProjectId);
+        $repo = new GitRepository();
+        $repos = array($repo);
+        $repo_ids = array(200);
         $usermanager = new MockUserManager();
         $usermanager->setReturnValue('getCurrentUser', $user);
 
+        $projectManager = new MockProjectManager();
+        $projectManager->setReturnValue('getProject', $toProject, array($toProjectId));
         $git = new GitSpy();
-        $git->expectOnce('addAction', array('forkCrossProject', array($toProject, $repos, $user)));
+        //forkCommand, $groupId, array $repos, User $user, Layout $response
+        $groupId = 101;
+        $git->expectOnce('addAction', array('forkCrossProject', array($groupId, $repos, $toProject, $user, $GLOBALS['HTML'])));
         $git->expectOnce('addView', array('forkRepositories'));
 
         $request = new Codendi_Request(array(
-                                        'to_project' => $toProject,
-                                        'repos' => $repos));
+                                        'to_project' => $toProjectId,
+                                        'repos' => $repo_ids));
 
-        $git->_addInstanceVars($request, $usermanager);
-        $git->setFactory(new MockGitRepositoryFactory());
+        $git->_addInstanceVars($request, $usermanager, null, null, $groupId);
+        $git->setProjectManager($projectManager);
+        $repositoryFactory = new MockGitRepositoryFactory();
+        $repositoryFactory->setReturnValue('getRepository', $repo, array($groupId, $repo_ids[0]));
+        $git->setFactory($repositoryFactory);
 
         $git->_dispatchActionAndView('fork_cross_project', null, null, $user);
     }

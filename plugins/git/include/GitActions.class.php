@@ -503,15 +503,15 @@ class GitActions extends PluginActions {
      */
     function forkRepositories($groupId, array $repos, $path, User $user, Layout $response) {
         $forkCommand = new ForkIndividualCommand($path);
-        $this->_forkRepos($forkCommand, $groupId, $repos, $user, $response);
+        $this->forkRepos($forkCommand, $groupId, $repos, $user, $response);
     }
 
     function forkCrossProject($groupId, array $repos, $to_project, User $user, Layout $response) {
         $forkCommand = new ForkExternalCommand($to_project);
-        $this->_forkRepos($forkCommand, $groupId, $repos, $user, $response);
+        $this->forkRepos($forkCommand, $groupId, $repos, $user, $response);
     }
     
-    function _forkRepos($forkCommand, $groupId, array $repos, User $user, Layout $response) {
+    function forkRepos($forkCommand, $groupId, array $repos, User $user, Layout $response) {
         $forked = $forkCommand->fork($repos, $user);
         if ($forked) {
             $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());

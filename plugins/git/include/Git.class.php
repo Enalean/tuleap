@@ -42,12 +42,18 @@ class Git extends PluginController {
      */
     private $userManager;
     
+    /**
+     * @var ProjectManager
+     */
+    private $projectManager;
+    
     public function __construct(GitPlugin $plugin) {
         parent::__construct();
         
         $this->userManager = UserManager::instance();
         
         $this->factory = new GitRepositoryFactory();
+        $this->projectManager = ProjectManager::instance();
         
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -61,7 +67,7 @@ class Git extends PluginController {
             //get repository by name and group id to retrieve repo id
                $repo = new GitRepository();
                $repo->setName($matches[3][0]);
-               $repo->setProject( ProjectManager::instance()->getProject($matches[1][0]) );
+               $repo->setProject( $this->projectManager->getProject($matches[1][0]) );
                try {
                    $repo->load();
                } catch (Exception $e) {                   
@@ -92,7 +98,7 @@ class Git extends PluginController {
             $this->redirect('/');
         }
       
-        $this->projectName      = ProjectManager::instance()->getProject($this->groupId)->getUnixName();
+        $this->projectName      = $this->projectManager->getProject($this->groupId)->getUnixName();
         if ( !PluginManager::instance()->isPluginAllowedForProject($this->plugin, $this->groupId) ) {
             $this->addError( $this->getText('project_service_not_available') );
             $this->redirect('/projects/'.$this->projectName.'/');
@@ -101,6 +107,11 @@ class Git extends PluginController {
         $this->permittedActions = array();
     }
     
+    public function setProjectManager($projectManager) {
+        $this->projectManager = $projectManager;
+    }
+
+        
     public function setFactory(GitRepositoryFactory $factory) {
         $this->factory = $factory;
     }
@@ -434,12 +445,13 @@ class Git extends PluginController {
             }
         }
         $toProjectId = $request->get('to_project');
+        $to_project = $this->projectManager->getProject($toProjectId);
         $repoIds = $request->get('repos');
         $repos = array();
         foreach ($repoIds as $id) {
             $repos[] = $this->factory->getRepository($this->groupId, $id);
         }
-        $this->addAction('forkCrossProject', array($toProjectId, $repoIds, $user));
+        $this->addAction('forkCrossProject', array($this->groupId, $repos, $to_project, $user, $GLOBALS['HTML']));
     }
 
     public function _doDispatchForkRepositories($request, $user) {
