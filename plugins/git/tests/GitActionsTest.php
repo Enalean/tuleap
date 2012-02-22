@@ -34,16 +34,17 @@ Mock::generate('GitRepositoryFactory');
 Mock::generate('User');
 Mock::generate('SystemEventManager');
 Mock::generate('Layout');
-
-class GitActionsTest extends UnitTestCase {
-
-    function setUp() {
+class AbstractGitActionsTest extends UnitTestCase {
+        function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage();
         $GLOBALS['Language']->setReturnValue('getText', 'actions_no_repository_selected', array('plugin_git', 'actions_no_repository_selected', '*'));
     }
     function tearDown() {
         unset($GLOBALS['Language']);
     }
+}
+class GitActionsTest extends AbstractGitActionsTest {
+
     function testRepoManagement() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
@@ -430,10 +431,12 @@ class GitActionsTest extends UnitTestCase {
         $action->getProjectRepositoryList($projectId, $userId);
     }
 
+}
+class GitActions_Fork_Test extends AbstractGitActionsTest {
     /**
      *TOdo use partial mock to just verify that it calls forkRepos() ? 
      */
-    function testForkShouldCloneOneRepository() {
+    function testForkRepositories() {
         $repositories = array('1');
         $path = 'toto';
         $group_id = 101;
@@ -452,7 +455,7 @@ class GitActionsTest extends UnitTestCase {
         $action->forkRepositories($group_id, $repos, $path, $user, $layout);
     }
     
-    function testForkShouldCloneManyRepositories() {
+    function testClonesManyInternalRepositories() {
         $repositories = array('1', '2', '3');
         $path = 'toto';
         $group_id = 101;
@@ -470,8 +473,28 @@ class GitActionsTest extends UnitTestCase {
         $action = new GitActions($controller, $systemEventManager);
         $action->forkRepositories($group_id, $repos, $path, $user, $layout);
     }
+    function testCloneManyExternalRepositories() {
+        $repositories = array('1', '2', '3');
+        $group_id = 101;
+        
+        $user = new MockUser();
+        $user->setReturnValue('getId', 123);
+        $to_project = new MockProject();
+        $to_project->setReturnValue('getId', 2);
+        
+        $controller = new MockGit($this);
+        $repos = $this->getRepoCollectionFor('forkExternal', array($to_project, $user), $repositories, $user);
+
+        
+        $systemEventManager = new MockSystemEventManager();
+        $layout = new MockLayout();
+        $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
+        
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkRepos(new ForkExternalCommand($to_project), $group_id, $repos, $user, $layout);
+    }
     
-    function testForkRepos_selectNoRepositoryToCloneShouldDisplayAWarning() {
+    function testWhenNoRepositorySelectedItAddsWarning() {
         $group_id = 101;
         $controller = new MockGit($this);
 
@@ -485,7 +508,7 @@ class GitActionsTest extends UnitTestCase {
         $action = new GitActions($controller, $systemEventManager);
         $action->forkRepos(new ForkIndividualCommand(''), $group_id, $repos, new MockUser(), $layout);
     }
-    function testForkCrossProjectShouldCloneOneRepository() {
+    function testClonesOneRepository() {
         $id = '1';
         $group_id = 101;
         
@@ -510,28 +533,8 @@ class GitActionsTest extends UnitTestCase {
         $action->forkRepos(new ForkExternalCommand($to_project), $group_id, $repos, $user, $layout);
     }
     
-    function testForkCrossProjectShouldCloneManyRepositories() {
-        $repositories = array('1', '2', '3');
-        $group_id = 101;
-        
-        $user = new MockUser();
-        $user->setReturnValue('getId', 123);
-        $to_project = new MockProject();
-        $to_project->setReturnValue('getId', 2);
-        
-        $controller = new MockGit($this);
-        $repos = $this->getRepoCollectionFor('forkExternal', array($to_project, $user), $repositories, $user);
 
-        
-        $systemEventManager = new MockSystemEventManager();
-        $layout = new MockLayout();
-        $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
-        
-        $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepos(new ForkExternalCommand($to_project), $group_id, $repos, $user, $layout);
-    }
-    
-    function testForkCrossProjectShouldNotCloneUnreadableRepos() {
+    function testDoesntCloneUnreadableRepos() {
         $repositories = array('1', '2', '3');
         $group_id = 101;
         
@@ -543,7 +546,6 @@ class GitActionsTest extends UnitTestCase {
         $to_project->setReturnValue('getId', 2);
         
         $controller = new MockGit($this);
-
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
@@ -552,10 +554,9 @@ class GitActionsTest extends UnitTestCase {
         $action = new GitActions($controller, $systemEventManager);
         $action->forkCrossProject($group_id, $repos, $to_project, $user, $layout);
     }
-    function testForkCrossProjectRequiresTheUserToBeAdminOfTheDestinationProject() {
+    function testUserMustBeAdminOfTheDestinationProject() {
         $controller = new MockGit($this);
         $action = new GitActions($controller, new MockSystemEventManager());
-//        $command->expectNever('fork');
         $layout = new MockLayout();
 
         $to_project = new MockProject();
@@ -564,10 +565,11 @@ class GitActionsTest extends UnitTestCase {
         $user = new MockUser();
         $user->setReturnValue('isMember', false, array($to_project->getId(), 'A'));
         $layout->expectNever('redirect');
-        
         $adminMsg = 'must_be_admin_to_create_project_repo';
         $GLOBALS['Language']->setReturnValue('getText', $adminMsg, array('plugin_git', $adminMsg, '*'));
+        
         $controller->expectOnce('addError', array($adminMsg));
+        
         $action->forkCrossProject(null, array(), $to_project, $user, $layout);
     }
     
