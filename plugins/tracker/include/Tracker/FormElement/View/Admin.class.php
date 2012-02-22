@@ -125,6 +125,7 @@ class Tracker_FormElement_View_Admin {
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').': ';
         $html .= '<br />';
         $html .= $this->formElement->getLabel();
+        $html .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
         $html .= '</p>';
         $html .= $this->fetchCustomHelp();
         return $html;
