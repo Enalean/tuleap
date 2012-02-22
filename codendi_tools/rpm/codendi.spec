@@ -357,6 +357,16 @@ Requires: %{PKG_NAME}-plugin-tracker
 %description plugin-cardwall
 Fancy cardwall output on top of Tracker v5
 
+%package plugin-agiledashboard
+Summary: Agile dashboard
+Group: Development/Tools
+Version: @@PLUGIN_AGILEDASHBOARD_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}-plugin-tracker, %{PKG_NAME}-plugin-cardwall
+%description plugin-agiledashboard
+Agile Dashboard aims to provide an nice integration of Scrum/Kanban
+tool on top of Tracker.
+
 #
 ## Themes
 #
@@ -913,6 +923,10 @@ fi
 %files plugin-cardwall
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/cardwall
+
+%files plugin-agiledashboard
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/agiledashboard
 
 #
 # Themes
