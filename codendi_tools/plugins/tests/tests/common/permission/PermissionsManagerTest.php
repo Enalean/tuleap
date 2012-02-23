@@ -26,60 +26,60 @@ Mock::generate('PermissionsDao');
 class PermissionsManagerTest extends UnitTestCase {
     
     function testDuplicatePermissionsPassParamters() {
-        $source          = 123;
-        $target          = 234;
-        $permission_type = 'STUFF_READ';
-        $ugroup_mapping  = array(110 => 210,
-                                 120 => 220);
+        $source           = 123;
+        $target           = 234;
+        $permission_types = array('STUFF_READ');
+        $ugroup_mapping   = array(110 => 210,
+                                  120 => 220);
         $duplicate_type  = PermissionsDao::DUPLICATE_SAME_PROJECT;
         
         $dao = new MockPermissionsDao();
-        $dao->expectOnce('duplicatePermissions', array($source, $target, $permission_type, $duplicate_type, $ugroup_mapping));
+        $dao->expectOnce('duplicatePermissions', array($source, $target, $permission_types, $duplicate_type, $ugroup_mapping));
         
         $permissionsManager = new PermissionsManager($dao);
         
-        $permissionsManager->duplicatePermissions($source, $target, $permission_type, $ugroup_mapping, $duplicate_type);
+        $permissionsManager->duplicatePermissions($source, $target, $permission_types, $ugroup_mapping, $duplicate_type);
     }
     
     function testDuplicateSameProjectShouldNotHaveUgroupMapping() {
-        $source          = 123;
-        $target          = 234;
-        $permission_type = 'STUFF_READ';
+        $source           = 123;
+        $target           = 234;
+        $permission_types = array('STUFF_READ');
         
         $dao = new MockPermissionsDao();
-        $dao->expectOnce('duplicatePermissions', array($source, $target, $permission_type, PermissionsDao::DUPLICATE_SAME_PROJECT, false));
+        $dao->expectOnce('duplicatePermissions', array($source, $target, $permission_types, PermissionsDao::DUPLICATE_SAME_PROJECT, false));
         
         $permissionsManager = new PermissionsManager($dao);
         
-        $permissionsManager->duplicateWithStatic($source, $target, $permission_type);
+        $permissionsManager->duplicateWithStatic($source, $target, $permission_types);
     }
     
     function testDuplicateNewProjectShouldHaveUgroupMapping() {
-        $source          = 123;
-        $target          = 234;
-        $permission_type = 'STUFF_READ';
-        $ugroup_mapping  = array(110 => 210,
-                                 120 => 220);
+        $source           = 123;
+        $target           = 234;
+        $permission_types = array('STUFF_READ');
+        $ugroup_mapping   = array(110 => 210,
+                                  120 => 220);
         
         $dao = new MockPermissionsDao();
-        $dao->expectOnce('duplicatePermissions', array($source, $target, $permission_type, PermissionsDao::DUPLICATE_NEW_PROJECT, $ugroup_mapping));
+        $dao->expectOnce('duplicatePermissions', array($source, $target, $permission_types, PermissionsDao::DUPLICATE_NEW_PROJECT, $ugroup_mapping));
         
         $permissionsManager = new PermissionsManager($dao);
         
-        $permissionsManager->duplicateWithStaticMapping($source, $target, $permission_type, $ugroup_mapping);
+        $permissionsManager->duplicateWithStaticMapping($source, $target, $permission_types, $ugroup_mapping);
     }
     
     function testDuplicateOtherProjectShouldNotHaveUgroupMapping() {
-        $source          = 123;
-        $target          = 234;
-        $permission_type = 'STUFF_READ';
+        $source           = 123;
+        $target           = 234;
+        $permission_types = array('STUFF_READ');
         
         $dao = new MockPermissionsDao();
-        $dao->expectOnce('duplicatePermissions', array($source, $target, $permission_type, PermissionsDao::DUPLICATE_OTHER_PROJECT, false));
+        $dao->expectOnce('duplicatePermissions', array($source, $target, $permission_types, PermissionsDao::DUPLICATE_OTHER_PROJECT, false));
         
         $permissionsManager = new PermissionsManager($dao);
         
-        $permissionsManager->duplicateWithoutStatic($source, $target, $permission_type);
+        $permissionsManager->duplicateWithoutStatic($source, $target, $permission_types);
     }
 }
 
