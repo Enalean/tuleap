@@ -131,6 +131,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $artifact  = new MockTracker_Artifact();
         $artifact->expectOnce('fetchDirectLinkToArtifact');
         $artifact->setReturnValue('getId', $id);
+        $artifact->setReturnValue('getTracker', new MockTracker());
         return $artifact;
     }
     
