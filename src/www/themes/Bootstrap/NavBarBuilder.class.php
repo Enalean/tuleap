@@ -45,6 +45,7 @@ class NavBarBuilder {
                         $this->getNavProjects().
                         '
                         <li><a href="/search/?words=%%%&type_of_search=people">Users</a></li>'.
+                        $this->getNavAdmin().
                         $this->getNavHelp().
                         '
                       </ul>
@@ -57,6 +58,15 @@ class NavBarBuilder {
                     </div> 
                   </div> 
                 </div>';
+        return $html;
+    }
+
+    private function getNavAdmin() {
+        $html  = '';
+        if ($this->user->isSuperUser()) {
+            $html .= '<li class="'. $this->getClassnameNavItemActive('/admin/', 'admin') .'">';
+            $html .= '<a href="/admin/">Admin</a></li>';
+        }
         return $html;
     }
 
