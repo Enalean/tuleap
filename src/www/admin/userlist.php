@@ -141,8 +141,10 @@ $breadcrumbs = array(
          'title' => $Language->getText('admin_main', 'header_user'),
      ),
 );
+$title = $Language->getText('admin_userlist','title');
+site_admin_header_without_default_title(array('title' => $title), $breadcrumbs);
+echo '<h2>'. $title .'</h2>';
 
-site_admin_header(array('title'=>$Language->getText('admin_userlist','title')), $breadcrumbs);
 echo "<p>";
 echo $Language->getText('admin_userlist','user_list').":  ";
 if (!$group_id) {

@@ -11,7 +11,7 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('common/include/ForgeUpgradeConfig.class.php');
 require_once('common/plugin/PluginManager.class.php');
 require_once('common/plugin/PluginHookPriorityManager.class.php');
-
+require_once 'www/admin/admin_utils.php';
 class PluginsAdministrationViews extends Views {
     
     function PluginsAdministrationViews(&$controler, $view=null) {
@@ -21,7 +21,13 @@ class PluginsAdministrationViews extends Views {
     function header() {
         $title = $GLOBALS['Language']->getText('plugin_pluginsadministration','title');
         //$GLOBALS['HTML']->includeJavascriptFile('/scripts/scriptaculous/scriptaculous.js');
-        $GLOBALS['HTML']->header(array('title'=>$title, 'selected_top_tab' => 'admin'));
+        $breadcrumbs = array(
+                             array(
+                                   'url'   => '/plugins/pluginsadministration/',
+                                   'title' => $title,
+                                  ),
+                            );
+        site_admin_header_without_default_title(array('title'=>$title, 'selected_top_tab' => 'admin'), $breadcrumbs);
         echo '<h2>'.$title.'&nbsp;'.$this->_getHelp().'</h2>';
     }
     function footer() {
@@ -442,7 +448,7 @@ EOS;
                 $output .=   '</a>';
             }
             $output .= '</td>';
-            $output .= '<tr>';
+            $output .= '</tr>';
         }
         $output .= '</table>';
         $output .= '</form></fieldset>';
