@@ -125,7 +125,7 @@ class AgileDashboard_SearchView {
     private function fetchTable() {
         if (count($this->artifacts)) {
             $html = '';
-            $html .= '<table>';
+            $html .= '<table class="sortable">';
             $html .= $this->fetchTHead();
             $html .= $this->fetchTBody();
             $html .= '</table>';
@@ -160,13 +160,13 @@ class AgileDashboard_SearchView {
     private function fetchTHead() {
         $html = '';
         $html .= '<thead>';
-        $html .= '<tr class="boxtable">';
-        $html .= '<td class="boxtitle">id</td>';
-        $html .= '<td class="boxtitle">'.$this->language->getText('plugin_agiledashboard', 'summary').'</td>';
+        $html .= '  <tr class="boxtable">';
+        $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
+        $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$this->language->getText('plugin_agiledashboard', 'summary').'</span></th>';
         foreach ($this->criteria as $header) {
-            $html .= '<td class="boxtitle">'. $header->field->getLabel().'</td>';
+            $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
         }
-        $html .= '</tr>';
+        $html .= '  </tr>';
         $html .= '</thead>';
         return $html;
     }
