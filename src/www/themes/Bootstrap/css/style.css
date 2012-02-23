@@ -37,6 +37,7 @@ body {
     /* color: white; /**/
     color: #404040;
 }
+/*
 .content h2 {
     color: #DA5A14;
     border-bottom: 1px solid #ddd;
@@ -48,6 +49,7 @@ body {
 
 .content h3 {
 }
+    */
 .content li {
     color: #404040;
 }
@@ -220,7 +222,7 @@ a.login {
 }
 
 
-
+/*
 
 .homepage .hero-unit {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
@@ -244,7 +246,7 @@ a.login {
 .homepage .row {
     margin-bottom: 40px;
 }
-
+*/
 #footer_debug {
     background: black;
     padding: 1em;
@@ -263,6 +265,3 @@ a.login {
     color: #404040;
 }
 
-.container-fluid > .content.expand {
-    margin-left: 0px;
-}

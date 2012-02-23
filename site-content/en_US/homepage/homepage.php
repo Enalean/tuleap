@@ -30,28 +30,46 @@ if (isset($GLOBALS['sys_exchange_policy_url'])) {
     $exchangePolicyUrl = "/plugins/docman/?group_id=1";
 }
 ?>
+<div class="hero-unit">
+    <h1>Collaborative Software Development at <?= $GLOBALS['sys_org_name']?></h1>
+    <p><a href="/docs/site/about_codendi.php"><?= $GLOBALS['sys_name']?></a> is a service to all 
+    <?= $GLOBALS['sys_org_name']?> software development teams.i</p>
 
-<div class="slogan">Collaborative Software Development at <?= $GLOBALS['sys_org_name']?></div>
+    <P><?= $GLOBALS['sys_name']?> offers an easy access to a full featured and totally web-based project management environment.
+    Using <?= $GLOBALS['sys_name']?> project teams can better focus on software development while making their community of users
+    and developers grow.</p>
+    <p><a href="/plugins/docman/?group_id=1" class="btn btn-large">Learn more on <?= $GLOBALS['sys_name']?> Services »</a></p>
+</div>
+<div class="row">
+    <div class="span4">
+        <h2>Site Participation</h2>
+        <p>In order to get the most out of <?= $GLOBALS['sys_name']?>, you should 
+        <a href="/account/register.php">register as a site user</a>. It's easy and 
+        fast and it allows you to participate fully in all we have to offer. Also 
+        make sure you read the <b><A href="<?php echo $exchangePolicyUrl ?>">
+        <?= $GLOBALS['sys_org_name']?> Code Exchange Policy</a></b> before using this site.</p>
+        <p><a href="/iaccount/login.php" class="btn btn-primary btn-large">Login to <?= $GLOBALS['sys_name']?> <i class="icon-chevron-right icon-white"></i></a><br>
+        Or <a href="/account/register.php">register a new account</a>
+        </p>
+    </div>
 
-<br><?= $GLOBALS['sys_name']?> is a <B>service to all <?= $GLOBALS['sys_org_name']?> software development teams</B>. <A href="/docs/site/about_codendi.php">[&nbsp;More about <?= $GLOBALS['sys_name']?>&nbsp;]</A>
+    <div class="span4">
+        <h2>Set Up Your Own Project</h2>
+        <p>After you <A href="/account/register.php">register as a site user</A>, you can 
+        <A HREF="/account/login.php">login</A> and <A HREF="/project/register.php">register your project</A>.
+        It only takes a couple of minutes to get a fully working environment to share your code.</p>
+        <p><a HREF="/project/register.php" class="btn">Register your project »</a></p>
+   </div>
 
-<P><?= $GLOBALS['sys_name']?> offers an easy access to a full featured and totally web-based project management environment.
-Using <?= $GLOBALS['sys_name']?> project teams can better focus on software development while making their community of users
-and developers grow. <A href="/plugins/docman/?group_id=1">[&nbsp;More on <?= $GLOBALS['sys_name']?> Services&nbsp;]</a><P>
-
-<u><B>Site Participation</B></u>
-
-<BR>In order to get the most out of <?= $GLOBALS['sys_name']?>, you should
-<A href="/account/register.php">register as a site user</A>. It's easy and fast and it allows you to participate fully in all we have to offer.
-Also make sure you read the <b><A href="<?php echo $exchangePolicyUrl ?>"><?= $GLOBALS['sys_org_name']?> Code Exchange Policy</a></b> before using this site.
-
-<P><u><B>Set Up Your Own Project</B></u><BR>After you <A href="/account/register.php">register as a site user</A>, you can <A HREF="/account/login.php">login</A> and <A HREF="/project/register.php">register your project</A>.
-It only takes a couple of minutes to get a fully working environment to share your code.
-
-<P><B><U>CLI</U></B><BR />This site provides a Command Line Interface based on the <a href="/soap/index.php">SOAP API</a> to access it through a command line client.
-You can download the <a href="/downloads/Codendi_CLI.zip">CLI client</a> and its <a href="documentation/cli/pdf/en_US/Codendi_CLI.pdf">documentation</a>.
-
-<p>Thanks... and enjoy the site.</p>
+   <div class="span4">
+        <h2>CLI</h2>
+        <p>This site provides a Command Line Interface based on the <a href="/soap/index.php">SOAP API</a> 
+        to access it through a command line client. You can download the 
+        <a href="/downloads/Codendi_CLI.zip">CLI client</a> and its 
+        <a href="documentation/cli/pdf/en_US/Codendi_CLI.pdf">documentation</a>.</p>
+        <p><a HREF="/downloads/Codendi_CLI.zip" class="btn">Download the CLI client <i class="icon-download-alt"></i></a></p>
+   </div>
+</div>
 
 <?php
 // Because of to aggressive continuous integration check on closing tags...
