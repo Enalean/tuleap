@@ -40,7 +40,7 @@ if (isset($GLOBALS['sys_exchange_policy_url'])) {
     and developers grow.</p>
     <p><a href="/plugins/docman/?group_id=1" class="btn btn-large">Learn more on <?= $GLOBALS['sys_name']?> Services »</a></p>
 </div>
-<div class="row">
+<div class="row-fluid">
     <div class="span4">
         <h2>Site Participation</h2>
         <p>In order to get the most out of <?= $GLOBALS['sys_name']?>, you should 
