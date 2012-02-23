@@ -32,6 +32,11 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @var GitDao
      */
     protected $dao;
+    
+    /**
+     * @var PermissionsManager
+     */
+    protected $permissionsManager;
 
     /**
      * Constructor
@@ -331,8 +336,31 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
         $new_namespace = $old->getProject()->getUnixName() .'/'. $new->getNamespace();
         $this->getDriver()->fork($name, $old_namespace, $new_namespace);
-        $this->createReference($new);
+        $id = $this->getDao()->save($new);
+        $new->setId($id);
+        $this->clonePermissions($old, $new);
+        $this->updateRepoConf($new);
     }
+    
+    public function clonePermissions(GitRepository $old, GitRepository $new) {
+        $pm = $this->getPermissionsManager();
+        
+        foreach(Git::allPermissionTypes() as $perm) {
+            $pm->duplicateWithStatic($old->getId(), $new->getId(), $perm);
+        }
+    }
+    
+    public function setPermissionsManager(PermissionsManager $permissionsManager) {
+        $this->permissionsManager = $permissionsManager;
+    }
+    
+    public function getPermissionsManager() {
+        if (!$this->permissionsManager) {
+            $this->permissionsManager = PermissionsManager::instance();
+        }
+        return $this->permissionsManager;
+    }
+    
     /**
      * Delete all gitolite repositories of a project
      *

@@ -799,6 +799,8 @@ class PermissionsManagerTest extends UnitTestCase {
                            'jane.doe@example.com' => 'fr_FR');
         $this->assertEqual($userArray, $this->docmanPm->getProjectAdminUsers(1));
     }
+    
+       //function testGetProjectAdminUsersSuccess() {
 
 }
 ?>

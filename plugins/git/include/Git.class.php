@@ -31,6 +31,15 @@ class Git extends PluginController {
     const PERM_READ  = 'PLUGIN_GIT_READ';
     const PERM_WRITE = 'PLUGIN_GIT_WRITE';
     const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
+    
+    /**
+     * Lists all git-related permission types.
+     * 
+     * @return array
+     */
+    public static function allPermissionTypes() {
+        return array(Git::PERM_READ, Git::PERM_WRITE, Git::PERM_WPLUS);
+    }
 
     /**
      * @var GitRepositoryFactory

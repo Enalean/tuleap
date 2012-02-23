@@ -24,13 +24,14 @@ require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
 require_once 'common/project/Project.class.php';
 require_once 'common/backend/Backend.class.php';
 
-Mock::Generate('Backend');
-Mock::Generate('Git_GitoliteDriver');
+Mock::generate('Backend');
+Mock::generate('Git_GitoliteDriver');
 Mock::generatePartial('Git_Backend_Gitolite', 'Git_Backend_GitoliteTestVersion', array('getDao', 'loadRepositoryFromId'));
 Mock::generate('GitRepository');
 Mock::generate('GitDao');
 Mock::generate('DataAccessResult');
 Mock::generate('Project');
+Mock::generate('PermissionsManager');
 
 class Git_Backend_GitoliteTest extends UnitTestCase {
     
@@ -184,9 +185,11 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $old_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $old_namespace);
         $old_repo->setProject($project);
         
-        $backend    = new Git_Backend_Gitolite($driver);
+        $backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('clonePermissions'));
+        $backend->__construct($driver);
         $backend->setDao($dao);
         
+        $backend->expectOnce('clonePermissions', array($old_repo, $new_repo));
         $dao->expectOnce('save', array($new_repo));
         $driver->expectOnce('fork', array($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace));        
         $driver->expectOnce('dumpProjectRepoConf', array($project));
@@ -208,10 +211,12 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     }
 
     protected function _GivenABackendGitolite() {
-        $driver  = new MockGit_GitoliteDriver();
-        $dao     = new MockGitDao();
+        $driver             = new MockGit_GitoliteDriver();
+        $dao                = new MockGitDao();
+        $permissionsManager = new MockPermissionsManager();
         $backend = new Git_Backend_Gitolite($driver);
         $backend->setDao($dao);
+        $backend->setPermissionsManager($permissionsManager);
         return $backend;
     }
 
@@ -244,7 +249,26 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         // url ends by the namespace + name
         $this->assertPattern('%:gpig/bionic\.git$%', $url);
     }
-
+    
+    public function testClonePermsWithSpecificReadPermsWithPersonalFork() {
+        $old_repo_id = 110;
+        $new_repo_id = 220;
+        
+        $old = new MockGitRepository();
+        $old->setReturnValue('getId', $old_repo_id);
+        $new = new MockGitRepository();
+        $new->setReturnValue('getId', $new_repo_id);
+        
+        $backend  = $this->_GivenABackendGitolite();
+        
+        $permissionsManager = $backend->getPermissionsManager();
+        $permissionsManager->expectAt(0, 'duplicateWithStatic', array($old_repo_id, $new_repo_id, Git::PERM_READ));
+        $permissionsManager->expectAt(1, 'duplicateWithStatic', array($old_repo_id, $new_repo_id, Git::PERM_WRITE));
+        $permissionsManager->expectAt(2, 'duplicateWithStatic', array($old_repo_id, $new_repo_id, Git::PERM_WPLUS));
+        $permissionsManager->expectCallCount('duplicateWithStatic', 3);
+        
+        $backend->clonePermissions($old, $new);
+    }
 }
 
 ?>
