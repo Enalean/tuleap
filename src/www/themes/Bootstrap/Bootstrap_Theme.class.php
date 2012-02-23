@@ -19,6 +19,7 @@
  */
 
 require_once 'common/layout/DivBasedTabbedLayout.class.php';
+require_once 'NavBarBuilder.class.php';
 
 class Bootstrap_Theme extends DivBasedTabbedLayout {
     
@@ -39,29 +40,10 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
         echo $this->displayStylesheetElements($params);
         echo $this->displaySyndicationElements();
         echo '</head>';
-        echo '<body>
-                <div class="navbar navbar-fixed-top">
-                  <div class="navbar-inner"> 
-                    <div class="container-fluid"> 
-                      <a class="brand" href="index.php"><img src="'. $this->imgroot . 'organization_logo.png" alt="Tuleap" /></a> 
-                      <ul class="nav"> 
-                        <li><a href="/">Home</a></li>'.
-                        $this->getNavMyPage($current_user)
-                        .
-                        $this->getNavProjects($current_user)
-                        .'
-                        <li><a href="/search/?words=%%%&type_of_search=people">Users</a></li>
-                        <li><a href="/site/">Help</a></li>
-                      </ul>
-                      <form action="" class="navbar-search pull-left">
-                        <input type="text" placeholder="Search" class="search-query" />
-                      </form>
-                      '.
-                      $this->getNavUser($current_user, $params['title'])
-                      .'
-                    </div> 
-                  </div> 
-                </div>';
+        echo '<body>';
+        $selectedTopTab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : false;
+        $nav = new NavBarBuilder(ProjectManager::instance(), EventManager::instance(), $GLOBALS['Language'], HTTPRequest::instance(), $current_user, $params['title'], $this->imgroot, $_SERVER['REQUEST_URI'], $selectedTopTab);
+        echo $nav->render();
         echo $this->getBreadcrumbs();
         echo $this->_getFeedback();
         echo '<div class="container-fluid">';
@@ -77,124 +59,6 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
         echo '<div class="content well">';
         echo $this->getToolbar();
     }
-
-    private function getNavProjects(User $user) {
-        $html_project_register = '';
-        if ((isset($GLOBALS['sys_use_project_registration']) && $GLOBALS['sys_use_project_registration'] == 1) || !isset($GLOBALS['sys_use_project_registration'])) {
-            $html_project_register .= '<li><a href="/project/register.php">'. $GLOBALS['Language']->getText('include_menu','register_new_proj') .'</a></li>';
-        } 
-
-        $html  = '';
-        $html .= '<li class="dropdown active">';
-        if ($user->isLoggedIn()) {
-            $projectIds = $user->getAllProjects();
-            $html_my_projects = $this->getNavMyProjects($projectIds);
-            if ($html_my_projects || $html_project_register) {
-            $html .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">Projects<b class="caret"></b></a>';
-            $html .= '<ul class="dropdown-menu">';
-            $html .= $html_my_projects;
-            $html .= '<li><a href="/softwaremap/">Browse all projects</a></li>';
-            $html .= $html_project_register;
-            $html .= '</ul>';
-            } else {
-                $html .= $this->getNavProjectsAnonymous();
-            }
-        } else {
-            $html .= $this->getNavProjectsAnonymous();
-        }
-        $html .= '</li>';
-        return $html;
-    }
-
-    private function getNavProjectsAnonymous() {
-        return '<a href="/softwaremap/">Projects</a>';
-    }
-
-    private function getNavMyProjects($projectIds) {
-        $html  = '';
-        if ($projectIds) {
-            $pm = ProjectManager::instance();
-            foreach ($projectIds as $projectId) {
-                if ($project = $pm->getProject($projectId)) {
-                    $html .= '<li>';
-                    $html .= '<a href="/projects/'. $project->getUnixName() .'/">';
-                    $html .= $project->getPublicName();
-                    $html .= '</a>';
-                    $html .= '</li>';
-                }
-            }
-            $html .= '<li class="divider"></li>';
-        }
-        return $html;
-    }
-
-    private function getNavMyPage(User $user) {
-        $html = '';
-        if ($user->isLoggedIn()) {
-            $html .= '<li><a href="/my/">My personnal page</a></li>';
-        }
-        return $html;
-    }
-
-    private function getNavUser(User $user, $title) {
-        $html = '';
-        $html .= '<ul class="nav pull-right">';
-        if ($user->isLoggedIn()) {
-            $html .= $this->getNavUserLoggedIn($user, $title);
-        } else {
-            $html .= $this->getNavUserAnonymous();
-        }
-        $html .= '</ul>';
-        return $html;
-    }
-
-    private function getNavUserAnonymous() {
-        $html  = '';
-        $html .= '<li>';
-        $html .= '<a href="/account/login.php">';
-        $html .= $GLOBALS['Language']->getText('include_menu','login');
-        $html .= '</a>';
-        $html .= '</li>';
-        $em =& EventManager::instance();
-        $display_new_user = true;
-        $em->processEvent('display_newaccount', array('allow' => &$display_new_user));
-        if ($display_new_user) {
-            $html .= '<li><a href="/account/register.php">'.$GLOBALS['Language']->getText('include_menu','new_user').'</a></li>';
-        }
-        return $html;
-    }
-
-    private function getNavUserLoggedIn(User $user, $title) {
-        $html  = '';
-        $html .= '<li class="dropdown">';
-        $html .= '<a href="#" class="dropdown-toggle" data-toggle="dropdown">';
-        $html .= '<span class="logged-in">Logged in as </span>';
-        $html .= $user->getRealName();
-        $html .= '<b class="caret"></b>';
-        $html .= '</a>';
-        $html .= $this->getSubNavLoggedinUser($user, $title);
-        $html .= '</li>';
-        return $html;
-    }
-
-    private function getSubNavLoggedinUser(User $user, $title) {
-        $html  = '';
-        $html .= '<ul class="dropdown-menu">';
-        if (!HTTPRequest::instance()->isPost()) {
-            $bookmark_title = urlencode(str_replace($GLOBALS['sys_name'].': ', '', $title));
-            $href = '/my/bookmark_add.php?bookmark_url='. urlencode($_SERVER['REQUEST_URI']) .'&bookmark_title='. $bookmark_title;
-            $html .= '<li class="bookmarkpage"><a href="'. $href .'">';
-            $html .= $GLOBALS['Language']->getText('include_menu','bookmark_this_page');
-            $html .= '</a></li>';
-        }
-        $html .= '<li><a href="/account/">'. $GLOBALS['Language']->getText('my_index','account_maintenance') .'</a></li>';
-        $html .= '<li><a href="/account/preferences.php">'. $GLOBALS['Language']->getText('account_options','preferences') .'</a></li>';
-        $html .= '<li class="divider"></li>';
-        $html .= '<li><a href="/account/logout.php">'.$GLOBALS['Language']->getText('include_menu','logout').'</a></li>';
-        $html .= '</ul>';
-        return $html;
-    }
-
     public function footer($params) {
         echo '</div>';
         echo '</div>';

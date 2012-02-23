@@ -9,7 +9,7 @@
 require_once('pre.php');
 
 
-$HTML->header(array('title'=>$Language->getText('contact', 'title')));
+$HTML->header(array('title'=>$Language->getText('contact', 'title'), 'selected_top_tab' => 'site'));
 
 echo '<h2>'.$Language->getText('contact', 'title')."</h2>\n";
 
