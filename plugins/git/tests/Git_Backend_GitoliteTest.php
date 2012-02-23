@@ -250,19 +250,49 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $this->assertPattern('%:gpig/bionic\.git$%', $url);
     }
     
-    public function testClonePermsWithSpecificReadPermsWithPersonalFork() {
+    public function testClonePermsWithPersonalFork() {
         $old_repo_id = 110;
         $new_repo_id = 220;
         
+        $project = new MockProject();
+        
         $old = new MockGitRepository();
         $old->setReturnValue('getId', $old_repo_id);
+        $old->setReturnValue('getProject', $project);
+        
         $new = new MockGitRepository();
         $new->setReturnValue('getId', $new_repo_id);
+        $new->setReturnValue('getProject', $project);
         
         $backend  = $this->_GivenABackendGitolite();
         
         $permissionsManager = $backend->getPermissionsManager();
         $permissionsManager->expectOnce('duplicateWithStatic', array($old_repo_id, $new_repo_id, Git::allPermissionTypes()));
+        
+        $backend->clonePermissions($old, $new);
+    }
+    
+    public function testClonePermsCrossProjectFork() {
+        $old_repo_id = 110;
+        $old_project = new MockProject();
+        $old_project->setReturnValue('getId', 1);
+        
+        $new_repo_id = 220;
+        $new_project = new MockProject();
+        $new_project->setReturnValue('getId', 2);
+        
+        $old = new MockGitRepository();
+        $old->setReturnValue('getId', $old_repo_id);
+        $old->setReturnValue('getProject', $old_project);
+        
+        $new = new MockGitRepository();
+        $new->setReturnValue('getId', $new_repo_id);
+        $new->setReturnValue('getProject', $new_project);
+        
+        $backend  = $this->_GivenABackendGitolite();
+        
+        $permissionsManager = $backend->getPermissionsManager();
+        $permissionsManager->expectOnce('duplicateWithoutStatic', array($old_repo_id, $new_repo_id, Git::allPermissionTypes()));
         
         $backend->clonePermissions($old, $new);
     }
