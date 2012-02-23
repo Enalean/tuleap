@@ -7,3 +7,6 @@ plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Dashboard agile
 
 plugin_agiledashboard	summary	Titre
+
+plugin_agiledashboard	included_trackers_title	Liste des outils de suivi inclus dans la recherche :
+plugin_agiledashboard	included_trackers_not_found	Aucun outil de suivi ne correspond.

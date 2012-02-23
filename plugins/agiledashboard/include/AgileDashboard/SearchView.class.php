@@ -192,7 +192,8 @@ class AgileDashboard_SearchView {
     
     private function fetchTrackerList() {
         $html  = '';
-        $html .= '<div>';
+        $html .= '<div class="agiledashboard_trackerlist">';
+        $html .= $this->language->getText('plugin_agiledashboard', 'included_trackers_title');
         if (count($this->trackers) > 0) {
             $html .= '<ul>';
             foreach($this->trackers as $tracker) {
@@ -201,6 +202,8 @@ class AgileDashboard_SearchView {
                 $html .= '</li>';
             }
             $html .= '</ul>';
+        } else {
+            $html .= '<p><em>'.$this->language->getText('plugin_agiledashboard', 'included_trackers_not_found').'</em></p>';
         }
         $html .= '</div>';
         return $html;
