@@ -17,19 +17,29 @@ document.observe('dom:loaded', function () {
     }
     
     if (fork_repositories_prefix) {
+    	var fork_destination = $('fork_destination');
         var submit = fork_repositories_prefix.up('form').down('input[type=submit]');
-        var tpl = new Template('<div>' + $F('fork_repositories_prefix') + '/#{path}#{repo}</div>');
+        var tpl = new Template('<div>#{dest}/#{path}#{repo}</div>');
         var table = fork_repositories_prefix.up('table');
         table.down('thead > tr > td', 3).update('<label style="font-weight: bold;">'+ codendi.locales.git.preview +'</label>');
         var preview = new Element('div', {
                 style: 'color: #999; border-bottom: 1px solid #EEE; margin-bottom:0.5em; padding-bottom:0.5em;'
         });
         table.down('tbody > tr > td', 3).insert({ top: preview });
-                
+        
+        function getForkDestination() {
+        	if (fork_destination.disabled) {
+        		return $F('fork_repositories_prefix');
+        	} else {
+        		return fork_destination.options[fork_destination.selectedIndex].title;
+        	}
+        }
+        
         new PeriodicalExecuter(function () {
             var p = {
                 path: $F('fork_repositories_path').strip() ? $F('fork_repositories_path').strip() + '/' : '',
-                repo: '...'
+                repo: '...', 
+                dest: getForkDestination()
             };
             if ($('fork_repositories_repo').selectedIndex >= 0) {
                 submit.enable();
@@ -46,18 +56,18 @@ document.observe('dom:loaded', function () {
             }
         }, 0.5);
 
-		$('fork_destination').disable();
+        fork_destination.disable();
 		function toggleDestination(evt) {
 			var optionBox = Event.element(evt);
 			if (optionBox.id == "choose_project" && optionBox.checked) {
-        		$('fork_destination').enable();
+				fork_destination.enable();
         	} else {
-        		$('fork_destination').disable();
+        		fork_destination.disable();
         	}
 		}
 		
         $('choose_project').observe('change', toggleDestination); 
-        $('choose_personal').observe('change', toggleDestination); 
+        $('choose_personal').observe('change', toggleDestination);
     }
     
 } );

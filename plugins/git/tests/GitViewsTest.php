@@ -36,8 +36,8 @@ class GitViewsTest extends UnitTestCase {
 		
 		$view = TestHelper::getPartialMock('GitViews', array());
 		$output = $view->getUserProjectsAsOptions($user, $manager, '50');
-		$this->assertPattern('/<option value="123">/', $output);
-		$this->assertNoPattern('/<option value="456">/', $output);
+		$this->assertPattern('/<option value="123"/', $output);
+		$this->assertNoPattern('/<option value="456"/', $output);
 	}
 	
 	public function testOptionsShouldContainThePublicNameOfTheProject() {
@@ -47,6 +47,15 @@ class GitViewsTest extends UnitTestCase {
 		
 		$view = TestHelper::getPartialMock('GitViews', array());
 		$this->assertPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
+	}
+	
+	public function testOptionsShouldContainTheUnixNameOfTheProjectAsTitle() {
+		$user    = $this->GivenAUserWithProjects();
+		$project = $this->GivenAProject('123', 'Guinea Pig', 'gpig');
+		$manager = $this->GivenAProjectManager($project);
+		
+		$view = TestHelper::getPartialMock('GitViews', array());
+		$this->assertPattern('/title="gpig"/', $view->getUserProjectsAsOptions($user, $manager, '50'));
 	}
 	
 	public function testOptionsShouldPurifyThePublicNameOfTheProject() {
@@ -69,10 +78,11 @@ class GitViewsTest extends UnitTestCase {
 		
 	}
 	
-	private function GivenAProject($id, $name) {
+	private function GivenAProject($id, $name, $unixName = null) {
 		$project = new MockProject();
 		$project->setReturnValue('getId', $id);
 		$project->setReturnValue('getPublicName', $name);
+		$project->setReturnValue('getUnixName', $unixName);
 		return $project;
 	}
 	

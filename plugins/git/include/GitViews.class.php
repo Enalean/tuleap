@@ -672,15 +672,17 @@ class GitViews extends PluginViews {
         echo '<br />';
     }
 	public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
+		$purifier   = Codendi_HTMLPurifier::instance();
 		$html       = '';
-		$option     = '<option value="%d">%s</option>';
+		$option     = '<option value="%d" title="%s">%s</option>';
 		$usrProject = array_diff($user->getAllProjects(), array($currentProjectId));
 		
 		foreach ($usrProject as $projectId) {
 			if ($user->isMember($projectId, 'A')) {
-				$projectName = $manager->getProject($projectId)->getPublicName();
-				$projectName = Codendi_HTMLPurifier::instance()->purify($projectName);
-				$html       .= sprintf($option, $projectId, $projectName);
+				$project = $manager->getProject($projectId);
+				$projectName     = $purifier->purify($project->getPublicName());
+				$projectUnixName = $purifier->purify($project->getUnixName()); 
+				$html           .= sprintf($option, $projectId, $projectUnixName, $projectName);
 			}
 		}
 		return $html;
