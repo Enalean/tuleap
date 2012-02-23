@@ -1,9 +1,19 @@
 <?php
 
 
-function site_admin_header($params) {
+function site_admin_header($params, $breadcrumbs = array()) {
     GLOBAL $HTML, $Language;
-	global $feedback;
+    global $feedback;
+    $breadcrumbs = array_merge(
+        array(
+          array(
+            'url'   => '/admin/',
+            'title' => $Language->getText('menu', 'admin'),
+          ),
+        ),
+        $breadcrumbs
+    );
+    $HTML->addBreadcrumbs($breadcrumbs);
 	$HTML->header($params);
 	echo html_feedback_top($feedback);
 	$version = trim(file_get_contents($GLOBALS['codendi_dir'].'/VERSION'));

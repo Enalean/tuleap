@@ -878,6 +878,16 @@ class Layout extends Response {
         return $this;
     }
 
+    public function addBreadcrumbs($breadcrumbs) {
+        foreach($breadcrumbs as $b) {
+            $classname = '';
+            if (isset($b['classname'])) {
+                $classname = 'class="breadcrumb-step-'. $b['classname'] .'"';
+            }
+            $this->addBreadcrumb('<a href="'. $b['url'] .'" '. $classname .'>'. $b['title'] .'</a>');
+        }
+    }
+
     function addHomeStepInBreadcrumbsIfEmpty() {
         if (empty($this->breadcrumbs)) {
             $this->breadcrumbs[] = '<a href="/">'. $GLOBALS['Language']->getText('menu','home') .'</a>';

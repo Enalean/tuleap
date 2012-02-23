@@ -8,6 +8,7 @@
 
 require_once('pre.php');    
 require_once('account.php');
+require_once('admin_utils.php');
 require_once('www/project/admin/ugroup_utils.php');
 require_once('common/event/EventManager.class.php');
 require_once('common/dao/UserDao.class.php');
@@ -134,7 +135,14 @@ if (!$group_id) {
 /*
  * Show list of users
  */
-$HTML->header(array('title'=>$Language->getText('admin_userlist','title')));
+$breadcrumbs = array(
+     array(
+         'url'   => '/admin/userlist.php',
+         'title' => $Language->getText('admin_main', 'header_user'),
+     ),
+);
+
+site_admin_header(array('title'=>$Language->getText('admin_userlist','title')), $breadcrumbs);
 echo "<p>";
 echo $Language->getText('admin_userlist','user_list').":  ";
 if (!$group_id) {
