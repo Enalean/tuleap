@@ -35,8 +35,9 @@ class GitViewsTest extends UnitTestCase {
 		$manager = $this->GivenAProjectManager($project);
 		
 		$view = TestHelper::getPartialMock('GitViews', array());
-		$this->assertPattern('/<option value="123">/', $view->getUserProjectsAsOptions($user, $manager));
-		$this->assertNoPattern('/<option value="456">/', $view->getUserProjectsAsOptions($user, $manager));
+		$output = $view->getUserProjectsAsOptions($user, $manager, '50');
+		$this->assertPattern('/<option value="123">/', $output);
+		$this->assertNoPattern('/<option value="456">/', $output);
 	}
 	
 	public function testOptionsShouldContainThePublicNameOfTheProject() {
@@ -45,7 +46,7 @@ class GitViewsTest extends UnitTestCase {
 		$manager = $this->GivenAProjectManager($project);
 		
 		$view = TestHelper::getPartialMock('GitViews', array());
-		$this->assertPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager));
+		$this->assertPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
 	}
 	
 	public function testOptionsShouldPurifyThePublicNameOfTheProject() {
@@ -54,7 +55,18 @@ class GitViewsTest extends UnitTestCase {
 		$manager = $this->GivenAProjectManager($project);
 		
 		$view = TestHelper::getPartialMock('GitViews', array());
-		$this->assertPattern('/Guinea &lt; Pig/', $view->getUserProjectsAsOptions($user, $manager));
+		$this->assertPattern('/Guinea &lt; Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
+	}
+	
+	public function testCurrentProjectMustNotBeInProjectList() {
+		$user    = $this->GivenAUserWithProjects();
+		$project = $this->GivenAProject('123', 'Guinea Pig');
+		$manager = $this->GivenAProjectManager($project);
+		
+		$view = TestHelper::getPartialMock('GitViews', array());
+		$this->assertNoPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '123'));
+		
+		
 	}
 	
 	private function GivenAProject($id, $name) {

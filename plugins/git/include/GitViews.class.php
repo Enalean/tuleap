@@ -650,7 +650,11 @@ class GitViews extends PluginViews {
         	<input id="choose_project" type="radio" name="choose_destination" />
         	<label for="choose_project">'.$this->getText('fork_choose_destination_project').'</label>
         </div>';
-        echo '<select name="destination" id="fork_destination">'. $this->getUserProjectsAsOptions($this->user, ProjectManager::instance()) .'</select>';
+        
+        echo '<select name="destination" id="fork_destination">';
+        echo $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
+        echo '</select>';
+        
         echo '</td>';
         
         echo '<td>';
@@ -667,10 +671,10 @@ class GitViews extends PluginViews {
         echo '</form>';
         echo '<br />';
     }
-	public function getUserProjectsAsOptions(User $user, ProjectManager $manager) {
+	public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
 		$html       = '';
 		$option     = '<option value="%d">%s</option>';
-		$usrProject = $user->getAllProjects();
+		$usrProject = array_diff($user->getAllProjects(), array($currentProjectId));
 		
 		foreach ($usrProject as $projectId) {
 			if ($user->isMember($projectId, 'A')) {
