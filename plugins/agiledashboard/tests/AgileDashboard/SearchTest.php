@@ -31,60 +31,44 @@ class AgileDashboard_SearchTest extends UnitTestCase {
         $this->project            = new MockProject();
         $this->sharedFieldFactory = new MockAgileDashboard_SharedFieldFactory();
         $this->searchDao          = new MockAgileDashboard_SearchDao();
-        $this->formElementFactory       = new MockTracker_FormElementFactory();
+        $this->trackerIds         = array (201, 202);
+        $trackers                 = array(aTracker()->withId(201)->build(), aTracker()->withId(202)->build());
         
-        $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao, $this->formElementFactory);
+        $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
+        $this->search->setTrackers($trackers);
     }
     
     function testGetMatchingArtifactsDelegatesToSharedFieldFactoryAndSearchDao() {
         $criteria  = array('220' => array('values' => array('350')));
-        
-        $fields = array(aTextField()->withTrackerId(201)->build(),
-                        aStringField()->withTrackerId(202)->build());
-        
-        $trackerIds = array (201, 202);
-        
-        $this->formElementFactory->setReturnValue('getAllProjectSharedFields', $fields, array($this->project));
-        
+                
         $sharedFields = array(new AgileDashboard_SharedField());
         
         $this->sharedFieldFactory->expectOnce('getSharedFields', array($criteria));
         $this->sharedFieldFactory->setReturnValue('getSharedFields', $sharedFields);
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array($trackerIds, $sharedFields));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, $sharedFields));
         
         $this->search->getMatchingArtifacts($this->project, $criteria);
     }
     
     function testGetProjectArtifactsWhenNoCriteria() {
         $criteria  = array('220' => array('values' => array('')));
-        
-        $fields = array(aTextField()->withTrackerId(201)->build(),
-                        aStringField()->withTrackerId(202)->build());
-        
-        $trackerIds = array (201, 202);
-        
-        $this->formElementFactory->setReturnValue('getAllProjectSharedFields', $fields, array($this->project));
-        
-        
-        $this->searchDao->expectOnce('searchArtifactsFromTrackers', array($trackerIds));
+
+        $this->searchDao->expectOnce('searchArtifactsFromTrackers', array($this->trackerIds));
 
         $this->search->getMatchingArtifacts($this->project, $criteria);
     }
     
     function testGetProjectArtifactsWhenNoArtifactsAndNoTrackers() {
         $criteria   = array('220' => array('values' => array('')));
-        
-        // No fields found
-        $fields     = array();
-        $trackerIds = array();
-        
-        $this->formElementFactory->setReturnValue('getAllProjectSharedFields', $fields, array($this->project));
-        
-        
+                
         $this->searchDao->expectNever('searchArtifactsFromTrackers');
-
-        $this->search->getMatchingArtifacts($this->project, $criteria);
+        
+        $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
+        $this->search->setTrackers(array());
+        $artifacts = $this->search->getMatchingArtifacts($this->project, $criteria);
+        
+        $this->assertEqual(count($artifacts), 0);
     }
 }
 ?>

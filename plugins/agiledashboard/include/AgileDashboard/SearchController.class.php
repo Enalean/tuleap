@@ -75,8 +75,9 @@ class AgileDashboard_SearchController {
             $service   = $this->getService($project);
             $report    = $this->getReport();
             $criteria  = $this->getCriteria($project, $report);
-            $artifacts = $this->getArtifacts($project);
             $trackers  = $this->getTrackers($project);
+            $this->search->setTrackers($trackers);
+            $artifacts = $this->getArtifacts($project);
             
             $view = $this->getView($service, $this->language, $report, $criteria, $artifacts, $trackers);
             $view->render();

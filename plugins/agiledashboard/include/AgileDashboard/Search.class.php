@@ -35,24 +35,24 @@ class AgileDashboard_Search {
     private $dao;
     
     /**
-     * @var Tracker_FormElementFactory
+     * @var Array of Tracker
      */
-    private $formElementFactory;
+    private $trackers;
     
     public function __construct(AgileDashboard_SharedFieldFactory $sharedFieldFactory,
-                                AgileDashboard_SearchDao          $dao,
-                                Tracker_FormElementFactory        $formElementFactory) {
+                                AgileDashboard_SearchDao          $dao) {
         
         $this->sharedFieldFactory = $sharedFieldFactory;
         $this->dao                = $dao;
-        $this->formElementFactory = $formElementFactory;
+    }
+    
+    public function setTrackers(array $trackers) {
+        $this->trackers = $trackers;
     }
     
     public function getMatchingArtifacts(Project $project, $criteria=null) {
         $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
-        
-        $projectSharedFields = $this->formElementFactory->getAllProjectSharedFields($project);
-        $trackerIds          = array_map(array($this, 'getTrackerId'), $projectSharedFields);
+        $trackerIds           = array_map(array($this, 'getTrackerId'), $this->trackers);
         
         if (count($searchedSharedFields) > 0) { 
             return $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
@@ -63,8 +63,8 @@ class AgileDashboard_Search {
         }
     }
     
-    private function getTrackerId($field) {
-        return $field->getTrackerId();
+    private function getTrackerId(Tracker $tracker) {
+        return $tracker->getId();
     }
 }
 ?>
