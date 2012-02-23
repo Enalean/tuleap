@@ -39,6 +39,24 @@ class GitTest extends TuleapTestCase {
         $git->_addInstanceVars($request, $usermanager, 'del', array('del'), $unimportantGroupId);
         $git->request();
     }
+
+    public function testDispatchToForkRepositoriesIfRequestsPersonal() {
+        $git = TestHelper::getPartialMock('Git', array('_doDispatchForkRepositories', 'addView'));
+        $request = new Codendi_Request(array('choose_destination' => 'personal'));
+        $git->_addInstanceVars($request, null);
+        $git->expectOnce('_doDispatchForkRepositories');
+        $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
+
+    }
+
+    public function testDispatchToForkCrossProjectIfRequestsProject() {
+        $git = TestHelper::getPartialMock('Git', array('_doDispatchForkCrossProject', 'addView'));
+        $request = new Codendi_Request(array('choose_destination' => 'project'));
+        $git->_addInstanceVars($request, null);
+        $git->expectOnce('_doDispatchForkCrossProject');
+        $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
+
+    }
 }
 //TODO 
 // - Ask the user to which project he wants to fork by listing all projects of which he is admin
@@ -55,12 +73,13 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
     public function testRenders_ForkRepositories_View() {
         Mock::generatePartial('Git', 'GitSpy2', array('_doDispatchForkRepositories', 'addView'));
         $git = new GitSpy2();
-        $request = new Codendi_Request(array());
+        $request = new Codendi_Request(array('choose_destination' => 'personal'));
         $git->_addInstanceVars($request, null);
         $git->expectOnce('addView', array('forkRepositories'));
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
 
     }
+    
     public function testExecutes_ForkRepositories_ActionWithAListOfRepos() {
         $groupId = 101;
         $repo = new GitRepository();
@@ -114,6 +133,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $git->expectOnce('addView', array('forkRepositories'));
 
         $request = new Codendi_Request(array(
+        								'choose_destination' => 'project',
                                         'to_project' => $toProjectId,
                                         'repos' => $repo_ids));
 
@@ -123,7 +143,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $repositoryFactory->setReturnValue('getRepository', $repo, array($groupId, $repo_ids[0]));
         $git->setFactory($repositoryFactory);
 
-        $git->_dispatchActionAndView('fork_cross_project', null, null, $user);
+        $git->_dispatchActionAndView('do_fork_repositories', null, null, $user);
     }
     
     public function testAddsErrorWhenRepositoriesAreMissing() {

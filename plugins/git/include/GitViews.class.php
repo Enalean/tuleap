@@ -643,15 +643,15 @@ class GitViews extends PluginViews {
         
         echo '<td>';
         echo '<div>
-        	<input id="choose_personal" type="radio" name="choose_destination" checked="true" />
+        	<input id="choose_personal" type="radio" name="choose_destination" value="personal" checked="true" />
         	<label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
         </div>';
         echo '<div>
-        	<input id="choose_project" type="radio" name="choose_destination" />
+        	<input id="choose_project" type="radio" name="choose_destination" value="project" />
         	<label for="choose_project">'.$this->getText('fork_choose_destination_project').'</label>
         </div>';
         
-        echo '<select name="destination" id="fork_destination">';
+        echo '<select name="to_project" id="fork_destination">';
         echo $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
         echo '</select>';
         
