@@ -59,8 +59,12 @@ class AgileDashboard_SearchView {
      */
     private $shared_factory;
     
+    /**
+     * @var Array of Tracker
+     */
+    private $trackers;
     
-    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_SharedFormElementFactory $shared_factory) {
+    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_SharedFormElementFactory $shared_factory, $trackers) {
         $this->language         = $language;
         $this->service          = $service;
         $this->report           = $report;
@@ -68,6 +72,7 @@ class AgileDashboard_SearchView {
         $this->artifacts        = $artifacts;
         $this->artifact_factory = $artifact_factory;
         $this->shared_factory   = $shared_factory;
+        $this->trackers         = $trackers;
     }
     
     public function render() {
@@ -87,6 +92,7 @@ class AgileDashboard_SearchView {
         $html .= '<h1>'. $title .'</h1>';
         try {
             $html .= $this->fetchContent();
+            $html .= $this->fetchTrackerList();
         } catch (Exception $e) {
             $html .= '<em>'. $e->getMessage() .'</em>';
         }
@@ -181,6 +187,22 @@ class AgileDashboard_SearchView {
             }
             $html .= '<td>'. $value .'</td>';
         }
+        return $html;
+    }
+    
+    private function fetchTrackerList() {
+        $html  = '';
+        $html .= '<div>';
+        if (count($this->trackers) > 0) {
+            $html .= '<ul>';
+            foreach($this->trackers as $tracker) {
+                $html .= '<li>';
+                $html .= $tracker->getName().' ('.$tracker->getProject()->getPublicName().')';
+                $html .= '</li>';
+            }
+            $html .= '</ul>';
+        }
+        $html .= '</div>';
         return $html;
     }
 }

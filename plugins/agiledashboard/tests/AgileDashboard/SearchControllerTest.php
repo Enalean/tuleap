@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) . '/../../../tracker/tests/Test_Tracker_Builder.php';
 require_once dirname(__FILE__) . '/../../../tracker/tests/Test_Tracker_FormElement_Builder.php';
 
 require_once dirname(__FILE__) . '/../../include/AgileDashboard/SearchController.class.php';
@@ -55,9 +56,10 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $fields = array(aTextField()->build(), aStringField()->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields, array($this->project));
         
-        $controller = TestHelper::getPartialMock('AgileDashboard_SearchController', array('getView'));
+        $controller = TestHelper::getPartialMock('AgileDashboard_SearchController', array('getView', 'getTrackers'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
         $controller->setReturnValue('getView', $view);
+        $controller->setReturnValue('getTrackers', array());
         
         $controller->search();
     }
@@ -112,9 +114,10 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
         $this->search->expectOnce('getMatchingArtifacts', array($this->project, $criteria));
         
-        $controller = TestHelper::getPartialMock('AgileDashboard_SearchController', array('getView'));
+        $controller = TestHelper::getPartialMock('AgileDashboard_SearchController', array('getView', 'getTrackers'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
         $controller->setReturnValue('getView', $view);
+        $controller->setReturnValue('getTrackers', array());
         
         $controller->search();
     }
@@ -171,6 +174,23 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $this->assertEqual(count($criteria), 2);
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350, 351));
         $this->assertEqual($criteria[1]->field->getCriteriaValue($criteria[1]), array(352));
+    }
+    
+    public function testImpactedTrackersShouldBeAvailableForSeachAndForViews() {
+        $tracker = aTracker()->withId(110)->build();
+        $fields = array(aTextField()->withId(220)->withTracker($tracker)->build(),
+                        aTextField()->withId(221)->withTracker($tracker)->build());
+        $this->formElementFactory->setReturnValue('getAllProjectSharedFields', $fields);
+        
+        $project = new MockProject();
+        
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
+        $trackers   = $controller->getTrackers($project);
+        $this->assertEqual(count($trackers), 1);
+        
+        $tracker1 = array_pop($trackers);
+        $this->assertIsA($tracker1, 'Tracker');
+        $this->assertEqual($tracker1->getId(), 110);
     }
 }
 ?>

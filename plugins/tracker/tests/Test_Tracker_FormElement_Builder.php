@@ -54,7 +54,7 @@ class Test_Tracker_FormElement_Builder {
     }
     
     public function withTracker($tracker) {
-        $this->tracker = $tracker;
+        $this->tracker   = $tracker;
         return $this;
     }
     

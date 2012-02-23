@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) . '/../../../tracker/tests/Test_Tracker_Builder.php';
 require_once dirname(__FILE__) .'/../../include/AgileDashboard/SearchView.class.php';
 
 Mock::generate('Service');
@@ -100,7 +101,12 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $report           = new MockTracker_Report();
         $artifact_factory = $this->GivenAnArtifactFactory($artifacts);
         $shared_factory   = $this->GivenASharedFactory($criteria);
-        $view             = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $artifact_factory, $shared_factory);
+        $project          = new MockProject();
+        $project->setReturnValue('getID', 110);
+        $project->setReturnValue('getPublicName', 'gpig');
+        $tracker1         = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
+        $trackers         = array($tracker1);
+        $view             = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
         return $view;
     }
     

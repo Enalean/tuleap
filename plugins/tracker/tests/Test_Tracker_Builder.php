@@ -31,14 +31,31 @@ function aTracker() {
 
 class Test_Tracker_Builder {
     private $id;
+    private $project;
+    private $project_id;
+    private $name;
     
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
+    
+    public function withProject(Project $project) {
+        $this->project    = $project;
+        $this->project_id = $project->getId();
+        return $this;
+    }
+    
+    public function withName($name) {
+        $this->name = $name;
+        return $this;
+    }
         
     public function build() {
-        $tracker = new Tracker($this->id, null, null, null, null, null, null, null, null, null, null, null);
+        $tracker = new Tracker($this->id, $this->project_id, $this->name, null, null, null, null, null, null, null, null, null);
+        if ($this->project) {
+            $tracker->setProject($this->project);
+        }
         return $tracker;
     }
 }

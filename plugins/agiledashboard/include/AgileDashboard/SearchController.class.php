@@ -76,8 +76,9 @@ class AgileDashboard_SearchController {
             $report    = $this->getReport();
             $criteria  = $this->getCriteria($project, $report);
             $artifacts = $this->getArtifacts($project);
+            $trackers  = $this->getTrackers($project);
             
-            $view = $this->getView($service, $this->language, $report, $criteria, $artifacts);
+            $view = $this->getView($service, $this->language, $report, $criteria, $artifacts, $trackers);
             $view->render();
         }
         catch (AgileDashboard_ProjectNotFoundException $e) {
@@ -94,6 +95,20 @@ class AgileDashboard_SearchController {
         return $this->search->getMatchingArtifacts($project, $this->request->get('criteria'));
     }
     
+    public function getTrackers($project) {
+        $trackers = array();
+        $projectSharedFields = $this->formElementFactory->getAllProjectSharedFields($project);
+        foreach ($projectSharedFields as $field) {
+            if (!isset($trackers[$field->getTrackerId()])) {
+                $trackers[$field->getTrackerId()] = $field->getTracker();
+            }
+        } 
+        return $trackers;
+    }
+    
+    private function getTrackerFromField(Tracker_FormElement $field) {
+        return $field->getTracker();
+    }
     
     private function getReport() {
         $name = "Shared field search";
@@ -168,12 +183,12 @@ class AgileDashboard_SearchController {
         }
     }
     
-    protected function getView(Service $service, BaseLanguage $language, Tracker_Report $report, $criteria, $artifacts) {
+    protected function getView(Service $service, BaseLanguage $language, Tracker_Report $report, $criteria, $artifacts, $trackers) {
         $artifact_factory   = Tracker_ArtifactFactory::instance();
         $formElementFactory = Tracker_FormElementFactory::instance();
         $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
         $shared_factory     = new Tracker_SharedFormElementFactory($formElementFactory, $bindFactory);
-        return new AgileDashboard_SearchView($service, $language, $report, $criteria, $artifacts, $artifact_factory, $shared_factory);
+        return new AgileDashboard_SearchView($service, $language, $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
     }
 }
 ?>
