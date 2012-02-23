@@ -31,7 +31,7 @@ Mock::generate('PermissionsManager');
 Mock::generate('Docman_PermissionsManagerDao');
 Mock::generate('DataAccessResult');
 
-class PermissionsManagerTest extends UnitTestCase {
+class Docman_PermissionsManagerTest extends UnitTestCase {
     var $user;
     var $docmanPm;
     var $refOnNull;
