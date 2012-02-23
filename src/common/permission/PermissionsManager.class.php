@@ -256,12 +256,54 @@ class PermissionsManager {
     * @param array  $ugroup_mapping, an array of ugroups
     * @param int    $duplicate_type What kind of duplication is going on
     * 
+    * @deprecated Use one of duplicateSameProject, duplicateNewProject, duplicateOtherProject below
+    * 
     * @return Boolean
     */
     public function duplicatePermissions($source, $target, $permission_type, $ugroup_mapping, $duplicate_type) {
-        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_type, $ugroup_mapping, $duplicate_type);
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_type, $duplicate_type, $ugroup_mapping);
     }
     
+    /**
+     * Duplicate permission within the same project (copy perms for both dynamic and static groups)
+     * 
+     * @param int    $source
+     * @param int    $target
+     * @param string $permission_type
+     * 
+     * @return boolean
+     */
+    public function duplicateWithStatic($source, $target, $permission_type) {
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_type, PermissionsDao::DUPLICATE_SAME_PROJECT, false);
+    }
+
+    /**
+     * Duplicate permission on project creation (straight copy perms for dynamic and translate static groups with ugroup_mapping)
+     * 
+     * @param int    $source
+     * @param int    $target
+     * @param string $permission_type
+     * @param array  $ugroup_mapping 
+     * 
+     * @return boolean
+     */
+    public function duplicateWithStaticMapping($source, $target, $permission_type, $ugroup_mapping) {
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_type, PermissionsDao::DUPLICATE_NEW_PROJECT, $ugroup_mapping);
+    }
+    
+    /**
+     * Duplicate permission from one project to another (straight copy perms for dynamic do not copy static groups)
+     * 
+     * @param int    $source
+     * @param int    $target
+     * @param string $permission_type
+     * 
+     * @return boolean
+     */
+    public function duplicateWithoutStatic($source, $target, $permission_type) {
+        return $this->_permission_dao->duplicatePermissions($source, $target, $permission_type, PermissionsDao::DUPLICATE_OTHER_PROJECT, false);
+    }
+
     function isPermissionExist($object_id, $ptype){    	
     	$dar = $this->_permission_dao->searchPermissionsByObjectId($object_id, array($ptype));
     	return $dar->valid();
