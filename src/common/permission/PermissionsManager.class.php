@@ -252,7 +252,7 @@ class PermissionsManager {
     * 
     * @param int    $source 
     * @param int    $target
-    * @param String $permission_type
+    * @param array  $permission_type
     * @param array  $ugroup_mapping, an array of ugroups
     * @param int    $duplicate_type What kind of duplication is going on
     * 
@@ -260,7 +260,7 @@ class PermissionsManager {
     * 
     * @return Boolean
     */
-    public function duplicatePermissions($source, $target, $permission_type, $ugroup_mapping, $duplicate_type) {
+    public function duplicatePermissions($source, $target, array $permission_type, $ugroup_mapping, $duplicate_type) {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_type, $duplicate_type, $ugroup_mapping);
     }
     
@@ -269,11 +269,11 @@ class PermissionsManager {
      * 
      * @param int    $source
      * @param int    $target
-     * @param string $permission_type
+     * @param array  $permission_type
      * 
      * @return boolean
      */
-    public function duplicateWithStatic($source, $target, $permission_type) {
+    public function duplicateWithStatic($source, $target, array $permission_type) {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_type, PermissionsDao::DUPLICATE_SAME_PROJECT, false);
     }
 
@@ -282,12 +282,12 @@ class PermissionsManager {
      * 
      * @param int    $source
      * @param int    $target
-     * @param string $permission_type
+     * @param array  $permission_type
      * @param array  $ugroup_mapping 
      * 
      * @return boolean
      */
-    public function duplicateWithStaticMapping($source, $target, $permission_type, $ugroup_mapping) {
+    public function duplicateWithStaticMapping($source, $target, array $permission_type, $ugroup_mapping) {
         return $this->_permission_dao->duplicatePermissions($source, $target, $permission_type, PermissionsDao::DUPLICATE_NEW_PROJECT, $ugroup_mapping);
     }
     

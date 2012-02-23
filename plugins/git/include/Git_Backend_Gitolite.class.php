@@ -344,10 +344,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     
     public function clonePermissions(GitRepository $old, GitRepository $new) {
         $pm = $this->getPermissionsManager();
-        
-        foreach(Git::allPermissionTypes() as $perm) {
-            $pm->duplicateWithStatic($old->getId(), $new->getId(), $perm);
-        }
+        $pm->duplicateWithStatic($old->getId(), $new->getId(), Git::allPermissionTypes());
     }
     
     public function setPermissionsManager(PermissionsManager $permissionsManager) {

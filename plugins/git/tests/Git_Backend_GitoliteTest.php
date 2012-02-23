@@ -262,10 +262,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $backend  = $this->_GivenABackendGitolite();
         
         $permissionsManager = $backend->getPermissionsManager();
-        $permissionsManager->expectAt(0, 'duplicateWithStatic', array($old_repo_id, $new_repo_id, Git::PERM_READ));
-        $permissionsManager->expectAt(1, 'duplicateWithStatic', array($old_repo_id, $new_repo_id, Git::PERM_WRITE));
-        $permissionsManager->expectAt(2, 'duplicateWithStatic', array($old_repo_id, $new_repo_id, Git::PERM_WPLUS));
-        $permissionsManager->expectCallCount('duplicateWithStatic', 3);
+        $permissionsManager->expectOnce('duplicateWithStatic', array($old_repo_id, $new_repo_id, Git::allPermissionTypes()));
         
         $backend->clonePermissions($old, $new);
     }
