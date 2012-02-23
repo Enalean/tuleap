@@ -146,9 +146,10 @@ plugin_git	fork_repositories_desc	Vous pouvez créer des forks personnels à par
 plugin_git	fork_repositories_select	Sélectionnez les dépôts à forker
 plugin_git	fork_repositories_path	Choisissez le chemin pour les forks
 plugin_git	fork_repositories_placeholder	Entrer un chemin ou laissez vide
-plugin_git	fork_repositories_submit	Créer les dépôts personnels
 plugin_git	fork_destination_project	Choisir un projet de destination
 plugin_git	fork_malformed_path	Le chemin ne peut pas contenir (..)
+plugin_git	fork_choose_destination_project	Copier vers un autre projet
+plugin_git	fork_choose_destination_personal	Créer les dépôts personnels
 
 plugin_git	tree_view_repository	Dépôt
 plugin_git	tree_view_description	Description

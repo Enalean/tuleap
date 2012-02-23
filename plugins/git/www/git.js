@@ -25,7 +25,7 @@ document.observe('dom:loaded', function () {
                 style: 'color: #999; border-bottom: 1px solid #EEE; margin-bottom:0.5em; padding-bottom:0.5em;'
         });
         table.down('tbody > tr > td', 3).insert({ top: preview });
-        
+                
         new PeriodicalExecuter(function () {
             var p = {
                 path: $F('fork_repositories_path').strip() ? $F('fork_repositories_path').strip() + '/' : '',
@@ -45,5 +45,19 @@ document.observe('dom:loaded', function () {
                 preview.update(tpl.evaluate(p));
             }
         }, 0.5);
+
+		$('fork_destination').disable();
+		function toggleDestination(evt) {
+			var optionBox = Event.element(evt);
+			if (optionBox.id == "choose_project" && optionBox.checked) {
+        		$('fork_destination').enable();
+        	} else {
+        		$('fork_destination').disable();
+        	}
+		}
+		
+        $('choose_project').observe('change', toggleDestination); 
+        $('choose_personal').observe('change', toggleDestination); 
     }
+    
 } );

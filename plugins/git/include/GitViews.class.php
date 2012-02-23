@@ -642,7 +642,15 @@ class GitViews extends PluginViews {
         echo '</td>';
         
         echo '<td>';
-        echo '<select>'. $this->getUserProjectsAsOptions($this->user, ProjectManager::instance()) .'</select>';
+        echo '<div>
+        	<input id="choose_personal" type="radio" name="choose_destination" checked="true" />
+        	<label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
+        </div>';
+        echo '<div>
+        	<input id="choose_project" type="radio" name="choose_destination" />
+        	<label for="choose_project">'.$this->getText('fork_choose_destination_project').'</label>
+        </div>';
+        echo '<select name="destination" id="fork_destination">'. $this->getUserProjectsAsOptions($this->user, ProjectManager::instance()) .'</select>';
         echo '</td>';
         
         echo '<td>';
@@ -651,7 +659,7 @@ class GitViews extends PluginViews {
         echo '</td>';
         
         echo '<td class="last">';
-        echo '<input type="submit" value="'. $this->getText('fork_repositories_submit') .'" />';
+        echo '<input type="submit" value="'. $this->getText('fork_repositories') .'" />';
         echo '</td>';
         
         echo '</tr></tbody></table>';
