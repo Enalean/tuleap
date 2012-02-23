@@ -561,6 +561,7 @@ class UserManagerTest extends UnitTestCase {
     	$user->setReturnValue('isAnonymous', false);
     	$user->setReturnValue('isSuspended', false);
     	$user->setReturnValue('isDeleted',   false);
+        $user->setReturnValue('toRow',       array());
     	
     	// True
     	$daotrue = new MockUserDao($this);
@@ -618,6 +619,7 @@ class UserManagerTest extends UnitTestCase {
         $user->setReturnValue('getId', 123);
         $user->setReturnValue('isAnonymous', false);
         $user->setReturnValue('isSuspended', true);
+        $user->setReturnValue('toRow',       array());
 
         $dao = new MockUserDao($this);
         $dao->setReturnValue('updateByRow', true);
@@ -634,6 +636,7 @@ class UserManagerTest extends UnitTestCase {
         $user->setReturnValue('getId', 123);
         $user->setReturnValue('isAnonymous', false);
         $user->setReturnValue('isDeleted', true);
+        $user->setReturnValue('toRow',       array());
 
         $dao = new MockUserDao($this);
         $dao->setReturnValue('updateByRow', true);

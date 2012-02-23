@@ -406,12 +406,12 @@ class BackendCVSTest extends UnitTestCase {
         
         
         $backend->expectCallCount('repositoryExists', 2);
-        $backend->expectArgumentsAt(0, 'repositoryExists', array($project1));
-        $backend->expectArgumentsAt(1, 'repositoryExists', array($project2));
+        $backend->expectAt(0, 'repositoryExists', array($project1));
+        $backend->expectAt(1, 'repositoryExists', array($project2));
        
         $backend->expectCallCount('updateCVSwriters', 2);
-        $backend->expectArgumentsAt(0, 'updateCVSwriters', array(102));
-        $backend->expectArgumentsAt(1, 'updateCVSwriters', array(101));
+        $backend->expectAt(0, 'updateCVSwriters', array(102));
+        $backend->expectAt(1, 'updateCVSwriters', array(101));
        
             
     }

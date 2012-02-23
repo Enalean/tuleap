@@ -95,9 +95,9 @@ class PluginManagerTest extends UnitTestCase {
         $args_2[] = $hook_A['callback'];
         $args_2[] = $hook_A['recallHook'];
         $args_2[] = 10;
-        $em->expectArgumentsAt(0, 'addListener', $args_0);
-        $em->expectArgumentsAt(1, 'addListener', $args_1);
-        $em->expectArgumentsAt(2, 'addListener', $args_2);
+        $em->expectAt(0, 'addListener', $args_0);
+        $em->expectAt(1, 'addListener', $args_1);
+        $em->expectAt(2, 'addListener', $args_2);
 
         //The priorities
         
@@ -113,9 +113,9 @@ class PluginManagerTest extends UnitTestCase {
         $args_phgm_2[] = $plugin_2;
         $args_phgm_2[] = $hook_A['hook'];
         
-        $phgm->expectArgumentsAt(0, 'getPriorityForPluginHook', $args_phgm_0);
-        $phgm->expectArgumentsAt(1, 'getPriorityForPluginHook', $args_phgm_1);
-        $phgm->expectArgumentsAt(2, 'getPriorityForPluginHook', $args_phgm_2);
+        $phgm->expectAt(0, 'getPriorityForPluginHook', $args_phgm_0);
+        $phgm->expectAt(1, 'getPriorityForPluginHook', $args_phgm_1);
+        $phgm->expectAt(2, 'getPriorityForPluginHook', $args_phgm_2);
         $phgm->setReturnValue('getPriorityForPluginHook', 0);
         $phgm->setReturnValueAt(2, 'getPriorityForPluginHook', 10);//124|hook_A
         
@@ -128,11 +128,6 @@ class PluginManagerTest extends UnitTestCase {
         $this->assertFalse($pm->isPluginsLoaded());
         $pm->loadPlugins();
         $this->assertTrue($pm->isPluginsLoaded());
-        
-        $em->tally();
-        $plugin_1->tally();
-        $plugin_2->tally();
-        $phgm->tally();
     }
     
     function testSingleton() {
@@ -189,8 +184,6 @@ class PluginManagerTest extends UnitTestCase {
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);
         
         $pm->availablePlugin($plugin);
-        
-        $plugin_factory->tally();
     }
     function testDisablePlugin() {
         //The plugins
@@ -205,8 +198,6 @@ class PluginManagerTest extends UnitTestCase {
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);
         
         $pm->unavailablePlugin($plugin);
-        
-        $plugin_factory->tally();
     }
     function _remove_directory($dir) {
       if ($handle = opendir("$dir")) {
@@ -239,8 +230,7 @@ class PluginManagerTest extends UnitTestCase {
         
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
-        $plugin_factory->expectOnce('createPlugin');
-        $plugin_factory->expectArguments('createPlugin', array('New_Plugin'));
+        $plugin_factory->expectOnce('createPlugin', array('New_Plugin'));
         $plugin_factory->setReturnReference('createPlugin', $plugin);
         
         //The plugins manager
@@ -297,8 +287,6 @@ class PluginManagerTest extends UnitTestCase {
         $pm->setReturnReference('_getPluginFactory', $plugin_factory);
         
         $pm->getPluginByName('plugin_name');
-        
-        $plugin_factory->tally();
     }
 }
 ?>

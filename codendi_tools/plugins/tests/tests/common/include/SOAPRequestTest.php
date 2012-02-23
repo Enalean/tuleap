@@ -3,18 +3,7 @@
 require_once('common/include/SOAPRequest.class.php');
 
 class SOAPRequestTest extends UnitTestCase {
-    
-    function testError() {
-       new SOAPRequest();
-       $this->assertError(); //Warning PHP5
-       $this->assertError(); 
-    }
-    function testWithoutError() {
-       new SOAPRequest(array());
-       $this->assertNoErrors();
-       
-    }
-    
+
     function testInit() {
        $request =& new SOAPRequest(array(
            'param_1' => 'value_1',

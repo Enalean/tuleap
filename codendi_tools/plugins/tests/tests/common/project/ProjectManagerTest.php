@@ -74,9 +74,9 @@ class ProjectManagerTest extends UnitTestCase {
         $p->setReturnValueAt(0, 'createProjectInstance', $p1);
         $p->setReturnValueAt(1, 'createProjectInstance', $p2);
         $p->setReturnValueAt(2, 'createProjectInstance', $p1);
-        $p->expectArgumentsAt(0, 'createProjectInstance', array(1));
-        $p->expectArgumentsAt(1, 'createProjectInstance', array(2));
-        $p->expectArgumentsAt(2, 'createProjectInstance', array(1));
+        $p->expectAt(0, 'createProjectInstance', array(1));
+        $p->expectAt(1, 'createProjectInstance', array(2));
+        $p->expectAt(2, 'createProjectInstance', array(1));
         
         $p->getProject(1);
         $p->getProject(1);
@@ -164,7 +164,7 @@ class ProjectManagerTest extends UnitTestCase {
         $project->setReturnValue('isActive', true);
         $pm->setReturnValue('getProject', $project);
         $pm->setReturnValue('checkRestrictedAccess', true);
-        $this->assertNoErrors();
+        
         $pm->getGroupByIdForSoap(1, '');
     }
 
