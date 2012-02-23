@@ -626,6 +626,9 @@ class GitViews extends PluginViews {
         echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label>';
         echo '</td>';
         echo '<td>';
+        echo '<label style="font-weight: bold;">'. $this->getText('fork_destination_project') .'</label>';
+        echo '</td>';
+        echo '<td>';
         echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label>';
         echo '</td>';
         echo '<td class="last">&nbsp;</td>';
@@ -636,6 +639,10 @@ class GitViews extends PluginViews {
         echo '<td class="first">';
         $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
         echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
+        echo '</td>';
+        
+        echo '<td>';
+        echo '<select>'. $this->getUserProjectsAsOptions($this->user, ProjectManager::instance()) .'</select>';
         echo '</td>';
         
         echo '<td>';
@@ -652,7 +659,20 @@ class GitViews extends PluginViews {
         echo '</form>';
         echo '<br />';
     }
-
+	public function getUserProjectsAsOptions(User $user, ProjectManager $manager) {
+		$html       = '';
+		$option     = '<option value="%d">%s</option>';
+		$usrProject = $user->getAllProjects();
+		
+		foreach ($usrProject as $projectId) {
+			if ($user->isMember($projectId, 'A')) {
+				$projectName = $manager->getProject($projectId)->getPublicName();
+				$projectName = Codendi_HTMLPurifier::instance()->purify($projectName);
+				$html       .= sprintf($option, $projectId, $projectName);
+			}
+		}
+		return $html;
+	}
     /**
      * TREE SUBVIEW
      */

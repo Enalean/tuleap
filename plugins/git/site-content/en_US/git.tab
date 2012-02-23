@@ -150,6 +150,7 @@ plugin_git	fork_repositories_select	Select repositories to fork
 plugin_git	fork_repositories_path	Choose the path for the forks
 plugin_git	fork_repositories_placeholder	Enter a path or leave it blank
 plugin_git	fork_repositories_submit	Create personal repositories
+plugin_git	fork_destination_project	Choose a destination project
 plugin_git	fork_malformed_path	Path cannot contain double dots (..)
 
 plugin_git	tree_view_repository	Repository
