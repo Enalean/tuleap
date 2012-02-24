@@ -1,3 +1,5 @@
 codendi.locales['git'] = {
-    preview: 'Preview'
+    preview: 'Preview',
+    path_placeholder_disabled: 'Disabled for cross projects',
+    path_placeholder_enabled: 'Enter a path or leave it blank' 
 };
