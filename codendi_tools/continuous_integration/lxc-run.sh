@@ -115,11 +115,13 @@ if  ! lxc-ls | egrep -wq "$lxc_name" || [ $install_mode = "clean-install" ] ; th
     # Install
     $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
 elif [ $install_mode = "upgrade" ] ; then
+    $remotecmd yum clean metadate
     $remotecmd yum install tuleap -y --disablerepo=epel php-pecl-json tuleap-all
     $remotecmd service httpd restart
 else 
     # the server already exists and we suppose this is a reinstall
     # ==========>>> Warning : yum reinstall probably wont work very well with parts of tuleap that doesnt support yum remove but we havent run into problems yet <<<<<==========
+    $remotecmd yum clean metadata
     $remotecmd yum reinstall tuleap -y --disablerepo=epel php-pecl-json tuleap-all
     $remotecmd service httpd restart
 fi
@@ -137,5 +139,8 @@ else
     exit 1
 fi
 
+# Get the mysql password from the install
+mysql_pass=$($remotecmd grep sys_dbpasswd /etc/codendi/conf/database.inc | cut -d\" -f2)  
+
 # And test!
-TULEAP_HOST=$lxc_ip cucumber -f junit -o test_results $src_dir/codendi_tools/plugins/tests/functional/features
+TULEAP_HOST=$lxc_ip TULEAP_ENV=aci TULEAP_MYSQL_PASS=$mysql_pass cucumber -f junit -o test_results $src_dir/codendi_tools/plugins/tests/functional/features

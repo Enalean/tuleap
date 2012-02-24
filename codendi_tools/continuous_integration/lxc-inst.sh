@@ -30,6 +30,9 @@ enabled=1
 gpgcheck=0
 EOF
 
+# we must clean yum metadata, otherwise reinstall of a "snapshot" version isn't possible
+yum clean metadata
+
 # local centos mirror may produce ftp io errors
 # => we need to retry install
 maxretry=10
@@ -38,7 +41,7 @@ until [ -d "/usr/share/tuleap-install" ]; do
         echo "*** Error: cannot install Tuleap after 10 attempts";
         exit 1
     fi
-    yum install -y --disablerepo=epel php-pecl-json php-zendframework tuleap-all
+    yum install -y --disablerepo=epel postfix php-pecl-json php-zendframework tuleap-all
     maxretry=$(($maxretry-1))
 done
 
