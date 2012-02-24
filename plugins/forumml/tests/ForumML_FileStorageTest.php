@@ -29,16 +29,14 @@ require_once(dirname(__FILE__).'/../include/ForumML_FileStorage.class.php');
 Mock::generatePartial('ForumML_FileStorage', 'ForumML_FileStorageTestVersion', array('fileExists'));
 
 class ForumML_FileStorageTest extends UnitTestCase {
-	private $_fixture;
+    private $_fixture;
     private $_namePattern;
-
-	// Class constructor
-	function __construct($name="ForumML Mail Attachments Storage Test") {
-        parent::__construct($name);
-        $this->_fixture     = dirname(__FILE__).'/_fixtures';
+    
+    public function setUp() {
+        $this->_fixture = dirname(__FILE__) . '/_fixtures';
         // validchar for attachment name
         $this->_namePattern = "`[^a-z0-9_-]`i";
-	}
+    }
 
     private function _deleteIfExists($path) {
         if (is_dir($path)) {
@@ -54,9 +52,6 @@ class ForumML_FileStorageTest extends UnitTestCase {
         $fs->setReturnValue('fileExists', false);
         return $fs;
     }
-
-    function setUp() {
-    }
 	
     function tearDown() {
         $this->_deleteIfExists($this->_fixture.'/gpig-interest/2007_10_24/Screenshot_jpg');
@@ -70,7 +65,6 @@ class ForumML_FileStorageTest extends UnitTestCase {
 		$this->assertNotNull($fstorage->root);
 		$this->assertIsA($fstorage->root, 'string');
 		$this->assertEqual($fstorage->root,$this->_fixture);
-		$this->assertNoErrors();
 	}
 	
     // case 1: an attachment file whose name has more than 64 characters  		
@@ -85,7 +79,7 @@ class ForumML_FileStorageTest extends UnitTestCase {
 		$path1 = $fs1->_getPath($name1,$list1,$date1,$type1);
 		$this->assertNotNull($path1);
 		$this->assertIsA($path1, 'string');
-		$this->assertNoErrors();		
+
 		// check filename length is restricted to 64 characters
 		$path_array1 = explode("/",$path1);
 		$fname1 = $path_array1[count($path_array1) - 1];
@@ -97,7 +91,7 @@ class ForumML_FileStorageTest extends UnitTestCase {
 		$fdate1 = $path_array1[count($path_array1) - 2];
 		$this->assertEqual($fdate1,$date1);
 		// check regexp
-		$this->assertWantedPattern($this->_namePattern,$name1);
+		$this->assertPattern($this->_namePattern,$name1);
     }
 
     // case 2: an attachment file whose name has less than 64 characters
@@ -111,7 +105,6 @@ class ForumML_FileStorageTest extends UnitTestCase {
 		$path2 = $fs1->_getPath($name2,$list1,$date1,$type1);
 		$this->assertNotNull($path2);
 		$this->assertIsA($path2, 'string');
-		$this->assertNoErrors();				
 		$path_array2 = explode("/",$path2);
 		$fname2 = $path_array2[count($path_array2) - 1];		
 		$this->assertEqual($fname2,"filename_less_than_64_chars");				
@@ -122,7 +115,7 @@ class ForumML_FileStorageTest extends UnitTestCase {
 		$fdate2 = $path_array2[count($path_array2) - 2];
 		$this->assertEqual($fdate2,$date1);		
 		// check regexp		
-		$this->assertWantedPattern($this->_namePattern,$name2);
+		$this->assertPattern($this->_namePattern,$name2);
     }
 
     // case 3: attachment filename with only alphanumeric characters
@@ -136,10 +129,9 @@ class ForumML_FileStorageTest extends UnitTestCase {
 		$path3 = $fs1->_getPath($name3,$list1,$date1,$type1);
 		$this->assertNotNull($path3);
 		$this->assertIsA($path3, 'string');
-		$this->assertNoErrors();		
 		$path_array3 = explode("/",$path3);
 		$fname3 = $path_array3[count($path_array3) - 1];
-		$this->assertNoUnwantedPattern($this->_namePattern,$name3);
+		$this->assertNoPattern($this->_namePattern,$name3);
     }
 
     // case 4: attachment filename is an empty string
@@ -151,12 +143,11 @@ class ForumML_FileStorageTest extends UnitTestCase {
 		$type1 = "store";
 
 		$path4 = $fs1->_getPath($name4,$list1,$date1,$type1);
-		$this->assertNoErrors();
 		$this->assertNotNull($path4);
 		$this->assertIsA($path4, 'string');
 		$path_array4 = explode("/",$path4);
 		$fname4 = $path_array4[count($path_array4) - 1];
-		$this->assertWantedPattern('/^attachment.*/', $fname4);
+		$this->assertPattern('/^attachment.*/', $fname4);
 	}
 	
     // case 5: same attachment name submitted 2 times same day for same list

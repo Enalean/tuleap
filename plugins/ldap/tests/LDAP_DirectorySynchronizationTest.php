@@ -48,7 +48,7 @@ class MyUmMock4Suspended extends MockUserManager {
         $this->_myUmTest->assertEqual($user->getStatus(), 'S');
         $this->_myUmTest->assertEqual($user->getUnixStatus(), 'D');
         // For expectations
-        parent::updateDb();
+        parent::updateDb($user);
     }
 }
 
