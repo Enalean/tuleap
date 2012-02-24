@@ -48,7 +48,7 @@ if (isset($GLOBALS['sys_exchange_policy_url'])) {
         fast and it allows you to participate fully in all we have to offer. Also 
         make sure you read the <b><A href="<?php echo $exchangePolicyUrl ?>">
         <?= $GLOBALS['sys_org_name']?> Code Exchange Policy</a></b> before using this site.</p>
-        <p><a href="/iaccount/login.php" class="btn btn-primary btn-large">Login to <?= $GLOBALS['sys_name']?> <i class="icon-chevron-right icon-white"></i></a><br>
+        <p><a href="/account/login.php" class="btn btn-primary btn-large">Login to <?= $GLOBALS['sys_name']?> <i class="icon-chevron-right icon-white"></i></a><br>
         Or <a href="/account/register.php">register a new account</a>
         </p>
     </div>
