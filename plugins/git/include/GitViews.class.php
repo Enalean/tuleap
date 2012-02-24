@@ -678,8 +678,8 @@ class GitViews extends PluginViews {
 		$usrProject = array_diff($user->getAllProjects(), array($currentProjectId));
 		
 		foreach ($usrProject as $projectId) {
-			if ($user->isMember($projectId, 'A')) {
-				$project = $manager->getProject($projectId);
+			$project = $manager->getProject($projectId);
+			if ($user->isMember($projectId, 'A') && $project->usesService('git')) {
 				$projectName     = $purifier->purify($project->getPublicName());
 				$projectUnixName = $purifier->purify($project->getUnixName()); 
 				$html           .= sprintf($option, $projectId, $projectUnixName, $projectName);

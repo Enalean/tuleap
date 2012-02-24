@@ -77,13 +77,29 @@ class GitViewsTest extends UnitTestCase {
 		
 		
 	}
+	public function testProjectListMustContainsOnlyProjectsWithGitEnabled() {
+		$user    = $this->GivenAUserWithProjects();
+		$project = $this->GivenAProjectWithoutGitService('123', 'Guinea Pig');
+		$manager = $this->GivenAProjectManager($project);
+		
+		$view = TestHelper::getPartialMock('GitViews', array());
+		$this->assertNoPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
+		
+	}
 	
-	private function GivenAProject($id, $name, $unixName = null) {
-		$project = new MockProject();
-		$project->setReturnValue('getId', $id);
-		$project->setReturnValue('getPublicName', $name);
-		$project->setReturnValue('getUnixName', $unixName);
-		return $project;
+	
+	
+	private function GivenAProject($id, $name, $unixName = null, $useGit = true) {
+	$project = new MockProject();
+	$project->setReturnValue('getId', $id);
+	$project->setReturnValue('getPublicName', $name);
+	$project->setReturnValue('getUnixName', $unixName);
+	$project->setReturnValue('usesService', $useGit, array('git'));
+			return $project;
+	}
+	
+	private function GivenAProjectWithoutGitService($id, $name) {
+		return $this->GivenAProject($id, $name, null, false);
 	}
 	
 	private function GivenAProjectManager($project) {
