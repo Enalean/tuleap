@@ -46,14 +46,6 @@ array('getFileLocation', 'getFile', 'getFileId', 'getProject', 'getUtils', 'logD
  */
 class WebDAVFRSFileTest extends UnitTestCase {
 
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function WebDAVFRSFileTest($name = 'WebDAVFRSFileTest') {
-        $this->UnitTestCase($name);
-    }
-
     function setUp() {
 
         $GLOBALS['Language'] = new MockBaseLanguage($this);
@@ -131,8 +123,6 @@ class WebDAVFRSFileTest extends UnitTestCase {
         $project = new MockProject();
         $webDAVFile->setReturnValue('getProject', $project);
         $webDAVFile->setReturnValue('getUtils', $utils);
-
-        $this->assertNoErrors();
 
         $webDAVFile->delete();
 

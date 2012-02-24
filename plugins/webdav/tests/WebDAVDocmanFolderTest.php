@@ -164,7 +164,6 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
-        $this->assertNoErrors();
         $children = $webDAVDocmanFolder->getChildList();
 
         $this->assertTrue(isset($children['SameName']));
@@ -214,7 +213,6 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $utils->setReturnValue('getDocmanItemFactory', $docmanItemFactory);
         $webDAVDocmanFolder->setReturnValue('getUtils', $utils);
 
-        $this->assertNoErrors();
         $children = $webDAVDocmanFolder->getChildren();
 
         $this->assertTrue(isset($children['SameName']));
@@ -320,7 +318,6 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
 
         $webDAVDocmanFolder->setReturnValue('getWebDAVDocmanFolder', $folder);
 
-        $this->assertNoErrors();
         $this->assertEqual($webDAVDocmanFolder->getChild('SomeName'), $folder);
     }
 
@@ -348,7 +345,6 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $item = new MockDocman_Item();
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
         
-        $this->assertNoErrors();
         $webDAVDocmanFolder->createDirectory('name');
     }
 
@@ -387,7 +383,6 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $item = new MockDocman_Item();
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
 
-        $this->assertNoErrors();
         $webDAVDocmanFolder->setName('newName');
     }
 
@@ -439,8 +434,7 @@ class WebDAVDocmanFolderTest extends UnitTestCase {
         $webDAVDocmanFolder->setReturnValue('getItem', $item);
         
         $webDAVDocmanFolder->setReturnValue('getMaxFileSize', 2000);
-        
-        $this->assertNoErrors();
+
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
         $webDAVDocmanFolder->createFile('name', $data);
     }

@@ -35,14 +35,6 @@ array()
 class WebDAVUtilsTest extends UnitTestCase {
 
     /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function WebDAVUtilsTest($name = 'WebDAVUtilsTest') {
-        $this->UnitTestCase($name);
-    }
-
-    /**
      * Testing when The user is not member and is not super user
      */
     function testUserIsAdminNotSuperUserNotmember() {
