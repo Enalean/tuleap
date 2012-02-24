@@ -147,7 +147,6 @@ class AgileDashboard_SearchView {
         foreach ($this->artifacts as $row) {
             $artifact = $this->artifact_factory->getArtifactById($row['id']);
             if ($artifact) {
-                $tracker = $artifact->getTracker();
                 $html .= '<tr class="' . html_get_alt_row_color($i++) . '">';
                 $html .= '<td>';
                 $html .= $artifact->fetchDirectLinkToArtifact();
