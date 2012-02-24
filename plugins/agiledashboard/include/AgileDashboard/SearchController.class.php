@@ -99,9 +99,7 @@ class AgileDashboard_SearchController {
         $trackers = array();
         $projectSharedFields = $this->formElementFactory->getAllProjectSharedFields($project);
         foreach ($projectSharedFields as $field) {
-            if (!isset($trackers[$field->getTrackerId()])) {
-                $trackers[$field->getTrackerId()] = $field->getTracker();
-            }
+            $trackers[$field->getTrackerId()] = $field->getTracker();
         } 
         return $trackers;
     }
