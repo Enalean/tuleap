@@ -5,7 +5,7 @@ class ForkExternalCommand extends ForkCommands {
 		$this->to_project = $to_project;
 	}
 
-	public function dofork($repo, User $user) {
+	public function dofork(GitRepository $repo, User $user) {
 		$repo->forkCrossProject($this->to_project, $user);
 	}
 }

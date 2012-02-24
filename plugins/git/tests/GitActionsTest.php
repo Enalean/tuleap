@@ -611,26 +611,6 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         return $return;
     }
 
-     /** 
-      * Todo : move to Forkcommmand or git.class? 
-      */   
-    function testForkShouldNotCloneAnyNonExistentRepositories() {
-        $repositories = array();
-        $path = 'toto';
-        $group_id = 101;
-        
-        $user = new MockUser();
-        
-        $controller = new MockGit($this);
-        $repos = $this->getRepoCollectionFor('forkIndividual', array($path, $user), $repositories, $user);
-        
-        $systemEventManager = new MockSystemEventManager();
-        $layout = new MockLayout();
-        $layout->expectNever('redirect');
-        
-        $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepos(new ForkIndividualCommand(''), $group_id, $repos, $user, $layout);
-    }
     
     public function testForkCrossProjectsRedirectToCrossProjectGitRepositories() {
         $repo_id = '1';

@@ -14,17 +14,23 @@
 * @return bool false if no repository has been cloned
 */
 abstract class ForkCommands {
+    
 	public function fork($repos, User $user) {
 		$forked = false;
+ 		$repos = $this->filterNullRepos($repos);
 		foreach($repos as $repo) {
-			if ($repo && $repo->userCanRead($user)) {
+			if ($repo->userCanRead($user)) {
 				$this->dofork($repo, $user);
 				$forked = true;
 			}
 		}
 		return $forked;
-
 	}
-	public abstract function dofork($repo, User $user);
+	
+	protected function filterNullRepos(array $repos) {
+	    return array_diff($repos, array(null));
+	}
+	
+	public abstract function dofork(GitRepository $repo, User $user);
 }
 ?>
