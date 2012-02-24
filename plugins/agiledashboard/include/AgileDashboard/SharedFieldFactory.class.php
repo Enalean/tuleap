@@ -29,7 +29,7 @@ class AgileDashboard_SharedFieldFactory {
 
         if ($criteria) {
             foreach($criteria as $fieldId => $data) {
-                $valueIds    = $data['values'];
+                $valueIds = $data['values'];
                 
                 if ($valueIds != array('')) {
                     $sharedFields[] = $this->getSharedField($fieldId, $valueIds);

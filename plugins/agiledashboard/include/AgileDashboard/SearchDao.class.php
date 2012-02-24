@@ -68,7 +68,7 @@ class AgileDashboard_SearchDao extends DataAccessObject {
             )
             INNER JOIN tracker_changeset_value_list AS $changeset_value_list ON (
                     $changeset_value_list.changeset_value_id = $changeset_value.id
-                AND $changeset_value_list.bindvalue_id       IN ($valueIds)
+                AND $changeset_value_list.bindvalue_id IN ($valueIds)
             )
         ";
         

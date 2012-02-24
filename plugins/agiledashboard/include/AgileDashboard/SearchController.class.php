@@ -132,8 +132,7 @@ class AgileDashboard_SearchController {
     }
     
     public function getCriteria(Project $project, Tracker_Report $report) {
-        $fields           = $this->formElementFactory->getProjectSharedFields($project);
-        
+        $fields   = $this->formElementFactory->getProjectSharedFields($project);
         $criteria = array();
         foreach ($fields as $field) {
             $field->setCriteriaValue($this->getSelectedValues($field));

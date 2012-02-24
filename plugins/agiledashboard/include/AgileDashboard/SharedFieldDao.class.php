@@ -33,9 +33,13 @@ class AgileDashboard_SharedFieldDao extends DataAccessObject {
         $sql_target_ids = "
             SELECT target.id
             FROM tracker_field AS f
-                INNER JOIN tracker_field AS original ON (   f.original_field_id = original.id
-                                                         OR f.id                = original.id)
-                INNER JOIN tracker_field AS target   ON (   original.id         = target.original_field_id)
+                INNER JOIN tracker_field AS original ON (
+                    f.original_field_id = original.id
+                    OR f.id             = original.id
+                )
+                INNER JOIN tracker_field AS target ON (
+                    original.id = target.original_field_id
+                )
             WHERE f.id = $sourceOrTargetFieldIds
         ";
         
