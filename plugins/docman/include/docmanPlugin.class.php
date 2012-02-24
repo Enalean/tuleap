@@ -23,9 +23,6 @@
  * 
  */
 require_once('common/plugin/Plugin.class.php');
-require_once('Docman_VersionFactory.class.php');
-require_once('Docman_ItemFactory.class.php');
-require_once('Docman_NotificationsManager.class.php');
 
 class DocmanPlugin extends Plugin {
     /**
@@ -513,6 +510,7 @@ class DocmanPlugin extends Plugin {
         
         $linkToLogMsg = '<p>When an element is deleted, the action appears in <a href="/project/stats/source_code_access.php/?who=allusers&span=14&view=daily&group_id='.$params['group_id'].'">the access log</a>.</p>';
         
+        require_once('Docman_VersionFactory.class.php');
         $version = new Docman_VersionFactory();
         $res = $version->listPendingVersions($params['group_id'], $offsetVers, $limit);
         $params['id'][] = 'version';
@@ -533,6 +531,7 @@ class DocmanPlugin extends Plugin {
         if ( !$offsetItem || $offsetItem < 0 ) {
             $offsetItem = 0;
         }
+        require_once('Docman_ItemFactory.class.php');
         $item = new Docman_ItemFactory($params['group_id']);
         $res = $item->listPendingItems($params['group_id'], $offsetItem , $limit);
         $params['id'][] = 'item';
@@ -604,6 +603,7 @@ class DocmanPlugin extends Plugin {
 
     function showPendingItems($res, $groupId, $nbItems, $offset, $limit) {
         $hp = Codendi_HTMLPurifier::instance();
+        require_once('Docman_ItemFactory.class.php');
         $itemFactory = new Docman_ItemFactory($groupId);
         $uh = UserHelper::instance();
 
@@ -664,9 +664,11 @@ class DocmanPlugin extends Plugin {
      * @return void
      */
     function purgeFiles(array $params) {
+        require_once('Docman_ItemFactory.class.php');
         $itemFactory = new Docman_ItemFactory();
         $itemFactory->purgeDeletedItems($params['time']);
 
+        require_once('Docman_VersionFactory.class.php');
         $versionFactory = new Docman_VersionFactory();
         $versionFactory->purgeDeletedVersions($params['time']);
     }
@@ -682,6 +684,7 @@ class DocmanPlugin extends Plugin {
         function project_is_deleted($params) {
             $groupId = $params['group_id'];
             if ($groupId) {
+                require_once('Docman_ItemFactory.class.php');
                 $docmanItemFactory = new Docman_ItemFactory();
                 $docmanItemFactory->deleteProjectTree($groupId);
             }
@@ -703,9 +706,11 @@ class DocmanPlugin extends Plugin {
         $pm = ProjectManager::instance();
         $project = $pm->getProject($groupId);
         if (!$project->isPublic()) {
+            require_once('Docman_ItemFactory.class.php');
             $docmanItemFactory = new Docman_ItemFactory();
             $root = $docmanItemFactory->getRoot($groupId);
             if ($root) {
+                require_once('Docman_NotificationsManager.class.php');
                 $notificationsManager = new Docman_NotificationsManager($groupId, null, null);
                 $dar = $notificationsManager->listAllMonitoredItems($groupId, $userId);
                 if($dar && !$dar->isError()) {
@@ -730,9 +735,11 @@ class DocmanPlugin extends Plugin {
         $private = $params['project_is_private'];
 
         if ($private) {
+            require_once('Docman_ItemFactory.class.php');
             $docmanItemFactory = new Docman_ItemFactory();
             $root = $docmanItemFactory->getRoot($groupId);
             if ($root) {
+                require_once('Docman_NotificationsManager.class.php');
                 $notificationsManager = new Docman_NotificationsManager($groupId, null, null);
                 $dar = $notificationsManager->listAllMonitoredItems($groupId);
                 if($dar && !$dar->isError()) {
