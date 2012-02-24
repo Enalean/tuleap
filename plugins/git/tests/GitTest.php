@@ -58,17 +58,7 @@ class GitTest extends TuleapTestCase {
 
     }
 }
-//TODO 
-// - Ask the user to which project he wants to fork by listing all projects of which he is admin
-// - move fork methods from gitrepository to gitforkcommands
-// - treat todos in GitActionsTest
-// - in git->_doDispatchForkInternal and external do not pass on non existing repos  and remove the corresponding check in ForkCommands
-//
-// - add token to forkcrossproject
-// - add requirement about the repos and git command passed to the action
-// - pass on a real project instead of a project id
-// - verify that the user is admin of the project
-// - clean gitaction tests of duplication
+
 class Git_ForkRepositories_Test extends TuleapTestCase {
     public function testRenders_ForkRepositories_View() {
         Mock::generatePartial('Git', 'GitSpy2', array('_doDispatchForkRepositories', 'addView'));
@@ -127,7 +117,6 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $toProject, array($toProjectId));
         $git = new GitSpy();
-        //forkCommand, $groupId, array $repos, User $user, Layout $response
         $groupId = 101;
         $git->expectOnce('addAction', array('forkCrossProject', array($groupId, $repos, $toProject, $user, $GLOBALS['HTML'])));
         $git->expectOnce('addView', array('forkRepositories'));

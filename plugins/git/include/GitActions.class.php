@@ -31,8 +31,8 @@ require_once('Git_GitoliteDriver.class.php');
 require_once('Git_Backend_Gitolite.class.php');
 require_once('GitRepositoryFactory.class.php');
 require_once('common/layout/Layout.class.php');
-require_once('ForkIndividualCommand.class.php');
-require_once('ForkExternalCommand.class.php');
+require_once('GitForkIndividualCommand.class.php');
+require_once('GitForkExternalCommand.class.php');
 
 /**
  * GitActions
@@ -503,7 +503,7 @@ class GitActions extends PluginActions {
      * @return bool false if no repository has been cloned
      */
     function forkRepositories($groupId, array $repos, $path, User $user, Layout $response) {
-        $forkCommand = new ForkIndividualCommand($path);
+        $forkCommand = new GitForkIndividualCommand($path);
         $this->forkRepos($forkCommand, $groupId, $repos, $user, $response);
     }
 
@@ -512,7 +512,7 @@ class GitActions extends PluginActions {
         if (!$user->isMember($projectId, 'A')) {
             $this->_addError('must_be_admin_to_create_project_repo');
         } else {
-            $forkCommand = new ForkExternalCommand($to_project);
+            $forkCommand = new GitForkExternalCommand($to_project);
             $this->forkRepos($forkCommand, $projectId, $repos, $user, $response);
         }
                 

@@ -34,7 +34,7 @@ Mock::generate('GitRepositoryFactory');
 Mock::generate('User');
 Mock::generate('SystemEventManager');
 Mock::generate('Layout');
-Mock::generate('ForkIndividualCommand');
+Mock::generate('GitForkIndividualCommand');
 class AbstractGitActionsTest extends UnitTestCase {
         function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage();
@@ -516,7 +516,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $controller = new MockGit($this);
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepos(new ForkExternalCommand($to_project), $group_id, $repos, $user, $layout);
+        $action->forkRepos(new GitForkExternalCommand($to_project), $group_id, $repos, $user, $layout);
         
         
     }
@@ -533,7 +533,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $layout->expectNever('redirect');
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepos(new ForkIndividualCommand(''), $group_id, $repos, new MockUser(), $layout);
+        $action->forkRepos(new GitForkIndividualCommand(''), $group_id, $repos, new MockUser(), $layout);
     }
     function testClonesOneRepository() {
         $id = '1';
@@ -556,7 +556,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepos(new ForkExternalCommand($to_project), $group_id, $repos, $user, $layout);
+        $action->forkRepos(new GitForkExternalCommand($to_project), $group_id, $repos, $user, $layout);
     }
     
 

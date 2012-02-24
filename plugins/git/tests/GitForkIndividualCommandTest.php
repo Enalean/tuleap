@@ -3,7 +3,7 @@ require_once dirname(__FILE__).'/../include/GitRepository.class.php';
 Mock::generate('GitRepository');
 Mock::generate('User');
 
-class testForkIndividualCommand extends UnitTestCase {
+class testGitForkIndividualCommand extends UnitTestCase {
     
     
     /**
@@ -13,7 +13,7 @@ class testForkIndividualCommand extends UnitTestCase {
         $user = new MockUser();
         $repo = new MockGitRepository();
         $repo->setReturnValue('userCanRead', true);
-        $command = new ForkIndividualCommand('');
+        $command = new GitForkIndividualCommand('');
         $command->fork(array($repo, null), $user);
         
     }

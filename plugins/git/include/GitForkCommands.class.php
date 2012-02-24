@@ -13,7 +13,7 @@
 *
 * @return bool false if no repository has been cloned
 */
-abstract class ForkCommands {
+abstract class GitForkCommands {
     
 	public function fork($repos, User $user) {
 		$forked = false;

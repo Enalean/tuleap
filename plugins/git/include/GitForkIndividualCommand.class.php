@@ -1,6 +1,6 @@
 <?php
-require_once('ForkCommands.class.php');
-class ForkIndividualCommand extends ForkCommands {
+require_once('GitForkCommands.class.php');
+class GitForkIndividualCommand extends GitForkCommands {
 	public function __construct($path) {
 		$this->path = $path;
 	}
