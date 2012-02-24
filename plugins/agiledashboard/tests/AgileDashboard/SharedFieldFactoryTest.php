@@ -30,12 +30,12 @@ class AgileDashboard_SharedFieldFactoryTest extends UnitTestCase {
         $this->factory->setReturnValue('getDao', $this->dao);
     }
     
-    function testWithNoCriteria() {
+    function testNoCriteriaShouldReturnNoFields() {
         $sharedFields = $this->factory->getSharedFields(null);
         $this->assertEqual($sharedFields, array());
     }
     
-    function testWithOneValueForOneField() {
+    function testWithOneValueForOneFieldShouldReturnTwoFieldsAndTwoValues() {
         $criteria = array('220' => array('values' => array('350')));
         
         $this->dao->setReturnValue('searchSharedFieldIds', $this->darFromIds(220, 230));
@@ -47,7 +47,7 @@ class AgileDashboard_SharedFieldFactoryTest extends UnitTestCase {
         $this->assertEqual($sharedFields[0]->getValueIds(), array(350, 360));
     }
     
-    function testWithTwoValuesForOneField() {
+    function testWithTwoValuesForOneFieldShouldRetunTwoFieldAndFourValues() {
         $criteria = array('220' => array('values' => array('350', '351')));
         
         $this->dao->setReturnValue('searchSharedFieldIds', $this->darFromIds(220, 230));
@@ -76,7 +76,7 @@ class AgileDashboard_SharedFieldFactoryTest extends UnitTestCase {
         $this->assertEqual($sharedFields[1]->getValueIds(), array(352, 362));
     }
     
-    function testWithOneFieldWithNoValues() {
+    function testWithOneFieldWithNoValuesShouldReturnNoMatchingFields() {
         $criteria = array('220' => array('values' => array(0 => '')));
         
         $this->dao->expectNever('searchSharedFieldIds');
@@ -86,7 +86,7 @@ class AgileDashboard_SharedFieldFactoryTest extends UnitTestCase {
         $this->assertEqual($sharedFields, array());
     }
     
-    function testWithValueNoneSelected() {
+    function testWithValueNoneSelectedShouldReturnOnlyOneValueForTheTwoFields() {
         $criteria = array('220' => array('values' => array(0 => '100')));
         
         $this->dao->setReturnValue('searchSharedFieldIds', $this->darFromIds(220, 230));
@@ -98,7 +98,7 @@ class AgileDashboard_SharedFieldFactoryTest extends UnitTestCase {
         $this->assertEqual($sharedFields[0]->getValueIds(), array(100));
     }
     
-    function testWithValueNoneSelectedAndAnotherOne() {
+    function testWithValueNoneSelectedAndAnotherOneShouldReturnNoneValueAndTheTwoOtherValues() {
         $criteria = array('220' => array('values' => array('100', '350')));
         
         $this->dao->setReturnValue('searchSharedFieldIds', $this->darFromIds(220, 230));
