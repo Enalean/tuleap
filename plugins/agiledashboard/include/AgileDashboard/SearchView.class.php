@@ -127,7 +127,7 @@ class AgileDashboard_SearchView {
     
     private function fetchTable() {
         $html  = '';
-        $html .= '<table class="sortable">';
+        $html .= '<table>';
         $html .= $this->fetchTHead();
         $html .= $this->fetchTBody();
         $html .= '</table>';
