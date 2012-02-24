@@ -31,8 +31,8 @@ require_once('Git_GitoliteDriver.class.php');
 require_once('Git_Backend_Gitolite.class.php');
 require_once('GitRepositoryFactory.class.php');
 require_once('common/layout/Layout.class.php');
-require_once('GitForkIndividualCommand.class.php');
-require_once('GitForkExternalCommand.class.php');
+require_once('ForkIndividualCommand.class.php');
+require_once('ForkExternalCommand.class.php');
 
 /**
  * GitActions

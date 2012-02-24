@@ -34,6 +34,7 @@ Mock::generate('GitRepositoryFactory');
 Mock::generate('User');
 Mock::generate('SystemEventManager');
 Mock::generate('Layout');
+Mock::generate('ForkIndividualCommand');
 class AbstractGitActionsTest extends UnitTestCase {
         function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage();
@@ -434,42 +435,56 @@ class GitActionsTest extends AbstractGitActionsTest {
 }
 class GitActions_Fork_Test extends AbstractGitActionsTest {
     /**
-     *TOdo use partial mock to just verify that it calls forkRepos() ? 
+     * TODO use partial mock to just verify that it calls forkRepos() ? 
      */
     function testForkRepositories() {
-        $repositories = array('1');
-        $path = 'toto';
+        $path  = 'toto';
         $group_id = 101;
         
         $user = new MockUser();
         $user->setReturnValue('getId', 123);
+        $project = new MockProject();
         
-        $controller = new MockGit($this);
-        $repos = $this->getRepoCollectionFor('forkIndividual', array($path, $user), $repositories, $user);
+        $repo = new MockGitRepository();
+        $repo->setReturnValue('userCanRead', true, array($user));
+        $repo->setReturnValue('getProject', $project);
+        $repo->expectOnce('fork', array($user, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $project));
         
-        $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
-        
+                
+        $controller = new MockGit($this);
+        $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepositories($group_id, $repos, $path, $user, $layout);
+        $action->forkRepositories($group_id, array($repo), $path, $user, $layout);
     }
     
-    function testClonesManyInternalRepositories() {
-        $repositories = array('1', '2', '3');
-        $path = 'toto';
-        $group_id = 101;
+    function testClonesManyInternalRepositories() {    	
+    	$path  = 'toto';
+    	$group_id = 101;
+    	
+    	$user = new MockUser();
+    	$user->setReturnValue('getId', 123);
+    	
+    	$project = new MockProject();
+    	
+    	$layout = new MockLayout();
+    	$layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
+    	
+        $repo_ids = array('1', '2', '3');
         
-        $user = new MockUser();
+        $repos = array();
+        foreach ($repo_ids as $id) {
+        	$repo = new MockGitRepository();
+        	$repo->setReturnValue('getId', $id);
+        	$repo->setReturnValue('userCanRead', true, array($user));
+        	$repo->setReturnValue('getProject', $project);
+        	$repo->expectOnce('fork', array($user, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $project));
+        	$repos[] = $repo;
+        }
         
         $controller = new MockGit($this);
-        
-        $repos = $this->getRepoCollectionFor('forkIndividual', array($path, $user), $repositories, $user);
-        
         $systemEventManager = new MockSystemEventManager();
-        $layout = new MockLayout();
-        $layout->expectOnce('redirect');
-        
         $action = new GitActions($controller, $systemEventManager);
         $action->forkRepositories($group_id, $repos, $path, $user, $layout);
     }
@@ -583,7 +598,6 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         }
         return $return;
     }
-    
     protected function getRepoCollectionFor($method, $expectedArgs, $repo_ids, $user ) {
         $return = array();
         foreach ($repo_ids as $id) {

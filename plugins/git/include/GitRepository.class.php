@@ -616,11 +616,6 @@ class GitRepository implements DVCSRepository {
         $clone->setDescription('-- Default description --');
         $this->getBackend()->createFork($clone);
     }
-        
-    public function forkIndividual($namespace, $user) {
-        $scope = self::REPO_SCOPE_INDIVIDUAL;
-        $this->_fork($user, $namespace, $scope, $this->project);
-    }
 
     public function forkCrossProject($project, $user) {
         $scope = self::REPO_SCOPE_PROJECT;
@@ -638,6 +633,10 @@ class GitRepository implements DVCSRepository {
         $clone->setPath($path);
         $clone->setScope($scope);
         $this->getBackend()->fork($this, $clone);
+    }
+    
+    public function fork($user, $namespace, $scope, $project) {
+    	$this->_fork($user, $namespace, $scope, $project);
     }
     
     /**

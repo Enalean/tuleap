@@ -230,7 +230,7 @@ class GitRepositoryTest extends UnitTestCase {
 
         $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($clone)));
 
-        $repo->forkIndividual($namespace, $user);
+        $repo->fork($user, $namespace, GitRepository::REPO_SCOPE_INDIVIDUAL, $project);
     }
     public function testForkExternalsClonesByChangingTheProjectAndPath() {
         $user = $this->_newUser("sandra");

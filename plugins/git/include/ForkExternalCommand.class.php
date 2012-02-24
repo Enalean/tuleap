@@ -1,5 +1,5 @@
 <?php
-require_once('GitForkCommands.class.php');
+require_once('ForkCommands.class.php');
 class ForkExternalCommand extends ForkCommands {
 	public function __construct($to_project) {
 		$this->to_project = $to_project;
