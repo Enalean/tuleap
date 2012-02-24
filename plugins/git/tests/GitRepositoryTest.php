@@ -250,8 +250,7 @@ class GitRepositoryTest extends UnitTestCase {
         $expectedRepo->setPath(unixPathJoin(array($to_project->getUnixName(), '', $repo->getName())).'.git');
 
         $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($expectedRepo)));
-        
-        $repo->forkCrossProject($to_project, $user);
+        $repo->fork($user, '', GitRepository::REPO_SCOPE_PROJECT, $to_project);
     }
     private function _aGitRepoWith($user, $repo, $namespace, $backend, $scope) {
         $clone = new GitRepository();
