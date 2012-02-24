@@ -41,12 +41,14 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $this->user->setReturnValue('getId', 1234);
         $this->docmanPm =& new Docman_PermissionsManagerTestVersion($this);
         $this->refOnNull = null;
+        $this->project = new MockProject();
     }
 
     function tearDown() {
         unset($this->user);
         unset($this->docmanPm);
         unset($this->refOnNull);
+        unset($this->project);
     }
     
     // Functional test (should never change)
@@ -697,10 +699,10 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $dao->expectOnce('getDocmanAdminUgroups');
         $dao->expectNever('getUgroupMembers');
         $this->docmanPm->expectOnce('getDao');
-        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers(1));
+        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
-    function testGetDocmanAdminUsersDynamicUgroup() {
+    function testGetDocmanAdminUsersDynamicUgroup() {        
         $dar = array(array('ugroup_id' => 101));
         $dao = new MockDocman_PermissionsManagerDao();
         $dao->setReturnValue('getDocmanAdminUgroups', $dar);
@@ -716,7 +718,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $this->docmanPm->expectOnce('getDao');
         $userArray = array('john.doe@example.com' => 'en_US',
                            'jane.doe@example.com' => 'fr_FR');
-        $this->assertEqual($userArray, $this->docmanPm->getDocmanAdminUsers(1));
+        $this->assertEqual($userArray, $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
     function testGetDocmanAdminUsersEmptyDynamicUgroup() {
@@ -730,7 +732,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $dao->expectOnce('getDocmanAdminUgroups');
         $dao->expectOnce('getUgroupMembers');
         $this->docmanPm->expectOnce('getDao');
-        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers(1));
+        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
     function testGetDocmanAdminUsersStaticUgroup() {
@@ -743,7 +745,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $dao->expectOnce('getDocmanAdminUgroups');
         $dao->expectNever('getUgroupMembers');
         $this->docmanPm->expectOnce('getDao');
-        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers(1));
+        $this->assertEqual(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
     function testGetProjectAdminUsersError() {
@@ -753,7 +755,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
 
         $dao->expectOnce('getProjectAdminMembers');
         $this->docmanPm->expectOnce('getDao');
-        $this->assertEqual(array(), $this->docmanPm->getProjectAdminUsers(1));
+        $this->assertEqual(array(), $this->docmanPm->getProjectAdminUsers($this->project));
     }
 
     function testGetProjectAdminUsersSuccess() {
@@ -769,7 +771,7 @@ class Docman_PermissionsManagerTest extends UnitTestCase {
         $this->docmanPm->expectOnce('getDao');
         $userArray = array('john.doe@example.com' => 'en_US',
                            'jane.doe@example.com' => 'fr_FR');
-        $this->assertEqual($userArray, $this->docmanPm->getProjectAdminUsers(1));
+        $this->assertEqual($userArray, $this->docmanPm->getProjectAdminUsers($this->project));
     }
     
        //function testGetProjectAdminUsersSuccess() {
