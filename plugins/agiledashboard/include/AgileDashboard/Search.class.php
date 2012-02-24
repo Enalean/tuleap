@@ -46,11 +46,10 @@ class AgileDashboard_Search {
         
         if (count($searchedSharedFields) > 0) { 
             return $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
-        } else {
-            if (count($trackerIds) > 0) {
-                return $this->dao->searchArtifactsFromTrackers($trackerIds);
-            }
+        } elseif (count($trackerIds) > 0) {
+            return $this->dao->searchArtifactsFromTrackers($trackerIds);
         }
+        return array();
     }
     
     private function getTrackerId(Tracker $tracker) {
