@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('FileModuleMonitorFactory.class.php');
-require_once('FRSPackageFactory.class.php');
-
 /**
  * ServiceFile
  */
@@ -69,6 +66,7 @@ class ServiceFile extends Service {
                         </td>
                     </tr>
             ';
+            require_once('FileModuleMonitorFactory.class.php');
             $fmmf =& new FileModuleMonitorFactory();
             foreach($packages as $package) {
                 // the icon is different whether the package is monitored or not
@@ -103,6 +101,12 @@ class ServiceFile extends Service {
         ';
         return $ret;
     }
+    
+    private function getFRSPackageFactory() {
+        require_once('FRSPackageFactory.class.php');
+        return new FRSPackageFactory();
+    }
+    
     /**
     * _getPackagesForUser
     * 
@@ -111,7 +115,7 @@ class ServiceFile extends Service {
     * @param  user_id  
     */
     function _getPackagesForUser($user_id) {
-        $frspf =& new FRSPackageFactory();
+        $frspf = $this->getFRSPackageFactory();
         $packages = array();
         $sql="SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date ".
         "FROM frs_package,frs_release ".
