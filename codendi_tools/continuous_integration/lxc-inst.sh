@@ -47,7 +47,7 @@ done
 
 # install Tuleap
 # TODO: redirect output and errors in a file for debugging purpose
-bash -x /usr/share/tuleap-install/setup.sh --mysql-root-password=mysql-root --without-bind-config --disable-subdomains --sys-default-domain=$ip_address --sys-fullname=$ip_address --sys-ip-address=$ip_address --sys-org-name=Tuleap --sys-long-org-name=Tuleap
+bash -x /usr/share/tuleap-install/setup.sh --auto-passwd --without-bind-config --disable-subdomains --sys-default-domain=$ip_address --sys-fullname=$ip_address --sys-ip-address=$ip_address --sys-org-name=Tuleap --sys-long-org-name=Tuleap
 
 # activate tuleap licence
 touch /etc/codendi/CODENDI_LICENSE_ACCEPTED
