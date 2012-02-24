@@ -213,18 +213,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $contributor_field    = $tracker->getContributorField();
         $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
         
-        /*
-         Manage multitracker queries
-        $tracker_ids = array($this->tracker_id);
-        $res = db_query("SELECT f_dest.tracker_id
-                         FROM tracker_field f_dest
-                         INNER JOIN tracker_field f 
-                            ON (f_dest.original_field_id = f.id AND f_dest.id != f_dest.original_field_id) 
-                         WHERE f.tracker_id = ".$this->tracker_id);
-        while ($row = db_fetch_array($res)) {
-            $tracker_ids[] = $row['tracker_id'];
-        }*/
-        
         $additional_from  = array();
         $additional_where = array();
         foreach($criteria as $c) {
