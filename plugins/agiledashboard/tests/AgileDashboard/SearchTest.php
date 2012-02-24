@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) . '/../../../tracker/tests/Test_Tracker_Builder.php';
 require_once dirname(__FILE__) . '/../../../tracker/tests/Test_Tracker_FormElement_Builder.php';
 require_once dirname(__FILE__) .'/../../include/AgileDashboard/Search.class.php';
 Mock::generate('AgileDashboard_SharedFieldFactory');
@@ -31,11 +32,10 @@ class AgileDashboard_SearchTest extends UnitTestCase {
         $this->project            = new MockProject();
         $this->sharedFieldFactory = new MockAgileDashboard_SharedFieldFactory();
         $this->searchDao          = new MockAgileDashboard_SearchDao();
-        $this->trackerIds         = array (201, 202);
-        $trackers                 = array(aTracker()->withId(201)->build(), aTracker()->withId(202)->build());
+        $this->trackerIds         = array(201, 202);
+        $this->trackers           = array(aTracker()->withId(201)->build(), aTracker()->withId(202)->build());
         
         $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
-        $this->search->setTrackers($trackers);
     }
     
     function testGetMatchingArtifactsDelegatesToSharedFieldFactoryAndSearchDao() {
@@ -48,7 +48,7 @@ class AgileDashboard_SearchTest extends UnitTestCase {
         
         $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, $sharedFields));
         
-        $this->search->getMatchingArtifacts($this->project, $criteria);
+        $this->search->getMatchingArtifacts($this->trackers, $criteria);
     }
     
     function testGetProjectArtifactsWhenNoCriteria() {
@@ -56,7 +56,7 @@ class AgileDashboard_SearchTest extends UnitTestCase {
 
         $this->searchDao->expectOnce('searchArtifactsFromTrackers', array($this->trackerIds));
 
-        $this->search->getMatchingArtifacts($this->project, $criteria);
+        $this->search->getMatchingArtifacts($this->trackers, $criteria);
     }
     
     function testGetProjectArtifactsWhenNoArtifactsAndNoTrackers() {
@@ -65,8 +65,7 @@ class AgileDashboard_SearchTest extends UnitTestCase {
         $this->searchDao->expectNever('searchArtifactsFromTrackers');
         
         $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
-        $this->search->setTrackers(array());
-        $artifacts = $this->search->getMatchingArtifacts($this->project, $criteria);
+        $artifacts = $this->search->getMatchingArtifacts(array(), $criteria);
         
         $this->assertEqual(count($artifacts), 0);
     }

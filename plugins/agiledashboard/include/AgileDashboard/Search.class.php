@@ -34,25 +34,15 @@ class AgileDashboard_Search {
      */
     private $dao;
     
-    /**
-     * @var Array of Tracker
-     */
-    private $trackers;
-    
     public function __construct(AgileDashboard_SharedFieldFactory $sharedFieldFactory,
                                 AgileDashboard_SearchDao          $dao) {
-        
         $this->sharedFieldFactory = $sharedFieldFactory;
         $this->dao                = $dao;
     }
-    
-    public function setTrackers(array $trackers) {
-        $this->trackers = $trackers;
-    }
-    
-    public function getMatchingArtifacts(Project $project, $criteria = null) {
+
+    public function getMatchingArtifacts(array $trackers, $criteria=null) {
         $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
-        $trackerIds           = array_map(array($this, 'getTrackerId'), $this->trackers);
+        $trackerIds           = array_map(array($this, 'getTrackerId'), $trackers);
         
         if (count($searchedSharedFields) > 0) { 
             return $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
