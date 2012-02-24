@@ -90,11 +90,11 @@ class AgileDashboard_SearchView {
         $html  = '';
         $html .= '<div class="agiledashboard">';
         $html .= '<h1>'. $title .'</h1>';
-        try {
+        if ($this->criteria) {
             $html .= $this->fetchContent();
             $html .= $this->fetchTrackerList();
-        } catch (Exception $e) {
-            $html .= '<em>'. $e->getMessage() .'</em>';
+        } else {
+            $html .= '<em>'. 'There is no shared field to query across your trackers' .'</em>';
         }
         $html .= '</div>';
         
@@ -104,44 +104,38 @@ class AgileDashboard_SearchView {
     }
     
     private function fetchContent() {
-        if ($this->criteria) {
-            $html  = '';
-            $html .= '<table><tr valign="top"><td>';
-            $report_can_be_modified = false;
-            $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
-            $html .= $this->fetchResults();
-            $html .= '</td></tr></table>';
-            return $html;
-        }
-        throw new Exception('There is no shared field to query across your trackers');
+        $html  = '';
+        $html .= '<table><tr valign="top"><td>';
+        $report_can_be_modified = false;
+        $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
+        $html .= $this->fetchResults();
+        $html .= '</td></tr></table>';
+        return $html;
     }
     
     private function fetchResults() {
-        $html = '';
+        $html  = '';
         $html .= '<div class="tracker_report_renderer">';
-        try {
+        if (count($this->artifacts)) {
             $html .= $this->fetchTable();
-        } catch (Exception $e) {
-            $html .= '<em>'. $e->getMessage() .'</em>';
+        } else {
+            $html .= '<em>'. 'No artifact match your query' .'</em>';
         }
         $html .= '</div>';
         return $html;
     }
     
     private function fetchTable() {
-        if (count($this->artifacts)) {
-            $html = '';
-            $html .= '<table class="sortable">';
-            $html .= $this->fetchTHead();
-            $html .= $this->fetchTBody();
-            $html .= '</table>';
-            return $html;
-        }
-        throw new Exception('No artifact match your query');
+        $html  = '';
+        $html .= '<table class="sortable">';
+        $html .= $this->fetchTHead();
+        $html .= $this->fetchTBody();
+        $html .= '</table>';
+        return $html;
     }
     
     private function fetchTBody() {
-        $html = '';
+        $html  = '';
         $html .= '<tbody>';
         $i = 0;
         foreach ($this->artifacts as $row) {
