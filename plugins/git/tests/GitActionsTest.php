@@ -617,6 +617,31 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $action = new GitActions($controller, $systemEventManager);
         $action->forkRepos(new ForkIndividualCommand(''), $group_id, $repos, $user, $layout);
     }
+    
+    public function testForkCrossProjectsRedirectToCrossProjectGitRepositories() {
+        $repo_id = '1';
+        $project_id = 2;
+        
+        $user = new MockUser();
+        $user->setReturnValue('getId', 123);
+        $user->setReturnValue('isMember', true, array($project_id, 'A'));
+        $to_project = new MockProject();
+        $to_project->setReturnValue('getId', $project_id);
+        
+        $controller = new MockGit($this);
+        $repo = new MockGitRepository();
+        $repo->setReturnValue('getId', $repo_id);
+        $repo->setReturnValue('userCanRead', true, array($user));
+        $repos = array($repo);
+        
+        $systemEventManager = new MockSystemEventManager();
+        $layout = new MockLayout();
+        $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $project_id .'&user='. $user->getId()));
+        
+        $action = new GitActions($controller, $systemEventManager);
+        $action->forkCrossProject($project_id, $repos, $to_project, $user, $layout);
+    	
+    }
 
 }
 
