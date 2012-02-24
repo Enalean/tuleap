@@ -10,7 +10,7 @@ require_once('pre.php');
 require_once('www/forum/forum_utils.php');
 require_once('features_boxes.php');
 
-$HTML->header(array('title'=>$Language->getText('homepage', 'title')));
+$HTML->header(array('title'=>$Language->getText('homepage', 'title'), 'htmlclassname' => 'homepage'));
 
 echo '<div id="homepage">';
 

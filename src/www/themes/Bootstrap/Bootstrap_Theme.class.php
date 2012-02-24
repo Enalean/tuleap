@@ -26,39 +26,72 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
     function __construct($root) {
         parent::__construct($root);
     }
-    
-    function header($params) {
-        $current_user  = UserManager::instance()->getCurrentUser();
+
+    public function header($params) {
         $htmlclassname = '';
+        if (isset($params['htmlclassname'])) {
+            $htmlclassname = $params['htmlclassname'];
+        }
         echo '<!DOCTYPE html> 
-        <html lang="en" class="'. $htmlclassname .'"> 
-          <head> 
+        <html lang="en" class="'. $htmlclassname .'">';
+        echo $this->head($params);
+        echo $this->body($params);
+    }
+
+    private function head($params) {
+        $title = $this->getHtmlTitleFromParams($params);
+        $html  = '';
+        $html .= '<head> 
             <meta charset="utf-8"> 
-            <title>'. ($params['title'] ? $params['title'] . ' - ' : '') . $GLOBALS['sys_name'] .'</title>
+            <title>'. $title .'</title>
             <link rel="SHORTCUT ICON" href="'. $this->imgroot . 'favicon.ico' .'">';
-        echo $this->displayJavascriptElements();
-        echo $this->displayStylesheetElements($params);
-        echo $this->displaySyndicationElements();
-        echo '</head>';
-        echo '<body>';
+        $html .=  $this->displayJavascriptElements();
+        $html .=  $this->displayStylesheetElements($params);
+        $html .=  $this->displaySyndicationElements();
+        $html .=  '</head>';
+        return $html;
+    }
+
+    private function getHtmlTitleFromParams($params) {
+        $title = $GLOBALS['sys_name'];
+        if (!empty($params['title'])) {
+           $title = $params['title'] .' - '. $title;
+        }
+        return $title;
+    }
+
+
+    private function body($params) {
+        $project_manager = ProjectManager::instance();
+        $current_user    = UserManager::instance()->getCurrentUser();
+        $html  = '';
+        $html .= '<body>';
         $selectedTopTab = isset($params['selected_top_tab']) ? $params['selected_top_tab'] : false;
-        $nav = new NavBarBuilder(ProjectManager::instance(), EventManager::instance(), $GLOBALS['Language'], HTTPRequest::instance(), $current_user, $params['title'], $this->imgroot, $_SERVER['REQUEST_URI'], $selectedTopTab);
-        echo $nav->render();
-        echo $this->getBreadcrumbs();
-        echo $this->_getFeedback();
-        echo '<div class="container-fluid">';
-        echo '<div class="row-fluid">';
-        if (isset($params['group']) && $params['group']) {
+        $nav = new NavBarBuilder($project_manager, EventManager::instance(), $GLOBALS['Language'], HTTPRequest::instance(), $current_user, $params['title'], $this->imgroot, $_SERVER['REQUEST_URI'], $selectedTopTab);
+        $html .= $nav->render();
+        $html .= $this->getBreadcrumbs();
+        $html .= $this->_getFeedback();
+        $html .= $this->container($params, $project_manager, $current_user);
+        return $html;
+    }
+
+    private function container(array $params, ProjectManager $project_manager, User $current_user) {
+        $html  = '';
+        $html .= '<div class="main container-fluid">';
+        $html .= '<div class="row-fluid">';
+        if (!empty($params['group'])) {
             $project = ProjectManager::instance()->getProject($params['group']);
-            $sidebar = $this->projectSidebar($project, $params['toptab'], Codendi_HTMLPurifier::instance(), UserManager::instance()->getCurrentUser());
+            $sidebar = $this->projectSidebar($project, $params['toptab'], Codendi_HTMLPurifier::instance(), $current_user);
             if ($sidebar) {
-                echo $sidebar;
-                echo '<div class="span9">';
+                $html .= $sidebar;
+                $html .= '<div class="span10">';
             }
         }
-        echo '<div class="content well">';
-        echo $this->getToolbar();
+        $html .= '<div class="content well">';
+        $html .= $this->getToolbar();
+        return $html;
     }
+
     public function footer($params) {
         echo '</div>';
         echo '</div>';
@@ -124,7 +157,7 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
 
     public function projectSidebar(Project $project, $toptab, Codendi_HTMLPurifier $hp, User $user) {
         $html = '';
-        $html .= '<div class="span3">';
+        $html .= '<div class="span2">';
         $html .= '<div class="well sidebar-nav">';
         $html .= '<div style="text-align:center">';
         $html .= '<img src="http://placehold.it/176x76" />';
