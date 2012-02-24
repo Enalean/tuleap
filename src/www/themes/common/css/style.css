@@ -1047,20 +1047,6 @@ div.datePicker table td
 /* }}} */
 
 /* {{{ tablekit */
-table.sortable .sortcol .label {
-    padding-right: 14px;
-    background-repeat: no-repeat;
-    background-position: center right;
-}
-
-table.sortable .sortcol:hover {
-    color: black;
-    cursor: pointer;
-}
-
-table.sortable .sortcol.sortasc  .label { background-image: url(../images/up_arrow.png); }
-table.sortable .sortcol.sortdesc .label { background-image: url(../images/dn_arrow.png); }
-
 th.resize-handle-active {
     cursor: e-resize;
 }
