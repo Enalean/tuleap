@@ -341,17 +341,18 @@ class GitDao extends DataAccessObject {
     /**
      * This function log a Git Push in the database
      *
-     * @param Integer  $repoId        Id of the git repository
-     * @param Integer  $UserId        Id of the user that performed the push
+     * @param Integer $repoId        Id of the git repository
+     * @param Integer $UserId        Id of the user that performed the push
+     * @param Integer $pushTimestamp Date of the push
      * @param Integer $commitsNumber Number of commits
      *
      * @return Boolean
      */
-    public function logGitPush($repoId, $userId, $commitsNumber) {
+    public function logGitPush($repoId, $userId, $pushTimestamp, $commitsNumber) {
         $repositoryId  = $this->da->escapeInt($repoId);
         $userId        = $this->da->escapeInt($userId);
         $commitsNumber = $this->da->escapeInt($commitsNumber);
-        $pushDate      = $this->da->quoteSmart(date('Y-m-d H:i:s'));
+        $pushDate      = $this->da->escapeInt($pushTimestamp);
         $query         = "INSERT INTO plugin_git_log (".self::REPOSITORY_ID.",
                                                       user_id,
                                                       push_date,
@@ -422,6 +423,34 @@ class GitDao extends DataAccessObject {
         $repository->setNamespace($result[self::REPOSITORY_NAMESPACE]);
         $repository->setScope($result[self::REPOSITORY_SCOPE]);
         $repository->loadNotifiedMails();
+    }
+
+    /**
+     * Count number of repositories grouped by backend type
+     *
+     * @param String  $startDate
+     * @param String  $endDate
+     * @param Integer $projectId
+     *
+     * @return DataAccessResult
+     */
+    public function getBackendStatistics($backend, $startDate, $endDate, $projectId = null) {
+        $condition = '';
+        if ($projectId) {
+            $condition = "AND ".self::FK_PROJECT_ID."=".$this->da->escapeInt($projectId);
+        }
+        $query = "SELECT count(repository_id) AS count,
+                  YEAR(repository_creation_date) AS year,
+                  MONTHNAME(STR_TO_DATE(MONTH(repository_creation_date), '%m')) AS month
+                  FROM ".$this->getTable()."
+                  JOIN groups g ON group_id = project_id
+                  WHERE repository_backend_type = ".$this->da->quoteSmart($backend)."
+                    AND repository_creation_date BETWEEN CAST(".$this->da->quoteSmart($startDate)." AS DATETIME) AND CAST(".$this->da->quoteSmart($endDate)." AS DATETIME)
+                    ".$condition."
+                    AND status = 'A'
+                    AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00'
+                  GROUP BY year, month";
+        return $this->retrieve($query);
     }
 }
 

@@ -48,20 +48,6 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
         return $html;
     }
     
-    public function fetchLabel() {
-        $html = parent::fetchLabel();
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'separator_label_help');
-        $html .= '</span>';
-        return $html;
-    }
-    
-    public function fetchDescription() {
-        // there is no description for separator
-        $html = '';
-        return $html;
-    }
-    
     /**
      * Display the html field in the admin ui
      * @return string html
@@ -120,7 +106,6 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/ui-splitter-horizontal--plus.png');
     }
-    
 }
 
 ?>

@@ -82,7 +82,15 @@ $sys_cookie_domain = "%sys_default_domain%";
  
 // Machine that hosts the mailing lists (This could also be
 // the mail host if you have enough horsepower & bandwidth)
+// /!\ Developers: if you need to change the default value, it will have an
+//     impact on the source code, grep is your friend.
 $sys_lists_host = "lists.%sys_default_domain%";
+
+// If you want the mailing-lists to belong to a domain different of $sys_lists_host
+// you can define it here.
+// For instance, you might want to send mails via 'lists.forge.example.com' machine
+// but with lists like 'tuleap-devel@example.com' name.
+$sys_lists_domain = $sys_lists_host;
 
 // Fully qualified name
 $sys_fullname = "%sys_fullname%";
@@ -264,6 +272,12 @@ $sys_display_homepage_news = 1;
 // Should be either 'ldap' or 'codendi'
 $sys_auth_type = 'codendi';
 
+// Default Apache Subversion authentication mod.
+// Default is 'modmysql'
+// In some setup, memleak might appears on checkout of big files, 'modperl' address
+// this issue
+$sys_auth_svn_mod = 'modmysql';
+
 // System name to be used in Web pages, documentation,etc.
 $sys_name = 'Tuleap';
 
@@ -395,6 +409,19 @@ $zend_path = "/usr/share/zend";
 
 //Exchange policy URL
 $sys_exchange_policy_url = "/plugins/docman/?group_id=1";
+
+// Allow to limit the number of SOAP call that might be critical for the platform.
+// As of today it only impact Project::addProject but it might evolve.
+$sys_nb_sensitive_soap_calls_per_hour = 10;
+
+// The minimum length of mailing list name
+$sys_lists_name_min_length = 4;
+
+// The mailing list name prefix
+$sys_lists_prefix = '';
+
+// The mailing list name suffix
+$sys_lists_suffix = '';
 
 // End of customizations -- place nothing after the closing PHP tag!
 ?>

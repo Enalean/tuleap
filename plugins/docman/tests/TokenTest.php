@@ -46,14 +46,6 @@ require_once('common/include/HTTPRequest.class.php');
 Mock::generate('HTTPRequest');
 class TokenTest extends UnitTestCase {
     
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function TokenTest($name = 'Docman_Token test') {
-        $this->UnitTestCase($name);
-    }
-    
     function testGenerateRandomToken() {
         $dao =& new MockDocman_TokenDao();
         $http =& new MockHTTPRequest();

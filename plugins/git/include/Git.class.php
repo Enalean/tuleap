@@ -188,12 +188,7 @@ class Git extends PluginController {
            
             #ADD REF
             case 'add':
-                if ($user->useLabFeatures() && $this->request->existAndNonEmpty('repo_type')) {
-                    $backendType = GitDao::BACKEND_GITOLITE;
-                } else {
-                    $backendType = GitDao::BACKEND_GITSHELL;
-                }
-                $this->addAction('createReference', array($this->groupId, $repositoryName, $backendType) );
+                $this->addAction('createReference', array($this->groupId, $repositoryName) );
                 $this->addView('index');
                 break;
              #DELETE a repository
@@ -218,7 +213,7 @@ class Git extends PluginController {
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
                 else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {                    
-                    $valid = new Valid_String('repo_desc');
+                    $valid = new Valid_Text('repo_desc');
                     $valid->required();
                     if($this->request->valid($valid)) {
                         $repoDesc = $this->request->get('repo_desc');
@@ -306,7 +301,7 @@ class Git extends PluginController {
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
                 else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
-                    $valid = new Valid_String('repo_desc');
+                    $valid = new Valid_Text('repo_desc');
                     $valid->required();
                     if($this->request->valid($valid)) {
                         $repoDesc = $this->request->get('repo_desc');

@@ -619,6 +619,9 @@ plugin_tracker_include_type	info_gn_default_added	Default global notification ad
 plugin_tracker_include_type	info_gn_default_not_added	Default global notification not added
 plugin_tracker_include_type	info_gn_deleted	Global notification has been deleted
 plugin_tracker_include_type	error_uniq_name	Unable to change the name of the element, it is already in use by another one
+
+plugin_tracker_include_type	field_copied_from	This field is shared from tracker <a href="$3">$1</a> from project $2
+plugin_tracker_include_type	field_copied_to	This field is used by the following trackers:
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactCanned.class.php
@@ -979,6 +982,8 @@ plugin_tracker_artifact_masschange	changing_items	Changing $1 artifact(s):
 
 plugin_tracker_artifact_changeset	header_changeset	CHANGESET
 plugin_tracker_artifact_changeset	header_artifact	ARTIFACT
+plugin_tracker_artifact_changeset	header_html_changeset	Latest modifications
+plugin_tracker_artifact_changeset	header_html_snapshot	Snapshot
 
 plugin_tracker_formelement_admin	crossreferences_label	Cross References
 plugin_tracker_formelement_admin	crossreferences_description	Display the cross references for the artifact

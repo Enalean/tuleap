@@ -342,12 +342,6 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     public function fetchMasschange() {
 
     }
-    /**
-     * Format a timestamp into Y-m-d format
-     */
-    public function formatDate($date) {
-        return format_date("Y-m-d", (float)$date, '');
-    }
     
     /**
      * Format a timestamp into Y-m-d H:i:s format
@@ -484,19 +478,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        if ( empty($value) ) {
-            return '';
-        }
-        $output = '';
-        switch ($format) {
-            case 'html':
-                break;
-            default:
-                $value  = $value->getTimestamp();
-                $output = $value ? $this->formatDate($value) : '';
-                break;
-        }
-        return $output;
+        return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
     /**

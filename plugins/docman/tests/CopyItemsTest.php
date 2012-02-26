@@ -64,10 +64,6 @@ Mock::generate('User');
  */
 class CopyItemsTest extends UnitTestCase {
 
-    function CopyItemsTest($name = 'CopyItems test') {
-        $this->UnitTestCase($name);
-    }
-
     function testDocumentCopyWithinTheSameProject() {
         $srcGroupId = $dstGroupId = 1789;
         

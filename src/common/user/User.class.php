@@ -21,6 +21,7 @@
 require_once('common/dao/UserPreferencesDao.class.php');
 require_once('common/dao/UserGroupDao.class.php');
 require_once('common/include/Recent_Element_Interface.class.php');
+require_once('common/language/BaseLanguageFactory.class.php');
 /**
  *
  * User object
@@ -148,6 +149,16 @@ class User {
      * should be used only for update/creation purpose.
      */
     private $clear_password;
+    
+    /**
+     * @var BaseLanguageFactory
+     */
+    protected $languageFactory;
+    
+    /**
+     * @var BaseLanguage
+     */
+    protected $language;
     
     /**
      * Constructor
@@ -470,6 +481,41 @@ class User {
         }
         return $this->_dynamics_ugroups[$hash];
     }
+
+    /**
+     * Check if user can see the existance of given user.
+     *
+     * A user can see another one if
+     * - the "querying" user is Active
+     * - the "querying" user is Restricted AND the user to see is
+     *   member of a project the restricted user is member too.
+     *
+     * @param User $user A user to test
+     *
+     * @return Boolean
+     */
+    public function canSee($user) {
+        if ($this->isRestricted()) {
+            $myGroupData   = $this->getUserGroupData();
+            $userGroupData = $user->getUserGroupData();
+            $commonGroups  = array_intersect_key($myGroupData, $userGroupData);
+            return count($commonGroups) > 0;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * User's language object corresponding to user's locale
+     * 
+     * @return BaseLanguage
+     */
+    public function getLanguage() {
+        if (!$this->language) {
+            $this->language = $this->getLanguageFactory()->getBaseLanguage($this->getLocale());
+        }
+        return $this->language;
+    }
     
     //
     // Getter
@@ -643,6 +689,11 @@ class User {
         return $this->shell;
     }
     
+    /**
+     * Return the local of the user. Ex: en_US, fr_FR
+     *
+     * @return string
+     */
     function getLocale() {
         return $this->locale;
     }
@@ -944,12 +995,7 @@ class User {
     function setPeopleViewSkills($peopleViewSkills) {
         $this->people_view_skills = $peopleViewSkills;
     }
-    /**
-     * @param int ID of the language of the user
-     */
-    function setLanguageID($languageID) {
-        $this->language_id = $languageID;
-    }
+
     /**
      * @param string md5 of user pwd
      */
@@ -963,11 +1009,22 @@ class User {
     function setShell($shell) {
         $this->shell = $shell;
     }
-    
+
+    /**
+     * @param int ID of the language of the user
+     */
+    function setLanguageID($languageID) {
+        $this->language_id = $languageID;
+    }
+
     function setLocale($locale) {
         $this->locale = $locale;
     }
 
+    function setLanguage(BaseLanguage $language) {
+        $this->language = $language;
+    }
+    
     /**
      * Set clear password
      * 
@@ -1255,6 +1312,27 @@ class User {
         //store
         $this->setPreference(self::PREFERENCE_RECENT_ELEMENTS, serialize($history));
      }
+     
+    /**
+     * Wrapper for BaseLanguageFactory
+     *
+     * @return BaseLanguageFactory
+     */
+    protected function getLanguageFactory() {
+        if (!isset($this->languageFactory)) {
+            $this->languageFactory = new BaseLanguageFactory();
+        }
+        return $this->languageFactory;
+    }
+    
+    /**
+     * Set LanguageFactory
+     * 
+     * @param BaseLanguageFactory $languageFactory 
+     */
+    public function setLanguageFactory(BaseLanguageFactory $languageFactory) {
+        $this->languageFactory = $languageFactory;
+    }
 }
 
 ?>

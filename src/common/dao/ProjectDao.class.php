@@ -112,6 +112,13 @@ class ProjectDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function updateStatus($id, $status) {
+        $sql = 'UPDATE groups'.
+            ' SET status = '.$this->da->quoteSmart($status).
+            ' WHERE group_id = '.$this->da->escapeInt($id);
+        return $this->update($sql);
+    }
+
     /**
      * Update the http_domain and service when renaming the group
      * @param Project $project

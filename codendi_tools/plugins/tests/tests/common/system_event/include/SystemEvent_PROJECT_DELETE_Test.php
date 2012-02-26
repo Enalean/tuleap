@@ -33,39 +33,18 @@ Mock::generatePartial('SystemEvent_PROJECT_DELETE',
                             'deleteProjectMailingLists',
                             'getEventManager'));
 
-require_once('common/project/Project.class.php');
+
 Mock::generate('Project');
-
-require_once('common/backend/BackendSystem.class.php');
 Mock::generate('BackendSystem');
-
-require_once('common/backend/BackendSVN.class.php');
 Mock::generate('BackendSVN');
-
-require_once('common/backend/BackendCVS.class.php');
 Mock::generate('BackendCVS');
-
-require_once('common/backend/BackendMailingList.class.php');
 Mock::generate('BackendMailingList');
-
-require_once('common/backend/BackendAliases.class.php');
 Mock::generate('BackendAliases');
-
-
-require_once('common/tracker/ArtifactTypeFactory.class.php');
 Mock::generate('ArtifactTypeFactory');
-
-require_once('common/event/EventManager.class.php');
 Mock::generate('EventManager');
-
-require_once('common/wiki/lib/WikiAttachment.class.php');
 Mock::generate('WikiAttachment');
 
 class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
-
-    public function __construct($name = 'SystemEvent_PROJECT_DELETE test') {
-        parent::__construct($name);
-    }
 
     public function testProjectDeleteUsersFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();

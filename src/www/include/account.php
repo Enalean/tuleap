@@ -127,8 +127,7 @@ function account_send_add_user_to_group_email($group_id,$user_id) {
             // $message is defined in the content file
             include($Language->getContent('include/add_user_to_group_email'));
             
-            list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
-            $mail =& new Mail();
+            $mail = new Mail();
             $mail->setTo($email_address);
             $mail->setFrom($GLOBALS['sys_noreply']);
             $mail->setSubject($Language->getText('include_account','welcome',array($GLOBALS['sys_name'],$group_name)));
@@ -313,8 +312,9 @@ function account_redirect_after_login() {
     $em =& EventManager::instance();
     $em->processEvent('account_redirect_after_login', null);
 
-    if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
-        $returnToToken = parse_url($_REQUEST['return_to']);
+    $request = HTTPRequest::instance();
+    if($request->existAndNonEmpty('return_to')) {
+        $returnToToken = parse_url($request->get('return_to'));
         if(preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {
             util_return_to('/my/index.php');
         }

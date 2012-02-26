@@ -23,26 +23,37 @@
  * $> php-launcher.sh test_one_file.php ../tests/common/frs/FRSFileTest.php
  */
 
-error_reporting(E_ALL);
+if (version_compare(PHP_VERSION, '5.3.0', '>=')) { 
+    error_reporting(E_ALL & ~E_DEPRECATED);
+} else {
+    error_reporting(E_ALL);
+}
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 
-require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
-require($GLOBALS['db_config_file']);
-require_once('../include/simpletest/unit_tester.php');
-require_once('../include/simpletest/mock_objects.php');
-require_once('../include/simpletest/web_tester.php');
-require_once('../include/simpletest/expectation.php');
-require_once('./tests_utils.php');
+// Base dir:
+$basedir      = realpath(dirname(__FILE__).'/../../../..');
+$src_path     = $basedir.'/src';
+$include_path = $basedir.'/src/www/include';
 
+ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
+
+require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
+//require($GLOBALS['db_config_file']);
+require_once(dirname(__FILE__).'/../include/simpletest/unit_tester.php');
+require_once(dirname(__FILE__).'/../include/simpletest/mock_objects.php');
+require_once(dirname(__FILE__).'/../include/simpletest/web_tester.php');
+require_once(dirname(__FILE__).'/../include/simpletest/expectation.php');
+require_once(dirname(__FILE__).'/../include/simpletest/collector.php');
+require_once(dirname(__FILE__).'/../include/TestHelper.class.php');
+require_once(dirname(__FILE__).'/CodendiReporter.class.php');
+require_once(dirname(__FILE__).'/TuleapTestSuite.class.php');
+require_once(dirname(__FILE__).'/TuleapTestCase.class.php');
+
+//require_once(dirname(__FILE__).'/tests_utils.php');
 
 // Start
-$unitTestFile = $_SERVER['argv'][1];
-
-// Load & Go
-require_once($unitTestFile);
-$className = basename($unitTestFile, '.php');
-$test      = new $className();
-$test->run(new TextReporter());
+$suite = new TuleapTestSuite($_SERVER['argv'][1]);
+$suite->run(new ColorTextReporter());
 
 ?>

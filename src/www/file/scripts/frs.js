@@ -360,10 +360,10 @@ document.observe('dom:loaded', function () {
                     var package_id = null; 
                 }
                 var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_create&package_id=' + package_id+'&date=' + $('release_date').value+
-                            '&name=' + $('release_name').value;
+                            '&name=' + encodeURIComponent($('release_name').value);
             } else {
                 var url = 'frsajax.php?group_id='+group_id +'&action=validator_frs_update&package_id=' + $('package_id').value+'&date=' + $('release_date').value+
-                        '&name=' + $('release_name').value+'&release_id=' + $('release_id').value;
+                        '&name=' + encodeURIComponent($('release_name').value) +'&release_id=' + $('release_id').value;
             }
             new Ajax.Request(url, {
                 method:'get',

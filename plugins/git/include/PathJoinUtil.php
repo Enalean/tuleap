@@ -28,7 +28,7 @@ function notEmpty($e) {
 function unixPathJoin($elements) {
     
     $path = implode('/', array_filter($elements, 'notEmpty'));
-    return preg_replace('%/{1,}%',"/", $path);    
+    return preg_replace('%/{1,}%',"/", $path);
 }
 
 function userRepoPath($username, $namespace) {

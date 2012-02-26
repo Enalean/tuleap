@@ -28,6 +28,7 @@ class hudsonPlugin extends Plugin {
         $this->_addHook('get_available_reference_natures', 'getAvailableReferenceNatures', false);
         $this->_addHook('ajax_reference_tooltip', 'ajax_reference_tooltip', false);
         $this->_addHook(Event::AJAX_REFERENCE_SPARKLINE, 'ajax_reference_sparkline', false);
+        $this->_addHook('statistics_collector',          'statistics_collector',       false);
     }
 
     function getPluginInfo() {
@@ -295,7 +296,35 @@ class hudsonPlugin extends Plugin {
         $controler =& new hudson();
         $controler->process();
     }
-    
+
+    /**
+     * Display CI statistics in CSV format
+     *
+     * @param Array $params parameters of the event
+     *
+     * @return void
+     */
+    public function statistics_collector($params) {
+        if (!empty($params['formatter'])) {
+            $formatter = $params['formatter'];
+            $jobDao = new PluginHudsonJobDao(CodendiDataAccess::instance());
+            $dar = $jobDao->countJobs($formatter->groupId);
+            $count = 0;
+            if ($dar && !$dar->isError()) {
+                    $row = $dar->getRow();
+                    if ($row) {
+                        $count = $row['count'];
+                    }
+            }
+            $formatter->clearContent();
+            $formatter->addEmptyLine();
+            $formatter->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'title')));
+            $formatter->addLine(array($GLOBALS['Language']->getText('plugin_hudson', 'job_count', array(date('Y-m-d'))), $count));
+            echo $formatter->getCsvContent();
+            $formatter->clearContent();
+        }
+    }
+
 }
 
 ?>

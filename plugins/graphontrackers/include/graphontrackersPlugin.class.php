@@ -158,7 +158,7 @@ class GraphOnTrackersPlugin extends Plugin {
 
             $func = $request->get('func');
             $set  = $request->get('set');
-            if ($request->get('report_graphic_id') !== false){
+            if ($request->get('report_graphic_id') !== false && $request->valid(new Valid_UInt('report_graphic_id'))) {
                 $this->report_graphic_id = $request->get('report_graphic_id');
                 $trackerGraphsPrefs = "&report_graphic_id=".$this->report_graphic_id;
                 if ($trackerGraphsPrefs != user_get_preference('tracker_graph_brow_cust'.$request->get('atid'))){

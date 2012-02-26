@@ -172,6 +172,44 @@ class GitBackendTest extends UnitTestCase {
         $this->assertTrue($backend->deleteProjectRepositories(1));
     }
 
+    public function testArchiveCreatesATarGz() {
+        $this->GivenThereIsARepositorySetUp();
+        
+        $project = new MockProject();
+        $project->setReturnValue('getUnixName', 'zorblub');
+        
+        $repo = new MockGitRepository();
+        $repo->setReturnValue('getPath', 'gitolite-admin-ref');
+        $repo->setReturnValue('getName', 'gitolite-admin-ref');
+        $repo->setReturnValue('getDeletionDate', '2012-01-26');
+        $repo->setReturnValue('getProject', $project);
+        
+        $backend = new GitBackendTestVersion();
+        $backend->setGitRootPath($this->_tmpDir);
+        $backend->setGitBackupDir($this->backupDir);
+        $backend->archive($repo);
+        
+        $this->ThenCleanTheWorkspace();
+    }
+    
+    private function GivenThereIsARepositorySetUp() {
+        // Copy the reference to save time & create symlink because
+        // git is very sensitive to path you are using. Just symlinking
+        // spots bugs
+        $this->cwd           = getcwd();
+        $this->_tmpDir       = '/tmp';
+        $this->_fixDir       = dirname(__FILE__).'/_fixtures';
+        $this->_glAdmDirRef  = $this->_tmpDir.'/gitolite-admin-ref';
+        $this->backupDir     = $this->_tmpDir.'/backup';
+        system('tar -xf '. $this->_fixDir.'/gitolite-admin-ref' .'.tar --directory '.$this->_tmpDir);
+        mkdir($this->backupDir);
+    }
+    
+    private function ThenCleanTheWorkspace() {
+        system('rm -rf '. $this->_glAdmDirRef);
+        system('rm -rf '. $this->backupDir);
+        chdir($this->cwd);
+    }
 }
 
 ?>

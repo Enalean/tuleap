@@ -24,7 +24,7 @@
 
 require_once('pre.php');
 require_once('www/project/admin/project_admin_utils.php');
-require('www/project/admin/include/UserImportHtml.class.php');
+require_once('www/project/admin/include/UserImportHtml.class.php');
 
 
 if ( !user_isloggedin()) {

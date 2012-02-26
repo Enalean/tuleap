@@ -37,6 +37,7 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
         $result = array();
         $fef = Tracker_FormElementFactory::instance();
         $effort_field = $fef->getFormElementById($this->chart->getFieldId());
+        $type = $fef->getType($effort_field);
         $start_date = $this->chart->getStartDate();
 
         $day = 24 * 60 * 60;
@@ -47,9 +48,13 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5 {
         if ($effort_field && $effort_field->userCanRead(UserManager::instance()->getCurrentUser())) {
             $sql = "SELECT c.artifact_id AS id, TO_DAYS(FROM_UNIXTIME(submitted_on)) - TO_DAYS(FROM_UNIXTIME(0)) as day, value
                     FROM tracker_changeset AS c 
-                         INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = ". $effort_field->getId() . ")
-                         INNER JOIN tracker_changeset_value_int AS cvi ON(cvi.changeset_value_id = cv.id)
-                    WHERE c.artifact_id IN (". implode(',', $artifact_ids) .")";
+                         INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = ". $effort_field->getId() . ")";
+            if ($type == 'int') {
+                $sql .= " INNER JOIN tracker_changeset_value_int AS cvi ON(cvi.changeset_value_id = cv.id)";
+            } else {
+                $sql .= " INNER JOIN tracker_changeset_value_float AS cvi ON(cvi.changeset_value_id = cv.id)";
+            }
+            $sql .= " WHERE c.artifact_id IN (". implode(',', $artifact_ids) .")";
             $res = db_query($sql);
             $dbdata = array();
             $minday = 0;

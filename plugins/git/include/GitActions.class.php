@@ -109,17 +109,12 @@ class GitActions extends PluginActions {
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
     }
 
-    public function createReference( $projectId, $repositoryName, $backendType) {
+    public function createReference($projectId, $repositoryName) {
         $c         = $this->getController();
         $projectId = intval( $projectId );
         
         $repository = new GitRepository();
-        if ($backendType == GitDao::BACKEND_GITOLITE) {
-            $backend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
-        } else {
-            $backend = Backend::instance('Git','GitBackend');
-        }
-        $repository->setBackend($backend);
+        $repository->setBackend(new Git_Backend_Gitolite(new Git_GitoliteDriver()));
 
         if ( $repository->isNameValid($repositoryName) === false ) {
             $c->addError( $this->getText('actions_input_format_error', array($repository->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
@@ -129,24 +124,17 @@ class GitActions extends PluginActions {
 
         $project = ProjectManager::instance()->getProject($projectId);
 
-        if ($backendType == GitDao::BACKEND_GITOLITE) {
-            $repository->setDescription('-- Default description --');
-            $repository->setCreator(UserManager::instance()->getCurrentUser());
-            $repository->setProject($project);
-            $repository->setName($repositoryName);
-            $repository->setBackend($backend);
-            if (!$repository->exists()) {
-                $repository->create();
-            } else {
-                $c->addError($this->getText('actions_create_repo_exists', array($repositoryName)));
-            }
+        $repository->setDescription('-- Default description --');
+        $repository->setCreator(UserManager::instance()->getCurrentUser());
+        $repository->setProject($project);
+        $repository->setName($repositoryName);
+        
+        if (!$repository->exists()) {
+            $repository->create();
         } else {
-            $this->systemEventManager->createEvent('GIT_REPO_CREATE',
-                $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryName.SystemEvent::PARAMETER_SEPARATOR.$this->user->getId(),
-                SystemEvent::PRIORITY_MEDIUM
-            );
-            $c->addInfo( $this->getText('actions_create_repo_process') );
+            $c->addError($this->getText('actions_create_repo_exists', array($repositoryName)));
         }
+
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
         return;
     }
@@ -399,7 +387,9 @@ class GitActions extends PluginActions {
                     }
                 }
             }
-            if ( !empty($repoDescription) ) {
+            if (strlen($repoDescription) > 1024) {
+                $c->addError( $this->getText('actions_long_description') );
+            } elseif (!empty($repoDescription)) {
                 $repository->setDescription($repoDescription);
             }
         } catch (GitDaoException $e) {

@@ -28,11 +28,14 @@
 
 
 /********  general   **********/
+html {
+	background: #D8E7EE;
+}
 body {
     font-family: "Lucida Grande", sans-serif;
     font-size: 13px;
 	margin: 0;
-	background: white;
+	background: #D8E7EE;
 	color: black;
 	padding: 3px 10px 0 10px;
 }
@@ -100,6 +103,7 @@ fieldset {
 	border-spacing: 0; border: 0;
         width: 99%;
         margin: auto;
+        padding-bottom:1em;
 }
 .row_below_outertabs,
 .outer_body_row,
@@ -244,8 +248,11 @@ a.tabsellink:hover {
 }
 
 /* Page header. Logo, user, search box, etc. */   
+#wrapper {
+    background: -moz-linear-gradient(center top , #D8E7EE 0%, #EFF5F8 50%, #D8E7EE 100%) repeat scroll 0 0 transparent;
+}
 #header {
-	background: transparent url(../images/pageheader.png) center top;
+	/* background: transparent url(../images/pageheader.png) center top; */
 	border: 1px solid gray;
 	height: 60px;    /* mandated to adjust to image, otherwise IE sucks */
 }
@@ -411,8 +418,7 @@ td.artifact_spacer { width: 5%; }
     margin: 0;
     padding: 0 1em;
     text-align: center;
-    background: transparent url(../images/navigation_grad.png) center top repeat-x;
-    -moz-border-radius: 0px 0px 3px 3px;
+    background: #2D323A;
 }
 
 #level_1 ul li  {
@@ -440,7 +446,7 @@ td.artifact_spacer { width: 5%; }
 	/* style */
 	border: 1px solid rgb(188, 188, 173);
 	border-bottom: 1px solid rgb(188, 188, 173);
-	background: #ededed url(../images/headergrad.png) left top repeat-x;
+	background: #D9E3E8;
 	color:grey;
 }
 
@@ -463,7 +469,7 @@ td.artifact_spacer { width: 5%; }
  */
 
 #level_2 {
-    background: #ededed url(../images/pageheader.png) left top repeat-x;
+    background: #E9E9E9; /* #646970; /* 40464F;*/
     -moz-border-radius: 3px 3px 0px 0px;
     -moz-box-shadow: 2px 2px 3px #aaa;
     -webkit-box-shadow: 2px 2px 3px #aaa;
@@ -489,23 +495,21 @@ td.artifact_spacer { width: 5%; }
 }
 
 #level_2 ul li a { 
-        color: white;
-	text-decoration: none;
+        color: #333;
+        text-decoration: none;
         border: none;  
         background: none;
-        border-right: 1px dotted #AAA;
 }
 #level_2 ul li a.current {
         font-weight: bold;
         color: black;
-        border-right: 1px dotted #AAA;
 }
 
 #level_2 ul li a:hover,
 #level_2 ul li a.current:hover { 
-        color: #333;
+        color: black;
         background: transparent;
-        border-right: 1px dotted #AAA;
+        text-decoration: underline;
 }
 
 #level_2 ul li:last-child a {
@@ -987,7 +991,6 @@ text-shadow: 0 1px 1px #FFFFFF;
 
 body {
     padding: 0;
-    background: #e6e6e6;
 }
 
 #header {
@@ -1019,7 +1022,6 @@ div.header_searchbox:hover select {
 
 .header_actions ul li {
     border-right: 1px solid gray;
-    color: white;
 }
 
 a:link,a:active,a:hover {
@@ -1047,35 +1049,24 @@ a:hover {
 }
 
 #level_1 ul span,#level_1 ul a.current,#level_1 ul a.current:hover {
-    background: #066eab;
+    background: #646970;
     border: none;
-    color: #333;
-}
-
-#level_1 ul a:hover {
-    background: #066eab;
-}
-
-#level_1 ul a,#level_1 ul a:hover {
     color: white;
+}
+
+#level_1 ul a{
     background: none;
     border: none;
-    color: #333;
 }
-
+#level_1 ul a:hover {
+    background: #646970;
+    color: white;
+}
 #level_1 ul a,#level_1 ul span,#level_1 ul a.current {
     color: white;
     margin: 0;
     padding: 6px 20px;
     text-align: center;
     text-decoration: none;
-}
-
-#level_1 ul li {
-    border-right: 1px solid #008fc7;
-}
-
-#level_1 ul li:first {
-    border-left: 1px solid #008fc7;
 }
 

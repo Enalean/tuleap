@@ -269,7 +269,7 @@
             par expression régulière</emphasis> : vos pouvez aussi
             spécifier un critère de recherche sous la forme d'une
             <ulink
-            url="http://www.mysql.com/doc/P/a/Pattern_matching.html">expression
+            url="http://dev.mysql.com/doc/refman/5.0/en/regexp.html">expression
             régulière MySQL</ulink> (n'oubliez pas les caractères /.../
             qui doivent impérativement entourer l'expression !)</para>
 

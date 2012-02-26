@@ -72,14 +72,6 @@ Mock::generate('NotificationsDao');
 class NotificationsManager_MoveTest extends UnitTestCase {
     var $groupId;
 
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function NotificationsManager_MoveTest($name = 'Docman_NotificationsManager_Move test') {
-        $this->UnitTestCase($name);
-    }
-    
     function testNotifications() {
         // {{{ Listener cannot read moved item
         // We expect no notification

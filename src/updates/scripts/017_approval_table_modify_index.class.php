@@ -17,21 +17,21 @@ class Update_017 extends CodendiUpgrade {
         echo $this->getLineSeparator();
         $table = 'plugin_docman_approval';
         
-        if(indexNameExists($table, 'version_id')){
+        if($this->indexNameExists($table, 'version_id')){
             $sql = ' ALTER TABLE  plugin_docman_approval DROP INDEX version_id';
             if(!$this->update($sql)) {
                 $this->addUpgradeError("An error occured while dropping index 'version_id' in 'plugin_docman_approval': ".$this->da->isError());
             }
         }
         
-        if(indexNameExists($table, 'item_wiki')){
+        if($this->indexNameExists($table, 'item_wiki')){
             $sql = ' ALTER TABLE  plugin_docman_approval DROP INDEX item_wiki';
             if(!$this->update($sql)) {
                 $this->addUpgradeError("An error occured while dropping index 'item_wiki' in 'plugin_docman_approval': ".$this->da->isError());
             }
         }
         
-         if(indexNameExists($table, 'item_id')){
+         if($this->indexNameExists($table, 'item_id')){
             $sql = ' ALTER TABLE  plugin_docman_approval DROP INDEX item_id';
             if(!$this->update($sql)) {
                 $this->addUpgradeError("An error occured while dropping index 'item_id' in 'plugin_docman_approval': ".$this->da->isError());

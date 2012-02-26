@@ -33,10 +33,6 @@ class PermissionsManagerLockTest extends UnitTestCase {
     private $user;
     private $docmanPm;
 
-    function __construct($name = 'Docman_PermissionsLockManager test') {
-        parent::__construct($name);
-    }
-
     function setUp() {
         $this->user = new MockUser($this);
         $this->user->setReturnValue('getId', 1234);

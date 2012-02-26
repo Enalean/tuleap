@@ -35,13 +35,6 @@ Mock::generate('ArtifactRulesManagerTest_ArtifactField','MockArtifactField');
  * Tests the class ArtifactRulesManager
  */
 class ArtifactRulesManagerTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function ArtifactRulesManagerTest($name = 'ArtifactRulesManager test') {
-        $this->UnitTestCase($name);
-    }
 
     function testValidate() {
         /*

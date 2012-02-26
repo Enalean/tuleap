@@ -13,13 +13,6 @@ Mock::generate('DataAccessResult');
  * Tests the class ArtifactRuleFactory
  */
 class ArtifactRuleFactoryTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function ArtifactRuleFactoryTest($name = 'ArtifactRuleFactory test') {
-        $this->UnitTestCase($name);
-    }
 
     function testGetRuleById() {
         

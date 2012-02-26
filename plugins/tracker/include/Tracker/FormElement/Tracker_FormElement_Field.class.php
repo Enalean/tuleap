@@ -179,7 +179,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
             );
             $html .= '</td><td>';
         }
-        $html .= '<label for="tracker_report_criteria_'. $this->id .'">'. $this->getLabel();
+        $html .= '<label for="tracker_report_criteria_'. $this->id .'" title="#'.$this->id.'">'. $this->getLabel();
         $html .= '<input type="hidden" id="tracker_report_criteria_'. $this->id .'_parent" value="'. $this->parent_id .'" />';
         $html .= '</label>';
         
@@ -313,7 +313,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         $html = '';
         if ($this->userCanRead()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'" '. ($this->takesTwoColumns() ? 'colspan="3"' : '') .'>';
+            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $value = $artifact->getLastChangeset()->getValue($this);
@@ -336,15 +336,25 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
      * @param Tracker_Artifact $artifact
      * @return <type>
      */
-    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {       
-        $output = '';        
+    public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
+        $output = '';
         if ( $ignore_perms || $this->userCanRead($recipient) ) {
-            $output .= ' * ';
-            $output .= $this->getLabel();
-            $output .= ' : ';
             $value = $artifact->getLastChangeset()->getValue($this);
-            $output .= $this->fetchMailArtifactValue($artifact, $value, $format);            
-        }        
+
+            if ($format =='text') {
+                $output .= ' * ';
+                $output .= $this->getLabel();
+                $output .= ' : ';
+                $output .= $this->fetchMailArtifactValue($artifact, $value, $format);
+            } else {
+                $hp = Codendi_HTMLPurifier::instance();
+                $output .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
+                $output .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . '</label>';
+                $output .= '<br />';
+                $output .= $this->fetchMailArtifactValue($artifact, $value, $format);
+                $output .= '</div>';
+            }
+        }
         return $output;
     }
 
@@ -360,7 +370,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         $html = '';
         if ($this->userCanSubmit()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'" '. ($this->takesTwoColumns() ? 'colspan="3"' : '') .'>';
+            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
             
             $html .= '<br />';
@@ -381,7 +391,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         $html = '';
         if ($this->userCanSubmit()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'" '. ($this->takesTwoColumns() ? 'colspan="3"' : '') .'>';
+            $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $html .= '<br />';
@@ -531,72 +541,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
     }
     
     /**
-     * If the formElement has specific properties then this method 
-     * should return the html needed to update those properties
-     * 
-     * The html must be a (or many) html row(s) table (one column for the label, 
-     * another one for the property)
-     * 
-     * <code>
-     * <tr><td><label>Property 1:</label></td><td><input type="text" value="value 1" /></td></tr>
-     * <tr><td><label>Property 2:</label></td><td><input type="text" value="value 2" /></td></tr>
-     * </code>
-     * 
-     * @return string html
-     */
-    protected function fetchAdminSpecificProperties() {
-        $html = '';
-        
-        //required
-        $html .= $this->fetchRequired();
-        
-        //notifications
-        $html .= $this->fetchNotifications();
-        
-        $html .= parent::fetchAdminSpecificProperties();
-        
-        return $html;
-    }
-    
-    /**
-     * Fetch the "notifications" part of field admin
-     *
-     * @return string html
-     */
-    protected function fetchNotifications() {
-        $html = '';
-        if ($this->isNotificationsSupported()) {
-            $html .=' <p>';
-            $html .= '<input type="hidden" name="formElement_data[notifications]" value="0" />';
-            $html .= '<input type="checkbox" name="formElement_data[notifications]" id="formElement_notifications" value="1" '. ($this->notifications ? 'checked="checked"' : '') .'" />';
-            $html .= '<label for="formElement_notifications">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'notifications');
-            $html .= '</p>';
-        }
-        return $html;
-    }
-    
-    /**
      * Say if this fields suport notifications
      *
      * @return bool
      */
     public function isNotificationsSupported() {
         return false;
-    }
-    
-    /**
-     * Fetch the "required" part of field admin
-     *
-     * @return string the HTML for the part of form for required checkbox
-     */
-    protected function fetchRequired() {
-        $html = '';
-        $html .= '<p>';
-        $html .= '<input type="hidden" name="formElement_data[required]" value="0" />';
-        $html .= '<input type="checkbox" name="formElement_data[required]" id="formElement_required" value="1" '. ($this->required ? 'checked="checked"' : '') .'" />';
-        $html .= '<label for="formElement_required">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'required');
-        $html .= '</p>';
-        return $html;
     }
     
     /**
@@ -731,11 +681,9 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
     public function validateField(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null, $is_submission = null) {
         $is_valid = true;
         $hasPermission = $this->userCanUpdate();
-        
         if ($is_submission) {
             $hasPermission = $this->userCanSubmit();
         }
-        
         if ($last_changeset_value === null && ((!is_array($submitted_value) && $submitted_value === null) || (is_array($submitted_value) && empty($submitted_value))) && $hasPermission && $this->isRequired()) {
             $is_valid = false;
             $this->setHasErrors(true);

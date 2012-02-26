@@ -39,7 +39,7 @@ if (!$at || !is_object($at)) {
     exit_error($Language->getText('global','error'),$Language->getText('help_browse_tracker_query_field','at_not_created'));
 }
 if ($at->isError()) {
-    exit_error($Language->getText('global','error'),$ath->getErrorMessage());
+    exit_error($Language->getText('global','error'), $at->getErrorMessage());
 }
 
 // Create field factory

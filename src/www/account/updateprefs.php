@@ -11,6 +11,7 @@ require_once('common/include/CookieManager.class.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
 
 $cookie_manager = new CookieManager();
+$user = UserManager::instance()->getCurrentUser();
 
 //
 // Validate params
@@ -114,10 +115,11 @@ if ($request->existAndNonEmpty('username_display')) {
     }
 }
 
-$user_tracker_mailformat = DEFAULT_TRACKER_MAILFORMAT;
-if ($request->existAndNonEmpty('user_tracker_mailformat')) {
-    if($request->valid(new Valid_WhiteList('user_tracker_mailformat', $tracker_mailformats))) {
-        $user_tracker_mailformat = $request->get('user_tracker_mailformat');
+$mailManager = new MailManager();
+$user_tracker_mailformat = $mailManager->getMailPreferencesByUser($user);
+if ($request->existAndNonEmpty(Codendi_Mail_Interface::PREF_FORMAT)) {
+    if($request->valid(new Valid_WhiteList(Codendi_Mail_Interface::PREF_FORMAT, $mailManager->getAllMailFormats()))) {
+        $user_tracker_mailformat = $request->get(Codendi_Mail_Interface::PREF_FORMAT);
     } else {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('account_preferences', 'error_user_tracker_mailformat'));
     }
@@ -139,7 +141,7 @@ db_query("UPDATE user SET "
 // Preferences
 user_set_preference("user_csv_separator", $user_csv_separator);
 user_set_preference("user_csv_dateformat", $user_csv_dateformat);
-user_set_preference("user_tracker_mailformat", $user_tracker_mailformat);
+user_set_preference(Codendi_Mail_Interface::PREF_FORMAT, $user_tracker_mailformat);
 
 if($username_display !== null) {
     user_set_preference("username_display", $username_display);

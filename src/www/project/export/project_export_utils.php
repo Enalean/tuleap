@@ -856,11 +856,10 @@ function pe_utils_format_sr_messages($group_id,$sr_id) {
 }
 
 function display_db_params () {
-    global $sys_default_domain, $dbname, $Language;
-    list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
+    global $dbname, $Language;
 echo '
 <table align="center" cellpadding="0">
-      <tr><td>'.$Language->getText('project_export_utils','server').':</td><td>'.$host.'</td></tr>
+      <tr><td>'.$Language->getText('project_export_utils','server').':</td><td>'.$GLOBALS['sys_dbhost'].'</td></tr>
       <tr><td>'.$Language->getText('project_export_utils','port').':</td><td>'.$Language->getText('project_export_utils','leave_blank').'</td></tr>
       <tr><td>'.$Language->getText('project_export_utils','db').':</td><td>'.$dbname.'</td></tr>
       <tr><td>'.$Language->getText('project_export_utils','user').':</td><td>cxuser</td></tr>
@@ -913,6 +912,18 @@ function db_project_create($dbname) {
     } else {
 	return false;
     }
+}
+
+/**
+ * Check if a given database already exists
+ * 
+ * @param String $dbname
+ * 
+ * @return Boolean
+ */
+function db_database_exist($dbname) {
+    $res = db_query("SHOW DATABASES LIKE '$dbname'");
+    return db_numrows($res) == 1;
 }
 
 function db_project_error() {

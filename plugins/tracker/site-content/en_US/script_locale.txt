@@ -1,6 +1,7 @@
 codendi.locales['tracker_formelement_admin'] = {
     cancel: 'cancel',
-    add_another_file: 'Add another file'
+    add_another_file: 'Add another file',
+    unique_field: 'This field type cannot be added twice on a same tracker'
 };
 codendi.locales['tracker_artifact'] = {
     masschange: 'Masschange',

@@ -14,6 +14,33 @@ require_once('../include/simpletest/expectation.php');
 require_once('../include/TestHelper.class.php');
 
 require_once('CodendiReporter.class.php');
+require_once('TuleapTestCase.class.php');
+
+/**
+ * Method called when a class is not defined.
+ *
+ * Used to load Zend classes on the fly
+ *
+ * @param String $className
+ *
+ * @return void
+ */
+function __autoload($className) {
+    global $Language;
+    if (strpos($className, 'Zend') === 0 && !class_exists($className)) {
+        if (isset($GLOBALS['zend_path'])) {
+            ini_set('include_path', $GLOBALS['zend_path'].':'.ini_get('include_path'));
+            $path = str_replace('_', '/', $className);
+            require_once $path.'.php';
+        } else if (is_dir('/usr/share/zend')) {
+            ini_set('include_path', '/usr/share/zend/:'.ini_get('include_path'));
+            $path = str_replace('_', '/', $className);
+            require_once $path.'.php';
+        } else {
+            exit_error($Language->getText('global','error'),$Language->getText('include_pre','zend_path_not_set',$GLOBALS['sys_email_admin']));
+        }
+    }
+}
 
 // It seems that runkit doesn't work properly on x86_64, at least with
 // PHP 5.1.6
@@ -31,7 +58,7 @@ if (PHP_INT_SIZE == 4) {
 
 $GLOBALS['config']['plugins_root'] = $GLOBALS['sys_pluginsroot'];
 $GLOBALS['config']['tests_root']   = '/tests/';
-$GLOBALS['config']['excludes']     = array('.', '..', '.svn');
+$GLOBALS['config']['excludes']     = array('.', '..', '.svn', '.git');
 $GLOBALS['config']['suffix']       = 'Test.php';
 
 $GLOBALS['tests']                  = array();
@@ -80,9 +107,9 @@ array_walk($GLOBALS['tests'], 'sort_tests');
 //}}}
 
 function &get_group_tests($tablo) {
-    $g =& new GroupTest("All Tests");
+    $g =& new TestSuite("All Tests");
     foreach($tablo as $plugin => $tests) {
-        $o =& new GroupTest($plugin .' Tests');
+        $o =& new TestSuite($plugin .' Tests');
         foreach($tests as $c => $t) {
             add_test_to_group($t, $c, 
                 array(
@@ -90,7 +117,7 @@ function &get_group_tests($tablo) {
                 'path' => $GLOBALS['config']['plugins_root'] . ($plugin == 'Codendi' ? 'tests' : $plugin) . $GLOBALS['config']['tests_root']
             ));
         }
-        $g->addTestCase($o);
+        $g->add($o);
     }
     return $g;
 }

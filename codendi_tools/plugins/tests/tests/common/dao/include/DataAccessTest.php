@@ -25,13 +25,6 @@ Mock::generatePartial('DataAccess', 'DataAccessTestVersion', array('connect'));
  * Tests the class DataAccess
  */
 class DataAccessTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function DataAccessTest($name = 'DataAccess test') {
-        $this->UnitTestCase($name);
-    }
 
     function testConnection() {
         

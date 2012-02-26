@@ -24,6 +24,7 @@ require_once('GraphOnTrackersV5_Chart.class.php');
 require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Burndown_DataBuilder.class.php');
 require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_Burndown.class.php');
 require_once('GraphOnTrackersV5_Chart_BurndownDao.class.php');
+require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.class.php');
 
 /**
  * Base class to provide a Scrum Burndown Chart
@@ -177,7 +178,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart {
     public function getProperties() {
         return array_merge(parent::getProperties(),
             array(
-                'field_id'   => new HTML_Element_Selectbox_TrackerFields_Int_TextFieldsV5(
+                'field_id'   => new HTML_Element_Selectbox_TrackerFields_NumericFieldsV5(
                     $this->getTracker(), 
                     $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum','burndown_property_effort'),
                     'chart[field_id]', 

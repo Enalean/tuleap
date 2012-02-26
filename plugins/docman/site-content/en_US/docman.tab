@@ -642,17 +642,37 @@ plugin_docman	notifications_on	You're monitoring '$1'.
 plugin_docman	notifications_not_removed	Unable to remove monitoring for user '$1'
 plugin_docman	notifications_not_present	Monitoring was not active for user '$1'
 plugin_docman	notifications_removed	Removed monitoring for user(s) '$1'
+plugin_docman	notifications_added	Monitoring for user(s) '$1' has been added
+plugin_docman	notifications_not_added	Monitoring for the whole sub-hierarchy for user(s) '$1' has not been added
+plugin_docman	notifications_cascade_not_added	Monitoring for user(s) '$1' has not been added
+plugin_docman	notifications_already_exists	Monitoring for user(s) '$1' already exists
+plugin_docman	notifications_no_access_rights	Insufficient permissions for user(s) '$1'
 plugin_docman	notifications_no_user	No user selected
-plugin_docman	notifications_permission_denied	You don't have enough permissions to remove users monitoring
+plugin_docman	notifications_no_user_added	No user added
+plugin_docman	notifications_some_users_not_added	Some users are not added
+plugin_docman	notifications_add_user	Add
+plugin_docman	notifications_add_user_title	Add users to the monitoring list :
+plugin_docman	notifications_add_user_cascade	Enable monitoring for the whole sub-hierarchy
+plugin_docman	notifications_permission_denied	You don't have enough permissions to perform this action
 plugin_docman	notifications_cascade_on	You're monitoring '$1' and its sub-hierarchy.
+plugin_docman	notifications_added_to_monitoring_list_subject	You were added to '$1' monitoring list
+plugin_docman	notifications_added_to_monitoring_list	You are receiving this message because you were added to the monitoring list of this item:
+plugin_docman	notifications_removed_from_monitoring_list_subject	You were removed from '$1' monitoring list
+plugin_docman	notifications_removed_from_monitoring_list	You are receiving this message because you were removed from the monitoring list of this item:
 plugin_docman	notifications_removed_mail_body	$1 has been removed by $2.\n\n---------------------------------------------------------------------\nYou are receiving this message because you were monitoring this item.\n$3.
-plugin_docman	notifications_removed_from_mail_body	$1 has been modified by $2.\n$3&action=show&id=$4\n\nRemoved:\n $5\n\n----------------------------------------------------------------------\nYou are receiving this message because you are monitoring this folder.\nTo stop monitoring, please visit:\n $3&action=details&section=notifications&id=$4	
-plugin_docman	notifications_added_mail_body	$1 has been modified by $2\n$3&action=show&id=$4\n\nAdded:\n$5\n\n----------------------------------------------------------------------\nYou are receiving this message because you are monitoring this folder.\nTo stop monitoring, please visit:\n$3&action=details&section=notifications&id=$4
+plugin_docman	notifications_removed_from_mail_body	$1 has been modified by $2.\n$3&action=show&id=$4\n\nRemoved:\n $5\n\n----------------------------------------------------------------------\nYou are receiving this message because you are monitoring this folder.\nTo stop monitoring, please visit:\n $3&action=details&section=notifications&id=$6
+plugin_docman	notifications_added_mail_body	$1 has been modified by $2\n$3&action=show&id=$4\n\nAdded:\n$5\n\n----------------------------------------------------------------------\nYou are receiving this message because you are monitoring this folder.\nTo stop monitoring, please visit:\n$3&action=details&section=notifications&id=$6
 plugin_docman	notifications_moved_to		to: \n $1
 plugin_docman	notifications_moved_from	from: \n $1
 plugin_docman	notifications_moved_mail_body_begin	$1 has been modified by $2\n$3&action=show&id=$4\n\nMoved
 plugin_docman	notifications_moved_mail_body_end	\n\n--------------------------------------------------------------------\nYou are receiving this message because you are monitoring this item.\nTo stop monitoring, please visit:\n$1&action=details&section=notifications&id=$2
-plugin_docman	notifications_moved_from_mail_body_begin	 $1 has been modified by $2\n$3&action=show&id=$4\n\n $5 moved	
+plugin_docman	notifications_moved_from_mail_body_begin	 $1 has been modified by $2\n$3&action=show&id=$4\n\n $5 moved
+plugin_docman	notif_modified_by	has been modified by
+plugin_docman	notif_wiki_new_version	New version of $1 wiki page was created by
+plugin_docman	notif_something_happen	Something happen !
+plugin_docman	notif_footer_message	You are receiving this message because you are monitoring this item.
+plugin_docman	notif_footer_message_link	To stop monitoring, please visit:
+plugin_docman	notif_footer_message_restore_link	To restore monitoring, please visit:
 
 plugin_docman	obso_warn_email_subject	[$1] Document '$2' will be obsolete in one month
 plugin_docman	obso_warn_email_body	As document owner, you are notified of the obsolescence in one month of the\ndocument:\nTitle: $1\nProject: $2\nObsolescence date: $3\nDirect Link: <$4>\n\nThis document will disappear from your document manager in one month if you\ndo nothing. The document will remain accessible through the administration\ninterface though.\nYou can change the obsolescence date of your document or make it permanent with\nthe following link:\n<$5>\n\n--\nThis is an automatic message sent by a robot. Please do not reply to this email.\n

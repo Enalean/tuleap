@@ -31,11 +31,6 @@ Mock::generatePartial('Docman_MetadataListOfValuesElementFactory', 'MetadataList
 
 class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
 
-    function __construct($name = 'Docman_MetadataListOfValuesElementFactory test')
-    {
-        parent::__construct($name);
-    }
-    
     function testCloneValues()
     {
         // Factory to test
@@ -70,9 +65,6 @@ class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
         $valuesMapping = $srcLoveF->cloneValues($srcMd, $dstMd);
         $this->assertEqual($valuesMapping[101], 201);
         $this->assertEqual($valuesMapping[102], 202);
-        
-        $srcLoveF->tally();
-        $dstLoveF->tally();
     }
     
     /**
@@ -107,9 +99,6 @@ class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
         $srcLoveF->setReturnReference('getMetadataListOfValuesElementFactory', $dstLoveF);
         
         $srcLoveF->exportValues($srcMd, $dstMd, $valuesMapping);
-        
-        $srcLoveF->tally();
-        $dstLoveF->tally();
     }
     
     /**
@@ -145,9 +134,6 @@ class MetadataListOfValuesElementFactoryTest extends UnitTestCase {
         $srcLoveF->setReturnReference('getMetadataListOfValuesElementFactory', $dstLoveF);
         
         $srcLoveF->exportValues($srcMd, $dstMd, $valuesMapping);
-        
-        $srcLoveF->tally();
-        $dstLoveF->tally();
     }
 }
 

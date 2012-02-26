@@ -193,6 +193,31 @@ class ProjectManager {
     }
 
     /**
+     * Make project available
+     * 
+     * @param Project $project
+     * 
+     * @return Boolean
+     */
+    public function activate(Project $project) {
+        $dao = $this->_getDao();
+        if ($dao->updateStatus($project->getId(), 'A')) {
+            include_once 'proj_email.php';
+
+            group_add_history('approved', 'x', $project->getId());
+
+            $em = $this->getEventManager();
+            $em->processEvent('approve_pending_project', array('group_id' => $project->getId()));
+
+            if (!send_new_project_email($project->getId())) {
+                $GLOBALS['Response']->addFeedback('warning', $project->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Rename project
      * 
      * @param Project $project
@@ -376,5 +401,13 @@ class ProjectManager {
         return UserManager::instance();
     }
 
+    /**
+     * Wrapper
+     *
+     * @return EventManager
+     */
+    protected function getEventManager() {
+        return EventManager::instance();
+    }
 }
 ?>

@@ -160,7 +160,7 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    function searchUsedByTrackerIdAndType($tracker_id, $type) {
+    function searchUsedByTrackerIdAndType($tracker_id, $type, $used = null) {
         $tracker_id  = $this->da->escapeInt($tracker_id);
         if (is_array($type)) {
             $type_stm = ' IN ('. implode(',', array_map(array($this->da, 'quoteSmart'), $type)) .') ';
@@ -168,12 +168,15 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
             $type = $this->da->quoteSmart($type);
             $type_stm = " = $type";
         }
+        
         $sql = "SELECT *
                 FROM $this->table_name
                 WHERE tracker_id = $tracker_id 
-                  AND formElement_type $type_stm
-                  AND use_it = 1
-                ORDER BY rank";
+                  AND formElement_type $type_stm";
+        if ($used) {
+            $sql.= " AND use_it = 1";
+        }
+        $sql.= " ORDER BY rank";
         return $this->retrieve($sql);
     }
     
@@ -251,8 +254,8 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         //TODO: duplicate tracker_id
         $from_field_id  = $this->da->escapeInt($from_field_id);
         $to_tracker_id = $this->da->escapeInt($to_tracker_id);
-        $sql = "INSERT INTO $this->table_name (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications)
-                SELECT $to_tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications
+        $sql = "INSERT INTO $this->table_name (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id)
+                SELECT $to_tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id
                 FROM $this->table_name
                 WHERE id = $from_field_id";
         return $this->updateAndGetLastId($sql);
@@ -279,15 +282,16 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         $rank = (int)$this->prepareRanking($field->id, $field->parent_id, $field->rank, 'id', 'parent_id');
         
         $sql = "UPDATE $this->table_name
-                SET parent_id     = ". $this->da->escapeInt($field->parent_id) .", 
-                    label         = ". $this->da->quoteSmart($field->label) .", 
-                    name          = ". $this->da->quoteSmart($field->name) .", 
-                    description   = ". $this->da->quoteSmart($field->description) .", 
-                    scope         = ". $this->da->quoteSmart($field->scope) .", 
-                    required      = ". $this->da->escapeInt($field->required ? 1 : 0) .", 
-                    notifications = ". ($field->notifications ? 1 : "NULL") .", 
-                    use_it        = ". $this->da->escapeInt($field->use_it ? 1 : 0) .", 
-                    rank          = ". $this->da->escapeInt($rank) ."
+                SET parent_id         = ". $this->da->escapeInt($field->parent_id) .", 
+                    label             = ". $this->da->quoteSmart($field->label) .", 
+                    name              = ". $this->da->quoteSmart($field->name) .", 
+                    description       = ". $this->da->quoteSmart($field->description) .", 
+                    scope             = ". $this->da->quoteSmart($field->scope) .", 
+                    required          = ". $this->da->escapeInt($field->required ? 1 : 0) .", 
+                    notifications     = ". ($field->notifications ? 1 : "NULL") .", 
+                    use_it            = ". $this->da->escapeInt($field->use_it ? 1 : 0) .", 
+                    rank              = ". $this->da->escapeInt($rank) .",
+                    original_field_id = ". $this->da->escapeInt($field->getOriginalFieldId()) ."
                 WHERE id = ". $this->da->escapeInt($field->id);
         if ($this->update($sql)) {
             $field->rank = $rank;
@@ -295,7 +299,16 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         }
         return false;
     }
-
+    
+    public function propagateUpdatedProperties($original_field) {
+        $sql = "UPDATE $this->table_name AS original 
+                INNER JOIN $this->table_name AS target ON (target.original_field_id = original.id)
+                SET target.label = original.label,
+                    target.description = original.description
+                WHERE original.id = $original_field->id";
+        return $this->update($sql);
+    }
+    
     public function setType($field,$type) {
         $sql = "UPDATE $this->table_name
                 SET formElement_type = ". $this->da->quoteSmart($type) ."
@@ -312,28 +325,35 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
         return $this->update($sql);
     }
     
-    public function create($type, $tracker_id, $parent_id, $name, $prefix_name, $label, $description, $use_it, $scope, $required, $notifications, $rank) {
-        $type          = $this->da->quoteSmart($type);
-        $tracker_id    = $this->da->escapeInt($tracker_id);
-        $parent_id     = $this->da->escapeInt($parent_id);
-        $name_like     = $this->da->quoteSmart(str_replace('_', '\_', $prefix_name) . '%');
-        $prefix_name   = $this->da->quoteSmart($prefix_name);
-        $label         = $this->da->quoteSmart($label);
-        $description   = $this->da->quoteSmart($description);
-        $use_it        = $this->da->escapeInt($use_it);
-        $scope         = $this->da->quoteSmart($scope);
-        $required      = $this->da->escapeInt($required);
-        $notifications = ($notifications ? 1 : "NULL");
-        $rank          = $this->da->escapeInt($this->prepareRanking(0, $parent_id, $rank, 'id', 'parent_id'));
+    public function searchSharedTargets($id) {
+        $id  = $this->da->escapeInt($id);
+        $sql = "SELECT id FROM tracker_field WHERE original_field_id = $id";
+        return $this->retrieve($sql);
+    }
+    
+    public function create($type, $tracker_id, $parent_id, $name, $prefix_name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field_id) {
+        $type              = $this->da->quoteSmart($type);
+        $tracker_id        = $this->da->escapeInt($tracker_id);
+        $parent_id         = $this->da->escapeInt($parent_id);
+        $name_like         = $this->da->quoteSmart(str_replace('_', '\_', $prefix_name) . '%');
+        $prefix_name       = $this->da->quoteSmart($prefix_name);
+        $label             = $this->da->quoteSmart($label);
+        $description       = $this->da->quoteSmart($description);
+        $use_it            = $this->da->escapeInt($use_it);
+        $scope             = $this->da->quoteSmart($scope);
+        $required          = $this->da->escapeInt($required);
+        $notifications     = ($notifications ? 1 : "NULL");
+        $rank              = $this->da->escapeInt($this->prepareRanking(0, $parent_id, $rank, 'id', 'parent_id'));
+        $original_field_id = $this->da->escapeInt($original_field_id);
         
-        $sql = "INSERT INTO $this->table_name (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications) ";
+        $sql = "INSERT INTO $this->table_name (tracker_id, parent_id, name, formElement_type, label, description, scope, required, use_it, rank, notifications, original_field_id) ";
         if ($name) {
             $name = $this->da->quoteSmart($name);
             $sql .= "
-                VALUES ($tracker_id, $parent_id, $name, $type, $label, $description, $scope, $required, $use_it, $rank, $notifications)";
+                VALUES ($tracker_id, $parent_id, $name, $type, $label, $description, $scope, $required, $use_it, $rank, $notifications, $original_field_id)";
         } else {
             $sql .= "
-                SELECT $tracker_id, $parent_id, CONCAT($prefix_name, IFNULL(MAX(REPLACE(name, $prefix_name, '')), 0) + 1), $type, $label, $description, $scope, $required, $use_it, $rank, $notifications
+                SELECT $tracker_id, $parent_id, CONCAT($prefix_name, IFNULL(MAX(REPLACE(name, $prefix_name, '')), 0) + 1), $type, $label, $description, $scope, $required, $use_it, $rank, $notifications, $original_field_id
                 FROM tracker_field
                 WHERE tracker_id = $tracker_id
                     AND name LIKE $name_like";

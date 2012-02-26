@@ -142,7 +142,7 @@ class ArtifactFactory extends Error {
 	        	    return false;
                 }
                 
-                if ($af->isDateField() && ($cr->field_name != 'open_date' && $cr->field_name != 'close_date')) {
+                if ($af->isDateField() && ($cr->field_name != 'open_date' && $cr->field_name != 'close_date' && $cr->field_name != 'last_update_date')) {
                     // The SQL query expects a timestamp, whereas the given date is in YYYY-MM-DD format
                     $cr->field_value = strtotime($cr->field_value);
                 }
@@ -153,7 +153,7 @@ class ArtifactFactory extends Error {
                 }
                 
 				if ($af->isStandardField()) {
-                    if ($cr->operator == '=' && ($cr->field_name == 'open_date' || $cr->field_name == 'close_date')) {
+                    if ($cr->operator == '=' && ($cr->field_name == 'open_date' || $cr->field_name == 'close_date' || $cr->field_name == 'last_update_date')) {
                         // special case for open_date and close_date with operator = : the hours, minutes, and seconds are stored, so we have to compare an interval
                         list($year,$month,$day) = util_date_explode($cr->field_value);
                         $time_end = mktime(23, 59, 59, $month, $day, $year);

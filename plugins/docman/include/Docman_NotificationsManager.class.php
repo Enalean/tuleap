@@ -213,26 +213,60 @@ class Docman_NotificationsManager extends NotificationsManager {
         }
         $this->_messages[$md5]['to'][$to->getId()] = $to;
     }
+
+    /**
+     * Notify each user in his preferred language
+     *
+     * @param User $user User to be notified
+     *
+     * @return BaseLanguage
+     */
+    function _getLanguageForUser($user) {
+        // TODO : return the language depending on user preferences
+        return $GLOBALS['Language'];
+    }
+
+    /**
+     * Given an item monitored by user through "sub-hierarchy", retrieve the monitored parent.
+     * @see getListeningUsers
+     *
+     * @param $user User monitoring the item
+     * @param $item Item which parent is monitored
+     *
+     * @return Docman_Item
+     */
+    function _getMonitoredItemForUser($user, $item) {
+        $listeners = $this->getListeningUsers($item);
+        foreach ($listeners as $userId => $item) {
+            if ($user->getId() == $userId) {
+                return $item;
+            }
+        }
+        return $item;
+    }
+
     function _getMessageForUser(&$user, $message_type, $params) {
         $msg = '';
+        $language = $this->_getLanguageForUser($user);
         switch($message_type) {
             case self::MESSAGE_MODIFIED:
             case self::MESSAGE_NEWVERSION:
-                $msg .= $params['path']->get($params['item']) .' has been modified by '. $user->getRealName() .".\n";
+                $msg .= $params['path']->get($params['item']) .' '.$language->getText('plugin_docman', 'notif_modified_by').' '. $user->getRealName() .".\n";
                 $msg .= $this->_url .'&action=details&id='. $params['item']->getId() ."\n";
                 break;
             case self::MESSAGE_WIKI_NEWVERSION:
-                $msg .= 'New version of ' . $params['wiki_page'] . 'wiki page was created by ' . $user->getRealName() . ".\n";
+                $msg .= $language->getText('plugin_docman', 'notif_wiki_new_version', $params['wiki_page']).' ' . $user->getRealName() . ".\n";
                 $msg .= $params['url'] . "\n";
                 break;
             default:
-                $msg .= 'Something happen !';
+                $msg .= $language->getText('plugin_docman', 'notif_something_happen');
                 break;
         }
         $msg .= "\n\n--------------------------------------------------------------------\n";
-        $msg .= "You are receiving this message because you are monitoring this item.\n";
-        $msg .= "To stop monitoring, please visit:\n";
-        $msg .= $this->_url .'&action=details&section=notifications&id='. $params['item']->getId();
+        $msg .= $language->getText('plugin_docman', 'notif_footer_message')."\n";
+        $msg .= $language->getText('plugin_docman', 'notif_footer_message_link')."\n";
+        $monitoredItem = $this->_getMonitoredItemForUser($user, $params['item']);
+        $msg .= $this->_url .'&action=details&section=notifications&id='. $monitoredItem->getId();
         return $msg;
     }
 

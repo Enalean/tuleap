@@ -84,7 +84,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric 
         if ($value === null) {
             return '';
         } else {
-            return number_format($value, self::FLOAT_DECIMALS);
+            return number_format($value, self::FLOAT_DECIMALS, '.', '');
         }
     }
     

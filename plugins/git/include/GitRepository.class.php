@@ -317,22 +317,26 @@ class GitRepository implements DVCSRepository {
     /**
      * Prepare data then log a Git push.
      *
-     * @param String  $repositoryName Name of the git repository
-     * @param String  $identifier     Name of the user that performed the push
-     * @param String  $projectName    Unix name of the project
+     * @param String  $identifier     Name of the user that performed the push, in case of a repository with gitshell backend.
+     * @param Integer $pushTimestamp  Date of the push
      * @param Integer $commitsNumber  Number of commits
+     * @param String  $gitoliteUser   Name of the user that performed the push, in case of a repository with gitolite backend.
      *
      * @return Boolean
      */
-    public function logGitPush($repositoryName, $identifier, $projectName, $commitsNumber) {
+    public function logGitPush($identifier, $pushTimestamp, $commitsNumber, $gitoliteUser = null) {
         $um = $this->_getUserManager();
+        if ($this->getBackendType() == GitDao::BACKEND_GITOLITE) {
+            if (!empty($gitoliteUser)) {
+                $identifier = $gitoliteUser;
+            }
+        }
         if ($user = $um->getUserByIdentifier($identifier)) {
             $userId = $user->getId();
         } else {
             $userId = 100;
         }
-        $repoId = $this->getRepositoryIDByName($repositoryName, $projectName);
-        return $this->getDao()->logGitPush($repoId, $userId, $commitsNumber);
+        return $this->getDao()->logGitPush($this->getId(), $userId, $pushTimestamp, $commitsNumber);
     }
 
     /**

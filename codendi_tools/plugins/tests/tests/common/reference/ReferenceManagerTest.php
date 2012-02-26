@@ -26,14 +26,7 @@ Mock::generate('DataAccessResult');
  *
  * Tests the class ReferenceManager
  */
-class ReferenceManagerTest extends UnitTestCase {
-
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-    }
-    function tearDown() {
-        unset($GLOBALS['Language']);
-    }
+class ReferenceManagerTest extends TuleapTestCase {
 
 	function testSingleton() {
 		$this->assertReference(

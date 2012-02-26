@@ -75,7 +75,7 @@ h1, .h1{
 /*@editable*/ color:#202020;
 display:block;
 /*@editable*/ font-family:Arial;
-/*@editable*/ font-size:26px;
+/*@editable*/ font-size:22px;
 /*@editable*/ font-weight:bold;
 /*@editable*/ line-height:100%;
 margin-top:0;
@@ -95,7 +95,7 @@ h2, .h2{
 /*@editable*/ color:#202020;
 display:block;
 /*@editable*/ font-family:Arial;
-/*@editable*/ font-size:22px;
+/*@editable*/ font-size:18px;
 /*@editable*/ font-weight:bold;
 /*@editable*/ line-height:100%;
 margin-top:20px;
@@ -117,7 +117,7 @@ h3, .h3{
 /*@editable*/ color:#202020;
 display:block;
 /*@editable*/ font-family:Arial;
-/*@editable*/ font-size:18px;
+/*@editable*/ font-size:14px;
 /*@editable*/ font-weight:bold;
 /*@editable*/ line-height:100%;
 margin-top:0;
@@ -137,7 +137,7 @@ h4, .h4{
 /*@editable*/ color:#202020;
 display:block;
 /*@editable*/ font-family:Arial;
-/*@editable*/ font-size:14px;
+/*@editable*/ font-size:12px;
 /*@editable*/ font-weight:bold;
 /*@editable*/ line-height:100%;
 margin-top:0;
@@ -269,6 +269,12 @@ display:inline;
 height:auto;
 }
 
+.bodyContent .tracker_formelement_label {
+    font-weight: bold;
+}
+.bodyContent .tracker_artifact_field {
+    margin-bottom: 1em;
+}
 .bodyContent .tracker_artifact_followup_header {
     -webkit-border-top-right-radius:20px;
     -moz-border-radius-topright:20px;
@@ -292,6 +298,16 @@ height:auto;
 .bodyContent .tracker_artifact_followup_comment_edited_by {    
     font-size:0.8em;
     color:#999;
+}
+.bodyContent .tracker_artifact_followup_comment_body {
+    border-color: #e8ebb5;
+    -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    margin: 1em 0;
+    padding: 0.5em 1em;
+}
+.bodyContent .tracker_artifact_followup_comment_changes {
 }
 .bodyContent .tracker_artifact_followup_date {
     text-align:right;

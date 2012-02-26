@@ -176,7 +176,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     
     /**
      * Return the dao of the criteria value used with this field.
-     * @return DataAccessObject
+     * @return Tracker_Report_Criteria_List_ValueDao
      */
     protected function getCriteriaDao() {
         return new Tracker_Report_Criteria_List_ValueDao();
@@ -410,6 +410,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $output = '';
         switch($format) {
             case 'html':
+                $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
                 $tablo = array();
@@ -734,31 +735,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
         return $html;
     }
-    
-    /**
-     * Fetch additionnal stuff to display below the edit form
-     *
-     * @return string html
-     */
-    protected function fetchAfterAdminEditForm() {
-        return $this->getBind()->fetchAdminEditForm();
-    }
-    
-    /**
-     * Fetch additionnal stuff to display below the create form
-     * Result if not empty must be enclosed in a <tr>
-     *
-     * @return string html
-     */
-    protected function fetchAfterAdminCreateForm() {
-        $bf = new Tracker_FormElement_Field_List_BindFactory();
-        $html = '';
-        $html .= '<tr valign="top"><td colspan="2">';
-        $html .= $bf->fetchCreateABind($this);
-        $html .= '</td></tr>';
-        return $html;
-    }
-    
+        
     /**
      * Update the form element.
      * Override the parent function to handle binds
@@ -955,13 +932,17 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function hasChanges($previous_changesetvalue, $new_value) {
         if (!is_array($new_value)) {
-            if ($new_value == 100) {
-                $new_value = array();
-            } else {
-                $new_value = array($new_value);
-            }
+            $new_value = array($new_value);
         }
-        $old_value = $previous_changesetvalue ? $previous_changesetvalue->getValue() : array();
+        if (empty($new_value)) {
+            $new_value = array(100);
+        }
+        if ($previous_changesetvalue) {
+            $old_value = $previous_changesetvalue->getValue();
+        }
+        if (empty($old_value)) {
+            $old_value = array(100);
+        }
         sort($old_value);
         sort($new_value);
         return $old_value != $new_value;
@@ -1041,6 +1022,5 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
         return !$this->has_errors;
     }
-
 }
 ?>

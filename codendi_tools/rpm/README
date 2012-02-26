@@ -7,8 +7,10 @@ How to rebuild
 
 Requirements
 ------------
-* On the OS: you need 'rpmbuild' and 'createrepo' RPM packages to be installed
+* On the OS: you need 'make' 'rpmbuild' and 'create-repo' RPM packages to be installed
   on your system before to start
+  Minimal requirement is to run:
+  yum -y install make
 
 * Documentation: you need a couple of docbook tools:
 ** Jimi-1.0
@@ -19,6 +21,8 @@ Requirements
 
 For docbook tools, you can checkout them here:
 https://codex.cro.st.com/svnroot/codex-infra/tools/trunk/docbook
+or
+https://tuleap.net/file/pub/tuleap/tools/docbook/docbook.tbz2
 
 Set the environment
 -------------------

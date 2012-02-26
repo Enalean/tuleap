@@ -39,10 +39,6 @@ Mock::generatePartial('Docman_ItemFactory', 'Docman_ItemFactoryTestRestore', arr
 
 class Docman_ItemFactoryTest extends UnitTestCase {
 
-    function Docman_ItemFactoryTest ($name = 'Docman_ItemFactory test') {
-	    $this->UnitTestCase($name);	
-	}
-
     /**
      * 140
      * `-- 150

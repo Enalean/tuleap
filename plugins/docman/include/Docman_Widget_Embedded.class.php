@@ -172,9 +172,9 @@ class Docman_Widget_Embedded extends Widget /* implements Visitor */ {
     public function create($request) {
         $content_id = false;
         $vItem_id = new Valid_String('item_id');
-        $vItem_id->setErrorMessage("Can't add empty plugin_docman_widget_embedded item_id");
+        $vItem_id->setErrorMessage("Unable to add the widget. Please give an item id.");
         $vItem_id->required();
-        if($request->validInArray('plugin_docman_widget_embedded', $vItem_id)) {
+        if ($request->validInArray('plugin_docman_widget_embedded', $vItem_id)) {
             $plugin_docman_widget_embedded = $request->get('plugin_docman_widget_embedded');
             $vTitle = new Valid_String('title');
             $vTitle->required();

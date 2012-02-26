@@ -29,10 +29,6 @@ Mock::generatePartial('Valid', 'ValidTestVersion', array('addFeedback'));
 
 class ValidTest extends UnitTestCase {
 
-    function UnitTestCase($name = 'Valid test') {
-        $this->UnitTestCase($name);
-    }
-
     function testArgPropagate() {
         $v = new Valid();
         $v->disableFeedback();
@@ -40,7 +36,6 @@ class ValidTest extends UnitTestCase {
         $r->expectOnce('isValid', array('value'));
         $v->addRule($r);
         $v->validate('value');
-        $r->tally();
     }
 
     function testRetPropagate() {
@@ -93,9 +88,6 @@ class ValidTest extends UnitTestCase {
         $v->addRule($r3);
 
         $v->validate('value');
-        $r1->tally();
-        $r2->tally();
-        $r3->tally();
     }
 
 
@@ -109,7 +101,6 @@ class ValidTest extends UnitTestCase {
         $v->addRule($r);
 
         $v->validate('value');
-        $r->tally();
     }
 
     function testNoErrorMessage() {
@@ -169,10 +160,6 @@ class ValidTest extends UnitTestCase {
         $v3->required();
         $v3->addRule($r3);
         $v3->validate(null);
-
-        $r1->tally();
-        $r2->tally();
-        $r3->tally();
     }
 
     /**
@@ -222,7 +209,6 @@ class ValidTest extends UnitTestCase {
         $v->addRule($r);
 
         $v->validate('value');
-        $v->tally();
     }
 
     function testFeedbackErrorWhenRequired() {
@@ -238,7 +224,6 @@ class ValidTest extends UnitTestCase {
         $v->addRule($r);
 
         $v->validate('value');
-        $v->tally();
     }
 
     function testFeedbackWarning() {
@@ -253,7 +238,6 @@ class ValidTest extends UnitTestCase {
         $v->addRule($r);
 
         $v->validate('value');
-        $v->tally();
     }
 
     function testFeedbackGlobal() {
@@ -276,7 +260,6 @@ class ValidTest extends UnitTestCase {
         $v->addRule($r2, 'Just in time message');
 
         $v->validate('value');
-        $v->tally();
     }
 
     function testFeedbackGlobalWithoutErrors() {

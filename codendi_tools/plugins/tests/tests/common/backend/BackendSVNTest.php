@@ -39,6 +39,7 @@ require_once('common/dao/ServiceDao.class.php');
 Mock::generate('ServiceDao');
 require_once('common/svn/SVNAccessFile.class.php');
 Mock::generate('SVNAccessFile');
+Mock::generate('EventManager');
 Mock::generatePartial('BackendSVN', 'BackendSVNTestVersion', array('getUserManager', 
                                                                    'getProjectManager',
                                                                    'getUGroupDao',
@@ -383,6 +384,5 @@ class BackendSVNTest extends UnitTestCase {
        
             
     }
-    
 }
 ?>

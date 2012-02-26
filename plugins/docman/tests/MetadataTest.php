@@ -47,16 +47,6 @@ Mock::generatePartial('Docman_MetadataFactory', 'MetadataFactoryMockedForCloneRe
 
 class MetadataTest extends UnitTestCase {
 
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function __construct($name = 'Docman_Metadata test')
-    {
-        parent::__construct($name);
-        //$this->groupId = 1540;
-    }
-
     function testCloneOneMetadata()
     {
         // Parameters
@@ -88,9 +78,6 @@ class MetadataTest extends UnitTestCase {
         
         $srcMdF->_cloneOneMetadata($dstGroupId, $srcMd, $metadataMapping);
         $this->assertEqual($metadataMapping['md'][301], 401);
-        
-        $srcMdF->tally();
-        $dstMdF->tally();
     }
     
     function testCloneOneMetadataList()
@@ -130,10 +117,6 @@ class MetadataTest extends UnitTestCase {
         $this->assertEqual($metadataMapping['md'][301], 401);
         $this->assertEqual($metadataMapping['love'][101], 201);
         $this->assertEqual($metadataMapping['love'][102], 202);
-        
-        $dstLoveF->tally();
-        $srcMdF->tally();
-        $dstMdF->tally();
     }
     
     /**
@@ -221,7 +204,6 @@ class MetadataTest extends UnitTestCase {
         
         // Run the test
         $srcMdF->_cloneRealMetadata($dstGroupId, $metadataMapping);
-        $srcMdF->tally();
     }
     
     /*

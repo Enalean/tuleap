@@ -9,23 +9,15 @@ Mock::generatePartial('DataAccessResult', 'DataAccessResultTestVersion', array('
  * Tests the class DataAccessResult
  */
 class DataAccessResultTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function DataAccessResultTest($name = 'DataAccessResult test') {
-        $this->UnitTestCase($name);
-    }
 
     function testGetRow() {
-        $dar =& new DataAccessResultTestVersion($this);
+        $dar = new DataAccessResultTestVersion($this);
         $dar->expectOnce('current');
         $dar->expectOnce('next');
         $tab = array('col' => 'value');
         $dar->setReturnReference('current', $tab);
         
         $this->assertIdentical($dar->getRow(), $tab);
-        $dar->tally();
     }
 }
 ?>

@@ -1,75 +1,71 @@
-#
-# Copyright (c) STMicroelectronics 2011. All rights reserved
-#
-
-This is a solution to run integration tests using Selenium Server
-
-LICENSE
-=======
-This code is distributed under the GPL v2 Licence. See the file COPYING for details.
-
-INSTALLATION
+Launch tests
 ============
-Before installing, you need to understand that this code deals with three different machines:
-1. The machine from which you may launch tests having a phpunit. Let's call it "Launcher".
-2. The machine on which web application to be tested is deployed. Let's call it "Server".
-3. The machine from which tests will be launched, we use a web browser installed on it. Let's call it "Client".
 
-To make it simple as a first installation please consider having 1- & 3- on the same machine: your desktop and 2- as are remote web server.
-You will install pear, phpunit & selenium on your desktop and run the tests again your server.
+Cucumber tests
+--------------
 
+$> cd tuleap
+$> cucumber 
+Feature: Make cucumber work
 
-On Launcher
------------
-Install PEAR 1.9.2 by typing
+  Scenario: A user can logon              # features/test.feature:3
+    Given I am on the home page           # features/step_definitions/steps.rb:2
+    When I logon as "admin" : "siteadmin" # features/step_definitions/steps.rb:6
+    Then I am on my personal page         # features/step_definitions/steps.rb:13
 
-    pear install PEAR-1.9.2
+1 scenario (1 passed)
+3 steps (3 passed)
+0m13.740s
 
-Then install PHPUnit:
+There are preconfigured profiles for cucumber (in .config/cucumber.yml) you can use them by
+$> cucumber -p <profile>
+for a list of profiles just enter a non existing profile, cucumber will show which ones are available
+for instance 
+$> cucumber -p blabla
+More documentation https://github.com/cucumber/cucumber/wiki/cucumber.yml
 
-    pear channel-discover pear.phpunit.de
-    pear channel-discover components.ez.no
-    pear channel-discover pear.symfony-project.com
-    pear install phpunit/PHPUnit
-    
-this would install Selenium extention with it.
+Installation & Setup
+====================
 
-On Client
----------
-You need to download selenium-server-standalone-2.5.0.jar from http://seleniumhq.org/download
+# The recommended way to setup the whole platform is to rely on a local ruby installation.
 
-If you use firefox for tests & daily usage then create a Firefox profile for selenium (you may need to delete extentions.rdf for addons popup)
+RVM
+===
+RVM is the easiest way to build your own ruby in your homedir.
 
-Then run Selenium by
+First, install it:
+bash -s stable < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer )
 
-    java -jar selenium-server-standalone-2.5.0.jar -singlewindow -firefoxProfileTemplate "/path/to/firefox/profile/" -trustAllSSLCertificates
+# Load rvm:
+. $HOME/.rvm/scripts/rvm
 
-Selenium Server must be always running on client machine as a service to make launching tests from Launcher possible.
+# Check all requirements are installed
+rvm requirements
+-> look for "additional dependencies" and install what is needed by "# For Ruby / Ruby HEAD (MRI, Rubinius, & REE), install the following:" section.
 
-To keep the same session for all tests add the option -browserSessionReuse
+# Install ruby head
+rvm install ruby-1.8.7-head
 
-For headless Client (aka firefox running in da cloud). You will have to use a fake X server.
+# Load your ruby in your environement:
+$> rvm use ruby-1.8.7-head
+$> which ruby
+/home/manuel/.rvm/rubies/ruby-1.8.7-head/bin/ruby
+$> which gem
+/home/manuel/.rvm/rubies/ruby-1.8.7-head/bin/gem
 
-    yum install firefox xorg-x11-server-Xvfb cairo
-    # you may have to install also xauth?
+# Install gems
+gem install rspec cucumber capybara capybara-screenshot selenium
 
-edit /etc/rc.d/rc.local
+Environement
+============
 
-    Xvfb :99 -ac -noreset &
+# add the following lines to your ~/.bashrc and source it
+. $HOME/.rvm/scripts/rvm
+rvm use ruby-1.8.7-head
 
-install `selenium` service by copying the file ./selenium in /etc/init.d/ folder. Then issue the command:
-
-    chkconfig --add selenium
-    
-And reboot. You're done!
-    
-
-
-RUN TESTS
-=========
-You probably need to modify tests settings in include/set.php file.
-
-Then you can run tests in command line by just typing:
-
-    phpunit codendi_tools/plugins/tests/functional/
-
+Running with webkit (faster selenium) 
+===================
+apt-get install libqt4-dev
+gem install capybara-screenshot
+gem install capybara-webkit
+# Note: you need capybara-webkit-0.8 minimum

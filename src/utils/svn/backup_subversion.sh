@@ -56,13 +56,18 @@ LogTag=SVN
 
 # What umask to use when creating backups
 Umask=027
+ARCH=`uname -i`
+LIB_PATH='/usr/lib64'
+if [ "$ARCH" != "x86_64" ];then
+    LIB_PATH='/usr/lib'
+fi
 
 LS=/bin/ls
 RM=/bin/rm
 MKDIR=/bin/mkdir
 SVNADMIN=/usr/bin/svnadmin
 SVNLOOK=/usr/bin/svnlook
-HOTCOPY=/usr/lib/subversion/tools/backup/hot-backup.py
+HOTCOPY=${LIB_PATH}/subversion/tools/backup/hot-backup.py
 PERL=/usr/bin/perl
 OLPERL="${PERL} -ne"
 

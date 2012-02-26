@@ -7,7 +7,7 @@
 // 
 
 require_once('pre.php');
-require('../forum_utils.php');
+require_once('../forum_utils.php');
 
 $is_admin_page='y';
 $request =& HTTPRequest::instance();

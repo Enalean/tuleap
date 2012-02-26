@@ -11,10 +11,7 @@ require_once('common/reference/ReferenceManager.class.php');
 require_once('common/valid/Rule.class.php');
 require_once('common/include/URL.class.php');
 require_once('common/include/Codendi_HTMLPurifier.class.php');
-
-//Tracker Mail Format
-define("DEFAULT_TRACKER_MAILFORMAT", "text");
-$tracker_mailformats = array("text", "html");
+require_once('common/date/DateHelper.class.php');
 
 // Part about CSV format export
 // The separator for CSV export can differ regarding the Excel version.
@@ -113,26 +110,21 @@ function util_get_user_preferences_export_datefmt() {
 }
 
 /**
-* Convert a timestamp unix into the user defined format.
-* This format is depending on the choosen language, and is defined
-* in the site-content file <language>.tab
-*
-* @global $sys_datefmt the user preference date format defined in the language file
-*
-* @param string $date the date in the unix timestamp format
-* @param boolean $day_only false: return the day AND the time, true only the date.
-* @return string the date in the user format, or null if the conversion was not possible or wrong
-*/
+ * Convert a timestamp unix into the user defined format.
+ * This format is depending on the choosen language, and is defined
+ * in the site-content file <language>.tab
+ *
+ * @global $sys_datefmt the user preference date format defined in the language file
+ *
+ * @param string $date the date in the unix timestamp format
+ * @param boolean $day_only false: return the day AND the time, true only the date.
+ *
+ * @deprecated Use DateHelper::formatForLanguage() instead
+ *
+ * @return string the date in the user format, or null if the conversion was not possible or wrong
+ */
 function util_timestamp_to_userdateformat($date, $day_only=false) {
-    
-    if($day_only) {
-        $user_date = format_date($GLOBALS['Language']->getText('system', 'datefmt_short'), $date, null);
-    }
-    else {
-        $user_date = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $date, null);
-    }
-
-    return $user_date;
+    return DateHelper::formatForLanguage($GLOBALS['Language'], $date, $day_only);
 }
 
 // Convert a date in sys_datefmt (Y-M-d H:i ex: 2004-Feb-03 16:13)
@@ -885,13 +877,13 @@ function util_normalize_emails($adresses) {
       global $Language;
         $valid = true;
         $message = "";
-        
+        $purifier = Codendi_HTMLPurifier::instance();
         foreach($arr_email as $key => $cc) {
             // Make sure that the address is valid
             $ref = util_user_finder($cc, $strict);	  
             if(empty($ref)) {
                 $valid = false;
-                $message .= "'$cc'<br>";
+                $message .= "'".$purifier->purify($cc)."'<br>";
                 continue;
             }
             else {	    

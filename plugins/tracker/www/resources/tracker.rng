@@ -820,6 +820,16 @@
           </element>
         </optional>
       </group>
+      <group>
+        <attribute name="type">
+          <value>plugin_cardwall</value>
+        </attribute>
+        <optional>
+          <attribute name="field_id">
+            <data type="IDREF"/>
+          </attribute>
+        </optional>
+      </group>
     </choice>
   </define>
 </grammar>

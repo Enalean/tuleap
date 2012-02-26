@@ -22,12 +22,17 @@ require_once('common/user/User.class.php');
 require_once('common/dao/UserDao.class.php');
 require_once('common/dao/WikiDao.class.php');
 require_once('common/session/Codendi_Session.class.php');
+require_once('UserNotExistException.class.php');
+require_once('UserNotAuthorizedException.class.php');
+require_once('UserNotActiveException.class.php');
+require_once('SessionNotCreatedException.class.php');
 
 class UserManager {
     
     var $_users           = array();
     var $_userid_bynames  = array();
     var $_userid_byldapid = array();
+    
     var $_userdao         = null;
     var $_currentuser     = null;
     
@@ -200,8 +205,6 @@ class UserManager {
      *
      * @param String $email mail address of the user to retrieve
      *
-     * @throws Exception
-     *
      * @return User or null if no user found
      */
     public function getUserByEmail($email) {
@@ -214,6 +217,13 @@ class UserManager {
         }
     }
     
+    public function getAllUsersByEmail($email) {
+        $users = array();
+        foreach ($this->getDao()->searchByEmail($email) as $user) {
+            $users[] = $this->getUserInstanceFromRow($user);
+        }
+        return $users;
+    }
     /**
      * Returns a user that correspond to an identifier
      * The identifier can be prepended with a type.
@@ -395,36 +405,10 @@ class UserManager {
                 //We retrieve the user access information  to test on it
                 $accessInfo = $this->getUserAccessInfo($this->_currentuser);
                 if ($auth_success) {
-                    $allowed = false;
                     //Check the status
                     $status  = $this->_currentuser->getStatus();
-                    if (($status == 'A') || ($status == 'R') || 
-                        ($allowpending && ($status == 'V' || $status == 'W' ||
-                            ($GLOBALS['sys_user_approval']==0 && $status == 'P')))) {
-                        $allowed =  true;
-                    } else {
-                        if ($status == 'S') { 
-                            //acount suspended
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_suspended'));
-                            $allowed =  false;
-                        }
-                        if (($GLOBALS['sys_user_approval']==0 && ($status == 'P' || $status == 'V' || $status == 'W'))||
-                            ($GLOBALS['sys_user_approval']==1 && ($status == 'V' || $status == 'W'))) { 
-                            //account pending
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_pending'));
-                            $allowed =  false;
-                        } 
-                        if ($status == 'D') { 
-                            //account deleted
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_deleted'));
-                            $allowed =  false;
-                        }
-                        if (($status != 'A')&&($status != 'R')) {
-                            //unacceptable account flag
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_not_active'));
-                            $allowed =  false;
-                        }
-                    }
+                    $allowed = $this->checkUserStatus($status, $allowpending);
+                    
                     if ($allowed) {
                         //Check that password is not expired
                         if ($password_lifetime = $this->_getPasswordLifetime()) {
@@ -502,6 +486,70 @@ class UserManager {
         $this->_users[$this->_currentuser->getId()] = $this->_currentuser;
         $this->_userid_bynames[$this->_currentuser->getUserName()] = $this->_currentuser->getId();
         return $this->_currentuser;
+    }
+    
+   /**
+    * loginAs allows the siteadmin to log as someone else
+    *
+    * @param string $username
+    * 
+    * @return string a session hash
+    */
+    function loginAs($name) {
+        if (! $this->getCurrentUser()->isSuperUser()) {
+            throw new UserNotAuthorizedException();
+        }
+        
+        $user_login_as = $this->getUserByUserName($name);
+        if (!$user_login_as) {
+            throw new UserNotExistException();
+        }
+        if (!$this->checkUserStatus($user_login_as->getStatus())) {
+            throw new UserNotActiveException();
+        }        
+        return $this->createSession($user_login_as);
+    }
+
+    private function createSession(User $user) {
+        $now = $_SERVER['REQUEST_TIME'];
+        $session_hash = $this->getDao()->createSession($user->getId(), $now);
+        if (!$session_hash) {
+            throw new SessionNotCreatedException();
+        }
+        return $session_hash;
+    }
+    
+    function checkUserStatus($status, $allowpending = false) {
+        
+        $allowed = false;
+        if (($status == 'A') || ($status == 'R') ||
+            ($allowpending && ($status == 'V' || $status == 'W' ||
+                ($GLOBALS['sys_user_approval']==0 && $status == 'P')))) {
+            $allowed =  true;
+        } else {
+            if ($status == 'S') {
+                //acount suspended
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_suspended'));
+                $allowed =  false;
+            }
+            if (($GLOBALS['sys_user_approval']==0 && ($status == 'P' || $status == 'V' || $status == 'W'))||
+                ($GLOBALS['sys_user_approval']==1 && ($status == 'V' || $status == 'W'))) {
+                //account pending
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_pending'));
+                $allowed =  false;
+            }
+            if ($status == 'D') {
+                //account deleted
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_deleted'));
+                $allowed =  false;
+            }
+            if (($status != 'A')&&($status != 'R')) {
+                //unacceptable account flag
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','account_not_active'));
+                $allowed =  false;
+            }
+        }
+        return $allowed;
     }
     
     /**

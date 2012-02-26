@@ -18,13 +18,6 @@ class TestEventManager extends EventManager {
  * Test the class EventManager
  */
 class EventManagerTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function EventManagerTest($name = 'EventManager test') {
-        $this->UnitTestCase($name);
-    }
 
     function testSingleton() {
         $this->assertReference(
@@ -57,10 +50,6 @@ class EventManagerTest extends UnitTestCase {
         //We process event
         $params = array();
         $m->processEvent($e1, $params);
-        
-        $l1->tally();
-        $l2->tally();
-        $l3->tally();
     }
     
     function testProcessEvent2() {
@@ -87,10 +76,6 @@ class EventManagerTest extends UnitTestCase {
         //We process event
         $params = array();
         $m->processEvent($e2, $params);
-        
-        $l1->tally();
-        $l2->tally();
-        $l3->tally();
     }
     
     function testPriority() {

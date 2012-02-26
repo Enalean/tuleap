@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `plugin_git_post_receive_mail` (
 CREATE TABLE IF NOT EXISTS `plugin_git_log` (
   `repository_id` int(10) unsigned NOT NULL,
   `user_id` int(11) unsigned NULL,
-  `push_date` datetime NOT NULL,
+  `push_date` int(11) DEFAULT 0,
   `commits_number` int,
    INDEX `idx_repository_user`(`repository_id`, `user_id`));
 

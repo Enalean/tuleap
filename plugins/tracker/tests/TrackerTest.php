@@ -149,6 +149,9 @@ Mock::generate('Tracker_ArtifactFactory');
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php');
+Mock::generate('Tracker_SharedFormElementFactory');
+
 class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {
     public function exportToXML($root, &$xmlMapping, &$index) {
         $xmlMapping['F'. $index] = $this->getId();
@@ -159,12 +162,10 @@ class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_I
 require_once('common/layout/Layout.class.php');
 Mock::generate('Layout');
 
-require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
-
-class TrackerTest extends UnitTestCase {
+class TrackerTest extends TuleapTestCase {
     
-    public function setup() {
+    public function setUp() {
+        parent::setUp();
         $this->tracker = new TrackerTestVersion();
         $this->tracker1 = new TrackerTestVersion();
         $this->tracker2 = new TrackerTestVersion();
@@ -398,7 +399,6 @@ class TrackerTest extends UnitTestCase {
         $this->tracker->setReturnReference('getCannedResponseFactory', $this->canned_response_factory);
 
         $GLOBALS['Response'] = new MockLayout();
-        $GLOBALS['Language'] = new MockBaseLanguage();
 
         $GLOBALS['UGROUPS'] = array(
             'UGROUP_1' => 1,
@@ -425,9 +425,7 @@ class TrackerTest extends UnitTestCase {
         unset($this->tracker_assignee);
         unset($this->tracker_submitterassignee);
         unset($this->tracker_admin);
-        
-        unset($GLOBALS['Response']);
-        unset($GLOBALS['Language']);
+        parent::tearDown();
     }
     
     //
@@ -1629,6 +1627,36 @@ class TrackerTest extends UnitTestCase {
         
         $GLOBALS['Response']->expectNever('addFeedback', array('warning', '*', '*'));
         $tracker->isValidCSV($lines, $separator);
+    }
+    
+    public function testCreateFormElementDispatchesToOrdinaryFieldCreation() {
+        $data = array('type' => 'string');
+        
+        list($tracker, $factory, $sharedFactory, $user) = $this->GivenATrackerAndItsFactories();
+        $factory->expectOnce('createFormElement', array($tracker , $data['type'], $data));
+        $sharedFactory->expectNever('createFormElement');
+        
+        $tracker->createFormElement($data['type'], $data, $user);
+    }
+    
+    public function testCreateFormElementDispatchesToSharedField() {
+        $data = array('type' => 'shared');
+        
+        list($tracker, $factory, $sharedFactory, $user) = $this->GivenATrackerAndItsFactories();
+        $factory->expectNever('createFormElement');
+        $sharedFactory->expectOnce('createFormElement', array($tracker , $data, $user));
+        
+        $tracker->createFormElement($data['type'], $data, $user);
+    }
+    
+    private function GivenATrackerAndItsFactories() {
+        $tracker = new Tracker(null, null, null, null, null, null, null, null, null, null, null, null);
+        $factory = new MockTracker_FormElementFactory();
+        $tracker->setFormElementFactory($factory);
+        $sharedFactory = new MockTracker_SharedFormElementFactory();
+        $tracker->setSharedFormElementFactory($sharedFactory);
+        $user = new MockUser();
+        return array($tracker, $factory, $sharedFactory, $user);
     }
 }
 

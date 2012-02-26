@@ -6,8 +6,8 @@
 //
 // 
 require_once('pre.php');
-require('../admin/project_admin_utils.php');
-require('./project_export_utils.php');
+require_once('../admin/project_admin_utils.php');
+require_once('./project_export_utils.php');
 require_once('common/tracker/Artifact.class.php');
 require_once('www/tracker/include/ArtifactHtml.class.php');
 require_once('common/tracker/ArtifactType.class.php');

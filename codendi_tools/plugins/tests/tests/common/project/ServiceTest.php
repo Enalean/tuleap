@@ -14,9 +14,6 @@ require_once('common/project/Project.class.php');
 Mock::generate('Project');
 
 class ServiceTest extends UnitTestCase {
-    function ServiceTest($name = 'Service test') {
-        $this->UnitTestCase($name);
-    }
     
     function testGetUrl() {
         $url_server_1 = 'url_server_1';

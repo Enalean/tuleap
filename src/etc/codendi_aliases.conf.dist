@@ -160,33 +160,48 @@ RewriteRule /http-bind  http://%sys_default_domain%:7070/http-bind/ [P]
 RewriteRule /http-bind/ http://%sys_default_domain%:7070/http-bind/ [P]
 
 
-# Look for images in the following order:
+# Look for images in themes. Here are the priorities:
 # 1. /etc/themes/XXXX/images
 # 2. /etc/themes/custom/images
 # 3. .../www/themes/XXXX/images
 # 4. .../www/themes/custom/images
+#
+# Now if the user asks specifically for a common image, then return the common image
 
-#   try to find it in the custom theme...
-#   ...and if found stop and be happy:
+# If we ask for a common image ^/(?:custom|themes)/custom/images/(.+)
+# And the image has been redefined in /etc/codendi/themes/common/images/$1
+# Then serve /etc/codendi/themes/common/images/$1
+RewriteCond  /etc/codendi/themes/common/images/$1  -f
+RewriteRule  ^/(?:custom|themes)/common/images/(.+)  /etc/codendi/themes/common/images/$1  [L]
+
+# Else if we ask for a Theme image ^/(?:custom|themes)/([^/]*)/images/(.+)
+# And the image has been redefined in /etc/codendi/themes/$1/images/$2
+# Then serve /etc/codendi/themes/$1/images/$2
 RewriteCond  /etc/codendi/themes/$1/images/$2  -f
-RewriteRule  ^/custom/([^/]*)/images/(.+)  /etc/codendi/themes/$1/images/$2  [L]
+RewriteRule  ^/(?:custom|themes)/([^/]*)/images/(.+)  /etc/codendi/themes/$1/images/$2  [L]
 
-#   try to find it in custom common...
-#   ...and if found stop and be happy:
+# Else if we ask for an image (either common or Theme) ^/(?:custom|themes)/(?:[^/]*)/images/(.+)
+# And the image has been redefined in /etc/codendi/themes/common/images/$1 
+# Then serve /etc/codendi/themes/common/images/$1
+# Exemple: organization_logo.png put globaly in /etc/.../common/
 RewriteCond  /etc/codendi/themes/common/images/$1  -f
 RewriteRule  ^/(?:custom|themes)/[^/]*/images/(.+)  /etc/codendi/themes/common/images/$1  [L]
 
-#   try to find it in the theme...
-#   ...and if found stop and be happy:
-RewriteCond  /usr/share/codendi/src/www/themes/$1/images/$2  -f
-RewriteRule  ^/themes/([^/]*)/images/(.+)  /themes/$1/images/$2  [L]
-
-#   lastly try to find it in common...
-#   ...and if found stop and be happy:
+# Else if we ask for a common image ^/(?:custom|themes)/common/images/(.+)
+# Then serve the standard one /usr/share/codendi/src/www/themes/common/images/$1
 RewriteCond  /usr/share/codendi/src/www/themes/common/images/$1  -f
-RewriteRule  ^/(?:custom|themes)/[^/]*/images/(.+)  /themes/common/images/$1  [L]
+RewriteRule  ^/(?:custom|themes)/common/images/(.+)  /usr/share/codendi/src/www/themes/common/images/$1  [L]
 
-#   else go on for other Alias or ScriptAlias directives,
-#   etc.
+# Else if we ask for a Theme image ^/(?:custom|themes)/([^/]*)/images/(.+)
+# Then serve the standard one /usr/share/codendi/src/www/themes/$1/images/$2
+RewriteCond  /usr/share/codendi/src/www/themes/$1/images/$2  -f
+RewriteRule  ^/(?:custom|themes)/([^/]*)/images/(.+)  /usr/share/codendi/src/www/themes/$1/images/$2  [L]
+
+# Else if we ask for an image ^/(?:custom|themes)/([^/]*)/images/(.+)
+# Then serve the standard common one
+RewriteCond  /usr/share/codendi/src/www/themes/common/images/$1  -f
+RewriteRule  ^/(?:custom|themes)/[^/]*/images/(.+)  /usr/share/codendi/src/www/themes/common/images/$1  [L]
+
+# Else go on for other Alias or ScriptAlias directives, etc.
 RewriteRule   ^(.+)  -  [PT]
 

@@ -134,7 +134,7 @@ class CrossReferenceFactory {
         return $refs;
     }
 
-    function getHTMLDisplayCrossRefs($with_links = true, $condensed = false) {
+    function getHTMLDisplayCrossRefs($with_links = true, $condensed = false, $isBrowser = true) {
         global $Language;
 
         /**
@@ -176,7 +176,7 @@ class CrossReferenceFactory {
         $user = UserManager::instance()->getCurrentUser();
     
         $itemIsReferenced = false;
-        if($user->isSuperUser() || $user->isMember($this->entity_gid, 'A') ){
+        if($isBrowser && ($user->isSuperUser() || $user->isMember($this->entity_gid, 'A'))){
                 $can_delete = true;
         }else{
                 $can_delete = false;

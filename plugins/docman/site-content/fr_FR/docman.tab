@@ -642,17 +642,37 @@ plugin_docman	notifications_on	Vous surveillez désormais '$1'.
 plugin_docman	notifications_not_removed	Impossible de supprimer le monitoring pour l'utilisateur '$1'
 plugin_docman	notifications_not_present	Le monitoring n'était pas activé pour l'utilisateur '$1'
 plugin_docman	notifications_removed	Le monitoring a été supprimé pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_added	Le monitoring a été ajouté pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_not_added	Le monitoring n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_cascade_not_added	Le monitoring de la sous-hiérarchie n'a pas pu être ajouté pour le(s) utilisateur(s) '$1'
+plugin_docman	notifications_already_exists	Le monitoring pour le(s) utilisateur(s) '$1' existe déjà
+plugin_docman	notifications_no_access_rights	Les permissions ne sont pas suffisantes pour le(s) utilisateur(s) '$1'
 plugin_docman	notifications_no_user	Aucun utilisateur séléctionné
-plugin_docman	notifications_permission_denied	Vous n'avez pas assez de permission pour supprimer le monitoring d'autres utilisateurs
+plugin_docman	notifications_no_user_added	Aucun utilisateur ajouté
+plugin_docman	notifications_some_users_not_added	Certains utilisateurs n'ont pas été ajoutés
+plugin_docman	notifications_add_user	Ajoutez
+plugin_docman	notifications_add_user_title	Ajoutez des utilisateurs à la liste de monitoring :
+plugin_docman	notifications_add_user_cascade	Monitoring activé pour toute la sous-hiérarchie
+plugin_docman	notifications_permission_denied	Vous n'avez pas assez de permission pour cette action
 plugin_docman	notifications_cascade_on	Vous surveillez désormais '$1' et sa sous-hiérarchie.
+plugin_docman	notifications_added_to_monitoring_list_subject	Vous avez été ajouté à la liste de monitoring du document '$1'
+plugin_docman	notifications_added_to_monitoring_list	Vous recevez cette notification car vous avez été rajouté à la liste des utilisateurs qui monitorent cet item:
+plugin_docman	notifications_removed_from_monitoring_list_subject	Vous avez été enlevé de la liste de monitoring du document '$1'
+plugin_docman	notifications_removed_from_monitoring_list	Vous recevez cette notification car vous avez été enlevé de la liste des utilisateurs qui monitorent cet item:
 plugin_docman	notifications_removed_mail_body	$1 a été supprimé par $2.\n\n---------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez cet item.\n$3.
-plugin_docman	notifications_removed_from_mail_body	$1 a été modifié par $2.\n$3&action=show&id=$4\n\nSupprimé:\n $5\n\n----------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez ce répertoire.\nPour arrêter la surveillance, aller à la page suivante :\n $3&action=details&section=notifications&id=$4	
-plugin_docman	notifications_added_mail_body	$1 a été modifié par $2\n$3&action=show&id=$4\n\nAjouté :\n$5\n\n----------------------------------------------------------------------\n\nVous recevez ce message parce que vous surveillez ce répertoire. \nPour arrêter la surveillance, aller à la page suivante :\n$3&action=details&section=notifications&id=$4
+plugin_docman	notifications_removed_from_mail_body	$1 a été modifié par $2.\n$3&action=show&id=$4\n\nSupprimé:\n $5\n\n----------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez ce répertoire.\nPour arrêter la surveillance, aller à la page suivante :\n $3&action=details&section=notifications&id=$6
+plugin_docman	notifications_added_mail_body	$1 a été modifié par $2\n$3&action=show&id=$4\n\nAjouté :\n$5\n\n----------------------------------------------------------------------\n\nVous recevez ce message parce que vous surveillez ce répertoire. \nPour arrêter la surveillance, aller à la page suivante :\n$3&action=details&section=notifications&id=$6
 plugin_docman	notifications_moved_to		vers : \n $1
 plugin_docman	notifications_moved_from	de : \n $1
 plugin_docman	notifications_moved_mail_body_begin	$1 a été modifié par $2\n$3&action=show&id=$4\n\nDéplacé
 plugin_docman	notifications_moved_mail_body_end	\n\n--------------------------------------------------------------------\nVous recevez ce message parce que vous surveillez cet item.\nPour arrêter la surveillance, aller à la page suivante :\n$1&action=details&section=notifications&id=$2
 plugin_docman	notifications_moved_from_mail_body_begin	 $1 a été modifié par $2\n$3&action=show&id=$4\n\n$5 déplacé
+plugin_docman	notif_modified_by	a été modifié par
+plugin_docman	notif_wiki_new_version	Une nouvelle version de la page wiki $1 a été crée par
+plugin_docman	notif_something_happen	Quelque chose a changé !
+plugin_docman	notif_footer_message	Vous recevez cette notification car vous monitorez cet item.
+plugin_docman	notif_footer_message_link	Pour arreter le monitoring, veuillez visiter :
+plugin_docman	notif_footer_message_restore_link	Pour restaurer le monitoring, veuillez visiter :
 
 plugin_docman	obso_warn_email_subject	[$1] Document '$2' sera obsolète dans un mois
 plugin_docman	obso_warn_email_body	En tant que propriétaire du document, vous êtes notifié de l'obsolescence du document:\nTitre : $1\nProjet : $2\nObsolescence : $3\nLien direct : <$4>\n\nCe document disparaîtra de votre gestionnaire de document dans un mois \nsi vous ne faites rien. Ce document restera accessible à travers l'interface\nd'administration néanmoins.\nVous pouvez changer la date d'obsolescence de votre document à l'adresse suivante : \n<$5>\n\n--\nCeci est un message automatique. Merci de ne pas répondre à cet email.\n

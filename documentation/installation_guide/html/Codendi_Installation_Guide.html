@@ -1269,15 +1269,24 @@ service sendmail stop
 chkconfig sendmail off
 # Make postfix start instead
 chkconfig --add postfix
+# Updating alternatives aliases
+alternatives --set mta /usr/sbin/sendmail.postfix
+# Starting Postfix service
+service postfix restart
 </pre>
 <p>Then you should edit the postfix configuration file /etc/postfix/main.cf, and replace the value of these parameters:
-<ul><li>inet_interfaces = all (instead of 'localhost' by default).
-<li>myhostname = my_server_url.com
-<li>alias_maps = hash:/etc/aliases, hash:/etc/aliases.codendi
-<li>mydestination = $myhostname, localhost.$mydomain, localhost, lists.$myhostname
+<ul>
+<li><a href="http://www.postfix.org/postconf.5.html#inet_interfaces">inet_interfaces</a> = all (instead of 'localhost' by default).</li>
+<li><a href="http://www.postfix.org/postconf.5.html#myhostname">myhostname</a>    = my_server.my_domain.com </li>
+<li><a href="http://www.postfix.org/postconf.5.html#mydomain">mydomain</a>      = my_domain.com </li>
+<li><a href="http://www.postfix.org/postconf.5.html#alias_maps">alias_maps</a>    = hash:/etc/aliases, hash:/etc/aliases.codendi </li>
+<li><a href="http://www.postfix.org/postconf.5.html#alias_database">alias_database</a>    = hash:/etc/aliases, hash:/etc/aliases.codendi </li>
+<li><a href="http://www.postfix.org/postconf.5.html#mydestination">mydestination</a> = $myhostname, localhost.$mydomain, localhost, lists.$myhostname </li>
+<li><a href="http://www.postfix.org/postconf.5.html#mynetworks">mynetworks</a>    = 127.0.0.1/8 xxx.xxx.xxx.xxx/xx </li>
 </ul>
-<br>The modification of "mydestination" is only needed when subdomains are enabled.
-
+<br />The modification of <a href="http://www.postfix.org/postconf.5.html#mydestination">mydestination</a> is only needed when subdomains are enabled.
+<br /><a href="http://www.postfix.org/postconf.5.html#mynetworks">mynetworks</a> allows to authorize any server from another network to send mail to the postfix instance
+<br /><a href="http://www.postfix.org/postconf.5.html#relay_domains">relay_domains</a> may be checked if sending email to another domain is required, see also <a href="http://www.postfix.org/postconf.5.html#relay_transport">relay_transport</a>,<a href="http://www.postfix.org/postconf.5.html#relayhost">relayhost</a>.
 <p>Last, you should customize the mailman configuration for postfix.
 Simply add this at the end of /etc/mailman/mm_cfg.py
 <pre>

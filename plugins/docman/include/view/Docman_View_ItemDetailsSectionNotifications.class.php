@@ -93,13 +93,44 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
                     $content .= '</td></tr>';
                 }
                 // TODO : ask user if he wants or not to notify the users he remove
-                // TODO : We may ask him also if his name wil appear as the guilty one or not
+                // TODO : We may ask him also if his name will appear as the guilty one or not
                 $content .= '<td colspan="2"><input type="submit" value="'. $GLOBALS['Language']->getText('plugin_docman', 'action_delete') .'"></td></tr>';
                 $content .= '</tbody></table></form>';
-                $content .= '</td><td><div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help').'</div></td></tr></table>';
-                $content .= '</fieldset>';
+                $content .= '</td><td><div class="docman_help">'.$GLOBALS['Language']->getText('plugin_docman', 'details_notifications_help').'</div></td></tr>';
             }
+            $content .= $this->addListeningUser($itemId);
+            $content .= '</table></fieldset>';
         }
+        return $content;
+    }
+
+    /**
+     * Add a user to the list of peoples that are monitoring a given item.
+     *
+     * @param Integer $itemId Id of the document
+     *
+     * @return String
+     */
+    function addListeningUser($itemId) {
+        $content = '<tr><td colspan="2"><hr width="100%" size="1" NoShade></td></tr>';
+        $content .= '<tr><form name="add_monitoring" method="POST" action="">';
+        $content .= '<input type="hidden" name="action" value="add_monitoring">';
+        $content .= '<input type="hidden" name="item_id" value="'. $itemId .'">';
+        $content .= '<table>';
+        $content .= '<tr><td><b>'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_title') .'</b></td></tr>';
+        $content .= '<tr><td><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea></td></tr>';
+
+        //checkbox to enable cascade monitoring
+        $content .= '<tr><td><input type="checkbox" name="monitor_cascade" value="1" id="plugin_docman_monitor_add_user_cascade" />';
+        $content .= '<label for="plugin_docman_monitor_add_user_cascade">'. $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user_cascade') .'</label></td></tr>';
+        $content .= '</table>';
+
+        //autocompletion on "add_user" field.
+        $autocomplete = "new UserAutoCompleter('listeners_to_add','".
+                        util_get_dir_image_theme()."',true);";
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($autocomplete);
+        $content .= '<input type="submit" name="submit" value="'.
+                    $GLOBALS['Language']->getText('plugin_docman', 'notifications_add_user') .'"></td></form></tr>';
         return $content;
     }
 

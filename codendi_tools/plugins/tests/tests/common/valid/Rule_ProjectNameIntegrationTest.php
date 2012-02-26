@@ -21,29 +21,13 @@
 require_once('common/valid/Rule.class.php');
 Mock::generatePartial('Rule_ProjectName', 'Rule_ProjectNameIntegration', array('_getProjectManager', '_getUserManager', '_getBackend', 'isNameAvailable', '_getSystemEventManager'));
 
-require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
-
 require_once('common/backend/Backend.class.php');
 Mock::generate('Backend');
-
 Mock::generate('UserManager');
 Mock::generate('ProjectManager');
 Mock::generate('SystemEventManager');
 
-class Rule_ProjectNameIntegrationTest extends UnitTestCase {
-
-    function __construct($name = 'Rule_ProjectName Integration test') {
-        parent::__construct($name);
-    }
-    
-    function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage($this);
-    }
-
-    function tearDown() {
-        unset($GLOBALS['Language']);
-    }
+class Rule_ProjectNameIntegrationTest extends TuleapTestCase {
 
     function testValidNamesAreValid() {
         $um = new MockUserManager($this);

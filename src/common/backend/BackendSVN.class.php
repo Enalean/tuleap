@@ -27,12 +27,13 @@ require_once('common/dao/ServiceDao.class.php');
 require_once('common/svn/SVNAccessFile.class.php');
 require_once('common/include/Error.class.php');
 require_once('www/svn/svn_utils.php');
+require_once('common/svn/SVN_Apache_SvnrootConf.class.php');
+require_once('common/include/Config.class.php');
 
 /**
  * Backend class to work on subversion repositories
  */
 class BackendSVN extends Backend {
-
 
     protected $SVNApacheConfNeedUpdate;
 
@@ -71,6 +72,16 @@ class BackendSVN extends Backend {
         return new ServiceDao(CodendiDataAccess::instance());
     }
 
+    
+    /**
+     * Wrapper for Config
+     * 
+     * @return Config
+     */
+    protected function getConfig($var) {
+        return Config::get($var);
+    }
+    
     /**
      * Create project SVN repository
      * If the directory already exists, nothing is done.
@@ -308,6 +319,31 @@ class BackendSVN extends Backend {
     }
 
     /**
+     * Rewrite the .SVNAccessFile if removed
+     *
+     * @return void
+     */
+    public function checkSVNAccessPresence($group_id) {
+        $project = $this->getProjectManager()->getProject($group_id);
+        if (!$project) {
+            return false;
+        }
+        $unix_group_name = $project->getUnixName(false); // May contain upper-case letters
+        $svn_dir = $GLOBALS['svn_prefix']."/".$unix_group_name;
+        if (!is_dir($svn_dir)) {
+            $this->log("Can't update SVN Access file: project SVN repo is missing: $svn_dir", Backend::LOG_ERROR);
+            return false;
+        }
+        
+        $svnaccess_file = $svn_dir."/.SVNAccessFile";
+        
+        if (!is_file($svnaccess_file)) {
+            return $this->updateSVNAccess($group_id);
+        }
+        return true;
+    }
+
+    /**
      * SVNAccessFile groups definitions
      *
      * @param Project $project
@@ -446,84 +482,33 @@ class BackendSVN extends Backend {
      * @return boolean true on success or false on failure
      */
     public function generateSVNApacheConf() {
-
         $svn_root_file = $GLOBALS['svn_root_file'];
         $svn_root_file_old = $svn_root_file.".old";
         $svn_root_file_new = $svn_root_file.".new";
         
-
-        if (!$fp = fopen($svn_root_file_new, 'w')) {
-            $this->log("Can't open file for writing: $svn_root_file_new", Backend::LOG_ERROR);
+        $conf = $this->getApacheConf();
+        if (file_put_contents($svn_root_file_new, $conf) !== strlen($conf)) {
+            $this->log("Error while writing to $svn_root_file_new", Backend::LOG_ERROR);
             return false;
         }
-
-        fwrite($fp, "# Codendi SVN repositories\n\n");
-
-        # Define specific log file for SVN queries
-        fwrite($fp, "# Custom log file for SVN queries\n");
-        fwrite($fp, 'CustomLog logs/svn_log "%h %l %u %t %U %>s \"%{SVN-ACTION}e\"" env=SVN-ACTION'."\n\n");
-
-        $service_dao = $this->_getServiceDao();
-        $dar = $service_dao->searchActiveUnixGroupByUsedService('svn');
-        foreach ($dar as $row) {
-            // Write repository definition
-            if (!fwrite($fp, $this->getProjectSVNApacheConf($row))) {
-                $this->log("Error while writing to $svn_root_file_new", Backend::LOG_ERROR);
-                return false;
-            }
-        }
-        fclose($fp);
 
         $this->chown("$svn_root_file_new", $this->getHTTPUser());
         $this->chgrp("$svn_root_file_new", $this->getHTTPUser());
         chmod("$svn_root_file_new", 0640);
 
-
         // Backup existing file and install new one
         return $this->installNewFileVersion($svn_root_file_new, $svn_root_file, $svn_root_file_old, true);
     }
 
-    /**
-     * Replace double quotes by single quotes in project name (conflict with Apache realm name)
-     * 
-     * @param String $str
-     * @return String
-     */
-    function escapeStringForApacheConf($str) {
-        return strtr($str, "\"", "'");
+    function getApacheConf() {
+        $projects = $this->_getServiceDao()->searchActiveUnixGroupByUsedService('svn');
+        $factory  = $this->getSVNApacheAuthFactory();
+        $conf = new SVN_Apache_SvnrootConf($factory, $projects);
+        return $conf->getFullConf();
     }
     
-    protected function getProjectSVNApacheConf($row) {
-        $conf = '';
-        $conf .= "<Location /svnroot/".$row['unix_group_name'].">\n";
-        $conf .= "    DAV svn\n";
-        $conf .= "    SVNPath ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."\n";
-        $conf .= "    SVNIndexXSLT \"/svn/repos-web/view/repos.xsl\"\n";
-        $conf .= $this->getProjectSVNApacheConfAuthz($row);
-        $conf .= $this->getProjectSVNApacheConfAuth($row);
-        $conf .= "</Location>\n\n";
-        return $conf;
-    }
-
-    protected function getProjectSVNApacheConfAuth($row) {
-        $conf = '';
-        $conf .= "    Require valid-user\n";
-        $conf .= "    AuthType Basic\n";
-        $conf .= "    AuthName \"Subversion Authorization (".$this->escapeStringForApacheConf($row['group_name']).")\"\n";
-        $conf .= "    AuthMYSQLEnable on\n";
-        $conf .= "    AuthMySQLUser ".$GLOBALS['sys_dbauth_user']."\n";
-        $conf .= "    AuthMySQLPassword ".$GLOBALS['sys_dbauth_passwd']."\n";
-        $conf .= "    AuthMySQLDB ".$GLOBALS['sys_dbname']."\n";
-        $conf .= "    AuthMySQLUserTable \"user, user_group\"\n";
-        $conf .= "    AuthMySQLNameField user.user_name\n";
-        $conf .= "    AuthMySQLPasswordField user.unix_pw\n";
-        $conf .= "    AuthMySQLUserCondition \"(user.status='A' or (user.status='R' AND user_group.user_id=user.user_id and user_group.group_id=".$row['group_id']."))\"\n";
-        return $conf;
-    }
-
-    protected function getProjectSVNApacheConfAuthz($row) {
-        $conf = "    AuthzSVNAccessFile ".$GLOBALS['svn_prefix']."/".$row['unix_group_name']."/.SVNAccessFile\n";
-        return $conf;
+    protected function getSVNApacheAuthFactory() {
+        return new SVN_Apache_Auth_Factory();
     }
     
     /**

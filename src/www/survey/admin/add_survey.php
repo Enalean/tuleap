@@ -7,8 +7,8 @@
 // 
 
 require_once('pre.php');
-require('../survey_data.php');
-require('../survey_utils.php');
+require_once('../survey_data.php');
+require_once('../survey_utils.php');
 
 require_once('common/include/HTTPRequest.class.php');
 $request =& HTTPRequest::instance();

@@ -2131,14 +2131,22 @@ svnadmin dump /path_to_svn_root &gt; svn_dumpfile</pre>
 <pre>
 scp svn_dumpfile username@codendi.example.com:/home/groups/projectname</pre>
 (it is also possible to use FTP instead).
+<li> One may want to change svn:author property for all commits in the dump file, this can be achieved by means of svn-author-replace.pl
+    This is usefull when authors are not known or known under another login name in the codendi platform
+    <pre>perl /usr/share/codendi/src/utils/svn/svn-author-replace.pl -f svn_dumpfile -u user_map.txt > new_svn_dumpfile</pre>
+    where svn.dump is the subversion dump file, and user_map.txt a file with author name to change (1 user per line) old_author_name=new_author_name
+    default=default_login may be added to process unknown users.
 <li>then a Codendi site administrator needs to load the repository content into the existing repository on Codendi:
 <pre>
-svnadmin load /svnroot/projectname &lt; /home/groups/projectname/svn_dumpfile </pre> 
+svnadmin load /svnroot/projectname &lt; /home/groups/projectname/new_svn_dumpfile </pre>
 <li>Then, don't forget to set proper Unix ownership on the repository:
 <pre>
 chown -R codendiadm.projectname /svnroot/projectname</pre>
 <li>if the existing repository had specific permissions or hooks, it is now time to copy the corresponding files on the new repository. This can be done by the project team.
-<li>Once the team has tested the new repository, you can remove the dump file from /home/groups/projectname/svn_dumpfile.
+<li>History can be imported into the Codendi database, this is possible with svn-commit.pl (/usr/share/codendi/src/utils/svn/)
+    <pre>perl /usr/share/codendi/src/utils/svn/svn-commit.pl -p /svnroot/myproject/ -r r1:r2</pre>
+</li>
+<li>Once the team has tested the new repository, you can remove the dump file from /home/groups/projectname/svn_dumpfile.</li>
 </ol>
 
 You're done!

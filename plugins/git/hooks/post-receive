@@ -12,15 +12,12 @@
 # see contrib/hooks/ for an sample, or uncomment the next line (on debian)
 #
 
-. /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
+#. /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
 
-## Tested with real size repository (dalvik from Android source)
-## On my 2CPU 4GB RAM server, load raised up to 60 and I had to
-## force power off of the machine
+push_timestamp=$(date +%s)
 
-#while read oldrev newrev refname
-#    do
-#       echo `date` $oldrev $newrev $refname >> /tmp/push.log
-#       echo $oldrev $newrev $refname | /usr/share/codendi/plugins/git/hooks/post-receive-email >&- 2>&- &
-#       . /usr/share/codendi/plugins/git/hooks/post-receive-log $oldrev $newrev >&- 2>&- &
-#    done
+while read oldrev newrev refname
+    do
+	echo $oldrev $newrev $refname | /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
+	. /usr/share/codendi/plugins/git/hooks/post-receive-log 2>/dev/null
+    done

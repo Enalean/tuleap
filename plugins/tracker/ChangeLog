@@ -1,6 +1,31 @@
 DISCLAIMER: plugin still in beta, do not use it on production servers.
 DISCLAIMER: Your data might be trashed in a future update.
 
+Version 0.9.1 - Tuleap 4.0.27
+  * Fix issue: float fields and number > 1000
+
+Version 0.9.1 - Tuleap 4.0.27
+  * Refactoring: better naming
+  * Fix issue: label should not contain input elements
+
+Version 0.9.0 - Tuleap 4.0.27
+  * Add shared field: a tracker can re-use a field (select box or multi selectbox) defined in another tracker.
+
+Version 0.8.12 - Tuleap 4.0.26
+  * Add tests for workflow postactions
+
+Version 0.8.11 - Tuleap 4.0.26
+  * Cucumberize the features
+
+Version 0.8.10 - Tuleap 4.0.26
+  * Fix performance issue on tracker report display.
+
+Version 0.8.9 - Tuleap 4.0.26
+  * HTML email notifications (in collaboration with STMicroelectronics)
+
+Version 0.8.8 - Tuleap 4.0.26
+  * Fix sla #160: fatal error on artifact link when the field is mandatory
+
 Version 0.8.7 - Tuleap 4.0.25
   * Fix bug with JS declaration of tracker namespace
 

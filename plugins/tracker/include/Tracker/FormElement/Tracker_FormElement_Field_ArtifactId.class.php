@@ -114,6 +114,8 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
         $output = '';
         switch ($format) {
             case 'html':
+                $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
+                $output .= '<a href= "'.$proto.'://'. $GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">#'. (int)$artifact->id .'</a>';
                 break;
             default:
                 $output .= '#'.$artifact->id;
@@ -213,17 +215,5 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
      public function fetchSubmitMasschange($submitted_values=array()) {
          return '';
      }
-
-
-     /**
-     * Fetch the "required" part of field admin
-     *
-     * @param string the HTML for the part of form for required checkbox
-     */
-    protected function fetchRequired() {
-        $html = '';
-        return $html;
-    }
-
 }
 ?>

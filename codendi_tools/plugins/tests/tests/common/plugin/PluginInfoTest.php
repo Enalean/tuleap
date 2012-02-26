@@ -21,13 +21,6 @@ class TestPluginInfo extends PluginInfo {
  * Tests the class PluginInfo
  */
 class PluginInfoTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function PluginInfoTest($name = 'PluginInfo test') {
-        $this->UnitTestCase($name);
-    }
 
     function testPluginDescriptor() {
         $p  = new MockPlugin($this);

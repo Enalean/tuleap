@@ -1,3 +1,9 @@
+1.7 - Tuleap 4.0.26
+    * Export Hudson Statistics to CSV
+    
+1.6 - Tuleap 4.0.26
+    * Redirect to jobs list after adding a new job (prevents double submission) (Contrib Xerox)
+
 1.5 - Tuleap 4.0.24
     * Catch exceptions in widgets
 

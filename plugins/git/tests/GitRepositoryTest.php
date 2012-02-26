@@ -108,16 +108,14 @@ class GitRepositoryTest extends UnitTestCase {
         $um->setReturnValue('getUserByIdentifier', null);
         $repo = new GitRepositoryTestVersion();
         $repo->setReturnValue('_getUserManager', $um);
-        $repo->setReturnValue('getRepositoryIDByName', 1);
         $dao = new MockGitDao();
         $dao->setReturnValue('logGitPush', true);
         $repo->setReturnValue('getDao', $dao);
 
-        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 3));
+        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
 
         $repo->expectOnce('_getUserManager');
         $um->expectOnce('getUserByIdentifier');
-        $repo->expectOnce('getRepositoryIDByName');
         $dao->expectOnce('logGitPush');
     }
 
@@ -128,17 +126,15 @@ class GitRepositoryTest extends UnitTestCase {
         $um->setReturnValue('getUserByIdentifier', $user);
         $repo = new GitRepositoryTestVersion();
         $repo->setReturnValue('_getUserManager', $um);
-        $repo->setReturnValue('getRepositoryIDByName', 1);
         $dao = new MockGitDao();
         $dao->setReturnValue('logGitPush', false);
         $repo->setReturnValue('getDao', $dao);
 
-        $this->assertFalse($repo->logGitPush('repo', 'user', 'prj', 3));
+        $this->assertFalse($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
 
         $repo->expectOnce('_getUserManager');
         $um->expectOnce('getUserByIdentifier');
         $user->expectOnce('getId');
-        $repo->expectOnce('getRepositoryIDByName');
         $dao->expectOnce('logGitPush');
     }
 
@@ -149,17 +145,15 @@ class GitRepositoryTest extends UnitTestCase {
         $um->setReturnValue('getUserByIdentifier', $user);
         $repo = new GitRepositoryTestVersion();
         $repo->setReturnValue('_getUserManager', $um);
-        $repo->setReturnValue('getRepositoryIDByName', 1);
         $dao = new MockGitDao();
         $dao->setReturnValue('logGitPush', true);
         $repo->setReturnValue('getDao', $dao);
 
-        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 3));
+        $this->assertTrue($repo->logGitPush('repo', 'user', 'prj', 1327577111, 3));
 
         $repo->expectOnce('_getUserManager');
         $um->expectOnce('getUserByIdentifier');
         $user->expectOnce('getId');
-        $repo->expectOnce('getRepositoryIDByName');
         $dao->expectOnce('logGitPush');
     }
 

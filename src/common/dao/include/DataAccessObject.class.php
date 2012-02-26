@@ -25,6 +25,7 @@ class DataAccessObject {
     /**
     * Private
     * $da stores data access object
+     * @var DataAccess
     */
     var $da;
 
@@ -48,8 +49,8 @@ class DataAccessObject {
      *
      * @return mixed either false if error or object DataAccessResult
      */
-    public function retrieve($sql) {
-        $result = $this->da->query($sql);
+    public function retrieve($sql, $params = array()) {
+        $result = $this->da->query($sql, $params);
         if ($error = $result->isError()) {
             $trace = debug_backtrace();
             $i = isset($trace[1]) ? 1 : 0;
@@ -67,8 +68,8 @@ class DataAccessObject {
      *
      * @return boolean true if success
      */
-    public function update($sql) {
-        $result = $this->da->query($sql);
+    public function update($sql, $params = array()) {
+        $result = $this->da->query($sql, $params);
         if ($error = $result->isError()) {
             $trace = debug_backtrace();
             $i = isset($trace[1]) ? 1 : 0;
@@ -95,8 +96,6 @@ class DataAccessObject {
     
     /**
      * Prepare ranking of items.
-     * 
-     * @see  https://partners.xrce.xerox.com/plugins/docman/?group_id=120&action=show&id=95
      * 
      * @param   int $id  The id of the item to rank. 0 if the item doesn't exist.
      * @param   int $parent_id   The id of the element used to group items

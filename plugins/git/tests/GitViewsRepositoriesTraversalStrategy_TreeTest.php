@@ -31,9 +31,19 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         parent::__construct('GitViewsRepositoriesTraversalStrategy_Tree');
     }
     
+    public function testEmptyListShouldReturnEmptyString() {
+        $view = new MockGitViews();
+        $lastPushes = array();
+        $user = new MockUser();
+        $repositories = array();
+        $strategy = new $this->classname($view, $lastPushes);
+        $this->assertIdentical('', $strategy->fetch($repositories, $user));
+    }
+    
     public function testInsertInTreeWithOneFolderShouldInsertInTheFirstLevel() {
         $view      = new MockGitViews();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view);
+        $lastPushes = array();
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view, $lastPushes);
         
         $tree = array();
         $path = array('a');
@@ -45,7 +55,8 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     
     public function testInsertInTreeWithEmptyPathShouldDoNothing() {
         $view      = new MockGitViews();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view);
+        $lastPushes = array();
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view, $lastPushes);
         
         $tree = array();
         $path = array();
@@ -57,7 +68,8 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     
     public function testInsertInTreeShouldInsertAtTheLeaf() {
         $view      = new MockGitViews();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view);
+        $lastPushes = array();
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view, $lastPushes);
         
         $tree = array();
         $path = array('a', 'b', 'c');
@@ -69,7 +81,8 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     
     public function testInsertInTreeShouldInsertInSeveralBranches() {
         $view      = new MockGitViews();
-        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view);
+        $lastPushes = array();
+        $traversal = new GitViewsRepositoriesTraversalStrategy_Tree($view, $lastPushes);
         $tree      = array();
         
         $path  = array('a', 'b', 'c');
@@ -91,8 +104,9 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     
     public function testBuildTree() {
         $view      = new MockGitViews();
+        $lastPushes = array();
         $traversal = TestHelper::getPartialMock('GitViewsRepositoriesTraversalStrategy_Tree', array('getRepository'));
-        $traversal->__construct($view);
+        $traversal->__construct($view, $lastPushes);
         
         // Magic call that do stuff we want, yeah!
         $repositories = $this->getFlatTree($traversal);
@@ -117,9 +131,10 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         $view = TestHelper::getPartialMock('GitViews', array());
         $view->groupId = 101;
         $user = new MockUser();
+        $lastPushes = array();
         
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
-        $strategy->__construct($view);
+        $strategy->__construct($view, $lastPushes);
         
         $repositories    = $this->getFlatTree($strategy);
         
@@ -140,9 +155,10 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         $view = TestHelper::getPartialMock('GitViews', array());
         $view->groupId = 101;
         $user = new MockUser();
+        $lastPushes = array();
 
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
-        $strategy->__construct($view);
+        $strategy->__construct($view, $lastPushes);
 
         $repositories = $this->getFlatTree($strategy);
 

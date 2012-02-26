@@ -48,13 +48,6 @@ class MockEM4UserManager extends BaseMockEventManager {
  * Tests the class User
  */
 class UserManagerTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function UserManagerTest($name = 'User Manager test') {
-        $this->UnitTestCase($name);
-    }
     
     function setUp() {
         $GLOBALS['Response'] = new MockResponse($this);
@@ -416,8 +409,9 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnReference('getDao', $dao);
         $this->assertReference($userAnonymous, $um->login('user_123', 'bad_pwd', 0));
     }
-
+    
     function testSuspenedUserGetSession() {
+        
         $cm               = new MockCookieManager($this);
         $dar_valid_hash   = new MockDataAccessResult($this);
         $user123          = new MockUser($this);
@@ -666,5 +660,99 @@ class UserManagerTest extends UnitTestCase {
         // Codendi 4.0 and new User, we should use this assertion:
         //$this->assertEqual(1789, $user->getUnixUid());
     }
+    function testLoginAsCallsGetCurrentUser() {
+        $ordinaryUser = new MockUser($this);
+        $ordinaryUser->setReturnValue('isSuperUser', false);
+        $um = $this->aUserManagerWithCurrentUser($ordinaryUser);
+
+        $um->expectOnce('getCurrentUser', array());
+        
+        $this->expectException('UserNotAuthorizedException');
+        $um->loginAs(null);
+    }
+    
+    function testLoginAsReturnsAnExceptionWhenNotCallByTheSuperUser() {
+        $hash_is_not_important = null;
+        $ordinaryUser = new MockUser($this);
+        $ordinaryUser->setReturnValue('isSuperUser', false);
+        $um = $this->aUserManagerWithCurrentUser($ordinaryUser);
+        
+        $this->expectException('UserNotAuthorizedException');
+        $um->loginAs('tlkjtj');
+    }
+    
+    function testLoginAsReturnsAnExceptionWhenAccountDoesNotExist() {
+        $um = TestHelper::getPartialMock('UserManager', array('getCurrentUser', 'getUserByUserName'));
+        $admin_user = $this->anAdminUser();
+        $um->setReturnValue('getCurrentUser', $admin_user);
+        
+        $name = 'toto';
+        $um->setReturnValue('getUserByUserName', null, array($name));
+
+        $this->expectException('UserNotExistException');
+        $um->loginAs($name);
+    }
+    
+    function testLoginAsReturnsAnExceptionWhenAccountIsNotInOrder() {
+        $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
+        $this->injectUser($um, 'Johnny', 'D');
+
+        $this->expectException('UserNotActiveException');
+        $um->loginAs('Johnny');
+    }
+    
+    function testLoginAsReturnsAnExceptionWhenSessionIsNotCreated() {
+        $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
+
+        $this->injectUser($um, 'Clooney', 'A');
+        
+        $user_dao = new MockUserDao($this);
+        $user_dao->setReturnValue('createSession', false);
+        $um->_userdao = $user_dao;
+
+        $this->expectException('SessionNotCreatedException');
+        $um->loginAs('Clooney');
+    }
+    
+    function testLoginAsCreatesASessionAndReturnsASessionHash() {
+        $um = $this->aUserManagerWithCurrentUser($this->anAdminUser());
+        
+        $userLoginAs = $this->injectUser($um, 'Clooney', 'A');
+
+        $user_dao = new MockUserDao($this);
+        $user_dao->setReturnValue('createSession', 'session_hash', array($userLoginAs->getId(), $_SERVER['REQUEST_TIME']));
+        $um->_userdao = $user_dao;
+        
+        $session_hash = $um->loginAs('Clooney');
+        $this->assertEqual($session_hash, 'session_hash');
+        
+    }
+    private function aUserWithStatusAndId($status, $id) {
+        $userLoginAs = new MockUser();
+        $userLoginAs->setReturnValue('getStatus', $status);
+        $userLoginAs->setReturnValue('getId', $id);
+        return $userLoginAs;
+    }
+
+    private function aUserManagerWithCurrentUser($user) {
+        $um = TestHelper::getPartialMock('UserManager', array('getCurrentUser'));
+        $um->setReturnValue('getCurrentUser', $user);
+        return $um;
+    }
+    function injectUser(UserManager $um, $name, $status) {
+        $whatever = 999;
+        $user = $this->aUserWithStatusAndId($status, $whatever);
+        $um->_userid_bynames[$name] = $user->getId();
+        $um->_users[$user->getId()] = $user;
+        return $user;
+    }
+
+    private function anAdminUser() {
+        $adminUser = new MockUser($this);
+        $adminUser->setReturnValue('isSuperUser', true);
+        return $adminUser;
+        
+    }
 }
+
 ?>

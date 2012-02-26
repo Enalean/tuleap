@@ -34,10 +34,13 @@ Mock::generatePartial('Docman_Actions','Docman_ActionsTest', array('_getItemFact
                                                                    '_getActionsDeleteVisitor',
                                                                    '_getEventManager',
                                                                    '_getVersionFactory',
+                                                                   '_getDocmanPermissionsManagerInstance',
                                                                    '_getUserManagerInstance'));
 
 require_once(dirname(__FILE__).'/../include/Docman_Controller.class.php');
 Mock::generate('Docman_Controller');
+require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
+Mock::generate('Docman_PermissionsManager');
 
 require_once('common/valid/ValidFactory.class.php');
 
@@ -238,96 +241,226 @@ class DocmanActionsTest extends UnitTestCase {
     function testRemove_monitoringNothingToDelete() {
         $controller = new MockDocman_Controller();
         $controller->feedback = new MockFeedback();
+        $controller->feedback->expectOnce('log', array('error', '*'));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_no_user'));
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
         $actions->remove_monitoring(array('listeners_to_delete' => true));
-        $controller->expectNever('userCanManage');
-    }
-
-    function testRemove_monitoringPermissionDenied() {
-        $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', false);
-        $controller->feedback = new MockFeedback();
-        $userManager = new MockUserManager();
-        $actions = new Docman_ActionsTest();
-        $actions->_controler = $controller;
-        $actions->setReturnValue('_getUserManagerInstance', $userManager);
-        $params['listeners_to_delete'] = array(1);
-        $params['item'] = new MockDocman_Item();
-        $actions->remove_monitoring($params);
-        $controller->expectOnce('userCanManage');
-        $userManager->expectNever('getUserById');
     }
 
     function testRemove_monitoringNotifDoesNotExist() {
         $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
-        $userManager = new MockUserManager();
-        $user = new MockUser();
-        $userManager->setReturnValue('getUserById', $user);
+        $user1 = new MockUser();
+        $user1->setReturnValue('getId', 123);
+        $user1->setReturnValue('getName', 'Carol');
+        $user2 = new MockUser();
+        $user2->setReturnValue('getId', 132);
+        $user2->setReturnValue('getName', 'Carlos');
+        $user3 = new MockUser();
+        $user3->setReturnValue('getId', 133);
+        $user3->setReturnValue('getName', 'Charlie');
+        $controller->feedback->expectAt(0, 'log', array('warning', '*'));
+        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_not_present', array($user1->getName())));
+        $controller->feedback->expectAt(1, 'log', array('warning', '*'));
+        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_present', array($user2->getName())));
+        $controller->feedback->expectAt(2, 'log', array('warning', '*'));
+        $GLOBALS['Language']->expectAt(2, 'getText', array('plugin_docman', 'notifications_not_present', array($user3->getName())));
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('exist', false);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $actions->setReturnValue('_getUserManagerInstance', $userManager);
-        $params['listeners_to_delete'] = array(1, 2, 3);
+        $params['listeners_to_delete'] = array($user1, $user2, $user3);
         $params['item'] = new MockDocman_Item();
         $actions->remove_monitoring($params);
-        $controller->expectOnce('userCanManage');
-        $userManager->expectCallCount('getUserById', 3);
         $notificationsManager->expectCallCount('exist', 3);
         $notificationsManager->expectNever('remove');
     }
 
     function testRemove_monitoringError() {
         $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
         $userManager = new MockUserManager();
-        $user = new MockUser();
-        $userManager->setReturnValue('getUserById', $user);
+        $user1 = new MockUser();
+        $user1->setReturnValue('getId', 123);
+        $user1->setReturnValue('getName', 'Carol');
+        $user2 = new MockUser();
+        $user2->setReturnValue('getId', 132);
+        $user2->setReturnValue('getName', 'Carlos');
+        $user3 = new MockUser();
+        $user3->setReturnValue('getId', 133);
+        $user3->setReturnValue('getName', 'Charlie');
+        $controller->feedback->expectAt(0, 'log', array('error', '*'));
+        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_not_removed', array($user1->getName())));
+        $controller->feedback->expectAt(1, 'log', array('error', '*'));
+        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_removed', array($user2->getName())));
+        $controller->feedback->expectAt(2, 'log', array('error', '*'));
+        $GLOBALS['Language']->expectAt(2, 'getText', array('plugin_docman', 'notifications_not_removed', array($user3->getName())));
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('exist', true);
         $notificationsManager->setReturnValue('remove', false);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
-        $actions->setReturnValue('_getUserManagerInstance', $userManager);
-        $params['listeners_to_delete'] = array(1, 2, 3);
+        $params['listeners_to_delete'] = array($user1, $user2, $user3);
         $params['item'] = new MockDocman_Item();
         $actions->remove_monitoring($params);
-        $controller->expectOnce('userCanManage');
-        $userManager->expectCallCount('getUserById', 3);
         $notificationsManager->expectCallCount('exist', 3);
         $notificationsManager->expectCallCount('remove', 3);
-        $user->expectNever('getName');
     }
 
     function testRemove_monitoringSuccess() {
         $controller = new MockDocman_Controller();
-        $controller->setReturnValue('userCanManage', true);
         $controller->feedback = new MockFeedback();
         $userManager = new MockUserManager();
-        $user = new MockUser();
-        $userManager->setReturnValue('getUserById', $user);
+        $user1 = new MockUser();
+        $user1->setReturnValue('getId', 123);
+        $user1->setReturnValue('getName', 'Carol');
+        $user2 = new MockUser();
+        $user2->setReturnValue('getId', 132);
+        $user2->setReturnValue('getName', 'Carlos');
+        $user3 = new MockUser();
+        $user3->setReturnValue('getId', 133);
+        $user3->setReturnValue('getName', 'Charlie');
+        $controller->feedback->expectOnce('log', array('info', '*'));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_removed', array('Carol,Carlos,Charlie')));
         $notificationsManager = new MockDocman_NotificationsManager();
         $notificationsManager->setReturnValue('exist', true);
         $notificationsManager->setReturnValue('remove', true);
         $controller->notificationsManager = $notificationsManager;
         $actions = new Docman_ActionsTest();
         $actions->_controler = $controller;
+        $actions->event_manager = new MockEventManager($this);
         $actions->setReturnValue('_getUserManagerInstance', $userManager);
-        $params['listeners_to_delete'] = array(1, 2, 3);
+        $params['listeners_to_delete'] = array($user1, $user2, $user3);
         $params['item'] = new MockDocman_Item();
         $actions->remove_monitoring($params);
-        $controller->expectOnce('userCanManage');
-        $userManager->expectCallCount('getUserById', 3);
         $notificationsManager->expectCallCount('exist', 3);
         $notificationsManager->expectCallCount('remove', 6);
-        $user->expectCallCount('getName', 3);
     }
 
+    function testAdd_monitoringNoOneToAdd() {
+        $controller = new MockDocman_Controller();
+        $controller->feedback = new MockFeedback();
+        $controller->feedback->expectOnce('log', array('error', '*'));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_no_user_added'));
+        $actions = new Docman_ActionsTest();
+        $actions->_controler = $controller;
+        $actions->add_monitoring(array('listeners_to_add' => true));
+    }
+
+    function testAdd_monitoringNotifAlreadyExist() {
+        $controller = new MockDocman_Controller();
+        $controller->feedback = new MockFeedback();
+        $notificationsManager = new MockDocman_NotificationsManager();
+        $notificationsManager->setReturnValue('exist', true);
+        $controller->notificationsManager = $notificationsManager;
+        $actions = new Docman_ActionsTest();
+        $actions->_controler = $controller;
+        $user1 = new MockUser();
+        $user1->setReturnValue('getName', 'Carol');
+        $user1->setReturnValue('getId', 1);
+        $user2 = new MockUser();
+        $user2->setReturnValue('getName', 'Carlos');
+        $user2->setReturnValue('getId', 2);
+        $controller->feedback->expectOnce('log', array('warning', '*'));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_already_exists', array('Carol,Carlos')));
+        $params['listeners_to_add'] = array($user1, $user2);
+        $params['item']             = new MockDocman_Item();
+        $params['invalid_users']    = false;
+        $actions->add_monitoring($params);
+        $notificationsManager->expectCallCount('exist', 2);
+        $notificationsManager->expectNever('add');
+    }
+
+    function testAdd_monitoringError() {
+        $controller = new MockDocman_Controller();
+        $controller->feedback = new MockFeedback();
+        $notificationsManager = new MockDocman_NotificationsManager();
+        $notificationsManager->setReturnValue('exist', false);
+        $notificationsManager->setReturnValue('add', false);
+        $controller->notificationsManager = $notificationsManager;
+        $actions = new Docman_ActionsTest();
+        $actions->_controler = $controller;
+        $docmanPermissionsManager = new MockDocman_PermissionsManager();
+        $docmanPermissionsManager->setReturnValue('userCanRead', true);
+        $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
+        $user1 = new MockUser();
+        $user1->setReturnValue('getId', 123);
+        $user1->setReturnValue('getName', 'Carol');
+        $user2 = new MockUser();
+        $user2->setReturnValue('getId', 132);
+        $user2->setReturnValue('getName', 'Carlos');
+        $controller->feedback->expectAt(0, 'log', array('error', '*'));
+        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_not_added', array($user1->getName())));
+        $controller->feedback->expectAt(1, 'log', array('error', '*'));
+        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_not_added', array($user2->getName())));
+        $params['listeners_to_add'] = array($user1, $user2);
+        $params['item']             = new MockDocman_Item();
+        $params['invalid_users']    = false;
+        $actions->add_monitoring($params);
+        $notificationsManager->expectCallCount('exist', 2);
+        $notificationsManager->expectCallCount('add', 2);
+    }
+
+    function testAdd_monitoringNoUserPermissions() {
+        $controller = new MockDocman_Controller();
+        $controller->feedback = new MockFeedback();
+        $notificationsManager = new MockDocman_NotificationsManager();
+        $notificationsManager->setReturnValue('exist', false);
+        $notificationsManager->setReturnValue('add', true);
+        $controller->notificationsManager = $notificationsManager;
+        $actions = new Docman_ActionsTest();
+        $actions->_controler = $controller;
+        $docmanPermissionsManager = new MockDocman_PermissionsManager();
+        $docmanPermissionsManager->setReturnValueAt(0,'userCanRead', true);
+        $docmanPermissionsManager->setReturnValueAt(1,'userCanRead', false);
+        $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
+        $actions->event_manager = new MockEventManager($this);
+        $user1 = new MockUser();
+        $user1->setReturnValue('getId', 123);
+        $user1->setReturnValue('getName', 'Carol');
+        $user2 = new MockUser();
+        $user2->setReturnValue('getId', 132);
+        $user2->setReturnValue('getName', 'Carlos');
+        $controller->feedback->expectAt(0, 'log', array('warning', '*'));
+        $GLOBALS['Language']->expectAt(0, 'getText', array('plugin_docman', 'notifications_no_access_rights', array($user2->getName())));
+        $controller->feedback->expectAt(1, 'log', array('info', '*'));
+        $GLOBALS['Language']->expectAt(1, 'getText', array('plugin_docman', 'notifications_added', array($user1->getName())));
+        $params['listeners_to_add'] = array($user1, $user2);
+        $params['item']             = new MockDocman_Item();
+        $params['invalid_users']    = false;
+        $actions->add_monitoring($params);
+        $notificationsManager->expectCallCount('exist', 2);
+        $docmanPermissionsManager->expectCallCount('userCanRead', 2);
+        $notificationsManager->expectCallCount('add', 1);
+    }
+
+    function testAdd_monitoringSuccess() {
+        $controller = new MockDocman_Controller();
+        $controller->feedback = new MockFeedback();
+        $user = new MockUser();
+        $user->setReturnValue('getId', 123);
+        $user->setReturnValue('getName', 'Carol');
+        $controller->feedback->expectOnce('log', array('info', '*'));
+        $GLOBALS['Language']->expectOnce('getText', array('plugin_docman', 'notifications_added', array($user->getName())));
+        $notificationsManager = new MockDocman_NotificationsManager();
+        $notificationsManager->setReturnValue('exist', false);
+        $notificationsManager->setReturnValue('add', true);
+        $controller->notificationsManager = $notificationsManager;
+        $actions = new Docman_ActionsTest();
+        $actions->_controler = $controller;
+        $actions->event_manager = new MockEventManager($this);
+        $docmanPermissionsManager = new MockDocman_PermissionsManager();
+        $docmanPermissionsManager->setReturnValue('userCanRead', true);
+        $actions->setReturnValue('_getDocmanPermissionsManagerInstance', $docmanPermissionsManager);
+        $params['listeners_to_add'] = array($user);
+        $params['item']             = new MockDocman_Item();
+        $params['invalid_users']    = false;
+        $actions->add_monitoring($params);
+        $notificationsManager->expectCallCount('exist', 1);
+        $notificationsManager->expectCallCount('add', 1);
+    }
 }
 ?>

@@ -369,9 +369,9 @@ setup_mysql() {
         freshdb=1
         $MYSQL $pass_opt -e "CREATE DATABASE codendi DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci"
         $CAT <<EOF | $MYSQL $pass_opt mysql
-GRANT ALL PRIVILEGES on *.* to codendiadm@$mysql_httpd_host identified by '$codendiadm_passwd' WITH GRANT OPTION;
-REVOKE SUPER ON *.* FROM codendiadm@$mysql_httpd_host;
-GRANT ALL PRIVILEGES on *.* to root@$mysql_httpd_host identified by '$rt_passwd';
+GRANT ALL PRIVILEGES on *.* to 'codendiadm'@'$mysql_httpd_host' identified by '$codendiadm_passwd' WITH GRANT OPTION;
+REVOKE SUPER ON *.* FROM 'codendiadm'@'$mysql_httpd_host';
+GRANT ALL PRIVILEGES on *.* to 'root'@'$mysql_httpd_host' identified by '$rt_passwd';
 FLUSH PRIVILEGES;
 EOF
     fi
@@ -510,10 +510,10 @@ do
 		MYSQL="$MYSQL -P$mysql_port"
 		MYSQLSHOW="$MYSQLSHOW -P$mysql_port"
 		;;
-	--mysql-root-password=*)
+	--mysql-root-password)
 		rt_passwd="$2";shift 2
 		;;
-	--mysql-httpd-host=*)
+	--mysql-httpd-host)
 		mysql_httpd_host="$2";shift 2 ;;
 	-h|--help)
 		usage $0 ;;
@@ -927,6 +927,15 @@ else
     echo '/etc/nsswitch.conf does not exist. Cannot use MySQL authentication!'
 fi
 
+# TODO: package it
+# #Copying perl codendi module for mod_dav_svn authentication
+# codendi_perl_module_dir='/usr/lib/perl5/vendor_perl/5.8.8/Apache'
+# if [ ! -d $codendi_perl_module_dir ];then
+#     $MKDIR -p $codendi_perl_module_dir
+# fi
+# $CP $INSTALL_DIR/src/utils/svn/Codendi.pm $codendi_perl_module_dir/Codendi.pm
+# TODO: /etc/httpd/conf.d/perl.conf
+# TODO: mod_perl perl-BSD-Resource libdbi-dbd-mysql libdbi libdbi-drivers 
 
 # replace string patterns in local.inc
 substitute '/etc/codendi/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
@@ -1271,11 +1280,11 @@ echo "path[]=\"$INSTALL_DIR/plugins/graphontrackers\"" >> /etc/codendi/forgeupgr
 if [ "$enable_plugin_im" = "true" ]; then
     # Create openfireadm MySQL user
     $CAT <<EOF | $MYSQL $pass_opt mysql
-GRANT ALL PRIVILEGES on openfire.* to openfireadm@localhost identified by '$openfire_passwd';
-GRANT SELECT ON codendi.user to openfireadm@localhost;
-GRANT SELECT ON codendi.groups to openfireadm@localhost;
-GRANT SELECT ON codendi.user_group to openfireadm@localhost;
-GRANT SELECT ON codendi.session to openfireadm@localhost;
+GRANT ALL PRIVILEGES on openfire.* to 'openfireadm'@'localhost' identified by '$openfire_passwd';
+GRANT SELECT ON codendi.user to 'openfireadm'@'localhost';
+GRANT SELECT ON codendi.groups to 'openfireadm'@'localhost';
+GRANT SELECT ON codendi.user_group to 'openfireadm'@'localhost';
+GRANT SELECT ON codendi.session to 'openfireadm'@'localhost';
 FLUSH PRIVILEGES;
 EOF
     # Install plugin

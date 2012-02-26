@@ -659,7 +659,7 @@ if ($type_of_search == "soft") {
 	$sql =	"SELECT DISTINCT wiki_group_list.language_id"
 		." FROM wiki_group_list"
 		." WHERE wiki_group_list.group_id=".$group_id." AND"
-        ."       wiki_group_list.language_id <> 0";
+        ."       wiki_group_list.language_id <> '0'";
 	$result = db_query($sql);
     if (db_numrows($result) == 0) {
         // there is not any language specified for this wiki, default search page is english

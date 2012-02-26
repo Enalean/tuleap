@@ -8,7 +8,7 @@ try {
     include_once("pre.php");
     include_once("common/reference/ReferenceManager.class.php");
 
-    $repository = $argv[2];
+    $repository = $argv[1];
     // retrieve the group name from repository
     $unix_group_name = substr($repository, strlen($GLOBALS['svn_prefix'])+1);
     $group_id = group_getid_by_name($unix_group_name);

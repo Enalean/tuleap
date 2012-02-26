@@ -27,5 +27,17 @@ class Tracker_URLVerification extends URLVerification {
     function getUrl() {
         return new Tracker_URL();
     }
+
+    /**
+     * Always permit requests for localhost, or for api or soap scripts and for system tracker templates
+     *
+     * @param Array $server
+     *
+     * @return Boolean
+     */
+    function isException($server) {
+        $userRequestsDefaultTemplates = $server['REQUEST_URI'] == TRACKER_BASE_URL .'/index.php?group_id=100' && HTTPRequest::instance()->isAjax();
+        return $userRequestsDefaultTemplates || parent::isException($server);
+    }
 }
 ?>

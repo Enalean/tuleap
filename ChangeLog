@@ -1,4 +1,85 @@
-Version 4.0.25 (Not released yet)
+Version 4.0.27 - NOT RELEASED YET
+   == Bug Fix ==
+   * In project export details, display db host instead of front end server
+   * Fix issue whith search while wiki is fr_FR
+
+   == Enhancement ==
+   * Theme Tuleap 2.1: Official logo & colors.
+   * Shrink homepage in Dawn theme
+
+   == Plugins ==
+   * Tracker v0.9.2: See separte ChangeLog.
+   * LDAP v3.12: See separte ChangeLog.
+   * Docman v2.24: See separte ChangeLog.
+
+   == Development ==
+   * Fix issue in CI: lxc installation was missing yum repository generation
+
+Version 4.0.26.1 (Wednesday, February 8th 2012)
+    == Bug Fix ==
+    * Fix issue with site news approval (Thanks to Régis Houssin and Grégory
+      Salvan)
+
+Version 4.0.26 (Friday, February 3rd 2012)
+    == Enhancement ==
+    * Mailing list names enhancement: allow siteadmin to configure the prefered 
+      format of mailing list through the following configuration variables:
+      - sys_lists_domain
+      - sys_lists_name_min_length
+      - sys_lists_prefix
+      - sys_lists_suffix
+      => see local.inc for usage. (Contrib Orange)
+    * Display much more lastlogins entries in siteadmin. (Contrib Orange)
+    * svn-commit.pl script allows one to issue commit-email.pl on all loaded 
+      commits (from svnadmin load) that are not into the tuleap database. (Contrib Xerox)
+    * Add script to change the name of authors in a svndump (to be run before 
+      the import into tuleap). (Contrib Xerox)
+    * Regenerate a .SVNAcccessFile if it is not present during System Check. (Contrib Xerox)
+    * Use site-content to add extra tabs in the tob bar services (only in div based themes)
+    
+    == Bug Fix ==
+    * Update codendi_aliases.conf to resolve some issues in customization of images in themes
+    * Set the default php value of session.save_path in php.conf
+    * When going to http://example.com/projects/gpig/, display the first active 
+      service if "summary" is disabled. (Contrib Xerox)
+    * Fix memory leaks and performance issues on big subversion checkouts. (Contrib Xerox)
+    ** See sys_auth_svn_mod in local.inc to switch the apache subversion authentication mod.
+    * Fix escaping issues in FRS file upload pre-validation. (Contrib Xerox)
+    * Fix getArtifacts SOAP API fails with criteria on date fields in tracker v3. (Contrib Xerox)
+    * Fix (again) IE issue with file download (Contrib Xerox)
+    * Fix cvs repository ownership issue (Contrib Xerox)
+    * Re-add SurveyManager in the user guide (inadvertently removed)
+    * Fix project db export(Contrib STMicroelectronics)
+    * Fix Security issue (Contrib STMicroelectronics)
+    
+    == Plugins ==
+    * Git v1.25. See separated Changelog
+    * Tracker v0.8.12. See separated Changelog
+    * GraphOnTrackers v1.4. See separated Changelog
+    * GraphOnTrackersV5 v0.6.2. See separated Changelog
+    * Cardwall v0.4. See separated Changelog
+    * Docman v2.22. See separated Changelog
+    * Hudson v1.7. See separated Changelog
+    * IM v1.5. See separated Changelog
+    * Ldap v3.11. See separated Changelog
+    * Statistics v0.9. See separated Changelog
+    
+    == Tuleap Development ==
+    * Allow randomization of execution of unit tests (to be sure that there is no inter dependencies)
+    * Add a color reporter for tests execution in cli
+    * Incorporate fusionforge stuff to be able to ease FF/Tuleap plugins compatibility. (Contrib Orange)
+    * Add migration scripts to convert a Codendi 4.0 plateform (+ local 
+      customization) to a Tuleap one.
+    * Add a plugin google_analytics which helps to track visits on a Tuleap instance. (Contrib Xerox)
+    * Add a plugin orange that contains Orange specificities.
+    * The default rpm package name is now Tuleap.
+    * Add cgi-bin script for various statistics purpose. (Contrib Orange)
+    * Cucumber now run some of our testlink test cases
+    
+    == SOAP ==
+    * SOAP API update to version 4.3, see src/www/soap/ChangeLog for details.
+
+Version 4.0.25 (Friday, December 23rd 2011)
     == Bug Fix ==
     * Dot no longer allowed in project short names.
     * Prevent a user from being added to ugroup as many time as the button add is clicked.(contrib STMicroelectronics)
@@ -19,7 +100,7 @@ Version 4.0.25 (Not released yet)
     == CLI ==
     * Version 1.5.0. See separated Changelog
 
-Version 4.0.24.1 (Not released yet)
+Version 4.0.24.1 (Friday, December 2nd 2011)
     == Bug Fix ==
     * Fix json issue following upgrade to Prototype v1.7 and Scriptaculous v1.9
     * Fix viewvc display issues (css where missing)
@@ -79,7 +160,7 @@ Version 4.0.23 - Thursday, October 27th 2011
     * Docman v2.15. See Separated Changelog
     * LDAP v3.6. See separated Changelog.
     * ForumML v2.5. See separated Changelog.
-    * Staistics v0.8. See separated Changelog.
+    * Statistics v0.8. See separated Changelog.
     * Webdav v1.9. See separated Changelog
 
     == CLI ==

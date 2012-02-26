@@ -1,3 +1,15 @@
+Version 2.24 - Tuleap 4.0.27
+    Display a more explicit error message while adding a widget previewer without the item id
+
+Version 2.23 - Tuleap 4.0.27
+    Fix unit tests to prepare for simpletest 1.1
+
+Version 2.22 - Tuleap 4.0.26
+    Fix behaviour on permission denied when accessing document: when no one to notify, notify admin (contrib STMicroelectronics).
+
+Version 2.21 - Tuleap 4.0.26
+    Document manager can add and remove people that monitors documents and folders (contrib STMicroelectronics).
+
 Version 2.20 - Tuleap 4.0.25
     SOAP getDocmanTreeInfo return the filename for files and embedded files(contrib STMicroelectronics).
 

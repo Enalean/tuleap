@@ -33,7 +33,6 @@ class GitPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->_addHook('site_admin_option_hook',                          'siteAdminHooks',                  false);
         $this->_addHook('cssfile',                                         'cssFile',                         false);
         $this->_addHook('javascript_file',                                 'jsFile',                          false);
         $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                      false);
@@ -54,7 +53,6 @@ class GitPlugin extends Plugin {
         
         $this->_addHook(Event::EDIT_SSH_KEYS, 'edit_ssh_keys', false);
         $this->_addHook(Event::DUMP_SSH_KEYS, 'dump_ssh_keys', false);
-        $this->_addHook(Event::LAB_FEATURES_DEFINITION_LIST, 'lab_features_definition_list', false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
         
         $this->_addHook('permission_get_name',               'permission_get_name',               false);
@@ -63,6 +61,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
         $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
         $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
+        $this->_addHook('statistics_collector',              'statistics_collector',                    false);
     }
 
     public function getPluginInfo() {
@@ -71,10 +70,6 @@ class GitPlugin extends Plugin {
             $this->pluginInfo = new GitPluginInfo($this);
         }
         return $this->pluginInfo;
-    }
-
-    public function siteAdminHooks($params) {
-        echo '<li><a href="'.$this->getPluginPath().'/">Git</a></li>';
     }
 
     public function cssFile($params) {
@@ -252,14 +247,6 @@ class GitPlugin extends Plugin {
         }
     }
     
-    public function lab_features_definition_list($params) {
-        $params['lab_features'][] = array(
-            'title'       => $GLOBALS['Language']->getText('plugin_git', 'gitolite_lab_feature_title'),
-            'description' => $GLOBALS['Language']->getText('plugin_git', 'gitolite_lab_feature_description'),
-            'image'       => $this->getPluginPath().'/lab_feature.png',
-        );
-    }
-    
     function permission_get_name($params) {
         if (!$params['name']) {
             switch($params['permission_type']) {
@@ -371,6 +358,21 @@ class GitPlugin extends Plugin {
             // Delete all git repositories of the project
             $gitBackend = Backend::instance('Git','GitBackend');
             $gitBackend->deleteProjectRepositories($projectId);
+        }
+    }
+
+    /**
+     * Display git backend statistics in CSV format
+     *
+     * @param Array $params parameters of the event
+     *
+     * @return void
+     */
+    public function statistics_collector($params) {
+        if (!empty($params['formatter'])) {
+            $formatter = $params['formatter'];
+            $gitBackend = Backend::instance('Git','GitBackend');
+            echo $gitBackend->getBackendStatistics($formatter);
         }
     }
 

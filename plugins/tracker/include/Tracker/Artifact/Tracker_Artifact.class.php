@@ -173,17 +173,26 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     
     /**
      * This method returns the artifact mail rendering
-     * @param string $format
+     * 
+     * @param array  $recipient
+     * @param string $format, the mail format text or html
+     * @param bool   $ignore_perms, indicates if we ignore various permissions
+     * 
      * @return string
      */
-    public function fetchMail($recipient, $format='text', $ignore_perms=false) {
+    public function fetchMail($recipient, $format, $ignore_perms=false) {
         $output = '';
         switch($format) {
             case 'html':
-                $output .= '<!-- TODO -->';
+                $content = $this->fetchMailFormElements($recipient, $format, $ignore_perms);
+                if ($content) {
+                    $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>';
+                    $output .= $content;
+                }
+
+                $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
                 break;
-            default:                                
-                //$output .= $this->getTracker()->item_name.' #'. $this->id;
+            default:
                 $output .= PHP_EOL;
                 //fields formelements                
                 $output .= $this->fetchMailFormElements($recipient, $format, $ignore_perms);
@@ -192,40 +201,80 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $output;
     }
-    
-    public function fetchMailFormElements($recipient, $format='text', $ignore_perms=false) {
+
+    /**
+     * Returns the artifact field for mail rendering
+     * 
+     * @param array  $recipient
+     * @param string $format, the mail format text or html
+     * @param bool   $ignore_perms, indicates if we ignore various permissions
+     * 
+     * @return String
+     */
+    public function fetchMailFormElements($recipient, $format, $ignore_perms=false) {
         $text = '';
-        foreach( $this->getTracker()->getFormElements() as $formElement ) {            
+        foreach ($this->getTracker()->getFormElements() as $formElement) {
+            $formElement->prepareForDisplay();
+        }
+        foreach ($this->getTracker()->getFormElements() as $formElement) {
             $output = $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
-            if ( $output ) {
-                $text .= $output;
+            $text .= $output;
+            if ($format == 'text' && $output) {
                 $text .= PHP_EOL;
             }
         }
         return $text;
     }
-
-    public function fetchMailFollowUp($recipient, $format='text', $ignore_perms=false) {
-        $output = ' ===== '.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').' ===== ';
+    
+    /**
+     * Returns the artifact followup for mail rendering
+     * 
+     * @param array  $recipient
+     * @param string $format, the mail format text or html
+     * @param bool   $ignore_perms, indicates if we ignore various permissions
+     * 
+     * @return String
+     */
+    public function fetchMailFollowUp($recipient, $format, $ignore_perms=false) {
         $uh = UserHelper::instance();
         $um = UserManager::instance();
         $cs = $this->getChangesets();
+        $output = '';
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
-            if ( empty($comment) ) {
+            $changes = $changeset->diffToPrevious($format, $recipient, $ignore_perms);
+            if (empty($comment)) {
                 //do not display empty comment
                 continue;
             }
-            $user = $um->getUserById($comment->submitted_by);
-            $output .= PHP_EOL;
-            $output .= '----------------------------- ';
-            $output .= PHP_EOL;
-            $output .= $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_date') . util_timestamp_to_userdateformat($comment->submitted_on);
-            $output .= "\t" . $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_by') . $uh->getDisplayNameFromUser($user);
-            $output .= PHP_EOL;
-            $output .= $comment->body;
-            $output .= PHP_EOL;
-            $output .= PHP_EOL;
+            switch ($format) {
+                case 'html':
+                    $followup = $comment->fetchFollowUp($format, true);
+                    if(!empty($followup)) {
+                        if(!isset($output)) {
+                            $output = '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h2>';
+                        }
+                        $output .= '<div class="tracker_artifact_followup_header">';
+                        $output .= $followup;
+                        $output .= '</div>';
+                    }
+                    break;
+                case 'text':
+                    $user = $um->getUserById($comment->submitted_by);
+                    $output = PHP_EOL;
+                    $output .= '----------------------------- ';
+                    $output .= PHP_EOL;
+                    $output .= $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_date') . util_timestamp_to_userdateformat($comment->submitted_on);
+                    $output .= "\t" . $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_by') . $uh->getDisplayNameFromUser($user);
+                    $output .= PHP_EOL;
+                    $output .= $comment->body;
+                    $output .= PHP_EOL;
+                    $output .= PHP_EOL;
+                    break;
+                default:
+                    $output .= '<!-- TODO -->';
+                    break;
+            }
         }
         return $output;
     }
@@ -787,7 +836,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $is_valid = false; //TODO To be removed
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'no_changes', array($this->getId())));
+                    $art_link = '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->getId() . '">' . $this->getTracker()->getItemName() . ' #' . $this->getId() . '</a>';
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'no_changes', array($art_link)), CODENDI_PURIFIER_LIGHT);
+                    $is_valid = false;
                 }
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'fields_not_valid'));

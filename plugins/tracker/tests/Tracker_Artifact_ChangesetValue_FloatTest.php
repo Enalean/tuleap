@@ -24,10 +24,8 @@ Mock::generate('Tracker_Artifact');
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Float.class.php');
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Float.class.php');
 Mock::generate('Tracker_FormElement_Field_Float');
-require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
 
-class Tracker_Artifact_ChangesetValue_FloatTest extends UnitTestCase {
+class Tracker_Artifact_ChangesetValue_FloatTest extends TuleapTestCase {
     
     function testFloats() {
         $field = new MockTracker_FormElement_Field_Float();
@@ -76,9 +74,16 @@ class Tracker_Artifact_ChangesetValue_FloatTest extends UnitTestCase {
     }
     
     function testDiff() {
+        $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('plugin_tracker_artifact','changed_from'));
+        $GLOBALS['Language']->setReturnValue('getText', 'to', array('plugin_tracker_artifact','to'));
+        
         $field = new MockTracker_FormElement_Field_Float();
         $float_1 = new Tracker_Artifact_ChangesetValue_Float(111, $field, false, 987.321);
         $float_2 = new Tracker_Artifact_ChangesetValue_Float(111, $field, false, 987);
+        $GLOBALS['Language'] = new MockBaseLanguage($this);
+        $GLOBALS['Language']->setReturnValue('getText', 'changed from', array('plugin_tracker_artifact','changed_from'));
+        $GLOBALS['Language']->setReturnValue('getText', 'to', array('plugin_tracker_artifact','to'));
+        
         $this->assertEqual($float_1->diff($float_2), 'changed from 987.0000 to 987.3210');
         $this->assertEqual($float_2->diff($float_1), 'changed from 987.3210 to 987.0000');
         

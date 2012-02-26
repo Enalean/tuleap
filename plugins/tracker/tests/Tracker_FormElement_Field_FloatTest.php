@@ -30,20 +30,10 @@ Mock::generate('Tracker_FormElement_Field_Value_FloatDao');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-require_once('common/include/Response.class.php');
-Mock::generate('Response');
-
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
-class Tracker_FormElement_Field_FloatTest extends UnitTestCase {
-    
-    function setUp() {
-        $GLOBALS['Response'] = new MockResponse();
-    }
-    function tearDrop() {
-        unset($GLOBALS['Response']);
-    }
+class Tracker_FormElement_Field_FloatTest extends TuleapTestCase {
     
     function testNoDefaultValue() {
         $float_field = new Tracker_FormElement_Field_FloatTestVersion();

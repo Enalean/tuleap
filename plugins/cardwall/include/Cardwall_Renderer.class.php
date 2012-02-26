@@ -22,23 +22,30 @@ require_once(TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.ph
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
     
+    /**
+     * @var Plugin
+     */
     protected $plugin;
+    
+    private $enable_qr_code = true;
     
     /**
      * Constructor
      *
-     * @param Plugin $plugin      the parent cardwall plugin
-     * @param int    $id          the id of the renderer
-     * @param Report $report      the id of the report
-     * @param string $name        the name of the renderer
-     * @param string $description the description of the renderer
-     * @param int    $rank        the rank
-     * @param int    $field_id    the field id
+     * @param Plugin $plugin         the parent cardwall plugin
+     * @param int    $id             the id of the renderer
+     * @param Report $report         the id of the report
+     * @param string $name           the name of the renderer
+     * @param string $description    the description of the renderer
+     * @param int    $rank           the rank
+     * @param int    $field_id       the field id
+     * @param bool   $enable_qr_code Display the QR code to ease usage of tablets
      */
-    public function __construct($plugin, $id, $report, $name, $description, $rank, $field_id) {
+    public function __construct($plugin, $id, $report, $name, $description, $rank, $field_id, $enable_qr_code) {
         parent::__construct($id, $report, $name, $description, $rank);
-        $this->plugin   = $plugin;
-        $this->field_id = $field_id;
+        $this->plugin         = $plugin;
+        $this->field_id       = $field_id;
+        $this->enable_qr_code = $enable_qr_code;
     }
     
     public function initiateSession() {
@@ -238,6 +245,14 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
             )
         );
         
+        if ($this->enable_qr_code) {
+            $html .= $this->getHTMLQRCode($url);
+        }
+        return $html;
+    }
+
+    private function getHTMLQRCode($url) {
+        $html = '';
         $html .= '<div class="plugin_cardwall_qrcode">';
         $html .= '<div id="plugin_cardwall_qrcode_toggler" class="'. Toggler::getClassname('plugin_cardwall_qrcode_toggler', false, true) .'">QR Code</div>';
         $html .= '<img src="http://chart.apis.google.com/chart?'. http_build_query(
@@ -250,7 +265,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
         $html .= '</div>';
         return $html;
     }
-
+    
     /*----- Implements below some abstract methods ----*/
 
     public function delete() {}
@@ -329,6 +344,19 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      */
     public function getDao() {
         return new Cardwall_RendererDao();
+    }
+    
+    /**
+     * Transforms Tracker_Renderer into a SimpleXMLElement
+     * 
+     * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
+     * @param $formsMapping the form elements mapping
+     */
+    public function exportToXML($root, $formsMapping) {
+        parent::exportToXML(&$root, $formsMapping);
+        if ($mapping = (string)array_search($this->field_id, $formsMapping)) {
+            $root->addAttribute('field_id', $mapping);
+        }
     }
 }
 ?>

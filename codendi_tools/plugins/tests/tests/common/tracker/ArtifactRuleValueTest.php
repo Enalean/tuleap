@@ -9,14 +9,7 @@ require_once('common/tracker/ArtifactRuleValue.class.php');
  * Tests the class ArtifactRuleValue
  */
 class ArtifactRuleValueTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function ArtifactRuleValueTest($name = 'ArtifactRuleValue test') {
-        $this->UnitTestCase($name);
-    }
-    
+
     function testApplyTo() {
         $arv =& new ArtifactRuleValue('id', 'group_artifact_id', 'source_field', 'source_value', 'target_field', 'target_value');
         

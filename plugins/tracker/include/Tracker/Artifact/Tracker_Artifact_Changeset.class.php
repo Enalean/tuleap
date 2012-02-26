@@ -25,6 +25,9 @@ require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class
 require_once(dirname(__FILE__).'/../Tracker_NotificationsManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/include/Config.class.php');
+require_once('common/mail/MailManager.class.php');
+require_once('common/language/BaseLanguageFactory.class.php');
+require_once('utils.php');
 
 class Tracker_Artifact_Changeset {
     public $id;
@@ -51,8 +54,7 @@ class Tracker_Artifact_Changeset {
         $this->submitted_on = $submitted_on;
         $this->email        = $email;
     }
-
-
+        
     /**
      * Return the value of a field in the current changeset
      *
@@ -412,7 +414,7 @@ class Tracker_Artifact_Changeset {
             break;
             default://text
                 $result .= ' * '.$field->getLabel().' : '.PHP_EOL;
-                $result .= $diff.PHP_EOL;
+                $result .= $diff . PHP_EOL;
             break;
         }
         return $result;
@@ -446,6 +448,7 @@ class Tracker_Artifact_Changeset {
     
             // 1. Get the recipients list
             $recipients = $this->getRecipients($is_update);
+            
             // 2. Compute the body of the message + headers
             $messages = array();
             $um = $this->getUserManager();
@@ -483,41 +486,69 @@ class Tracker_Artifact_Changeset {
                     $m['recipients'],
                     $m['headers'],
                     $m['subject'],
-                    $m['body']
+                    $m['htmlBody'],
+                    $m['txtBody']
                 );
             }
         }
     }
 
-    protected function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
+    public function buildMessage(&$messages, $is_update, $user, $ignore_perms) {
+        $mailManager = new MailManager();
+        
         $recipient = $user->getEmail();
-        $body      = $this->getBody($is_update, $user, $ignore_perms);
+        $lang      = $user->getLanguage();
+        $format    = $mailManager->getMailPreferencesByUser($user);
+        
+        //We send multipart mail: html & text body in case of preferences set to html
+        $htmlBody = '';
+        if ($format == Codendi_Mail_Interface::FORMAT_HTML) {
+            $htmlBody  .= $this->getBodyHtml($is_update, $user, $lang, $ignore_perms);
+        }
+        $txtBody = $this->getBodyText($is_update, $user, $lang, $ignore_perms);
+
         $subject   = $this->getSubject($user, $ignore_perms);
         $headers   = array(); // TODO
-        $hash = md5($body . serialize($headers) . serialize($subject));
+        $hash = md5($htmlBody . $txtBody . serialize($headers) . serialize($subject));
         if (isset($messages[$hash])) {
             $messages[$hash]['recipients'][] = $recipient;
         } else {
             $messages[$hash] = array(
                     'headers'    => $headers,
-                    'body'       => $body,
+                    'htmlBody'   => $htmlBody,
+                    'txtBody'    => $txtBody,
                     'subject'    => $subject,
                     'recipients' => array($recipient),
             );
         }
     }
+    
     /**
      * Send a notification
      *
      * @param array  $recipients the list of recipients
      * @param array  $headers    the additional headers
-     * @param string $subject       the content of the message
-     * @param string $body       the content of the message
+     * @param string $subject    the subject of the message
+     * @param string $htmlBody   the html content of the message
+     * @param string $txtBody    the text content of the message
      *
      * @return void
      */
-    protected function sendNotification($recipients, $headers, $subject, $body) {
-        $mail = new Mail();
+    protected function sendNotification($recipients, $headers, $subject, $htmlBody, $txtBody) {
+        $mail = new Codendi_Mail();
+        $hp = Codendi_HTMLPurifier::instance();
+        $breadcrumbs = array();
+        $groupId = $this->getTracker()->getGroupId();
+        $project = $this->getTracker()->getProject();
+        $trackerId = $this->getTracker()->getID();
+        $artifactId = $this->getArtifact()->getID();
+
+        $breadcrumbs[] = '<a href="'. get_server_url() .'/projects/'. $project->getUnixName(true) .'" />'. $project->getPublicName() .'</a>';
+        $breadcrumbs[] = '<a href="'. get_server_url() .'/plugins/tracker/?tracker='. (int)$trackerId .'" />'. $hp->purify(SimpleSanitizer::unsanitize($this->getTracker()->getName())) .'</a>';
+        $breadcrumbs[] = '<a href="'. get_server_url().'/plugins/tracker/?aid='.(int)$artifactId.'" />'. $hp->purify($this->getTracker()->getName().' #'.$artifactId) .'</a>';
+
+        $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
+        $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject));
         $mail->setFrom($GLOBALS['sys_noreply']);
         $mail->addAdditionalHeader("X-Codendi-Project",     $this->getArtifact()->getTracker()->getProject()->getUnixName());
         $mail->addAdditionalHeader("X-Codendi-Tracker",     $this->getArtifact()->getTracker()->getItemName());
@@ -527,7 +558,10 @@ class Tracker_Artifact_Changeset {
         }
         $mail->setTo(implode(', ', $recipients));
         $mail->setSubject($subject);
-        $mail->setBody($body);
+        if ($htmlBody) {
+            $mail->setBodyHTML($htmlBody);
+        }
+        $mail->setBodyText($txtBody);
         $mail->send();
     }
 
@@ -536,7 +570,7 @@ class Tracker_Artifact_Changeset {
      *
      * @param bool $is_update It is an update, not a new artifact
      *
-     * @return array
+     * @return array of [$recipient => $checkPermissions] where $recipient is a usenrame or an email and $checkPermissions is bool.
      */
     public function getRecipients($is_update) {
         $factory = $this->getFormElementFactory();
@@ -575,45 +609,116 @@ class Tracker_Artifact_Changeset {
     }
 
     /**
-     * Get the body for notification
+     * Get the text body for notification
      *
-     * @param bool   $is_update It is an update, not a new artifact
-     * @param string $recipient The recipient who will receive the notification
+     * @param Boolean $is_update    It is an update, not a new artifact
+     * @param String  $recipient    The recipient who will receive the notification
+     * @param BaseLanguage $language The language of the message
+     * @param Boolean $ignore_perms indicates if permissions have to be ignored
      *
-     * @return string
+     * @return String
      */
-    public function getBody($is_update, $recipient_user, $ignore_perms=false) {
+    public function getBodyText($is_update, $recipient_user, BaseLanguage $language, $ignore_perms) {
         $format = 'text';
-        $um = $this->getUserManager();        
-        $user = $um->getUserById($this->submitted_by);
-        
         $art = $this->getArtifact();
+        $um = $this->getUserManager();
+        $user = $um->getUserById($this->submitted_by);
+
         $output = '+============== '.'['.$art->getTracker()->getItemName() .' #'. $art->getId().'] '.$art->fetchMailTitle($recipient_user, $format, $ignore_perms).' ==============+';
         $output .= PHP_EOL;
         $output .= PHP_EOL;
         $proto = ($GLOBALS['sys_force_ssl']) ? 'https' : 'http';
         $output .= ' <'. $proto .'://'. $GLOBALS['sys_default_domain'] .TRACKER_BASE_URL.'/?aid='. $art->getId() .'>';
         $output .= PHP_EOL;
-        $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
-        $output .= ' '.UserHelper::instance()->getDisplayNameFromUserId($this->submitted_by);
-        $output .= ' on '.util_timestamp_to_userdateformat($this->submitted_on);
+        $output .= $language->getText('plugin_tracker_include_artifact', 'last_edited');
+        $output .= ' '. $this->getUserHelper()->getDisplayNameFromUserId($this->submitted_by);
+        $output .= ' on '.DateHelper::formatForLanguage($language, $this->submitted_on);
         if ( $comment = $this->getComment() ) {
             $output .= PHP_EOL;
             $output .= $comment->fetchFollowUp($format);
         }
         $output .= PHP_EOL;
-        $output .= ' -------------- ' . $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
+        $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
         $output .= PHP_EOL;
-        $output .= $this->diffToPrevious('text', $recipient_user, $ignore_perms);
+        $output .= $this->diffToPrevious($format, $recipient_user, $ignore_perms);
         $output .= PHP_EOL;
-        $output .= ' -------------- ' . $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_artifact') . ' ---------------- ';
+        $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_artifact') . ' ---------------- ';
         $output .= PHP_EOL;
         $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
         $output .= PHP_EOL;
-
         return $output;
     }
+    /**
+     * Get the html body for notification
+     *
+     * @param Boolean $is_update    It is an update, not a new artifact
+     * @param String  $recipient    The recipient who will receive the notification
+     * @param BaseLanguage $language The language of the message
+     * @param Boolean $ignore_perms ???
+     *
+     * @return String
+     */
+    public function getBodyHtml($is_update, $recipient_user, BaseLanguage $language, $ignore_perms) {
+        $format = 'html';
+        $art = $this->getArtifact();
+        $hp = Codendi_HTMLPurifier::instance();
+        
+        $output ='<h1>'.$hp->purify($art->fetchMailTitle($recipient_user, $format, $ignore_perms)).'</h1>'.PHP_EOL;
+        $followup = '';
+        // Display latest changes (diff)
+        if ($comment = $this->getComment()) {
+            $followup = $comment->fetchFollowUp($format, true, true);
+        }
+        $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
+        if ($followup || $changes) {
+            $output .= '<h2>'.$language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';
+            $output .= '<div class="tracker_artifact_followup_header">';
+            // Last comment
+            if ($followup) {
+                $output .= $followup.PHP_EOL;
+            }
+            // Last changes
+            if ($changes) {
+                //TODO check that the following is PHP compliant (what if I made a changes without a comment? -- comment is null)
+                if (!empty($comment->body)) {
+                    $output .= '<hr size="1" />';
+                }
+                $output .= '<ul class="tracker_artifact_followup_changes">';
+                $output .= $changes;
+                $output .= '</ul>';
+            }
+            $output .= '</div>'.PHP_EOL;
+            $output .= $this->fetchHtmlAnswerButton(get_server_url().'/plugins/tracker/?aid='.(int)$art->getId());
+        }
 
+        //Display of snapshot
+        $snapshot = $art->fetchMail($recipient_user, $format, $ignore_perms);
+        if ($snapshot) {
+            $output .= $snapshot;
+        }
+        return $output;
+    }
+    
+    /**
+     * @return string html call to action button to include in an html mail
+     */
+    public function fetchHtmlAnswerButton($artifact_href) {
+        return '<p align="right" class="cta">
+            <a href="'. $artifact_href .'" target="_blank">' .
+            $GLOBALS['Language']->getText('tracker_include_artifact','mail_answer_now') .
+            '</a>
+            </p>';
+    }
+
+    /**
+     * Wrapper for UserHelper
+     *
+     * @return UserHelper
+     */
+    protected function getUserHelper() {
+        return UserHelper::instance();
+    }
+    
     /**
      * Get the subject for notification
      *

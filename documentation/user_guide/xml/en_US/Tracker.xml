@@ -258,7 +258,7 @@
 	  <listitem>
 	    <para><emphasis role="underline">Regular
 	    expression</emphasis>: You can also specify a <ulink
-	    url="http://www.mysql.com/doc/P/a/Pattern_matching.html">MySQL
+	    url="http://dev.mysql.com/doc/refman/5.0/en/regexp.html">MySQL
 	    Extended Regular Expression</ulink> as a matching criteria
 	    (mind the surrounding /.../ !)</para>
 

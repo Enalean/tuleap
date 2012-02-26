@@ -18,17 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/plugin/PluginInfo.class.php');
+require_once('common/plugin/PluginFileInfo.class.php');
 require_once('CardwallPluginDescriptor.class.php');
 
 
 /**
  * CardwallPluginInfo
  */
-class CardwallPluginInfo extends PluginInfo {
+class CardwallPluginInfo extends PluginFileInfo {
     
-    function CardwallPluginInfo(&$plugin) {
-        $this->PluginInfo($plugin);
+    function __construct($plugin) {
+        parent::__construct($plugin, 'config');
         $this->setPluginDescriptor(new CardwallPluginDescriptor());
     }
     

@@ -108,6 +108,7 @@ class LdapPlugin extends Plugin {
         
         // Backend SVN
         $this->_addHook('backend_factory_get_svn', 'backend_factory_get_svn', false);
+        $this->_addHook(Event::SVN_APACHE_AUTH,    'svn_apache_auth',         false);
 
         // Daily codendi job
         $this->_addHook('codendi_daily_start', 'codendi_daily_start', false);
@@ -184,7 +185,7 @@ class LdapPlugin extends Plugin {
      * @return void
      */
     function ajax_search_user($params) {
-        if(!$params['codendiUserOnly']) {
+        if($this->isLDAPUserManagementEnabled() && !$params['codendiUserOnly']) {
             $params['pluginAnswered'] = true;
 
             $validEmail = isset($params['validEmail']) ? $params['validEmail'] : false;
@@ -343,13 +344,14 @@ class LdapPlugin extends Plugin {
             $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
             if(!$ldapUserDao->alreadyLoggedInOnce(user_getid())) {
                 $return_to_arg = "";
-                if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to'] != '') {
-                    $return_to_arg ='?return_to='.urlencode($_REQUEST['return_to']);
+                $request = HTTPRequest::instance();
+                if($request->existAndNonEmpty('return_to')) {
+                    $return_to_arg ='?return_to='.urlencode($request->get('return_to'));
                     if (isset($pv) && $pv == 2) $return_to_arg .= '&pv='.$pv;
                 } else {
                     if (isset($pv) && $pv == 2) $return_to_arg .= '?pv='.$pv;
                 }
-                $_REQUEST['return_to'] = '/plugins/ldap/welcome.php'.$return_to_arg;
+                $request->set('return_to', '/plugins/ldap/welcome.php'.$return_to_arg);
             }
         }
     }
@@ -405,21 +407,23 @@ class LdapPlugin extends Plugin {
      *  IN/OUT  $params['user'] User object if found or null.
      */
     function user_manager_find_user($params) {
-        $ldap = $this->getLdap();
-        // First, test if its provided by autocompleter: "Common Name (login name)"
-        $matches = array();
-        if(preg_match('/^(.*) \((.*)\)$/', $params['ident'], $matches)) {
-            if(trim($matches[2]) != '') {
-                $lri  = $ldap->searchLogin($matches[2]);
+        if ($this->isLDAPUserManagementEnabled()) {
+            $ldap = $this->getLdap();
+            // First, test if its provided by autocompleter: "Common Name (login name)"
+            $matches = array();
+            if(preg_match('/^(.*) \((.*)\)$/', $params['ident'], $matches)) {
+                if(trim($matches[2]) != '') {
+                    $lri  = $ldap->searchLogin($matches[2]);
+                } else {
+                    $lri  = $ldap->searchCommonName($matches[1]);
+                }
             } else {
-                $lri  = $ldap->searchCommonName($matches[1]);
+                // Otherwise, search as defined in config most of the time
+                // (uid, email, common name)
+                $lri  = $ldap->searchUser($params['ident']);
             }
-        } else {
-            // Otherwise, search as defined in config most of the time
-            // (uid, email, common name)
-            $lri  = $ldap->searchUser($params['ident']);
+            $params['user'] = $this->getUserFromLdapIterator($lri);
         }
-        $params['user'] = $this->getUserFromLdapIterator($lri);
     }
 
     /**
@@ -430,7 +434,7 @@ class LdapPlugin extends Plugin {
      * @param unknown_type $params
      */
     function user_manager_get_user_by_identifier($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($GLOBALS['sys_auth_type'] == 'ldap' && $this->isLDAPUserManagementEnabled()) {
             // identifier = type:value
             $separatorPosition = strpos($params['identifier'], ':');
             $type = strtolower(substr($params['identifier'], 0, $separatorPosition));
@@ -713,7 +717,7 @@ class LdapPlugin extends Plugin {
      * @param array $params
      */
     function ugroup_table_title($params) {
-        if($GLOBALS['sys_auth_type'] == 'ldap') {
+        if($GLOBALS['sys_auth_type'] == 'ldap' && $this->isLDAPGroupsUsageEnabled()) {
             $params['html_array'][150] = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_ldap_title');
         }
     }
@@ -725,7 +729,7 @@ class LdapPlugin extends Plugin {
      * @param Array $params
      */
     function ugroup_table_row($params) {
-        if($GLOBALS['sys_auth_type'] == 'ldap') {
+        if($GLOBALS['sys_auth_type'] == 'ldap' && $this->isLDAPGroupsUsageEnabled()) {
             // No ldap for project 100
             if($params['row']['group_id'] == 100) {
                 $params['html_array'][150] = array('value' => '-', 'html_attrs' => 'align="center"');
@@ -764,35 +768,37 @@ class LdapPlugin extends Plugin {
      * @return void
      */
     function project_admin_add_user_form(array $params) {
-        $projectMembersManager = new LDAP_ProjectGroupManager($this->getLdap());
-        $ldapGroup = $projectMembersManager->getLdapGroupByGroupId($params['groupId']);
-        if ($ldapGroup) {
-            $groupName = $ldapGroup->getCommonName();
-        } else {
-            $groupName = '';
+        if ($this->isLDAPGroupsUsageEnabled()) {
+            $projectMembersManager = new LDAP_ProjectGroupManager($this->getLdap());
+            $ldapGroup = $projectMembersManager->getLdapGroupByGroupId($params['groupId']);
+            if ($ldapGroup) {
+                $groupName = $ldapGroup->getCommonName();
+            } else {
+                $groupName = '';
+            }
+
+            $html = '<hr />'.PHP_EOL;
+            $html .= '<strong>'.$GLOBALS['Language']->getText('plugin_ldap', 'project_admin_add_ugroup').'</strong>'.PHP_EOL;
+            $html .= '<form method="post" action="'.$this->getPluginPath().'/admin.php?group_id='.$params['groupId'].'">'.PHP_EOL;
+            $html .= '<input type="text" value="'.$groupName.'" name="ldap_group" id="project_admin_add_ldap_group" size="60" />'.PHP_EOL;
+            $html .= '<br />'.PHP_EOL;
+            $html .= '<input type="checkbox" id="preserve_members" name="preserve_members" checked="checked" />'.PHP_EOL;
+            $html .= '<label for="preserve_members">'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label>'.PHP_EOL;
+            $html .= '<br />'.PHP_EOL;
+            $html .= '<input type="submit" name="delete" value="'.$GLOBALS['Language']->getText('global', 'btn_delete').'" />'.PHP_EOL;
+            $html .= '<input type="submit" name="check" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'" />'.PHP_EOL;
+            $html .= '</form>'.PHP_EOL;
+
+            $GLOBALS['Response']->includeFooterJavascriptFile($this->getPluginPath().'/scripts/autocomplete.js');
+            $js = "new LdapGroupAutoCompleter('project_admin_add_ldap_group',
+                            '".$this->getPluginPath()."',
+                            '".util_get_dir_image_theme()."',
+                            'project_admin_add_ldap_group',
+                            false);";
+            $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
+
+            echo $html;
         }
-
-        $html = '<hr />'.PHP_EOL;
-        $html .= '<strong>'.$GLOBALS['Language']->getText('plugin_ldap', 'project_admin_add_ugroup').'</strong>'.PHP_EOL;
-        $html .= '<form method="post" action="'.$this->getPluginPath().'/admin.php?group_id='.$params['groupId'].'">'.PHP_EOL;
-        $html .= '<input type="text" value="'.$groupName.'" name="ldap_group" id="project_admin_add_ldap_group" size="60" />'.PHP_EOL;
-        $html .= '<br />'.PHP_EOL;
-        $html .= '<input type="checkbox" id="preserve_members" name="preserve_members" checked="checked" />'.PHP_EOL;
-        $html .= '<label for="preserve_members">'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label>'.PHP_EOL;
-        $html .= '<br />'.PHP_EOL;
-        $html .= '<input type="submit" name="delete" value="'.$GLOBALS['Language']->getText('global', 'btn_delete').'" />'.PHP_EOL;
-        $html .= '<input type="submit" name="check" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'" />'.PHP_EOL;
-        $html .= '</form>'.PHP_EOL;
-
-        $GLOBALS['Response']->includeFooterJavascriptFile($this->getPluginPath().'/scripts/autocomplete.js');
-        $js = "new LdapGroupAutoCompleter('project_admin_add_ldap_group',
-                           '".$this->getPluginPath()."',
-                           '".util_get_dir_image_theme()."',
-                           'project_admin_add_ldap_group',
-                           false);";
-        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
-
-        echo $html;
     }
 
     /**
@@ -823,6 +829,15 @@ class LdapPlugin extends Plugin {
             $params['setup'] = array($this->getLdap());
         }
     }
+    
+    function svn_apache_auth($params) {
+        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            $ldapProjectManager = new LDAP_ProjectManager();
+            if ($ldapProjectManager->hasSVNLDAPAuth($params['project_info']['group_id'])) {
+                $params['svn_apache_auth'] = new LDAP_SVN_Apache($this->getLdap(), $params['project_info']);
+            }
+        }
+    }
 
     /**
      * Hook
@@ -832,10 +847,44 @@ class LdapPlugin extends Plugin {
      * @return void
      */
     function codendi_daily_start($params) {
-        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+        if ($GLOBALS['sys_auth_type'] == 'ldap' && $this->isDailySyncEnabled()) {
             $ldapQuery = new LDAP_DirectorySynchronization($this->getLdap());
             $ldapQuery->syncAll();
         }
+    }
+    
+    /**
+     * The daily synchro is enabled if the variable is not defined or if the variable is defined to 1
+     * 
+     * This is for backward compatibility (when daily_sync was not yet defined).
+     * 
+     * @return Boolean
+     */
+    protected function isDailySyncEnabled() {
+        return $this->isParamEnabled('daily_sync');
+    }
+    
+    protected function isLDAPUserManagementEnabled() {
+        return $this->isParamEnabled('user_management');
+    }
+    
+    protected function isLDAPGroupsUsageEnabled() {
+        return $this->isParamEnabled('grp_enabled');
+    }
+    
+    /**
+     * Return true if the parameter is defined and enabled or not defined at all.
+     * 
+     * @param String $key
+     * 
+     * @return Boolean 
+     */
+    protected function isParamEnabled($key) {
+        $value = $this->getLDAP()->getLDAPParam($key);
+        if ($value === null || $value == 1) {
+            return true;
+        }
+        return false;
     }
     
     public function system_event_get_types($params) {

@@ -67,6 +67,7 @@ plugin_git	disable_delete_gitolite	It's not yet possible to delete "Gitolite" ba
 plugin_git	disable_fork_gitolite	It's not yet possible to fork "Gitolite" based repositories
 
 plugin_git	actions_params_error	Empty required parameter(s)
+plugin_git	actions_long_description	Too long description
 plugin_git	actions_delete_process	Repository will be removed in a few seconds
 plugin_git	actions_input_format_error	Repository name is not well formatted. Allowed characters: $1 and max length is $2, no slashes at the beginning or the end, it also must not finish with ".git".
 plugin_git	actions_create_repo_process	Repository will be created in a few seconds
@@ -150,6 +151,11 @@ plugin_git	fork_repositories_path	Choose the path for the forks
 plugin_git	fork_repositories_placeholder	Enter a path or leave it blank
 plugin_git	fork_repositories_submit	Create personal repositories
 plugin_git	fork_malformed_path	Path cannot contain double dots (..)
+
+plugin_git	tree_view_repository	Repository
+plugin_git	tree_view_description	Description
+plugin_git	tree_view_last_push	Last push
+plugin_git	tree_view_by	$1 by $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission granted for git repository $1
 project_admin_utils	perm_reset_for_git_repository	Permission reset for git repository $1

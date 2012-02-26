@@ -1588,6 +1588,77 @@ class Docman_Actions extends Actions {
     }
 
     /**
+     * Raise item monitoring list event
+     *
+     * @param Docman_Item $item Locked item
+     * @param String      $eventType
+     * @param Array       $subscribers
+     *
+     * @return void
+     */
+    function _raiseMonitoringListEvent($item, $subscribers, $eventType) {
+        $p = array('group_id' => $item->getGroupId(),
+                                       'item'     => $item,
+                                       'listeners' => $subscribers,
+                                       'event'    => $eventType);
+        $this->event_manager->processEvent('plugin_docman_event_subcribers', $p);
+    }
+
+    /**
+     * Add monitoring for more than one user
+     *
+     * @param Array $params contains list if users to subscribe and the item
+     *
+     * @return void
+     */
+    function add_monitoring($params) {
+        if (isset($params['listeners_to_add']) && is_array($params['listeners_to_add']) && !empty($params['listeners_to_add'])) {
+                $cascade = false;
+                if (isset($params['monitor_cascade']) && $params['monitor_cascade']) {
+                    $cascade = true;
+                }
+                $users = array();
+                $existingUsers = array();
+                $dpm = $this->_getDocmanPermissionsManagerInstance($params['item']->getGroupId());
+                $invalidUsers = $params['invalid_users'];
+                foreach ($params['listeners_to_add'] as $user) {
+                    if ($user instanceof User) {
+                        if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
+                            if ($dpm->userCanRead($user, $params['item']->getId())) {
+                                if ($this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
+                                    if ($cascade && !$this->_controler->notificationsManager->add($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                                        $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_cascade_not_added', array($user->getName())));
+                                    }
+                                    $users[] = $user->getName();
+                                } else {
+                                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_added', array($user->getName())));
+                                }
+                            } else {
+                                $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_access_rights', array($user->getName())));
+                            }
+                        } else {
+                            $existingUsers[$user->getId()] = $user->getName();
+                        }
+                    } else {
+                        $invalidUsers = true;
+                    }
+                }
+                if ($invalidUsers) {
+                    $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_some_users_not_added'));
+                }
+                if (!empty($existingUsers)) {
+                    $this->_controler->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'notifications_already_exists', array(implode(',', $existingUsers))));
+                }
+                if (!empty($users)) {
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_added', array(implode(',', $users))));
+                    $this->_raiseMonitoringListEvent($params['item'], $params['listeners_to_add'],'plugin_docman_add_monitoring');
+                }
+        } else {
+            $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user_added'));
+        }
+    }
+
+    /**
      * Remove monitoring for more than one user
      *
      * @param Array $params contains list if users to remove and the item
@@ -1596,14 +1667,11 @@ class Docman_Actions extends Actions {
      */
     function remove_monitoring($params) {
         if (isset($params['listeners_to_delete']) && is_array($params['listeners_to_delete']) && !empty($params['listeners_to_delete'])) {
-            if ($this->_controler->userCanManage($params['item']->getId())) {
                 $users = array();
-                foreach ($params['listeners_to_delete'] as $userId) {
-                    $user = $this->_getUserManagerInstance()->getUserById($userId);
-                    if ($this->_controler->notificationsManager->exist($userId, $params['item']->getId())) {
-                        if ($this->_controler->notificationsManager->remove($userId, $params['item']->getId()) && $this->_controler->notificationsManager->remove($userId, $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
-                            $users[] = $user->getName();
-                            // TODO : send notification to the user about this action
+                foreach ($params['listeners_to_delete'] as $user) {
+                    if ($this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
+                        if ($this->_controler->notificationsManager->remove($user->getId(), $params['item']->getId()) && $this->_controler->notificationsManager->remove($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                            $users[] = $user;
                         } else {
                             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_not_removed', array($user->getName())));
                         }
@@ -1612,11 +1680,13 @@ class Docman_Actions extends Actions {
                     }
                 }
                 if (!empty($users)) {
-                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $users))));
+                    $removedUsers = array();
+                    foreach ($users as $user) {
+                        $removedUsers[] = $user->getName();
+                    }
+                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'notifications_removed', array(implode(',', $removedUsers))));
+                    $this->_raiseMonitoringListEvent($params['item'], $users, 'plugin_docman_remove_monitoring');
                 }
-            } else {
-                $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_permission_denied'));
-            }
         } else {
             $this->_controler->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'notifications_no_user'));
         }

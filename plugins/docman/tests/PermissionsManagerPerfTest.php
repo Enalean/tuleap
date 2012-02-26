@@ -34,10 +34,6 @@ class PermissionsManagerPerfTest extends UnitTestCase {
     var $docmanPm;
     var $refOnNull;
 
-    function __construct($name = 'Docman_PermissionsPerfManager test') {
-        parent::__construct($name);
-    }
-
     function setUp() {
         $this->user =& new MockUser($this);
         $this->docmanPm =& new Docman_PermissionsManagerTestPerfVersion($this);

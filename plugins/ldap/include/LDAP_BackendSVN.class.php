@@ -21,11 +21,11 @@ require_once 'common/backend/BackendSVN.class.php';
 require_once 'LDAP_ProjectManager.class.php';
 require_once 'LDAP.class.php';
 require_once 'LDAP_UserManager.class.php';
+require_once 'LDAP_SVN_Apache.class.php';
 
 class LDAP_BackendSVN extends BackendSVN {
     private $ldap;
     private $ldapProjectManager = null;
-    private $ldapUrl            = null;
     private $ldapUserManager    = null;
 
     /**
@@ -35,30 +35,6 @@ class LDAP_BackendSVN extends BackendSVN {
      */
     public function setUp(LDAP $ldap) {
         $this->ldap = $ldap;
-    }
-
-    /**
-     * Authentification performed by LDAP server
-     * 
-     * @see src/common/backend/BackendSVN#getProjectSVNApacheConfAuth()
-     * @param Array $row DB entry of a given project
-     * 
-     * @return String
-     */
-    protected function getProjectSVNApacheConfAuth($row) {
-        $ldapPrjMgr = $this->getLDAPProjectManager();
-        if ($ldapPrjMgr->hasSVNLDAPAuth($row['group_id'])) {
-            $conf = '';
-            $conf .= '    AuthType Basic'.PHP_EOL;
-            $conf .= '    AuthBasicProvider ldap'.PHP_EOL;
-            $conf .= '    AuthzLDAPAuthoritative Off'.PHP_EOL;
-            $conf .= '    AuthName "LDAP Subversion Authorization ('.$this->escapeStringForApacheConf($row['group_name']).')"'.PHP_EOL;
-            $conf .= '    AuthLDAPUrl "'.$this->getLDAPServersUrl().'"'.PHP_EOL;
-            $conf .= '    Require valid-user'.PHP_EOL;
-            return $conf;
-        } else {
-            return parent::getProjectSVNApacheConfAuth($row);
-        }
     }
 
     /**
@@ -164,40 +140,6 @@ class LDAP_BackendSVN extends BackendSVN {
         } else {
             return parent::getSVNAccessRootPathDef($project);
         }
-    }
-
-    /**
-     * Format LDAP url for apache mod_ldap
-     *
-     * Combine Codendin ldap parameter 'sys_ldap_server' and 'sys_ldap_dn' to
-     * generate an Apache mod_authnz_ldap compatible url
-     *
-     * @see http://httpd.apache.org/docs/2.2/mod/mod_authnz_ldap.html#authldapurl
-     *
-     * @return String
-     */
-    public function getLDAPServersUrl() {
-        if ($this->ldapUrl === null) {
-            $ldap = $this->getLDAP();
-            $serverList = explode(',', $ldap->getLDAPParam('server'));
-            $firstIsLdaps = false;
-            foreach ($serverList as $k => $server) {
-                $server = strtolower(trim($server));
-                if ($k == 0 && strpos($server, 'ldaps://') === 0) {
-                    $firstIsLdaps = true;
-                }
-                $server = str_replace('ldap://', '', $server);
-                $server = str_replace('ldaps://', '', $server);
-                $serverList[$k] = $server;
-            }
-            if ($firstIsLdaps) {
-                $this->ldapUrl = 'ldaps://';
-            } else {
-                $this->ldapUrl = 'ldap://';
-            }
-            $this->ldapUrl .= implode(' ', $serverList).'/'.$ldap->getLDAPParam('dn');
-        }
-        return $this->ldapUrl;
     }
 
     /**

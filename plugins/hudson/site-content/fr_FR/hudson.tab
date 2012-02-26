@@ -115,3 +115,5 @@ plugin_hudson	widget_description_jobsoverview	Affiche un aperçu de tous les job
 widget_categ_label	ci	Intégration Continue
 
 plugin_hudson	error_object_not_found	Erreur : Objet Hudson non trouvé.
+
+plugin_hudson	job_count	Nombre de jobs jusqu'au $1

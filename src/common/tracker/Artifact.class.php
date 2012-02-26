@@ -23,9 +23,7 @@
  */
 
 require_once('common/tracker/ArtifactFile.class.php');
-require_once('common/mail/Mail.class.php');
-require_once('common/mail/Codendi_Mail.class.php');
-require_once('common/include/Tuleap_Template.class.php');
+require_once('common/mail/MailManager.class.php');
 require_once('common/include/Codendi_Diff.class.php');
 
 /**
@@ -1404,8 +1402,6 @@ class Artifact extends Error {
      * @return boolean
      */
     function addDependencies($artifact_id_dependent,&$changes,$masschange, $import = false) {
-        global $Language;
-        
         if ( !$artifact_id_dependent ) 
             return true;
         
@@ -1422,9 +1418,9 @@ class Artifact extends Error {
             if (!$this->validArtifact($id)) {
                 
                 // at import stage, $id can have value "None" or "Aucun"
-                if ( ! $import || $id != $Language->getText('global','none')) {
+                if ( ! $import || $id != $GLOBALS['Language']->getText('global','none')) {
                     $ok = false;
-                    $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','invalid_art',$id));
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact','invalid_art',$id));
                 }
             }            
             if ($ok && ($id != $this->getID()) && !$this->existDependency($id)) {
@@ -1434,7 +1430,7 @@ class Artifact extends Error {
         }
         
         if (!$ok) {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_artifact','depend_add_fail',$this->getID()));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_common_artifact','depend_add_fail',$this->getID()));
         } else {
             $changes['Dependencies']['add'] = $artifact_id_dependent;
         }
@@ -2491,17 +2487,16 @@ class Artifact extends Error {
      * @param Codendi_Mail_Interface $html_mail
      */
     function sendNotification($addresses, $subject, $text_mail, $html_mail) {
-        $um             = UserManager::instance();
         $html_addresses = array();
         $text_addresses = array();
-        foreach ($addresses as $address) {
-            $user = $um->getUserByEmail($address);
-            $pref = $user ? $user->getPreference('user_tracker_mailformat') : false;
-            if ($pref === 'html') {
-                $html_addresses[] = $address;
-            } else {
-                $text_addresses[] = $address;
-            }
+        
+        $mailMgr   = new MailManager();
+        $mailPrefs = $mailMgr->getMailPreferencesByEmail($addresses);
+        foreach ($mailPrefs['html'] as $user) {
+            $html_addresses[] = $user->getEmail();
+        }
+        foreach ($mailPrefs['text'] as $user) {
+            $text_addresses[] = $user->getEmail();
         }
 
         $mail = null;
@@ -2629,6 +2624,9 @@ class Artifact extends Error {
             $body .= '<table>';
             $body .= $snapshot;
             $body .= '</table>';
+            if (!$changes) {
+                $body .= $this->fetchHtmlAnswerButton($artifact_href);
+            }
         }
         
         $result = $this->getFollowups();
@@ -2675,6 +2673,17 @@ class Artifact extends Error {
         } else {
             return null;
         }
+    }
+    
+    /**
+     * @return string html call to action button to include in an html mail
+     */
+    public function fetchHtmlAnswerButton($artifact_href) {
+        return '<p align="right" class="cta">
+            <a href="'. $artifact_href .'" target="_blank">' .
+            $GLOBALS['Language']->getText('tracker_include_artifact','mail_answer_now') .
+            '</a>
+            </p>';
     }
 
     /**
@@ -2998,7 +3007,7 @@ class Artifact extends Error {
      * @return string
      */
     function formatChangesHTML($changes, $field_perm, $artifact_href, &$visible_change) {
-
+        
         global $art_field_fact,$Language;
         $group_id = $this->ArtifactType->getGroupID();
         $visible_change = false;
@@ -3042,8 +3051,7 @@ class Artifact extends Error {
                 <div class="avatar"></div>
             </div>
             <div class="tracker_artifact_followup_content">
-                <div class="tracker_artifact_followup_comment">
-                    <div class="tracker_artifact_followup_comment_body">';
+                <div class="tracker_artifact_followup_comment">';
         
         //Process special cases first: follow-up comment
         if (!empty($changes['comment'])) {
@@ -3051,7 +3059,9 @@ class Artifact extends Error {
             if (!empty($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global','none')) {
                 $out_com .= "<strong>[". $changes['comment']['type'] ."]</strong><br />";
             }
+            $out_com .= '<div class="tracker_artifact_followup_comment_body">';
             $out_com .= $this->formatFollowUp($group_id, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_BROWSER);
+            $out_com .= '</div>';
             unset($changes['comment']);
         }
         //Process special cases first: file attachment
@@ -3121,24 +3131,20 @@ class Artifact extends Error {
             }
         }
         if ($out_ch) {
-            $out_ch = $Language->getText('tracker_include_artifact','mail_changes').'<table cellpadding="0" border="0" cellspacing="0" class="artifact_changes">'.
-            $out_ch .
-            '</table>';
+            $out_ch = '<div class="tracker_artifact_followup_comment_changes">' .
+                $Language->getText('tracker_include_artifact','mail_changes').'<table cellpadding="0" border="0" cellspacing="0" class="artifact_changes">' .
+                $out_ch .
+                '</table>
+                </div>';
         }
         
-        $out .= $out_com;
-        if ($out_com && $out_ch) {
-            $out .= '<hr>';
-        }
-        $out .= $out_ch;
+        $out .= $out_com . $out_ch;
         
         $out .= '
-                    </div>
                 </div>
             </div>
-            <div style="clear:both;"></div>
-            <p align="right" class="cta"><a href="'. $artifact_href .'" target="_blank">'.$Language->getText('tracker_include_artifact','mail_answer_now').'</a></p>
-            ';
+            <div style="clear:both;"></div>';
+        $out .= $this->fetchHtmlAnswerButton($artifact_href);
         return $out;
     }
 

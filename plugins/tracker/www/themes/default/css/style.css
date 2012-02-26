@@ -318,6 +318,8 @@ ul.tracker_function_aggregate_results {
 .tracker_admin_static_value_hidden {
     background:  url('../images/tracker_admin_static_value_hidden.png') top left repeat;
     opacity: 0.35;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=35)"; /* IE 8 */ 
+    filter : alpha(opacity=35); /* IE < 8 */ 
 }
 .tracker_report_table_pager {
     border-top:1px solid #CCC;
@@ -486,10 +488,14 @@ ul.tracker_function_aggregate_results {
 .tracker_artifact_followup_changes {
     font-size:0.8em;
     opacity:0.7;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)"; /* IE 8 */ 
+    filter : alpha(opacity=70); /* IE < 8 */ 
     margin:20px auto;
 }
 .tracker_artifact_followup_changes:hover {
     opacity:1;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; /* IE 8 */ 
+    filter : alpha(opacity=100); /* IE < 8 */ 
 }
 .tracker_artifact_followup_changes_field {
     font-weight: bold;
@@ -527,6 +533,8 @@ ul.tracker_function_aggregate_results {
 .tracker_artifact_attachment_submitter {
     font-size:0.8em;
     opacity:0.7;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=70)"; /* IE 8 */ 
+    filter : alpha(opacity=70); /* IE < 8 */ 
 }
 .tracker_artifact_attachment {
     padding-left: 1em;
@@ -775,12 +783,14 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 #tracker-admin-field-properties {
     background: #fcfcff;
 }
+
 .tracker-admin-palette button img,
 .tracker-admin-palette a.button img {
     vertical-align:middle;
     margin-right:0.5em;
 }
-.tracker-admin-palette button,
+.tracker-admin-palette button, 
+.tracker-admin-palette a.button_disabled,
 .tracker-admin-palette a.button {
     font-family: Corbel,
          "Lucida Grande",
@@ -805,6 +815,13 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
     padding:4px 8px 3px 5px;
     display:block;
 }
+.tracker-admin-palette a.button_disabled {
+    cursor:default;
+    opacity:0.5;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; /* IE 8 */ 
+    filter : alpha(opacity=50); /* IE < 8 */ 
+}
+
 .tracker-admin-palette button:focus,
 .tracker-admin-palette button:hover,
 .tracker-admin-palette a.button:focus,
@@ -827,6 +844,7 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 .tracker-admin-palette-content label {
     font-weight: bold;
 }
+
 /* }}} */
 
 

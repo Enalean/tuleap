@@ -52,14 +52,6 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         //return $this->getDao()->delete($this->id);
     }
     
-    public function fetchLabel() {
-        $html = parent::fetchLabel();
-        $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions_help');
-        $html .= '</span>';
-        return $html;
-    }
-    
     /**
      * Display the field as a Changeset value.
      * Used in report table
@@ -236,15 +228,14 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         $is_read_only = true;
         $output = '';
-        switch($format) {
-            case 'html':
-                break;
-            default:                               
-                $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
-                $ugroups  = permission_fetch_selected_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId());
-                $output .= "\n".implode(', ',$ugroups);
-                break;
+        $separator = '&nbsp;';
+        if ($format == 'text') {
+            $separator = PHP_EOL;
+            $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
         }
+
+        $ugroups  = permission_fetch_selected_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS', $artifact->getId(), $this->getTracker()->getGroupId());
+        $output .= $separator.implode(', ',$ugroups);
         return $output;
     }
 
@@ -383,6 +374,13 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     public static function getFactoryIconCreate() {
         return $GLOBALS['HTML']->getImagePath('ic/lock--plus.png');
+    }
+    
+    /**
+     * @return bool say if the field is a unique one
+     */
+    public static function getFactoryUniqueField() {
+        return true;
     }
     
     /**
@@ -733,6 +731,5 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         }
         return true;
     }
-
 }
 ?>

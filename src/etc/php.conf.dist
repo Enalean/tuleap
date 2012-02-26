@@ -43,7 +43,7 @@ php_flag allow_call_time_pass_reference on
 # With PHP5 session.save_path may not have a default value. This will raise a notice when
 # browsing wiki pages. To fix it, just uncomment the following line.
 #
-#php_value session.save_path "/var/tmp/codendi_cache"
+php_value session.save_path "/var/tmp/codendi_cache"
 
 
 # Debugging all=6143, all but notice=6135. See http://www.php.net/error_reporting

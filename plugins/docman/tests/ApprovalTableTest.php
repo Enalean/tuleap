@@ -27,10 +27,6 @@ require_once(dirname(__FILE__).'/../include/Docman_ApprovalTable.class.php');
 
 class ApprovalTableTest extends UnitTestCase {
 
-    function ApprovalTableTest($name = 'Docman_ApprovalTableTest test') {
-        $this->UnitTestCase($name);
-    }
-
     function testTableStateRejected() {
         // Std case
         $row['nb_reviewers'] = 5;

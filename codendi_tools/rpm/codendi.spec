@@ -23,7 +23,7 @@
 %define ftp_group        ftp
 %define ftp_user         ftp
 
-Summary: Codendi forge
+Summary: The Tuleap forge
 Name: %{PKG_NAME}
 Provides: codendi = %{version}
 Version: @@VERSION@@
@@ -119,6 +119,18 @@ Provides: tuleap-core-subversion
 %endif
 %description core-subversion
 Manage dependencies for Codendi Subversion integration
+
+%package core-subversion-modperl
+Summary: Subversion with mod_perl authentication
+Group: Development/Tools
+Version: 1.0
+Release: 1%{?dist}
+Requires: %{PKG_NAME}-core-subversion, mod_perl
+%description core-subversion-modperl
+Provides authentication for Subversion component based on mod_perl rather than
+mod_mysql.
+This module might help server with big subversion usage. mod_mysql + mod_svn
+seems to have memory leak issues.
 
 %package core-cvs
 Summary: CVS component for codendi
@@ -478,6 +490,10 @@ done
 # Cache dir
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}
 
+# Core subversion mod_perl
+%{__install} -d $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
+%{__install} src/utils/svn/Tuleap.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
+
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
 
@@ -597,10 +613,13 @@ else
     # Remove existing combined js
     rm -f %{APP_DIR}/src/www/scripts/combined/codendi-*.js
     %{__chown} %{APP_USER}:%{APP_USER} %{APP_CACHE_DIR}/lang/*.php
+
+    # Remove soap cache
+    rm -f /tmp/wsdl-*
 fi
 
 # In any cases fix the context
-/usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR}
+/usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR} || true
 
 # This adds the proper /etc/rc*.d links for the script that runs the codendi backend
 #/sbin/chkconfig --add %{APP_NAME}
@@ -811,6 +830,10 @@ fi
 %files core-subversion
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/CORE_SUBVERSION_VERSION
+
+%files core-subversion-modperl
+%defattr(-,root,root,-)
+%{perl_vendorlib}/Apache/Tuleap.pm
 
 %files core-cvs
 %defattr(-,%{APP_USER},%{APP_USER},-)

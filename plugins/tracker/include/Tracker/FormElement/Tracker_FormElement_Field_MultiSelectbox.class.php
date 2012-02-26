@@ -85,23 +85,6 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     }
 
     /**
-     * html form for the change type action
-     *
-     * @return string html
-     */
-    protected function fetchChangeType() {
-        $html = ' (<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
-                'tracker'            => $this->tracker_id,
-                'func'               => 'admin-formElement-update',
-                'formElement'        => $this->id,
-                'change-type'        => 'sb'
-            )) .'" onclick="return confirm(\''.$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_type_confirm').'\');">'
-               .$GLOBALS['Language']->getText('plugin_tracker_formelement_admin','switch_sb').'</a>)';
-
-        return $html;
-    }
-
-    /**
      * Change the type of the multi select box
      * @param string $type the new type
      *
@@ -139,6 +122,5 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     public function isNone($value) {
         return $value === null || $value === '' || (is_array($value) && count($value) ==1 && $value[0] == '100');
     }
-
 }
 ?>
