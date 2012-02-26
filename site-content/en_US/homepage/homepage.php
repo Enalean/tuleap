@@ -33,7 +33,7 @@ if (isset($GLOBALS['sys_exchange_policy_url'])) {
 <div class="hero-unit">
     <h1>Collaborative Software Development at <?= $GLOBALS['sys_org_name']?></h1>
     <p><a href="/docs/site/about_codendi.php"><?= $GLOBALS['sys_name']?></a> is a service to all 
-    <?= $GLOBALS['sys_org_name']?> software development teams.i</p>
+    <?= $GLOBALS['sys_org_name']?> software development teams.</p>
 
     <P><?= $GLOBALS['sys_name']?> offers an easy access to a full featured and totally web-based project management environment.
     Using <?= $GLOBALS['sys_name']?> project teams can better focus on software development while making their community of users

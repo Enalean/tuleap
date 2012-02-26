@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,11 +20,13 @@
 
 require_once 'common/layout/DivBasedTabbedLayout.class.php';
 require_once 'NavBarBuilder.class.php';
+require_once 'Bootstrap_FeedbackFormatter.class.php';
 
 class Bootstrap_Theme extends DivBasedTabbedLayout {
     
     function __construct($root) {
         parent::__construct($root);
+        $this->_feedback->setFormatter(new Bootstrap_FeedbackFormatter());
     }
 
     public function header($params) {
@@ -71,6 +73,7 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
         $html .= $nav->render();
         $html .= $this->getBreadcrumbs();
         $html .= $this->_getFeedback();
+        $this->_feedback->display();
         $html .= $this->container($params, $project_manager, $current_user);
         return $html;
     }
