@@ -82,8 +82,8 @@ project_admin_editservice	service_cvs_lbl_key	CVS
 project_admin_editservice	service_cvs_desc_key	Accès CVS
 project_admin_editservice	service_file_lbl_key	Fichiers
 project_admin_editservice	service_file_desc_key	Publication de fichiers
-project_admin_editservice	service_tracker_lbl_key	Suivi
-project_admin_editservice	service_tracker_desc_key	Outils de suivi du projet
+project_admin_editservice	service_tracker_lbl_key	Suivi v3
+project_admin_editservice	service_tracker_desc_key	Outils de suivi (version 3) du projet
 project_admin_editservice	service_svn_lbl_key	Subversion
 project_admin_editservice	service_svn_desc_key	Accès Subversion
 project_admin_editservice	service_wiki_lbl_key	Wiki
@@ -959,3 +959,7 @@ project_privacy	public	Public
 project_privacy	tooltip_private	<p>Le niveau de confidentialité du projet est : <big><strong>privé</strong></big><br />Seuls les membres du projets peuvent accèder à son contenu.</p>
 project_privacy	tooltip_public_w_anon	<p>Le niveau de confidentialité du projet est : <big><strong>public</strong></big><br />Par défault, son contenu est accessible à tout utilisateur (authentifié ou non).<br />Veuillez noter que des permissions plus restrictives peuvent être apposées sur certains items.</p>
 project_privacy	tooltip_public_wo_anon	<p>Le niveau de confidentialité du projet est : <big><strong>public</strong></big><br />Par défault, son contenu est accessible à tout utilisateur authentifié non restreint.<br />Veuillez noter que des permissions plus restrictives peuvent être apposées sur certains items.</p>
+
+project_service	service_not_used	Le service $1 n'est pas activé
+project	does_not_exist	Le projet n'existe pas
+

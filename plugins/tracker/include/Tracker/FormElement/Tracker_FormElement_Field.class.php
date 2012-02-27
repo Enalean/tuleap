@@ -167,10 +167,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
     
     /**
      * Display the field as a criteria
-     * @param Tracker_ReportCriteria $criteria
+     * @param Tracker_Report_Criteria $criteria
      * @return string
      */
-    public function fetchCriteria($criteria) {
+    public function fetchCriteria(Tracker_Report_Criteria $criteria) {
         $html = '';
         if ($this->criteriaCanBeAdvanced()) {
             $html .= '<table cellpadding="0" cellspacing="0"><tbody><tr><td>';

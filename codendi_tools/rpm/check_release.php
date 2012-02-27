@@ -9,7 +9,7 @@ if (isset($argv[1])) {
 
 // Gather RPMs info
 $rpms = array();
-$spec = file(dirname(__FILE__).'/codendi.spec', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+$spec = file(dirname(__FILE__).'/tuleap.spec', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 foreach ($spec as $line) {
     $m1 = array();
     if (preg_match('/^%package (.*)-(.*)$/', trim($line), $m1)) {

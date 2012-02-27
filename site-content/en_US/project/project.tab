@@ -82,8 +82,8 @@ project_admin_editservice	service_cvs_lbl_key	CVS
 project_admin_editservice	service_cvs_desc_key	CVS Access
 project_admin_editservice	service_file_lbl_key	Files
 project_admin_editservice	service_file_desc_key	File Releases
-project_admin_editservice	service_tracker_lbl_key	Trackers
-project_admin_editservice	service_tracker_desc_key	Project Trackers
+project_admin_editservice	service_tracker_lbl_key	Trackers v3
+project_admin_editservice	service_tracker_desc_key	Project Trackers (version 3)
 project_admin_editservice	service_svn_lbl_key	Subversion
 project_admin_editservice	service_svn_desc_key	Subversion Access
 project_admin_editservice	service_wiki_lbl_key	Wiki
@@ -962,3 +962,7 @@ project_privacy	public	Public
 project_privacy	tooltip_private	<p>Project privacy set to <big><strong>private</strong></big><br />Only project members can access its content.</p>
 project_privacy	tooltip_public_w_anon	<p>Project privacy set to <big><strong>public</strong></big><br />By default, its content is available to everyone (authenticated or not).<br />Please note that more restrictive permissions might exist on some items.</p>
 project_privacy	tooltip_public_wo_anon	<p>Project privacy set to <big><strong>public</strong></big><br />By default, its content is available to all authenticated, but not restricted, users.<br />Please note that more restrictive permissions might exist on some items.</p>
+
+
+project_service	service_not_used	$1 service is not enabled
+project	does_not_exist	The project doesn't exist

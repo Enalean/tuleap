@@ -153,11 +153,44 @@ class PluginManager {
             file_get_contents($GLOBALS['sys_pluginsroot'].$path_to_file) : 
             false;
     }
-    function getReadme($name) {
-        $path_to_file = '/'.$name.'/README.txt';
-        return file_exists($GLOBALS['sys_pluginsroot'].$path_to_file) ? 
-            file_get_contents($GLOBALS['sys_pluginsroot'].$path_to_file) : 
-            false;
+    
+    function getInstallReadme($name) {
+        return $GLOBALS['sys_pluginsroot'] .'/'. $name .'/README';
+    }
+    
+    /**
+     * Format the readme file of a plugin
+     *
+     * Use markdown formatter if installed and if README.mkd exists
+     * Otherwise assume text/plain and put it in <pre> tags
+     * If README file doesn't exist, return empty string.
+     *
+     * For Markdown, the following is needed:
+     * <code>
+     * pear channel-discover pear.michelf.com
+     * pear install michelf/package
+     * </code>
+     *
+     * @return string html
+     */
+    function fetchFormattedReadme($file) {
+        if (is_file("$file.mkd")) {
+            $content = file_get_contents("$file.mkd");
+            if (@include_once "markdown.php") {
+                return Markdown($content);
+            }
+            return '<pre>'. $content .'</pre>';
+        }
+        
+        if (is_file("$file.txt")) {
+            return '<pre>'. file_get_contents("$file.txt") .'</pre>';
+        }
+        
+        if (is_file($file)) {
+            return '<pre>'. file_get_contents($file) .'</pre>';
+        }
+        
+        return '';
     }
 
     /**

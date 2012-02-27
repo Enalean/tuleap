@@ -29,6 +29,9 @@ class Tracker_Report_Criteria {
     /**
      * Constructor
      *
+     * WARNING: cannot add typehinting on parameters as sometimes they might be
+     * null (and it's crappy to have null args in the middle of arg list).
+     * 
      * @param int $id the id of the criteria
      * @param Tracker_Report $report the id of the report
      * @param Tracker_FormElement_Field $field the name of the renderer

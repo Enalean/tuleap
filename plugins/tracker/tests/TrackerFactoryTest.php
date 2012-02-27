@@ -20,6 +20,7 @@
 
 //require_once('common/dao/include/DataAccessObject.class.php');
 //require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_Tooltip.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerFactory.class.php');

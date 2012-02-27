@@ -50,6 +50,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     public $stop_notification;
     private $formElementFactory;
     private $sharedFormElementFactory;
+    private $project;
 
     // attributes necessary to to create an intermediate Tracker Object
     // (before Database import) during XML import
@@ -104,9 +105,17 @@ class Tracker implements Tracker_Dispatchable_Interface {
      * @return Project
      */
     function getProject() {
-        return ProjectManager::instance()->getProject($this->group_id);
+        if (!$this->project) {
+            $this->project = ProjectManager::instance()->getProject($this->group_id);
+        }
+        return $this->project;
     }
 
+    function setProject(Project $project) {
+        $this->project  = $project;
+        $this->group_id = $project->getID();
+    }
+    
     /**
      * getId - get this Tracker Id.
      *

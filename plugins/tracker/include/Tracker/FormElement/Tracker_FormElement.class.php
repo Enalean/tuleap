@@ -239,7 +239,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
     
     public function setTracker(Tracker $tracker) {
-        $this->tracker = $tracker;
+        $this->tracker    = $tracker;
+        $this->tracker_id = $tracker->getId();
     }
     
     /**

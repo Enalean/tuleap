@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'Test_Tracker_FormElement_Builder.php';
+
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generatePartial(
     'Tracker_FormElementFactory', 
@@ -29,6 +31,8 @@ Mock::generatePartial(
     )
 );
 
+Mock::generate('Tracker_FormElement_FieldDao');
+
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Container_Fieldset.class.php');
 Mock::generate('Tracker_FormElement_Container_Fieldset');
 
@@ -39,6 +43,7 @@ require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 Mock::generate('TrackerManager');
 Mock::generate('User');
+Mock::generate('Project');
 
 require_once 'common/include/HTTPRequest.class.php';
 Mock::generate('HTTPRequest');
@@ -190,7 +195,7 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
     }
     
     private function GivenAFormElementFactory() {
-        $factory         = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getUsedFormElementForTracker', 'getEventManager'));
+        $factory         = TestHelper::getPartialMock('Tracker_FormElementFactory', array('getUsedFormElementForTracker', 'getEventManager', 'getDao'));
         $factory->setReturnValue('getUsedFormElementForTracker', array());
         $factory->setReturnValue('getEventManager', new MockEventManager());
         return $factory;
@@ -211,5 +216,64 @@ class Tracker_FormElementFactoryTest extends TuleapTestCase {
         
         return $content;
     }
+    
+    public function testGetAllSharedFieldsOfATrackerShouldReturnsEmptyArrayWhenNoSharedFields() {
+        $project_id = 1;
+        $dar = TestHelper::arrayToDar();
+        
+        $factory = $this->GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id);
+
+        $this->ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, array());
+    }
+    
+    public function testGetAllSharedFieldsOfATrackerReturnsAllSharedFieldsThatTheTrackerExports() {
+        $project_id = 1;
+        
+        $dar = TestHelper::arrayToDar(
+                $this->createDar(999, 'text'),
+                $this->createDar(666, 'date')
+        );
+        
+        $factory = $this->GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id);
+        
+        $textField = aTextField()->withId(999)->build();
+        $dateField = aDateField()->withId(666)->build();
+
+        $this->ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, array($textField, $dateField));
+    }
+    
+    private function GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id) {
+        $dao = new MockTracker_FormElement_FieldDao();
+        $dao->setReturnValue('searchProjectSharedFieldsOriginals', $dar, array($project_id));
+        
+        $factory = $this->GivenAFormElementFactory();
+        $factory->setReturnValue('getDao', $dao);
+        
+        return $factory;
+    }
+    
+    private function ThenICompareProjectSharedFieldsWithExpectedResult($factory, $project_id, $expectedResult) {
+        $project = new MockProject();
+        $project->setReturnValue('getId', $project_id);
+        
+        $this->assertEqual($factory->getProjectSharedFields($project), $expectedResult);
+    }
+    
+    private function createDar($id, $type) {
+        return array('id' => $id, 
+                     'formElement_type' => $type,
+                     'tracker_id' => null,
+                     'parent_id' => null,
+                     'name' => null,
+                     'label' => null,
+                     'description' => null,
+                     'use_it' => null,
+                     'scope' => null,
+                     'required' => null,
+                     'notifications' => null,
+                     'rank' => null,
+                     'original_field_id' => null);
+    }
 }
+
 ?>

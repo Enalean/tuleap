@@ -22,6 +22,7 @@ require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_SharedF
 require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php';
 require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_Selectbox.class.php';
 require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindFactory.class.php';
+require_once 'common/dao/include/DataAccessObject.class.php';
 
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker');
@@ -31,6 +32,7 @@ Mock::generate('Tracker_FormElement_Field_Selectbox');
 Mock::generate('Tracker_FormElement_Field_List_BindFactory');
 Mock::generate('Tracker_FormElement_Field_List_Bind_Static');
 Mock::generate('Tracker_FormElement_Field_List_Bind_Users');
+Mock::generate('Tracker_FormElement_FieldDao');
 
 class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
 
@@ -176,7 +178,8 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
         $boundValuesFactory = new MockTracker_FormElement_Field_List_BindFactory();
-        $decorator = new Tracker_SharedFormElementFactory($factory, $boundValuesFactory);
+        $decorator = TestHelper::getPartialMock('Tracker_SharedFormElementFactory', array('getDao'));
+        $decorator->__construct($factory, $boundValuesFactory);
         $factory->setReturnValue('getType', 'string', array($field));
         $factory->setReturnValue('getFormElementById', $field, array($field->getId()));
         return array($decorator, $factory, $tracker, $user, $boundValuesFactory);
@@ -215,6 +218,30 @@ class Tracker_SharedFormElementFactoryTest extends UnitTestCase {
         $field->setReturnValue('getTracker', $tracker);
         $field->setReturnValue('getBind', new MockTracker_FormElement_Field_List_Bind_Users());
         return $field;
+    }
+    
+    public function testGetFieldFromTrackerAndSharedFieldToRetrieveFieldValueFromSearchCriterion() {
+        $field1 = $this->GivenAUserSelectbox();
+        $field1->setReturnValue('getId', 123);
+        
+        $field2 = $this->GivenAUserSelectbox();
+        $field2->setReturnValue('getId', 456);
+        
+        list($sharedFormElementFactory, $factory, $tracker, $user) = $this->GivenASharedFormElementFactory($field1, 'sb');
+        
+        $tracker->setReturnValue('getId', 66);
+        
+        $factory->setReturnValue('getFormElementById', $field2, array($field2->getId()));
+        
+        $dar = new MockDataAccessResult();
+        $dar->setReturnValue('getRow', array('id' => 456));
+        $dao = new MockTracker_FormElement_FieldDao();
+        $dao->setReturnValue('searchFieldFromTrackerIdAndSharedFieldId', $dar, array(66, 123));
+        $dao->expectOnce('searchFieldFromTrackerIdAndSharedFieldId', array(66, 123));
+        
+        $sharedFormElementFactory->setReturnValue('getDao', $dao);
+        
+        $this->assertEqual($sharedFormElementFactory->getFieldFromTrackerAndSharedField($tracker, $field1), $field2);
     }
 }
 ?>

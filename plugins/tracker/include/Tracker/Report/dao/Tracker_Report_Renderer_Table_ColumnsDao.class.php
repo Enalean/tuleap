@@ -26,10 +26,11 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject {
     
     function searchByRendererId($renderer_id) {
         $renderer_id  = $this->da->escapeInt($renderer_id);
-        $sql = "SELECT *
-                FROM $this->table_name
+        $sql = "SELECT col.*
+                FROM $this->table_name AS col
+                    INNER JOIN tracker_field ON (col.field_id = tracker_field.id)
                 WHERE renderer_id = $renderer_id 
-                ORDER BY rank";
+                ORDER BY col.rank";
         return $this->retrieve($sql);
     }
     
