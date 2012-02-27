@@ -177,5 +177,4 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
 
 }
 
-
 ?>
