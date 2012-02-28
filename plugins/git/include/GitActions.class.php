@@ -501,7 +501,7 @@ class GitActions extends PluginActions {
      *
      * @return bool false if no repository has been cloned
      */
-    function forkRepositories($groupId, array $repos, $path, User $user, Layout $response) {
+    function forkIndividualRepositories($groupId, array $repos, $path, User $user, Layout $response) {
         $forkCommand = new GitForkIndividualCommand($path);
         $redirect_url = '/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId();
         $this->executeForkCommand($forkCommand, $repos, $user, $response, $redirect_url);

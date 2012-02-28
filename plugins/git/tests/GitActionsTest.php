@@ -458,10 +458,10 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $controller = new MockGit($this);
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepositories($group_id, array($repo), $path, $user, $layout);
+        $action->forkIndividualRepositories($group_id, array($repo), $path, $user, $layout);
     }
     
-    function testClonesManyInternalRepositories() {    	
+    function testClonesManyInternalRepositories() {
         $path  = 'toto';
         $group_id = 101;
         
@@ -490,7 +490,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $controller = new MockGit($this);
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepositories($group_id, $repos, $path, $user, $layout);
+        $action->forkIndividualRepositories($group_id, $repos, $path, $user, $layout);
     }
     function testCloneManyExternalRepositories() {
         
@@ -542,7 +542,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $controller->expectOnce('addError', array('actions_no_repository_forked'));
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepositories($group_id, $repos, '', $user, $layout);
+        $action->forkIndividualRepositories($group_id, $repos, '', $user, $layout);
     }
     
     function testClonesOneRepository() {
@@ -570,7 +570,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $systemEventManager = new MockSystemEventManager();
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkRepositories($group_id, $repos, '', $user, $layout);
+        $action->forkIndividualRepositories($group_id, $repos, '', $user, $layout);
     }
     
 

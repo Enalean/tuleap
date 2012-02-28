@@ -83,7 +83,7 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         
         $git = new GitSpy();
         $git->expectAt(0, 'addAction', array('getProjectRepositoryList', array($groupId)));
-        $git->expectAt(1,'addAction', array('forkRepositories', array($groupId, $repos, $path, $user, $GLOBALS['HTML'])));
+        $git->expectAt(1,'addAction', array('forkIndividualRepositories', array($groupId, $repos, $path, $user, $GLOBALS['HTML'])));
         $request = new Codendi_Request(array('repos' => array('1001'),
             'path' => 'toto'));
         $git->_addInstanceVars(null, null, null, null, $groupId);

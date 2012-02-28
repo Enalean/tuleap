@@ -492,7 +492,7 @@ class Git extends PluginController {
         foreach ($repos_ids as $id) {
             $repos[] = $this->factory->getRepository($this->groupId, $id);
         }
-        $this->addAction('forkRepositories', array($this->groupId, $repos, $path, $user, $GLOBALS['HTML']));
+        $this->addAction('forkIndividualRepositories', array($this->groupId, $repos, $path, $user, $GLOBALS['HTML']));
         
     }
 }
