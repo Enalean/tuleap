@@ -24,7 +24,7 @@ require_once('GitForkCommand.class.php');
  * Child class that make a fork to an external project
  *
  */
-class GitForkExternalCommand extends GitForkCommand {
+class GitForkCrossProjectCommand extends GitForkCommand {
 
     /**
      * Constructor

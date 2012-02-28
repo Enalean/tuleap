@@ -32,7 +32,7 @@ require_once('Git_Backend_Gitolite.class.php');
 require_once('GitRepositoryFactory.class.php');
 require_once('common/layout/Layout.class.php');
 require_once('GitForkIndividualCommand.class.php');
-require_once('GitForkExternalCommand.class.php');
+require_once('GitForkCrossProjectCommand.class.php');
 
 /**
  * GitActions
@@ -501,23 +501,23 @@ class GitActions extends PluginActions {
      *
      * @return bool false if no repository has been cloned
      */
-    function forkIndividualRepositories($groupId, array $repos, $path, User $user, Layout $response) {
+    public function forkIndividualRepositories($groupId, array $repos, $path, User $user, Layout $response) {
         $forkCommand = new GitForkIndividualCommand($path);
         $redirect_url = '/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId();
         $this->executeForkCommand($forkCommand, $repos, $user, $response, $redirect_url);
     }
 
-    function forkCrossProject($groupId, array $repos, Project $to_project, User $user, Layout $response) {
+    public function forkCrossProjectRepositories($groupId, array $repos, Project $to_project, User $user, Layout $response) {
         $projectId = $to_project->getId();
         if (!$user->isMember($projectId, 'A')) {
             return $this->addError('must_be_admin_to_create_project_repo');
         }
-        $forkCommand = new GitForkExternalCommand($to_project);
+        $forkCommand = new GitForkCrossProjectCommand($to_project);
         $redirect_url = '/plugins/git/?group_id='. (int)$projectId;
         $this->executeForkCommand($forkCommand, $repos, $user, $response, $redirect_url);
     }
     
-    function executeForkCommand(GitForkCommand $command, array $repos, User $user, Layout $response, $redirect_url) {
+    private function executeForkCommand(GitForkCommand $command, array $repos, User $user, Layout $response, $redirect_url) {
         if ($command->fork($repos, $user)) {
             $this->addInfo('successfully_forked');
             $response->redirect($redirect_url);

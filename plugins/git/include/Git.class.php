@@ -460,7 +460,7 @@ class Git extends PluginController {
         foreach ($repoIds as $id) {
             $repos[] = $this->factory->getRepository($this->groupId, $id);
         }
-        $this->addAction('forkCrossProject', array($this->groupId, $repos, $to_project, $user, $GLOBALS['HTML']));
+        $this->addAction('forkCrossProjectRepositories', array($this->groupId, $repos, $to_project, $user, $GLOBALS['HTML']));
     }
 
     public function checkSynchronizerToken($url) {
