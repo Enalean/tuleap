@@ -505,17 +505,37 @@ class GitActions extends PluginActions {
         $this->executeForkCommand($forkCommand, $repos, $user, $response, $redirect_url);
     }
 
+    /**
+     * Fork a bunch of repositories in an external project for an admin of th e project
+     *
+     * Repositories those that don't belong to the project.
+     *
+     * @param array   $repos_ids  The array of id of repositories to fork
+     * @param Project $to_project The project where the new repositories will be forked
+     * @param User    $user       The owner of those new repositories
+     * @param Layout  $response   The response object
+     *
+     * @return null
+     */
     public function forkCrossProjectRepositories(array $repos, Project $to_project, User $user, Layout $response) {
-        $projectId = $to_project->getId();
-        if ($user->isMember($projectId, 'A')) {
-            $forkCommand = new GitForkCrossProjectCommand($to_project);
-            $redirect_url = '/plugins/git/?group_id='. (int)$projectId;
-            $this->executeForkCommand($forkCommand, $repos, $user, $response, $redirect_url);
+        $project_id = $to_project->getId();
+        if ($user->isMember($project_id, 'A')) {
+            $fork_command = new GitForkCrossProjectCommand($to_project);
+            $redirect_url = '/plugins/git/?group_id='. (int)$project_id;
+            $this->executeForkCommand($fork_command, $repos, $user, $response, $redirect_url);
         } else {
             $this->addError('must_be_admin_to_create_project_repo');
         }
     }
-    
+    /**
+     * Call the method fork on a forkCommand then redirect to the right URL or show an error
+     * 
+     * @param GitForkCommand $command      forkCommand object that do the fork
+     * @param array          $repos        a list of repositories
+     * @param User           $user         the user who asks for a fork
+     * @param Layout         $response     $GLOBALS['HTML']
+     * @param string         $redirect_url the page to return if succeed
+     */
     private function executeForkCommand(GitForkCommand $command, array $repos, User $user, Layout $response, $redirect_url) {
         if ($command->fork($repos, $user)) {
             $this->addInfo('successfully_forked');
@@ -524,12 +544,20 @@ class GitActions extends PluginActions {
             $this->addError('actions_no_repository_forked');
         }
     }
-    
+    /**
+     * Tell the controller to show the error $error
+     * 
+     * @param string $error error message to show
+     */
     protected function addError($error) {
         $controler = $this->getController();
         $controler->addError($this->getText($error));
     }
-    
+    /**
+     * Tell the controller to show an info referenced by first parameter
+     * 
+     * @param string $key_message message to display
+     */
     protected function addInfo($key_message) {
         $controler = $this->getController();
         $controler->addInfo($this->getText($key_message));
