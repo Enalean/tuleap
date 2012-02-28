@@ -31,7 +31,7 @@ abstract class GitForkCommand {
      *
      * @return bool whether dofork was called once or not
      */
-    public function fork($repos, User $user) {
+    public function fork(array $repos, User $user) {
         $forked = false;
         $repos  = array_filter($repos);
         foreach($repos as $repo) {
@@ -47,7 +47,7 @@ abstract class GitForkCommand {
         return $forked;
     }
 
-    public function forkRepo(GitRepository $repo, $user, $namespace, $scope, $project) {
+    public function forkRepo(GitRepository $repo, User $user, $namespace, $scope, Project $project) {
         $clone = clone $repo;
         $clone->setProject($project);
         $clone->setCreator($user);
