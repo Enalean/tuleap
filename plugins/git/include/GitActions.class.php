@@ -506,48 +506,33 @@ class GitActions extends PluginActions {
         if ($forkCommand->fork($repos, $user)) {
             $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
         } else {
-            $this->_addError('actions_no_repository_selected');
+            $this->addError('actions_no_repository_selected');
         }
-        //$this->forkRepos($forkCommand, $groupId, $repos, $user, $response);
     }
 
     function forkCrossProject($groupId, array $repos, Project $to_project, User $user, Layout $response) {
-    	$projectId = $to_project->getId();
+        $projectId = $to_project->getId();
         if (!$user->isMember($projectId, 'A')) {
-            return $this->_addError('must_be_admin_to_create_project_repo');
+            return $this->addError('must_be_admin_to_create_project_repo');
         }
         $forkCommand = new GitForkExternalCommand($to_project);
         if ( $forkCommand->fork($repos, $user) ) {
+            $this->addInfo('successfully_forked');
             $response->redirect('/plugins/git/?group_id='. (int)$groupId);
         } else {
-            $this->_addError('actions_no_repository_selected');
+            $this->addError('actions_no_repository_selected');
         }
-        //$this->forkRepos($forkCommand, $projectId, $repos, $user, $response);
     }
-    /*
-    function forkRepos($forkCommand, $groupId, array $repos, User $user, Layout $response) {
-        $forked = $forkCommand->fork($repos, $user);
-        if ($forked) {
-            $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
-        } else {
-            $this->_addError('actions_no_repository_selected');
-        }
-        return $forked;
-    }
-    */
     
-    
-    protected function _addError($error) {
-        
+    protected function addError($error) {
         $controler = $this->getController();
         $controler->addError($this->getText($error));
     }
     
-    
-        
-
-            
-        
+    protected function addInfo($key_message) {
+        $controler = $this->getController();
+        $controler->addInfo($this->getText($key_message));
+    }
 }
 
 

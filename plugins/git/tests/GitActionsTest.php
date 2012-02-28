@@ -40,6 +40,7 @@ class AbstractGitActionsTest extends UnitTestCase {
         function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage();
         $GLOBALS['Language']->setReturnValue('getText', 'actions_no_repository_selected', array('plugin_git', 'actions_no_repository_selected', '*'));
+        $GLOBALS['Language']->setReturnValue('getText', 'successfully_forked', array('plugin_git', 'successfully_forked', '*'));
     }
     function tearDown() {
         unset($GLOBALS['Language']);
@@ -638,6 +639,8 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $backend->expectOnce('fork');
         
         $controller = new MockGit($this);
+        $controller->expectOnce('addInfo', array('successfully_forked'));
+        
         $repo = new MockGitRepository();
         $repo->setReturnValue('getId', $repo_id);
         $repo->setReturnValue('userCanRead', true, array($user));
@@ -650,7 +653,6 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         
         $action = new GitActions($controller, $systemEventManager);
         $action->forkCrossProject($project_id, $repos, $to_project, $user, $layout);
-    	
     }
 
 }

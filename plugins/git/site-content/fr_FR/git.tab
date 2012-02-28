@@ -150,6 +150,7 @@ plugin_git	fork_destination_project	Choisir un projet de destination
 plugin_git	fork_malformed_path	Le chemin ne peut pas contenir (..)
 plugin_git	fork_choose_destination_project	Copier vers un autre projet
 plugin_git	fork_choose_destination_personal	Créer les dépôts personnels
+plugin_git	successfully_forked	Fork créé avec succès
 
 plugin_git	tree_view_repository	Dépôt
 plugin_git	tree_view_description	Description
