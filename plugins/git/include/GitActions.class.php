@@ -31,8 +31,6 @@ require_once('Git_GitoliteDriver.class.php');
 require_once('Git_Backend_Gitolite.class.php');
 require_once('GitRepositoryFactory.class.php');
 require_once('common/layout/Layout.class.php');
-require_once('GitForkIndividualCommand.class.php');
-require_once('GitForkCrossProjectCommand.class.php');
 
 /**
  * GitActions
@@ -499,10 +497,15 @@ class GitActions extends PluginActions {
      * @param User   $user      The owner of those new repositories
      * @param Layout $response  The response object
      */
-    public function forkIndividualRepositories($groupId, array $repos, $path, User $user, Layout $response) {
-        $forkCommand = new GitForkIndividualCommand($path);
-        $redirect_url = '/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId();
-        $this->executeForkCommand($forkCommand, $repos, $user, $response, $redirect_url);
+    public function forkIndividualRepositories(array $repos, Project $to_project, $path, User $user, Layout $response) {
+        $project_id = $to_project->getId();
+        $redirect_url = '/plugins/git/?group_id='. (int)$project_id .'&user='. (int)$user->getId();
+        if ($this->fork($repos, $user, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $to_project)) {
+            $this->addInfo('successfully_forked');
+            $response->redirect($redirect_url);
+        } else {
+            $this->addError('actions_no_repository_forked');
+        }
     }
 
     /**
@@ -519,39 +522,28 @@ class GitActions extends PluginActions {
      */
     public function forkCrossProjectRepositories(array $repos, Project $to_project, User $user, Layout $response) {
         $project_id = $to_project->getId();
+        $namespace  = '';
         if ($user->isMember($project_id, 'A')) {
-            $fork_command = new GitForkCrossProjectCommand($to_project);
             $redirect_url = '/plugins/git/?group_id='. (int)$project_id;
-            $this->executeForkCommand($fork_command, $repos, $user, $response, $redirect_url);
+            if ($this->fork($repos, $user, $namespace, GitRepository::REPO_SCOPE_PROJECT, $to_project)) {
+                $this->addInfo('successfully_forked');
+                $response->redirect($redirect_url);
+            } else {
+                $this->addError('actions_no_repository_forked');
+            }
         } else {
             $this->addError('must_be_admin_to_create_project_repo');
         }
     }
-    /**
-     * Call the method fork on a forkCommand then redirect to the right URL or show an error
-     * 
-     * @param GitForkCommand $command      forkCommand object that do the fork
-     * @param array          $repos        a list of repositories
-     * @param User           $user         the user who asks for a fork
-     * @param Layout         $response     $GLOBALS['HTML']
-     * @param string         $redirect_url the page to return if succeed
-     */
-    private function executeForkCommand(GitForkCommand $command, array $repos, User $user, Layout $response, $redirect_url) {
-        if ($command->fork($repos, $user)) {
-            $this->addInfo('successfully_forked');
-            $response->redirect($redirect_url);
-        } else {
-            $this->addError('actions_no_repository_forked');
-        }
-    }
+    
     /**
      * Tell the controller to show the error $error
      * 
      * @param string $error error message to show
      */
-    protected function addError($error) {
+    protected function addError($key_message) {
         $controler = $this->getController();
-        $controler->addError($this->getText($error));
+        $controler->addError($this->getText($key_message));
     }
     /**
      * Tell the controller to show an info referenced by first parameter
@@ -562,7 +554,43 @@ class GitActions extends PluginActions {
         $controler = $this->getController();
         $controler->addInfo($this->getText($key_message));
     }
-}
+    
+    /**
+     * Fork a list of repositories for the given user
+     *
+     * @param array $repos a list of GitRepository
+     * @param User $user
+     *
+     * @return bool whether dofork was called once or not
+     */
+    public function fork(array $repos, User $user, $namespace, $scope, Project $project) {
+        $forked = false;
+        $repos  = array_filter($repos);
+        foreach($repos as $repo) {
+            try {
+                if ($repo->userCanRead($user)) {
+                    $this->forkRepo($repo, $user, $namespace, $scope, $project);
+                    $forked = true;
+                }
+            } catch (Exception $e) {
+                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_exists', array($repo->getName())));
+            }
+        }
+        return $forked;
+    }
 
+    private function forkRepo(GitRepository $repo, User $user, $namespace, $scope, Project $project) {
+        $clone = clone $repo;
+        $clone->setProject($project);
+        $clone->setCreator($user);
+        $clone->setParent($repo);
+        $clone->setNamespace($namespace);
+        $clone->setId(null);
+        $path = unixPathJoin(array($project->getUnixName(), $namespace, $repo->getName())).'.git';
+        $clone->setPath($path);
+        $clone->setScope($scope);
+        $repo->getBackend()->fork($repo, $clone);
+    }
+}
 
 ?>

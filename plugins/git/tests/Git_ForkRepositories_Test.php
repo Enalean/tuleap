@@ -20,26 +20,14 @@
 
 class Git_ForkRepositories_Test extends TuleapTestCase {
     
-    private function addInstanceVarsToGitObject(Git $git, $request, $userManager, $action = null, $permittedActions = null, $groupId = null) {
-        if ($request) {
-            $git->setRequest($request);
-        }
-        if ($userManager) {
-            $git->setUserManager($userManager);
-        }
-        $git->setAction($action);
-        $git->setPermittedActions($permittedActions);
-        $git->setGroupId($groupId);
-    }
-    
     public function testRenders_ForkRepositories_View() {
         Mock::generatePartial('Git', 'GitSpy2', array('_doDispatchForkRepositories', 'addView'));
-        $git = new GitSpy2();
         $request = new Codendi_Request(array('choose_destination' => 'personal'));
-        $this->addInstanceVarsToGitObject($git, $request, null);
+        
+        $git = new GitSpy2();
+        $git->setRequest($request);
         $git->expectOnce('addView', array('forkRepositories'));
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
-
     }
     
     public function testExecutes_ForkRepositories_ActionWithAListOfRepos() {
@@ -50,16 +38,22 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $user->setUserName('Ben');
         $path = userRepoPath('Ben', 'toto');
         
+        $project = new MockProject();
+        
+        $projectManager = new MockProjectManager();
+        $projectManager->setReturnValue('getProject', $project, array($groupId));
+        
         $factory = new MockGitRepositoryFactory();
         $factory->setReturnValue('getRepository', $repo);
         
         $git = new GitSpy();
+        $git->setGroupId($groupId);
+        $git->setProjectManager($projectManager);
         $git->expectAt(0, 'addAction', array('getProjectRepositoryList', array($groupId)));
-        $git->expectAt(1,'addAction', array('forkIndividualRepositories', array($groupId, $repos, $path, $user, $GLOBALS['HTML'])));
+        $git->expectAt(1,'addAction', array('forkIndividualRepositories', array($repos, $project, $path, $user, $GLOBALS['HTML'])));
         $request = new Codendi_Request(array(
             'repos' => array('1001'),
             'path'  => 'toto'));
-        $this->addInstanceVarsToGitObject($git, null, null, null, null, $groupId);
         $git->setFactory($factory);
         $git->_doDispatchForkRepositories($request, $user);
     }
@@ -67,7 +61,7 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
     public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() {
         $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken'));
         $git->throwOn('checkSynchronizerToken', new Exception());
-        $this->addInstanceVarsToGitObject($git, null, null, null, null, 101);
+        $git->setGroupId(101);
         $this->expectException();
         $git->_doDispatchForkRepositories(null, null);
 

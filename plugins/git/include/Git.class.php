@@ -495,8 +495,9 @@ class Git extends PluginController {
         if($request->validArray($valid)) {
             $repos_ids = $request->get('repos');
         }
-        $repos = $this->getRepositoriesFromIds($repos_ids);
-        $this->addAction('forkIndividualRepositories', array($this->groupId, $repos, $path, $user, $GLOBALS['HTML']));
+        $to_project = $this->projectManager->getProject($this->groupId);
+        $repos      = $this->getRepositoriesFromIds($repos_ids);
+        $this->addAction('forkIndividualRepositories', array($repos, $to_project, $path, $user, $GLOBALS['HTML']));
         
     }
     

@@ -34,18 +34,17 @@ Mock::generate('GitRepositoryFactory');
 Mock::generate('User');
 Mock::generate('SystemEventManager');
 Mock::generate('Layout');
-Mock::generate('GitForkIndividualCommand');
+require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');
 Mock::generate('Git_Backend_Gitolite');
-class AbstractGitActionsTest extends UnitTestCase {
-        function setUp() {
-        $GLOBALS['Language'] = new MockBaseLanguage();
+
+class AbstractGitActionsTest extends TuleapTestCase {
+    function setUp() {
+        parent::setUp();
         $GLOBALS['Language']->setReturnValue('getText', 'actions_no_repository_forked', array('plugin_git', 'actions_no_repository_forked', '*'));
         $GLOBALS['Language']->setReturnValue('getText', 'successfully_forked', array('plugin_git', 'successfully_forked', '*'));
     }
-    function tearDown() {
-        unset($GLOBALS['Language']);
-    }
 }
+
 class GitActionsTest extends AbstractGitActionsTest {
 
     function testRepoManagement() {
@@ -436,13 +435,17 @@ class GitActionsTest extends AbstractGitActionsTest {
 
 }
 class GitActions_Fork_Test extends AbstractGitActionsTest {
-    function testForkRepositories() {
+    
+    function testForkIndividualRepositories() {
         $path  = 'toto';
         $group_id = 101;
         
         $user = new MockUser();
         $user->setReturnValue('getId', 123);
+        
         $project = new MockProject();
+        $project->setReturnValue('getId', $group_id);
+        
         $backend = new MockGit_Backend_Gitolite();
         $backend->expectOnce('fork');
         
@@ -458,7 +461,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $controller = new MockGit($this);
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkIndividualRepositories($group_id, array($repo), $path, $user, $layout);
+        $action->forkIndividualRepositories(array($repo), $project, $path, $user, $layout);
     }
     
     function testClonesManyInternalRepositories() {
@@ -469,6 +472,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $user->setReturnValue('getId', 123);
         
         $project = new MockProject();
+        $project->setReturnValue('getId', $group_id);
         
         $layout = new MockLayout();
         $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
@@ -490,7 +494,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $controller = new MockGit($this);
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkIndividualRepositories($group_id, $repos, $path, $user, $layout);
+        $action->forkIndividualRepositories($repos, $project, $path, $user, $layout);
     }
     function testCloneManyCrossProjectRepositories() {
         
@@ -532,6 +536,9 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
 
         $repos = array();
         $user = new MockUser();
+        
+        $project = new MockProject();
+        $project->setReturnValue('getId', $group_id);
                 
         $layout = new MockLayout();
         $layout->expectNever('redirect');
@@ -540,7 +547,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $controller->expectOnce('addError', array('actions_no_repository_forked'));
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkIndividualRepositories($group_id, $repos, '', $user, $layout);
+        $action->forkIndividualRepositories($repos, $project, '', $user, $layout);
     }
     
     function testClonesOneRepository() {
@@ -549,9 +556,11 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         
         $user = new MockUser();
         $user->setReturnValue('getId', 123);
+        
         $project = new MockProject();
-        $project->setReturnValue('getId', 2);
+        $project->setReturnValue('getId', $group_id);
         $project->setReturnValue('getUnixName', '');
+        
         $backend = new MockGit_Backend_Gitolite();
         $backend->expectOnce('fork');
         $layout = new MockLayout();
@@ -568,7 +577,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $systemEventManager = new MockSystemEventManager();
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkIndividualRepositories($group_id, $repos, '', $user, $layout);
+        $action->forkIndividualRepositories($repos, $project, '', $user, $layout);
     }
     
 
@@ -636,7 +645,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $backend = new MockGit_Backend_Gitolite();
         $backend->expectOnce('fork');
         
-        $controller = new MockGit($this);
+        $controller = new MockGit();
         $controller->expectOnce('addInfo', array('successfully_forked'));
         
         $repo = new MockGitRepository();
@@ -653,6 +662,49 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $action->forkCrossProjectRepositories($repos, $to_project, $user, $layout);
     }
 
+    function testForkShouldNotCloneAnyNonExistentRepositories() {
+        $project = new MockProject();
+        $backend = new MockGit_Backend_Gitolite();
+        $backend->expectOnce('fork');
+        $repo = $this->GivenARepository(123, $backend);
+        
+        $controller         = new MockGit();
+        $systemEventManager = new MockSystemEventManager();
+        
+        $user   = new MockUser();
+        $action = new GitActions($controller, $systemEventManager);
+        $action->fork(array($repo, null), $user, null, null, $project);
+    }
+    
+    private function GivenARepository($id, $backend) {
+        $project = new MockProject();
+        $repo    = new MockGitRepository();
+        $repo->setReturnValue('getId', $id);
+        $repo->setReturnValue('userCanRead', true);
+        $repo->setReturnValue('getProject', $project);
+        $repo->setReturnValue('getBackend', $backend);
+        return $repo;
+    }
+    
+    function testForkShouldIgnoreAlreadyExistingRepository() {
+        $errorMessage = 'Repository Xxx already exists';
+        $GLOBALS['Language']->setReturnValue('getText', $errorMessage);
+        $GLOBALS['Response']->expectOnce('addFeedback', array('warning', $errorMessage));
+        $project = new MockProject();
+        $backend = new MockGit_Backend_Gitolite();
+        $backend->throwAt(1, 'fork');
+        $repo1 = $this->GivenARepository(123, $backend);
+        $repo2 = $this->GivenARepository(456, $backend);
+        $repo3 = $this->GivenARepository(789, $backend);
+        $repositories = array($repo1, $repo2, $repo3);
+        
+        $controller         = new MockGit();
+        $systemEventManager = new MockSystemEventManager();
+        
+        $user   = new MockUser();
+        $action = new GitActions($controller, $systemEventManager);
+        $action->fork($repositories, $user, null, null, $project);
+    }
 }
 
 ?>
