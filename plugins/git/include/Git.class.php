@@ -467,7 +467,7 @@ class Git extends PluginController {
         $to_project    = $this->projectManager->getProject($to_project_id);
         $repos_ids     = $request->get('repos');
         $repos         = $this->getRepositoriesFromIds($repos_ids);
-        $this->addAction('forkCrossProjectRepositories', array($this->groupId, $repos, $to_project, $user, $GLOBALS['HTML']));
+        $this->addAction('forkCrossProjectRepositories', array($repos, $to_project, $user, $GLOBALS['HTML']));
     }
 
     protected function checkSynchronizerToken($url) {

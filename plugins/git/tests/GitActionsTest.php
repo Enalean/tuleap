@@ -495,7 +495,6 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
     function testCloneManyCrossProjectRepositories() {
         
         $path  = '';
-        $group_id = 101;
          
         $user = new MockUser();
         $user->setReturnValue('getId', 123);
@@ -505,7 +504,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $to_project = new MockProject();
         $to_project->setReturnValue('getId', $project_id);
          
-        $repo_ids = array('1', '2', '3');        
+        $repo_ids = array('1', '2', '3');
         $repos = array();
         foreach ($repo_ids as $id) {
             $backend = new MockGit_Backend_Gitolite();
@@ -525,8 +524,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
         
-        $action->forkCrossProjectRepositories($group_id, $repos, $to_project, $user, $layout);
-        
+        $action->forkCrossProjectRepositories($repos, $to_project, $user, $layout);
     }
     
     function testWhenNoRepositorySelectedItAddsWarning() {
@@ -576,7 +574,6 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
 
     function testDoesntCloneUnreadableRepos() {
         $repositories = array('1', '2', '3');
-        $group_id = 101;
         
         $user = new MockUser();
         $user->setReturnValue('getId', 123);
@@ -592,7 +589,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $layout->expectNever('redirect');
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkCrossProjectRepositories($group_id, $repos, $to_project, $user, $layout);
+        $action->forkCrossProjectRepositories($repos, $to_project, $user, $layout);
     }
     
     function testUserMustBeAdminOfTheDestinationProject() {
@@ -611,7 +608,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         
         $controller->expectOnce('addError', array($adminMsg));
         
-        $action->forkCrossProjectRepositories(null, array(), $to_project, $user, $layout);
+        $action->forkCrossProjectRepositories(array(), $to_project, $user, $layout);
     }
     
     protected function getRepoCollectionUnreadableFor($repo_ids, $user) {
@@ -653,7 +650,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $project_id));
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkCrossProjectRepositories($project_id, $repos, $to_project, $user, $layout);
+        $action->forkCrossProjectRepositories($repos, $to_project, $user, $layout);
     }
 
 }

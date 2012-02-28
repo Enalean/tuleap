@@ -505,7 +505,7 @@ class GitActions extends PluginActions {
         $this->executeForkCommand($forkCommand, $repos, $user, $response, $redirect_url);
     }
 
-    public function forkCrossProjectRepositories($groupId, array $repos, Project $to_project, User $user, Layout $response) {
+    public function forkCrossProjectRepositories(array $repos, Project $to_project, User $user, Layout $response) {
         $projectId = $to_project->getId();
         if ($user->isMember($projectId, 'A')) {
             $forkCommand = new GitForkCrossProjectCommand($to_project);

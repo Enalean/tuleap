@@ -159,7 +159,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $projectManager->setReturnValue('getProject', $toProject, array($toProjectId));
         $git = new GitSpy();
         $groupId = 101;
-        $git->expectOnce('addAction', array('forkCrossProjectRepositories', array($groupId, $repos, $toProject, $user, $GLOBALS['HTML'])));
+        $git->expectOnce('addAction', array('forkCrossProjectRepositories', array($repos, $toProject, $user, $GLOBALS['HTML'])));
         $git->expectOnce('addView', array('forkRepositories'));
 
         $request = new Codendi_Request(array(
@@ -180,7 +180,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $git = new GitSpyForErrors();
         $group_id = 11;
         $invalidRequestError = 'Invalid request';
-        $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter', array('repos')));
+        $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter_repos', '*'));
         
         $this->addInstanceVarsToGitObject($git, null, null, null, null, $group_id);
         $git->setFactory(new MockGitRepositoryFactory());
@@ -196,7 +196,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $git = new GitSpyForErrors();
         $group_id = 11;
         $invalidRequestError = 'Invalid request';
-        $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter', array('to_project')));
+        $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter_to_project', '*'));
 
         $this->addInstanceVarsToGitObject($git, null, null, null, null, $group_id);
         $git->expectOnce('addError', array($invalidRequestError));
