@@ -494,9 +494,8 @@ class GitActions extends PluginActions {
      * @param User   $user      The owner of those new repositories
      * @param Layout $response  The response object
      */
-    public function forkRepositories(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url) {
-        $project_id = $to_project->getId();
-        if ($this->fork($repos, $user, $namespace, $scope, $to_project)) {
+    public function fork(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url) {
+        if ($this->forkRepositories($repos, $user, $namespace, $scope, $to_project)) {
             $this->addInfo('successfully_forked');
             $response->redirect($redirect_url);
         } else {
@@ -531,7 +530,7 @@ class GitActions extends PluginActions {
      *
      * @return bool whether dofork was called once or not
      */
-    public function fork(array $repos, User $user, $namespace, $scope, Project $project) {
+    public function forkRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
         $forked = false;
         $repos  = array_filter($repos);
         foreach($repos as $repo) {

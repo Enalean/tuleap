@@ -353,7 +353,7 @@ class Git extends PluginController {
             #fork
             case 'fork':
                 $this->addAction('repoManagement', array($this->groupId, $repoId));
-                $this->addView('fork');
+                $this->addView('forkRepositories');
                 break;
             #confirm_private
             case 'confirm_private':
@@ -476,7 +476,7 @@ class Git extends PluginController {
             $namespace     = '';
             $scope         = GitRepository::REPO_SCOPE_PROJECT;
             $redirect_url  = '/plugins/git/?group_id='. (int)$to_project_id;
-            $this->addAction('forkRepositories', array($repos, $to_project, $namespace, $scope, $user, $GLOBALS['HTML'], $redirect_url));
+            $this->addAction('fork', array($repos, $to_project, $namespace, $scope, $user, $GLOBALS['HTML'], $redirect_url));
         } else {
             $this->addError($this->getText('must_be_admin_to_create_project_repo'));
         }
@@ -511,7 +511,7 @@ class Git extends PluginController {
         $repos        = $this->getRepositoriesFromIds($repos_ids);
         $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;
         $redirect_url = '/plugins/git/?group_id='. (int)$this->groupId .'&user='. (int)$user->getId();
-        $this->addAction('forkRepositories', array($repos, $to_project, $path, $scope, $user, $GLOBALS['HTML'], $redirect_url));
+        $this->addAction('fork', array($repos, $to_project, $path, $scope, $user, $GLOBALS['HTML'], $redirect_url));
         
     }
     
