@@ -499,7 +499,7 @@ class GitActions extends PluginActions {
      * @param User   $user      The owner of those new repositories
      * @param Layout $response  The response object
      *
-     * @return bool false if no repository has been cloned
+     * @return null
      */
     public function forkIndividualRepositories($groupId, array $repos, $path, User $user, Layout $response) {
         $forkCommand = new GitForkIndividualCommand($path);
@@ -509,12 +509,13 @@ class GitActions extends PluginActions {
 
     public function forkCrossProjectRepositories($groupId, array $repos, Project $to_project, User $user, Layout $response) {
         $projectId = $to_project->getId();
-        if (!$user->isMember($projectId, 'A')) {
-            return $this->addError('must_be_admin_to_create_project_repo');
+        if ($user->isMember($projectId, 'A')) {
+            $forkCommand = new GitForkCrossProjectCommand($to_project);
+            $redirect_url = '/plugins/git/?group_id='. (int)$projectId;
+            $this->executeForkCommand($forkCommand, $repos, $user, $response, $redirect_url);
+        } else {
+            $this->addError('must_be_admin_to_create_project_repo');
         }
-        $forkCommand = new GitForkCrossProjectCommand($to_project);
-        $redirect_url = '/plugins/git/?group_id='. (int)$projectId;
-        $this->executeForkCommand($forkCommand, $repos, $user, $response, $redirect_url);
     }
     
     private function executeForkCommand(GitForkCommand $command, array $repos, User $user, Layout $response, $redirect_url) {
