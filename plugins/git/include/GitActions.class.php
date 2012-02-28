@@ -504,6 +504,7 @@ class GitActions extends PluginActions {
     function forkRepositories($groupId, array $repos, $path, User $user, Layout $response) {
         $forkCommand = new GitForkIndividualCommand($path);
         if ($forkCommand->fork($repos, $user)) {
+            $this->addInfo('successfully_forked');
             $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
         } else {
             $this->addError('actions_no_repository_selected');
