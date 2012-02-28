@@ -30,16 +30,7 @@ class Rule_ArrayTest extends UnitTestCase {
         $this->assertTrue($r->isValid(array(1, 2)));
         $this->assertTrue($r->isValid(array('toto' => 'tata')));
         $this->assertFalse($r->isValid('toto'));
-        $this->assertFalse($r->isValid(new Rule_Array()));
+        $this->assertFalse($r->isValid(new StdClass()));
     }
-    function testValidatesWetherTheArgumentIsAnArray() {
-        $v = new Valid_Array();
-        $this->assertTrue($v->validate(array()));
-        $this->assertTrue($v->validate(array(1, 2)));
-        $this->assertTrue($v->validate(array('toto' => 'tata')));
-        $this->assertFalse($v->validate('toto'));
-        $this->assertFalse($v->validate(new Rule_Array()));
-    }
-
 }
 ?>
