@@ -118,11 +118,11 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $projectManager->setReturnValue('getProject', $toProject, array($toProjectId));
         $git = new GitSpy();
         $groupId = 101;
-        $git->expectOnce('addAction', array('forkCrossProject', array($groupId, $repos, $toProject, $user, $GLOBALS['HTML'])));
+        $git->expectOnce('addAction', array('forkCrossProjectRepositories', array($groupId, $repos, $toProject, $user, $GLOBALS['HTML'])));
         $git->expectOnce('addView', array('forkRepositories'));
 
         $request = new Codendi_Request(array(
-        								'choose_destination' => 'project',
+                                        'choose_destination' => 'project',
                                         'to_project' => $toProjectId,
                                         'repos' => $repo_ids));
 

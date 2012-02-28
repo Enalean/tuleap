@@ -492,7 +492,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $action = new GitActions($controller, $systemEventManager);
         $action->forkIndividualRepositories($group_id, $repos, $path, $user, $layout);
     }
-    function testCloneManyExternalRepositories() {
+    function testCloneManyCrossProjectRepositories() {
         
         $path  = '';
         $group_id = 101;
@@ -525,7 +525,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
         
-        $action->forkCrossProject($group_id, $repos, $to_project, $user, $layout);
+        $action->forkCrossProjectRepositories($group_id, $repos, $to_project, $user, $layout);
         
     }
     
@@ -592,7 +592,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $layout->expectNever('redirect');
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkCrossProject($group_id, $repos, $to_project, $user, $layout);
+        $action->forkCrossProjectRepositories($group_id, $repos, $to_project, $user, $layout);
     }
     
     function testUserMustBeAdminOfTheDestinationProject() {
@@ -611,7 +611,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         
         $controller->expectOnce('addError', array($adminMsg));
         
-        $action->forkCrossProject(null, array(), $to_project, $user, $layout);
+        $action->forkCrossProjectRepositories(null, array(), $to_project, $user, $layout);
     }
     
     protected function getRepoCollectionUnreadableFor($repo_ids, $user) {
@@ -653,7 +653,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $project_id));
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkCrossProject($project_id, $repos, $to_project, $user, $layout);
+        $action->forkCrossProjectRepositories($project_id, $repos, $to_project, $user, $layout);
     }
 
 }

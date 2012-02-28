@@ -232,7 +232,7 @@ class GitRepositoryTest extends UnitTestCase {
 
         $repo->fork($user, $namespace, GitRepository::REPO_SCOPE_INDIVIDUAL, $project);
     }
-    public function testForkExternalsClonesByChangingTheProjectAndPath() {
+    public function testForkCrossProjectClonesByChangingTheProjectAndPath() {
         $user = $this->_newUser("sandra");
         $backend = new MockGit_Backend_Gitolite();
         $project = new Mockproject();
