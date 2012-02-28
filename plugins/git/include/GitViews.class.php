@@ -655,7 +655,8 @@ class GitViews extends PluginViews {
         echo '</td>';
         
         echo '<td>';
-        echo '<input type="text" placeholder="'. $this->getText('fork_repositories_placeholder') .'" id="fork_repositories_path" name="path" />';
+        $placeholder = $this->getText('fork_repositories_placeholder');
+        echo '<input type="text" title="'. $placeholder .'" placeholder="'. $placeholder .'" id="fork_repositories_path" name="path" />';
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
         echo '</td>';
         

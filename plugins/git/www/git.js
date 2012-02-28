@@ -61,7 +61,6 @@ document.observe('dom:loaded', function () {
         
         var table = fork_repositories_prefix.up('table');
         
-        
         new PeriodicalExecuter(getPreviewUpdater(table, 3), 0.5);
 
         function toggleDestination(evt) {
@@ -70,11 +69,12 @@ document.observe('dom:loaded', function () {
                 fork_destination.enable();
                 fork_path.disable();
                 fork_path.placeholder = codendi.locales.git.path_placeholder_disabled; 
-                
+                fork_path.title       = codendi.locales.git.path_placeholder_disabled; 
             } else {
                 fork_destination.disable();
                 fork_path.enable();
                 fork_path.placeholder = codendi.locales.git.path_placeholder_enabled; 
+                fork_path.title       = codendi.locales.git.path_placeholder_enabled; 
             }
         }
         
