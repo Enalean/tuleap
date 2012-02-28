@@ -138,13 +138,19 @@ class Plugin {
         trigger_error("Plugin->_getThemePath() is deprecated. Please use Plugin->getThemePath() instead in ". $trace[0]['file'] ." at line ". $trace[0]['line'], E_USER_WARNING);
         return $this->getThemePath();
     }
+    
     public function getThemePath() {
-        $pm = $this->_getPluginManager();
+        if (!isset($GLOBALS['sys_user_theme'])) {
+            return null;
+        }
+        
+        $pluginName = $this->_getPluginManager()->getNameForPlugin($this);
+        
         $paths  = array($GLOBALS['sys_custompluginspath'], $GLOBALS['sys_pluginspath']);
         $roots  = array($GLOBALS['sys_custompluginsroot'], $GLOBALS['sys_pluginsroot']);
-        $dir    = '/'.$pm->getNameForPlugin($this).'/www/themes/';
+        $dir    = '/'. $pluginName .'/www/themes/';
         $dirs   = array($dir.$GLOBALS['sys_user_theme'], $dir.'default');
-        $dir    = '/'.$pm->getNameForPlugin($this).'/themes/';
+        $dir    = '/'. $pluginName .'/themes/';
         $themes = array($dir.$GLOBALS['sys_user_theme'], $dir.'default');
         $found = false;
         while (!$found && (list($kd, $dir) = each($dirs))) {
