@@ -161,3 +161,5 @@ project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le
 project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1
 
 plugin_git	fork_repository_exists	Le dépot $1 existe déjà sur la cible. Dépot ignoré.
+plugin_git  missing_parameter_to_project    Aucun projet sélectionné pour le fork
+plugin_git  missing_parameter_repos    Aucun dépôt sélectionné pour le fork

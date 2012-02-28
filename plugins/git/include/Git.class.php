@@ -448,15 +448,15 @@ class Git extends PluginController {
         foreach ($validators as $validator) {
             $validator->required();
             if (!$request->valid($validator)) {
-                $this->addError($this->getText('missing_parameter', array($validator->key)));
+                $this->addError($this->getText('missing_parameter_'. $validator->key));
                 $this->redirect('/plugins/git/?group_id='.$this->groupId);
                 return;
             }
         }
-        $toProjectId = $request->get('to_project');
-        $to_project  = $this->projectManager->getProject($toProjectId);
-        $repoIds     = $request->get('repos');
-        $repos       = $this->getRepositoriesFromIds($repoIds);
+        $to_project_id = $request->get('to_project');
+        $to_project  = $this->projectManager->getProject($to_project_id);
+        $repos_ids     = $request->get('repos');
+        $repos       = $this->getRepositoriesFromIds($repos_ids);
         $this->addAction('forkCrossProjectRepositories', array($this->groupId, $repos, $to_project, $user, $GLOBALS['HTML']));
     }
 

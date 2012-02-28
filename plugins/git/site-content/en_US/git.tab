@@ -164,3 +164,5 @@ project_admin_utils	perm_granted_for_git_repository	Permission granted for git r
 project_admin_utils	perm_reset_for_git_repository	Permission reset for git repository $1
 
 plugin_git	fork_repository_exists	Repository $1 already exists on target, skipped.
+plugin_git  missing_parameter_to_project    No project selected for the fork
+plugin_git  missing_parameter_repos    No repository selected for thr fork
