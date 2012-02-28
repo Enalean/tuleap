@@ -176,9 +176,12 @@ class GitViews extends PluginViews {
                 $repoActions .= '<li>'.$this->linkTo($this->getText('admin_repo_management'), '/plugins/git/?action=repo_management&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_admin"').'</li>';
             }
 
+            /** Disable fork of gitshell repositories **/
+            /*
             if ($initialized && $this->getController()->isAPermittedAction('clone') && !($repository->getBackend() instanceof Git_Backend_Gitolite)) {
                 $repoActions .= '<li>'.$this->linkTo($this->getText('admin_fork_creation_title'), '/plugins/git/?action=fork&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_fork"').'</li>';
             }
+            */
             $repoActions .= '</ul>';
 
             echo '<div id="plugin_git_reference">';
