@@ -26,7 +26,21 @@ Mock::generate('UserManager');
 Mock::generate('Project');
 Mock::generate('ProjectManager');
 Mock::generate('GitRepositoryFactory');
+
 class GitTest extends TuleapTestCase {
+    
+    private function addInstanceVarsToGitObject(Git $git, $request, $userManager, $action = null, $permittedActions = null, $groupId = null) {
+        if ($request) {
+            $git->setRequest($request);
+        }
+        if ($userManager) {
+            $git->setUserManager($userManager);
+        }
+        $git->setAction($action);
+        $git->setPermittedActions($permittedActions);
+        $git->setGroupId($groupId);
+    }
+    
     public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView() {
         $git = new GitSpy();
         $git->expectOnce('addAction', array('deleteRepository', '*'));
@@ -36,14 +50,14 @@ class GitTest extends TuleapTestCase {
         $unimportantGroupId = 101;
         $request = new HTTPRequest();
 
-        $git->_addInstanceVars($request, $usermanager, 'del', array('del'), $unimportantGroupId);
+        $this->addInstanceVarsToGitObject($git, $request, $usermanager, 'del', array('del'), $unimportantGroupId);
         $git->request();
     }
 
     public function testDispatchToForkRepositoriesIfRequestsPersonal() {
         $git = TestHelper::getPartialMock('Git', array('_doDispatchForkRepositories', 'addView'));
         $request = new Codendi_Request(array('choose_destination' => 'personal'));
-        $git->_addInstanceVars($request, null);
+        $this->addInstanceVarsToGitObject($git, $request, null);
         $git->expectOnce('_doDispatchForkRepositories');
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
 
@@ -52,7 +66,7 @@ class GitTest extends TuleapTestCase {
     public function testDispatchToForkCrossProjectIfRequestsProject() {
         $git = TestHelper::getPartialMock('Git', array('_doDispatchForkCrossProject', 'addView'));
         $request = new Codendi_Request(array('choose_destination' => 'project'));
-        $git->_addInstanceVars($request, null);
+        $this->addInstanceVarsToGitObject($git, $request, null);
         $git->expectOnce('_doDispatchForkCrossProject');
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
 
@@ -60,11 +74,24 @@ class GitTest extends TuleapTestCase {
 }
 
 class Git_ForkRepositories_Test extends TuleapTestCase {
+    
+    private function addInstanceVarsToGitObject(Git $git, $request, $userManager, $action = null, $permittedActions = null, $groupId = null) {
+        if ($request) {
+            $git->setRequest($request);
+        }
+        if ($userManager) {
+            $git->setUserManager($userManager);
+        }
+        $git->setAction($action);
+        $git->setPermittedActions($permittedActions);
+        $git->setGroupId($groupId);
+    }
+    
     public function testRenders_ForkRepositories_View() {
         Mock::generatePartial('Git', 'GitSpy2', array('_doDispatchForkRepositories', 'addView'));
         $git = new GitSpy2();
         $request = new Codendi_Request(array('choose_destination' => 'personal'));
-        $git->_addInstanceVars($request, null);
+        $this->addInstanceVarsToGitObject($git, $request, null);
         $git->expectOnce('addView', array('forkRepositories'));
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
 
@@ -87,7 +114,7 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $request = new Codendi_Request(array(
             'repos' => array('1001'),
             'path'  => 'toto'));
-        $git->_addInstanceVars(null, null, null, null, $groupId);
+        $this->addInstanceVarsToGitObject($git, null, null, null, null, $groupId);
         $git->setFactory($factory);
         $git->_doDispatchForkRepositories($request, $user);
     }
@@ -96,7 +123,7 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         Mock::generatePartial('Git', 'GitSpyToken', array('checkSynchronizerToken'));
         $git = new GitSpyToken();
         $git->throwOn('checkSynchronizerToken', new Exception());
-        $git->_addInstanceVars(null, null, null, null, 101);
+        $this->addInstanceVarsToGitObject($git, null, null, null, null, 101);
         $this->expectException();
         $git->_doDispatchForkRepositories(null, null);
 
@@ -104,6 +131,19 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
     
 }
 class Git_ForkCrossProject_Test extends TuleapTestCase {
+    
+    private function addInstanceVarsToGitObject(Git $git, $request, $userManager, $action = null, $permittedActions = null, $groupId = null) {
+        if ($request) {
+            $git->setRequest($request);
+        }
+        if ($userManager) {
+            $git->setUserManager($userManager);
+        }
+        $git->setAction($action);
+        $git->setPermittedActions($permittedActions);
+        $git->setGroupId($groupId);
+    }
+    
     public function testExecutes_ForkCrossProject_ActionWithForkRepositoriesView() {
         $user = new User();
         $toProjectId = 100;
@@ -127,7 +167,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
                                         'to_project' => $toProjectId,
                                         'repos' => $repo_ids));
 
-        $git->_addInstanceVars($request, $usermanager, null, null, $groupId);
+        $this->addInstanceVarsToGitObject($git, $request, $usermanager, null, null, $groupId);
         $git->setProjectManager($projectManager);
         $repositoryFactory = new MockGitRepositoryFactory();
         $repositoryFactory->setReturnValue('getRepository', $repo, array($groupId, $repo_ids[0]));
@@ -142,7 +182,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $invalidRequestError = 'Invalid request';
         $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter', array('repos')));
         
-        $git->_addInstanceVars(null, null, null, null, $group_id);
+        $this->addInstanceVarsToGitObject($git, null, null, null, null, $group_id);
         $git->setFactory(new MockGitRepositoryFactory());
         $git->expectOnce('addError', array($invalidRequestError));
         $git->expectOnce('redirect', array('/plugins/git/?group_id='.$group_id));
@@ -158,7 +198,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $invalidRequestError = 'Invalid request';
         $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter', array('to_project')));
 
-        $git->_addInstanceVars(null, null, null, null, $group_id);
+        $this->addInstanceVarsToGitObject($git, null, null, null, null, $group_id);
         $git->expectOnce('addError', array($invalidRequestError));
         $git->expectOnce('redirect', array('/plugins/git/?group_id='.$group_id));
 
@@ -170,12 +210,11 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
     public function testItUsesTheSynchronizerTokenToAvoidDuplicateForks() {
         $git = new GitSpyToken();
         $git->throwOn('checkSynchronizerToken', new Exception());
-        $git->_addInstanceVars(null, null, null, null, 101);
+        $this->addInstanceVarsToGitObject($git, null, null, null, null, 101);
         $this->expectException();
         $git->_doDispatchForkCrossProject(null, null);
 
     }
-
 }
 
 ?>

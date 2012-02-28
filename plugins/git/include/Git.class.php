@@ -124,15 +124,25 @@ class Git extends PluginController {
     public function setFactory(GitRepositoryFactory $factory) {
         $this->factory = $factory;
     }
-    /**
-     * Added for testing
-     */
-    public function _addInstanceVars($request, $userManager, $action = null, $permittedActions = null, $groupId = null) {
+    
+    public function setRequest(Codendi_Request $request) {
         $this->request = $request;
+    }
+    
+    public function setUserManager(UserManager $userManager) {
         $this->userManager = $userManager;
+    }
+    
+    public function setAction($action) {
         $this->action = $action;
-        $this->permittedActions = $permittedActions;
+    }
+    
+    public function setGroupId($groupId) {
         $this->groupId = $groupId;
+    }
+    
+    public function setPermittedActions($permittedActions) {
+        $this->permittedActions = $permittedActions;
     }
 
     protected function getText($key, $params = array()) {
