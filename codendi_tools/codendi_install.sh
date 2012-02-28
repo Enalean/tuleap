@@ -1289,13 +1289,25 @@ echo "path[]=\"$INSTALL_DIR/plugins/docman\"" >> /etc/codendi/forgeupgrade/confi
 if [ "$enable_plugin_tracker" = "true" ]; then
     build_dir /etc/codendi/plugins/tracker/etc codendiadm codendiadm 755
     $CAT $INSTALL_DIR/plugins/tracker/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+    $CAT <<EOF | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+INSERT INTO plugin (name, available) VALUES ('tracker', '1');
+EOF
     echo "path[]=\"$INSTALL_DIR/plugins/tracker\"" >> /etc/codendi/forgeupgrade/config.ini
+
+    # Import all templates
+    template_base_dir="$INSTALL_DIR/plugins/tracker/www/resources/templates"
+    /bin/ls $template_base_dir/Tracker_*.xml | while read xml_template; do
+	$INSTALL_DIR/src/utils/php-launcher.sh $INSTALL_DIR/plugins/tracker/bin/import_tracker_xml_template.php "$template_base_dir/$xml_template"
+    done
 fi
 
 # GraphOnTrackersv5 plugin
 if [ "$enable_plugin_graphontrackersv5" = "true" ]; then
     build_dir /etc/codendi/plugins/graphontrackersv5/etc codendiadm codendiadm 755
     $CAT $INSTALL_DIR/plugins/graphontrackersv5/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+    $CAT <<EOF | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
+INSERT INTO plugin (name, available) VALUES ('graphontrackersv5', '1');
+EOF
     echo "path[]=\"$INSTALL_DIR/plugins/graphontrackersv5\"" >> /etc/codendi/forgeupgrade/config.ini
 fi
 
