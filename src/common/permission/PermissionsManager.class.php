@@ -256,7 +256,7 @@ class PermissionsManager {
     * @param array  $ugroup_mapping, an array of ugroups
     * @param int    $duplicate_type What kind of duplication is going on
     * 
-    * @deprecated Use one of duplicateSameProject, duplicateNewProject, duplicateOtherProject below
+    * @deprecated Use one of duplicateWithStatic, duplicateWithStaticMapping, duplicateWithoutStatic below
     * 
     * @return Boolean
     */
