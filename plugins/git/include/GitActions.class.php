@@ -498,8 +498,6 @@ class GitActions extends PluginActions {
      * @param string $path      The path where the new repositories will live
      * @param User   $user      The owner of those new repositories
      * @param Layout $response  The response object
-     *
-     * @return null
      */
     public function forkIndividualRepositories($groupId, array $repos, $path, User $user, Layout $response) {
         $forkCommand = new GitForkIndividualCommand($path);
