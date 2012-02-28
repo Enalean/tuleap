@@ -33,7 +33,7 @@ abstract class GitForkCommand {
      */
     public function fork($repos, User $user) {
         $forked = false;
-        $repos  = $this->filterNullRepos($repos);
+        $repos  = array_filter($repos);
         foreach($repos as $repo) {
             try {
                 if ($repo->userCanRead($user)) {
@@ -58,17 +58,6 @@ abstract class GitForkCommand {
         $clone->setPath($path);
         $clone->setScope($scope);
         $repo->getBackend()->fork($repo, $clone);
-    }
-
-    /**
-     * Remove null values in the given array
-     *
-     * @param array $repos the list of repositories we would filter
-     *
-     * return array the given parameter without null values
-     */
-    protected function filterNullRepos(array $repos) {
-        return array_filter($repos);
     }
 
     /**
