@@ -18,37 +18,62 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 /**
-* Fork a bunch of repositories in a project for a given user
+ * Base class for fork commands
  *
-* Repositories that the user cannot access won't be forked as well as
-* those that don't belong to the project.
-*
-* @param int    $groupId    The project id
-* @param array  $repos_ids  The array of id of repositories to fork
-* @param string $to_project The path where the new repositories will live
-* @param User   $user       The owner of those new repositories
-* @param Layout $response   The response object
-*
-* @return bool false if no repository has been cloned
-*/
+ */
 abstract class GitForkCommands {
-    
-	public function fork($repos, User $user) {
-		$forked = false;
- 		$repos = $this->filterNullRepos($repos);
-		foreach($repos as $repo) {
-			if ($repo->userCanRead($user)) {
-				$this->dofork($repo, $user);
-				$forked = true;
-			}
-		}
-		return $forked;
-	}
-	
-	protected function filterNullRepos(array $repos) {
-	    return array_diff($repos, array(null));
-	}
-	
-	public abstract function dofork(GitRepository $repo, User $user);
+
+    /**
+     * Fork a list of repositories for the given user
+     *
+     * @param array $repos a list of GitRepository
+     * @param User $user
+     *
+     * @return bool whether dofork was called once or not
+     */
+    public function fork($repos, User $user) {
+        $forked = false;
+        $repos = $this->filterNullRepos($repos);
+        foreach($repos as $repo) {
+            if ($repo->userCanRead($user)) {
+                $this->dofork($repo, $user);
+                $forked = true;
+            }
+        }
+        return $forked;
+    }
+
+    public function forkRepo(GitRepository $repo, $user, $namespace, $scope, $project) {
+        $clone = clone $repo;
+        $clone->setProject($project);
+        $clone->setCreator($user);
+        $clone->setParent($repo);
+        $clone->setNamespace($namespace);
+        $clone->setId(null);
+        $path = unixPathJoin(array($project->getUnixName(), $namespace, $repo->getName())).'.git';
+        $clone->setPath($path);
+        $clone->setScope($scope);
+        $repo->getBackend()->fork($repo, $clone);
+    }
+    /**
+     * Remove null values in the given array
+     *
+     * @param array $repos the list of repositories we would filter
+     *
+     * return array the given parameter without null values
+     */
+    protected function filterNullRepos(array $repos) {
+        return array_filter($repos);
+    }
+
+    /**
+     * Fork repositoriy for a given user
+     *
+     * @param GitRepository $repo Git Repository to fork
+     * @param User			$user User which ask for a fork
+     *
+     * @return null just do it
+     */
+    public abstract function dofork(GitRepository $repo, User $user);
 }
 ?>

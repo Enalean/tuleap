@@ -75,7 +75,6 @@ class GitBackendTest extends GitUnitTestCase {
     //TODO make a stub for GitDriver 
     public function testCreateReference_DoesNotExist() {
         $this->repository->setReturnValue('exists', false);
-        //$repository->setReturnValue('getRootPath', 'myproject/mymodule');
         $this->repository->setReturnValue('getPath', 'myproject/mymodule/myrepo.git');
         $r = $this->backend->createReference($this->repository);        
         $this->assertTrue($r);        
@@ -98,7 +97,6 @@ class GitBackendTest extends GitUnitTestCase {
         $parent->setReturnValue('load', true);
         $parent->setReturnValue('getRootPath', 'myproject/mymodule/');
         $parent->setReturnValue('getPath', 'myproject/mymodule/myrepo.git');
-        //$parent->setReturnValue('getId', 1);
         $clone = new MockGitRepository();        
         $clone->setReturnReference('getParent', $parent);
         $clone->setReturnReference('getDao', $dao);

@@ -20,6 +20,8 @@
 require_once dirname(__FILE__).'/../include/GitRepository.class.php';
 Mock::generate('GitRepository');
 Mock::generate('User');
+Mock::generate('Project');
+Mock::generate('Git_Backend_Gitolite');
 
 class testGitForkIndividualCommand extends UnitTestCase {
     
@@ -29,8 +31,13 @@ class testGitForkIndividualCommand extends UnitTestCase {
      */
     function testForkShouldNotCloneAnyNonExistentRepositories() {
         $user = new MockUser();
+        $project = new MockProject();
+        $backend = new MockGit_Backend_Gitolite();
+        $backend->ExpectOnce('fork');
         $repo = new MockGitRepository();
         $repo->setReturnValue('userCanRead', true);
+        $repo->setReturnValue('getProject', $project);
+        $repo->setReturnValue('getBackend', $backend);
         $command = new GitForkIndividualCommand('');
         $command->fork(array($repo, null), $user);
         

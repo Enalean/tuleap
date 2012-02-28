@@ -18,13 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('GitForkCommands.class.php');
+/**
+ * Child class that make a fork to an external project
+ *
+ */
 class GitForkExternalCommand extends GitForkCommands {
-	public function __construct($to_project) {
+    /**
+     * Constructor
+     * 
+     * @param Project $to_project the destination project of the fork
+     */
+	public function __construct(Project $to_project) {
 		$this->to_project = $to_project;
 	}
-
+	/**
+	 * call fork with right paramters
+	 * 
+     * @param GitRepository $repo Git Repository to fork  
+     * @param User			$user User which ask for a fork
+     *
+	 * @see GitForkCommands::dofork()
+	 * @return null
+	 */
 	public function dofork(GitRepository $repo, User $user) {
-        $repo->fork($user, '', GitRepository::REPO_SCOPE_PROJECT, $this->to_project);
+	    
+	    $this->forkRepo($repo, $user, '', GitRepository::REPO_SCOPE_PROJECT, $this->to_project);
 	}
 }
 ?>

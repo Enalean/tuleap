@@ -617,7 +617,7 @@ class GitRepository implements DVCSRepository {
         $this->getBackend()->createFork($clone);
     }
     
-    public function fork($user, $namespace, $scope, $project) {
+    public function fork($user, $namespace, $scope, Project $project) {
         $clone = clone $this;
         $clone->setProject($project);
         $clone->setCreator($user);
