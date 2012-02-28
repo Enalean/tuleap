@@ -536,7 +536,7 @@ class GitActions extends PluginActions {
         foreach($repos as $repo) {
             try {
                 if ($repo->userCanRead($user)) {
-                    $this->forkRepo($repo, $user, $namespace, $scope, $project);
+                    $repo->fork($user, $namespace, $scope, $project);
                     $forked = true;
                 }
             } catch (Exception $e) {
@@ -544,19 +544,6 @@ class GitActions extends PluginActions {
             }
         }
         return $forked;
-    }
-
-    private function forkRepo(GitRepository $repo, User $user, $namespace, $scope, Project $project) {
-        $clone = clone $repo;
-        $clone->setProject($project);
-        $clone->setCreator($user);
-        $clone->setParent($repo);
-        $clone->setNamespace($namespace);
-        $clone->setId(null);
-        $path = unixPathJoin(array($project->getUnixName(), $namespace, $repo->getName())).'.git';
-        $clone->setPath($path);
-        $clone->setScope($scope);
-        $repo->getBackend()->fork($repo, $clone);
     }
 }
 
