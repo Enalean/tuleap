@@ -21,7 +21,7 @@
  * Base class for fork commands
  *
  */
-abstract class GitForkCommands {
+abstract class GitForkCommand {
 
     /**
      * Fork a list of repositories for the given user
@@ -55,6 +55,7 @@ abstract class GitForkCommands {
         $clone->setScope($scope);
         $repo->getBackend()->fork($repo, $clone);
     }
+
     /**
      * Remove null values in the given array
      *
@@ -70,7 +71,7 @@ abstract class GitForkCommands {
      * Fork repositoriy for a given user
      *
      * @param GitRepository $repo Git Repository to fork
-     * @param User			$user User which ask for a fork
+     * @param User          $user User which ask for a fork
      *
      * @return null just do it
      */

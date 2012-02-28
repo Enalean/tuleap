@@ -17,27 +17,29 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('GitForkCommands.class.php');
-class GitForkIndividualCommand extends GitForkCommands {
+
+require_once('GitForkCommand.class.php');
+
+class GitForkIndividualCommand extends GitForkCommand {
     /**
      * Constructor
      * 
      * @param String $path the destination path of the fork
      */
-	public function __construct($path) {
-		$this->path = $path;
-	}
-	/**
-	 * call fork with right paramters
-	 * 
+    public function __construct($path) {
+        $this->path = $path;
+    }
+    /**
+     * call fork with right paramters
+     * 
      * @param GitRepository $repo Git Repository to fork  
-     * @param User			$user User which ask for a fork
+     * @param User          $user User which ask for a fork
      *
-	 * @see GitForkCommands::dofork()
-	 * @return null
-	 */
-	public function dofork(GitRepository $repo, User $user) {
-	    $this->forkRepo($repo, $user,  $this->path, GitRepository::REPO_SCOPE_INDIVIDUAL, $repo->getProject());
-	}
+     * @see GitForkCommand::dofork()
+     * @return null
+     */
+    public function dofork(GitRepository $repo, User $user) {
+        $this->forkRepo($repo, $user,  $this->path, GitRepository::REPO_SCOPE_INDIVIDUAL, $repo->getProject());
+    }
 }
 ?>
