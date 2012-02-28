@@ -97,7 +97,7 @@ class Git_GitoliteDriver {
                 $dir = new DirectoryIterator($headsPath);
                 foreach ($dir as $fileinfo) {
                     if (!$fileinfo->isDot()) {
-                        return true;
+                        return true;// return true at the first file it find ??
                     }
                 }
             }

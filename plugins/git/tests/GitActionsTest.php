@@ -500,9 +500,10 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $user = new MockUser();
         $user->setReturnValue('getId', 123);
         $user->setReturnValue('isMember', true);
-         
+
+        $project_id = 2;
         $to_project = new MockProject();
-        $to_project->setReturnValue('getId', 2);
+        $to_project->setReturnValue('getId', $project_id);
          
         $repo_ids = array('1', '2', '3');        
         $repos = array();
@@ -518,7 +519,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         }
         
         $layout = new MockLayout();
-        $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id));
+        $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $project_id));
         
         $controller = new MockGit($this);
         $systemEventManager = new MockSystemEventManager();
