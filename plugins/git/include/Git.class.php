@@ -42,6 +42,11 @@ class Git extends PluginController {
     }
 
     /**
+     * @var int
+     */
+    protected $groupId;
+    
+    /**
      * @var GitRepositoryFactory
      */
     protected $factory;
@@ -464,10 +469,14 @@ class Git extends PluginController {
             }
         }
         $to_project_id = $request->get('to_project');
-        $to_project    = $this->projectManager->getProject($to_project_id);
-        $repos_ids     = $request->get('repos');
-        $repos         = $this->getRepositoriesFromIds($repos_ids);
-        $this->addAction('forkCrossProjectRepositories', array($repos, $to_project, $user, $GLOBALS['HTML']));
+        if ($user->isMember($to_project_id, 'A')) {
+            $to_project    = $this->projectManager->getProject($to_project_id);
+            $repos_ids     = $request->get('repos');
+            $repos         = $this->getRepositoriesFromIds($repos_ids);
+            $this->addAction('forkCrossProjectRepositories', array($repos, $to_project, $user, $GLOBALS['HTML']));
+        } else {
+            $this->addError($this->getText('must_be_admin_to_create_project_repo'));
+        }
     }
 
     protected function checkSynchronizerToken($url) {

@@ -601,25 +601,6 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $action->forkCrossProjectRepositories($repos, $to_project, $user, $layout);
     }
     
-    function testUserMustBeAdminOfTheDestinationProject() {
-        $controller = new MockGit($this);
-        $action = new GitActions($controller, new MockSystemEventManager());
-        $layout = new MockLayout();
-
-        $to_project = new MockProject();
-        $to_project->setReturnValue('getId', 2);
-        
-        $user = new MockUser();
-        $user->setReturnValue('isMember', false, array($to_project->getId(), 'A'));
-        $layout->expectNever('redirect');
-        $adminMsg = 'must_be_admin_to_create_project_repo';
-        $GLOBALS['Language']->setReturnValue('getText', $adminMsg, array('plugin_git', $adminMsg, '*'));
-        
-        $controller->expectOnce('addError', array($adminMsg));
-        
-        $action->forkCrossProjectRepositories(array(), $to_project, $user, $layout);
-    }
-    
     protected function getRepoCollectionUnreadableFor($repo_ids, $user) {
         $return = array();
         foreach ($repo_ids as $id) {

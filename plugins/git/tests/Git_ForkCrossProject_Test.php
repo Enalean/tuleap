@@ -31,7 +31,8 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $repos = array($repo);
         $repo_ids = array(200);
         
-        $user = new User();
+        $user = new MockUser();
+        $user->setReturnValue('isMember', true);
         
         $usermanager = new MockUserManager();
         $usermanager->setReturnValue('getCurrentUser', $user);
@@ -98,6 +99,26 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $git->throwOn('checkSynchronizerToken', new Exception());
         $this->expectException();
         $git->_doDispatchForkCrossProject(null, null);
+    }
+    
+    function testUserMustBeAdminOfTheDestinationProject() {
+        $adminMsg = 'must_be_admin_to_create_project_repo';
+        $GLOBALS['Language']->setReturnValue('getText', $adminMsg, array('plugin_git', $adminMsg, '*'));
+        
+        $user = new MockUser();
+        $user->setReturnValue('isMember', false, array(666, 'A'));
+        
+        $request = new Codendi_Request(array(
+            'to_project' => 666,
+            'repos'      => array(1),
+        ));
+        
+        $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken', 'addError', 'addAction'));
+        $git->setGroupId(123);
+        $git->expectOnce('addError', array($adminMsg));
+        $git->expectNever('addAction');
+        
+        $git->_doDispatchForkCrossProject($request, $user);
     }
 }
 ?>

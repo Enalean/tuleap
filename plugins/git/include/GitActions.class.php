@@ -523,16 +523,12 @@ class GitActions extends PluginActions {
     public function forkCrossProjectRepositories(array $repos, Project $to_project, User $user, Layout $response) {
         $project_id = $to_project->getId();
         $namespace  = '';
-        if ($user->isMember($project_id, 'A')) {
-            $redirect_url = '/plugins/git/?group_id='. (int)$project_id;
-            if ($this->fork($repos, $user, $namespace, GitRepository::REPO_SCOPE_PROJECT, $to_project)) {
-                $this->addInfo('successfully_forked');
-                $response->redirect($redirect_url);
-            } else {
-                $this->addError('actions_no_repository_forked');
-            }
+        $redirect_url = '/plugins/git/?group_id='. (int)$project_id;
+        if ($this->fork($repos, $user, $namespace, GitRepository::REPO_SCOPE_PROJECT, $to_project)) {
+            $this->addInfo('successfully_forked');
+            $response->redirect($redirect_url);
         } else {
-            $this->addError('must_be_admin_to_create_project_repo');
+            $this->addError('actions_no_repository_forked');
         }
     }
     
