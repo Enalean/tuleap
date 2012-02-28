@@ -245,7 +245,7 @@ class GitRepository implements DVCSRepository {
      * @param GitRepository $parentRepository
      */
     public function setParent($parentRepository) {
-        $this->parent   = $parentRepository;       
+        $this->parent = $parentRepository;
     }
 
     /**
@@ -254,7 +254,7 @@ class GitRepository implements DVCSRepository {
      * @return GitRepository
      */
     public function getParent() {
-        if ( empty($this->parent) ) {            
+        if ( empty($this->parent) ) {
             $this->load();            
             $parent = new GitRepository();
             $parent->setId($this->parentId);
@@ -282,7 +282,7 @@ class GitRepository implements DVCSRepository {
      */
     public function getProject() {
         return $this->project;
-    }      
+    }
 
     public function getProjectId() {
         $project = $this->getProject();

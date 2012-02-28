@@ -192,10 +192,10 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         
         $backend->expectOnce('clonePermissions', array($old_repo, $new_repo));
         $dao->expectOnce('save', array($new_repo));
-        $dao->setReturnValue('isRepositoryExisting', false, array($new_repo_path));
-        $driver->expectOnce('fork', array($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace));        
+        $dao->setReturnValue('isRepositoryExisting', false, array('*', $new_repo_path));
+        $driver->expectOnce('fork', array($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace));
         $driver->expectOnce('dumpProjectRepoConf', array($project));
-        $driver->expectOnce('push');        
+        $driver->expectOnce('push');
 
         $backend->fork($old_repo, $new_repo);
     }
@@ -208,15 +208,12 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         
         $driver     = new MockGit_GitoliteDriver();
         $dao        = new MockGitDao();
-        $project    = new MockProject();
-        
-        $project->setReturnValue('getUnixName', 'gpig');
         
         $new_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $new_namespace);
-        $new_repo->setProject($project);
         $new_repo->setPath($new_repo_path);
+        $project_id = $new_repo->getProject()->getId();
+        
         $old_repo = $this->_GivenAGitRepoWithNameAndNamespace($name, $old_namespace);
-        $old_repo->setProject($project);
         
         $backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('clonePermissions'));
         $backend->__construct($driver);
@@ -226,7 +223,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         
         $backend->expectNever('clonePermissions');
         $dao->expectNever('save');
-        $dao->setReturnValue('isRepositoryExisting', true, array($new_repo_path));
+        $dao->setReturnValue('isRepositoryExisting', true, array($project_id, $new_repo_path));
         $driver->expectNever('fork');
         $driver->expectNever('dumpProjectRepoConf');
         $driver->expectNever('push');
@@ -242,6 +239,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         
         $project = new MockProject();
         $project->setReturnValue('getUnixName', 'gpig');
+        $project->setReturnValue('getId', 123);
         $repository->setProject($project);
         
         return $repository;
