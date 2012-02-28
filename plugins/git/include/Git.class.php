@@ -473,7 +473,10 @@ class Git extends PluginController {
             $to_project    = $this->projectManager->getProject($to_project_id);
             $repos_ids     = $request->get('repos');
             $repos         = $this->getRepositoriesFromIds($repos_ids);
-            $this->addAction('forkCrossProjectRepositories', array($repos, $to_project, $user, $GLOBALS['HTML']));
+            $namespace     = '';
+            $scope         = GitRepository::REPO_SCOPE_PROJECT;
+            $redirect_url  = '/plugins/git/?group_id='. (int)$to_project_id;
+            $this->addAction('forkRepositories', array($repos, $to_project, $namespace, $scope, $user, $GLOBALS['HTML'], $redirect_url));
         } else {
             $this->addError($this->getText('must_be_admin_to_create_project_repo'));
         }
@@ -504,9 +507,11 @@ class Git extends PluginController {
         if($request->validArray($valid)) {
             $repos_ids = $request->get('repos');
         }
-        $to_project = $this->projectManager->getProject($this->groupId);
-        $repos      = $this->getRepositoriesFromIds($repos_ids);
-        $this->addAction('forkIndividualRepositories', array($repos, $to_project, $path, $user, $GLOBALS['HTML']));
+        $to_project   = $this->projectManager->getProject($this->groupId);
+        $repos        = $this->getRepositoriesFromIds($repos_ids);
+        $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;
+        $redirect_url = '/plugins/git/?group_id='. (int)$this->groupId .'&user='. (int)$user->getId();
+        $this->addAction('forkRepositories', array($repos, $to_project, $path, $scope, $user, $GLOBALS['HTML'], $redirect_url));
         
     }
     

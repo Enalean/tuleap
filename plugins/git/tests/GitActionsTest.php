@@ -456,12 +456,12 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $repo->setReturnValue('getBackend', $backend);
         
         $layout = new MockLayout();
-        $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
+        $layout->expectOnce('redirect');
                 
         $controller = new MockGit($this);
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkIndividualRepositories(array($repo), $project, $path, $user, $layout);
+        $action->forkRepositories(array($repo), $project, $path, null, $user, $layout, null);
     }
     
     function testClonesManyInternalRepositories() {
@@ -475,7 +475,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $project->setReturnValue('getId', $group_id);
         
         $layout = new MockLayout();
-        $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
+        $layout->expectOnce('redirect');
         
         $repo_ids = array('1', '2', '3');
         
@@ -494,7 +494,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $controller = new MockGit($this);
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkIndividualRepositories($repos, $project, $path, $user, $layout);
+        $action->forkRepositories($repos, $project, $path, null, $user, $layout, null);
     }
     function testCloneManyCrossProjectRepositories() {
         
@@ -522,13 +522,13 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         }
         
         $layout = new MockLayout();
-        $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $project_id));
+        $layout->expectOnce('redirect');
         
         $controller = new MockGit($this);
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
         
-        $action->forkCrossProjectRepositories($repos, $to_project, $user, $layout);
+        $action->forkRepositories($repos, $to_project, '', null, $user, $layout, null);
     }
     
     function testWhenNoRepositorySelectedItAddsWarning() {
@@ -547,7 +547,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $controller->expectOnce('addError', array('actions_no_repository_forked'));
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkIndividualRepositories($repos, $project, '', $user, $layout);
+        $action->forkRepositories($repos, $project, '', null, $user, $layout, null);
     }
     
     function testClonesOneRepository() {
@@ -564,7 +564,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $backend = new MockGit_Backend_Gitolite();
         $backend->expectOnce('fork');
         $layout = new MockLayout();
-        $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
+        $layout->expectOnce('redirect');
         
         $repo = new MockGitRepository();
         $repo->setReturnValue('getId', $id);
@@ -577,7 +577,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $systemEventManager = new MockSystemEventManager();
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkIndividualRepositories($repos, $project, '', $user, $layout);
+        $action->forkRepositories($repos, $project, '', null, $user, $layout, null);
     }
     
 
@@ -598,7 +598,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $layout->expectNever('redirect');
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkCrossProjectRepositories($repos, $to_project, $user, $layout);
+        $action->forkRepositories($repos, $to_project, '', null, $user, $layout, null);
     }
     
     protected function getRepoCollectionUnreadableFor($repo_ids, $user) {
@@ -637,10 +637,10 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         
         $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
-        $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $project_id));
+        $layout->expectOnce('redirect');
         
         $action = new GitActions($controller, $systemEventManager);
-        $action->forkCrossProjectRepositories($repos, $to_project, $user, $layout);
+        $action->forkRepositories($repos, $to_project, '', null, $user, $layout, null);
     }
 
     function testForkShouldNotCloneAnyNonExistentRepositories() {

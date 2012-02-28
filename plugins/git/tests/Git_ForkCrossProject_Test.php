@@ -55,7 +55,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $git->setProjectManager($projectManager);
         $git->setFactory($repositoryFactory);
         
-        $git->expectOnce('addAction', array('forkCrossProjectRepositories', array($repos, $toProject, $user, $GLOBALS['HTML'])));
+        $git->expectOnce('addAction', array('forkRepositories', array($repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=100')));
         $git->expectOnce('addView', array('forkRepositories'));
         
         $git->_dispatchActionAndView('do_fork_repositories', null, null, $user);

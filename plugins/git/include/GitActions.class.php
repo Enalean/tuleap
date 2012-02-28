@@ -487,44 +487,16 @@ class GitActions extends PluginActions {
 
     /**
      * Fork a bunch of repositories in a project for a given user
-     *
-     * Repositories that the user cannot access won't be forked as well as 
-     * those that don't belong to the project.
      * 
      * @param int    $groupId   The project id
      * @param array  $repos_ids The array of id of repositories to fork
-     * @param string $path      The path where the new repositories will live
+     * @param string $namespace The namespace where the new repositories will live
      * @param User   $user      The owner of those new repositories
      * @param Layout $response  The response object
      */
-    public function forkIndividualRepositories(array $repos, Project $to_project, $path, User $user, Layout $response) {
+    public function forkRepositories(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url) {
         $project_id = $to_project->getId();
-        $redirect_url = '/plugins/git/?group_id='. (int)$project_id .'&user='. (int)$user->getId();
-        if ($this->fork($repos, $user, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $to_project)) {
-            $this->addInfo('successfully_forked');
-            $response->redirect($redirect_url);
-        } else {
-            $this->addError('actions_no_repository_forked');
-        }
-    }
-
-    /**
-     * Fork a bunch of repositories in an external project for an admin of th e project
-     *
-     * Repositories those that don't belong to the project.
-     *
-     * @param array   $repos_ids  The array of id of repositories to fork
-     * @param Project $to_project The project where the new repositories will be forked
-     * @param User    $user       The owner of those new repositories
-     * @param Layout  $response   The response object
-     *
-     * @return null
-     */
-    public function forkCrossProjectRepositories(array $repos, Project $to_project, User $user, Layout $response) {
-        $project_id = $to_project->getId();
-        $namespace  = '';
-        $redirect_url = '/plugins/git/?group_id='. (int)$project_id;
-        if ($this->fork($repos, $user, $namespace, GitRepository::REPO_SCOPE_PROJECT, $to_project)) {
+        if ($this->fork($repos, $user, $namespace, $scope, $to_project)) {
             $this->addInfo('successfully_forked');
             $response->redirect($redirect_url);
         } else {
