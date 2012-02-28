@@ -33,7 +33,7 @@ abstract class GitForkCommand {
      */
     public function fork($repos, User $user) {
         $forked = false;
-        $repos = $this->filterNullRepos($repos);
+        $repos  = $this->filterNullRepos($repos);
         foreach($repos as $repo) {
             try {
                 if ($repo->userCanRead($user)) {

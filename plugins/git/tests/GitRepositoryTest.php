@@ -346,9 +346,6 @@ class GitRepositoryTest extends UnitTestCase {
         
         $this->assertFalse($repo->belongsTo($user));
     }
-    
-
-
 }
 
 ?>

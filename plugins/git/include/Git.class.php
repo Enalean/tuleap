@@ -372,11 +372,11 @@ class Git extends PluginController {
                 break;
             case 'do_fork_repositories':
                 try {
-                	if ($this->request->get('choose_destination') == 'personal') {
-                    	$this->_doDispatchForkRepositories($this->request, $user);
-                	} else {
-                		$this->_doDispatchForkCrossProject($this->request, $user);
-                	}
+                    if ($this->request->get('choose_destination') == 'personal') {
+                        $this->_doDispatchForkRepositories($this->request, $user);
+                    } else {
+                        $this->_doDispatchForkCrossProject($this->request, $user);
+                    }
                 } catch (MalformedPathException $e) {
                     $this->addError($this->getText('fork_malformed_path'));
                 }
@@ -396,8 +396,6 @@ class Git extends PluginController {
                 $this->addView('index');
                 break;
         }
-        
-        
     }
 
     protected function _informAboutPendingEvents($repoId) {

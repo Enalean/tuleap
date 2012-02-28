@@ -462,29 +462,29 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
     }
     
     function testClonesManyInternalRepositories() {    	
-    	$path  = 'toto';
-    	$group_id = 101;
-    	
-    	$user = new MockUser();
-    	$user->setReturnValue('getId', 123);
-    	
-    	$project = new MockProject();
-    	
-    	$layout = new MockLayout();
-    	$layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
-    	
+        $path  = 'toto';
+        $group_id = 101;
+        
+        $user = new MockUser();
+        $user->setReturnValue('getId', 123);
+        
+        $project = new MockProject();
+        
+        $layout = new MockLayout();
+        $layout->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id .'&user='. $user->getId()));
+        
         $repo_ids = array('1', '2', '3');
         
         $repos = array();
         foreach ($repo_ids as $id) {
             $backend = new MockGit_Backend_Gitolite();
             $backend->expectOnce('fork');
-        	$repo = new MockGitRepository();
-        	$repo->setReturnValue('getId', $id);
-        	$repo->setReturnValue('userCanRead', true, array($user));
-        	$repo->setReturnValue('getProject', $project);
-        	$repo->setReturnValue('getBackend', $backend);
-        	$repos[] = $repo;
+            $repo = new MockGitRepository();
+            $repo->setReturnValue('getId', $id);
+            $repo->setReturnValue('userCanRead', true, array($user));
+            $repo->setReturnValue('getProject', $project);
+            $repo->setReturnValue('getBackend', $backend);
+            $repos[] = $repo;
         }
         
         $controller = new MockGit($this);
@@ -514,7 +514,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
             $repo->setReturnValue('getId', $id);
             $repo->setReturnValue('userCanRead', true, array($user));
             $repo->setReturnValue('getProject', $to_project);
-        	$repo->setReturnValue('getBackend', $backend);
+            $repo->setReturnValue('getBackend', $backend);
             $repos[] = $repo;
         }
         

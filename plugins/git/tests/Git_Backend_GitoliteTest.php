@@ -37,7 +37,6 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     
     protected $fixturesPath;
 
-
     protected $unset_servername = false;
     
     public function setUp() {
@@ -228,9 +227,9 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $backend->expectNever('clonePermissions');
         $dao->expectNever('save');
         $dao->setReturnValue('isRepositoryExisting', true, array($new_repo_path));
-        $driver->expectNever('fork');        
+        $driver->expectNever('fork');
         $driver->expectNever('dumpProjectRepoConf');
-        $driver->expectNever('push');        
+        $driver->expectNever('push');
 
         $backend->fork($old_repo, $new_repo);
     }
