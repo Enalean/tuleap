@@ -464,9 +464,9 @@ class Git extends PluginController {
             }
         }
         $to_project_id = $request->get('to_project');
-        $to_project  = $this->projectManager->getProject($to_project_id);
+        $to_project    = $this->projectManager->getProject($to_project_id);
         $repos_ids     = $request->get('repos');
-        $repos       = $this->getRepositoriesFromIds($repos_ids);
+        $repos         = $this->getRepositoriesFromIds($repos_ids);
         $this->addAction('forkCrossProjectRepositories', array($this->groupId, $repos, $to_project, $user, $GLOBALS['HTML']));
     }
 
@@ -484,7 +484,7 @@ class Git extends PluginController {
         $valid = new Valid_String('path');
         $valid->required();
 
-        $path      = '';
+        $path = '';
         if($request->valid($valid)) {
             $path = trim($request->get('path'));
         }
