@@ -449,7 +449,7 @@ class Git extends PluginController {
             $validator->required();
             if (!$request->valid($validator)) {
                 $this->addError($this->getText('missing_parameter', array($validator->key)));
-                $this->redirect('/plugins/git?group_id='.$this->groupId);
+                $this->redirect('/plugins/git/?group_id='.$this->groupId);
                 return;
             }
         }
