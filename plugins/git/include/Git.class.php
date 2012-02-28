@@ -454,16 +454,13 @@ class Git extends PluginController {
             }
         }
         $toProjectId = $request->get('to_project');
-        $to_project = $this->projectManager->getProject($toProjectId);
-        $repoIds = $request->get('repos');
-        $repos = array();
-        foreach ($repoIds as $id) {
-            $repos[] = $this->factory->getRepository($this->groupId, $id);
-        }
+        $to_project  = $this->projectManager->getProject($toProjectId);
+        $repoIds     = $request->get('repos');
+        $repos       = $this->getRepositoriesFromIds($repoIds);
         $this->addAction('forkCrossProjectRepositories', array($this->groupId, $repos, $to_project, $user, $GLOBALS['HTML']));
     }
 
-    public function checkSynchronizerToken($url) {
+    protected function checkSynchronizerToken($url) {
         $token = new CSRFSynchronizerToken($url);  
         $token->check();
     } 
@@ -488,12 +485,17 @@ class Git extends PluginController {
         if($request->validArray($valid)) {
             $repos_ids = $request->get('repos');
         }
-        $repos = array();
-        foreach ($repos_ids as $id) {
-            $repos[] = $this->factory->getRepository($this->groupId, $id);
-        }
+        $repos = $this->getRepositoriesFromIds($repos_ids);
         $this->addAction('forkIndividualRepositories', array($this->groupId, $repos, $path, $user, $GLOBALS['HTML']));
         
+    }
+    
+    private function getRepositoriesFromIds(array $repoIds) {
+        $repos = array();
+        foreach ($repoIds as $id) {
+            $repos[] = $this->factory->getRepository($this->groupId, $id);
+        }
+        return $repos;
     }
 }
 

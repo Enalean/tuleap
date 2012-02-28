@@ -84,8 +84,9 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $git = new GitSpy();
         $git->expectAt(0, 'addAction', array('getProjectRepositoryList', array($groupId)));
         $git->expectAt(1,'addAction', array('forkIndividualRepositories', array($groupId, $repos, $path, $user, $GLOBALS['HTML'])));
-        $request = new Codendi_Request(array('repos' => array('1001'),
-            'path' => 'toto'));
+        $request = new Codendi_Request(array(
+            'repos' => array('1001'),
+            'path'  => 'toto'));
         $git->_addInstanceVars(null, null, null, null, $groupId);
         $git->setFactory($factory);
         $git->_doDispatchForkRepositories($request, $user);
@@ -144,7 +145,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $git->_addInstanceVars(null, null, null, null, $group_id);
         $git->setFactory(new MockGitRepositoryFactory());
         $git->expectOnce('addError', array($invalidRequestError));
-        $git->expectOnce('redirect', array('/plugins/git?group_id='.$group_id));
+        $git->expectOnce('redirect', array('/plugins/git/?group_id='.$group_id));
 
         $request = new Codendi_Request(array(
                                         'to_project' => 234));
@@ -159,7 +160,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
 
         $git->_addInstanceVars(null, null, null, null, $group_id);
         $git->expectOnce('addError', array($invalidRequestError));
-        $git->expectOnce('redirect', array('/plugins/git?group_id='.$group_id));
+        $git->expectOnce('redirect', array('/plugins/git/?group_id='.$group_id));
 
         $request = new Codendi_Request(array(
                                         'repos' => array('qdfj')));
