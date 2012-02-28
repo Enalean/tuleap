@@ -503,12 +503,8 @@ class GitActions extends PluginActions {
      */
     function forkRepositories($groupId, array $repos, $path, User $user, Layout $response) {
         $forkCommand = new GitForkIndividualCommand($path);
-        if ($forkCommand->fork($repos, $user)) {
-            $this->addInfo('successfully_forked');
-            $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
-        } else {
-            $this->addError('actions_no_repository_selected');
-        }
+        $redirect_url = '/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId();
+        $this->executeForkCommand($forkCommand, $repos, $user, $response, $redirect_url);
     }
 
     function forkCrossProject($groupId, array $repos, Project $to_project, User $user, Layout $response) {
@@ -517,11 +513,16 @@ class GitActions extends PluginActions {
             return $this->addError('must_be_admin_to_create_project_repo');
         }
         $forkCommand = new GitForkExternalCommand($to_project);
-        if ( $forkCommand->fork($repos, $user) ) {
+        $redirect_url = '/plugins/git/?group_id='. (int)$projectId;
+        $this->executeForkCommand($forkCommand, $repos, $user, $response, $redirect_url);
+    }
+    
+    function executeForkCommand(GitForkCommand $command, array $repos, User $user, Layout $response, $redirect_url) {
+        if ($command->fork($repos, $user)) {
             $this->addInfo('successfully_forked');
-            $response->redirect('/plugins/git/?group_id='. (int)$projectId);
+            $response->redirect($redirect_url);
         } else {
-            $this->addError('actions_no_repository_selected');
+            $this->addError('actions_no_repository_forked');
         }
     }
     

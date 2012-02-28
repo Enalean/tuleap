@@ -452,6 +452,15 @@ class GitDao extends DataAccessObject {
                   GROUP BY year, month";
         return $this->retrieve($query);
     }
+    
+    public function isRepositoryExisting($path) {
+        $path = $this->da->quoteSmart($path);
+        $sql = "SELECT NULL
+                FROM plugin_git
+                WHERE repository_path = $path
+                LIMIT 1";
+        return count($this->retrieve($sql)) > 0;
+    }
 }
 
 ?>

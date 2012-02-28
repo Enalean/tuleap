@@ -20,6 +20,7 @@
 
 
 require_once('GitBackend.class.php');
+require_once('Git_Backend_Gitolite.class.php');
 require_once('GitDriver.class.php');
 require_once('GitDao.class.php');
 require_once('PathJoinUtil.php');

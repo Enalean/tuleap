@@ -39,7 +39,7 @@ Mock::generate('Git_Backend_Gitolite');
 class AbstractGitActionsTest extends UnitTestCase {
         function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage();
-        $GLOBALS['Language']->setReturnValue('getText', 'actions_no_repository_selected', array('plugin_git', 'actions_no_repository_selected', '*'));
+        $GLOBALS['Language']->setReturnValue('getText', 'actions_no_repository_forked', array('plugin_git', 'actions_no_repository_forked', '*'));
         $GLOBALS['Language']->setReturnValue('getText', 'successfully_forked', array('plugin_git', 'successfully_forked', '*'));
     }
     function tearDown() {
@@ -539,7 +539,7 @@ class GitActions_Fork_Test extends AbstractGitActionsTest {
         $layout->expectNever('redirect');
         
         $controller = new MockGit($this);
-        $controller->expectOnce('addError', array('actions_no_repository_selected'));
+        $controller->expectOnce('addError', array('actions_no_repository_forked'));
         $systemEventManager = new MockSystemEventManager();
         $action = new GitActions($controller, $systemEventManager);
         $action->forkRepositories($group_id, $repos, '', $user, $layout);

@@ -646,17 +646,11 @@ class GitViews extends PluginViews {
         
         echo '<td>';
         echo '<div>
-        	<input id="choose_personal" type="radio" name="choose_destination" value="personal" checked="true" />
-        	<label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
-        </div>';
-        echo '<div>
-        	<input id="choose_project" type="radio" name="choose_destination" value="project" />
-        	<label for="choose_project">'.$this->getText('fork_choose_destination_project').'</label>
+            <input id="choose_personal" type="radio" name="choose_destination" value="personal" checked="true" />
+            <label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
         </div>';
         
-        echo '<select name="to_project" id="fork_destination">';
-        echo $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
-        echo '</select>';
+        echo $this->fetchCopyToAnotherProject();
         
         echo '</td>';
         
@@ -674,22 +668,40 @@ class GitViews extends PluginViews {
         echo '</form>';
         echo '<br />';
     }
-	public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
-		$purifier   = Codendi_HTMLPurifier::instance();
-		$html       = '';
-		$option     = '<option value="%d" title="%s">%s</option>';
-		$usrProject = array_diff($user->getAllProjects(), array($currentProjectId));
-		
-		foreach ($usrProject as $projectId) {
-			$project = $manager->getProject($projectId);
-			if ($user->isMember($projectId, 'A') && $project->usesService('git')) {
-				$projectName     = $purifier->purify($project->getPublicName());
-				$projectUnixName = $purifier->purify($project->getUnixName()); 
-				$html           .= sprintf($option, $projectId, $projectUnixName, $projectName);
-			}
-		}
-		return $html;
-	}
+    
+    private function fetchCopyToAnotherProject() {
+        $html = '';
+        $userProjectOptions = $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
+        if ($userProjectOptions) {
+            $html .= '<div>
+                <input id="choose_project" type="radio" name="choose_destination" value="project" />
+                <label for="choose_project">'.$this->getText('fork_choose_destination_project').'</label>
+            </div>';
+            
+            $html .= '<select name="to_project" id="fork_destination">';
+            $html .= $userProjectOptions;
+            $html .= '</select>';
+        }
+        return $html;
+    }
+    
+    public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
+        $purifier   = Codendi_HTMLPurifier::instance();
+        $html       = '';
+        $option     = '<option value="%d" title="%s">%s</option>';
+        $usrProject = array_diff($user->getAllProjects(), array($currentProjectId));
+        
+        foreach ($usrProject as $projectId) {
+            $project = $manager->getProject($projectId);
+            if ($user->isMember($projectId, 'A') && $project->usesService('git')) {
+                $projectName     = $purifier->purify($project->getPublicName());
+                $projectUnixName = $purifier->purify($project->getUnixName()); 
+                $html           .= sprintf($option, $projectId, $projectUnixName, $projectName);
+            }
+        }
+        return $html;
+    }
+    
     /**
      * TREE SUBVIEW
      */

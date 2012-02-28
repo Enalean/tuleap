@@ -23,24 +23,46 @@ Mock::generate('User');
 Mock::generate('Project');
 Mock::generate('Git_Backend_Gitolite');
 
-class testGitForkIndividualCommand extends UnitTestCase {
+class testGitForkIndividualCommand extends TuleapTestCase {
     
     
     /**
     * Todo : move to Forkcommmand or git.class?
      */
     function testForkShouldNotCloneAnyNonExistentRepositories() {
-        $user = new MockUser();
-        $project = new MockProject();
         $backend = new MockGit_Backend_Gitolite();
-        $backend->ExpectOnce('fork');
-        $repo = new MockGitRepository();
+        $backend->expectOnce('fork');
+        $repo = $this->GivenARepository(123, $backend);
+        
+        $user    = new MockUser();
+        $command = new GitForkIndividualCommand('');
+        $command->fork(array($repo, null), $user);
+    }
+    
+    private function GivenARepository($id, $backend) {
+        $project = new MockProject();
+        $repo    = new MockGitRepository();
+        $repo->setReturnValue('getId', $id);
         $repo->setReturnValue('userCanRead', true);
         $repo->setReturnValue('getProject', $project);
         $repo->setReturnValue('getBackend', $backend);
-        $command = new GitForkIndividualCommand('');
-        $command->fork(array($repo, null), $user);
+        return $repo;
+    }
+    
+    function testForkShouldIgnoreAlreadyExistingRepository() {
+        $errorMessage = 'Repository Xxx already exists';
+        $GLOBALS['Language']->setReturnValue('getText', $errorMessage);
+        $GLOBALS['Response']->expectOnce('addFeedback', array('warning', $errorMessage));
+        $backend = new MockGit_Backend_Gitolite();
+        $backend->throwAt(1, 'fork');
+        $repo1 = $this->GivenARepository(123, $backend);
+        $repo2 = $this->GivenARepository(456, $backend);
+        $repo3 = $this->GivenARepository(789, $backend);
+        $repositories = array($repo1, $repo2, $repo3);
         
+        $user    = new MockUser();
+        $command = new GitForkIndividualCommand('');
+        $command->fork($repositories, $user);
     }
 }
 ?>

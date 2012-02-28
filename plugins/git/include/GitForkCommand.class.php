@@ -35,9 +35,13 @@ abstract class GitForkCommand {
         $forked = false;
         $repos = $this->filterNullRepos($repos);
         foreach($repos as $repo) {
-            if ($repo->userCanRead($user)) {
-                $this->dofork($repo, $user);
-                $forked = true;
+            try {
+                if ($repo->userCanRead($user)) {
+                    $this->dofork($repo, $user);
+                    $forked = true;
+                }
+            } catch (Exception $e) {
+                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_exists', array($repo->getName())));
             }
         }
         return $forked;
