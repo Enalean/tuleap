@@ -352,6 +352,7 @@ class GitPlugin extends Plugin {
      * @return void
      */
     public function project_is_deleted($params) {
+        require_once('GitActions.class.php');
         if (!empty($params['group_id'])) {
             $projectId = intval($params['group_id']);
             // Delete all gitolite repositories of the project
