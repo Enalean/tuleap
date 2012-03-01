@@ -49,8 +49,6 @@ class LDAP_UserDaoTest extends UnitTestCase {
         $ldapUserDao->expectCallCount('retrieve', 2);
         
         $this->assertTrue($ldapUserDao->userNameIsAvailable('coincoin'));
-        $ldapUserDao->da->tally();
-        $ldapUserDao->tally();
     }
     
     function testUserNameIsAlreadyUser() {
@@ -64,8 +62,6 @@ class LDAP_UserDaoTest extends UnitTestCase {
         $ldapUserDao->expectCallCount('retrieve', 1);
         
         $this->assertFalse($ldapUserDao->userNameIsAvailable('coincoin'));
-        $ldapUserDao->da->tally();
-        $ldapUserDao->tally();
     }
     
     function testUserNameIsAlreadyGroup() {
@@ -82,8 +78,6 @@ class LDAP_UserDaoTest extends UnitTestCase {
         $ldapUserDao->expectCallCount('retrieve', 2);
         
         $this->assertFalse($ldapUserDao->userNameIsAvailable('coincoin'));
-        $ldapUserDao->da->tally();
-        $ldapUserDao->tally();
     }
     
 }

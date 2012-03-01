@@ -482,9 +482,8 @@ class Git_GitoliteDriver {
     }
     
     public function fork($repo, $old_ns, $new_ns){
-
-        $source = unixPathJoin(array($this->getRepositoriesPath(),$old_ns, $repo)) .'.git';
-        $target = unixPathJoin(array($this->getRepositoriesPath(),$new_ns, $repo)) .'.git';
+        $source = unixPathJoin(array($this->getRepositoriesPath(), $old_ns, $repo)) .'.git';
+        $target = unixPathJoin(array($this->getRepositoriesPath(), $new_ns, $repo)) .'.git';
         if (!is_dir($target)) {
             $asGroupGitolite = 'sg - gitolite -c ';
             $cmd = 'umask 0007; '.$asGroupGitolite.' "git clone --bare '. $source .' '. $target.'"';

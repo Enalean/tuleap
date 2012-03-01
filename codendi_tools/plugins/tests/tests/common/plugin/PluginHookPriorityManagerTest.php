@@ -23,8 +23,7 @@ class PluginHookPriorityManagerTest extends UnitTestCase {
         $priority_dao = new MockPriorityPluginHookDao($this);
         $priority_dar = new MockDataAccessResult($this);
         $priority_dao->setReturnReference('searchByHook_PluginId', $priority_dar);
-        $priority_dao->expectCallCount('searchByHook_PluginId', 1);
-        $priority_dao->expectArguments('searchByHook_PluginId', array('hook', 123));
+        $priority_dao->expectOnce('searchByHook_PluginId', array('hook', 123));
         $priority_dar->setReturnValue('getRow', array('priority' => '10'));
 
         $phgm = new PluginHookPriorityManagerTestVersion($this);
@@ -38,8 +37,7 @@ class PluginHookPriorityManagerTest extends UnitTestCase {
         $plugin->setReturnValue('getId', 123);
         
         $priority_dao = new MockPriorityPluginHookDao($this);
-        $priority_dao->expectCallCount('setPriorityForHook_PluginId', 1);
-        $priority_dao->expectArguments('setPriorityForHook_PluginId', array('hook', 123, 15));
+        $priority_dao->expectOnce('setPriorityForHook_PluginId', array('hook', 123, 15));
         $priority_dao->setReturnValue('setPriorityForHook_PluginId', true);
         
         $phgm = new PluginHookPriorityManagerTestVersion($this);
@@ -53,8 +51,7 @@ class PluginHookPriorityManagerTest extends UnitTestCase {
         $plugin->setReturnValue('getId', 123);
         
         $priority_dao = new MockPriorityPluginHookDao($this);
-        $priority_dao->expectCallCount('deleteByPluginId', 1);
-        $priority_dao->expectArguments('deleteByPluginId', array(123));
+        $priority_dao->expectOnce('deleteByPluginId', array(123));
         $priority_dao->setReturnValue('deleteByPluginId', true);
         
         $phgm = new PluginHookPriorityManagerTestVersion($this);

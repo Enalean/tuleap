@@ -34,13 +34,6 @@ array('issetUsername', 'setHeader', 'getUsername', 'getPassword', 'getUser', 'er
  */
 class WebDAVAuthenticationTest extends UnitTestCase {
 
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function WebDAVAuthenticationTest($name = 'WebDAVAuthenticationTest') {
-        $this->UnitTestCase($name);
-    }
 
     function setUp() {
 

@@ -20,6 +20,7 @@
 
 
 require_once('GitBackend.class.php');
+require_once('Git_Backend_Gitolite.class.php');
 require_once('GitDriver.class.php');
 require_once('GitDao.class.php');
 require_once('PathJoinUtil.php');
@@ -244,7 +245,7 @@ class GitRepository implements DVCSRepository {
      * @param GitRepository $parentRepository
      */
     public function setParent($parentRepository) {
-        $this->parent   = $parentRepository;       
+        $this->parent = $parentRepository;
     }
 
     /**
@@ -253,7 +254,7 @@ class GitRepository implements DVCSRepository {
      * @return GitRepository
      */
     public function getParent() {
-        if ( empty($this->parent) ) {            
+        if ( empty($this->parent) ) {
             $this->load();            
             $parent = new GitRepository();
             $parent->setId($this->parentId);
@@ -281,7 +282,7 @@ class GitRepository implements DVCSRepository {
      */
     public function getProject() {
         return $this->project;
-    }      
+    }
 
     public function getProjectId() {
         $project = $this->getProject();
@@ -616,21 +617,20 @@ class GitRepository implements DVCSRepository {
         $clone->setDescription('-- Default description --');
         $this->getBackend()->createFork($clone);
     }
-        
-    public function fork($namespace, $user) {
+    
+    public function fork($user, $namespace, $scope, Project $project) {
         $clone = clone $this;
-                
+        $clone->setProject($project);
         $clone->setCreator($user);
         $clone->setParent($this);
         $clone->setNamespace($namespace);
         $clone->setId(null);
-        $path = unixPathJoin(array($this->project->getUnixName(), $namespace, $this->getName())).'.git';
+        $path = unixPathJoin(array($project->getUnixName(), $namespace, $this->getName())).'.git';
         $clone->setPath($path);
-        $clone->setScope(self::REPO_SCOPE_INDIVIDUAL);
+        $clone->setScope($scope);
         $this->getBackend()->fork($this, $clone);
     }
     
-
     /**
      * Create a reference repository
      */

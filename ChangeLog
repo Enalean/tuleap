@@ -14,8 +14,9 @@ Version 4.0.27 - NOT RELEASED YET
    == Plugins ==
    * Tracker v5.0 See separate ChangeLog.
    * GraphOnTrackerV5 v5.0 See separate ChangeLog.
-   * Docman v2.24: See separte ChangeLog.
-   * LDAP v3.12: See separte ChangeLog.
+   * Docman v2.24: See separate ChangeLog.
+   * LDAP v3.12: See separate ChangeLog.
+   * Git v2.0: See separate ChangeLog.
 
    == Development ==
    * Fix issue in CI: lxc installation was missing yum repository generation

@@ -41,7 +41,7 @@ EOS;
     }
     
     function testExecuteHelp() {
-        $codendisoap =& new MockCodendiSOAP();
+        $codendisoap = new MockCodendiSOAP();
         
         $module =& new MockCLI_Module();
         $module->setReturnValue('getParameter', true);

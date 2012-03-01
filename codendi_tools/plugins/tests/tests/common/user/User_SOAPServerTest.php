@@ -48,9 +48,9 @@ class User_SOAPServerTest extends UnitTestCase {
         $um->throwOn('loginAs', $exception);
         $server = new User_SOAPServer($um);
         return new UserManagerAsserter($server, $this);
-    }
-    
+    }    
 }
+
 class UserManagerAsserter {
     public function __construct(User_SOAPServer $server, $asserter) {
         $this->server = $server;
@@ -59,8 +59,7 @@ class UserManagerAsserter {
     public function thenLoginAsReturns($expected) {
         $this->asserter->assertIdentical($this->server->loginAs(null, null), $expected);
         
-    }
-    
+    }    
 }
 
 ?>

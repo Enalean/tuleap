@@ -32,6 +32,11 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @var GitDao
      */
     protected $dao;
+    
+    /**
+     * @var PermissionsManager
+     */
+    protected $permissionsManager;
 
     /**
      * Constructor
@@ -329,10 +334,48 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         $name = $old->getName();
         //TODO use $old->getRootPath() (good luck for Unit Tests!)
         $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
-        $new_namespace = $old->getProject()->getUnixName() .'/'. $new->getNamespace();
-        $this->getDriver()->fork($name, $old_namespace, $new_namespace);
-        $this->createReference($new);
+        $new_namespace = $new->getProject()->getUnixName() .'/'. $new->getNamespace();
+        
+        $new_project = $new->getProject();
+        if ($this->getDao()->isRepositoryExisting($new_project->getId(), $new->getPath())) {
+            throw new GitBackendException('Respository already exists');
+        } else {
+            $forkSucceeded = $this->getDriver()->fork($name, $old_namespace, $new_namespace);
+            if ($forkSucceeded) {
+                $id = $this->getDao()->save($new);
+                $new->setId($id);
+                $this->clonePermissions($old, $new);
+                $this->updateRepoConf($new);
+            }
+        }
     }
+    
+    public function clonePermissions(GitRepository $old, GitRepository $new) {
+        $pm = $this->getPermissionsManager();
+        
+        if ($this->inSameProject($old, $new)) {
+            $pm->duplicateWithStatic($old->getId(), $new->getId(), Git::allPermissionTypes());
+        }
+        else {
+            $pm->duplicateWithoutStatic($old->getId(), $new->getId(), Git::allPermissionTypes());
+        }
+    }
+    
+    private function inSameProject(GitRepository $repository1, GitRepository $repository2) {
+        return ($repository1->getProject()->getId() == $repository2->getProject()->getId());
+    }
+    
+    public function setPermissionsManager(PermissionsManager $permissionsManager) {
+        $this->permissionsManager = $permissionsManager;
+    }
+    
+    public function getPermissionsManager() {
+        if (!$this->permissionsManager) {
+            $this->permissionsManager = PermissionsManager::instance();
+        }
+        return $this->permissionsManager;
+    }
+    
     /**
      * Delete all gitolite repositories of a project
      *

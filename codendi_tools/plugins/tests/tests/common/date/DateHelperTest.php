@@ -24,10 +24,6 @@ Mock::generate('BaseLanguage');
 
 class DateHelperTest extends UnitTestCase {
 
-    public function __construct($name = 'DateHelper test') {
-        parent::__construct($name);
-    }
-
     public function test_distanceOfTimeInWords() {
         $expected = array(
             0 => array( //'less than a minute', 'less than 5 seconds'),     // 0 second

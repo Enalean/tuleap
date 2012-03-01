@@ -9,16 +9,7 @@ require_once(dirname(__FILE__).'/../include/SVNCommitMetaData.class.php');
  * Test the class SVNCommitMetaData
  */
 class SVNCommitMetaDataTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function SVNCommitMetaDataTest($name = 'SVNCommitMetaData test') {
-        $this->UnitTestCase($name);
-    }
-    
-    
-    
+
     function testSetMetaData() {
         $msg_1 = "-- update info --\nlevel=minor\nupdate=auto\n--\n\nThis is a commit message test\n";
         $msg_2 = "level=critical\nupdate=db,manual";

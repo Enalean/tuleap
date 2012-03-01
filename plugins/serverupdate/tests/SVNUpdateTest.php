@@ -22,14 +22,7 @@ Mock::generatePartial(
  *  
  */
 class SVNUpdateTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function SVNUpdateTest($name = 'SVNUpdate test') {
-        $this->UnitTestCase($name);
-    }
-    
+
     
     /**
 	 * Result of query "svn info" 

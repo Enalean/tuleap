@@ -36,7 +36,6 @@ class PluginFactoryTest extends UnitTestCase {
         $this->assertIsA($plugin, 'Plugin');
         
         $plugin = $pf->getPluginById(123);
-        $this->assertnoErrors();
 
         $this->assertFalse($pf->getPluginById(124));
     }
@@ -61,7 +60,7 @@ class PluginFactoryTest extends UnitTestCase {
         
         
         $plugin_2 = $pf->getPluginByName('plugin 123');
-        $this->assertnoErrors();
+
         $this->assertReference($plugin_1, $plugin_2);
 
         $this->assertIdentical(false, $pf->getPluginByName('plugin 124'));
@@ -149,15 +148,13 @@ class PluginFactoryTest extends UnitTestCase {
         $plugin_dao->setReturnReference('searchById', $access_result);
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123', 'available' => '0')); 
         $access_result->setReturnValueAt(1, 'getRow', false);
-        $plugin_dao->expectOnce('updateAvailableByPluginId');
-        $plugin_dao->expectArguments('updateAvailableByPluginId', array('1', 123));
+        $plugin_dao->expectOnce('updateAvailableByPluginId', array('1', 123));
         $pf = new PluginFactoryTestVersion($this);
         $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         
         $p = $pf->getPluginById(123);
         $pf->availablePlugin($p);
-        $plugin_dao->tally();
     }
     
     function testDisablePlugin() {
@@ -166,15 +163,13 @@ class PluginFactoryTest extends UnitTestCase {
         $plugin_dao->setReturnReference('searchById', $access_result);
         $access_result->setReturnValueAt(0, 'getRow', array('id' => '123', 'name' => 'plugin 123', 'available' => '1')); //enabled = 1
         $access_result->setReturnValueAt(1, 'getRow', false);
-        $plugin_dao->expectOnce('updateAvailableByPluginId');
-        $plugin_dao->expectArguments('updateAvailableByPluginId', array('0', 123));
+        $plugin_dao->expectOnce('updateAvailableByPluginId', array('0', 123));
         $pf = new PluginFactoryTestVersion($this);
         $pf->setReturnValue('_getClassNameForPluginName', array('class' => 'Plugin', 'custom' => false));
         $pf->PluginFactory($plugin_dao); //Only for test. You should use singleton instead
         
         $p = $pf->getPluginById(123);
         $pf->unavailablePlugin($p);
-        $plugin_dao->tally();
     }
     
     function testPluginIsCustom() {
