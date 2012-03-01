@@ -334,17 +334,19 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         $name = $old->getName();
         //TODO use $old->getRootPath() (good luck for Unit Tests!)
         $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
-        $new_namespace = $old->getProject()->getUnixName() .'/'. $new->getNamespace();
+        $new_namespace = $new->getProject()->getUnixName() .'/'. $new->getNamespace();
         
         $new_project = $new->getProject();
         if ($this->getDao()->isRepositoryExisting($new_project->getId(), $new->getPath())) {
             throw new GitBackendException('Respository already exists');
         } else {
-            $this->getDriver()->fork($name, $old_namespace, $new_namespace);
-            $id = $this->getDao()->save($new);
-            $new->setId($id);
-            $this->clonePermissions($old, $new);
-            $this->updateRepoConf($new);
+            $forkSucceeded = $this->getDriver()->fork($name, $old_namespace, $new_namespace);
+            if ($forkSucceeded) {
+                $id = $this->getDao()->save($new);
+                $new->setId($id);
+                $this->clonePermissions($old, $new);
+                $this->updateRepoConf($new);
+            }
         }
     }
     

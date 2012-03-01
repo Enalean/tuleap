@@ -175,6 +175,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $new_repo_path = "gpig/$new_namespace/$name.git";
         
         $driver     = new MockGit_GitoliteDriver();
+        $driver->setReturnValue('fork', true);
         $dao        = new MockGitDao();
         $project    = new MockProject();
         
@@ -195,6 +196,43 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $dao->setReturnValue('isRepositoryExisting', false, array('*', $new_repo_path));
         $driver->expectOnce('fork', array($name, 'gpig/'. $old_namespace, 'gpig/'. $new_namespace));
         $driver->expectOnce('dumpProjectRepoConf', array($project));
+        $driver->expectOnce('push');
+
+        $backend->fork($old_repo, $new_repo);
+    }
+
+    public function testFork_clonesRepositoryFromOneProjectToAnotherSucceedAndPushesConf() {
+        $repo_name        = 'tuleap';
+        $old_project_name = 'garden';
+        $new_project_name = 'gpig';
+        $namespace        = '';
+        $new_repo_path    = "$new_project_name/$namespace/$repo_name.git";
+        
+        $driver     = new MockGit_GitoliteDriver();
+        $driver->setReturnValue('fork', true);
+        $dao        = new MockGitDao();
+        
+        $new_project    = new MockProject();
+        $new_project->setReturnValue('getUnixName', $new_project_name);
+        
+        $old_project    = new MockProject();
+        $old_project->setReturnValue('getUnixName', 'garden');
+        
+        $new_repo = $this->_GivenAGitRepoWithNameAndNamespace($repo_name, $namespace);
+        $new_repo->setProject($new_project);
+        $new_repo->setPath($new_repo_path);
+        $old_repo = $this->_GivenAGitRepoWithNameAndNamespace($repo_name, $namespace);
+        $old_repo->setProject($old_project);
+        
+        $backend = TestHelper::getPartialMock('Git_Backend_Gitolite', array('clonePermissions'));
+        $backend->__construct($driver);
+        $backend->setDao($dao);
+        
+        $backend->expectOnce('clonePermissions', array($old_repo, $new_repo));
+        $dao->expectOnce('save', array($new_repo));
+        $dao->setReturnValue('isRepositoryExisting', false, array('*', $new_repo_path));
+        $driver->expectOnce('fork', array($repo_name, $old_project_name.'/'. $namespace, $new_project_name.'/'. $namespace));
+        $driver->expectOnce('dumpProjectRepoConf', array($new_project));
         $driver->expectOnce('push');
 
         $backend->fork($old_repo, $new_repo);
