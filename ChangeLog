@@ -1,7 +1,8 @@
 Version 4.0.27 - NOT RELEASED YET
    == Bug Fix ==
    * In project export details, display db host instead of front end server
-   * Fix issue whith search while wiki is fr_FR
+   * Fix issue with search while wiki is fr_FR
+   * Fix issue on mandatory reference in commit message (sla #494)
 
    == Enhancement ==
    * Theme Tuleap 2.1: Official logo & colors.
