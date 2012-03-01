@@ -1,4 +1,4 @@
-Version 2.0 (Tuleap 4.0.27)
+Version 2.1 (Tuleap 4.0.27)
     * Allow to fork gitolite repositories from one project to another
     * Fork inherit parent's permissions.
     * Disable the ability to fork gitshell repositories.
