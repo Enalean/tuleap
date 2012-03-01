@@ -1,8 +1,12 @@
+Version 5.1.1 - Tuleap 4.0.27
+  * Fix inclusion of files.
+
 Version 5.1 - Tuleap 4.0.27
   * Fix issue with permissions while cloning trackers
 
 Version 5.0 - Tuleap 4.0.27
   * Change version number
+  * Reduce memory consumption by not loading all plugin's class for each hit.
 
 Version 0.9.1 - Tuleap 4.0.27
   * Fix issue: float fields and number > 1000
