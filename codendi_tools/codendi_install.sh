@@ -1297,7 +1297,7 @@ EOF
     # Import all templates
     template_base_dir="$INSTALL_DIR/plugins/tracker/www/resources/templates"
     /bin/ls $template_base_dir/Tracker_*.xml | while read xml_template; do
-	$INSTALL_DIR/src/utils/php-launcher.sh $INSTALL_DIR/plugins/tracker/bin/import_tracker_xml_template.php "$template_base_dir/$xml_template"
+	$INSTALL_DIR/src/utils/php-launcher.sh $INSTALL_DIR/plugins/tracker/bin/import_tracker_xml_template.php "$xml_template"
     done
 fi
 
