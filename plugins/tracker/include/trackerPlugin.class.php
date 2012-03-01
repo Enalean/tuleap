@@ -127,6 +127,7 @@ class trackerPlugin extends Plugin {
     * @param Array $params
     */
     function register_project_creation($params) {
+        require_once('Tracker/TrackerManager.class.php');
         $tm = new TrackerManager();
         $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
 
@@ -195,6 +196,9 @@ class trackerPlugin extends Plugin {
     }
     
     function permission_get_object_name($params) {
+        require_once 'Tracker/TrackerFactory.class.php';
+        require_once 'Tracker/FormElement/Tracker_FormElementFactory.class.php';
+        require_once 'Tracker/Artifact/Tracker_ArtifactFactory.class.php';
         if (!$params['object_name']) {
             $type = $this->getObjectTypeFromPermissions($params);
             if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
@@ -234,6 +238,8 @@ class trackerPlugin extends Plugin {
     }
     
     function permissions_for_ugroup($params) {
+        require_once 'Tracker/FormElement/Tracker_FormElementFactory.class.php';
+        require_once 'workflow/TransitionFactory.class.php';
         if (!$params['results']) {
             
             $group_id = $params['group_id'];
@@ -270,6 +276,10 @@ class trackerPlugin extends Plugin {
     
     var $_cached_permission_user_allowed_to_change;
     function permission_user_allowed_to_change($params) {
+        require_once 'Tracker/TrackerFactory.class.php';
+        require_once 'Tracker/FormElement/Tracker_FormElementFactory.class.php';
+        require_once 'workflow/TransitionFactory.class.php';
+        require_once 'Tracker/Artifact/Tracker_ArtifactFactory.class.php';
         if (!$params['allowed']) {
             $allowed = array(
                 'PLUGIN_TRACKER_ADMIN', 
@@ -325,6 +335,7 @@ class trackerPlugin extends Plugin {
     }
     
     public function ajax_reference_tooltip($params) {
+        require_once 'Tracker/Artifact/Tracker_ArtifactFactory.class.php';
         if ($params['reference']->getServiceShortName() == 'plugin_tracker') {
             if ($params['reference']->getNature() == Tracker_Artifact::REFERENCE_NATURE) {
                 $user = UserManager::instance()->getCurrentUser();
@@ -395,6 +406,7 @@ class trackerPlugin extends Plugin {
     }
     
     function service_public_areas($params) {
+        require_once 'Tracker/TrackerFactory.class.php';
         if ($params['project']->usesService('plugin_tracker')) {
             $tf = TrackerFactory::instance();
             
