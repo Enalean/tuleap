@@ -12,7 +12,7 @@ Version 4.0.27 - NOT RELEASED YET
    ** For trackerv5, it can be customized into 'plugins/tracker/site-content/<lang>/tracker.tab' with key (plugin_tracker, service_lbl_key)
 
    == Plugins ==
-   * Tracker v5.0 See separate ChangeLog.
+   * Tracker v5.1 See separate ChangeLog.
    * GraphOnTrackerV5 v5.0 See separate ChangeLog.
    * Docman v2.24: See separate ChangeLog.
    * LDAP v3.12: See separate ChangeLog.
