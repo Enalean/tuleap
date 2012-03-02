@@ -31,7 +31,7 @@ require_once('common/widget/Widget_Static.class.php');
 require_once(dirname(__FILE__).'/../tracker_permissions.php');
 require_once('Tracker_Dispatchable_Interface.class.php');
 require_once('FormElement/Tracker_SharedFormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../MustacheRenderer.class.php');
+require_once('Hierarchy/Controller.class.php');
 
 require_once('json.php');
 
@@ -89,7 +89,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->stop_notification            = $stop_notification;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
         $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
-        $this->renderer                     = new MustacheRenderer(dirname(__FILE__).'/../../templates');
     }
 
     /**
@@ -534,11 +533,11 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 }
                 break;
             case 'admin-hierarchy':
-                $possible_children = array();
-                
                 $this->displayAdminItemHeader($tracker_manager, 'hierarchy');
-                $this->renderAdminHierarchy($possible_children);
-                
+                $possible_children = array();
+                $controller = new Tracker_Hierarchy_Controller($this);
+                $controller->edit($possible_children);
+                $this->displayFooter($tracker_manager);
                 break;
             default:
                 //If there is nothing to do, display a report
@@ -550,11 +549,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         return false;
     }
     
-    public function renderAdminHierarchy($possible_children) {
-        require_once('Hierarchy/Presenter.class.php');
-        $presenter = new Tracker_Hierarchy_Presenter($this, $possible_children);
-        $this->renderer->render('admin-hierarchy', $presenter);
-    }
+
     
     public function createFormElement($type, $formElement_data, $user) {
         if ($type == 'shared') {

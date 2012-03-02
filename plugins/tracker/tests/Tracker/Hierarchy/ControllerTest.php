@@ -19,6 +19,7 @@
  */
 
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Presenter.class.php');
+require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Controller.class.php');
 require_once(dirname(__FILE__).'/../../Test_Tracker_Builder.php');
 Mock::generate('Tracker');
 
@@ -35,7 +36,9 @@ class Tracker_Hierarchy_ControllerTest extends UnitTestCase {
         $possible_children = array($possible_child_1, $possible_child_2);
         
         ob_start();
-        $tracker->renderAdminHierarchy($possible_children);
+        $controller = new Tracker_Hierarchy_Controller($tracker);
+        $controller->edit($possible_children);
+
         $content = ob_get_clean();
         
         $this->assertContainsAll(array('Bugs', 'Tasks'), $content);
