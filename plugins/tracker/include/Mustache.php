@@ -908,3 +908,4 @@ class MustacheException extends Exception {
 	const UNKNOWN_PRAGMA           = 4;
 
 }
+?>
