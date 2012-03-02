@@ -1,3 +1,12 @@
+Version 2.1.1 (Tuleap 4.0.27)
+    * Fix include of files (regression due to memory consumption fix at version 2.0).
+
+Version 2.1 (Tuleap 4.0.27)
+    * Allow to fork gitolite repositories from one project to another
+    * Fork inherit parent's permissions.
+    * Disable the ability to fork gitshell repositories.
+    * No longer load the all plugin's classes at each hit (reduce memory consumption).
+
 Version 1.25 (Tuleap 4.0.26)
     * Do not display an mysterious error message when fail to find the repository for git push count.
 

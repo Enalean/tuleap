@@ -176,9 +176,12 @@ class GitViews extends PluginViews {
                 $repoActions .= '<li>'.$this->linkTo($this->getText('admin_repo_management'), '/plugins/git/?action=repo_management&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_admin"').'</li>';
             }
 
+            /** Disable fork of gitshell repositories **/
+            /*
             if ($initialized && $this->getController()->isAPermittedAction('clone') && !($repository->getBackend() instanceof Git_Backend_Gitolite)) {
                 $repoActions .= '<li>'.$this->linkTo($this->getText('admin_fork_creation_title'), '/plugins/git/?action=fork&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_fork"').'</li>';
             }
+            */
             $repoActions .= '</ul>';
 
             echo '<div id="plugin_git_reference">';
@@ -626,6 +629,9 @@ class GitViews extends PluginViews {
         echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label>';
         echo '</td>';
         echo '<td>';
+        echo '<label style="font-weight: bold;">'. $this->getText('fork_destination_project') .'</label>';
+        echo '</td>';
+        echo '<td>';
         echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label>';
         echo '</td>';
         echo '<td class="last">&nbsp;</td>';
@@ -639,12 +645,23 @@ class GitViews extends PluginViews {
         echo '</td>';
         
         echo '<td>';
-        echo '<input type="text" placeholder="'. $this->getText('fork_repositories_placeholder') .'" id="fork_repositories_path" name="path" />';
+        echo '<div>
+            <input id="choose_personal" type="radio" name="choose_destination" value="personal" checked="true" />
+            <label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
+        </div>';
+        
+        echo $this->fetchCopyToAnotherProject();
+        
+        echo '</td>';
+        
+        echo '<td>';
+        $placeholder = $this->getText('fork_repositories_placeholder');
+        echo '<input type="text" title="'. $placeholder .'" placeholder="'. $placeholder .'" id="fork_repositories_path" name="path" />';
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
         echo '</td>';
         
         echo '<td class="last">';
-        echo '<input type="submit" value="'. $this->getText('fork_repositories_submit') .'" />';
+        echo '<input type="submit" value="'. $this->getText('fork_repositories') .'" />';
         echo '</td>';
         
         echo '</tr></tbody></table>';
@@ -652,7 +669,40 @@ class GitViews extends PluginViews {
         echo '</form>';
         echo '<br />';
     }
-
+    
+    private function fetchCopyToAnotherProject() {
+        $html = '';
+        $userProjectOptions = $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
+        if ($userProjectOptions) {
+            $html .= '<div>
+                <input id="choose_project" type="radio" name="choose_destination" value="project" />
+                <label for="choose_project">'.$this->getText('fork_choose_destination_project').'</label>
+            </div>';
+            
+            $html .= '<select name="to_project" id="fork_destination">';
+            $html .= $userProjectOptions;
+            $html .= '</select>';
+        }
+        return $html;
+    }
+    
+    public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
+        $purifier   = Codendi_HTMLPurifier::instance();
+        $html       = '';
+        $option     = '<option value="%d" title="%s">%s</option>';
+        $usrProject = array_diff($user->getAllProjects(), array($currentProjectId));
+        
+        foreach ($usrProject as $projectId) {
+            $project = $manager->getProject($projectId);
+            if ($user->isMember($projectId, 'A') && $project->usesService('git')) {
+                $projectName     = $purifier->purify($project->getPublicName());
+                $projectUnixName = $purifier->purify($project->getUnixName()); 
+                $html           .= sprintf($option, $projectId, $projectUnixName, $projectName);
+            }
+        }
+        return $html;
+    }
+    
     /**
      * TREE SUBVIEW
      */

@@ -40,15 +40,7 @@ class IMPluginTest extends UnitTestCase {
     var $user;
     var $user_manager;
     var $jabbex;
-    
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function IMPluginTest($name = 'IMPlugin test') {
-        $this->UnitTestCase($name);
-    }
-    
+
     function setUp() {
         $this->implugin = new IMPluginTestVersion($this);
         

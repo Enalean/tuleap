@@ -46,13 +46,6 @@ array('getGroupId', 'getProject', 'getUser', 'getUtils', 'getPackageList','getFR
  */
 class WebDAVFRSTest extends UnitTestCase {
 
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function WebDAVFRSTest($name = 'WebDAVProjectTest') {
-        $this->UnitTestCase($name);
-    }
 
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
@@ -334,7 +327,6 @@ class WebDAVFRSTest extends UnitTestCase {
         $pm = new MockPermissionsManager();
         $utils->setReturnValue('getPermissionsManager', $pm);
         $webDAVFRS->setReturnValue('getUtils', $utils);
-        $this->assertNoErrors();
 
         $webDAVFRS->createDirectory('pkg');
     }

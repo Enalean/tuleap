@@ -39,14 +39,6 @@ array('getWebDAVProject', 'getUser', 'getProjectIdByName', 'getPublicProjectList
  */
 class WebDAVRootTest extends UnitTestCase {
 
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function WebDAVRootTest($name = 'WebDAVRootTest') {
-        $this->UnitTestCase($name);
-    }
-
     function setUp() {
 
         $GLOBALS['Language'] = new MockBaseLanguage($this);

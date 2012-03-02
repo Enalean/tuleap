@@ -111,7 +111,6 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $item->setReturnValue('getCurrentVersion', $version);
         $webDAVDocmanFile->setReturnValue('getItem', $item);
 
-        $this->assertNoErrors();
         $webDAVDocmanFile->get();
     }
 
@@ -162,8 +161,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         $webDAVDocmanFile->setReturnValue('getItem', $item);
         
         $webDAVDocmanFile->setReturnValue('getMaxFileSize', 4096);
-        
-        $this->assertNoErrors();
+
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
         $webDAVDocmanFile->put($data);
     }
@@ -189,8 +187,7 @@ class WebDAVDocmanFileTest extends UnitTestCase {
         
         $item = new MockDocman_Item();
         $webDAVDocmanFile->setReturnValue('getItem', $item);
-        
-        $this->assertNoErrors();
+
         $webDAVDocmanFile->setName('newName');
     }
 

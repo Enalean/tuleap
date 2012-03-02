@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'WebDAV_Request.class.php';
+
 /**
  * This class contains methods used in WebDAV plugin
  */

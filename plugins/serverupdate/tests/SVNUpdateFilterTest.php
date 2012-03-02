@@ -12,14 +12,7 @@ Mock::generate('SVNCommit');
  * Test the class SVNCommitMetaData
  */
 class SVNUpdateFilterTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function SVNUpdateFilter($name = 'SVNUpdateFilter test') {
-        $this->UnitTestCase($name);
-    }
-    
+
     function testAccept() {
         // 
         // Commit #1 : level minor

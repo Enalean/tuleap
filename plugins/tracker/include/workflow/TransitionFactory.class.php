@@ -348,7 +348,7 @@ class TransitionFactory {
         $pm = PermissionsManager::instance();        
         $permission_type = array('PLUGIN_TRACKER_WORKFLOW_TRANSITION');
         //Duplicate tracker permissions
-        $pm->duplicatePermissions($from_transition_id, $transition_id, $permission_type, $duplicate_type, $ugroup_mapping);
+        $pm->duplicatePermissions($from_transition_id, $transition_id, $permission_type, $ugroup_mapping, $duplicate_type);
     }
 }
 ?>

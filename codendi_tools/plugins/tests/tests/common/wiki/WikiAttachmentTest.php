@@ -48,7 +48,6 @@ class WikiAttachmentTest extends UnitTestCase {
         $wa->basedir = dirname(__FILE__).'/_fixtures';
         $wa->setReturnValue('dbadd', true);
 
-        $this->assertNoErrors();
         $this->assertFalse(is_dir($wa->basedir.'/testing.txt'));
         $this->assertFalse($wa->exist());
         $this->assertTrue($wa->create());
@@ -63,7 +62,6 @@ class WikiAttachmentTest extends UnitTestCase {
         $wa->basedir = dirname(__FILE__).'/_fixtures';
         $wa->setReturnValue('dbadd', true);
 
-        $this->assertNoErrors();
         $this->assertTrue(is_dir($wa->basedir.'/toto.txt'));
         $this->assertTrue($wa->exist());
         $this->assertTrue($wa->create());
@@ -79,7 +77,6 @@ class WikiAttachmentTest extends UnitTestCase {
         $wa->setReturnValue('dbadd', true);
         mkdir($wa->basedir.'/'.$wa->getFilesystemName());
 
-        $this->assertNoErrors();
         $this->assertTrue(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
         $this->assertTrue($wa->exist());
         $this->assertTrue($wa->create());
@@ -95,7 +92,7 @@ class WikiAttachmentTest extends UnitTestCase {
         $wa->initFilesystemName();
         $wa->basedir = dirname(__FILE__).'/_fixtures';
         $wa->setReturnValue('dbadd', true);
-        $this->assertNoErrors();
+
         $this->assertFalse(is_dir($wa->basedir.'/'.$wa->getFilesystemName()));
         $this->assertFalse($wa->exist());
         $this->assertTrue($wa->create());
@@ -117,7 +114,7 @@ class WikiAttachmentTest extends UnitTestCase {
         $wa->setReturnValue('getDao', $dao);
         $dao->setReturnValue('setPurgeDate', true);
         $dao->expectOnce('setPurgeDate');
-        $this->assertNoErrors();
+
         $this->assertTrue($wa->purgeAttachment());
         $this->assertFalse($wa->exist());
     }
@@ -135,7 +132,7 @@ class WikiAttachmentTest extends UnitTestCase {
         $wa->setReturnValue('getDao', $dao);
         $dao->setReturnValue('setPurgeDate', false);
         $dao->expectOnce('setPurgeDate');
-        $this->assertNoErrors();
+
         $this->assertFalse($wa->purgeAttachment());
         $this->assertFalse($wa->exist());
     }

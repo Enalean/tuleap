@@ -63,7 +63,7 @@ class Rule_FileTest extends UnitTestCase {
         $r->expectOnce('geti18nError', array('error_upload_size', UPLOAD_ERR_INI_SIZE));
         $this->file['error'] = UPLOAD_ERR_INI_SIZE;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertWantedPattern('/'.UPLOAD_ERR_INI_SIZE.'/', $r->error);
+        $this->assertPattern('/'.UPLOAD_ERR_INI_SIZE.'/', $r->error);
     }
 
     function testErrorFormSize() {
@@ -73,7 +73,7 @@ class Rule_FileTest extends UnitTestCase {
         $r->expectOnce('geti18nError', array('error_upload_size', UPLOAD_ERR_FORM_SIZE));
         $this->file['error'] = UPLOAD_ERR_FORM_SIZE;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertWantedPattern('/'.UPLOAD_ERR_FORM_SIZE.'/', $r->error);
+        $this->assertPattern('/'.UPLOAD_ERR_FORM_SIZE.'/', $r->error);
     }
 
     function testErrorPartial() {
@@ -83,7 +83,7 @@ class Rule_FileTest extends UnitTestCase {
         $r->expectOnce('geti18nError', array('error_upload_partial', UPLOAD_ERR_PARTIAL));
         $this->file['error'] = UPLOAD_ERR_PARTIAL;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertWantedPattern('/'.UPLOAD_ERR_PARTIAL.'/', $r->error);
+        $this->assertPattern('/'.UPLOAD_ERR_PARTIAL.'/', $r->error);
     }
 
     function testErrorNoFile() {
@@ -93,7 +93,7 @@ class Rule_FileTest extends UnitTestCase {
         $r->expectOnce('geti18nError', array('error_upload_nofile', UPLOAD_ERR_NO_FILE));
         $this->file['error'] = UPLOAD_ERR_NO_FILE;
         $this->assertFalse($r->isValid($this->file));
-        $this->assertWantedPattern('/'.UPLOAD_ERR_NO_FILE.'/', $r->error);
+        $this->assertPattern('/'.UPLOAD_ERR_NO_FILE.'/', $r->error);
     }
 
     /* PHP5
@@ -134,7 +134,7 @@ class Rule_FileTest extends UnitTestCase {
         $r->setReturnValue('geti18nError', UPLOAD_ERR_INI_SIZE);
         $r->expectOnce('geti18nError', array('error_upload_size', UPLOAD_ERR_INI_SIZE));
         $this->assertFalse($r->isValid($this->file));
-        $this->assertWantedPattern('/'.UPLOAD_ERR_INI_SIZE.'/', $r->error);
+        $this->assertPattern('/'.UPLOAD_ERR_INI_SIZE.'/', $r->error);
     }
 
     function testNoName() {

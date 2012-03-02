@@ -375,12 +375,12 @@ class BackendSVNTest extends UnitTestCase {
         $this->assertEqual($backend->updateSVNAccessForGivenMember($user), true);
        
         $backend->expectCallCount('repositoryExists', 2);
-        $backend->expectArgumentsAt(0, 'repositoryExists', array($project1));
-        $backend->expectArgumentsAt(1, 'repositoryExists', array($project2));
+        $backend->expectAt(0, 'repositoryExists', array($project1));
+        $backend->expectAt(1, 'repositoryExists', array($project2));
        
         $backend->expectCallCount('updateSVNAccess', 2);
-        $backend->expectArgumentsAt(0, 'updateSVNAccess', array(102));
-        $backend->expectArgumentsAt(1, 'updateSVNAccess', array(101));
+        $backend->expectAt(0, 'updateSVNAccess', array(102));
+        $backend->expectAt(1, 'updateSVNAccess', array(101));
        
             
     }

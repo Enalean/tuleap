@@ -14,14 +14,7 @@ Mock::generate('SVNCommitedFile');
  * Test the class SVNCommit
  */
 class SVNCommitTest extends UnitTestCase {
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function SVNCommitTest($name = 'SVNCommit test') {
-        $this->UnitTestCase($name);
-    }
-    
+
     function testIsFilePartOfCommit() {
         $cf1 =& new MockSVNCommitedFile($this);
         $cf1->setReturnValue('getPath', "/upgrades/scripts/CodendiUpgrade_001.class.php");

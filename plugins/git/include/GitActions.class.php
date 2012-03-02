@@ -32,18 +32,12 @@ require_once('Git_Backend_Gitolite.class.php');
 require_once('GitRepositoryFactory.class.php');
 require_once('common/layout/Layout.class.php');
 
-
 /**
  * GitActions
  * @todo call Event class instead of SystemEvent
  * @author Guillaume Storchi
  */
 class GitActions extends PluginActions {
-
-    /**
-     * @var GitRepositoryFactory
-     */
-    protected $factory;
 
     /**
      * @var SystemEventManager
@@ -57,9 +51,8 @@ class GitActions extends PluginActions {
      * @param GitRepositoryFactory $factory            The factory to manage repositories
      * @param SystemEventManager   $systemEventManager The system manager
      */
-    public function __construct($controller, GitRepositoryFactory $factory, SystemEventManager $systemEventManager) {
+    public function __construct($controller, SystemEventManager $systemEventManager) {
         parent::__construct($controller);
-        $this->factory = $factory;
         $this->systemEventManager = $systemEventManager;
 
     }
@@ -207,7 +200,6 @@ class GitActions extends PluginActions {
         return new GitDao();
     }
     
-    //TODO check repo - project?
     public function getRepositoryDetails($projectId, $repositoryId) {
         $c = $this->getController();
         $projectId    = intval($projectId);
@@ -495,42 +487,64 @@ class GitActions extends PluginActions {
 
     /**
      * Fork a bunch of repositories in a project for a given user
-     *
-     * Repositories that the user cannot access won't be forked as well as 
-     * those that don't belong to the project.
      * 
      * @param int    $groupId   The project id
      * @param array  $repos_ids The array of id of repositories to fork
-     * @param string $path      The path where the new repositories will live
+     * @param string $namespace The namespace where the new repositories will live
      * @param User   $user      The owner of those new repositories
      * @param Layout $response  The response object
-     *
-     * @return bool false if no repository has been cloned
      */
-    function forkRepositories($groupId, array $repos_ids, $path, User $user, Layout $response) {
-        $c = $this->getController();
-        if(empty($repos_ids)){
-            $c->addError($this->getText('actions_no_repository_selected'));
-            $success = false;
+    public function fork(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url) {
+        if ($this->forkRepositories($repos, $user, $namespace, $scope, $to_project)) {
+            $this->addInfo('successfully_forked');
+            $response->redirect($redirect_url);
         } else {
-            $nb_forked = 0;
-            foreach ($repos_ids as $id) {
-                if ($repo = $this->factory->getRepository($groupId, $id)) {
-                    if ($repo->userCanRead($user)) {
-                        $repo->fork($path, $user);
-                        $nb_forked++;
-                    }
-                }
-            }
-            $success = $nb_forked > 0;
+            $this->addError('actions_no_repository_forked');
         }
-        if ($success) {
-            $response->redirect('/plugins/git/?group_id='. (int)$groupId .'&user='. (int)$user->getId());
-        }
-        return $success;
     }
-
+    
+    /**
+     * Tell the controller to show the error $error
+     * 
+     * @param string $error error message to show
+     */
+    protected function addError($key_message) {
+        $controler = $this->getController();
+        $controler->addError($this->getText($key_message));
+    }
+    /**
+     * Tell the controller to show an info referenced by first parameter
+     * 
+     * @param string $key_message message to display
+     */
+    protected function addInfo($key_message) {
+        $controler = $this->getController();
+        $controler->addInfo($this->getText($key_message));
+    }
+    
+    /**
+     * Fork a list of repositories for the given user
+     *
+     * @param array $repos a list of GitRepository
+     * @param User $user
+     *
+     * @return bool whether dofork was called once or not
+     */
+    public function forkRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
+        $forked = false;
+        $repos  = array_filter($repos);
+        foreach($repos as $repo) {
+            try {
+                if ($repo->userCanRead($user)) {
+                    $repo->fork($user, $namespace, $scope, $project);
+                    $forked = true;
+                }
+            } catch (Exception $e) {
+                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_exists', array($repo->getName())));
+            }
+        }
+        return $forked;
+    }
 }
-
 
 ?>

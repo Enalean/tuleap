@@ -21,6 +21,7 @@ require_once('common/dao/include/DataAccessObject.class.php');
 require_once('exceptions/GitDaoException.class.php');
 require_once('common/project/ProjectManager.class.php');
 require_once('common/user/UserManager.class.php');
+require_once('GitRepository.class.php');
 /**
  * Description of GitDaoclass
  * @todo change date format to timestamp instead of mysql date format
@@ -451,6 +452,17 @@ class GitDao extends DataAccessObject {
                     AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00'
                   GROUP BY year, month";
         return $this->retrieve($query);
+    }
+    
+    public function isRepositoryExisting($project_id, $path) {
+        $project_id = $this->da->escapeInt($project_id);
+        $path       = $this->da->quoteSmart($path);
+        $sql = "SELECT NULL
+                FROM plugin_git
+                WHERE repository_path = $path
+                  AND project_id = $project_id
+                LIMIT 1";
+        return count($this->retrieve($sql)) > 0;
     }
 }
 

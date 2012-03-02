@@ -1,7 +1,12 @@
-Version 4.0.27 - NOT RELEASED YET
+Version 4.0.27.1 (Friday, March 2nd 2012)
+   == Bug fix ==
+   * Fix SOAP loginAs method (was not taking into account given session_hash).
+
+Version 4.0.27 (Friday, March 2nd 2012)
    == Bug Fix ==
    * In project export details, display db host instead of front end server
-   * Fix issue whith search while wiki is fr_FR
+   * Fix issue with search while wiki is fr_FR
+   * Fix issue on mandatory reference in commit message (sla #494)
 
    == Enhancement ==
    * Theme Tuleap 2.1: Official logo & colors.
@@ -11,10 +16,13 @@ Version 4.0.27 - NOT RELEASED YET
    ** For trackerv5, it can be customized into 'plugins/tracker/site-content/<lang>/tracker.tab' with key (plugin_tracker, service_lbl_key)
 
    == Plugins ==
-   * Tracker v5.0 See separate ChangeLog.
+   * New plugin: Agile Dashboard v0.4
+   DISCLAIMER: plugin in beta, do not use it on production servers.
+   * Tracker v5.1.1 See separate ChangeLog.
    * GraphOnTrackerV5 v5.0 See separate ChangeLog.
-   * Docman v2.24: See separte ChangeLog.
-   * LDAP v3.12: See separte ChangeLog.
+   * Docman v2.24: See separate ChangeLog.
+   * LDAP v3.12: See separate ChangeLog.
+   * Git v2.1.1: See separate ChangeLog.
 
    == Development ==
    * Fix issue in CI: lxc installation was missing yum repository generation

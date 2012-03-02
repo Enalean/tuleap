@@ -188,13 +188,13 @@ class PermissionsDao extends DataAccessObject {
     * 
     * @param int    $from
     * @param int    $to
-    * @param String $permission_type    
+    * @param Array $permission_type    
     * @param int    $duplicate_type
-    * @param array  $ugroup_mapping, an array of static ugroups
+    * @param Array  $ugroup_mapping, an array of static ugroups
     *
     * @return Boolean
     */
-    function duplicatePermissions($from, $to, $permission_type, $duplicate_type, $ugroup_mapping = false) {
+    function duplicatePermissions($from, $to, array $permission_type, $duplicate_type, $ugroup_mapping = false) {
         
         $from = $this->da->escapeInt($from);
         $to = $this->da->escapeInt($to);
@@ -226,7 +226,6 @@ class PermissionsDao extends DataAccessObject {
                     WHERE object_id='.$from.'
                         AND permission_type IN '.$permission_type
                         .$and;
-                        
         return $this->update($sql);
     }
     

@@ -440,14 +440,14 @@ class TrackerFactory {
         $pm = PermissionsManager::instance();
         $permission_type_tracker = array('PLUGIN_TRACKER_ADMIN','PLUGIN_TRACKER_ACCESS_FULL','PLUGIN_TRACKER_ACCESS_ASSIGNEE','PLUGIN_TRACKER_ACCESS_SUBMITTER','PLUGIN_TRACKER_NONE');
         //Duplicate tracker permissions
-        $pm->duplicatePermissions($id_template, $id, $permission_type_tracker, $duplicate_type, $ugroup_mapping);
+        $pm->duplicatePermissions($id_template, $id, $permission_type_tracker, $ugroup_mapping, $duplicate_type);
         
         $permission_type_field = array('PLUGIN_TRACKER_FIELD_SUBMIT','PLUGIN_TRACKER_FIELD_READ','PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_NONE');
         //Duplicate fields permissions
         foreach ($field_mapping as $f) {
             $from = $f['from'];
             $to = $f['to'];
-            $pm->duplicatePermissions($from, $to, $permission_type_field, $duplicate_type, $ugroup_mapping);
+            $pm->duplicatePermissions($from, $to, $permission_type_field, $ugroup_mapping, $duplicate_type);
         }
     }
 

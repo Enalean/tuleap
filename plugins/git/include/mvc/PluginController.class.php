@@ -79,7 +79,7 @@ class PluginController {
      * @param String url
      */
     public function redirect($url) {     
-        $GLOBALS['Response']->redirect($url);
+        $GLOBALS['HTML']->redirect($url);
     }
 
     /**
