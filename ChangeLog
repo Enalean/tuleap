@@ -1,4 +1,4 @@
-Version 4.0.27 - NOT RELEASED YET
+Version 4.0.27 (Friday, March 2nd 2012)
    == Bug Fix ==
    * In project export details, display db host instead of front end server
    * Fix issue with search while wiki is fr_FR
