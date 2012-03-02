@@ -31,6 +31,7 @@ require_once('common/widget/Widget_Static.class.php');
 require_once(dirname(__FILE__).'/../tracker_permissions.php');
 require_once('Tracker_Dispatchable_Interface.class.php');
 require_once('FormElement/Tracker_SharedFormElementFactory.class.php');
+require_once(dirname(__FILE__).'/../MustacheRenderer.class.php');
 
 require_once('json.php');
 
@@ -51,6 +52,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     private $formElementFactory;
     private $sharedFormElementFactory;
     private $project;
+    private $renderer;
 
     // attributes necessary to to create an intermediate Tracker Object
     // (before Database import) during XML import
@@ -86,8 +88,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->instantiate_for_new_projects = $instantiate_for_new_projects;
         $this->stop_notification            = $stop_notification;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
-        $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory
-                                                , new Tracker_FormElement_Field_List_BindFactory());
+        $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
+        $this->renderer                     = new MustacheRenderer(dirname(__FILE__).'/../../templates');
     }
 
     /**
@@ -531,6 +533,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
+            case 'admin-hierarchy':
+                $possible_children = array();
+                
+                $this->displayAdminItemHeader($tracker_manager, 'hierarchy');
+                $this->renderAdminHierarchy($possible_children);
+                
+                break;
             default:
                 //If there is nothing to do, display a report
                 if ($this->userCanView($current_user)) {
@@ -539,6 +548,12 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
         }
         return false;
+    }
+    
+    public function renderAdminHierarchy($possible_children) {
+        require_once('Hierarchy/Presenter.class.php');
+        $presenter = new Tracker_Hierarchy_Presenter($this, $possible_children);
+        $this->renderer->render('admin-hierarchy', $presenter);
     }
     
     public function createFormElement($type, $formElement_data, $user) {
@@ -1039,6 +1054,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','export'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','export_desc'),
                         'img'         => 'ic/48/tracker-export.png',
+                ),
+                'hierarchy' => array(
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-hierarchy',
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy_desc'),
+                        'img'         => 'ic/48/tracker-workflow.png',
                 ),
         );
     }

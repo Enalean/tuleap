@@ -1093,6 +1093,9 @@ plugin_tracker_admin	csv_import_desc	Importer des artefacts à partir d'un fichi
 plugin_tracker_admin	export	Export
 plugin_tracker_admin	export_desc	Exporter la structure du tracker
 
+plugin_tracker_admin	hierarchy	Hiérarchie
+plugin_tracker_admin	hierarchy_desc	Définir la hiérarchie de l'outil de suivi
+
 plugin_tracker_admin	manage_dependencies	Gérer les dépendances entre champs
 plugin_tracker_admin	manage_dependencies_desc	Définir comment les valeurs d'un champ dépendent des valeurs d'un autre champ
 

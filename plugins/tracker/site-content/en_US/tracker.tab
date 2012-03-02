@@ -1094,6 +1094,9 @@ plugin_tracker_admin	csv_import_desc	Import artifacts in the tracker from a CSV 
 plugin_tracker_admin	export	Export
 plugin_tracker_admin	export_desc	Export the tracker structure
 
+plugin_tracker_admin	hierarchy	Hierarchy
+plugin_tracker_admin	hierarchy_desc	Manage tracker hierarchy
+
 plugin_tracker_admin	manage_dependencies	Manage field dependencies
 plugin_tracker_admin	manage_dependencies_desc	Define how values in one field depend upon other field values.
 
