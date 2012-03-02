@@ -21,6 +21,9 @@ require_once 'UserManager.class.php';
 
 class User_SOAPServer {
 
+    /**
+     * @var UserManager
+     */
     private $userManager;
 
     public function __construct(UserManager $userManager) {
@@ -30,15 +33,17 @@ class User_SOAPServer {
    /**
     * loginAs allows the siteadmin to log as someone else
     *
+    * @param string $admin_session_hash Session hash of an admin user
     * @param string $username
     * 
     * @return string a session hash
     */
-    public function loginAs($username) {
+    public function loginAs($admin_session_hash, $username) {
         try {
+            $this->continueSession($admin_session_hash);
             return $this->userManager->loginAs($username);
         } catch (UserNotAuthorizedException $e) {
-            return new SoapFault('3300', 'Permission denied');
+            return new SoapFault('3300', 'Permission denied. You must be site admin to loginAs someonelse');
         } catch (UserNotExistException $e) {
             return new SoapFault('3301', 'User not exist');
         }catch (UserNotActiveException $e) {
@@ -48,6 +53,21 @@ class User_SOAPServer {
         }
     }
     
+    /**
+     *
+     * @see session_continue
+     * 
+     * @param String $sessionKey
+     * 
+     * @return User
+     */
+    private function continueSession($sessionKey) {
+        $user = $this->userManager->getCurrentUser($sessionKey);
+        if ($user->isLoggedIn()) {
+            return $user;
+        }
+        throw new SoapFault('3001', 'Invalid session');
+    }
   
 }
 
