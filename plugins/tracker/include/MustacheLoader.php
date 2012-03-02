@@ -83,3 +83,4 @@ class MustacheLoader implements ArrayAccess {
 		return $this->baseDir . '/' . $file . '.' . $this->extension;
 	}
 }
+?>
