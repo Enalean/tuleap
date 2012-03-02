@@ -50,7 +50,7 @@ abstract class TemplateRendererTest extends UnitTestCase {
 
 class MustacheRendererTest extends TemplateRendererTest {
     function setUp() {
-        $this->renderer = new MustacheRenderer(dirname(__FILE__));
+        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/templates');
         parent::setUp();
     }
 }
