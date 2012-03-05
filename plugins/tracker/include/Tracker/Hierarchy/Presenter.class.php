@@ -35,7 +35,7 @@ class Tracker_Hierarchy_Presenter {
     
     public function __construct(Tracker $tracker, $possible_children) {
         $this->tracker           = $tracker;
-        $this->possible_children = $possible_children;
+        $this->possible_children = array_values($possible_children);
     }
 }
 

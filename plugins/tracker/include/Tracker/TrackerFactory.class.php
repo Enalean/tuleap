@@ -85,6 +85,19 @@ class TrackerFactory {
         }
         return $trackers;
     }
+    
+    /**
+     * @param Tracker $tracker
+     * 
+     * @return Children trackers of the given tracker.
+     */
+    public function getPossibleChildren($tracker) {
+        $project_id = $tracker->getGroupId();
+        $trackers   = $this->getTrackersByGroupId($project_id);
+        
+        unset($trackers[$tracker->getId()]);
+        return $trackers;
+    }
 
     protected $dao;
     /**

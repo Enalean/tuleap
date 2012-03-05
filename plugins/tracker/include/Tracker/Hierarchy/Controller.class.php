@@ -22,33 +22,31 @@ require_once('Presenter.class.php');
 require_once(dirname(__FILE__).'/../../MustacheRenderer.class.php');
 
 class Tracker_Hierarchy_Controller {
+
+    /**
+     * @var Tracker
+     */
+    private $tracker;
+
     /**
      * @var TrackerFactory
      */
     private $factory;
-    public function __construct(Tracker $tracker, $factory) {
+    
+    public function __construct(Tracker $tracker, TrackerFactory $factory) {
         $this->tracker = $tracker;
         $this->factory = $factory;
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
     }
+    
     public function edit() {
-        $project_id = $this->tracker->getGroupId();
-        $trackers = $this->factory->getTrackersByGroupId($project_id);
-        $this->_edit(array_values($this->removeCurrentTrackerFrom($trackers)));
-    }
-    public function _edit($possible_children) {
-        $presenter = new Tracker_Hierarchy_Presenter($this->tracker, $possible_children);
+        $possible_children = $this->factory->getPossibleChildren($this->tracker);
+        $presenter         = new Tracker_Hierarchy_Presenter($this->tracker, $possible_children);
         $this->render('admin-hierarchy', $presenter);
     }
     
-    public function render($template_name, $presenter) {
+    private function render($template_name, $presenter) {
         echo $this->renderer->render($template_name, $presenter);
-    }
-
-    public function removeCurrentTrackerFrom($trackers) {
-        unset($trackers[$this->tracker->getId()]);
-        return $trackers;
-        
     }
 }
 ?>

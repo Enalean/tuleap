@@ -218,5 +218,22 @@ class TrackerFactoryTest extends UnitTestCase {
         
         $tracker_factory->duplicate(100, 999, null);
     }
+    
+    public function testGetPossibleChildrenShouldNotContainSelf() {
+        $current_tracker   = aTracker()->withId(1)->withName('Stories')->build();
+        $expected_children = array(
+            '2' => aTracker()->withId(2)->withName('Bugs')->build(),
+            '3' => aTracker()->withId(3)->withName('Tasks')->build(),
+        );
+        $all_project_trackers      = $expected_children;
+        $all_project_trackers['1'] = $current_tracker;
+        
+        $tracker_factory   = TestHelper::getPartialMock('TrackerFactory', array('getTrackersByGroupId'));
+        $tracker_factory->setReturnValue('getTrackersByGroupId', $all_project_trackers);
+        
+        $possible_children = $tracker_factory->getPossibleChildren($current_tracker);
+        
+        $this->assertEqual($possible_children, $expected_children);
+    }
 }
 ?>

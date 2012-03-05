@@ -27,12 +27,11 @@ Mock::generate('TrackerFactory');
 class Tracker_Hierarchy_ControllerTest extends UnitTestCase {
 
     function testObtainsTheChildrenFromTheFactory() {
-        $group_id = 101;
-        $tracker = aTracker()->withName('Stories')->withProjectId($group_id)->build();
+        $tracker = aTracker()->withName('Stories')->build();
         $possible_children = array('1' => aTracker()->withName('Bugs')->build(), 
                                    '2' => aTracker()->withName('Tasks')->build());
         $factory = new MockTrackerFactory();
-        $factory->setReturnValue('getTrackersByGroupId', $possible_children, array($group_id));
+        $factory->setReturnValue('getPossibleChildren', $possible_children, array($tracker));
         ob_start();
         $controller = new Tracker_Hierarchy_Controller($tracker, $factory);
         $controller->edit();
@@ -41,21 +40,6 @@ class Tracker_Hierarchy_ControllerTest extends UnitTestCase {
         
         $this->assertContainsAll(array('Bugs', 'Tasks'), $content);
     }
-    
-    function testWeDontDisplayTheCurrentTracker() {
-        $tracker = aTracker()->withId(1)->withName('Stories')->build();
-        $expectedTrackers = array(
-            '2' => aTracker()->withId(2)->withName('Bugs')->build(),
-            '3' => aTracker()->withId(3)->withName('Tasks')->build(),
-        );
-        $trackers = $expectedTrackers;
-        $trackers['1'] = $tracker;
-        $controller = new Tracker_Hierarchy_Controller($tracker, new MockTrackerFactory());
-        $filteredTrackers = $controller->removeCurrentTrackerFrom($trackers);
-        $this->assertEqual($filteredTrackers, $expectedTrackers);
-        
-    }
-    
     
     private function assertContainsAll($expected_strings, $actual_text) {
         foreach($expected_strings as $string) {
