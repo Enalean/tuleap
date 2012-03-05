@@ -68,5 +68,13 @@ class Tracker_HierarchyTest extends UnitTestCase {
         $this->expectException('Tracker_Hierarchy_CyclicHierarchyException');
         $hierarchy->getLevel(111);
     }
+    
+    public function testGetLevelShouldReturnOForEachRoots() {
+        $hierarchy = new Tracker_Hierarchy(array(array(112, 111), array(1002, 1050)));
+        $level = $hierarchy->getLevel(112);
+        $this->assertEqual(0, $level);
+        $level = $hierarchy->getLevel(1002);
+        $this->assertEqual(0, $level);
+    }
 }
 ?>

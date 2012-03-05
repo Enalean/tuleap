@@ -192,5 +192,33 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $this->assertIsA($tracker1, 'Tracker');
         $this->assertEqual($tracker1->getId(), 110);
     }
+    
+    public function testSearchCallGetViewWithTrackerHierarchy() {
+        $view = new MockAgileDashboard_SearchView();
+        
+        $trackers_ids = array(111, 112);
+        $trackers = array();
+        foreach( $trackers_ids as $tracker_id) {
+            $tracker = new MockTracker();
+            $tracker->setReturnValue('getId', $tracker_id);
+            $trackers[] = $tracker;
+        }
+        
+        $trackers_hierarchy = new Tracker_Hierarchy(array(array(111, 112)));
+        
+        $controller = TestHelper::getPartialMock(
+            'AgileDashboard_SearchController', 
+            array('getView', 'getTrackers', 'getProject', 'getService', 'getArtifacts', 'getReport', 'getCriteria', 'getTrackersHierarchy')
+        );
+        
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search);
+        
+        $controller->expectOnce('getView', array('*', '*', '*', '*', '*', $trackers, $trackers_hierarchy));
+        $controller->setReturnValue('getView', $view);
+        $controller->setReturnValue('getTrackers', $trackers);
+        $controller->setReturnValue('getTrackersHierarchy', $trackers_hierarchy , array($trackers));
+        
+        $controller->search();
+    }
 }
 ?>

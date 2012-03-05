@@ -30,6 +30,7 @@ Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Field_List');
 Mock::generate('Tracker_SharedFormElementFactory');
 Mock::generate('Tracker_Artifact_Changeset');
+Mock::generate('Tracker_Hierarchy');
 
 class AgileDashboard_SearchViewTest extends TuleapTestCase {
     
@@ -97,6 +98,23 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $this->assertPattern('/shared field value/', $output);
     }
     
+    function testRenderShouldPadTheArtifactsAccordingToTheirTrackerLevel() {
+        $service   = new MockService();
+        $criteria  = $this->GivenCriteria();
+        $artifacts = array(
+            array(
+                'id'                => '6',
+                'last_changeset_id' => '12345',
+                'title'             => 'As a user I want to search on shared fields',
+            )
+        );
+        $view = $this->GivenASearchView($service, $criteria, $artifacts);
+        
+        $output = $this->renderAndGetContent($view);
+        
+        $this->assertPattern('/padding-left: 2em;/', $output);
+    }
+    
     private function GivenASearchView($service, $criteria, $artifacts) {
         $report           = new MockTracker_Report();
         $artifact_factory = $this->GivenAnArtifactFactory($artifacts);
@@ -106,7 +124,11 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $project->setReturnValue('getPublicName', 'gpig');
         $tracker1         = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
         $trackers         = array($tracker1);
-        $view             = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
+        
+        $tracker_hierarchy = new MockTracker_Hierarchy();
+        $tracker_hierarchy->setReturnValue('getLevel', 2);
+        
+        $view             = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers, $tracker_hierarchy);
         return $view;
     }
     

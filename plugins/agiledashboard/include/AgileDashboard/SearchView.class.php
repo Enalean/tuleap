@@ -20,6 +20,7 @@
 
 require_once 'common/project/Service.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Report/Tracker_Report.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Hierarchy/Hierarchy.class.php';
 require_once 'html.php';
 
 class AgileDashboard_SearchView {
@@ -64,15 +65,21 @@ class AgileDashboard_SearchView {
      */
     private $trackers;
     
-    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_SharedFormElementFactory $shared_factory, $trackers) {
-        $this->language         = $language;
-        $this->service          = $service;
-        $this->report           = $report;
-        $this->criteria         = $criteria;
-        $this->artifacts        = $artifacts;
-        $this->artifact_factory = $artifact_factory;
-        $this->shared_factory   = $shared_factory;
-        $this->trackers         = $trackers;
+    /**
+     * @var Tracker_Hierarchy object that represent the hierarchy of trackers
+     */
+    private $tracker_hierarchy;
+    
+    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_SharedFormElementFactory $shared_factory, $trackers, Tracker_Hierarchy $tracker_hierarchy) {
+        $this->language          = $language;
+        $this->service           = $service;
+        $this->report            = $report;
+        $this->criteria          = $criteria;
+        $this->artifacts         = $artifacts;
+        $this->artifact_factory  = $artifact_factory;
+        $this->shared_factory    = $shared_factory;
+        $this->trackers          = $trackers;
+        $this->tracker_hierarchy = $tracker_hierarchy;
     }
     
     public function render() {
@@ -142,7 +149,8 @@ class AgileDashboard_SearchView {
             $artifact = $this->artifact_factory->getArtifactById($row['id']);
             if ($artifact) {
                 $html .= '<tr class="' . html_get_alt_row_color($i++) . '">';
-                $html .= '<td>';
+                $padding = $this->tracker_hierarchy->getLevel($artifact->getTracker()->getId());
+                $html .= '<td style="padding-left: '. $padding .'em;">';
                 $html .= $artifact->fetchDirectLinkToArtifact();
                 $html .= '</td>';
                 $html .= '<td>';
