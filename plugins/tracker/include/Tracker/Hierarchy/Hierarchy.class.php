@@ -46,21 +46,27 @@ class Tracker_Hierarchy {
     
     private function getLevelRecursive($tracker_id) {
         if (array_key_exists($tracker_id, $this->parents)) {
-            $parent = $this->parents[$tracker_id];
-            if (is_null($parent)) {
-                return 0;
-            } else {
-                if (in_array($parent, $this->levelHierarchyTmp) === true ) {
-                    $message = 'Tracker hierarchy is Cyclic';
-                    throw new Exception($message);
-                }
-                $this->levelHierarchyTmp[] = $parent;
-                return $this->getLevelRecursive($parent) + 1;
-            }
+            return $this->computeLevel($this->parents[$tracker_id]);
         } else {
             $message = 'Tracker not in hierarchy';
             throw new Exception($message);
         }
+    }
+    
+    private function computeLevel($tracker_id) {
+        if (is_null($tracker_id)) {
+            return 0;
+        }
+        $this->assertHierarchyIsNotCyclic($tracker_id);
+        return $this->getLevelRecursive($tracker_id) + 1;
+    }
+    
+    private function assertHierarchyIsNotCyclic($tracker_id) {
+        if (in_array($tracker_id, $this->levelHierarchyTmp) === true ) {
+            $message = 'Tracker hierarchy is Cyclic';
+            throw new Exception($message);
+        }
+        $this->levelHierarchyTmp[] = $tracker_id;
     }
 }
 ?>
