@@ -34,14 +34,18 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
         $sql = "INSERT INTO tracker_hierarchy(parent_id, child_id) VALUES ".implode(',', $insert_values);
         $this->update($sql);
     }
-    
+
     public function getChildren($tracker_id) {
         
     }
     
     public function searchTrackerHierarchy(array $tracker_ids) {
+        $tracker_ids = array_map(array($this->da, 'escapeInt'), $tracker_ids);
+        $tracker_ids = implode(',', $tracker_ids);
         $sql = "SELECT parent_id, child_id
-                FROM tracker_hierarchy";
+                FROM tracker_hierarchy 
+                WHERE parent_id IN ($tracker_ids) 
+                   OR child_id  IN ($tracker_ids)";
         return $this->retrieve($sql);
     }
 }

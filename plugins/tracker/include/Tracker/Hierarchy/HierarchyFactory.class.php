@@ -22,17 +22,29 @@ require_once 'Hierarchy.class.php';
 require_once 'Dao.class.php';
 
 class Tracker_HierarchyFactory {
+    
     protected $hierarchy_dao;
+    
     public function __construct(Tracker_Hierarchy_Dao $hierarchy_dao) {
         $this->hierarchy_dao = $hierarchy_dao;
     }
-    public function getHierarchy() {
-         $hierarchy = new Tracker_Hierarchy();
-         $hierarchy_dar = $this->hierarchy_dao->searchTrackerHierarchy();
-         foreach ($hierarchy_dar as $row) {
-             $hierarchy->addRelationship($row['parent_id'], $row['child_id']);
-         }
-         return $hierarchy;
+    
+    public function getHierarchy($tracker_ids = array()) {
+        $hierarchy             = new Tracker_Hierarchy();
+        $search_tracker_ids    = $tracker_ids;
+        $processed_tracker_ids = array();
+        while (!empty($search_tracker_ids)) {
+            $hierarchy_dar         = $this->hierarchy_dao->searchTrackerHierarchy($search_tracker_ids);
+            $processed_tracker_ids = array_merge($processed_tracker_ids, $search_tracker_ids);
+            $search_tracker_ids    = array();
+            foreach ($hierarchy_dar as $row) {
+                $hierarchy->addRelationship($row['parent_id'], $row['child_id']);
+                $search_tracker_ids[] = $row['parent_id'];
+                $search_tracker_ids[] = $row['child_id'];
+            }
+            $search_tracker_ids = array_values(array_diff($search_tracker_ids, $processed_tracker_ids));
+        }
+        return $hierarchy;
     }
 }
 

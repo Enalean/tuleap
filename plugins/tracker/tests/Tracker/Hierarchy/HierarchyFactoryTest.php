@@ -23,18 +23,14 @@ require_once dirname(__FILE__) .'/../../../include/Tracker/Hierarchy/HierarchyFa
 Mock::generate('Tracker_Hierarchy_Dao');
 
 class Tracker_HierarchyFactoryTest extends UnitTestCase {
-    
+
     public function testFactoryShouldCreateAHierarchy() {
-        $dao     = new MockTracker_Hierarchy_Dao();
-        $dao->setReturnValue('searchTrackerHierarchy', array());
-        $factory = new Tracker_HierarchyFactory($dao);
+        $factory = $this->GivenAHierarchyFactory();
         $this->assertIsA($factory->getHierarchy(), 'Tracker_Hierarchy');
     }
     
     public function testFactoryShouldReturnManyDifferentHierarchies() {
-        $dao     = new MockTracker_Hierarchy_Dao();
-        $dao->setReturnValue('searchTrackerHierarchy', array());
-        $factory = new Tracker_HierarchyFactory($dao);
+        $factory = $this->GivenAHierarchyFactory();
         
         $h1 = $factory->getHierarchy();
         $h2 = $factory->getHierarchy();
@@ -43,23 +39,60 @@ class Tracker_HierarchyFactoryTest extends UnitTestCase {
     }
     
     public function testFactoryShouldCallTheDatabaseToBuildHierarchy() {
-        $dao     = new MockTracker_Hierarchy_Dao();
+        $dao = new MockTracker_Hierarchy_Dao();
         $dao->setReturnValue('searchTrackerHierarchy', array());
-        $factory = new Tracker_HierarchyFactory($dao);
-        
         $dao->expectOnce('searchTrackerHierarchy');
         
-        $factory->getHierarchy();
+        $factory = $this->GivenAHierarchyFactory($dao);
+        $factory->getHierarchy(array(111));
     }
     
     public function testFactoryShouldReturnARealHierarchyAccordingToDatabase() {
         $dao     = new MockTracker_Hierarchy_Dao();
-        $factory = new Tracker_HierarchyFactory($dao);
-        
         $dao->setReturnValue('searchTrackerHierarchy', TestHelper::arrayToDar(array('parent_id' => 111, 'child_id' => 112)));
         
-        $hierarchy = $factory->getHierarchy();
+        $factory = $this->GivenAHierarchyFactory($dao);
+        
+        $hierarchy = $factory->getHierarchy(array(111));
         $this->assertEqual($hierarchy->getLevel(112), 1);
+    }
+    
+    public function testFactoryShouldReturnFullHierarchy() {
+        /*
+          111
+          +- 112
+             +- 113
+                +- 114
+        */
+        $dao = $this->GivenADaoThatContainsFullHierarchy();
+        $factory = $this->GivenAHierarchyFactory($dao);
+        
+        $hierarchy = $factory->getHierarchy(array(111, 114));
+        $this->assertEqual($hierarchy->getLevel(114), 3);
+    }
+    
+    private function GivenADaoThatContainsFullHierarchy() {
+        $dao     = new MockTracker_Hierarchy_Dao();
+        $dar1 = TestHelper::arrayToDar(
+            array('parent_id' => 111, 'child_id' => 112),
+            array('parent_id' => 113, 'child_id' => 114)
+        );
+        $dao->setReturnValue('searchTrackerHierarchy', $dar1, array(array(111, 114)));
+        $dar2 = TestHelper::arrayToDar(
+            array('parent_id' => 111, 'child_id' => 112),
+            array('parent_id' => 112, 'child_id' => 113),
+            array('parent_id' => 113, 'child_id' => 114)
+        );
+        $dao->setReturnValue('searchTrackerHierarchy', $dar2, array(array(112, 113)));
+        return $dao;
+    }
+    
+    private function GivenAHierarchyFactory($dao = null) {
+        if (!$dao) {
+            $dao = new MockTracker_Hierarchy_Dao();
+            $dao->setReturnValue('searchTrackerHierarchy', array());
+        }
+        return new Tracker_HierarchyFactory($dao);
     }
 }
 ?>
