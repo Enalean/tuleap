@@ -18,11 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Presenter.class.php');
-require_once(dirname(__FILE__).'/../../MustacheRenderer.class.php');
+require_once 'Presenter.class.php';
+require_once 'Dao.class.php';
+require_once dirname(__FILE__).'/../../MustacheRenderer.class.php';
+require_once 'common/valid/ValidFactory.class.php';
 
 class Tracker_Hierarchy_Controller {
 
+    /**
+     * @var Codendi_Request
+     */
+    private $request;
+    
     /**
      * @var Tracker
      */
@@ -33,9 +40,16 @@ class Tracker_Hierarchy_Controller {
      */
     private $factory;
     
-    public function __construct(Tracker $tracker, TrackerFactory $factory) {
-        $this->tracker = $tracker;
-        $this->factory = $factory;
+    /**
+     * @var Tracker_Hierarchy_Dao
+     */
+    private $dao;
+    
+    public function __construct(Codendi_Request $request, Tracker $tracker, TrackerFactory $factory, Tracker_Hierarchy_Dao $dao) {
+        $this->request  = $request;
+        $this->tracker  = $tracker;
+        $this->factory  = $factory;
+        $this->dao      = $dao;
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
     }
     
@@ -43,6 +57,26 @@ class Tracker_Hierarchy_Controller {
         $possible_children = $this->factory->getPossibleChildren($this->tracker);
         $presenter         = new Tracker_Hierarchy_Presenter($this->tracker, $possible_children);
         $this->render('admin-hierarchy', $presenter);
+    }
+    
+    public function update() {
+        $vChildren = new Valid_UInt('children');
+        $vChildren->required();
+        
+        if ($this->request->validArray($vChildren)) {
+            $this->dao->updateChildren($this->tracker->getId(),
+                                       $this->request->get('children'));
+        } else {
+            $GLOBALS['Response']->addFeedback('error', 'Please select some child tracker from the list below');
+        }
+        
+        $this->redirect(array('tracker' => $this->tracker->getId(),
+                              'func'    => 'admin-hierarchy'));
+    }
+    
+    private function redirect($query_parts) {
+        $redirect = http_build_query($query_parts);
+        $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'.$redirect);
     }
     
     private function render($template_name, $presenter) {

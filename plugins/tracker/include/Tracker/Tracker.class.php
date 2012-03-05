@@ -533,10 +533,20 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 }
                 break;
             case 'admin-hierarchy':
+                $factory    = $this->getTrackerFactory();
+                $dao        = new Tracker_Hierarchy_Dao();
+                $controller = new Tracker_Hierarchy_Controller($request, $this, $factory, $dao);
+                
                 $this->displayAdminItemHeader($tracker_manager, 'hierarchy');
-                $controller = new Tracker_Hierarchy_Controller($this, $this->getTrackerFactory());
                 $controller->edit();
                 $this->displayFooter($tracker_manager);
+                break;
+            case 'admin-hierarchy-update':
+                $factory    = $this->getTrackerFactory();
+                $dao        = new Tracker_Hierarchy_Dao();
+                $controller = new Tracker_Hierarchy_Controller($request, $this, $factory, $dao);
+                
+                $controller->update();
                 break;
             default:
                 //If there is nothing to do, display a report
