@@ -30,7 +30,7 @@ class Tracker_Hierarchy {
     public function __construct(array $parents) {
         $this->parents = array();
         foreach ($parents as $parent_child) {
-            $this->addRelationship($parent_child[0], $parent_child[1]);
+            $this->addRelationship($parent_child['parent_id'], $parent_child['child_id']);
         }
     }
     

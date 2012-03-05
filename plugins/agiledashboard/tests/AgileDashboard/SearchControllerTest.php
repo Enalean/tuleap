@@ -204,7 +204,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
             $trackers[] = $tracker;
         }
         
-        $trackers_hierarchy = new Tracker_Hierarchy(array(array(111, 112)));
+        $trackers_hierarchy = new Tracker_Hierarchy(array(array('parent_id' => 111, 'child_id' => 112)));
         
         $controller = TestHelper::getPartialMock(
             'AgileDashboard_SearchController', 
