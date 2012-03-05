@@ -51,5 +51,10 @@ class Tracker_HierarchyTest extends UnitTestCase {
         $this->assertEqual(2, $level);
     }
     
+    public function testGetLevelShouldRaiseAnExceptionIfTheHierarchyIsCyclic() {
+        $hierarchy = new Tracker_Hierarchy(array(array(111, 112), array(112, 111)));
+        $this->expectException();
+        $hierarchy->getLevel(112);
+    }
 }
 ?>

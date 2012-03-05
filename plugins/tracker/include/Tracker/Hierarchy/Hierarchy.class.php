@@ -20,33 +20,42 @@
 
 class Tracker_Hierarchy {
     
-    private $relationships=array();
+    private $parents = array();
+
+    private $levelHierarchyTmp = array();
     
-    public function __construct(array $relationships) {
-        $this->relationships = array();
-        foreach ($relationships as $parent_child) {
+    public function __construct(array $parents) {
+        $this->parents = array();
+        foreach ($parents as $parent_child) {
             $this->addRelationship($parent_child[0], $parent_child[1]);
         }
     }
     
     private function addRelationship($parent, $child) {
-        $this->relationships = array_merge_recursive(
-            $this->relationships, 
-            array(
-                "_$parent" => array('parent'=> array(),        'children' => array($child)),
-                "_$child"  => array('parent'=> array($parent), 'children' => array()),
-            )
-        );
+        if (!array_key_exists($parent, $this->parents)) {
+            $this->parents[$parent] = null;
+        }
+        $this->parents[$child] = $parent;
     }
     
     
     public function getLevel($tracker_id) {
-        if (isset($this->relationships["_$tracker_id"])) {
-            $parents = $this->relationships["_$tracker_id"]['parent'];
-            if (!empty($parents)) {
-                return $this->getLevel($parents[0]) + 1;
-            } else {
+        $this->levelHierarchyTmp = array();
+        return $this->getLevelRecursive($tracker_id);
+    }
+    
+    private function getLevelRecursive($tracker_id) {
+        if (array_key_exists($tracker_id, $this->parents)) {
+            $parent = $this->parents[$tracker_id];
+            if (is_null($parent)) {
                 return 0;
+            } else {
+                if (in_array($parent, $this->levelHierarchyTmp) === true ) {
+                    $message = 'Tracker hierarchy is Cyclic';
+                    throw new Exception($message);
+                }
+                $this->levelHierarchyTmp[] = $parent;
+                return $this->getLevelRecursive($parent) + 1;
             }
         } else {
             $message = 'Tracker not in hierarchy';
