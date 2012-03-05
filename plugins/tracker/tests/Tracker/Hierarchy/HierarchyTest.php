@@ -52,9 +52,15 @@ class Tracker_HierarchyTest extends UnitTestCase {
     }
     
     public function testGetLevelShouldRaiseAnExceptionIfTheHierarchyIsCyclic() {
-        $hierarchy = new Tracker_Hierarchy(array(array(111, 112), array(112, 111)));
+        $hierarchy = new Tracker_Hierarchy(
+            array(
+                array(112, 111),
+                array(112, 113),
+                array(113, 112),
+            )
+        );
         $this->expectException();
-        $hierarchy->getLevel(112);
+        $hierarchy->getLevel(111);
     }
 }
 ?>
