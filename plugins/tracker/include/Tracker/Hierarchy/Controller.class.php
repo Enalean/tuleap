@@ -22,6 +22,7 @@ require_once 'Presenter.class.php';
 require_once 'Dao.class.php';
 require_once dirname(__FILE__).'/../../MustacheRenderer.class.php';
 require_once 'common/valid/ValidFactory.class.php';
+require_once 'HierarchicalTrackerFactory.class.php';
 
 class Tracker_Hierarchy_Controller {
 
@@ -36,7 +37,7 @@ class Tracker_Hierarchy_Controller {
     private $tracker;
 
     /**
-     * @var TrackerFactory
+     * @var Tracker_Hierarchy_HierarchicalTrackerFactory
      */
     private $factory;
     
@@ -45,7 +46,7 @@ class Tracker_Hierarchy_Controller {
      */
     private $dao;
     
-    public function __construct(Codendi_Request $request, Tracker $tracker, TrackerFactory $factory, Tracker_Hierarchy_Dao $dao) {
+    public function __construct(Codendi_Request $request, Tracker $tracker, Tracker_Hierarchy_HierarchicalTrackerFactory $factory, Tracker_Hierarchy_Dao $dao) {
         $this->request  = $request;
         $this->tracker  = $tracker;
         $this->factory  = $factory;

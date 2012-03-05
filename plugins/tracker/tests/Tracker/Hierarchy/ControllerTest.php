@@ -22,6 +22,7 @@ require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Presenter.cl
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Controller.class.php');
 require_once(dirname(__FILE__).'/../../Test_Tracker_Builder.php');
 Mock::generate('Tracker');
+Mock::generate('Tracker_Hierarchy_HierarchicalTrackerFactory');
 Mock::generate('TrackerFactory');
 Mock::generate('Tracker_Hierarchy_Dao');
 
@@ -36,9 +37,11 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         
         $this->tracker_id           = 3;
         $this->tracker              = aTracker()->withId($this->tracker_id)->withName('Stories')->build();
+        $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->tracker, array());
         $this->request              = new Codendi_Request(array());
-        $this->factory              = new MockTrackerFactory();
+        $this->tracker_factory      = new MockTrackerFactory();
         $this->dao                  = new MockTracker_Hierarchy_Dao();
+        $this->factory              = new MockTracker_Hierarchy_HierarchicalTrackerFactory($this->tracker_factory, $this->dao);
         $this->redirect_url         = TRACKER_BASE_URL."/?tracker=$this->tracker_id&func=admin-hierarchy";
     }
 
