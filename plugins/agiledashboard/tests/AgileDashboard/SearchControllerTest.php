@@ -217,7 +217,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $controller->search();
     }
     
-    public function testsSearchCreateTrackerHierarchyFromDatabase() {
+    public function testSearchCreateTrackerHierarchyFromDatabase() {
         $view = new MockAgileDashboard_SearchView();
                                                                             
         $trackers_ids = array(111, 112);

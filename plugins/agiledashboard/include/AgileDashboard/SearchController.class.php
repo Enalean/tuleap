@@ -103,7 +103,11 @@ class AgileDashboard_SearchController {
             $tracker_ids[] = $tracker->getId();
         }
         $hierarchy_rows = $this->hierarchy_dao->searchTrackerHierarchy($tracker_ids);
-        return new Tracker_Hierarchy($hierarchy_rows);
+        $hierarchy = new Tracker_Hierarchy();
+        foreach ($hierarchy_rows as $row) {
+            $hierarchy->addRelationship($row['parent_id'], $row['child_id']);
+        }
+        return $hierarchy;
     }
     
     protected function getArtifacts(array $trackers) {
