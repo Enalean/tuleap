@@ -24,21 +24,25 @@ require_once(dirname(__FILE__).'/../../Test_Tracker_Builder.php');
 Mock::generate('Tracker');
 Mock::generate('TrackerFactory');
 
-class Tracker_Hierarchy_ControllerTest extends UnitTestCase {
+if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/plugins/tracker');
+}
+
+class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
 
     function testObtainsTheChildrenFromTheFactory() {
-        $tracker = aTracker()->withName('Stories')->build();
-        $possible_children = array('1' => aTracker()->withName('Bugs')->build(), 
-                                   '2' => aTracker()->withName('Tasks')->build());
+        $tracker    = aTracker()->withName('Stories')->build();
+        $possible_children = array('1' => aTracker()->withId(1)->withName('Bugs')->build(), 
+                                   '2' => aTracker()->withId(2)->withName('Tasks')->build());
         $factory = new MockTrackerFactory();
         $factory->setReturnValue('getPossibleChildren', $possible_children, array($tracker));
+
         ob_start();
         $controller = new Tracker_Hierarchy_Controller($tracker, $factory);
         $controller->edit();
-
         $content = ob_get_clean();
         
-        $this->assertContainsAll(array('Bugs', 'Tasks'), $content);
+        $this->assertContainsAll(array('value="1".*Bugs', 'value="2".*Tasks'), $content);
     }
     
     private function assertContainsAll($expected_strings, $actual_text) {

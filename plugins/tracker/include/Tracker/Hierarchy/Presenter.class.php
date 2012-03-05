@@ -37,6 +37,18 @@ class Tracker_Hierarchy_Presenter {
         $this->tracker           = $tracker;
         $this->possible_children = array_values($possible_children);
     }
+    
+    public function getTrackerUrl() {
+        return TRACKER_BASE_URL;
+    }
+    
+    public function getTrackerId() {
+        return $this->tracker->getId();
+    }
+    
+    public function getSubmitLabel() {
+        return $GLOBALS['Language']->getText('global', 'btn_submit');
+    }
 }
 
 ?>
