@@ -22,22 +22,20 @@ require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Presenter.cl
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Controller.class.php');
 require_once(dirname(__FILE__).'/../../Test_Tracker_Builder.php');
 Mock::generate('Tracker');
+Mock::generate('TrackerFactory');
 
 class Tracker_Hierarchy_ControllerTest extends UnitTestCase {
-    function testRendersChildrenNames() {
-        $tracker = aTracker()->withName('Stories')->build();
 
-        $possible_child_1 = new MockTracker();
-        $possible_child_1->setReturnValue('getName', 'Bugs');
-        
-        $possible_child_2 = new MockTracker();
-        $possible_child_2->setReturnValue('getName', 'Tasks');
-        
-        $possible_children = array($possible_child_1, $possible_child_2);
-        
+    function testObtainsTheChildrenFromTheFactory() {
+        $group_id = 101;
+        $tracker = aTracker()->withName('Stories')->withProjectId($group_id)->build();
+        $possible_children = array('1' => aTracker()->withName('Bugs')->build(), 
+                                   '2' => aTracker()->withName('Tasks')->build());
+        $factory = new MockTrackerFactory();
+        $factory->setReturnValue('getTrackersByGroupId', $possible_children, array($group_id));
         ob_start();
-        $controller = new Tracker_Hierarchy_Controller($tracker);
-        $controller->edit($possible_children);
+        $controller = new Tracker_Hierarchy_Controller($tracker, $factory);
+        $controller->edit();
 
         $content = ob_get_clean();
         

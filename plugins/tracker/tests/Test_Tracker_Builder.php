@@ -46,6 +46,11 @@ class Test_Tracker_Builder {
         return $this;
     }
     
+    public function withProjectId($project_id) {
+        $this->project_id = $project_id;
+        return $this;
+    }
+    
     public function withName($name) {
         $this->name = $name;
         return $this;

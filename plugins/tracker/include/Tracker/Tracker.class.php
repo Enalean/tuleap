@@ -534,9 +534,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 break;
             case 'admin-hierarchy':
                 $this->displayAdminItemHeader($tracker_manager, 'hierarchy');
-                $possible_children = array();
-                $controller = new Tracker_Hierarchy_Controller($this);
-                $controller->edit($possible_children);
+                $controller = new Tracker_Hierarchy_Controller($this, $this->getTrackerFactory());
+                $controller->edit();
                 $this->displayFooter($tracker_manager);
                 break;
             default:
