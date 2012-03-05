@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'NotInHierarchyException.class.php';
+require_once 'CyclicHierarchyException.class.php';
+
 class Tracker_Hierarchy {
     
     private $parents = array();
@@ -48,8 +51,7 @@ class Tracker_Hierarchy {
         if (array_key_exists($tracker_id, $this->parents)) {
             return $this->computeLevel($this->parents[$tracker_id]);
         } else {
-            $message = 'Tracker not in hierarchy';
-            throw new Exception($message);
+            throw new Tracker_Hierarchy_NotInHierarchyException();
         }
     }
     
@@ -63,8 +65,7 @@ class Tracker_Hierarchy {
     
     private function assertHierarchyIsNotCyclic($tracker_id) {
         if (in_array($tracker_id, $this->levelHierarchyTmp) === true ) {
-            $message = 'Tracker hierarchy is Cyclic';
-            throw new Exception($message);
+            throw new Tracker_Hierarchy_CyclicHierarchyException($message);
         }
         $this->levelHierarchyTmp[] = $tracker_id;
     }

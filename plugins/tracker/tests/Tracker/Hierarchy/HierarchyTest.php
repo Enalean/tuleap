@@ -23,7 +23,7 @@ class Tracker_HierarchyTest extends UnitTestCase {
     
     public function testWithEmptyHierarchGetLevelyShouldThrowExceptionForAnyTracker() {
         $hierarchy = new Tracker_Hierarchy(array());
-        $this->expectException();
+        $this->expectException('Tracker_Hierarchy_NotInHierarchyException');
         $hierarchy->getLevel(1);
     }
     
@@ -59,7 +59,13 @@ class Tracker_HierarchyTest extends UnitTestCase {
                 array(113, 112),
             )
         );
-        $this->expectException();
+        $this->expectException('Tracker_Hierarchy_CyclicHierarchyException');
+        $hierarchy->getLevel(111);
+    }
+    
+    public function testChildCannotBeItsParent() {
+        $hierarchy = new Tracker_Hierarchy(array(array(111, 111)));
+        $this->expectException('Tracker_Hierarchy_CyclicHierarchyException');
         $hierarchy->getLevel(111);
     }
 }
