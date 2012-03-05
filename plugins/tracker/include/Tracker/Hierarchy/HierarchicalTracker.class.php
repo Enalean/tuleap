@@ -26,16 +26,20 @@ class Tracker_Hierarchy_HierarchicalTracker {
     private $parent;
     
     /**
-     * @var Tracker
+     * @var Array of Tracker
      */
     private $children;
     
-    public function __construct($parent, $children) {
+    public function __construct(Tracker $parent, array $children) {
         $this->parent   = $parent;
         $this->children = $children;
     }
     
-    public function hasChild($tracker) {
+    public function getChildren() {
+        return $this->children;
+    }
+    
+    public function hasChild(Tracker $tracker) {
         return in_array($tracker, $this->children);
     }
 }

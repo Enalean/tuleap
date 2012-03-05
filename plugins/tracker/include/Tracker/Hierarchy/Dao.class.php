@@ -35,6 +35,10 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
         $this->update($sql);
     }
     
+    public function getChildren($tracker_id) {
+        
+    }
+    
     public function searchTrackerHierarchy(array $tracker_ids) {
         $sql = "SELECT parent_id, child_id
                 FROM tracker_hierarchy";

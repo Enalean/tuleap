@@ -1,8 +1,8 @@
 <form method="post" action="{{getTrackerUrl}}/?tracker={{getTrackerId}}&func=admin-hierarchy-update">
     <select name="children" multiple="multiple">
-        {{#possible_children}}
-            <option value="{{getId}}">{{getName}}</option>
-        {{/possible_children}}
+        {{#getPossibleChildren}}
+            <option value="{{id}}" {{selected}}>{{name}}</option>
+        {{/getPossibleChildren}}
     </select>
     <input type="submit" value="{{getSubmitLabel}}">
 </form>

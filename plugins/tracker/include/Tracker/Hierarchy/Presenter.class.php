@@ -49,6 +49,30 @@ class Tracker_Hierarchy_Presenter {
     public function getSubmitLabel() {
         return $GLOBALS['Language']->getText('global', 'btn_submit');
     }
+    
+    public function getPossibleChildren() {
+        return $this->possible_children;
+        
+        $possible_children = array();
+        
+        foreach ($this->possible_children as $possible_child) {
+            $selected = $this->getSelectedAttribute($possible_child);
+                    
+            $possible_children[] = array('id'       => $possible_child->getId(),
+                                         'name'     => $possible_child->getName(),
+                                         'selected' => $selected);
+        }
+        
+        return $possible_children;
+    }
+    
+    private function getSelectedAttribute(Tracker $possible_child) {
+        $tracker_hierarchy = new Tracker_WithHierarchy($tracker);
+        $tracker_hierarchy->hasChild($this->tracker, $possible_child);
+        if ($this->tracker->hasChild($possible_child)) {
+            return 'selected="selected"';
+        }
+    }
 }
 
 ?>
