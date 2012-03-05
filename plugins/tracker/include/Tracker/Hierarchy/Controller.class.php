@@ -34,7 +34,7 @@ class Tracker_Hierarchy_Controller {
     public function edit() {
         $project_id = $this->tracker->getGroupId();
         $trackers = $this->factory->getTrackersByGroupId($project_id);
-        $this->_edit(array_values($trackers));
+        $this->_edit(array_values($this->removeCurrentTrackerFrom($trackers)));
     }
     public function _edit($possible_children) {
         $presenter = new Tracker_Hierarchy_Presenter($this->tracker, $possible_children);
@@ -43,6 +43,12 @@ class Tracker_Hierarchy_Controller {
     
     public function render($template_name, $presenter) {
         echo $this->renderer->render($template_name, $presenter);
+    }
+
+    public function removeCurrentTrackerFrom($trackers) {
+        unset($trackers[$this->tracker->getId()]);
+        return $trackers;
+        
     }
 }
 ?>
