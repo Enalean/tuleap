@@ -27,7 +27,7 @@ class Tracker_Hierarchy {
 
     private $levelHierarchyTmp = array();
     
-    public function __construct(array $parents) {
+    public function __construct($parents) {
         $this->parents = array();
         foreach ($parents as $parent_child) {
             $this->addRelationship($parent_child['parent_id'], $parent_child['child_id']);

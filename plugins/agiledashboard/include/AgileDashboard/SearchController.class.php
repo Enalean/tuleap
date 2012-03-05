@@ -22,6 +22,7 @@ require_once 'SearchView.class.php';
 require_once 'ServiceNotUsedException.class.php';
 require_once 'ProjectNotFoundException.class.php';
 require_once 'Search.class.php';
+require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/Hierarchy/Dao.class.php';
 
 class AgileDashboard_SearchController {
     /**
@@ -49,6 +50,8 @@ class AgileDashboard_SearchController {
      */
     private $formElementFactory;
     
+    private $hierarchy_dao;
+    
     /**
      * @var AgileDashboard_Search
      */
@@ -59,7 +62,8 @@ class AgileDashboard_SearchController {
                                 Tracker_FormElementFactory $formElementFactory, 
                                 BaseLanguage               $language, 
                                 Layout                     $layout,
-                                AgileDashboard_Search      $search) {
+                                AgileDashboard_Search      $search,
+                                Tracker_Hierarchy_Dao      $hierarchy_dao) {
         
         $this->request            = $request;
         $this->projectManager     = $projectManager;
@@ -67,6 +71,7 @@ class AgileDashboard_SearchController {
         $this->layout             = $layout;
         $this->formElementFactory = $formElementFactory;
         $this->search             = $search;
+        $this->hierarchy_dao      = $hierarchy_dao;
     }
 
     public function search() {
@@ -93,7 +98,12 @@ class AgileDashboard_SearchController {
     }
     
     protected function getTrackersHierarchy($trackers) {
-        return new Tracker_Hierarchy(array(111, 112));
+        $tracker_ids = array();
+        foreach ($trackers as $tracker) {
+            $tracker_ids[] = $tracker->getId();
+        }
+        $hierarchy_rows = $this->hierarchy_dao->searchTrackerHierarchy($tracker_ids);
+        return new Tracker_Hierarchy($hierarchy_rows);
     }
     
     protected function getArtifacts(array $trackers) {

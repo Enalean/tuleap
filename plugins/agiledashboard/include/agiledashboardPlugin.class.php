@@ -82,7 +82,8 @@ class AgileDashboardPlugin extends Plugin {
             $formElementFactory,
             $GLOBALS['Language'],
             $GLOBALS['Response'],
-            $search
+            $search,
+            new Tracker_Hierarchy_Dao()
         );
     }
 }
