@@ -36,7 +36,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         parent::setUp();
         
         $this->tracker_id           = 3;
-        $this->tracker              = aTracker()->withId($this->tracker_id)->withName('Stories')->build();
+        $this->tracker              = aTracker()->withId($this->tracker_id)->withName('Stories')->withProjectId(101)->build();
         $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->tracker, array());
         $this->request              = new Codendi_Request(array());
         $this->tracker_factory      = new MockTrackerFactory();
@@ -49,10 +49,10 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $possible_children = array('1' => aTracker()->withId(1)->withName('Bugs')->build(), 
                                    '2' => aTracker()->withId(2)->withName('Tasks')->build());
         
-        $this->factory->setReturnValue('getPossibleChildren', $possible_children, array($this->tracker));
+        $this->factory->setReturnValue('getPossibleChildren', $possible_children, array($this->hierarchical_tracker));
 
         ob_start();
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->tracker, $this->factory, $this->dao);
+        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->edit();
         $content = ob_get_clean();
         
@@ -67,7 +67,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         
         $GLOBALS['Response']->expectOnce('redirect', array($this->redirect_url));
         
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->tracker, $this->factory, $this->dao);
+        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->update();
     }
     
@@ -78,7 +78,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['Response']->expectOnce('redirect', array($this->redirect_url));
         
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->tracker, $this->factory, $this->dao);
+        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->update();
     }
     

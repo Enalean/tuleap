@@ -36,17 +36,15 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         return new Tracker_Hierarchy_HierarchicalTracker($tracker, $children);
     }
     
-    public function getPossibleChildren(Tracker $tracker) {
-        $project_id       = $tracker->getGroupId();
-        $project_trackers = $this->tracker_factory->getTrackersByGroupId($project_id);
+    public function getPossibleChildren(Tracker_Hierarchy_HierarchicalTracker $tracker) {
+        $project_id        = $tracker->getProject()->getId();
+        $project_trackers  = $this->tracker_factory->getTrackersByGroupId($project_id);
+        
         
         unset($project_trackers[$tracker->getId()]);
         
-        foreach($project_trackers as $project_tracker) {
-            $possible_children[] = $project_tracker;
-        }
         
-        return $possible_children;
+        return $project_trackers;
     }
 }
 

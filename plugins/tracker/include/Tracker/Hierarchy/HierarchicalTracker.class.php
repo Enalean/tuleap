@@ -35,6 +35,14 @@ class Tracker_Hierarchy_HierarchicalTracker {
         $this->children = $children;
     }
     
+    public function getId() {
+        return $this->parent->getId();
+    }
+    
+    public function getProject() {
+        return $this->parent->getProject();
+    }
+    
     public function getChildren() {
         return $this->children;
     }

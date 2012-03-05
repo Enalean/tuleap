@@ -533,20 +533,22 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 }
                 break;
             case 'admin-hierarchy':
-                $dao             = new Tracker_Hierarchy_Dao();
-                $tracker_factory = $this->getTrackerFactory();
-                $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
-                $controller      = new Tracker_Hierarchy_Controller($request, $this, $factory, $dao);
+                $dao                  = new Tracker_Hierarchy_Dao();
+                $tracker_factory      = $this->getTrackerFactory();
+                $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+                $hierarchical_tracker = $factory->getWithChildren($this);
+                $controller           = new Tracker_Hierarchy_Controller($request, $hierarchical_tracker, $factory, $dao);
                 
                 $this->displayAdminItemHeader($tracker_manager, 'hierarchy');
                 $controller->edit();
                 $this->displayFooter($tracker_manager);
                 break;
             case 'admin-hierarchy-update':
-                $dao             = new Tracker_Hierarchy_Dao();
-                $tracker_factory = $this->getTrackerFactory();
-                $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
-                $controller      = new Tracker_Hierarchy_Controller($request, $this, $factory, $dao);
+                $dao                  = new Tracker_Hierarchy_Dao();
+                $tracker_factory      = $this->getTrackerFactory();
+                $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+                $hierarchical_tracker = $factory->getWithChildren($this);
+                $controller           = new Tracker_Hierarchy_Controller($request, $hierarchical_tracker, $factory, $dao);
                 
                 $controller->update();
                 break;

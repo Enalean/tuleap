@@ -24,7 +24,7 @@ require_once(dirname(__FILE__).'/../Tracker.class.php');
 class Tracker_Hierarchy_Presenter {
     
     /**
-     * @var Tracker
+     * @var Tracker_Hierarchy_HierarchicalTracker
      */
     public $tracker;
     
@@ -33,7 +33,7 @@ class Tracker_Hierarchy_Presenter {
      */
     public $possible_children;
     
-    public function __construct(Tracker $tracker, $possible_children) {
+    public function __construct(Tracker_Hierarchy_HierarchicalTracker $tracker, array $possible_children) {
         $this->tracker           = $tracker;
         $this->possible_children = array_values($possible_children);
     }
@@ -51,8 +51,6 @@ class Tracker_Hierarchy_Presenter {
     }
     
     public function getPossibleChildren() {
-        return $this->possible_children;
-        
         $possible_children = array();
         
         foreach ($this->possible_children as $possible_child) {
@@ -67,8 +65,6 @@ class Tracker_Hierarchy_Presenter {
     }
     
     private function getSelectedAttribute(Tracker $possible_child) {
-        $tracker_hierarchy = new Tracker_WithHierarchy($tracker);
-        $tracker_hierarchy->hasChild($this->tracker, $possible_child);
         if ($this->tracker->hasChild($possible_child)) {
             return 'selected="selected"';
         }

@@ -1,5 +1,5 @@
 <form method="post" action="{{getTrackerUrl}}/?tracker={{getTrackerId}}&func=admin-hierarchy-update">
-    <select name="children" multiple="multiple">
+    <select name="children[]" multiple="multiple">
         {{#getPossibleChildren}}
             <option value="{{id}}" {{selected}}>{{name}}</option>
         {{/getPossibleChildren}}

@@ -24,26 +24,35 @@ require_once(dirname(__FILE__).'/../../Test_Tracker_Builder.php');
 class Tracker_Hierarchy_HierarchicalTrackerTest extends UnitTestCase {
 
     function setUp() {
-        $this->parent   = aTracker()->withId(1)->build();
+        $this->project_id = 110;
+        $project = new MockProject();
+        $project->setReturnValue('getId', $this->project_id);
+        $this->parent   = aTracker()->withId(1)->withProject($project)->build();
         $this->child    = aTracker()->withId(2)->build();
         $this->children = array($this->child);
+        
+        $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->parent, $this->children);
+    }
+    
+    function testDelegatesGetGroupIdToTracker() {
+        $this->assertEqual($this->hierarchical_tracker->getProject()->getId(), 110);
+    }
+    
+    function testDelegatesGetIdToTracker() {
+        $this->assertEqual($this->hierarchical_tracker->getId(), 1);
     }
     
     function testHasChild() {
-        $hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->parent, $this->children);
-        $this->assertTrue($hierarchical_tracker->hasChild($this->child));
+        $this->assertTrue($this->hierarchical_tracker->hasChild($this->child));
     }
     
     function testNotHasChild() {
         $not_child = aTracker()->withId(3)->build();
-        
-        $hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->parent, $this->children);
-        $this->assertFalse($hierarchical_tracker->hasChild($not_child));
+        $this->assertFalse($this->hierarchical_tracker->hasChild($not_child));
     }
     
     function testIsNotItsOwnChild() {
-        $hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->parent, $this->children);
-        $this->assertFalse($hierarchical_tracker->hasChild($this->parent));
+        $this->assertFalse($this->hierarchical_tracker->hasChild($this->parent));
     }
 }
 

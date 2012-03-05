@@ -59,7 +59,10 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $dao = new MockTracker_Hierarchy_Dao();
         
         $project_id = 100;
-        $tracker    = aTracker()->withId(1)->withProjectId($project_id)->build();
+        $project    = new MockProject();
+        $project->setReturnValue('getId', $project_id);
+        $tracker    = aTracker()->withId(1)->withProject($project)->build();
+        $hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($tracker, array());
         
         $possible_child_1 = aTracker()->withId(2)->build();
         $possible_child_2 = aTracker()->withId(3)->build();
@@ -76,11 +79,16 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
         
         $expected_possible_children = array($possible_child_1, $possible_child_2);
-        $actual_possible_children   = $factory->getPossibleChildren($tracker);
+        $actual_possible_children   = $factory->getPossibleChildren($hierarchical_tracker);
         
-        $this->assertEqual(2, count($actual_possible_children));
+        
+        $actual_possible_children = $this->assertChildEquals($actual_possible_children, $possible_child_1);
+        $actual_possible_children = $this->assertChildEquals($actual_possible_children, $possible_child_2);
+        $this->assertEqual(count($actual_possible_children), 0);
+        
+        /*$this->assertEqual(2, count($actual_possible_children));
         $this->assertEqual($possible_child_1, $actual_possible_children[0]);
-        $this->assertEqual($possible_child_2, $actual_possible_children[1]);
+        $this->assertEqual($possible_child_2, $actual_possible_children[1]);*/
     }
 }
 
