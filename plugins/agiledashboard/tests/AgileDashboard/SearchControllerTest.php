@@ -31,7 +31,7 @@ Mock::generate('AgileDashboard_SearchView');
 Mock::generate('AgileDashboard_Search');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_Report');
-Mock::generate('Tracker_Hierarchy_Dao');
+Mock::generate('Tracker_HierarchyFactory');
 
 class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
     
@@ -44,8 +44,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $this->request            = new Codendi_Request(array('group_id' => '66'));
         $this->formElementFactory = new MockTracker_FormElementFactory();
         $this->search             = new MockAgileDashboard_Search();
-        $this->hierarchy_dao      = new MockTracker_Hierarchy_Dao();
-        $this->hierarchy_dao->setReturnValue('searchTrackerHierarchy', array());
+        $this->hierarchy_factory  = new MockTracker_HierarchyFactory();
     }
     
     public function testSearchRendersViewForServiceWithCriteria() {
@@ -60,7 +59,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields, array($this->project));
         
         $controller = TestHelper::getPartialMock('AgileDashboard_SearchController', array('getView', 'getTrackers'));
-        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_dao);
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
         $controller->setReturnValue('getView', $view);
         $controller->setReturnValue('getTrackers', array());
         
@@ -73,7 +72,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
 
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
 
-        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_dao);
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
 
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
@@ -91,7 +90,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/'));
         
-        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_dao);
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
         
         $controller->search();
     }
@@ -118,7 +117,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $this->search->expectOnce('getMatchingArtifacts', array(array(), $criteria));
         
         $controller = TestHelper::getPartialMock('AgileDashboard_SearchController', array('getView', 'getTrackers'));
-        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_dao);
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
         $controller->setReturnValue('getView', $view);
         $controller->setReturnValue('getTrackers', array());
         
@@ -136,7 +135,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $fields = array(aTextField()->withId(220)->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
         
-        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_dao);
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
         $criteria = $controller->getCriteria($project, $report);
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array());
     }
@@ -153,7 +152,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $fields = array(aTextField()->withId(220)->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
         
-        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_dao);
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
         $criteria = $controller->getCriteria($project, $report);
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350));
     }
@@ -172,7 +171,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
                         aTextField()->withId(221)->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
         
-        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_dao);
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
         $criteria = $controller->getCriteria($project, $report);
         $this->assertEqual(count($criteria), 2);
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350, 351));
@@ -187,7 +186,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         
         $project = new MockProject();
         
-        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_dao);
+        $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
         $trackers   = $controller->getTrackers($project);
         $this->assertEqual(count($trackers), 1);
         
@@ -207,7 +206,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
             array('getView', 'getTrackers', 'getProject', 'getService', 'getArtifacts', 'getReport', 'getCriteria', 'getTrackersHierarchy')
         );
         
-        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_dao);
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
         
         $controller->expectOnce('getView', array('*', '*', '*', '*', '*', $trackers, $trackers_hierarchy));
         $controller->setReturnValue('getView', $view);
@@ -219,7 +218,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
     
     public function testSearchCreateTrackerHierarchyFromDatabase() {
         $view = new MockAgileDashboard_SearchView();
-                                                                            
+        
         $trackers_ids = array(111, 112);
         $trackers = array();
         foreach( $trackers_ids as $tracker_id) {
@@ -228,15 +227,17 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
             $trackers[] = $tracker;
         }
         
-        $hierarchy_dao = new MockTracker_Hierarchy_Dao();
-        $hierarchy_dao->expectOnce('searchTrackerHierarchy', array($trackers_ids));
-        $hierarchy_dao->setReturnValue('searchTrackerHierarchy', TestHelper::arrayToDar(array('parent_id' => 111, 'child_id' => 112)));
+        $trackers_hierarchy = new Tracker_Hierarchy(array());
+        
+        $hierarchy_factory = new MockTracker_HierarchyFactory();
+        $hierarchy_factory->expectOnce('getHierarchy', array($trackers_ids));
+        $hierarchy_factory->setReturnValue('getHierarchy', $trackers_hierarchy);
         
         $controller = TestHelper::getPartialMock(
             'AgileDashboard_SearchController', 
             array('getView', 'getTrackers', 'getProject', 'getService', 'getArtifacts', 'getReport', 'getCriteria')
         );
-        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $hierarchy_dao);
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $hierarchy_factory);
         
         $controller->setReturnValue('getView', $view);
         $controller->setReturnValue('getTrackers', $trackers);

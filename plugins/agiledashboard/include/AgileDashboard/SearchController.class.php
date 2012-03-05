@@ -22,7 +22,7 @@ require_once 'SearchView.class.php';
 require_once 'ServiceNotUsedException.class.php';
 require_once 'ProjectNotFoundException.class.php';
 require_once 'Search.class.php';
-require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/Hierarchy/Dao.class.php';
+require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/Hierarchy/HierarchyFactory.class.php';
 
 class AgileDashboard_SearchController {
     /**
@@ -50,7 +50,10 @@ class AgileDashboard_SearchController {
      */
     private $formElementFactory;
     
-    private $hierarchy_dao;
+    /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
     
     /**
      * @var AgileDashboard_Search
@@ -63,7 +66,7 @@ class AgileDashboard_SearchController {
                                 BaseLanguage               $language, 
                                 Layout                     $layout,
                                 AgileDashboard_Search      $search,
-                                Tracker_Hierarchy_Dao      $hierarchy_dao) {
+                                Tracker_HierarchyFactory   $hierarchy_factory) {
         
         $this->request            = $request;
         $this->projectManager     = $projectManager;
@@ -71,7 +74,7 @@ class AgileDashboard_SearchController {
         $this->layout             = $layout;
         $this->formElementFactory = $formElementFactory;
         $this->search             = $search;
-        $this->hierarchy_dao      = $hierarchy_dao;
+        $this->hierarchy_factory  = $hierarchy_factory;
     }
 
     public function search() {
@@ -102,12 +105,7 @@ class AgileDashboard_SearchController {
         foreach ($trackers as $tracker) {
             $tracker_ids[] = $tracker->getId();
         }
-        $hierarchy_rows = $this->hierarchy_dao->searchTrackerHierarchy($tracker_ids);
-        $hierarchy = new Tracker_Hierarchy();
-        foreach ($hierarchy_rows as $row) {
-            $hierarchy->addRelationship($row['parent_id'], $row['child_id']);
-        }
-        return $hierarchy;
+        return $this->hierarchy_factory->getHierarchy($tracker_ids);
     }
     
     protected function getArtifacts(array $trackers) {
