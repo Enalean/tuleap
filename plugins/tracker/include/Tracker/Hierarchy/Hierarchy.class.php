@@ -64,8 +64,8 @@ class Tracker_Hierarchy {
     }
     
     private function assertHierarchyIsNotCyclic($tracker_id) {
-        if (in_array($tracker_id, $this->levelHierarchyTmp) === true ) {
-            throw new Tracker_Hierarchy_CyclicHierarchyException($message);
+        if (in_array($tracker_id, $this->levelHierarchyTmp)) {
+            throw new Tracker_Hierarchy_CyclicHierarchyException();
         }
         $this->levelHierarchyTmp[] = $tracker_id;
     }
