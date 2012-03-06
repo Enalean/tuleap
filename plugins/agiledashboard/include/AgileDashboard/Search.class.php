@@ -40,7 +40,7 @@ class AgileDashboard_Search {
         $this->dao                = $dao;
     }
 
-    public function getMatchingArtifacts(array $trackers, $criteria=null) {
+    public function getMatchingArtifacts(array $trackers, $criteria = null) {
         $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
         $trackerIds           = array_map(array($this, 'getTrackerId'), $trackers);
         

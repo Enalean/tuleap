@@ -28,13 +28,13 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         $sql = "
             SELECT artifact.id, artifact.last_changeset_id, CVT.value AS title
             FROM tracker_artifact AS artifact
-            INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
-            " . $this->getSharedFieldsSqlFragment($sharedFields) . "
-            LEFT JOIN (
-                tracker_changeset_value AS CV
-                    INNER JOIN tracker_semantic_title       AS ST  ON (CV.field_id = ST.field_id)
-                    INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id       = CVT.changeset_value_id)
-            ) ON (c.id = CV.changeset_id)
+                INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
+                " . $this->getSharedFieldsSqlFragment($sharedFields) . "
+                LEFT JOIN (
+                    tracker_changeset_value AS CV
+                        INNER JOIN tracker_semantic_title       AS ST  ON (CV.field_id = ST.field_id)
+                        INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id       = CVT.changeset_value_id)
+                ) ON (c.id = CV.changeset_id)
             WHERE artifact.use_artifact_permissions = 0
             AND   artifact.tracker_id IN ($trackerIds)
             ORDER BY title
