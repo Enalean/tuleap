@@ -26,7 +26,7 @@ class AgileDashboard_SearchDao extends DataAccessObject {
     public function searchMatchingArtifacts(array $trackerIds, array $sharedFields) {
         $trackerIds = $this->da->quoteSmartImplode(',', $trackerIds);
         $sql = "
-            SELECT artifact.id, artifact.last_changeset_id, CVT.value AS title
+            SELECT artifact.id, artifact.last_changeset_id, CVT.value AS title, artifact.tracker_id, GROUP_CONCAT(CVAL.artifact_id) AS artifactlinks
             FROM tracker_artifact AS artifact
                 INNER JOIN tracker_changeset AS c ON (artifact.last_changeset_id = c.id)
                 " . $this->getSharedFieldsSqlFragment($sharedFields) . "
@@ -35,8 +35,15 @@ class AgileDashboard_SearchDao extends DataAccessObject {
                         INNER JOIN tracker_semantic_title       AS ST  ON (CV.field_id = ST.field_id)
                         INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id       = CVT.changeset_value_id)
                 ) ON (c.id = CV.changeset_id)
+                
+                LEFT JOIN (
+                    tracker_changeset_value_artifactlink AS CVAL
+                    INNER JOIN tracker_changeset_value AS CV2 ON (CV2.id = CVAL.changeset_value_id) 
+                ) ON CV2.changeset_id = artifact.last_changeset_id
+                
             WHERE artifact.use_artifact_permissions = 0
-            AND   artifact.tracker_id IN ($trackerIds)
+              AND artifact.tracker_id IN ($trackerIds)
+            GROUP BY artifact.id
             ORDER BY title
         ";
         return $this->retrieve($sql);
@@ -80,7 +87,8 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         $sql = "
             SELECT artifact.id,
                    artifact.last_changeset_id,
-                   CVT.value AS title
+                   CVT.value AS title, 
+                   GROUP_CONCAT(CVAL.artifact_id) AS artifactlinks
         
             FROM       tracker_artifact  AS artifact
             INNER JOIN tracker_changeset AS c ON c.id = artifact.last_changeset_id
@@ -91,8 +99,14 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         
             ) ON CV.changeset_id = c.id
 
+            LEFT JOIN (
+                tracker_changeset_value_artifactlink AS CVAL
+                INNER JOIN tracker_changeset_value AS CV2 ON (CV2.id = CVAL.changeset_value_id) 
+            ) ON CV2.changeset_id = artifact.last_changeset_id
+            
             WHERE artifact.use_artifact_permissions = 0
-            AND   artifact.tracker_id IN ($trackerIds)
+              AND artifact.tracker_id IN ($trackerIds)
+            GROUP BY artifact.id
             ORDER BY title
         ";
         return $this->retrieve($sql);

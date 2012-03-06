@@ -25,6 +25,7 @@ Mock::generate('AgileDashboard_SharedFieldFactory');
 Mock::generate('AgileDashboard_SearchDao');
 Mock::generate('Project');
 Mock::generate('Tracker_FormElementFactory');
+Mock::generate('Tracker_Hierarchy');
 
 class AgileDashboard_SearchTest extends UnitTestCase {
     
@@ -39,6 +40,7 @@ class AgileDashboard_SearchTest extends UnitTestCase {
     }
     
     function testGetMatchingArtifactsDelegatesToSharedFieldFactoryAndSearchDao() {
+        $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $criteria  = array('220' => array('values' => array('350')));
                 
         $sharedFields = array(new AgileDashboard_SharedField());
@@ -48,26 +50,77 @@ class AgileDashboard_SearchTest extends UnitTestCase {
         
         $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, $sharedFields));
         
-        $this->search->getMatchingArtifacts($this->trackers, $criteria);
+        $this->search->getMatchingArtifacts($this->trackers, $tracker_hierarchy, $criteria);
     }
     
     function testGetProjectArtifactsWhenNoCriteria() {
+        $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $criteria  = array('220' => array('values' => array('')));
 
         $this->searchDao->expectOnce('searchArtifactsFromTrackers', array($this->trackerIds));
 
-        $this->search->getMatchingArtifacts($this->trackers, $criteria);
+        $this->search->getMatchingArtifacts($this->trackers, $tracker_hierarchy, $criteria);
     }
     
     function testGetProjectArtifactsWhenNoArtifactsAndNoTrackers() {
+        $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $criteria   = array('220' => array('values' => array('')));
                 
         $this->searchDao->expectNever('searchArtifactsFromTrackers');
         
         $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
-        $artifacts = $this->search->getMatchingArtifacts(array(), $criteria);
+        $artifacts = $this->search->getMatchingArtifacts(array(), $tracker_hierarchy, $criteria);
         
         $this->assertEqual(count($artifacts), 0);
     }
+    
+    function testGetMatchingArtifactsShouldOrderResultsAccordinglyToTheTrackerHierarchy() {
+        $tracker_hierarchy = $this->GivenATrackerHierarchy();
+        $this->searchDao->setReturnValue('searchArtifactsFromTrackers', $this->getResultsWithOneLevel());
+        $trackers = array(
+            aTracker()->withId(111)->build(),
+            aTracker()->withId(112)->build(),
+        );
+        $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
+        
+        
+        $artifacts = $this->search->getMatchingArtifacts($trackers, $tracker_hierarchy);
+        $expected  = $this->getExpectedWithOneLevel();
+        $this->assertEqual($artifacts, $expected);
+    }
+    
+    private function getResultsWithOneLevel() {
+        return TestHelper::arrayToDar(
+            array('artifact_id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5',),
+            array('artifact_id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8',),
+            array('artifact_id' => 5, 'tracker_id' => 111, 'artifactlinks' => '',)
+        );
+    }
+    
+    private function getExpectedWithOneLevel() {
+        return array(
+            array('artifact_id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5',),
+            array('artifact_id' => 5, 'tracker_id' => 111, 'artifactlinks' => '',),
+            array('artifact_id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8',),
+        );
+    }
+    
+    private function GivenATrackerHierarchy() {
+        $hierarchy = new MockTracker_Hierarchy();
+        $hierarchy->setReturnValue('getLevel', 0, array(112));
+        $hierarchy->setReturnValue('getLevel', 1, array(111));
+        $hierarchy->setReturnValue('getLevel', 2, array(113));
+        $hierarchy->setReturnValue('getLevel', 0, array(201));
+        $hierarchy->setReturnValue('getLevel', 1, array(202));
+        
+        $hierarchy->setReturnValue('getChildren', array(), array(113));
+        $hierarchy->setReturnValue('getChildren', array(111), array(112));
+        $hierarchy->setReturnValue('getChildren', array(113), array(111));
+        $hierarchy->setReturnValue('getChildren', array(202), array(201));
+        $hierarchy->setReturnValue('getChildren', array(), array(202));
+        
+        return $hierarchy;
+    }
+   
 }
 ?>
