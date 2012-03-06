@@ -54,6 +54,12 @@ class Tracker_Hierarchy_HierarchicalTrackerTest extends UnitTestCase {
     function testIsNotItsOwnChild() {
         $this->assertFalse($this->hierarchical_tracker->hasChild($this->parent));
     }
+    
+    function testGetChildren() {
+        $children = $this->hierarchical_tracker->getChildren();
+        $this->assertEqual(count($children), 1);
+        $this->assertEqual($children[0], $this->child);
+    }
 }
 
 ?>
