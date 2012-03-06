@@ -33,13 +33,21 @@ class MustacheRenderer {
      */
     private $templates;
     
+    private $options = array('throws_exceptions' => array(
+		MustacheException::UNKNOWN_VARIABLE         => true,
+		MustacheException::UNCLOSED_SECTION         => true,
+		MustacheException::UNEXPECTED_CLOSE_SECTION => true,
+		MustacheException::UNKNOWN_PARTIAL          => true,
+		MustacheException::UNKNOWN_PRAGMA           => true,
+	));
+    
     public function __construct($path) {
-        $this->mustache  = new Mustache();
+        $this->mustache  = new Mustache(null, null, null, $this->options);
         $this->templates = new MustacheLoader($path);
         
     }
     public function render($template_name, $presenter) {
-        echo $this->mustache->render($this->templates[$template_name], $presenter);
+        echo $this->mustache->render($this->templates[$template_name], $presenter, $this->templates);
     }
 }
 

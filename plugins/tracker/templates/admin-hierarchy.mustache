@@ -1,3 +1,4 @@
+<h2>Edit children</h2>
 <form method="post" action="{{getTrackerUrl}}/?tracker={{getTrackerId}}&func=admin-hierarchy-update">
     <select name="children[]" multiple="multiple">
         {{#getPossibleChildren}}
@@ -6,3 +7,8 @@
     </select>
     <input type="submit" value="{{getSubmitLabel}}">
 </form>
+
+<h2>Current Full Hierarchy</h2>
+{{#getRootAncestors}}
+    {{> tracker-node}}
+{{/getRootAncestors}}

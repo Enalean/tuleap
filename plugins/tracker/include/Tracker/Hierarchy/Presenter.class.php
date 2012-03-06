@@ -69,6 +69,17 @@ class Tracker_Hierarchy_Presenter {
             return 'selected="selected"';
         }
     }
+    
+    public function getRootAncestors() {
+        return array(
+            array('name' => 'T1', 'children' => array(
+                array('name' => 'T2', 'children' => array(
+                    array('name' => 'T3', 'children' => array()),
+                )),
+                array('name' => 'T4', 'children' => array())
+            ))
+        );
+    }
 }
 
 ?>
