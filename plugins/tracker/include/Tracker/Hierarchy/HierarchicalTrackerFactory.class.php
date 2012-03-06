@@ -25,6 +25,9 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         $this->dao             = $dao;
     }
     
+    /**
+     * @return Tracker_Hierarchy_HierarchicalTracker
+     */
     public function getWithChildren(Tracker $tracker) {
         $dar      = $this->dao->getChildren($tracker->getId());
         $children = array();
@@ -36,13 +39,14 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         return new Tracker_Hierarchy_HierarchicalTracker($tracker, $children);
     }
     
+    /**
+     * @return Array of Tracker
+     */
     public function getPossibleChildren(Tracker_Hierarchy_HierarchicalTracker $tracker) {
         $project_id        = $tracker->getProject()->getId();
         $project_trackers  = $this->tracker_factory->getTrackersByGroupId($project_id);
         
-        
         unset($project_trackers[$tracker->getId()]);
-        
         
         return $project_trackers;
     }

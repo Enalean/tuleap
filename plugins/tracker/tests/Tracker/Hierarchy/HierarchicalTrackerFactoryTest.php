@@ -85,10 +85,6 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $actual_possible_children = $this->assertChildEquals($actual_possible_children, $possible_child_1);
         $actual_possible_children = $this->assertChildEquals($actual_possible_children, $possible_child_2);
         $this->assertEqual(count($actual_possible_children), 0);
-        
-        /*$this->assertEqual(2, count($actual_possible_children));
-        $this->assertEqual($possible_child_1, $actual_possible_children[0]);
-        $this->assertEqual($possible_child_2, $actual_possible_children[1]);*/
     }
 }
 
