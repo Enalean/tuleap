@@ -35,10 +35,6 @@ class AgileDashboard_Search {
      
      */
     private $dao;
-    /**
-     * @var Tracker_Hierarchy
-     */
-    private $hierarchy;
     
     public function __construct(AgileDashboard_SharedFieldFactory $sharedFieldFactory,
                                 AgileDashboard_SearchDao          $dao) {
@@ -47,43 +43,31 @@ class AgileDashboard_Search {
     }
 
     public function getMatchingArtifacts(array $trackers, Tracker_Hierarchy $hierarchy, $criteria = null) {
-        $this->hierarchy = $hierarchy;
         $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
         $trackerIds           = array_map(array($this, 'getTrackerId'), $trackers);
+        $artifacts            = array();
         
         if (count($searchedSharedFields) > 0) { 
-            return $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
+            $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
         } elseif (count($trackerIds) > 0) {
-            if ($artifacts = $this->dao->searchArtifactsFromTrackers($trackerIds)) {
-                
-                
-                $artifactsById      = array();
-                $artifactsByTracker = array();
-                foreach ($artifacts as $artifact) {
-                    //by id
-                    $artifactsById[$artifact['artifact_id']] = $artifact;
-                    
-                    //by tracker_id
-                    $tracker_id = $artifact['tracker_id'];
-                    if (isset($artifactsByTracker[$tracker_id])) {
-                        $artifactsByTracker[$tracker_id][] = $artifact;
-                    } else {
-                        $artifactsByTracker[$tracker_id] = array($artifact);
-                    }
-                }
-                $result = array();
-                usort($trackerIds, array($this, 'sortByTrackerLevel'));
-                foreach ($trackerIds as $tracker_id) {
-                    foreach ($artifactsByTracker[$tracker_id] as $artifact) {
-                        $this->appendArtifactAndSonsToResult($artifact, $result, $artifactsById);
-                    }
-                }
-                
-                return array_values($result);
-            }
-            
+            $artifacts = $this->dao->searchArtifactsFromTrackers($trackerIds);
         }
-        return array();
+        return $this->sortResults($artifacts, $trackerIds, $hierarchy);
+    }
+    
+    private function sortResults($artifacts, $trackerIds, $hierarchy) {
+        if ($artifacts) {
+            list($artifactsById, $artifactsByTracker) = $this->indexArtifactsByIdAndTracker($artifacts);
+            $result = array();
+            $trackerIds = $this->sortTrackerIdsAccordinglyToHierarchy($trackerIds, $hierarchy);
+            foreach ($trackerIds as $tracker_id) {
+                foreach ($artifactsByTracker[$tracker_id] as $artifact) {
+                    $this->appendArtifactAndSonsToResult($artifact, $result, $artifactsById);
+                }
+            }
+            $artifacts = array_values($result);
+        }
+        return $artifacts;
     }
     
     private function appendArtifactAndSonsToResult($artifact, &$result, $artifacts) {
@@ -98,25 +82,46 @@ class AgileDashboard_Search {
         }
     }
     
-    protected function sortByTrackerLevel($tracker1, $tracker2) {
-        $level1 = $this->hierarchy->getLevel($tracker1);
-        $level2 = $this->hierarchy->getLevel($tracker2);
-        
-        return strcmp($level1, $level2);
-    }
-    function sortByTrackerId($artifact1, $artifact2) {
-        return strcmp($artifact1['tracker_id'], $artifact2['tracker_id']);
+    private function indexArtifactsByIdAndTracker($artifacts) {
+        $artifactsById      = array();
+        $artifactsByTracker = array();
+        foreach ($artifacts as $artifact) {
+            //by id
+            $artifactsById[$artifact['artifact_id']] = $artifact;
+            
+            //by tracker_id
+            $tracker_id = $artifact['tracker_id'];
+            if (isset($artifactsByTracker[$tracker_id])) {
+                $artifactsByTracker[$tracker_id][] = $artifact;
+            } else {
+                $artifactsByTracker[$tracker_id] = array($artifact);
+            }
+        }
+        return array($artifactsById, $artifactsByTracker);
     }
     
+    private function sortTrackerIdsAccordinglyToHierarchy($trackerIds, $hierarchy) {
+        $this->hierarchyTmp = $hierarchy;
+        usort($trackerIds, array($this, 'sortByTrackerLevel'));
+        return $trackerIds;
+    }
+    
+    protected function sortByTrackerLevel($tracker1, $tracker2) {
+        try {
+            $level1 = $this->hierarchyTmp->getLevel($tracker1);
+        } catch (Exception $e) {
+            return 1;
+        }
+        try {
+            $level2 = $this->hierarchyTmp->getLevel($tracker2);
+        } catch (Exception $e) {
+            return -1;
+        }
+        return strcmp($level1, $level2);
+    }
     
     private function getTrackerId(Tracker $tracker) {
         return $tracker->getId();
-    }
-    
-    private function getTrackerIdsByLevel(Tracker $tracker, $tracker_ids=array(), $hierarchy) {
-        $tracker_id = $tracker->getId(); 
-        $tracker_ids[$tracker_id] = $hierarchy->getLevel($tracker_id);
-        return $tracker_ids;
     }
 }
 ?>

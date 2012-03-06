@@ -74,7 +74,7 @@ class AgileDashboard_SearchTest extends UnitTestCase {
         $this->assertEqual(count($artifacts), 0);
     }
     
-    function testGetMatchingArtifactsShouldOrderResultsAccordinglyToTheTrackerHierarchy() {
+    function testGetMatchingArtifactsShouldOrderResultsAccordinglyToAOneLevelHierarchy() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $this->searchDao->setReturnValue('searchArtifactsFromTrackers', $this->getResultsWithOneLevel());
         $trackers = array(
@@ -105,6 +105,53 @@ class AgileDashboard_SearchTest extends UnitTestCase {
         );
     }
     
+    function testGetMatchingArtifactsShouldReturnArtifactFromTrackersOutsidesHierarchy() {
+        $tracker_hierarchy = $this->GivenATrackerHierarchy();
+        $sharedFields      = array(new AgileDashboard_SharedField());
+        
+        $this->sharedFieldFactory->setReturnValue('getSharedFields', $sharedFields);
+        
+        $this->searchDao->setReturnValue('searchMatchingArtifacts', $this->getResultsForTrackerOutsideHierarchy());
+        $trackers = array(
+            aTracker()->withId(111)->build(),
+            aTracker()->withId(112)->build(),
+            aTracker()->withId(113)->build(),
+            aTracker()->withId(666)->build(),
+        );
+        $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
+        
+        
+        $artifacts = $this->search->getMatchingArtifacts($trackers, $tracker_hierarchy);
+        $expected  = $this->getExpectedForTrackerOutsideHierarchy();
+        $this->assertEqual($artifacts, $expected);
+    }
+    
+    private function getResultsForTrackerOutsideHierarchy() {
+        return TestHelper::arrayToDar(
+            array('artifact_id' => 66, 'tracker_id' => 666, 'artifactlinks' => '',),
+            array('artifact_id' => 8, 'tracker_id' => 111, 'artifactlinks' => '11,9,34',),
+            array('artifact_id' => 11, 'tracker_id' => 113, 'artifactlinks' => '',),
+            array('artifact_id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5',),
+            array('artifact_id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8',),
+            array('artifact_id' => 5, 'tracker_id' => 111, 'artifactlinks' => '',),
+            array('artifact_id' => 9, 'tracker_id' => 113, 'artifactlinks' => '',),
+            array('artifact_id' => 10, 'tracker_id' => 113, 'artifactlinks' => '42',)
+        );
+    }
+    
+    private function getExpectedForTrackerOutsideHierarchy() {
+        return array(
+            array('artifact_id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5',),
+            array('artifact_id' => 5, 'tracker_id' => 111, 'artifactlinks' => '',),
+            array('artifact_id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8',),
+            array('artifact_id' => 8, 'tracker_id' => 111, 'artifactlinks' => '11,9,34',),
+            array('artifact_id' => 11, 'tracker_id' => 113, 'artifactlinks' => '',),
+            array('artifact_id' => 9, 'tracker_id' => 113, 'artifactlinks' => '',),
+            array('artifact_id' => 10, 'tracker_id' => 113, 'artifactlinks' => '42',),
+            array('artifact_id' => 66, 'tracker_id' => 666, 'artifactlinks' => '',)
+        );
+    }
+    
     private function GivenATrackerHierarchy() {
         $hierarchy = new MockTracker_Hierarchy();
         $hierarchy->setReturnValue('getLevel', 0, array(112));
@@ -118,6 +165,8 @@ class AgileDashboard_SearchTest extends UnitTestCase {
         $hierarchy->setReturnValue('getChildren', array(113), array(111));
         $hierarchy->setReturnValue('getChildren', array(202), array(201));
         $hierarchy->setReturnValue('getChildren', array(), array(202));
+        
+        $hierarchy->throwOn('getLevel', new Tracker_Hierarchy_NotInHierarchyException(), array(666));
         
         return $hierarchy;
     }
