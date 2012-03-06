@@ -62,13 +62,5 @@ class Tracker_Hierarchy {
         }
         $this->levelHierarchyTmp[] = $tracker_id;
     }
-    
-    public function getChildren() {
-        
-    }
-    
-    public function __toString() {
-        return var_export($this->parents, 1);
-    }
 }
 ?>

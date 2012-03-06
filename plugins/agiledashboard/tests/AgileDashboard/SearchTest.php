@@ -160,12 +160,6 @@ class AgileDashboard_SearchTest extends UnitTestCase {
         $hierarchy->setReturnValue('getLevel', 0, array(201));
         $hierarchy->setReturnValue('getLevel', 1, array(202));
         
-        $hierarchy->setReturnValue('getChildren', array(), array(113));
-        $hierarchy->setReturnValue('getChildren', array(111), array(112));
-        $hierarchy->setReturnValue('getChildren', array(113), array(111));
-        $hierarchy->setReturnValue('getChildren', array(202), array(201));
-        $hierarchy->setReturnValue('getChildren', array(), array(202));
-        
         $hierarchy->throwOn('getLevel', new Tracker_Hierarchy_NotInHierarchyException(), array(666));
         
         return $hierarchy;
