@@ -84,8 +84,8 @@ class AgileDashboard_SearchController {
             $report             = $this->getReport();
             $criteria           = $this->getCriteria($project, $report);
             $trackers           = $this->getTrackers($project);
-            $artifacts          = $this->getArtifacts($trackers);
             $trackers_hierarchy = $this->getTrackersHierarchy($trackers);
+            $artifacts          = $this->getArtifacts($trackers, $trackers_hierarchy);
             
             $view = $this->getView($service, $this->language, $report, $criteria, $artifacts, $trackers, $trackers_hierarchy);
             $view->render();
@@ -108,8 +108,8 @@ class AgileDashboard_SearchController {
         return $this->hierarchy_factory->getHierarchy($tracker_ids);
     }
     
-    protected function getArtifacts(array $trackers) {
-        return $this->search->getMatchingArtifacts($trackers, $this->request->get('criteria'));
+    protected function getArtifacts(array $trackers, $hierarchy) {
+        return $this->search->getMatchingArtifacts($trackers, $hierarchy, $this->request->get('criteria'));
     }
     
     public function getTrackers($project) {

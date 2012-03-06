@@ -88,6 +88,7 @@ class AgileDashboard_SearchDao extends DataAccessObject {
             SELECT artifact.id,
                    artifact.last_changeset_id,
                    CVT.value AS title, 
+                   artifact.tracker_id, 
                    GROUP_CONCAT(CVAL.artifact_id) AS artifactlinks
         
             FROM       tracker_artifact  AS artifact

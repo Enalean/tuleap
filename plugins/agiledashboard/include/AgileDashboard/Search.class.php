@@ -71,8 +71,8 @@ class AgileDashboard_Search {
     }
     
     private function appendArtifactAndSonsToResult($artifact, &$result, $artifacts) {
-        if (!isset($result[$artifact['artifact_id']])) {
-            $result[$artifact['artifact_id']] = $artifact;
+        if (!isset($result[$artifact['id']])) {
+            $result[$artifact['id']] = $artifact;
             $artifactlinks = explode(',', $artifact['artifactlinks']);
             foreach ($artifactlinks as $link_id) {
                 if (isset($artifacts[$link_id])) {
@@ -87,7 +87,7 @@ class AgileDashboard_Search {
         $artifactsByTracker = array();
         foreach ($artifacts as $artifact) {
             //by id
-            $artifactsById[$artifact['artifact_id']] = $artifact;
+            $artifactsById[$artifact['id']] = $artifact;
             
             //by tracker_id
             $tracker_id = $artifact['tracker_id'];

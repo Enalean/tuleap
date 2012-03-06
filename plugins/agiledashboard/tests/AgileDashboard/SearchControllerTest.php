@@ -32,6 +32,7 @@ Mock::generate('AgileDashboard_Search');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_Report');
 Mock::generate('Tracker_HierarchyFactory');
+Mock::generate('Tracker_Hierarchy');
 
 class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
     
@@ -99,6 +100,10 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $view = new MockAgileDashboard_SearchView();
         $view->expectOnce('render');
         
+        
+        $tracker_hierarchy = new MockTracker_Hierarchy();
+        $this->hierarchy_factory->setReturnValue('getHierarchy', $tracker_hierarchy);
+        
         $criteria = array();
         $this->request = new Codendi_Request(array(
             'group_id' => '66', 
@@ -114,7 +119,37 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $matchingIds = array(array('artifactId1', 'artifactId2'), array('changesetId1', 'changesetId2'));
         
         $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
-        $this->search->expectOnce('getMatchingArtifacts', array(array(), $criteria));
+        
+        $controller = TestHelper::getPartialMock('AgileDashboard_SearchController', array('getView', 'getTrackers'));
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
+        $controller->setReturnValue('getView', $view);
+        $controller->setReturnValue('getTrackers', array());
+        
+        $controller->search();
+    }
+    
+    public function testSearchActionCallGetMatchingArtifactsWithAHierarchy() {
+        $view = new MockAgileDashboard_SearchView();
+        
+        $tracker_hierarchy = new MockTracker_Hierarchy();
+        $this->hierarchy_factory->setReturnValue('getHierarchy', $tracker_hierarchy);
+        
+        $criteria = array();
+        $this->request = new Codendi_Request(array(
+            'group_id' => '66', 
+            'criteria' => $criteria
+        ));
+        
+        $this->project->setReturnValue('getService', $this->service, array('plugin_agiledashboard'));
+        
+        $this->manager->setReturnValue('getProject', $this->project, array('66'));
+        
+        $this->formElementFactory->setReturnValue('getProjectSharedFields', array());
+        
+        $matchingIds = array(array('artifactId1', 'artifactId2'), array('changesetId1', 'changesetId2'));
+        
+        $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
+        $this->search->expectOnce('getMatchingArtifacts', array(array(), $tracker_hierarchy, $criteria));
         
         $controller = TestHelper::getPartialMock('AgileDashboard_SearchController', array('getView', 'getTrackers'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
