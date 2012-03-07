@@ -67,10 +67,13 @@ class Tracker_Hierarchy_Controller {
         $vChildren->required();
         
         if ($this->request->validArray($vChildren)) {
-            $this->dao->updateChildren($this->tracker->getId(),
-                                       $this->request->get('children'));
+            $this->dao->updateChildren($this->tracker->getId(), $this->request->get('children'));
         } else {
-            $GLOBALS['Response']->addFeedback('error', 'Please select some child tracker from the list below');
+            if ($this->request->exist('children')) {
+                $GLOBALS['Response']->addFeedback('error', "There's some error with your request, cowardly doing nothing");
+            } else {
+                $this->dao->deleteAllChildren($this->tracker->getId());
+            }
         }
         
         $this->redirect(array('tracker' => $this->tracker->getId(),

@@ -23,9 +23,7 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 class Tracker_Hierarchy_Dao extends DataAccessObject {
     
     public function updateChildren($parent_id, array $child_ids) {
-        $parent_id = $this->da->escapeInt($parent_id);
-        $sql = "DELETE FROM tracker_hierarchy WHERE parent_id = $parent_id";
-        $this->update($sql);
+        $this->deleteAllChildren($parent_id);
         
         foreach($child_ids as $child_id) {
             $child_id = $this->da->escapeInt($child_id);
@@ -33,6 +31,13 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
         }
         $sql = "INSERT INTO tracker_hierarchy(parent_id, child_id) VALUES ".implode(',', $insert_values);
         $this->update($sql);
+    }
+    
+    public function deleteAllChildren($parent_id) {
+        $parent_id = $this->da->escapeInt($parent_id);
+        $sql = "DELETE FROM tracker_hierarchy WHERE parent_id = $parent_id";
+        $this->update($sql);
+        
     }
 
     public function getChildren($tracker_id) {

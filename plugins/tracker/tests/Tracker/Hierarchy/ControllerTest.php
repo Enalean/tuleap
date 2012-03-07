@@ -94,6 +94,16 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $controller->update();
     }
     
+    public function testWeCanDeleteAllChildrenByNOTprovidingAnArrayOfIds() {
+        
+        $this->dao->expectOnce('deleteAllChildren', array($this->tracker_id));
+        
+        $GLOBALS['Response']->expectOnce('redirect', array($this->redirect_url));
+        
+        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
+        $controller->update();
+    }
+    
     public function testUpdateWithNastyRequestShouldThrowErrors() {
         $this->request->set('children', array('DROP DATABASE http://xkcd.com/327/'));
         $this->dao->expectNever('updateChildren');
