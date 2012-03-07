@@ -33,9 +33,12 @@ class Tracker_Hierarchy_Presenter {
      */
     public $possible_children;
     
-    public function __construct(Tracker_Hierarchy_HierarchicalTracker $tracker, array $possible_children) {
+    public $hierarchy;
+    
+    public function __construct(Tracker_Hierarchy_HierarchicalTracker $tracker, array $possible_children, $hierarchy ) {
         $this->tracker           = $tracker;
         $this->possible_children = array_values($possible_children);
+        $this->hierarchy = $hierarchy;
     }
     
     public function getTrackerUrl() {

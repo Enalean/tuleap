@@ -45,11 +45,12 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->redirect_url         = TRACKER_BASE_URL."/?tracker=$this->tracker_id&func=admin-hierarchy";
     }
 
-    public function testEditObtainsTheChildrenFromTheFactory() {
+    public function testEditListsAllChildren() {
         $possible_children = array('1' => aTracker()->withId(1)->withName('Bugs')->build(), 
                                    '2' => aTracker()->withId(2)->withName('Tasks')->build());
         
         $this->factory->setReturnValue('getPossibleChildren', $possible_children, array($this->hierarchical_tracker));
+        $this->factory->setReturnValue('getHierarchy', array());
 
         ob_start();
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
@@ -57,6 +58,28 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $content = ob_get_clean();
         
         $this->assertContainsAll(array('value="1".*Bugs', 'value="2".*Tasks'), $content);
+    }
+   
+    public function testEditDisplaysTheWholeHierarchy() {
+        $hierarchy = array(
+            array('name' => 'Sprints', 'children' => array(
+                array('name' => 'Stories', 'children' => array(
+                    array('name' => 'Tasks', 'children' => array()),
+                    array('name' => 'Bugs', 'children' => array()),
+                )),
+            ))
+        );
+        $this->factory->setReturnValue('getPossibleChildren', array());
+        $this->factory->expectOnce('getHierarchy', array($this->tracker));
+        $this->factory->setReturnValue('getHierarchy', $hierarchy);
+        
+        ob_start();
+        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
+        $controller->edit();
+        $content = ob_get_clean();
+        
+        $this->assertContainsAll(array('Sprint', 'Stories', 'Tasks', 'Bugs'), $content);
+
     }
     
     public function testUpdateHappyPathShouldCallDaoToSaveHierarchy() {

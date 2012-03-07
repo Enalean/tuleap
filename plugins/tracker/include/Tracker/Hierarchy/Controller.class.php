@@ -57,7 +57,8 @@ class Tracker_Hierarchy_Controller {
     
     public function edit() {
         $possible_children = $this->factory->getPossibleChildren($this->tracker);
-        $presenter         = new Tracker_Hierarchy_Presenter($this->tracker, $possible_children);
+        $hierarchy         = $this->factory->getHierarchy($this->tracker->getUnhierarchizedTracker());
+        $presenter         = new Tracker_Hierarchy_Presenter($this->tracker, $possible_children, $hierarchy);
         $this->render('admin-hierarchy', $presenter);
     }
     
