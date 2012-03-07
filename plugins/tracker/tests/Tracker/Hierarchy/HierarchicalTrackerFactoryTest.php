@@ -200,40 +200,41 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
     }
     
     public function testGetRootTrackerIdFromHierarchyWithOneChild() {
-        $hierarchy_dar = array(
-            array('child_id' => 2, 'parent_id' => 1)
-        );
-        
         $root_tracker_id = 1;
         $current_tracker_id = 2;
+        
+        $hierarchy_dar = array(
+            array('child_id' => $current_tracker_id, 'parent_id' => $root_tracker_id)
+        );
 
         $actual_root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $current_tracker_id);
         $this->assertEqual($root_tracker_id, $actual_root_tracker_id);
     }
     
     public function testGetRootTrackerIdFromHierarchyWithMultipleChildren() {
-        $hierarchy_dar = array(
-            array('child_id' => 2, 'parent_id' => 4),
-            array('child_id' => 3, 'parent_id' => 1)
-        );
-        
         $root_tracker_id = 1;
         $current_tracker_id = 3;
+        
+        $hierarchy_dar = array(
+            array('child_id' => 2,                   'parent_id' => 4),
+            array('child_id' => $current_tracker_id, 'parent_id' => $root_tracker_id)
+        );
+        
 
         $actual_root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $current_tracker_id);
         $this->assertEqual($root_tracker_id, $actual_root_tracker_id);
     }
     
     public function testGetRootTrackerIdFromHierarchyWithDeepHierarchy() {
-        $hierarchy_dar = array(
-             array('child_id' => 2, 'parent_id' => 1),
-             array('child_id' => 3, 'parent_id' => 2),
-             array('child_id' => 4, 'parent_id' => 2),
-             array('child_id' => 5, 'parent_id' => 3)
-        );
-        
         $root_tracker_id = 1;
         $current_tracker_id = 5;
+        
+        $hierarchy_dar = array(
+             array('child_id' => 2,                   'parent_id' => $root_tracker_id),
+             array('child_id' => 3,                   'parent_id' => 2),
+             array('child_id' => 4,                   'parent_id' => 2),
+             array('child_id' => $current_tracker_id, 'parent_id' => 3)
+        );
 
         $actual_root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $current_tracker_id);
         $this->assertEqual($root_tracker_id, $actual_root_tracker_id);
@@ -242,7 +243,7 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
     public function getRootTrackerId($hierarchy_dar, $current_tracker_id) {
         $dao = new MockTracker_Hierarchy_Dao();
         $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(new MockTrackerFactory(), $dao);
-        return $factory->_getRootTrackerId($hierarchy_dar, $current_tracker_id);
+        return $factory->getRootTrackerId($hierarchy_dar, $current_tracker_id);
 
         
     }
