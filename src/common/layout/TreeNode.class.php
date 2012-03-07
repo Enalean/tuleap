@@ -208,7 +208,7 @@ class TreeNode /*implements Visitable*/ {
      * @param Visitor
      */
     function accept(&$visitor, $params = null) {
-        $visitor->visit($this, $params);
+        return $visitor->visit($this, $params);
     }
     
     public function __toString() {

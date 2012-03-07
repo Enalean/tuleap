@@ -39,7 +39,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $service->expectOnce('displayFooter');
         $criteria = $this->GivenCriteria();
         
-        $view = $this->GivenASearchView($service, $criteria, array());
+        $view = $this->GivenASearchView($service, $criteria, array(), new TreeNode());
         
         $output = $this->renderAndGetContent($view);
     }
@@ -48,7 +48,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $service   = new MockService();
         $criteria  = $this->GivenCriteria();
         $artifacts = array();
-        $view = $this->GivenASearchView($service, $criteria, $artifacts);
+        $view = $this->GivenASearchView($service, $criteria, $artifacts, new TreeNode());
         
         $output = $this->renderAndGetContent($view);
         
@@ -63,20 +63,24 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
                 'id'                => '6',
                 'last_changeset_id' => '12345',
                 'title'             => 'As a user I want to search on shared fields',
-                'level'             => 1,
+                'artifactlinks'     => '',
             ),
             array(
                 'id'                => '8',
                 'last_changeset_id' => '56789',
                 'title'             => 'Add the form',
-                'level'             => 1,
+                'artifactlinks'     => '',
             )
         );
         
-        $view = $this->GivenASearchView($service, $criteria, $artifacts);
+        
+        $root = new TreeNode();
+        $root->addChild(new TreeNode($artifacts[0]));
+        $root->addChild(new TreeNode($artifacts[1]));
+        
+        $view = $this->GivenASearchView($service, $criteria, $artifacts, $root);
         
         $output = $this->renderAndGetContent($view);
-        
         $this->assertPattern('/As a user I want to search on shared fields/', $output);
         $this->assertPattern('/Add the form/', $output);
     }
@@ -89,10 +93,14 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
                 'id'                => '6',
                 'last_changeset_id' => '12345',
                 'title'             => 'As a user I want to search on shared fields',
-                'level'             => 1,
+                'artifactlinks'     => '',
             )
         );
-        $view = $this->GivenASearchView($service, $criteria, $artifacts);
+        
+        $root = new TreeNode();
+        $root->addChild(new TreeNode($artifacts[0]));
+        
+        $view = $this->GivenASearchView($service, $criteria, $artifacts, $root);
         
         $output = $this->renderAndGetContent($view);
         
@@ -108,17 +116,31 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
                 'id'                => '6',
                 'last_changeset_id' => '12345',
                 'title'             => 'As a user I want to search on shared fields',
-                'level'             => 1,
+                'artifactlinks'     => '8',
+            ),
+            array(
+                'id'                => '8',
+                'last_changeset_id' => '56789',
+                'title'             => 'Add the form',
+                'artifactlinks'     => '',
             )
         );
-        $view = $this->GivenASearchView($service, $criteria, $artifacts);
+        
+        $root  = new TreeNode();
+        $node0 = new TreeNode($artifacts[0]);
+        $node1 = new TreeNode($artifacts[1]);
+        
+        $root->addChild($node0);
+        $node0->addChild($node1);
+        
+        $view = $this->GivenASearchView($service, $criteria, $artifacts, $root);
         
         $output = $this->renderAndGetContent($view);
         
-        $this->assertPattern('/padding-left: 1.5em;/', $output);
+        $this->assertPattern('%div class="tree-blank"></div><div class="tree-last"%', $output);
     }
     
-    private function GivenASearchView($service, $criteria, $artifacts) {
+    private function GivenASearchView($service, $criteria, $artifacts, $root) {
         $report           = new MockTracker_Report();
         $artifact_factory = $this->GivenAnArtifactFactory($artifacts);
         $shared_factory   = $this->GivenASharedFactory($criteria);
@@ -128,7 +150,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $tracker1         = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
         $trackers         = array($tracker1);
         
-        $view             = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
+        $view             = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $root, $artifact_factory, $shared_factory, $trackers);
         return $view;
     }
     

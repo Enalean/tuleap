@@ -1,3 +1,25 @@
 .agiledashboard .tracker_report_criteria_advanced_toggle {
     display: none;
 }
+
+.tree-blank, .tree-node, .tree-pipe, .tree-last {
+    width: 16px;
+    height: 16px;
+    float: left;
+    background-image: url('../images/TreeSprites.png');
+    background-repeat: no-repeat;
+}
+
+.tree-last {
+    background-position:-48px 0px;
+}
+ .tree-node {
+    background-position:-32px 0px;
+}
+.tree-pipe {
+    background-position:-16px 0px;
+}
+
+.tree-node, .tree-last {
+    margin-right: 0.25em;
+}

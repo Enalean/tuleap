@@ -21,6 +21,8 @@
 require_once 'common/project/Service.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Report/Tracker_Report.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Hierarchy/Hierarchy.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Hierarchy/HierarchyTreeVisitor.class.php';
+
 require_once 'html.php';
 
 class AgileDashboard_SearchView {
@@ -65,6 +67,13 @@ class AgileDashboard_SearchView {
      */
     private $trackers;
     
+    private static $state_classes = array(
+        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_BLANK => 'tree-blank',
+        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_NODE  => 'tree-node',
+        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_PIPE  => 'tree-pipe',
+        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_LAST  => 'tree-last',
+    );
+    
     public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_SharedFormElementFactory $shared_factory, $trackers) {
         $this->language          = $language;
         $this->service           = $service;
@@ -74,6 +83,8 @@ class AgileDashboard_SearchView {
         $this->artifact_factory  = $artifact_factory;
         $this->shared_factory    = $shared_factory;
         $this->trackers          = $trackers;
+        $this->treeVisistor      = new Tracker_Hierarchy_HierarchyTreeVisitor();
+        $this->artifacts->accept($this->treeVisistor);
     }
     
     public function render() {
@@ -117,7 +128,7 @@ class AgileDashboard_SearchView {
     private function fetchResults() {
         $html  = '';
         $html .= '<div class="tracker_report_renderer">';
-        if (count($this->artifacts)) {
+        if ($this->artifacts->hasChildren()) {
             $html .= $this->fetchTable();
         } else {
             $html .= '<em>'. 'No artifact match your query' .'</em>';
@@ -135,24 +146,43 @@ class AgileDashboard_SearchView {
         return $html;
     }
     
+    public function visit(TreeNode $node, $index) {
+        $html = '';
+        $row = $node->getData();
+        $artifact = $this->artifact_factory->getArtifactById($row['id']);
+        if ($artifact) {
+            $html .= '<tr class="' . html_get_alt_row_color($index++) . '">';
+            $html .= '<td>';
+            $html.= $this->fetchState($node);
+            $html .= $artifact->fetchDirectLinkToArtifact();
+            $html .= '</td>';
+            $html .= '<td>';
+            $html .= $row['title'];
+            $html .= '</td>';
+            $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
+            $html .= '</tr>';
+            foreach ($node->getChildren() as $child) {
+                $html .= $child->accept($this, $index);
+            }
+        }
+        return $html;
+    }
+    
+    private function fetchState(TreeNode $node) {
+        $html = '';
+        $state = $this->treeVisistor->getState($node);
+        $template = '<div class="%s"></div>';
+        foreach ($state as $state_id) {
+            $html .= sprintf($template, self::$state_classes[$state_id]);
+        }
+        return $html;
+    }
+    
     private function fetchTBody() {
         $html  = '';
         $html .= '<tbody>';
-        $i = 0;
-        foreach ($this->artifacts as $row) {
-            $artifact = $this->artifact_factory->getArtifactById($row['id']);
-            if ($artifact) {
-                $html .= '<tr class="' . html_get_alt_row_color($i++) . '">';
-                $padding = $row['level'] * 1.5;
-                $html .= '<td style="padding-left: '. $padding .'em;">';
-                $html .= $artifact->fetchDirectLinkToArtifact();
-                $html .= '</td>';
-                $html .= '<td>';
-                $html .= $row['title'];
-                $html .= '</td>';
-                $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
-                $html .= '</tr>';
-            }
+        foreach ($this->artifacts->getChildren() as $child) {
+            $html.= $child->accept($this, 0);
         }
         $html .= '</tbody>';
         return $html;
