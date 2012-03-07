@@ -171,9 +171,16 @@ class AgileDashboard_SearchView {
     private function fetchState(TreeNode $node) {
         $html = '';
         $state = $this->treeVisistor->getState($node);
-        $template = '<div class="%s"></div>';
+        $template = '<div class="%s" %s></div>';
         foreach ($state as $state_id) {
-            $html .= sprintf($template, self::$state_classes[$state_id]);
+            $id    = '';
+            $class = self::$state_classes[$state_id];
+            if ($node->hasChildren() && ($state_id == Tracker_Hierarchy_HierarchyTreeVisitor::STATE_LAST || $state_id == Tracker_Hierarchy_HierarchyTreeVisitor::STATE_NODE)) {
+                $row = $node->getData();
+                $class .= ' tree-collapsable';
+                $id = 'id="tree-node-'. $row['id'] .'"';
+            }
+            $html .= sprintf($template, $class, $id);
         }
         return $html;
     }
