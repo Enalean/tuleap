@@ -57,6 +57,14 @@ class Tracker_Hierarchy_HierarchyTreeVisitorTest extends UnitTestCase {
     }
     
     public function testComplexHierarchy() {
+        /*
+        
+        +- story 7
+        |  `- task 5
+        |     `- risk 11
+        `- story6
+        
+        */
         $root    = new TreeNode();
         $story_7 = $this->GivenANodeInAparent($root);
         $task_5  = $this->GivenANodeInAparent($story_7);

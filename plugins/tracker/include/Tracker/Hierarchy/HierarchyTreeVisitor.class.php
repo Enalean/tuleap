@@ -28,10 +28,6 @@ class Tracker_Hierarchy_HierarchyTreeVisitor {
     const STATE_PIPE  = 3;
     
     private $states = array();
-    private $nodes  = array();
-    
-    public function __construct() {
-    }
     
     public function getState(TreeNode $node) {
         return $this->states[$node->getId()];
