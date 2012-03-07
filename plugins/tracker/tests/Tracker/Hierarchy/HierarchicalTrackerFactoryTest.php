@@ -96,6 +96,7 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $tracker = aTracker()->withId(3)->withProjectId($project_id)->build();
         
         $project_trackers = array(
+//            '3' => aTracker()->withId(1)->withName('Holidays')->build(),
             '1' => aTracker()->withId(1)->withName('Releases')->build(),
             '2' => aTracker()->withId(2)->withName('Sprints')->build(),
         );
@@ -105,6 +106,7 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $tracker_factory->setReturnValue('getTrackersByGroupId', $project_trackers);
         
         $hierarchy_dar = array(
+//             array('child_id' => 3, 'parent_id' => null),
              array('child_id' => 1, 'parent_id' => null),
              array('child_id' => 2, 'parent_id' => 1)
         );
@@ -116,11 +118,10 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         );
         
         $dao = new MockTracker_Hierarchy_Dao();
-        $dao->setReturnValue('getHierarchy', $hierarchy_dar, array($tracker->getId()));
+        $dao->setReturnValue('getHierarchy', $hierarchy_dar, array($tracker->getGroupId()));
         
         $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
         $actual_hierarchy = $factory->getHierarchy($tracker);
-        
         $this->assertEqual($expected_hierarchy, $actual_hierarchy);
     }
     
@@ -152,7 +153,7 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         );
         
         $dao = new MockTracker_Hierarchy_Dao();
-        $dao->setReturnValue('getHierarchy', $hierarchy_dar, array($tracker->getId()));
+        $dao->setReturnValue('getHierarchy', $hierarchy_dar, array($tracker->getGroupId()));
         
         $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
         $actual_hierarchy = $factory->getHierarchy($tracker);
