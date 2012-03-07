@@ -47,19 +47,25 @@ class TreeNode /*implements Visitable*/ {
      */
     var $parentNode;
     
-
+    private $id;
+    
+    
     /**
      * Constructor
      */
     function TreeNode($data=null) {
+        $this->id = uniqid();
         /*if(func_num_args() !== 0) {
             trigger_error(get_class($this).'::TreeNode => Do not accept arguments', E_USER_ERROR);
         }*/
         $this->data       = $data;
-        $this->children   = null;
+        $this->children   = array();
         $this->parentNode = null;
     }
-
+    
+    public function getId() {
+        return $this->id;
+    }
 
     /**
      * Set data for current node.
