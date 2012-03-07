@@ -66,6 +66,10 @@ class TreeNode /*implements Visitable*/ {
     public function getId() {
         return $this->id;
     }
+    
+    public function setId($id) {
+        $this->id = $id;
+    }
 
     /**
      * Set data for current node.
@@ -205,6 +209,14 @@ class TreeNode /*implements Visitable*/ {
      */
     function accept(&$visitor, $params = null) {
         $visitor->visit($this, $params);
+    }
+    
+    public function __toString() {
+        $children_as_string = '';
+        foreach ($this->getChildren() as $child) {
+            $children_as_string .= $child->__toString() .",\n";
+        }
+        return 'TreeNode #'. $this->id ." {\n $children_as_string }\n";
     }
 }
 
