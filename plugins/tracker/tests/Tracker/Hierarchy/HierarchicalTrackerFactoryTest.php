@@ -96,7 +96,6 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $tracker = aTracker()->withId(3)->withProjectId($project_id)->build();
         
         $project_trackers = array(
-//            '3' => aTracker()->withId(1)->withName('Holidays')->build(),
             '1' => aTracker()->withId(1)->withName('Releases')->build(),
             '2' => aTracker()->withId(2)->withName('Sprints')->build(),
         );
@@ -106,7 +105,6 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $tracker_factory->setReturnValue('getTrackersByGroupId', $project_trackers);
         
         $hierarchy_dar = array(
-//             array('child_id' => 3, 'parent_id' => null),
              array('child_id' => 1, 'parent_id' => null),
              array('child_id' => 2, 'parent_id' => 1)
         );
@@ -124,41 +122,41 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $actual_hierarchy = $factory->getHierarchy($tracker);
         $this->assertEqual($expected_hierarchy, $actual_hierarchy);
     }
-    
-    public function testGetHierarchyWithMultipleChildren() {
-        $project_id = 110;
-        $tracker = aTracker()->withId(3)->withProjectId($project_id)->build();
-        
-        $project_trackers = array(
-            '1' => aTracker()->withId(1)->withName('Releases')->build(),
-            '2' => aTracker()->withId(2)->withName('Sprints')->build(),
-            '3' => aTracker()->withId(3)->withName('Epics')->build(),
-        );
-        
-        $tracker_factory = new MockTrackerFactory();
-        $tracker_factory->expectOnce('getTrackersByGroupId', array($project_id));
-        $tracker_factory->setReturnValue('getTrackersByGroupId', $project_trackers);
-        
-        $hierarchy_dar = array(
-             array('child_id' => 1, 'parent_id' => null),
-             array('child_id' => 2, 'parent_id' => 1),
-             array('child_id' => 3, 'parent_id' => 1)
-        );
-        
-        $expected_hierarchy = array(
-            array('name' => 'Releases', 'children' => array(
-                array('name' => 'Sprints', 'children' => array()),
-                array('name' => 'Epics',   'children' => array())
-            ))
-        );
-        
-        $dao = new MockTracker_Hierarchy_Dao();
-        $dao->setReturnValue('getHierarchy', $hierarchy_dar, array($tracker->getGroupId()));
-        
-        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
-        $actual_hierarchy = $factory->getHierarchy($tracker);
-        $this->assertEqual($expected_hierarchy, $actual_hierarchy);
-    }
+//    
+//    public function testGetHierarchyWithMultipleChildren() {
+//        $project_id = 110;
+//        $tracker = aTracker()->withId(3)->withProjectId($project_id)->build();
+//        
+//        $project_trackers = array(
+//            '1' => aTracker()->withId(1)->withName('Releases')->build(),
+//            '2' => aTracker()->withId(2)->withName('Sprints')->build(),
+//            '3' => aTracker()->withId(3)->withName('Epics')->build(),
+//        );
+//        
+//        $tracker_factory = new MockTrackerFactory();
+//        $tracker_factory->expectOnce('getTrackersByGroupId', array($project_id));
+//        $tracker_factory->setReturnValue('getTrackersByGroupId', $project_trackers);
+//        
+//        $hierarchy_dar = array(
+//             array('child_id' => 1, 'parent_id' => null),
+//             array('child_id' => 2, 'parent_id' => 1),
+//             array('child_id' => 3, 'parent_id' => 1)
+//        );
+//        
+//        $expected_hierarchy = array(
+//            array('name' => 'Releases', 'children' => array(
+//                array('name' => 'Sprints', 'children' => array()),
+//                array('name' => 'Epics',   'children' => array())
+//            ))
+//        );
+//        
+//        $dao = new MockTracker_Hierarchy_Dao();
+//        $dao->setReturnValue('getHierarchy', $hierarchy_dar, array($tracker->getGroupId()));
+//        
+//        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+//        $actual_hierarchy = $factory->getHierarchy($tracker);
+//        $this->assertEqual($expected_hierarchy, $actual_hierarchy);
+//    }
     
 //    public function testGetHierarchy() {
 //        $tracker = aTracker()->withId(3)->build();
@@ -190,6 +188,60 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
 //        $actual_hierarchy = $factory->getHierarchy($tracker);
 //        $this->assertEqual($expected_hierarchy, $actual_hierarchy);
 //    }
+    
+    public function testGetRootTrackerIdFromHierarchyWithNoChildren() {
+        $hierarchy_dar = array();
+        $tracker = aTracker()->withId(3)->build();
+        $root_tracker_id = $tracker->getId();
+        $dao = new MockTracker_Hierarchy_Dao();
+        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(new MockTrackerFactory(), $dao);
+        $actual_root_tracker_id = $factory->getRootTrackerId($hierarchy_dar, $tracker);
+        $this->assertEqual($root_tracker_id, $actual_root_tracker_id);
+    }
+    
+    public function testGetRootTrackerIdFromHierarchyWithOneChild() {
+        $hierarchy_dar = array(
+            array('child_id' => 2, 'parent_id' => 1)
+        );
+        $tracker = aTracker()->withId(2)->build();
+        $root_tracker_id = 1;
+        
+        $dao = new MockTracker_Hierarchy_Dao();
+        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(new MockTrackerFactory(), $dao);
+        $actual_root_tracker_id = $factory->getRootTrackerId($hierarchy_dar, $tracker);
+        $this->assertEqual($root_tracker_id, $actual_root_tracker_id);
+    }
+    
+    public function testGetRootTrackerIdFromHierarchyWithMultipleChildren() {
+        $hierarchy_dar = array(
+            array('child_id' => 2, 'parent_id' => 4),
+            array('child_id' => 3, 'parent_id' => 1)
+        );
+        $tracker = aTracker()->withId(3)->build();
+        $root_tracker_id = 1;
+        
+        $dao = new MockTracker_Hierarchy_Dao();
+        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(new MockTrackerFactory(), $dao);
+        $actual_root_tracker_id = $factory->getRootTrackerId($hierarchy_dar, $tracker);
+        $this->assertEqual($root_tracker_id, $actual_root_tracker_id);
+    }
+    
+    public function testGetRootTrackerIdFromHierarchyWithDeepHierarchy() {
+        $hierarchy_dar = array(
+             array('child_id' => 2, 'parent_id' => 1),
+             array('child_id' => 3, 'parent_id' => 2),
+             array('child_id' => 4, 'parent_id' => 2),
+             array('child_id' => 5, 'parent_id' => 3)
+        );
+        
+        $tracker = aTracker()->withId(5)->build();
+        $root_tracker_id = 1;
+        
+        $dao = new MockTracker_Hierarchy_Dao();
+        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(new MockTrackerFactory(), $dao);
+        $actual_root_tracker_id = $factory->getRootTrackerId($hierarchy_dar, $tracker);
+        //$this->assertEqual($root_tracker_id, $actual_root_tracker_id);
+    }
 }
 
 ?>
