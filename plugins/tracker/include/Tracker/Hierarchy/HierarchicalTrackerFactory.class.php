@@ -50,6 +50,26 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         
         return $project_trackers;
     }
+    
+    
+    public function getHierarchy(Tracker $tracker) {
+        $hierarchy_dar = $this->dao->getHierarchy($tracker->getId());
+        return $this->buildHierarchyChildrenOf(null, $hierarchy_dar);
+    }
+
+    private function buildHierarchyChildrenOf($parent_id, $dar) {
+        $children = array();
+        
+        foreach($dar as $row) {
+            if ($row['parent_id'] == $parent_id) {
+                $children[] = array('name'     => $row['name'],
+                                    'children' => $this->buildHierarchyChildrenOf($row['id'], $dar));
+            } 
+              
+        }
+        
+        return $children;
+    }
 }
 
 ?>

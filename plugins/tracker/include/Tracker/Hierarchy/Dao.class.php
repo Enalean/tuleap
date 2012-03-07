@@ -49,6 +49,14 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
                    OR child_id  IN ($tracker_ids)";
         return $this->retrieve($sql);
     }
+    
+    public function getHierarchy($tracker_id) {
+//        $sql = "SELECT parent_id, tracker.*
+//                FROM tracker_hierarchy, tracker
+//                  ON (tracker.id = parent_id)
+//                WHERE group_id = $group_id";
+//        //
+    }
 }
 
 ?>
