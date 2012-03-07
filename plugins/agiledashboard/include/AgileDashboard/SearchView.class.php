@@ -139,7 +139,7 @@ class AgileDashboard_SearchView {
     
     private function fetchTable() {
         $html  = '';
-        $html .= '<table>';
+        $html .= '<table cellspacing="1">';
         $html .= $this->fetchTHead();
         $html .= $this->fetchTBody();
         $html .= '</table>';
