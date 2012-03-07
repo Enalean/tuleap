@@ -191,11 +191,11 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
     
     public function testGetRootTrackerIdFromHierarchyWithNoChildren() {
         $hierarchy_dar = array();
-        $tracker = aTracker()->withId(3)->build();
-        $root_tracker_id = $tracker->getId();
-        $dao = new MockTracker_Hierarchy_Dao();
-        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(new MockTrackerFactory(), $dao);
-        $actual_root_tracker_id = $factory->getRootTrackerId($hierarchy_dar, $tracker);
+
+        $root_tracker_id = 3;
+        $current_tracker_id = $root_tracker_id;
+
+        $actual_root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $current_tracker_id);
         $this->assertEqual($root_tracker_id, $actual_root_tracker_id);
     }
     
@@ -203,12 +203,11 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $hierarchy_dar = array(
             array('child_id' => 2, 'parent_id' => 1)
         );
-        $tracker = aTracker()->withId(2)->build();
-        $root_tracker_id = 1;
         
-        $dao = new MockTracker_Hierarchy_Dao();
-        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(new MockTrackerFactory(), $dao);
-        $actual_root_tracker_id = $factory->getRootTrackerId($hierarchy_dar, $tracker);
+        $root_tracker_id = 1;
+        $current_tracker_id = 2;
+
+        $actual_root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $current_tracker_id);
         $this->assertEqual($root_tracker_id, $actual_root_tracker_id);
     }
     
@@ -217,12 +216,11 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
             array('child_id' => 2, 'parent_id' => 4),
             array('child_id' => 3, 'parent_id' => 1)
         );
-        $tracker = aTracker()->withId(3)->build();
-        $root_tracker_id = 1;
         
-        $dao = new MockTracker_Hierarchy_Dao();
-        $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(new MockTrackerFactory(), $dao);
-        $actual_root_tracker_id = $factory->getRootTrackerId($hierarchy_dar, $tracker);
+        $root_tracker_id = 1;
+        $current_tracker_id = 3;
+
+        $actual_root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $current_tracker_id);
         $this->assertEqual($root_tracker_id, $actual_root_tracker_id);
     }
     
@@ -234,13 +232,19 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
              array('child_id' => 5, 'parent_id' => 3)
         );
         
-        $tracker = aTracker()->withId(5)->build();
         $root_tracker_id = 1;
-        
+        $current_tracker_id = 5;
+
+        $actual_root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $current_tracker_id);
+        $this->assertEqual($root_tracker_id, $actual_root_tracker_id);
+    }
+
+    public function getRootTrackerId($hierarchy_dar, $current_tracker_id) {
         $dao = new MockTracker_Hierarchy_Dao();
         $factory = new Tracker_Hierarchy_HierarchicalTrackerFactory(new MockTrackerFactory(), $dao);
-        $actual_root_tracker_id = $factory->getRootTrackerId($hierarchy_dar, $tracker);
-        //$this->assertEqual($root_tracker_id, $actual_root_tracker_id);
+        return $factory->_getRootTrackerId($hierarchy_dar, $current_tracker_id);
+
+        
     }
 }
 

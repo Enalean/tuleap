@@ -78,16 +78,16 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
     }
     
     public function getRootTrackerId($hierarchy_dar, $tracker) {
-        if(!empty($hierarchy_dar)) {
-            $tracker_id = $tracker->getId();
-            foreach($hierarchy_dar as $child) {
-                if ($child['child_id'] == $tracker_id) {
-                    return $child['parent_id'];
-                }
+        return $this->_getRootTrackerId($hierarchy_dar, $tracker->getId());
+    }
+
+    public function _getRootTrackerId($hierarchy_dar, $current_tracker_id) {
+        foreach($hierarchy_dar as $child) {
+            if ($child['child_id'] == $current_tracker_id) {
+                return $this->_getRootTrackerId($hierarchy_dar, $child['parent_id']);
             }
-            //return $hierarchy_dar[0]['parent_id'];
         }
-        return $tracker->getId();
+        return $current_tracker_id;
     }
 }
 
