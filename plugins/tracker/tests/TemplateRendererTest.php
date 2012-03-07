@@ -24,9 +24,22 @@ class TestPresenter {
     public function title() {
         return 'Tuleap';
     }
+    public function getTreeItems() {
+        return array(
+            array('name' => 'T1', 'children' => array(
+                array('name' => 'T2', 'children' => array(
+                    array('name' => 'T3', 'children' => array()),
+                )),
+                array('name' => 'T4', 'children' => array())
+            ))
+        );
+    }
     public $content = 'An open ALM solution.';
 }
 
+/**
+ * extend this class for any new template engines
+ */
 abstract class TemplateRendererTest extends UnitTestCase {
     function setUp() {
         $this->presenter = new TestPresenter();
@@ -46,8 +59,21 @@ abstract class TemplateRendererTest extends UnitTestCase {
     function testFunction() {
         $this->assertOutputContains($this->presenter->content);
     }
+    
+    function testCanBuildANestedList() {
+        //dont know how to assert the nestedness in a proper way, so lets just assert that it contains all elements
+        //atleast we know that the recursion is working
+        $this->assertPattern("/T1.*T2.*T3.*T4/", $this->strip($this->output)); 
+    }
+
+    public function strip($string) {
+        return "\n".preg_replace("/[ \t\n]+/", ' ', $string)."\n";
+    }
 }
 
+/**
+ * Replace this class or add a class for every template engine 
+ */
 class MustacheRendererTest extends TemplateRendererTest {
     function setUp() {
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/templates');

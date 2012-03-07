@@ -1,3 +1,7 @@
 <h1>{{title}}</h1>
-
+<ul>
+{{#getTreeItems}}
+  {{> tree-item}}
+{{/getTreeItems}}
+</ul>
 {{content}}
