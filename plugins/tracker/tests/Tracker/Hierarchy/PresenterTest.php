@@ -36,7 +36,7 @@ class Tracker_Hierarchy_PresenterTest extends UnitTestCase {
         $tracker->setReturnValue('hasChild', false, array($possible_children[1]));
         $tracker->setReturnValue('hasChild', true,  array($possible_children[2]));
         
-        $presenter = new Tracker_Hierarchy_Presenter($tracker, $possible_children);
+        $presenter = new Tracker_Hierarchy_Presenter($tracker, $possible_children, null);
         
         $attributes = $presenter->getPossibleChildren();
         $this->assertEqual($attributes[0]['name'], 'Stories');
