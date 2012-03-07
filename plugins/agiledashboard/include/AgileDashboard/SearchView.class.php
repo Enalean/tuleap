@@ -146,12 +146,12 @@ class AgileDashboard_SearchView {
         return $html;
     }
     
-    public function visit(TreeNode $node, $index) {
+    public function visit(TreeNode $node) {
         $html = '';
         $row = $node->getData();
         $artifact = $this->artifact_factory->getArtifactById($row['id']);
         if ($artifact) {
-            $html .= '<tr class="' . html_get_alt_row_color($index++) . '">';
+            $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '">';
             $html .= '<td>';
             $html.= $this->fetchState($node);
             $html .= $artifact->fetchDirectLinkToArtifact();
@@ -162,7 +162,7 @@ class AgileDashboard_SearchView {
             $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
             $html .= '</tr>';
             foreach ($node->getChildren() as $child) {
-                $html .= $child->accept($this, $index);
+                $html .= $child->accept($this);
             }
         }
         return $html;
@@ -181,8 +181,9 @@ class AgileDashboard_SearchView {
     private function fetchTBody() {
         $html  = '';
         $html .= '<tbody>';
+        $this->current_index = 0;
         foreach ($this->artifacts->getChildren() as $child) {
-            $html.= $child->accept($this, 0);
+            $html.= $child->accept($this);
         }
         $html .= '</tbody>';
         return $html;
