@@ -104,9 +104,9 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $tracker_factory->expectOnce('getTrackersByGroupId', array($project_id));
         $tracker_factory->setReturnValue('getTrackersByGroupId', $project_trackers);
         
-        $hierarchy_dar = array(
+        $hierarchy_dar = new ArrayIterator(array(
              array('child_id' => 2, 'parent_id' => 1)
-        );
+        ));
         
         $expected_hierarchy = 
             array('name' => 'Releases', 'children' => array(
@@ -124,7 +124,7 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
     
     public function testGetHierarchyWithMultipleChildren() {
         $project_id = 110;
-        $tracker = aTracker()->withId(3)->withProjectId($project_id)->build();
+        $tracker = aTracker()->withId(2)->withProjectId($project_id)->build();
         
         $project_trackers = array(
             '1' => aTracker()->withId(1)->withName('Releases')->build(),
@@ -136,10 +136,10 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $tracker_factory->expectOnce('getTrackersByGroupId', array($project_id));
         $tracker_factory->setReturnValue('getTrackersByGroupId', $project_trackers);
         
-        $hierarchy_dar = array(
+        $hierarchy_dar = new ArrayIterator(array(
              array('child_id' => 2, 'parent_id' => 1),
              array('child_id' => 3, 'parent_id' => 1)
-        );
+        ));
         
         $expected_hierarchy = 
             array('name' => 'Releases', 'children' => array(
@@ -168,12 +168,12 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
             '4' => aTracker()->withId(4)->withName('Tasks')->build(),
             '5' => aTracker()->withId(5)->withName('Bugs')->build(),
         );
-        $hierarchy_dar = array(
+        $hierarchy_dar = new ArrayIterator(array(
              array('child_id' => 2, 'parent_id' => 1),
              array('child_id' => 3, 'parent_id' => 2),
              array('child_id' => 4, 'parent_id' => 3),
              array('child_id' => 5, 'parent_id' => 2)
-        );
+        ));
         
         $tracker_factory = new MockTrackerFactory();
         $tracker_factory->expectOnce('getTrackersByGroupId', array($project_id));
