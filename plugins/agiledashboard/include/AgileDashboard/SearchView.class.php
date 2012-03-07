@@ -143,7 +143,7 @@ class AgileDashboard_SearchView {
             $artifact = $this->artifact_factory->getArtifactById($row['id']);
             if ($artifact) {
                 $html .= '<tr class="' . html_get_alt_row_color($i++) . '">';
-                $padding = $row['level'];
+                $padding = $row['level'] * 1.5;
                 $html .= '<td style="padding-left: '. $padding .'em;">';
                 $html .= $artifact->fetchDirectLinkToArtifact();
                 $html .= '</td>';

@@ -115,7 +115,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         
         $output = $this->renderAndGetContent($view);
         
-        $this->assertPattern('/padding-left: 1em;/', $output);
+        $this->assertPattern('/padding-left: 1.5em;/', $output);
     }
     
     private function GivenASearchView($service, $criteria, $artifacts) {
