@@ -56,7 +56,8 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         $project_trackers = $this->tracker_factory->getTrackersByGroupId($tracker->getGroupId());
         $hierarchy_dar    = $this->dao->getHierarchy($tracker->getGroupId());
         $root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $tracker->getId());
-        $hierarchy = array('name'     => $project_trackers[$root_tracker_id]->getname(),
+        $hierarchy = array('name'     => $project_trackers[$root_tracker_id]->getName(),
+                           'id'       => $root_tracker_id,
                      'children' => $this->buildHierarchyChildrenOf($root_tracker_id , iterator_to_array($hierarchy_dar), $project_trackers));
         return $hierarchy;
     }
@@ -69,6 +70,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
                 $tracker = $project_trackers[$id];
                 
                 $children[] = array('name'     => $tracker->getName(),
+                                    'id'       => $tracker->getId(),
                                     'children' => $this->buildHierarchyChildrenOf($id, $hierarchy_dar, $project_trackers));
             }
         }

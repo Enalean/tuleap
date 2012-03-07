@@ -109,8 +109,8 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         ));
         
         $expected_hierarchy = 
-            array('name' => 'Releases', 'children' => array(
-                array('name' => 'Sprints', 'children' => array())
+            array('id' => '1', 'name' => 'Releases', 'children' => array(
+                array('id' => '2', 'name' => 'Sprints', 'children' => array())
             ))
         ;
         
@@ -142,9 +142,9 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         ));
         
         $expected_hierarchy = 
-            array('name' => 'Releases', 'children' => array(
-                array('name' => 'Sprints', 'children' => array()),
-                array('name' => 'Epics',   'children' => array())
+            array('id' => '1', 'name' => 'Releases', 'children' => array(
+                array('id' => '2', 'name' => 'Sprints', 'children' => array()),
+                array('id' => '3', 'name' => 'Epics',   'children' => array())
             ))
         ;
         
@@ -180,12 +180,12 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $tracker_factory->setReturnValue('getTrackersByGroupId', $project_trackers);
         
         $expected_hierarchy = 
-            array('name' => 'Releases', 'children' => array(
-                array('name' => 'Sprints', 'children' => array(
-                    array('name' => 'Stories', 'children' => array(
-                        array('name' => 'Tasks', 'children' => array())
+            array('id' => '1', 'name' => 'Releases', 'children' => array(
+                array('id' => '2', 'name' => 'Sprints', 'children' => array(
+                    array('id' => '3', 'name' => 'Stories', 'children' => array(
+                        array('id' => '4', 'name' => 'Tasks', 'children' => array())
                     )),
-                    array('name' => 'Bugs', 'children' => array())
+                    array('id' => '5', 'name' => 'Bugs', 'children' => array())
                 ))
             ))
         ;
