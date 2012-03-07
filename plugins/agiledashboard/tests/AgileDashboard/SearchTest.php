@@ -99,9 +99,9 @@ class AgileDashboard_SearchTest extends UnitTestCase {
     
     private function getExpectedWithOneLevel() {
         return array(
-            array('id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5',),
-            array('id' => 5, 'tracker_id' => 111, 'artifactlinks' => '',),
-            array('id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8',),
+            array('id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5', 'level' => 0),
+            array('id' => 5, 'tracker_id' => 111, 'artifactlinks' => '', 'level' => 1),
+            array('id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8', 'level' => 0),
         );
     }
     
@@ -141,14 +141,14 @@ class AgileDashboard_SearchTest extends UnitTestCase {
     
     private function getExpectedForTrackerOutsideHierarchy() {
         return array(
-            array('id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5',),
-            array('id' => 5, 'tracker_id' => 111, 'artifactlinks' => '',),
-            array('id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8',),
-            array('id' => 8, 'tracker_id' => 111, 'artifactlinks' => '11,9,34',),
-            array('id' => 11, 'tracker_id' => 113, 'artifactlinks' => '',),
-            array('id' => 9, 'tracker_id' => 113, 'artifactlinks' => '',),
-            array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '42',),
-            array('id' => 66, 'tracker_id' => 666, 'artifactlinks' => '',)
+            array('id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5',       'level' => 0),
+            array('id' => 5, 'tracker_id' => 111, 'artifactlinks' => '',        'level' => 1),
+            array('id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8',       'level' => 0),
+            array('id' => 8, 'tracker_id' => 111, 'artifactlinks' => '11,9,34', 'level' => 1),
+            array('id' => 11, 'tracker_id' => 113, 'artifactlinks' => '',       'level' => 2),
+            array('id' => 9, 'tracker_id' => 113, 'artifactlinks' => '',        'level' => 2),
+            array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '42',     'level' => 0),
+            array('id' => 66, 'tracker_id' => 666, 'artifactlinks' => '',       'level' => 0)
         );
     }
     

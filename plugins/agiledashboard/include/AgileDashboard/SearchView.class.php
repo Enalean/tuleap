@@ -65,12 +65,7 @@ class AgileDashboard_SearchView {
      */
     private $trackers;
     
-    /**
-     * @var Tracker_Hierarchy object that represent the hierarchy of trackers
-     */
-    private $tracker_hierarchy;
-    
-    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_SharedFormElementFactory $shared_factory, $trackers, Tracker_Hierarchy $tracker_hierarchy) {
+    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_SharedFormElementFactory $shared_factory, $trackers) {
         $this->language          = $language;
         $this->service           = $service;
         $this->report            = $report;
@@ -79,7 +74,6 @@ class AgileDashboard_SearchView {
         $this->artifact_factory  = $artifact_factory;
         $this->shared_factory    = $shared_factory;
         $this->trackers          = $trackers;
-        $this->tracker_hierarchy = $tracker_hierarchy;
     }
     
     public function render() {
@@ -149,7 +143,7 @@ class AgileDashboard_SearchView {
             $artifact = $this->artifact_factory->getArtifactById($row['id']);
             if ($artifact) {
                 $html .= '<tr class="' . html_get_alt_row_color($i++) . '">';
-                $padding = $this->tracker_hierarchy->getLevel($artifact->getTracker()->getId());
+                $padding = $row['level'];
                 $html .= '<td style="padding-left: '. $padding .'em;">';
                 $html .= $artifact->fetchDirectLinkToArtifact();
                 $html .= '</td>';

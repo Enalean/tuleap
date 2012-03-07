@@ -27,6 +27,10 @@ class Tracker_Hierarchy {
 
     private $levelHierarchyTmp = array();
     
+    /**
+     * @param int $parent The id of the parent in the relatonship
+     * @param int $child  The id of the parent in the relatonship
+     */
     public function addRelationship($parent, $child) {
         if (!array_key_exists($parent, $this->parents)) {
             $this->parents[$parent] = null;
@@ -34,7 +38,12 @@ class Tracker_Hierarchy {
         $this->parents[$child] = $parent;
     }
     
-    
+    /**
+     * @throws Tracker_Hierarchy_NotInHierarchyException
+     * @throws Tracker_Hierarchy_CyclicHierarchyException
+     *
+     * @return int the level of the tracker accordingly to the hierarchy
+     */
     public function getLevel($tracker_id) {
         $this->levelHierarchyTmp = array();
         return $this->getLevelRecursive($tracker_id);

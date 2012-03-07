@@ -62,6 +62,7 @@ class AgileDashboard_Search {
             $trackerIds = $this->sortTrackerIdsAccordinglyToHierarchy($trackerIds, $hierarchy);
             foreach ($trackerIds as $tracker_id) {
                 foreach ($artifactsByTracker[$tracker_id] as $artifact) {
+                    $artifact['level'] = 0;
                     $this->appendArtifactAndSonsToResult($artifact, $result, $artifactsById);
                 }
             }
@@ -76,6 +77,7 @@ class AgileDashboard_Search {
             $artifactlinks = explode(',', $artifact['artifactlinks']);
             foreach ($artifactlinks as $link_id) {
                 if (isset($artifacts[$link_id])) {
+                    $artifacts[$link_id]['level'] = $artifact['level'] + 1;
                     $this->appendArtifactAndSonsToResult($artifacts[$link_id], $result, $artifacts);
                 }
             }

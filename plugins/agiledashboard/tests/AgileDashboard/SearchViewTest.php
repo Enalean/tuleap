@@ -30,7 +30,6 @@ Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Field_List');
 Mock::generate('Tracker_SharedFormElementFactory');
 Mock::generate('Tracker_Artifact_Changeset');
-Mock::generate('Tracker_Hierarchy');
 
 class AgileDashboard_SearchViewTest extends TuleapTestCase {
     
@@ -64,11 +63,13 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
                 'id'                => '6',
                 'last_changeset_id' => '12345',
                 'title'             => 'As a user I want to search on shared fields',
+                'level'             => 1,
             ),
             array(
                 'id'                => '8',
                 'last_changeset_id' => '56789',
                 'title'             => 'Add the form',
+                'level'             => 1,
             )
         );
         
@@ -88,6 +89,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
                 'id'                => '6',
                 'last_changeset_id' => '12345',
                 'title'             => 'As a user I want to search on shared fields',
+                'level'             => 1,
             )
         );
         $view = $this->GivenASearchView($service, $criteria, $artifacts);
@@ -98,7 +100,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $this->assertPattern('/shared field value/', $output);
     }
     
-    function testRenderShouldPadTheArtifactsAccordingToTheirTrackerLevel() {
+    function testRenderShouldPadTheArtifactsAccordingToTheirLevel() {
         $service   = new MockService();
         $criteria  = $this->GivenCriteria();
         $artifacts = array(
@@ -106,13 +108,14 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
                 'id'                => '6',
                 'last_changeset_id' => '12345',
                 'title'             => 'As a user I want to search on shared fields',
+                'level'             => 1,
             )
         );
         $view = $this->GivenASearchView($service, $criteria, $artifacts);
         
         $output = $this->renderAndGetContent($view);
         
-        $this->assertPattern('/padding-left: 2em;/', $output);
+        $this->assertPattern('/padding-left: 1em;/', $output);
     }
     
     private function GivenASearchView($service, $criteria, $artifacts) {
@@ -125,10 +128,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $tracker1         = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
         $trackers         = array($tracker1);
         
-        $tracker_hierarchy = new MockTracker_Hierarchy();
-        $tracker_hierarchy->setReturnValue('getLevel', 2);
-        
-        $view             = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers, $tracker_hierarchy);
+        $view             = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
         return $view;
     }
     

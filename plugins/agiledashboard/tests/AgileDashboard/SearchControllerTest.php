@@ -243,7 +243,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
         
-        $controller->expectOnce('getView', array('*', '*', '*', '*', '*', $trackers, $trackers_hierarchy));
+        $controller->expectOnce('getView', array('*', '*', '*', '*', '*', $trackers));
         $controller->setReturnValue('getView', $view);
         $controller->setReturnValue('getTrackers', $trackers);
         $controller->setReturnValue('getTrackersHierarchy', $trackers_hierarchy , array($trackers));
