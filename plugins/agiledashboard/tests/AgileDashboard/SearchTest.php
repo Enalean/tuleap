@@ -71,38 +71,7 @@ class AgileDashboard_SearchTest extends UnitTestCase {
         $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
         $artifacts = $this->search->getMatchingArtifacts(array(), $tracker_hierarchy, $criteria);
         
-        $this->assertEqual(count($artifacts), 0);
-    }
-    
-    function testGetMatchingArtifactsShouldOrderResultsAccordinglyToAOneLevelHierarchy() {
-        $tracker_hierarchy = $this->GivenATrackerHierarchy();
-        $this->searchDao->setReturnValue('searchArtifactsFromTrackers', $this->getResultsWithOneLevel());
-        $trackers = array(
-            aTracker()->withId(111)->build(),
-            aTracker()->withId(112)->build(),
-        );
-        $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
-        
-        
-        $artifacts = $this->search->getMatchingArtifacts($trackers, $tracker_hierarchy);
-        $expected  = $this->getExpectedWithOneLevel();
-        $this->assertEqual($artifacts, $expected);
-    }
-    
-    private function getResultsWithOneLevel() {
-        return TestHelper::arrayToDar(
-            array('id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5',),
-            array('id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8',),
-            array('id' => 5, 'tracker_id' => 111, 'artifactlinks' => '',)
-        );
-    }
-    
-    private function getExpectedWithOneLevel() {
-        return array(
-            array('id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5', 'level' => 0),
-            array('id' => 5, 'tracker_id' => 111, 'artifactlinks' => '', 'level' => 1),
-            array('id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8', 'level' => 0),
-        );
+        $this->assertFalse($artifacts->hasChildren());
     }
     
     function testGetMatchingArtifactsShouldReturnArtifactFromTrackersOutsidesHierarchy() {
@@ -123,7 +92,7 @@ class AgileDashboard_SearchTest extends UnitTestCase {
         
         $artifacts = $this->search->getMatchingArtifacts($trackers, $tracker_hierarchy);
         $expected  = $this->getExpectedForTrackerOutsideHierarchy();
-        $this->assertEqual($artifacts, $expected);
+        $this->assertEqual($artifacts->__toString(), $expected->__toString());
     }
     
     private function getResultsForTrackerOutsideHierarchy() {
@@ -140,16 +109,49 @@ class AgileDashboard_SearchTest extends UnitTestCase {
     }
     
     private function getExpectedForTrackerOutsideHierarchy() {
-        return array(
-            array('id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5',       'level' => 0),
-            array('id' => 5, 'tracker_id' => 111, 'artifactlinks' => '',        'level' => 1),
-            array('id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8',       'level' => 0),
-            array('id' => 8, 'tracker_id' => 111, 'artifactlinks' => '11,9,34', 'level' => 1),
-            array('id' => 11, 'tracker_id' => 113, 'artifactlinks' => '',       'level' => 2),
-            array('id' => 9, 'tracker_id' => 113, 'artifactlinks' => '',        'level' => 2),
-            array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '42',     'level' => 0),
-            array('id' => 66, 'tracker_id' => 666, 'artifactlinks' => '',       'level' => 0)
-        );
+        $root = new TreeNode();
+        $root->setId(0);
+        
+        $node_7 = new TreeNode();
+        $node_7->setId(7);
+        $node_7->setData(array('id' => 7, 'tracker_id' => 112, 'artifactlinks' => '5'));
+        $root->addChild($node_7);
+        
+        $node_5 = new TreeNode();
+        $node_5->setId(5);
+        $node_5->setData(array('id' => 5, 'tracker_id' => 111, 'artifactlinks' => ''));
+        $node_7->addChild($node_5);
+        
+        $node_6 = new TreeNode();
+        $node_6->setId(6);
+        $node_6->setData(array('id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8'));
+        $root->addChild($node_6);
+
+        $node_8 = new TreeNode();
+        $node_8->setId(8);
+        $node_8->setData(array('id' => 8, 'tracker_id' => 111, 'artifactlinks' => '11,9,34'));
+        $node_6->addChild($node_8);
+        
+        $node_11 = new TreeNode();
+        $node_11->setId(11);
+        $node_11->setData(array('id' => 11, 'tracker_id' => 113, 'artifactlinks' => ''));
+        $node_8->addChild($node_11);
+        
+        $node_9 = new TreeNode();
+        $node_9->setId(9);
+        $node_9->setData(array('id' => 9, 'tracker_id' => 93, 'artifactlinks' => ''));
+        $node_8->addChild($node_9);
+        
+        $node_10 = new TreeNode();
+        $node_10->setId(10);
+        $node_10->setData(array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '42'));
+        $root->addChild($node_10);
+        
+        $node_66 = new TreeNode();
+        $node_66->setId(66);
+        $node_66->setData(array('id' => 66, 'tracker_id' => 666, 'artifactlinks' => ''));
+        $root->addChild($node_66);
+        return $root;
     }
     
     private function GivenATrackerHierarchy() {

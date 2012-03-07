@@ -56,29 +56,33 @@ class AgileDashboard_Search {
     }
     
     private function sortResults($artifacts, $trackerIds, $hierarchy) {
+        $root = new TreeNode();
+        $root->setId(0);
         if ($artifacts) {
             list($artifactsById, $artifactsByTracker) = $this->indexArtifactsByIdAndTracker($artifacts);
-            $result = array();
+            $artifactsInTree = array();
             $trackerIds = $this->sortTrackerIdsAccordinglyToHierarchy($trackerIds, $hierarchy);
             foreach ($trackerIds as $tracker_id) {
                 foreach ($artifactsByTracker[$tracker_id] as $artifact) {
-                    $artifact['level'] = 0;
-                    $this->appendArtifactAndSonsToResult($artifact, $result, $artifactsById);
+                    $this->appendArtifactAndSonsToParent($artifact, $artifactsInTree, $root, $artifactsById);
                 }
             }
-            $artifacts = array_values($result);
         }
-        return $artifacts;
+        return $root;
     }
     
-    private function appendArtifactAndSonsToResult($artifact, &$result, $artifacts) {
-        if (!isset($result[$artifact['id']])) {
-            $result[$artifact['id']] = $artifact;
+    private function appendArtifactAndSonsToParent($artifact, &$artifactsInTree, $parent, $artifacts) {
+        $id = $artifact['id'];
+        if (!isset($artifactsInTree[$id])) {
+            $node = new TreeNode();
+            $node->setId($id);
+            $node->setData($artifact);
+            $parent->addChild($node);
+            $artifactsInTree[$id] = true;
             $artifactlinks = explode(',', $artifact['artifactlinks']);
             foreach ($artifactlinks as $link_id) {
                 if (isset($artifacts[$link_id])) {
-                    $artifacts[$link_id]['level'] = $artifact['level'] + 1;
-                    $this->appendArtifactAndSonsToResult($artifacts[$link_id], $result, $artifacts);
+                    $this->appendArtifactAndSonsToParent($artifacts[$link_id], $artifactsInTree, $node, $artifacts);
                 }
             }
         }
