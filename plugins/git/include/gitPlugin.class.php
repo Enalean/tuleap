@@ -26,7 +26,13 @@ require_once('common/system_event/SystemEvent.class.php');
  * GitPlugin
  */
 class GitPlugin extends Plugin {
-
+    
+    /**
+     * Service short_name as it appears in 'service' table
+     * 
+     * Should be transfered in 'ServiceGit' class when we introduce it
+     */
+    const SERVICE_SHORTNAME = 'plugin_git';
 
     public function __construct($id) {
         parent::__construct($id);
@@ -166,7 +172,7 @@ class GitPlugin extends Plugin {
         $path = $GLOBALS['sys_data_dir'].'/gitolite/repositories/'.strtolower($row['unix_group_name']);
         $sum += $params['DiskUsageManager']->getDirSize($path);
 
-        $params['DiskUsageManager']->_getDao()->addGroup($row['group_id'], 'plugin_git', $sum, $_SERVER['REQUEST_TIME']);
+        $params['DiskUsageManager']->_getDao()->addGroup($row['group_id'], self::SERVICE_SHORTNAME, $sum, $_SERVER['REQUEST_TIME']);
     }
 
     /**
@@ -175,7 +181,7 @@ class GitPlugin extends Plugin {
      * @param array $params
      */
     function plugin_statistics_disk_usage_service_label($params) {
-        $params['services']['plugin_git'] = 'Git';
+        $params['services'][self::SERVICE_SHORTNAME] = 'Git';
     }
 
     /**
@@ -184,7 +190,7 @@ class GitPlugin extends Plugin {
      * @param array $params
      */
     function plugin_statistics_color($params) {
-        if ($params['service'] == 'plugin_git') {
+        if ($params['service'] == self::SERVICE_SHORTNAME) {
             $params['color'] = 'palegreen';
         }
     }
@@ -217,6 +223,7 @@ class GitPlugin extends Plugin {
      * @param array $params
      */
     public function edit_ssh_keys($params) {
+        require_once 'Git_GitoliteDriver.class.php';
         $user = UserManager::instance()->getUserById($params['user_id']);
         if ($user) {
             $gitolite = new Git_GitoliteDriver();

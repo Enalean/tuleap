@@ -15,18 +15,18 @@
   references section (see <xref linkend="GitReferences" />).</para>
 
   <para>
-    Git support has been designed to support multiple repositories for a given project.
+    Git support has been designed to support multiple repositories for a given project as well as "Personal repositories" for each developer.
     This is consistent with the Distributed Version Control System philosophy which allows to delegate project features to be developped in separated repositories.
   </para>
 
-  <para>Git access (for both read and write operations) requires SSH a valid key to be configured in user account preference. See <xref linkend="AccountMaintenance" /> for details.
+  <para>Git access (for both read and write operations) requires a valid SSH key to be configured in user account preference. See <xref linkend="AccountMaintenance" /> for details.
   </para>
 
   <para>
     Two types of repositories are available:
     <itemizedlist mark="bullet">
-      <listitem><para>Reference: it is considered as a independant subproject or project module which can be forked</para></listitem>
-      <listitem><para>Fork (clone): it is the result of the 'git clone' command to seperate features works among developement team(s). Could be used as a shared developper's repository</para></listitem>
+      <listitem><para>Project References: the default, aims to catch the official version of project repositories. There might be several repositories and they can be organized into folders for grouping.</para></listitem>
+      <listitem><para>Personal Fork (clone): each project member can clone References in order to publish it's personal work. It aims to support the publish/integrator development model.</para></listitem>
     </itemizedlist>
   </para>
   
@@ -35,20 +35,44 @@
 
     <para>A reference can be created by project admin from the Git service home page, a reference name can be like reference-project_1.</para>
 
-    <para>A reference must be initialized. Note that a reference cannot be empty. If it is the case, you can for instance create a README file.
-      <itemizedlist mark="bullet">
-        <listitem><para>cd mysources</para></listitem>
-        <listitem><para>git init</para></listitem>
-        <listitem><para>git add .</para></listitem>
-        <listitem><para>git commit -m 'initial commit'</para></listitem>
-        <listitem><para>git push USER@SERVER:/gitroot/PROJECT_SHORT_NAME/REPO_NAME.git master</para></listitem>
-      </itemizedlist>
+    <para>A reference must be initialized: 
+    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+    cd mysources
+    git init
+    git add .
+    git commit -m 'initial commit'
+    git push gitolite@&SYS_DEFAULT_DOMAIN;:&lt;project_shortname&gt;/&lt;repo_name&gt;.git master
+    </programlisting>
+    </para>
+
+    <para>If you have an existing repository with branches and tags you want to push, as an alternative you can run:
+    <programlisting format="linespecific" linenumbering="unnumbered" width="80">
+    git push --mirror gitolite@&SYS_DEFAULT_DOMAIN;:&lt;project_shortname&gt;/&lt;repo_name&gt;.git
+    </programlisting>
     </para>
   </section>
 
   <section id="GitRepositoryFork">
-    <title>Forking</title>
-    <para>Any repository can be forked by any project members. It inherits access from its parent.</para>
+    <title>Fork</title>
+    <para>Personal forks allow to support a fully decentralized development model where "References" are maintained by integrators and represent the official repositories of the project.</para>
+    <para>In this context, developments should happen in developers repositories (on developer's computer) and are regularly pushed into a public repositories for sharing with other developers.</para>
+    <para>&SYS_PRODUCT_NAME; "Personal Fork" are those public repositories.</para>
+    <para>If you ever need to group the selected repositories into a common namespace, you can give a specific path the repositories will be created in.</para>
+    
+    <figure id="FigureGitPersonalFork">
+        <title>Git repositories fork screen</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG" fileref="../../screenshots/en_US/sc_git_personal_fork.png" width="12cm" />
+          </imageobject>
+        </mediaobject>
+    </figure>
+    
+    <para>This screen also allows to fork across projects. Given you are administrator of a project with Git service activated, 
+    you can choose to create the forks in this project instead of into the personal area of the current project.
+    </para>
+    <para>In this case, the forked repositories become "References" into the target project.</para>
+    
   </section>
 
   <section id="GitRepositorySettings">
@@ -62,14 +86,27 @@
     </para>
 
     <section id="GitRepositorySettingsAccessControlGitShell">
-      <title>Simple access control</title>
-      <para>Default access control is based on public/private access. A public repository is accessible by all users with a valid account on the platform.
-        Private repositories are only accessible by project members.</para>
-      <para>In any case, all project members have full access to all the repositories for both read and write operations.</para>
-      <para>If "Restricted Users" feature is enabled, it's only possible to create "Private" repositories.</para>
-      <para>For fine grain permissions repositories, see the dedicated <xref linkend="GitRepositoryGitolite" />.</para>
-    </section>
+      <title>Access control</title>
+      <para>Project administrators can control permissions details of each repository. By default a repository is readable by all active users of the platform but only project member can modify it.</para>
+      <para>In "Git repository management" screen, project administrator can select the User Groups allowed to:
+        <itemizedlist mark="bullet">
+            <listitem><para>READ: access the repository</para></listitem>
+            <listitem><para>WRITE: push content into the repository (commits, new branches, deletion of branches, etc)</para></listitem>
+            <listitem><para>REWIND: go behind git barriers and play with repo history. This is highly un-advised to activate it if you don't know exactly what you are doing, you can erase your whole repository. You are warned!</para></listitem>
+        </itemizedlist>
+      </para>
 
+      <figure id="FigureGitPermissions">
+        <title>Control Git repository permissions</title>
+        <mediaobject>
+          <imageobject>
+            <imagedata format="PNG" fileref="../../screenshots/en_US/sc_git_permissions.png" width="12cm" />
+          </imageobject>
+        </mediaobject>
+      </figure>
+      
+    </section>
+    
     <section id="GitRepositorySettingsEmail">
       <title>Email notification</title>
       <para>It's often a good idea to notify the whole team when someone pushes some new content into a repository.
@@ -92,33 +129,6 @@
         Please note that cross-reference extraction will not work if email notification is not configured.
       </para>
     </section>
-  </section>
-
-  <section id="GitRepositoryGitolite">
-    <title>Fine grain access control</title>
-    <para>Starting release 4.0.20, project admins can create repositories allowing to define fine grain permissions.</para>
-    
-    <para>In order to activate this feature, one project admin should activate "&SYS_PRODUCT_NAME; Lab" in her preferences pages (My personal page).
-      Then a check box appears in Git reference creation page to turn on this feature.</para>
-    
-    <para>There are two improvements with those new repositories:
-      <itemizedlist mark="bullet">
-        <listitem><para>directories tree are allowed, so you can name your repo "platform/x86" for instance,</para></listitem>
-        <listitem><para>you can associate different user groups to the three capabilities: READ, WRITE, REWIND.</para></listitem>
-      </itemizedlist>
-    </para>
-
-    <para>As a project admin, in "Git repository management" screen, project admins can select the User Groups allowed to:
-      <itemizedlist mark="bullet">
-        <listitem><para>READ: access the repository</para></listitem>
-        <listitem><para>WRITE: push content into the repository (commits, new branches, deletion of branches, etc)</para></listitem>
-        <listitem><para>REWIND: go behind git barriers and play with repo history. This is highly un-advised to activate it if you don't know exactly what you are doing, you can erase your whole repository. You are warned!</para></listitem>
-      </itemizedlist>
-    </para>
-
-    <para>The "fine grain permissions repositories" are technically based on different technology (aka. Gitolite) than "standard repositories" (aka Gitshell).
-      It's neither yet possible to delete nor fork those repositories. Those features will be developed in a further release.
-    </para>
   </section>
 
   <section id="GitRepositoryDeletion">

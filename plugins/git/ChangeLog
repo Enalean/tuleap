@@ -1,3 +1,8 @@
+Version 2.1.2 (Tuleap 4.0.27)
+    * Consistant naming of git service
+    * Improve description of fork feature
+    * Fix bug when there is nothing to fork
+
 Version 2.1.1 (Tuleap 4.0.27)
     * Fix include of files (regression due to memory consumption fix at version 2.0).
 

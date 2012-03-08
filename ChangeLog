@@ -1,3 +1,11 @@
+Version 4.0.27.2 (Thursday, March 8th 2012)
+   == Enhancement ==
+   * Git documentation is now aligned with implementation.
+
+   == Plugins ==
+   * Git v2.1.2.
+   * Tracker v5.1.2
+
 Version 4.0.27.1 (Friday, March 2nd 2012)
    == Bug fix ==
    * Fix SOAP loginAs method (was not taking into account given session_hash).

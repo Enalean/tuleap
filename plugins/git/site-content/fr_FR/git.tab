@@ -142,7 +142,7 @@ plugin_git	perm_W	Ecriture
 plugin_git	perm_W+	Rewind
 
 plugin_git	fork_repositories	Forker des dépôts
-plugin_git	fork_repositories_desc	Vous pouvez créer des forks personnels à partir de différents dépôts parents. <div class="lab_features">Cette fonctionnalité est expérimentale, donc soumise à changement. Pour l'instant, les permissions des nouveaux dépôts n'héritent pas de celles du parent, mais seulement de celles par défaut.</div>
+plugin_git	fork_repositories_desc	<p>Vous pouvez créer des forks personnels à partir de différents dépôts parents. Par défault, ces forks seront placés dans votre espace personnel du projet (cf. colonne "apérçu").</p><p>Vous avez également la possibilité de créer ces forks dans un autre project. Dans ce cas, ils deviendront des dépôts de référence dans le project de destination.<br/>Dans ce cas, vous devez être administrateur du projet de destination et le service Git doit être actif.</p>
 plugin_git	fork_repositories_select	Sélectionnez les dépôts à forker
 plugin_git	fork_repositories_path	Choisissez le chemin pour les forks
 plugin_git	fork_repositories_placeholder	Entrer un chemin ou laissez vide

@@ -91,7 +91,7 @@ class GitViewsTest extends UnitTestCase {
         $project->setReturnValue('getId', $id);
         $project->setReturnValue('getPublicName', $name);
         $project->setReturnValue('getUnixName', $unixName);
-        $project->setReturnValue('usesService', $useGit, array('git'));
+        $project->setReturnValue('usesService', $useGit, array(GitPlugin::SERVICE_SHORTNAME));
         return $project;
     }
     

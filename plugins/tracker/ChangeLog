@@ -1,3 +1,6 @@
+Version 5.1.2 - Tuleap 4.0.27
+  * Fix unit test with php 5.3
+
 Version 5.1.1 - Tuleap 4.0.27
   * Fix inclusion of files.
 

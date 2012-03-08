@@ -9,10 +9,10 @@
 -->
       
 <chapter id="TrackerV5Service">
-  <title>New Tracker Service (BETA)</title>
+  <title>Tracker Service</title>
 
   <para><emphasis role="bold">Disclaimer:</emphasis> this chapter covers the new version (aka v5) of Tracker service.
-  For documentation on current tracker system see <xref linkend="TrackerService" />.</para>
+  For documentation on the legacy tracker system (v3) see <xref linkend="TrackerService" />.</para>
 
   <para>The &SYS_PRODUCT_NAME; Tracker is one of the most powerful and versatile
   services offered to &SYS_PRODUCT_NAME; hosted projects. It allows for the tracking 

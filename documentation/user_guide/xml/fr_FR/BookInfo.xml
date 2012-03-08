@@ -83,8 +83,8 @@
 
         <authorinitials>Marie-Luise Schneider</authorinitials>
 
-        <revremark>Mise à jour des chapitres Vue d'ensemble du site
-	&SYS_PRODUCT_NAME;, Créer un nouveau projet et Administration d'un projet
+        <revremark>Mise à jour des chapitres Vue d'ensemble du site, 
+        Créer un nouveau projet et Administration d'un projet
 	pour les patron de projets.
         </revremark>
       </revision>
@@ -117,9 +117,9 @@
 
         <date>03-Avr-2007</date>
 
-        <authorinitials>Equipe &SYS_PRODUCT_NAME;</authorinitials>
+        <authorinitials>Equipe Codex</authorinitials>
 
-        <revremark>Mise à jour pour la version 3.2 de &SYS_PRODUCT_NAME; :
+        <revremark>Mise à jour pour la version 3.2 :
         Documentation du nouveau service Fichiers, documentation 
         des templates, documentation du mode CVS Watch, nombreuses 
         corrections (voir SR #337).
@@ -130,7 +130,7 @@
 
         <date>6-May-2008</date>
 
-        <authorinitials>Equipe &SYS_PRODUCT_NAME;</authorinitials>
+        <authorinitials>Equipe Codex</authorinitials>
 
         <revremark>Corrections mineures, mise à jour de certaines sections et
         réparation de liens.
@@ -139,7 +139,7 @@
       <revision>
         <revnumber>3.6</revnumber>
         <date>12-August-2008</date>
-        <authorinitials>Equipe &SYS_PRODUCT_NAME;</authorinitials>
+        <authorinitials>Equipe Codex</authorinitials>
         <revremark>CodeX vers Codendi
         </revremark>
       </revision>
@@ -158,6 +158,15 @@
         <authorinitials>Equipe Enalean</authorinitials>
         <revremark>Corrige les utilisations du nom de produit.
 	Ajout des Post Actions dans le Workflow.
+	</revremark>
+      </revision>
+
+      <revision>
+        <revnumber>4.0.27.2</revnumber>
+        <date>7 mars 2012</date>
+        <authorinitials>Equipe Enalean</authorinitials>
+        <revremark>Git: suppression des références à Gitshell, ajout sur gitolite et les forks personnels.
+        Tracker: les tracker v5 ne sont plus en beta.
 	</revremark>
       </revision>
 

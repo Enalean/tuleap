@@ -247,13 +247,12 @@ class GitDao extends DataAccessObject {
                 ORDER BY CONCAT(". self::REPOSITORY_NAMESPACE .', '. self::REPOSITORY_NAME .')';
                   
         $rs = $this->retrieve($sql);
-        if ( empty($rs) || $rs->rowCount() == 0 ) {
-            return false;
-        }
         $list = array();
-        while( $row = $rs->getRow() ) {
-            $repoId        = $row[self::REPOSITORY_ID];
-            $list[$repoId] = $row;
+        if ($rs && $rs->rowCount() > 0 ) {        
+            foreach ($rs as $row) {
+                $repoId        = $row[self::REPOSITORY_ID];
+                $list[$repoId] = $row;
+            }
         }
         return $list;
     }

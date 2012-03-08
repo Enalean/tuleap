@@ -37,11 +37,11 @@ CREATE TABLE IF NOT EXISTS `plugin_git_log` (
 
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
-       VALUES      ( 100, 'plugin_git:service_lbl_key', 'plugin_git:service_desc_key', 'git', '/plugins/git/?group_id=$group_id', 1, 0, 'system', 230 );
+       VALUES      ( 100, 'plugin_git:service_lbl_key', 'plugin_git:service_desc_key', 'plugin_git', '/plugins/git/?group_id=$group_id', 1, 0, 'system', 230 );
 
 -- Create service for all other projects (but disabled)
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
-  SELECT DISTINCT group_id, 'plugin_git:service_lbl_key', 'plugin_git:service_desc_key', 'git', CONCAT('/plugins/git/?group_id=', group_id), 1, 0, 'system', 230
+  SELECT DISTINCT group_id, 'plugin_git:service_lbl_key', 'plugin_git:service_desc_key', 'plugin_git', CONCAT('/plugins/git/?group_id=', group_id), 1, 0, 'system', 230
         FROM service
         WHERE group_id NOT IN (SELECT group_id
                                FROM service

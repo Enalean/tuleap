@@ -20,6 +20,7 @@
  */
 
 require_once('mvc/PluginViews.class.php');
+require_once('gitPlugin.class.php');
 require_once('GitDao.class.php');
 require_once('Git_LogDao.class.php');
 require_once('GitBackend.class.php');
@@ -614,7 +615,7 @@ class GitViews extends PluginViews {
         $params = $this->getData();
         $this->_getBreadCrumb();
         echo '<h2>'. $this->getText('fork_repositories') .'</h2>';
-        echo '<p>'. $this->getText('fork_repositories_desc') .'</p>';
+        echo $this->getText('fork_repositories_desc');
         
         echo '<form action="" method="POST">';
         echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
@@ -641,7 +642,7 @@ class GitViews extends PluginViews {
         echo '<tbody><tr valign="top">';
         echo '<td class="first">';
         $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
-        echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
+        echo $strategy->fetch($params['repository_list'], $this->user);
         echo '</td>';
         
         echo '<td>';
@@ -694,7 +695,7 @@ class GitViews extends PluginViews {
         
         foreach ($usrProject as $projectId) {
             $project = $manager->getProject($projectId);
-            if ($user->isMember($projectId, 'A') && $project->usesService('git')) {
+            if ($user->isMember($projectId, 'A') && $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
                 $projectName     = $purifier->purify($project->getPublicName());
                 $projectUnixName = $purifier->purify($project->getUnixName()); 
                 $html           .= sprintf($option, $projectId, $projectUnixName, $projectName);
