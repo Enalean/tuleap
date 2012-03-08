@@ -102,18 +102,15 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->assertPattern("%/plugins/tracker/\?tracker=$stories_id&func=admin-hierarchy%", $content);
     }
     
-    public function testUpdateHappyPathShouldSetChildrenInHierarchicalTrackerThenCallDaoWithItToSaveHierarchy() {
-        $hierarchical_tracker = new MockTracker_Hierarchy_HierarchicalTracker();
-        $hierarchical_tracker->setReturnValue('getId', $this->tracker_id);
+    public function testUpdateHappyPathShouldCallDaoToSaveHierarchy() {
         $children_ids = array('1', '2');
+        
         $this->request->set('children', $children_ids);
-        $hierarchical_tracker->expectOnce('setChildrenIds', array($children_ids));
-        $hierarchical_tracker->setReturnValue('getChildrenIds', $children_ids);
-        $this->dao->expectOnce('updateChildren', array($hierarchical_tracker));
+        $this->dao->expectOnce('updateChildren', array($this->tracker_id, $children_ids));
         
         $GLOBALS['Response']->expectOnce('redirect', array($this->redirect_url));
         
-        $controller = new Tracker_Hierarchy_Controller($this->request, $hierarchical_tracker, $this->factory, $this->dao);
+        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->update();
     }
     

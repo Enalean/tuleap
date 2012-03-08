@@ -67,8 +67,7 @@ class Tracker_Hierarchy_Controller {
         $vChildren->required();
         
         if ($this->request->validArray($vChildren)) {
-            $this->tracker->setChildrenIds($this->request->get('children'));
-            $this->dao->updateChildren($this->tracker);
+            $this->dao->updateChildren($this->tracker->getId(), $this->request->get('children'));
         } else {
             if ($this->request->exist('children')) {
                 $GLOBALS['Response']->addFeedback('error', "There's some error with your request, cowardly doing nothing");
