@@ -98,8 +98,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $controller->edit();
         $content = ob_get_clean();
 
-        $this->assertPattern("%plugins/tracker/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
-        $this->assertPattern("%plugins/tracker/\?tracker=$stories_id&func=admin-hierarchy%", $content);
+        $this->assertPattern("%/plugins/tracker/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
+        $this->assertPattern("%/plugins/tracker/\?tracker=$stories_id&func=admin-hierarchy%", $content);
     }
     
     public function testUpdateHappyPathShouldCallDaoToSaveHierarchy() {
