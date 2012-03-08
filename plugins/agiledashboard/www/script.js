@@ -17,59 +17,87 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
  
-codendi.Tree = { };
-codendi.Tree.Node = Class.create({
+codendi.Tree       = { };
+codendi.Tree.nodes = { };
+codendi.Tree.Node  = Class.create({
     initialize: function (node) {
-        this.node   = $(node);
-        this.method = 'hide';
-        this.id     = this.node.id.match(/-(\d+)$/)[1];
-        this.level  = this.node.previousSiblings().size();
-        this.toggleEvent = this.toggle.bindAsEventListener(this);
+        this.node          = $(node);
+        this.siblings      = { };
+        this.id            = this.extractId(node);
+        this.level         = this.node.previousSiblings().size();
+        this.toggleEvent   = this.toggle.bindAsEventListener(this);
+        this.collapse_icon = '<img src="'+ codendi.imgroot +'ic/toggle-small.png" />';
+        this.expand_icon   = '<img src="'+ codendi.imgroot +'ic/toggle-small-expand.png" />';
         this.node.observe('click', this.toggleEvent);
-        this.node.update('<img src="'+ codendi.imgroot +'ic/toggle-small.png" />');
+        this.displayCollapseIcon();
+        codendi.Tree.nodes[this.id] = this;
+    },
+    extractId: function (node) {
+        return node.id.match(/-(\d+)$/)[1];
+    },
+    displayCollapseIcon: function () {
+        this.node.update(this.collapse_icon);
+        this.method = 'hide';
+    },
+    displayExpandIcon: function () {
+        this.node.update(this.expand_icon);
+        this.method = 'show';
     },
     toggle: function (evt) {
-        var stop = false;
-        var siblings = this.node
-            .up('tr')
-            .nextSiblings()
-            .findAll(function (tr) {
-                var found = false;
-                if (!stop) {
-                    stop = true;
-                    var div_at_the_same_level = tr.down('td').down('div', this.level);
-                    if (div_at_the_same_level) {
-                        found = ! (div_at_the_same_level.hasClassName('tree-last') || div_at_the_same_level.hasClassName('tree-node'));
-                        if (found) {
-                            stop = false;
-                        }
-                    }
-                }
-                return found;
-            }.bind(this));
-        
-        siblings.invoke(this.method);
-        
-        if (this.method == 'hide') {
-            this.node.update('<img src="'+ codendi.imgroot +'ic/toggle-small-expand.png" />');
-            this.method = 'show';
-        } else {
-            this.node.update('<img src="'+ codendi.imgroot +'ic/toggle-small.png" />');
-            this.method =  'hide';
-        }
+        this.getSiblings().map(this.toggleSibling.bind(this));
+        this.toggleIconForNodeAccordinglyToMethod(this, this.method);
         
         Event.stop(evt);
         return false;
+    },
+    getSiblings: function () {
+        if (!this.siblings[this.id]) {
+            var a_sibling_has_been_found = false;
+            function divAtSameLevelTellsThatNodeIsAChildOrSubchild(div) {
+                return ! (div.hasClassName('tree-last') || div.hasClassName('tree-node'));
+            }
+            this.siblings = this.node
+                .up('tr')
+                .nextSiblings()
+                .findAll(function (tr) {
+                    var is_a_child_or_subchild = false;
+                    if (!a_sibling_has_been_found) {
+                        a_sibling_has_been_found = true;
+                        var div_at_the_same_level = tr.down('td').down('div', this.level);
+                        if (div_at_the_same_level) {
+                            is_a_child_or_subchild = divAtSameLevelTellsThatNodeIsAChildOrSubchild(div_at_the_same_level);
+                            if (is_a_child_or_subchild) {
+                                a_sibling_has_been_found = false;
+                            }
+                        }
+                    }
+                    return is_a_child_or_subchild;
+                }.bind(this));
+        }
+        return this.siblings;
+    },
+    toggleSibling: function (tr) {
+        var collapsable = tr.down('td').down('.tree-collapsable');
+        if (collapsable) {
+            var id = this.extractId(collapsable);
+            if (codendi.Tree.nodes[id]) {
+                this.toggleIconForNodeAccordinglyToMethod(codendi.Tree.nodes[id], this.method);
+            }
+        }
+        tr[this.method].apply(tr);
+    },
+    toggleIconForNodeAccordinglyToMethod: function (treenode, method) {
+        if (method == 'hide') {
+            treenode.displayExpandIcon();
+        } else {
+            treenode.displayCollapseIcon();
+        }
     }
 });
 
 
 document.observe('dom:loaded', function () {
-        try {
     $$('.tree-collapsable').each(function (node) {
         new codendi.Tree.Node(node);
     });
-        } catch (e) {
-            console.error(e);
-        }
 });
