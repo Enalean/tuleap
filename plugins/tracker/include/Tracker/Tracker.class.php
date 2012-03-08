@@ -1068,7 +1068,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy_desc'),
-                        'img'         => 'ic/48/tracker-workflow.png',
+                        'img'         => 'ic/48/tracker-hierarchy.png',
                 ),
         );
     }
