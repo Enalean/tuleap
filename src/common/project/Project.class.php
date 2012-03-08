@@ -307,19 +307,19 @@ class Project extends Group {
 		bugs/patches/support requests to
     */
     function getNewBugAddress() {
-        return $this->project_data_array['new_bug_address'];
+        return '';
     }
 
     function getNewSupportAddress() {
-        return $this->project_data_array['new_support_address'];
+        return '';
     }
 
     function getNewPatchAddress() {
-        return $this->project_data_array['new_patch_address'];
+        return '';
     }
 
     function getNewTaskAddress() {
-        return $this->project_data_array['new_task_address'];
+        return '';
     }
 
     /*
@@ -329,19 +329,19 @@ class Project extends Group {
 
     */
     function sendAllBugUpdates() {
-        return $this->project_data_array['send_all_bugs'];
+        return false;
     }
 
     function sendAllSupportUpdates() {
-        return $this->project_data_array['send_all_support'];
+        return false;
     }
 
     function sendAllPatchUpdates() {
-        return $this->project_data_array['send_all_patches'];
+        return false;
     }
 
     function sendAllTaskUpdates() {
-        return $this->project_data_array['send_all_tasks'];
+        return false;
     }
 
     /*
