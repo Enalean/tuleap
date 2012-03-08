@@ -51,6 +51,14 @@ class Tracker_Hierarchy_HierarchicalTracker {
         return $this->children;
     }
     
+    public function setChildrenIds($children_ids) {
+        //
+    }
+    
+    public function getChildrenIds() {
+        //
+    }
+    
     public function hasChild(Tracker $tracker) {
         return in_array($tracker, $this->children);
     }
