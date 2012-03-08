@@ -215,11 +215,11 @@ class Project extends Group {
     }
 
     function usesBugs() {
-        return isset($this->use_service['bugs']) && $this->use_service['bugs'];
+        return false;
     }
 
     function usesSupport() {
-        return isset($this->use_service['support']) && $this->use_service['support'];
+        return false;
     }
 
     function usesDocman() {
@@ -227,7 +227,7 @@ class Project extends Group {
     }
 
     function usesPatch() {
-        return isset($this->use_service['patch']) && $this->use_service['patch'];
+        return false;
     }
 
     function usesFile() {
@@ -235,7 +235,7 @@ class Project extends Group {
     }
 
     function usesPm() {
-        return isset($this->use_service['task']) && $this->use_service['task'];
+        return false;
     }
 
 
