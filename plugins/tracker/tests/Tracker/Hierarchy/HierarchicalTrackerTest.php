@@ -27,11 +27,11 @@ class Tracker_Hierarchy_HierarchicalTrackerTest extends UnitTestCase {
         $this->project_id = 110;
         $project = new MockProject();
         $project->setReturnValue('getId', $this->project_id);
-        $this->parent   = aTracker()->withId(1)->withProject($project)->build();
+        $this->tracker  = aTracker()->withId(1)->withProject($project)->build();
         $this->child    = aTracker()->withId(2)->build();
         $this->children = array($this->child);
         
-        $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->parent, $this->children);
+        $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->tracker, $this->children);
     }
     
     function testDelegatesGetGroupIdToTracker() {
@@ -52,7 +52,7 @@ class Tracker_Hierarchy_HierarchicalTrackerTest extends UnitTestCase {
     }
     
     function testIsNotItsOwnChild() {
-        $this->assertFalse($this->hierarchical_tracker->hasChild($this->parent));
+        $this->assertFalse($this->hierarchical_tracker->hasChild($this->tracker));
     }
     
     function testGetChildren() {
