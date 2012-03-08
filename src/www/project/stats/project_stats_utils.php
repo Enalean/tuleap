@@ -31,16 +31,8 @@ function stats_get_sql_query($group_id) {
         $sql .= ", SUM(site_views + subdomain_views)";
     if ($grp->usesForum())
         $sql .= ", SUM(msg_posted)";
-    if ($grp->usesBugs())
-        $sql .= ", SUM(bugs_opened),SUM(bugs_closed)";
-    if ($grp->usesSupport())
-        $sql .= ", SUM(support_opened),SUM(support_closed)";
-    if ($grp->usesPm())
-        $sql .= ", SUM(tasks_opened),SUM(tasks_closed)";
     if ($grp->usesTracker())
         $sql .= ", SUM(artifacts_opened),SUM(artifacts_closed)";
-    if ($grp->usesPatch())
-        $sql .= ", SUM(patches_opened),SUM(patches_closed)";
     if ($grp->usesCVS())
         $sql .= ", SUM(cvs_commits),SUM(cvs_adds)";
     if ($grp->usesSVN())
@@ -58,16 +50,8 @@ function stats_get_table_service_header($group_id) {
         $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','page_views').'</TD>';
     if ($grp->usesFile())
         $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','downloads').'</TD>';
-    if ($grp->usesBugs())
-        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','bugs').'</TD>';
-    if ($grp->usesSupport())
-        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','support').'</TD>';
-    if ($grp->usesPm())
-        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','tasks').'</TD>';
     if ($grp->usesTracker())
         $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','artifacts').'</TD>';
-    if ($grp->usesPatch())
-        $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','patches').'</TD>';
     if ($grp->usesCVS())
         $text .=  '<TD class="boxtitle">'.$Language->getText('project_stats_index','cvs').'</TD>';
     if ($grp->usesSVN())
@@ -83,16 +67,8 @@ function stats_get_table_service_rows($group_id,$row) {
         $text .= '<TD align="center">' . number_format( $row["SUM(site_views + subdomain_views)"] ) . '</TD>';
     if ($grp->usesFile())
         $text .= '<TD align="center">' . number_format( $row["SUM(downloads)"] ) . '</TD>';
-    if ($grp->usesBugs())
-        $text .= '<TD align="center">' . $row["SUM(bugs_opened)"] . " ( " . $row["SUM(bugs_closed)"] . ' )</TD>';
-    if ($grp->usesSupport())
-        $text .= '<TD align="center">' . $row["SUM(support_opened)"] . " ( " . $row["SUM(support_closed)"] . ' )</TD>';
-    if ($grp->usesPm())
-        $text .= '<TD align="center">' . $row["SUM(tasks_opened)"] . " ( " . $row["SUM(tasks_closed)"] . ' )</TD>';
     if ($grp->usesTracker())
         $text .= '<TD align="center">' . $row["SUM(artifacts_opened)"] . " ( " . $row["SUM(artifacts_closed)"] . ' )</TD>';
-    if ($grp->usesPatch())
-        $text .= '<TD align="center">' . $row["SUM(patches_opened)"] . " ( " . $row["SUM(patches_closed)"] . ' )</TD>';
     if ($grp->usesCVS())
         $text .= '<TD align="center">' . $row["SUM(cvs_commits)"] . '</TD>';
     if ($grp->usesSVN())
@@ -195,6 +171,7 @@ function stats_project_weekly( $group_id, $span = 8 ) {
 
         $today = time();
 
+        $i = 0;
         while ( $row = db_fetch_array($res) ) {
             $w_begin = $w_end = 0;
             list($w_begin, $w_end) = week_to_dates($row["week"]);
@@ -260,6 +237,7 @@ function stats_project_monthly( $group_id, $span = 4 ) {
         print stats_get_table_service_header($group_id);
         print '</TR>' . "\n";
 
+        $i = 0;
         while ( $row = db_fetch_array($res) ) {
 	  // the time from DB is GMT, don't choose first day, first sec of month to avoid that 
 	  // strftime with the time local shifts the month to the month before
