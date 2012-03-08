@@ -94,53 +94,20 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         $actual_possible_children = $this->assertChildEquals($actual_possible_children, $possible_child_2);
         $this->assertEqual(count($actual_possible_children), 0);
     }
-   
-    public function testGetHierarchyWithOneLevel() {
-        $project_id = 110;
-        $tracker = aTracker()->withId(2)->withProjectId($project_id)->build();
-        
-        $project_trackers = array(
-            '1' => aTracker()->withId(1)->withName('Releases')->build(),
-            '2' => aTracker()->withId(2)->withName('Sprints')->build());
-        
-        $hierarchy_dar = new ArrayIterator(array(
-             array('child_id' => 2, 'parent_id' => 1)));
-        
-        $expected_hierarchy = 
-            array('name' => 'Releases', 'id'=>1, 'children' => array(
-                array('name' => 'Sprints', 'id'=>2, 'children' => array())));
-        
-        $dao             = $this->aMockDaoWith($project_id, $hierarchy_dar);
-        $tracker_factory = $this->aMockTrackerFactoryWith($project_id, $project_trackers);
-        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
-        
-        $this->assertEqual($expected_hierarchy, $factory->getHierarchy($tracker));
-
-    }
     
-    public function testGetHierarchyWithMultipleChildren() {
-        $project_id = 110;
-        $tracker = aTracker()->withId(2)->withProjectId($project_id)->build();
-        
-        $project_trackers = array(
-            '1' => aTracker()->withId(1)->withName('Releases')->build(),
-            '2' => aTracker()->withId(2)->withName('Sprints')->build(),
-            '3' => aTracker()->withId(3)->withName('Epics')->build());
-        
-        $hierarchy_dar = new ArrayIterator(array(
-             array('child_id' => 2, 'parent_id' => 1),
-             array('child_id' => 3, 'parent_id' => 1)));
-        
-        $expected_hierarchy = 
-            array('name' => 'Releases', 'id'=>1, 'children' => array(
-                array('name' => 'Sprints', 'id'=>2, 'children' => array()),
-                array('name' => 'Epics', 'id'=>3,   'children' => array())));
-        
-        $dao             = $this->aMockDaoWith($project_id, $hierarchy_dar);
-        $tracker_factory = $this->aMockTrackerFactoryWith($project_id, $project_trackers);
-        $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
-        
-        $this->assertEqual($expected_hierarchy, $factory->getHierarchy($tracker));
+    private function getHierarchyAsTreeNode($hierarchy) {
+        $node = new TreeNode();
+        if (isset($hierarchy['children'])) {
+            $node->setData(array('name' => $hierarchy['name'], 'id' => $hierarchy['id']));
+            $node->setId($hierarchy['id']);
+            $hierarchy = $hierarchy['children'];
+        } else {
+            $node->setId(0);
+        }
+        foreach ($hierarchy as $item) {
+            $node->addChild($this->getHierarchyAsTreeNode($item));
+        }
+        return $node;
     }
     
     public function testGetDeepHierarchy() {
@@ -160,7 +127,7 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
              array('child_id' => 4, 'parent_id' => 3),
              array('child_id' => 5, 'parent_id' => 2)));
         
-        $expected_hierarchy = 
+        $expected_hierarchy = $this->getHierarchyAsTreeNode(array(
             array('name' => 'Releases', 'id'=>1, 'children' => array(
                 array('name' => 'Sprints', 'id'=>2, 'children' => array(
                     array('name' => 'Stories', 'id'=>3, 'children' => array(
@@ -168,13 +135,13 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
                     )),
                     array('name' => 'Bugs', 'id'=>5, 'children' => array())
                 ))
-            ));
+            ))));
         
         $dao             = $this->aMockDaoWith($project_id, $hierarchy_dar);
         $tracker_factory = $this->aMockTrackerFactoryWith($project_id, $project_trackers);
         $factory         = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
         
-        $this->assertEqual($expected_hierarchy, $factory->getHierarchy($tracker));
+        $this->assertEqual($expected_hierarchy->__toString(), $factory->getHierarchy($tracker)->__toString());
     }
     
     public function testGetRootTrackerIdFromHierarchyWithNoChildren() {

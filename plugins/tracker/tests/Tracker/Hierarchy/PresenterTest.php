@@ -26,6 +26,7 @@ Mock::generate('Tracker_Hierarchy_HierarchicalTracker');
 Mock::generate('Tracker');
 
 class Tracker_Hierarchy_PresenterTest extends UnitTestCase {
+    
     public function testGetPossibleChildrenReturnsAttributesForSelect() {
         $possible_children = array(
             1 => aTracker()->withId(1)->withName('Stories')->build(),

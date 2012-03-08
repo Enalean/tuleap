@@ -122,13 +122,13 @@ class TreeNode /*implements Visitable*/ {
      *
      * @param TreeNode &$c A TreeNode (reference call)
      */
-    function addChild(&$c) {
+    function addChild($c) {
         if(is_object($c) && is_a($c, get_class($this))) {
             if($this->children === null) {
                 $this->children = array();
             }
             $c->_setParentNode($this);
-            $this->children[] =& $c;
+            $this->children[] = $c;
         }
         else {
             trigger_error(get_class($this).'::addChild => require: "'.get_class($this).'" given: "'.gettype($c).'"', E_USER_ERROR);

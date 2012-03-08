@@ -63,9 +63,19 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         $project_trackers = $this->tracker_factory->getTrackersByGroupId($tracker->getGroupId());
         $hierarchy_dar    = $this->dao->getHierarchy($tracker->getGroupId());
         $root_tracker_id = $this->getRootTrackerId($hierarchy_dar, $tracker->getId());
-        $hierarchy = array('name'     => $project_trackers[$root_tracker_id]->getName(),
-                           'id'       => $root_tracker_id,
-                           'children' => $this->buildHierarchyChildrenOf($root_tracker_id , iterator_to_array($hierarchy_dar), $project_trackers));
+        $hierarchy = new TreeNode();
+        $hierarchy->setId(0);
+        
+        $root_tracker_node = new TreeNode(
+            array('name'     => $project_trackers[$root_tracker_id]->getName(),
+                  'id'       => $root_tracker_id
+            )
+        );
+        $root_tracker_node->setId($root_tracker_id);
+        foreach ($this->buildHierarchyChildrenOf($root_tracker_id , iterator_to_array($hierarchy_dar), $project_trackers) as $child) {
+            $root_tracker_node->addChild($child);
+        }
+        $hierarchy->addChild($root_tracker_node);
         return $hierarchy;
     }
     
@@ -76,9 +86,12 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
                 $id      = $row['child_id'];
                 $tracker = $project_trackers[$id];
                 
-                $children[] = array('name'     => $tracker->getName(),
-                                    'id'       => $tracker->getId(),
-                                    'children' => $this->buildHierarchyChildrenOf($id, $hierarchy_dar, $project_trackers));
+                $node = new TreeNode(array('name' => $tracker->getName(), 'id' => $tracker->getId()));
+                $node->setId($tracker->getId());
+                foreach ($this->buildHierarchyChildrenOf($id, $hierarchy_dar, $project_trackers) as $child) {
+                    $node->addChild($child);
+                }
+                $children[] = $node;
             }
         }
         return $children;

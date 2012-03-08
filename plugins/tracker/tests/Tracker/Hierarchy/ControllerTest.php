@@ -71,7 +71,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         );
         $this->factory->setReturnValue('getPossibleChildren', array());
         $this->factory->expectOnce('getHierarchy', array($this->tracker));
-        $this->factory->setReturnValue('getHierarchy', $hierarchy);
+        $this->factory->setReturnValue('getHierarchy', $this->getHierarchyAsTreeNode($hierarchy));
         
         ob_start();
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
@@ -79,6 +79,21 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $content = ob_get_clean();
         
         $this->assertContainsAll(array('Sprint', 'Stories', 'Tasks', 'Bugs'), $content);
+    }
+    
+    private function getHierarchyAsTreeNode($hierarchy) {
+        $node = new TreeNode();
+        if (isset($hierarchy['children'])) {
+            $node->setData(array('name' => $hierarchy['name'], 'id' => $hierarchy['id']));
+            $node->setId($hierarchy['id']);
+            $hierarchy = $hierarchy['children'];
+        } else {
+            $node->setId('root');
+        }
+        foreach ($hierarchy as $item) {
+            $node->addChild($this->getHierarchyAsTreeNode($item));
+        }
+        return $node;
     }
     
     public function testEditProvidesUrlsToTheTrackersInTheHierarchy() {
@@ -91,7 +106,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         );
         $this->factory->setReturnValue('getPossibleChildren', array());
         $this->factory->expectOnce('getHierarchy', array($this->tracker));
-        $this->factory->setReturnValue('getHierarchy', $hierarchy);
+        $this->factory->setReturnValue('getHierarchy', $this->getHierarchyAsTreeNode($hierarchy));
         
         ob_start();
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
@@ -134,6 +149,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->update();
     }
+    /**/
     
     private function assertContainsAll($expected_strings, $actual_text) {
         foreach($expected_strings as $string) {
