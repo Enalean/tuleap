@@ -23,28 +23,28 @@ class Tracker_Hierarchy_HierarchicalTracker {
     /**
      * @var Tracker
      */
-    private $parent;
+    private $unhierarchizedTracker;
     
     /**
      * @var Array of Tracker
      */
     private $children;
     
-    public function __construct(Tracker $parent, array $children) {
-        $this->parent   = $parent;
+    public function __construct(Tracker $unhierarchizedTracker, array $children) {
+        $this->unhierarchizedTracker   = $unhierarchizedTracker;
         $this->children = $children;
     }
     
     public function getUnhierarchizedTracker() {
-        return $this->parent;
+        return $this->unhierarchizedTracker;
     }
     
     public function getId() {
-        return $this->parent->getId();
+        return $this->unhierarchizedTracker->getId();
     }
     
     public function getProject() {
-        return $this->parent->getProject();
+        return $this->unhierarchizedTracker->getProject();
     }
     
     public function getChildren() {
