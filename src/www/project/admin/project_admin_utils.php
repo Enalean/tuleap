@@ -261,7 +261,7 @@ function convert_project_history_events($array, $subevents) {
  *
  * @return void
  */
-function displayProjectHistoryResults($group_id, $res, $export = false, $i = 1) {
+function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1) {
     global $Language;
 
     $hp = Codendi_HTMLPurifier::instance();
@@ -409,7 +409,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo html_build_list_table_top ($title_arr);
         $i=1;
 
-        displayProjectHistoryResults($group_id, $res, false, &$i);
+        displayProjectHistoryResults($group_id, $res, false, $i);
 
         echo '</TABLE>';
 
