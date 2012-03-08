@@ -33,12 +33,24 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
             $child_id = $this->da->escapeInt($child_id);
             $insert_values[] = "($parent_id, $child_id)";
         }
-        $sql = "INSERT INTO tracker_hierarchy(parent_id, child_id) VALUES ".implode(',', $insert_values);
+        $sql = "REPLACE INTO tracker_hierarchy(parent_id, child_id) VALUES ".implode(',', $insert_values);
         $this->update($sql);
     }
     
     public function getAncestorIds($tracker_id) {
-        return array();        
+        $ancestor_ids = array();
+        while($tracker_id = $this->getAncestorId($tracker_id)) {
+            $ancestor_ids[] = $tracker_id;
+        }
+        return $ancestor_ids;
+    }
+    
+    public function getAncestorId($tracker_id) {
+        $sql = "SELECT parent_id FROM tracker_hierarchy WHERE child_id= " . $tracker_id. " LIMIT 1";
+        $dar = $this->retrieve($sql);
+        $result = array('parent_id'=>null);
+        foreach($dar as $result) {}
+        return $result['parent_id'];
     }
     
     public function deleteAllChildren($parent_id) {
