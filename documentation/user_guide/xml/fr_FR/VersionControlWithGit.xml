@@ -71,7 +71,7 @@
     <para>Veuillez noter que, pour l'instant, l'écriture dans un dépôt personnel
     n'est pas encore restreinte au seul propriétaire du dépôt. Lors d'un fork, 
     le dépot hérite des permissions de la source.
-    <para>
+    </para>
     
    <figure id="FigureGitPersonalFork">
         <title>Interface de fork de dépôt Git</title>
