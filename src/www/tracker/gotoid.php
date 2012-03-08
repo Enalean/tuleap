@@ -20,31 +20,6 @@
  
 require_once('../svn/svn_data.php');
 
-// Redirect function for legacy trackers (bug, task and SR)
-function legacy_redirect($location,$aid, $group_id, $atn) {
-    if ($atn == 'bug') {
-        $location .= "/bugs/?func=detailbug&bug_id=". (int)$aid ."&group_id=". (int)$group_id;
-        header($location);
-        exit;
-    }
-    if ($atn == 'task') {
-        $location .= "/pm/task.php?func=detailtask&project_task_id=". (int)$aid ."&group_id=". (int)$group_id;
-        header($location);
-        exit;
-    }
-    if ($atn == 'sr') {
-        $location .= "/support/index.php?func=detailsupport&support_id=". (int)$aid ."&group_id=". (int)$group_id;
-        header($location);
-        exit;
-    }
-    if ($atn == 'patch') {
-      $location .= "/patch/?func=detailpatch&patch_id=". (int)$aid ."&group_id=". (int)$group_id;
-      header($location);
-      exit;
-    }
-    
-}
-
 /**
  * Redirect function for generic trackers.
  * This function checks the artifact short name and project.
@@ -158,8 +133,6 @@ if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
     }
 
     if (!$artifact_exists) {
-        // The artifact does not exist -> legacy
-        legacy_redirect($location,$aid,$group_id,$atn);
         exit_error($Language->getText('global','error'),$Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
     }
 
@@ -178,8 +151,6 @@ if (($atn == 'bug')||($atn == 'task')||($atn == 'sr')||($atn == 'patch')) {
     // Otherwise, prefer the generic artifact.
     // This is the only place where there is still an arbitrary decision made...
     if (($atn != strtolower($art_name))||($group_id!=$art_group_id)) {
-        // Let's choose the legacy trackers
-        legacy_redirect($location,$aid,$group_id,$atn);
         exit_error($Language->getText('global', 'error'),$Language->getText('tracker_gotoid', 'invalid_tracker'));
     } else {
         // If the artifact belongs to the current project, let's choose the generic trackers
