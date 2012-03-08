@@ -45,10 +45,18 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
     public function getPossibleChildren(Tracker_Hierarchy_HierarchicalTracker $tracker) {
         $project_id        = $tracker->getProject()->getId();
         $project_trackers  = $this->tracker_factory->getTrackersByGroupId($project_id);
+        $ids_to_remove     = $this->dao->getAncestorIds($tracker->getId());
+        $ids_to_remove[]   = $tracker->getId();
         
-        unset($project_trackers[$tracker->getId()]);
+        $project_trackers = $this->removeIdsFromTrackerList($project_trackers, $ids_to_remove);
         
         return $project_trackers;
+    }
+    
+    private function removeIdsFromTrackerList($tracker_list, $tracker_ids_to_remove) {
+        $array_with_keys_to_remove = array_combine($tracker_ids_to_remove, range(0, count($tracker_ids_to_remove)-1));
+        return array_diff_key($tracker_list, $array_with_keys_to_remove);
+        
     }
     
     public function getHierarchy(Tracker $tracker) {

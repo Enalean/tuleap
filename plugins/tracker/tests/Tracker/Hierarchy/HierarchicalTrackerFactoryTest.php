@@ -61,6 +61,8 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
     
     public function testGetPossibleChildren() {
         $dao = new MockTracker_Hierarchy_Dao();
+        $dao->expectOnce('getAncestorIds', array(1));
+        $dao->setReturnValue('getAncestorIds', array(4));
         
         $project_id = 100;
         $project    = new MockProject();
@@ -70,11 +72,13 @@ class HierarchicalTrackerFactoryTest extends UnitTestCase {
         
         $possible_child_1 = aTracker()->withId(2)->build();
         $possible_child_2 = aTracker()->withId(3)->build();
+        $ancestor         = aTracker()->withId(4)->build();
         
         $project_trackers = array(
             1 => $tracker,
             2 => $possible_child_1,
-            3 => $possible_child_2
+            3 => $possible_child_2,
+            4 => $ancestor
         );
         
         $tracker_factory = new MockTrackerFactory();

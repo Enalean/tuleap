@@ -25,12 +25,20 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
     public function updateChildren($parent_id, array $child_ids) {
         $this->deleteAllChildren($parent_id);
         
+        // TODO:
+        // $ancestor_ids = $this->getAncestorIds($parent_id);
+        // $child_ids    = array_diff($child_ids, $ancestor_ids);
+        
         foreach($child_ids as $child_id) {
             $child_id = $this->da->escapeInt($child_id);
             $insert_values[] = "($parent_id, $child_id)";
         }
         $sql = "INSERT INTO tracker_hierarchy(parent_id, child_id) VALUES ".implode(',', $insert_values);
         $this->update($sql);
+    }
+    
+    public function getAncestorIds($tracker_id) {
+        return array();        
     }
     
     public function deleteAllChildren($parent_id) {
