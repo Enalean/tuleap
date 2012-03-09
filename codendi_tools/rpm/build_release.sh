@@ -19,12 +19,6 @@ fi
 # Assume the script is in the "tools" subdirectory of the whole config
 rootdir=$(cd $bindir/../../; pwd)
 
-# Docbook tools
-docbook_tools="$DOCBOOK_TOOLS_DIR"
-export SAXON_HOME="$docbook_tools/saxon"
-export FOP_HOME="$docbook_tools/fop"
-export JIMI_HOME="$docbook_tools/jimi"
-
 export CODENDI_LOCAL_INC=$rootdir/local.inc
 
 #
@@ -47,18 +41,5 @@ make -C $programmer_guide
 # CLI
 #
 echo "Generate CLI"
-cli_guide="$rootdir/documentation/cli"
-
-substitute $cli_guide/xml/en_US/Codendi_CLI.xml "/etc/codendi/documentation/cli/xml/ParametersLocal.dtd" "$rootdir/cli_ParametersLocal.dtd"
-substitute $cli_guide/xml/fr_FR/Codendi_CLI.xml "/etc/codendi/documentation/cli/xml/ParametersLocal.dtd" "$rootdir/cli_ParametersLocal.dtd"
-
-substitute $cli_guide/xml/en_US/Codendi_CLI.xml "/usr/local" "$docbook_tools"
-substitute $cli_guide/xml/fr_FR/Codendi_CLI.xml "/usr/local" "$docbook_tools"
-substitute $cli_guide/xsl/fo/docbook_fr_FR.xsl "/usr/local" "$docbook_tools"
-substitute $cli_guide/xsl/fo/docbook_en_US.xsl "/usr/local" "$docbook_tools"
-substitute $cli_guide/xsl/htmlhelp/htmlhelp_fr_FR.xsl "/usr/local" "$docbook_tools"
-substitute $cli_guide/xsl/htmlhelp/htmlhelp_onechunk_en_US.xsl "/usr/local" "$docbook_tools"
-substitute $cli_guide/xsl/htmlhelp/htmlhelp_onechunk_fr_FR.xsl "/usr/local" "$docbook_tools"
-substitute $cli_guide/xsl/htmlhelp/htmlhelp_en_US.xsl "/usr/local" "$docbook_tools"
 
 $rootdir/src/utils/generate_cli_package.sh

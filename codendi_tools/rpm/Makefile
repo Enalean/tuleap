@@ -156,9 +156,6 @@ clean:
 	-rm -Rf $(RPM_TMP)/*
 	@[ ! -d $(RPM_TMP) ] || rmdir $(RPM_TMP)
 	-rm -Rf ~/.rpmmacros
-	-rm -f /tmp/docbook-cug-*
-	-rm -f /tmp/log_xml2html_*
-	-rm -f /tmp/log_xml2pdf_*
 
 dist: 
 	mkdir -p $(RPM_TMP)/yum
