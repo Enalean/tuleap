@@ -35,6 +35,7 @@ class Tracker_Hierarchy_PresenterTest extends TuleapTestCase {
         );
         
         $tracker = new MockTracker_Hierarchy_HierarchicalTracker();
+        $tracker->setReturnValue('getUnhierarchizedTracker', aTracker()->build());
         $tracker->setReturnValue('hasChild', false, array($possible_children[1]));
         $tracker->setReturnValue('hasChild', true,  array($possible_children[2]));
         
