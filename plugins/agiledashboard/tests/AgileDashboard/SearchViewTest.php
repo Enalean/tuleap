@@ -128,7 +128,9 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         
         $root  = new TreeNode();
         $node0 = new TreeNode($artifacts[0]);
+        $node0->setId($artifacts[0]['id']);
         $node1 = new TreeNode($artifacts[1]);
+        $node1->setId($artifacts[1]['id']);
         
         $root->addChild($node0);
         $node0->addChild($node1);

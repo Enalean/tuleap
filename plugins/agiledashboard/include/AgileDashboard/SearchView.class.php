@@ -21,7 +21,7 @@
 require_once 'common/project/Service.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Report/Tracker_Report.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Hierarchy/Hierarchy.class.php';
-require_once 'common/TreeNode/GetStateVisitor.class.php';
+require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
 
 require_once 'html.php';
 
@@ -83,7 +83,7 @@ class AgileDashboard_SearchView {
         $this->artifact_factory  = $artifact_factory;
         $this->shared_factory    = $shared_factory;
         $this->trackers          = $trackers;
-        $this->treeVisistor      = new TreeNode_GetStateVisitor();
+        $this->treeVisistor      = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
         $this->artifacts->accept($this->treeVisistor);
     }
     
@@ -153,7 +153,7 @@ class AgileDashboard_SearchView {
         if ($artifact) {
             $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '">';
             $html .= '<td>';
-            $html.= $this->fetchState($node);
+            $html .= $row['tree-padding'];
             $html .= $artifact->fetchDirectLinkToArtifact();
             $html .= '</td>';
             $html .= '<td>';
@@ -164,23 +164,6 @@ class AgileDashboard_SearchView {
             foreach ($node->getChildren() as $child) {
                 $html .= $child->accept($this);
             }
-        }
-        return $html;
-    }
-    
-    private function fetchState(TreeNode $node) {
-        $html = '';
-        $state = $this->treeVisistor->getState($node);
-        $template = '<div class="%s" %s></div>';
-        foreach ($state as $state_id) {
-            $id    = '';
-            $class = self::$state_classes[$state_id];
-            if ($node->hasChildren() && ($state_id == TreeNode_GetStateVisitor::STATE_LAST || $state_id == TreeNode_GetStateVisitor::STATE_NODE)) {
-                $row = $node->getData();
-                $class .= ' tree-collapsable';
-                $id = 'id="tree-node-'. $row['id'] .'"';
-            }
-            $html .= sprintf($template, $class, $id);
         }
         return $html;
     }
