@@ -7,6 +7,9 @@ require_once(dirname(__FILE__).'/../include/simpletest/extensions/junit_xml_repo
 // @see: https://github.com/sebastianbergmann/php-code-coverage
 @include_once 'PHP/CodeCoverage/Autoload.php';
 
+require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
+require_once 'common/TreeNode/TreeNode.class.php';
+
 /**
  * Invoker decorator to target code coverage only on executed tests
  *
