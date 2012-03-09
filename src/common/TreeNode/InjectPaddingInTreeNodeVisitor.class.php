@@ -47,7 +47,7 @@ class TreeNode_InjectPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor {
 
     private function convertStateToDivs(TreeNode $node, $state) {
         $html = '';
-        $template = '<div class="%s" %s></div>';
+        $template = '<div class="%s" %s>&nbsp;</div>';
         foreach ($state as $state_id) {
             $id    = '';
             $class = self::$state_classes[$state_id];

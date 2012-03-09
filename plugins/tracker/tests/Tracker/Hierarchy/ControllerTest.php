@@ -74,7 +74,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $content = $this->WhenICaptureTheOutputOfEditAction();
         
         $this->assertContainsAll(array('Sprint', 'Stories', 'Tasks', 'Bugs'), $content);
-        $this->assertPattern('%div class="tree-blank" ></div><div class="tree-last"%', $content);
+        $this->assertPattern('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $content);
     }
     
     private function getHierarchyAsTreeNode($hierarchy) {

@@ -158,8 +158,8 @@ class AgileDashboard_SearchView {
         $row = $node->getData();
         $artifact = $this->artifact_factory->getArtifactById($row['id']);
         if ($artifact) {
-            $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '">';
-            $html .= '<td>';
+            $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '" valign="top">';
+            $html .= '<td nowrap>';
             $html .= $row['tree-padding'];
             $html .= $artifact->fetchDirectLinkToArtifact();
             $html .= '</td>';
