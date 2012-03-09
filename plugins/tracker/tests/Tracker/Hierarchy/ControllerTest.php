@@ -52,15 +52,12 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         
         $this->factory->setReturnValue('getPossibleChildren', $possible_children, array($this->hierarchical_tracker));
         $this->factory->setReturnValue('getHierarchy', $this->getHierarchyAsTreeNode(array()));
-
-        ob_start();
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
-        $controller->edit();
-        $content = ob_get_clean();
+        
+        $content = $this->WhenICaptureTheOutputOfEditAction();
         
         $this->assertContainsAll(array('value="1".*Bugs', 'value="2".*Tasks'), $content);
     }
-   
+    
     public function testEditDisplaysTheWholeHierarchy() {
         $hierarchy = array(
             array('name' => 'Sprints', 'id' => '', 'current_class' => '', 'children' => array(
@@ -74,10 +71,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->factory->expectOnce('getHierarchy', array($this->tracker));
         $this->factory->setReturnValue('getHierarchy', $this->getHierarchyAsTreeNode($hierarchy));
         
-        ob_start();
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
-        $controller->edit();
-        $content = ob_get_clean();
+        $content = $this->WhenICaptureTheOutputOfEditAction();
         
         $this->assertContainsAll(array('Sprint', 'Stories', 'Tasks', 'Bugs'), $content);
         $this->assertPattern('%div class="tree-blank" ></div><div class="tree-last"%', $content);
@@ -110,13 +104,18 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->factory->expectOnce('getHierarchy', array($this->tracker));
         $this->factory->setReturnValue('getHierarchy', $this->getHierarchyAsTreeNode($hierarchy));
         
+        $content = $this->WhenICaptureTheOutputOfEditAction();
+        
+        $this->assertPattern("%/plugins/tracker/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
+        $this->assertPattern("%/plugins/tracker/\?tracker=$stories_id&func=admin-hierarchy%", $content);
+    }
+    
+    private function WhenICaptureTheOutputOfEditAction() {
         ob_start();
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->edit();
         $content = ob_get_clean();
-
-        $this->assertPattern("%/plugins/tracker/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
-        $this->assertPattern("%/plugins/tracker/\?tracker=$stories_id&func=admin-hierarchy%", $content);
+        return $content;
     }
     
     public function testUpdateHappyPathShouldCallDaoToSaveHierarchy() {
@@ -151,7 +150,6 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->update();
     }
-    /**/
     
     private function assertContainsAll($expected_strings, $actual_text) {
         foreach($expected_strings as $string) {
