@@ -20,7 +20,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('TreeNode.class.php');
+require_once('common/TreeNode/TreeNode.class.php');
 require_once('BuildMenuVisitor.class.php');
 require_once('common/layout/Layout.class.php');
 

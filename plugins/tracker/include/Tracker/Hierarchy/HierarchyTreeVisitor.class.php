@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/layout/TreeNode.class.php';
+require_once 'common/TreeNode/TreeNode.class.php';
 
 class Tracker_Hierarchy_HierarchyTreeVisitor {
     
