@@ -42,8 +42,14 @@ class Tracker_Hierarchy_Presenter {
      */
     public $hierarchy;
     
+    /**
+     * @var string
+     */
+    public $tracker_name;
+    
     public function __construct(Tracker_Hierarchy_HierarchicalTracker $tracker, array $possible_children, TreeNode $hierarchy ) {
         $this->tracker           = $tracker;
+        $this->tracker_name      = $tracker->getUnhierarchizedTracker()->getName();
         $this->possible_children = array_values($possible_children);
         $this->hierarchy         = $hierarchy;
         $visitor                 = new TreeNode_InjectPaddingInTreeNodeVisitor();
