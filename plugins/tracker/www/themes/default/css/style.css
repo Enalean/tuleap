@@ -941,3 +941,14 @@ ul.plugin_tracker_my_artifacts_list {
     margin-top: 5px;
 }
 /* }}} */
+.tracker-hierarchy,
+.tracker-hierarchy ul,
+.tracker-hierarchy li
+{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.tracker-hierarchy ul {
+    clear:both;
+}

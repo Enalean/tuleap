@@ -50,7 +50,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
                                    '2' => aTracker()->withId(2)->withName('Tasks')->build());
         
         $this->factory->setReturnValue('getPossibleChildren', $possible_children, array($this->hierarchical_tracker));
-        $this->factory->setReturnValue('getHierarchy', array());
+        $this->factory->setReturnValue('getHierarchy', $this->getHierarchyAsTreeNode(array()));
 
         ob_start();
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
@@ -79,6 +79,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $content = ob_get_clean();
         
         $this->assertContainsAll(array('Sprint', 'Stories', 'Tasks', 'Bugs'), $content);
+        $this->assertPattern('%div class="tree-blank" ></div><div class="tree-last"%', $content);
     }
     
     private function getHierarchyAsTreeNode($hierarchy) {

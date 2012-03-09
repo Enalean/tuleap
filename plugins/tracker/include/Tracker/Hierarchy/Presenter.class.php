@@ -20,6 +20,7 @@
 
 require_once(dirname(__FILE__).'/../TrackerManager.class.php');
 require_once(dirname(__FILE__).'/../Tracker.class.php');
+require_once 'InjectPaddingInTreeNodeVisitor.class.php';
 
 class Tracker_Hierarchy_Presenter {
     
@@ -33,12 +34,17 @@ class Tracker_Hierarchy_Presenter {
      */
     public $possible_children;
     
+    /**
+     * @var TreeNode
+     */
     public $hierarchy;
     
-    public function __construct(Tracker_Hierarchy_HierarchicalTracker $tracker, array $possible_children, $hierarchy ) {
+    public function __construct(Tracker_Hierarchy_HierarchicalTracker $tracker, array $possible_children, TreeNode $hierarchy ) {
         $this->tracker           = $tracker;
         $this->possible_children = array_values($possible_children);
-        $this->hierarchy = $hierarchy;
+        $this->hierarchy         = $hierarchy;
+        $visitor                 = new Tracker_Hierarchy_InjectPaddingInTreeNodeVisitor();
+        $this->hierarchy->accept($visitor);
     }
     
     public function getTrackerUrl() {

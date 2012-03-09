@@ -45,12 +45,16 @@ class Tracker_Hierarchy_HierarchyTreeVisitor {
                 $children_prefix = $this->getChildrenPrefixForLastChild($prefix);
                 $child_state     = $this->getStateWhenChildIsTheLastOne($prefix);
             }
-            $this->states[$child_id] = $child_state;
+            $this->setChildState($child, $child_state);
             $child->accept($this, $children_prefix);
             $i++;
         }
     }
-    
+
+    protected function setChildState(TreeNode $child, $state) {
+        $this->states[$child->getId()] = $state;
+    }
+
     private function getDefaultChildrenPrefix($prefix) {
         return array_merge($prefix, array(self::STATE_PIPE));
     }

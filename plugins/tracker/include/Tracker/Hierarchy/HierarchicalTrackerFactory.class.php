@@ -59,6 +59,9 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         
     }
     
+    /**
+     * @return TreeNode
+     */
     public function getHierarchy(Tracker $tracker) {
         $project_trackers = $this->tracker_factory->getTrackersByGroupId($tracker->getGroupId());
         $hierarchy_dar    = $this->dao->getHierarchy($tracker->getGroupId());
