@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__) .'/../../../include/Tracker/Hierarchy/HierarchyTreeVisitor.class.php';
+require_once 'common/TreeNode/GetStateVisitor.class.php';
 
-class Tracker_Hierarchy_HierarchyTreeVisitorTest extends UnitTestCase {
+class TreeNode_GetStateVisitorVisitorTest extends UnitTestCase {
     
-    const STATE_NODE = Tracker_Hierarchy_HierarchyTreeVisitor::STATE_NODE;
-    const STATE_LAST = Tracker_Hierarchy_HierarchyTreeVisitor::STATE_LAST;
-    const STATE_BLANK = Tracker_Hierarchy_HierarchyTreeVisitor::STATE_BLANK;
-    const STATE_PIPE = Tracker_Hierarchy_HierarchyTreeVisitor::STATE_PIPE;
+    const STATE_NODE  = TreeNode_GetStateVisitor::STATE_NODE;
+    const STATE_LAST  = TreeNode_GetStateVisitor::STATE_LAST;
+    const STATE_BLANK = TreeNode_GetStateVisitor::STATE_BLANK;
+    const STATE_PIPE  = TreeNode_GetStateVisitor::STATE_PIPE;
     
     public function testOneNodeShouldHaveStateLast() {
         $root    = new TreeNode();
@@ -80,7 +80,7 @@ class Tracker_Hierarchy_HierarchyTreeVisitorTest extends UnitTestCase {
     }
     
     private function GivenAVisitor($node) {
-        $visitor = new Tracker_Hierarchy_HierarchyTreeVisitor();
+        $visitor = new TreeNode_GetStateVisitor();
         $node->accept($visitor);
         return $visitor;
     }

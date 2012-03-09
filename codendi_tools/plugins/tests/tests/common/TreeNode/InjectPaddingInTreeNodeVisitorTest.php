@@ -18,18 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../include/Tracker/Hierarchy/InjectPaddingInTreeNodeVisitor.class.php';
+require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
 
-class Tracker_Hierarchy_InjectPaddingInTreeNodeVisitorTest extends TuleapTestCase {
+class TreeNode_InjectPaddingInTreeNodeVisitorTest extends TuleapTestCase {
 
-    function ItUsesTreeVisitorAndItselfToInjectPadding() {
+    function ItInjectsPadding() {
         $root = new TreeNode();
         $node1 = new TreeNode();
         $node2 = new TreeNode();
         $root->addChild($node1);
         $node1->addChild($node2);
 
-        $visitor = new Tracker_Hierarchy_InjectPaddingInTreeNodeVisitor();
+        $visitor = new TreeNode_InjectPaddingInTreeNodeVisitor();
         $root->accept($visitor);
 
         $data = $node2->getData();

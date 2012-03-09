@@ -18,15 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'HierarchyTreeVisitor.class.php';
+require_once 'GetStateVisitor.class.php';
 
-class Tracker_Hierarchy_InjectPaddingInTreeNodeVisitor extends Tracker_Hierarchy_HierarchyTreeVisitor {
+class TreeNode_InjectPaddingInTreeNodeVisitor extends TreeNode_GetStateVisitor {
 
     private static $state_classes = array(
-        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_BLANK => 'tree-blank',
-        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_NODE  => 'tree-node',
-        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_PIPE  => 'tree-pipe',
-        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_LAST  => 'tree-last',
+        TreeNode_GetStateVisitor::STATE_BLANK => 'tree-blank',
+        TreeNode_GetStateVisitor::STATE_NODE  => 'tree-node',
+        TreeNode_GetStateVisitor::STATE_PIPE  => 'tree-pipe',
+        TreeNode_GetStateVisitor::STATE_LAST  => 'tree-last',
     );
 
     /**

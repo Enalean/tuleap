@@ -21,7 +21,7 @@
 require_once 'common/project/Service.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Report/Tracker_Report.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Hierarchy/Hierarchy.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Hierarchy/HierarchyTreeVisitor.class.php';
+require_once 'common/TreeNode/GetStateVisitor.class.php';
 
 require_once 'html.php';
 
@@ -68,10 +68,10 @@ class AgileDashboard_SearchView {
     private $trackers;
     
     private static $state_classes = array(
-        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_BLANK => 'tree-blank',
-        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_NODE  => 'tree-node',
-        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_PIPE  => 'tree-pipe',
-        Tracker_Hierarchy_HierarchyTreeVisitor::STATE_LAST  => 'tree-last',
+        TreeNode_GetStateVisitor::STATE_BLANK => 'tree-blank',
+        TreeNode_GetStateVisitor::STATE_NODE  => 'tree-node',
+        TreeNode_GetStateVisitor::STATE_PIPE  => 'tree-pipe',
+        TreeNode_GetStateVisitor::STATE_LAST  => 'tree-last',
     );
     
     public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_SharedFormElementFactory $shared_factory, $trackers) {
@@ -83,7 +83,7 @@ class AgileDashboard_SearchView {
         $this->artifact_factory  = $artifact_factory;
         $this->shared_factory    = $shared_factory;
         $this->trackers          = $trackers;
-        $this->treeVisistor      = new Tracker_Hierarchy_HierarchyTreeVisitor();
+        $this->treeVisistor      = new TreeNode_GetStateVisitor();
         $this->artifacts->accept($this->treeVisistor);
     }
     
@@ -175,7 +175,7 @@ class AgileDashboard_SearchView {
         foreach ($state as $state_id) {
             $id    = '';
             $class = self::$state_classes[$state_id];
-            if ($node->hasChildren() && ($state_id == Tracker_Hierarchy_HierarchyTreeVisitor::STATE_LAST || $state_id == Tracker_Hierarchy_HierarchyTreeVisitor::STATE_NODE)) {
+            if ($node->hasChildren() && ($state_id == TreeNode_GetStateVisitor::STATE_LAST || $state_id == TreeNode_GetStateVisitor::STATE_NODE)) {
                 $row = $node->getData();
                 $class .= ' tree-collapsable';
                 $id = 'id="tree-node-'. $row['id'] .'"';
