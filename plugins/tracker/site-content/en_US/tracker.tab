@@ -1167,6 +1167,9 @@ plugin_tracker_admin_import	nb_updated_import	$1 Artifact(s) updated
 plugin_tracker_admin_import	date_format_help	Expected date format is <strong>$1</strong>. <a href="/account/preferences.php">Change import/export date format</a>
 plugin_tracker_admin_import	separator_not_found	CSV separator not found ($1). Either you want to import only one field, or you're using the wrong separator.<br />If so, you can <a href="/account/preferences.php">change the CSV import/export separator</a>
 
+plugin_tracker_admin_hierarchy	edit_children_title	Edit children
+plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Current Full Hierarchy
+
 plugin_tracker_renderer_table	items_range_of	of
 
 plugin_tracker_report	edit_report	Edit the report

@@ -24,6 +24,9 @@ require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
 
 class Tracker_Hierarchy_Presenter {
     
+    // Manage translation
+    public $__ = array(__CLASS__, '__trans');
+    
     /**
      * @var Tracker_Hierarchy_HierarchicalTracker
      */
@@ -87,6 +90,9 @@ class Tracker_Hierarchy_Presenter {
         }
     }
     
+    public function __trans($text) {
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_hierarchy', $text);
+    }
     
 }
 

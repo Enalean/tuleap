@@ -1,6 +1,6 @@
 <div class="overflow-hidden">
     <div class="tracker-admin-hierarchy-float">
-        <h3>Edit children</h3>
+        <h3>{{#__}}edit_children_title{{/__}}</h3>
         <form method="post"
             action="{{getTrackerUrl}}/?tracker={{getTrackerId}}&func=admin-hierarchy-update">
             <select class="tracker-admin-hierarchy-edit-children" name="children[]" multiple="multiple">
@@ -14,7 +14,7 @@
         </form>
     </div>
     <div id="tracker-admin-current-full-hierarchy" class="overflow-hidden">
-        <h3>Current Full Hierarchy</h3>
+        <h3>{{#__}}current_full_hierarchy_title{{/__}}</h3>
         {{#hierarchy}}
             <ul class="tracker-hierarchy">{{> tracker-node}}</ul>
         {{/hierarchy}}
