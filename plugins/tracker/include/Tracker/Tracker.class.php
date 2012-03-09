@@ -52,7 +52,6 @@ class Tracker implements Tracker_Dispatchable_Interface {
     private $formElementFactory;
     private $sharedFormElementFactory;
     private $project;
-    private $renderer;
 
     // attributes necessary to to create an intermediate Tracker Object
     // (before Database import) during XML import
