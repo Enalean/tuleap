@@ -55,7 +55,7 @@ class AgileDashboard_Search {
         return $this->sortResults($artifacts, $trackerIds, $hierarchy);
     }
     
-    private function sortResults($artifacts, $trackerIds, $hierarchy) {
+    private function sortResults($artifacts, array $trackerIds, Tracker_Hierarchy $hierarchy) {
         $root = new TreeNode();
         $root->setId(0);
         if ($artifacts) {
@@ -73,7 +73,7 @@ class AgileDashboard_Search {
         return $root;
     }
     
-    private function appendArtifactAndSonsToParent($artifact, &$artifactsInTree, $parent, $artifacts) {
+    private function appendArtifactAndSonsToParent(array $artifact, array &$artifactsInTree, TreeNode $parent, array $artifacts) {
         $id = $artifact['id'];
         if (!isset($artifactsInTree[$id])) {
             $node = new TreeNode();
@@ -108,20 +108,20 @@ class AgileDashboard_Search {
         return array($artifactsById, $artifactsByTracker);
     }
     
-    private function sortTrackerIdsAccordinglyToHierarchy($trackerIds, $hierarchy) {
+    private function sortTrackerIdsAccordinglyToHierarchy(array $trackerIds, Tracker_Hierarchy $hierarchy) {
         $this->hierarchyTmp = $hierarchy;
         usort($trackerIds, array($this, 'sortByTrackerLevel'));
         return $trackerIds;
     }
     
-    protected function sortByTrackerLevel($tracker1, $tracker2) {
+    protected function sortByTrackerLevel($tracker1_id, $tracker2_id) {
         try {
-            $level1 = $this->hierarchyTmp->getLevel($tracker1);
+            $level1 = $this->hierarchyTmp->getLevel($tracker1_id);
         } catch (Exception $e) {
             return 1;
         }
         try {
-            $level2 = $this->hierarchyTmp->getLevel($tracker2);
+            $level2 = $this->hierarchyTmp->getLevel($tracker2_id);
         } catch (Exception $e) {
             return -1;
         }
