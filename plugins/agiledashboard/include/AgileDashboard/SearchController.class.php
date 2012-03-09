@@ -125,7 +125,7 @@ class AgileDashboard_SearchController {
         return $field->getTracker();
     }
     
-    protected function getReport() {
+    private function getReport() {
         $name = "Shared field search";
         $is_query_displayed = true;
         $report_id = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $updated_by = $updated_at = 0;
@@ -159,7 +159,7 @@ class AgileDashboard_SearchController {
         return $criteria;
     }
     
-    protected function getSelectedValues(Tracker_FormElement_Field $field) {
+    private function getSelectedValues(Tracker_FormElement_Field $field) {
         $request_criteria = $this->request->get('criteria');
         $currentValue     = $request_criteria[$field->getId()]['values'];
         if (!$currentValue) {
@@ -171,7 +171,7 @@ class AgileDashboard_SearchController {
     /**
      * @return Project
      */
-    protected function getProject() {
+    private function getProject() {
         $projectId = $this->request->get('group_id');
         $project   = $this->projectManager->getProject($projectId);
         if ($project->isError()) {
@@ -185,7 +185,7 @@ class AgileDashboard_SearchController {
     /**
      * @return Service
      */
-    protected function getService(Project $project) {
+    private function getService(Project $project) {
         $service = $project->getService('plugin_agiledashboard');
         if ($service) {
             return $service;
