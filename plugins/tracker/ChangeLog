@@ -1,4 +1,4 @@
-Version 5.2 - Tuleap 4.0.28
+Version 5.3 - Tuleap 4.0.28
   * Allow to define a hierarchy of trackers:
     Epics
     `-- Stories

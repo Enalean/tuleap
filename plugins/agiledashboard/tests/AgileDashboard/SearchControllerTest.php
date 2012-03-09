@@ -42,6 +42,7 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $this->service            = new MockService();
         $this->project            = new MockProject();
         $this->manager            = new MockProjectManager();
+        $this->manager->setReturnValue('getProject', $this->project, array('66'));
         $this->request            = new Codendi_Request(array('group_id' => '66'));
         $this->formElementFactory = new MockTracker_FormElementFactory();
         $this->search             = new MockAgileDashboard_Search();
@@ -54,7 +55,6 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
                 
         $this->project->setReturnValue('getService', $this->service, array('plugin_agiledashboard'));
         
-        $this->manager->setReturnValue('getProject', $this->project, array('66'));
         
         $fields = array(aTextField()->build(), aStringField()->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields, array($this->project));
@@ -70,8 +70,6 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
     public function testSearchRedirectsWithErrorMessageIfServiceIsNotUsed() {
         $this->project->setReturnValue('getService', null, array('plugin_agiledashboard'));
         $this->project->setReturnValue('getUnixName', 'coin');
-
-        $this->manager->setReturnValue('getProject', $this->project, array('66'));
 
         $controller = new AgileDashboard_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
 
@@ -141,8 +139,6 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         ));
         
         $this->project->setReturnValue('getService', $this->service, array('plugin_agiledashboard'));
-        
-        $this->manager->setReturnValue('getProject', $this->project, array('66'));
         
         $this->formElementFactory->setReturnValue('getProjectSharedFields', array());
         
@@ -230,54 +226,53 @@ class AgileDashboard_SearchControllerIndexTest extends TuleapTestCase {
         $this->assertEqual($tracker1->getId(), 110);
     }
     
-    public function testSearchCallGetViewWithTrackerHierarchy() {
-        $view = new MockAgileDashboard_SearchView();
+    public function testSearchCreateTrackerHierarchyFromDatabase() {
+        $this->GivenAProjectThatUseTheService();
         
-        $trackers = array();
-        $trackers_hierarchy = new Tracker_Hierarchy(array());
+        $trackers_ids = array(111, 112);
+        $this->GivenAListOfTrackerIds($trackers_ids);
         
-        $controller = TestHelper::getPartialMock(
-            'AgileDashboard_SearchController', 
-            array('getView', 'getTrackers', 'getProject', 'getService', 'getArtifacts', 'getReport', 'getCriteria', 'getTrackersHierarchy')
-        );
+        $hierarchy_factory = $this->GivenAHierarchyFactory();
+        $hierarchy_factory->expectOnce('getHierarchy', array($trackers_ids));
         
-        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
-        
-        $controller->expectOnce('getView', array('*', '*', '*', '*', '*', $trackers));
-        $controller->setReturnValue('getView', $view);
-        $controller->setReturnValue('getTrackers', $trackers);
-        $controller->setReturnValue('getTrackersHierarchy', $trackers_hierarchy , array($trackers));
-        
+        $controller = $this->GivenAControllerWithAHierarchyFactory($hierarchy_factory);
         $controller->search();
     }
     
-    public function testSearchCreateTrackerHierarchyFromDatabase() {
-        $view = new MockAgileDashboard_SearchView();
-        
-        $trackers_ids = array(111, 112);
+    private function GivenAListOfTrackerIds($trackers_ids) {
         $trackers = array();
+        $fields   = array();
         foreach( $trackers_ids as $tracker_id) {
             $tracker = new MockTracker();
             $tracker->setReturnValue('getId', $tracker_id);
-            $trackers[] = $tracker;
+            $fields[] = aTextField()->withId($tracker_id * 10)->withTracker($tracker)->build();
         }
-        
-        $trackers_hierarchy = new Tracker_Hierarchy(array());
-        
-        $hierarchy_factory = new MockTracker_HierarchyFactory();
-        $hierarchy_factory->expectOnce('getHierarchy', array($trackers_ids));
-        $hierarchy_factory->setReturnValue('getHierarchy', $trackers_hierarchy);
-        
+        $this->formElementFactory->setReturnValue('getAllProjectSharedFields', $fields);
+        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
+    }
+    
+    private function GivenAControllerWithAHierarchyFactory($hierarchy_factory) {
+        $view = new MockAgileDashboard_SearchView();
         $controller = TestHelper::getPartialMock(
             'AgileDashboard_SearchController', 
-            array('getView', 'getTrackers', 'getProject', 'getService', 'getArtifacts', 'getReport', 'getCriteria')
+            array('getView')
         );
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $hierarchy_factory);
         
         $controller->setReturnValue('getView', $view);
-        $controller->setReturnValue('getTrackers', $trackers);
-
-        $controller->search();
+        return $controller;
+    }
+    
+    private function GivenAHierarchyFactory() {
+        $trackers_hierarchy = new Tracker_Hierarchy(array());
+        
+        $hierarchy_factory = new MockTracker_HierarchyFactory();
+        $hierarchy_factory->setReturnValue('getHierarchy', $trackers_hierarchy);
+        return $hierarchy_factory;
+    }
+    
+    private function GivenAProjectThatUseTheService() {
+        $this->project->setReturnValue('getService', $this->service, array('plugin_agiledashboard'));
     }
 }
 ?>

@@ -106,14 +106,11 @@ class CodendiHtmlReporter extends HtmlReporter implements iCodeCoverageReporter 
      *    @access public
      */
     function paintFail($message) {
-        //echo '<p><input type="checkbox" onclick="$(this).siblings().invoke(\'toggle\');" /><span>';
-        //parent::paintFail($message);
         $this->_fails++;
         print "<span class=\"fail\">Fail</span>: ";
         $breadcrumb = $this->getTestListAsTreeNode();
         $breadcrumb->accept($this);
         print '<pre style="clear:both; margin-left:6em;">' . $this->_htmlEntities($message) . '</pre>';
-        //echo '</span></p>';
     }
     
     function visit(TreeNode $node) {
@@ -143,6 +140,19 @@ class CodendiHtmlReporter extends HtmlReporter implements iCodeCoverageReporter 
     function paintException($exception) {
         parent::paintException($exception);
         echo '<pre>'. $exception->getTraceAsString() .'</pre>';
+    }
+
+    /**
+     *    Paints a PHP error or exception.
+     *    @param string $message        Message to be shown.
+     *    @access public
+     *    @abstract
+     */
+    function paintError($message) {
+        $this->_exceptions++;
+        print "<span class=\"fail\">Exception</span>: ";
+        $this->getTestListAsTreeNode()->accept($this);
+        print '<pre style="clear:both; margin-left:6em; background:#fcc;">' . $this->_htmlEntities($message) .'</pre>';
     }
 
     function createInvoker($invoker) {
