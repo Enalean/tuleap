@@ -495,11 +495,17 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 if ($this->userIsAdmin($current_user)) {
                     // TODO: change directory
                     $this->sendXML($this->exportToXML());
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-dependencies':
                 if ($this->userIsAdmin($current_user)) {
                     $this->getRulesManager()->process($tracker_manager, $request, $current_user);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'submit-artifact':
@@ -533,24 +539,34 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 }
                 break;
             case 'admin-hierarchy':
-                $dao                  = new Tracker_Hierarchy_Dao();
-                $tracker_factory      = $this->getTrackerFactory();
-                $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
-                $hierarchical_tracker = $factory->getWithChildren($this);
-                $controller           = new Tracker_Hierarchy_Controller($request, $hierarchical_tracker, $factory, $dao);
-                
-                $this->displayAdminItemHeader($tracker_manager, 'hierarchy');
-                $controller->edit();
-                $this->displayFooter($tracker_manager);
+                if ($this->userIsAdmin($current_user)) {
+                    $dao                  = new Tracker_Hierarchy_Dao();
+                    $tracker_factory      = $this->getTrackerFactory();
+                    $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+                    $hierarchical_tracker = $factory->getWithChildren($this);
+                    $controller           = new Tracker_Hierarchy_Controller($request, $hierarchical_tracker, $factory, $dao);
+                    
+                    $this->displayAdminItemHeader($tracker_manager, 'hierarchy');
+                    $controller->edit();
+                    $this->displayFooter($tracker_manager);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
+                }
                 break;
             case 'admin-hierarchy-update':
-                $dao                  = new Tracker_Hierarchy_Dao();
-                $tracker_factory      = $this->getTrackerFactory();
-                $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
-                $hierarchical_tracker = $factory->getWithChildren($this);
-                $controller           = new Tracker_Hierarchy_Controller($request, $hierarchical_tracker, $factory, $dao);
-                
-                $controller->update();
+                if ($this->userIsAdmin($current_user)) {
+                    $dao                  = new Tracker_Hierarchy_Dao();
+                    $tracker_factory      = $this->getTrackerFactory();
+                    $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+                    $hierarchical_tracker = $factory->getWithChildren($this);
+                    $controller           = new Tracker_Hierarchy_Controller($request, $hierarchical_tracker, $factory, $dao);
+                    
+                    $controller->update();
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
+                }
                 break;
             default:
                 //If there is nothing to do, display a report
