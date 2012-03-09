@@ -19,10 +19,13 @@
  */
 
 if ($argc != 2) {
-    die("Usage: ".basename($argv[0]).". en_US|fr_FR\n");
+    die("Usage: ".basename($argv[0]).". /path/to/BookInfo.xml
+Example:
+".basename($argv[0])." documentation/user_guide/xml/en_US/BookInfo.xml
+");
 }
 
-$bookinfo = simplexml_load_file(dirname(__FILE__).'/../xml/'.$argv[1].'/BookInfo.xml', 'SimpleXMLElement', LIBXML_NOWARNING );
+$bookinfo = simplexml_load_file($argv[1], 'SimpleXMLElement', LIBXML_NOWARNING );
 
 $last_revision = $bookinfo->xpath('/bookinfo/revhistory/revision[last()]');
 
