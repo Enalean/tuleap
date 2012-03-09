@@ -21,19 +21,24 @@
 require_once 'NotInHierarchyException.class.php';
 require_once 'CyclicHierarchyException.class.php';
 
+/**
+ * Store relationship between tracker based on their ids.
+ * 
+ * This allows to compute the level of a tracker in a given hierarchy. 
+ */
 class Tracker_Hierarchy {
     
     private $parents = array();
     
     /**
-     * @param int $parent The id of the parent in the relatonship
-     * @param int $child  The id of the parent in the relatonship
+     * @param int $parent_id The id of the parent in the relatonship
+     * @param int $child_id  The id of the parent in the relatonship
      */
-    public function addRelationship($parent, $child) {
-        if (!array_key_exists($parent, $this->parents)) {
-            $this->parents[$parent] = null;
+    public function addRelationship($parent_id, $child_id) {
+        if (!array_key_exists($parent_id, $this->parents)) {
+            $this->parents[$parent_id] = null;
         }
-        $this->parents[$child] = $parent;
+        $this->parents[$child_id] = $parent_id;
     }
     
     /**
