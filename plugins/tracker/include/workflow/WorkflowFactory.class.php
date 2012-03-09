@@ -271,7 +271,7 @@ class WorkflowFactory {
      * 
      * @return Workflow The workflow object, or null if error
      */
-    public function getInstanceFromXML($xml, $xmlMapping, $tracker) {
+    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
         
         $xml_field_id = $xml->field_id;
         $xml_field_attributes = $xml_field_id->attributes();        
