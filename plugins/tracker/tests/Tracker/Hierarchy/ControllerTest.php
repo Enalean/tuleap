@@ -63,10 +63,10 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
    
     public function testEditDisplaysTheWholeHierarchy() {
         $hierarchy = array(
-            array('name' => 'Sprints', 'id' => '', 'children' => array(
-                array('name' => 'Stories', 'id' => '', 'children' => array(
-                    array('name' => 'Tasks', 'id' => '', 'children' => array()),
-                    array('name' => 'Bugs', 'id' => '', 'children' => array()),
+            array('name' => 'Sprints', 'id' => '', 'current_class' => '', 'children' => array(
+                array('name' => 'Stories', 'id' => '', 'current_class' => 'current', 'children' => array(
+                    array('name' => 'Tasks', 'id' => '', 'current_class' => '', 'children' => array()),
+                    array('name' => 'Bugs', 'id' => '', 'current_class' => '', 'children' => array()),
                 )),
             ))
         );
@@ -86,7 +86,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
     private function getHierarchyAsTreeNode($hierarchy) {
         $node = new TreeNode();
         if (isset($hierarchy['children'])) {
-            $node->setData(array('name' => $hierarchy['name'], 'id' => $hierarchy['id']));
+            $node->setData(array('name' => $hierarchy['name'], 'id' => $hierarchy['id'], 'current_class' => ''));
             $node->setId($hierarchy['id']);
             $hierarchy = $hierarchy['children'];
         } else {
@@ -102,8 +102,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $sprints_id = 666;
         $stories_id = 999;
         $hierarchy = array(
-            array('name' => 'Sprints', 'id' => $sprints_id, 'children' => array(
-                array('name' => 'Stories', 'id' => $stories_id, 'children' => array())
+            array('name' => 'Sprints', 'id' => $sprints_id, 'current_class' => '', 'children' => array(
+                array('name' => 'Stories', 'id' => $stories_id, 'current_class' => '', 'children' => array())
             ))
         );
         $this->factory->setReturnValue('getPossibleChildren', array());

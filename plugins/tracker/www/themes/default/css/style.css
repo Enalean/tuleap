@@ -967,3 +967,9 @@ ul.plugin_tracker_my_artifacts_list {
     float:left;
 }
 
+.tracker-hierarchy-current,
+.tracker-hierarchy-current:visited,
+.tracker-hierarchy-current:hover {
+    font-weight: bold;
+    color: #0676B9;
+}
