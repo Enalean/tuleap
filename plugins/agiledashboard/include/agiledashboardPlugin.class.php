@@ -35,12 +35,7 @@ class AgileDashboardPlugin extends Plugin {
         if (defined('TRACKER_BASE_URL')) {
             $this->_addHook('cssfile', 'cssfile', false);
             $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
-            $this->_addHook('javascript_file', 'jsFile', false);
         }
-    }
-
-    public function jsFile() {
-        echo '<script type="text/javascript" src="'.$this->getPluginPath().'/script.js"></script>';
     }
 
     /**
@@ -57,8 +52,7 @@ class AgileDashboardPlugin extends Plugin {
     function cssfile($params) {
         // Only show the stylesheet if we're actually in the AgileDashboard pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
-            strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL) === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
