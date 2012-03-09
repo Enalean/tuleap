@@ -1171,6 +1171,7 @@ plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Hiérarchie actuelle
 
 plugin_tracker_hierarchy    error_is_cyclic    La hiérarchie est cyclique
 plugin_tracker_hierarchy    tracker_not_in_hierarchy    Le tracker n'appartient pas à la hiérarchie
+plugin_tracker_hierarchy    controller_bad_request  La requête contient des données invalides (paramètre 'children')
 
 plugin_tracker_renderer_table	items_range_of	sur
 
