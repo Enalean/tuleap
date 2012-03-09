@@ -24,6 +24,7 @@ class TestPresenter {
     public function title() {
         return 'Tuleap';
     }
+    
     public function getTreeItems() {
         return array(
             array('name' => 'T1', 'children' => array(
@@ -34,14 +35,27 @@ class TestPresenter {
             ))
         );
     }
+    
     public $content = 'An open ALM solution.';
+    
+    public $__ = array(__CLASS__, '_l10n');
+    
+    public function _l10n($key) {
+        return $GLOBALS['Language']->getText('module', $key);
+    }
 }
 
 /**
  * extend this class for any new template engines
  */
-abstract class TemplateRendererTest extends UnitTestCase {
+abstract class TemplateRendererTest extends TuleapTestCase {
     function setUp() {
+        parent::setUp();
+        
+        $this->expected_l10_string = 'a translated string';
+        $GLOBALS['Language']->expectOnce('getText', array('module', 'i18n_text'));
+        $GLOBALS['Language']->setReturnValue('getText', $this->expected_l10_string);
+        
         $this->presenter = new TestPresenter();
         ob_start();
         $this->renderer->render('test', $this->presenter);
@@ -50,6 +64,10 @@ abstract class TemplateRendererTest extends UnitTestCase {
     
     function assertOutputContains($content) {
         $this->assertPattern("/".$content."/", $this->output);
+    }
+    
+    function assertOutputDoesntContain($content) {
+        $this->assertNoPattern("/".$content."/", $this->output);
     }
     
     function testSimpleValue() {
@@ -68,6 +86,11 @@ abstract class TemplateRendererTest extends UnitTestCase {
 
     public function strip($string) {
         return "\n".preg_replace("/[ \t\n]+/", ' ', $string)."\n";
+    }
+    
+    function testShouldTranslateStringsUsingLanguage() {
+        $this->assertOutputContains($this->expected_l10_string);
+        $this->assertOutputDoesntContain('i18n_text');
     }
 }
 
