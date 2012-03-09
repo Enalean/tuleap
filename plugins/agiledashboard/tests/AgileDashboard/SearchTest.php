@@ -105,7 +105,7 @@ class AgileDashboard_SearchTest extends TuleapTestCase {
             array('id' => 6, 'tracker_id' => 112, 'artifactlinks' => '8',),
             array('id' => 5, 'tracker_id' => 111, 'artifactlinks' => '',),
             array('id' => 9, 'tracker_id' => 113, 'artifactlinks' => '',),
-            array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '42',)
+            array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '66',)
         );
     }
     
@@ -145,7 +145,7 @@ class AgileDashboard_SearchTest extends TuleapTestCase {
         
         $node_10 = new TreeNode();
         $node_10->setId(10);
-        $node_10->setData(array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '42'));
+        $node_10->setData(array('id' => 10, 'tracker_id' => 113, 'artifactlinks' => '66'));
         $root->addChild($node_10);
         
         $node_66 = new TreeNode();
@@ -156,15 +156,10 @@ class AgileDashboard_SearchTest extends TuleapTestCase {
     }
     
     private function GivenATrackerHierarchy() {
-        $hierarchy = new MockTracker_Hierarchy();
-        $hierarchy->setReturnValue('getLevel', 0, array(112));
-        $hierarchy->setReturnValue('getLevel', 1, array(111));
-        $hierarchy->setReturnValue('getLevel', 2, array(113));
-        $hierarchy->setReturnValue('getLevel', 0, array(201));
-        $hierarchy->setReturnValue('getLevel', 1, array(202));
-        
-        $hierarchy->throwOn('getLevel', new Tracker_Hierarchy_NotInHierarchyException(), array(666));
-        
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(112, 111);
+        $hierarchy->addRelationship(111, 113);
+        $hierarchy->addRelationship(201, 202);
         return $hierarchy;
     }
    

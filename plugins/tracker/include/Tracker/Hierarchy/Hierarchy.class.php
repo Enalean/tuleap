@@ -52,6 +52,13 @@ class Tracker_Hierarchy {
         return $this->getLevelRecursive($tracker_id, $callstack);
     }
     
+    /**
+     * @return bool
+     */
+    public function isChild($parent_id, $child_id) {
+        return isset($this->parents[$child_id]) && $this->parents[$child_id] == $parent_id;
+    }
+    
     private function getLevelRecursive($tracker_id, array &$callstack) {
         if (array_key_exists($tracker_id, $this->parents)) {
             return $this->computeLevel($this->parents[$tracker_id], $callstack);

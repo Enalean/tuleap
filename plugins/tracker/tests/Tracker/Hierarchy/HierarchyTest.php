@@ -81,5 +81,18 @@ class Tracker_HierarchyTest extends TuleapTestCase {
         $level = $hierarchy->getLevel(1002);
         $this->assertEqual(0, $level);
     }
+    
+    public function ItShouldBeChild() {
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(112, 111);
+        $this->assertTrue($hierarchy->isChild(112, 111));
+    }
+    
+    public function ItShouldNotBeChild() {
+        $hierarchy = new Tracker_Hierarchy();
+        $hierarchy->addRelationship(112, 111);
+        $this->assertFalse($hierarchy->isChild(112, 666));
+        $this->assertFalse($hierarchy->isChild(111, 112));
+    }
 }
 ?>
