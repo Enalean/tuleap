@@ -69,12 +69,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         $hierarchy = new TreeNode();
         $hierarchy->setId(0);
         
-        $root_tracker_node = new TreeNode(
-            array('name'     => $project_trackers[$root_tracker_id]->getName(),
-                  'id'       => $root_tracker_id
-            )
-        );
-        $root_tracker_node->setId($root_tracker_id);
+        $root_tracker_node = $this->makeNodeFor($project_trackers[$root_tracker_id]);
         foreach ($this->buildHierarchyChildrenOf($root_tracker_id , iterator_to_array($hierarchy_dar), $project_trackers) as $child) {
             $root_tracker_node->addChild($child);
         }
@@ -87,10 +82,8 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         foreach($hierarchy_dar as $row) {
             if ($row['parent_id'] == $parent_id) {
                 $id      = $row['child_id'];
-                $tracker = $project_trackers[$id];
-                
-                $node = new TreeNode(array('name' => $tracker->getName(), 'id' => $tracker->getId()));
-                $node->setId($tracker->getId());
+                $node = $this->makeNodeFor($project_trackers[$id]);
+
                 foreach ($this->buildHierarchyChildrenOf($id, $hierarchy_dar, $project_trackers) as $child) {
                     $node->addChild($child);
                 }
@@ -107,6 +100,16 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
             }
         }
         return $current_tracker_id;
+    }
+
+    public function makeNodeFor($tracker) {
+        $node = new TreeNode(
+            array('name'     => $tracker->getName(),
+                  'id'       => $tracker->getId()
+            )
+        );
+        $node->setId($tracker->getId());
+        return $node;
     }
 }
 
