@@ -19,6 +19,13 @@
  
 codendi.Tree       = { };
 codendi.Tree.nodes = { };
+
+/**
+ * Allow expand/collapse of TreeNodes
+ *
+ * /!\ This works only for TreeNode contained in a <table>. 
+ *     <ul> is not supported for now.
+ */
 codendi.Tree.Node  = Class.create({
     initialize: function (node) {
         this.node          = $(node);
