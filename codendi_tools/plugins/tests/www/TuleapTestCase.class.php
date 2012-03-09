@@ -102,7 +102,7 @@ abstract class TuleapTestCase extends UnitTestCase {
     function cleanCamelCase($textInCamelCase) {
         $return = preg_replace_callback('@(?<!=[A-Z])[A-Z]@', array($this, 'replaceCamelUpperCase'), $textInCamelCase);
         $return = str_replace('test ', '', $return);
-        return '<strong>' . ucfirst($return) . '</strong>';
+        return '<strong>' . ucfirst($return) . '</strong> ('. $textInCamelCase .')';
     }
     
     function replaceCamelUpperCase($match) {
