@@ -18,6 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/** A "hierarchy-aware" tracker.
+ * 
+ * This class handles the hierarchy aspect of a tracker.
+ * It was written while I was not aware of TreeNode, and was aimed at becoming
+ * a more generic hierarchy node representation.
+ * 
+ * We should probably remove it, and use TreeNode Instead.
+ */
 class Tracker_Hierarchy_HierarchicalTracker {
 
     /**
