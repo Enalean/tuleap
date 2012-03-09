@@ -541,7 +541,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 if ($this->userIsAdmin($current_user)) {
                     
                     $this->displayAdminItemHeader($tracker_manager, 'hierarchy');
-                    $this->getHierarchyController()->edit();
+                    $this->getHierarchyController($request)->edit();
                     $this->displayFooter($tracker_manager);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -551,7 +551,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case 'admin-hierarchy-update':
                 if ($this->userIsAdmin($current_user)) {
                     
-                    $this->getHierarchyController()->update();
+                    $this->getHierarchyController($request)->update();
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -567,7 +567,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         return false;
     }
     
-    private function getHierarchyController() {
+    private function getHierarchyController($request) {
         $dao                  = new Tracker_Hierarchy_Dao();
         $tracker_factory      = $this->getTrackerFactory();
         $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
