@@ -20,6 +20,9 @@
 
 require_once 'common/project/Service.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Report/Tracker_Report.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Hierarchy/Hierarchy.class.php';
+require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
+
 require_once 'html.php';
 
 class AgileDashboard_SearchView {
@@ -64,15 +67,31 @@ class AgileDashboard_SearchView {
      */
     private $trackers;
     
-    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_SharedFormElementFactory $shared_factory, $trackers) {
-        $this->language         = $language;
-        $this->service          = $service;
-        $this->report           = $report;
-        $this->criteria         = $criteria;
-        $this->artifacts        = $artifacts;
-        $this->artifact_factory = $artifact_factory;
-        $this->shared_factory   = $shared_factory;
-        $this->trackers         = $trackers;
+    private static $state_classes = array(
+        TreeNode_GetStateVisitor::STATE_BLANK => 'tree-blank',
+        TreeNode_GetStateVisitor::STATE_NODE  => 'tree-node',
+        TreeNode_GetStateVisitor::STATE_PIPE  => 'tree-pipe',
+        TreeNode_GetStateVisitor::STATE_LAST  => 'tree-last',
+    );
+    
+    public function __construct(Service                          $service,
+                                BaseLanguage                     $language, 
+                                Tracker_Report                   $report, 
+                                array                            $criteria, 
+                                                                 $artifacts, 
+                                Tracker_ArtifactFactory          $artifact_factory, 
+                                Tracker_SharedFormElementFactory $shared_factory, 
+                                                                 $trackers) {
+        $this->language          = $language;
+        $this->service           = $service;
+        $this->report            = $report;
+        $this->criteria          = $criteria;
+        $this->artifacts         = $artifacts;
+        $this->artifact_factory  = $artifact_factory;
+        $this->shared_factory    = $shared_factory;
+        $this->trackers          = $trackers;
+        $this->treeVisistor      = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
+        $this->artifacts->accept($this->treeVisistor);
     }
     
     public function render() {
@@ -116,7 +135,7 @@ class AgileDashboard_SearchView {
     private function fetchResults() {
         $html  = '';
         $html .= '<div class="tracker_report_renderer">';
-        if (count($this->artifacts)) {
+        if ($this->artifacts->hasChildren()) {
             $html .= $this->fetchTable();
         } else {
             $html .= '<em>'. 'No artifact match your query' .'</em>';
@@ -127,30 +146,41 @@ class AgileDashboard_SearchView {
     
     private function fetchTable() {
         $html  = '';
-        $html .= '<table>';
+        $html .= '<table cellspacing="1">';
         $html .= $this->fetchTHead();
         $html .= $this->fetchTBody();
         $html .= '</table>';
         return $html;
     }
     
+    public function visit(TreeNode $node) {
+        $html = '';
+        $row = $node->getData();
+        $artifact = $this->artifact_factory->getArtifactById($row['id']);
+        if ($artifact) {
+            $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '">';
+            $html .= '<td>';
+            $html .= $row['tree-padding'];
+            $html .= $artifact->fetchDirectLinkToArtifact();
+            $html .= '</td>';
+            $html .= '<td>';
+            $html .= $row['title'];
+            $html .= '</td>';
+            $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
+            $html .= '</tr>';
+            foreach ($node->getChildren() as $child) {
+                $html .= $child->accept($this);
+            }
+        }
+        return $html;
+    }
+    
     private function fetchTBody() {
         $html  = '';
         $html .= '<tbody>';
-        $i = 0;
-        foreach ($this->artifacts as $row) {
-            $artifact = $this->artifact_factory->getArtifactById($row['id']);
-            if ($artifact) {
-                $html .= '<tr class="' . html_get_alt_row_color($i++) . '">';
-                $html .= '<td>';
-                $html .= $artifact->fetchDirectLinkToArtifact();
-                $html .= '</td>';
-                $html .= '<td>';
-                $html .= $row['title'];
-                $html .= '</td>';
-                $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
-                $html .= '</tr>';
-            }
+        $this->current_index = 0;
+        foreach ($this->artifacts->getChildren() as $child) {
+            $html.= $child->accept($this);
         }
         $html .= '</tbody>';
         return $html;

@@ -21,6 +21,7 @@
 require_once 'SharedFieldFactory.class.php';
 require_once 'SearchDao.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Hierarchy/Hierarchy.class.php';
 
 class AgileDashboard_Search {
     
@@ -31,6 +32,7 @@ class AgileDashboard_Search {
     
     /**
      * @var AgileDashboard_SearchDao
+     
      */
     private $dao;
     
@@ -40,16 +42,90 @@ class AgileDashboard_Search {
         $this->dao                = $dao;
     }
 
-    public function getMatchingArtifacts(array $trackers, $criteria=null) {
+    public function getMatchingArtifacts(array $trackers, Tracker_Hierarchy $hierarchy, $criteria = null) {
         $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
         $trackerIds           = array_map(array($this, 'getTrackerId'), $trackers);
+        $artifacts            = array();
         
         if (count($searchedSharedFields) > 0) { 
-            return $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
+            $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
         } elseif (count($trackerIds) > 0) {
-            return $this->dao->searchArtifactsFromTrackers($trackerIds);
+            $artifacts = $this->dao->searchArtifactsFromTrackers($trackerIds);
         }
-        return array();
+        return $this->sortResults($artifacts, $trackerIds, $hierarchy);
+    }
+    
+    private function sortResults($artifacts, array $trackerIds, Tracker_Hierarchy $hierarchy) {
+        $root = new TreeNode();
+        $root->setId(0);
+        if ($artifacts) {
+            list($artifactsById, $artifactsByTracker) = $this->indexArtifactsByIdAndTracker($artifacts);
+            $artifactsInTree = array();
+            $trackerIds = $this->sortTrackerIdsAccordinglyToHierarchy($trackerIds, $hierarchy);
+            foreach ($trackerIds as $tracker_id) {
+                if (isset($artifactsByTracker[$tracker_id])) {
+                    foreach ($artifactsByTracker[$tracker_id] as $artifact) {
+                        $this->appendArtifactAndSonsToParent($artifact, $artifactsInTree, $root, $artifactsById);
+                    }
+                }
+            }
+        }
+        return $root;
+    }
+    
+    private function appendArtifactAndSonsToParent(array $artifact, array &$artifactsInTree, TreeNode $parent, array $artifacts) {
+        $id = $artifact['id'];
+        if (!isset($artifactsInTree[$id])) {
+            $node = new TreeNode();
+            $node->setId($id);
+            $node->setData($artifact);
+            $parent->addChild($node);
+            $artifactsInTree[$id] = true;
+            $artifactlinks = explode(',', $artifact['artifactlinks']);
+            foreach ($artifactlinks as $link_id) {
+                if (isset($artifacts[$link_id])) {
+                    $this->appendArtifactAndSonsToParent($artifacts[$link_id], $artifactsInTree, $node, $artifacts);
+                }
+            }
+        }
+    }
+    
+    private function indexArtifactsByIdAndTracker($artifacts) {
+        $artifactsById      = array();
+        $artifactsByTracker = array();
+        foreach ($artifacts as $artifact) {
+            //by id
+            $artifactsById[$artifact['id']] = $artifact;
+            
+            //by tracker_id
+            $tracker_id = $artifact['tracker_id'];
+            if (isset($artifactsByTracker[$tracker_id])) {
+                $artifactsByTracker[$tracker_id][] = $artifact;
+            } else {
+                $artifactsByTracker[$tracker_id] = array($artifact);
+            }
+        }
+        return array($artifactsById, $artifactsByTracker);
+    }
+    
+    private function sortTrackerIdsAccordinglyToHierarchy(array $trackerIds, Tracker_Hierarchy $hierarchy) {
+        $this->hierarchyTmp = $hierarchy;
+        usort($trackerIds, array($this, 'sortByTrackerLevel'));
+        return $trackerIds;
+    }
+    
+    protected function sortByTrackerLevel($tracker1_id, $tracker2_id) {
+        try {
+            $level1 = $this->hierarchyTmp->getLevel($tracker1_id);
+        } catch (Exception $e) {
+            return 1;
+        }
+        try {
+            $level2 = $this->hierarchyTmp->getLevel($tracker2_id);
+        } catch (Exception $e) {
+            return -1;
+        }
+        return strcmp($level1, $level2);
     }
     
     private function getTrackerId(Tracker $tracker) {

@@ -106,12 +106,20 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
             color: green; 
         } 
         pre { 
-            background-color: lightgray; 
+            background-color: ivory;
+            border:1px solid #d2d2d2;
+            padding: 1em 0.5em;
+            white-space: pre-wrap;       /* css-3 */
+            white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+            white-space: -pre-wrap;      /* Opera 4-6 */
+            white-space: -o-pre-wrap;    /* Opera 7 */
+            word-wrap: break-word;       /* Internet Explorer 5.5+ */
         }
         a img {
             border:none;
         }
         </style>
+        <link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />
         <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
         <script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
         <script type="text/javascript">
@@ -181,7 +189,7 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
         Event.observe(window, 'load', init, true);
         </script>
     </head>
-    <body>
+    <body class="main_body_row" style="background:white">
         <form action="" method="POST">
             <table width="100%">
                 <tr>

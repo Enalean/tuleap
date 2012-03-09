@@ -280,7 +280,7 @@ class WorkflowFactory {
         $transitions = array();
         foreach($xml->transitions->transition as $t) {
             $tf = $this->getTransitionFactory();
-            $transitions[] = $tf->getInstanceFromXML($t, &$xmlMapping);
+            $transitions[] = $tf->getInstanceFromXML($t, $xmlMapping);
         }
         
         return new Workflow(0, $tracker, $field_id, $xml->is_used, $transitions);

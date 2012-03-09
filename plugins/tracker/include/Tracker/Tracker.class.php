@@ -31,6 +31,7 @@ require_once('common/widget/Widget_Static.class.php');
 require_once(dirname(__FILE__).'/../tracker_permissions.php');
 require_once('Tracker_Dispatchable_Interface.class.php');
 require_once('FormElement/Tracker_SharedFormElementFactory.class.php');
+require_once('Hierarchy/Controller.class.php');
 
 require_once('json.php');
 
@@ -86,8 +87,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         $this->instantiate_for_new_projects = $instantiate_for_new_projects;
         $this->stop_notification            = $stop_notification;
         $this->formElementFactory           = Tracker_FormElementFactory::instance();
-        $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory
-                                                , new Tracker_FormElement_Field_List_BindFactory());
+        $this->sharedFormElementFactory     = new Tracker_SharedFormElementFactory($this->formElementFactory, new Tracker_FormElement_Field_List_BindFactory());
     }
 
     /**
@@ -494,11 +494,17 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 if ($this->userIsAdmin($current_user)) {
                     // TODO: change directory
                     $this->sendXML($this->exportToXML());
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'admin-dependencies':
                 if ($this->userIsAdmin($current_user)) {
                     $this->getRulesManager()->process($tracker_manager, $request, $current_user);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
             case 'submit-artifact':
@@ -531,6 +537,26 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
+            case 'admin-hierarchy':
+                if ($this->userIsAdmin($current_user)) {
+                    
+                    $this->displayAdminItemHeader($tracker_manager, 'hierarchy');
+                    $this->getHierarchyController()->edit();
+                    $this->displayFooter($tracker_manager);
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
+                }
+                break;
+            case 'admin-hierarchy-update':
+                if ($this->userIsAdmin($current_user)) {
+                    
+                    $this->getHierarchyController()->update();
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
+                }
+                break;
             default:
                 //If there is nothing to do, display a report
                 if ($this->userCanView($current_user)) {
@@ -540,6 +566,16 @@ class Tracker implements Tracker_Dispatchable_Interface {
         }
         return false;
     }
+    
+    private function getHierarchyController() {
+        $dao                  = new Tracker_Hierarchy_Dao();
+        $tracker_factory      = $this->getTrackerFactory();
+        $factory              = new Tracker_Hierarchy_HierarchicalTrackerFactory($tracker_factory, $dao);
+        $hierarchical_tracker = $factory->getWithChildren($this);
+        $controller           = new Tracker_Hierarchy_Controller($request, $hierarchical_tracker, $factory, $dao);
+        return $controller;
+    }
+
     
     public function createFormElement($type, $formElement_data, $user) {
         if ($type == 'shared') {
@@ -1039,6 +1075,13 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','export'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','export_desc'),
                         'img'         => 'ic/48/tracker-export.png',
+                ),
+                'hierarchy' => array(
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-hierarchy',
+                        'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy'),
+                        'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy'),
+                        'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','hierarchy_desc'),
+                        'img'         => 'ic/48/tracker-hierarchy.png',
                 ),
         );
     }

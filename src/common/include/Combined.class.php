@@ -46,6 +46,7 @@ class Combined {
             '/scripts/lightwindow/lightwindow.js',
             '/scripts/codendi/RichTextEditor.js',
             '/scripts/codendi/Tracker.js',
+            '/scripts/codendi/TreeNode.js',
         );
         EventManager::instance()->processEvent(Event::COMBINED_SCRIPTS, array('scripts' => &$arr));
         return $arr;

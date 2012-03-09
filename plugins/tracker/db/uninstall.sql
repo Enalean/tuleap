@@ -32,6 +32,7 @@ DROP TABLE IF EXISTS tracker_changeset_value_openlist;
 DROP TABLE IF EXISTS tracker_changeset_value_artifactlink;
 DROP TABLE IF EXISTS tracker_changeset_value_permissionsonartifact;
 DROP TABLE IF EXISTS tracker_fileinfo;
+DROP TABLE IF EXISTS tracker_hierarchy;
 DROP TABLE IF EXISTS tracker_report;
 DROP TABLE IF EXISTS tracker_report_renderer;
 DROP TABLE IF EXISTS tracker_report_renderer_table;

@@ -1,3 +1,12 @@
+Version 4.0.28 (Not released yet)
+   == Plugins ==
+   * AgileDashoard v0.2
+   * Tracker v5.2
+
+   == Development ==
+   * Improve output of UnitTest to make them more readable.
+   * Allows to start test method by 'it'.
+
 Version 4.0.27.2 (Thursday, March 8th 2012)
    == Enhancement ==
    * Git documentation is now aligned with implementation.

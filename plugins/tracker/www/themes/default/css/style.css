@@ -940,4 +940,36 @@ ul.plugin_tracker_my_artifacts_list {
 .alert-message.block-message .alert-actions {
     margin-top: 5px;
 }
+.overflow-hidden {
+    overflow:hidden;
+}
 /* }}} */
+.tracker-hierarchy,
+.tracker-hierarchy ul,
+.tracker-hierarchy li
+{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.tracker-hierarchy ul {
+    clear:both;
+}
+#tracker-admin-current-full-hierarchy {
+    padding-left:4em;
+}
+.tracker-admin-hierarchy-edit-children {
+    min-width:250px;
+    min-height: 200px;
+}
+
+.tracker-admin-hierarchy-float {
+    float:left;
+}
+
+.tracker-hierarchy-current,
+.tracker-hierarchy-current:visited,
+.tracker-hierarchy-current:hover {
+    font-weight: bold;
+    color: #0676B9;
+}

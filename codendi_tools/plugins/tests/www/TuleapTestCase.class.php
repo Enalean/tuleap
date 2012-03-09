@@ -62,6 +62,52 @@ abstract class TuleapTestCase extends UnitTestCase {
         unset($GLOBALS['HTML']);
         $GLOBALS = $this->globals;
     }
+    /**
+     *    Tests to see if the method is a test that should
+     *    be run, override default by searching methods that starts with 'it'
+     *    is a candidate unless it is the constructor.
+     *    @param string $method        Method name to try.
+     *    @return boolean              True if test method.
+     *    @access protected
+     */
+    function _isTest($method) {
+        if (strtolower(substr($method, 0, 2)) == 'it') {
+            return ! SimpleTestCompatibility::isA($this, strtolower($method));
+        }
+        return parent::_isTest($method);
+    }
+    
+    function getLabel() {
+        $label = parent::getLabel();
+        return $this->cleanCamelCase($label);
+    }
+
+    /**
+     *    Announces the start of the test.
+     *    @param string $method    Test method just started.
+     *    @access public
+     */
+    function before($method) {
+        parent::before($this->cleanCamelCase($method));
+    }
+    /**
+     *    Announces the end of the test. Includes private clean up.
+     *    @param string $method    Test method just finished.
+     *    @access public
+     */
+    function after($method) {
+        parent::after($this->cleanCamelCase($method));
+    }
+    
+    function cleanCamelCase($textInCamelCase) {
+        $return = preg_replace_callback('@(?<!=[A-Z])[A-Z]@', array($this, 'replaceCamelUpperCase'), $textInCamelCase);
+        $return = str_replace('test ', '', $return);
+        return '<strong>' . ucfirst($return) . '</strong> ('. $textInCamelCase .')';
+    }
+    
+    function replaceCamelUpperCase($match) {
+        return ' '.strtolower($match[0]);
+    }
     
 }
 ?>

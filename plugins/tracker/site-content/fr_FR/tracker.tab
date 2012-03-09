@@ -1093,6 +1093,10 @@ plugin_tracker_admin	csv_import_desc	Importer des artefacts à partir d'un fichi
 plugin_tracker_admin	export	Export
 plugin_tracker_admin	export_desc	Exporter la structure du tracker
 
+plugin_tracker_admin	hierarchy	Hiérarchie
+plugin_tracker_admin	hierarchy_desc	Définir la hiérarchie de l'outil de suivi
+plugin_tracker_admin	manage_hierarchy_title	Gérer la hiérarchie du tracker 
+
 plugin_tracker_admin	manage_dependencies	Gérer les dépendances entre champs
 plugin_tracker_admin	manage_dependencies_desc	Définir comment les valeurs d'un champ dépendent des valeurs d'un autre champ
 
@@ -1161,6 +1165,13 @@ plugin_tracker_admin_import	nb_created_import	$1 artefact(s) créé(s)
 plugin_tracker_admin_import	nb_updated_import	$1 artefact(s) mis à jour
 plugin_tracker_admin_import	date_format_help	Format de date attendu : <strong>$1</strong>. <a href="/account/preferences.php">Changer le format de date pour l'import/export</a>
 plugin_tracker_admin_import	separator_not_found	Séparateur CSV non trouvé ($1). Soit vous tentez d'importer un seul champ, soit vous utilisez le mauvais séparateur.<br />Si c'est le cas, vous pouvez <a href="/account/preferences.php">changer le séparateur CSV pour l'import/export</a>
+
+plugin_tracker_admin_hierarchy	edit_children_title	Modifier les enfants de $1
+plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Hiérarchie actuellement définie
+
+plugin_tracker_hierarchy	error_is_cyclic	La hiérarchie est cyclique
+plugin_tracker_hierarchy	tracker_not_in_hierarchy	Le tracker n'appartient pas à la hiérarchie
+plugin_tracker_hierarchy	controller_bad_request	La requête contient des données invalides (paramètre 'children')
 
 plugin_tracker_renderer_table	items_range_of	sur
 

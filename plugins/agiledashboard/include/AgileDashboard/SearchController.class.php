@@ -22,6 +22,7 @@ require_once 'SearchView.class.php';
 require_once 'ServiceNotUsedException.class.php';
 require_once 'ProjectNotFoundException.class.php';
 require_once 'Search.class.php';
+require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/Hierarchy/HierarchyFactory.class.php';
 
 class AgileDashboard_SearchController {
     /**
@@ -50,6 +51,11 @@ class AgileDashboard_SearchController {
     private $formElementFactory;
     
     /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
+    
+    /**
      * @var AgileDashboard_Search
      */
     private $search;
@@ -59,7 +65,8 @@ class AgileDashboard_SearchController {
                                 Tracker_FormElementFactory $formElementFactory, 
                                 BaseLanguage               $language, 
                                 Layout                     $layout,
-                                AgileDashboard_Search      $search) {
+                                AgileDashboard_Search      $search,
+                                Tracker_HierarchyFactory   $hierarchy_factory) {
         
         $this->request            = $request;
         $this->projectManager     = $projectManager;
@@ -67,16 +74,18 @@ class AgileDashboard_SearchController {
         $this->layout             = $layout;
         $this->formElementFactory = $formElementFactory;
         $this->search             = $search;
+        $this->hierarchy_factory  = $hierarchy_factory;
     }
 
     public function search() {
         try {
-            $project   = $this->getProject();
-            $service   = $this->getService($project);
-            $report    = $this->getReport();
-            $criteria  = $this->getCriteria($project, $report);
-            $trackers  = $this->getTrackers($project);
-            $artifacts = $this->getArtifacts($trackers);
+            $project            = $this->getProject();
+            $service            = $this->getService($project);
+            $report             = $this->getReport();
+            $criteria           = $this->getCriteria($project, $report);
+            $trackers           = $this->getTrackers($project);
+            $trackers_hierarchy = $this->getTrackersHierarchy($trackers);
+            $artifacts          = $this->getArtifacts($trackers, $trackers_hierarchy);
             
             $view = $this->getView($service, $this->language, $report, $criteria, $artifacts, $trackers);
             $view->render();
@@ -91,8 +100,16 @@ class AgileDashboard_SearchController {
         }
     }
     
-    private function getArtifacts(array $trackers) {
-        return $this->search->getMatchingArtifacts($trackers, $this->request->get('criteria'));
+    protected function getTrackersHierarchy($trackers) {
+        $tracker_ids = array();
+        foreach ($trackers as $tracker) {
+            $tracker_ids[] = $tracker->getId();
+        }
+        return $this->hierarchy_factory->getHierarchy($tracker_ids);
+    }
+    
+    protected function getArtifacts(array $trackers, $hierarchy) {
+        return $this->search->getMatchingArtifacts($trackers, $hierarchy, $this->request->get('criteria'));
     }
     
     public function getTrackers($project) {
@@ -108,7 +125,7 @@ class AgileDashboard_SearchController {
         return $field->getTracker();
     }
     
-    private function getReport() {
+    protected function getReport() {
         $name = "Shared field search";
         $is_query_displayed = true;
         $report_id = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $updated_by = $updated_at = 0;
@@ -142,7 +159,7 @@ class AgileDashboard_SearchController {
         return $criteria;
     }
     
-    private function getSelectedValues(Tracker_FormElement_Field $field) {
+    protected function getSelectedValues(Tracker_FormElement_Field $field) {
         $request_criteria = $this->request->get('criteria');
         $currentValue     = $request_criteria[$field->getId()]['values'];
         if (!$currentValue) {
@@ -154,7 +171,7 @@ class AgileDashboard_SearchController {
     /**
      * @return Project
      */
-    private function getProject() {
+    protected function getProject() {
         $projectId = $this->request->get('group_id');
         $project   = $this->projectManager->getProject($projectId);
         if ($project->isError()) {
@@ -168,7 +185,7 @@ class AgileDashboard_SearchController {
     /**
      * @return Service
      */
-    private function getService(Project $project) {
+    protected function getService(Project $project) {
         $service = $project->getService('plugin_agiledashboard');
         if ($service) {
             return $service;
