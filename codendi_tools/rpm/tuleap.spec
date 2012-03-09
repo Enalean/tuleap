@@ -695,7 +695,6 @@ fi
 %{APP_DIR}/src/www/account
 %{APP_DIR}/src/www/admin
 %{APP_DIR}/src/www/api
-%{APP_DIR}/src/www/bugs
 %{APP_DIR}/src/www/codendi.css
 %{APP_DIR}/src/www/cvs
 %{APP_DIR}/src/www/docman
@@ -711,9 +710,7 @@ fi
 %{APP_DIR}/src/www/my
 %{APP_DIR}/src/www/new
 %{APP_DIR}/src/www/news
-%{APP_DIR}/src/www/patch
 %{APP_DIR}/src/www/people
-%{APP_DIR}/src/www/pm
 %{APP_DIR}/src/www/project
 %{APP_DIR}/src/www/projects
 %{APP_DIR}/src/www/reference
@@ -726,7 +723,6 @@ fi
 %{APP_DIR}/src/www/soap
 %{APP_DIR}/src/www/softwaremap
 %{APP_DIR}/src/www/stats
-%{APP_DIR}/src/www/support
 %{APP_DIR}/src/www/survey
 %{APP_DIR}/src/www/svn
 # Only "common" theme is embedded into the package

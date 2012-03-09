@@ -53,13 +53,11 @@ codendi_tools/rpm/build_release.sh
 # Doc: CLI
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
 %{__cp} -ar documentation/cli/html $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
-%{__cp} -ar documentation/cli/pdf $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
 %{__cp} -ar documentation/cli/icons $RPM_BUILD_ROOT/%{APP_DIR}/documentation/cli
 
 # Doc: Programmer guide
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
 %{__cp} -ar documentation/programmer_guide/html $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
-%{__cp} -ar documentation/programmer_guide/pdf $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
 %{__cp} -ar documentation/programmer_guide/icons $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
 %{__cp} -ar documentation/programmer_guide/screenshots $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
 %{__cp} -ar documentation/programmer_guide/slides $RPM_BUILD_ROOT/%{APP_DIR}/documentation/programmer_guide
@@ -67,7 +65,6 @@ codendi_tools/rpm/build_release.sh
 # Doc: User Guide
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
 %{__cp} -ar documentation/user_guide/html $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
-%{__cp} -ar documentation/user_guide/pdf $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
 %{__cp} -ar documentation/user_guide/icons $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
 %{__cp} -ar documentation/user_guide/screenshots $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide
 %{__cp} -ar documentation/user_guide/slides $RPM_BUILD_ROOT/%{APP_DIR}/documentation/user_guide

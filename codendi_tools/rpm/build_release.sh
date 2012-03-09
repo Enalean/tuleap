@@ -33,20 +33,7 @@ export CODENDI_LOCAL_INC=$rootdir/local.inc
 echo "Generate User Guide"
 user_guide="$rootdir/documentation/user_guide"
 
-substitute $user_guide/xml/ParametersDefault.dtd "/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd" "$rootdir/user_guide_ParametersLocal.dtd"
-substitute $user_guide/xml/en_US/User_Guide.xml "/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd" "$rootdir/user_guide_ParametersLocal.dtd"
-substitute $user_guide/xml/fr_FR/User_Guide.xml "/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd" "$rootdir/user_guide_ParametersLocal.dtd"
-
-substitute $user_guide/xml/en_US/User_Guide.xml "/usr/local" "$docbook_tools"
-substitute $user_guide/xml/fr_FR/User_Guide.xml "/usr/local" "$docbook_tools"
-substitute $user_guide/xsl/fo/docbook_fr_FR.xsl "/usr/local" "$docbook_tools"
-substitute $user_guide/xsl/fo/docbook_en_US.xsl "/usr/local" "$docbook_tools"
-substitute $user_guide/xsl/htmlhelp/htmlhelp_en_US.xsl "/usr/local" "$docbook_tools"
-substitute $user_guide/xsl/htmlhelp/htmlhelp_fr_FR.xsl "/usr/local" "$docbook_tools"
-substitute $user_guide/xsl/htmlhelp/htmlhelp_onechunk_en_US.xsl "/usr/local" "$docbook_tools"
-substitute $user_guide/xsl/htmlhelp/htmlhelp_onechunk_fr_FR.xsl "/usr/local" "$docbook_tools"
-
-$rootdir/src/utils/generate_doc.sh
+make -C $user_guide
 
 #
 # Programmer guide
@@ -54,13 +41,7 @@ $rootdir/src/utils/generate_doc.sh
 echo "Generate Programmer Guide"
 programmer_guide="$rootdir/documentation/programmer_guide"
 
-substitute $programmer_guide/xml/en_US/Codendi_Programmer_Guide.xml "/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd" "$rootdir/user_guide_ParametersLocal.dtd"
-
-substitute $programmer_guide/xml/en_US/Codendi_Programmer_Guide.xml "/usr/local" "$docbook_tools"
-substitute $programmer_guide/xsl/fo/docbook.xsl "/usr/local" "$docbook_tools"
-substitute $programmer_guide/xsl/htmlhelp/htmlhelp.xsl "/usr/local" "$docbook_tools"
-
-$rootdir/src/utils/generate_programmer_doc.sh
+make -C $programmer_guide
 
 #
 # CLI
