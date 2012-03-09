@@ -537,6 +537,12 @@ CREATE TABLE IF NOT EXISTS tracker_rule(
   KEY tracker_id (tracker_id)
 );
 
+DROP TABLE IF EXISTS tracker_hierarchy;
+CREATE TABLE IF NOT EXISTS tracker_hierarchy (
+  parent_id int(11) NOT NULL,
+  child_id int(11) NOT NULL PRIMARY KEY
+);
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank) 
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);
