@@ -1096,6 +1096,7 @@ plugin_tracker_admin	export_desc	Export the tracker structure
 
 plugin_tracker_admin	hierarchy	Hierarchy
 plugin_tracker_admin	hierarchy_desc	Manage tracker hierarchy
+plugin_tracker_admin	manage_hierarchy_title	Manage hierarchy of tracker  
 
 plugin_tracker_admin	manage_dependencies	Manage field dependencies
 plugin_tracker_admin	manage_dependencies_desc	Define how values in one field depend upon other field values.

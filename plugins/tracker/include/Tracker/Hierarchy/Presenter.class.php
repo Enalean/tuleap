@@ -39,12 +39,20 @@ class Tracker_Hierarchy_Presenter {
      */
     public $hierarchy;
     
+    /**
+     * Text befor title of each tracker in hierarchy
+     * 
+     * @var string
+     */
+    public $manage_hierarchy_title;
+    
     public function __construct(Tracker_Hierarchy_HierarchicalTracker $tracker, array $possible_children, TreeNode $hierarchy ) {
         $this->tracker           = $tracker;
         $this->possible_children = array_values($possible_children);
         $this->hierarchy         = $hierarchy;
         $visitor                 = new TreeNode_InjectPaddingInTreeNodeVisitor();
         $this->hierarchy->accept($visitor);
+        $this->manage_hierarchy_title = $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_hierarchy_title');
     }
     
     public function getTrackerUrl() {

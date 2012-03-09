@@ -1,16 +1,22 @@
-<h2>Edit children</h2>
-<form method="post" action="{{getTrackerUrl}}/?tracker={{getTrackerId}}&func=admin-hierarchy-update">
-    <select name="children[]" multiple="multiple">
-        {{#getPossibleChildren}}
-            <option value="{{id}}" {{selected}}>{{name}}</option>
-        {{/getPossibleChildren}}
-    </select>
-    <input type="submit" value="{{getSubmitLabel}}">
-</form>
-
-<h2>Current Full Hierarchy</h2>
-{{#hierarchy}}
-<ul class="tracker-hierarchy">
-    {{> tracker-node}}
-</ul>
-{{/hierarchy}}
+<div class="overflow-hidden">
+    <div class="tracker-admin-hierarchy-float">
+        <h3>Edit children</h3>
+        <form method="post"
+            action="{{getTrackerUrl}}/?tracker={{getTrackerId}}&func=admin-hierarchy-update">
+            <select class="tracker-admin-hierarchy-edit-children" name="children[]" multiple="multiple">
+                {{#getPossibleChildren}}
+                <option value="{{id}}"{{selected}}>{{name}}</option>
+                {{/getPossibleChildren}}
+            </select>
+            <p>
+                <input type="submit" value="{{getSubmitLabel}}">
+            </p>
+        </form>
+    </div>
+    <div id="tracker-admin-current-full-hierarchy" class="overflow-hidden">
+        <h3>Current Full Hierarchy</h3>
+        {{#hierarchy}}
+            <ul class="tracker-hierarchy">{{> tracker-node}}</ul>
+        {{/hierarchy}}
+    </div>
+</div>
