@@ -25,7 +25,7 @@ require_once dirname(__FILE__).'/../../../include/Tracker/Tracker.class.php';
 Mock::generate('Tracker_Hierarchy_HierarchicalTracker');
 Mock::generate('Tracker');
 
-class Tracker_Hierarchy_PresenterTest extends UnitTestCase {
+class Tracker_Hierarchy_PresenterTest extends TuleapTestCase {
     
     public function testGetPossibleChildrenReturnsAttributesForSelect() {
         $possible_children = array(

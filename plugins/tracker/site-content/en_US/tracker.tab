@@ -1170,6 +1170,9 @@ plugin_tracker_admin_import	separator_not_found	CSV separator not found ($1). Ei
 plugin_tracker_admin_hierarchy	edit_children_title	Edit children
 plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Current Full Hierarchy
 
+plugin_tracker_hierarchy    error_is_cyclic    Tracker hierarchy is Cyclic
+plugin_tracker_hierarchy    tracker_not_in_hierarchy    Tracker not in hierarchy
+
 plugin_tracker_renderer_table	items_range_of	of
 
 plugin_tracker_report	edit_report	Edit the report

@@ -1169,6 +1169,9 @@ plugin_tracker_admin_import	separator_not_found	Séparateur CSV non trouvé ($1)
 plugin_tracker_admin_hierarchy	edit_children_title	Modifier les enfants
 plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Hiérarchie actuellement définie
 
+plugin_tracker_hierarchy    error_is_cyclic    La hiérarchie est cyclique
+plugin_tracker_hierarchy    tracker_not_in_hierarchy    Le tracker n'appartient pas à la hiérarchie
+
 plugin_tracker_renderer_table	items_range_of	sur
 
 plugin_tracker_report	edit_report	Editer le rapport

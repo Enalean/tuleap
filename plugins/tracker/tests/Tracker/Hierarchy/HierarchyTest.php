@@ -19,7 +19,7 @@
  */
 require_once dirname(__FILE__) .'/../../../include/Tracker/Hierarchy/Hierarchy.class.php';
 
-class Tracker_HierarchyTest extends UnitTestCase {
+class Tracker_HierarchyTest extends TuleapTestCase {
     
     public function testWithEmptyHierarchGetLevelyShouldThrowExceptionForAnyTracker() {
         $hierarchy = new Tracker_Hierarchy();

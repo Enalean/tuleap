@@ -34,7 +34,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
     
     function setUp() {
         parent::setUp();
-        
+        $GLOBALS['Language']->setReturnValue('getText', 'some l10n stuff');
+
         $this->tracker_id           = 3;
         $this->tracker              = aTracker()->withId($this->tracker_id)->withName('Stories')->withProjectId(101)->build();
         $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($this->tracker, array());
