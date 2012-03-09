@@ -74,7 +74,14 @@ class AgileDashboard_SearchView {
         TreeNode_GetStateVisitor::STATE_LAST  => 'tree-last',
     );
     
-    public function __construct(Service $service, BaseLanguage $language, Tracker_Report $report, array $criteria, $artifacts, Tracker_ArtifactFactory $artifact_factory, Tracker_SharedFormElementFactory $shared_factory, $trackers) {
+    public function __construct(Service                          $service,
+                                BaseLanguage                     $language, 
+                                Tracker_Report                   $report, 
+                                array                            $criteria, 
+                                                                 $artifacts, 
+                                Tracker_ArtifactFactory          $artifact_factory, 
+                                Tracker_SharedFormElementFactory $shared_factory, 
+                                                                 $trackers) {
         $this->language          = $language;
         $this->service           = $service;
         $this->report            = $report;
