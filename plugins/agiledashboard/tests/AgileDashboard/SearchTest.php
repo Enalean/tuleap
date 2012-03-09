@@ -27,9 +27,10 @@ Mock::generate('Project');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_Hierarchy');
 
-class AgileDashboard_SearchTest extends UnitTestCase {
+class AgileDashboard_SearchTest extends TuleapTestCase {
     
     function setUp() {
+        parent::setUp();
         $this->project            = new MockProject();
         $this->sharedFieldFactory = new MockAgileDashboard_SharedFieldFactory();
         $this->searchDao          = new MockAgileDashboard_SearchDao();
