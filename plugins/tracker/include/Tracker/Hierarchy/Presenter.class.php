@@ -87,7 +87,9 @@ class Tracker_Hierarchy_Presenter {
     }
     
     public function __trans($text) {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_hierarchy', $text);
+        $args = explode('|', $text);
+        $secondary_key = array_shift($args);
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_hierarchy', $secondary_key, $args);
     }
     
 }
