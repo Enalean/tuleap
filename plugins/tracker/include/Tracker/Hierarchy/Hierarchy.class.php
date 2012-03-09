@@ -24,8 +24,6 @@ require_once 'CyclicHierarchyException.class.php';
 class Tracker_Hierarchy {
     
     private $parents = array();
-
-    private $levelHierarchyTmp = array();
     
     /**
      * @param int $parent The id of the parent in the relatonship
@@ -45,31 +43,31 @@ class Tracker_Hierarchy {
      * @return int the level of the tracker accordingly to the hierarchy
      */
     public function getLevel($tracker_id) {
-        $this->levelHierarchyTmp = array();
-        return $this->getLevelRecursive($tracker_id);
+        $callstack = array();
+        return $this->getLevelRecursive($tracker_id, $callstack);
     }
     
-    private function getLevelRecursive($tracker_id) {
+    private function getLevelRecursive($tracker_id, array &$callstack) {
         if (array_key_exists($tracker_id, $this->parents)) {
-            return $this->computeLevel($this->parents[$tracker_id]);
+            return $this->computeLevel($this->parents[$tracker_id], $callstack);
         } else {
             throw new Tracker_Hierarchy_NotInHierarchyException();
         }
     }
     
-    private function computeLevel($tracker_id) {
+    private function computeLevel($tracker_id, array &$callstack) {
         if (is_null($tracker_id)) {
             return 0;
         }
-        $this->assertHierarchyIsNotCyclic($tracker_id);
-        return $this->getLevelRecursive($tracker_id) + 1;
+        $this->assertHierarchyIsNotCyclic($tracker_id, $callstack);
+        return $this->getLevelRecursive($tracker_id, $callstack) + 1;
     }
     
-    private function assertHierarchyIsNotCyclic($tracker_id) {
-        if (in_array($tracker_id, $this->levelHierarchyTmp)) {
+    private function assertHierarchyIsNotCyclic($tracker_id, array &$callstack) {
+        if (in_array($tracker_id, $callstack)) {
             throw new Tracker_Hierarchy_CyclicHierarchyException();
         }
-        $this->levelHierarchyTmp[] = $tracker_id;
+        $callstack[] = $tracker_id;
     }
 }
 ?>
