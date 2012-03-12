@@ -109,5 +109,12 @@ abstract class TuleapTestCase extends UnitTestCase {
         return ' '.strtolower($match[0]);
     }
     
+    public function expectRedirectTo($url) {
+        $GLOBALS['Response']->expectOnce('redirect', array($url));
+    }
+    
+    public function expectFeedback($level, $message) {
+        $GLOBALS['Response']->expectOnce('addFeedback', array($level, $message));
+    }
 }
 ?>

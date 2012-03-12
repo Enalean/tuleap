@@ -65,7 +65,7 @@ class AgileDashboard_Search {
             foreach ($trackerIds as $tracker_id) {
                 if (isset($artifactsByTracker[$tracker_id])) {
                     foreach ($artifactsByTracker[$tracker_id] as $artifact) {
-                        $this->appendArtifactAndSonsToParent($artifact, $artifactsInTree, $root, $artifactsById);
+                        $this->appendArtifactAndSonsToParent($artifact, $artifactsInTree, $root, $artifactsById, $hierarchy);
                     }
                 }
             }
@@ -73,7 +73,7 @@ class AgileDashboard_Search {
         return $root;
     }
     
-    private function appendArtifactAndSonsToParent(array $artifact, array &$artifactsInTree, TreeNode $parent, array $artifacts) {
+    private function appendArtifactAndSonsToParent(array $artifact, array &$artifactsInTree, TreeNode $parent, array $artifacts, Tracker_Hierarchy $hierarchy) {
         $id = $artifact['id'];
         if (!isset($artifactsInTree[$id])) {
             $node = new TreeNode();
@@ -83,11 +83,15 @@ class AgileDashboard_Search {
             $artifactsInTree[$id] = true;
             $artifactlinks = explode(',', $artifact['artifactlinks']);
             foreach ($artifactlinks as $link_id) {
-                if (isset($artifacts[$link_id])) {
-                    $this->appendArtifactAndSonsToParent($artifacts[$link_id], $artifactsInTree, $node, $artifacts);
+                if ($this->artifactCanBeAppended($link_id, $artifacts, $artifact, $hierarchy)) {
+                    $this->appendArtifactAndSonsToParent($artifacts[$link_id], $artifactsInTree, $node, $artifacts, $hierarchy);
                 }
             }
         }
+    }
+    
+    private function artifactCanBeAppended($artifact_id, array $artifacts, array $parent_artifact, Tracker_Hierarchy $hierarchy) {
+        return isset($artifacts[$artifact_id]) && $hierarchy->isChild($parent_artifact['tracker_id'], $artifacts[$artifact_id]['tracker_id']);
     }
     
     private function indexArtifactsByIdAndTracker($artifacts) {

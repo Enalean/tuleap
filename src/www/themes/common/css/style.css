@@ -2081,10 +2081,14 @@ h3.toggler-hide-noajax {
 
 .tree-blank, .tree-node, .tree-pipe, .tree-last {
     width: 16px;
-    height: 16px;
-    float: left;
+    height: 100%;
+    display: inline-block;
     background-image: url('../images/TreeNodeSprites.png');
-    background-repeat: no-repeat;
+    background-repeat: repeat-y;
+    
+    /*Dirty IE Hack*/
+      zoom: 1;
+      *display: inline;
 }
 
 .tree-last {

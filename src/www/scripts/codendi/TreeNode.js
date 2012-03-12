@@ -59,29 +59,30 @@ codendi.Tree.Node  = Class.create({
     },
     getSiblings: function () {
         if (!this.siblings[this.id]) {
-            var a_sibling_has_been_found = false;
-            function divAtSameLevelTellsThatNodeIsAChildOrSubchild(div) {
-                return ! (div.hasClassName('tree-last') || div.hasClassName('tree-node'));
-            }
+            this.a_sibling_has_been_found = false;
             this.siblings = this.node
                 .up('tr')
                 .nextSiblings()
-                .findAll(function (tr) {
-                    var is_a_child_or_subchild = false;
-                    if (!a_sibling_has_been_found) {
-                        a_sibling_has_been_found = true;
-                        var div_at_the_same_level = tr.down('td').down('div', this.level);
-                        if (div_at_the_same_level) {
-                            is_a_child_or_subchild = divAtSameLevelTellsThatNodeIsAChildOrSubchild(div_at_the_same_level);
-                            if (is_a_child_or_subchild) {
-                                a_sibling_has_been_found = false;
-                            }
-                        }
-                    }
-                    return is_a_child_or_subchild;
-                }.bind(this));
+                .findAll(this.isDescendant.bind(this));
         }
         return this.siblings;
+    },
+    isDescendant: function (tr) {
+        var is_a_child_or_subchild = false;
+        if (!this.a_sibling_has_been_found) {
+            this.a_sibling_has_been_found = true;
+            var div_at_the_same_level = tr.down('td').down('div', this.level);
+            if (div_at_the_same_level) {
+                is_a_child_or_subchild = this.divAtSameLevelTellsThatNodeIsAChildOrSubchild(div_at_the_same_level);
+                if (is_a_child_or_subchild) {
+                    this.a_sibling_has_been_found = false;
+                }
+            }
+        }
+        return is_a_child_or_subchild;
+    },
+    divAtSameLevelTellsThatNodeIsAChildOrSubchild: function(div) {
+        return ! (div.hasClassName('tree-last') || div.hasClassName('tree-node'));
     },
     toggleSibling: function (tr) {
         var collapsable = tr.down('td').down('.tree-collapsable');

@@ -34,17 +34,33 @@ class Tracker_HierarchyFactory {
         $search_tracker_ids    = $tracker_ids;
         $processed_tracker_ids = array();
         while (!empty($search_tracker_ids)) {
-            $hierarchy_dar         = $this->hierarchy_dao->searchTrackerHierarchy($search_tracker_ids);
-            $processed_tracker_ids = array_merge($processed_tracker_ids, $search_tracker_ids);
-            $search_tracker_ids    = array();
-            foreach ($hierarchy_dar as $row) {
-                $hierarchy->addRelationship($row['parent_id'], $row['child_id']);
-                $search_tracker_ids[] = $row['parent_id'];
-                $search_tracker_ids[] = $row['child_id'];
-            }
-            $search_tracker_ids = array_values(array_diff($search_tracker_ids, $processed_tracker_ids));
+            $this->getHierarchyFromTrackers($hierarchy, $search_tracker_ids, $processed_tracker_ids);
         }
         return $hierarchy;
+    }
+    
+    private function getHierarchyFromTrackers(Tracker_Hierarchy $hierarchy, &$search_tracker_ids, &$processed_tracker_ids) {
+        $processed_tracker_ids   = array_merge($processed_tracker_ids, $search_tracker_ids);
+        $added_relationships_ids = $this->addRelationships($hierarchy, $search_tracker_ids);
+        $search_tracker_ids      = array_values(array_diff($added_relationships_ids, $processed_tracker_ids));
+    }
+    
+    private function addRelationships(Tracker_Hierarchy $hierarchy, $search_tracker_ids) {
+        $hierarchy_dar     = $this->hierarchy_dao->searchTrackerHierarchy($search_tracker_ids);
+        
+        $relationships_ids = array();
+        foreach ($hierarchy_dar as $row) {
+            $this->addRelationshipAndStack($hierarchy, $row['parent_id'], $row['child_id'], $relationships_ids);
+        }
+        
+        return $relationships_ids;
+    }
+    
+    private function addRelationshipAndStack($hierarchy, $parent_id, $child_id, &$stack) {
+        $hierarchy->addRelationship($parent_id, $child_id);
+        
+        $stack[] = $parent_id;
+        $stack[] = $child_id;
     }
 }
 

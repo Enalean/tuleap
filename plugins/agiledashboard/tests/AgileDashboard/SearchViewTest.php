@@ -140,7 +140,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $output = $this->renderAndGetContent($view);
         
         $this->assertPattern('%div class="tree-last tree-collapsable" id="tree-node-6"%', $output);
-        $this->assertPattern('%div class="tree-blank" ></div><div class="tree-last"%', $output);
+        $this->assertPattern('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $output);
     }
     
     private function GivenASearchView($service, $criteria, $artifacts, $root) {

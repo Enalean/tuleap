@@ -34,7 +34,6 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
     
     function setUp() {
         parent::setUp();
-        $GLOBALS['Language']->setReturnValue('getText', 'some l10n stuff');
 
         $this->tracker_id           = 3;
         $this->tracker              = aTracker()->withId($this->tracker_id)->withName('Stories')->withProjectId(101)->build();
@@ -52,15 +51,12 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         
         $this->factory->setReturnValue('getPossibleChildren', $possible_children, array($this->hierarchical_tracker));
         $this->factory->setReturnValue('getHierarchy', $this->getHierarchyAsTreeNode(array()));
-
-        ob_start();
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
-        $controller->edit();
-        $content = ob_get_clean();
+        
+        $content = $this->WhenICaptureTheOutputOfEditAction();
         
         $this->assertContainsAll(array('value="1".*Bugs', 'value="2".*Tasks'), $content);
     }
-   
+    
     public function testEditDisplaysTheWholeHierarchy() {
         $hierarchy = array(
             array('name' => 'Sprints', 'id' => '', 'current_class' => '', 'children' => array(
@@ -74,13 +70,10 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->factory->expectOnce('getHierarchy', array($this->tracker));
         $this->factory->setReturnValue('getHierarchy', $this->getHierarchyAsTreeNode($hierarchy));
         
-        ob_start();
-        $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
-        $controller->edit();
-        $content = ob_get_clean();
+        $content = $this->WhenICaptureTheOutputOfEditAction();
         
         $this->assertContainsAll(array('Sprint', 'Stories', 'Tasks', 'Bugs'), $content);
-        $this->assertPattern('%div class="tree-blank" ></div><div class="tree-last"%', $content);
+        $this->assertPattern('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $content);
     }
     
     private function getHierarchyAsTreeNode($hierarchy) {
@@ -110,13 +103,18 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->factory->expectOnce('getHierarchy', array($this->tracker));
         $this->factory->setReturnValue('getHierarchy', $this->getHierarchyAsTreeNode($hierarchy));
         
+        $content = $this->WhenICaptureTheOutputOfEditAction();
+        
+        $this->assertPattern("%/plugins/tracker/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
+        $this->assertPattern("%/plugins/tracker/\?tracker=$stories_id&func=admin-hierarchy%", $content);
+    }
+    
+    private function WhenICaptureTheOutputOfEditAction() {
         ob_start();
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->edit();
         $content = ob_get_clean();
-
-        $this->assertPattern("%/plugins/tracker/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
-        $this->assertPattern("%/plugins/tracker/\?tracker=$stories_id&func=admin-hierarchy%", $content);
+        return $content;
     }
     
     public function testUpdateHappyPathShouldCallDaoToSaveHierarchy() {
@@ -125,7 +123,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->request->set('children', $children_ids);
         $this->dao->expectOnce('updateChildren', array($this->tracker_id, $children_ids));
         
-        $GLOBALS['Response']->expectOnce('redirect', array($this->redirect_url));
+        $this->expectRedirectTo($this->redirect_url);
         
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->update();
@@ -135,7 +133,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         
         $this->dao->expectOnce('deleteAllChildren', array($this->tracker_id));
         
-        $GLOBALS['Response']->expectOnce('redirect', array($this->redirect_url));
+        $this->expectRedirectTo($this->redirect_url);
         
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->update();
@@ -145,13 +143,12 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->request->set('children', array('DROP DATABASE http://xkcd.com/327/'));
         $this->dao->expectNever('updateChildren');
         
-        $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
-        $GLOBALS['Response']->expectOnce('redirect', array($this->redirect_url));
+        $this->expectFeedback('error', '*');
+        $this->expectRedirectTo($this->redirect_url);
         
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->update();
     }
-    /**/
     
     private function assertContainsAll($expected_strings, $actual_text) {
         foreach($expected_strings as $string) {

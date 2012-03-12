@@ -1,3 +1,6 @@
+Version 5.3.1 - Tuleap 4.0.28
+  * Fix bug on hierarchy definition
+
 Version 5.3 - Tuleap 4.0.28
   * Allow to define a hierarchy of trackers:
     Epics

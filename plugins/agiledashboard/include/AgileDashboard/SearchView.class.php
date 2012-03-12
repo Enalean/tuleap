@@ -48,9 +48,9 @@ class AgileDashboard_SearchView {
     private $criteria;
     
     /**
-     * @var Array of artifacts rows
+     * @var TreeNode of artifacts rows
      */
-    private $artifacts;
+    private $tree_of_artifacts;
     
     /**
      * @var Tracker_ArtifactFactory
@@ -78,7 +78,7 @@ class AgileDashboard_SearchView {
                                 BaseLanguage                     $language, 
                                 Tracker_Report                   $report, 
                                 array                            $criteria, 
-                                                                 $artifacts, 
+                                TreeNode                         $tree_of_artifacts, 
                                 Tracker_ArtifactFactory          $artifact_factory, 
                                 Tracker_SharedFormElementFactory $shared_factory, 
                                                                  $trackers) {
@@ -86,12 +86,12 @@ class AgileDashboard_SearchView {
         $this->service           = $service;
         $this->report            = $report;
         $this->criteria          = $criteria;
-        $this->artifacts         = $artifacts;
+        $this->tree_of_artifacts = $tree_of_artifacts;
         $this->artifact_factory  = $artifact_factory;
         $this->shared_factory    = $shared_factory;
         $this->trackers          = $trackers;
         $this->treeVisistor      = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
-        $this->artifacts->accept($this->treeVisistor);
+        $this->tree_of_artifacts->accept($this->treeVisistor);
     }
     
     public function render() {
@@ -135,7 +135,7 @@ class AgileDashboard_SearchView {
     private function fetchResults() {
         $html  = '';
         $html .= '<div class="tracker_report_renderer">';
-        if ($this->artifacts->hasChildren()) {
+        if ($this->tree_of_artifacts->hasChildren()) {
             $html .= $this->fetchTable();
         } else {
             $html .= '<em>'. 'No artifact match your query' .'</em>';
@@ -158,8 +158,8 @@ class AgileDashboard_SearchView {
         $row = $node->getData();
         $artifact = $this->artifact_factory->getArtifactById($row['id']);
         if ($artifact) {
-            $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '">';
-            $html .= '<td>';
+            $html .= '<tr class="' . html_get_alt_row_color($this->current_index++) . '" valign="top">';
+            $html .= '<td nowrap>';
             $html .= $row['tree-padding'];
             $html .= $artifact->fetchDirectLinkToArtifact();
             $html .= '</td>';
@@ -179,7 +179,7 @@ class AgileDashboard_SearchView {
         $html  = '';
         $html .= '<tbody>';
         $this->current_index = 0;
-        foreach ($this->artifacts->getChildren() as $child) {
+        foreach ($this->tree_of_artifacts->getChildren() as $child) {
             $html.= $child->accept($this);
         }
         $html .= '</tbody>';

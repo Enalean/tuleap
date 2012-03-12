@@ -43,14 +43,17 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
      * @return Array of Tracker
      */
     public function getPossibleChildren(Tracker_Hierarchy_HierarchicalTracker $tracker) {
-        $project_id        = $tracker->getProject()->getId();
-        $project_trackers  = $this->tracker_factory->getTrackersByGroupId($project_id);
-        $ids_to_remove     = $this->dao->getAncestorIds($tracker->getId());
+        $project_trackers  = $this->getProjectTrackers($tracker->getProject());
+        $ids_to_remove     = $this->dao->searchAncestorIds($tracker->getId());
         $ids_to_remove[]   = $tracker->getId();
         
         $project_trackers = $this->removeIdsFromTrackerList($project_trackers, $ids_to_remove);
         
         return $project_trackers;
+    }
+    
+    private function getProjectTrackers(Project $project) {
+        return $this->tracker_factory->getTrackersByGroupId($project->getID());
     }
     
     private function removeIdsFromTrackerList($tracker_list, $tracker_ids_to_remove) {
@@ -62,9 +65,9 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
      * @return TreeNode
      */
     public function getHierarchy(Tracker $tracker) {
-        $project_trackers = $this->tracker_factory->getTrackersByGroupId($tracker->getGroupId());
-        $hierarchy_dar    = $this->dao->getHierarchy($tracker->getGroupId());
-        $children_map     = $this->getChildrenMapFromDar($hierarchy_dar, $project_trackers);
+        $project_trackers = $this->getProjectTrackers($tracker->getProject());
+        $parent_child_dar = $this->dao->searchParentChildAssociations($tracker->getGroupId());
+        $children_map     = $this->getChildrenMapFromDar($parent_child_dar , $project_trackers);
         
         $root = new TreeNode();
         $root->setId('root');
@@ -88,13 +91,14 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
     
     public function getChildrenMapFromDar($hierarchy_dar, $project_trackers) {
         $hierarchy     = iterator_to_array($hierarchy_dar);
-        $children_map  = array();
+        $children  = array();
         $hierarchy_map = array();
         foreach($hierarchy as $relationship) {
             $parent_id = $relationship['parent_id'];
             $child_id  = $relationship['child_id'];
-            $children[]= $child_id; 
-            if (!isset($hierarchy[$child_id])) {
+            $children[]= $child_id;
+             
+            if (!isset($hierarchy_map[$child_id])) {
                 $hierarchy_map[$child_id] = array();
             }
             if (!isset($hierarchy_map[$parent_id])) {
@@ -107,7 +111,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory {
         $hierarchy_map['root'] = array_values(array_diff(array_keys($hierarchy_map), $children));
         
         $unhierarchized_root_tracker_ids = array_diff(array_keys($project_trackers), array_keys($hierarchy_map));
-        foreach($unhierarchized_root_tracker_ids as $tracker_id)  {
+        foreach($unhierarchized_root_tracker_ids as $tracker_id) {
             $hierarchy_map[$tracker_id] = array();
             $hierarchy_map['root'][]    = $tracker_id;
         }

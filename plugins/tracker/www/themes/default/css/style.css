@@ -940,9 +940,6 @@ ul.plugin_tracker_my_artifacts_list {
 .alert-message.block-message .alert-actions {
     margin-top: 5px;
 }
-.overflow-hidden {
-    overflow:hidden;
-}
 /* }}} */
 .tracker-hierarchy,
 .tracker-hierarchy ul,
@@ -955,16 +952,16 @@ ul.plugin_tracker_my_artifacts_list {
 .tracker-hierarchy ul {
     clear:both;
 }
+.tracker-admin-hierarchy-edit-form {
+    overflow:hidden;
+}
 #tracker-admin-current-full-hierarchy {
-    padding-left:4em;
+    margin-right:4em;
+    float:left;
 }
 .tracker-admin-hierarchy-edit-children {
     min-width:250px;
     min-height: 200px;
-}
-
-.tracker-admin-hierarchy-float {
-    float:left;
 }
 
 .tracker-hierarchy-current,

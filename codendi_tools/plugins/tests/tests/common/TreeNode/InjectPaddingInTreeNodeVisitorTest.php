@@ -33,7 +33,7 @@ class TreeNode_InjectPaddingInTreeNodeVisitorTest extends TuleapTestCase {
         $root->accept($visitor);
 
         $data = $node2->getData();
-        $this->assertPattern('%div class="tree-blank" ></div><div class="tree-last"%', $data['tree-padding']);
+        $this->assertPattern('%div class="tree-blank" >[^<]*</div><div class="tree-last"%', $data['tree-padding']);
     }
 }
 ?>
