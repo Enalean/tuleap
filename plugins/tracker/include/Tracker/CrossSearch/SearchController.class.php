@@ -22,7 +22,7 @@ require_once 'SearchView.class.php';
 require_once 'ServiceNotUsedException.class.php';
 require_once 'ProjectNotFoundException.class.php';
 require_once 'Search.class.php';
-require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/Hierarchy/HierarchyFactory.class.php';
+require_once dirname(__FILE__) .'/../Hierarchy/HierarchyFactory.class.php';
 
 class AgileDashboard_SearchController {
     /**

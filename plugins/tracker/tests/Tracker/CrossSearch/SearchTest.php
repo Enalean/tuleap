@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) . '/../../../tracker/tests/Test_Tracker_Builder.php';
-require_once dirname(__FILE__) . '/../../../tracker/tests/Test_Tracker_FormElement_Builder.php';
-require_once dirname(__FILE__) .'/../../include/AgileDashboard/Search.class.php';
+require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
+require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
+require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Search.class.php';
 Mock::generate('AgileDashboard_SharedFieldFactory');
 Mock::generate('AgileDashboard_SearchDao');
 Mock::generate('Project');

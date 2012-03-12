@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/AgileDashboard/SharedFieldFactory.class.php';
+require_once dirname(__FILE__).'/../../../include/Tracker/CrossSearch/SharedFieldFactory.class.php';
 
 Mock::generate('AgileDashboard_SharedFieldDao');
 
