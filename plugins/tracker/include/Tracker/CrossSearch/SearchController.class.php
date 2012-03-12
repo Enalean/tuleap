@@ -56,7 +56,7 @@ class AgileDashboard_SearchController {
     private $hierarchy_factory;
     
     /**
-     * @var AgileDashboard_Search
+     * @var Tracker_CrossSearch_Search
      */
     private $search;
     
@@ -65,7 +65,7 @@ class AgileDashboard_SearchController {
                                 Tracker_FormElementFactory $formElementFactory, 
                                 BaseLanguage               $language, 
                                 Layout                     $layout,
-                                AgileDashboard_Search      $search,
+                                Tracker_CrossSearch_Search      $search,
                                 Tracker_HierarchyFactory   $hierarchy_factory) {
         
         $this->request            = $request;
@@ -90,7 +90,7 @@ class AgileDashboard_SearchController {
             $view = $this->getView($service, $this->language, $report, $criteria, $artifacts, $trackers);
             $view->render();
         }
-        catch (AgileDashboard_ProjectNotFoundException $e) {
+        catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
             $this->layout->addFeedback('error', $e->getMessage());
             $this->layout->redirect('/');
         }
@@ -176,7 +176,7 @@ class AgileDashboard_SearchController {
         $project   = $this->projectManager->getProject($projectId);
         if ($project->isError()) {
             $errorMessage = $this->language->getText('project', 'does_not_exist');
-            throw new AgileDashboard_ProjectNotFoundException($errorMessage);
+            throw new Tracker_CrossSearch_ProjectNotFoundException($errorMessage);
         } else {
             return $project;
         }

@@ -37,7 +37,7 @@ class AgileDashboard_SearchTest extends TuleapTestCase {
         $this->trackerIds         = array(201, 202);
         $this->trackers           = array(aTracker()->withId(201)->build(), aTracker()->withId(202)->build());
         
-        $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
+        $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao);
     }
     
     function testGetMatchingArtifactsDelegatesToSharedFieldFactoryAndSearchDao() {
@@ -69,7 +69,7 @@ class AgileDashboard_SearchTest extends TuleapTestCase {
                 
         $this->searchDao->expectNever('searchArtifactsFromTrackers');
         
-        $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
+        $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao);
         $artifacts = $this->search->getMatchingArtifacts(array(), $tracker_hierarchy, $criteria);
         
         $this->assertFalse($artifacts->hasChildren());
@@ -88,7 +88,7 @@ class AgileDashboard_SearchTest extends TuleapTestCase {
             aTracker()->withId(113)->build(),
             aTracker()->withId(666)->build(),
         );
-        $this->search = new AgileDashboard_Search($this->sharedFieldFactory, $this->searchDao);
+        $this->search = new Tracker_CrossSearch_Search($this->sharedFieldFactory, $this->searchDao);
         
         
         $artifacts = $this->search->getMatchingArtifacts($trackers, $tracker_hierarchy);

@@ -74,7 +74,7 @@ class AgileDashboardPlugin extends Plugin {
         
         $sharedFieldFactory = new AgileDashboard_SharedFieldFactory();
         $dao                = new AgileDashboard_SearchDao();
-        $search             = new AgileDashboard_Search($sharedFieldFactory, $dao, $formElementFactory);
+        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $formElementFactory);
         
         return new AgileDashboard_SearchController(
             $request,

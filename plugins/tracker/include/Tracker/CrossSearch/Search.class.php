@@ -23,7 +23,7 @@ require_once 'SearchDao.class.php';
 require_once dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php';
 require_once dirname(__FILE__).'/../Hierarchy/Hierarchy.class.php';
 
-class AgileDashboard_Search {
+class Tracker_CrossSearch_Search {
     
     /**
      * @var AgileDashboard_SharedFieldFactory
