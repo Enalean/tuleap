@@ -51,6 +51,16 @@ require_once(dirname(__FILE__).'/TuleapTestSuite.class.php');
 require_once(dirname(__FILE__).'/TuleapTestCase.class.php');
 
 //require_once(dirname(__FILE__).'/tests_utils.php');
+if (PHP_INT_SIZE == 4) {
+    if (extension_loaded('runkit')) {
+        require_once(dirname(__FILE__) .'/../include/simpletest/mock_functions.php');
+        define('MOCKFUNCTION_AVAILABLE', true);
+    } else {
+        define('MOCKFUNCTION_AVAILABLE', false);
+    }
+} else {
+    define('MOCKFUNCTION_AVAILABLE', false);
+}
 
 // Start
 $suite = new TuleapTestSuite($_SERVER['argv'][1]);
