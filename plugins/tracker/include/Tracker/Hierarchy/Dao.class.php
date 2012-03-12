@@ -75,10 +75,10 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function searchHierarchy($group_id) {
+    public function searchParentChildAssociations($group_id) {
         $sql = "SELECT h.*
                 FROM       tracker_hierarchy AS h
-                INNER JOIN tracker           AS t ON (t.id = h.parent_id )
+                INNER JOIN tracker           AS t ON (t.id = h.parent_id)
                 WHERE t.group_id = $group_id";
         
         return $this->retrieve($sql);
