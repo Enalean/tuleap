@@ -34,7 +34,6 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
     
     function setUp() {
         parent::setUp();
-        $GLOBALS['Language']->setReturnValue('getText', 'some l10n stuff');
 
         $this->tracker_id           = 3;
         $this->tracker              = aTracker()->withId($this->tracker_id)->withName('Stories')->withProjectId(101)->build();
@@ -124,7 +123,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->request->set('children', $children_ids);
         $this->dao->expectOnce('updateChildren', array($this->tracker_id, $children_ids));
         
-        $GLOBALS['Response']->expectOnce('redirect', array($this->redirect_url));
+        $this->expectRedirectTo($this->redirect_url);
         
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->update();
@@ -134,7 +133,7 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         
         $this->dao->expectOnce('deleteAllChildren', array($this->tracker_id));
         
-        $GLOBALS['Response']->expectOnce('redirect', array($this->redirect_url));
+        $this->expectRedirectTo($this->redirect_url);
         
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->update();
@@ -144,8 +143,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         $this->request->set('children', array('DROP DATABASE http://xkcd.com/327/'));
         $this->dao->expectNever('updateChildren');
         
-        $GLOBALS['Response']->expectOnce('addFeedback', array('error', '*'));
-        $GLOBALS['Response']->expectOnce('redirect', array($this->redirect_url));
+        $this->expectFeedback('error', '*');
+        $this->expectRedirectTo($this->redirect_url);
         
         $controller = new Tracker_Hierarchy_Controller($this->request, $this->hierarchical_tracker, $this->factory, $this->dao);
         $controller->update();
