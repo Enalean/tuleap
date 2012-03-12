@@ -61,8 +61,8 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
     
     public function testGetPossibleChildren() {
         $dao = new MockTracker_Hierarchy_Dao();
-        $dao->expectOnce('getAncestorIds', array(1));
-        $dao->setReturnValue('getAncestorIds', array(4));
+        $dao->expectOnce('searchAncestorIds', array(1));
+        $dao->setReturnValue('searchAncestorIds', array(4));
         
         $project_id = 100;
         $project    = new MockProject();
@@ -279,7 +279,7 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
 
     private function aMockDaoWith($project_id, $hierarchy_dar) {
         $dao = new MockTracker_Hierarchy_Dao();
-        $dao->setReturnValue('getHierarchy', $hierarchy_dar, array($project_id));
+        $dao->setReturnValue('searchHierarchy', $hierarchy_dar, array($project_id));
         return $dao;
     }
 }

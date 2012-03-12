@@ -37,15 +37,15 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
         $this->update($sql);
     }
     
-    public function getAncestorIds($tracker_id) {
+    public function searchAncestorIds($tracker_id) {
         $ancestor_ids = array();
-        while($tracker_id = $this->getAncestorId($tracker_id)) {
+        while($tracker_id = $this->searchAncestorId($tracker_id)) {
             $ancestor_ids[] = $tracker_id;
         }
         return $ancestor_ids;
     }
     
-    public function getAncestorId($tracker_id) {
+    private function searchAncestorId($tracker_id) {
         $sql = "SELECT parent_id FROM tracker_hierarchy WHERE child_id= " . $tracker_id. " LIMIT 1";
         $dar = $this->retrieve($sql);
         $result = array('parent_id'=>null);
@@ -75,7 +75,7 @@ class Tracker_Hierarchy_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
-    public function getHierarchy($group_id) {
+    public function searchHierarchy($group_id) {
         $sql = "SELECT h.*
                 FROM       tracker_hierarchy AS h
                 INNER JOIN tracker           AS t ON (t.id = h.parent_id )
