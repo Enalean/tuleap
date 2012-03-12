@@ -112,7 +112,9 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
     
     public function testGetDeepHierarchy() {
         $project_id = 110;
-        $tracker = aTracker()->withId(5)->withProjectId($project_id)->build();
+        $project    = new MockProject();
+        $project->setReturnValue('getID', $project_id);
+        $tracker    = aTracker()->withId(5)->withProject($project)->build();
         
         $project_trackers = array(
             '1' => aTracker()->withId(1)->withName('Releases')->build(),
@@ -182,10 +184,13 @@ class HierarchicalTrackerFactoryTest extends TuleapTestCase {
     
     public function itCanMoveATrackerAndSonsToAnothersTrackerNotInTheSameBranchAtTheSameTime() {
         $project_id = 110;
+        $project    = new MockProject();
+        $project->setReturnValue('getID', $project_id);
+        
         $project_trackers = array(
             '117' => aTracker()->withId(117)->withName('Project')->build(),
             '118' => aTracker()->withId(118)->withName('Releases')->build(),
-            '120' => aTracker()->withId(120)->withName('Stories')->withProjectId($project_id)->build(),
+            '120' => aTracker()->withId(120)->withName('Stories')->withProject($project)->build(),
             '121' => aTracker()->withId(121)->withName('Tasks')->build(),
             '122' => aTracker()->withId(122)->withName('Bugs')->build(),
             '119' => aTracker()->withId(119)->withName('Epics')->build()
