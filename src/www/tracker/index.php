@@ -304,7 +304,6 @@ if ( $func == 'gotoid' ) {
                                     $addresses = $agnf->getAllAddresses($ath->getID());
                                     $ah->mailFollowupWithPermissions($addresses);
                                     
-                                    $em = EventManager::instance();
                                     $em->processEvent('postcopy', array('ah' => $ah, 'ath' => $ath));
                                     
                                     $itemname = $ath->getItemName();
@@ -1016,7 +1015,7 @@ if ( $func == 'gotoid' ) {
        
         case 'toggle_section':
             $collapsable_sections = array('results', 'query');
-            EventManager::instance()->processEvent('tracker_collapsable_sections', array('sections' => &$collapsable_sections));
+            $em->processEvent('tracker_collapsable_sections', array('sections' => &$collapsable_sections));
             if (in_array($request->get('section'), $collapsable_sections)) {
                 $current_user = UserManager::instance()->getCurrentUser();
                 $pref_name = 'tracker_'. (int)$atid .'_hide_section_'. $request->get('section');
