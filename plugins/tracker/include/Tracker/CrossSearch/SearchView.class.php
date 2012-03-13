@@ -107,6 +107,7 @@ class Tracker_CrossSearch_SearchView {
         $this->service->displayHeader($title, $breadcrumbs, array());
         
         $html  = '';
+        $html .= $this->fetchTrackerHomeNav();
         $html .= '<div class="agiledashboard">';
         $html .= '<h1>'. $title .'</h1>';
         if ($this->criteria) {
@@ -120,6 +121,13 @@ class Tracker_CrossSearch_SearchView {
         echo $html;
         
         $this->service->displayFooter();
+    }
+    
+    private function fetchTrackerHomeNav() {
+        $presenter = new Tracker_HomeNavPresenter();
+        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
+        
+        return $renderer->render('tracker-home-nav', $presenter);
     }
     
     private function fetchContent() {

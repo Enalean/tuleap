@@ -44,6 +44,16 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $output = $this->renderAndGetContent($view);
     }
     
+    function itRendersTheTrackerHomeNav() {
+        $service  = new MockService();
+        $criteria = $this->GivenCriteria();
+        $view     = $this->GivenASearchView($service, $criteria, array(), new TreeNode());
+        
+        $output = $this->renderAndGetContent($view);
+        
+        $this->assertPattern('/id="tracker-home-nav"/', $output);
+    }
+    
     function testRenderShouldNotDisplayTableWhenNoMatchingArtifacts() {
         $service   = new MockService();
         $criteria  = $this->GivenCriteria();
