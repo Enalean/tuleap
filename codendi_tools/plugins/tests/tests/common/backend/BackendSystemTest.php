@@ -52,7 +52,7 @@ class BackendSystemTest extends UnitTestCase {
     function setUp() {
         $GLOBALS['homedir_prefix']            = dirname(__FILE__) . '/_fixtures/home/users';
         $GLOBALS['grpdir_prefix']             = dirname(__FILE__) . '/_fixtures/home/groups';
-        $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
+        $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_tuleap';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
         $GLOBALS['ftp_frs_dir_prefix']       = dirname(__FILE__) . '/_fixtures/var/lib/tuleap/ftp/codendi';
         $GLOBALS['ftp_anon_dir_prefix']      = dirname(__FILE__) . '/_fixtures/var/lib/tuleap/ftp/pub';

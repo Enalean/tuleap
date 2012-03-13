@@ -752,7 +752,7 @@ build_dir /var/log/tuleap codendiadm codendiadm 755
 build_dir /var/log/tuleap/cvslogs codendiadm codendiadm 775
 build_dir /var/tmp/tuleap codendiadm codendiadm 755
 # config dirs
-build_dir /etc/skel_codendi root root 755
+build_dir /etc/skel_tuleap root root 755
 build_dir /etc/tuleap codendiadm codendiadm 755
 build_dir /etc/tuleap/conf codendiadm codendiadm 700
 build_dir /etc/tuleap/documentation codendiadm codendiadm 755
