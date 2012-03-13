@@ -186,11 +186,11 @@ class Tracker_CrossSearch_SearchController {
      * @return Service
      */
     private function getService(Project $project) {
-        $service = $project->getService('plugin_agiledashboard');
+        $service = $project->getService('plugin_tracker');
         if ($service) {
             return $service;
         } else {
-            $serviceLabel = $this->language->getText('plugin_agiledashboard', 'title');
+            $serviceLabel = $this->language->getText('plugin_tracker', 'title');
             $errorMessage = $this->language->getText('project_service', 'service_not_used', array($serviceLabel));
             
             throw new Tracker_CrossSearch_ServiceNotUsedException($errorMessage);

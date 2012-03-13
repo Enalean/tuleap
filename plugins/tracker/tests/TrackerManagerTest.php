@@ -41,8 +41,8 @@ Mock::generatePartial('TrackerManager',
                           'checkServiceEnabled',
                       )
 );
-//require_once dirname(__FILE__) .'/../include/Tracker/CrossSearch/SearchController.class.php';
-//Mock::generate('Tracker_CrossSearch_SearchController');
+require_once dirname(__FILE__) .'/../include/Tracker/CrossSearch/SearchController.class.php';
+Mock::generate('Tracker_CrossSearch_SearchController');
 require_once('common/include/Codendi_Request.class.php');
 Mock::generate('Codendi_Request');
 require_once('common/user/User.class.php');

@@ -54,7 +54,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $view = new MockTracker_CrossSearch_SearchView();
         $view->expectOnce('render');
                 
-        $this->project->setReturnValue('getService', $this->service, array('plugin_agiledashboard'));
+        $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
         
         
         $fields = array(aTextField()->build(), aStringField()->build());
@@ -69,7 +69,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     }
     
     public function testSearchRedirectsWithErrorMessageIfServiceIsNotUsed() {
-        $this->project->setReturnValue('getService', null, array('plugin_agiledashboard'));
+        $this->project->setReturnValue('getService', null, array('plugin_tracker'));
         $this->project->setReturnValue('getUnixName', 'coin');
 
         $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
@@ -109,7 +109,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
             'criteria' => $criteria
         ));
         
-        $this->project->setReturnValue('getService', $this->service, array('plugin_agiledashboard'));
+        $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
         
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
         
@@ -139,7 +139,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
             'criteria' => $criteria
         ));
         
-        $this->project->setReturnValue('getService', $this->service, array('plugin_agiledashboard'));
+        $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
         
         $this->formElementFactory->setReturnValue('getProjectSharedFields', array());
         
@@ -273,7 +273,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     }
     
     private function GivenAProjectThatUseTheService() {
-        $this->project->setReturnValue('getService', $this->service, array('plugin_agiledashboard'));
+        $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
     }
 }
 ?>
