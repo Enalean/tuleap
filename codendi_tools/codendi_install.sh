@@ -1237,7 +1237,7 @@ $CHKCONFIG httpd on
 $CHKCONFIG mysqld on
 $CHKCONFIG crond on
 
-/etc/init.d/codendi start
+/etc/init.d/tuleap start
 
 $SERVICE httpd restart
 $SERVICE crond restart
