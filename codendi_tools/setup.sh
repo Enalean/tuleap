@@ -7,7 +7,7 @@
 #
 
 # In order to keep a log of the installation, you may run the script with:
-# ./codendi_install.sh 2>&1 | tee /tmp/codendi_install.log
+# ./setup.sh 2>&1 | tee /tmp/tuleap_install.log
 
 TODO_FILE=/root/todo_tuleap.txt
 export INSTALL_DIR="/usr/share/tuleap"

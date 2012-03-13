@@ -22,11 +22,11 @@ This file is licensed under the GNU General Public License version 2. See the fi
 <br>
 <h1><a name="Preamble"></a>Preamble</h1>
 The <a
- href="/documentation/installation_guide/html/Codendi_Installation_Guide.html">Codendi
+ href="/documentation/installation_guide/html/Tuleap_Installation_Guide.html">Codendi
 Installation Guide</a> covers the various steps that one has to go
 through to install and configure the Codendi software. After or while you
 are reading the installation guide we also recommend that you read the <a
- href="/documentation/administration_guide/html/Codendi_Administration_Guide.html">Codendi
+ href="/documentation/administration_guide/html/Tuleap_Administration_Guide.html">Codendi
 Administration Guide</a> which focuses on the various tasks to perform
 to properly administrate a Codendi site on a daily basis. <br>
 <br>
@@ -688,7 +688,7 @@ DocBook processing chain to generate the Codendi User Guide.<br>
       <td valign="top">Stock RedHat<br>
       </td>
       <td valign="top">Codendi needs a number of RedHat packages that may not be installed by default (e.g. php-soap, apr, bind, etc.).
-The /usr/share/tuleap/codendi_install.sh installation script contain the list of required RPMs. During installation, this script will complain if packages are missing.
+The /usr/share/tuleap/setup.sh installation script contain the list of required RPMs. During installation, this script will complain if packages are missing.
       </td>
     </tr>
   </tbody>
@@ -1953,7 +1953,7 @@ When logging on the Codendi web interface, simply enter your LDAP name and passw
 <ul><li><span style="font-family: monospace;">$sys_ldap_server</span> is the full name of the LDAP server(s). You may specify
 multiple directories or mirrors by using a comma separated list of servers. To specify secure LDAP servers, use 'ldaps://servername'. This variable is already defined above for querying LDAP information from the company directory.
 <li><span style="font-family: monospace;">$sys_ldap_bind_dn</span> and <span style="font-family: monospace;">$sys_ldap_bind_passwd</span> may also be necessary depending on your LDAP setup (see above).
-<li><span style="font-family: monospace;">$sys_auth_type</span> defines the authentication scheme to use. Its default value is 'tuleap' for Codendi specific login/passwords. In order to use LDAP authentication, set this variable to 'ldap'.
+<li><span style="font-family: monospace;">$sys_auth_type</span> defines the authentication scheme to use. Its default value is 'codendi' for Codendi specific login/passwords. In order to use LDAP authentication, set this variable to 'ldap'.
 <li><span style="font-family: monospace;">$sys_ldap_auth_dn</span> is the distinguished name (DN) used for checking the user LDAP name and password. 
 <ul><li>If you already know the correct DN to use for your LDAP repository, please use <span style="font-family: monospace;">'%ldap_name%'</span> wherever the user LDAP login should appear in this DN. It will automatically be replaced by the login name entered by the user. In order to test the user credentials, the system will perform an LDAP bind with this DN and the user entered password. 
 <br>Example: <span style="font-family: monospace;">$sys_ldap_auth_dn = 'dc=xerox, dc=com, cn=%ldap_name%'</span>.

@@ -474,7 +474,7 @@ done
 
 # Install script
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{_datadir}/tuleap-install
-%{__install} -m 755 codendi_tools/codendi_install.sh $RPM_BUILD_ROOT/%{_datadir}/tuleap-install/setup.sh
+%{__install} -m 755 codendi_tools/setup.sh $RPM_BUILD_ROOT/%{_datadir}/tuleap-install/setup.sh
 #
 # Install Tuleap executables
 %{__install} -d $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
