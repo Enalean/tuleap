@@ -24,7 +24,7 @@ require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchController.class.php';
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'common/project/ProjectManager.class.php';
-require_once dirname(__FILE__) . '/../../../include/Tracker/Tracker_HomeNavPresenter.class.php';
+require_once dirname(__FILE__) . '/../../../include/Tracker/HomeNavPresenter.class.php';
 
 Mock::generate('ProjectManager');
 Mock::generate('Project');
@@ -54,14 +54,23 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     }
     
     public function testSearchRendersTrackerHomeNav() {
-        $presenter = new MockTracker_HomeNavPresenter();
+        $presenter  = new MockTracker_HomeNavPresenter();
+        $controller = TestHelper::getPartialMock('Tracker_CrossSearch_SearchController', array('getPresenter', 'getArtifacts'));
         
-        $controller = TestHelper::getPartialMock('Tracker_CrossSearch_SearchController', array('getPresenter', 'render'));
+        $this->project->setReturnValue('getService', $this->service);
+        $this->formElementFactory->setReturnValue('getAllProjectSharedFields', array());
+        $this->formElementFactory->setReturnValue('getProjectSharedFields', array());
+        
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['Language'], $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
         $controller->setReturnValue('getPresenter', $presenter);
+        $controller->setReturnValue('getArtifacts', new TreeNode());
         
-        $controller->expectOnce('render', array('tracker-home-nav', $presenter));
+        ob_start();
         $controller->search();
+        $output = ob_get_clean();
+        
+        $this->assertPattern('/List/', $output);
+        $this->assertPattern('/Search/', $output);
     }
     
     public function testSearchRendersViewForServiceWithCriteria() {

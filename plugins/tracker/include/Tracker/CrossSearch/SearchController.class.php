@@ -23,6 +23,7 @@ require_once 'ServiceNotUsedException.class.php';
 require_once 'ProjectNotFoundException.class.php';
 require_once 'Search.class.php';
 require_once dirname(__FILE__) .'/../Hierarchy/HierarchyFactory.class.php';
+require_once dirname(__FILE__) .'/../HomeNavPresenter.class.php';
 
 class Tracker_CrossSearch_SearchController {
     /**
@@ -108,7 +109,7 @@ class Tracker_CrossSearch_SearchController {
     }
     
     public function getPresenter() {
-        
+        return new Tracker_HomeNavPresenter();
     }
     
     protected function getTrackersHierarchy($trackers) {
