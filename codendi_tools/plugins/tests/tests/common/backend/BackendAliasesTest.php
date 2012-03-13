@@ -83,7 +83,7 @@ class BackendAliasesTest extends UnitTestCase {
         $this->assertEqual($MA->update(),True);
         $aliases=file_get_contents($GLOBALS['alias_file']);
         $this->assertFalse($aliases === false);
-        $this->assertPattern("/codendi-contact/",$aliases,"Codendi-wide aliases not set");
+        $this->assertPattern("/tuleap-contact/",$aliases,"Codendi-wide aliases not set");
         $this->assertPattern("/list1-bounces:/",$aliases,"ML aliases not set");
         $this->assertPattern("/user3:/",$aliases,"User aliases not set");
 
