@@ -19,21 +19,16 @@
  */
 
 require_once dirname(__FILE__) .'/../include/agiledashboardPlugin.class.php';
+require_once 'common/include/Codendi_Request.class.php';
 
-require_once dirname(__FILE__) .'/../include/AgileDashboard/SearchController.class.php';
-Mock::generate('AgileDashboard_SearchController');
+// FIXME: WAT ?
+define('TRACKER_EVENT_INCLUDE_CSS_FILE', null);
 
 class AgileDashboardPluginTest extends UnitTestCase {
     
-    public function testProcessShouldRunActionIndexOfAgileDashboardControllerByDefault() {
-        $controller = new MockAgileDashboard_SearchController();
-        $controller->expectOnce('search');
-        
-        $plugin = TestHelper::getPartialMock('AgileDashboardPlugin', array('getController'));
-        $plugin->setReturnValue('getController', $controller);
-        
+    public function testProcessDoesNothing() {
+        $plugin = new AgileDashboardPlugin(null);
         $request = new Codendi_Request(array());
-        
         $plugin->process($request);
     }
 }

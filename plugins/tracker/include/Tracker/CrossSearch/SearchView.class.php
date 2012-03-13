@@ -25,7 +25,7 @@ require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
 
 require_once 'html.php';
 
-class AgileDashboard_SearchView {
+class Tracker_CrossSearch_SearchView {
     
     /**
      * @var Service

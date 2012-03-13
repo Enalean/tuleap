@@ -21,19 +21,19 @@
 require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
 require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Search.class.php';
-Mock::generate('AgileDashboard_SharedFieldFactory');
-Mock::generate('AgileDashboard_SearchDao');
+Mock::generate('Tracker_CrossSearch_SharedFieldFactory');
+Mock::generate('Tracker_CrossSearch_SearchDao');
 Mock::generate('Project');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_Hierarchy');
 
-class AgileDashboard_SearchTest extends TuleapTestCase {
+class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
     
     function setUp() {
         parent::setUp();
         $this->project            = new MockProject();
-        $this->sharedFieldFactory = new MockAgileDashboard_SharedFieldFactory();
-        $this->searchDao          = new MockAgileDashboard_SearchDao();
+        $this->sharedFieldFactory = new MockTracker_CrossSearch_SharedFieldFactory();
+        $this->searchDao          = new MockTracker_CrossSearch_SearchDao();
         $this->trackerIds         = array(201, 202);
         $this->trackers           = array(aTracker()->withId(201)->build(), aTracker()->withId(202)->build());
         
@@ -44,7 +44,7 @@ class AgileDashboard_SearchTest extends TuleapTestCase {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $criteria  = array('220' => array('values' => array('350')));
                 
-        $sharedFields = array(new AgileDashboard_SharedField());
+        $sharedFields = array(new Tracker_CrossSearch_SharedField());
         
         $this->sharedFieldFactory->expectOnce('getSharedFields', array($criteria));
         $this->sharedFieldFactory->setReturnValue('getSharedFields', $sharedFields);
@@ -77,7 +77,7 @@ class AgileDashboard_SearchTest extends TuleapTestCase {
     
     function testGetMatchingArtifactsShouldReturnArtifactFromTrackersOutsidesHierarchy() {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
-        $sharedFields      = array(new AgileDashboard_SharedField());
+        $sharedFields      = array(new Tracker_CrossSearch_SharedField());
         
         $this->sharedFieldFactory->setReturnValue('getSharedFields', $sharedFields);
         

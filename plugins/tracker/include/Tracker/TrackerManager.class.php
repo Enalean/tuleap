@@ -163,6 +163,10 @@ class TrackerManager { /* extends Engine? */
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);
                                 break;
+                            case 'cross-search':
+                                $controller = $this->getCrossSearchController($request);
+                                $controller->search();
+                                break;
                             default:
                                 $this->displayAllTrackers($project, $user);
                                 break;
@@ -171,6 +175,27 @@ class TrackerManager { /* extends Engine? */
                 }
             }
         }
+    }
+    
+    protected function getCrossSearchController(Codendi_Request $request) {
+        require_once 'Tracker/CrossSearch/SearchController.class.php';
+        require_once 'Tracker/CrossSearch/Search.class.php';
+        
+        $formElementFactory = Tracker_FormElementFactory::instance();
+        
+        $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
+        $dao                = new Tracker_CrossSearch_SearchDao();
+        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $formElementFactory);
+        
+        return new Tracker_CrossSearch_SearchController(
+            $request,
+            ProjectManager::instance(),
+            $formElementFactory,
+            $GLOBALS['Language'],
+            $GLOBALS['Response'],
+            $search,
+            new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao())
+        );
     }
     
     /**

@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_SharedField {
+class Tracker_CrossSearch_SharedField {
     
     private $fieldIds = array();
     private $valueIds = array();

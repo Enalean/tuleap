@@ -18,6 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_ServiceNotUsedException extends Exception {
+class Tracker_CrossSearch_ServiceNotUsedException extends Exception {
 }
 ?>
