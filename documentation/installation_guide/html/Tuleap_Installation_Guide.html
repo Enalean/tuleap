@@ -756,9 +756,9 @@ below for more information<br>
 Codendi has its own domain name and the name server for the Codendi
 domain is hosted on the central Codendi server. <br>
 <h2>DNS Zone file</h2>
-Your DNS zone (called codendi.zone) definition file must be placed in <tt>/var/named/chroot/var/named</tt>.
+Your DNS zone (called tuleap.zone) definition file must be placed in <tt>/var/named/chroot/var/named</tt>.
 <br>
-As an example here is how the codendi.zone file looks like on the Codendi
+As an example here is how the tuleap.zone file looks like on the Codendi
 central site of the Xerox Corporation. Adapt the file to your own needs:<br>
 <br>
 <blockquote><tt>$TTL 3600</tt><br>
@@ -900,9 +900,9 @@ logging {
 
 include "/etc/named.rfc1912.zones";
 
-zone "codendi.xerox.com" {
+zone "tuleap.example.com" {
                 type master;
-                file "codendi.zone";
+                file "tuleap.zone";
 };
 </pre>
 

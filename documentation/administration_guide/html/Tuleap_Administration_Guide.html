@@ -1285,7 +1285,7 @@ xww.<span style="font-style: italic;">your.codendi.domain</span>, www.<span
  style="font-style: italic;">your.codendi.domain</span> or simply <span
  style="font-style: italic;">your.codendi.domain</span>. and any aliases
 that you may have defined yourself in the file <span
- style="font-family: monospace;">/var/named/codendi.zone</span>. The
+ style="font-family: monospace;">/var/named/tuleap.zone</span>. The
 Apache Document
 Root is at <span style="font-family: monospace;">/usr/share/tuleap/src/www</span>
 where all the PHP scripts are located.
@@ -1370,7 +1370,7 @@ are
 located in:<br>
 <ul>
   <li><tt>/etc/named.conf</tt>: top configuration file&nbsp;</li>
-  <li><tt>/var/named/chroot/var/named/codendi.zone</tt>: this is
+  <li><tt>/var/named/chroot/var/named/tuleap.zone</tt>: this is
 where&nbsp;the
 codendi.example.com domain is defined.&nbsp;</li>
 </ul>
@@ -1383,7 +1383,7 @@ and must be edited by hand. Before the Codendi server is installed you
 must ask your network administrator to create the Codendi domain <span
  style="font-style: italic;">your.codendi.domain</span> and delegate the
 administration of this domain to the Codendi server. </p>
-<p>The Codendi zone is defined in <tt>/var/named/codendi.zone</tt>
+<p>The Codendi zone is defined in <tt>/var/named/tuleap.zone</tt>
 . It contains the IP address for the master Codendi server as well as a
 list of aliases defined like www, cvs,
 download, shell,
@@ -1417,7 +1417,7 @@ can
 be accessed at the URL http://<span style="font-style: italic;">projectname</span>.<span
  style="font-style: italic;">your.codendi.domain</span>, as well as dedicated cvs.projectname and svn.projectname domains.
 For this to work, Codendi now provides a wildcard DNS record that accepts all subdomains.
-It it defined in codendi.zone with these lines: (Xerox server)<br>
+It it defined in tuleap.zone with these lines: (Xerox server)<br>
 <tt>
 ;<br>
 ; Wildcard DNS entry, to match all possible hosts: projnamme.*, cvs.projname.*, svn.projname.*, etc.<br>

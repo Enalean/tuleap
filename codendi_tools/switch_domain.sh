@@ -26,8 +26,8 @@ fi
 if [ -e '/etc/tuleap/documentation/cli/xml/ParametersLocal.dtd' ] ; then
     substitute '/etc/tuleap/documentation/cli/xml/ParametersLocal.dtd' "$old_domain" "$new_domain" 
 fi
-if [ -e '/var/named/chroot/var/named/codendi.zone' ] ; then
-    substitute '/var/named/chroot/var/named/codendi.zone' "$old_domain" "$new_domain" 
+if [ -e '/var/named/chroot/var/named/tuleap.zone' ] ; then
+    substitute '/var/named/chroot/var/named/tuleap.zone' "$old_domain" "$new_domain" 
 fi
 if [ -e '/etc/mail/local-host-names' ] ; then
     substitute '/etc/mail/local-host-names' "$old_domain" "$new_domain" 

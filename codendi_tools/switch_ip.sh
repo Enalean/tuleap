@@ -16,8 +16,8 @@ read -p "New IP address: " new_ip_address
 
 
 substitute '/etc/httpd/conf/httpd.conf' "$old_ip_address" "$new_ip_address"
-if [ -e '/var/named/chroot/var/named/codendi.zone' ] ; then
-  substitute '/var/named/chroot/var/named/codendi.zone' "$old_ip_address" "$new_ip_address"
+if [ -e '/var/named/chroot/var/named/tuleap.zone' ] ; then
+  substitute '/var/named/chroot/var/named/tuleap.zone' "$old_ip_address" "$new_ip_address"
 fi
 
 
