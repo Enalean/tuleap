@@ -28,13 +28,18 @@ require_once('ArtifactDateReminderFactory.class.php');
 //
 class ArtifactDateReminder {
 
+    private $logger;
+    
     /**
      *  Constructor.
      */
-    function __construct() {
+    function __construct(TrackerDateReminder_Logger $logger) {
+        $this->logger = new TrackerDateReminder_Logger_Prefix($logger, '');
     }
 
     function codexDaily() {
+        $this->logger->info('Start');
+        
         $sql = "SELECT notification_id FROM artifact_date_reminder_processing ORDER BY notification_id";
         $res = db_query($sql);
         if (db_numrows($res) > 0) {
@@ -42,11 +47,12 @@ class ArtifactDateReminder {
                 $notification_id = $rows['notification_id'];
                 // For each event(represented by a row in artifact_date_reminder_processing table),
                 // instantiate a new ArtifactDateReminderFactory, then check its reminder status
-                $adrf = new ArtifactDateReminderFactory($notification_id);
+                $adrf = new ArtifactDateReminderFactory($notification_id, $this->logger);
                 $adrf->checkReminderStatus($_SERVER['REQUEST_TIME']);
             }
         }
-
+        
+        $this->logger->info('End');
     }
 
 }

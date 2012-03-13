@@ -37,4 +37,6 @@ $mysqlcmd < $scriptdir/clean_old_plugins.sql
 
 $mysqlcmd < $srcdir/plugins/ldap/db/install.sql
 
+# Domain name change
 $mysqlcmd < $scriptdir/domain_name.sql 
+(cd /usr/lib/mailman && bin/withlist -a -l -r fix_url)

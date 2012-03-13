@@ -2,6 +2,7 @@ Version 4.0.28 (Not released yet)
    == Plugins ==
    * AgileDashoard v0.4
    * Tracker v5.3.1
+   * TrackerDateReminder v1.2
 
    == Development ==
    * Improve output of UnitTest to make them more readable.
