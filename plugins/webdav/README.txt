@@ -52,4 +52,4 @@ DEVELOPERS
 
 - If you install by and (without RPM package) do not forget to install SabreDav = 1.4
 - And add locks directory:
-    /usr/bin/install -d -g codendiadm -o codendiadm -m 00750 /var/tmp/codendi_cache/plugins/webdav/locks/
+    /usr/bin/install -d -g codendiadm -o codendiadm -m 00750 /var/tmp/tuleap/plugins/webdav/locks/

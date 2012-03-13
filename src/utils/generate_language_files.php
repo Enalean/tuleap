@@ -24,7 +24,7 @@
  *
  * Generate pre-analysed language files for each language and theme.
  * The resulting files will be located in $codendi_cache_dir/lang (typically
- * /var/tmp/codendi_cache/lang).
+ * /var/tmp/tuleap/lang).
  */
 
 require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/tuleap/conf/local.inc');

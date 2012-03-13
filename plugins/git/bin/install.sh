@@ -72,8 +72,8 @@ if [ ! -L '/gitroot'  ];then
    ln -s $GITROOT_DIR /gitroot
 fi
 
-mkdir -p /var/tmp/codendi_cache/smarty/{templates_c,cache}
-chmod -R 755 /var/tmp/codendi_cache/smarty/
-chown -R codendiadm:codendiadm /var/tmp/codendi_cache/smarty/
+mkdir -p /var/tmp/tuleap/smarty/{templates_c,cache}
+chmod -R 755 /var/tmp/tuleap/smarty/
+chown -R codendiadm:codendiadm /var/tmp/tuleap/smarty/
 
 exit 0

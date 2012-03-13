@@ -750,7 +750,7 @@ build_dir /var/lib/tuleap/docman codendiadm codendiadm 700
 # log dirs
 build_dir /var/log/codendi codendiadm codendiadm 755
 build_dir /var/log/codendi/cvslogs codendiadm codendiadm 775
-build_dir /var/tmp/codendi_cache codendiadm codendiadm 755
+build_dir /var/tmp/tuleap codendiadm codendiadm 755
 # config dirs
 build_dir /etc/skel_codendi root root 755
 build_dir /etc/tuleap codendiadm codendiadm 755

@@ -39,7 +39,7 @@ class FakeMail extends Mail {
 
     function FakeMail() {
         parent::Mail();
-        $this->_testDir = '/var/tmp/codendi_cache/mail';
+        $this->_testDir = '/var/tmp/tuleap/mail';
     }
 
     function _sendmail($headers) {

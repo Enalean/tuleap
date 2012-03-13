@@ -63,10 +63,10 @@ codendi_src="$WORKSPACE/$local_module_directory"
 set -x
 cd "$codendi_src"
 
-# Create /var/tmp/codendi_cache dir
+# Create /var/tmp/tuleap dir
 mkdir -p ../var/
 mkdir -p ../var/tmp/
-mkdir -p ../var/tmp/codendi_cache/
+mkdir -p ../var/tmp/tuleap/
 
 # Create /etc/tuleap/conf and /etc/tuleap/plugins/IM/etc dir
 mkdir -p ../etc/
