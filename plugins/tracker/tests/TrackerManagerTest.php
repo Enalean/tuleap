@@ -287,13 +287,13 @@ class TrackerManagerTest extends TuleapTestCase {
         $tm->duplicate($source_project_id, $destinatnion_project_id, $u_group_mapping);
     }
     
-//    public function testProcessCrossSearch() {
-//        $controller = new MockTracker_CrossSearch_SearchController();
-//        $controller->expectOnce('search');
-//        
-//        $this->tm->setReturnValue('getController', $controller);
-//        $this->tm->process(new Codendi_Request(array('func' => 'cross-search')));
-//    }
+    public function testProcessCrossSearch() {
+        $controller = new MockTracker_CrossSearch_SearchController();
+        $controller->expectOnce('search');
+        
+        $this->tm->setReturnValue('getController', $controller);
+        $this->tm->process(new Codendi_Request(array('func' => 'cross-search')));
+    }
 }
 
 ?>

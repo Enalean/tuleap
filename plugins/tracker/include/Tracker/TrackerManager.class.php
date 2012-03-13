@@ -26,6 +26,8 @@ require_once('Artifact/Tracker_ArtifactFactory.class.php');
 require_once('Report/Tracker_ReportFactory.class.php');
 require_once('dao/Tracker_PermDao.class.php');
 require_once('common/reference/ReferenceManager.class.php');
+require_once('CrossSearch/SearchController.class.php');
+require_once('CrossSearch/Search.class.php');
 
 class TrackerManager { /* extends Engine? */
     
@@ -177,10 +179,7 @@ class TrackerManager { /* extends Engine? */
         }
     }
     
-    protected function getCrossSearchController(Codendi_Request $request) {
-        require_once 'Tracker/CrossSearch/SearchController.class.php';
-        require_once 'Tracker/CrossSearch/Search.class.php';
-        
+    protected function getCrossSearchController(Codendi_Request $request) {        
         $formElementFactory = Tracker_FormElementFactory::instance();
         
         $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
