@@ -1077,7 +1077,7 @@ prone.
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/tuleap/ftp/codendi/<span style="font-style: italic;">ProjectName</span></td>
+      <td valign="top">/var/lib/tuleap/ftp/tuleap/<span style="font-style: italic;">ProjectName</span></td>
       <td valign="top">This is where all the uploaded files associated
 with a given release of project <span style="font-style: italic;">ProjectName</span>
 (see the <a
@@ -1099,7 +1099,7 @@ to upload the software packages to be associated with new software
 releases in the Codendi File Release Service.
 This
 is a temporary storage area as the uploaded files move to the final
-release space&nbsp; /var/lib/tuleap/ftp/codendi/<span style="font-style: italic;">ProjectName</span>
+release space&nbsp; /var/lib/tuleap/ftp/tuleap/<span style="font-style: italic;">ProjectName</span>
 (see
 above) when a new software release is created.&nbsp;
       <p><b><font color="#ff0000">Remark: </font></b>There is a script
@@ -2267,7 +2267,7 @@ on the Codendi server. Here is the procedure to follow to change a group name (a
 <li>Change the old project name 'xxx' in the following directories:
 <ul><tt>
 <li>/var/lib/tuleap/ftp/pub 
-<li>/var/lib/tuleap/ftp/codendi 
+<li>/var/lib/tuleap/ftp/tuleap 
 <li>/home/groups 
 <li>/cvsroot
 <li>/svnroot
@@ -2896,7 +2896,7 @@ Please note that the default template does not allow selection of satellite serv
 <h3>Migration</h3>
 <p>It is possible to relocate a service that already has some historical data.
 <h4>Files</h4>
-<p>Make a tarball of the /var/lib/tuleap/ftp/codendi/<i>projname</i> directory on the server that contains the existing data, and un-tar the files at the same location on the new server.
+<p>Make a tarball of the /var/lib/tuleap/ftp/tuleap/<i>projname</i> directory on the server that contains the existing data, and un-tar the files at the same location on the new server.
 <h4>Subversion</h4>
 <p>Similarly, make a tarball of the /svnroot/<i>projname</i> directory on the server that contains the existing data, and un-tar the files at the same location on the new server.
 <h3>Single Sign-on</h3>

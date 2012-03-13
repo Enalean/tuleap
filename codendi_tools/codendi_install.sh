@@ -738,7 +738,7 @@ build_dir /home/codendiadm codendiadm codendiadm 700
 build_dir /var/lib/tuleap codendiadm codendiadm 755
 build_dir /var/lib/tuleap/dumps dummy dummy 755
 build_dir /var/lib/tuleap/ftp root ftp 755
-build_dir /var/lib/tuleap/ftp/codendi root root 711
+build_dir /var/lib/tuleap/ftp/tuleap root root 711
 build_dir /var/lib/tuleap/ftp/pub ftpadmin ftpadmin 755
 build_dir /var/lib/tuleap/ftp/incoming ftpadmin ftpadmin 3777
 build_dir /var/lib/tuleap/wiki codendiadm codendiadm 700
@@ -784,7 +784,7 @@ $CHMOD 750 /var/lib/tuleap/ftp/incoming/.delete_files
 $TOUCH /var/lib/tuleap/ftp/incoming/.delete_files.work
 $CHOWN codendiadm.ftpadmin /var/lib/tuleap/ftp/incoming/.delete_files.work
 $CHMOD 750 /var/lib/tuleap/ftp/incoming/.delete_files.work
-build_dir /var/lib/tuleap/ftp/codendi/DELETED codendiadm codendiadm 750
+build_dir /var/lib/tuleap/ftp/tuleap/DELETED codendiadm codendiadm 750
 
 $TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
 

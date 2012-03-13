@@ -15,7 +15,7 @@ my $localinc = $ENV{'CODENDI_LOCAL_INC'} || "/etc/tuleap/conf/local.inc"; # Loca
 my %conf = load_local_config($localinc);
 
 my $src_dir = $conf{'ftp_incoming_dir'}   || '/var/lib/tuleap/ftp/incoming/';
-my $dst_dir = $conf{'ftp_frs_dir_prefix'} || '/var/lib/tuleap/ftp/codendi/';
+my $dst_dir = $conf{'ftp_frs_dir_prefix'} || '/var/lib/tuleap/ftp/tuleap/';
 my $file    = '';
 my $group   = '';
 my $dst_file = '';

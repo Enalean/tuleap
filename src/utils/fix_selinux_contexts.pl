@@ -48,7 +48,7 @@ if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=di
 `$CHCON -R -h system_u:object_r:public_content_t $sys_data_dir/ftp`;
 `$CHCON -R -h system_u:object_r:public_content_rw_t  $sys_data_dir/ftp/incoming`;
 # Releases must be accessed from httpd
-`$CHCON -R -h $context $sys_data_dir/ftp/codendi`;
+`$CHCON -R -h $context $sys_data_dir/ftp/tuleap`;
 
 # Allow anonymous FTP writes
 `setsebool -P allow_ftpd_anon_write=1`;

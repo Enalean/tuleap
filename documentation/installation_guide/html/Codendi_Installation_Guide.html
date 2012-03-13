@@ -351,7 +351,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/tuleap/ftp/codendi<br>
+      <td valign="top">/var/lib/tuleap/ftp/tuleap<br>
       </td>
       <td valign="top">root.root<br>
       </td>
@@ -1376,7 +1376,7 @@ provided at <a
 files from the incoming ftp directory to the project file release space</p>
 <p>Go to /usr/share/tuleap/src/utils. In fileforge.c, modify the following
 lines if need be </p>
-<pre>  char * src_dir   = "/var/lib/tuleap/ftp/incoming/"; /* the ftp incoming directory */<br>  char * dest_dir  = "/var/lib/tuleap/ftp/codendi/"; /* the file release space for Codendi projects */<br></pre>
+<pre>  char * src_dir   = "/var/lib/tuleap/ftp/incoming/"; /* the ftp incoming directory */<br>  char * dest_dir  = "/var/lib/tuleap/ftp/tuleap/"; /* the file release space for Codendi projects */<br></pre>
 The trailing slashes are mandatory. Compile it with gcc -O2 -o
 fileforge fileforge.c. Then copy fileforge to /usr/local/bin and run:
 <pre>	# cd /usr/local/bin<br>	# chown root.codendiadm fileforge<br>	# chmod 4750 fileforge   # sets the uid bit<br><br></pre>

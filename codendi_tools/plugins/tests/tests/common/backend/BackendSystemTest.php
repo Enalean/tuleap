@@ -54,7 +54,7 @@ class BackendSystemTest extends UnitTestCase {
         $GLOBALS['grpdir_prefix']             = dirname(__FILE__) . '/_fixtures/home/groups';
         $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_tuleap';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
-        $GLOBALS['ftp_frs_dir_prefix']       = dirname(__FILE__) . '/_fixtures/var/lib/tuleap/ftp/codendi';
+        $GLOBALS['ftp_frs_dir_prefix']       = dirname(__FILE__) . '/_fixtures/var/lib/tuleap/ftp/tuleap';
         $GLOBALS['ftp_anon_dir_prefix']      = dirname(__FILE__) . '/_fixtures/var/lib/tuleap/ftp/pub';
         $GLOBALS['sys_file_deletion_delay']   = 5;
     }
@@ -350,7 +350,7 @@ class BackendSystemTest extends UnitTestCase {
     public function testIsProjectNameAvailableWithExistingFileInFRS() {
         touch($GLOBALS['ftp_frs_dir_prefix']."/testproject");
         $backend = new BackendTestVersion($this);
-        $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/codendi');
+        $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/tuleap');
         unlink($GLOBALS['ftp_frs_dir_prefix']."/testproject");
     }
     
