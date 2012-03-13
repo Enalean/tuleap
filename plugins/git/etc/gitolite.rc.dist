@@ -26,7 +26,7 @@ $GL_CONF_COMPILED="$GL_ADMINDIR/conf/gitolite.conf-compiled.pm";
 # most often used/changed variables
 # ------------------------------------------------------------------------------
 $GL_WILDREPOS = 0;
-$PROJECTS_LIST = "/var/lib/codendi/gitolite/projects.list";
+$PROJECTS_LIST = "/var/lib/tuleap/gitolite/projects.list";
 $REPO_UMASK = 0007;
 
 # ------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ $GL_LOGT="$GL_ADMINDIR/logs/gitolite-%y-%m.log";
 # ------------------------------------------------------------------------------
 # variables that should NOT be changed after the install step completes
 # ------------------------------------------------------------------------------
-$REPO_BASE="/var/lib/codendi/gitolite/repositories";
+$REPO_BASE="/var/lib/tuleap/gitolite/repositories";
 
 # ------------------------------------------------------------------------------
 # DO NOT TOUCH ANY THING AFTER THIS LINE

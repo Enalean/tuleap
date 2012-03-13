@@ -492,7 +492,7 @@ class Statistics_DiskUsageManager {
             $this->storeForGroup($row['group_id'], self::GRP_HOME, $GLOBALS['grpdir_prefix']."/".$row['unix_group_name']);
             $this->storeForGroup($row['group_id'], 'wiki', $GLOBALS['sys_wiki_attachment_data_dir']."/".$row['group_id']);
             // Fake plugin for webdav/subversion
-            $this->storeForGroup($row['group_id'], 'plugin_webdav', '/var/lib/codendi/webdav'."/".$row['unix_group_name']);
+            $this->storeForGroup($row['group_id'], 'plugin_webdav', '/var/lib/tuleap/webdav'."/".$row['unix_group_name']);
             
             $params = array('DiskUsageManager' => $this, 'project_row' => $row);
             $em->processEvent('plugin_statistics_disk_usage_collect_project', $params);
@@ -545,8 +545,8 @@ class Statistics_DiskUsageManager {
         $sql = db_query('START TRANSACTION');
         $this->storeForSite('mysql', '/var/lib/mysql');
         $this->storeForSite('codendi_log', '/var/log/codendi');
-        $this->storeForSite('backup', '/var/lib/codendi/backup');
-        $this->storeForSite('backup_old', '/var/lib/codendi/backup/old');
+        $this->storeForSite('backup', '/var/lib/tuleap/backup');
+        $this->storeForSite('backup_old', '/var/lib/tuleap/backup/old');
         $this->storeDf();
         $sql = db_query('COMMIT');
         

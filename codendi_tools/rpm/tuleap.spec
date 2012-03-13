@@ -580,21 +580,21 @@ if [ "$1" -eq "1" ]; then
     fi
     # ftpadmin
     if id %{ftpadmin_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'FTP Administrator'    -d '/var/lib/codendi/ftp'    -g %{ftpadmin_group} %{ftpadmin_user}
+        /usr/sbin/usermod -c 'FTP Administrator'    -d '/var/lib/tuleap/ftp'    -g %{ftpadmin_group} %{ftpadmin_user}
     else
-        /usr/sbin/useradd -c 'FTP Administrator' -M -d '/var/lib/codendi/ftp' -r -g %{ftpadmin_group} %{ftpadmin_user}
+        /usr/sbin/useradd -c 'FTP Administrator' -M -d '/var/lib/tuleap/ftp' -r -g %{ftpadmin_group} %{ftpadmin_user}
     fi
     # ftp
     if id %{ftp_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'FTP User'    -d '/var/lib/codendi/ftp'    -g %{ftp_group} %{ftp_user}
+        /usr/sbin/usermod -c 'FTP User'    -d '/var/lib/tuleap/ftp'    -g %{ftp_group} %{ftp_user}
     else
-        /usr/sbin/useradd -c 'FTP User' -M -d '/var/lib/codendi/ftp' -r -g %{ftp_group} %{ftp_user}
+        /usr/sbin/useradd -c 'FTP User' -M -d '/var/lib/tuleap/ftp' -r -g %{ftp_group} %{ftp_user}
     fi
     # dummy
     if id %{dummy_user} >/dev/null 2>&1; then
-        /usr/sbin/usermod -c 'Dummy Tuleap User'    -d '/var/lib/codendi/dumps'    -g %{dummy_group} %{dummy_user}
+        /usr/sbin/usermod -c 'Dummy Tuleap User'    -d '/var/lib/tuleap/dumps'    -g %{dummy_group} %{dummy_user}
     else
-        /usr/sbin/useradd -c 'Dummy Tuleap User' -M -d '/var/lib/codendi/dumps' -r -g %{dummy_group} %{dummy_user}
+        /usr/sbin/useradd -c 'Dummy Tuleap User' -M -d '/var/lib/tuleap/dumps' -r -g %{dummy_group} %{dummy_user}
     fi
 else
     # Stop the services

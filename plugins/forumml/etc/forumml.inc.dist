@@ -1,7 +1,7 @@
 <?php
 
 // Where the attachments are located
-$forumml_dir = "/var/lib/codendi/forumml";
+$forumml_dir = "/var/lib/tuleap/forumml";
 
 // Where the temporary mail file is stored
 $forumml_tmp = "/var/run/forumml";

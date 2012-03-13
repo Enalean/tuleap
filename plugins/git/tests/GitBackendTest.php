@@ -96,7 +96,7 @@ class GitBackendTest extends UnitTestCase {
         $repo->setId(290);
 
         $driver = new MockGitDriver($this);
-        $driver->expectOnce('setConfig', array('/var/lib/codendi/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=repo.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
+        $driver->expectOnce('setConfig', array('/var/lib/tuleap/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=repo.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
 
         $backend = new GitBackendTestVersion($this);
         $backend->setGitRootPath(Git_Backend_Interface::GIT_ROOT_PATH);
@@ -128,7 +128,7 @@ class GitBackendTest extends UnitTestCase {
         $dao->setReturnValue('save', 290); // The id we expect below
 
         $driver = new MockGitDriver($this);
-        $driver->expectOnce('setConfig', array('/var/lib/codendi/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=repo.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
+        $driver->expectOnce('setConfig', array('/var/lib/tuleap/gitroot/prj/repo.git', 'hooks.showrev', "t=%s; git show --name-status --pretty='format:URL:    https://codendi.org/plugins/git/index.php/1750/view/290/?p=repo.git&a=commitdiff&h=%%H%%nAuthor: %%an <%%ae>%%nDate:   %%aD%%n%%n%%s%%n%%b' \$t"));
 
         $backend = new GitBackend4SetUp($this);
         $backend->setGitRootPath(Git_Backend_Interface::GIT_ROOT_PATH);

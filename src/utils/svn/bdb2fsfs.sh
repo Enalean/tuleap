@@ -22,7 +22,7 @@
 debug=
 
 sys_http_user="codendiadm"
-BKPDIR=/var/lib/codendi/__tmp_svn__backup__
+BKPDIR=/var/lib/tuleap/__tmp_svn__backup__
 
 
 set -e${debug}

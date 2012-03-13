@@ -38,10 +38,10 @@ set -e
 # configuration variables
 
 # SvnParentPath is the directory where project repositories are found
-#SvnParentPath=/var/lib/codendi/svnroot
+#SvnParentPath=/var/lib/tuleap/svnroot
 SvnParentPath=/svnroot # We can use the symbolic link
 
-SvnBackupPath=/var/lib/codendi/backup/subversion
+SvnBackupPath=/var/lib/tuleap/backup/subversion
 # SvnIncrBackupPath is the directory where incremental backups are created
 SvnIncrBackupPath=${SvnBackupPath}/incr
 # SvnFullBackupPath is the directory where full backups are created

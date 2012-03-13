@@ -61,7 +61,7 @@ else
 fi
 
 #root dir
-GITROOT_DIR=/var/lib/codendi/gitroot
+GITROOT_DIR=/var/lib/tuleap/gitroot
 if [ ! -d "$GITROOT_DIR"  ];then
     mkdir -p $GITROOT_DIR
 fi

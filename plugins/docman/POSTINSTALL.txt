@@ -10,9 +10,9 @@ To finish installation, please follow those last steps:
    b. Set sourceforge as user and group for this directory
    c. Set full permissions for user and none for group and other
    e.g.:
-     mkdir /var/lib/codendi/docman
-     chown sourceforge.sourceforge /var/lib/codendi/docman
-     chmod 700 /var/lib/codendi/docman
-     chcon -R -h -t httpd_sys_content_t /var/lib/codendi/docman
+     mkdir /var/lib/tuleap/docman
+     chown sourceforge.sourceforge /var/lib/tuleap/docman
+     chmod 700 /var/lib/tuleap/docman
+     chcon -R -h -t httpd_sys_content_t /var/lib/tuleap/docman
 
 

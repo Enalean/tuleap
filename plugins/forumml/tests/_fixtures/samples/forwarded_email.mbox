@@ -85,7 +85,7 @@ Content-Transfer-Encoding: 7bit
 Sender: gpig-events-bounces@tuleap.net
 Errors-To: gpig-events-bounces@tuleap.net
 
-SVN Repository: /var/lib/codendi/svnroot/tuleap
+SVN Repository: /var/lib/tuleap/svnroot/tuleap
 Changes by:     Tom Anderson <tom.anderson@tuleap.net>  on 2011-09-05 11:47:07 +0000 (Mon, 05 Sep 2011)
 New Revision:   18476   https://tuleap.net/goto?key=rev&val=18476&group_id=101
 

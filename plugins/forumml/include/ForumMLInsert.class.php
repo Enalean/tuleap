@@ -262,7 +262,7 @@ class ForumMLInsert {
                 $content_id = $struct->headers['content-id'];
             }
                 
-            // store attachment in /var/lib/codendi/forumml/<listname>/<Y_M_D>
+            // store attachment in /var/lib/tuleap/forumml/<listname>/<Y_M_D>
             $date  = date("Y_m_d",strtotime($mailHeaders["date"]));
             $fpath = $storage->store($basename, $body, $this->id_list, $date);
                 

@@ -8,7 +8,7 @@ $GLOBALS['mailman_lib_dir'] = '/var/lib/mailman';
 $GLOBALS['mailman_bin_dir'] = '/usr/lib/mailman/bin';
 $GLOBALS['forumml_arch'] = '/var/lib/mailman/archives';
 $GLOBALS['forumml_tmp'] = '/var/run/forumml';
-$GLOBALS['forumml_dir'] = '/var/lib/codendi/forumml';
+$GLOBALS['forumml_dir'] = '/var/lib/tuleap/forumml';
 $GLOBALS['sysdebug_lazymode_on'] = false;
 
 function isLogged(){

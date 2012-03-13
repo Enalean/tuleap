@@ -77,7 +77,7 @@ data will be located.
 <tr><th>Top Directory</th><th>Content</th></tr>
 <tr><td><pre>/usr</pre></td><td>Codendi source code is installed in /usr/share/tuleap. Size around 300 MB. Total size for the whole /usr directory: up to 8 GB for a full RHEL4 installation.</td></tr>
 <tr><td><pre>/home</pre></td><td>Contains Codendi users home directories, and project directories (including project web sites). Size depends on Codendi usage (login shell allowed, web site usage).</td></tr>
-<tr><td><pre>/var</pre></td><td>/var/lib/mysql contains the Codendi database, and /var/lib/codendi is Codendi main data directory. It contains CVS and Subversion repositories, file releases, backups . Size: as much as the projects need. This directory should be located in the biggest disk or disk partition.</td></tr>
+<tr><td><pre>/var</pre></td><td>/var/lib/mysql contains the Codendi database, and /var/lib/tuleap is Codendi main data directory. It contains CVS and Subversion repositories, file releases, backups . Size: as much as the projects need. This directory should be located in the biggest disk or disk partition.</td></tr>
 </table>
 <p>Whatever the partitioning scheme chosen, it is always possible to move directories from a partition to another, and create links from their original location. Be warned, though, of potential issues with SELinux: you might need to change security contexts.
 <hr size="2" width="100%">
@@ -125,7 +125,7 @@ manual software installation<br>
       </td>
       <td valign="top">Dummy Codendi user<br>
       </td>
-      <td valign="top">/var/lib/codendi/dumps</td>
+      <td valign="top">/var/lib/tuleap/dumps</td>
       <td valign="top">/bin/bash</td>
       <td valign="top">Set same password as codendiadm<br>
       </td>
@@ -150,7 +150,7 @@ manual software installation<br>
       <td valign="top"><br>
       </td>
       <td valign="top">FTP Administrator</td>
-      <td valign="top">/var/lib/codendi/ftp</td>
+      <td valign="top">/var/lib/tuleap/ftp</td>
       <td valign="top">&nbsp;-<br>
       </td>
       <td valign="top">shell login not allowed</td>
@@ -164,7 +164,7 @@ manual software installation<br>
       </td>
       <td valign="top">FTP User<br>
       </td>
-      <td valign="top">/var/lib/codendi/ftp</td>
+      <td valign="top">/var/lib/tuleap/ftp</td>
       <td valign="top">-<br>
       </td>
       <td valign="top">shell login not allowed<br>
@@ -306,7 +306,7 @@ database dumps</b><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/dumps</td>
+      <td valign="top">/var/lib/tuleap/dumps</td>
       <td valign="top">dummy.dummy </td>
       <td valign="top">drwxr-xr-x</td>
       <td valign="top"><br>
@@ -318,7 +318,7 @@ database dumps</b><br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/ftp<br>
+      <td valign="top">/var/lib/tuleap/ftp<br>
       </td>
       <td valign="top">root.ftp<br>
       </td>
@@ -331,8 +331,8 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/ftp/bin<br>
-/var/lib/codendi/ftp/etc<br>
+      <td valign="top">/var/lib/tuleap/ftp/bin<br>
+/var/lib/tuleap/ftp/etc<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin<br>
       </td>
@@ -342,7 +342,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/ftp/lib<br>
+      <td valign="top">/var/lib/tuleap/ftp/lib<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin</td>
       <td valign="top">drwxr-xr-x<br>
@@ -351,7 +351,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/ftp/codendi<br>
+      <td valign="top">/var/lib/tuleap/ftp/codendi<br>
       </td>
       <td valign="top">root.root<br>
       </td>
@@ -361,7 +361,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/ftp/pub<br>
+      <td valign="top">/var/lib/tuleap/ftp/pub<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin<br>
       </td>
@@ -371,7 +371,7 @@ central server<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/ftp/incoming<br>
+      <td valign="top">/var/lib/tuleap/ftp/incoming<br>
       </td>
       <td valign="top">ftpadmin.ftpadmin<br>
       </td>
@@ -407,7 +407,7 @@ cvs tracking script that feed the Codendi database<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/cvsroot<br>
+      <td valign="top">/var/lib/tuleap/cvsroot<br>
       </td>
       <td valign="top">codendiadm.codendiadm</td>
       <td valign="top">drwxr-xr-x<br>
@@ -421,7 +421,7 @@ cvs tracking script that feed the Codendi database<br>
       <td valign="top">root.root</td>
       <td valign="top">lrwxrwxrwx<br>
       </td>
-      <td valign="top">Link to /var/lib/codendi/cvsroot.<br>
+      <td valign="top">Link to /var/lib/tuleap/cvsroot.<br>
       </td>
     </tr>
     <tr>
@@ -429,7 +429,7 @@ cvs tracking script that feed the Codendi database<br>
       </td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/svnroot<br>
+      <td valign="top">/var/lib/tuleap/svnroot<br>
       </td>
       <td valign="top">codendiadm.codendiadm</td>
       <td valign="top">drwxr-xr-x<br>
@@ -443,7 +443,7 @@ cvs tracking script that feed the Codendi database<br>
       <td valign="top">root.root</td>
       <td valign="top">lrwxrwxrwx<br>
       </td>
-      <td valign="top">Link to /var/lib/codendi/svnroot.<br>
+      <td valign="top">Link to /var/lib/tuleap/svnroot.<br>
       </td>
     </tr>
     <tr>
@@ -1376,7 +1376,7 @@ provided at <a
 files from the incoming ftp directory to the project file release space</p>
 <p>Go to /usr/share/tuleap/src/utils. In fileforge.c, modify the following
 lines if need be </p>
-<pre>  char * src_dir   = "/var/lib/codendi/ftp/incoming/"; /* the ftp incoming directory */<br>  char * dest_dir  = "/var/lib/codendi/ftp/codendi/"; /* the file release space for Codendi projects */<br></pre>
+<pre>  char * src_dir   = "/var/lib/tuleap/ftp/incoming/"; /* the ftp incoming directory */<br>  char * dest_dir  = "/var/lib/tuleap/ftp/codendi/"; /* the file release space for Codendi projects */<br></pre>
 The trailing slashes are mandatory. Compile it with gcc -O2 -o
 fileforge fileforge.c. Then copy fileforge to /usr/local/bin and run:
 <pre>	# cd /usr/local/bin<br>	# chown root.codendiadm fileforge<br>	# chmod 4750 fileforge   # sets the uid bit<br><br></pre>
@@ -1400,13 +1400,13 @@ Ownership and permission must be:<br>
 your Codendi server (see the section on <a
  href="#RPM_Packages">RPM
 Packages</a>)</li>
-  <li>Create the <tt>/var/lib/codendi/svnroot</tt> directory and the <tt>/svnroot</tt> link as
+  <li>Create the <tt>/var/lib/tuleap/svnroot</tt> directory and the <tt>/svnroot</tt> link as
 follows:<br>
     <br>
-    <tt># mkdir /var/lib/codendi/svnroot<br>
-# chown codendiadm.codendiadm /var/lib/codendi/svnroot</tt><tt><br>
+    <tt># mkdir /var/lib/tuleap/svnroot<br>
+# chown codendiadm.codendiadm /var/lib/tuleap/svnroot</tt><tt><br>
 # chmod 775 /svnroot</tt><tt><br>
-# ln -s /var/lib/codendi/svnroot /svnroot</tt><br>
+# ln -s /var/lib/tuleap/svnroot /svnroot</tt><br>
 </li>
 </ul>
 Subversion offers several remote access methods either via the native
@@ -1586,7 +1586,7 @@ The ViewVC configuration file is at <span
   <li>You may also customize the welcome banner.<tt><br>
 ftpd_banner=Welcome to Codendi FTP service.
     </tt></li>
-  <li>Last, you may also set welcome messages in various directories: /var/lib/codendi/ftp/.message for the main welcome message, and /var/lib/codendi/ftp/incoming/.message for the incoming directory. Make sure both files are owned by ftpadmin.</li>
+  <li>Last, you may also set welcome messages in various directories: /var/lib/tuleap/ftp/.message for the main welcome message, and /var/lib/tuleap/ftp/incoming/.message for the incoming directory. Make sure both files are owned by ftpadmin.</li>
 </ul>
 <hr>
 <h1><a name="Shell_Account"></a>Shell Account</h1>
@@ -2086,7 +2086,7 @@ that</tt><br>
   <tt># Delete all files in FTP incoming that are older than 2 weeks
 (336 hours)</tt><br>
   <tt>#</tt><br>
-  <tt>0 3 * * * /usr/sbin/tmpwatch -m -f 336 /var/lib/codendi/ftp/incoming</tt><br>
+  <tt>0 3 * * * /usr/sbin/tmpwatch -m -f 336 /var/lib/tuleap/ftp/incoming</tt><br>
   <tt>#</tt><br>
   <br>
 </blockquote>

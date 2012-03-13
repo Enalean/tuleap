@@ -86,7 +86,7 @@ then
     # Make sure that the log message respect the metadata conventions.
     SVNLOOK=/usr/bin/svnlook
     MESSAGE=$($SVNLOOK log -t "$TXN" "$REPOS")
-    /usr/bin/php /var/lib/codendi/svnroot/codendi/hooks/checkCommitMessage.php "$MESSAGE" || exit 1
+    /usr/bin/php /var/lib/tuleap/svnroot/codendi/hooks/checkCommitMessage.php "$MESSAGE" || exit 1
 fi
 
 # All checks passed, so allow the commit.

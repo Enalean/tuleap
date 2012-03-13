@@ -14,8 +14,8 @@ class ExtractCrossRefTest extends UnitTestCase {
     function testExtractsGroupNameFromProjectRepos() {
         $this->assertEqual('myproject', $this->extractor->getProjectName('/gitroot/myproject/stuff.git'));
         $this->assertEqual('gpig', $this->extractor->getProjectName('/gitolite/repositories/gpig/dalvik.git'));
-        $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/codendi/gitolite/repositories/gpig/dalvik.git'));
-        $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/codendi/gitroot/gpig/dalvik.git'));
+        $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/tuleap/gitolite/repositories/gpig/dalvik.git'));
+        $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/tuleap/gitroot/gpig/dalvik.git'));
     }
     
     function testExtractsTheNameAfterTheFirstOccurrenceOfRootPath() {
@@ -23,8 +23,8 @@ class ExtractCrossRefTest extends UnitTestCase {
     }
 
     function testExtractsGroupNameFromPersonalRepos() {
-        $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/codendi/gitolite/repositories/gpig/u/manuel/dalvik.git'));
-        $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/codendi/gitroot/gpig/u/manuel/dalvik.git'));
+        $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/tuleap/gitolite/repositories/gpig/u/manuel/dalvik.git'));
+        $this->assertEqual('gpig', $this->extractor->getProjectName('/var/lib/tuleap/gitroot/gpig/u/manuel/dalvik.git'));
     }
     
     function testExtractsGroupNameFromSymlinkedRepo() {

@@ -167,7 +167,7 @@ setup_vsftpd() {
     $PERL -pi -e "s/^local_umask=.*/local_umask=002/g" /etc/vsftpd/vsftpd.conf 
 
     # Add welcome messages
-    $CAT <<'EOF' > /var/lib/codendi/ftp/.message
+    $CAT <<'EOF' > /var/lib/tuleap/ftp/.message
 ********************************************************************
 Welcome to Tuleap FTP server
 
@@ -177,15 +177,15 @@ On This Site:
 *********************************************************************
 
 EOF
-    $CHOWN ftpadmin.ftpadmin /var/lib/codendi/ftp/.message
+    $CHOWN ftpadmin.ftpadmin /var/lib/tuleap/ftp/.message
 
     # Add welcome messages
-    $CAT <<'EOF' >/var/lib/codendi/ftp/incoming/.message
+    $CAT <<'EOF' >/var/lib/tuleap/ftp/incoming/.message
 
 Upload new file releases here
 
 EOF
-    $CHOWN ftpadmin.ftpadmin /var/lib/codendi/ftp/incoming/.message
+    $CHOWN ftpadmin.ftpadmin /var/lib/tuleap/ftp/incoming/.message
 
     # Log Rotate
     $CAT <<'EOF' >/etc/logrotate.d/vsftpd.log
@@ -735,18 +735,18 @@ build_dir /home/groups codendiadm codendiadm 771
 # home directories
 build_dir /home/codendiadm codendiadm codendiadm 700
 # data dirs
-build_dir /var/lib/codendi codendiadm codendiadm 755
-build_dir /var/lib/codendi/dumps dummy dummy 755
-build_dir /var/lib/codendi/ftp root ftp 755
-build_dir /var/lib/codendi/ftp/codendi root root 711
-build_dir /var/lib/codendi/ftp/pub ftpadmin ftpadmin 755
-build_dir /var/lib/codendi/ftp/incoming ftpadmin ftpadmin 3777
-build_dir /var/lib/codendi/wiki codendiadm codendiadm 700
-build_dir /var/lib/codendi/backup codendiadm codendiadm 711
-build_dir /var/lib/codendi/backup/mysql mysql mysql 770 
-build_dir /var/lib/codendi/backup/mysql/old root root 700
-build_dir /var/lib/codendi/backup/subversion root root 700
-build_dir /var/lib/codendi/docman codendiadm codendiadm 700
+build_dir /var/lib/tuleap codendiadm codendiadm 755
+build_dir /var/lib/tuleap/dumps dummy dummy 755
+build_dir /var/lib/tuleap/ftp root ftp 755
+build_dir /var/lib/tuleap/ftp/codendi root root 711
+build_dir /var/lib/tuleap/ftp/pub ftpadmin ftpadmin 755
+build_dir /var/lib/tuleap/ftp/incoming ftpadmin ftpadmin 3777
+build_dir /var/lib/tuleap/wiki codendiadm codendiadm 700
+build_dir /var/lib/tuleap/backup codendiadm codendiadm 711
+build_dir /var/lib/tuleap/backup/mysql mysql mysql 770 
+build_dir /var/lib/tuleap/backup/mysql/old root root 700
+build_dir /var/lib/tuleap/backup/subversion root root 700
+build_dir /var/lib/tuleap/docman codendiadm codendiadm 700
 # log dirs
 build_dir /var/log/codendi codendiadm codendiadm 755
 build_dir /var/log/codendi/cvslogs codendiadm codendiadm 775
@@ -771,20 +771,20 @@ build_dir /etc/tuleap/plugins/docman codendiadm codendiadm 755
 build_dir /etc/tuleap/plugins/pluginsadministration codendiadm codendiadm 755
 # SCM dirs
 build_dir /var/run/log_accum root root 777
-build_dir /var/lib/codendi/cvsroot codendiadm codendiadm 751
-build_dir /var/lib/codendi/svnroot codendiadm codendiadm 751
+build_dir /var/lib/tuleap/cvsroot codendiadm codendiadm 751
+build_dir /var/lib/tuleap/svnroot codendiadm codendiadm 751
 build_dir /var/lock/cvs root root 751
-$LN -sf /var/lib/codendi/cvsroot /cvsroot
-$LN -sf /var/lib/codendi/svnroot /svnroot
+$LN -sf /var/lib/tuleap/cvsroot /cvsroot
+$LN -sf /var/lib/tuleap/svnroot /svnroot
 
 
-$TOUCH /var/lib/codendi/ftp/incoming/.delete_files
-$CHOWN codendiadm.ftpadmin /var/lib/codendi/ftp/incoming/.delete_files
-$CHMOD 750 /var/lib/codendi/ftp/incoming/.delete_files
-$TOUCH /var/lib/codendi/ftp/incoming/.delete_files.work
-$CHOWN codendiadm.ftpadmin /var/lib/codendi/ftp/incoming/.delete_files.work
-$CHMOD 750 /var/lib/codendi/ftp/incoming/.delete_files.work
-build_dir /var/lib/codendi/ftp/codendi/DELETED codendiadm codendiadm 750
+$TOUCH /var/lib/tuleap/ftp/incoming/.delete_files
+$CHOWN codendiadm.ftpadmin /var/lib/tuleap/ftp/incoming/.delete_files
+$CHMOD 750 /var/lib/tuleap/ftp/incoming/.delete_files
+$TOUCH /var/lib/tuleap/ftp/incoming/.delete_files.work
+$CHOWN codendiadm.ftpadmin /var/lib/tuleap/ftp/incoming/.delete_files.work
+$CHMOD 750 /var/lib/tuleap/ftp/incoming/.delete_files.work
+build_dir /var/lib/tuleap/ftp/codendi/DELETED codendiadm codendiadm 750
 
 $TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
 
@@ -792,7 +792,7 @@ $TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
 if [ $SELINUX_ENABLED ]; then
     $CHCON -R -h $SELINUX_CONTEXT /usr/share/tuleap
     $CHCON -R -h $SELINUX_CONTEXT /etc/tuleap
-    $CHCON -R -h $SELINUX_CONTEXT /var/lib/codendi
+    $CHCON -R -h $SELINUX_CONTEXT /var/lib/tuleap
     $CHCON -R -h $SELINUX_CONTEXT /home/groups
     $CHCON -R -h $SELINUX_CONTEXT /home/codendiadm
     $CHCON -h $SELINUX_CONTEXT /svnroot

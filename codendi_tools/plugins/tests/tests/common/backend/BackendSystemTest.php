@@ -54,8 +54,8 @@ class BackendSystemTest extends UnitTestCase {
         $GLOBALS['grpdir_prefix']             = dirname(__FILE__) . '/_fixtures/home/groups';
         $GLOBALS['codendi_shell_skel']        = dirname(__FILE__) . '/_fixtures/etc/skel_codendi';
         $GLOBALS['tmp_dir']                   = dirname(__FILE__) . '/_fixtures/var/tmp';
-        $GLOBALS['ftp_frs_dir_prefix']       = dirname(__FILE__) . '/_fixtures/var/lib/codendi/ftp/codendi';
-        $GLOBALS['ftp_anon_dir_prefix']      = dirname(__FILE__) . '/_fixtures/var/lib/codendi/ftp/pub';
+        $GLOBALS['ftp_frs_dir_prefix']       = dirname(__FILE__) . '/_fixtures/var/lib/tuleap/ftp/codendi';
+        $GLOBALS['ftp_anon_dir_prefix']      = dirname(__FILE__) . '/_fixtures/var/lib/tuleap/ftp/pub';
         $GLOBALS['sys_file_deletion_delay']   = 5;
     }
     

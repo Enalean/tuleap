@@ -26,7 +26,7 @@ foreach ( $file_list as $key=>$filename ) {
     $lines_to_write = array();
     $project_name = trim($project_list[$key]);
     foreach ($lines as $line) {
-        if ( strpos($line, "ALL (cat;chgrp -R $project_name /var/lib/codendi/cvsroot/$project_name)>/dev/null 2>&1") !== false  ) {
+        if ( strpos($line, "ALL (cat;chgrp -R $project_name /var/lib/tuleap/cvsroot/$project_name)>/dev/null 2>&1") !== false  ) {
             continue;
         } else {
             $lines_to_write[] = $line;

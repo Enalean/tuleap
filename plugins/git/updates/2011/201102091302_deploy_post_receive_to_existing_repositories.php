@@ -20,7 +20,7 @@ EOT;
     }
 
     public function up() {
-        $dir = new DirectoryIterator('/var/lib/codendi/gitroot');
+        $dir = new DirectoryIterator('/var/lib/tuleap/gitroot');
         foreach ($dir as $project) {
             if (!$project->isDot() && $project->isDir()) {
                 $prjIter = new DirectoryIterator($project->getPathname());

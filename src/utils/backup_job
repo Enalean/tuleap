@@ -31,8 +31,8 @@ set -e
 
 
 ## Global definitions
-oldBackupDstDir=/var/lib/codendi/backup/mysql/old
-currentBackupDstDir=/var/lib/codendi/backup/mysql
+oldBackupDstDir=/var/lib/tuleap/backup/mysql/old
+currentBackupDstDir=/var/lib/tuleap/backup/mysql
 binaryLogDir=/var/lib/mysql
 mysqlDataDir=/var/lib/mysql
 tarDir=/var/lib

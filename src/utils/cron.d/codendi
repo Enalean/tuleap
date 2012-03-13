@@ -46,7 +46,7 @@
 
 # Delete all files in FTP incoming that are older than 2 weeks (336 hours)
 #
-0 3 * * * root /usr/sbin/tmpwatch -m -f 336 /var/lib/codendi/ftp/incoming
+0 3 * * * root /usr/sbin/tmpwatch -m -f 336 /var/lib/tuleap/ftp/incoming
 
 # Delete all forumml files older than 24 hours
 45 20 * * * root (test -d /var/run/forumml && /usr/sbin/tmpwatch -f 24 /var/run/forumml)

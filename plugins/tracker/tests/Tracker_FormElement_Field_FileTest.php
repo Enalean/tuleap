@@ -145,7 +145,7 @@ class Tracker_FormElement_Field_FileTest extends UnitTestCase {
     
     function testGetFieldData() {
         $file_field = new Tracker_FormElement_Field_FileTestVersion();
-        $this->assertNotNull($file_field->getFieldData('/var/lib/codendi/ftp/users/my_file.iso'));
+        $this->assertNotNull($file_field->getFieldData('/var/lib/tuleap/ftp/users/my_file.iso'));
         $this->assertIdentical(array(), $file_field->getFieldData('/usr/share/tuleap/VERSION'));
         $this->assertNotNull($file_field->getFieldData(null));
         $this->assertIdentical(array(), $file_field->getFieldData(null));

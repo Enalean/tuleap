@@ -14,8 +14,8 @@ use File::Copy;
 my $localinc = $ENV{'CODENDI_LOCAL_INC'} || "/etc/tuleap/conf/local.inc"; # Local Include file for database username and password
 my %conf = load_local_config($localinc);
 
-my $src_dir = $conf{'ftp_incoming_dir'}   || '/var/lib/codendi/ftp/incoming/';
-my $dst_dir = $conf{'ftp_frs_dir_prefix'} || '/var/lib/codendi/ftp/codendi/';
+my $src_dir = $conf{'ftp_incoming_dir'}   || '/var/lib/tuleap/ftp/incoming/';
+my $dst_dir = $conf{'ftp_frs_dir_prefix'} || '/var/lib/tuleap/ftp/codendi/';
 my $file    = '';
 my $group   = '';
 my $dst_file = '';

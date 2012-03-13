@@ -41,7 +41,7 @@ if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=di
 # /etc/tuleap -> for licence, site-content...
 `$CHCON -R -h $context $sys_custom_dir`;
 
-# /var/lib/codendi
+# /var/lib/tuleap
 `$CHCON -R -h $context $sys_data_dir`;
 
 # FTP directories

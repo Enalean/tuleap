@@ -54,7 +54,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         $file = new MockFRSFile($this);
         $evt->setReturnValue('getFileFactory', $fileFactory);
         $fileFactory->setReturnValue('getFRSFileFromDb', $file, array('100012'));
-        $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p2952_r10819/test.dump');
+        $file->setReturnValue('getFileLocation', '/var/lib/tuleap/ftp/codendi/project_1/p2952_r10819/test.dump');
 
         $evt->setReturnValue('computeFRSMd5Sum', 'd41d8cd98f00b204e9800998ecf8427e');
 
@@ -79,7 +79,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         $file = new MockFRSFile($this);
         $evt->setReturnValue('getFileFactory', $fileFactory);
         $fileFactory->setReturnValue('getFRSFileFromDb', $file, array('100012'));
-        $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p2952_r10819/test.dump');
+        $file->setReturnValue('getFileLocation', '/var/lib/tuleap/ftp/codendi/project_1/p2952_r10819/test.dump');
         $file->setReturnValue('getUserID', 142);
 
         $evt->setReturnValue('computeFRSMd5Sum', false);
@@ -109,7 +109,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         $file = new MockFRSFile($this);
         $evt->setReturnValue('getFileFactory', $fileFactory);
         $fileFactory->setReturnValue('getFRSFileFromDb', $file);
-        $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p1827_r6573/webkit-1.0.tar.gz');
+        $file->setReturnValue('getFileLocation', '/var/lib/tuleap/ftp/codendi/project_1/p1827_r6573/webkit-1.0.tar.gz');
 
         $evt->setReturnValue('computeFRSMd5Sum', 'd41d8cd98f00b204e9800998ecf8427e');
 
@@ -133,7 +133,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         $file = new MockFRSFile($this);
         $evt->setReturnValue('getFileFactory', $fileFactory);
         $fileFactory->setReturnValue('getFRSFileFromDb', $file, array('100012'));
-        $file->setReturnValue('getFileLocation', '/var/lib/codendi/ftp/codendi/project_1/p2952_r10819/test.dump');
+        $file->setReturnValue('getFileLocation', '/var/lib/tuleap/ftp/codendi/project_1/p2952_r10819/test.dump');
         $file->setReturnValue('getUserID', 142);
 
         $evt->setReturnValue('computeFRSMd5Sum', true);

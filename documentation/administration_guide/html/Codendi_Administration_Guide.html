@@ -725,13 +725,13 @@ Codendi.</li>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/cvsroot and link from /cvsroot</td>
+      <td valign="top">/var/lib/tuleap/cvsroot and link from /cvsroot</td>
       <td valign="top">The CVS repositories of all Codendi projects are
 created
-under the <span style="font-family: monospace;">/var/lib/codendi/cvsroot</span>
+under the <span style="font-family: monospace;">/var/lib/tuleap/cvsroot</span>
 directory. This directory is linked from <span style="font-family: monospace;">/cvsroot</span>
 in the top directory.
- /var/lib/codendi/<i>ProjectName</i> is the CVS repository
+ /var/lib/tuleap/<i>ProjectName</i> is the CVS repository
 of
 project <i>ProjectName</i>. By default all files belong to user nobody
 and
@@ -789,14 +789,14 @@ must not be touched).</td>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/svnroot and link from /svnroot</td>
+      <td valign="top">/var/lib/tuleap/svnroot and link from /svnroot</td>
       <td valign="top">The Subversion repositories of all Codendi&nbsp;
 projects are
 created
-under the <span style="font-family: monospace;">/var/lib/codendi/svnroot</span>
+under the <span style="font-family: monospace;">/var/lib/tuleap/svnroot</span>
 directory.  This directory is linked from <span style="font-family: monospace;">/svnroot</span>
 in the top directory.
-/var/lib/codendi/svnsroot/<i>ProjectName</i> is the Subversion repository
+/var/lib/tuleap/svnsroot/<i>ProjectName</i> is the Subversion repository
 of
 project <i>ProjectName</i>. As opposed to CVS, Subversion manages the
 repository in a database acting as a virtual filesystem. Therefore
@@ -924,7 +924,7 @@ Files </a>section). It is basically a copy of the FTP log file <span
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/dumps</td>
+      <td valign="top">/var/lib/tuleap/dumps</td>
       <td valign="top">As we will see later in this document there is a
 bunch
 of background script running on Codendi on a regular basis. The default
@@ -1077,7 +1077,7 @@ prone.
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/ftp/codendi/<span style="font-style: italic;">ProjectName</span></td>
+      <td valign="top">/var/lib/tuleap/ftp/codendi/<span style="font-style: italic;">ProjectName</span></td>
       <td valign="top">This is where all the uploaded files associated
 with a given release of project <span style="font-style: italic;">ProjectName</span>
 (see the <a
@@ -1093,13 +1093,13 @@ is group
 writable.&nbsp;</td>
     </tr>
     <tr nosave="">
-      <td valign="top" nosave="">/var/lib/codendi/ftp/incoming</td>
+      <td valign="top" nosave="">/var/lib/tuleap/ftp/incoming</td>
       <td>The FTP incoming directory is used by the project members
 to upload the software packages to be associated with new software
 releases in the Codendi File Release Service.
 This
 is a temporary storage area as the uploaded files move to the final
-release space&nbsp; /var/lib/codendi/ftp/codendi/<span style="font-style: italic;">ProjectName</span>
+release space&nbsp; /var/lib/tuleap/ftp/codendi/<span style="font-style: italic;">ProjectName</span>
 (see
 above) when a new software release is created.&nbsp;
       <p><b><font color="#ff0000">Remark: </font></b>There is a script
@@ -1127,7 +1127,7 @@ we don't want that ghost files stay here for too long.<br>
       <td bgcolor="#c0c0c0"><b>Description</b></td>
     </tr>
     <tr>
-      <td valign="top">/var/lib/codendi/ftp/pub/<span style="font-style: italic;">ProjectName</span></td>
+      <td valign="top">/var/lib/tuleap/ftp/pub/<span style="font-style: italic;">ProjectName</span></td>
       <td valign="top">This is the anonymous FTP space assigned to
 project <span style="font-style: italic;">ProjectName</span> at
 creation time. It can be used by the project
@@ -1850,8 +1850,8 @@ data is backed up to disk.&nbsp; The sequence is as follows: </p>
     <li> move old codendi-bin.index, codendi-bin.001, sqldump.&lt;last
 week's date/time&gt; to</li>
     <br>
-/var/lib/codendi/backup/mysql/old directory <li> dump&nbsp; 0f&nbsp;&nbsp;
-/var/lib/codendi/backup/mysql/sqldump.&lt;date&gt;.&lt;time&gt;&nbsp;&nbsp;
+/var/lib/tuleap/backup/mysql/old directory <li> dump&nbsp; 0f&nbsp;&nbsp;
+/var/lib/tuleap/backup/mysql/sqldump.&lt;date&gt;.&lt;time&gt;&nbsp;&nbsp;
 /var/lib/mysql</li>
     <li> /etc/rc.d/init.d/mysql start</li>
   </ul>
@@ -1882,7 +1882,7 @@ days of the week (Monday - Saturday) run incremental backups. </p>
 <li>
 2 files are needed to rebuild.  Find the most recent "dump" and "bin" files:
 <pre>
-cd  /var/lib/codendi/backup/mysql
+cd  /var/lib/tuleap/backup/mysql
 ls  -lt
   Example: 
   sqldump.080502.004501	(created from cron "dump" every Sunday; mysql is shut down prior to "dump")
@@ -1937,7 +1937,7 @@ Rebuild is complete.
       <td><b>Description</b></td>
     </tr>
     <tr>
-      <td>/var/lib/codendi/backup/mysql <br>
+      <td>/var/lib/tuleap/backup/mysql <br>
 &nbsp; <br>
 &nbsp; <br>
 &nbsp; <br>
@@ -1957,7 +1957,7 @@ when restoring mysql data</li>
         <li><b>codendi-bin.001:&nbsp;</b> Binary log file used for
 viewing or piping into a mysql command if rebuilding database</li>
       </ul>
-Older files are stored in /var/lib/codendi/backup/mysql/old</td>
+Older files are stored in /var/lib/tuleap/backup/mysql/old</td>
     </tr>
     <tr>
       <td>/etc <br>
@@ -2155,15 +2155,15 @@ You're done!
 <p>It is possible to merge several repositories by using <a href="http://www.coelho.net/svn-merge-repos.html">svn-merge-repos.pl</a> script</p>
 <li>One must first get local copy of all repositories to merge into the codendi project repository, then issue the following command</li>
 <pre>
-perl svn-merge-repos.pl -t /var/lib/codendi/svnroot/project_name/ /local/path/to/repo1/:target_path_for_src1 /local/path/to/repo2/:trunk/target_path_for_src2
+perl svn-merge-repos.pl -t /var/lib/tuleap/svnroot/project_name/ /local/path/to/repo1/:target_path_for_src1 /local/path/to/repo2/:trunk/target_path_for_src2
 </pre>
 
 
 <hr>
 <h2><a name="HowTo_Import_Git"></a>Importing an existing Git repository in Codendi (bare repository)</h2>
 
-<p> All repositories are stored under /var/lib/codendi/gitroot/. Each project has a project directory 'myproject',
-    for instance /var/lib/codendi/gitroot/myproject/reference1.git with persmissions (drwxrwsr-x codendiadm myproject).
+<p> All repositories are stored under /var/lib/tuleap/gitroot/. Each project has a project directory 'myproject',
+    for instance /var/lib/tuleap/gitroot/myproject/reference1.git with persmissions (drwxrwsr-x codendiadm myproject).
     Several steps must be achieved before being able to use a git repoitory in codendi.
 </p>
 <ul>
@@ -2171,11 +2171,11 @@ perl svn-merge-repos.pl -t /var/lib/codendi/svnroot/project_name/ /local/path/to
     <li>Replace the empty repository with the one you want to import</li>
     <li>Set permissions :
         <ul>
-            <li><tt>$> chown -R codendiadm:myproject /var/lib/codendi/gitroot/myproject/myrepo.git</tt></li>
-            <li><tt>$> find /var/lib/codendi/gitroot/myproject/myrepo.git -type d | xargs chmod u+rwx,g+rwxs,o-rwx </tt></li>
-            <li><tt>$> chmod g+w /var/lib/codendi/gitroot/myproject/myrepo.git/HEAD</tt></li>
-            <li>make a private repo : <tt>$> find  /var/lib/codendi/gitroot/myproject/myrepo.git -type d ! -path "*hooks*" | xargs chmod o-rwx </tt></li>
-            <li>make a private repo : <tt>$> find  /var/lib/codendi/gitroot/myproject/myrepo.git -type f ! -path "*hooks*" | xargs chmod o-rwx </tt> </li>
+            <li><tt>$> chown -R codendiadm:myproject /var/lib/tuleap/gitroot/myproject/myrepo.git</tt></li>
+            <li><tt>$> find /var/lib/tuleap/gitroot/myproject/myrepo.git -type d | xargs chmod u+rwx,g+rwxs,o-rwx </tt></li>
+            <li><tt>$> chmod g+w /var/lib/tuleap/gitroot/myproject/myrepo.git/HEAD</tt></li>
+            <li>make a private repo : <tt>$> find  /var/lib/tuleap/gitroot/myproject/myrepo.git -type d ! -path "*hooks*" | xargs chmod o-rwx </tt></li>
+            <li>make a private repo : <tt>$> find  /var/lib/tuleap/gitroot/myproject/myrepo.git -type f ! -path "*hooks*" | xargs chmod o-rwx </tt> </li>
             <li>NOTICE : Do not forget to check hooks permissions</li>
         </ul>
     </li>
@@ -2266,8 +2266,8 @@ on the Codendi server. Here is the procedure to follow to change a group name (a
 <li> First log as root
 <li>Change the old project name 'xxx' in the following directories:
 <ul><tt>
-<li>/var/lib/codendi/ftp/pub 
-<li>/var/lib/codendi/ftp/codendi 
+<li>/var/lib/tuleap/ftp/pub 
+<li>/var/lib/tuleap/ftp/codendi 
 <li>/home/groups 
 <li>/cvsroot
 <li>/svnroot
@@ -2792,15 +2792,15 @@ To select a set of historical data, please read: <a href="http://cvs2svn.tigris.
 <p>
 Subversion repositories are backed up every day. So it is always possible to restore the repository as it was the day before.
 <br>There are two Subversion backup directories:
-<ul><li>/var/lib/codendi/backup/subversion/full contains the full backups performed weekly
-<li>/var/lib/codendi/backup/subversion/incr contains the incremental backups performed daily.
+<ul><li>/var/lib/tuleap/backup/subversion/full contains the full backups performed weekly
+<li>/var/lib/tuleap/backup/subversion/incr contains the incremental backups performed daily.
 </ul>
 In order to restore the most recent version of the repository, you need:
 <ul><li>to restore the most recent full backup: 
-<br>simply copy /var/lib/codendi/backup/subversion/full/current/projectname-rev1 as /svnroot/projectname, and note the number 'rev1'.
+<br>simply copy /var/lib/tuleap/backup/subversion/full/current/projectname-rev1 as /svnroot/projectname, and note the number 'rev1'.
 <li>then restore the incremental backups starting with 'rev1+1':
 <pre>
-cd /var/lib/codendi/backup/subversion/incr/projectname
+cd /var/lib/tuleap/backup/subversion/incr/projectname
 bunzip2 < projectname.incr.rev1+1:rev2.bz2 | svnadmin load /svnroot/projectname 
 bunzip2 < projectname.incr.rev2+1:rev3.bz2 | svnadmin load /svnroot/projectname 
 etc.
@@ -2896,7 +2896,7 @@ Please note that the default template does not allow selection of satellite serv
 <h3>Migration</h3>
 <p>It is possible to relocate a service that already has some historical data.
 <h4>Files</h4>
-<p>Make a tarball of the /var/lib/codendi/ftp/codendi/<i>projname</i> directory on the server that contains the existing data, and un-tar the files at the same location on the new server.
+<p>Make a tarball of the /var/lib/tuleap/ftp/codendi/<i>projname</i> directory on the server that contains the existing data, and un-tar the files at the same location on the new server.
 <h4>Subversion</h4>
 <p>Similarly, make a tarball of the /svnroot/<i>projname</i> directory on the server that contains the existing data, and un-tar the files at the same location on the new server.
 <h3>Single Sign-on</h3>
