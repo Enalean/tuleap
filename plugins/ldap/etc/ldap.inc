@@ -15,13 +15,13 @@ $sys_ldap_dn     = 'dc=tuleap,dc=net';
 
 // For LDAP systems that do not accept anonymous binding, define here
 // a valid DN and password:
-//$sys_ldap_bind_dn = "eduid=1234,ou=people,dc=codendi,dc=com";
+//$sys_ldap_bind_dn = "eduid=1234,ou=people,dc=example,dc=com";
 //$sys_ldap_bind_passwd = "xxxxxxxxx";
 
 // LDAP authentication:
-// Codendi only supports authentication with a attempt to bind with LDAP server
+// Tuleap only supports authentication with a attempt to bind with LDAP server
 // with a DN and a password.
-// As the DN is usually long (eduid=1234,ou=people,dc=codendi,dc=com) people 
+// As the DN is usually long (eduid=1234,ou=people,dc=example,dc=com) people 
 // usually authenticate themself with a login. So we need to first look 
 // for the DN that correspond to the given login and once found attempt to bind
 // with the given password. 
