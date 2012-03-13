@@ -293,9 +293,9 @@ EOF
 
     # Create site wide ML
     # Note that if sys_default_domain is not a domain, the script will complain
-    LIST_OWNER=codendi-admin@$sys_default_domain
+    LIST_OWNER=tuleap-admin@$sys_default_domain
     if [ "$disable_subdomains" = "y" ]; then
-        LIST_OWNER=codendi-admin@$sys_fullname
+        LIST_OWNER=tuleap-admin@$sys_fullname
     fi
     /usr/lib/mailman/bin/newlist -q mailman $LIST_OWNER $mm_passwd > /dev/null
 
@@ -319,7 +319,7 @@ mailman-unsubscribe:  "|/usr/lib/mailman/mail/mailman unsubscribe mailman"
 
 EOF
 
-    # Subscribe codendi-admin to this ML
+    # Subscribe tuleap-admin to this ML
     echo $LIST_OWNER | /usr/lib/mailman/bin/add_members -r - mailman
 
     $CHKCONFIG mailman on
@@ -1039,9 +1039,9 @@ fi
 
 # Default: codex-admin is redirected to root
 # TODO check if already there
-echo "codendi-admin:          root" >> /etc/aliases
+echo "tuleap-admin:          root" >> /etc/aliases
 
-#todo "Finish sendmail settings (see installation Guide). By default, emails sent to codendi-admin are redirected to root (see /etc/aliases)"
+#todo "Finish sendmail settings (see installation Guide). By default, emails sent to tuleap-admin are redirected to root (see /etc/aliases)"
 
 ##############################################
 # CVS

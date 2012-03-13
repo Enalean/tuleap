@@ -68,7 +68,7 @@ INSERT INTO user_access SET \
 INSERT INTO user SET \
         user_id = 101, \
         user_name = 'admin', \
-        email = 'codendi-admin@_DOMAIN_NAME_', \
+        email = 'tuleap-admin@_DOMAIN_NAME_', \
         user_pw = '6f3cac6213ffceee27cc85414f458caa', \
         realname = 'Site Administrator', \
         register_purpose = NULL, \
@@ -138,9 +138,9 @@ INSERT INTO groups SET \
   license_other = '', \
   register_time = 940000000, \
   rand_hash = '', \
-  new_bug_address = 'codendi-admin@_DOMAIN_NAME_', \
-  new_patch_address = 'codendi-admin@_DOMAIN_NAME_', \
-  new_support_address = 'codendi-admin@_DOMAIN_NAME_', \
+  new_bug_address = 'tuleap-admin@_DOMAIN_NAME_', \
+  new_patch_address = 'tuleap-admin@_DOMAIN_NAME_', \
+  new_support_address = 'tuleap-admin@_DOMAIN_NAME_', \
   type = '1', \
   send_all_bugs = '1', \
   send_all_patches = '1', \
