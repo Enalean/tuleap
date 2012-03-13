@@ -167,7 +167,7 @@ class Plugin {
     /**
      * Returns plugin's path on the server file system
      *
-     * Example: /usr/share/codendi/plugins/docman
+     * Example: /usr/share/tuleap/plugins/docman
      *
      * @return String
      */

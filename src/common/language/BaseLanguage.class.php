@@ -156,7 +156,7 @@ class BaseLanguage {
     }
 
     /**
-     * Load tab files in /usr/share/codendi/site-content for given language
+     * Load tab files in /usr/share/tuleap/site-content for given language
      */
     function loadCoreSiteContent($lang, &$text_array) {
         $this->loadAllTabFiles($GLOBALS['sys_incdir'].'/'.$lang, $text_array);
@@ -170,7 +170,7 @@ class BaseLanguage {
     }
 
     /**
-     * Load all tab files in /usr/share/codendi/plugins/.../site-content for
+     * Load all tab files in /usr/share/tuleap/plugins/.../site-content for
      * given language
      */
     function loadPluginsSiteContent($lang, &$text_array) {

@@ -3,20 +3,20 @@
 # ------------------  EDIT THE CORRECT FILE  -------------------------
 #
 # This file is copied to /etc/cron.d/codendi from
-# /usr/share/codendi/src/utils/cron.d/codendi when the codendi service is started via its
+# /usr/share/tuleap/src/utils/cron.d/codendi when the codendi service is started via its
 # init.d script and the file /etc/cron.d/codendi is removed when the
 # service is stopped.  Therefore any edits made directly to
 # /etc/cron.d/codendi will be lost anytime the codendi service
 # restarts.
 #
-# To make changes edit the master copy /usr/share/codendi/src/utils/cron.d/codendi and then
+# To make changes edit the master copy /usr/share/tuleap/src/utils/cron.d/codendi and then
 # restart the service to pick up the changes (/sbin/service codendi restart).
 #
 # The reason this is done this way is because the codendi cron jobs
 # should only be invoked if the codendi service is enabled and not
 # just as a consequence of installing the rpm as was the case
 # previously. The file /etc/cron.d/codendi cannot simply be linked to
-# the master copy in /usr/share/codendi/src/utils/cron.d/codendi because for security reasons cron
+# the master copy in /usr/share/tuleap/src/utils/cron.d/codendi because for security reasons cron
 # will not process crontab files that are links or writeable by
 # anybody else but root, thus the file must be copied into /etc/cron.d
 # with the right ownership and permissions.
@@ -26,23 +26,23 @@
 #
 
 # Once a minute, process Tuleap system events
-* * * * * root (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php)
+* * * * * root (cd /usr/share/tuleap/src/utils; ./php-launcher.sh ./process_system_events.php)
 
 #
 # Regularly launch a system_check event (e.g. every half-hour)
-0,30 * * * * root (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./launch_system_check.php)
+0,30 * * * * root (cd /usr/share/tuleap/src/utils; ./php-launcher.sh ./launch_system_check.php)
 
 #
 # run the daily statistics script just a little bit after
 # midnight so that it computes stats for the day before
 # Run at 0:30 am
-30 0 * * * root /usr/share/codendi/src/utils/compute_all_daily_stats.sh 2>&1 >/dev/null
+30 0 * * * root /usr/share/tuleap/src/utils/compute_all_daily_stats.sh 2>&1 >/dev/null
 
 #
 # run the weekly stats for projects. Run it on Monday morning so that
 # it computes the stats for the week before
 # Run on Monday at 1am
-0 1 * * Mon root (cd /usr/share/codendi/src/utils/underworld-root; ./db_project_weekly_metric.pl 2>&1 >/dev/null)
+0 1 * * Mon root (cd /usr/share/tuleap/src/utils/underworld-root; ./db_project_weekly_metric.pl 2>&1 >/dev/null)
 
 # Delete all files in FTP incoming that are older than 2 weeks (336 hours)
 #
@@ -61,4 +61,4 @@
 #
 
 # Daily Tuleap PHP cron (obsolete documents...)
-10 0 * * * codendiadm /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php
+10 0 * * * codendiadm /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/codendi_daily.php

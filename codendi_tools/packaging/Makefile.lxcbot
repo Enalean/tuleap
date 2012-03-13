@@ -58,9 +58,9 @@ remotemockbuild:
 
 remoteinstall:
 	ssh root@$(BUILDHOST) yum -y install tuleap-plugin-soapproject mysql-server tuleap-core-subversion tuleap-theme-tuleap
-	#scp codendi_tools/codendi_install.sh root@$(BUILDHOST):/usr/share/codendi/codendi_tools/codendi_install.sh
+	#scp codendi_tools/codendi_install.sh root@$(BUILDHOST):/usr/share/tuleap/codendi_tools/codendi_install.sh
 	ssh root@$(BUILDHOST) service mysqld start
-	[ -f remoteinstall ] || ssh root@$(BUILDHOST) "bash /usr/share/codendi/codendi_tools/codendi_install.sh --auto 2>&1 | tee ~/install_transcript.log"
+	[ -f remoteinstall ] || ssh root@$(BUILDHOST) "bash /usr/share/tuleap/codendi_tools/codendi_install.sh --auto 2>&1 | tee ~/install_transcript.log"
 	touch remoteinstall
 
 remoteinstall2:

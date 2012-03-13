@@ -75,7 +75,7 @@ data will be located.
 <br>The following table shows the main directories used by Codendi:
 <table border="1">
 <tr><th>Top Directory</th><th>Content</th></tr>
-<tr><td><pre>/usr</pre></td><td>Codendi source code is installed in /usr/share/codendi. Size around 300 MB. Total size for the whole /usr directory: up to 8 GB for a full RHEL4 installation.</td></tr>
+<tr><td><pre>/usr</pre></td><td>Codendi source code is installed in /usr/share/tuleap. Size around 300 MB. Total size for the whole /usr directory: up to 8 GB for a full RHEL4 installation.</td></tr>
 <tr><td><pre>/home</pre></td><td>Contains Codendi users home directories, and project directories (including project web sites). Size depends on Codendi usage (login shell allowed, web site usage).</td></tr>
 <tr><td><pre>/var</pre></td><td>/var/lib/mysql contains the Codendi database, and /var/lib/codendi is Codendi main data directory. It contains CVS and Subversion repositories, file releases, backups . Size: as much as the projects need. This directory should be located in the biggest disk or disk partition.</td></tr>
 </table>
@@ -234,7 +234,7 @@ There is no longer need to edit /etc/passwd, /etc/shadow and /etc/group.
 Only the system users listed above still need to exist in those files (codendiadm, mailman, ftp, etc.).
 <h3>Configuration files</h3>
 LibNSS-MySQL needs two configuration files: /etc/libnss-mysql.cfg and /etc/libnss-mysql-root.cfg.
-Those files contain the queries that map system calls to SQL syntax. We provide sample files (.dist) for codendi in /usr/share/codendi/src/etc.
+Those files contain the queries that map system calls to SQL syntax. We provide sample files (.dist) for codendi in /usr/share/tuleap/src/etc.
 <h3>nsswitch.conf</h3>
 In order to use libnss-mysql, one need to update /etc/nsswitch.conf to inform the system that it can use mysql for name service requests.
 Here is an extract from a sample nsswitch.conf (it is automatically updated by the Codendi installation script):
@@ -544,17 +544,17 @@ Codendi installation directory, custom directory, data directory (for file packa
 codendiadm subversion directory (for server update plugin),
 project directories (for project web sites) and source code repositories (for ViewVC).
 <br> 
-You can execute the 'fix_selinux_contexts.pl' Perl script located in /usr/share/codendi/src/utils to setup SELinux directory contexts automatically.
+You can execute the 'fix_selinux_contexts.pl' Perl script located in /usr/share/tuleap/src/utils to setup SELinux directory contexts automatically.
 
 <h3>New SELinux modules</h3>
 <p>Codendi also needs specific rules that must be added to the RedHat default
 targeted policy.
-<p>SELinux rules for Codendi are provided in /usr/share/codendi/codendi_tools/selinux, in both textual and binary format.
+<p>SELinux rules for Codendi are provided in /usr/share/tuleap/codendi_tools/selinux, in both textual and binary format.
 In order to load a binary module, simply type:
 <pre>
 semodule -i modulename.pp
 </pre>
-You can load all Codendi-provided modules by running the 'fix_selinux_contexts.pl' Perl script located in /usr/share/codendi/src/utils.
+You can load all Codendi-provided modules by running the 'fix_selinux_contexts.pl' Perl script located in /usr/share/tuleap/src/utils.
 <h3>Compiling SELinux modules</h3>
 <p>
 Please read the <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-5-manual/Deployment_Guide-en-US/selg-overview.html">
@@ -688,7 +688,7 @@ DocBook processing chain to generate the Codendi User Guide.<br>
       <td valign="top">Stock RedHat<br>
       </td>
       <td valign="top">Codendi needs a number of RedHat packages that may not be installed by default (e.g. php-soap, apr, bind, etc.).
-The /usr/share/codendi/codendi_install.sh installation script contain the list of required RPMs. During installation, this script will complain if packages are missing.
+The /usr/share/tuleap/codendi_install.sh installation script contain the list of required RPMs. During installation, this script will complain if packages are missing.
       </td>
     </tr>
   </tbody>
@@ -911,11 +911,11 @@ zone "codendi.xerox.com" {
 <h1><a name="Apache_Configuration"></a>Apache Configuration</h1>
 <ul>
   <li>A sample Apache configuration file is available in the Codendi code
-in <tt>/usr/share/codendi/src/etc/http.conf.dist</tt>. Edit this file to
+in <tt>/usr/share/tuleap/src/etc/http.conf.dist</tt>. Edit this file to
 reflect your site settings and place it in <tt>/etc/httpd/conf/httpd.conf</tt>.</li>
   <li>Modules configuration must
 be placed in <tt>/etc/httpd/conf.d/</tt> . Codendi comes with a number
-of Apache modules configuration files that must be copied from <tt>/usr/share/codendi/src/etc/</tt>
+of Apache modules configuration files that must be copied from <tt>/usr/share/tuleap/src/etc/</tt>
 to <tt>/etc/httpd/conf.d/</tt> (e.g. php.conf, ssl.conf,etc.). 
   <li>Please not that, by default, <b>all</b> 
 configuration files (ending with .conf) located in <tt>/etc/httpd/conf.d/</tt> are included in both httpd.conf and ssl.conf.
@@ -936,7 +936,7 @@ in the right place. The RedHat Manual has excellent instructions on how
 to do generate a self-signed certificate. See the section called 
 <a href="http://www.redhat.com/docs/manuals/enterprise/RHEL-5-manual/Deployment_Guide-en-US/s1-httpd-secure-server.html">Apache HTTP Secure Server Configuration</a>
 <p>
-You will also find a script that will automate these tasks for you (/usr/share/codendi/src/utils/generate_ssl_certificate.sh)
+You will also find a script that will automate these tasks for you (/usr/share/tuleap/src/utils/generate_ssl_certificate.sh)
 <p>
 Note: although RedHat recommends that you generate a password protected
 key for your certificate it has some serious implications. The most
@@ -945,7 +945,7 @@ while rebooting the Codendi system to type the password when the Apache
 server is started. This prevents from doing an unattended reboot.<br>
 <br>
 To activate SSL on your Codendi server simply copy the sample <span
- style="font-family: monospace;">/usr/share/codendi/src/etc/ssl.conf.dist</span>
+ style="font-family: monospace;">/usr/share/tuleap/src/etc/ssl.conf.dist</span>
 file to <tt>/etc/httpd/conf/</tt>. It contains all the necessary
 Apache directives
 to enable secured HTTP. Then do the following:<br>
@@ -992,8 +992,8 @@ to the GNU GPL license.&nbsp;</font></li>
 Software</h1>
 As user root:<br>
 <ul>
-  <li>copy /usr/share/codendi/src/etc/local.inc.dist in
-/etc/codendi/conf/local.inc and /usr/share/codendi/src/etc/database.inc.dist in
+  <li>copy /usr/share/tuleap/src/etc/local.inc.dist in
+/etc/codendi/conf/local.inc and /usr/share/tuleap/src/etc/database.inc.dist in
 /etc/codendi/conf/database.inc</li>
   <li>change local.inc and database.inc ownership (e.g. chown
 codendiadm.codendiadm
@@ -1040,7 +1040,7 @@ name as $sys_default_domain. Set it to an empty string ($sys_https_host
     <pre>   php_flag magic_quotes_gpc on</pre>
   </li>
   <li>Update the include_path variable to the following value:<br>
-    <pre>   php_value include_path "/usr/share/codendi/src/www/include:/usr/share/codendi/src:."</pre>
+    <pre>   php_value include_path "/usr/share/tuleap/src/www/include:/usr/share/tuleap/src:."</pre>
   </li>
   <li>Also set/tune some additional variable for upload size:<br>
     <pre>   php_value memory_limit 30M
@@ -1182,7 +1182,7 @@ codendiadm password when prompted:<br>
 <h2>Populate the database</h2>
 To create the tables in the Codendi database and populate the database
 with the initial values one needs to type a few commands:
-<pre>cd /usr/share/codendi/src/db/mysql/<br>mysql -u codendiadm codendi -p &lt; database_structure.sql   # create the DB<br>mysql -u codendiadm codendi -p &lt; database_initvalues.sql  # populate with init values.<br><br>If you make a mistake in the creation process and want to restart from scratch run the following command:<br></pre>
+<pre>cd /usr/share/tuleap/src/db/mysql/<br>mysql -u codendiadm codendi -p &lt; database_structure.sql   # create the DB<br>mysql -u codendiadm codendi -p &lt; database_initvalues.sql  # populate with init values.<br><br>If you make a mistake in the creation process and want to restart from scratch run the following command:<br></pre>
 <pre>mysql -e "drop database codendi"<br><br></pre>
 <h2>MySQL configuration file</h2>
 The /etc/my.cnf configuration file is here to specify a number of
@@ -1374,7 +1374,7 @@ provided at <a
 <h2>fileforge</h2>
 <p>This is a small utility which is called by the Apache server to move
 files from the incoming ftp directory to the project file release space</p>
-<p>Go to /usr/share/codendi/src/utils. In fileforge.c, modify the following
+<p>Go to /usr/share/tuleap/src/utils. In fileforge.c, modify the following
 lines if need be </p>
 <pre>  char * src_dir   = "/var/lib/codendi/ftp/incoming/"; /* the ftp incoming directory */<br>  char * dest_dir  = "/var/lib/codendi/ftp/codendi/"; /* the file release space for Codendi projects */<br></pre>
 The trailing slashes are mandatory. Compile it with gcc -O2 -o
@@ -1518,10 +1518,10 @@ service xinetd restart
 chkconfig --add cvslockd
 service cvslockd start
 </pre>
-<li>Copy '/usr/share/codendi/src/etc/PServer.dist' file to /etc/cvsnt/PServer.<br>
+<li>Copy '/usr/share/tuleap/src/etc/PServer.dist' file to /etc/cvsnt/PServer.<br>
 Note that the sserver protocol uses the same SSL certificates as the https protocol.
 If your Codendi server is not yet configured for HTTPS, you need to generate a certificate.
-<li>You may need to migrate existing CVSROOTs if they were created with CVS (and not CVSNT) with a script. Use /usr/share/codendi/src/utils/cvs1/cvs2cvsnt.pl.
+<li>You may need to migrate existing CVSROOTs if they were created with CVS (and not CVSNT) with a script. Use /usr/share/tuleap/src/utils/cvs1/cvs2cvsnt.pl.
 
 </ul>
 <h2>The SSH approach</h2>
@@ -1555,7 +1555,7 @@ This feature is activated in the CVS Web interface of the Codendi Web
 frontend under CVS -&gt; Admin. For this feature to work properly
 symbolic links must be created from the /usr/local/bin directory as
 follows:<br>
-<pre><tt>&nbsp;&nbsp;&nbsp; # cd /usr/share/codendi/src/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/lib/codendi/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/lib/codendi/bin</tt></pre>
+<pre><tt>&nbsp;&nbsp;&nbsp; # cd /usr/share/tuleap/src/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/lib/codendi/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/lib/codendi/bin</tt></pre>
 The log_accum script requires the
 codendiadm group ownership to execute properly. <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b>
@@ -1773,7 +1773,7 @@ place as the src directory (PHP scripts). &nbsp;Make sure you update the
 <tt>$sys_incdir</tt>
 variable in <tt>/etc/codendi/conf/local.inc</tt> to reflect the path to
 the <tt>site-content</tt>
-directory (default is <tt>/usr/share/codendi/site-content</tt>).<br>
+directory (default is <tt>/usr/share/tuleap/site-content</tt>).<br>
 <br>
 To customize the content of a given script for your site go through the
 following steps:<br>
@@ -1785,7 +1785,7 @@ directory if it doesn't exist.</li>
 original <tt><i>whattext</i>.txt</tt> file under the <tt>/etc/codendi/site-content/<i></i></tt>
 with the exact same path. For instance if you want to customize the
 introductory text of the Codendi home page, copy <span
- style="font-family: monospace;">/usr/share/codendi/site-content/en_US/homepage/welcome_intro.txt</span>&nbsp;
+ style="font-family: monospace;">/usr/share/tuleap/site-content/en_US/homepage/welcome_intro.txt</span>&nbsp;
 into and <span style="font-family: monospace;">/etc/site-content/en_US/homepage/welcome_intro.txt</span>
 edit it as you like.<br>
     <br>
@@ -1805,7 +1805,7 @@ Currently, Codendi supports the English and French languages.
 <br>The format of the message files is very simple: one line per message, with the following format:<br>
 <pre>   key1[tab]key2[tab]your message here</pre>
 <p>As with other site-content files, you may customize the language files, so that you can change a few specific messages:
-<ol><li>Copy the language file you need to customize from the /usr/share/codendi/site-content subdirectory to the corresponding subdirectory in /etc/codendi/site-content (see <a href="#Site_content">Site content</a> above)
+<ol><li>Copy the language file you need to customize from the /usr/share/tuleap/site-content subdirectory to the corresponding subdirectory in /etc/codendi/site-content (see <a href="#Site_content">Site content</a> above)
 <li>Remove all lines that you don't need to change, and only keep the lines you will modify.
 <li>Change the messages
 <li>Repeat the operation for all the languages you need to support on your Codendi server.
@@ -1814,8 +1814,8 @@ Currently, Codendi supports the English and French languages.
 <p>When looking for a message to display, Codendi will look successively in the following directories, stopping as soon as the message is found:
 <ol><li>Theme-specific message file
 <li>/etc/codendi/site-content/<i>user_lang</i> directory
-<li>/usr/share/codendi/site-content/<i>user_lang</i> directory
-<li>/usr/share/codendi/site-content/en_US directory (if the message file does not exist in the selected language)
+<li>/usr/share/tuleap/site-content/<i>user_lang</i> directory
+<li>/usr/share/tuleap/site-content/en_US directory (if the message file does not exist in the selected language)
 </ol>
 
 <h2>Site Documentation</h2>
@@ -1848,28 +1848,28 @@ directories.<br>
 The User Guide contain references to the company name, server name
 running Codendi,etc. These pieces of information vary from one site to
 another. Therefore a specific file has been introduced at <span
- style="font-family: monospace;">/usr/share/codendi/documentation/user_guide/xml/ParametersLocal.dtd</span>
+ style="font-family: monospace;">/usr/share/tuleap/documentation/user_guide/xml/ParametersLocal.dtd</span>
 that you can use to customize the&nbsp; content of the Codendi User
 Guide. To do so:<br>
 <ul>
-  <li>Copy <span style="font-family: monospace;">/usr/share/codendi/documentation/user_guide/xml/ParametersLocal.dtd
+  <li>Copy <span style="font-family: monospace;">/usr/share/tuleap/documentation/user_guide/xml/ParametersLocal.dtd
 to </span><span style="font-family: monospace;"><span
  style="font-family: monospace;">/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd</span></span></li>
   <li>Edit the file you just copied and redefine the XML entities that
 govern
 the site specific information. For a list of the available XML entities
 that you can redefine see the <span style="font-family: monospace;"><span
- style="font-family: monospace;">/usr/share/codendi/documentation/user_guide/xml/en_US/</span></span><span
+ style="font-family: monospace;">/usr/share/tuleap/documentation/user_guide/xml/en_US/</span></span><span
  style="font-family: monospace;">ParametersDefault.dtd</span> . <br>
   </li>
   <li>Regenerate the documentation by running <span
  style="font-family: monospace;">the script
-/usr/share/codendi/src/utils/generate_doc.sh</span></li>
+/usr/share/tuleap/src/utils/generate_doc.sh</span></li>
 </ul>
 <br>
 Also notice that the HTML and PDF versions of the CUG are <b>not</b>
 stored in the source repository. They are generated from the XML files
-using the script&nbsp; <span style="font-family: monospace;">/usr/share/codendi/src/utils/generate_doc.sh</span>.
+using the script&nbsp; <span style="font-family: monospace;">/usr/share/tuleap/src/utils/generate_doc.sh</span>.
 You can run this
 script
 by hand from the codendiadm Linux account and our advice is also to
@@ -1883,10 +1883,10 @@ software packages to install</a>.<br>
 <h2>Project Web Site</h2>
 When a project is registered on Codendi a new web site is created for
 that project. A default home page is installed for that project from
-the <span style="font-family: monospace;">/usr/share/codendi/site-content/en_US/others/default_page.php</span>
+the <span style="font-family: monospace;">/usr/share/tuleap/site-content/en_US/others/default_page.php</span>
 file. You may want to create your own custom
 file for your own Codendi site. To do so, copy the <span style="font-family: monospace;">
-/usr/share/codendi/site-content/en_US/others/default_page.php</span> file
+/usr/share/tuleap/site-content/en_US/others/default_page.php</span> file
 in the <span style="font-family: monospace;">/etc/codendi/site-content/en_US/others/</span>
 directory if not already
 there. Then, edit the custom file and customize it to your liking<br>
@@ -2037,7 +2037,7 @@ $sys_ldap_login = 'uid';
 <h1><a name="Backend_Scripts"></a>Backend Scripts<br>
 </h1>
 Most of the backend scripts used by the Codendi system are writen in Perl
-and are located in <tt>/usr/share/codendi/src/utils</tt>. Many of these script
+and are located in <tt>/usr/share/tuleap/src/utils</tt>. Many of these script
 use the<tt> include.pl</tt> file and, in case you did not follow the
 standard installation process explained in this document, you may have
 to customize the content of this include file to match your site
@@ -2058,21 +2058,21 @@ you keep the same time and frequency to run the jobs. <br>
 <br>
 <blockquote>
   <tt># Once a minute, process Codendi system events</tt><br>
-  <tt>* * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./process_system_events.php)</tt><br>
+  <tt>* * * * * (cd /usr/share/tuleap/src/utils; ./php-launcher.sh ./process_system_events.php)</tt><br>
   <tt>#</tt><br>
   <tt># Regularly launch a system_check event (e.g. every half-hour) </tt><br>
-  <tt>0,30 * * * * (cd /usr/share/codendi/src/utils; ./php-launcher.sh ./launch_system_check.php)</tt><br>
+  <tt>0,30 * * * * (cd /usr/share/tuleap/src/utils; ./php-launcher.sh ./launch_system_check.php)</tt><br>
   <tt>#</tt><br>
   <tt># run the daily statistics script just a little bit after</tt><br>
   <tt># midnight so that it computes stats for the day before</tt><br>
   <tt># Run at 0:30 am</tt><br>
-  <tt>30 0 * * * /usr/share/codendi/src/utils/compute_all_daily_stats.sh</tt><br>
+  <tt>30 0 * * * /usr/share/tuleap/src/utils/compute_all_daily_stats.sh</tt><br>
   <tt>#</tt><br>
   <tt># run the weekly stats for projects. Run it on Monday morning so
 that</tt><br>
   <tt># it computes the stats for the week before</tt><br>
   <tt># Run on Monday at 1am</tt><br>
-  <tt>0 1 * * Mon (cd /usr/share/codendi/src/utils/underworld-root;
+  <tt>0 1 * * Mon (cd /usr/share/tuleap/src/utils/underworld-root;
 ./db_project_weekly_metric</tt><tt>.pl)</tt><br>
   <tt># daily incremental backup of subversion repositories</tt><br>
   <tt>45 23 * * 1-6 /usr/lib/codendi/bin/backup_subversion.sh -i</tt><br>
@@ -2096,11 +2096,11 @@ your backup procedure or something similar.<br>
 <h2>Codendiadm crontab</h2>
 <blockquote>
   <tt># Daily Codendi PHP cron (obsolete documents...)</tt><br>
-  <tt>10 0 * * * /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/src/utils/codendi_daily.php</tt><br>
+  <tt>10 0 * * * /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/src/utils/codendi_daily.php</tt><br>
   <tt># Re-generate the Codendi User Guides on a daily basis</tt><br>
-  <tt>00 03 * * * /usr/share/codendi/src/utils/generate_doc.sh</tt><br>
-  <tt>30 03 * * * /usr/share/codendi/src/utils/generate_programmer_doc.sh</tt><br>
-  <tt>45 03 * * * /usr/share/codendi/src/utils/generate_cli_package.sh</tt><br>
+  <tt>00 03 * * * /usr/share/tuleap/src/utils/generate_doc.sh</tt><br>
+  <tt>30 03 * * * /usr/share/tuleap/src/utils/generate_programmer_doc.sh</tt><br>
+  <tt>45 03 * * * /usr/share/tuleap/src/utils/generate_cli_package.sh</tt><br>
   <br>
 </blockquote>
 <br>

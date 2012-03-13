@@ -89,7 +89,7 @@ close(OUT);
 
 # Get PHP_PARAMS variable from php-laucher.sh
 my $PHP_PARAMS="";
-open(PHP_LAUNCHER, "</usr/share/codendi/src/utils/php-launcher.sh");
+open(PHP_LAUNCHER, "</usr/share/tuleap/src/utils/php-launcher.sh");
 while (<PHP_LAUNCHER>) {
     if (m/^[ ]*PHP_PARAMS="(.*)"$/) {
 	$PHP_PARAMS=$1
@@ -99,7 +99,7 @@ close(PHP_LAUNCHER);
 
 # get PHP_PARAMS variable from php-laucher.sh
 my $PHP_PARAMS="";
-open(PHP_LAUNCHER, "</usr/share/codendi/src/utils/php-launcher.sh");
+open(PHP_LAUNCHER, "</usr/share/tuleap/src/utils/php-launcher.sh");
 while (<PHP_LAUNCHER>) {
     if (m/^[ ]*PHP_PARAMS="(.*)"$/) {
 	$PHP_PARAMS=$1
@@ -108,7 +108,7 @@ while (<PHP_LAUNCHER>) {
 close(PHP_LAUNCHER);
 
 # store mail in ForumML DB
-exec "/usr/bin/php $PHP_PARAMS /usr/share/codendi/plugins/forumml/bin/mail_2_DB.php $listname 1 $temp";
+exec "/usr/bin/php $PHP_PARAMS /usr/share/tuleap/plugins/forumml/bin/mail_2_DB.php $listname 1 $temp";
 
 close STDOUT;
 close STDERR;

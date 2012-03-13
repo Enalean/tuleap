@@ -525,7 +525,7 @@ There are specific user account you must know about:
 <ul>
   <li> <b>codendiadm:</b> this is the user that owns the entire Codendi
 Web
-site hierarchy under /usr/share/codendi</li>
+site hierarchy under /usr/share/tuleap</li>
   <li> <b>dummy:</b> a "dummy" user that is generally used whenever a
 file
 belongs to a given group but to no specific user in particular. More or
@@ -587,14 +587,14 @@ There are specific group accounts you must know about:
 <ul>
   <li> <b>codendiadm:</b> group created to own the Codendi Web
 hierarchy
-under <span style="font-family: monospace;">/usr/share/codendi</span>.</li>
+under <span style="font-family: monospace;">/usr/share/tuleap</span>.</li>
   <li><span style="font-weight: bold;">mailman:</span> group owner of
 all the Mailman directories</li>
 </ul>
 <h1> <a name="CodendiFileStructure"></a>Codendi File Structure</h1>
 <h2> Web site</h2>
 The Codendi Web front end files are all under <b><span
- style="font-family: monospace;">/usr/share/codendi</span>.</b> Except
+ style="font-family: monospace;">/usr/share/tuleap</span>.</b> Except
 otherwise
 specified this directories and all the files and directories under it
 belongs
@@ -859,14 +859,14 @@ are archived. Archiving takes place each day.</td>
       <td valign="top">File name pattern: <tt>cvs_traffic_YYYYMMDD.log</tt>
       <p>A daily log of the CVS history files for all Codendi projects.
 The
-script <tt>/usr/share/codendi/src/utils/cvs1/cvs_history_parse.pl </tt>runs
+script <tt>/usr/share/tuleap/src/utils/cvs1/cvs_history_parse.pl </tt>runs
 daily
 and is responsible for extracting the CVS log information of that day
 for
 all <tt>/cvsroot/ProjectName/CVSROOT/history</tt> file and assemble
 them all
 in a single log file. </p>
-      <p>This global log file is later processed by the script <tt>/usr/share/codendi/src/utils/underworld-root/db_stats_cvs_history.pl</tt>
+      <p>This global log file is later processed by the script <tt>/usr/share/tuleap/src/utils/underworld-root/db_stats_cvs_history.pl</tt>
 which feeds the Codendi database with statistical figures about the CVS
 activity
 of each project (like the number of&nbsp; CVS checkout/add/commit
@@ -952,7 +952,7 @@ automatically
 updated.</li>
 All user aliases and mailing list aliases are actually appended to the
 master
-file <tt>/usr/share/codendi/src/utils/underworld-dummy/aliases.zone</tt>. This
+file <tt>/usr/share/tuleap/src/utils/underworld-dummy/aliases.zone</tt>. This
 file
 contains codendi wide aliases like codendi-admin or codendi-contact. If you
 want
@@ -1287,7 +1287,7 @@ xww.<span style="font-style: italic;">your.codendi.domain</span>, www.<span
 that you may have defined yourself in the file <span
  style="font-family: monospace;">/var/named/codendi.zone</span>. The
 Apache Document
-Root is at <span style="font-family: monospace;">/usr/share/codendi/src/www</span>
+Root is at <span style="font-family: monospace;">/usr/share/tuleap/src/www</span>
 where all the PHP scripts are located.
 <h2> Virtual Servers</h2>
 Each project has its own project Web server. These servers are configured with 
@@ -1538,14 +1538,14 @@ crontab.
 <table border="1" width="100%" nosave="">
   <tbody>
     <tr>
-      <td style="font-family: monospace;">/usr/share/codendi/src/utils/compute_all_daily_stats.sh</td>
+      <td style="font-family: monospace;">/usr/share/tuleap/src/utils/compute_all_daily_stats.sh</td>
       <td>As the name says it this the master script that compute all
 the
 daily statistics about the Codendi site globally and also for individual
 projects</td>
     </tr>
     <tr>
-      <td><span style="font-family: monospace;">/usr/share/codendi/src/utils/underworld-root/...
+      <td><span style="font-family: monospace;">/usr/share/tuleap/src/utils/underworld-root/...
       </span><br>
       <span style="font-family: monospace;">db_project_weekly_metric.pl</span></td>
       <td>Same as above but this time it is for weekly statistics</td>
@@ -1617,7 +1617,7 @@ Codendi offers a continuous update process to Codendi site administrators
 to quickly and easily put in place new bug fixes, new features while
 minimizing the server downtime. The Codendi software is made of PHP and
 Perl code that is delivered in source form to our customers. The Codendi
-software resides in the <span style="font-family: monospace;">/usr/share/codendi</span>
+software resides in the <span style="font-family: monospace;">/usr/share/tuleap</span>
 directory and it is formatted in such a way that it behaves like a Subversion
 working copy that can be remotely updated when ever the system
 administrator decide to do so.<br>
@@ -1671,7 +1671,7 @@ repository pointer<br>
 <ul>
   <li>Log to the 'codendiadm' Codendi shell account on the Codendi server</li>
   <li>Go to the Codendi top directory: <span
- style="font-family: monospace;">cd /usr/share/codendi</span></li>
+ style="font-family: monospace;">cd /usr/share/tuleap</span></li>
   <li>Launch an SVN status command to get a list of all the
 files that needs to be updated on your local Codendi directory<br>
     <br>
@@ -1866,7 +1866,7 @@ week's date/time&gt; to</li>
 The whole MySQL data backup process takes less than 15 seconds
 <p>
 </li>
-<li>Subversion repositories: a specific subversion backup script (/usr/share/codendi/utils/subversion_backup.sh) is run in the root crontab. 
+<li>Subversion repositories: a specific subversion backup script (/usr/share/tuleap/utils/subversion_backup.sh) is run in the root crontab. 
 <br>The script offers two backup mechanisms: full backup, and incremental backup (with '-i' flag). Currently, full backups are run weekly, while incremental ones are run daily.
 <li>
 <p>Disk Partitions - Using Legato software, a full backup of all disks (except
@@ -2133,7 +2133,7 @@ scp svn_dumpfile username@codendi.example.com:/home/groups/projectname</pre>
 (it is also possible to use FTP instead).
 <li> One may want to change svn:author property for all commits in the dump file, this can be achieved by means of svn-author-replace.pl
     This is usefull when authors are not known or known under another login name in the codendi platform
-    <pre>perl /usr/share/codendi/src/utils/svn/svn-author-replace.pl -f svn_dumpfile -u user_map.txt > new_svn_dumpfile</pre>
+    <pre>perl /usr/share/tuleap/src/utils/svn/svn-author-replace.pl -f svn_dumpfile -u user_map.txt > new_svn_dumpfile</pre>
     where svn.dump is the subversion dump file, and user_map.txt a file with author name to change (1 user per line) old_author_name=new_author_name
     default=default_login may be added to process unknown users.
 <li>then a Codendi site administrator needs to load the repository content into the existing repository on Codendi:
@@ -2143,8 +2143,8 @@ svnadmin load /svnroot/projectname &lt; /home/groups/projectname/new_svn_dumpfil
 <pre>
 chown -R codendiadm.projectname /svnroot/projectname</pre>
 <li>if the existing repository had specific permissions or hooks, it is now time to copy the corresponding files on the new repository. This can be done by the project team.
-<li>History can be imported into the Codendi database, this is possible with svn-commit.pl (/usr/share/codendi/src/utils/svn/)
-    <pre>perl /usr/share/codendi/src/utils/svn/svn-commit.pl -p /svnroot/myproject/ -r r1:r2</pre>
+<li>History can be imported into the Codendi database, this is possible with svn-commit.pl (/usr/share/tuleap/src/utils/svn/)
+    <pre>perl /usr/share/tuleap/src/utils/svn/svn-commit.pl -p /svnroot/myproject/ -r r1:r2</pre>
 </li>
 <li>Once the team has tested the new repository, you can remove the dump file from /home/groups/projectname/svn_dumpfile.</li>
 </ol>
@@ -2699,7 +2699,7 @@ $sys_allow_restricted_users = 1;
 </ul>
 See also 'Codendi Installation Guide'.
 <h3>Setting restricted users privileges</h3>
-<p>You may fine tune the privileges of restricted users on your system. Simply copy /usr/share/codendi/site-content/en_US/include/restricted_user_permissions.txt in /etc/codendi/site-content/en_US/include/ and edit it. This is a sample configuration file:
+<p>You may fine tune the privileges of restricted users on your system. Simply copy /usr/share/tuleap/site-content/en_US/include/restricted_user_permissions.txt in /etc/codendi/site-content/en_US/include/ and edit it. This is a sample configuration file:
 <pre>
 // comment/uncomment forbidden URLs
 $forbidden_url = array(

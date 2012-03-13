@@ -1,3 +1,3 @@
 <?php
-include '/usr/share/codendi/www/include/pre.php';
+include '/usr/share/tuleap/www/include/pre.php';
 ?>

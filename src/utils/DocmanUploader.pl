@@ -37,7 +37,7 @@ use Env qw($CODENDI_WSDL);
 #################################
 
 # Where Codendi-CLI tool stands
-my $_cli_dir   = "/usr/share/codendi/cli";
+my $_cli_dir   = "/usr/share/tuleap/cli";
 # Server URL where all the stuff will be uploaded
 my $_codendi_url = "http://codendi.example.com";
 # CLI execution command

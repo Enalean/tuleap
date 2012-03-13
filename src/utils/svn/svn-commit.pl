@@ -27,7 +27,7 @@ use DBI;
 # Svnlook path.
 my $svnlook = "/usr/bin/svnlook";
 
-$utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/codendi/src/utils";
+$utils_path = $ENV{'CODENDI_UTILS_PREFIX'} || "/usr/share/tuleap/src/utils";
 require $utils_path."/include.pl";
 require $utils_path."/group.pl";
 &db_connect;
@@ -98,7 +98,7 @@ if (!$quiet) {
 print "Import $repository from $from_rev to $to_rev\n";
 for ( my $i=$from_rev; $i<$to_rev+1; $i++ ) {
     print 'Processing revision '."$i\n";
-    `perl /usr/share/codendi/src/utils/svn/commit-email.pl $repository $i`;
+    `perl /usr/share/tuleap/src/utils/svn/commit-email.pl $repository $i`;
 }
 
 ##

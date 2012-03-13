@@ -23,7 +23,7 @@
 #    Automatically fix SELinux contexts to allow proper access to Apache and MySAL
 #
 
-$INSTALL_DIR="/usr/share/codendi";
+$INSTALL_DIR="/usr/share/tuleap";
 require("$INSTALL_DIR/src/utils/include.pl");  # Include all the predefined functions and variables
 $CHCON='/usr/bin/chcon';
 $SEMODULE='/usr/sbin/semodule';
@@ -35,7 +35,7 @@ if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=di
    exit;
 }
 
-# /usr/share/codendi -> codendi main Web tree, documentation, plugins, etc.
+# /usr/share/tuleap -> tuleap main Web tree, documentation, plugins, etc.
 `$CHCON -R -h $context $codendi_dir`;
 
 # /etc/codendi -> for licence, site-content...

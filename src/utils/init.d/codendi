@@ -28,7 +28,7 @@
 # On RedHat, and derivatives, install with "chkconfig --add codendi"
 
 
-CODENDI_HOME=/usr/share/codendi
+CODENDI_HOME=/usr/share/tuleap
 
 # We used to install the mailman cron jobs when the mailman rpm was
 # installed, irrespective of whether mailman was actually being

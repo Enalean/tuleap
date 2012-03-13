@@ -279,7 +279,7 @@ UseCanonicalName Off
 # documents. By default, all requests are taken from this directory, but
 # symbolic links and aliases may be used to point to other locations.
 #
-DocumentRoot "/usr/share/codendi/src/www"
+DocumentRoot "/usr/share/tuleap/src/www"
 
 #
 # Each directory to which Apache has access can be configured with respect
@@ -304,7 +304,7 @@ DocumentRoot "/usr/share/codendi/src/www"
 #
 # This should be changed to whatever you set DocumentRoot to.
 #
-<Directory "/usr/share/codendi/src/www">
+<Directory "/usr/share/tuleap/src/www">
     Options Includes FollowSymLinks MultiViews
     AllowOverride All
     AcceptPathInfo On
@@ -317,7 +317,7 @@ DocumentRoot "/usr/share/codendi/src/www"
 # Currently, the risk is low, so we only filter on UserAgent string (which can be easily forged)
 # For better security, you can filter on the server IP address
 SetEnvIf User-Agent ^Codendi let_me_in
-<Directory "/usr/share/codendi/src/www/api">
+<Directory "/usr/share/tuleap/src/www/api">
     # API scrips do not end with ".php"
     ForceType application/x-httpd-php
     Order Deny,Allow

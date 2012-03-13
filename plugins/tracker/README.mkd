@@ -35,7 +35,7 @@ You may need to define templates in your template project(s).
 
 A cli script will help you in this task. As codendiadm:
 
-    $ cd /usr/share/codendi/
+    $ cd /usr/share/tuleap/
     $ src/utils/php-launcher.sh plugins/tracker/bin/import_tracker_xml_template.php plugins/tracker/www/resources/templates/<choose-a-template>.xml
 
 Dependencies

@@ -61,7 +61,7 @@ EOT;
 
 #. /usr/share/doc/git-core/contrib/hooks/post-receive-email
 # !!! Codendi Specific !!! DO NOT REMOVE (NEEDED CODENDI MARKER)
-. /usr/share/codendi/plugins/git/hooks/post-receive 2>/dev/null
+. /usr/share/tuleap/plugins/git/hooks/post-receive 2>/dev/null
 # END OF NEEDED CODENDI BLOCK
 
 EOT;

@@ -12,12 +12,12 @@
 # see contrib/hooks/ for an sample, or uncomment the next line (on debian)
 #
 
-#. /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
+#. /usr/share/tuleap/plugins/git/hooks/post-receive-email 2>/dev/null
 
 push_timestamp=$(date +%s)
 
 while read oldrev newrev refname
     do
-	echo $oldrev $newrev $refname | /usr/share/codendi/plugins/git/hooks/post-receive-email 2>/dev/null
-	. /usr/share/codendi/plugins/git/hooks/post-receive-log 2>/dev/null
+	echo $oldrev $newrev $refname | /usr/share/tuleap/plugins/git/hooks/post-receive-email 2>/dev/null
+	. /usr/share/tuleap/plugins/git/hooks/post-receive-log 2>/dev/null
     done

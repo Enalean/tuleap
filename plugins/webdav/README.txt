@@ -7,11 +7,11 @@ Option 1: if you access to webdav by "http[s]://webdav.domain.tld":
     Add a virtual host to WebDAV domain name (before definition of "Project web site virtual hosts alias" if any) :
     <VirtualHost webdav.domain.tld:80>
         Include conf.d/php.conf
-        DocumentRoot /usr/share/codendi/plugins/webdav/www
+        DocumentRoot /usr/share/tuleap/plugins/webdav/www
 
-        AliasMatch ^/(.*) /usr/share/codendi/plugins/webdav/www/index.php
+        AliasMatch ^/(.*) /usr/share/tuleap/plugins/webdav/www/index.php
 
-        <Directory /usr/share/codendi/plugins/webdav/www>
+        <Directory /usr/share/tuleap/plugins/webdav/www>
             Options Indexes MultiViews
             AllowOverride None
             Order allow,deny
@@ -28,8 +28,8 @@ Option 2: if you access to webdav by "https://domain.tld/plugins/webdav/" (doesn
     Under "/etc/httpd/conf.d/codendi_aliases.conf" add (in alias matches definition, add it to the beginning):
 
     # 0- WebDAV plugin web/php pages 
-    AliasMatch ^/plugins/webdav/(.*) /usr/share/codendi/plugins/webdav/www/index.php
-    <DirectoryMatch "/usr/share/codendi/plugins/webdav/www/">
+    AliasMatch ^/plugins/webdav/(.*) /usr/share/tuleap/plugins/webdav/www/index.php
+    <DirectoryMatch "/usr/share/tuleap/plugins/webdav/www/">
         Options Indexes MultiViews
         AllowOverride None
         Order allow,deny

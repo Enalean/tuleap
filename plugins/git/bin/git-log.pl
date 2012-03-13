@@ -26,11 +26,11 @@ $ENV{'PATH'} = '/usr/bin:/bin';
 
 # get PHP_PARAMS variable from php-laucher.sh
 my $PHP_PARAMS="";
-open(PHP_LAUNCHER, "</usr/share/codendi/src/utils/php-launcher.sh");
+open(PHP_LAUNCHER, "</usr/share/tuleap/src/utils/php-launcher.sh");
 while (<PHP_LAUNCHER>) {
     if (m/^[ ]*PHP_PARAMS="(.*)"$/) {
         $PHP_PARAMS=$1
     }
 }
 close(PHP_LAUNCHER);
-exec "/usr/bin/php $PHP_PARAMS /usr/share/codendi/plugins/git/hooks/git-log.php --group_name=$ARGV[0] --login=$ARGV[1] --repo_name=$ARGV[2] --push_timestamp=$ARGV[3] --commits_number=$ARGV[4] --gitolite_user=$ARGV[5]";
+exec "/usr/bin/php $PHP_PARAMS /usr/share/tuleap/plugins/git/hooks/git-log.php --group_name=$ARGV[0] --login=$ARGV[1] --repo_name=$ARGV[2] --push_timestamp=$ARGV[3] --commits_number=$ARGV[4] --gitolite_user=$ARGV[5]";

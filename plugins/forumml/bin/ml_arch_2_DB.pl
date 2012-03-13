@@ -51,7 +51,7 @@ if (-f $conf) {
 
 # Get PHP_PARAMS variable from php-laucher.sh
 my $PHP_PARAMS="";
-open(PHP_LAUNCHER, "</usr/share/codendi/src/utils/php-launcher.sh");
+open(PHP_LAUNCHER, "</usr/share/tuleap/src/utils/php-launcher.sh");
 while (<PHP_LAUNCHER>) {
     if (m/^[ ]*PHP_PARAMS="(.*)"$/) {
 	$PHP_PARAMS=$1
@@ -62,7 +62,7 @@ close(PHP_LAUNCHER);
 #use strict;
 use DBI;
 
-require "/usr/share/codendi/src/utils/include.pl";
+require "/usr/share/tuleap/src/utils/include.pl";
 &db_connect;
 
 # get all active mailing-lists
@@ -72,6 +72,6 @@ $req->execute();
 while (my ($list_name,$group_id) = $req->fetchrow()) {
     if(! exists $excluded_list{$list_name}) {
 	print "Processing ".$list_name." mailing-list ... \n";
-	system("/usr/bin/php $PHP_PARAMS /usr/share/codendi/plugins/forumml/bin/mail_2_DB.php $list_name 2");
+	system("/usr/bin/php $PHP_PARAMS /usr/share/tuleap/plugins/forumml/bin/mail_2_DB.php $list_name 2");
     }
 }

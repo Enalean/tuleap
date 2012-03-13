@@ -1,3 +1,3 @@
 <?php
-$gfcommon="/usr/share/codendi/src/common/";
+$gfcommon="/usr/share/tuleap/src/common/";
 ?>

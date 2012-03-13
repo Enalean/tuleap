@@ -30,7 +30,7 @@ php_flag register_globals on
 php_flag magic_quotes_gpc on
 # Needed by trackers and phpWiki
 php_flag register_long_arrays on
-php_value include_path "/usr/share/pear/:/usr/share/codendi/src/www/include:/usr/share/codendi/src:."
+php_value include_path "/usr/share/pear/:/usr/share/tuleap/src/www/include:/usr/share/tuleap/src:."
 php_value memory_limit 196M
 php_value post_max_size 128M
 php_value upload_max_filesize 128M

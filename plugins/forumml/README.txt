@@ -1,12 +1,12 @@
 ==== RPM INSTALLATION ====
 
-## If you installed codendi-plugin-forumml, you just need to be sure the right
+## If you installed tuleap-plugin-forumml, you just need to be sure the right
 ## mailman package is installed:
 mailman-2.1.9-5.codendi
 
 ## Then, update mailman configuration (/etc/mm_cfg.py) and set:
-PUBLIC_EXTERNAL_ARCHIVER = '/usr/lib/codendi/bin/mail_2_DB.pl %(listname)s ;'
-PRIVATE_EXTERNAL_ARCHIVER = '/usr/lib/codendi/bin/mail_2_DB.pl %(listname)s ;'
+PUBLIC_EXTERNAL_ARCHIVER = '/usr/lib/tuleap/bin/mail_2_DB.pl %(listname)s ;'
+PRIVATE_EXTERNAL_ARCHIVER = '/usr/lib/tuleap/bin/mail_2_DB.pl %(listname)s ;'
 
 ## Restart mailman:
 service mailman restart
@@ -22,7 +22,7 @@ service mailman restart
 /usr/bin/install -d -g codendiadm -o codendiadm -m 00750 /var/run/forumml
 
 ## Install ForumMl hook
-/usr/bin/install -g codendiadm -o codendiadm -m 06755 /usr/share/codendi/plugins/forumml/bin/mail_2_DB.pl /usr/lib/codendi/bin
+/usr/bin/install -g codendiadm -o codendiadm -m 06755 /usr/share/tuleap/plugins/forumml/bin/mail_2_DB.pl /usr/lib/tuleap/bin
 
 ## Install requested RPMS:
 # Standard rpm (shiped with RHEL/CentOs):
@@ -59,8 +59,8 @@ Add /usr/share/pear in include_path
 
 ## Update Mailman config to enable the Hook
 # edit /etc/mm_cfg.py and set
-PUBLIC_EXTERNAL_ARCHIVER = '/usr/lib/codendi/bin/mail_2_DB.pl %(listname)s ;'
-PRIVATE_EXTERNAL_ARCHIVER = '/usr/lib/codendi/bin/mail_2_DB.pl %(listname)s ;'
+PUBLIC_EXTERNAL_ARCHIVER = '/usr/lib/tuleap/bin/mail_2_DB.pl %(listname)s ;'
+PRIVATE_EXTERNAL_ARCHIVER = '/usr/lib/tuleap/bin/mail_2_DB.pl %(listname)s ;'
 
 ## restart mailman
 service mailman restart
@@ -73,11 +73,11 @@ service mailman restart
 run 'mail_2_DB.php' script.
 1st argument: list name
 2nd argument: 2
-$> /usr/share/codendi/src/utils/php-launcher /usr/share/codendi/plugins/forumml/bin/mail_2_DB.php codex-support 2
+$> /usr/share/tuleap/src/utils/php-launcher /usr/share/tuleap/plugins/forumml/bin/mail_2_DB.php codex-support 2
 
 ## To import ML archives of all Codendi projects, for which the plugin is enabled
 run 'ml_arch_2_DB.pl' script:
-$> /usr/share/codendi/plugins/forumml/bin/ml_arch_2_DB.pl
+$> /usr/share/tuleap/plugins/forumml/bin/ml_arch_2_DB.pl
 
 
 
@@ -101,6 +101,6 @@ pear upgrade --force PEAR-1.9.0.tgz Archive_Tar-1.3.3.tgz Console_Getopt-1.2.3.t
 
 ==== REBUILD RPMS ====
 ## You might need to rebuild few RPMs:
-cd /usr/share/codendi/rpm/SPECS
+cd /usr/share/tuleap/rpm/SPECS
 rpmbuild -ba mailman.codendi.spec
 

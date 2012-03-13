@@ -10,7 +10,7 @@
 # ./codendi_install.sh 2>&1 | tee /tmp/codendi_install.log
 
 TODO_FILE=/root/todo_tuleap.txt
-export INSTALL_DIR="/usr/share/codendi"
+export INSTALL_DIR="/usr/share/tuleap"
 
 # path to command line tools
 GROUPADD='/usr/sbin/groupadd'
@@ -790,7 +790,7 @@ $TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
 
 # SELinux specific
 if [ $SELINUX_ENABLED ]; then
-    $CHCON -R -h $SELINUX_CONTEXT /usr/share/codendi
+    $CHCON -R -h $SELINUX_CONTEXT /usr/share/tuleap
     $CHCON -R -h $SELINUX_CONTEXT /etc/codendi
     $CHCON -R -h $SELINUX_CONTEXT /var/lib/codendi
     $CHCON -R -h $SELINUX_CONTEXT /home/groups
@@ -982,7 +982,7 @@ fi
 
 # Make sure SELinux contexts are valid
 if [ $SELINUX_ENABLED ]; then
-    $CHCON -R -h $SELINUX_CONTEXT /usr/share/codendi
+    $CHCON -R -h $SELINUX_CONTEXT /usr/share/tuleap
 fi
 
 todo "Customize /etc/codendi/conf/local.inc and /etc/codendi/conf/database.inc"
