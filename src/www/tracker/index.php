@@ -34,14 +34,13 @@ require_once('./include/ArtifactImportHtml.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/SimpleSanitizer.class.php');
 
-
-$sanitizer = new SimpleSanitizer();
-
 $aid      = $request->getValidated('aid', 'uint', 0);
 $atid     = $request->getValidated('atid', 'uint', 0);
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 
-$hp = Codendi_HTMLPurifier::instance();
+$em        = EventManager::instance();
+$sanitizer = new SimpleSanitizer();
+$hp        = Codendi_HTMLPurifier::instance();
 
 if ($aid && !$atid) {
     // We have the artifact id, but not the tracker id
@@ -210,7 +209,6 @@ if ( $func == 'gotoid' ) {
                                 $addresses = $agnf->getAllAddresses($ath->getID());
                                 $ah->mailFollowupWithPermissions($addresses);
 
-                                $em = EventManager::instance();
                                 $em->processEvent('tracker_postadd', array('ah' => $ah, 'ath' => $ath));
 
                                 $itemname = $ath->getItemName();
@@ -547,6 +545,8 @@ if ( $func == 'gotoid' ) {
                         // Update the 'last_update_date' artifact field
                         $res_last_up = $ah->update_last_update_date();
     
+                        $em->processEvent('tracker_postmod', array('ah' => $ah, 'ath' => $ath));
+                        
                         //
                         //      Show just one feedback entry if no errors
                         //

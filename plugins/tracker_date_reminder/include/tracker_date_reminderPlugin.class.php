@@ -47,6 +47,8 @@ class tracker_date_reminderPlugin extends Plugin {
         $this->_addHook('tracker_postadd', 'tracker_create_artifact', false);
         // Copy an artifact
         $this->_addHook('tracker_postcopy', 'tracker_create_artifact', false);
+        // Modificatin of an artifact
+        $this->_addHook('tracker_postmod', 'tracker_update_artifact', false);
     }
 
     function getPluginInfo() {
@@ -241,6 +243,22 @@ class tracker_date_reminderPlugin extends Plugin {
     function tracker_create_artifact($params) { 
         if ($params['ah']->getStatusID() == 1) {
             $tdrArtifactType = new TrackerDateReminder_ArtifactType($params['ath']);
+            $tdrArtifactType->addArtifactToDateReminderProcessing(0, $params['ah']->getID(), $params['ath']->getID());
+        }
+    }
+    
+    
+    /**
+     * Hook: Artifact update in web interface
+     * 
+     * @param $params
+     * 
+     * @return void
+     */
+    function tracker_update_artifact($params) {
+        if ($params['ah']->getStatusID() == 1) {
+            $tdrArtifactType = new TrackerDateReminder_ArtifactType($params['ath']);
+            $tdrArtifactType->deleteArtifactFromDateReminderProcessing(0, $params['ah']->getID(), $params['ath']->getID());
             $tdrArtifactType->addArtifactToDateReminderProcessing(0, $params['ah']->getID(), $params['ath']->getID());
         }
     }
