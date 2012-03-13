@@ -198,7 +198,7 @@ EOF
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/var/log/codendi/$year/$month"
+     destdir="/var/log/tuleap/$year/$month"
      destfile="ftp_xferlog_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/xferlog.1 $destdir/$destfile
@@ -748,8 +748,8 @@ build_dir /var/lib/tuleap/backup/mysql/old root root 700
 build_dir /var/lib/tuleap/backup/subversion root root 700
 build_dir /var/lib/tuleap/docman codendiadm codendiadm 700
 # log dirs
-build_dir /var/log/codendi codendiadm codendiadm 755
-build_dir /var/log/codendi/cvslogs codendiadm codendiadm 775
+build_dir /var/log/tuleap codendiadm codendiadm 755
+build_dir /var/log/tuleap/cvslogs codendiadm codendiadm 775
 build_dir /var/tmp/tuleap codendiadm codendiadm 755
 # config dirs
 build_dir /etc/skel_codendi root root 755
@@ -1112,7 +1112,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
      year=`date +%Y`
      month=`date +%m`
      day=`date +%d`
-     destdir="/var/log/codendi/$year/$month"
+     destdir="/var/log/tuleap/$year/$month"
      destfile="http_combined_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/access_log.1 $destdir/$destfile
@@ -1129,7 +1129,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
      month=`date +%m`
      day=`date +%d`
      #server=`hostname`
-     destdir="/var/log/codendi/$year/$month"
+     destdir="/var/log/tuleap/$year/$month"
      destfile="vhosts-access_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/vhosts-access_log.1 $destdir/$destfile
@@ -1156,7 +1156,7 @@ $CAT <<'EOF' >/etc/logrotate.d/httpd
      month=`date +%m`
      day=`date +%d`
      #server=`hostname`
-     destdir="/var/log/codendi/$year/$month"
+     destdir="/var/log/tuleap/$year/$month"
      destfile="svn_$year$month$day.log"
      mkdir -p $destdir
      cp /var/log/httpd/svn_log.1 $destdir/$destfile

@@ -544,7 +544,7 @@ class Statistics_DiskUsageManager {
     public function collectSite() {
         $sql = db_query('START TRANSACTION');
         $this->storeForSite('mysql', '/var/lib/mysql');
-        $this->storeForSite('codendi_log', '/var/log/codendi');
+        $this->storeForSite('codendi_log', '/var/log/tuleap');
         $this->storeForSite('backup', '/var/lib/tuleap/backup');
         $this->storeForSite('backup_old', '/var/lib/tuleap/backup/old');
         $this->storeDf();

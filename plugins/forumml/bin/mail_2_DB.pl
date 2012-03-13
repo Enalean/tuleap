@@ -42,7 +42,7 @@ use strict;
 $ENV{'PATH'} = '/usr/bin:/bin';
 
 # Hook log file
-my $logfile = "/var/log/codendi/forumml_hook.log";
+my $logfile = "/var/log/tuleap/forumml_hook.log";
 
 # Redirect outputs
 open STDOUT, ">>", $logfile or die "cannot append to '$logfile': $!\n";
