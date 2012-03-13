@@ -21,9 +21,6 @@
 require_once dirname(__FILE__) .'/../include/agiledashboardPlugin.class.php';
 require_once 'common/include/Codendi_Request.class.php';
 
-// FIXME: WAT ?
-define('TRACKER_EVENT_INCLUDE_CSS_FILE', null);
-
 class AgileDashboardPluginTest extends UnitTestCase {
     
     public function testProcessDoesNothing() {

@@ -34,7 +34,8 @@ class AgileDashboardPlugin extends Plugin {
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
             $this->_addHook('cssfile', 'cssfile', false);
-            $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
+            //TODO
+            //$this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
         }
     }
 
