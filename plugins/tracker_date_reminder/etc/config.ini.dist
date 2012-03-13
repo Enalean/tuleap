@@ -1,0 +1,9 @@
+<?php
+
+// Turn it to true to produce logging info into
+// /var/log/tuleap/tracker_date_reminder.log file
+// Be careful, the file might grow quickly, activate it only for debug purpose
+// on a short period of time.
+$enable_log = false;
+
+?>
