@@ -59,7 +59,7 @@ class tracker_date_reminderPlugin extends Plugin {
 
     function codendi_daily_start($params) {
         include_once 'ArtifactDateReminder.class.php';
-        include_once 'TrackerDateReminder_Logger.class.php';
+        include_once 'TrackerDateReminder_Logger_Prefix.class.php';
         
         $logger = new TrackerDateReminder_Logger($GLOBALS['codendi_log']."/tracker_date_reminder.log");
         

@@ -63,7 +63,7 @@ class ArtifactDateReminderFactory {
         $notif_array = $this->getNotificationData($notification_id);
         $this->setFromArray($notif_array);
 
-        $this->logger = $logger;
+        $this->logger = new TrackerDateReminder_Logger_Prefix($logger, '[Notif id '.$notification_id.']');
     }
 
     /**
@@ -462,8 +462,8 @@ class ArtifactDateReminderFactory {
     function handleNotification() {
         global $art_field_fact;
 
-        $logPrefix = "handleNotification[".$this->notification_id."]";
-        $this->logger->info("$logPrefix Start");
+        $logger = new TrackerDateReminder_Logger_Prefix($this->logger, '[handleNotification]');
+        $logger->info("Start");
         
         $group          = ProjectManager::instance()->getProject($this->getGroupId());
         $at             = new ArtifactType($group, $this->getGroupArtifactId());
@@ -471,6 +471,9 @@ class ArtifactDateReminderFactory {
         $field          = $art_field_fact->getFieldFromId($this->getFieldId());
         $art            = new Artifact($at,$this->getArtifactId(), false);
 
+        $logger->info("tracker: ".$this->getGroupArtifactId());
+        $logger->info("artifact: ".$this->getArtifactId());
+        
         $sent = true;
         $week = date("W",$this->getDateValue());
 
@@ -490,16 +493,16 @@ class ArtifactDateReminderFactory {
         $mail->setBody($body);
         
         $allNotified = $this->getNotifiedPeople();
-        $this->logger->info("$logPrefix notify: ".implode(', ', $allNotified));
+        $logger->info("notify: ".implode(', ', $allNotified));
         foreach ($allNotified as $notified) {
             $mail->setTo($notified);
             if (!$mail->send()) {
-                $this->logger->error("$logPrefix faild to notify $notified");
+                $logger->error("faild to notify $notified");
                 $sent = false;
             }
         }
         
-        $this->logger->info("$logPrefix End");
+        $logger->info("End");
         
         return $sent;
     }
@@ -515,21 +518,20 @@ class ArtifactDateReminderFactory {
      * @param Integer $current_time Time when the reminder status should be checked (appart for test should be time())
      */
     function checkReminderStatus($current_time) {
-        $logPrefix = "checkReminderStatus[".$this->notification_id."]";
-        $this->logger->info("$logPrefix Start");
+        $this->logger->info("Start");
         
         $notificationSent = $this->getNotificationSent();
         $recurse          = $this->getRecurse();
-        $this->logger->info("$logPrefix notification_sent = $notificationSent");
-        $this->logger->info("$logPrefix recurse           = $recurse");
+        $this->logger->info("notification_sent = $notificationSent");
+        $this->logger->info("recurse           = $recurse");
         if ($notificationSent < $recurse) {
             $notificationToBeSent = $this->getNotificationToBeSent($current_time);
-            $this->logger->info("$logPrefix notification_to_be_sent = $notificationToBeSent");
+            $this->logger->info("notification_to_be_sent = $notificationToBeSent");
             if ($notificationToBeSent > 0 && $notificationToBeSent > $this->getNotificationSent()) {
                 //previous notification mails were not sent (for different possible reasons: push to prod of the feature, mail server crash, bug, etc)
                 //in this case, re-adjust 'notification_sent' field
                 $this->updateNotificationSent($notificationToBeSent);
-                $this->logger->warn("$logPrefix update notification sent");
+                $this->logger->warn("update notification sent");
             }
 
             $next_day = intval($this->getNextReminderDate() + 24 * 3600);
@@ -539,10 +541,10 @@ class ArtifactDateReminderFactory {
                     $this->updateNotificationSent();
                 }
             } else {
-                $this->logger->info("$logPrefix out of notification period");
+                $this->logger->info("out of notification period");
             }
         }
-        $this->logger->info("$logPrefix End");
+        $this->logger->info("End");
     }
 }
 
