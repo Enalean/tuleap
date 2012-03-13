@@ -268,8 +268,8 @@ $sys_display_homepage_news = 1;
 //
 // Authentication scheme
 //
-// Should be either 'ldap' or 'codendi'
-$sys_auth_type = 'codendi';
+// Should be either 'ldap' or 'tuleap'
+$sys_auth_type = 'tuleap';
 
 // Default Apache Subversion authentication mod.
 // Default is 'modmysql'
