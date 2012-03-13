@@ -1028,7 +1028,7 @@ fi
 # $LN -sf /usr/lib/tuleap/bin/gotohell
 # #$LN -sf $MAILMAN_DIR/mail/mailman Now done in RPM install
 
-# $PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codendi:' /etc/mail/sendmail.cf
+# $PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.tuleap:' /etc/mail/sendmail.cf
 # cat <<EOF >/etc/mail/local-host-names
 # # local-host-names - include all aliases for your machine here.
 # $sys_default_domain

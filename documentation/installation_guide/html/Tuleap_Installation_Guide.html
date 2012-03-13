@@ -1225,7 +1225,7 @@ DMcodendi.xerox.com
 The commented out version of this line would then look like so:
 <pre>#O DaemonPortOptions=Port=smtp,Addr=127.0.0.1, Name=MTA</pre>
   <li>Aliases files should have been automatically set up. They are:<br>
-    <pre>O AliasFile=/etc/aliases,/etc/aliases.codendi</pre>
+    <pre>O AliasFile=/etc/aliases,/etc/aliases.tuleap</pre>
   </li>
   <li>If you have errors when using mailman like this one:
 <pre>
@@ -1279,8 +1279,8 @@ service postfix restart
 <li><a href="http://www.postfix.org/postconf.5.html#inet_interfaces">inet_interfaces</a> = all (instead of 'localhost' by default).</li>
 <li><a href="http://www.postfix.org/postconf.5.html#myhostname">myhostname</a>    = my_server.my_domain.com </li>
 <li><a href="http://www.postfix.org/postconf.5.html#mydomain">mydomain</a>      = my_domain.com </li>
-<li><a href="http://www.postfix.org/postconf.5.html#alias_maps">alias_maps</a>    = hash:/etc/aliases, hash:/etc/aliases.codendi </li>
-<li><a href="http://www.postfix.org/postconf.5.html#alias_database">alias_database</a>    = hash:/etc/aliases, hash:/etc/aliases.codendi </li>
+<li><a href="http://www.postfix.org/postconf.5.html#alias_maps">alias_maps</a>    = hash:/etc/aliases, hash:/etc/aliases.tuleap </li>
+<li><a href="http://www.postfix.org/postconf.5.html#alias_database">alias_database</a>    = hash:/etc/aliases, hash:/etc/aliases.tuleap </li>
 <li><a href="http://www.postfix.org/postconf.5.html#mydestination">mydestination</a> = $myhostname, localhost.$mydomain, localhost, lists.$myhostname </li>
 <li><a href="http://www.postfix.org/postconf.5.html#mynetworks">mynetworks</a>    = 127.0.0.1/8 xxx.xxx.xxx.xxx/xx </li>
 </ul>
@@ -1305,9 +1305,9 @@ service mailman restart
 This is where you must insert system level aliases by hand (e.g.
 aliases for postmaster, root, etc.). <br>
 <br>
-/<u>etc/aliases.codendi</u><br>
+/<u>etc/aliases.tuleap</u><br>
 <br>
-aliases.codendi is generated automatically bo the Codendi cron job (see
+aliases.tuleap is generated automatically bo the Codendi cron job (see
 below) and contains the aliases for all the mailing lists in the
 @lists.codendi.xerox.com domain and the email aliases for users. **Never
 edit this file by hand**<br>

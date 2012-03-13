@@ -42,7 +42,7 @@ class BackendAliasesTest extends UnitTestCase {
     }
 
     function setUp() {
-        $GLOBALS['alias_file'] = dirname(__FILE__) . '/_fixtures/etc/aliases.codendi';   
+        $GLOBALS['alias_file'] = dirname(__FILE__) . '/_fixtures/etc/aliases.tuleap';   
     }
     
     function tearDown() {

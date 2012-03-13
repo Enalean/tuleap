@@ -96,7 +96,7 @@ $sys_fullname = "%sys_fullname%";
 
 //This is used for cookie authentication. If you have distributed servers, 
 //please use same cookie prefix for a "cluster"
-$sys_cookie_prefix = "CODENDI";
+$sys_cookie_prefix = "TULEAP";
 
 
 //
@@ -194,7 +194,7 @@ $mailman_list_dir= "/var/lib/mailman/lists";
 $mailman_wrapper = "/usr/lib/mailman/mail/mailman";
 
 // Sendmail alias
-$alias_file      = "/etc/aliases.codendi";
+$alias_file      = "/etc/aliases.tuleap";
 
 // Plugins related paths
 $sys_pluginsroot       = $codendi_dir . "/plugins/";
