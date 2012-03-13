@@ -24,11 +24,11 @@ substitute() {
 ##
 ## Default values
 ##
-sys_default_domain="codendi.org";
+sys_default_domain="tuleap.example.net";
 local_module_directory="codendi-src";
 port="80";
-sys_org_name="Codendi";
-sys_long_org_name="Codendi";
+sys_org_name="Tuleap";
+sys_long_org_name="Tuleap";
 sniff_svn="true"
 
 ##
@@ -84,8 +84,8 @@ cp src/etc/local.inc.dist ../etc/tuleap/conf/local.inc
 # Substitute dist values by correct ones
 substitute '../etc/tuleap/conf/local.inc' '%sys_default_domain%' "$sys_default_domain:$port" 
 substitute '../etc/tuleap/conf/local.inc' '%sys_ldap_server%' " " 
-substitute '../etc/tuleap/conf/local.inc' '%sys_org_name%' "Xerox" 
-substitute '../etc/tuleap/conf/local.inc' '%sys_long_org_name%' "Xerox Corp" 
+substitute '../etc/tuleap/conf/local.inc' '%sys_org_name%' "Enalean" 
+substitute '../etc/tuleap/conf/local.inc' '%sys_long_org_name%' "Enalean SAS" 
 substitute '../etc/tuleap/conf/local.inc' '%sys_fullname%' "$sys_default_domain" 
 substitute '../etc/tuleap/conf/local.inc' '%sys_win_domain%' " " 
 substitute '../etc/tuleap/conf/local.inc' '\/usr\/share\/tuleap' "$WORKSPACE/$local_module_directory"
