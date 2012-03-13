@@ -47,7 +47,7 @@ class tracker_date_reminderPlugin extends Plugin {
         $this->_addHook('tracker_postadd', 'tracker_create_artifact', false);
         // Copy an artifact
         $this->_addHook('tracker_postcopy', 'tracker_create_artifact', false);
-        // Modificatin of an artifact
+        // Modification of an artifact
         $this->_addHook('tracker_postmod', 'tracker_update_artifact', false);
     }
 
