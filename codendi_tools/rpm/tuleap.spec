@@ -88,7 +88,7 @@ It is meant to be install at the initial setup of the platform and
 recommanded to uninstall it after.
 
 %package core-mailman
-Summary: Mailman component for codendi
+Summary: Mailman component for tuleap
 Group: Development/Tools
 Version: @@CORE_MAILMAN_VERSION@@
 Release: 1%{?dist}
@@ -105,7 +105,7 @@ Provides: tuleap-core-mailman
 Manage dependencies for Tuleap mailman integration
 
 %package core-subversion
-Summary: Subversion component for codendi
+Summary: Subversion component for tuleap
 Group: Development/Tools
 Version: @@CORE_SUBVERSION_VERSION@@
 Release: 1%{?dist}
@@ -134,7 +134,7 @@ This module might help server with big subversion usage. mod_mysql + mod_svn
 seems to have memory leak issues.
 
 %package core-cvs
-Summary: CVS component for codendi
+Summary: CVS component for tuleap
 Group: Development/Tools
 Version: @@CORE_CVS_VERSION@@
 Release: 1%{?dist}
@@ -459,7 +459,7 @@ Tuleap theme
 %{__rm} -rf $RPM_BUILD_ROOT
 
 #
-# Install codendi application
+# Install tuleap application
 %{__install} -m 755 -d $RPM_BUILD_ROOT/%{APP_DIR}
 for i in codendi_tools cli plugins site-content src ChangeLog VERSION; do
 	%{__cp} -ar $i $RPM_BUILD_ROOT/%{APP_DIR}
@@ -635,12 +635,12 @@ fi
 # In any cases fix the context
 /usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR} || true
 
-# This adds the proper /etc/rc*.d links for the script that runs the codendi backend
+# This adds the proper /etc/rc*.d links for the script that runs the tuleap backend
 #/sbin/chkconfig --add %{APP_NAME}
 
 # Restart the services
 #/sbin/service httpd start
-#/etc/init.d/codendi start
+#/etc/init.d/tuleap start
 
 #
 # Post install of git plugin
