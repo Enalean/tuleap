@@ -75,6 +75,7 @@ class Tracker_CrossSearch_SearchController {
         $this->formElementFactory = $formElementFactory;
         $this->search             = $search;
         $this->hierarchy_factory  = $hierarchy_factory;
+        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
     }
 
     public function search() {
@@ -86,7 +87,9 @@ class Tracker_CrossSearch_SearchController {
             $trackers           = $this->getTrackers($project);
             $trackers_hierarchy = $this->getTrackersHierarchy($trackers);
             $artifacts          = $this->getArtifacts($trackers, $trackers_hierarchy);
+            $presenter          = $this->getPresenter();
             
+            $this->render('tracker-home-nav', $presenter);
             $view = $this->getView($service, $this->language, $report, $criteria, $artifacts, $trackers);
             $view->render();
         }
@@ -98,6 +101,14 @@ class Tracker_CrossSearch_SearchController {
             $this->layout->addFeedback('error', $e->getMessage());
             $this->layout->redirect('/projects/' . $project->getUnixName() . '/');
         }
+    }
+    
+    public function render($template_name, $presenter) {
+        echo $this->renderer->render($template_name, $presenter);
+    }
+    
+    public function getPresenter() {
+        
     }
     
     protected function getTrackersHierarchy($trackers) {
