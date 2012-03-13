@@ -54,7 +54,7 @@ $SVNSERVE = "";
 # $UPDATE_CHAINS_TO = "hooks/update.secondary";
 # $ADMIN_POST_UPDATE_CHAINS_TO = "hooks/post-update.secondary";
 # $GL_ADC_PATH = "";
-# $GL_GET_MEMBERSHIPS_PGM = "/usr/lib/codendi/bin/gl-membership.pl";
+# $GL_GET_MEMBERSHIPS_PGM = "/usr/lib/tuleap/bin/gl-membership.pl";
 # $GL_HTTP_ANON_USER = "mob";
 
 # ------------------------------------------------------------------------------

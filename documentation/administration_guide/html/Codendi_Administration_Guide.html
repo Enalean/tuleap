@@ -682,7 +682,7 @@ only (rw-r-----)</td>
       </td>
     </tr>
     <tr>
-      <td valign="top">/usr/lib/codendi/bin</td>
+      <td valign="top">/usr/lib/tuleap/bin</td>
       <td valign="top">There are a couple of executables in this
 directory
 that work in cooperation with the Codendi WEB Site:
@@ -1551,11 +1551,11 @@ projects</td>
       <td>Same as above but this time it is for weekly statistics</td>
     </tr>
     <tr>
-      <td style="font-family: monospace;">/usr/lib/codendi/bin/backup_job</td>
+      <td style="font-family: monospace;">/usr/lib/tuleap/bin/backup_job</td>
       <td>Backup of all Codendi file system.</td>
     </tr>
     <tr>
-      <td style="font-family: monospace;">/usr/lib/codendi/bin/backup_subversion.sh</td>
+      <td style="font-family: monospace;">/usr/lib/tuleap/bin/backup_subversion.sh</td>
       <td>Backup of all Codendi subversion repositories.</td>
     </tr>
   </tbody>
@@ -1973,7 +1973,7 @@ starts.&nbsp; MySQL variables are set here.</li>
       </td>
     </tr>
     <tr>
-      <td>/usr/lib/codendi/bin <br>
+      <td>/usr/lib/tuleap/bin <br>
 &nbsp;
       <p>&nbsp;</p>
       </td>
@@ -2691,7 +2691,7 @@ $sys_allow_restricted_users = 1;
 </ul>
 <h4>Restricted Shell</h4>
 <p>By default, restricted users do not have a regular shell access: they are given a restricted shell access that only supports a few command (only 'cvs' today).
-<p>The default shell is '/usr/lib/codendi/bin/cvssh-restricted'. It grants CVS access to projects the user is member of, and forbid access to all other projects repositories.
+<p>The default shell is '/usr/lib/tuleap/bin/cvssh-restricted'. It grants CVS access to projects the user is member of, and forbid access to all other projects repositories.
 <p>If you need to completely remove shell access (and forbid CVS), you need to modify the shell manually in the administration interface for each user: set it to /sbin/nologin.
 <p>Setup: in order to use CVS, the restricted user must do the following:
 <ul><li>Set the 'CVS_RSH' environment variable to 'ssh'
@@ -2784,7 +2784,7 @@ To select a set of historical data, please read: <a href="http://cvs2svn.tigris.
 <li>You should then set proper ownership on the repository:
 <pre>chown -R codendiadm.projname /svnroot/projname</pre>
 <li>Activate the Subversion service in Codendi if it is disabled.
-<li>You may also populate the Codendi DB with subversion revision details: you need to execute as codendiadm '/usr/lib/codendi/bin/commit-email.pl NNN' for each revision number (NNN) created. Please note however that CVS commits performed by people whose login name does not correspond to Codendi logins won't appear.
+<li>You may also populate the Codendi DB with subversion revision details: you need to execute as codendiadm '/usr/lib/tuleap/bin/commit-email.pl NNN' for each revision number (NNN) created. Please note however that CVS commits performed by people whose login name does not correspond to Codendi logins won't appear.
 </ul>
 
 <hr>

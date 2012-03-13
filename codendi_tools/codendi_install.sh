@@ -146,8 +146,8 @@ service cvspserver
 EOF
 
     $CAT <<'EOF' >> /etc/shells
-/usr/lib/codendi/bin/cvssh
-/usr/lib/codendi/bin/cvssh-restricted
+/usr/lib/tuleap/bin/cvssh
+/usr/lib/tuleap/bin/cvssh-restricted
 EOF
 
     $CHKCONFIG cvs on
@@ -1025,7 +1025,7 @@ fi
 # echo "##############################################"
 # echo "Installing sendmail shell wrappers and configuring sendmail..."
 # cd /etc/smrsh
-# $LN -sf /usr/lib/codendi/bin/gotohell
+# $LN -sf /usr/lib/tuleap/bin/gotohell
 # #$LN -sf $MAILMAN_DIR/mail/mailman Now done in RPM install
 
 # $PERL -i'.orig' -p -e's:^O\s*AliasFile.*:O AliasFile=/etc/aliases,/etc/aliases.codendi:' /etc/mail/sendmail.cf
@@ -1093,7 +1093,7 @@ $GREP -q "Tuleap" /tmp/cronfile
 if [ $? -ne 0 ]; then
     $CAT <<'EOF' >>/tmp/cronfile
 # Tuleap: weekly backup preparation (mysql shutdown, file dump and restart)
-45 0 * * Sun /usr/lib/codendi/bin/backup_job
+45 0 * * Sun /usr/lib/tuleap/bin/backup_job
 EOF
     crontab -u root /tmp/cronfile
 fi

@@ -1390,7 +1390,7 @@ noreply@codendi.xerox.com messages. The file must contain:<br>
   <pre>cat - &gt;/dev/null</pre>
 </blockquote>
 Ownership and permission must be:<br>
-<pre>	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 27 Dec 11&nbsp; 2001 /usr/lib/codendi/bin/gotohell</pre>
+<pre>	-rwxr-xr-x&nbsp;&nbsp;&nbsp; 1 root&nbsp;&nbsp;&nbsp;&nbsp; root&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 27 Dec 11&nbsp; 2001 /usr/lib/tuleap/bin/gotohell</pre>
 <br>
 <br>
 <hr style="width: 100%; height: 2px;">
@@ -1555,13 +1555,13 @@ This feature is activated in the CVS Web interface of the Codendi Web
 frontend under CVS -&gt; Admin. For this feature to work properly
 symbolic links must be created from the /usr/local/bin directory as
 follows:<br>
-<pre><tt>&nbsp;&nbsp;&nbsp; # cd /usr/share/tuleap/src/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/lib/codendi/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/lib/codendi/bin</tt></pre>
+<pre><tt>&nbsp;&nbsp;&nbsp; # cd /usr/share/tuleap/src/utils/cvs1</tt><tt><br>&nbsp;&nbsp;&nbsp; # cp log_accum /usr/lib/tuleap/bin<br>&nbsp;&nbsp;&nbsp; # cp commit_prep</tt><tt> /usr/lib/tuleap/bin</tt></pre>
 The log_accum script requires the
 codendiadm group ownership to execute properly. <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b>
-<pre>	# cd /usr/lib/codendi/bin<br>	# chown codendiadm.codendiadm log_accum commit_prep<br>	# chmod 755 log_accum commit_prep<br>	# chmod u+s log_accum   # sets the uid bit (-rwsr-xr-x)<br></pre>
+<pre>	# cd /usr/lib/tuleap/bin<br>	# chown codendiadm.codendiadm log_accum commit_prep<br>	# chmod 755 log_accum commit_prep<br>	# chmod u+s log_accum   # sets the uid bit (-rwsr-xr-x)<br></pre>
 Be careful that you must set the uid bit again whenever the log_accum
-script is updated from CVS and copied again into the /usr/lib/codendi/bin
+script is updated from CVS and copied again into the /usr/lib/tuleap/bin
 directory.<br>
 <tt><br>
 </tt>
@@ -1639,7 +1639,7 @@ Codendi restricted users (status 'R')
 <br>
 To activate these pseudo shells:<br>
 <ul>
-  <li>copy the file cvssh (or cvssh-restricted) in /usr/lib/codendi/bin,
+  <li>copy the file cvssh (or cvssh-restricted) in /usr/lib/tuleap/bin,
 make sure it is executable and also add the file to the list of
 authorized shells in /etc/shells. Adding cvssh to /etc/shells will make
 it appear in the list of possible shells in the Codendi user admin
@@ -1648,7 +1648,7 @@ interface. Note: This is already done for you on Codendi versions after 2.4</li>
 then
 change the default value of the shell column in the user table with the
 following mysql command:<br>
-    <pre>$ mysql -u codendiadm codendi -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/usr/lib/codendi/bin/cvssh' ;</pre>
+    <pre>$ mysql -u codendiadm codendi -p<br>mysql&gt;&nbsp; ALTER TABLE user ALTER COLUMN shell SET DEFAULT<br>'/usr/lib/tuleap/bin/cvssh' ;</pre>
   </li>
 </ul>
 <br>
@@ -2075,13 +2075,13 @@ that</tt><br>
   <tt>0 1 * * Mon (cd /usr/share/tuleap/src/utils/underworld-root;
 ./db_project_weekly_metric</tt><tt>.pl)</tt><br>
   <tt># daily incremental backup of subversion repositories</tt><br>
-  <tt>45 23 * * 1-6 /usr/lib/codendi/bin/backup_subversion.sh -i</tt><br>
+  <tt>45 23 * * 1-6 /usr/lib/tuleap/bin/backup_subversion.sh -i</tt><br>
   <tt>#</tt><br>
   <tt># weekly full backup of subversion repositories (0:15 on Sunday)</tt><br>
-  <tt>15 0 * * Sun /usr/lib/codendi/bin/backup_subversion.sh</tt><br>
+  <tt>15 0 * * Sun /usr/lib/tuleap/bin/backup_subversion.sh</tt><br>
   <tt>#</tt><br>
   <tt># weekly backup preparation (mysql shutdown, file dump and restart)</tt><br>
-  <tt>45 0 * * Sun /usr/lib/codendi/bin/backup_job</tt><br>
+  <tt>45 0 * * Sun /usr/lib/tuleap/bin/backup_job</tt><br>
   <tt>#</tt><br>
   <tt># Delete all files in FTP incoming that are older than 2 weeks
 (336 hours)</tt><br>

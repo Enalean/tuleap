@@ -41,7 +41,7 @@ logGitPushes()
 
 	nbcommits=$(git rev-list $revspec | wc -l)
 
-	/usr/lib/codendi/bin/git-log.pl $tuleap_group_name $tuleap_login $tuleap_repo_name $push_timestamp $nbcommits $tuleap_gitolite_user
+	/usr/lib/tuleap/bin/git-log.pl $tuleap_group_name $tuleap_login $tuleap_repo_name $push_timestamp $nbcommits $tuleap_gitolite_user
 
 }
 
