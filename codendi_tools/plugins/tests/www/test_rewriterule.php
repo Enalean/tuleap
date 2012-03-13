@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
+require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/tuleap/conf/local.inc');
 
 // {{{ workaround for 'Invalid cross-device link' error
 @unlink($sys_custom_themeroot . '/pass.png');
@@ -49,12 +49,12 @@ Example:
  
  - in /u/s/c/.../themes/common/images/ there is org_logo.png => Main logo available for all themes
  - in /u/s/c/.../themes/Tuleap/images/ there is org_logo.png => It is redefined because Tuleap theme needs a B&W logo
- - in /etc/codendi/themes/common/images/ there is also org_logo.png => The site admin put its enterprise logo, available for all themes
- - in /etc/codendi/themes/Tuleap/images/ there is *NO* org_logo.png (It is forbidden to modify the colors of enterprise logo, say the Comunication Manager)
+ - in /etc/tuleap/themes/common/images/ there is also org_logo.png => The site admin put its enterprise logo, available for all themes
+ - in /etc/tuleap/themes/Tuleap/images/ there is *NO* org_logo.png (It is forbidden to modify the colors of enterprise logo, say the Comunication Manager)
  => We are in the subcase '2'
  
  ===> the image which will be returned is given by (case, subcase) => (c, 2) => 2
-      The user asks /themes/Tuleap/images/org_logo.png and we return /etc/codendi/themes/common/images/org_logo.png
+      The user asks /themes/Tuleap/images/org_logo.png and we return /etc/tuleap/themes/common/images/org_logo.png
  
 */
 $expected = array(

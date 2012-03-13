@@ -15,7 +15,7 @@ In plugins/IM/ we have:
    >>IMPluginInfo.class.php :
    >>CodendiToJabberData.class.php :
 -> site-content: the repository for plugin specific text and messages. This can be customized
-   with /etc/codendi/plugins/IM/site-content/,
+   with /etc/tuleap/plugins/IM/site-content/,
    
    
 ->> www: web space of the IM plugin. It will be accessible by the following URI:

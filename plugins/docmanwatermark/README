@@ -30,7 +30,7 @@ In plugins/docmanwatermark/ we have:
    >>view/DocmanWatermark_View_RedirectAfterCrud.class.php :
    
 -> site-content: the repository for plugin specific text and messages. This can be customized
-   with /etc/codendi/plugins/docmanwatermark/site-content/,
+   with /etc/tuleap/plugins/docmanwatermark/site-content/,
    
    
 -> www: web space of the docmanwatermark plugin. It will be accessible by the following URI:

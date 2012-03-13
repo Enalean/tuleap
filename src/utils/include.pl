@@ -11,7 +11,7 @@ $ENV{LANG} = 'en_US.UTF-8';
 ##############################
 # Global Variables
 ##############################
-$db_include	=	$ENV{'CODENDI_LOCAL_INC'} || "/etc/codendi/conf/local.inc"; # Local Include file for database username and password
+$db_include	=	$ENV{'CODENDI_LOCAL_INC'} || "/etc/tuleap/conf/local.inc"; # Local Include file for database username and password
 $date           =       int(time()/3600/24);    # Get the number of days since 1/1/1970 for /etc/shadow
 
 &load_local_config($db_include);

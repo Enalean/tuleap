@@ -14,7 +14,7 @@ require_once('common/event/EventManager.class.php');
 Mock::generate('EventManager');
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
-require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
+require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/tuleap/conf/local.inc');
 require($GLOBALS['db_config_file']);
 
 Mock::generatePartial('ForgeUpgradeConfig', 'ForgeUpgradeConfigTestPluginManager', array('run'));

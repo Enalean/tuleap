@@ -222,7 +222,7 @@ setup_bind() {
     if [ -f /var/named/chroot/var/named/codendi.zone ]; then
         $CP -af /var/named/chroot/var/named/codendi.zone /var/named/chroot/var/named/codendi.zone.orig
     fi
-    $CP -f $INSTALL_DIR/src/etc/codendi.zone /var/named/chroot/var/named/codendi.zone
+    $CP -f $INSTALL_DIR/src/etc/tuleap.zone /var/named/chroot/var/named/codendi.zone
 
     $CHOWN root:named /var/named/chroot/var/named/codendi.zone
     if [ -f "/var/named/chroot/etc/named.conf" ]; then
@@ -753,22 +753,22 @@ build_dir /var/log/codendi/cvslogs codendiadm codendiadm 775
 build_dir /var/tmp/codendi_cache codendiadm codendiadm 755
 # config dirs
 build_dir /etc/skel_codendi root root 755
-build_dir /etc/codendi codendiadm codendiadm 755
-build_dir /etc/codendi/conf codendiadm codendiadm 700
-build_dir /etc/codendi/documentation codendiadm codendiadm 755
-build_dir /etc/codendi/documentation/user_guide codendiadm codendiadm 755
-build_dir /etc/codendi/documentation/user_guide/xml codendiadm codendiadm 755
-build_dir /etc/codendi/documentation/cli codendiadm codendiadm 755
-build_dir /etc/codendi/documentation/cli/xml codendiadm codendiadm 755
-build_dir /etc/codendi/site-content codendiadm codendiadm 755
-build_dir /etc/codendi/site-content/en_US codendiadm codendiadm 755
-build_dir /etc/codendi/site-content/en_US/others codendiadm codendiadm 755
-build_dir /etc/codendi/site-content/fr_FR codendiadm codendiadm 755
-build_dir /etc/codendi/site-content/fr_FR/others codendiadm codendiadm 755
-build_dir /etc/codendi/themes codendiadm codendiadm 755
-build_dir /etc/codendi/plugins codendiadm codendiadm 755
-build_dir /etc/codendi/plugins/docman codendiadm codendiadm 755
-build_dir /etc/codendi/plugins/pluginsadministration codendiadm codendiadm 755
+build_dir /etc/tuleap codendiadm codendiadm 755
+build_dir /etc/tuleap/conf codendiadm codendiadm 700
+build_dir /etc/tuleap/documentation codendiadm codendiadm 755
+build_dir /etc/tuleap/documentation/user_guide codendiadm codendiadm 755
+build_dir /etc/tuleap/documentation/user_guide/xml codendiadm codendiadm 755
+build_dir /etc/tuleap/documentation/cli codendiadm codendiadm 755
+build_dir /etc/tuleap/documentation/cli/xml codendiadm codendiadm 755
+build_dir /etc/tuleap/site-content codendiadm codendiadm 755
+build_dir /etc/tuleap/site-content/en_US codendiadm codendiadm 755
+build_dir /etc/tuleap/site-content/en_US/others codendiadm codendiadm 755
+build_dir /etc/tuleap/site-content/fr_FR codendiadm codendiadm 755
+build_dir /etc/tuleap/site-content/fr_FR/others codendiadm codendiadm 755
+build_dir /etc/tuleap/themes codendiadm codendiadm 755
+build_dir /etc/tuleap/plugins codendiadm codendiadm 755
+build_dir /etc/tuleap/plugins/docman codendiadm codendiadm 755
+build_dir /etc/tuleap/plugins/pluginsadministration codendiadm codendiadm 755
 # SCM dirs
 build_dir /var/run/log_accum root root 777
 build_dir /var/lib/codendi/cvsroot codendiadm codendiadm 751
@@ -791,7 +791,7 @@ $TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
 # SELinux specific
 if [ $SELINUX_ENABLED ]; then
     $CHCON -R -h $SELINUX_CONTEXT /usr/share/tuleap
-    $CHCON -R -h $SELINUX_CONTEXT /etc/codendi
+    $CHCON -R -h $SELINUX_CONTEXT /etc/tuleap
     $CHCON -R -h $SELINUX_CONTEXT /var/lib/codendi
     $CHCON -R -h $SELINUX_CONTEXT /home/groups
     $CHCON -R -h $SELINUX_CONTEXT /home/codendiadm
@@ -888,7 +888,7 @@ for f in /etc/httpd/conf/httpd.conf \
 /etc/httpd/conf/ssl.conf \
 /etc/httpd/conf.d/php.conf /etc/httpd/conf.d/subversion.conf /etc/httpd/conf.d/auth_mysql.conf \
 /etc/libnss-mysql.cfg  /etc/libnss-mysql-root.cfg \
-/etc/codendi/conf/local.inc /etc/codendi/conf/database.inc /etc/httpd/conf.d/codendi_aliases.conf; do
+/etc/tuleap/conf/local.inc /etc/tuleap/conf/database.inc /etc/httpd/conf.d/codendi_aliases.conf; do
     yn="0"
     fn=`basename $f`
 #   [ -f "$f" ] && read -p "$f already exist. Overwrite? [y|n]:" yn
@@ -949,20 +949,20 @@ fi
 # TODO: mod_perl perl-BSD-Resource libdbi-dbd-mysql libdbi libdbi-drivers 
 
 # replace string patterns in local.inc
-substitute '/etc/codendi/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
-substitute '/etc/codendi/conf/local.inc' '%sys_org_name%' "$sys_org_name" 
-substitute '/etc/codendi/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
-substitute '/etc/codendi/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
-substitute '/etc/codendi/conf/local.inc' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+substitute '/etc/tuleap/conf/local.inc' '%sys_default_domain%' "$sys_default_domain" 
+substitute '/etc/tuleap/conf/local.inc' '%sys_org_name%' "$sys_org_name" 
+substitute '/etc/tuleap/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
+substitute '/etc/tuleap/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
+substitute '/etc/tuleap/conf/local.inc' '%sys_dbauth_passwd%' "$dbauth_passwd" 
 if [ "$disable_subdomains" = "y" ]; then
-  substitute '/etc/codendi/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'
-  substitute '/etc/codendi/conf/local.inc' 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
+  substitute '/etc/tuleap/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'
+  substitute '/etc/tuleap/conf/local.inc' 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
 fi
 # replace string patterns in codendi_aliases.inc
 substitute '/etc/httpd/conf.d/codendi_aliases.conf' '%sys_default_domain%' "$sys_default_domain" 
 
 # replace string patterns in database.inc
-substitute '/etc/codendi/conf/database.inc' '%sys_dbpasswd%' "$codendiadm_passwd" 
+substitute '/etc/tuleap/conf/database.inc' '%sys_dbpasswd%' "$codendiadm_passwd" 
 
 # replace string patterns in httpd.conf
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
@@ -985,7 +985,7 @@ if [ $SELINUX_ENABLED ]; then
     $CHCON -R -h $SELINUX_CONTEXT /usr/share/tuleap
 fi
 
-todo "Customize /etc/codendi/conf/local.inc and /etc/codendi/conf/database.inc"
+todo "Customize /etc/tuleap/conf/local.inc and /etc/tuleap/conf/database.inc"
 todo "You may also want to customize /etc/httpd/conf/httpd.conf"
 
 ##############################################
@@ -1064,13 +1064,13 @@ fi
 # Create the custom default page for the project Web sites
 #
 echo "Creating the custom default page for the project Web sites..."
-def_page=/etc/codendi/site-content/en_US/others/default_page.php
+def_page=/etc/tuleap/site-content/en_US/others/default_page.php
 yn="y"
 [ -f "$def_page" ] && read -p "Custom Default Project Home page already exists. Overwrite? [y|n]:" yn
 if [ "$yn" = "y" ]; then
-    $MKDIR -p /etc/codendi/site-content/en_US/others
-    $CHOWN codendiadm.codendiadm /etc/codendi/site-content/en_US/others
-    $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/codendi/site-content/en_US/others/default_page.php
+    $MKDIR -p /etc/tuleap/site-content/en_US/others
+    $CHOWN codendiadm.codendiadm /etc/tuleap/site-content/en_US/others
+    $CP $INSTALL_DIR/site-content/en_US/others/default_page.php /etc/tuleap/site-content/en_US/others/default_page.php
 fi
 
 if [ "$disable_subdomains" = "y" ]; then
@@ -1078,8 +1078,8 @@ if [ "$disable_subdomains" = "y" ]; then
   $MYSQL -u codendiadm codendi --password=$codendiadm_passwd -e "UPDATE service SET link = IF(group_id = 1, '/www/codendi', '/www/\$projectname/') WHERE short_name = 'homepage' "
 fi
 
-#todo "Customize /etc/codendi/site-content/en_US/others/default_page.php (project web site default home page)"
-todo "Customize /etc/codendi/site-content information for your site."
+#todo "Customize /etc/tuleap/site-content/en_US/others/default_page.php (project web site default home page)"
+todo "Customize /etc/tuleap/site-content information for your site."
 todo "  For instance: contact/contact.txt cvs/intro.txt"
 todo "  svn/intro.txt include/new_project_email.txt, etc."
 
@@ -1265,8 +1265,8 @@ fi
 #
 
 $MYSQL -ucodendiadm -p$codendiadm_passwd codendi < /usr/share/forgeupgrade/db/install-mysql.sql
-$INSTALL --group=codendiadm --owner=codendiadm --mode=0755 --directory /etc/codendi/forgeupgrade
-$INSTALL --group=codendiadm --owner=codendiadm --mode=0644 $INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist /etc/codendi/forgeupgrade/config.ini
+$INSTALL --group=codendiadm --owner=codendiadm --mode=0755 --directory /etc/tuleap/forgeupgrade
+$INSTALL --group=codendiadm --owner=codendiadm --mode=0644 $INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist /etc/tuleap/forgeupgrade/config.ini
 
 
 ##############################################
@@ -1279,20 +1279,20 @@ $CAT $INSTALL_DIR/plugins/docman/db/install.sql | $MYSQL -u codendiadm codendi -
 $CAT <<EOF | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 INSERT INTO plugin (name, available) VALUES ('docman', '1');
 EOF
-build_dir /etc/codendi/plugins/docman/etc codendiadm codendiadm 755
-$CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/codendi/plugins/docman/etc/docman.inc
-$CHOWN codendiadm.codendiadm /etc/codendi/plugins/docman/etc/docman.inc
-$CHMOD 644 /etc/codendi/plugins/docman/etc/docman.inc
-echo "path[]=\"$INSTALL_DIR/plugins/docman\"" >> /etc/codendi/forgeupgrade/config.ini
+build_dir /etc/tuleap/plugins/docman/etc codendiadm codendiadm 755
+$CP $INSTALL_DIR/plugins/docman/etc/docman.inc.dist /etc/tuleap/plugins/docman/etc/docman.inc
+$CHOWN codendiadm.codendiadm /etc/tuleap/plugins/docman/etc/docman.inc
+$CHMOD 644 /etc/tuleap/plugins/docman/etc/docman.inc
+echo "path[]=\"$INSTALL_DIR/plugins/docman\"" >> /etc/tuleap/forgeupgrade/config.ini
 
 # Tracker plugin
 if [ "$enable_plugin_tracker" = "true" ]; then
-    build_dir /etc/codendi/plugins/tracker/etc codendiadm codendiadm 755
+    build_dir /etc/tuleap/plugins/tracker/etc codendiadm codendiadm 755
     $CAT $INSTALL_DIR/plugins/tracker/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
     $CAT <<EOF | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 INSERT INTO plugin (name, available) VALUES ('tracker', '1');
 EOF
-    echo "path[]=\"$INSTALL_DIR/plugins/tracker\"" >> /etc/codendi/forgeupgrade/config.ini
+    echo "path[]=\"$INSTALL_DIR/plugins/tracker\"" >> /etc/tuleap/forgeupgrade/config.ini
 
     # Import all templates
     template_base_dir="$INSTALL_DIR/plugins/tracker/www/resources/templates"
@@ -1303,12 +1303,12 @@ fi
 
 # GraphOnTrackersv5 plugin
 if [ "$enable_plugin_graphontrackersv5" = "true" ]; then
-    build_dir /etc/codendi/plugins/graphontrackersv5/etc codendiadm codendiadm 755
+    build_dir /etc/tuleap/plugins/graphontrackersv5/etc codendiadm codendiadm 755
     $CAT $INSTALL_DIR/plugins/graphontrackersv5/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
     $CAT <<EOF | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 INSERT INTO plugin (name, available) VALUES ('graphontrackersv5', '1');
 EOF
-    echo "path[]=\"$INSTALL_DIR/plugins/graphontrackersv5\"" >> /etc/codendi/forgeupgrade/config.ini
+    echo "path[]=\"$INSTALL_DIR/plugins/graphontrackersv5\"" >> /etc/tuleap/forgeupgrade/config.ini
 fi
 
 # IM plugin
@@ -1323,7 +1323,7 @@ GRANT SELECT ON codendi.session to 'openfireadm'@'localhost';
 FLUSH PRIVILEGES;
 EOF
     # Install plugin
-    build_dir /etc/codendi/plugins/IM/etc codendiadm codendiadm 755
+    build_dir /etc/tuleap/plugins/IM/etc codendiadm codendiadm 755
     $CAT $INSTALL_DIR/plugins/IM/db/install.sql | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
     $CAT <<EOF | $MYSQL -u codendiadm codendi --password=$codendiadm_passwd
 INSERT INTO plugin (name, available) VALUES ('IM', '1');
@@ -1334,7 +1334,7 @@ EOF
     IM_ADMIN_USER_PW='1M@dm1n'
     IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
     $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
-    echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/codendi/forgeupgrade/config.ini
+    echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/tuleap/forgeupgrade/config.ini
 
     # Enable service
     $CHKCONFIG openfire on
@@ -1345,7 +1345,7 @@ fi
 ##############################################
 # Register buckets in forgeupgrade
 #
-/usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/codendi/forgeupgrade/config.ini record-only
+/usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/tuleap/forgeupgrade/config.ini record-only
 
 
 ##############################################

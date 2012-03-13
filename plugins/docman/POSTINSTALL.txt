@@ -3,7 +3,7 @@ To finish installation, please follow those last steps:
 1. Configure docman
    a. Go to properties of plugin docman and configure the plugin
    OR
-   b. Edit docman.inc in your custom directory (typically /etc/codendi/plugins/docman/etc)
+   b. Edit docman.inc in your custom directory (typically /etc/tuleap/plugins/docman/etc)
    
 2. As root, create docman directory and set permissions
    a. Create the root directory where docman will store documents. (see docman configuration)

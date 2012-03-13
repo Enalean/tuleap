@@ -50,6 +50,6 @@ done
 bash -x /usr/share/tuleap-install/setup.sh --auto-passwd --without-bind-config --disable-subdomains --sys-default-domain=$ip_address --sys-fullname=$ip_address --sys-ip-address=$ip_address --sys-org-name=Tuleap --sys-long-org-name=Tuleap
 
 # activate tuleap licence
-touch /etc/codendi/CODENDI_LICENSE_ACCEPTED
+touch /etc/tuleap/CODENDI_LICENSE_ACCEPTED
 
 

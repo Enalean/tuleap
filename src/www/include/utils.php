@@ -1005,7 +1005,7 @@ function util_get_image_theme($fn, $the_theme=false, $absolute=false){
     $path = util_get_dir_image_theme($the_theme);
     if ($absolute) {
         if (strpos($path, '/custom') !== false) { 
-            // Custom images are in /etc/codendi/themes
+            // Custom images are in /etc/tuleap/themes
             $path= preg_replace('/\/custom/','',$path);
             $path = $GLOBALS['sys_custom_themeroot'] . $path;
         } else {

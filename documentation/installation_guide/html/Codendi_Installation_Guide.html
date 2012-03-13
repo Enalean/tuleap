@@ -955,13 +955,13 @@ to enable secured HTTP. Then do the following:<br>
 appropriate values for your site.<tt><br>
     </tt></li>
   <li>For the changes to take effect you must restart the Apache server.</li>
-  <li>Then edit the /etc/codendi/conf/local.inc file and edit the
+  <li>Then edit the /etc/tuleap/conf/local.inc file and edit the
 $sys_https_host
 variable (in most cases this will be the same name as the
 $sys_default_domain variable. If the port number you use for https is
 not the regular one (443) then you must specify the port number
 explicitely in the host name.</li>
-  <li>In the same /etc/codendi/conf/local.inc file, you can also tune the
+  <li>In the same /etc/tuleap/conf/local.inc file, you can also tune the
 $sys_force_ssl variable to determine how HTTPS is
 going to be used/enforced on your site.<br>
   </li>
@@ -993,12 +993,12 @@ Software</h1>
 As user root:<br>
 <ul>
   <li>copy /usr/share/tuleap/src/etc/local.inc.dist in
-/etc/codendi/conf/local.inc and /usr/share/tuleap/src/etc/database.inc.dist in
-/etc/codendi/conf/database.inc</li>
+/etc/tuleap/conf/local.inc and /usr/share/tuleap/src/etc/database.inc.dist in
+/etc/tuleap/conf/database.inc</li>
   <li>change local.inc and database.inc ownership (e.g. chown
 codendiadm.codendiadm
-/etc/codendi/conf/local.inc)</li>
-  <li>change permission (e.g. chmod 640 /etc/codendi/conf/local.inc) <b><font
+/etc/tuleap/conf/local.inc)</li>
+  <li>change permission (e.g. chmod 640 /etc/tuleap/conf/local.inc) <b><font
  color="#ff0000">**HIGHLY CRITICAL**</font></b></li>
 </ul>
 A couple of remarks on the some the variables in local.inc:<br>
@@ -1100,7 +1100,7 @@ the maximum size you chose. </li>
     <tr>
       <td valign="top">sys_max_size_upload<br>
       </td>
-      <td valign="top">/etc/codendi/conf/local.inc<br>
+      <td valign="top">/etc/tuleap/conf/local.inc<br>
       </td>
       <td valign="top">N<br>
       </td>
@@ -1572,7 +1572,7 @@ their Web browser. After installing the ViewVC RPM package (see&nbsp;<a
  href="#Installing_the_Codendi_Software">#Installing_the_Codendi_Software</a>
 ), a cgi-bin directory is created with the viewvc.cgi script in it.
 The ViewVC configuration file is at <span
- style="font-family: monospace;">/etc/codendi/conf/viewvc.conf</span>.<br>
+ style="font-family: monospace;">/etc/tuleap/conf/viewvc.conf</span>.<br>
 <br>
 <hr>
 <h1><a name="FTP_Configuration"></a>FTP Configuration</h1>
@@ -1698,7 +1698,7 @@ taken into account</li>
 <h2><a name="System_configuration_file_local.inc"></a>System
 configuration file (local.inc)</h2>
 The PHP scripts take many values from a configuration file located in <span
- style="font-family: monospace;">/etc/codendi/conf/local.inc</span>. This
+ style="font-family: monospace;">/etc/tuleap/conf/local.inc</span>. This
 file must
 be initially copied from the <span style="font-family: monospace;">src/etc/local.inc.dist</span>
 file and the values must be changed accordingly for your site. Make
@@ -1771,18 +1771,18 @@ script the text belongs to.</li>
 By default the site-content directory should be stored in the same
 place as the src directory (PHP scripts). &nbsp;Make sure you update the
 <tt>$sys_incdir</tt>
-variable in <tt>/etc/codendi/conf/local.inc</tt> to reflect the path to
+variable in <tt>/etc/tuleap/conf/local.inc</tt> to reflect the path to
 the <tt>site-content</tt>
 directory (default is <tt>/usr/share/tuleap/site-content</tt>).<br>
 <br>
 To customize the content of a given script for your site go through the
 following steps:<br>
 <ol>
-  <li>Under <span style="font-family: monospace;">/etc/codendi</span>
+  <li>Under <span style="font-family: monospace;">/etc/tuleap</span>
 create the <span style="font-family: monospace;">site-content</span>
 directory if it doesn't exist.</li>
   <li>For each piece of text that you want to customize copy the
-original <tt><i>whattext</i>.txt</tt> file under the <tt>/etc/codendi/site-content/<i></i></tt>
+original <tt><i>whattext</i>.txt</tt> file under the <tt>/etc/tuleap/site-content/<i></i></tt>
 with the exact same path. For instance if you want to customize the
 introductory text of the Codendi home page, copy <span
  style="font-family: monospace;">/usr/share/tuleap/site-content/en_US/homepage/welcome_intro.txt</span>&nbsp;
@@ -1805,15 +1805,15 @@ Currently, Codendi supports the English and French languages.
 <br>The format of the message files is very simple: one line per message, with the following format:<br>
 <pre>   key1[tab]key2[tab]your message here</pre>
 <p>As with other site-content files, you may customize the language files, so that you can change a few specific messages:
-<ol><li>Copy the language file you need to customize from the /usr/share/tuleap/site-content subdirectory to the corresponding subdirectory in /etc/codendi/site-content (see <a href="#Site_content">Site content</a> above)
+<ol><li>Copy the language file you need to customize from the /usr/share/tuleap/site-content subdirectory to the corresponding subdirectory in /etc/tuleap/site-content (see <a href="#Site_content">Site content</a> above)
 <li>Remove all lines that you don't need to change, and only keep the lines you will modify.
 <li>Change the messages
 <li>Repeat the operation for all the languages you need to support on your Codendi server.
 </ol>
-<p>Codendi themes may also use additional messages that are not part of the main Codendi source code. These messages are directly stored in the theme directory, and they may be customized for local themes in /etc/codendi/themes/messages/<i>theme_name</i>/
+<p>Codendi themes may also use additional messages that are not part of the main Codendi source code. These messages are directly stored in the theme directory, and they may be customized for local themes in /etc/tuleap/themes/messages/<i>theme_name</i>/
 <p>When looking for a message to display, Codendi will look successively in the following directories, stopping as soon as the message is found:
 <ol><li>Theme-specific message file
-<li>/etc/codendi/site-content/<i>user_lang</i> directory
+<li>/etc/tuleap/site-content/<i>user_lang</i> directory
 <li>/usr/share/tuleap/site-content/<i>user_lang</i> directory
 <li>/usr/share/tuleap/site-content/en_US directory (if the message file does not exist in the selected language)
 </ol>
@@ -1854,7 +1854,7 @@ Guide. To do so:<br>
 <ul>
   <li>Copy <span style="font-family: monospace;">/usr/share/tuleap/documentation/user_guide/xml/ParametersLocal.dtd
 to </span><span style="font-family: monospace;"><span
- style="font-family: monospace;">/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd</span></span></li>
+ style="font-family: monospace;">/etc/tuleap/documentation/user_guide/xml/ParametersLocal.dtd</span></span></li>
   <li>Edit the file you just copied and redefine the XML entities that
 govern
 the site specific information. For a list of the available XML entities
@@ -1887,7 +1887,7 @@ the <span style="font-family: monospace;">/usr/share/tuleap/site-content/en_US/o
 file. You may want to create your own custom
 file for your own Codendi site. To do so, copy the <span style="font-family: monospace;">
 /usr/share/tuleap/site-content/en_US/others/default_page.php</span> file
-in the <span style="font-family: monospace;">/etc/codendi/site-content/en_US/others/</span>
+in the <span style="font-family: monospace;">/etc/tuleap/site-content/en_US/others/</span>
 directory if not already
 there. Then, edit the custom file and customize it to your liking<br>
 <hr>

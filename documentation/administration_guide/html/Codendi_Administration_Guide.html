@@ -664,7 +664,7 @@ extension) are instantiated by the Codendi installation script,
 customized at installation time and
 copied over to the target directories. <br>
       <b><font color="#ff0000">Remark:</font></b> the database.inc
-configuration file stored in /etc/codendi/conf/database.inc contains
+configuration file stored in /etc/tuleap/conf/database.inc contains
 the Codendi database password in clear so it must be readable only for
 the codendiadm user/group
 only (rw-r-----)</td>
@@ -1190,7 +1190,7 @@ with
 the database from the local host and not from a remote machine. All the
 Codendi PHP scripts run under this user name to
 connect
-to the database (see the file <span style="font-family: monospace;">/etc/codendi/conf/local.inc</span>
+to the database (see the file <span style="font-family: monospace;">/etc/tuleap/conf/local.inc</span>
 for the configuration of the database user and password).<br>
   </li>
   <li> <b>dummy</b>: this user was created with read only access on
@@ -1693,7 +1693,7 @@ then it 's a normal update operation that you can do with a simple:<br>
   <li>If <span style="font-family: monospace;">src/etc/local.inc.dist</span>
 is in the list of files to be updated then you must look at the
 differences with your own local.inc.dist and make the changes in your <span
- style="font-family: monospace;">/etc/codendi/conf/local.inc</span> file
+ style="font-family: monospace;">/etc/tuleap/conf/local.inc</span> file
 accordingly. To see what has changed in the local.inc.dist file type:<br>
     <br>
     <span style="font-family: monospace;">svn diff --username  <span style="font-style: italic;">username </span>
@@ -1702,7 +1702,7 @@ place<br>
 svn update --username  <span style="font-style: italic;">username</span>&nbsp;
 # do the real update<br>
 vi
-/etc/codendi/conf/local.inc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/etc/tuleap/conf/local.inc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 # edit your Codendi configuration file and merge the changes<br>
     </span><br>
 then do the real update as above.<br>
@@ -2563,7 +2563,7 @@ mysqladmin --user=codendiadm -p password [new_password]
 <br>
 enter password: [enter old password]
 <br>
-3) Modify /etc/codendi/conf/database.inc 
+3) Modify /etc/tuleap/conf/database.inc 
 <br>- change <b>codendiadm</b> password<br>
 </p>
 <p><b>admin</b> account:
@@ -2676,7 +2676,7 @@ of the selected mailing list, then it is OK.
 <h3>Configuration</h3>
 <h4>local.inc</h4>
 <p>In order to setup restricted users, you need a coherent local.inc.
-<p>Edit /etc/codendi/conf/local.inc and make sure that the following variables are properly set:
+<p>Edit /etc/tuleap/conf/local.inc and make sure that the following variables are properly set:
 <pre>
 $sys_user_approval = 1;
 $sys_is_project_public = 1;
@@ -2699,7 +2699,7 @@ $sys_allow_restricted_users = 1;
 </ul>
 See also 'Codendi Installation Guide'.
 <h3>Setting restricted users privileges</h3>
-<p>You may fine tune the privileges of restricted users on your system. Simply copy /usr/share/tuleap/site-content/en_US/include/restricted_user_permissions.txt in /etc/codendi/site-content/en_US/include/ and edit it. This is a sample configuration file:
+<p>You may fine tune the privileges of restricted users on your system. Simply copy /usr/share/tuleap/site-content/en_US/include/restricted_user_permissions.txt in /etc/tuleap/site-content/en_US/include/ and edit it. This is a sample configuration file:
 <pre>
 // comment/uncomment forbidden URLs
 $forbidden_url = array(
@@ -2866,11 +2866,11 @@ to be located on satellite servers.
 
 <h3>Setup</h3>
 <dl>
-    <dt>In /etc/codendi/conf/local.inc:</dt>
+    <dt>In /etc/tuleap/conf/local.inc:</dt>
     <dd>
         Choose a sys_server_id for the master and the satellite (any integer is OK)
     </dd>
-    <dt>In /etc/codendi/conf/database.inc:</dt>
+    <dt>In /etc/tuleap/conf/database.inc:</dt>
     <dd>
         both servers should point to the master MySQL server. 
     </dd>

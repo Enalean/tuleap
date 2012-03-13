@@ -13,7 +13,7 @@ if (version_compare(phpversion(), '5.1.6', '<')) {
 // Defines all of the Codendi settings first (hosts, databases, etc.)
 $local_inc = getenv('CODENDI_LOCAL_INC');
 if ( ! $local_inc ){
-    $local_inc = '/etc/codendi/conf/local.inc';
+    $local_inc = '/etc/tuleap/conf/local.inc';
 }
 require($local_inc);
 require($GLOBALS['db_config_file']);

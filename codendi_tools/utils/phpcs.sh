@@ -25,7 +25,7 @@ fi
 
 # Codendi sources
 if [ -z "$CODENDI_LOCAL_INC" ]; then 
-    CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
+    CODENDI_LOCAL_INC=/etc/tuleap/conf/local.inc
 fi
 if [ ! -f "$CODENDI_LOCAL_INC" ]; then
     echo "*** ERROR: unable to find local.inc, please set CODENDI_LOCAL_INC variable"

@@ -28,7 +28,7 @@ class ForgeUpgrade_Db_Driver_Codendi extends ForgeUpgrade_Db_Driver_Abstract {
     
     protected function initOptions() {
         if (!$this->dsn) {
-            $localInc = getenv('CODENDI_LOCAL_INC') ? getenv('CODENDI_LOCAL_INC') : '/etc/codendi/conf/local.inc';
+            $localInc = getenv('CODENDI_LOCAL_INC') ? getenv('CODENDI_LOCAL_INC') : '/etc/tuleap/conf/local.inc';
             if (is_file($localInc)) {
                 include $localInc;
                 include $db_config_file;

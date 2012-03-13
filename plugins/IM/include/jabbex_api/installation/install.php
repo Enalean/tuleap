@@ -74,7 +74,7 @@ class JabbeXInstaller {
 						"*\n".
 						"*	Optional arguments for automatic mode:\n".
 						"*		-dir	Openfire's installation directory (default: /opt/openfire).\n".
-						"*		-etcdir	Openfire's installation directory (default: /etc/codendi/plugins/IM/etc/).\n".
+						"*		-etcdir	Openfire's installation directory (default: /etc/tuleap/plugins/IM/etc/).\n".
 						"*		-ap		Unsecure web admin port (default: 9090).\n".
 						"*		-aps	Secure web admin port (default: 9091).\n".
 						"*		-odd	Openfire's DB driver (default: com.mysql.jdbc.Driver).\n".
@@ -315,7 +315,7 @@ class JabbeXInstaller {
 
 			$default_val = array(
 						"-dir" => "/opt/openfire",
-						"-etcdir" => "/etc/codendi/plugins/IM/etc/",
+						"-etcdir" => "/etc/tuleap/plugins/IM/etc/",
 						"-ap" => "9090",
 						"-aps" => "9091",
 						"-odd" => "com.mysql.jdbc.Driver",
@@ -737,7 +737,7 @@ class JabbeXInstaller {
 	}	
 	
 	/*
-	 * Creates the JabbeX configuration file /etc/codendi/plugins/IM/etc/jabbex_conf.xml based on
+	 * Creates the JabbeX configuration file /etc/tuleap/plugins/IM/etc/jabbex_conf.xml based on
 	 * the template file resources/jabbex_conf.tpl.xml.
 	 */
 	function configure_jabbex(){
@@ -796,7 +796,7 @@ class JabbeXInstaller {
 	}
 
 	/*
-	 * Creates the database configuration file /etc/codendi/plugins/IM/etc/database_im.inc based on
+	 * Creates the database configuration file /etc/tuleap/plugins/IM/etc/database_im.inc based on
 	 * the template file resources/database_im.tpl.inc.
 	 */
 	function configure_database_im() {

@@ -2,8 +2,8 @@
 
 scriptdir=`dirname $0`
 
-db_conf_file=/etc/codendi/conf/database.inc
-forgeupgrade_conf_file=/etc/codendi/forgeupgrade/config.ini
+db_conf_file=/etc/tuleap/conf/database.inc
+forgeupgrade_conf_file=/etc/tuleap/forgeupgrade/config.ini
 forgeupgrade_db_structure=/usr/share/forgeupgrade/db/install-mysql.sql
 srcdir=/usr/share/codendi
 

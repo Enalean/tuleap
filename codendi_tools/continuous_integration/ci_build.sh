@@ -68,38 +68,38 @@ mkdir -p ../var/
 mkdir -p ../var/tmp/
 mkdir -p ../var/tmp/codendi_cache/
 
-# Create /etc/codendi/conf and /etc/codendi/plugins/IM/etc dir
+# Create /etc/tuleap/conf and /etc/tuleap/plugins/IM/etc dir
 mkdir -p ../etc/
-mkdir -p ../etc/codendi/
-mkdir -p ../etc/codendi/conf/
-mkdir -p ../etc/codendi/plugins/
-mkdir -p ../etc/codendi/plugins/IM/
-mkdir -p ../etc/codendi/plugins/IM/etc/
+mkdir -p ../etc/tuleap/
+mkdir -p ../etc/tuleap/conf/
+mkdir -p ../etc/tuleap/plugins/
+mkdir -p ../etc/tuleap/plugins/IM/
+mkdir -p ../etc/tuleap/plugins/IM/etc/
 
 # Copy dist files to etc dir
-cp src/etc/database.inc.dist ../etc/codendi/conf/database.inc
-cp plugins/IM/include/jabbex_api/installation/resources/jabbex_conf.tpl.xml ../etc/codendi/plugins/IM/etc/jabbex_conf.xml
-cp src/etc/local.inc.dist ../etc/codendi/conf/local.inc
+cp src/etc/database.inc.dist ../etc/tuleap/conf/database.inc
+cp plugins/IM/include/jabbex_api/installation/resources/jabbex_conf.tpl.xml ../etc/tuleap/plugins/IM/etc/jabbex_conf.xml
+cp src/etc/local.inc.dist ../etc/tuleap/conf/local.inc
 
 # Substitute dist values by correct ones
-substitute '../etc/codendi/conf/local.inc' '%sys_default_domain%' "$sys_default_domain:$port" 
-substitute '../etc/codendi/conf/local.inc' '%sys_ldap_server%' " " 
-substitute '../etc/codendi/conf/local.inc' '%sys_org_name%' "Xerox" 
-substitute '../etc/codendi/conf/local.inc' '%sys_long_org_name%' "Xerox Corp" 
-substitute '../etc/codendi/conf/local.inc' '%sys_fullname%' "$sys_default_domain" 
-substitute '../etc/codendi/conf/local.inc' '%sys_win_domain%' " " 
-substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/codendi' "$WORKSPACE/$local_module_directory"
-substitute '../etc/codendi/conf/local.inc' '\/var\/lib\/codendi' "$WORKSPACE/var/lib/codendi"
-substitute '../etc/codendi/conf/local.inc' '\/var\/log\/codendi' "$WORKSPACE/var/log/codendi"
-substitute '../etc/codendi/conf/local.inc' '\/etc\/codendi' "$WORKSPACE/etc/codendi"
-substitute '../etc/codendi/conf/local.inc' '\/usr\/lib\/codendi\/bin' "$WORKSPACE/etc/codendi"
-substitute '../etc/codendi/conf/local.inc' '^\$sys_https_host ' "// \\\$sys_https_host"
-substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/htmlpurifier' "/usr/share/htmlpurifier"
-substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/jpgraph' "/usr/share/jpgraph"
-substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$WORKSPACE/var/tmp"
+substitute '../etc/tuleap/conf/local.inc' '%sys_default_domain%' "$sys_default_domain:$port" 
+substitute '../etc/tuleap/conf/local.inc' '%sys_ldap_server%' " " 
+substitute '../etc/tuleap/conf/local.inc' '%sys_org_name%' "Xerox" 
+substitute '../etc/tuleap/conf/local.inc' '%sys_long_org_name%' "Xerox Corp" 
+substitute '../etc/tuleap/conf/local.inc' '%sys_fullname%' "$sys_default_domain" 
+substitute '../etc/tuleap/conf/local.inc' '%sys_win_domain%' " " 
+substitute '../etc/tuleap/conf/local.inc' '\/usr\/share\/codendi' "$WORKSPACE/$local_module_directory"
+substitute '../etc/tuleap/conf/local.inc' '\/var\/lib\/codendi' "$WORKSPACE/var/lib/codendi"
+substitute '../etc/tuleap/conf/local.inc' '\/var\/log\/codendi' "$WORKSPACE/var/log/codendi"
+substitute '../etc/tuleap/conf/local.inc' '\/etc\/codendi' "$WORKSPACE/etc/tuleap"
+substitute '../etc/tuleap/conf/local.inc' '\/usr\/lib\/codendi\/bin' "$WORKSPACE/etc/tuleap"
+substitute '../etc/tuleap/conf/local.inc' '^\$sys_https_host ' "// \\\$sys_https_host"
+substitute '../etc/tuleap/conf/local.inc' '\/usr\/share\/htmlpurifier' "/usr/share/htmlpurifier"
+substitute '../etc/tuleap/conf/local.inc' '\/usr\/share\/jpgraph' "/usr/share/jpgraph"
+substitute '../etc/tuleap/conf/local.inc' '\/var\/tmp' "$WORKSPACE/var/tmp"
 
 # Set environment var CODENDI_LOCAL_INC
-export CODENDI_LOCAL_INC="$WORKSPACE/etc/codendi/conf/local.inc"
+export CODENDI_LOCAL_INC="$WORKSPACE/etc/tuleap/conf/local.inc"
 
 # Create a symbolic link from plugins/tests to codendi_tools/tests
 cd $codendi_src/plugins/

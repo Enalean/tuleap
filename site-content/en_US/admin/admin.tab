@@ -458,5 +458,5 @@ admin_system_events	nobody	Nobody
 # Script: SF/www/admin/show_pending_documents.php
 #
 admin_show_pending_documents	pending_doc	Pending deleted documents for project <a href="/project/admin/?group_id=$1">$2</a> 
-admin_show_pending_documents	delay_info	As per the configuration (<code>$sys_file_deletion_delay</code>) defined in <code>/etc/codendi/local.inc</code> elements will be <strong>purged</strong> from the filesystem after <strong>$1 days.</strong>
+admin_show_pending_documents	delay_info	As per the configuration (<code>$sys_file_deletion_delay</code>) defined in <code>/etc/tuleap/local.inc</code> elements will be <strong>purged</strong> from the filesystem after <strong>$1 days.</strong>
 

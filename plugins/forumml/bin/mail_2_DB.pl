@@ -49,7 +49,7 @@ open STDOUT, ">>", $logfile or die "cannot append to '$logfile': $!\n";
 open STDERR, ">&STDOUT" or die "cannot append STDERR to STDOUT: $!\n";
 
 # Search if there are lists we shouldn't treat
-my $conf = '/etc/codendi/plugins/forumml/etc/forumml.inc';
+my $conf = '/etc/tuleap/plugins/forumml/etc/forumml.inc';
 if (-f $conf) {
     # Get the variable defined in forumml.inc
     my @exc_lists;

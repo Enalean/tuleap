@@ -55,8 +55,8 @@ Alias /downloads/ "/usr/share/tuleap/downloads/"
 #
 # Codendi custom themes
 #
-Alias /custom/ "/etc/codendi/themes/"
-<Directory "/etc/codendi/themes/">
+Alias /custom/ "/etc/tuleap/themes/"
+<Directory "/etc/tuleap/themes/">
     Options FollowSymLinks
     AllowOverride None
     Order allow,deny
@@ -99,8 +99,8 @@ AliasMatch ^/plugins/([^/]*)/(.*) /usr/share/tuleap/plugins/$1/www/$2
 </DirectoryMatch>
 
 # 3- Custom plugins CGI scripts
-ScriptAliasMatch /customplugins/([^/]*/cgi-bin/.*) "/etc/codendi/plugins/$1"
-<Directory "/etc/codendi/plugins/[^/]*/cgi-bin">
+ScriptAliasMatch /customplugins/([^/]*/cgi-bin/.*) "/etc/tuleap/plugins/$1"
+<Directory "/etc/tuleap/plugins/[^/]*/cgi-bin">
     AllowOverride None
     Options ExecCGI
     Order allow,deny
@@ -108,8 +108,8 @@ ScriptAliasMatch /customplugins/([^/]*/cgi-bin/.*) "/etc/codendi/plugins/$1"
 </Directory>
 
 # 4- Custom plugins web/php pages
-AliasMatch ^/customplugins/([^/]*)/(.*) /etc/codendi/plugins/$1/www/$2
-<DirectoryMatch "/etc/codendi/plugins/([^/]*)/www/">
+AliasMatch ^/customplugins/([^/]*)/(.*) /etc/tuleap/plugins/$1/www/$2
+<DirectoryMatch "/etc/tuleap/plugins/([^/]*)/www/">
     Options MultiViews
     AllowOverride None
     Order allow,deny
@@ -169,23 +169,23 @@ RewriteRule /http-bind/ http://%sys_default_domain%:7070/http-bind/ [P]
 # Now if the user asks specifically for a common image, then return the common image
 
 # If we ask for a common image ^/(?:custom|themes)/custom/images/(.+)
-# And the image has been redefined in /etc/codendi/themes/common/images/$1
-# Then serve /etc/codendi/themes/common/images/$1
-RewriteCond  /etc/codendi/themes/common/images/$1  -f
-RewriteRule  ^/(?:custom|themes)/common/images/(.+)  /etc/codendi/themes/common/images/$1  [L]
+# And the image has been redefined in /etc/tuleap/themes/common/images/$1
+# Then serve /etc/tuleap/themes/common/images/$1
+RewriteCond  /etc/tuleap/themes/common/images/$1  -f
+RewriteRule  ^/(?:custom|themes)/common/images/(.+)  /etc/tuleap/themes/common/images/$1  [L]
 
 # Else if we ask for a Theme image ^/(?:custom|themes)/([^/]*)/images/(.+)
-# And the image has been redefined in /etc/codendi/themes/$1/images/$2
-# Then serve /etc/codendi/themes/$1/images/$2
-RewriteCond  /etc/codendi/themes/$1/images/$2  -f
-RewriteRule  ^/(?:custom|themes)/([^/]*)/images/(.+)  /etc/codendi/themes/$1/images/$2  [L]
+# And the image has been redefined in /etc/tuleap/themes/$1/images/$2
+# Then serve /etc/tuleap/themes/$1/images/$2
+RewriteCond  /etc/tuleap/themes/$1/images/$2  -f
+RewriteRule  ^/(?:custom|themes)/([^/]*)/images/(.+)  /etc/tuleap/themes/$1/images/$2  [L]
 
 # Else if we ask for an image (either common or Theme) ^/(?:custom|themes)/(?:[^/]*)/images/(.+)
-# And the image has been redefined in /etc/codendi/themes/common/images/$1 
-# Then serve /etc/codendi/themes/common/images/$1
+# And the image has been redefined in /etc/tuleap/themes/common/images/$1 
+# Then serve /etc/tuleap/themes/common/images/$1
 # Exemple: organization_logo.png put globaly in /etc/.../common/
-RewriteCond  /etc/codendi/themes/common/images/$1  -f
-RewriteRule  ^/(?:custom|themes)/[^/]*/images/(.+)  /etc/codendi/themes/common/images/$1  [L]
+RewriteCond  /etc/tuleap/themes/common/images/$1  -f
+RewriteRule  ^/(?:custom|themes)/[^/]*/images/(.+)  /etc/tuleap/themes/common/images/$1  [L]
 
 # Else if we ask for a common image ^/(?:custom|themes)/common/images/(.+)
 # Then serve the standard one /usr/share/tuleap/src/www/themes/common/images/$1

@@ -38,7 +38,7 @@ if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=di
 # /usr/share/tuleap -> tuleap main Web tree, documentation, plugins, etc.
 `$CHCON -R -h $context $codendi_dir`;
 
-# /etc/codendi -> for licence, site-content...
+# /etc/tuleap -> for licence, site-content...
 `$CHCON -R -h $context $sys_custom_dir`;
 
 # /var/lib/codendi

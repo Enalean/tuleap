@@ -41,7 +41,7 @@ class LDAP_UserSync {
     /**
      * Instanciate the right LDAP_UserSync object
      *
-     * Site can define its own implementation in /etc/codendi/plugins/ldap/site-content/en_US/synchronize_user.txt
+     * Site can define its own implementation in /etc/tuleap/plugins/ldap/site-content/en_US/synchronize_user.txt
      *
      * @return LDAP_UserSync
      */

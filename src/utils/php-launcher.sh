@@ -42,7 +42,7 @@ error() {
 # Check if CODENDI_LOCAL_INC variable exists in the environement
 # or set a default value
 if [ ! -f "${CODENDI_LOCAL_INC}" ]; then
-    CODENDI_LOCAL_INC="/etc/codendi/conf/local.inc"
+    CODENDI_LOCAL_INC="/etc/tuleap/conf/local.inc"
 fi
 if [ ! -f "${CODENDI_LOCAL_INC}" ]; then
     error "No valid CODENDI_LOCAL_INC found. Please update your environnement."

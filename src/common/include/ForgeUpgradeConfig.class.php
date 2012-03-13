@@ -53,7 +53,7 @@ class ForgeUpgradeConfig {
         if (isset($GLOBALS['forgeupgrade_file']) && is_file($GLOBALS['forgeupgrade_file'])) {
             $this->setFilePath($GLOBALS['forgeupgrade_file']);
         } else {
-            $localInc = getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc';
+            $localInc = getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/tuleap/conf/local.inc';
             throw new Exception('$forgeupgrade_file variable not defined in '.$localInc);
         }
     }

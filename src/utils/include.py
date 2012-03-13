@@ -52,7 +52,7 @@ def load_local_config(filename):
 
 db_include = os.getenv('CODENDI_LOCAL_INC','')
 if db_include is "":
-    db_include = "/etc/codendi/conf/local.inc"
+    db_include = "/etc/tuleap/conf/local.inc"
 # Local Include file for database username and password
 date = int(time.time()/3600/24) # Get the number of days since 1/1/1970 for /etc/shadow
 load_local_config(db_include)

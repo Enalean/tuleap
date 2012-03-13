@@ -163,7 +163,7 @@ class BaseLanguage {
     }
 
     /**
-     * Load tab files in /etc/codendi/site-content for given language
+     * Load tab files in /etc/tuleap/site-content for given language
      */
     function loadCustomSiteContent($lang, &$text_array) {
         $this->loadAllTabFiles($GLOBALS['sys_custom_incdir'].'/'.$lang, $text_array);
@@ -178,7 +178,7 @@ class BaseLanguage {
     }
 
     /**
-     * Load all tab files in /etc/codendi/plugins/.../site-content for
+     * Load all tab files in /etc/tuleap/plugins/.../site-content for
      * given language
      */
     function loadPluginsCustomSiteContent($lang, &$text_array) {

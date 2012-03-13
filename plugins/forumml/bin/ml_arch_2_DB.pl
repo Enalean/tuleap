@@ -30,7 +30,7 @@ Only projects that enabled ForumML plugin are concerned by this migration.
 =cut
 
 # Search if there are lists we shouldn't treat
-my $conf = '/etc/codendi/plugins/forumml/etc/forumml.inc';
+my $conf = '/etc/tuleap/plugins/forumml/etc/forumml.inc';
 my %excluded_list;
 if (-f $conf) {
     # Get the variable defined in forumml.inc

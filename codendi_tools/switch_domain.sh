@@ -17,14 +17,14 @@ echo "Current domain = $old_domain"
 read -p "New domain: " new_domain
 
 
-substitute '/etc/codendi/conf/local.inc' "$old_domain" "$new_domain" 
-substitute '/etc/codendi/conf.d/codendi_aliases.conf' "$old_domain" "$new_domain" 
+substitute '/etc/tuleap/conf/local.inc' "$old_domain" "$new_domain" 
+substitute '/etc/tuleap/conf.d/codendi_aliases.conf' "$old_domain" "$new_domain" 
 substitute '/etc/httpd/conf/httpd.conf' "$old_domain" "$new_domain"
-if [ -e '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' ] ; then
-    substitute '/etc/codendi/documentation/user_guide/xml/ParametersLocal.dtd' "$old_domain" "$new_domain" 
+if [ -e '/etc/tuleap/documentation/user_guide/xml/ParametersLocal.dtd' ] ; then
+    substitute '/etc/tuleap/documentation/user_guide/xml/ParametersLocal.dtd' "$old_domain" "$new_domain" 
 fi
-if [ -e '/etc/codendi/documentation/cli/xml/ParametersLocal.dtd' ] ; then
-    substitute '/etc/codendi/documentation/cli/xml/ParametersLocal.dtd' "$old_domain" "$new_domain" 
+if [ -e '/etc/tuleap/documentation/cli/xml/ParametersLocal.dtd' ] ; then
+    substitute '/etc/tuleap/documentation/cli/xml/ParametersLocal.dtd' "$old_domain" "$new_domain" 
 fi
 if [ -e '/var/named/chroot/var/named/codendi.zone' ] ; then
     substitute '/var/named/chroot/var/named/codendi.zone' "$old_domain" "$new_domain" 
@@ -32,11 +32,11 @@ fi
 if [ -e '/etc/mail/local-host-names' ] ; then
     substitute '/etc/mail/local-host-names' "$old_domain" "$new_domain" 
 fi
-if [ -e '/etc/codendi/plugins/salome/etc/database_salome.inc' ] ; then
-    substitute '/etc/codendi/plugins/salome/etc/database_salome.inc' "$old_domain" "$new_domain"
+if [ -e '/etc/tuleap/plugins/salome/etc/database_salome.inc' ] ; then
+    substitute '/etc/tuleap/plugins/salome/etc/database_salome.inc' "$old_domain" "$new_domain"
 fi
-if [ -e '/etc/codendi/plugins/IM/etc/jabbex_conf.xml' ] ; then
-    substitute '/etc/codendi/plugins/IM/etc/jabbex_conf.xml' "$old_domain" "$new_domain"
+if [ -e '/etc/tuleap/plugins/IM/etc/jabbex_conf.xml' ] ; then
+    substitute '/etc/tuleap/plugins/IM/etc/jabbex_conf.xml' "$old_domain" "$new_domain"
 fi
 
 

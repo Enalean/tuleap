@@ -40,7 +40,7 @@ class Update_001 extends CodendiUpgrade {
 */
 
 // Defines all of the Codendi settings first (hosts, databases, etc.)
-require_once(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
+require_once(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/tuleap/conf/local.inc');
 require($GLOBALS['db_config_file']);
 //database abstraction
 require_once(dirname(__FILE__).'/../../common/dao/include/DataAccessObject.class.php');

@@ -54,7 +54,7 @@ CURRENTDIR=`pwd`
 # honor BASEDOCDIR if defined
 if [ -z "$BASEDOCDIR" ]; then
     if [ -z "$CODENDI_LOCAL_INC" ]; then
-        CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
+        CODENDI_LOCAL_INC=/etc/tuleap/conf/local.inc
     fi
     CODENDI_DOCUMENTATION_PREFIX=`$GREP '^\$codendi_documentation_prefix' $CODENDI_LOCAL_INC | $SED -e 's/\$codendi_documentation_prefix\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
     BASEDOCDIR=$CODENDI_DOCUMENTATION_PREFIX
@@ -64,7 +64,7 @@ CMDDOCDIR=$BASEDOCDIR/cli/cmd
 # honor BASESRCDIR if defined
 if [ -z "$BASESRCDIR" ]; then
     if [ -z "$CODENDI_LOCAL_INC" ]; then
-        CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
+        CODENDI_LOCAL_INC=/etc/tuleap/conf/local.inc
     fi
     CODENDI_DIR=`$GREP '^\$codendi_dir' $CODENDI_LOCAL_INC | $SED -e 's/\$codendi_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
     BASESRCDIR=$CODENDI_DIR/cli
@@ -73,7 +73,7 @@ fi
 # honor TMPDIR if defined
 if [ -z "$TMPDIR" ]; then
     if [ -z "$CODENDI_LOCAL_INC" ]; then
-        CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
+        CODENDI_LOCAL_INC=/etc/tuleap/conf/local.inc
     fi
     TMP_DIR=`$GREP '^\$tmp_dir' $CODENDI_LOCAL_INC | $SED -e 's/\$tmp_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
     TMPDIR=$TMP_DIR
@@ -82,7 +82,7 @@ fi
 # honor sys_default_domain if defined
 if [ -z "$sys_default_domain" ]; then
     if [ -z "$CODENDI_LOCAL_INC" ]; then
-        CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
+        CODENDI_LOCAL_INC=/etc/tuleap/conf/local.inc
     fi
     sys_default_domain=`$GREP '^\$sys_default_domain' $CODENDI_LOCAL_INC | $SED -e 's/\$sys_default_domain\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
 fi
@@ -90,7 +90,7 @@ fi
 # honor $sys_https_host if defined
 if [ -z "$sys_https_host" ]; then
     if [ -z "$CODENDI_LOCAL_INC" ]; then
-        CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
+        CODENDI_LOCAL_INC=/etc/tuleap/conf/local.inc
     fi
     sys_https_host=`$GREP '^\$sys_https_host' $CODENDI_LOCAL_INC | $SED -e 's/\$sys_https_host\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
 fi
@@ -123,7 +123,7 @@ done
 # honor DESTDIR if defined
 if [ -z "$DESTDIR" ]; then
     if [ -z "$CODENDI_LOCAL_INC" ]; then
-        CODENDI_LOCAL_INC=/etc/codendi/conf/local.inc
+        CODENDI_LOCAL_INC=/etc/tuleap/conf/local.inc
     fi
     DEST_DIR=`$GREP '^\$codendi_downloads_dir' $CODENDI_LOCAL_INC | $SED -e 's/\$codendi_downloads_dir\s*=\s*\(.*\);\(.*\)/\1/' | $TR -d '"' | $TR -d "'"`
     DESTDIR=$DEST_DIR

@@ -140,7 +140,7 @@ else
 fi
 
 # Get the mysql password from the install
-mysql_pass=$($remotecmd grep sys_dbpasswd /etc/codendi/conf/database.inc | cut -d\" -f2)  
+mysql_pass=$($remotecmd grep sys_dbpasswd /etc/tuleap/conf/database.inc | cut -d\" -f2)  
 
 # And test!
 TULEAP_HOST=$lxc_ip TULEAP_ENV=aci TULEAP_MYSQL_PASS=$mysql_pass cucumber -f junit -o test_results $src_dir/codendi_tools/plugins/tests/functional/features
