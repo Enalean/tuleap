@@ -30,6 +30,7 @@ Mock::generate('User');
 require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/project/Project.class.php');
+require_once('common/frs/FRSFileFactory.class.php');
 Mock::generate('Project');
 Mock::generate('FRSFileFactory');
 Mock::generate('WikiAttachment');
