@@ -45,7 +45,7 @@ class ForgeUpgrade_Db_Driver_Codendi extends ForgeUpgrade_Db_Driver_Abstract {
                 $this->user     = $sys_dbuser;
                 $this->password = $sys_dbpasswd;
             } else {
-                throw new Exception('Unable to find a valid local.inc for Codendi, please check CODENDI_LOCAL_INC environment variable');
+                throw new Exception('Unable to find a valid local.inc for Tuleap, please check CODENDI_LOCAL_INC environment variable');
             }
         }
     }

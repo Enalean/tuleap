@@ -630,6 +630,10 @@ else
 
     # Remove soap cache
     rm -f /tmp/wsdl-*
+    
+    # Backward compatibility
+    [ -d "/usr/share/codendi"] || [ -h "/usr/share/codendi"] || ln -s /usr/share/tuleap /usr/share/codendi
+    [ -d "/etc/codendi"] || [ -h "/etc/codendi"] || ln -s /etc/tuleap /etc/codendi
 fi
 
 # In any cases fix the context
