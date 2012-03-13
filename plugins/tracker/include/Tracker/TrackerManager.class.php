@@ -26,6 +26,8 @@ require_once('Artifact/Tracker_ArtifactFactory.class.php');
 require_once('Report/Tracker_ReportFactory.class.php');
 require_once('dao/Tracker_PermDao.class.php');
 require_once('common/reference/ReferenceManager.class.php');
+require_once('CrossSearch/SearchController.class.php');
+require_once('CrossSearch/Search.class.php');
 
 class TrackerManager { /* extends Engine? */
     
@@ -163,6 +165,10 @@ class TrackerManager { /* extends Engine? */
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);
                                 break;
+                            case 'cross-search':
+                                $controller = $this->getCrossSearchController($request);
+                                $controller->search();
+                                break;
                             default:
                                 $this->displayAllTrackers($project, $user);
                                 break;
@@ -171,6 +177,24 @@ class TrackerManager { /* extends Engine? */
                 }
             }
         }
+    }
+    
+    protected function getCrossSearchController(Codendi_Request $request) {        
+        $formElementFactory = Tracker_FormElementFactory::instance();
+        
+        $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
+        $dao                = new Tracker_CrossSearch_SearchDao();
+        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $formElementFactory);
+        
+        return new Tracker_CrossSearch_SearchController(
+            $request,
+            ProjectManager::instance(),
+            $formElementFactory,
+            $GLOBALS['Language'],
+            $GLOBALS['Response'],
+            $search,
+            new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao())
+        );
     }
     
     /**

@@ -19,13 +19,13 @@
  */
 
 require_once 'common/project/Service.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Report/Tracker_Report.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Hierarchy/Hierarchy.class.php';
+require_once dirname(__FILE__).'/../Report/Tracker_Report.class.php';
+require_once dirname(__FILE__).'/../Hierarchy/Hierarchy.class.php';
 require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
 
 require_once 'html.php';
 
-class AgileDashboard_SearchView {
+class Tracker_CrossSearch_SearchView {
     
     /**
      * @var Service

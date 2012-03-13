@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) . '/../../../tracker/tests/Test_Tracker_Builder.php';
-require_once dirname(__FILE__) .'/../../include/AgileDashboard/SearchView.class.php';
+require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
+require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SearchView.class.php';
 
 Mock::generate('Service');
 Mock::generate('Project');
@@ -31,7 +31,7 @@ Mock::generate('Tracker_FormElement_Field_List');
 Mock::generate('Tracker_SharedFormElementFactory');
 Mock::generate('Tracker_Artifact_Changeset');
 
-class AgileDashboard_SearchViewTest extends TuleapTestCase {
+class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     
     function testRenderShouldDisplayServiceHeaderAndFooter() {
         $service = new MockService();
@@ -153,7 +153,7 @@ class AgileDashboard_SearchViewTest extends TuleapTestCase {
         $tracker1         = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
         $trackers         = array($tracker1);
         
-        $view             = new AgileDashboard_SearchView($service, $GLOBALS['Language'], $report, $criteria, $root, $artifact_factory, $shared_factory, $trackers);
+        $view             = new Tracker_CrossSearch_SearchView($service, $GLOBALS['Language'], $report, $criteria, $root, $artifact_factory, $shared_factory, $trackers);
         return $view;
     }
     

@@ -18,6 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_ServiceNotUsedException extends Exception {
+class Tracker_CrossSearch_SharedField {
+    
+    private $fieldIds = array();
+    private $valueIds = array();
+    
+    public function addFieldId($id) {
+        $this->fieldIds[] = $id;
+    }
+    
+    public function getFieldIds() {
+        return $this->fieldIds;
+    }
+    
+    public function addValueId($id) {
+        $this->valueIds[] = $id;
+    }
+    
+    public function getValueIds() {
+        return $this->valueIds;
+    }
 }
+
 ?>

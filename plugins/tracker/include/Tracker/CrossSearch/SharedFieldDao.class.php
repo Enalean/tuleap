@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AgileDashboard_SharedFieldDao extends DataAccessObject {
+class Tracker_CrossSearch_SharedFieldDao extends DataAccessObject {
     
     public function searchSharedFieldIds($sourceOrTargetFieldIds) {
         $sourceOrTargetFieldIds = $this->da->escapeInt($sourceOrTargetFieldIds);

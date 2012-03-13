@@ -34,7 +34,8 @@ class AgileDashboardPlugin extends Plugin {
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
             $this->_addHook('cssfile', 'cssfile', false);
-            $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
+            //TODO
+            //$this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
         }
     }
 
@@ -62,29 +63,6 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function process(Codendi_Request $request) {
-        $controller = $this->getController($request);
-        $controller->search();
-    }
-    
-    protected function getController(Codendi_Request $request) {
-        require_once 'AgileDashboard/SearchController.class.php';
-        require_once 'AgileDashboard/Search.class.php';
-        
-        $formElementFactory = Tracker_FormElementFactory::instance();
-        
-        $sharedFieldFactory = new AgileDashboard_SharedFieldFactory();
-        $dao                = new AgileDashboard_SearchDao();
-        $search             = new AgileDashboard_Search($sharedFieldFactory, $dao, $formElementFactory);
-        
-        return new AgileDashboard_SearchController(
-            $request,
-            ProjectManager::instance(),
-            $formElementFactory,
-            $GLOBALS['Language'],
-            $GLOBALS['Response'],
-            $search,
-            new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao())
-        );
     }
 }
 

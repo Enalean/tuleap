@@ -22,9 +22,9 @@ require_once 'SearchView.class.php';
 require_once 'ServiceNotUsedException.class.php';
 require_once 'ProjectNotFoundException.class.php';
 require_once 'Search.class.php';
-require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/Hierarchy/HierarchyFactory.class.php';
+require_once dirname(__FILE__) .'/../Hierarchy/HierarchyFactory.class.php';
 
-class AgileDashboard_SearchController {
+class Tracker_CrossSearch_SearchController {
     /**
      * @var Codendi_Request
      */
@@ -56,7 +56,7 @@ class AgileDashboard_SearchController {
     private $hierarchy_factory;
     
     /**
-     * @var AgileDashboard_Search
+     * @var Tracker_CrossSearch_Search
      */
     private $search;
     
@@ -65,7 +65,7 @@ class AgileDashboard_SearchController {
                                 Tracker_FormElementFactory $formElementFactory, 
                                 BaseLanguage               $language, 
                                 Layout                     $layout,
-                                AgileDashboard_Search      $search,
+                                Tracker_CrossSearch_Search      $search,
                                 Tracker_HierarchyFactory   $hierarchy_factory) {
         
         $this->request            = $request;
@@ -90,11 +90,11 @@ class AgileDashboard_SearchController {
             $view = $this->getView($service, $this->language, $report, $criteria, $artifacts, $trackers);
             $view->render();
         }
-        catch (AgileDashboard_ProjectNotFoundException $e) {
+        catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
             $this->layout->addFeedback('error', $e->getMessage());
             $this->layout->redirect('/');
         }
-        catch (AgileDashboard_ServiceNotUsedException $e) {
+        catch (Tracker_CrossSearch_ServiceNotUsedException $e) {
             $this->layout->addFeedback('error', $e->getMessage());
             $this->layout->redirect('/projects/' . $project->getUnixName() . '/');
         }
@@ -176,7 +176,7 @@ class AgileDashboard_SearchController {
         $project   = $this->projectManager->getProject($projectId);
         if ($project->isError()) {
             $errorMessage = $this->language->getText('project', 'does_not_exist');
-            throw new AgileDashboard_ProjectNotFoundException($errorMessage);
+            throw new Tracker_CrossSearch_ProjectNotFoundException($errorMessage);
         } else {
             return $project;
         }
@@ -186,14 +186,14 @@ class AgileDashboard_SearchController {
      * @return Service
      */
     private function getService(Project $project) {
-        $service = $project->getService('plugin_agiledashboard');
+        $service = $project->getService('plugin_tracker');
         if ($service) {
             return $service;
         } else {
-            $serviceLabel = $this->language->getText('plugin_agiledashboard', 'title');
+            $serviceLabel = $this->language->getText('plugin_tracker', 'title');
             $errorMessage = $this->language->getText('project_service', 'service_not_used', array($serviceLabel));
             
-            throw new AgileDashboard_ServiceNotUsedException($errorMessage);
+            throw new Tracker_CrossSearch_ServiceNotUsedException($errorMessage);
         }
     }
     
@@ -202,7 +202,7 @@ class AgileDashboard_SearchController {
         $formElementFactory = Tracker_FormElementFactory::instance();
         $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
         $shared_factory     = new Tracker_SharedFormElementFactory($formElementFactory, $bindFactory);
-        return new AgileDashboard_SearchView($service, $language, $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
+        return new Tracker_CrossSearch_SearchView($service, $language, $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
     }
 }
 ?>

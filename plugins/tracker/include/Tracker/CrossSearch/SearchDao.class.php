@@ -21,7 +21,7 @@
 require_once 'common/dao/include/DataAccessObject.class.php';
 require_once 'SharedField.class.php';
 
-class AgileDashboard_SearchDao extends DataAccessObject {
+class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     
     public function searchMatchingArtifacts(array $trackerIds, array $sharedFields) {
         $trackerIds = $this->da->quoteSmartImplode(',', $trackerIds);
@@ -60,7 +60,7 @@ class AgileDashboard_SearchDao extends DataAccessObject {
         return implode(' ', $sqlFragments);
     }
     
-    protected function getSharedFieldFragment($fragmentNumber, AgileDashboard_SharedField $sharedField) {
+    protected function getSharedFieldFragment($fragmentNumber, Tracker_CrossSearch_SharedField $sharedField) {
         $fieldIds = implode(',', $sharedField->getFieldIds());
         $valueIds = implode(',', $sharedField->getValueIds());
         

@@ -41,6 +41,10 @@ class BaseLanguageTest extends UnitTestCase {
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__) . '/_fixtures/etc/plugins';
         $GLOBALS['sys_custom_themeroot']  = dirname(__FILE__) . '/_fixtures/etc/themes';
         $GLOBALS['codendi_cache_dir']     = dirname(__FILE__) . '/_fixtures/tmp';
+         
+	if (!is_dir($GLOBALS['codendi_cache_dir'].'/lang')) {
+	    mkdir($GLOBALS['codendi_cache_dir'].'/lang', 0777, true);
+	}
     }
     
     function tearDown() {
