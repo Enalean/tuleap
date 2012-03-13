@@ -1,6 +1,7 @@
 # Define variables
 %define PKG_NAME @@PKG_NAME@@
 %define APP_NAME tuleap
+%define OLD_APP_NAME codendi
 %define APP_USER codendiadm
 %define APP_HOME_DIR /home/%{APP_USER}
 %define APP_DIR %{_datadir}/%{APP_NAME}
@@ -492,6 +493,9 @@ done
 # Install init.d script
 %{__install} -d $RPM_BUILD_ROOT/etc/rc.d/init.d
 %{__install} src/utils/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/
+
+# Backward compatability
+%{__ln_s} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{APP_NAME} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{OLD_APP_NAME}
 
 # Install cron.d script
 %{__install} -d $RPM_BUILD_ROOT/etc/cron.d
