@@ -59,11 +59,21 @@ class tracker_date_reminderPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
+    private function isLoggingEnabled() {
+        return $this->getPluginInfo()->getPropertyValueForName('enable_log');
+    }
+    
     function codendi_daily_start($params) {
         include_once 'ArtifactDateReminder.class.php';
         include_once 'TrackerDateReminder_Logger_Prefix.class.php';
         
-        $logger = new TrackerDateReminder_Logger($GLOBALS['codendi_log']."/tracker_date_reminder.log");
+        if ($this->isLoggingEnabled()) {
+            $logfile = $GLOBALS['codendi_log']."/tracker_date_reminder.log";
+        } else {
+            $logfile = false;
+        }
+        
+        $logger = new TrackerDateReminder_Logger($logfile);
         
         $artifactDateReminder = new ArtifactDateReminder($logger);
         $artifactDateReminder->codexDaily();

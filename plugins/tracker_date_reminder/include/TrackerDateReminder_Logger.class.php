@@ -23,6 +23,8 @@ class TrackerDateReminder_Logger {
     const LOG_WARNING = "warn";
     const LOG_ERROR   = "error";
     
+    private $file;
+    
     public function __construct($file) {
         $this->file = $file;
     }
@@ -40,7 +42,9 @@ class TrackerDateReminder_Logger {
     }
     
     private function log($level, $message) {
-         error_log(date('c')." [$level] $message\n", 3, $this->file);
+        if ($this->file) {
+            error_log(date('c') . " [$level] $message\n", 3, $this->file);
+        }
     }
 }
 
