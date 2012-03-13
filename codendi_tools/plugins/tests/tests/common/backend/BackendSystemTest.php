@@ -92,7 +92,7 @@ class BackendSystemTest extends UnitTestCase {
         $this->assertEqual($backend->createUserHome(104),True);
         $this->assertTrue(is_dir($GLOBALS['homedir_prefix']."/codendiadm"),"Home dir should be created");
 
-        $this->assertTrue(is_file($GLOBALS['homedir_prefix']."/codendiadm/.profile"),"User files from /etc/tuleap_skel should be created");
+        $this->assertTrue(is_file($GLOBALS['homedir_prefix']."/codendiadm/.profile"),"User files from /etc/skel_tuleap should be created");
 
 
         // Check that a wrong user id does not raise an error

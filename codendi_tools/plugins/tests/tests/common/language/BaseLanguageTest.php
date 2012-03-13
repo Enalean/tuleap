@@ -34,9 +34,9 @@ class BaseLanguageTest extends UnitTestCase {
 
     function setUp() {
         $this->glob = $GLOBALS;
-        $GLOBALS['sys_incdir']            = dirname(__FILE__) . '/_fixtures/codendi/site-content';
-        $GLOBALS['sys_pluginsroot']       = dirname(__FILE__) . '/_fixtures/codendi/plugins';
-        $GLOBALS['sys_themeroot']         = dirname(__FILE__) . '/_fixtures/codendi/themes';
+        $GLOBALS['sys_incdir']            = dirname(__FILE__) . '/_fixtures/tuleap/site-content';
+        $GLOBALS['sys_pluginsroot']       = dirname(__FILE__) . '/_fixtures/tuleap/plugins';
+        $GLOBALS['sys_themeroot']         = dirname(__FILE__) . '/_fixtures/tuleap/themes';
         $GLOBALS['sys_custom_incdir']     = dirname(__FILE__) . '/_fixtures/etc/site-content';
         $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__) . '/_fixtures/etc/plugins';
         $GLOBALS['sys_custom_themeroot']  = dirname(__FILE__) . '/_fixtures/etc/themes';

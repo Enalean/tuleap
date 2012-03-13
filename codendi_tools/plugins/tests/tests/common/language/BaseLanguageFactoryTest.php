@@ -19,6 +19,7 @@
  */
 
 require_once 'common/language/BaseLanguageFactory.class.php';
+require_once 'common/include/Config.class.php';
 
 class BaseLanguageFactoryTest extends UnitTestCase {
     function setUp() {
