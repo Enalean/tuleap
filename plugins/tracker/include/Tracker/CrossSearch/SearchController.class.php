@@ -89,7 +89,7 @@ class Tracker_CrossSearch_SearchController {
             $trackers_hierarchy = $this->getTrackersHierarchy($trackers);
             $artifacts          = $this->getArtifacts($trackers, $trackers_hierarchy);
             
-            $view = $this->getView($service, $this->language, $report, $criteria, $artifacts, $trackers);
+            $view = $this->getView($project, $service, $this->language, $report, $criteria, $artifacts, $trackers);
             $view->render();
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
@@ -199,12 +199,12 @@ class Tracker_CrossSearch_SearchController {
         }
     }
     
-    protected function getView(Service $service, BaseLanguage $language, Tracker_Report $report, $criteria, $artifacts, $trackers) {
+    protected function getView(Project $project, Service $service, BaseLanguage $language, Tracker_Report $report, $criteria, $artifacts, $trackers) {
         $artifact_factory   = Tracker_ArtifactFactory::instance();
         $formElementFactory = Tracker_FormElementFactory::instance();
         $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
         $shared_factory     = new Tracker_SharedFormElementFactory($formElementFactory, $bindFactory);
-        return new Tracker_CrossSearch_SearchView($service, $language, $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
+        return new Tracker_CrossSearch_SearchView($project, $service, $language, $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
     }
 }
 ?>

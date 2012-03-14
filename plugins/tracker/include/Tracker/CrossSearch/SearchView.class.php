@@ -28,6 +28,11 @@ require_once 'html.php';
 class Tracker_CrossSearch_SearchView {
     
     /**
+     * @var Project
+     */
+    private $project;
+    
+    /**
      * @var Service
      */
     private $service;
@@ -74,7 +79,8 @@ class Tracker_CrossSearch_SearchView {
         TreeNode_GetStateVisitor::STATE_LAST  => 'tree-last',
     );
     
-    public function __construct(Service                          $service,
+    public function __construct(Project                          $project,
+                                Service                          $service,
                                 BaseLanguage                     $language, 
                                 Tracker_Report                   $report, 
                                 array                            $criteria, 
@@ -82,8 +88,9 @@ class Tracker_CrossSearch_SearchView {
                                 Tracker_ArtifactFactory          $artifact_factory, 
                                 Tracker_SharedFormElementFactory $shared_factory, 
                                                                  $trackers) {
-        $this->language          = $language;
+        $this->project           = $project;
         $this->service           = $service;
+        $this->language          = $language;
         $this->report            = $report;
         $this->criteria          = $criteria;
         $this->tree_of_artifacts = $tree_of_artifacts;
@@ -124,7 +131,7 @@ class Tracker_CrossSearch_SearchView {
     }
     
     private function fetchTrackerHomeNav() {
-        $presenter = new Tracker_HomeNavPresenter();
+        $presenter = new Tracker_HomeNavPresenter($this->project, 'cross-search');
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
         
         return $renderer->render('tracker-home-nav', $presenter);

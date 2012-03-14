@@ -163,7 +163,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $tracker1         = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
         $trackers         = array($tracker1);
         
-        $view             = new Tracker_CrossSearch_SearchView($service, $GLOBALS['Language'], $report, $criteria, $root, $artifact_factory, $shared_factory, $trackers);
+        $view             = new Tracker_CrossSearch_SearchView($project, $service, $GLOBALS['Language'], $report, $criteria, $root, $artifact_factory, $shared_factory, $trackers);
         return $view;
     }
     

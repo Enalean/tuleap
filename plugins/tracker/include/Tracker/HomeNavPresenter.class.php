@@ -18,6 +18,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/project/Project.class.php';
+
 class Tracker_HomeNavPresenter {
+    
+    /**
+     * @var Project
+     */
+    private $project;
+    
+    /**
+     * @var String
+     */
+    private $func;
+    
+    /**
+     * @var Array of Array
+     */
+    private $nav_items = array(
+        array('label' => 'List',   'func' => ''),
+        array('label' => 'Search', 'func' => 'cross-search')
+    );
+    
+    public function __construct(Project $project, $func='') {
+        $this->project = $project;
+        $this->func    = $func;
+    }
+    
+    public function getNavItems() {
+        return array_map(array($this, 'prepareNavItem'), $this->nav_items);
+    }
+    
+    private function prepareNavItem($nav_item) {
+        $nav_item['current'] = $this->getCurrentForItem($nav_item);
+        $nav_item['url']     = $this->getUrlForItem($nav_item);
+        
+        return $nav_item;
+    }
+    
+    private function getCurrentForItem($nav_item) {
+        if($this->func == $nav_item['func']) {
+            return 'current';
+        }
+    }
+    
+    private function getUrlForItem($nav_item) {
+        return TRACKER_BASE_URL . '/?group_id=' . $this->project->getId() . '&func=' . $nav_item['func'];
+    }
 }
 ?>
