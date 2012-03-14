@@ -36,13 +36,9 @@ Mock::generatePartial('BackendAliases', 'BackendAliasesTestVersion',
                             ));
 
 class BackendAliasesTest extends UnitTestCase {
-    
-    function __construct($name = 'BackendAliases test') {
-        parent::__construct($name);
-    }
 
     function setUp() {
-        $GLOBALS['alias_file'] = dirname(__FILE__) . '/_fixtures/etc/aliases.tuleap';   
+        $GLOBALS['alias_file'] = dirname(__FILE__) . '/_fixtures/etc/aliases.custom';   
     }
     
     function tearDown() {
