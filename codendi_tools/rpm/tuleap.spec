@@ -26,13 +26,12 @@
 
 Summary: The Tuleap forge
 Name: %{PKG_NAME}
-Provides: codendi = %{version}
 Version: @@VERSION@@
 Release: 1%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
-URL: http://codendi.org
+URL: http://tuleap.net
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@st.com>
@@ -48,7 +47,6 @@ Requires: dejavu-lgc-fonts
 %if %{PKG_NAME} == codendi_st
 Requires: jpgraph
 # = 2.3.4-0.codendi
-Provides: codendi
 %else
 Requires: jpgraph-%{PKG_NAME}
 Provides: tuleap
