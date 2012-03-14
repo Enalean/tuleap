@@ -38,11 +38,6 @@ class Tracker_CrossSearch_SearchView {
     private $service;
     
     /**
-     * @var BaseLanguage
-     */
-    private $language;
-    
-    /**
      * @var Tracker_Report
      */
     private $report;
@@ -81,7 +76,6 @@ class Tracker_CrossSearch_SearchView {
     
     public function __construct(Project                          $project,
                                 Service                          $service,
-                                BaseLanguage                     $language, 
                                 Tracker_Report                   $report, 
                                 array                            $criteria, 
                                 TreeNode                         $tree_of_artifacts, 
@@ -90,7 +84,6 @@ class Tracker_CrossSearch_SearchView {
                                                                  $trackers) {
         $this->project           = $project;
         $this->service           = $service;
-        $this->language          = $language;
         $this->report            = $report;
         $this->criteria          = $criteria;
         $this->tree_of_artifacts = $tree_of_artifacts;
@@ -102,7 +95,7 @@ class Tracker_CrossSearch_SearchView {
     }
     
     public function render() {
-        $title = $this->language->getText('plugin_tracker_crosssearch', 'title');
+        $title = $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'title');
         
         $breadcrumbs = array(
             array(
@@ -131,7 +124,7 @@ class Tracker_CrossSearch_SearchView {
     }
     
     private function fetchTrackerHomeNav() {
-        $presenter = new Tracker_HomeNavPresenter($this->project, $this->language, 'cross-search');
+        $presenter = new Tracker_HomeNavPresenter($this->project, 'cross-search');
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
         
         return $renderer->render('tracker-home-nav', $presenter);
@@ -153,7 +146,7 @@ class Tracker_CrossSearch_SearchView {
         if ($this->tree_of_artifacts->hasChildren()) {
             $html .= $this->fetchTable();
         } else {
-            $html .= '<em>'. $this->language->getText('plugin_tracker_crosssearch', 'no_matching_artifact').'</em>';
+            $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'no_matching_artifact').'</em>';
         }
         $html .= '</div>';
         return $html;
@@ -206,7 +199,7 @@ class Tracker_CrossSearch_SearchView {
         $html .= '<thead>';
         $html .= '  <tr class="boxtable">';
         $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
-        $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$this->language->getText('plugin_tracker_crosssearch', 'summary').'</span></th>';
+        $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'summary').'</span></th>';
         foreach ($this->criteria as $header) {
             $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
         }
@@ -231,7 +224,7 @@ class Tracker_CrossSearch_SearchView {
     private function fetchTrackerList() {
         $html  = '';
         $html .= '<div class="tracker_homenav_list">';
-        $html .= $this->language->getText('plugin_tracker_crosssearch', 'included_trackers_title');
+        $html .= $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'included_trackers_title');
         if (count($this->trackers) > 0) {
             $html .= '<ul>';
             foreach($this->trackers as $tracker) {
@@ -241,7 +234,7 @@ class Tracker_CrossSearch_SearchView {
             }
             $html .= '</ul>';
         } else {
-            $html .= '<p><em>'.$this->language->getText('plugin_tracker_crosssearch', 'included_trackers_not_found').'</em></p>';
+            $html .= '<p><em>'.$GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'included_trackers_not_found').'</em></p>';
         }
         $html .= '</div>';
         return $html;

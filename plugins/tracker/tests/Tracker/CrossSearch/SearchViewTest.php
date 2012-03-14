@@ -64,9 +64,10 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $artifacts = array();
         $view = $this->GivenASearchView($service, $criteria, $artifacts, new TreeNode());
         
+        $GLOBALS['Language']->setReturnValue('getText', 'No matching artifact', array('plugin_tracker_crosssearch', 'no_matching_artifact'));
         $output = $this->renderAndGetContent($view);
         
-        $this->assertPattern('/No artifact/', $output);
+        $this->assertPattern('/No matching artifact/', $output);
     }
     
     function testRenderShouldDisplayArtifacts() {
@@ -167,7 +168,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $tracker1         = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
         $trackers         = array($tracker1);
         
-        $view             = new Tracker_CrossSearch_SearchView($project, $service, $GLOBALS['Language'], $report, $criteria, $root, $artifact_factory, $shared_factory, $trackers);
+        $view             = new Tracker_CrossSearch_SearchView($project, $service, $report, $criteria, $root, $artifact_factory, $shared_factory, $trackers);
         return $view;
     }
     

@@ -192,7 +192,6 @@ class TrackerManager { /* extends Engine? */
             $request,
             ProjectManager::instance(),
             $formElementFactory,
-            $GLOBALS['Language'],
             $GLOBALS['Response'],
             $search,
             new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao())

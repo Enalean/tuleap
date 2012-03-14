@@ -35,7 +35,7 @@ class Tracker_HomeNavPresenterTest extends TuleapTestCase {
     }
     
     public function itHasNavItemsWithLabelAndUrl() {
-        $presenter = new Tracker_HomeNavPresenter($this->project, $GLOBALS['Language']);
+        $presenter = new Tracker_HomeNavPresenter($this->project);
         $nav_items = $presenter->getNavItems();
         
         $this->assertNotEmpty($nav_items);
@@ -43,11 +43,11 @@ class Tracker_HomeNavPresenterTest extends TuleapTestCase {
     }
     
     public function itKnowsWhichNavItemIsTheCurrentOne() {
-        $presenter = new Tracker_HomeNavPresenter($this->project, $GLOBALS['Language'], '');
+        $presenter = new Tracker_HomeNavPresenter($this->project, '');
         $nav_items = $presenter->getNavItems();
         $this->assertCurrentItem($nav_items, 0);
         
-        $presenter = new Tracker_HomeNavPresenter($this->project, $GLOBALS['Language'], 'cross-search');
+        $presenter = new Tracker_HomeNavPresenter($this->project, 'cross-search');
         $nav_items = $presenter->getNavItems();
         $this->assertCurrentItem($nav_items, 1);
     }

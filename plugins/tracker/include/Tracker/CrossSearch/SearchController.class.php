@@ -37,11 +37,6 @@ class Tracker_CrossSearch_SearchController {
     private $projectManager;
     
     /**
-     * @var BaseLanguage
-     */
-    private $language;
-    
-    /**
      * @var Layout
      */
     private $layout;
@@ -64,14 +59,12 @@ class Tracker_CrossSearch_SearchController {
     public function __construct(Codendi_Request            $request,
                                 ProjectManager             $projectManager, 
                                 Tracker_FormElementFactory $formElementFactory, 
-                                BaseLanguage               $language, 
                                 Layout                     $layout,
                                 Tracker_CrossSearch_Search      $search,
                                 Tracker_HierarchyFactory   $hierarchy_factory) {
         
         $this->request            = $request;
         $this->projectManager     = $projectManager;
-        $this->language           = $language;
         $this->layout             = $layout;
         $this->formElementFactory = $formElementFactory;
         $this->search             = $search;
@@ -89,7 +82,7 @@ class Tracker_CrossSearch_SearchController {
             $trackers_hierarchy = $this->getTrackersHierarchy($trackers);
             $artifacts          = $this->getArtifacts($trackers, $trackers_hierarchy);
             
-            $view = $this->getView($project, $service, $this->language, $report, $criteria, $artifacts, $trackers);
+            $view = $this->getView($project, $service, $report, $criteria, $artifacts, $trackers);
             $view->render();
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
@@ -177,7 +170,7 @@ class Tracker_CrossSearch_SearchController {
         $projectId = $this->request->get('group_id');
         $project   = $this->projectManager->getProject($projectId);
         if ($project->isError()) {
-            $errorMessage = $this->language->getText('project', 'does_not_exist');
+            $errorMessage = $GLOBALS['Language']->getText('project', 'does_not_exist');
             throw new Tracker_CrossSearch_ProjectNotFoundException($errorMessage);
         } else {
             return $project;
@@ -192,19 +185,19 @@ class Tracker_CrossSearch_SearchController {
         if ($service) {
             return $service;
         } else {
-            $serviceLabel = $this->language->getText('plugin_tracker', 'title');
-            $errorMessage = $this->language->getText('project_service', 'service_not_used', array($serviceLabel));
+            $serviceLabel = $GLOBALS['Language']->getText('plugin_tracker', 'title');
+            $errorMessage = $GLOBALS['Language']->getText('project_service', 'service_not_used', array($serviceLabel));
             
             throw new Tracker_CrossSearch_ServiceNotUsedException($errorMessage);
         }
     }
     
-    protected function getView(Project $project, Service $service, BaseLanguage $language, Tracker_Report $report, $criteria, $artifacts, $trackers) {
+    protected function getView(Project $project, Service $service, Tracker_Report $report, $criteria, $artifacts, $trackers) {
         $artifact_factory   = Tracker_ArtifactFactory::instance();
         $formElementFactory = Tracker_FormElementFactory::instance();
         $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
         $shared_factory     = new Tracker_SharedFormElementFactory($formElementFactory, $bindFactory);
-        return new Tracker_CrossSearch_SearchView($project, $service, $language, $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
+        return new Tracker_CrossSearch_SearchView($project, $service, $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
     }
 }
 ?>
