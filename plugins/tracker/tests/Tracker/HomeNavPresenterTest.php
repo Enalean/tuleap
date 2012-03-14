@@ -29,6 +29,7 @@ Mock::generate('Project');
 
 class Tracker_HomeNavPresenterTest extends TuleapTestCase {
     public function setUp() {
+        parent::setUp();
         $this->project = new MockProject();
         $this->project->setReturnValue('getId', '104');
     }
