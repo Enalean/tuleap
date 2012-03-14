@@ -26,6 +26,7 @@
 
 Summary: The Tuleap forge
 Name: %{PKG_NAME}
+Provides: codendi
 Version: @@VERSION@@
 Release: 1%{?dist}
 BuildArch: noarch
@@ -49,7 +50,6 @@ Requires: jpgraph
 # = 2.3.4-0.codendi
 %else
 Requires: jpgraph-%{PKG_NAME}
-Provides: tuleap
 %endif
 Requires: php-pecl-apc
 Requires: htmlpurifier
