@@ -158,9 +158,12 @@ INSERT INTO groups SET \
   cvs_preamble = '', \
   svn_tracker = '1', \
   svn_mandatory_ref = '0', \
-  svn_events_mailing_list = '', \
-  svn_events_mailing_header = '', \
   svn_preamble = '' ;
+
+INSERT INTO svn_notification SET \
+  group_id = '1', \
+  svn_events_mailing_list = '', \
+  svn_events_mailing_header = '';
 
 INSERT INTO groups SET \
   group_id = '46', \
@@ -197,10 +200,12 @@ INSERT INTO groups SET \
   cvs_preamble = '', \
   svn_tracker = '0', \
   svn_mandatory_ref = '0', \
-  svn_events_mailing_list = '', \
-  svn_events_mailing_header = '', \
   svn_preamble = '' ;
 
+INSERT INTO svn_notification SET \
+  group_id = '46', \
+  svn_events_mailing_list = '', \
+  svn_events_mailing_header = '';
 
 INSERT INTO groups SET \
   group_id = '100', \
@@ -237,9 +242,12 @@ INSERT INTO groups SET \
   cvs_preamble = '', \
   svn_tracker = '1', \
   svn_mandatory_ref = '0', \
-  svn_events_mailing_list = '', \
-  svn_events_mailing_header = '', \
   svn_preamble = '' ;
+
+INSERT INTO svn_notification SET \
+  group_id = '100', \
+  svn_events_mailing_list = '', \
+  svn_events_mailing_header = '';
 
 
 INSERT INTO groups_notif_delegation_message SET \

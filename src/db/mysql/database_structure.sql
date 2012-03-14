@@ -1019,8 +1019,6 @@ CREATE TABLE groups (
   cvs_is_private TINYINT(1) NOT NULL DEFAULT 0,
   svn_tracker int(11)   NOT NULL default '1',
   svn_mandatory_ref TINYINT NOT NULL default '0',
-  svn_events_mailing_list text NOT NULL,
-  svn_events_mailing_header varchar(64) binary DEFAULT NULL,
   svn_preamble text NOT NULL,
   svn_accessfile text NULL,
   PRIMARY KEY  (group_id),
@@ -3429,6 +3427,20 @@ CREATE TABLE IF NOT EXISTS soap_call_counter (
     date int(11) unsigned NOT NULL,
     INDEX (method_name, date)
 );
+
+# --------------------------------------------------------
+
+#
+# Table structure for Svn notification
+#
+
+CREATE TABLE IF NOT EXISTS svn_notification (
+    group_id int(11) NOT NULL,
+    svn_events_mailing_list text NOT NULL DEFAULT "",
+    svn_events_mailing_header varchar(64) DEFAULT NULL,
+    path varchar(64) DEFAULT "/"
+);
+
 
 #
 # EOF
