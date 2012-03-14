@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/plugins/tracker');
+}
+
 require_once dirname(__FILE__).'/../../include/Tracker/HomeNavPresenter.class.php';
 require_once 'common/include/Codendi_Request.class.php';
 
