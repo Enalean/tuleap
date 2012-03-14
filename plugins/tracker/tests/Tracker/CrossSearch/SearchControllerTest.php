@@ -22,6 +22,8 @@ require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
 require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchController.class.php';
+require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class.php';
+
 require_once 'common/include/Codendi_Request.class.php';
 require_once 'common/project/ProjectManager.class.php';
 
@@ -35,6 +37,7 @@ Mock::generate('Tracker_Report');
 Mock::generate('Tracker_HierarchyFactory');
 Mock::generate('Tracker_Hierarchy');
 Mock::generate('Tracker');
+Mock::generate('TrackerFactory');
 
 class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     
@@ -49,6 +52,9 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->formElementFactory = new MockTracker_FormElementFactory();
         $this->search             = new MockTracker_CrossSearch_Search();
         $this->hierarchy_factory  = new MockTracker_HierarchyFactory();
+        $this->tracker_factory    = new MockTrackerFactory();
+        
+        $this->project->setReturnValue('getGroupId', '123');
     }
     
     public function testSearchRendersViewForServiceWithCriteria() {
@@ -62,7 +68,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields, array($this->project));
         
         $controller = TestHelper::getPartialMock('Tracker_CrossSearch_SearchController', array('getView', 'getTrackers'));
-        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
         $controller->setReturnValue('getView', $view);
         $controller->setReturnValue('getTrackers', array());
         
@@ -73,7 +79,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->project->setReturnValue('getService', null, array('plugin_tracker'));
         $this->project->setReturnValue('getUnixName', 'coin');
 
-        $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
+        $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
 
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
@@ -91,7 +97,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
         $GLOBALS['HTML']->expectOnce('redirect', array('/'));
         
-        $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
+        $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
         
         $controller->search();
     }
@@ -121,7 +127,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
         
         $controller = TestHelper::getPartialMock('Tracker_CrossSearch_SearchController', array('getView', 'getTrackers'));
-        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
         $controller->setReturnValue('getView', $view);
         $controller->setReturnValue('getTrackers', array());
         
@@ -150,7 +156,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->search->expectOnce('getMatchingArtifacts', array(array(), $tracker_hierarchy, $criteria));
         
         $controller = TestHelper::getPartialMock('Tracker_CrossSearch_SearchController', array('getView', 'getTrackers'));
-        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
         $controller->setReturnValue('getView', $view);
         $controller->setReturnValue('getTrackers', array());
         
@@ -168,7 +174,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $fields = array(aTextField()->withId(220)->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
         
-        $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
+        $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
         $criteria = $controller->getCriteria($project, $report);
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array());
     }
@@ -185,7 +191,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $fields = array(aTextField()->withId(220)->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
         
-        $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
+        $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
         $criteria = $controller->getCriteria($project, $report);
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350));
     }
@@ -204,28 +210,11 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
                         aTextField()->withId(221)->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
         
-        $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
+        $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
         $criteria = $controller->getCriteria($project, $report);
         $this->assertEqual(count($criteria), 2);
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350, 351));
         $this->assertEqual($criteria[1]->field->getCriteriaValue($criteria[1]), array(352));
-    }
-    
-    public function testImpactedTrackersShouldBeAvailableForSeachAndForViews() {
-        $tracker = aTracker()->withId(110)->build();
-        $fields = array(aTextField()->withId(220)->withTracker($tracker)->build(),
-                        aTextField()->withId(221)->withTracker($tracker)->build());
-        $this->formElementFactory->setReturnValue('getAllProjectSharedFields', $fields);
-        
-        $project = new MockProject();
-        
-        $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory);
-        $trackers   = $controller->getTrackers($project);
-        $this->assertEqual(count($trackers), 1);
-        
-        $tracker1 = array_pop($trackers);
-        $this->assertIsA($tracker1, 'Tracker');
-        $this->assertEqual($tracker1->getId(), 110);
     }
     
     public function testSearchCreateTrackerHierarchyFromDatabase() {
@@ -248,7 +237,9 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
             $tracker = new MockTracker();
             $tracker->setReturnValue('getId', $tracker_id);
             $fields[] = aTextField()->withId($tracker_id * 10)->withTracker($tracker)->build();
+            $trackers[] = $tracker;
         }
+        $this->tracker_factory->setReturnValue('getTrackersByGroupId', $trackers);
         $this->formElementFactory->setReturnValue('getAllProjectSharedFields', $fields);
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
     }
@@ -259,7 +250,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
             'Tracker_CrossSearch_SearchController', 
             array('getView')
         );
-        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $hierarchy_factory);
+        $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $hierarchy_factory, $this->tracker_factory);
         
         $controller->setReturnValue('getView', $view);
         return $controller;

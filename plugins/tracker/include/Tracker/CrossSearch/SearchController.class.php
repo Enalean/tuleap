@@ -52,6 +52,11 @@ class Tracker_CrossSearch_SearchController {
     private $hierarchy_factory;
     
     /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+    
+    /**
      * @var Tracker_CrossSearch_Search
      */
     private $search;
@@ -60,8 +65,9 @@ class Tracker_CrossSearch_SearchController {
                                 ProjectManager             $projectManager, 
                                 Tracker_FormElementFactory $formElementFactory, 
                                 Layout                     $layout,
-                                Tracker_CrossSearch_Search      $search,
-                                Tracker_HierarchyFactory   $hierarchy_factory) {
+                                Tracker_CrossSearch_Search $search,
+                                Tracker_HierarchyFactory   $hierarchy_factory,
+                                TrackerFactory             $tracker_factory) {
         
         $this->request            = $request;
         $this->projectManager     = $projectManager;
@@ -69,6 +75,7 @@ class Tracker_CrossSearch_SearchController {
         $this->formElementFactory = $formElementFactory;
         $this->search             = $search;
         $this->hierarchy_factory  = $hierarchy_factory;
+        $this->tracker_factory    = $tracker_factory;
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
     }
 
@@ -95,7 +102,7 @@ class Tracker_CrossSearch_SearchController {
         }
     }
     
-    protected function getTrackersHierarchy($trackers) {
+    protected function getTrackersHierarchy(array $trackers) {
         $tracker_ids = array();
         foreach ($trackers as $tracker) {
             $tracker_ids[] = $tracker->getId();
@@ -107,13 +114,8 @@ class Tracker_CrossSearch_SearchController {
         return $this->search->getMatchingArtifacts($trackers, $hierarchy, $this->request->get('criteria'));
     }
     
-    public function getTrackers($project) {
-        $trackers = array();
-        $projectSharedFields = $this->formElementFactory->getAllProjectSharedFields($project);
-        foreach ($projectSharedFields as $field) {
-            $trackers[$field->getTrackerId()] = $field->getTracker();
-        } 
-        return $trackers;
+    public function getTrackers(Project $project) {
+        return $this->tracker_factory->getTrackersByGroupId($project->getGroupId());
     }
     
     private function getTrackerFromField(Tracker_FormElement $field) {

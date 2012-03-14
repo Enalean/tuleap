@@ -194,7 +194,8 @@ class TrackerManager { /* extends Engine? */
             $formElementFactory,
             $GLOBALS['Response'],
             $search,
-            new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao())
+            new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao()),
+            $this->getTrackerFactory()
         );
     }
     
