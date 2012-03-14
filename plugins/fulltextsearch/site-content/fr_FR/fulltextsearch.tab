@@ -1,0 +1,11 @@
+plugin_fulltextsearch	descriptor_description	Recherche plein texte avec SolR
+plugin_fulltextsearch	descriptor_name	Recherche plein texte
+
+plugin_fulltextsearch	title	Recherche plein texte
+plugin_fulltextsearch	link_solr_admin_tool	Administration solR (moteur d'indexation)
+
+plugin_fulltextsearch	service_lbl_key	Recherche plein texte
+plugin_fulltextsearch	service_desc_key	Recherche plein texte avec SolR
+
+plugin_fulltextsearch	service_not_used	Le service recherche plein texte n'est pas actif.
+plugin_fulltextsearch	group_id_missing	Paramètre group_id manquant.
