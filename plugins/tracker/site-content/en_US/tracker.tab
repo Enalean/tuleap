@@ -6,6 +6,15 @@ plugin_tracker	title	Tracker
 plugin_tracker	service_lbl_key	Trackers
 plugin_tracker	service_desc_key	Project Trackers
 
+plugin_tracker_homenav	list	Trackers List
+plugin_tracker_homenav	search	Cross Trackers Search
+
+plugin_tracker_crosssearch	title	Cross Trackers Search
+
+plugin_tracker_crosssearch	summary	Title
+
+plugin_tracker_crosssearch	included_trackers_title	List of trackers included into the search:
+plugin_tracker_crosssearch	included_trackers_not_found	No relevant tracker found
 #/**
 #  *
 #  * Tracker scripts message catalog (English)

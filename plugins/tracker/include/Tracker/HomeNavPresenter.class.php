@@ -28,6 +28,11 @@ class Tracker_HomeNavPresenter {
     private $project;
     
     /**
+     * @var BaseLanguage
+     */
+    private $language;
+    
+    /**
      * @var String
      */
     private $func;
@@ -36,13 +41,14 @@ class Tracker_HomeNavPresenter {
      * @var Array of Array
      */
     private $nav_items = array(
-        array('label' => 'List',   'func' => ''),
-        array('label' => 'Search', 'func' => 'cross-search')
+        array('label_key' => 'list',   'func' => ''),
+        array('label_key' => 'search', 'func' => 'cross-search')
     );
     
-    public function __construct(Project $project, $func='') {
-        $this->project = $project;
-        $this->func    = $func;
+    public function __construct(Project $project, BaseLanguage $language, $func='') {
+        $this->project  = $project;
+        $this->func     = $func;
+        $this->language = $language;
     }
     
     public function getNavItems() {
@@ -52,8 +58,12 @@ class Tracker_HomeNavPresenter {
     private function prepareNavItem($nav_item) {
         $nav_item['current'] = $this->getCurrentForItem($nav_item);
         $nav_item['url']     = $this->getUrlForItem($nav_item);
-        
+        $nav_item['label']   = $this->getLabelForItem($nav_item);
         return $nav_item;
+    }
+    
+    private function getLabelForItem($nav_item) {
+        return $this->language->getText('plugin_tracker_homenav', $nav_item['label_key']);
     }
     
     private function getCurrentForItem($nav_item) {

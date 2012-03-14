@@ -102,7 +102,7 @@ class Tracker_CrossSearch_SearchView {
     }
     
     public function render() {
-        $title = $this->language->getText('plugin_agiledashboard', 'title');
+        $title = $this->language->getText('plugin_tracker_crosssearch', 'title');
         
         $breadcrumbs = array(
             array(
@@ -131,7 +131,7 @@ class Tracker_CrossSearch_SearchView {
     }
     
     private function fetchTrackerHomeNav() {
-        $presenter = new Tracker_HomeNavPresenter($this->project, 'cross-search');
+        $presenter = new Tracker_HomeNavPresenter($this->project, $this->language, 'cross-search');
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
         
         return $renderer->render('tracker-home-nav', $presenter);
@@ -206,7 +206,7 @@ class Tracker_CrossSearch_SearchView {
         $html .= '<thead>';
         $html .= '  <tr class="boxtable">';
         $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
-        $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$this->language->getText('plugin_agiledashboard', 'summary').'</span></th>';
+        $html .= '    <th class="boxtitle sortfirstasc"><span class="label">'.$this->language->getText('plugin_tracker_crosssearch', 'summary').'</span></th>';
         foreach ($this->criteria as $header) {
             $html .= '<th class="boxtitle"><span class="label">'. $header->field->getLabel().'</span></th>';
         }
@@ -231,7 +231,7 @@ class Tracker_CrossSearch_SearchView {
     private function fetchTrackerList() {
         $html  = '';
         $html .= '<div class="agiledashboard_trackerlist">';
-        $html .= $this->language->getText('plugin_agiledashboard', 'included_trackers_title');
+        $html .= $this->language->getText('plugin_tracker_crosssearch', 'included_trackers_title');
         if (count($this->trackers) > 0) {
             $html .= '<ul>';
             foreach($this->trackers as $tracker) {
@@ -241,7 +241,7 @@ class Tracker_CrossSearch_SearchView {
             }
             $html .= '</ul>';
         } else {
-            $html .= '<p><em>'.$this->language->getText('plugin_agiledashboard', 'included_trackers_not_found').'</em></p>';
+            $html .= '<p><em>'.$this->language->getText('plugin_tracker_crosssearch', 'included_trackers_not_found').'</em></p>';
         }
         $html .= '</div>';
         return $html;

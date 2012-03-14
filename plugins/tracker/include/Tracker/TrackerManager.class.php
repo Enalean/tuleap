@@ -450,7 +450,7 @@ class TrackerManager { /* extends Engine? */
     }
     
     public function displayTrackerHomeNav(Project $project) {
-        $presenter = new Tracker_HomeNavPresenter($project);
+        $presenter = new Tracker_HomeNavPresenter($project, $GLOBALS['Language']);
         $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../templates');
         
         echo $renderer->render('tracker-home-nav', $presenter);
