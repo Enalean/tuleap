@@ -125,12 +125,3 @@ the performance of the expiration check:
 * Set 'cachelifetime' low, between 5-10 seconds.
 * Set 'objectcachelifetime' high, 86400 seconds or more.  (86400 is the default)
 
-If you ever run into problems with your cache not syncing correctly, or
-showing out of date information, you can use the 'expire' action to force
-expiration of all cache.  This action is not linked anywhere because it
-is not supposed to be run by users, it's more of an administrative function.
-To use it, you want to set a=expire.  So, for example, you would visit this
-address in a browser (obviously with the correct path to your gitphp
-index.php):
-
-http://yourserver.com/gitphp/index.php?a=expire
