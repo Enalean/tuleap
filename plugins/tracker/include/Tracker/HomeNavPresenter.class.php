@@ -61,7 +61,7 @@ class Tracker_HomeNavPresenter {
     }
     
     private function getCurrentForItem($nav_item) {
-        if($this->func == $nav_item['func']) {
+        if ($this->func == $nav_item['func']) {
             return 'current';
         }
     }
