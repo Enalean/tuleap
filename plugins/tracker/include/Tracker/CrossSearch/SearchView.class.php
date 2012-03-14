@@ -115,7 +115,7 @@ class Tracker_CrossSearch_SearchView {
         
         $html  = '';
         $html .= $this->fetchTrackerHomeNav();
-        $html .= '<div class="agiledashboard">';
+        $html .= '<div class="tracker_homenav_cross_search">';
         $html .= '<h1>'. $title .'</h1>';
         if ($this->criteria) {
             $html .= $this->fetchContent();
@@ -153,7 +153,7 @@ class Tracker_CrossSearch_SearchView {
         if ($this->tree_of_artifacts->hasChildren()) {
             $html .= $this->fetchTable();
         } else {
-            $html .= '<em>'. 'No artifact match your query' .'</em>';
+            $html .= '<em>'. $this->language->getText('plugin_tracker_crosssearch', 'no_matching_artifact').'</em>';
         }
         $html .= '</div>';
         return $html;
@@ -230,7 +230,7 @@ class Tracker_CrossSearch_SearchView {
     
     private function fetchTrackerList() {
         $html  = '';
-        $html .= '<div class="agiledashboard_trackerlist">';
+        $html .= '<div class="tracker_homenav_list">';
         $html .= $this->language->getText('plugin_tracker_crosssearch', 'included_trackers_title');
         if (count($this->trackers) > 0) {
             $html .= '<ul>';
