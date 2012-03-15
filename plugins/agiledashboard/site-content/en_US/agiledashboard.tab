@@ -1,12 +1,5 @@
 plugin_agiledashboard	descriptor_description	Agile Dashboard
 plugin_agiledashboard	descriptor_name	Agile Dashboard
 
-plugin_agiledashboard	title	Agile Dashboard
-
 plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Agile Dashboard
-
-plugin_agiledashboard	summary	Title
-
-plugin_agiledashboard	included_trackers_title	List of trackers included into the search:
-plugin_agiledashboard	included_trackers_not_found	No relevant tracker found

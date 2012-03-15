@@ -1,3 +1,6 @@
+Version 5.4 - Tuleap 4.0.28
+  * Allow to do cross tracker search based on shared fields.
+
 Version 5.3.1 - Tuleap 4.0.28
   * Fix bug on hierarchy definition
 

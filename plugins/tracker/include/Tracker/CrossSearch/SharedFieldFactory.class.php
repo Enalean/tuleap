@@ -21,7 +21,7 @@
 require_once 'SharedFieldDao.class.php';
 require_once 'SharedField.class.php';
 
-class AgileDashboard_SharedFieldFactory {
+class Tracker_CrossSearch_SharedFieldFactory {
     const VALUE_NONE = 100;
     
     public function getSharedFields($criteria) {
@@ -41,7 +41,7 @@ class AgileDashboard_SharedFieldFactory {
     }
     
     private function getSharedField($fieldId, $valueIds) {
-        $sharedField = new AgileDashboard_SharedField();
+        $sharedField = new Tracker_CrossSearch_SharedField();
         
         $this->addSharedFieldId($sharedField, $fieldId);
         $this->addSharedValueIds($sharedField, $valueIds);
@@ -49,13 +49,13 @@ class AgileDashboard_SharedFieldFactory {
         return $sharedField;
     }
     
-    private function addSharedFieldId(AgileDashboard_SharedField $sharedField, $fieldId) {
+    private function addSharedFieldId(Tracker_CrossSearch_SharedField $sharedField, $fieldId) {
         foreach ($this->getDao()->searchSharedFieldIds($fieldId) as $row) {
             $sharedField->addFieldId($row['id']);
         }
     }
     
-    private function addSharedValueIds(AgileDashboard_SharedField $sharedField, array $valueIds) {
+    private function addSharedValueIds(Tracker_CrossSearch_SharedField $sharedField, array $valueIds) {
         $notNoneValueIds = $this->filterAndAddNoneValueIds($sharedField, $valueIds);
 
         foreach ($this->getDao()->searchSharedValueIds($notNoneValueIds ) as $row) {
@@ -63,7 +63,7 @@ class AgileDashboard_SharedFieldFactory {
         }
     }
     
-    private function filterAndAddNoneValueIds(AgileDashboard_SharedField $sharedField, array $valueIds) {
+    private function filterAndAddNoneValueIds(Tracker_CrossSearch_SharedField $sharedField, array $valueIds) {
         $notNoneValueIds = array();
         
         foreach($valueIds as $valueId) {
@@ -78,7 +78,7 @@ class AgileDashboard_SharedFieldFactory {
     }
     
     protected function getDao() {
-        return new AgileDashboard_SharedFieldDao();
+        return new Tracker_CrossSearch_SharedFieldDao();
     }
 }
 

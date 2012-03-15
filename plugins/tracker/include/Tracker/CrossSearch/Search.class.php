@@ -20,24 +20,24 @@
 
 require_once 'SharedFieldFactory.class.php';
 require_once 'SearchDao.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Hierarchy/Hierarchy.class.php';
+require_once dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php';
+require_once dirname(__FILE__).'/../Hierarchy/Hierarchy.class.php';
 
-class AgileDashboard_Search {
+class Tracker_CrossSearch_Search {
     
     /**
-     * @var AgileDashboard_SharedFieldFactory
+     * @var Tracker_CrossSearch_SharedFieldFactory
      */
     private $sharedFieldFactory;
     
     /**
-     * @var AgileDashboard_SearchDao
+     * @var Tracker_CrossSearch_SearchDao
      
      */
     private $dao;
     
-    public function __construct(AgileDashboard_SharedFieldFactory $sharedFieldFactory,
-                                AgileDashboard_SearchDao          $dao) {
+    public function __construct(Tracker_CrossSearch_SharedFieldFactory $sharedFieldFactory,
+                                Tracker_CrossSearch_SearchDao          $dao) {
         $this->sharedFieldFactory = $sharedFieldFactory;
         $this->dao                = $dao;
     }

@@ -18,15 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/AgileDashboard/SharedFieldFactory.class.php';
+require_once dirname(__FILE__).'/../../../include/Tracker/CrossSearch/SharedFieldFactory.class.php';
 
-Mock::generate('AgileDashboard_SharedFieldDao');
+Mock::generate('Tracker_CrossSearch_SharedFieldDao');
 
-class AgileDashboard_SharedFieldFactoryTest extends UnitTestCase {
+class Tracker_CrossSearch_SharedFieldFactoryTest extends UnitTestCase {
     
     function setUp() {
-        $this->factory = TestHelper::getPartialMock('AgileDashboard_SharedFieldFactory', array('getDao'));
-        $this->dao     = new MockAgileDashboard_SharedFieldDao();
+        $this->factory = TestHelper::getPartialMock('Tracker_CrossSearch_SharedFieldFactory', array('getDao'));
+        $this->dao     = new MockTracker_CrossSearch_SharedFieldDao();
         $this->factory->setReturnValue('getDao', $this->dao);
     }
     
