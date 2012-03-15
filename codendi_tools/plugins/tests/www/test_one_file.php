@@ -23,13 +23,7 @@
  * $> php-launcher.sh test_one_file.php ../tests/common/frs/FRSFileTest.php
  */
 
-if (version_compare(PHP_VERSION, '5.3.0', '>=')) { 
-    error_reporting(E_ALL & ~E_DEPRECATED);
-} else {
-    error_reporting(E_ALL);
-}
-ini_set('max_execution_time', 0);
-ini_set('memory_limit', -1);
+require_once 'tests_common.php';
 
 // Base dir:
 $basedir      = realpath(dirname(__FILE__).'/../../../..');
@@ -50,13 +44,6 @@ require_once(dirname(__FILE__).'/CodendiReporter.class.php');
 require_once(dirname(__FILE__).'/TuleapTestSuite.class.php');
 require_once(dirname(__FILE__).'/TuleapTestCase.class.php');
 
-//require_once(dirname(__FILE__).'/tests_utils.php');
-if (PHP_INT_SIZE == 4 && extension_loaded('runkit')) {
-    require_once(dirname(__FILE__) .'/../include/simpletest/mock_functions.php');
-    define('MOCKFUNCTION_AVAILABLE', true);
-} else {
-    define('MOCKFUNCTION_AVAILABLE', false);
-}
 
 // Start
 $suite = new TuleapTestSuite($_SERVER['argv'][1]);
