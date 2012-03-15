@@ -28,13 +28,7 @@ Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', a
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSReleaseFactory', '_getFRSFileDao', '_getUserManager', '_getEventManager'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestoreFiles', array('_getFRSFileDao', 'restoreFile'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestCreateFiles', array('create', 'moveFileForge','isFileBaseNameExists', 'isSameFileMarkedToBeRestored', 'compareMd5Checksums'));
-/**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- *
- *
- *
- * Tests the FRSFileFactory class
- */
+
 class FRSFileFactoryTest extends UnitTestCase {
 
     function setUp() {
@@ -801,7 +795,8 @@ class FRSFileFactoryTest extends UnitTestCase {
         $f->setRelease($r);
 
         $ff = new FRSFileFactory();
-        $ff->setFileForge(dirname(__FILE__).'/../../../../../../src/utils/fileforge.pl');
+        //var_dump(realpath(dirname(__FILE__).'/../../../'));
+        $ff->setFileForge(dirname(__FILE__).'/../../../../src/utils/fileforge.pl');
 
         $res = $ff->moveFileForge($f, $r);
         $this->assertTrue($res);

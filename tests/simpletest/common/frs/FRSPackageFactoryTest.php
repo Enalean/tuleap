@@ -18,12 +18,12 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../../../../../../src/common/frs/FRSPackageFactory.class.php');
+require_once('common/frs/FRSPackageFactory.class.php');
 Mock::generatePartial('FRSPackageFactory', 'FRSPackageFactoryTestVersion', array('_getFRSPackageDao', 'getUserManager', 'getPermissionsManager', 'getFRSPackagesFromDb', 'delete_package'));
-require_once(dirname(__FILE__).'/../../../../../../src/common/dao/include/DataAccess.class.php');
-require_once(dirname(__FILE__).'/../../../../../../src/common/dao/include/DataAccessResult.class.php');
+require_once('common/dao/include/DataAccess.class.php');
+require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
-require_once(dirname(__FILE__).'/../../../../../../src/common/dao/FRSPackageDao.class.php');
+require_once('common/dao/FRSPackageDao.class.php');
 Mock::generatePartial('FRSPackageDao', 'FRSPackageDaoTestVersion', array('retrieve'));
 
 Mock::generate('User');
