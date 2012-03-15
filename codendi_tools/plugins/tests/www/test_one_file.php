@@ -51,13 +51,9 @@ require_once(dirname(__FILE__).'/TuleapTestSuite.class.php');
 require_once(dirname(__FILE__).'/TuleapTestCase.class.php');
 
 //require_once(dirname(__FILE__).'/tests_utils.php');
-if (PHP_INT_SIZE == 4) {
-    if (extension_loaded('runkit')) {
-        require_once(dirname(__FILE__) .'/../include/simpletest/mock_functions.php');
-        define('MOCKFUNCTION_AVAILABLE', true);
-    } else {
-        define('MOCKFUNCTION_AVAILABLE', false);
-    }
+if (PHP_INT_SIZE == 4 && extension_loaded('runkit')) {
+    require_once(dirname(__FILE__) .'/../include/simpletest/mock_functions.php');
+    define('MOCKFUNCTION_AVAILABLE', true);
 } else {
     define('MOCKFUNCTION_AVAILABLE', false);
 }
