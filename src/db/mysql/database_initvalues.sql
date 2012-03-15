@@ -160,11 +160,6 @@ INSERT INTO groups SET \
   svn_mandatory_ref = '0', \
   svn_preamble = '' ;
 
-INSERT INTO svn_notification SET \
-  group_id = '1', \
-  svn_events_mailing_list = '', \
-  svn_events_mailing_header = '';
-
 INSERT INTO groups SET \
   group_id = '46', \
   group_name = 'Site News', \
@@ -202,11 +197,6 @@ INSERT INTO groups SET \
   svn_mandatory_ref = '0', \
   svn_preamble = '' ;
 
-INSERT INTO svn_notification SET \
-  group_id = '46', \
-  svn_events_mailing_list = '', \
-  svn_events_mailing_header = '';
-
 INSERT INTO groups SET \
   group_id = '100', \
   group_name = 'Default Site Template', \
@@ -243,12 +233,6 @@ INSERT INTO groups SET \
   svn_tracker = '1', \
   svn_mandatory_ref = '0', \
   svn_preamble = '' ;
-
-INSERT INTO svn_notification SET \
-  group_id = '100', \
-  svn_events_mailing_list = '', \
-  svn_events_mailing_header = '';
-
 
 INSERT INTO groups_notif_delegation_message SET \
   group_id = '100', \

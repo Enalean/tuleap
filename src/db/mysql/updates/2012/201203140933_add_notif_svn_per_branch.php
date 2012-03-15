@@ -36,7 +36,7 @@ EOT;
                     group_id int(11) NOT NULL,
                     svn_events_mailing_list text NOT NULL DEFAULT "",
                     svn_events_mailing_header varchar(64) DEFAULT NULL,
-                    path varchar(64) DEFAULT "/"
+                    path varchar(255) DEFAULT "/"
                 )';
         $this->db->createTable('svn_notification', $sql);
 
