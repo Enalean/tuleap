@@ -5,6 +5,6 @@
 * 
 */
 
-define('CODENDI_CLI_DIR', dirname(__FILE__).'/../../../../../cli');
+define('CODENDI_CLI_DIR', dirname(__FILE__).'/../../../cli');
 
 ?>
