@@ -47,7 +47,8 @@ require_once(dirname(__FILE__).'/TuleapTestCase.class.php');
 
 
 // Start
-$suite = new TuleapTestSuite($_SERVER['argv'][1]);
+array_shift($_SERVER['argv']);
+$suite = new TuleapTestSuite($_SERVER['argv']);
 $suite->run(new ColorTextReporter());
 
 ?>

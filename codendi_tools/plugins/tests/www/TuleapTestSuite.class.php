@@ -4,6 +4,16 @@ class TuleapTestSuite extends TestSuite {
 
     function __construct($dir) {
         parent::__construct();
+        if (is_array($dir)) {
+            foreach ($dir as $element) {
+                $this->append($element);
+            }
+        } else {
+            $this->append($dir);
+        }
+    }
+    
+    function append($dir) {
         if (is_dir($dir)) {
             $this->collect($dir, new TuleapTestCollector());
         } else {
