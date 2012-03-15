@@ -1,0 +1,23 @@
+#! /bin/bash
+# marcsorter.sh
+# Program to sort marc records numerically based on 001 field
+# $Id: marcsorter.sh 
+
+E_BADARGS=65
+
+scriptdir=$( (cd -P $(dirname $0) && pwd) )
+if ! [ -e $scriptdir/SolrMarc.jar ] 
+then
+  scriptdir=$( (cd -P $(dirname $0)/.. && pwd) )
+fi
+
+if [ $# -eq 0 ]
+then
+    echo "    Usage: `basename $0` ./path/to/marc.mrc > sorted_output_file.mrc"
+    exit $E_BADARGS
+fi
+
+java -Dsolrmarc.main.class="org.solrmarc.marc.MarcSorter" -jar $scriptdir/SolrMarc.jar $1 $2
+
+exit 0
+

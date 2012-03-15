@@ -1,0 +1,77 @@
+<?php
+Header ("Content-type: text/css");
+$configArray = parse_ini_file('../../../../conf/config.ini', true);
+?>
+
+/* CSS Document */
+/* Based on Douglas Bowman's "Sliding Doors" (http://www.alistapart.com/articles/slidingdoors/*/
+
+#tabnav {
+  font-size:90%;
+  margin-top:4em;
+  width:100%;
+  }
+#tabnav ul {
+  display:block;
+  margin:0;
+  padding:0px 0 0 0px;
+  list-style:none;
+  }
+#tabnav li {
+  position:relative;
+  display:block;
+  float:left;
+  margin:0;
+  padding:0 0 0px 0px;
+  }
+#tabnav a {
+  display:block;
+  background:url("<?php echo $configArray['Site']['path'];?>/images/tabs_bg.jpg") repeat-x right top;
+  padding:.7em 1em .7em 1em;
+  text-decoration:none;
+  border-top: 1px solid #ccc;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #ccc;
+  color:#333;
+  }
+  
+
+#tabnav a:hover {
+  background:url("<?php echo $configArray['Site']['path'];?>/images/tabs_hover_bg.jpg") repeat-x right top;
+  }
+#tabnav .active a:hover {
+  background:url("<?php echo $configArray['Site']['path'];?>/images/tab_active_bg.jpg") repeat-x right top;
+  }
+  
+  
+ #tabnav a.first {
+ border-left: 1px solid #ccc;
+ } 
+
+#tabnav a:hover {
+  
+  }
+#tabnav .active {
+ 
+  }
+#tabnav .active a {
+  background-image:url("<?php echo $configArray['Site']['path'];?>/images/tab_active_bg.jpg");
+  color:#000;
+  }
+
+#tabnav .active a span {
+    position:absolute;
+    bottom:-15px;
+    left:50%;
+    margin-left:-8px;
+    width:17px;
+    height:15px;
+    background:url("<?php echo $configArray['Site']['path'];?>/images/tab_active_arrow.jpg") left top no-repeat;
+}
+* html .tabs .active span{
+    margin-left:-20px;
+    bottom:-15px;
+}
+* html .tabs li a{
+    position:relative;
+}

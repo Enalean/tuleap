@@ -1,0 +1,16 @@
+192.168.0.10 -  -  [01/02/2010:10:59:37 +0000] "GET /solr/admin/ HTTP/1.1" 200 3748 
+192.168.0.10 -  -  [01/02/2010:10:59:40 +0000] "GET /solr/admin/solr_small.png HTTP/1.1" 304 0 
+192.168.0.10 -  -  [01/02/2010:10:59:40 +0000] "GET /solr/admin/solr-admin.css HTTP/1.1" 304 0 
+127.0.0.1 -  -  [01/02/2010:10:59:41 +0000] "HEAD /solr/admin/ping HTTP/1.0" 200 0 
+127.0.0.1 -  -  [01/02/2010:10:59:41 +0000] "HEAD /solr/admin/ping HTTP/1.0" 200 0 
+127.0.0.1 -  -  [01/02/2010:10:59:41 +0000] "POST /solr/update/celi?wt=json HTTP/1.0" 200 44 
+127.0.0.1 -  -  [01/02/2010:10:59:45 +0000] "POST /solr/update/celi?wt=json HTTP/1.0" 200 43 
+127.0.0.1 -  -  [01/02/2010:10:59:45 +0000] "POST /solr/update/celi?wt=json HTTP/1.0" 200 43 
+192.168.0.10 -  -  [01/02/2010:10:59:58 +0000] "GET /solr/select/?q=solr&version=2.2&start=0&rows=10&indent=on HTTP/1.1" 200 376 
+192.168.0.10 -  -  [01/02/2010:10:59:58 +0000] "GET /solr/select/?q=solr&version=2.2&start=0&rows=10&indent=on HTTP/1.1" 200 377 
+192.168.0.10 -  -  [01/02/2010:11:00:01 +0000] "GET /solr/admin/favicon.ico HTTP/1.1" 200 1146 
+127.0.0.1 -  -  [01/02/2010:11:00:05 +0000] "HEAD /solr/admin/ping HTTP/1.0" 200 0 
+127.0.0.1 -  -  [01/02/2010:11:00:05 +0000] "HEAD /solr/admin/ping HTTP/1.0" 200 0 
+127.0.0.1 -  -  [01/02/2010:11:00:05 +0000] "POST /solr/update/celi?wt=json HTTP/1.0" 200 42 
+127.0.0.1 -  -  [01/02/2010:11:00:05 +0000] "POST /solr/update/celi?wt=json HTTP/1.0" 200 43 
+127.0.0.1 -  -  [01/02/2010:11:00:05 +0000] "POST /solr/update/celi?wt=json HTTP/1.0" 200 42 

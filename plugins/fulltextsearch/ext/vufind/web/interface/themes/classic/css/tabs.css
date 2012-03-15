@@ -1,0 +1,45 @@
+<?php
+Header ("Content-type: text/css");
+$configArray = parse_ini_file('../../../../conf/config.ini', true);
+?>
+
+/* CSS Document */
+/* Based on Douglas Bowman's "Sliding Doors" (http://www.alistapart.com/articles/slidingdoors/*/
+
+#tabnav {
+  font-size:90%;
+  margin-top:35px;
+  width:100%;
+  }
+#tabnav ul {
+  margin:0;
+  padding:0px 0 0 0px;
+  list-style:none;
+  }
+#tabnav li {
+  float:left;
+  background:url("<?php echo $configArray['Site']['path'];?>/images/tab_left.gif") no-repeat left top;
+  margin:0;
+  padding:0 0 0px 10px;
+  }
+#tabnav a {
+  float:left;
+  display:block;
+  background:url("<?php echo $configArray['Site']['path'];?>/images/tab_right.gif") no-repeat right top;
+  padding:15px 10px 10px 0px;
+  text-decoration:none;
+  }
+/* Commented Backslash Hack
+   hides rule from IE5-Mac \*/
+#tabnav a {float:none;}
+/* End IE5-Mac hack */
+#tabnav a:hover {
+  
+  }
+#tabnav .active {
+  background-image:url("<?php echo $configArray['Site']['path'];?>/images/tab_select_left.gif");
+  }
+#tabnav .active a {
+  background-image:url("<?php echo $configArray['Site']['path'];?>/images/tab_select_right.gif");
+  color:#333;
+  }

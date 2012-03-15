@@ -1,0 +1,10 @@
+org.apache.solr.client.solrj
+org.apache.solr.client.solrj.beans
+org.apache.solr.client.solrj.impl
+org.apache.solr.client.solrj.request
+org.apache.solr.client.solrj.response
+org.apache.solr.client.solrj.util
+org.apache.solr.common
+org.apache.solr.common.luke
+org.apache.solr.common.params
+org.apache.solr.common.util

@@ -1,0 +1,1 @@
+This is the directory in which you should place locally defined translation maps.

@@ -1,0 +1,239 @@
+---
+# Listing of search types and their component parts and weights.
+#
+# Format is:
+#  searchType:
+#    # CustomMunge is an optional section to define custom pre-processing of
+#    #     user input.  See below for details of munge actions.
+#    CustomMunge:
+#      MungeName1:
+#        - [action1, actionParams]
+#        - [action2, actionParams]
+#        - [action3, actionParams]
+#      MungeName2:
+#        - [action1, actionParams]
+#    # DismaxFields is optional and defines the fields sent to the Dismax handler
+#    #     when we are able to use it.  QueryFields will be used for advanced
+#    #     searches that Dismax cannot support.  QueryFields is always used if no
+#    #     DismaxFields section is defined.
+#    DismaxFields:
+#      - field1^boost
+#      - field2^boost
+#      - field3^boost
+#    # DismaxParams is optional and allows you to override default Dismax settings
+#    #     (i.e. mm / bf) on a search-by-search basis.  If you want global default
+#    #     values for these settings, you can edit the "dismax" search handler in
+#    #     solr/biblio/conf/solrconfig.xml.
+#    DismaxParams:
+#      - [param1_name, param1_value]
+#      - [param2_name, param2_value]
+#      - [param3_name, param3_value]
+#    # QueryFields define the fields we are searching when not using Dismax
+#    QueryFields:
+#      - SolrField:
+#        - [howToMungeSearchstring, weight]
+#        - [differentMunge, weight]
+#      - DifferentSolrField:
+#        - [howToMunge, weight]
+#    # The optional FilterQuery section allows you to AND a static query to the
+#    #     dynamic query generated using the QueryFields; see JournalTitle below
+#    #     for an example.  This is applied whether we use DismaxFields or 
+#    #     QueryFields.
+#    FilterQuery: (optional Lucene filter query)
+# 
+# ...etc.
+#
+#-----------------------------------------------------------------------------------
+#
+# Within the QueryFields area, fields are OR'd together, unless they're in an 
+# anonymous array, in which case the first element is a two-value array that tells 
+# us what the type (AND or OR) and weight of the whole group should be.
+#
+# So, given:
+#
+# test:
+#   QueryFields:
+#     - A:
+#       - [onephrase, 500]
+#       - [and, 200]
+#     - B:
+#       - [and, 100]   
+#       - [or, 50]  
+#     # Start an anonymous array to group; first element indicates AND grouping 
+#     #     and a weight of 50
+#     -
+#       - [AND, 50]                 
+#       - C:
+#         - [onephrase, 200]
+#       - D:
+#         - [onephrase, 300]
+#       # Note the "not" attached to the field name as a minus, and the use of ~ 
+#       #     to mean null ("no special weight")
+#       - -E:
+#         - [or, ~]
+#     - D:
+#       - [or, 100]
+# 
+#  ...and the search string 
+#
+#      test "one two"
+#
+#  ...we'd get
+#   
+#   (A:"test one two"^500 OR 
+#    A:(test AND "one two")^ 200 OR
+#    B:(test AND "one two")^100 OR
+#    B:(test OR "one two")^50
+#    (
+#      C:("test one two")^200 AND
+#      D:"test one two"^300 AND
+#      -E:(test OR "one two")
+#    )^50 OR
+#    D:(test OR "one two")^100
+#   )
+#
+#-----------------------------------------------------------------------------------
+#
+# Munge types are based on the original Solr.php code, and consist of:
+#
+# onephrase: eliminate all quotes and do it as a single phrase. 
+#   testing "one two"
+#    ...becomes ("testing one two")
+#
+# and: AND the terms together
+#  testing "one two"
+#   ...becomes (testing AND "one two")
+#
+# or: OR the terms together
+#  testing "one two"
+#   ...becomes (testing OR "one two")
+#
+# Additional Munge types can be defined in the CustomMunge section.  Each array
+# entry under CustomMunge defines a new named munge type.  Each array entry under
+# the name of the munge type specifies a string manipulation operation.  Operations
+# will be applied in the order listed, and different operations take different
+# numbers of parameters.
+#
+# Munge operations:
+#
+# [append, text] - Append text to the end of the user's search string
+# [lowercase] - Convert string to lowercase
+# [preg_replace, pattern, replacement] - Perform a regular expression replace
+#                                        using the preg_replace() PHP function
+# [uppercase] - Convert string to uppercase
+#
+# See the CallNumber search below for an example of custom munging in action.
+#-----------------------------------------------------------------------------------
+
+# These searches use Dismax when possible:
+Document:
+  QueryFields:
+    - doc_title:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+    - doc_description:
+      - [onephrase, 100]
+      - [and, 50]
+      - [or, ~]
+    - doc_owner:
+      - [onephrase, 100]
+      - [and, 50]
+      - [or, ~]
+    - doc_owner_name:
+      - [onephrase, 100]
+      - [and, 50]
+      - [or, ~]
+    - doc_extra_field:
+      - [onephrase, 100]
+      - [and, 50]
+      - [or, ~]
+    - doc_language:
+      - [onephrase, 100]
+      - [and, 50]
+      - [or, ~]
+
+DocumentTitle:
+  QueryFields:
+    - doc_title:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentDescription:
+  QueryFields:
+    - doc_description:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentOwner:
+  QueryFields:
+    - doc_owner:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentOwnerName:
+  QueryFields:
+    - doc_owner_name:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentExtraField:
+  QueryFields:
+    - doc_extra_field:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentLanguage:
+  QueryFields:
+    - doc_language:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentCreationYear:
+  QueryFields:
+    - doc_create_year:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentCreationDay:
+  QueryFields:
+    - doc_create_day:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentUpdateYear:
+  QueryFields:
+    - doc_update_year:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentUpdateDate:
+  QueryFields:
+    - doc_update_date:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentUpdateMonth:
+  QueryFields:
+    - doc_update_month:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentCreationDate:
+  QueryFields:
+    - doc_create_date:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentUpdateDay:
+  QueryFields:
+    - doc_update_day:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]
+DocumentCreationMonth:
+  QueryFields:
+    - doc_create_month:
+      - [onephrase, 350]
+      - [and, 200]
+      - [or, 100]

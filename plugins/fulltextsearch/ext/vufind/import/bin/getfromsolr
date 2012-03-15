@@ -1,0 +1,66 @@
+#! /bin/bash
+# getfromsolr.sh
+# extracts complete MARC records from Solr index documents.
+# $Id: getfromsolr.sh 
+
+E_BADARGS=65
+
+scriptdir=$( (cd -P $(dirname $0) && pwd) )
+if ! [ -e $scriptdir/SolrMarc.jar ] 
+then
+  scriptdir=$( (cd -P $(dirname $0)/.. && pwd) )
+fi
+
+if [ $# -eq 0 ]
+  then
+    echo "    Usage: `basename $0` http://remoteMachine:port/solr id:u30980"
+    echo "    Usage: `basename $0` id:u38989"
+    exit $E_BADARGS
+fi
+
+id=
+url=
+config=
+flag=
+
+case $1 in
+http*) url=$1 ;;
+*.properties) config=$1 ;;
+*:*) query=$1 ;;
+[A-Za-z0-9]*) id=$1 ;;
+-v) flag=$1 ;;
+-vv) flag=$1 ;;
+esac
+
+case $2 in
+http*) url=$2 ;;
+*.properties) config=$2 ;;
+*:*) query=$2 ;;
+[A-Za-z0-9]*) id=$2 ;;
+-v) flag=$2 ;;
+-vv) flag=$2 ;;
+esac
+
+case $3 in
+http*) url=$3 ;;
+*.properties) config=$3 ;;
+*:*) query=$3 ;;
+[A-Za-z0-9]*) id=$3 ;;
+-v) flag=$3 ;;
+-vv) flag=$3 ;;
+esac
+
+if [[ "$query" == "" && "$id" != "" ]]
+then
+    query="id:$id"
+fi
+
+if [ "$url" == "" ]
+then
+    java -Dsolrmarc.main.class="org.solrmarc.marc.SolrReIndexer" -jar $scriptdir/SolrMarc.jar $config "$query" 2> /dev/null
+else
+    java -Dsolrmarc.main.class="org.solrmarc.solr.RemoteSolrSearcher" -jar $scriptdir/SolrMarc.jar $flag $url "$query" 
+fi
+
+exit 0
+

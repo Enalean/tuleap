@@ -1,0 +1,96 @@
+import org.marc4j.marc.Record;
+
+// define the base level indexer so that its methods can be called from the script.
+// note that the SolrIndexer code will set this value before the script methods are called.
+org.solrmarc.index.SolrIndexer indexer = null;
+
+/**
+ * Extract the call number label from a record
+ * @param record
+ * @return Call number label
+ */
+public String getFullCallNumber(Record record) {
+
+    return(getFullCallNumber(record, "099ab:090ab:050ab"));
+}
+
+/**
+ * Extract the call number label from a record
+ * @param record
+ * @return Call number label
+ */
+public String getFullCallNumber(Record record, String fieldSpec) {
+
+    String val = indexer.getFirstFieldVal(record, fieldSpec);
+
+    if (val != null) {
+        return val.toUpperCase().replaceAll(" ", "");
+    } else {
+        return val;
+    }
+}
+
+/**
+ * Extract the call number label from a record
+ * @param record
+ * @return Call number label
+ */
+public String getCallNumberLabel(Record record) {       
+
+    return getCallNumberLabel(record, "090a:050a");
+}
+
+/**
+ * Extract the call number label from a record
+ * @param record
+ * @return Call number label
+ */
+public String getCallNumberLabel(Record record, String fieldSpec) {
+    
+    String val = indexer.getFirstFieldVal(record, fieldSpec);
+    
+    if (val != null) {
+        int dotPos = val.indexOf(".");
+        if (dotPos > 0) {
+            val = val.substring(0, dotPos);
+        }
+        return val.toUpperCase();
+    } else {
+        return val;
+    }
+}
+
+/**
+ * Extract the subject component of the call number
+ *
+ * Can return null
+ *
+ * @param record
+ * @return Call number label
+ */
+public String getCallNumberSubject(Record record) {
+
+    return(getCallNumberSubject(record, "090a:050a"));
+}
+
+/**
+ * Extract the subject component of the call number
+ *
+ * Can return null
+ *
+ * @param record
+ * @return Call number label
+ */
+public String getCallNumberSubject(Record record, String fieldSpec) {
+
+    String val = indexer.getFirstFieldVal(record, fieldSpec);
+
+    if (val != null) {
+        String [] callNumberSubject = val.toUpperCase().split("[^A-Z]+");
+        if (callNumberSubject.length > 0)
+        {
+            return callNumberSubject[0];
+        }
+    }
+    return(null);
+}

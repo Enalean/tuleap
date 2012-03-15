@@ -1,0 +1,15 @@
+Package: vufind
+Version: 1.0.1
+Section: World Wide Web
+Priority: Optional
+Architecture: all
+Depends: default-jdk, apache2, php5, php5-dev, php-pear, php5-ldap, php5-mysql, php5-xsl, php5-pspell, mysql-server
+Maintainer: VuFind Project Administration Team <vufind-admins@lists.sourceforge.net>
+Homepage: http://vufind.org/
+Description: A library resource discovery portal
+ VuFind is a library resource portal designed and developed for libraries by
+ libraries. The goal of VuFind is to enable your users to search and browse
+ through all of your library's resources by replacing the traditional OPAC.
+ 
+ You can find more information at http://vufind.org.
+

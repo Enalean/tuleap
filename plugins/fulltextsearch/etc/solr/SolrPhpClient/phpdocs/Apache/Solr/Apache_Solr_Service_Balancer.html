@@ -1,0 +1,1451 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+		<head>
+			<!-- template designed by Marco Von Ballmoos -->
+			<title>Docs For Class Apache_Solr_Service_Balancer</title>
+			<link rel="stylesheet" href="../../media/stylesheet.css" />
+			<meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'/>
+		</head>
+		<body>
+			<div class="page-body">			
+<h2 class="class-name">Class Apache_Solr_Service_Balancer</h2>
+
+<a name="sec-description"></a>
+<div class="info-box">
+	<div class="info-box-title">Description</div>
+	<div class="nav-bar">
+					<span class="disabled">Description</span> |
+													<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+						|											<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+						
+											<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+						
+			</div>
+	<div class="info-box-body">
+        		<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Reference Implementation for using multiple Solr services in a distribution. Functionality</p>
+<p class="description"><p>includes:  	routing of read / write operations  	failover (on selection) for multiple read servers</p></p>
+		<p class="notes">
+			Located in <a class="field" href="_Service---Balancer.php.html">/Service/Balancer.php</a> (line <span class="field"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a49">49</a></span>)
+		</p>
+		
+				
+		<pre></pre>
+	
+			</div>
+</div>
+
+
+	<a name="sec-const-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constant Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Constants</span> (<a href="#sec-consts">details</a>)
+												<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<div class="const-summary">
+								<div class="const-title">
+					<img src="../../media/images/Constant.png" alt=" " />
+					<a href="#SVN_ID" title="details" class="const-name">SVN_ID</a> = 					<span class="var-type"> '$Id: Balancer.php 15 2009-08-04 17:53:08Z donovan.jimenez $'</span>
+
+				</div>
+								<div class="const-title">
+					<img src="../../media/images/Constant.png" alt=" " />
+					<a href="#SVN_REVISION" title="details" class="const-name">SVN_REVISION</a> = 					<span class="var-type"> '$Revision: 15 $'</span>
+
+				</div>
+							</div>
+		</div>
+	</div>
+
+	<a name="sec-var-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variable Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+						<span class="disabled">Vars</span> (<a href="#sec-vars">details</a>)
+							| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+															<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<div class="var-summary">
+																																																																																																								<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_backoffEscalation" title="details" class="var-name">$_backoffEscalation</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_backoffLimit" title="details" class="var-name">$_backoffLimit</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_createDocuments" title="details" class="var-name">$_createDocuments</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_currentReadService" title="details" class="var-name">$_currentReadService</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_currentWriteService" title="details" class="var-name">$_currentWriteService</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_defaultBackoff" title="details" class="var-name">$_defaultBackoff</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_readableServices" title="details" class="var-name">$_readableServices</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_readPingTimeout" title="details" class="var-name">$_readPingTimeout</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_useBackoff" title="details" class="var-name">$_useBackoff</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_writeableServices" title="details" class="var-name">$_writeableServices</a>
+				</div>
+																<div class="var-title">
+					<span class="var-type">mixed</span>
+					<a href="#$_writePingTimeout" title="details" class="var-name">$_writePingTimeout</a>
+				</div>
+											</div>
+		</div>
+	</div>
+
+	<a name="sec-method-summary"></a>
+	<div class="info-box">
+		<div class="info-box-title">Method Summary</span></div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+				 
+				|
+						<span class="disabled">Methods</span> (<a href="#sec-methods">details</a>)
+		</div>
+		<div class="info-box-body">			
+			<div class="method-summary">
+																																																																																										
+				<div class="method-definition">
+					static 						<span class="method-result">string</span>
+										<a href="#escape" title="details" class="method-name">escape</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+														
+				<div class="method-definition">
+					static 						<span class="method-result">string</span>
+										<a href="#escapePhrase" title="details" class="method-name">escapePhrase</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+																														
+				<div class="method-definition">
+					static 						<span class="method-result">string</span>
+										<a href="#phrase" title="details" class="method-name">phrase</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>)
+									</div>
+																																																																																																										
+				<div class="method-definition">
+											<span class="method-result">Apache_Solr_Service_Balancer</span>
+										<a href="#__construct" title="details" class="method-name">__construct</a>
+											([<span class="var-type">array</span>&nbsp;<span class="var-name">$readableServices</span> = <span class="var-default">array()</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$writeableServices</span> = <span class="var-default">array()</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+										<a href="#add" title="details" class="method-name">add</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$rawPost</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+										<a href="#addDocument" title="details" class="method-name">addDocument</a>
+											(<span class="var-type"><a href="../../Apache/Solr/Apache_Solr_Document.html">Apache_Solr_Document</a></span>&nbsp;<span class="var-name">$document</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$allowDups</span> = <span class="var-default">false</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$overwritePending</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$overwriteCommitted</span> = <span class="var-default">true</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+										<a href="#addDocuments" title="details" class="method-name">addDocuments</a>
+											(<span class="var-type">array</span>&nbsp;<span class="var-name">$documents</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$allowDups</span> = <span class="var-default">false</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$overwritePending</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$overwriteCommitted</span> = <span class="var-default">true</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#addReadService" title="details" class="method-name">addReadService</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$service</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#addWriteService" title="details" class="method-name">addWriteService</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$service</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+										<a href="#commit" title="details" class="method-name">commit</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$optimize</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$waitFlush</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$waitSearcher</span> = <span class="var-default">true</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$timeout</span> = <span class="var-default">3600</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+										<a href="#delete" title="details" class="method-name">delete</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$rawPost</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+										<a href="#deleteById" title="details" class="method-name">deleteById</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$id</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$fromPending</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$fromCommitted</span> = <span class="var-default">true</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+										<a href="#deleteByQuery" title="details" class="method-name">deleteByQuery</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$rawQuery</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$fromPending</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$fromCommitted</span> = <span class="var-default">true</span>])
+									</div>
+																														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#getCreateDocuments" title="details" class="method-name">getCreateDocuments</a>
+										()
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+										<a href="#optimize" title="details" class="method-name">optimize</a>
+											([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$waitFlush</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$waitSearcher</span> = <span class="var-default">true</span>])
+									</div>
+																						
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#removeReadService" title="details" class="method-name">removeReadService</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$service</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#removeWriteService" title="details" class="method-name">removeWriteService</a>
+											(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$service</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+										<a href="#search" title="details" class="method-name">search</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$query</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$limit</span> = <span class="var-default">10</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$params</span> = <span class="var-default">array()</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setCreateDocuments" title="details" class="method-name">setCreateDocuments</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$createDocuments</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setReadPingTimeout" title="details" class="method-name">setReadPingTimeout</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$timeout</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setUseBackoff" title="details" class="method-name">setUseBackoff</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$enable</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">void</span>
+										<a href="#setWritePingTimeout" title="details" class="method-name">setWritePingTimeout</a>
+											(<span class="var-type"></span>&nbsp;<span class="var-name">$timeout</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result">string</span>
+										<a href="#_getServiceId" title="details" class="method-name">_getServiceId</a>
+											(<span class="var-type">string</span>&nbsp;<span class="var-name">$host</span>, <span class="var-type">integer</span>&nbsp;<span class="var-name">$port</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$path</span>)
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Service.html">Apache_Solr_Service</a></span>
+										<a href="#_selectReadService" title="details" class="method-name">_selectReadService</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$forceSelect</span> = <span class="var-default">false</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Service.html">Apache_Solr_Service</a></span>
+										<a href="#_selectWriteService" title="details" class="method-name">_selectWriteService</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$forceSelect</span> = <span class="var-default">false</span>])
+									</div>
+														
+				<div class="method-definition">
+											<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Service.html">Apache_Solr_Service</a></span>
+										<a href="#_selectWriteServiceSafe" title="details" class="method-name">_selectWriteServiceSafe</a>
+											([<span class="var-type"></span>&nbsp;<span class="var-name">$forceSelect</span> = <span class="var-default">false</span>])
+									</div>
+											</div>
+		</div>
+	</div>		
+
+	<a name="sec-vars"></a>
+	<div class="info-box">
+		<div class="info-box-title">Variables</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Vars</a> (<span class="disabled">details</span>)
+						
+			
+												<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+										| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			
+<a name="var$_backoffEscalation" id="$_backoffEscalation"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_backoffEscalation</span>
+			 = <span class="var-default"> 2.0</span>			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a75">75</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_backoffLimit" id="$_backoffLimit"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_backoffLimit</span>
+			 = <span class="var-default"> 600</span>			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a74">74</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_createDocuments" id="$_createDocuments"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_createDocuments</span>
+			 = <span class="var-default"> true</span>			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a61">61</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_currentReadService" id="$_currentReadService"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_currentReadService</span>
+			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a66">66</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_currentWriteService" id="$_currentWriteService"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_currentWriteService</span>
+			 = <span class="var-default"> null</span>			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a67">67</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_defaultBackoff" id="$_defaultBackoff"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_defaultBackoff</span>
+			 = <span class="var-default"> 2.0</span>			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a76">76</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_readableServices" id="$_readableServices"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_readableServices</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a63">63</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_readPingTimeout" id="$_readPingTimeout"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_readPingTimeout</span>
+			 = <span class="var-default"> 2</span>			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a69">69</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_useBackoff" id="$_useBackoff"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_useBackoff</span>
+			 = <span class="var-default"> false</span>			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a73">73</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_writeableServices" id="$_writeableServices"><!-- --></A>
+<div class="oddrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_writeableServices</span>
+			 = <span class="var-default">array()</span>			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a64">64</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+<a name="var$_writePingTimeout" id="$_writePingTimeout"><!-- --></A>
+<div class="evenrow">
+
+	<div class="var-header">
+		<span class="var-title">
+			<span class="var-type">mixed</span>
+			<span class="var-name">$_writePingTimeout</span>
+			 = <span class="var-default"> 4</span>			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a70">70</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	
+		
+		
+
+</div>
+						
+		</div>
+	</div>
+	
+	<a name="sec-methods"></a>
+	<div class="info-box">
+		<div class="info-box-title">Methods</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+															<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+																			<a href="#sec-const-summary">Constants</a> (<a href="#sec-consts">details</a>)
+							
+										<a href="#sec-method-summary">Methods</a> (<span class="disabled">details</span>)
+						
+		</div>
+		<div class="info-box-body">
+			<A NAME='method_detail'></A>
+<a name="methodescape" id="escape"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">static escape</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a86">86</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Escape a value for special query characters such as ':', '(', ')', '*', '?', etc.</p>
+<p class="description"><p>NOTE: inside a phrase fewer characters need escaped, use <a href="../../Apache/Solr/Apache_Solr_Service.html#methodescapePhrase">Apache_Solr_Service::escapePhrase()</a> instead</p></p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">string</span>
+		<span class="method-name">
+			escape
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$value</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodescapePhrase" id="escapePhrase"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">static escapePhrase</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a97">97</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Escape a value meant to be contained in a phrase for special query characters</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">string</span>
+		<span class="method-name">
+			escapePhrase
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$value</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodphrase" id="phrase"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">static phrase</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a108">108</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Convenience function for creating phrase syntax from a value</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		static <span class="method-result">string</span>
+		<span class="method-name">
+			phrase
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$value</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$value</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method__construct" id="__construct"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">Constructor __construct</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a119">119</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Constructor. Takes arrays of read and write service instances or descriptions</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">Apache_Solr_Service_Balancer</span>
+		<span class="method-name">
+			__construct
+		</span>
+					([<span class="var-type">array</span>&nbsp;<span class="var-name">$readableServices</span> = <span class="var-default">array()</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$writeableServices</span> = <span class="var-default">array()</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$readableServices</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$writeableServices</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodadd" id="add"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">add</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a477">477</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Raw Add Method. Takes a raw post body and sends it to the update service.  Post body  should be a complete and well formed &quot;add&quot; xml document.</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If an error occurs during the service call</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+		<span class="method-name">
+			add
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$rawPost</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$rawPost</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddDocument" id="addDocument"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">addDocument</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a512">512</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Add a Solr Document to the index</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If an error occurs during the service call</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+		<span class="method-name">
+			addDocument
+		</span>
+					(<span class="var-type"><a href="../../Apache/Solr/Apache_Solr_Document.html">Apache_Solr_Document</a></span>&nbsp;<span class="var-name">$document</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$allowDups</span> = <span class="var-default">false</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$overwritePending</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$overwriteCommitted</span> = <span class="var-default">true</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"><a href="../../Apache/Solr/Apache_Solr_Document.html">Apache_Solr_Document</a></span>
+				<span class="var-name">$document</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$allowDups</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$overwritePending</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$overwriteCommitted</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddDocuments" id="addDocuments"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addDocuments</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a547">547</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Add an array of Solr Documents to the index all at once</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If an error occurs during the service call</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+		<span class="method-name">
+			addDocuments
+		</span>
+					(<span class="var-type">array</span>&nbsp;<span class="var-name">$documents</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$allowDups</span> = <span class="var-default">false</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$overwritePending</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$overwriteCommitted</span> = <span class="var-default">true</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$documents</span><span class="var-description">: Should be an array of Apache_Solr_Document instances</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$allowDups</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$overwritePending</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$overwriteCommitted</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddReadService" id="addReadService"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">addReadService</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a170">170</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds a service instance or service descriptor (if it is already  not added)</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If service descriptor is not valid</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addReadService
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$service</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$service</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodaddWriteService" id="addWriteService"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">addWriteService</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a238">238</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Adds a service instance or service descriptor (if it is already  not added)</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If service descriptor is not valid</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			addWriteService
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$service</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$service</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodcommit" id="commit"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">commit</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a581">581</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Send a commit command.  Will be synchronous unless both wait parameters are set  to false.</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If an error occurs during the service call</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+		<span class="method-name">
+			commit
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$optimize</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$waitFlush</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$waitSearcher</span> = <span class="var-default">true</span>], [<span class="var-type"></span>&nbsp;<span class="var-name">$timeout</span> = <span class="var-default">3600</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$waitFlush</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$waitSearcher</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$optimize</span>			</li>
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$timeout</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddelete" id="delete"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">delete</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a614">614</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Raw Delete Method. Takes a raw post body and sends it to the update service. Body should be  a complete and well formed &quot;delete&quot; xml document</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If an error occurs during the service call</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+		<span class="method-name">
+			delete
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$rawPost</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$rawPost</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddeleteById" id="deleteById"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">deleteById</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a648">648</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Create a delete document based on document ID</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If an error occurs during the service call</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+		<span class="method-name">
+			deleteById
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$id</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$fromPending</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$fromCommitted</span> = <span class="var-default">true</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$id</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$fromPending</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$fromCommitted</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methoddeleteByQuery" id="deleteByQuery"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">deleteByQuery</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a682">682</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Create a delete document based on a query and submit it</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If an error occurs during the service call</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+		<span class="method-name">
+			deleteByQuery
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$rawQuery</span>, [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$fromPending</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$fromCommitted</span> = <span class="var-default">true</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$rawQuery</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$fromPending</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$fromCommitted</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodgetCreateDocuments" id="getCreateDocuments"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">getCreateDocuments</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a463">463</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			getCreateDocuments
+		</span>
+				()
+			</div>
+	
+		
+			
+	</div>
+<a name="methodoptimize" id="optimize"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">optimize</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a716">716</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Send an optimize command.  Will be synchronous unless both wait parameters are set  to false.</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If an error occurs during the service call</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+		<span class="method-name">
+			optimize
+		</span>
+					([<span class="var-type">boolean</span>&nbsp;<span class="var-name">$waitFlush</span> = <span class="var-default">true</span>], [<span class="var-type">boolean</span>&nbsp;<span class="var-name">$waitSearcher</span> = <span class="var-default">true</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$waitFlush</span>			</li>
+					<li>
+				<span class="var-type">boolean</span>
+				<span class="var-name">$waitSearcher</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveReadService" id="removeReadService"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">removeReadService</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a200">200</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes a service instance or descriptor from the available services</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If service descriptor is not valid</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeReadService
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$service</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$service</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodremoveWriteService" id="removeWriteService"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">removeWriteService</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a268">268</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Removes a service instance or descriptor from the available services</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If service descriptor is not valid</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			removeWriteService
+		</span>
+					(<span class="var-type">mixed</span>&nbsp;<span class="var-name">$service</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">mixed</span>
+				<span class="var-name">$service</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsearch" id="search"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">search</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a751">751</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Simple Search interface</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If an error occurs during the service call</li>
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Response.html">Apache_Solr_Response</a></span>
+		<span class="method-name">
+			search
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$query</span>, [<span class="var-type">int</span>&nbsp;<span class="var-name">$offset</span> = <span class="var-default">0</span>], [<span class="var-type">int</span>&nbsp;<span class="var-name">$limit</span> = <span class="var-default">10</span>], [<span class="var-type">array</span>&nbsp;<span class="var-name">$params</span> = <span class="var-default">array()</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$query</span><span class="var-description">: The raw query string</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$offset</span><span class="var-description">: The starting offset for result documents</span>			</li>
+					<li>
+				<span class="var-type">int</span>
+				<span class="var-name">$limit</span><span class="var-description">: The maximum number of result documents to return</span>			</li>
+					<li>
+				<span class="var-type">array</span>
+				<span class="var-name">$params</span><span class="var-description">: key / value pairs for query parameters, use arrays for multivalued parameters</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetCreateDocuments" id="setCreateDocuments"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setCreateDocuments</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a452">452</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setCreateDocuments
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$createDocuments</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$createDocuments</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetReadPingTimeout" id="setReadPingTimeout"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setReadPingTimeout</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a134">134</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setReadPingTimeout
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$timeout</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$timeout</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetUseBackoff" id="setUseBackoff"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">setUseBackoff</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a144">144</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setUseBackoff
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$enable</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$enable</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="methodsetWritePingTimeout" id="setWritePingTimeout"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">setWritePingTimeout</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a139">139</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+	<ul class="tags">
+				<li><span class="field">access:</span> public</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">void</span>
+		<span class="method-name">
+			setWritePingTimeout
+		</span>
+					(<span class="var-type"></span>&nbsp;<span class="var-name">$timeout</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$timeout</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_getServiceId" id="_getServiceId"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_getServiceId</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a157">157</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Generates a service ID</p>
+	<ul class="tags">
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result">string</span>
+		<span class="method-name">
+			_getServiceId
+		</span>
+					(<span class="var-type">string</span>&nbsp;<span class="var-name">$host</span>, <span class="var-type">integer</span>&nbsp;<span class="var-name">$port</span>, <span class="var-type">string</span>&nbsp;<span class="var-name">$path</span>)
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$host</span>			</li>
+					<li>
+				<span class="var-type">integer</span>
+				<span class="var-name">$port</span>			</li>
+					<li>
+				<span class="var-type">string</span>
+				<span class="var-name">$path</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_selectReadService" id="_selectReadService"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_selectReadService</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a306">306</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Iterate through available read services and select the first with a ping  that satisfies configured timeout restrictions (or the default)</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If there are no read services that meet requirements</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Service.html">Apache_Solr_Service</a></span>
+		<span class="method-name">
+			_selectReadService
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$forceSelect</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$forceSelect</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_selectWriteService" id="_selectWriteService"><!-- --></a>
+<div class="oddrow">
+	
+	<div class="method-header">
+		<span class="method-title">_selectWriteService</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a354">354</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Iterate through available write services and select the first with a ping  that satisfies configured timeout restrictions (or the default)</p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If there are no write services that meet requirements</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Service.html">Apache_Solr_Service</a></span>
+		<span class="method-name">
+			_selectWriteService
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$forceSelect</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$forceSelect</span>			</li>
+				</ul>
+		
+			
+	</div>
+<a name="method_selectWriteServiceSafe" id="_selectWriteServiceSafe"><!-- --></a>
+<div class="evenrow">
+	
+	<div class="method-header">
+		<span class="method-title">_selectWriteServiceSafe</span> (line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a410">410</a></span>)
+	</div> 
+	
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">Iterate through available write services and select the first with a ping</p>
+<p class="description"><p>that satisfies configured timeout restrictions (or the default).  The  timeout period will increase until a connection is made or the limit is  reached.   This will allow for increased reliability with heavily loaded  server(s).</p></p>
+	<ul class="tags">
+				<li><span class="field">throws:</span> Exception If there are no write services that meet requirements</li>
+				<li><span class="field">access:</span> protected</li>
+			</ul>
+	
+	<div class="method-signature">
+		<span class="method-result"><a href="../../Apache/Solr/Apache_Solr_Service.html">Apache_Solr_Service</a></span>
+		<span class="method-name">
+			_selectWriteServiceSafe
+		</span>
+					([<span class="var-type"></span>&nbsp;<span class="var-name">$forceSelect</span> = <span class="var-default">false</span>])
+			</div>
+	
+			<ul class="parameters">
+					<li>
+				<span class="var-type"></span>
+				<span class="var-name">$forceSelect</span>			</li>
+				</ul>
+		
+			
+	</div>
+						
+		</div>
+	</div>
+
+	<a name="sec-consts"></a>
+	<div class="info-box">
+		<div class="info-box-title">Class Constants</div>
+		<div class="nav-bar">
+			<a href="#sec-description">Description</a> |
+										<a href="#sec-var-summary">Constants</a> (<span class="disabled">details</span>)
+						
+			
+												<a href="#sec-var-summary">Vars</a> (<a href="#sec-vars">details</a>)
+														| 
+									<a href="#sec-method-summary">Methods</a> (<a href="#sec-methods">details</a>)
+							
+					</div>
+		<div class="info-box-body">
+			<a name="constSVN_ID" id="SVN_ID"><!-- --></A>
+<div class="oddrow">
+
+	<div class="const-header">
+		<img src="../../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">SVN_ID</span>
+			 = <span class="const-default"> '$Id: Balancer.php 15 2009-08-04 17:53:08Z donovan.jimenez $'</span>
+			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a59">59</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">SVN ID meta data for this class</p>
+	
+	
+</div>
+<a name="constSVN_REVISION" id="SVN_REVISION"><!-- --></A>
+<div class="evenrow">
+
+	<div class="const-header">
+		<img src="../../media/images/Variable.png" />
+		<span class="const-title">
+			<span class="const-name">SVN_REVISION</span>
+			 = <span class="const-default"> '$Revision: 15 $'</span>
+			(line <span class="line-number"><a href="../../__filesource/fsource_Apache_Solr_ServiceBalancer.php.html#a54">54</a></span>)
+		</span>
+	</div>
+
+	<!-- ========== Info from phpDoc block ========= -->
+<p class="short-description">SVN Revision meta data for this class</p>
+	
+	
+</div>
+						
+		</div>
+	</div>
+
+	<p class="notes" id="credit">
+		Documentation generated on Mon, 09 Nov 2009 18:15:41 -0500 by <a href="http://www.phpdoc.org" target="_blank">phpDocumentor 1.4.2</a>
+	</p>
+	</div></body>
+</html>

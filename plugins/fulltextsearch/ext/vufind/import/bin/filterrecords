@@ -1,0 +1,30 @@
+#! /bin/bash
+# filterrecords
+# Grep for marc records:  selects only those records that contain certain fields or certain values in certain fields.
+# $Id: filterrecords
+
+E_BADARGS=65
+
+scriptdir=$( (cd -P $(dirname $0) && pwd) )
+if ! [ -e $scriptdir/SolrMarc.jar ] 
+then
+  scriptdir=$( (cd -P $(dirname $0)/.. && pwd) )
+fi
+
+if ! [ -p /dev/stdin ]
+then  
+  if [ $# -eq 0 ]
+  then
+    echo "    Usage: `basename $0` [config.properties] ./path/to/marc.mrc "
+    echo "      Note that if the config.properties file is not specified the Jarfile will be searched for"
+    echo "      a file whose name ends with \"config.properties\""
+    echo "    Usage: cat /path/to/big/marcfile.mrc | `basename $0` 'fieldspec/search_string'"
+    echo "      would get the records in the file that have search_string in the fieldspec  (e.g. '245a/Jefferson')" 
+    exit $E_BADARGS
+  fi
+fi
+
+java -Dsolrmarc.main.class="org.solrmarc.marc.MarcPrinter" -Dmarc.include_if_present="$1" -Dmarc.combine_records="" -jar $scriptdir/SolrMarc.jar translate $2 $3 
+
+exit 0
+

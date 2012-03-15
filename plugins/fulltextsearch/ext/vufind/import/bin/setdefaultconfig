@@ -1,0 +1,34 @@
+#! /bin/bash
+# setdefaultconfig
+# Set the name of the default config file to use.
+# $Id: setdefaultconfig
+
+E_BADARGS=65
+
+scriptdir=$( (cd -P $(dirname $0) && pwd) )
+if ! [ -e $scriptdir/SolrMarc.jar ] 
+then
+  scriptdir=$( (cd -P $(dirname $0)/.. && pwd) )
+fi
+
+for i in "$@" 
+do
+case "$i" in
+*config.properties) config="$i" ;;
+esac
+done
+
+if [[ $config == "" ]]
+then
+  echo  "Usage: setdefaultconfig your_config.properties"
+  exit 0
+fi
+
+java -Dsolrmarc.main.class="org.solrmarc.tools.PropertyFileFetcher" -jar $scriptdir/SolrMarc.jar JarUtils.jar $scriptdir
+
+java -classpath $scriptdir/JarUtils.jar JarUpdate $scriptdir/SolrMarc.jar "META-INF/MANIFEST.MF" "Default-Config-File: $config" > /dev/null
+echo Default configuration in SolrMarc.jar set to $config
+
+rm -f $scriptdir/JarUtils.jar
+
+exit 0

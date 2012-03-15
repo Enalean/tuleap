@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, Helvetica;
+    font-size: 10pt;
+}
+
+ul.HelpMenu {
+    float: left;
+    width: 150px;
+    background-color: #FFFFCC;
+}
+
+dl.content {
+    border-left: solid 1px #999999;
+    /*margin-left: 190px;*/
+    padding-left: 10px;
+    height: 430px;
+    width: 390px;
+    overflow: auto;
+}
+
+dl dt {
+   font-weight: bold;
+}
+
+dl dd {
+    padding: 0px;
+    margin: 2px 0px 2px 10px;
+}
+
+pre {
+    padding: 10px;
+    margin: 10px;
+    background-color: #EEEEEE;
+    border: dashed 1px #999999;
+    width: 300px;
+}
+
+.warning {
+    color: red;
+}

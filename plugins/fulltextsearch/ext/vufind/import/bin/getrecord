@@ -1,0 +1,36 @@
+#! /bin/bash
+# getrecord
+# Get specific record(s) from larger file of marc records.
+# $Id: getrecord
+
+E_BADARGS=65
+
+scriptdir=$( (cd -P $(dirname $0) && pwd) )
+if ! [ -e $scriptdir/SolrMarc.jar ] 
+then
+  scriptdir=$( (cd -P $(dirname $0)/.. && pwd) )
+fi
+
+if ! [ -p /dev/stdin ]
+then  
+  if [ $# -eq 0 ]
+  then
+    echo "    Usage: `basename $0` ./path/to/marcfile.mrc id_to_extract"
+    echo "    Usage: `basename $0` ./path/to/marcfile.mrc first_id_to_extract last_id_to_extract"
+    echo "    Usage: `basename $0` ./path/to/marcfile.mrc file_with_list_of_ids.txt"
+    
+    exit $E_BADARGS
+  fi
+  arg1=$1
+  arg2=$2
+  arg3=$3
+else
+  arg1=-
+  arg2=$1
+  arg3=$2
+fi
+
+java -Dsolrmarc.main.class="org.solrmarc.marc.RawRecordReader" -jar $scriptdir/SolrMarc.jar $arg1 $arg2 $arg3
+
+exit 0
+

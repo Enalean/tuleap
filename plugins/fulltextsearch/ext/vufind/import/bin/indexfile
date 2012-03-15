@@ -1,0 +1,33 @@
+#! /bin/bash
+# index_file.sh
+# Import a single marc file into a Solr index
+# $Id: indexfile.sh 
+
+E_BADARGS=65
+
+scriptdir=$( (cd -P $(dirname $0) && pwd) )
+if ! [ -e $scriptdir/SolrMarc.jar ] 
+then
+  scriptdir=$( (cd -P $(dirname $0)/.. && pwd) )
+fi
+
+if ! [ -p /dev/stdin ]
+then  
+  if [ $# -eq 0 ]
+  then
+    echo "    Usage: `basename $0` [config.properties] ./path/to/marc.mrc "
+    echo "      Note that if the config.properties file is not specified the Jarfile will be searched for"
+    echo "      a file whose name ends with \"config.properties\""
+    exit $E_BADARGS
+  fi
+fi
+
+if [[ "$SOLRMARC_MEM_ARGS" == "" ]] 
+then
+    SOLRMARC_MEM_ARGS='-Xms512m -Xmx512m'
+fi
+
+java $SOLRMARC_MEM_ARGS -jar $scriptdir/SolrMarc.jar $1 $2 $3
+
+exit 0
+

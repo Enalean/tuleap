@@ -1,0 +1,24 @@
+#! /bin/bash
+# marcerror.sh
+# Diagnostic program to show look for errors in Marc records.
+# $Id: marcerror.sh 
+
+E_BADARGS=65
+
+scriptdir=$( (cd -P $(dirname $0) && pwd) )
+if ! [ -e $scriptdir/SolrMarc.jar ] 
+then
+  scriptdir=$( (cd -P $(dirname $0)/.. && pwd) )
+fi
+
+if [ $# -eq 0 ]
+  then
+    echo "    Usage: `basename $0` [-v|-vv] ./path/to/marc.mrc "
+    exit $E_BADARGS
+  fi
+
+
+java -Dsolrmarc.main.class="org.solrmarc.tools.PermissiveReaderTest" -jar $scriptdir/SolrMarc.jar $1 $2 $3
+
+exit 0
+

@@ -1,0 +1,78 @@
+/* Print CSS Definitions for VuFind.
+   Chris Barr, August 2008
+*/
+body {
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
+}
+h1, h2, h3 {font-weight: normal;
+font-family: Georgia, serif;
+}
+h1 {font-size: 24pt;}
+
+#hd, #ft, #siteNavBackground, .currentSearch, .sectionSub, .tools, .backtosearch, #tabnav, .submenu, .add, .toggle, .fav, .searchtools, .pagination {visibility: hidden; height:0;overflow: hidden;}
+
+.sidebar {border-top: solid #999 thin;border-bottom: solid #999 thin;}
+
+a {color:#000; text-decoration: none;}
+
+.yui-ge {
+    margin: 1em 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.resultItemLine1{
+font-weight: bold;
+}
+
+/* Citation Table */
+.citation {
+padding-bottom: 1em;
+}
+.citation th {
+  text-align:left;
+  color:#666;
+  padding:.3em 0 .3em 0;
+  border-bottom: 1px solid #ccc;
+}
+.citation tr {
+  
+}
+.citation td {
+  padding:.3em 0 .3em 1em;
+  border-bottom: 1px solid #ccc;
+}
+.citation tr, .citation td {
+  vertical-align:top;
+}
+
+.alignleft {
+	float: right;
+	padding: 4px;
+	margin: 0 0 2px 15px;
+	}
+	
+	
+/* Icon Classes */
+
+#stabnav a.catalog {
+  background-image:url(<?php echo $configArray['Site']['path'];?>/images/silk/book.png);
+  background-repeat:no-repeat;
+  background-position: left; 
+  padding-left:20px;
+}
+#stabnav a.articles {
+  background-image:url(<?php echo $configArray['Site']['path'];?>/images/articles.png);
+  background-repeat:no-repeat;
+  background-position: left; 
+  padding-left:20px;
+}
+
+/* Icon Classes */
+
+.available {
+ color:#009900;
+}
+.checkedout {
+  color:#cc0000;
+}

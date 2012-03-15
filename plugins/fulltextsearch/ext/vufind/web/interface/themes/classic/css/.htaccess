@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine Off
+</IfModule>
+
+# Dynamic CSS
+AddType application/x-httpd-php .css
+

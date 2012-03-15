@@ -1,0 +1,17 @@
+#! /bin/bash
+# updatesolrserver
+# send an update message to a running solr server, 
+# $Id: updatesolrserver
+
+E_BADARGS=65
+
+scriptdir=$( (cd -P $(dirname $0) && pwd) )
+if ! [ -e $scriptdir/SolrMarc.jar ] 
+then
+  scriptdir=$( (cd -P $(dirname $0)/.. && pwd) )
+fi
+
+java -Dsolrmarc.main.class="org.solrmarc.tools.SolrUpdate" -jar $scriptdir/SolrMarc.jar $1 
+
+exit 0
+
