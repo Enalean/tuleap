@@ -32,6 +32,7 @@ $include_path = $basedir.'/src/www/include';
 
 ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
 
+//$GLOBALS['jpgraph_dir'] = '/usr/share/jpgraph';
 require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
 //require($GLOBALS['db_config_file']);
 require_once(dirname(__FILE__).'/../include/simpletest/unit_tester.php');
