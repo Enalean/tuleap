@@ -1,16 +1,23 @@
 <?php
 
+require_once 'common/include/Config.class.php';
 require_once 'common/svn/SVN_Apache_SvnrootConf.class.php';
+
+mock::generate('EventManager');
 
 class SVN_Apache_SvnrootConfTest extends UnitTestCase {
     
     function setUp() {
         Config::store();
+        $GLOBALS['sys_dbhost'] = 'db_server';
+        $GLOBALS['sys_dbname'] = 'db';
         $GLOBALS['svn_prefix'] = '/bla';
     }
     
     function tearDown() {
         Config::restore();
+        unset($GLOBALS['sys_dbname']);
+        unset($GLOBALS['sys_dbhost']);
         unset($GLOBALS['svn_prefix']);
     }
     

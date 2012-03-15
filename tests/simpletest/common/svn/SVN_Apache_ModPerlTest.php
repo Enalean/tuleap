@@ -23,10 +23,14 @@ require_once 'common/svn/SVN_Apache_ModPerl.class.php';
 class SVN_Apache_ModPerlTest extends UnitTestCase {
     
     function setUp() {
+        $GLOBALS['sys_dbhost'] = 'db_server';
+        $GLOBALS['sys_dbname'] = 'db';
         $GLOBALS['svn_prefix'] = '/svnroot';
     }
     
     function tearDown() {
+        unset($GLOBALS['sys_dbname']);
+        unset($GLOBALS['sys_dbhost']);
         unset($GLOBALS['svn_prefix']);
     }
     
