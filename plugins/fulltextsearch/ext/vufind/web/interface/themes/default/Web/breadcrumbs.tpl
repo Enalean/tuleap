@@ -1,1 +1,0 @@
-<em>{translate text='Web'}</em> <span>&gt;</span>
