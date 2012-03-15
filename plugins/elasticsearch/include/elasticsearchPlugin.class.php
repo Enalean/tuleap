@@ -3,7 +3,9 @@
 require_once('common/plugin/Plugin.class.php');
 
 class elasticsearchPlugin extends Plugin {
-        
+    
+    private $elasticSearchClient;
+    
     function elasticsearchPlugin($id) {
         $this->Plugin($id);
         $this->_addHook('javascript_file', 'jsFile', false);
@@ -16,48 +18,25 @@ class elasticsearchPlugin extends Plugin {
     }
     
     function addDocman($params) {
-        $event = 'plugin_docman_event_add';
-        /*$df = CodendiSolrDocumentFactory::instance();
-        $document = $df->getCodendiSolrDocumentFromEventParams($event, $params);*/
-        $this->_addDocumentInSolr($document);
-    }
-    
-    /**
-     * Add or Update a document in SolR
-     *
-     * @param Apache_Solr_Document $document the document to index in SolR
-     *
-     * @return void
-     */
-    private function _addDocumentInElasticSearch(ElasticSearch_Document $document) {
-        /*$solr_server = $this->getPluginInfo()->getPropVal('solr_server');
-        $solr_port   = $this->getPluginInfo()->getPropVal('solr_port');
-        $solr_path   = $this->getPluginInfo()->getPropVal('solr_path');
-        //$solr = new Celi_Apache_Solr_Service($solr_server, $solr_port, $solr_path);
-        $solr = new Apache_Solr_Service($solr_server, $solr_port, $solr_path);
-        if ( ! $solr->ping() ) {
-            //$GLOBALS['Response']->addFeedback('error', 'SolR server server not found.');
-        }
-        $gus = $solr->_getUpdateServlet();
-        //$gus ='update/celi';
-        $solr->_setUpdateServlet($gus);
-        $gus = $solr->_getUpdateServlet();
+        $data = array('title' => 'No title');
+        $id   = 1;
         
-        try {
-            if ($solr->addDocument($document)) {
-                //$GLOBALS['Response']->addFeedback('info', 'Document indexed.');
-            } else {
-                //$GLOBALS['Response']->addFeedback('error', 'Impossible to index document');
-                // Log into backend?
-            }
-            $solr->commit(); //commits to see the deletes and the document
-            $solr->optimize(); //merges multiple segments into one
-        } catch (Exception $e) {
-            //$GLOBALS['Response']->addFeedback('error', $e->getMessage());
-            // Log into backend?
-        }*/
+        $this->getElasticSearchClient()->index($data, $id);
     }
     
+    private function getElasticSearchClient() {
+        if ($this->elasticSearchClient == null) {
+            $elasticsearch_path = $this->getPluginInfo()->getPropertyValueForName('elasticsearch_path');
+            $elasticsearch_host = $this->getPluginInfo()->getPropertyValueForName('elasticsearch_host');
+            $elasticsearch_port = $this->getPluginInfo()->getPropertyValueForName('elasticsearch_port');
+            
+            require_once($elasticsearch_path.'/ElasticSearchClient.php');
+            
+            $transport                 = new ElasticSearchTransportHTTP("localhost", 9200);
+            $this->elasticSearchClient = new ElasticSearchClient($transport, "tuleap", "docman");
+        }
+        return $this->elasticSearchClient;
+    }
     
     function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'ElasticsearchPluginInfo')) {

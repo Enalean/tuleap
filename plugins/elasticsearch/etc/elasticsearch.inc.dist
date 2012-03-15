@@ -1,3 +1,5 @@
 <?php
-
+$elasticsearch_path = '/usr/local/share/php/elasticsearch';
+$elasticsearch_host = 'localhost';
+$elasticsearch_port = 9200;
 ?>
