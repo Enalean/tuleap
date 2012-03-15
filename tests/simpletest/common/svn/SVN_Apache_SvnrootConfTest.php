@@ -9,6 +9,7 @@ class SVN_Apache_SvnrootConfTest extends UnitTestCase {
     
     function setUp() {
         Config::store();
+        $GLOBALS['sys_name']   = 'Platform';
         $GLOBALS['sys_dbhost'] = 'db_server';
         $GLOBALS['sys_dbname'] = 'db';
         $GLOBALS['svn_prefix'] = '/bla';
@@ -16,6 +17,7 @@ class SVN_Apache_SvnrootConfTest extends UnitTestCase {
     
     function tearDown() {
         Config::restore();
+        unset($GLOBALS['sys_name']);
         unset($GLOBALS['sys_dbname']);
         unset($GLOBALS['sys_dbhost']);
         unset($GLOBALS['svn_prefix']);
