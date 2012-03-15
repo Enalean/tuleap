@@ -41,10 +41,12 @@ class LDAP_BackendSVNTest extends UnitTestCase {
 
     function setUp() {
         $GLOBALS['svn_prefix'] = '/svnroot';
+        $GLOBALS['sys_name']   = 'Platform';
     }
     
     function tearDown() {
         unset($GLOBALS['svn_prefix']);
+        unset($GLOBALS['sys_name']);
     }
     
     private function GivenAFullApacheConf() {
