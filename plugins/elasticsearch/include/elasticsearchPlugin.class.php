@@ -90,9 +90,9 @@ class elasticsearchPlugin extends Plugin {
     
     function site_admin_external_tool_hook($params) {
        global $Language;
-        echo '<li><a href="externaltools.php?tool=solr">' .
+        /*echo '<li><a href="externaltools.php?tool=solr">' .
             $GLOBALS['Language']->getText('plugin_fulltextsearch','link_solr_admin_tool') .
-            '</a></li>';
+            '</a></li>';*/
     }
         
     function site_admin_external_tool_selection_hook($params) {
