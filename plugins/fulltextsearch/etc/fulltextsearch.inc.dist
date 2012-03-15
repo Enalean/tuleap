@@ -1,7 +1,0 @@
-<?php
-
-$solr_server = 'localhost';
-$solr_port   = '8983';
-$solr_path   = '/solr';
-
-?>

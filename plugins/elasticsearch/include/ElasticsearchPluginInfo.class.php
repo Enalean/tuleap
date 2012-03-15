@@ -18,24 +18,16 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('ICodendiSolrDocument.class.php');
-require_once('common/user/UserManager.class.php');
-require_once('common/user/UserHelper.class.php');
-require_once(dirname(__FILE__) . '/../etc/solr/SolrPhpClient/Apache/Solr/Document.php' );
 
-class CodendiSolrDocument_DocmanItem extends Apache_Solr_Document implements ICodendiSolrDocument {
+require_once('common/plugin/PluginFileInfo.class.php');
+require_once('ElasticsearchPluginDescriptor.class.php');
+
+class ElasticsearchPluginInfo extends PluginFileInfo {
     
-    /**
-     * Returns the Solr query for this SolrDocument
-     *
-     * @param string searched text entered by user
-     *
-     * @return string the Solr query for this SolrDocument
-     */
-    public function getSolrQuery($searched_text) {
-        return '';
+    function __construct($plugin) {
+        parent::__construct($plugin, 'elasticsearch');
+        $this->setPluginDescriptor(new ElasticsearchPluginDescriptor());
     }
-
+    
 }
-
 ?>
