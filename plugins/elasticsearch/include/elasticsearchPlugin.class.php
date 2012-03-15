@@ -18,10 +18,13 @@ class elasticsearchPlugin extends Plugin {
     }
     
     function addDocman($params) {
-        $data = array('title' => 'No title');
-        $id   = 1;
-        
-        $this->getElasticSearchClient()->index($data, $id);
+        $this->getElasticSearchClient()->index(
+            array(
+                'title'       => $params['item']->getTitle(),
+                'description' => $params['item']->getDescription()
+            ),
+            $params['item']->getId()
+        );
     }
     
     private function getElasticSearchClient() {
