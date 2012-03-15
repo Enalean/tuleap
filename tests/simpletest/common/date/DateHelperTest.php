@@ -22,6 +22,8 @@ require_once('common/date/DateHelper.class.php');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
+require_once('utils.php');
+
 class DateHelperTest extends UnitTestCase {
 
     public function test_distanceOfTimeInWords() {

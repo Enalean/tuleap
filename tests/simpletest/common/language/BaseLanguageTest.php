@@ -23,14 +23,11 @@
  * 
  */
 
+require_once('common/include/Config.class.php');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generatePartial('BaseLanguage', 'BaseLanguageTestVersion', array('loadAllTabFiles'));
 
 class BaseLanguageTest extends UnitTestCase {
-    
-    function __construct($name = 'BaseLanguage test') {
-        parent::__construct($name);
-    }
 
     function setUp() {
         $this->glob = $GLOBALS;
