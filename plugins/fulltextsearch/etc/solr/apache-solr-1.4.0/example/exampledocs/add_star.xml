@@ -1,9 +1,0 @@
-<add>
-    <doc><field name="id">starodt_01</field>
-    <field name="file_address">/home/solr/apache-solr-1.4.0/example/exampledocs/Star-Word.odt</field>
-
-    </doc>
-
-</add>
-
-

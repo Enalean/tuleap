@@ -1,9 +1,0 @@
-<add>
-    <doc><field name="id">doc_01</field>
-    <field name="file_address">/home/solr/apache-solr-1.4.0/example/exampledocs/Doc-Word.doc</field>
-
-    </doc>
-
-</add>
-
-

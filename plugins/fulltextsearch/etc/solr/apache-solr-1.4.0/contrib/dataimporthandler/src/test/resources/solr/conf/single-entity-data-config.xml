@@ -1,8 +1,0 @@
-<dataConfig>
-	<document>
-		<entity name="x" query="select * from x">
-			<field column="id" />
-			<field column="desc" />
-		</entity>
-	</document>
-</dataConfig>
