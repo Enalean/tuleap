@@ -8,24 +8,15 @@ Mock::generate('ArtifactRuleValue');
 require_once('common/tracker/ArtifactRuleFactory.class.php');
 Mock::generate('ArtifactRuleFactory');
 
-//We cannot mock ArtifactField ($Language is undefined)
-//require_once('common/tracker/ArtifactFieldFactory.class.php');
-class ArtifactRulesManagerTest_ArtifactFieldFactory {
-    function getFieldFromName() {}
-}
-Mock::generate('ArtifactRulesManagerTest_ArtifactFieldFactory','MockArtifactFieldFactory');
+require_once('common/tracker/ArtifactFieldFactory.class.php');
+Mock::generate('ArtifactFieldFactory');
 
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-//We cannot mock ArtifactField ($Language is undefined)
-//require_once('common/tracker/ArtifactField.class.php');
-class ArtifactRulesManagerTest_ArtifactField {
-    function getID() {}
-    function getFieldPredefinedValues() {}
-    function getLabel() {}
-}
-Mock::generate('ArtifactRulesManagerTest_ArtifactField','MockArtifactField');
+require_once('common/tracker/ArtifactField.class.php');
+Mock::generate('ArtifactField');
+
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
