@@ -14,14 +14,16 @@ class elasticsearchPlugin extends Plugin {
         $this->_addHook('site_admin_external_tool_selection_hook', 'site_admin_external_tool_selection_hook', false);
         
         // docman
-        $this->_addHook('plugin_docman_event_add', 'addDocman', false);
+//        $this->_addHook('plugin_docman_event_add', 'addDocman', false);
+        $this->_addHook('plugin_docman_after_new_document', 'addDocman', false);
     }
     
     function addDocman($params) {
         $this->getElasticSearchClient()->index(
             array(
                 'title'       => $params['item']->getTitle(),
-                'description' => $params['item']->getDescription()
+                'description' => $params['item']->getDescription(),
+                'file'        => base64_encode(file_get_contents($params['version']->getPath()))
             ),
             $params['item']->getId()
         );

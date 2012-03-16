@@ -30,4 +30,26 @@ Install the elasticsearch PHP client:
 
 Create the index:
 
-    $ curl -XPUT http://localhost:9200/tuleap
+    $ curl -X PUT http://localhost:9200/tuleap/
+
+Define the attachment mapping:
+
+    $ curl -X PUT "localhost:9200/tuleap/docman/_mapping" -d \
+        '{"docman": {"properties": {"file": {"type": "attachment"}}}}'
+
+Check it worked:
+
+    $ curl "localhost:9200/tuleap/docman/_mapping"
+
+Now upload a file into the docman. Then, for some text (e.g. Foo) in the
+uploaded file:
+
+    $ curl 'localhost:9200/tuleap/docman/_search?q=Foo'
+
+
+References
+----------
+
+- http://www.elasticsearch.org/
+- https://github.com/elasticsearch/elasticsearch-mapper-attachments
+- http://www.elasticsearch.org/tutorials/2011/07/18/attachment-type-in-action.html
