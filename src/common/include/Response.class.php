@@ -77,5 +77,7 @@ class Response {
         $cookie_manager =& new CookieManager();
         $cookie_manager->removeCookie($name);
     }
+    public function sendStatusCode($code) {
+    }
 }
 ?>

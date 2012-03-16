@@ -1445,30 +1445,59 @@ require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 Mock::generate('TrackerManager');
 
 class Tracker_Artifact_Process_AssociateArtifactTo extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        $this->user = new MockUser();
+        $this->request = new Codendi_Request(array(
+            'func'               => 'associate-artifact-to', 
+            'linked-artifact-id' => 987));
+    }
 
     public function itCreatesANewChangesetWithANewAssociation() {
-        $field = anArtifactLinkField()->withId(1002)->build();
         $tracker = aTracker()->withId(456)->build();
-        $factory = new MockTracker_FormElementFactory();
-        $factory->setReturnValue('getUsedArtifactLinkFields', array($field), array($tracker));
-        $artifact = TestHelper::getPartialMock('Tracker_Artifact', array('createNewChangeset'));
         
-        $artifact->setId(123);
-        $artifact->setTracker($tracker);
+        $artifact = $this->GivenAnArtifact($tracker);
+        
+        $field = anArtifactLinkField()->withId(1002)->build();
+        $factory = $this->GivenAFactoryThatReturns(array($field), $tracker);
         $artifact->setFormElementFactory($factory);
-        
-        $request = new Codendi_Request(array(
-            'func'               => 'associate-artifact-to', 
-            'aid'                => $artifact->getId(), 
-            'linked-artifact-id' => 987));
-        
+
         $expected_field_data = array($field->getId() => array('new_values' => 987));
         $no_comment = $no_email = '';
-        $user = new MockUser();
         
-        $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $user, $no_email));
+        $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $this->user, $no_email));
         
-        $artifact->process(new MockTrackerManager(), $request, $user);
+        $artifact->process(new MockTrackerManager(), $this->request, $this->user);
+    }
+    
+    public function itReturnsAnErrorCodeWhenItHasNoArtifactLinkField() {
+        $tracker = aTracker()->withId(456)->build();
+        
+        $artifact = $this->GivenAnArtifact($tracker);
+        
+        $factory = $this->GivenAFactoryThatReturns(array(), $tracker);
+        $artifact->setFormElementFactory($factory);
+        
+        $artifact->expectNever('createNewChangeset');
+        $GLOBALS['Response']->expectOnce('sendStatusCode', array(400));
+        $GLOBALS['Language']->setReturnValue('getText', 'The destination artifact must have a artifact link field.', array('plugin_tracker', 'must_have_artifact_link_field'));
+        $this->expectFeedback('error', 'The destination artifact must have a artifact link field.');
+        
+        $artifact->process(new MockTrackerManager(), $this->request, $this->user);
+        
+    }
+
+    private function GivenAFactoryThatReturns($artifactLinkFields, $tracker) {
+        $factory = new MockTracker_FormElementFactory();
+        $factory->setReturnValue('getUsedArtifactLinkFields', $artifactLinkFields, array($tracker));
+        return $factory;
+    }
+
+    public function GivenAnArtifact($tracker) {
+        $artifact = TestHelper::getPartialMock('Tracker_Artifact', array('createNewChangeset'));
+        $artifact->setTracker($tracker);
+        return $artifact;
     }
 }
 ?>
