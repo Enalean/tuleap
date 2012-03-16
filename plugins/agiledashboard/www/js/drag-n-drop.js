@@ -5,5 +5,11 @@ dropItem = function(item, target) {
 }
 
 associateArtifactTo = function(sourceId, targetId) {
+    var r = new Ajax.Request('lkjsdqfj', {
+        onSuccess: refresh
+    });
+}
+
+refresh = function() {
     
 }
