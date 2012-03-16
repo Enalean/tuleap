@@ -75,6 +75,10 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function process(Codendi_Request $request) {
+        $this->displayPlanning($request);
+    }
+
+    public function displayPlanning(Codendi_Request $request) {
         $mustacheRenderer = new MustacheRenderer(dirname(__FILE__).'/../templates');
         $presenter = new ReleaseViewPresenter();
         
@@ -95,9 +99,10 @@ class AgileDashboardPlugin extends Plugin {
         $mustacheRenderer->render("release-view", $presenter);
         $service->displayFooter();
     }
+    
 }
 class ReleaseViewPresenter {
-    
+
 }
 
 ?>

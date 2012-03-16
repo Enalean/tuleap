@@ -37,6 +37,10 @@ function aDateField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Date');
 }
 
+function anArtifactLinkField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_ArtifactLink');
+}
+
 class Test_Tracker_FormElement_Builder {
     private $name;
     

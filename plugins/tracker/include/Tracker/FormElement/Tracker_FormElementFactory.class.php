@@ -352,6 +352,15 @@ class Tracker_FormElementFactory {
     
     /**
      * @param Tracker $tracker
+     * @return array of Tracker_FormElement_Field_ArtifactLink
+     */
+    public function getUsedArtifactLinkFields($tracker) {
+        return $this->getUsedFormElementsByType($tracker, array('art_link'));
+    }
+    
+    
+    /**
+     * @param Tracker $tracker
      * @return array All lists formElements bind to users used by the tracker
      */
     public function getUsedUserListFields($tracker) {

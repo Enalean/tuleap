@@ -42,6 +42,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected $changesets;
     
     /**
+     * @var Tracker 
+     */
+    private $tracker;
+    
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formElementFactory;
+    
+    /**
      * Constructor
      *
      * @param int     $id                       The Id of the artifact
@@ -638,6 +648,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $this->display($tracker_manager, $request, $current_user);
                 }
                 break;
+            case 'associate-artifact-to':
+                $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
+                if ($artlink_fields) {
+                    $fields_data   = array();
+                    $comment       = '';
+                    $email         = '';
+                    $artlink_field = $artlink_fields[0];
+                    $fields_data[$artlink_field->getId()]['new_values'] = $request->get('linked-artifact-id');
+                    $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+                }
+                break;    
             default:
                 if ($request->isAjax()) {
                     echo $this->fetchTooltip($current_user);
@@ -674,7 +695,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Tracker_FormElementFactory
      */
     protected function getFormElementFactory() {
-        return Tracker_FormElementFactory::instance();
+        if (empty($this->formElementFactory)) {
+            $this->formElementFactory = Tracker_FormElementFactory::instance();
+        }
+        return $this->formElementFactory;
+    }
+    
+    public function setFormElementFactory(Tracker_FormElementFactory $factory) {
+        $this->formElementFactory = $factory;
     }
     
     /**
@@ -880,9 +908,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Tracker The tracker this artifact belongs to
      */
     public function getTracker() {
-        return TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+        if (!isset($this->tracker)) {
+            $this->tracker = TrackerFactory::instance()->getTrackerByid($this->tracker_id);
+        }
+        return $this->tracker;
     }
-    
+
+    public function setTracker(Tracker $tracker) {
+        $this->tracker = $tracker;
+        $this->tracker_id = $tracker->getId();
+    }
+
     /**
      * Returns the latest changeset of this artifact
      *

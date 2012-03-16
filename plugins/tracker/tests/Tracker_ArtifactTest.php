@@ -132,6 +132,9 @@ Mock::generate('Tracker_RulesManager');
     )
 );*/
 
+require_once('Test_Tracker_FormElement_Builder.php');
+require_once('Test_Tracker_Builder.php');
+
 Mock::generate('Workflow');
 class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends MockWorkflow {
     function before(&$fields_data, $submitter) {
@@ -1436,6 +1439,36 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $this->assertFalse($artifact_subass->userCanView($other));
         $this->assertFalse($artifact_subass->userCanView($u));
     }
-    
+}
+
+require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
+Mock::generate('TrackerManager');
+
+class Tracker_Artifact_Process_AssociateArtifactTo extends TuleapTestCase {
+
+    public function itCreatesANewChangesetWithANewAssociation() {
+        $field = anArtifactLinkField()->withId(1002)->build();
+        $tracker = aTracker()->withId(456)->build();
+        $factory = new MockTracker_FormElementFactory();
+        $factory->setReturnValue('getUsedArtifactLinkFields', array($field), array($tracker));
+        $artifact = TestHelper::getPartialMock('Tracker_Artifact', array('createNewChangeset'));
+        
+        $artifact->setId(123);
+        $artifact->setTracker($tracker);
+        $artifact->setFormElementFactory($factory);
+        
+        $request = new Codendi_Request(array(
+            'func'               => 'associate-artifact-to', 
+            'aid'                => $artifact->getId(), 
+            'linked-artifact-id' => 987));
+        
+        $expected_field_data = array($field->getId() => array('new_values' => 987));
+        $no_comment = $no_email = '';
+        $user = new MockUser();
+        
+        $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $user, $no_email));
+        
+        $artifact->process(new MockTrackerManager(), $request, $user);
+    }
 }
 ?>
