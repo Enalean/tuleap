@@ -129,6 +129,26 @@ sub get_email_from_login {
     }
 }
 
+sub get_emails_by_path {
+    my ($table, $fieldname, $value, $retfieldname) = @_;
+    my ($query, $res);
+    $query = "SELECT $retfieldname FROM $table WHERE $fieldname RLIKE '^$value*'";
+    $sth = $dbh->prepare($query);
+    $res = $sth->execute();
+    if ($sth->rows >= 1) {
+        my @emails = ();
+        while (my @row = $sth->fetchrow_array()) {
+            my $email = shift @row;
+            push @emails, $email;
+        }
+        $result = join(",",@emails);
+    } else {
+        print STDERR "$query\nCan't select field: $DBI::errstr\n";
+        $result = '0';
+    }
+    return $result;
+}
+
 #
 # input: a string handled as a email address
 # output: 1 if the email address is valid, or 0 if the email address is not known in Codendi, or if all the accounts associated with it are deleted or suspended
