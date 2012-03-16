@@ -1485,14 +1485,13 @@ class Tracker_Artifact_Process_AssociateArtifactTo extends TuleapTestCase {
         $this->expectFeedback('error', 'The destination artifact must have a artifact link field.');
         
         $artifact->process(new MockTrackerManager(), $this->request, $this->user);
-        
     }
 
     private function GivenAFactoryThatReturns($artifactLinkFields) {
         return new FormElementFactory_PendingMock($artifactLinkFields);
     }
 
-    public function GivenAnArtifact($tracker) {
+    private function GivenAnArtifact($tracker) {
         $artifact = TestHelper::getPartialMock('Tracker_Artifact', array('createNewChangeset'));
         $artifact->setTracker($tracker);
         return $artifact;
@@ -1508,7 +1507,15 @@ class FormElementFactory_PendingMock {
         $factory = new MockTracker_FormElementFactory();
         $factory->setReturnValue('getUsedArtifactLinkFields', $this->returnVal, array($argument));
         return $factory;
+    }
+}
 
+class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
+
+    public function itReturnsAnEmptyListWhenThereAreNoLinks() {
+        $artifact = new Tracker_Artifact(null, null, null, null, null);
+        $links = $artifact->getArtifactLinks();
+        $this->assertEqual(array(), $links);
     }
 }
 ?>
