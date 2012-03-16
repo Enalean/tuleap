@@ -38,6 +38,9 @@
         <div id="art-{{destination_id}}" class="release_planner planning-droppable">
             <h3>{{destination_title}}</h3>
             <div>
+                {{^linked_items}}
+                No items yet
+                {{/linked_items}}
                 <ul>
                     <li>
                     Create CPI documentation related to Story 160

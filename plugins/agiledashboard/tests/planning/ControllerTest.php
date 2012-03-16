@@ -28,13 +28,13 @@ class Planning_ControllerTest extends TuleapTestCase {
     
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
         $content = $this->WhenICaptureTheOutputOfEditAction();
-//        $this->assertPattern('/No items yet/', $content);
+        $this->assertPattern('/No items yet/', $content);
     }
     
     private function WhenICaptureTheOutputOfEditAction() {
         ob_start();
         $controller = new Planning_Controller();
-        $controller->edit();
+        $controller->display();
         $content = ob_get_clean();
         return $content;
     }
