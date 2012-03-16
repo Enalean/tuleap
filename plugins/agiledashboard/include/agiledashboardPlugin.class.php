@@ -65,7 +65,23 @@ class AgileDashboardPlugin extends Plugin {
     public function process(Codendi_Request $request) {
         $mustacheRenderer = new MustacheRenderer(dirname(__FILE__).'/../templates');
         $presenter = new ReleaseViewPresenter();
+        
+        $breadcrumbs = array(
+            array('url'   => 'bla',
+                  'title' => "Product A"),
+            array('url'   => 'bla',
+                  'title' => "Release 4.0.27"),
+        );
+        
+        
+        $project = ProjectManager::instance()->getProject($request->get('group_id'));
+        $service = $project->getService('plugin_agiledashboard');
+        $service->displayHeader("Release planning", $breadcrumbs, array());
+        
+        
+        
         $mustacheRenderer->render("release-view", $presenter);
+        $service->displayFooter();
     }
 }
 class ReleaseViewPresenter {

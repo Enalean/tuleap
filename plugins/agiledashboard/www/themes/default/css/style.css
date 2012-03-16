@@ -1,3 +1,14 @@
 .agiledashboard .tracker_report_criteria_advanced_toggle {
     display: none;
 }
+
+.agiledashboard .product_backlog {
+    float: left;
+}
+
+.agiledashboard .release_planner {
+    float: right;
+    border: 1px solid lightgray;
+    min-height: 200px;
+    padding: 0 0.5em;
+}
