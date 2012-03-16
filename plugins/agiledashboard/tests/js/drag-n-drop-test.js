@@ -38,9 +38,9 @@ describe("drag-n-drop", function () {
 
         it("tells the server to associate the first item to the second", function() {
             request.response(TestResponses.drop.success);
-            expect(request.url).toContain(Planning.trackerBaseUrl+'?action=associate-artifact-to');
-            expect(request.url).toContain('item=152');
-            expect(request.url).toContain('target=666');
+            expect(request.url).toContain(Planning.trackerBaseUrl+'?func=associate-artifact-to');
+            expect(request.url).toContain('linked-artifact-id=152');
+            expect(request.url).toContain('aid=666');
 
         });
     });

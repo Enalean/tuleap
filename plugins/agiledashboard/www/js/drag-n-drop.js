@@ -9,7 +9,7 @@ Planning.reload = function() {
 Planning.trackerBaseUrl = '/plugins/tracker/';
 
 Planning.associateArtifactTo = function(sourceId, targetId) {
-    var r = new Ajax.Request(Planning.trackerBaseUrl + '?action=associate-artifact-to&item=' + sourceId + '&target=' + targetId, {
+    var r = new Ajax.Request(Planning.trackerBaseUrl + '?func=associate-artifact-to&linked-artifact-id=' + sourceId + '&aid=' + targetId, {
         onSuccess: Planning.reload
     });
 }
