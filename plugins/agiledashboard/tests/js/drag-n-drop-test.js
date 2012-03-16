@@ -19,7 +19,8 @@ describe("drag-n-drop", function () {
         };
 
         beforeEach(function() {
-            refresh = spyOn(Planning, 'reload');
+            errorOccured = spyOn(Planning, 'errorOccured')
+            refresh      = spyOn(Planning, 'reload');
             jasmine.Ajax.useMock();
 
             Planning.associateArtifactTo(sourceId, targetId);
@@ -31,9 +32,10 @@ describe("drag-n-drop", function () {
             expect(refresh).toHaveBeenCalled();
         });
 
-        it("does nothing if the save was unsuccessful", function() {
+        it("displays error if the save was unsuccessful", function() {
             request.response(TestResponses.drop.failure);
             expect(refresh).not.toHaveBeenCalled();
+            expect(errorOccured).toHaveBeenCalled();
         });
 
         it("tells the server to associate the first item to the second", function() {
@@ -44,7 +46,24 @@ describe("drag-n-drop", function () {
 
         });
     });
-
+    
+    describe("errorOccured", function() {
+        
+        var logger;
+        
+        beforeEach(function() {
+            logger = spyOn(codendi.feedback, 'log');
+        });
+        
+        it ("displays error message", function () {
+            var transport = {
+                responseText: 'error: Something weird occured'
+            }
+            Planning.errorOccured(transport);
+            expect(logger).toHaveBeenCalledWith('error', transport.responseText);
+        });
+    });
+    
     describe("dropItem", function() {
 
         var sourceId = 152;
@@ -63,7 +82,7 @@ describe("drag-n-drop", function () {
     });
 
     describe("loadDroppables", function() {
-        it ("instantiate a droppable for each target elements", function() {
+        it ("instantiates a droppable for each target elements", function() {
             var element = '<div class="planning-droppable" id="art-666"></div>';
             var dom = sandbox('<div>'+element+'<div class="other useless elements"></div></div>');
 
@@ -78,7 +97,7 @@ describe("drag-n-drop", function () {
     });
 
     describe("loadDraggables", function() {
-        it ("instantiate a draggable for each source element", function() {
+        it ("instantiates a draggable for each source element", function() {
             var element = '<div class="planning-draggable" id="art-666"></div>';
             var dom = sandbox('<div>'+element+'<div class="other useless elements"></div></div>');
             expect(Draggables.drags.length).toEqual(0);

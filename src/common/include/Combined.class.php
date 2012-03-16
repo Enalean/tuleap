@@ -32,6 +32,7 @@ class Combined {
             '/scripts/scriptaculous/slider.js',
             '/scripts/scriptaculous/sound.js',
             '/scripts/codendi/common.js',
+            '/scripts/codendi/feedback.js',
             '/scripts/codendi/cross_references.js',
             '/scripts/codendi/Tooltip.js',
             '/scripts/codendi/Toggler.js',

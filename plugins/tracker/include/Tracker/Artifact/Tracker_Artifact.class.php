@@ -651,12 +651,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'associate-artifact-to':
                 $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
                 $linked_artifact_id = $request->get('linked-artifact-id');
-                if (count($artlink_fields)) {
-                    $this->createNewAssociation($artlink_fields, $linked_artifact_id, $current_user);
-                } else {
+//                if (count($artlink_fields)) {
+//                    $this->createNewAssociation($artlink_fields, $linked_artifact_id, $current_user);
+//                } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
                     $GLOBALS['Response']->sendStatusCode(400);
-                }
+//                }
                 break;    
             default:
                 if ($request->isAjax()) {
