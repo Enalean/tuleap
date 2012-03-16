@@ -59,3 +59,17 @@ describe("dropItem", function() {
 
 
 });
+
+describe("loadDroppables", function() {
+    it ("instantiate a droppable for each target elements", function() {
+        var element = '<div class="planning-droppable" id="art-666"></div>';
+//        var element = 'sd';
+        var dom = sandbox('<div>'+element+'<div class="other useless elements"></div></div>');
+        
+        expect(Droppables.drops.length).toEqual(0);
+        loadDroppables(dom);
+        expect(Droppables.drops.length).toEqual(1);
+        expect(Droppables.drops[0].hoverclass).toEqual('planning-droppable-hover');
+        expect(Droppables.drops[0].onDrop).toEqual(dropItem);
+    });
+});
