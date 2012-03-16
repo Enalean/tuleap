@@ -1460,7 +1460,7 @@ class Tracker_Artifact_Process_AssociateArtifactTo extends TuleapTestCase {
         $artifact = $this->GivenAnArtifact($tracker);
         
         $field = anArtifactLinkField()->withId(1002)->build();
-        $factory = $this->GivenAFactoryThatReturns(array($field), $tracker);
+        $factory = $this->GivenAFactoryThatReturns(array($field))->whenCalledWith($tracker);
         $artifact->setFormElementFactory($factory);
 
         $expected_field_data = array($field->getId() => array('new_values' => 987));
@@ -1476,7 +1476,7 @@ class Tracker_Artifact_Process_AssociateArtifactTo extends TuleapTestCase {
         
         $artifact = $this->GivenAnArtifact($tracker);
         
-        $factory = $this->GivenAFactoryThatReturns(array(), $tracker);
+        $factory = $this->GivenAFactoryThatReturns(array())->whenCalledWith($tracker);
         $artifact->setFormElementFactory($factory);
         
         $artifact->expectNever('createNewChangeset');
@@ -1488,16 +1488,27 @@ class Tracker_Artifact_Process_AssociateArtifactTo extends TuleapTestCase {
         
     }
 
-    private function GivenAFactoryThatReturns($artifactLinkFields, $tracker) {
-        $factory = new MockTracker_FormElementFactory();
-        $factory->setReturnValue('getUsedArtifactLinkFields', $artifactLinkFields, array($tracker));
-        return $factory;
+    private function GivenAFactoryThatReturns($artifactLinkFields) {
+        return new FormElementFactory_PendingMock($artifactLinkFields);
     }
 
     public function GivenAnArtifact($tracker) {
         $artifact = TestHelper::getPartialMock('Tracker_Artifact', array('createNewChangeset'));
         $artifact->setTracker($tracker);
         return $artifact;
+    }
+}
+
+class FormElementFactory_PendingMock {
+    public function __construct($returnVal) {
+        $this->returnVal = $returnVal;
+    }
+    
+    public function whenCalledWith($argument) {
+        $factory = new MockTracker_FormElementFactory();
+        $factory->setReturnValue('getUsedArtifactLinkFields', $this->returnVal, array($argument));
+        return $factory;
+
     }
 }
 ?>
