@@ -42,7 +42,7 @@ class Planning_Controller {
     }
 
     function display() {
-        $presenter = new Planning_Presenter($this->artifact->getId(), $this->artifact->getTitle());
+        $presenter = new Planning_Presenter($this->artifact);
         $this->render('release-view', $presenter);
     }
 

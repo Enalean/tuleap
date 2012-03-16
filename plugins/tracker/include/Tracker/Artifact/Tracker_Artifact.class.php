@@ -1149,6 +1149,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
         $this->createNewChangeset($fields_data, $comment, $current_user, $email);
     }
+    
+    /**
+     *
+     * @return array of Linked Artifacts
+     */
+    public function getArtifactLinks() {
+        return array();
+    }
 }
 
 ?>

@@ -140,7 +140,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     /**
      * Returns the value of this changeset value
      *
-     * @return string The value of this artifact changeset value
+     * @return mixed The value of this artifact changeset value
      */
     public function getValue() {
         return $this->artifact_links;

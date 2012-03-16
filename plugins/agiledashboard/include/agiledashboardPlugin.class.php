@@ -19,7 +19,7 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
-require_once dirname(__FILE__). '/../../tracker/include/MustacheRenderer.class.php';
+
 /**
  * AgileDashboardPlugin
  */
@@ -72,9 +72,6 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function displayPlanning(Codendi_Request $request) {
-        $mustacheRenderer = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        $presenter = new ReleaseViewPresenter();
-        
         $breadcrumbs = array(
             array('url'   => 'bla',
                   'title' => "Product A"),
@@ -87,9 +84,12 @@ class AgileDashboardPlugin extends Plugin {
         $service = $project->getService('plugin_agiledashboard');
         $service->displayHeader("Release planning", $breadcrumbs, array());
         
+        require_once 'Planning/Controller.class.php';
+        $controller = new Planning_Controller($request, Tracker_ArtifactFactory::instance());
+        $controller->display();
         
         
-        $mustacheRenderer->render("release-view", $presenter);
+        
         $service->displayFooter();
     }
     

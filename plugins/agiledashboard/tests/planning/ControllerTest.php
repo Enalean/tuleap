@@ -36,23 +36,41 @@ class Planning_ControllerTest extends TuleapTestCase {
     
     public function itDisplaysTheArtifactTitleAndId() {
         $id = 987;
-        $title = "screen hangs with macos";
+        $title = "screen hangs with macos and some escapable characters #<";
         $content = $this->WhenICaptureTheOutputOfEditActionForAnEmptyArtifact($id, $title);
         $this->assertPattern("/art-$id/", $content);
         $this->assertPattern("/$title/", $content);
     }
-//    public function itListsAllLinkedItems() {
-//        $request = new Codendi_Request(array('aid' => 987));
-//        $content = $this->WhenICaptureTheOutputOfEditAction($request);
-//        $this->assertPattern('/title 1/', $content);
-//    }
+
+    public function itListsAllLinkedItems() {
+        $id = 987;
+        $linked_items = array(
+            $this->GivenAnArtifact(123, 'Tutu'),
+            $this->GivenAnArtifact(123, 'Tata')
+        );
+        
+        $artifact = $this->GivenAnArtifact($id, 'Toto');
+        $artifact->setReturnValue('getArtifactLinks', $linked_items);
+        $factory = new MockTracker_ArtifactFactory();
+        $factory->setReturnValue('getArtifactByid', $artifact, array($id));
+        $request = new Codendi_Request(array('aid' => $id));
+
+        $content = $this->WhenICaptureTheOutputOfEditAction($request, $factory);
+        $this->assertPattern('/Tutu/', $content);
+        $this->assertPattern('/Tata/', $content);
+    }
     
+    private function GivenAnArtifact($id, $title) {
+        $artifact = new MockTracker_Artifact();
+        $artifact->setReturnValue('getTitle', $title);
+        $artifact->setReturnValue('fetchTitle', "#$id $title");
+        $artifact->setReturnValue('getId', $id);
+        return $artifact;
+    }
     private function WhenICaptureTheOutputOfEditActionForAnEmptyArtifact($id, $title) {
         $request = new Codendi_Request(array('aid' => $id));
         
-        $artifact = new MockTracker_Artifact();
-        $artifact->setReturnValue('getTitle', $title);
-        $artifact->setReturnValue('getId', $id);
+        $artifact = $this->GivenAnArtifact($id, $title);
         
         $factory = new MockTracker_ArtifactFactory();
         $factory->setReturnValue('getArtifactByid', $artifact, array($id));
