@@ -380,7 +380,8 @@ class GitPlugin extends Plugin {
      */
     public function statistics_collector($params) {
         if (!empty($params['formatter'])) {
-            $formatter = $params['formatter'];
+            include_once('GitBackend.class.php');
+            $formatter  = $params['formatter'];
             $gitBackend = Backend::instance('Git','GitBackend');
             echo $gitBackend->getBackendStatistics($formatter);
         }

@@ -28,6 +28,8 @@ require_once('dao/Tracker_PermDao.class.php');
 require_once('common/reference/ReferenceManager.class.php');
 require_once('CrossSearch/SearchController.class.php');
 require_once('CrossSearch/Search.class.php');
+require_once 'HomeNavPresenter.class.php';
+require_once dirname(__FILE__) . '/../MustacheRenderer.class.php';
 
 class TrackerManager { /* extends Engine? */
     
@@ -190,10 +192,10 @@ class TrackerManager { /* extends Engine? */
             $request,
             ProjectManager::instance(),
             $formElementFactory,
-            $GLOBALS['Language'],
             $GLOBALS['Response'],
             $search,
-            new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao())
+            new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao()),
+            $this->getTrackerFactory()
         );
     }
     
@@ -447,6 +449,13 @@ class TrackerManager { /* extends Engine? */
               </div>';
     }
     
+    public function displayTrackerHomeNav(Project $project) {
+        $presenter = new Tracker_HomeNavPresenter($project);
+        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../templates');
+        
+        echo $renderer->render('tracker-home-nav', $presenter);
+    }
+    
     /**
      * Display all trackers of project $project that $user is able to see
      *
@@ -478,7 +487,7 @@ class TrackerManager { /* extends Engine? */
         } else {
             
             $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar);
-            
+            $this->displayTrackerHomeNav($project);
             
             $html .= '<p>';
             if (count($trackers)) {

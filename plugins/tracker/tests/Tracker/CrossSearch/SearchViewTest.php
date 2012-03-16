@@ -18,6 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+if (!defined('TRACKER_BASE_URL')) {
+    define('TRACKER_BASE_URL', '/plugins/tracker');
+}
+
 require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SearchView.class.php';
 
@@ -44,15 +48,26 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $output = $this->renderAndGetContent($view);
     }
     
+    function itRendersTheTrackerHomeNav() {
+        $service  = new MockService();
+        $criteria = $this->GivenCriteria();
+        $view     = $this->GivenASearchView($service, $criteria, array(), new TreeNode());
+        
+        $output = $this->renderAndGetContent($view);
+        
+        $this->assertPattern('/id="tracker-home-nav"/', $output);
+    }
+    
     function testRenderShouldNotDisplayTableWhenNoMatchingArtifacts() {
         $service   = new MockService();
         $criteria  = $this->GivenCriteria();
         $artifacts = array();
         $view = $this->GivenASearchView($service, $criteria, $artifacts, new TreeNode());
         
+        $GLOBALS['Language']->setReturnValue('getText', 'No matching artifact', array('plugin_tracker_crosssearch', 'no_matching_artifact'));
         $output = $this->renderAndGetContent($view);
         
-        $this->assertPattern('/No artifact/', $output);
+        $this->assertPattern('/No matching artifact/', $output);
     }
     
     function testRenderShouldDisplayArtifacts() {
@@ -153,7 +168,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $tracker1         = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
         $trackers         = array($tracker1);
         
-        $view             = new Tracker_CrossSearch_SearchView($service, $GLOBALS['Language'], $report, $criteria, $root, $artifact_factory, $shared_factory, $trackers);
+        $view             = new Tracker_CrossSearch_SearchView($project, $service, $report, $criteria, $root, $artifact_factory, $shared_factory, $trackers);
         return $view;
     }
     

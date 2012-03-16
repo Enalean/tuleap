@@ -23,6 +23,7 @@ require_once 'ServiceNotUsedException.class.php';
 require_once 'ProjectNotFoundException.class.php';
 require_once 'Search.class.php';
 require_once dirname(__FILE__) .'/../Hierarchy/HierarchyFactory.class.php';
+require_once dirname(__FILE__) .'/../HomeNavPresenter.class.php';
 
 class Tracker_CrossSearch_SearchController {
     /**
@@ -34,11 +35,6 @@ class Tracker_CrossSearch_SearchController {
      * @var ProjectManager
      */
     private $projectManager;
-    
-    /**
-     * @var BaseLanguage
-     */
-    private $language;
     
     /**
      * @var Layout
@@ -56,6 +52,11 @@ class Tracker_CrossSearch_SearchController {
     private $hierarchy_factory;
     
     /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+    
+    /**
      * @var Tracker_CrossSearch_Search
      */
     private $search;
@@ -63,18 +64,19 @@ class Tracker_CrossSearch_SearchController {
     public function __construct(Codendi_Request            $request,
                                 ProjectManager             $projectManager, 
                                 Tracker_FormElementFactory $formElementFactory, 
-                                BaseLanguage               $language, 
                                 Layout                     $layout,
-                                Tracker_CrossSearch_Search      $search,
-                                Tracker_HierarchyFactory   $hierarchy_factory) {
+                                Tracker_CrossSearch_Search $search,
+                                Tracker_HierarchyFactory   $hierarchy_factory,
+                                TrackerFactory             $tracker_factory) {
         
         $this->request            = $request;
         $this->projectManager     = $projectManager;
-        $this->language           = $language;
         $this->layout             = $layout;
         $this->formElementFactory = $formElementFactory;
         $this->search             = $search;
         $this->hierarchy_factory  = $hierarchy_factory;
+        $this->tracker_factory    = $tracker_factory;
+        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
     }
 
     public function search() {
@@ -87,7 +89,7 @@ class Tracker_CrossSearch_SearchController {
             $trackers_hierarchy = $this->getTrackersHierarchy($trackers);
             $artifacts          = $this->getArtifacts($trackers, $trackers_hierarchy);
             
-            $view = $this->getView($service, $this->language, $report, $criteria, $artifacts, $trackers);
+            $view = $this->getView($project, $service, $report, $criteria, $artifacts, $trackers);
             $view->render();
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
@@ -100,7 +102,7 @@ class Tracker_CrossSearch_SearchController {
         }
     }
     
-    protected function getTrackersHierarchy($trackers) {
+    protected function getTrackersHierarchy(array $trackers) {
         $tracker_ids = array();
         foreach ($trackers as $tracker) {
             $tracker_ids[] = $tracker->getId();
@@ -112,13 +114,8 @@ class Tracker_CrossSearch_SearchController {
         return $this->search->getMatchingArtifacts($trackers, $hierarchy, $this->request->get('criteria'));
     }
     
-    public function getTrackers($project) {
-        $trackers = array();
-        $projectSharedFields = $this->formElementFactory->getAllProjectSharedFields($project);
-        foreach ($projectSharedFields as $field) {
-            $trackers[$field->getTrackerId()] = $field->getTracker();
-        } 
-        return $trackers;
+    public function getTrackers(Project $project) {
+        return $this->tracker_factory->getTrackersByGroupId($project->getGroupId());
     }
     
     private function getTrackerFromField(Tracker_FormElement $field) {
@@ -175,7 +172,7 @@ class Tracker_CrossSearch_SearchController {
         $projectId = $this->request->get('group_id');
         $project   = $this->projectManager->getProject($projectId);
         if ($project->isError()) {
-            $errorMessage = $this->language->getText('project', 'does_not_exist');
+            $errorMessage = $GLOBALS['Language']->getText('project', 'does_not_exist');
             throw new Tracker_CrossSearch_ProjectNotFoundException($errorMessage);
         } else {
             return $project;
@@ -190,19 +187,19 @@ class Tracker_CrossSearch_SearchController {
         if ($service) {
             return $service;
         } else {
-            $serviceLabel = $this->language->getText('plugin_tracker', 'title');
-            $errorMessage = $this->language->getText('project_service', 'service_not_used', array($serviceLabel));
+            $serviceLabel = $GLOBALS['Language']->getText('plugin_tracker', 'title');
+            $errorMessage = $GLOBALS['Language']->getText('project_service', 'service_not_used', array($serviceLabel));
             
             throw new Tracker_CrossSearch_ServiceNotUsedException($errorMessage);
         }
     }
     
-    protected function getView(Service $service, BaseLanguage $language, Tracker_Report $report, $criteria, $artifacts, $trackers) {
+    protected function getView(Project $project, Service $service, Tracker_Report $report, $criteria, $artifacts, $trackers) {
         $artifact_factory   = Tracker_ArtifactFactory::instance();
         $formElementFactory = Tracker_FormElementFactory::instance();
         $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
         $shared_factory     = new Tracker_SharedFormElementFactory($formElementFactory, $bindFactory);
-        return new Tracker_CrossSearch_SearchView($service, $language, $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
+        return new Tracker_CrossSearch_SearchView($project, $service, $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
     }
 }
 ?>

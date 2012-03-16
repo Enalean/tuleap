@@ -17,9 +17,11 @@ ALTER TABLE `artifact_field_value`
     ALTER COLUMN `field_id` DROP DEFAULT, 
     ALTER COLUMN `artifact_id` DROP DEFAULT;
 -- At Orange there is NOT NULL 'default 0'
-ALTER TABLE `artifact_file` 
-    ALTER COLUMN `filesize` DROP DEFAULT, 
-    ALTER COLUMN `submitted_by` DROP DEFAULT;
+-- Just a matter of style, but as table is big
+-- execution will be too long
+--ALTER TABLE `artifact_file` 
+--    ALTER COLUMN `filesize` DROP DEFAULT, 
+--    ALTER COLUMN `submitted_by` DROP DEFAULT;
 -- At Orange there is NOT NULL 'default 0'
 ALTER TABLE `artifact_global_notification` 
     ALTER COLUMN `tracker_id` DROP DEFAULT, 
@@ -48,9 +50,10 @@ ALTER TABLE `cvs_repositories`
 ALTER TABLE `cvs_tags`
     ALTER COLUMN  `revision` SET DEFAULT '';
 -- just a matter of column order
-ALTER TABLE `doc_data`
-    CHANGE COLUMN `rank` `rank` INT(11) NOT NULL DEFAULT '0'  AFTER `doc_group`,
-    ALTER COLUMN `title` SET DEFAULT '' ;
+-- Not done because table is too big
+--ALTER TABLE `doc_data`
+--    CHANGE COLUMN `rank` `rank` INT(11) NOT NULL DEFAULT '0'  AFTER `doc_group`,
+--    ALTER COLUMN `title` SET DEFAULT '' ;
 ALTER TABLE `doc_groups`
     ALTER COLUMN `groupname` SET DEFAULT '' ;
 -- At Orange there VARCHAR(32)

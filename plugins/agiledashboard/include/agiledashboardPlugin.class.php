@@ -19,7 +19,7 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
-require_once dirname(__FILE__). '/../../tracker/include/MustacheRenderer.class.php';
+
 /**
  * AgileDashboardPlugin
  */
@@ -63,13 +63,7 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function process(Codendi_Request $request) {
-        $mustacheRenderer = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        $presenter = new ReleaseViewPresenter();
-        $mustacheRenderer->render("release-view", $presenter);
     }
-}
-class ReleaseViewPresenter {
-    
 }
 
 ?>
