@@ -654,8 +654,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if (count($artlink_fields)) {
                     $this->createNewAssociation($artlink_fields, $linked_artifact_id, $current_user);
                 } else {
-                    $GLOBALS['Response']->sendStatusCode(400);
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
+                    $GLOBALS['Response']->sendStatusCode(400);
                 }
                 break;    
             default:

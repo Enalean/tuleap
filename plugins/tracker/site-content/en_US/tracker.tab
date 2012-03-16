@@ -1317,3 +1317,5 @@ plugin_tracker_widget_myartifacts	s_info	submitted by me [S]
 plugin_tracker_widget_myartifacts	as_info	assigned to or submitted by me [AS]
 plugin_tracker_widget_myartifacts	description	List artifacts you have submitted or assigned to you, by project.
 plugin_tracker_widget_myartifacts	no_artifacts	No artifacts founds.
+
+plugin_tracker	must_have_artifact_link_field	The artifact doesn't have an artifact link field, please reconfigure your tracker

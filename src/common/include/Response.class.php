@@ -78,6 +78,8 @@ class Response {
         $cookie_manager->removeCookie($name);
     }
     public function sendStatusCode($code) {
+        header("HTTP/1.0 $code");
+        echo $this->getRawFeedback();
     }
 }
 ?>
