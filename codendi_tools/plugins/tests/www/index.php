@@ -13,7 +13,6 @@ header("Pragma: no-cache");
 require_once('./tests_utils.php');
 
 $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
-
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -33,8 +32,10 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                     <td class="testsControl">
                         <fieldset>
                             <legend>Options</legend>
-                            <input type="checkbox" id="show_pass" name="show_pass" value="1" <?= isset($_REQUEST['show_pass']) ? 'checked="checked"' : '' ?> /><label for="show_pass">Show pass</label>
-                            <input type="checkbox" id="cover_code" name="cover_code" value="1" <?= $coverCode ? 'checked="checked"' : '' ?> /><label for="cover_code">Code coverage</label>
+                            <input type="checkbox" id="show_pass" name="show_pass" value="1" <?= isset($_REQUEST['show_pass']) ? 'checked="checked"' : '' ?> />
+                            <label for="show_pass">Show pass</label>
+                            <input type="checkbox" id="cover_code" name="cover_code" value="1" <?= $coverCode ? 'checked="checked"' : '' ?> />
+                            <label for="cover_code">Code coverage</label>
                             <br />
                             Order: 
                             <input type="radio" id="order_normal" name="order" value="normal" <?= empty($_REQUEST['order']) || $_REQUEST['order'] == 'normal' ? 'checked="checked"' : '' ?> />
