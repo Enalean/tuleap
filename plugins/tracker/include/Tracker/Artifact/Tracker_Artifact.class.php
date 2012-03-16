@@ -649,14 +649,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
                 break;
             case 'associate-artifact-to':
-                $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
+                $artlink_fields     = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
+                $linked_artifact_id = $request->get('linked-artifact-id');
                 if ($artlink_fields) {
-                    $fields_data   = array();
-                    $comment       = '';
-                    $email         = '';
-                    $artlink_field = $artlink_fields[0];
-                    $fields_data[$artlink_field->getId()]['new_values'] = $request->get('linked-artifact-id');
-                    $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+                    $this->createNewAssociation($artlink_fields, $linked_artifact_id, $current_user);
                 }
                 break;    
             default:
@@ -1140,6 +1136,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getUserManager() {
         return UserManager::instance();
+    }
+
+    public function createNewAssociation($artlink_fields, $linked_artifact_id, $current_user) {
+        $comment       = '';
+        $email         = '';
+        $artlink_field = $artlink_fields[0];
+        $fields_data   = array();
+        $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
+        $this->createNewChangeset($fields_data, $comment, $current_user, $email);
     }
 }
 
