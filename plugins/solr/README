@@ -1,0 +1,16 @@
+Solr
+====
+
+    $ yum install curl-devel libxml2-devel
+    $ pecl install -f solr
+
+
+    $ cd /opt
+    $ wget http://mirror.ibcp.fr/pub/apache//lucene/solr/3.5.0/apache-solr-3.5.0.tgz
+    $ tar zxf apache-solr-3.5.0.tgz
+    $ cd apache-solr-3.5.0
+
+    $ cd /usr/local/share/php/
+    $ wget http://pecl.php.net/get/solr -O solr.tar.gz
+    $ tar zxf solr.tar.gz
+    $ cd solr-1.0.2/
