@@ -128,11 +128,25 @@ sub get_email_from_login {
         return 0;
     }
 }
-
+# @TODO add docBlock for subroutine
 sub get_emails_by_path {
     my ($table, $fieldname, $value, $retfieldname) = @_;
     my ($query, $res);
-    $query = "SELECT $retfieldname FROM $table WHERE $fieldname RLIKE '^$value*'";
+# @TODO add comment
+    my @dirs = split('/', $value);
+    $root = "/";
+    foreach my $dirVal (@dirs) {
+        if ($dirVal ne '') {
+                $patternBuilder .= $root.$dirVal;
+                $patternMatcher .= '|^'.$patternBuilder;
+        } else {
+                $patternBuilder .= $dirVal;
+                $patternMatcher .= '^'.$patternBuilder;
+        }
+        $patternMatcher .= '*';
+    }
+# @TODO add comment
+    $query = "SELECT $retfieldname FROM $table WHERE $fieldname RLIKE '$patternMatcher'";
     $sth = $dbh->prepare($query);
     $res = $sth->execute();
     if ($sth->rows >= 1) {
