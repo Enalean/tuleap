@@ -15,6 +15,17 @@ class SolrPlugin extends Plugin {
         $this->setScope(self::SCOPE_PROJECT);
         $this->_addHook('plugin_docman_after_new_document', 'addDocman', false);
     }
+    
+    function addDocman($params) {
+        $ch = curl_init('http://localhost:8983/solr/update/extract?literal.id='.$params['item']->getId().'&commit=true');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, array(
+            'title'       => $params['item']->getTitle(),
+            'description' => $params['item']->getDescription(),
+            'file'        => base64_encode(file_get_contents($params['version']->getPath()))
+        ));
+        curl_exec($ch);
+        curl_close($ch);
+    }
 
     /**
      * @return SolrPluginInfo

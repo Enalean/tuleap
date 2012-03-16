@@ -1,16 +1,24 @@
 Solr
 ====
 
-    $ yum install curl-devel libxml2-devel
-    $ pecl install -f solr
+This plugin is still in heavy development: do not use in production!
 
+
+Development setup
+-----------------
 
     $ cd /opt
     $ wget http://mirror.ibcp.fr/pub/apache//lucene/solr/3.5.0/apache-solr-3.5.0.tgz
     $ tar zxf apache-solr-3.5.0.tgz
-    $ cd apache-solr-3.5.0
+    $ cd apache-solr-3.5.0/example/
+    $ java -jar start.jar
 
-    $ cd /usr/local/share/php/
-    $ wget http://pecl.php.net/get/solr -O solr.tar.gz
-    $ tar zxf solr.tar.gz
-    $ cd solr-1.0.2/
+
+References
+----------
+
+- http://lucene.apache.org/solr/
+- http://lucene.apache.org/solr/tutorial.html
+- http://www.eolya.fr/2011/01/28/solr-et-curl/
+- http://wiki.apache.org/solr/ExtractingRequestHandler
+- http://php.net/manual/fr/function.curl-setopt.php
