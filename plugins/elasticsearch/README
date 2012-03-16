@@ -7,23 +7,23 @@ This plugin is still in heavy development: do not use in production!
 Development setup
 -----------------
 
-On your VM, install the elasticsearch PHP client:
-
-    $ mkdir -p /usr/local/share/php
-    $ cd /usr/local/share/php
-    $ git clone git://github.com/nervetattoo/elasticsearch.git
-
-Then, install elasticsearch:
+Install elasticsearch:
 
     $ cd /opt
     $ wget --no-check-certificate https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.0.tar.gz
     $ tar zxf elasticsearch-0.19.0.tar.gz
     $ cd elasticsearch-0.19.0
 
-Start the server in background, to keep using your session:
+Install the elasticsearch attachments plugin:
+
+    $ ./bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.2.0
+
+Start the elasticsearch server:
 
     $ ./bin/elasticsearch
 
-Or in foreground, to get logs:
+Install the elasticsearch PHP client:
 
-    $ ./bin/elasticsearch -f
+    $ mkdir -p /usr/local/share/php
+    $ cd /usr/local/share/php
+    $ git clone git://github.com/nervetattoo/elasticsearch.git
