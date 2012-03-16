@@ -1,0 +1,81 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body,th,td {
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 10pt;
+}
+
+#menu,#menu ul {
+    list-style-type: none;
+    padding-left: 0px;
+}
+
+#menu ul li {
+    padding-left: 40px;
+}
+
+#menu ul li.categ {
+    padding-left: 24px;
+}
+
+#submit_panel {
+    text-align: center;
+}
+
+#submit_panel input {
+    width: 96px;
+    font-size: 2em;
+    height: 100%;
+    border: 1px solid #ccc;
+    background-image: url('bg.png');
+    color: transparent;
+}
+
+#submit_panel input:hover {
+    background-image: url('bg-hover.png');
+}
+
+tr {
+    vertical-align: top;
+}
+
+.fail {
+    color: red;
+}
+
+.pass {
+    color: green;
+}
+
+pre {
+    background-color: ivory;
+    border: 1px solid #d2d2d2;
+    padding: 1em 0.5em;
+    white-space: pre-wrap; /* css-3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
+a img {
+    border: none;
+}
+
+.testsRunner {
+    width:100%;
+}
+
+.testsControl {
+    width:10%;
+    white-space:nowrap;
+}
+.testsLauncher {
+    width:5%;
+}
+.testsResult {
+    width:90%;
+}
