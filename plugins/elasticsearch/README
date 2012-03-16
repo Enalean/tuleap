@@ -27,3 +27,7 @@ Install the elasticsearch PHP client:
     $ mkdir -p /usr/local/share/php
     $ cd /usr/local/share/php
     $ git clone git://github.com/nervetattoo/elasticsearch.git
+
+Create the index:
+
+    $ curl -XPUT http://localhost:9200/tuleap
