@@ -20,6 +20,8 @@
  
 require_once 'Presenter.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/MustacheRenderer.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
+require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 
 class Planning_Controller {
 
@@ -28,12 +30,19 @@ class Planning_Controller {
      */
     private $renderer;
     
-    function __construct() {
+    /**
+     * @var Tracker_Artifact
+     */
+    private $artifact;
+    
+    function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory) {
+        $aid = $request->get('aid');
+        $this->artifact = $artifact_factory->getArtifactById($aid);
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../templates');
     }
 
     function display() {
-        $presenter = new Planning_Presenter();
+        $presenter = new Planning_Presenter($this->artifact->getId(), $this->artifact->getTitle());
         $this->render('release-view', $presenter);
     }
 
