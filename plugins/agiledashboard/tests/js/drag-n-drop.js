@@ -33,6 +33,14 @@ describe("associateArtifactTo", function () {
         request.response(TestResponses.drop.failure);
         expect(refresh).not.toHaveBeenCalled();
     });
+    
+    it("tells the server to associate the first item to the second", function() {
+        request.response(TestResponses.drop.success);
+        expect(request.url).toContain(trackerBaseUrl+'?action=associate-artifact-to');
+        expect(request.url).toContain('item=152');
+        expect(request.url).toContain('target=666');
+        
+    });
 });
 
 describe("dropItem", function() {
