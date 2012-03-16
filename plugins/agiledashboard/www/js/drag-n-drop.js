@@ -19,7 +19,16 @@ loadDroppables = function(container) {
     container.select('.planning-droppable').each(function(element) {
         Droppables.add(element, {
             hoverclass: 'planning-droppable-hover',
-            onDrop: dropItem
+            onDrop: dropItem,
+            accept: "planning-draggable"
         });
     });
+}
+
+loadDraggables = function(container) {
+    container.select('.planning-draggable').each(function(element) {
+        new Draggable(element, {
+            revert: 'failure'
+        });
+    })
 }

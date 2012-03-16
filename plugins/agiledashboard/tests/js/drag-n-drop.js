@@ -63,13 +63,27 @@ describe("dropItem", function() {
 describe("loadDroppables", function() {
     it ("instantiate a droppable for each target elements", function() {
         var element = '<div class="planning-droppable" id="art-666"></div>';
-//        var element = 'sd';
         var dom = sandbox('<div>'+element+'<div class="other useless elements"></div></div>');
         
         expect(Droppables.drops.length).toEqual(0);
         loadDroppables(dom);
+        
         expect(Droppables.drops.length).toEqual(1);
         expect(Droppables.drops[0].hoverclass).toEqual('planning-droppable-hover');
         expect(Droppables.drops[0].onDrop).toEqual(dropItem);
+        expect(Droppables.drops[0].accept).toContain("planning-draggable");
+    });
+});
+
+describe("loadDraggables", function() {
+    it ("instantiate a draggable for each source element", function() {
+        var element = '<div class="planning-draggable" id="art-666"></div>';
+        var dom = sandbox('<div>'+element+'<div class="other useless elements"></div></div>');
+        expect(Draggables.drags.length).toEqual(0);
+        
+        loadDraggables(dom);
+
+        expect(Draggables.drags.length).toEqual(1);
+        expect(Draggables.drags[0].options.revert).toEqual('failure');
     });
 });
