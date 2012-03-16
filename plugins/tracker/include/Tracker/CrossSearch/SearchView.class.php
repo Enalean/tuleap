@@ -171,9 +171,7 @@ class Tracker_CrossSearch_SearchView {
             $html .= $row['tree-padding'];
             $html .= $artifact->fetchDirectLinkToArtifact();
             $html .= '</td>';
-            $html .= '<td>';
-            $html .= $row['title'];
-            $html .= '</td>';
+            $html .= $this->draggableCell($row['id'], $row['title']);
             $html .= $this->fetchColumnsValues($artifact, $row['last_changeset_id']);
             $html .= '</tr>';
             foreach ($node->getChildren() as $child) {
@@ -238,6 +236,17 @@ class Tracker_CrossSearch_SearchView {
         }
         $html .= '</div>';
         return $html;
+    }
+
+    public function draggableCell($id, $title) {
+        $html  = '';
+        $html .= '<td class="planning-droppable" id="art-'.$id.'">';
+        $html .= '<div>';
+        $html .= $title;
+        $html .= '</div>';
+        $html .= '</td>';
+        return $html;
+        
     }
 }
 ?>

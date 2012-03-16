@@ -1,31 +1,36 @@
-var trackerBaseUrl = '/plugins/tracker/';
 
-dropItem = function(item, target) {
-    var itemId   = parseInt(item.id.match(/art-(\d+)/)[1]);
-    var targetId = parseInt(target.id.match(/art-(\d+)/)[1]);
-    associateArtifactTo(itemId, targetId);
+
+var Planning = { } ;
+
+Planning.reload = function() {
+    window.location.reload();
 }
-associateArtifactTo = function(sourceId, targetId) {
-    var r = new Ajax.Request(trackerBaseUrl + '?action=associate-artifact-to&item=' + sourceId + '&target=' + targetId, {
-        onSuccess: refresh
+
+Planning.trackerBaseUrl = '/plugins/tracker/';
+
+Planning.associateArtifactTo = function(sourceId, targetId) {
+    var r = new Ajax.Request(Planning.trackerBaseUrl + '?action=associate-artifact-to&item=' + sourceId + '&target=' + targetId, {
+        onSuccess: Planning.reload
     });
 }
 
-refresh = function() {
-    window.location.href = window.location.href;
+Planning.dropItem = function(item, target) {
+    var itemId   = parseInt(item.id.match(/art-(\d+)/)[1]);
+    var targetId = parseInt(target.id.match(/art-(\d+)/)[1]);
+    Planning.associateArtifactTo(itemId, targetId);
 }
 
-loadDroppables = function(container) {
+Planning.loadDroppables = function(container) {
     container.select('.planning-droppable').each(function(element) {
         Droppables.add(element, {
             hoverclass: 'planning-droppable-hover',
-            onDrop: dropItem,
+            onDrop: Planning.dropItem,
             accept: "planning-draggable"
         });
     });
 }
 
-loadDraggables = function(container) {
+Planning.loadDraggables = function(container) {
     container.select('.planning-draggable').each(function(element) {
         new Draggable(element, {
             revert: 'failure'

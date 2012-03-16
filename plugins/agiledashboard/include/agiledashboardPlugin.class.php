@@ -34,6 +34,7 @@ class AgileDashboardPlugin extends Plugin {
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
             $this->_addHook('cssfile', 'cssfile', false);
+            $this->_addHook('javascript_file', 'jsFile', false);
             //TODO
             //$this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
         }
@@ -55,6 +56,14 @@ class AgileDashboardPlugin extends Plugin {
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
+        }
+    }
+    
+    public function jsFile() {
+        // Only show the javascript if we're actually in the Git pages.
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/planning-view.js"></script>';
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/drag-n-drop.js"></script>';
         }
     }
     
