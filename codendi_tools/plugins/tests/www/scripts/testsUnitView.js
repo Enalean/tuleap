@@ -58,9 +58,9 @@
 		$$('li.categ').each(function (element) {
 			register_events(element);
 			plus++;
-			new Insertion.Top(element, '<a href="" id="plus_' + plus +'"><img src="minus.png" /></a>');
+			new Insertion.Top(element, '<a href="" id="plus_' + plus +'"><img src="themes/default/images/minus.png" /></a>');
 			var uls = $A(element.childNodes).findAll(function (element) {
-				return element.tagName == 'UL';
+				return element.tagName == 'ul';
 			});
 			var matchPlus = new RegExp("plus.png$");
 			Event.observe($('plus_'+plus), 'click', function (evt) {
@@ -68,9 +68,9 @@
 					Element.toggle(element);
 				});
 				if (Event.element(evt).src.match(matchPlus)) {
-					Event.element(evt).src = 'minus.png';
+					Event.element(evt).src = 'themes/default/images/minus.png';
 				} else {
-					Event.element(evt).src = 'plus.png';
+					Event.element(evt).src = 'themes/default/images/plus.png';
 				}
 				Event.stop(evt);
 				return false;

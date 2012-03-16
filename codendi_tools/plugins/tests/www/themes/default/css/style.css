@@ -30,12 +30,12 @@ body,th,td {
     font-size: 2em;
     height: 100%;
     border: 1px solid #ccc;
-    background-image: url('bg.png');
+    background-image: url('../images/bg.png');
     color: transparent;
 }
 
 #submit_panel input:hover {
-    background-image: url('bg-hover.png');
+    background-image: url('../images/bg-hover.png');
 }
 
 tr {
