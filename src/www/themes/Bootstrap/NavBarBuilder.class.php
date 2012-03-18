@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -38,27 +38,42 @@ class NavBarBuilder {
                 <div class="navbar navbar-fixed-top">
                   <div class="navbar-inner"> 
                     <div class="container-fluid"> 
-                      <a class="brand" href="index.php"><img src="'. $this->imgroot . 'organization_logo.png" alt="Tuleap" /></a> 
-                      <ul class="nav">'.
-                        $this->getNavHome().
-                        $this->getNavMyPage().
-                        $this->getNavProjects().
-                        '
-                        <li><a href="/search/?words=%%%&type_of_search=people">Users</a></li>'.
-                        $this->getNavAdmin().
-                        $this->getNavHelp().
-                        '
-                      </ul>
-                      <form action="" class="navbar-search pull-left">
-                        <input type="text" placeholder="Search" class="search-query" />
-                      </form>
-                      '.
-                      $this->getNavUser()
+                      <a class="brand" href="/"><img src="'. $this->imgroot . 'organization_logo.png" alt="Tuleap" /></a>'.
+                      $this->getMainNavigation().
+                      $this->getSearchForm().
+                      $this->getUserNavigation()
                       .'
                     </div> 
                   </div> 
                 </div>';
         return $html;
+    }
+
+    private function getSearchForm() {
+        $html  = '';
+        $html .= '<form action="" class="navbar-search pull-left">';
+        $html .= '<input type="text" placeholder="Search" class="search-query" />';
+        $html .= '</form>';
+        return $html;
+    }
+
+    private function getMainNavigation() {
+        $html  = '';
+        $html .= '<ul class="nav">';
+        $html .= $this->getNavHome();
+        $html .= $this->getNavMyPage();
+        $html .= $this->getNavProjects();
+        $html .= $this->getNavUsers();
+        $html .= $this->getNavAdmin();
+        $html .= $this->getNavHelp();
+        $html .= '</ul>';
+        return $html;
+    }
+
+    private function getNavUsers() {
+        return '';
+        //Not yet implemented
+        return '<li><a href="/search/?words=%%%&type_of_search=people">Users</a></li>';
     }
 
     private function getNavAdmin() {
@@ -167,7 +182,7 @@ class NavBarBuilder {
         return $html;
     }
 
-    private function getNavUser() {
+    private function getUserNavigation() {
         $html = '';
         $html .= '<ul class="nav pull-right">';
         if ($this->user->isLoggedIn()) {
