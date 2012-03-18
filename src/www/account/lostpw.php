@@ -23,7 +23,7 @@ $HTML->header(array('title'=>$Language->getText('account_lostpw', 'title')));
 <P>
 Login Name:
 <INPUT type="text" name="form_loginname">
-<INPUT type="submit" class="btn primary" name="Send Lost Password Hash" value="<?php echo $Language->getText('account_lostpw', 'send_hash'); ?>">
+<INPUT type="submit" class="btn-primary" name="Send Lost Password Hash" value="<?php echo $Language->getText('account_lostpw', 'send_hash'); ?>">
 </FORM>
 
 <P><A href="/">[<?php echo $Language->getText('global', 'back_home'); ?>]</A>

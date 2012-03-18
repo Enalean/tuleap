@@ -51,7 +51,7 @@ foreach ($user->getAuthorizedKeys(true) as $key) {
 }
 ?>
 </textarea>
-<p><input type="submit" class="btn primary" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
+<p><input type="submit" class="btn-primary" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
 </form>
 
 <?php

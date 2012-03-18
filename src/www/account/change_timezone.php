@@ -47,7 +47,7 @@ $HTML->header(array('title'=>$Language->getText('account_change_timezone', 'titl
 echo html_get_timezone_popup ('timezone',user_get_timezone());
 
 ?>
-<input type="submit" class="btn primary" name="submit" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
+<input type="submit" class="btn-primary" name="submit" value="<?php echo $Language->getText('global', 'btn_update'); ?>">
 </form>
 
 <?php
