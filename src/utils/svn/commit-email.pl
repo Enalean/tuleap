@@ -385,8 +385,7 @@ my @dirschanged = &read_from_process($svnlook, 'dirs-changed', $repos,
                                      '-r', $rev);
 
 # Retrive emails watching a given path that appears in the list of changed directories
-# @TODO Iterate on all changed directories
-# @TODO add filter for group Id
+
 my @svn_events_mailing_lists = '';
 foreach my $dirVal (@dirschanged) {
 $svn_events_mailing_lists .= get_emails_by_path('svn_notification', 'path', $dirVal, 'svn_events_mailing_list', $group_id);
