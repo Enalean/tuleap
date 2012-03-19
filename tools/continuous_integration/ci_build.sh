@@ -106,11 +106,9 @@ cd "$codendi_src"
 
 # Execute the Tests
 # This will produce a "JUnit like" test result file named codendi_unit_tests_report.xml that Hudson can use to produce test results.
-php -d include_path="src/www/include:src:/usr/share/pear:." -d memory_limit=196M tests/bin/simpletest -x tests/simpletest
+php -d include_path="src/www/include:src:/usr/share/pear:." -d memory_limit=196M tests/bin/simpletest -x tests/simpletest plugins
 
 # Checkstyle
-
-
 files=""
 if [ "$sniff_svn" = "true" ]; then
     files=$(php "$codendi_src/tools/continuous_integration/findFilesToSniff.php")
