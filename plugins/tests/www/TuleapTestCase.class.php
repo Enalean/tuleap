@@ -60,7 +60,9 @@ abstract class TuleapTestCase extends UnitTestCase {
         unset($GLOBALS['Response']);
         unset($GLOBALS['Language']);
         unset($GLOBALS['HTML']);
-        $GLOBALS = $this->globals;
+        if ($this->globals !== null) {
+            $GLOBALS = $this->globals;
+        }
     }
     /**
      *    Tests to see if the method is a test that should
