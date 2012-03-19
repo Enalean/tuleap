@@ -19,9 +19,28 @@
  */
  
 require_once 'Presenter.class.php';
+require_once 'PlanningFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/MustacheRenderer.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
+
+class Planning_IndexPresenter {
+    public $group_id = '123';
+    
+    function __construct(PlanningFactory $planning_factory) {
+        $this->plannings = $planning_factory->getPlannings($this->group_id);
+    }
+    public function getPlannings() {
+        return $this->plannings;
+    }
+    
+    public function hasPlannings() {
+        if (empty($this->plannings)) {
+            return false;
+        }
+        return true;
+    }
+}
 
 class Planning_Controller {
 
@@ -35,10 +54,11 @@ class Planning_Controller {
      */
     private $artifact;
     
-    function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory) {
+    function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
         $aid = $request->get('aid');
         $this->artifact = $artifact_factory->getArtifactById($aid);
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../templates');
+        $this->planning_factory = $planning_factory;
     }
 
     function display() {
@@ -48,6 +68,11 @@ class Planning_Controller {
 
     private function render($template_name, $presenter) {
         echo $this->renderer->render($template_name, $presenter);
+    }
+    
+    public function index() {
+        $presenter = new Planning_IndexPresenter ($this->planning_factory);
+        $this->render('index', $presenter);
     }
 }
 ?>
