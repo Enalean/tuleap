@@ -55,7 +55,20 @@ class testsPluginRequest {
     }
     
     public function setTestsToRun( array $tests_to_run) {
-        $this->tests_to_run = $tests_to_run;
+        
+        $this->tests_to_run = $this->parseTestsToRun($tests_to_run);
+    }
+    
+    private function parseTestsToRun($tests_to_run) {
+        $to_run = array();
+        foreach ($tests_to_run as $key=>$value) {
+            if (is_array($value)) {
+                $to_run[$key] = $this->parseTestsToRun($value);
+            } elseif ($value === 1 && $key !== '_do_all') {
+                $to_run[] = $key; 
+            }
+        }
+        return $to_run;
     }
     
     
