@@ -25,6 +25,35 @@ require_once 'common/mustache/MustacheRenderer.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 
+class Planning_CreatePresenter {
+    /**
+     * @var int
+     */
+    public $group_id;
+    
+    /**
+     * @var TrackerFactory
+     */
+    public $tracker_factory;
+    
+    /**
+     * @var Array of Tracker
+     */
+    private $available_trackers;
+    
+    public function __construct(/*int*/ $group_id, TrackerFactory $tracker_factory) {
+        $this->group_id        = $group_id;
+        $this->tracker_factory = $tracker_factory;
+    }
+    
+    public function getAvailableTrackers() {
+        if ($this->available_trackers == null) {
+            $this->available_trackers = array_values($this->tracker_factory->getTrackersByGroupId($this->group_id));
+        }
+        return $this->available_trackers;
+    }
+}
+
 class Planning_Controller {
 
     /**
@@ -37,12 +66,13 @@ class Planning_Controller {
      */
     private $artifact;
     
-    function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
+    function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory, TrackerFactory $tracker_factory) {
         $aid = $request->get('aid');
         $this->group_id = $request->get('group_id');
         $this->artifact = $artifact_factory->getArtifactById($aid);
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../templates');
         $this->planning_factory = $planning_factory;
+        $this->tracker_factory  = $tracker_factory;
     }
 
     function display() {
@@ -57,6 +87,11 @@ class Planning_Controller {
     public function index() {
         $presenter = new Planning_IndexPresenter ($this->planning_factory, $this->group_id);
         $this->render('index', $presenter);
+    }
+    
+    public function create() {
+        $presenter = new Planning_CreatePresenter($this->group_id, $this->tracker_factory);
+        $this->render('create', $presenter);
     }
 }
 ?>

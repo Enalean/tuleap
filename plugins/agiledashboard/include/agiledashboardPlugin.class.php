@@ -74,6 +74,9 @@ class AgileDashboardPlugin extends Plugin {
             case 'show':
                 $this->displayPlanning($request);
                 break;
+            case 'create':
+                $this->displayCreate($request);
+                break;
             case 'index':
             default:
                 $this->displayIndex($request);
@@ -109,7 +112,8 @@ class AgileDashboardPlugin extends Plugin {
         
         return new Planning_Controller($request,
                                        Tracker_ArtifactFactory::instance(),
-                                       PlanningFactory::instance());
+                                       PlanningFactory::instance(),
+                                       TrackerFactory::instance());
     }
     
     private function displayIndex(Codendi_Request $request) {
@@ -117,6 +121,14 @@ class AgileDashboardPlugin extends Plugin {
         
         $this->displayHeader($request, "Plannings");
         $controller->index();
+        $this->displayFooter($request);
+    }
+    
+    private function displayCreate(Codendi_Request $request) {
+        $controller = $this->buildController($request);
+        
+        $this->displayHeader($request, "New Planning");
+        $controller->create();
         $this->displayFooter($request);
     }
 

@@ -28,6 +28,7 @@ if (!defined('TRACKER_BASE_URL')) {
 }
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
+Mock::generate('TrackerFactory');
 Mock::generate('PlanningFactory');
 Mock::generate('Planning');
 
@@ -84,7 +85,7 @@ class Planning_ControllerTest extends TuleapTestCase {
     
     private function WhenICaptureTheOutputOfEditAction($request, $factory) {
         ob_start();
-        $controller = new Planning_Controller($request, $factory, new MockPlanningFactory());
+        $controller = new Planning_Controller($request, $factory, new MockPlanningFactory(), new MockTrackerFactory());
         $controller->display();
         $content = ob_get_clean();
         return $content;
@@ -99,7 +100,8 @@ abstract class Planning_ControllerIndexTest extends TuleapTestCase {
         $this->request          = new Codendi_Request(array('group_id' => $this->group_id));
         $this->artifact_factory = new MockTracker_ArtifactFactory();
         $this->planning_factory = new MockPlanningFactory();
-        $this->controller       = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory);
+        $this->tracker_factory  = new MockTrackerFactory();
+        $this->controller       = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory, $this->tracker_factory);
     }
     
     protected function renderIndex() {
@@ -148,4 +150,51 @@ class Planning_ControllerNonEmptyIndexTest extends Planning_ControllerIndexTest 
     }
 }
 
+class Planning_ControllerCreateTest extends TuleapTestCase {
+    
+    function setUp() {
+        parent::setUp();
+        $this->group_id         = '123';
+        $this->request          = new Codendi_Request(array('group_id' => $this->group_id));
+        $this->artifact_factory = new MockTracker_ArtifactFactory();
+        $this->planning_factory = new MockPlanningFactory();
+        $this->tracker_factory  = new MockTrackerFactory();
+        $this->controller       = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory, $this->tracker_factory);
+        
+        $this->trackers = array(
+            101 => aTracker()->withId(101)->withName('Epics')->build(),
+            102 => aTracker()->withId(102)->withName('Stories')->build(),
+        );
+        
+        $this->renderCreate();
+    }
+    
+    protected function renderCreate() {
+        $this->tracker_factory->expectOnce('getTrackersByGroupId', array($this->group_id));
+        $this->tracker_factory->setReturnValue('getTrackersByGroupId', $this->trackers);
+        
+        ob_start();
+        $this->controller->create();
+        $this->output = ob_get_clean();
+    }
+    
+    public function itHasATextFieldForTheName() {
+        $this->assertPattern('/<input type="text" name="planning_name"/', $this->output);
+    }
+    
+    public function itHasAMultiSelectBoxListingTrackers() {
+        
+        $this->assertPattern('/\<select multiple="multiple" name="planning_backlog_ids"/', $this->output);
+        foreach ($this->trackers as $tracker) {
+            $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
+        }
+    }
+    
+    public function itHasASelectBoxListingTrackers() {
+        $this->assertPattern('/\<select name="planning_release_id"/', $this->output);
+        foreach ($this->trackers as $tracker) {
+            $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
+        }
+    }
+}
 ?>
