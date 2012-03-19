@@ -1,13 +1,16 @@
 #!/bin/bash
 #
+# Copyright (c) Enalean, Tuleap 2011,2012
+# Copyright (c) STMicroelectronics, Codex 2009,2010
 # Copyright (c) Xerox Corporation, Codendi 2001-2009.
+#
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
 #      Originally written by Laurent Julliard 2004, Codendi Team, Xerox
 #
 
 # In order to keep a log of the installation, you may run the script with:
-# ./codendi_install.sh 2>&1 | tee /tmp/codendi_install.log
+# ./setup.sh 2>&1 | tee /root/tuleap_install.log
 
 TODO_FILE=/root/todo_tuleap.txt
 export INSTALL_DIR="/usr/share/codendi"
