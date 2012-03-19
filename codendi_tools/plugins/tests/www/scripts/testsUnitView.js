@@ -55,22 +55,24 @@
 	
 	function init() {
 		var plus = 0;
+		var baseSrc  = 'themes/default/images/';
+		var minusSrc = baseSrc + 'minus.png';
+		var plusSrc  = baseSrc + 'plus.png';
 		$$('li.categ').each(function (element) {
 			register_events(element);
 			plus++;
-			new Insertion.Top(element, '<a href="" id="plus_' + plus +'"><img src="themes/default/images/minus.png" /></a>');
+			new Insertion.Top(element, '<a href="" id="plus_' + plus +'"><img src="' + plusSrc +'" /></a>');
 			var uls = $A(element.childNodes).findAll(function (element) {
-				return element.tagName == 'ul';
+				return element.tagName == 'UL';
 			});
-			var matchPlus = new RegExp("plus.png$");
-			Event.observe($('plus_'+plus), 'click', function (evt) {
+			Event.observe($('plus_' + plus), 'click', function (evt) {
 				uls.each(function (element) {
 					Element.toggle(element);
 				});
-				if (Event.element(evt).src.match(matchPlus)) {
-					Event.element(evt).src = 'themes/default/images/minus.png';
+				if (Event.element(evt).src == minusSrc) {
+					Event.element(evt).src = plusSrc;
 				} else {
-					Event.element(evt).src = 'themes/default/images/plus.png';
+					Event.element(evt).src = minusSrc;
 				}
 				Event.stop(evt);
 				return false;
