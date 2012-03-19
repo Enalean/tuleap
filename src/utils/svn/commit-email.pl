@@ -387,8 +387,11 @@ my @dirschanged = &read_from_process($svnlook, 'dirs-changed', $repos,
 # Retrive emails watching a given path that appears in the list of changed directories
 # @TODO Iterate on all changed directories
 # @TODO add filter for group Id
-
-my @svn_events_mailing_lists = get_emails_by_path('svn_notification', 'path', $repos, 'svn_events_mailing_list');
+my @svn_events_mailing_lists = '';
+foreach my $dirVal (@dirschanged) {
+$svn_events_mailing_lists .= get_emails_by_path('svn_notification', 'path', $dirVal, 'svn_events_mailing_list');
+}
+print "\n Debug::event notification lists => $svn_events_mailing_lists ";
 
 # Lose the trailing slash in the directory names if one exists, except
 # in the case of '/'.
