@@ -1,0 +1,26 @@
+<form action="/plugins/agiledashboard/?group_id={{group_id}}&amp;func=doCreate">
+    <p>
+        <label for="planning_name">Name</label>
+        <input type="text" name="planning_name"/>
+    </p>
+    <p>
+        <label for="planning_release_id">Release Tracker</label>
+        <select name="planning_release_id">
+            <option value=""/>
+            {{#getAvailableTrackers}}
+                <option value="{{getId}}">{{getName}}</option>
+            {{/getAvailableTrackers}}
+        </select>
+    </p>
+    <p>
+        <label for="planning_backlog_ids">Backlog Trackers</label>
+        <select multiple="multiple" name="planning_backlog_ids">
+            {{#getAvailableTrackers}}
+                <option value="{{getId}}">{{getName}}</option>
+            {{/getAvailableTrackers}}
+        </select>
+    </p>
+    <p>
+        <input type="submit" value="Create"/>
+    </p>
+</form>
