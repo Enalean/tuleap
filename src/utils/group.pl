@@ -146,7 +146,12 @@ sub get_emails_by_path {
         $patternMatcher .= '*';
     }
 # @TODO add comment
-    $query = "SELECT $retfieldname FROM $table WHERE $fieldname RLIKE '$patternMatcher'";
+    my $retfieldname = $dbh->quote_identifier($retfieldname);
+    my $table = $dbh->quote_identifier($table);
+    my $fieldname = $dbh->quote_identifier($fieldname);
+    my $patternMatcher = $dbh->quote($patternMatcher);
+
+    $query = "SELECT $retfieldname FROM $table WHERE $fieldname RLIKE $patternMatcher";
     $sth = $dbh->prepare($query);
     $res = $sth->execute();
     if ($sth->rows >= 1) {
