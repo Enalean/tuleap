@@ -21,7 +21,7 @@
 require_once 'Presenter.class.php';
 require_once 'IndexPresenter.class.php';
 require_once 'PlanningFactory.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/MustacheRenderer.class.php';
+require_once 'common/mustache/MustacheRenderer.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 

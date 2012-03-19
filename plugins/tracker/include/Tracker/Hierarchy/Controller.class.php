@@ -20,7 +20,7 @@
 
 require_once 'Presenter.class.php';
 require_once 'Dao.class.php';
-require_once dirname(__FILE__).'/../../MustacheRenderer.class.php';
+require_once 'common/mustache/MustacheRenderer.class.php';
 require_once 'common/valid/ValidFactory.class.php';
 require_once 'HierarchicalTracker.class.php';
 require_once 'HierarchicalTrackerFactory.class.php';

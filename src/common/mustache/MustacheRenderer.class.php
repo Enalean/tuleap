@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Mustache.php');
-require_once(dirname(__FILE__).'/../include/MustacheLoader.php');
+require_once 'Mustache.php';
+require_once 'MustacheLoader.php';
 
 class MustacheRenderer {
 
