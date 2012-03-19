@@ -49,21 +49,6 @@ class PluginRunnerTest extends TuleapTestCase {
         PluginFilterIteratorTest::delFixtures(PluginFilterIteratorTest::$fixDirs, PluginFilterIteratorTest::$fixFiles);
     }
     
-    public function itCanFindAllTestsFilesInTheGivenPath() {
-        $baseDir  = PluginFilterIteratorTest::implodePath(dirname(__FILE__), 'fixtures');
-        $this->runner->appendTestsInPath($baseDir, 'MyTest 1');
-        $allTests = $this->runner->getAllTestFilesOfCategory('MyTest 1');
-        sort($allTests);
-        $expected = array(
-            PluginFilterIteratorTest::implodePath('test1', 'test1Test.php'), 
-            PluginFilterIteratorTest::implodePath('test2', 'test2Test.php'), 
-            PluginFilterIteratorTest::implodePath('test2', 'test 2', 'test2.1Test.php'), 
-            PluginFilterIteratorTest::implodePath('test2', 'test 2', 'test2.2Test.php')
-        );
-        sort($expected);
-        $this->assertEqual($expected, $allTests);
-    }
-    
     public function itCanFindAllTestsFilesInTheGivenPathThatMustBeRun() {
         
         $baseDir  = PluginFilterIteratorTest::implodePath(dirname(__FILE__), 'fixtures');

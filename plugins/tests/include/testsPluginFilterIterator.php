@@ -31,10 +31,12 @@ class testsPluginFilterIterator extends FilterIterator {
         $this->pattern = $pattern;
     }
     
-    public static function apply($path) {        
+    public static function apply($path, $pattern = '@Test.php$@') {        
         $RecursiveIt    =  new RecursiveCachingIterator(new RecursiveDirectoryIterator($path));
         $RecursiveIt    = new RecursiveIteratorIterator($RecursiveIt, RecursiveIteratorIterator::SELF_FIRST);
-        return new testsPluginFilterIterator($RecursiveIt);
+        $filterIterator = new testsPluginFilterIterator($RecursiveIt);
+        $filterIterator->pattern = $pattern;
+        return $filterIterator;
     }
 }
 ?>
