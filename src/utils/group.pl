@@ -143,8 +143,8 @@ sub get_emails_by_path {
                 $patternBuilder .= $dirVal;
                 $patternMatcher .= '^'.$patternBuilder;
         }
-        $patternMatcher .= '*';
     }
+    $patternMatcher .= '*';
 # @TODO add comment
     my $retfieldname = $dbh->quote_identifier($retfieldname);
     my $table = $dbh->quote_identifier($table);
