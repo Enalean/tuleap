@@ -18,6 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../include/Git.class.php';
+
+Mock::generate('User');
+Mock::generate('UserManager');
+Mock::generate('Project');
+Mock::generate('ProjectManager');
+Mock::generate('GitRepositoryFactory');
+
 class Git_ForkCrossProject_Test extends TuleapTestCase {
     
     public function testExecutes_ForkCrossProject_ActionWithForkRepositoriesView() {
@@ -41,21 +49,23 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $projectManager->setReturnValue('getProject', $toProject, array($toProjectId));
         
         $repositoryFactory = new MockGitRepositoryFactory();
-        $repositoryFactory->setReturnValue('getRepository', $repo, array($groupId, $repo_ids[0]));
+        $repositoryFactory->setReturnValue('getRepositoryById', $repo, array($repo_ids[0]));
         
         $request = new Codendi_Request(array(
                                         'choose_destination' => 'project',
                                         'to_project' => $toProjectId,
                                         'repos' => $repo_ids));
         
-        $git = new GitSpy();
+        $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
         $git->setGroupId($groupId);
         $git->setRequest($request);
         $git->setUserManager($usermanager);
         $git->setProjectManager($projectManager);
         $git->setFactory($repositoryFactory);
         
-        $git->expectOnce('addAction', array('fork', array($repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=100')));
+        $git->expectCallCount('addAction', 2);
+        $git->expectAt(0, 'addAction', array('fork', array($repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=100')));
+        $git->expectAt(1, 'addAction', array('getProjectRepositoryList', array($groupId)));
         $git->expectOnce('addView', array('forkRepositories'));
         
         $git->_dispatchActionAndView('do_fork_repositories', null, null, $user);
@@ -67,7 +77,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $invalidRequestError = 'Invalid request';
         $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter_repos', '*'));
         
-        $git = new GitSpyForErrors();
+        $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect', 'checkSynchronizerToken'));
         $git->setGroupId($group_id);
         $git->setFactory(new MockGitRepositoryFactory());
         $git->expectOnce('addError', array($invalidRequestError));
@@ -84,7 +94,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $invalidRequestError = 'Invalid request';
         $GLOBALS['Language']->setReturnValue('getText', $invalidRequestError, array('plugin_git', 'missing_parameter_to_project', '*'));
         
-        $git = new GitSpyForErrors();
+        $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect', 'checkSynchronizerToken'));
         $git->setGroupId($group_id);
         $git->expectOnce('addError', array($invalidRequestError));
         $git->expectOnce('redirect', array('/plugins/git/?group_id='.$group_id));

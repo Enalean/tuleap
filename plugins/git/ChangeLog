@@ -1,3 +1,12 @@
+Version 2.1.4 (Tuleap 4.0.27.3)
+    * Fix various bugs on git repository clone/delete/recreate senario.
+    * Fix git push logging (log for repositories outside project root works).
+    * Disable fork button while forking is actually happening).
+
+Version 2.1.3 (Tuleap 4.0.27.3)
+    * Fix include file for git formatter (regression due to memory consumption fix at version 2.0).
+    * Fix install (git service in double).
+
 Version 2.1.2 (Tuleap 4.0.27)
     * Consistant naming of git service
     * Improve description of fork feature

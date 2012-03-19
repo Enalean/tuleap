@@ -1,3 +1,7 @@
+Version 4.0.27.3 (Monday, March 19th 2012)
+   == Plugins ==
+   * Git v2.1.4
+
 Version 4.0.27.2 (Thursday, March 8th 2012)
    == Enhancement ==
    * Git documentation is now aligned with implementation.

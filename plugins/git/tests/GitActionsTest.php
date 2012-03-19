@@ -431,6 +431,13 @@ class GitActionsTest extends TuleapTestCase {
         $action->getProjectRepositoryList($projectId, $userId);
     }
 
+    private function GivenAGitActions() {
+        $controller         = new MockGit($this);
+        $systemEventManager = new MockSystemEventManager();
+        $factory            = new MockGitRepositoryFactory();
+        return new GitActions($controller, $systemEventManager, $factory);
+    }
+    
     function testForkIndividualRepositories() {
         $path  = 'toto';
         $group_id = 101;
@@ -448,12 +455,10 @@ class GitActionsTest extends TuleapTestCase {
         $layout = new MockLayout();
         $layout->expectOnce('redirect');
                 
-        $controller = new MockGit($this);
-        $systemEventManager = new MockSystemEventManager();
-        $action = new GitActions($controller, $systemEventManager);
+        $action = $this->GivenAGitActions();
         $action->fork(array($repo), $project, $path, null, $user, $layout, null);
     }
-    
+
     function testClonesManyInternalRepositories() {
         $path  = 'toto';
         $group_id = 101;
@@ -478,9 +483,7 @@ class GitActionsTest extends TuleapTestCase {
             $repos[] = $repo;
         }
         
-        $controller = new MockGit($this);
-        $systemEventManager = new MockSystemEventManager();
-        $action = new GitActions($controller, $systemEventManager);
+        $action = $this->GivenAGitActions();
         $action->fork($repos, $project, $path, null, $user, $layout, null);
     }
     function testCloneManyCrossProjectRepositories() {
@@ -508,10 +511,7 @@ class GitActionsTest extends TuleapTestCase {
         $layout = new MockLayout();
         $layout->expectOnce('redirect');
         
-        $controller = new MockGit($this);
-        $systemEventManager = new MockSystemEventManager();
-        $action = new GitActions($controller, $systemEventManager);
-        
+        $action = $this->GivenAGitActions();
         $action->fork($repos, $to_project, '', null, $user, $layout, null);
     }
     
@@ -527,10 +527,11 @@ class GitActionsTest extends TuleapTestCase {
         $layout = new MockLayout();
         $layout->expectNever('redirect');
         
-        $controller = new MockGit($this);
-        $controller->expectOnce('addError', array('actions_no_repository_forked'));
-        $systemEventManager = new MockSystemEventManager();
-        $action = new GitActions($controller, $systemEventManager);
+
+        $action = $this->GivenAGitActions();
+        
+        $action->getController()->expectOnce('addError', array('actions_no_repository_forked'));
+        
         $action->fork($repos, $project, '', null, $user, $layout, null);
     }
     
@@ -554,10 +555,7 @@ class GitActionsTest extends TuleapTestCase {
         $repo->expectOnce('fork');
         $repos = array($repo);
         
-        $controller = new MockGit($this);
-        $systemEventManager = new MockSystemEventManager();
-        
-        $action = new GitActions($controller, $systemEventManager);
+        $action = $this->GivenAGitActions();
         $action->fork($repos, $project, '', null, $user, $layout, null);
     }
     
@@ -572,13 +570,10 @@ class GitActionsTest extends TuleapTestCase {
         $to_project = new MockProject();
         $to_project->setReturnValue('getId', 2);
         
-        $controller = new MockGit($this);
-        
-        $systemEventManager = new MockSystemEventManager();
         $layout = new MockLayout();
         $layout->expectNever('redirect');
         
-        $action = new GitActions($controller, $systemEventManager);
+        $action = $this->GivenAGitActions();
         $action->fork($repos, $to_project, '', null, $user, $layout, null);
     }
     
@@ -604,9 +599,6 @@ class GitActionsTest extends TuleapTestCase {
         $to_project = new MockProject();
         $to_project->setReturnValue('getId', $project_id);
         
-        $controller = new MockGit();
-        $controller->expectOnce('addInfo', array('successfully_forked'));
-        
         $repo = new MockGitRepository();
         $repo->setReturnValue('getId', $repo_id);
         $repo->setReturnValue('userCanRead', true, array($user));
@@ -617,7 +609,10 @@ class GitActionsTest extends TuleapTestCase {
         $layout = new MockLayout();
         $layout->expectOnce('redirect');
         
-        $action = new GitActions($controller, $systemEventManager);
+        $action = $this->GivenAGitActions();
+        
+        $action->getController()->expectOnce('addInfo', array('successfully_forked'));
+                
         $action->fork($repos, $to_project, '', null, $user, $layout, null);
     }
 
@@ -625,11 +620,8 @@ class GitActionsTest extends TuleapTestCase {
         $project = new MockProject();
         $repo    = $this->GivenARepository(123);
         
-        $controller         = new MockGit();
-        $systemEventManager = new MockSystemEventManager();
-        
         $user   = new MockUser();
-        $action = new GitActions($controller, $systemEventManager);
+        $action = $this->GivenAGitActions();
         $action->forkRepositories(array($repo, null), $user, null, null, $project);
     }
 
@@ -644,12 +636,9 @@ class GitActionsTest extends TuleapTestCase {
         $repositories = array($repo1, $repo2, $repo3);
         
         $repo2->throwOn('fork');
-
-        $controller         = new MockGit();
-        $systemEventManager = new MockSystemEventManager();
         
         $user   = new MockUser();
-        $action = new GitActions($controller, $systemEventManager);
+        $action = $this->GivenAGitActions();
         $action->forkRepositories($repositories, $user, null, null, $project);
     }
     
