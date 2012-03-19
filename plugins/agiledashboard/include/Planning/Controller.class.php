@@ -39,6 +39,7 @@ class Planning_Controller {
     
     function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
         $aid = $request->get('aid');
+        $this->group_id = $request->get('group_id');
         $this->artifact = $artifact_factory->getArtifactById($aid);
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../templates');
         $this->planning_factory = $planning_factory;
@@ -54,7 +55,7 @@ class Planning_Controller {
     }
     
     public function index() {
-        $presenter = new Planning_IndexPresenter ($this->planning_factory);
+        $presenter = new Planning_IndexPresenter ($this->planning_factory, $this->group_id);
         $this->render('index', $presenter);
     }
 }
