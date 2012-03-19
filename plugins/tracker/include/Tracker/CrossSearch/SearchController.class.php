@@ -81,13 +81,13 @@ class Tracker_CrossSearch_SearchController {
 
     public function search() {
         try {
-            $project            = $this->getProject();
+            $project            = $this->getProject($this->request->get('group_id'), $this->projectManager);
             $service            = $this->getService($project);
             $report             = $this->getReport();
-            $criteria           = $this->getCriteria($project, $report);
-            $trackers           = $this->getTrackers($project);
-            $trackers_hierarchy = $this->getTrackersHierarchy($trackers);
-            $artifacts          = $this->getArtifacts($trackers, $trackers_hierarchy);
+            $criteria           = $this->getCriteria($project, $report, $this->formElementFactory, $this->request->get('criteria'));
+            $trackers           = $this->getTrackers($project, $this->tracker_factory);
+            $trackers_hierarchy = $this->getTrackersHierarchy($trackers, $this->hierarchy_factory);
+            $artifacts          = $this->getArtifacts($trackers, $trackers_hierarchy, $this->search, $this->request->get('criteria'));
             
             $view = $this->getView($project, $service, $criteria, $trackers);
             $view->render($this->getContentView($report, $criteria, $artifacts));
@@ -102,24 +102,20 @@ class Tracker_CrossSearch_SearchController {
         }
     }
     
-    protected function getTrackersHierarchy(array $trackers) {
+    protected function getTrackersHierarchy(array $trackers, $hierarchy_factory) {
         $tracker_ids = array();
         foreach ($trackers as $tracker) {
             $tracker_ids[] = $tracker->getId();
         }
-        return $this->hierarchy_factory->getHierarchy($tracker_ids);
+        return $hierarchy_factory->getHierarchy($tracker_ids);
     }
     
-    protected function getArtifacts(array $trackers, $hierarchy) {
-        return $this->search->getMatchingArtifacts($trackers, $hierarchy, $this->request->get('criteria'));
+    protected function getArtifacts(array $trackers, $hierarchy, $search, $request_criteria) {
+        return $search->getMatchingArtifacts($trackers, $hierarchy, $request_criteria);
     }
     
-    public function getTrackers(Project $project) {
-        return $this->tracker_factory->getTrackersByGroupId($project->getGroupId());
-    }
-    
-    private function getTrackerFromField(Tracker_FormElement $field) {
-        return $field->getTracker();
+    public function getTrackers(Project $project, $tracker_factory) {
+        return $tracker_factory->getTrackersByGroupId($project->getGroupId());
     }
     
     private function getReport() {
@@ -142,11 +138,11 @@ class Tracker_CrossSearch_SearchController {
         return $report;
     }
     
-    public function getCriteria(Project $project, Tracker_Report $report) {
-        $fields   = $this->formElementFactory->getProjectSharedFields($project);
+    public function getCriteria(Project $project, Tracker_Report $report, $formElementFactory, $request_criteria) {
+        $fields   = $formElementFactory->getProjectSharedFields($project);
         $criteria = array();
         foreach ($fields as $field) {
-            $field->setCriteriaValue($this->getSelectedValues($field));
+            $field->setCriteriaValue($this->getSelectedValues($field, $request_criteria));
             
             $id          = null;
             $rank        = 0;
@@ -156,8 +152,7 @@ class Tracker_CrossSearch_SearchController {
         return $criteria;
     }
     
-    private function getSelectedValues(Tracker_FormElement_Field $field) {
-        $request_criteria = $this->request->get('criteria');
+    private function getSelectedValues(Tracker_FormElement_Field $field, $request_criteria) {
         $currentValue     = $request_criteria[$field->getId()]['values'];
         if (!$currentValue) {
             $currentValue = array();
@@ -168,9 +163,8 @@ class Tracker_CrossSearch_SearchController {
     /**
      * @return Project
      */
-    private function getProject() {
-        $projectId = $this->request->get('group_id');
-        $project   = $this->projectManager->getProject($projectId);
+    private function getProject($projectId, $projectManager) {
+        $project   = $projectManager->getProject($projectId);
         if ($project->isError()) {
             $errorMessage = $GLOBALS['Language']->getText('project', 'does_not_exist');
             throw new Tracker_CrossSearch_ProjectNotFoundException($errorMessage);

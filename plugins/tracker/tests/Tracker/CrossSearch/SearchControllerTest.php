@@ -175,7 +175,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
         
         $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
-        $criteria = $controller->getCriteria($project, $report);
+        $criteria = $this->getCriteria($controller, $project, $report);
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array());
     }
     
@@ -192,7 +192,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
         
         $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
-        $criteria = $controller->getCriteria($project, $report);
+        $criteria = $this->getCriteria($controller, $project, $report);
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350));
     }
     
@@ -211,7 +211,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
         
         $controller = new Tracker_CrossSearch_SearchController($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
-        $criteria = $controller->getCriteria($project, $report);
+        $criteria = $this->getCriteria($controller, $project, $report);
         $this->assertEqual(count($criteria), 2);
         $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350, 351));
         $this->assertEqual($criteria[1]->field->getCriteriaValue($criteria[1]), array(352));
@@ -266,6 +266,10 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     
     private function GivenAProjectThatUseTheService() {
         $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
+    }
+
+    public function getCriteria($controller, $project, $report) {
+        return $controller->getCriteria($project, $report, $this->formElementFactory, $this->request->get('criteria'));
     }
 }
 ?>
