@@ -4,17 +4,15 @@
         <input type="text" name="planning_name"/>
     </p>
     <p>
-        <label for="planning_release_id">Release Tracker</label>
-        <select name="planning_release_id">
-            <option value=""/>
+        This planning allows assignment of
+        <select multiple="multiple" name="planning_backlog_ids" style="vertical-align: top;">
             {{#getAvailableTrackers}}
                 <option value="{{getId}}">{{getName}}</option>
             {{/getAvailableTrackers}}
         </select>
-    </p>
-    <p>
-        <label for="planning_backlog_ids">Backlog Trackers</label>
-        <select multiple="multiple" name="planning_backlog_ids">
+        to
+        <select name="planning_release_id">
+            <option value=""/>
             {{#getAvailableTrackers}}
                 <option value="{{getId}}">{{getName}}</option>
             {{/getAvailableTrackers}}
