@@ -970,6 +970,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
     
     /**
+     * @param array $changesets array of Tracker_Artifact_Changeset
+     */
+    public function setChangesets(array $changesets) {
+        $this->changesets = $changesets;
+    }
+    
+    /**
      * Get all commentators of this artifact
      *
      * @return array of strings (username or emails)
@@ -1151,10 +1158,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
     
     /**
+     * Get the latest artifacts linked to the current artifact
+     * 
      * @return array of Linked Artifacts
      */
-    public function getArtifactLinks() {
-        return array();
+    public function getLinkedArtifacts() {
+        $artifact_links       = array();
+        $artifact_link_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
+        if ($artifact_link_fields) {
+            $field          = $artifact_link_fields[0];
+            $changeset      = $this->getLastChangeset();
+            $artifact_links = $field->getLinkedArtifacts($changeset);
+        }
+        return $artifact_links;
     }
 }
 

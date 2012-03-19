@@ -1007,5 +1007,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         // TODO : remove the removed elements
     }
     
+    /**
+     *
+     * @param Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value 
+     * 
+     * @return array
+     */
+    public function getLinkedArtifacts(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value) {
+        
+    }
 }
 ?>

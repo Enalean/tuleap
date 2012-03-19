@@ -1510,12 +1510,50 @@ class FormElementFactory_PendingMock {
     }
 }
 
+require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
+Mock::generate('Tracker_FormElement_Field_ArtifactLink');
+require_once 'Test_Artifact_Builder.php';
+
 class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
 
-    public function itReturnsAnEmptyListWhenThereAreNoLinks() {
-        $artifact = new Tracker_Artifact(null, null, null, null, null);
-        $links = $artifact->getArtifactLinks();
+    public function itReturnsAnEmptyListWhenThereIsNoArtifactLinkField() {
+        $tracker = aTracker()->withId('101')->build();
+
+        $factory = $this->GivenAFactoryThatReturns(array())->whenCalledWith($tracker);
+        $artifact = anArtifact()
+                    ->withTracker($tracker)
+                    ->withFormElementFactory($factory)
+                    ->build();
+
+        $links = $artifact->getLinkedArtifacts();
         $this->assertEqual(array(), $links);
+    }
+    
+    public function itReturnsAlistOfTheLinkedArtifacts() {
+        $expected_list = array(
+            new Tracker_Artifact(111, null, null, null, null),
+            new Tracker_Artifact(222, null, null, null, null)
+        );
+        
+        $changesets = array(new MockTracker_Artifact_Changeset());
+        
+        $field = new MockTracker_FormElement_Field_ArtifactLink();
+        $field->setReturnValue('getLinkedArtifacts', $expected_list, $changesets);
+        
+        $tracker = aTracker()->build();
+        $factory = $this->GivenAFactoryThatReturns(array($field))->whenCalledWith($tracker);
+        
+        $artifact = anArtifact()
+                    ->withTracker($tracker)
+                    ->withFormElementFactory($factory)
+                    ->withChangesets($changesets)
+                    ->build();
+        
+        $this->assertEqual($expected_list, $artifact->getLinkedArtifacts());
+    }
+
+    private function GivenAFactoryThatReturns($artifactLinkFields) {
+        return new FormElementFactory_PendingMock($artifactLinkFields);
     }
 }
 ?>

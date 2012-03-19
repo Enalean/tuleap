@@ -28,7 +28,7 @@ class Planning_Presenter {
     public function __construct(Tracker_Artifact $artifact) {
         $this->destination_id    = $artifact->getId();
         $this->destination_title = $artifact->fetchTitle();
-        $linked_items = $artifact->getArtifactLinks();
+        $linked_items = $artifact->getLinkedArtifacts();
         if ($linked_items) {
             $this->linked_items = $linked_items;
         }

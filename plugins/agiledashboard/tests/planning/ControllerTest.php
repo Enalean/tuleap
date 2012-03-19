@@ -50,7 +50,7 @@ class Planning_ControllerTest extends TuleapTestCase {
         );
         
         $artifact = $this->GivenAnArtifact($id, 'Toto');
-        $artifact->setReturnValue('getArtifactLinks', $linked_items);
+        $artifact->setReturnValue('getLinkedArtifacts', $linked_items);
         $factory = new MockTracker_ArtifactFactory();
         $factory->setReturnValue('getArtifactByid', $artifact, array($id));
         $request = new Codendi_Request(array('aid' => $id));
