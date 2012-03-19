@@ -29,6 +29,11 @@ require_once(dirname(__FILE__).'/../Tracker_Valid_Rule.class.php');
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     
     /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    
+    /**
      * Display the html form in the admin ui
      *
      * @return string html
@@ -901,15 +906,20 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return new Tracker_Valid_Rule_ArtifactId();
     }
     
+    public function setArtifactFactory(Tracker_ArtifactFactory $artifact_factory) {
+        $this->artifact_factory = $artifact_factory;
+    }
+
     /**
-     * Returns an instance of Tracker_ArtifactFactory
-     *
-     * @return Tracker_ArtifactFactory 
+     * @return Tracker_ArtifactFactory
      */
     public function getArtifactFactory() {
-        return Tracker_ArtifactFactory::instance();
+        if (!$this->artifact_factory) {
+            $this->artifact_factory = Tracker_ArtifactFactory::instance();
+        }
+        return $this->artifact_factory;
     }
-    
+
     public function getTrackerFactory() {
         return TrackerFactory::instance();
     }
@@ -1008,13 +1018,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     }
     
     /**
-     *
-     * @param Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value 
-     * 
-     * @return array
+     * @return array of Tracker_Artifact
      */
-    public function getLinkedArtifacts(Tracker_Artifact_ChangesetValue_ArtifactLink $changeset_value) {
-        
+    public function getLinkedArtifacts(Tracker_Artifact_Changeset $changeset) {
+        $artifacts = array();
+        $changeset_value = $changeset->getValue($this);
+        if ($changeset_value) {
+            foreach ($changeset_value->getArtifactIds() as $id) {
+                $artifacts[] = $this->artifact_factory->getArtifactById($id);
+            }
+        }
+        return array_filter($artifacts);
     }
 }
 ?>

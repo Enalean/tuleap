@@ -67,6 +67,9 @@ class Test_Tracker_FormElement_Builder {
         return $this;
     }
     
+    /**
+     * @return Tracker_FormElement
+     */
     public function build() {
         $klass  = $this->name;
         $object = new $klass($this->id, $this->trackerId, null, null, null, null, null, null, null, null, null, null);

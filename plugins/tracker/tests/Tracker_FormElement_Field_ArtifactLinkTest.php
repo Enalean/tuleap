@@ -64,16 +64,7 @@ Mock::generate('Tracker_Valid_Rule_ArtifactId');
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-class Tracker_FormElement_Field_ArtifactLinkTest extends UnitTestCase {
-    
-    function setUp() {
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Language'] = new MockBaseLanguage();
-    }
-    
-    function tearDrop() {
-        unset($GLOBALS['Response']);
-    }
+class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
     
     function testNoDefaultValue() {
         $field = new Tracker_FormElement_Field_ArtifactLinkTestVersion();
@@ -226,7 +217,64 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends UnitTestCase {
         $this->assertFalse($f->isValid($a, ''));
         $this->assertTrue($f->hasErrors());
     }
+    
+    public function itReturnsAnEmptyListWhenThereAreNoValuesInTheChangeset() {
+        $field = anArtifactLinkField()->build();
+        $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('getValue', null, array($this));
+        
+        $artifacts = $field->getLinkedArtifacts($changeset);
+        $this->assertIdentical(array(), $artifacts);
+    }
 
+    public function itCreatesAListOfArtifactsBasedOnTheIdsInTheChangesetField() {
+        $artifact_1 = anArtifact()->withId(123)->build();
+        $artifact_2 = anArtifact()->withId(345)->build();
+        
+        $field = anArtifactLinkField()->build();
+        $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact_1, $artifact_2)));
+        
+        $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, 345));
+
+        $artifacts          = $field->getLinkedArtifacts($changeset);
+        $expected_artifacts = array(
+            $artifact_1,
+            $artifact_2
+        );
+        $this->assertEqual($expected_artifacts, $artifacts);
+    }
+
+    public function itIgnoresIdsThatDontExist() {
+        $artifact = anArtifact()->withId(123)->build();
+        
+        $field = anArtifactLinkField()->build();
+        $field->setArtifactFactory($this->GivenAnArtifactFactory(array($artifact)));
+        
+        $non_existing_id = 666;
+        $changeset = $this->GivenAChangesetValueWithArtifactIds($field, array(123, $non_existing_id));
+        
+        $artifacts          = $field->getLinkedArtifacts($changeset);
+        $expected_artifacts = array($artifact);
+        $this->assertEqual($expected_artifacts, $artifacts);
+    }
+
+    private function GivenAChangesetValueWithArtifactIds($field, $ids) {
+        $changeset_value = new MockTracker_Artifact_ChangesetValue_ArtifactLink();
+        $changeset_value->setReturnValue('getArtifactIds', $ids);
+        $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('getValue', $changeset_value, array($field));
+        return $changeset;
+        
+    }
+
+    private function GivenAnArtifactFactory($artifacts) {
+        $factory = new MockTracker_ArtifactFactory();
+        foreach ($artifacts as $a) {
+            $factory->setReturnValue('getArtifactById', $a, array($a->getId()));
+        }
+        return $factory;
+        
+    }
 }
 
 ?>
