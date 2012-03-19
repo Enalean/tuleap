@@ -19,28 +19,11 @@
  */
  
 require_once 'Presenter.class.php';
+require_once 'IndexPresenter.class.php';
 require_once 'PlanningFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/MustacheRenderer.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
-
-class Planning_IndexPresenter {
-    public $group_id = '123';
-    
-    function __construct(PlanningFactory $planning_factory) {
-        $this->plannings = $planning_factory->getPlannings($this->group_id);
-    }
-    public function getPlannings() {
-        return $this->plannings;
-    }
-    
-    public function hasPlannings() {
-        if (empty($this->plannings)) {
-            return false;
-        }
-        return true;
-    }
-}
 
 class Planning_Controller {
 
