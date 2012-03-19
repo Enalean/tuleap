@@ -25,6 +25,7 @@ class PluginRequestTest extends TuleapTestCase {
     protected $requestObject;
     
     public function setUp() {
+        parent::setUp();
         $this->requestObject = new testsPluginRequest();
     }
     
