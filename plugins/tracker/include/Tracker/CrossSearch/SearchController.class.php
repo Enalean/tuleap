@@ -89,8 +89,8 @@ class Tracker_CrossSearch_SearchController {
             $trackers_hierarchy = $this->getTrackersHierarchy($trackers);
             $artifacts          = $this->getArtifacts($trackers, $trackers_hierarchy);
             
-            $view = $this->getView($project, $service, $report, $criteria, $artifacts, $trackers);
-            $view->render();
+            $view = $this->getView($project, $service, $criteria, $trackers);
+            $view->render($this->getContentView($report, $criteria, $artifacts));
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
             $this->layout->addFeedback('error', $e->getMessage());
@@ -194,13 +194,16 @@ class Tracker_CrossSearch_SearchController {
         }
     }
     
-    protected function getView(Project $project, Service $service, Tracker_Report $report, $criteria, $artifacts, $trackers) {
+    protected function getView(Project $project, Service $service, $criteria, $trackers) {
+        return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers);
+    }
+    
+    protected function getContentView(Tracker_Report $report, $criteria, $artifacts) {
         $artifact_factory   = Tracker_ArtifactFactory::instance();
         $formElementFactory = Tracker_FormElementFactory::instance();
         $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
         $shared_factory     = new Tracker_SharedFormElementFactory($formElementFactory, $bindFactory);
-        $content_view       = new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, $artifact_factory, $shared_factory);
-        return new Tracker_CrossSearch_SearchView($project, $service, $content_view, $criteria, $trackers);
+        return new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, $artifact_factory, $shared_factory);
     }
 }
 ?>

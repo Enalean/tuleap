@@ -159,17 +159,17 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     }
     
     private function GivenASearchView($service, $criteria, $artifacts, $root) {
-        $report           = new MockTracker_Report();
-        $artifact_factory = $this->GivenAnArtifactFactory($artifacts);
-        $shared_factory   = $this->GivenASharedFactory($criteria);
-        $project          = new MockProject();
+        $report             = new MockTracker_Report();
+        $artifact_factory   = $this->GivenAnArtifactFactory($artifacts);
+        $shared_factory     = $this->GivenASharedFactory($criteria);
+        $project            = new MockProject();
         $project->setReturnValue('getID', 110);
         $project->setReturnValue('getPublicName', 'gpig');
-        $tracker1         = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
-        $trackers         = array($tracker1);
-        $content_view       = new Tracker_CrossSearch_SearchContentView($report, $criteria, $root, $artifact_factory, $shared_factory);
-
-        $view             = new Tracker_CrossSearch_SearchView($project, $service, $content_view, $criteria, $trackers);
+        $tracker1           = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
+        $trackers           = array($tracker1);
+        
+        $this->setContentView($report, $criteria, $root, $artifact_factory, $shared_factory);
+        $view               = new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers);
         return $view;
     }
     
@@ -208,9 +208,13 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     
     private function renderAndGetContent($view) {
         ob_start();
-        $view->render();
+        $view->render($this->content_view);
         $output = ob_get_clean();
         return $output;
+    }
+
+    private function setContentView($report, $criteria, $root, $artifact_factory, $shared_factory) {
+        $this->content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $root, $artifact_factory, $shared_factory);
     }
 }
 ?>
