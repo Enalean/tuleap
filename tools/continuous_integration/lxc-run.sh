@@ -99,7 +99,7 @@ if  ! lxc-ls | egrep -wq "$lxc_name" || [ $install_mode = "clean-install" ] ; th
     fi
     # Setup an lxc instance and install tuleap
     echo "Create a new container $lxc_name"
-    cp $src_dir/codendi_tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
+    cp $src_dir/tools/continuous_integration/lxc-centos5.cro.enalean.com.config lxc.config
     substitute "lxc.config" "%ip_addr%" "$lxc_ip"
 
     sudo lxc-create -n $lxc_name -f lxc.config -t centos5
@@ -110,7 +110,7 @@ if  ! lxc-ls | egrep -wq "$lxc_name" || [ $install_mode = "clean-install" ] ; th
 
     # Upload installation script into /root
     $remotecmd /bin/rm -fr /root/lxc-inst.sh
-    rsync --delete --archive $src_dir/codendi_tools/continuous_integration/lxc-inst.sh $build_host:/root
+    rsync --delete --archive $src_dir/tools/continuous_integration/lxc-inst.sh $build_host:/root
 
     # Install
     $remotecmd /bin/sh -x /root/lxc-inst.sh $repo_base_url
@@ -143,4 +143,4 @@ fi
 mysql_pass=$($remotecmd grep sys_dbpasswd /etc/codendi/conf/database.inc | cut -d\" -f2)  
 
 # And test!
-TULEAP_HOST=$lxc_ip TULEAP_ENV=aci TULEAP_MYSQL_PASS=$mysql_pass cucumber -f junit -o test_results $src_dir/codendi_tools/plugins/tests/functional/features
+TULEAP_HOST=$lxc_ip TULEAP_ENV=aci TULEAP_MYSQL_PASS=$mysql_pass cucumber -f junit -o test_results $src_dir/tools/plugins/tests/functional/features

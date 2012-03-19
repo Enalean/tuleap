@@ -22,7 +22,7 @@ depdist: dependanciessrc dependancies
 
 %:
 	@echo "Make codendi package target $@ with PKG_NAME=$(PKG_NAME)"
-	make -C codendi_tools/rpm $@ PKG_NAME=$(PKG_NAME) RPM_DIST=$(RPM_DIST)
+	make -C tools/rpm $@ PKG_NAME=$(PKG_NAME) RPM_DIST=$(RPM_DIST)
 
 # Build SRPMS with mock
 mockbuild: dependanciessrc

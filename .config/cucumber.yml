@@ -1,13 +1,11 @@
 # allows loads the core hooks and step defnitions, you must provide the desired feature files
-default: -r codendi_tools/plugins/tests/functional/ 
+default: -r tools/plugins/tests/functional/ 
 
 # loads all step files for the tracker plugin, specify the desired feature files
-tracker: -r codendi_tools/plugins/tests/functional/ -r plugins/tracker/functional/features/ 
+tracker: -r tools/plugins/tests/functional/ -r plugins/tracker/functional/features/ 
 
 # runs all the scenarios for the tracker plugin
-tracker_all: -r codendi_tools/plugins/tests/functional/ -r plugins/tracker/functional/features/ plugins/tracker/functional/features/
+tracker_all: -r tools/plugins/tests/functional/ -r plugins/tracker/functional/features/ plugins/tracker/functional/features/
 
 # runs all the scenarios of the core application
-core_all: codendi_tools/plugins/tests/functional/
-
-
+core_all: tools/plugins/tests/functional/

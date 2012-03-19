@@ -34,4 +34,4 @@ fi
 
 CODENDI_DIR=`/bin/grep '^\$codendi_dir' $CODENDI_LOCAL_INC | /bin/sed -e 's/\$codendi_dir\s*=\s*\(.*\);\(.*\)/\1/' | tr -d '"' | tr -d "'"`
 
-$PHP -d memory_limit=256M $PHPCS --standard="$CODENDI_DIR/codendi_tools/utils/phpcs/Codendi" -n $@
+$PHP -d memory_limit=256M $PHPCS --standard="$CODENDI_DIR/tools/utils/phpcs/Codendi" -n $@

@@ -24,11 +24,11 @@ substitute() {
 ##
 ## Default values
 ##
-sys_default_domain="codendi.org";
+sys_default_domain="tuleap.net";
 local_module_directory="codendi-src";
 port="80";
-sys_org_name="Codendi";
-sys_long_org_name="Codendi";
+sys_org_name="Tuleap";
+sys_long_org_name="Tuleap";
 sniff_svn="true"
 
 ##
@@ -101,13 +101,9 @@ substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$WORKSPACE/var/tmp"
 # Set environment var CODENDI_LOCAL_INC
 export CODENDI_LOCAL_INC="$WORKSPACE/etc/codendi/conf/local.inc"
 
-# Create a symbolic link from plugins/tests to codendi_tools/tests
-cd $codendi_src/plugins/
-ln -sf ../codendi_tools/plugins/tests
-cd tests/www/
-
 # Execute the Tests
 # This will produce a "JUnit like" test result file named codendi_unit_tests_report.xml that Hudson can use to produce test results.
+cd plugins/tests/www/
 php -d include_path="$codendi_src/src/www/include:$codendi_src/src:/usr/share/pear:." -d memory_limit=196M test_all.php
 
 # Checkstyle
@@ -116,10 +112,10 @@ cd "$codendi_src"
 
 files=""
 if [ "$sniff_svn" = "true" ]; then
-    files=$(php "$codendi_src/codendi_tools/continuous_integration/findFilesToSniff.php")
+    files=$(php "$codendi_src/tools/continuous_integration/findFilesToSniff.php")
 fi
 
-php -d memory_limit=256M /usr/bin/phpcs --standard="$codendi_src/codendi_tools/utils/phpcs/Codendi" "$codendi_src/src/common/chart" "$codendi_src/src/common/backend" --report=checkstyle -n --ignore=*/phpwiki/* --ignore="*/webdav/lib/*" $files > $WORKSPACE/var/tmp/checkstyle.xml || true
+php -d memory_limit=256M /usr/bin/phpcs --standard="$codendi_src/tools/utils/phpcs/Codendi" "$codendi_src/src/common/chart" "$codendi_src/src/common/backend" --report=checkstyle -n --ignore=*/phpwiki/* --ignore="*/webdav/lib/*" $files > $WORKSPACE/var/tmp/checkstyle.xml || true
 popd
 
 exit 0

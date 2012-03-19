@@ -2,11 +2,11 @@ Before do
     if ENV['TULEAP_ENV'] == 'aci'
         puts "reinit database"
         codendi_dir = "/usr/share/codendi"
-        fixture_file = "codendi_tools/plugins/tests/functional/fixture.sql"
+        fixture_file = "plugins/tests/functional/fixture.sql"
         mysql_pass = (ENV['TULEAP_MYSQL_PASS'] || "welcome0") 
         system "ssh root@#{$tuleap_host} -C \"mysql -B -p#{mysql_pass} -ucodendiadm codendi < #{codendi_dir}/#{fixture_file}\"" 
         #to export the state of the base and replace the current fixture file
-        #ssh root@piton -C "mysqldump -pwelcome0 -ucodendiadm codendi > /usr/share/codendi/codendi_tools/plugins/tests/functional/fixture.sql"
+        #ssh root@piton -C "mysqldump -pwelcome0 -ucodendiadm codendi > /usr/share/codendi/plugins/tests/functional/fixture.sql"
     end
 end
 
