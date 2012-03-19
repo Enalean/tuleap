@@ -391,7 +391,6 @@ my @svn_events_mailing_lists = '';
 foreach my $dirVal (@dirschanged) {
 $svn_events_mailing_lists .= get_emails_by_path('svn_notification', 'path', $dirVal, 'svn_events_mailing_list');
 }
-print "\n Debug::event notification lists => $svn_events_mailing_lists ";
 
 # Lose the trailing slash in the directory names if one exists, except
 # in the case of '/'.
