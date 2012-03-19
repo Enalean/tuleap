@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('../include/testsPluginRequest.php');
-require_once('../include/testsPluginRunner.php');
+require_once dirname(__FILE__).'/../include/testsPluginRequest.php';
+require_once dirname(__FILE__).'/../include/testsPluginRunner.php';
 
 class PluginRunnerTest extends TuleapTestCase {
     protected $runner;
