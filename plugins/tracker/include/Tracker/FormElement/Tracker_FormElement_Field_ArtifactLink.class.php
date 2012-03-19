@@ -1025,7 +1025,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $changeset_value = $changeset->getValue($this);
         if ($changeset_value) {
             foreach ($changeset_value->getArtifactIds() as $id) {
-                $artifacts[] = $this->artifact_factory->getArtifactById($id);
+                $artifacts[] = $this->getArtifactFactory()->getArtifactById($id);
             }
         }
         return array_filter($artifacts);
