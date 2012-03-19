@@ -19,10 +19,22 @@
  */
 
 class testsPluginFilterIterator extends FilterIterator {
+    protected $pattern = '@Test.php$@';
+    
     
     public function accept() {
         $file = $this->getInnerIterator()->current();
-        return (strpos($file->getPathname(), '/_') === false && preg_match('@Test.php$@', $file->getFilename()));
+        return (strpos($file->getPathname(), '/_') === false && preg_match($this->pattern, $file->getFilename()));
+    }
+    
+    public function setPattern($pattern) {
+        $this->pattern = $pattern;
+    }
+    
+    public static function apply($path) {        
+        $RecursiveIt    =  new RecursiveCachingIterator(new RecursiveDirectoryIterator($path));
+        $RecursiveIt    = new RecursiveIteratorIterator($RecursiveIt, RecursiveIteratorIterator::SELF_FIRST);
+        return new testsPluginFilterIterator($RecursiveIt);
     }
 }
 ?>
