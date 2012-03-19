@@ -21,6 +21,8 @@
 require_once(dirname(__FILE__).'/../../include/Planning/Controller.class.php');
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
+require_once(dirname(__FILE__).'/../builders/planning.php');
+
 if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker');
 }
@@ -130,15 +132,10 @@ class Planning_ControllerNonEmptyIndexTest extends Planning_ControllerIndexTest 
     function setUp() {
         parent::setUp();
         
-        $release_planning = new MockPlanning();
-        $release_planning->setReturnValue('getId', 1);
-        $release_planning->setReturnValue('getName', 'Release Planning');
-        
-        $sprint_planning = new MockPlanning();
-        $sprint_planning->setReturnValue('getId', 2);
-        $sprint_planning->setReturnValue('getName', 'Sprint Planning');
-        
-        $this->plannings = array($release_planning, $sprint_planning);
+        $this->plannings = array(
+            aPlanning()->withId(1)->withName('Release Planning')->build(),
+            aPlanning()->withId(2)->withName('Sprint Planning')->build(),
+        );
         
         $this->renderIndex();
     }

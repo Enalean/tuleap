@@ -18,17 +18,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning {
+// This is an on going work to help developers to build more expressive tests
+// please add the functions/methods below when needed.
+// For further information about the Test Data Builder pattern
+// @see http://nat.truemesh.com/archives/000727.html
+
+require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
+
+function aPlanning() {
+    return new Test_Planning_Builder();
+}
+
+class Test_Planning_Builder {
+    private $id;
+    private $name;
     
-    function __construct($id, $name) {
+    public function withId($id) {
         $this->id = $id;
+        return $this;
+    }
+    
+    public function withName($name) {
         $this->name = $name;
+        return $this;
     }
-    public function getId () {
-        return $this->id;
-    }
-    public function getName() {
-        return $this->name;
+        
+    public function build() {
+        return new Planning($this->id, $this->name);
     }
 }
 
