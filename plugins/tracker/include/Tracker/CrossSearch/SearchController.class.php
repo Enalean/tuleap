@@ -86,8 +86,7 @@ class Tracker_CrossSearch_SearchController {
             $report             = $this->getReport();
             $criteria           = $this->getCriteria($project, $report, $this->formElementFactory, $this->request->get('criteria'));
             $trackers           = $this->getTrackers($project, $this->tracker_factory);
-            $trackers_hierarchy = $this->getTrackersHierarchy($trackers, $this->hierarchy_factory);
-            $artifacts          = $this->getArtifacts($trackers, $trackers_hierarchy, $this->search, $this->request->get('criteria'));
+            $artifacts          = $this->getArtifacts($trackers, $this->search, $this->request->get('criteria'), $this->hierarchy_factory);
             
             $view = $this->getView($project, $service, $criteria, $trackers);
             $view->render($this->getContentView($report, $criteria, $artifacts));
@@ -102,16 +101,17 @@ class Tracker_CrossSearch_SearchController {
         }
     }
     
-    protected function getTrackersHierarchy(array $trackers, $hierarchy_factory) {
+    protected function getArtifacts(array $trackers, $search, $request_criteria, $hierarchy_factory) {
+        $hierarchy = $this->getTrackersHierarchy($trackers, $hierarchy_factory);
+        return $search->getMatchingArtifacts($trackers, $hierarchy, $request_criteria);
+    }
+    
+    private function getTrackersHierarchy(array $trackers, $hierarchy_factory) {
         $tracker_ids = array();
         foreach ($trackers as $tracker) {
             $tracker_ids[] = $tracker->getId();
         }
         return $hierarchy_factory->getHierarchy($tracker_ids);
-    }
-    
-    protected function getArtifacts(array $trackers, $hierarchy, $search, $request_criteria) {
-        return $search->getMatchingArtifacts($trackers, $hierarchy, $request_criteria);
     }
     
     public function getTrackers(Project $project, $tracker_factory) {
