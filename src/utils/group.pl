@@ -130,7 +130,7 @@ sub get_email_from_login {
 }
 # @TODO add docBlock for subroutine
 sub get_emails_by_path {
-    my ($table, $fieldname, $value, $retfieldname) = @_;
+    my ($table, $fieldname, $value, $retfieldname, $groupid) = @_;
     my ($query, $res);
 # @TODO add comment
     my @dirs = split('/', $value);
@@ -149,8 +149,9 @@ sub get_emails_by_path {
     my $table = $dbh->quote_identifier($table);
     my $fieldname = $dbh->quote_identifier($fieldname);
     my $patternMatcher = $dbh->quote($patternMatcher);
+    my $groupid = $dbh->quote($groupid);
 
-    $query = "SELECT $retfieldname FROM $table WHERE $fieldname RLIKE $patternMatcher";
+    $query = "SELECT $retfieldname FROM $table WHERE $fieldname RLIKE $patternMatcher and group_id = $groupid";
     $sth = $dbh->prepare($query);
     $res = $sth->execute();
     if ($sth->rows >= 1) {

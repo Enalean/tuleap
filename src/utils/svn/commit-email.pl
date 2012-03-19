@@ -389,7 +389,7 @@ my @dirschanged = &read_from_process($svnlook, 'dirs-changed', $repos,
 # @TODO add filter for group Id
 my @svn_events_mailing_lists = '';
 foreach my $dirVal (@dirschanged) {
-$svn_events_mailing_lists .= get_emails_by_path('svn_notification', 'path', $dirVal, 'svn_events_mailing_list');
+$svn_events_mailing_lists .= get_emails_by_path('svn_notification', 'path', $dirVal, 'svn_events_mailing_list', $group_id);
 }
 
 # Lose the trailing slash in the directory names if one exists, except
