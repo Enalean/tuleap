@@ -21,6 +21,7 @@
 require_once 'Presenter.class.php';
 require_once 'IndexPresenter.class.php';
 require_once 'PlanningFactory.class.php';
+require_once 'common/valid/ValidFactory.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
@@ -73,6 +74,7 @@ class Planning_Controller {
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../templates');
         $this->planning_factory = $planning_factory;
         $this->tracker_factory  = $tracker_factory;
+        $this->request = $request;
     }
 
     function display() {
@@ -92,6 +94,37 @@ class Planning_Controller {
     public function create() {
         $presenter = new Planning_CreatePresenter($this->group_id, $this->tracker_factory);
         $this->render('create', $presenter);
+    }
+    
+    public function doCreate() {
+        $planning_name = new Valid_String('planning_name');
+        $planning_name->required();
+        
+        $planning_backlog_ids = new Valid_UInt('planning_backlog_ids');
+        $planning_backlog_ids->required();
+        
+        $planning_release_id = new Valid_UInt('planning_release_id');
+        $planning_release_id->required();
+        
+        if ($this->request->validArray($planning_backlog_ids) && 
+            $this->request->valid($planning_release_id) &&
+            $this->request->valid($planning_name)) {
+            
+            $this->planning_factory->create($this->request->get('planning_name'),
+                                            $this->request->get('planning_release_id'),
+                                            $this->request->get('planning_backlog_ids'));
+            
+            $this->redirect(array('group_id' => $this->group_id));
+        } else {
+            $GLOBALS['Response']->addFeedback('error', 'All fields are mandatory');
+            $this->redirect(array('group_id' => $this->group_id,
+                                  'func'     => 'create'));
+        }
+    }
+    
+    private function redirect($query_parts) {
+        $redirect = http_build_query($query_parts);
+        $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'.$redirect);
     }
 }
 ?>

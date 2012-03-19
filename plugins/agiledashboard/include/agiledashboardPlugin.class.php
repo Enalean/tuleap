@@ -77,6 +77,9 @@ class AgileDashboardPlugin extends Plugin {
             case 'create':
                 $this->displayCreate($request);
                 break;
+            case 'doCreate':
+                $this->doCreate($request);
+                break;
             case 'index':
             default:
                 $this->displayIndex($request);
@@ -130,6 +133,11 @@ class AgileDashboardPlugin extends Plugin {
         $this->displayHeader($request, "New Planning");
         $controller->create();
         $this->displayFooter($request);
+    }
+    
+    private function doCreate(Codendi_Request $request) {
+        $controller = $this->buildController($request);
+        $controller->doCreate();
     }
 
     private function displayPlanning(Codendi_Request $request) {

@@ -46,6 +46,10 @@ class PlanningFactory {
     
     public function getPlannings() {
     }
+    
+    public function create($planning_name, $planning_backlog_ids, $planning_release_id) {
+        return true;
+    }
 }
 
 ?>

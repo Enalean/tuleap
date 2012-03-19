@@ -1,11 +1,11 @@
-<form action="/plugins/agiledashboard/?group_id={{group_id}}&amp;func=doCreate">
+<form method="post" action="/plugins/agiledashboard/?group_id={{group_id}}&amp;func=doCreate">
     <p>
         <label for="planning_name">Name</label>
         <input type="text" name="planning_name"/>
     </p>
     <p>
         This planning allows assignment of
-        <select multiple="multiple" name="planning_backlog_ids" style="vertical-align: top;">
+        <select multiple="multiple" name="planning_backlog_ids[]" style="vertical-align: top;">
             {{#getAvailableTrackers}}
                 <option value="{{getId}}">{{getName}}</option>
             {{/getAvailableTrackers}}

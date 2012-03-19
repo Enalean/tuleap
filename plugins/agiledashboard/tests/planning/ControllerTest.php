@@ -184,7 +184,7 @@ class Planning_ControllerCreateTest extends TuleapTestCase {
     
     public function itHasAMultiSelectBoxListingTrackers() {
         
-        $this->assertPattern('/\<select multiple="multiple" name="planning_backlog_ids"/', $this->output);
+        $this->assertPattern('/\<select multiple="multiple" name="planning_backlog_ids\[\]"/', $this->output);
         foreach ($this->trackers as $tracker) {
             $this->assertPattern('/\<option value="'.$tracker->getId().'"\>'.$tracker->getName().'/', $this->output);
         }
@@ -197,4 +197,58 @@ class Planning_ControllerCreateTest extends TuleapTestCase {
         }
     }
 }
+
+abstract class Planning_ControllerDoCreateTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        $this->group_id         = '123';
+        $this->request          = new Codendi_Request(array('group_id' => $this->group_id));
+        $this->artifact_factory = new MockTracker_ArtifactFactory();
+        $this->planning_factory = new MockPlanningFactory();
+        $this->tracker_factory  = new MockTrackerFactory();
+        
+        $this->tracker_factory->setReturnValue('getTrackersByGroupId', array());
+    }
+    
+    protected function doCreate() {
+        $this->controller = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory, $this->tracker_factory);
+        
+        ob_start();
+        $this->controller->doCreate();
+        $this->output = ob_get_clean();
+    }
+}
+
+class Planning_ControllerDoCreateWithInvalidParamsTest extends Planning_ControllerDoCreateTest {
+    public function setUp() {
+        parent::setUp();
+        
+        $this->request->set('planning_name', '');
+        $this->request->set('planning_backlog_ids', array());
+        $this->request->set('planning_release_id', '');
+    }
+    
+    public function itShowsAnErrorMessageAndRedirectsBackToTheCreationForm() {
+        $this->expectFeedback('error', '*');
+        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&func=create');
+        $this->doCreate();
+    }
+}
+
+class Planning_ControllerDoCreateWithValidParamsTest extends Planning_ControllerDoCreateTest {
+    public function setUp() {
+        parent::setUp();
+        
+        $this->request->set('planning_name', 'Release Planning');
+        $this->request->set('planning_backlog_ids', array('1', '2'));
+        $this->request->set('planning_release_id', '3');
+    }
+    
+    public function itCreatesThePlanningAndRedirectsToTheIndex() {
+        $this->planning_factory->expectOnce('create', array('Release Planning', '3', array('1', '2')));
+        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id);
+        $this->doCreate();
+    }
+}
+
 ?>
