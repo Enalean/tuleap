@@ -20,6 +20,7 @@
 
 require_once dirname(__FILE__).'/../include/testsPluginRequest.php';
 require_once dirname(__FILE__).'/../include/testsPluginRunner.php';
+require_once('PluginFilterIteratorTest.php');
 
 class PluginRunnerTest extends TuleapTestCase {
     protected $runner;
@@ -37,91 +38,39 @@ class PluginRunnerTest extends TuleapTestCase {
         'show_pass' =>false
     );
     
-    protected $fixFiles = array(
-        array('fixtures', 'test2', 'test 2', 'test2.1Test.php'),
-        array('fixtures', 'test2', 'test 2', 'test2.2Test.php'),
-        array('fixtures', 'test2', 'test2Test.php'),
-        array('fixtures', 'test1', 'test1Test.php'),
-    );
-    protected $fixDirs = array(
-        array('fixtures'),
-        array('fixtures', 'test1'),
-        array('fixtures', 'test2'),
-        array('fixtures', 'test2', 'test 2'),
-    );
-    
-    public static function implodePath() {
-        $path =  func_get_args();
-        return self::implodeArrayPath($path);
-    }
-    
-    public static function implodeArrayPath($path) {
-        return implode(DIRECTORY_SEPARATOR, $path);
-    }
-    
-    public function makeFixtures() {
-        $baseDir = dirname(__FILE__).DIRECTORY_SEPARATOR;
-        foreach($this->fixDirs as $dirname) {
-            $dirname = $baseDir.self::implodeArrayPath($dirname);
-            if (!file_exists($dirname)) {
-                mkdir($dirname);
-            }
-        }
-        foreach($this->fixFiles as $filename) {
-            touch($baseDir.self::implodeArrayPath($filename));
-        }
-    }
-    
-    public function delFixtures() {
-        $baseDir = dirname(__FILE__).DIRECTORY_SEPARATOR;
-        foreach ($this->fixFiles as $filename) {
-            $filename = $baseDir.self::implodeArrayPath($filename);
-            if (file_exists($filename)) {
-                unlink($filename);
-            }
-        }
-        $fixDirs = array_reverse($this->fixDirs);
-        foreach($fixDirs as $dirname) {
-            $dirname = $baseDir.self::implodeArrayPath($dirname);
-            if (file_exists($dirname)) {
-                rmdir($dirname);
-            }
-        }
-    }
-    
     public function setUp() {
-        $this->makeFixtures();
+        PluginFilterIteratorTest::makeFixtures(PluginFilterIteratorTest::$fixDirs, PluginFilterIteratorTest::$fixFiles);
         $this->request = new testsPluginRequest();
         $this->request->parse($this->reqArguments);
         $this->runner  = new testsPluginRunner($this->request);
     }
     
     public function tearDown() {
-        $this->delFixtures();
+        PluginFilterIteratorTest::delFixtures(PluginFilterIteratorTest::$fixDirs, PluginFilterIteratorTest::$fixFiles);
     }
     
     public function itCanFindAllTestsFilesInTheGivenPath() {
-        $baseDir  = self::implodePath(dirname(__FILE__), 'fixtures');
-        $expected = array(
-            self::implodePath('test1', 'test1Test.php'), 
-            self::implodePath('test2', 'test2Test.php'), 
-            self::implodePath('test2', 'test 2', 'test2.1Test.php'), 
-            self::implodePath('test2', 'test 2', 'test2.2Test.php')
-        );
-        sort($expected);
+        $baseDir  = PluginFilterIteratorTest::implodePath(dirname(__FILE__), 'fixtures');
         $this->runner->appendTestsInPath($baseDir, 'MyTest 1');
         $allTests = $this->runner->getAllTestFilesOfCategory('MyTest 1');
         sort($allTests);
+        $expected = array(
+            PluginFilterIteratorTest::implodePath('test1', 'test1Test.php'), 
+            PluginFilterIteratorTest::implodePath('test2', 'test2Test.php'), 
+            PluginFilterIteratorTest::implodePath('test2', 'test 2', 'test2.1Test.php'), 
+            PluginFilterIteratorTest::implodePath('test2', 'test 2', 'test2.2Test.php')
+        );
+        sort($expected);
         $this->assertEqual($expected, $allTests);
     }
     
     public function itCanFindAllTestsFilesInTheGivenPathThatMustBeRun() {
         
-        $baseDir  = self::implodePath(dirname(__FILE__), 'fixtures');
+        $baseDir  = PluginFilterIteratorTest::implodePath(dirname(__FILE__), 'fixtures');
         $expected = array(
-            self::implodePath('test1', 'test1Test.php'),
-            self::implodePath('test2', 'test 2', 'test2.1Test.php'),
-            self::implodePath('test2', 'test 2', 'test2.2Test.php')
+            PluginFilterIteratorTest::implodePath('test1', 'test1Test.php'),
+            PluginFilterIteratorTest::implodePath('test2', 'test 2', 'test2.1Test.php'),
+            PluginFilterIteratorTest::implodePath('test2', 'test 2', 'test2.2Test.php')
         );
         sort($expected);
         $this->runner->appendTestsInPath($baseDir, 'MyTest 2');
