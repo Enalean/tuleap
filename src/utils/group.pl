@@ -150,9 +150,9 @@ sub get_emails_by_path {
     my $fieldname = $dbh->quote_identifier($fieldname);
     my $patternMatcher = $dbh->quote($patternMatcher);
 
-    $query = "SELECT $retfieldname FROM $table WHERE $fieldname RLIKE ?";
+    $query = "SELECT $retfieldname FROM $table WHERE $fieldname RLIKE $patternMatcher";
     $sth = $dbh->prepare($query);
-    $res = $sth->execute($patternMatcher);
+    $res = $sth->execute();
     if ($sth->rows >= 1) {
         my @emails = ();
         while (my @row = $sth->fetchrow_array()) {
