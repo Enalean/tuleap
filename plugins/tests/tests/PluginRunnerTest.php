@@ -27,7 +27,7 @@ class PluginRunnerTest extends TuleapTestCase {
     protected $reqArguments = array(
     	'tests_to_run'=> array(
     		'test1' => array('_do_all'=>'0', 'test1Test.php'=>'1'),
-    		'test2' => array('_do_all'=>'0', 'tests 2'=>
+    		'test2' => array('_do_all'=>'0', 'test 2'=>
     		    array('_do_all'=>'1', 'test2.1Test.php'=>'1', 'test2.2Test.php'=>'1'),
     			'test2Test.php'=>'0'
     		 )
@@ -68,7 +68,7 @@ class PluginRunnerTest extends TuleapTestCase {
             }
         }
         foreach($this->fixFiles as $filename) {
-            file_put_contents($baseDir.self::implodeArrayPath($filename), '');
+            touch($baseDir.self::implodeArrayPath($filename));
         }
     }
     
@@ -119,12 +119,12 @@ class PluginRunnerTest extends TuleapTestCase {
         
         $baseDir  = self::implodePath(dirname(__FILE__), 'fixtures');
         $expected = array(
-        self::implodePath('test1', 'test1Test.php'),
-        self::implodePath('test2', 'test 2', 'test2.1Test.php'),
-        self::implodePath('test2', 'test 2', 'test2.2Test.php')
+            self::implodePath('test1', 'test1Test.php'),
+            self::implodePath('test2', 'test 2', 'test2.1Test.php'),
+            self::implodePath('test2', 'test 2', 'test2.2Test.php')
         );
         sort($expected);
-                $this->runner->appendTestsInPath($baseDir, 'MyTest 2');
+        $this->runner->appendTestsInPath($baseDir, 'MyTest 2');
         $allTests = $this->runner->getTestFilesToRunOfCategory('MyTest 2');
         sort($allTests);
         $this->assertEqual($expected, $allTests);

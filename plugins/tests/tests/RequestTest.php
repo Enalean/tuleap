@@ -105,7 +105,7 @@ class PluginRequestTest extends TuleapTestCase {
         	'test1'=>array('test1Test.php'),
         	'test2'=>array('tests 2'=>array('test2.1Test.php', 'test2.2Test.php')) 
         );
-        $this->requestObject->parse(array('tests_to_run'=>$expected));
+        $this->requestObject->parse($fixture);
         $this->assertEqual($this->requestObject->getTestsToRun(), $expected);
     }
     

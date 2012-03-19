@@ -22,8 +22,8 @@ require_once('testsPluginFilterIterator.php');
 class testsPluginRunner {
     
     protected $request;
-    protected $titles         = array('normal'=>'All Tests', 'revert'=>'All Tests (revert order)', 'random'=>'All Tests (random order)');
     protected $testSuite;
+    protected $titles         = array('normal'=>'All Tests', 'revert'=>'All Tests (revert order)', 'random'=>'All Tests (random order)');
     protected $testFiles      = array();
     protected $testFilesToRun = array();
     protected $categoryPath   = array();
@@ -31,44 +31,63 @@ class testsPluginRunner {
     public function __construct( testsPluginRequest $request) {
         $this->request = $request;
         $title = $this->getTitleByOrder($request->getOrder());
-        $this->testSuite = new TestSuite();
+        $this->testSuite = new TestSuite($title);
     }
     
     public function appendTestsInPath($path, $category) {
         $this->categoryPath[$category] = realpath($path).DIRECTORY_SEPARATOR;
-        $RecursiveIt    =  new RecursiveCachingIterator(new RecursiveDirectoryIterator($path));
-        $RecursiveIt    = new RecursiveIteratorIterator($RecursiveIt, RecursiveIteratorIterator::SELF_FIRST);
-        $filterIterator = new testsPluginFilterIterator($RecursiveIt);
+        $filterIterator = testsPluginFilterIterator::apply($path);
         foreach($filterIterator as $file) {
-            $pathName = $file->getPathname();
-            $this->appendFileInCategory($category, $pathName);
+            $filename = str_replace($this->categoryPath[$category], '', $file->getPathname());       
+            $this->testFiles[$category][] = $filename;
+            $exPath = $this->explodePath($filename);
+            if ($this->mustBeRun($filename)) {
+                $this->testFilesToRun = array_unique(array_merge_recursive($exPath, $this->testFilesToRun));
+            }
         }
+        
         $this->testFiles[$category] = array_unique($this->testFiles[$category]);
-    }
-    
-    protected function appendFileInCategory($category, $filename) {        
-        $this->testFiles[$category][] = str_replace($this->categoryPath[$category], '', $filename);
-        $exPath = $this->explodePath($filename);
-        if ($this->mustBeRun($category, $exPath)) {
-            var_dump($exPath);
-            $this->testFilesToRun = array_merge_recursive($exPath, $this->testFilesToRun);
-        }
+        
     }
     
     protected function explodePath($pathName) {
-        return explode(DIRECTORY_SEPARATOR, $pathName);
+        $expPath = array_reverse(explode(DIRECTORY_SEPARATOR, $pathName));
+        $return  = array_shift($expPath);
+        foreach ($expPath as $expKey) {
+            $return = array($expKey=>$return);
+        }
+        return $return;
     }
     
-    protected function mustBeRun($explodedPath, $category) {
-        $requestTests = $this->request->getTestsToRun();
-        while (is_array($explodedPath)) {
-            $current = array_shift($explodePath);
-            if (! isset($requestTests[$current])) {
-                return false;
+    public static function implodePath() {
+        $path =  func_get_args();
+        return self::implodeArrayPath($path);
+    }
+    
+    public static function implodeArrayPath($path) {
+        return implode(DIRECTORY_SEPARATOR, $path);
+    }
+    
+    protected function implodePathRecursive($pathName) {
+        $return = array();
+        foreach($pathName as $key=>$path) {
+            if (is_array($path)) {
+                 $path = $this->implodePathRecursive($path);
+                 foreach ($path as $currentPath) {
+                     $return[] = self::implodePath($key, $currentPath);
+                 }
+            } elseif(is_string($key)) {
+                $return[] = self::implodePath($key, $path);
+            } else {
+                $return[] = $path;
             }
-            $requestTests = $requestTests[$current];
         }
-        return true;
+        return array_unique($return);
+    }
+    
+    protected function mustBeRun($filename) {        
+        $testsToRun = $this->implodePathRecursive($this->request->getTestsToRun());
+        return in_array($filename, $testsToRun);
     }
     
     public function getAllTestFilesOfCategory($category) {
@@ -79,31 +98,19 @@ class testsPluginRunner {
         }
     }
     public function getTestFilesToRunOfCategory($category) {
-        return $this->testFilesToRun;
+        return $this->implodePathRecursive($this->testFilesToRun);
     }
     
     public function getTitleByOrder($order) {
         return $this->titles[$order];
     }
     
+    /*
+    
     public function run($reporter) {
         $this->testSuite->run($reporter);
     }
     
-    public function appendPathRecursive($testSuite, $path) {
-        $RecursiveIt =  new RecursiveCachingIterator(new RecursiveDirectoryIterator($path));
-        $RecursiveIt = new RecursiveIteratorIterator($RecursiveIt, RecursiveIteratorIterator::SELF_FIRST);
-        
-        $this->testsPathIterators[$path] = new testsPluginFilterIterator($RecursiveIt);
-    }
-    
-    public function iteratorToTestPath($basePath, $iterator) {
-        $arrayPath = array();
-        foreach($iterator as $file) {
-            $pathName = $file->getPathname();
-            
-        }
-    }
     
     public function getGroupTests($groupTests) {
         foreach($groupTests as $plugin => $tests) {
@@ -141,5 +148,96 @@ class testsPluginRunner {
             $params['group']->addTestFile($params['path'] . $category);
         }
     } 
+    
+    function add_test_to_group($test, $categ, $params) {
+        global $random;
+        if (is_array($test)) {
+            if ($categ != '_tests') {
+                $g = new TestSuite($categ .' Results');
+                foreach($test as $c => $t) {
+                    add_test_to_group($t, $c, array('group' => &$g, 'path' => $params['path']."/$categ/"));
+                }
+                $params['group']->addTestCase($g);
+            } else {
+                foreach($test as $t) {
+                    $random[] = $params['path'] . '/' . $t;
+                    $params['group']->addTestFile($params['path'] . '/' . $t);
+                }
+            }
+        } else if ($test) {
+            $random[] = $params['path'] . $categ;
+            $params['group']->addTestFile($params['path'] . $categ);
+        }
+    }
+    
+    $g = get_group_tests($_REQUEST['tests_to_run']);
+    if (isset($_REQUEST['order']) && $_REQUEST['order'] != 'normal') {
+                                    if ($_REQUEST['order'] == 'random') {
+                                        shuffle($random);
+    $g = new TestSuite("All Tests (random order)");
+    } else if ($_REQUEST['order'] == 'invert') {
+                                        rsort($random);
+    $g = new TestSuite("All Tests (invert order)");
+    }
+    foreach($random as $file) {
+    $g->addTestFile($file);
+    }
+    }
+    
+    /*
+    public function append($appendTests) {
+        foreach($appendTests as $plugin => $tests) {
+            $testSuite = new TestSuite($plugin .' Tests');
+            foreach($tests as $c => $t) {
+                add_test_to_group($t, $c,
+                array(
+                'group' => &$o, 
+                'path' => $GLOBALS['config']['plugins_root'] . ($plugin == 'Codendi' ? 'tests' : $plugin) . $GLOBALS['config']['tests_root']
+                ));
+            }
+            $g->add($o);
+        }
+    return $g;
+        $o =new TestSuite($plugin .' Tests');
+        foreach($tests as $c => $t) {
+            add_test_to_group($t, $c,
+            array(
+                        'group' => &$o, 
+                        'path' => $GLOBALS['config']['plugins_root'] . ($plugin == 'Codendi' ? 'tests' : $plugin) . $GLOBALS['config']['tests_root']
+            ));
+        }
+        $g->add($o);
+        }
+        return $g;
+    }
+    
+    public function addTestToGroup($test, $categ, $params) {
+        global $random;
+        if (is_array($test)) {
+            if ($categ != '_tests') {
+                $g = new TestSuite($categ .' Results');
+                foreach($test as $c => $t) {
+                    $this->addTestToGroup($t, $c, array('group' => &$g, 'path' => $params['path']."/$categ/"));
+                }
+                $params['group']->addTestCase($g);
+            } else {
+                foreach($test as $t) {
+                    $random[] = $params['path'] . '/' . $t;
+                    $params['group']->addTestFile($params['path'] . '/' . $t);
+                }
+            }
+        } elseif ($test) {
+            $random[] = $params['path'] . $categ;
+            $params['group']->addTestFile($params['path'] . $categ);
+        }
+    }
+    
+    public function collect($testSuite, $path) {
+        $pathIterator = new FilterTestCase(new RecursiveIteratorIterator(new RecursiveCachingIterator(new RecursiveDirectoryIterator($path)),
+        RecursiveIteratorIterator::SELF_FIRST));
+        foreach ($pathIterator as $file) {
+            $testSuite->addTestFile($file->getPathname());
+        }
+    }*/
 }
 ?>

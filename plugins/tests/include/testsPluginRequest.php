@@ -64,7 +64,7 @@ class testsPluginRequest {
         foreach ($tests_to_run as $key=>$value) {
             if (is_array($value)) {
                 $to_run[$key] = $this->parseTestsToRun($value);
-            } elseif ($value === 1 && $key !== '_do_all') {
+            } elseif ($value == 1 && $key !== '_do_all') {
                 $to_run[] = $key; 
             }
         }
