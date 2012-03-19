@@ -278,6 +278,26 @@ class ProjectDao extends DataAccessObject {
                 ' ON DUPLICATE KEY UPDATE msg_to_requester='.$this->da->quoteSmart($message);
         return $this->update($sql);
     }
+
+    /**
+     * Set mailing list and header to be notified on a given path
+     *
+     * @param Integer $groupId
+     * @param String $mailingList
+     * @param String $mailingHeader
+     * @param String $path
+     * 
+     * @return Boolean
+     */
+    function setSVNMailingListAndHeader($groupId, $mailingList, $mailingHeader, $path) {
+        $sql = ' INSERT INTO svn_notification 
+                 VALUES ('.$this->da->escapeInt($group_id).', '.$this->da->quoteSmart($mailingList).', '.
+                           $this->da->quoteSmart($mailingHeader).', '.$this->da->quoteSmart($path).')
+                 WHERE group_id = '.$this->da->escapeInt($group_id).'
+                 AND path = '.$this->da->quoteSmart($path).'
+                 ON DUPLICATE KEY UPDATE svn_mailing_list = '.$this->da->quoteSmart($mailingHeader);
+        return $this->update($sql);
+    }
 }
 
 ?>
