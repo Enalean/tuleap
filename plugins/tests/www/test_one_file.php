@@ -47,8 +47,31 @@ require_once(dirname(__FILE__).'/TuleapTestCase.class.php');
 
 
 // Start
+$options = getopt('x');
+$format  = 'console';
+if (isset($options['x'])) {
+    $format = 'checkstyle';
+    foreach ($_SERVER['argv'] as $key => $value) {
+        if ($value == '-x') {
+            unset($_SERVER['argv'][$key]);
+        }
+    }
+}
+
+if ($format == 'checkstyle') {
+    $reporter = CodendiReporterFactory::reporter('junit_xml', true);
+} else {
+    $reporter = new ColorTextReporter();
+}
+
+// remove command name from argument list
 array_shift($_SERVER['argv']);
+
 $suite = new TuleapTestSuite($_SERVER['argv']);
-$suite->run(new ColorTextReporter());
+$suite->run($reporter);
+
+if ($format == 'checkstyle') {
+    $reporter->writeXML('unit_tests_report.xml');
+}
 
 ?>
