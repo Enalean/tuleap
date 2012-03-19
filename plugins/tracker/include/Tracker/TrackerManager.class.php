@@ -181,6 +181,9 @@ class TrackerManager { /* extends Engine? */
         }
     }
     
+    /**
+     * @return Tracker_CrossSearch_SearchController 
+     */
     protected function getCrossSearchController(Codendi_Request $request) {        
         $formElementFactory = Tracker_FormElementFactory::instance();
         
