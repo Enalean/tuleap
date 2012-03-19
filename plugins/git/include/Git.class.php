@@ -23,6 +23,9 @@ require_once('mvc/PluginController.class.php');
 require_once('GitViews.class.php');
 require_once('GitActions.class.php');
 require_once('GitRepository.class.php');
+
+require_once('common/valid/ValidFactory.class.php');
+
 /**
  * Git
  * @author Guillaume Storchi
@@ -64,10 +67,9 @@ class Git extends PluginController {
     public function __construct(GitPlugin $plugin) {
         parent::__construct();
         
-        $this->userManager = UserManager::instance();
-        
-        $this->factory = new GitRepositoryFactory();
+        $this->userManager    = UserManager::instance();
         $this->projectManager = ProjectManager::instance();
+        $this->factory        = new GitRepositoryFactory(new GitDao(), $this->projectManager);
         
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -395,6 +397,7 @@ class Git extends PluginController {
                 } catch (MalformedPathException $e) {
                     $this->addError($this->getText('fork_malformed_path'));
                 }
+                $this->addAction('getProjectRepositoryList', array($this->groupId));
                 $this->addView('forkRepositories');
                 break;
             #LIST
@@ -453,7 +456,7 @@ class Git extends PluginController {
      * @return PluginActions
      */
     protected function instantiateAction($action) {
-        return new $action($this, SystemEventManager::instance());
+        return new $action($this, SystemEventManager::instance(), $this->factory);
     }
 
     public function _doDispatchForkCrossProject($request, $user) {
@@ -518,7 +521,7 @@ class Git extends PluginController {
     private function getRepositoriesFromIds(array $repoIds) {
         $repos = array();
         foreach ($repoIds as $id) {
-            $repos[] = $this->factory->getRepository($this->groupId, $id);
+            $repos[] = $this->factory->getRepositoryById($id);
         }
         return $repos;
     }

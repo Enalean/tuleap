@@ -18,10 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once (dirname(__FILE__).'/../include/Git.class.php');
-require_once(dirname(__FILE__).'/../../../src/common/valid/ValidFactory.class.php');
-require_once(dirname(__FILE__).'/../../../src/common/user/UserManager.class.php');
-Mock::generatePartial('Git', 'GitSpy', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
-Mock::generatePartial('Git', 'GitSpyForErrors', array('definePermittedActions', '_informAboutPendingEvents', 'addError', 'redirect', 'checkSynchronizerToken'));
 Mock::generate('UserManager');
 Mock::generate('Project');
 Mock::generate('ProjectManager');
@@ -33,7 +29,7 @@ class GitTest extends TuleapTestCase {
         $usermanager = new MockUserManager();
         $request     = new HTTPRequest();
 
-        $git = new GitSpy();
+        $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
         $git->setRequest($request);
         $git->setUserManager($usermanager);
         $git->setAction('del');

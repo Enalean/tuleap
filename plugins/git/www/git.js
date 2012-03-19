@@ -20,6 +20,7 @@ document.observe('dom:loaded', function () {
         var fork_destination = $('fork_destination');
         var fork_path        = $('fork_repositories_path');
         var submit = fork_repositories_prefix.up('form').down('input[type=submit]');
+
         var tpl = new Template('<div>#{dest}/#{path}#{repo}</div>');
         
         function getPreviewUpdater(table, previewPos) {
@@ -27,7 +28,7 @@ document.observe('dom:loaded', function () {
             var preview = new Element('div', {
                     style: 'color: #999; border-bottom: 1px solid #EEE; margin-bottom:0.5em; padding-bottom:0.5em;'
             });
-            table.down('tbody > tr > td', previewPos).insert({ top: preview });
+            table.down('tbody > tr > td', previewPos).insert({top: preview});
             
             function getForkDestination() {
                 if (fork_destination.disabled) {
@@ -36,7 +37,13 @@ document.observe('dom:loaded', function () {
                     return fork_destination.options[fork_destination.selectedIndex].title;
                 }
             }
-            return function() {
+            return function(periodicalExecuter) {
+                // On form submission, stop periodical executer so button stay
+                // disabled.
+                if (submitted === true) {
+                    periodicalExecuter.stop();
+                    return;
+                }
                 var tplVars = {
                     path: $F('fork_repositories_path').strip() ? $F('fork_repositories_path').strip() + '/' : '',
                     repo: '...', 
@@ -59,9 +66,17 @@ document.observe('dom:loaded', function () {
             };
         }
         
-        var table = fork_repositories_prefix.up('table');
+        // Keep status of the submitted form
+        var submitted = false;
+        var table     = fork_repositories_prefix.up('table');
         
-        new PeriodicalExecuter(getPreviewUpdater(table, 3), 0.5);
+        var periodicalExecuter = new PeriodicalExecuter(getPreviewUpdater(table, 3), 0.5);
+
+        // On fork, disable submit button
+        submit.up('form').observe('submit', function (event) {
+           submit.disable();
+           submitted = true;
+        });
 
         function toggleDestination(evt) {
             var optionBox = Event.element(evt);
@@ -81,5 +96,8 @@ document.observe('dom:loaded', function () {
         fork_destination.disable();
         $('choose_project').observe('change', toggleDestination); 
         $('choose_personal').observe('change', toggleDestination);
+        $('choose_project').observe('click', toggleDestination); 
+        $('choose_personal').observe('click', toggleDestination);
     }
 } );
+

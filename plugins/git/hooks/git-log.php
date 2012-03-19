@@ -20,14 +20,14 @@
  *
  * This script is called by post-receive-log hook in order to store git pushes in Tuleap db.
  *
- * Usage: php gitLog.php --group_name="gpig" --login="disciplus_simplex" --type="git_commit" --repo_name="gpigRepo" --commits_number="12"
+ * Usage: php gitLog.php --repo_location="/data/lib/tuleap/gitolite/repositories/gpig/u/disciplus_simplex/repo.git" --login="disciplus_simplex" --type="git_commit" --commits_number="12"
  */
 
 require_once(dirname(__FILE__).'/../include/GitRepository.class.php');
 require_once('pre.php');
 
 // Check script parameters
-if ($argc != 7) {
+if ($argc != 6) {
     error("Wrong number of arguments");
 }
 
@@ -38,14 +38,13 @@ foreach ($argv as $arg) {
     }
 }
 
-$repositoryName  = $params['repo_name'];
+$repoLocation    = $params['repo_location'];
 $userTuleapLogin = $params['login'];
-$groupName       = $params['group_name'];
 $nbCommits       = $params['commits_number'];
 $gitoliteUser    = $params['gitolite_user'];
 $pushTimestamp   = $params['push_timestamp'];
 
-logGitPushes($repositoryName, $userTuleapLogin, $groupName, $pushTimestamp, $nbCommits, $gitoliteUser);
+logGitPushes($repoLocation, $userTuleapLogin, $pushTimestamp, $nbCommits, $gitoliteUser);
 
 /**
  * Pint an error then exit
@@ -62,24 +61,19 @@ function error($msg) {
 /**
  * Store details about the push in the DB
  *
- * @param String  $repositoryName Name of the git repository
+ * @param String  $repositoryLocation Name of the git repository
  * @param String  $identifier     Name of the gitshell user that performed the push, retrived from whoami output.
- * @param String  $projectName    Unix name of the project
  * @param Integer $pushTimestamp  Date of the commit
  * @param Integer $commitsNumber  Number of commits
  * @param String  $gitoliteUser   Name of the gitolite user that performed the push, retrived from environment var $GL_USER.
  *
  * @return void
  */
-function logGitPushes($repositoryName, $identifier, $projectName, $pushTimestamp, $commitsNumber, $gitoliteUser) {
-    $repository = new GitRepository();
-    $repoId = $repository->getRepositoryIDByName($repositoryName, $projectName);
-    $repository->setId($repoId);
-    try {
-        $repository->load();
+function logGitPushes($repositoryLocation, $identifier, $pushTimestamp, $commitsNumber, $gitoliteUser) {
+    $repoFactory = new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
+    $repository  = $repoFactory->getFromFullPath($repositoryLocation);
+    if ($repository) {
         $repository->logGitPush($identifier, $pushTimestamp, $commitsNumber, $gitoliteUser);
-    } catch (Exception $e) {
-        //error("Unable to load repository");
     }
 }
 

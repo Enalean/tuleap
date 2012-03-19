@@ -45,15 +45,21 @@ class GitActions extends PluginActions {
     protected $systemEventManager;
     
     /**
+     * @var GitRepositoryFactory 
+     */
+    private $factory;
+    
+    /**
      * Constructor
      *
      * @param PluginController     $controller         The controller
      * @param GitRepositoryFactory $factory            The factory to manage repositories
      * @param SystemEventManager   $systemEventManager The system manager
      */
-    public function __construct($controller, SystemEventManager $systemEventManager) {
+    public function __construct($controller, SystemEventManager $systemEventManager, GitRepositoryFactory $factory) {
         parent::__construct($controller);
         $this->systemEventManager = $systemEventManager;
+        $this->factory            = $factory;
 
     }
 
@@ -72,32 +78,34 @@ class GitActions extends PluginActions {
         if ( empty($projectId) || empty($repositoryId) ) {
             $c->addError( $this->getText('actions_params_error') );            
             return false;
-        }       
-        $repository = new GitRepository();
-        $repository->setId( $repositoryId );
-        $repository->load();
-
-        if ( $repository->hasChild() ) {
-            $c->addError( $this->getText('backend_delete_haschild_error') );
-            $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
-            return false;
         }
         
-        if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-            try {
-                $repository->delete();
-                $c->addInfo( $this->getText('actions_delete_ok') );
-            } catch (Exception $e) {
-                $c->addError($e->getMessage());
+        $repository = $this->factory->getRepositoryById($repositoryId);
+        if ($repository) {
+            if ( $repository->hasChild() ) {
+                $c->addError( $this->getText('backend_delete_haschild_error') );
+                $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
+                return false;
+            }
+
+            if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
+                try {
+                    $repository->delete();
+                    $c->addInfo( $this->getText('actions_delete_ok') );
+                } catch (Exception $e) {
+                    $c->addError($e->getMessage());
+                }
+            } else {
+                $this->systemEventManager->createEvent(
+                    'GIT_REPO_DELETE',
+                    $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryId,
+                    SystemEvent::PRIORITY_MEDIUM
+                );
+                $c->addInfo( $this->getText('actions_delete_process') );
+                $c->addInfo( $this->getText('actions_delete_backup').' : '.PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir') );
             }
         } else {
-            $this->systemEventManager->createEvent(
-                'GIT_REPO_DELETE',
-                $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryId,
-                SystemEvent::PRIORITY_MEDIUM
-            );
-            $c->addInfo( $this->getText('actions_delete_process') );
-            $c->addInfo( $this->getText('actions_delete_backup').' : '.PluginManager::instance()->getPluginByName('git')->getPluginInfo()->getPropVal('git_backup_dir') );
+            $c->addError($this->getText('actions_repo_not_found'));
         }
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
     }
@@ -121,8 +129,8 @@ class GitActions extends PluginActions {
         $repository->setCreator(UserManager::instance()->getCurrentUser());
         $repository->setProject($project);
         $repository->setName($repositoryName);
-        
-        if (!$repository->exists()) {
+                
+        if (!$this->factory->isRepositoryExistingByName($project, $repositoryName)) {
             $repository->create();
         } else {
             $c->addError($this->getText('actions_create_repo_exists', array($repositoryName)));

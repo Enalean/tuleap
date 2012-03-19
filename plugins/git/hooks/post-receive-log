@@ -27,8 +27,6 @@ logGitPushes()
 	revtype=$(git cat-file -t "$newrev")
 	tuleap_login=$(whoami)
 	repo_location=$(cd $GIT_DIR; pwd)
-	tuleap_repo_name=$(basename $repo_location | sed -e 's/\.git$//')
-	tuleap_group_name=$(basename $(dirname $repo_location))
 	tuleap_gitolite_user=$GL_USER
 
 	nbcommits=0
@@ -41,7 +39,7 @@ logGitPushes()
 
 	nbcommits=$(git rev-list $revspec | wc -l)
 
-	/usr/lib/codendi/bin/git-log.pl $tuleap_group_name $tuleap_login $tuleap_repo_name $push_timestamp $nbcommits $tuleap_gitolite_user
+	/usr/lib/codendi/bin/git-log.pl $repo_location $tuleap_login $push_timestamp $nbcommits $tuleap_gitolite_user
 
 }
 

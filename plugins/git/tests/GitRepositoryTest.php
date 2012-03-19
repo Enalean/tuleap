@@ -65,7 +65,7 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertFalse($repo->isNameValid('jambon/beurre'));
     }
     
-    private function checkNameValidation($repo) {
+    private function checkNameValidation(GitRepository $repo) {
         $this->assertFalse($repo->isNameValid(''));
         $this->assertFalse($repo->isNameValid('/'));
         $this->assertFalse($repo->isNameValid('/jambon'));
@@ -79,6 +79,7 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertFalse($repo->isNameValid('jambon...beurre'));
         $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
         $this->assertFalse($repo->isNameValid('repo.git'));
+        $this->assertFalse($repo->isNameValid('u/toto'));
     }
     
         
@@ -92,7 +93,7 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertFalse($repo->isSubPath('_fixtures/perms/', 'coincoin'));
     }
     
-    public function testDeletionShoultAffectDotGit() {
+    public function testDeletionShouldAffectDotGit() {
         $repo = new GitRepository();
         $this->assertTrue($repo->isDotGit('default.git'));
         $this->assertTrue($repo->isDotGit('default.git.git'));

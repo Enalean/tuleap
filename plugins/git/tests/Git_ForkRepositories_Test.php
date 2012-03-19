@@ -18,13 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../include/Git.class.php';
+
+Mock::generate('User');
+Mock::generate('UserManager');
+Mock::generate('Project');
+Mock::generate('ProjectManager');
+Mock::generate('GitRepositoryFactory');
+
+
 class Git_ForkRepositories_Test extends TuleapTestCase {
     
     public function testRenders_ForkRepositories_View() {
-        Mock::generatePartial('Git', 'GitSpy2', array('_doDispatchForkRepositories', 'addView'));
         $request = new Codendi_Request(array('choose_destination' => 'personal'));
         
-        $git = new GitSpy2();
+        $git = TestHelper::getPartialMock('Git', array('_doDispatchForkRepositories', 'addView'));
         $git->setRequest($request);
         $git->expectOnce('addView', array('forkRepositories'));
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
@@ -45,9 +53,9 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $projectManager->setReturnValue('getProject', $project, array($groupId));
         
         $factory = new MockGitRepositoryFactory();
-        $factory->setReturnValue('getRepository', $repo);
+        $factory->setReturnValue('getRepositoryById', $repo);
         
-        $git = new GitSpy();
+        $git = TestHelper::getPartialMock('Git', array('definePermittedActions', '_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
         $git->setGroupId($groupId);
         $git->setProjectManager($projectManager);
         $git->expectAt(0, 'addAction', array('getProjectRepositoryList', array($groupId)));

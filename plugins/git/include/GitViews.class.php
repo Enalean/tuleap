@@ -616,58 +616,59 @@ class GitViews extends PluginViews {
         $this->_getBreadCrumb();
         echo '<h2>'. $this->getText('fork_repositories') .'</h2>';
         echo $this->getText('fork_repositories_desc');
-        
-        echo '<form action="" method="POST">';
-        echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
-        echo '<input type="hidden" name="action" value="do_fork_repositories" />';
-        $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
-        echo $token->fetchHTMLInput();
-        
-        echo '<table id="fork_repositories" cellspacing="0">';
-        echo '<thead>';
-        echo '<tr valign="top">';
-        echo '<td class="first">';
-        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label>';
-        echo '</td>';
-        echo '<td>';
-        echo '<label style="font-weight: bold;">'. $this->getText('fork_destination_project') .'</label>';
-        echo '</td>';
-        echo '<td>';
-        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label>';
-        echo '</td>';
-        echo '<td class="last">&nbsp;</td>';
-        echo '</tr>';
-        echo '</thead>';
-                
-        echo '<tbody><tr valign="top">';
-        echo '<td class="first">';
-        $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
-        echo $strategy->fetch($params['repository_list'], $this->user);
-        echo '</td>';
-        
-        echo '<td>';
-        echo '<div>
-            <input id="choose_personal" type="radio" name="choose_destination" value="personal" checked="true" />
-            <label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
-        </div>';
-        
-        echo $this->fetchCopyToAnotherProject();
-        
-        echo '</td>';
-        
-        echo '<td>';
-        $placeholder = $this->getText('fork_repositories_placeholder');
-        echo '<input type="text" title="'. $placeholder .'" placeholder="'. $placeholder .'" id="fork_repositories_path" name="path" />';
-        echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
-        echo '</td>';
-        
-        echo '<td class="last">';
-        echo '<input type="submit" value="'. $this->getText('fork_repositories') .'" />';
-        echo '</td>';
-        
-        echo '</tr></tbody></table>';
-        
-        echo '</form>';
+        if ( !empty($params['repository_list']) ) {
+            echo '<form action="" method="POST">';
+            echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
+            echo '<input type="hidden" name="action" value="do_fork_repositories" />';
+            $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
+            echo $token->fetchHTMLInput();
+
+            echo '<table id="fork_repositories" cellspacing="0">';
+            echo '<thead>';
+            echo '<tr valign="top">';
+            echo '<td class="first">';
+            echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label>';
+            echo '</td>';
+            echo '<td>';
+            echo '<label style="font-weight: bold;">'. $this->getText('fork_destination_project') .'</label>';
+            echo '</td>';
+            echo '<td>';
+            echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label>';
+            echo '</td>';
+            echo '<td class="last">&nbsp;</td>';
+            echo '</tr>';
+            echo '</thead>';
+
+            echo '<tbody><tr valign="top">';
+            echo '<td class="first">';
+            $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
+            echo $strategy->fetch($params['repository_list'], $this->user);
+            echo '</td>';
+
+            echo '<td>';
+            echo '<div>
+                <input id="choose_personal" type="radio" name="choose_destination" value="personal" checked="true" />
+                <label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
+            </div>';
+
+            echo $this->fetchCopyToAnotherProject();
+
+            echo '</td>';
+
+            echo '<td>';
+            $placeholder = $this->getText('fork_repositories_placeholder');
+            echo '<input type="text" title="'. $placeholder .'" placeholder="'. $placeholder .'" id="fork_repositories_path" name="path" />';
+            echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
+            echo '</td>';
+
+            echo '<td class="last">';
+            echo '<input type="submit" value="'. $this->getText('fork_repositories') .'" />';
+            echo '</td>';
+
+            echo '</tr></tbody></table>';
+
+            echo '</form>';
+        }
         echo '<br />';
     }
     
@@ -740,12 +741,15 @@ class GitViews extends PluginViews {
 
             $lastPushes = array();
             $dao = new Git_LogDao();
-            $dar = $dao->searchLastPushesForProject($this->groupId);
-            foreach ($dar as $row) {
-                $lastPushes[$row['repository_id']] = $row;
+            foreach ($params['repository_list'] as $repository) {
+                $id  = $repository['repository_id'];
+                $dar = $dao->searchLastPushForRepository($id);
+                if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                    $lastPushes[$id] = $dar->getRow();
+                }
             }
             $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($this, $lastPushes);
-            echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
+            echo $strategy->fetch($params['repository_list'], $this->user);
         }
         else {
             echo "<h3>".$this->getText('tree_msg_no_available_repo')."</h3>";

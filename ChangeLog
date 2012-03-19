@@ -10,6 +10,10 @@ Version 4.0.28 (Not released yet)
    * Allows to start test method by 'it'.
    * Unit tests run after conversion of repository to git.
 
+Version 4.0.27.3 (Monday, March 19th 2012)
+   == Plugins ==
+   * Git v2.1.4
+
 Version 4.0.27.2 (Thursday, March 8th 2012)
    == Enhancement ==
    * Git documentation is now aligned with implementation.
