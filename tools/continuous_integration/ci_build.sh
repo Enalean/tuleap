@@ -101,14 +101,15 @@ substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$WORKSPACE/var/tmp"
 # Set environment var CODENDI_LOCAL_INC
 export CODENDI_LOCAL_INC="$WORKSPACE/etc/codendi/conf/local.inc"
 
-# Execute the Tests
-# This will produce a "JUnit like" test result file named codendi_unit_tests_report.xml that Hudson can use to produce test results.
-cd plugins/tests/www/
-php -d include_path="$codendi_src/src/www/include:$codendi_src/src:/usr/share/pear:." -d memory_limit=196M test_all.php
-
-# Checkstyle
 pushd .
 cd "$codendi_src"
+
+# Execute the Tests
+# This will produce a "JUnit like" test result file named codendi_unit_tests_report.xml that Hudson can use to produce test results.
+php -d include_path="src/www/include:src:/usr/share/pear:." -d memory_limit=196M tests/bin/simpletest -x tests/simpletest
+
+# Checkstyle
+
 
 files=""
 if [ "$sniff_svn" = "true" ]; then
