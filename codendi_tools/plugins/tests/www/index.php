@@ -91,21 +91,20 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
 
                             $reporter = CodendiReporterFactory::reporter('html', $coverCode);
 
-                            $g = get_group_tests($_REQUEST['tests_to_run']);
+                            $testSuite = get_group_tests($_REQUEST['tests_to_run']);
                             if (isset($_REQUEST['order']) && $_REQUEST['order'] != 'normal') {
                                 if ($_REQUEST['order'] == 'random') {
                                     shuffle($random);
-                                    $g = new TestSuite("All Tests (random order)");
+                                    $testSuite = new TestSuite("All Tests (random order)");
                                 } else if ($_REQUEST['order'] == 'invert') {
                                     rsort($random);
-                                    $g = new TestSuite("All Tests (invert order)");
+                                    $testSuite = new TestSuite("All Tests (invert order)");
                                 }
                                 foreach($random as $file) {
-                                    $g->addTestFile($file);
+                                    $testSuite->addTestFile($file);
                                 }
                             }
-                            $g->run($reporter);
-
+                            $testSuite->run($reporter);
                             if ($reporter->generateCoverage(dirname(__FILE__).'/code-coverage-report')) {
                                 echo '<p><a href="code-coverage-report">Code coverage results:</a></p>';
                                 echo '<iframe src="code-coverage-report" style="width: 100%; height: 500px;" />';
