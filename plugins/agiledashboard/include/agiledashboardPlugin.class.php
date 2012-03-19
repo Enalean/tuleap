@@ -25,6 +25,8 @@ require_once 'common/plugin/Plugin.class.php';
  */
 class AgileDashboardPlugin extends Plugin {
 
+    private $service;
+    
     /**
      * Plugin constructor
      */
@@ -68,10 +70,25 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function process(Codendi_Request $request) {
-        $this->displayPlanning($request);
+        switch($request->get('func')) {
+            case 'show':
+                $this->displayPlanning($request);
+                break;
+            case 'index':
+            default:
+                $this->displayIndex($request);
+        }
     }
-
-    public function displayPlanning(Codendi_Request $request) {
+    
+    private function getService($request) {
+        if ($this->service == null) {
+            $project = ProjectManager::instance()->getProject($request->get('group_id'));
+            $this->service = $project->getService('plugin_agiledashboard');
+        }
+        return $this->service;
+    }
+    
+    private function displayHeader($request, $title) {
         $breadcrumbs = array(
             array('url'   => 'bla',
                   'title' => "Product A"),
@@ -79,19 +96,36 @@ class AgileDashboardPlugin extends Plugin {
                   'title' => "Release 4.0.27"),
         );
         
-        
-        $project = ProjectManager::instance()->getProject($request->get('group_id'));
-        $service = $project->getService('plugin_agiledashboard');
-        $service->displayHeader("Release planning", $breadcrumbs, array());
-        
+        $this->getService($request)->displayHeader($title, $breadcrumbs, array());
+    }
+    
+    private function displayFooter($request) {
+        $this->getService($request)->displayFooter();
+    }
+    
+    private function buildController($request) {
         require_once 'Planning/Controller.class.php';
         require_once 'Planning/PlanningFactory.class.php';
-        $controller = new Planning_Controller($request, Tracker_ArtifactFactory::instance(), PlanningFactory::instance());
+        
+        return new Planning_Controller($request,
+                                       Tracker_ArtifactFactory::instance(),
+                                       PlanningFactory::instance());
+    }
+    
+    private function displayIndex(Codendi_Request $request) {
+        $controller = $this->buildController($request);
+        
+        $this->displayHeader($request, "Plannings");
+        $controller->index();
+        $this->displayFooter($request);
+    }
+
+    private function displayPlanning(Codendi_Request $request) {
+        $controller = $this->buildController($request);
+        
+        $this->displayHeader($request, "Release planning");
         $controller->display();
-        
-        
-        
-        $service->displayFooter();
+        $this->displayFooter($request);
     }
     
 }
