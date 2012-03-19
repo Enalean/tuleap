@@ -55,17 +55,14 @@ class Tracker_CrossSearch_SearchView {
     
     public function __construct(Project                          $project,
                                 Service                          $service,
-                                Tracker_Report                   $report, 
+                                Tracker_CrossSearch_SearchContentView $content_view,
                                 array                            $criteria, 
-                                TreeNode                         $tree_of_artifacts, 
-                                Tracker_ArtifactFactory          $artifact_factory, 
-                                Tracker_SharedFormElementFactory $shared_factory, 
                                                                  $trackers) {
         $this->project           = $project;
         $this->service           = $service;
         $this->criteria          = $criteria;
         $this->trackers          = $trackers;
-        $this->content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $tree_of_artifacts, $artifact_factory, $shared_factory);
+        $this->content_view      = $content_view;
     }
     
     public function render() {

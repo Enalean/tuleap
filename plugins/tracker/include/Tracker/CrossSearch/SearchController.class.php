@@ -199,7 +199,8 @@ class Tracker_CrossSearch_SearchController {
         $formElementFactory = Tracker_FormElementFactory::instance();
         $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
         $shared_factory     = new Tracker_SharedFormElementFactory($formElementFactory, $bindFactory);
-        return new Tracker_CrossSearch_SearchView($project, $service, $report, $criteria, $artifacts, $artifact_factory, $shared_factory, $trackers);
+        $content_view       = new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, $artifact_factory, $shared_factory);
+        return new Tracker_CrossSearch_SearchView($project, $service, $content_view, $criteria, $trackers);
     }
 }
 ?>

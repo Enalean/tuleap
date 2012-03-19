@@ -167,8 +167,9 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
         $project->setReturnValue('getPublicName', 'gpig');
         $tracker1         = aTracker()->withId(101)->withName('Stories')->withProject($project)->build();
         $trackers         = array($tracker1);
-        
-        $view             = new Tracker_CrossSearch_SearchView($project, $service, $report, $criteria, $root, $artifact_factory, $shared_factory, $trackers);
+        $content_view       = new Tracker_CrossSearch_SearchContentView($report, $criteria, $root, $artifact_factory, $shared_factory);
+
+        $view             = new Tracker_CrossSearch_SearchView($project, $service, $content_view, $criteria, $trackers);
         return $view;
     }
     
