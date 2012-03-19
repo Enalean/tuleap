@@ -24,18 +24,10 @@
  * $> php-launcher.sh test_one_file.php ../tests/common/frs/FRSFileTest.php
  */
 
+require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
+
 require_once dirname(__FILE__).'/../../plugins/tests/www/tests_common.php';
 
-// Base dir:
-$basedir      = realpath(dirname(__FILE__).'/../../../..');
-$src_path     = $basedir.'/src';
-$include_path = $basedir.'/src/www/include';
-
-ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
-
-//$GLOBALS['jpgraph_dir'] = '/usr/share/jpgraph';
-require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
-//require($GLOBALS['db_config_file']);
 require_once(dirname(__FILE__).'/../../plugins/tests/include/simpletest/unit_tester.php');
 require_once(dirname(__FILE__).'/../../plugins/tests/include/simpletest/mock_objects.php');
 require_once(dirname(__FILE__).'/../../plugins/tests/include/simpletest/web_tester.php');

@@ -18,11 +18,11 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once($GLOBALS['jpgraph_dir'].'/jpgraph.php');
-require_once($GLOBALS['jpgraph_dir'].'/jpgraph_gantt.php');
-require_once($GLOBALS['jpgraph_dir'].'/jpgraph_line.php');
-require_once($GLOBALS['jpgraph_dir'].'/jpgraph_bar.php');
-require_once($GLOBALS['jpgraph_dir'].'/jpgraph_date.php'); 
+require_once('jpgraph.php');
+require_once('jpgraph_gantt.php');
+require_once('jpgraph_line.php');
+require_once('jpgraph_bar.php');
+require_once('jpgraph_date.php'); 
 
 /**
 * Chart

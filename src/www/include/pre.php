@@ -25,6 +25,14 @@ if (isset($GLOBALS['DEBUG_MODE'])) {
     Config::load(dirname($local_inc).'/development.inc');
 }
 
+// Fix path if needed
+if (isset($GLOBALS['htmlpurifier_dir'])) {
+    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$GLOBALS['htmlpurifier_dir']);
+}
+if (isset($GLOBALS['jpgraph_dir'])) {
+    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$GLOBALS['jpgraph_dir']);
+}
+
 define('TTF_DIR',isset($GLOBALS['ttf_font_dir']) ? $GLOBALS['ttf_font_dir'] : '/usr/share/fonts/');
 
 require_once('common/include/CookieManager.class.php');

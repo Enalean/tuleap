@@ -16,6 +16,21 @@ if (PHP_INT_SIZE == 4 && extension_loaded('runkit')) {
     define('MOCKFUNCTION_AVAILABLE', false);
 }
 
+// Base dir:
+$basedir      = realpath(dirname(__FILE__).'/../../..');
+$src_path     = $basedir.'/src';
+$include_path = $basedir.'/src/www/include';
+
+ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
+
+// Fix path if needed
+if (isset($GLOBALS['htmlpurifier_dir'])) {
+    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$GLOBALS['htmlpurifier_dir']);
+}
+if (isset($GLOBALS['jpgraph_dir'])) {
+    ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.$GLOBALS['jpgraph_dir']);
+}
+
 /**
  * Method called when a class is not defined.
  *
