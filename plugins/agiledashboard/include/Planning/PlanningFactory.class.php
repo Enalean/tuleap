@@ -19,8 +19,32 @@
  */
 
 class PlanningFactory {
+    
+    /**
+     * Hold an instance of the class
+     */
+    protected static $instance;
+    
+    
+    /**
+     * A protected constructor; prevents direct creation of object
+     */
+    protected function __construct() {}
+    
+    /**
+     * The singleton method
+     *
+     * @return Tracker_ArtifactFactory an instance of this class
+     */
+    public static function instance() {
+        if (!isset(self::$instance)) {
+            $c = __CLASS__;
+            self::$instance = new $c;
+        }
+        return self::$instance;
+    }
+    
     public function getPlannings() {
-        
     }
 }
 

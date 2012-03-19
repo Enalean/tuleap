@@ -85,7 +85,8 @@ class AgileDashboardPlugin extends Plugin {
         $service->displayHeader("Release planning", $breadcrumbs, array());
         
         require_once 'Planning/Controller.class.php';
-        $controller = new Planning_Controller($request, Tracker_ArtifactFactory::instance());
+        require_once 'Planning/PlanningFactory.class.php';
+        $controller = new Planning_Controller($request, Tracker_ArtifactFactory::instance(), PlanningFactory::instance());
         $controller->display();
         
         
