@@ -36,7 +36,8 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
     
     public function testNoValueSubmittedShouldNotSelectAnythingInCriterion() {
         $this->request = new Codendi_Request(array(
-            'group_id' => '66'
+            'group_id' => '66',
+            'criteria' => array()
         ));
         
         $project = new MockProject();
@@ -86,8 +87,8 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
     }
     
     private function getCriteria($project, $report) {
-        $searchViewBuilder = new Tracker_CrossSearch_ViewBuilder();
-        return $searchViewBuilder->getCriteria($project, $report, $this->formElementFactory, $this->request->get('criteria'));
+        $searchViewBuilder = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, new MockTrackerFactory());
+        return $searchViewBuilder->getCriteria($project, $report, $this->request->get('criteria'));
     }
     
 }

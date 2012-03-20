@@ -18,25 +18,39 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 class Tracker_CrossSearch_ViewBuilder {
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formElementFactory;
+    
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
 
-    public function buildView($project, $formElementFactory, $request_criteria, $tracker_factory) {
+    public function __construct(Tracker_FormElementFactory $formElementFactory, TrackerFactory $tracker_factory) {
+        $this->formElementFactory = $formElementFactory;
+        $this->tracker_factory    = $tracker_factory;
+    }
+    
+    public function buildView(Project $project, array $request_criteria) {
         $service            = $this->getService($project);
-        $criteria           = $this->getCriteria($project, $this->getReport(), $formElementFactory, $request_criteria);
-        $trackers           = $this->getTrackers($project, $tracker_factory);
+        $criteria           = $this->getCriteria($project, $this->getReport(), $request_criteria);
+        $trackers           = $this->getTrackers($project, $this->tracker_factory);
         return $this->getView($project, $service, $criteria, $trackers);
    
     }
-    public function buildContentView($project, $formElementFactory, $request_criteria, $tracker_factory, $search, $hierarchy_factory) {
+    public function buildContentView(Project $project, array $request_criteria, Tracker_CrossSearch_Search $search, Tracker_HierarchyFactory $hierarchy_factory) {
         $report             = $this->getReport();
-        $criteria           = $this->getCriteria($project, $report, $formElementFactory, $request_criteria);
-        $trackers           = $this->getTrackers($project, $tracker_factory);
-        $artifacts          = $this->getArtifacts($trackers, $search, $criteria, $hierarchy_factory);
+        $criteria           = $this->getCriteria($project, $report, $request_criteria);
+        $trackers           = $this->getTrackers($project, $this->tracker_factory);
+        $artifacts          = $this->getArtifacts($trackers, $search, $request_criteria, $hierarchy_factory);
         return $this->getContentView($report, $criteria, $artifacts);
     }
     
     
-    public function getCriteria(Project $project, Tracker_Report $report, $formElementFactory, $request_criteria) {
-        $fields   = $formElementFactory->getProjectSharedFields($project);
+    public function getCriteria(Project $project, Tracker_Report $report, array $request_criteria) {
+        $fields   = $this->formElementFactory->getProjectSharedFields($project);
         $criteria = array();
         foreach ($fields as $field) {
             $field->setCriteriaValue($this->getSelectedValues($field, $request_criteria));
@@ -71,7 +85,7 @@ class Tracker_CrossSearch_ViewBuilder {
         $artifact_factory   = Tracker_ArtifactFactory::instance();
         $formElementFactory = Tracker_FormElementFactory::instance();
         $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
-        $shared_factory     = new Tracker_SharedFormElementFactory($formElementFactory, $bindFactory);
+        $shared_factory     = new Tracker_SharedFormElementFactory($this->formElementFactory, $bindFactory);
         return new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, $artifact_factory, $shared_factory);
     }
     
@@ -114,9 +128,9 @@ class Tracker_CrossSearch_ViewBuilder {
     
     
     private function getSelectedValues(Tracker_FormElement_Field $field, $request_criteria) {
-        $currentValue     = $request_criteria[$field->getId()]['values'];
-        if (!$currentValue) {
-            $currentValue = array();
+        $currentValue = array();
+        if (isset($request_criteria[$field->getId()]['values'])) {
+            $currentValue = $request_criteria[$field->getId()]['values'];
         }
         return $currentValue;
     }

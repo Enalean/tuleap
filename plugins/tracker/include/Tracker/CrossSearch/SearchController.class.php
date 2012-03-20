@@ -42,61 +42,45 @@ class Tracker_CrossSearch_SearchController {
     private $layout;
     
     /**
-     * @var Tracker_FormElementFactory
-     */
-    private $formElementFactory;
-    
-    /**
      * @var Tracker_HierarchyFactory
      */
     private $hierarchy_factory;
-    
-    /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
     
     /**
      * @var Tracker_CrossSearch_Search
      */
     private $search;
     
-    public function __construct(Codendi_Request            $request,
-                                ProjectManager             $projectManager, 
-                                Tracker_FormElementFactory $formElementFactory, 
-                                Layout                     $layout,
-                                Tracker_CrossSearch_Search $search,
-                                Tracker_HierarchyFactory   $hierarchy_factory,
-                                TrackerFactory             $tracker_factory,
-                                Tracker_CrossSearch_ViewBuilder          $view_builder = null) {
+    public function __construct(Codendi_Request                 $request,
+                                ProjectManager                  $projectManager, 
+                                Layout                          $layout,
+                                Tracker_CrossSearch_Search      $search,
+                                Tracker_HierarchyFactory        $hierarchy_factory,
+                                Tracker_CrossSearch_ViewBuilder $view_builder) {
         
         $this->request            = $request;
         $this->projectManager     = $projectManager;
         $this->layout             = $layout;
-        $this->formElementFactory = $formElementFactory;
         $this->search             = $search;
         $this->hierarchy_factory  = $hierarchy_factory;
-        $this->tracker_factory    = $tracker_factory;
-        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
-        $this->view_builder = isset($view_builder) ? $view_builder : new Tracker_CrossSearch_ViewBuilder();
+        $this->view_builder       = $view_builder;
     }
 
     public function search() {
         try {
-            $request_criteria           = $this->request->get('criteria');
-            $project_id         = $this->request->get('group_id');
-            $project            = $this->getProject($project_id, $this->projectManager);
+            $request_criteria = $this->request->get('criteria');
+            $project_id       = $this->request->get('group_id');
+            $project          = $this->getProject($project_id, $this->projectManager);
             
+            if (!$request_criteria) {
+                $request_criteria = array();
+            }
             
             $view = $this->view_builder->buildView($project
-                    , $this->formElementFactory
-                    , $request_criteria
-                    , $this->tracker_factory);
+                    , $request_criteria);
             
             $content_view = $this->view_builder->buildContentView($project
-                    , $this->formElementFactory
                     , $request_criteria
-                    , $this->tracker_factory
                     , $this->search
                     , $this->hierarchy_factory);
             

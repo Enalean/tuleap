@@ -27,6 +27,7 @@ require_once('Report/Tracker_ReportFactory.class.php');
 require_once('dao/Tracker_PermDao.class.php');
 require_once('common/reference/ReferenceManager.class.php');
 require_once('CrossSearch/SearchController.class.php');
+require_once('CrossSearch/ViewBuilder.class.php');
 require_once('CrossSearch/Search.class.php');
 require_once 'HomeNavPresenter.class.php';
 require_once 'common/mustache/MustacheRenderer.class.php';
@@ -194,11 +195,11 @@ class TrackerManager { /* extends Engine? */
         return new Tracker_CrossSearch_SearchController(
             $request,
             ProjectManager::instance(),
-            $formElementFactory,
             $GLOBALS['Response'],
             $search,
             new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao()),
-            $this->getTrackerFactory()
+            new Tracker_CrossSearch_ViewBuilder($formElementFactory, $this->getTrackerFactory())
+                
         );
     }
     
