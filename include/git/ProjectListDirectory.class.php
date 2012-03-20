@@ -137,7 +137,13 @@ class GitPHP_ProjectListDirectory extends GitPHP_ProjectListBase
 			if (!(empty($category) || (strpos($category, '.') === 0))) {
 				$proj->SetCategory($category);
 			}
-			if ((!GitPHP_Config::GetInstance()->GetValue('exportedonly', false)) || $proj->GetDaemonEnabled()) {
+			if (GitPHP_Config::GetInstance()->GetValue('exportedonly', false)) {
+				if ($proj->GetDaemonEnabled()) {
+					$this->projects[$projectPath] = $proj;
+				} else {
+					GitPHP_Log::GetInstance()->Log(sprintf('Project %1$s not enabled for export', $proj->GetPath()));
+				}
+			} else {
 				$this->projects[$projectPath] = $proj;
 			}
 		} catch (Exception $e) {
