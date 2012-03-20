@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-class SearchViewBuilder {
+class Tracker_CrossSearch_ViewBuilder {
 
     public function buildView($project, $formElementFactory, $request_criteria, $tracker_factory) {
         $service            = $this->getService($project);

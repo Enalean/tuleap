@@ -68,7 +68,7 @@ class Tracker_CrossSearch_SearchController {
                                 Tracker_CrossSearch_Search $search,
                                 Tracker_HierarchyFactory   $hierarchy_factory,
                                 TrackerFactory             $tracker_factory,
-                                SearchViewBuilder          $view_builder = null) {
+                                Tracker_CrossSearch_ViewBuilder          $view_builder = null) {
         
         $this->request            = $request;
         $this->projectManager     = $projectManager;
@@ -78,7 +78,7 @@ class Tracker_CrossSearch_SearchController {
         $this->hierarchy_factory  = $hierarchy_factory;
         $this->tracker_factory    = $tracker_factory;
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
-        $this->view_builder = isset($view_builder) ? $view_builder : new SearchViewBuilder();
+        $this->view_builder = isset($view_builder) ? $view_builder : new Tracker_CrossSearch_ViewBuilder();
     }
 
     public function search() {

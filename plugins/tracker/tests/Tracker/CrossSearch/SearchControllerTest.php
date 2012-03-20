@@ -22,7 +22,7 @@ require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
 require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchController.class.php';
-require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchViewBuilder.class.php';
+require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/ViewBuilder.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class.php';
 
 require_once 'common/include/Codendi_Request.class.php';
@@ -39,7 +39,6 @@ Mock::generate('Tracker_HierarchyFactory');
 Mock::generate('Tracker_Hierarchy');
 Mock::generate('Tracker');
 Mock::generate('TrackerFactory');
-Mock::generate('SearchViewBuilder');
 
 class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     
@@ -56,7 +55,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->search->setReturnValue('getMatchingArtifacts', new TreeNode());
         $this->hierarchy_factory  = new MockTracker_HierarchyFactory();
         $this->tracker_factory    = new MockTrackerFactory();
-        $this->view_builder       = TestHelper::getPartialMock('SearchViewBuilder', array('getView'));
+        $this->view_builder       = TestHelper::getPartialMock('Tracker_CrossSearch_ViewBuilder', array('getView'));
         
         $this->project->setReturnValue('getGroupId', '123');
     }
@@ -221,68 +220,5 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     }
 
 }
-class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
 
-    public function setUp() {
-        parent::setUp();
-        $this->formElementFactory = new MockTracker_FormElementFactory();
-    }
-    
-    public function testNoValueSubmittedShouldNotSelectAnythingInCriterion() {
-        $this->request = new Codendi_Request(array(
-            'group_id' => '66'
-        ));
-        
-        $project = new MockProject();
-        $report  = new MockTracker_Report();
-        
-        $fields = array(aTextField()->withId(220)->build());
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
-        
-        $criteria = $this->getCriteria($project, $report);
-        $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array());
-    }
-    
-    public function testSubmittedValueIsSelectedInCriterion() {
-        $this->request = new Codendi_Request(array(
-            'group_id' => '66', 
-            'criteria' => array('220' => array('values' => array('350')))
-        ));
-        
-        $project = new MockProject();
-        $report  = new MockTracker_Report();
-        
-        $fields = array(aTextField()->withId(220)->build());
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
-        
-        $criteria = $this->getCriteria($project, $report);
-        $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350));
-    }
-    
-    public function testSubmittedValuesAreSelectedInCriterion() {
-        $this->request = new Codendi_Request(array(
-            'group_id' => '66', 
-            'criteria' => array('220' => array('values' => array('350', '351')),
-                                '221' => array('values' => array('352')))
-        ));
-        
-        $project = new MockProject();
-        $report  = new MockTracker_Report();
-        
-        $fields = array(aTextField()->withId(220)->build(),
-                        aTextField()->withId(221)->build());
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
-        
-        $criteria = $this->getCriteria($project, $report);
-        $this->assertEqual(count($criteria), 2);
-        $this->assertEqual($criteria[0]->field->getCriteriaValue($criteria[0]), array(350, 351));
-        $this->assertEqual($criteria[1]->field->getCriteriaValue($criteria[1]), array(352));
-    }
-    
-    private function getCriteria($project, $report) {
-        $searchViewBuilder = new SearchViewBuilder();
-        return $searchViewBuilder->getCriteria($project, $report, $this->formElementFactory, $this->request->get('criteria'));
-    }
-    
-}
 ?>
