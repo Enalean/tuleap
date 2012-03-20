@@ -114,7 +114,7 @@ abstract class Planning_ControllerIndexTest extends TuleapTestCase {
     }
     
     public function itHasALinkToCreateANewPlanning() {
-        $this->assertPattern('/func=new/', $this->output);
+        $this->assertPattern('/action=new/', $this->output);
     }
 }
 
@@ -230,7 +230,7 @@ class Planning_ControllerCreateWithInvalidParamsTest extends Planning_Controller
     
     public function itShowsAnErrorMessageAndRedirectsBackToTheCreationForm() {
         $this->expectFeedback('error', '*');
-        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&func=new');
+        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&action=new');
         $this->create();
     }
 }

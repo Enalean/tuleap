@@ -77,7 +77,7 @@ class Planning_Controller extends Controller {
         } else {
             $this->addFeedback('error', 'All fields are mandatory');
             $this->redirect(array('group_id' => $this->group_id,
-                                  'func'     => 'new'));
+                                  'action'   => 'new'));
         }
     }
 

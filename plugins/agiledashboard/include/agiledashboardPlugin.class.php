@@ -70,7 +70,7 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function process(Codendi_Request $request) {
-        switch($request->get('func')) {
+        switch($request->get('action')) {
             case 'show':
                 $this->renderAction('show', $request);
                 break;
