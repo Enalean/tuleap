@@ -22,7 +22,7 @@ require_once 'Presenter.class.php';
 require_once 'IndexPresenter.class.php';
 require_once 'PlanningFactory.class.php';
 require_once 'common/valid/ValidFactory.class.php';
-require_once 'common/mustache/MustacheRenderer.class.php';
+require_once 'common/mvc2/Controller.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 
@@ -55,12 +55,7 @@ class Planning_CreatePresenter {
     }
 }
 
-class Planning_Controller {
-
-    /**
-     * @var Renderer
-     */
-    private $renderer;
+class Planning_Controller extends Controller {
     
     /**
      * @var Tracker_Artifact
@@ -68,22 +63,18 @@ class Planning_Controller {
     private $artifact;
     
     function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory, TrackerFactory $tracker_factory) {
+        parent::__construct('agiledashboard', $request);
+        
         $aid = $request->get('aid');
         $this->group_id = $request->get('group_id');
         $this->artifact = $artifact_factory->getArtifactById($aid);
-        $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../templates');
         $this->planning_factory = $planning_factory;
         $this->tracker_factory  = $tracker_factory;
-        $this->request = $request;
     }
 
     function display() {
         $presenter = new Planning_Presenter($this->artifact);
         $this->render('release-view', $presenter);
-    }
-
-    private function render($template_name, $presenter) {
-        echo $this->renderer->render($template_name, $presenter);
     }
     
     public function index() {
@@ -117,15 +108,10 @@ class Planning_Controller {
             
             $this->redirect(array('group_id' => $this->group_id));
         } else {
-            $GLOBALS['Response']->addFeedback('error', 'All fields are mandatory');
+            $this->addFeedback('error', 'All fields are mandatory');
             $this->redirect(array('group_id' => $this->group_id,
                                   'func'     => 'create'));
         }
-    }
-    
-    private function redirect($query_parts) {
-        $redirect = http_build_query($query_parts);
-        $GLOBALS['Response']->redirect('/plugins/agiledashboard/?'.$redirect);
     }
 }
 ?>
