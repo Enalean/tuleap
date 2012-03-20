@@ -12,7 +12,7 @@ Subject: {$commit->GetTitle()}
 {if $tag}
 X-Git-Tag: {$tag->GetName()}
 {/if}
-X-Git-Url: {scripturl}?p={$project->GetProject()|urlencode}&amp;a=commitdiff&amp;h={$commit->GetHash()}
+X-Git-Url: {scripturl}?p={$project->GetProject()|rawurlencode}&amp;a=commitdiff&amp;h={$commit->GetHash()}
 ---
 {foreach from=$commit->GetComment() item=line}
 {$line}

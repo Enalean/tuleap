@@ -20,9 +20,9 @@
  <div class="page_nav">
    {include file='nav.tpl' treecommit=$commit}
    <br />
-   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$blob->GetPath()|escape:'url'}">{t}plain{/t}</a> | 
+   <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=blob_plain&amp;h={$blob->GetHash()}&amp;f={$blob->GetPath()|escape:'url'}">{t}plain{/t}</a> | 
    {if $commit->GetHash() != $head->GetHash()}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=blame&amp;hb=HEAD&amp;f={$blob->GetPath()|escape:'url'}">{t}HEAD{/t}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=blame&amp;hb=HEAD&amp;f={$blob->GetPath()|escape:'url'}">{t}HEAD{/t}</a>
    {else}
      {t}HEAD{/t}
    {/if}
@@ -52,7 +52,7 @@
 	  <tr class="{$rowclass}">
 	    <td class="date">
 	      {if $blamecommit}
-	        <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$blamecommit->GetHash()}" title="{$blamecommit->GetTitle()}" class="commitTip">{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"}</a>
+	        <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$blamecommit->GetHash()}" title="{$blamecommit->GetTitle()}" class="commitTip">{$blamecommit->GetAuthorEpoch()|date_format:"%Y-%m-%d %H:%M:%S"}</a>
 	      {/if}
 	    </td>
 	    <td class="author">

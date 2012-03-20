@@ -15,13 +15,13 @@
 {/block}
 
 {block name=feeds}
-  <link rel="alternate" title="{$project->GetProject()} log (Atom)" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=atom" type="application/atom+xml" />
-  <link rel="alternate" title="{$project->GetProject()} log (RSS)" href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=rss" type="application/rss+xml" />
+  <link rel="alternate" title="{$project->GetProject()} log (Atom)" href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=atom" type="application/atom+xml" />
+  <link rel="alternate" title="{$project->GetProject()} log (RSS)" href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=rss" type="application/rss+xml" />
 {/block}
 
 {block name=header}
   <a href="index.php">{if $homelink}{$homelink}{else}{t}projects{/t}{/if}</a> / 
-  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=summary">{$project->GetProject()}</a>
+  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=summary">{$project->GetProject()}</a>
   {if $actionlocal}
      / {$actionlocal}
   {/if}
@@ -52,6 +52,6 @@
   {$project->GetDescription()}
   {/if}
   </div>
-  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=rss" class="rss_logo">{t}RSS{/t}</a>
-  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=atom" class="rss_logo">{t}Atom{/t}</a>
+  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=rss" class="rss_logo">{t}RSS{/t}</a>
+  <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=atom" class="rss_logo">{t}Atom{/t}</a>
 {/block}

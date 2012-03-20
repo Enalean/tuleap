@@ -14,28 +14,28 @@
    {include file='nav.tpl' current='shortlog' logcommit=$commit treecommit=$commit logmark=$mark}
    <br />
    {if ($commit && $head) && (($commit->GetHash() != $head->GetHash()) || ($page > 0))}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=shortlog{if $mark}&amp;m={$mark->GetHash()}{/if}">{t}HEAD{/t}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=shortlog{if $mark}&amp;m={$mark->GetHash()}{/if}">{t}HEAD{/t}</a>
    {else}
      {t}HEAD{/t}
    {/if}
      &sdot; 
    {if $page > 0}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=shortlog&amp;h={$commit->GetHash()}&amp;pg={$page-1}{if $mark}&amp;m={$mark->GetHash()}{/if}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=shortlog&amp;h={$commit->GetHash()}&amp;pg={$page-1}{if $mark}&amp;m={$mark->GetHash()}{/if}" accesskey="p" title="Alt-p">{t}prev{/t}</a>
    {else}
      {t}prev{/t}
    {/if}
      &sdot; 
    {if $hasmorerevs}
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=shortlog&amp;h={$commit->GetHash()}&amp;pg={$page+1}{if $mark}&amp;m={$mark->GetHash()}{/if}" accesskey="n" title="Alt-n">{t}next{/t}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=shortlog&amp;h={$commit->GetHash()}&amp;pg={$page+1}{if $mark}&amp;m={$mark->GetHash()}{/if}" accesskey="n" title="Alt-n">{t}next{/t}</a>
    {else}
      {t}next{/t}
    {/if}
    <br />
    {if $mark}
      {t}selected{/t} &sdot;
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=commit&amp;h={$mark->GetHash()}" class="list commitTip" {if strlen($mark->GetTitle()) > 30}title="{$mark->GetTitle()|htmlspecialchars}"{/if}><strong>{$mark->GetTitle(30)}</strong></a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=commit&amp;h={$mark->GetHash()}" class="list commitTip" {if strlen($mark->GetTitle()) > 30}title="{$mark->GetTitle()|htmlspecialchars}"{/if}><strong>{$mark->GetTitle(30)}</strong></a>
      &sdot;
-     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|urlencode}&amp;a=shortlog&amp;h={$commit->GetHash()}&amp;pg={$page}">{t}deselect{/t}</a>
+     <a href="{$SCRIPT_NAME}?p={$project->GetProject()|rawurlencode}&amp;a=shortlog&amp;h={$commit->GetHash()}&amp;pg={$page}">{t}deselect{/t}</a>
      <br />
    {/if}
  </div>
