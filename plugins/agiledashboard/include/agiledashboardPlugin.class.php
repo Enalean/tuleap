@@ -70,9 +70,13 @@ class AgileDashboardPlugin extends Plugin {
     }
     
     public function process(Codendi_Request $request) {
+        require_once dirname(__FILE__) .'/../../tracker/include/Tracker/CrossSearch/ViewBuilder.class.php';
+        require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
+        require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
         switch($request->get('action')) {
             case 'show':
-                $this->renderAction('show', $request);
+                $view_builder = new Tracker_CrossSearch_ViewBuilder(Tracker_FormElementFactory::instance(), TrackerFactory::instance());
+                $this->renderAction('show', $request, array($view_builder));
                 break;
             case 'new':
                 $this->renderAction('new_', $request);
@@ -125,20 +129,17 @@ class AgileDashboardPlugin extends Plugin {
                                        TrackerFactory::instance());
     }
     
-    private function renderAction($action_name, Codendi_Request $request) {
+    private function renderAction($action_name, Codendi_Request $request, array $args = array()) {
         $this->displayHeader($request, $this->header_title[$action_name]);
-        $this->executeAction($action_name, $request);
+        call_user_func_array(array($this, 'executeAction'), array($action_name, $request, $args));
         $this->displayFooter($request);
     }
     
-    private function executeAction($action_name, Codendi_Request $request) {
+    private function executeAction($action_name, Codendi_Request $request, array $args = array()) {
         $controller = $this->buildController($request);
-        $controller->$action_name();
+        call_user_func_array(array($controller, $action_name), $args);
     }
     
-}
-class ReleaseViewPresenter {
-
 }
 
 ?>

@@ -31,19 +31,21 @@ Mock::generate('Tracker_Artifact');
 Mock::generate('TrackerFactory');
 Mock::generate('PlanningFactory');
 Mock::generate('Planning');
+Mock::generate('Tracker_CrossSearch_SearchContentView');
+Mock::generate('Tracker_CrossSearch_ViewBuilder');
 
 class Planning_ControllerTest extends TuleapTestCase {
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
         $id = 987;
         $title = "screen hangs with macos";
-        $content = $this->WhenICaptureTheOutputOfEditActionForAnEmptyArtifact($id, $title);
+        $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title);
         $this->assertPattern('/No items yet/', $content);
     }
     
     public function itDisplaysTheArtifactTitleAndId() {
         $id = 987;
         $title = "screen hangs with macos and some escapable characters #<";
-        $content = $this->WhenICaptureTheOutputOfEditActionForAnEmptyArtifact($id, $title);
+        $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title);
         $this->assertPattern("/art-$id/", $content);
         $this->assertPattern("/$title/", $content);
     }
@@ -61,9 +63,28 @@ class Planning_ControllerTest extends TuleapTestCase {
         $factory->setReturnValue('getArtifactByid', $artifact, array($id));
         $request = new Codendi_Request(array('aid' => $id));
 
-        $content = $this->WhenICaptureTheOutputOfEditAction($request, $factory);
+        $content = $this->WhenICaptureTheOutputOfShowAction($request, $factory);
         $this->assertPattern('/Tutu/', $content);
         $this->assertPattern('/Tata/', $content);
+    }
+    
+    public function itDisplaysTheSearchContentView() {
+        $content_view = new MockTracker_CrossSearch_SearchContentView();
+        $a_list_of_draggable_items = 'A list of draggable items';
+        $content_view->setReturnValue('fetch', $a_list_of_draggable_items);
+        
+        $view_builder = new MockTracker_CrossSearch_ViewBuilder();
+        $view_builder->setReturnValue('buildContentView', $content_view);
+        
+        $id       = 987;
+        $title    = "screen hangs with macos and some escapable characters #<";
+        $request  = new Codendi_Request(array('aid' => $id));
+        $artifact = $this->GivenAnArtifact($id, $title);
+        $factory  = new MockTracker_ArtifactFactory();
+        $factory->setReturnValue('getArtifactByid', $artifact, array($id));
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder);
+        
+        $this->assertPattern("/$a_list_of_draggable_items/", $content);
     }
     
     private function GivenAnArtifact($id, $title) {
@@ -73,20 +94,29 @@ class Planning_ControllerTest extends TuleapTestCase {
         $artifact->setReturnValue('getId', $id);
         return $artifact;
     }
-    private function WhenICaptureTheOutputOfEditActionForAnEmptyArtifact($id, $title) {
+    
+    private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
         $request = new Codendi_Request(array('aid' => $id));
         
         $artifact = $this->GivenAnArtifact($id, $title);
         
         $factory = new MockTracker_ArtifactFactory();
         $factory->setReturnValue('getArtifactByid', $artifact, array($id));
-        return $this->WhenICaptureTheOutputOfEditAction($request, $factory);
+        return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     
-    private function WhenICaptureTheOutputOfEditAction($request, $factory) {
+    private function WhenICaptureTheOutputOfShowAction($request, $factory) {
+        $content_view = new MockTracker_CrossSearch_SearchContentView();
+        $content_view->setReturnValue('fetch', 'stuff');
+        $view_builder = new MockTracker_CrossSearch_ViewBuilder();
+        $view_builder->setReturnValue('buildContentView', $content_view);
+        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder);
+    }
+    
+    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder) {
         ob_start();
         $controller = new Planning_Controller($request, $factory, new MockPlanningFactory(), new MockTrackerFactory());
-        $controller->show();
+        $controller->show($view_builder);
         $content = ob_get_clean();
         return $content;
     }
