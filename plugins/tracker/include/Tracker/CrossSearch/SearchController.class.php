@@ -67,7 +67,8 @@ class Tracker_CrossSearch_SearchController {
                                 Layout                     $layout,
                                 Tracker_CrossSearch_Search $search,
                                 Tracker_HierarchyFactory   $hierarchy_factory,
-                                TrackerFactory             $tracker_factory) {
+                                TrackerFactory             $tracker_factory,
+                                SearchViewBuilder          $view_builder = null) {
         
         $this->request            = $request;
         $this->projectManager     = $projectManager;
@@ -77,6 +78,7 @@ class Tracker_CrossSearch_SearchController {
         $this->hierarchy_factory  = $hierarchy_factory;
         $this->tracker_factory    = $tracker_factory;
         $this->renderer = new MustacheRenderer(dirname(__FILE__).'/../../../templates');
+        $this->view_builder = isset($view_builder) ? $view_builder : new SearchViewBuilder();
     }
 
     public function search() {
@@ -86,13 +88,12 @@ class Tracker_CrossSearch_SearchController {
             $project            = $this->getProject($project_id, $this->projectManager);
             
             
-            $view = $this->buildView($project
+            $view = $this->view_builder->buildView($project
                     , $this->formElementFactory
                     , $request_criteria
                     , $this->tracker_factory);
             
-            $view_builder = new SearchViewBuilder();
-            $content_view = $view_builder->buildContentView($project
+            $content_view = $this->view_builder->buildContentView($project
                     , $this->formElementFactory
                     , $request_criteria
                     , $this->tracker_factory
@@ -111,61 +112,6 @@ class Tracker_CrossSearch_SearchController {
         }
     }
     
-    
-    private function buildView($project, $formElementFactory, $request_criteria, $tracker_factory) {
-        $service            = $this->getService($project);
-        $criteria           = $this->getCriteria($project, $this->getReport(), $formElementFactory, $request_criteria);
-        $trackers           = $this->getTrackers($project, $tracker_factory);
-        return $this->getView($project, $service, $criteria, $trackers);
-   
-    }
-    
-    private function getTrackers(Project $project, $tracker_factory) {
-        return $tracker_factory->getTrackersByGroupId($project->getGroupId());
-    }
-    
-    private function getReport() {
-        $name = "Shared field search";
-        $is_query_displayed = true;
-        $report_id = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $tracker_id = $updated_by = $updated_at = 0;
-        
-        $report = new Tracker_Report($report_id, 
-                                     $name, 
-                                     $description, 
-                                     $current_renderer_id, 
-                                     $parent_report_id, 
-                                     $user_id, 
-                                     $is_default, 
-                                     $tracker_id, 
-                                     $is_query_displayed, 
-                                     $updated_by, 
-                                     $updated_at);
-        
-        return $report;
-    }
-    
-    public function getCriteria(Project $project, Tracker_Report $report, $formElementFactory, $request_criteria) {
-        $fields   = $formElementFactory->getProjectSharedFields($project);
-        $criteria = array();
-        foreach ($fields as $field) {
-            $field->setCriteriaValue($this->getSelectedValues($field, $request_criteria));
-            
-            $id          = null;
-            $rank        = 0;
-            $is_advanced = true;
-            $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
-        }
-        return $criteria;
-    }
-    
-    private function getSelectedValues(Tracker_FormElement_Field $field, $request_criteria) {
-        $currentValue     = $request_criteria[$field->getId()]['values'];
-        if (!$currentValue) {
-            $currentValue = array();
-        }
-        return $currentValue;
-    }
-    
     /**
      * @return Project
      */
@@ -177,6 +123,29 @@ class Tracker_CrossSearch_SearchController {
         } else {
             return $project;
         }
+    }
+    
+}
+class SearchViewBuilder {
+
+    public function buildView($project, $formElementFactory, $request_criteria, $tracker_factory) {
+        $service            = $this->getService($project);
+        $criteria           = $this->getCriteria($project, $this->getReport(), $formElementFactory, $request_criteria);
+        $trackers           = $this->getTrackers($project, $tracker_factory);
+        return $this->getView($project, $service, $criteria, $trackers);
+   
+    }
+    public function buildContentView($project, $formElementFactory, $request_criteria, $tracker_factory, $search, $hierarchy_factory) {
+        $report             = $this->getReport();
+        $criteria           = $this->getCriteria($project, $report, $formElementFactory, $request_criteria);
+        $trackers           = $this->getTrackers($project, $tracker_factory);
+        $artifacts          = $this->getArtifacts($trackers, $search, $criteria, $hierarchy_factory);
+        return $this->getContentView($report, $criteria, $artifacts);
+    }
+    
+    
+    protected function getView(Project $project, Service $service, $criteria, $trackers) {
+        return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers);
     }
     
     /**
@@ -192,31 +161,6 @@ class Tracker_CrossSearch_SearchController {
             
             throw new Tracker_CrossSearch_ServiceNotUsedException($errorMessage);
         }
-    }
-    
-    protected function getView(Project $project, Service $service, $criteria, $trackers) {
-        return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers);
-    }
-    
-    protected function getContentView(Tracker_Report $report, $criteria, $artifacts) {
-        $artifact_factory   = Tracker_ArtifactFactory::instance();
-        $formElementFactory = Tracker_FormElementFactory::instance();
-        $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
-        $shared_factory     = new Tracker_SharedFormElementFactory($formElementFactory, $bindFactory);
-        return new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, $artifact_factory, $shared_factory);
-    }
-
-}
-class SearchViewBuilder {
-
-    function __construct() {
-    }
-    public function buildContentView($project, $formElementFactory, $request_criteria, $tracker_factory, $search, $hierarchy_factory) {
-        $report             = $this->getReport();
-        $criteria           = $this->getCriteria($project, $report, $formElementFactory, $request_criteria);
-        $trackers           = $this->getTrackers($project, $tracker_factory);
-        $artifacts          = $this->getArtifacts($trackers, $search, $criteria, $hierarchy_factory);
-        return $this->getContentView($report, $criteria, $artifacts);
     }
     protected function getContentView(Tracker_Report $report, $criteria, $artifacts) {
         $artifact_factory   = Tracker_ArtifactFactory::instance();
