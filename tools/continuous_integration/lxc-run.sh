@@ -142,5 +142,8 @@ fi
 # Get the mysql password from the install
 mysql_pass=$($remotecmd grep sys_dbpasswd /etc/codendi/conf/database.inc | cut -d\" -f2)  
 
+# Tests need to have fixture.sql on target server so upload it
+rsync --delete --archive $src_dir/tests $build_host:/usr/share/codendi
+
 # And test!
 TULEAP_HOST=$lxc_ip TULEAP_ENV=aci TULEAP_MYSQL_PASS=$mysql_pass cucumber -f junit -o test_results $src_dir/tests/functional/features
