@@ -50,8 +50,8 @@ class PlanningFactory {
         return $this->getDao()->searchPlannings($group_id);
     }
     
-    public function create($planning_name, $planning_backlog_ids, $planning_release_id) {
-        return $this->getDao()->create($planning_name, $planning_backlog_ids, $planning_release_id);
+    public function create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id) {
+        return $this->getDao()->create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id);
     }
     
     public function getDao() {

@@ -23,17 +23,18 @@ require_once('common/dao/include/DataAccessObject.class.php');
 
 class PlanningDao extends DataAccessObject {
     
-    function create($planning_name, $planning_backlog_ids, $planning_release_id){
+    function create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id){
         $planning_name       = $this->da->quoteSmart($planning_name);
+        $group_id            = $this->da->escapeInt($group_id);
         $planning_release_id = $this->da->escapeInt($planning_release_id);
         
         $sql = "INSERT INTO plugin_agiledashboard_planning
-                    (name, release_tracker_id)
-                    VALUES ($planning_name, $planning_release_id)";
+                    (name, group_id, release_tracker_id)
+                    VALUES ($planning_name, $group_id, $planning_release_id)";
         
         $last_id = $this->updateAndGetLastId($sql);
         
-        foreach ($planning_backlog_ids as $planning_backlog_id) {
+        foreach ($planning_backlog_ids as $planning_backlog_id) {            
             $planning_backlog_id = $this->da->escapeInt($planning_backlog_id);
             $sql = "INSERT INTO plugin_agiledashboard_planning_backlog_tracker
                     (planning_id, tracker_id)
@@ -43,6 +44,11 @@ class PlanningDao extends DataAccessObject {
     }
     
     function searchPlannings($group_id){
+        $group_id = $this->da->escapeInt($group_id);
+        $sql = "SELECT * 
+                FROM plugin_agiledashboard_planning
+                WHERE group_id = $group_id";
+        return $this->retrieve($sql);
     }
 }
 ?>

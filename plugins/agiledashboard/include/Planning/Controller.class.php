@@ -111,6 +111,7 @@ class Planning_Controller {
             $this->request->valid($planning_name)) {
             
             $this->planning_factory->create($this->request->get('planning_name'),
+                                            $this->group_id,
                                             $this->request->get('planning_backlog_ids'),
                                             $this->request->get('planning_release_id'));
             
