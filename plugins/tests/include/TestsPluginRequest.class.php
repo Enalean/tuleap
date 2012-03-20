@@ -26,6 +26,10 @@ class testsPluginRequest {
     protected $order_values = array('normal', 'random', 'invert');
     protected $tests_to_run = array();
     
+    public function __construct($parameters=array()) {
+        $this->parse($parameters);
+    }
+    
     public function parse($request) {
         foreach($request as $property=> $value) {
             $setProperty = 'set'.ucfirst(preg_replace_callback('@[_](.)@', array($this, 'replaceUnderscore'), $property));
