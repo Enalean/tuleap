@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/templating/TemplateRenderer.class.php';
 require_once 'Mustache.php';
 require_once 'MustacheLoader.php';
 
-class MustacheRenderer {
+class MustacheRenderer extends TemplateRenderer {
 
     /**
      * @var Mustache
@@ -31,23 +32,28 @@ class MustacheRenderer {
     /**
      * @var MustacheLoader
      */
-    private $templates;
+    private $mustache_loader;
     
+    /**
+     * @var array
+     */
     private $options = array('throws_exceptions' => array(
-		MustacheException::UNKNOWN_VARIABLE         => true,
-		MustacheException::UNCLOSED_SECTION         => true,
-		MustacheException::UNEXPECTED_CLOSE_SECTION => true,
-		MustacheException::UNKNOWN_PARTIAL          => true,
-		MustacheException::UNKNOWN_PRAGMA           => true,
-	));
+        MustacheException::UNKNOWN_VARIABLE         => true,
+        MustacheException::UNCLOSED_SECTION         => true,
+        MustacheException::UNEXPECTED_CLOSE_SECTION => true,
+        MustacheException::UNKNOWN_PARTIAL          => true,
+        MustacheException::UNKNOWN_PRAGMA           => true,
+    ));
     
-    public function __construct($path) {
-        $this->mustache  = new Mustache(null, null, null, $this->options);
-        $this->templates = new MustacheLoader($path);
+    public function __construct($plugin_templates_dir) {
+        parent::__construct($plugin_templates_dir);
         
+        $this->mustache        = new Mustache(null, null, null, $this->options);
+        $this->mustache_loader = new MustacheLoader($this->plugin_templates_dir);
     }
+    
     public function render($template_name, $presenter) {
-        echo $this->mustache->render($this->templates[$template_name], $presenter, $this->templates);
+        echo $this->mustache->render($this->mustache_loader[$template_name], $presenter, $this->mustache_loader);
     }
 }
 
