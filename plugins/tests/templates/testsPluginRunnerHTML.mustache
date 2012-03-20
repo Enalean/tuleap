@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Unit Tests - Tuleap</title>
+        <link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />
+        <link rel="stylesheet" type="text/css" href="/plugins/tests/themes/default/css/style.css" />
+        <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
+        <script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
+        <script type="text/javascript" src="/plugins/tests/scripts/testsUnitView.js"></script>
+    </head>
+    <body class="main_body_row">
+        <form action="" method="post">
+            <table class="testsRunner">
+                <tr>
+                    <td class="testsControl">
+                        <fieldset>
+                            <legend>Options</legend>
+                            <input type="checkbox" id="show_pass" name="show_pass" value="1" {{show_pass_checked}}/>
+                            <label for="show_pass">Show pass</label>
+                            <input type="checkbox" id="cover_code" name="cover_code" value="1" {{cover_code_checked}}/>
+                            <label for="cover_code">Code coverage</label>
+                            <br />
+                            Order: 
+                            <input type="radio" id="order_normal" name="order" value="normal" {{order_normal_checked}} />
+                            <label for="order_normal">Normal</label>
+                            <input type="radio" id="order_random" name="order" value="random" {{order_random_checked}} />
+                            <label for="order_random">Random</label>
+                            <input type="radio" id="order_invert" name="order" value="invert" {{order_invert_checked}} />
+                            <label for="order_invert">Revert</label>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Tests</legend>
+                            {{#navigator}}
+                            {{> testsSuitesHTML}}
+                            {{/navigator}}
+                        </fieldset>
+                </td>
+                <td class="testsLauncher">
+                    <div id="submit_panel"><input type="submit" value="Run !" /></div>
+                </td>
+                <td class="testsResult">
+                    <fieldset>
+                        <legend>Results</legend>
+                        {{#results}}
+                        {{> testsResults}}
+                        {{/results}}
+                    </fieldset>
+                </td>
+            </tr>
+        </table>
+     </form>
+    </body>
+</html>

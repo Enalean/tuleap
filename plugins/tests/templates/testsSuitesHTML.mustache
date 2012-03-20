@@ -1,0 +1,11 @@
+<ul id="{{id}}" class="{{classes}}">
+    {{#children}}
+        <li class="{{classes}}">
+            <label for="{{name}}">{{title}}</label>
+            <input type="checkbox" name="{{name}}" value="{{path}}" {{isSelected}}/>
+            {{#children}}
+            {{> testsSuitesHTML}}
+            {{/children}}
+        </li>
+    {{/children}}
+</ul>
