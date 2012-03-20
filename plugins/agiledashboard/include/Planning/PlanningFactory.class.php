@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('PlanningDao.class.php');
+
 class PlanningFactory {
     
     /**
@@ -44,11 +46,16 @@ class PlanningFactory {
         return self::$instance;
     }
     
-    public function getPlannings() {
+    public function getPlannings($group_id) {
+        return $this->getDao()->searchPlannings($group_id);
     }
     
     public function create($planning_name, $planning_backlog_ids, $planning_release_id) {
-        return true;
+        return $this->getDao()->create($planning_name, $planning_backlog_ids, $planning_release_id);
+    }
+    
+    public function getDao() {
+        return new PlanningDao();
     }
 }
 
