@@ -10,9 +10,14 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-require_once('./tests_utils.php');
 
-$coverCode = isset($_REQUEST['cover_code']) ? true  : false;
+
+require_once(dirname(__FILE__).'/tests_utils.php');
+require_once(dirname(__FILE__).'/../include/testsPluginRequest.php');
+require_once(dirname(__FILE__).'/../include/testsPluginRunner.php');
+$request = new testsPluginRequest();
+$request->parse($_REQUEST);
+$coverCode = $request->getCoverCode();
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -32,17 +37,17 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                     <td class="testsControl">
                         <fieldset>
                             <legend>Options</legend>
-                            <input type="checkbox" id="show_pass" name="show_pass" value="1" <?= isset($_REQUEST['show_pass']) ? 'checked="checked"' : '' ?> />
+                            <input type="checkbox" id="show_pass" name="show_pass" value="1" <?= $request->getShowPass() ? 'checked="checked"' : '' ?> />
                             <label for="show_pass">Show pass</label>
                             <input type="checkbox" id="cover_code" name="cover_code" value="1" <?= $coverCode ? 'checked="checked"' : '' ?> />
                             <label for="cover_code">Code coverage</label>
                             <br />
                             Order: 
-                            <input type="radio" id="order_normal" name="order" value="normal" <?= empty($_REQUEST['order']) || $_REQUEST['order'] == 'normal' ? 'checked="checked"' : '' ?> />
+                            <input type="radio" id="order_normal" name="order" value="normal" <?= $request->getOrder() == 'normal' ? 'checked="checked"' : '' ?> />
                             <label for="order_normal">Normal</label>
-                            <input type="radio" id="order_random" name="order" value="random" <?= !empty($_REQUEST['order']) &&  $_REQUEST['order'] == 'random' ? 'checked="checked"' : '' ?> />
+                            <input type="radio" id="order_random" name="order" value="random" <?= $request->getOrder() == 'random' ? 'checked="checked"' : '' ?> />
                             <label for="order_random">Random</label>
-                            <input type="radio" id="order_invert" name="order" value="invert" <?= !empty($_REQUEST['order']) &&  $_REQUEST['order'] == 'invert' ? 'checked="checked"' : '' ?> />
+                            <input type="radio" id="order_invert" name="order" value="invert" <?= $request->getOrder() == 'invert' ? 'checked="checked"' : '' ?> />
                             <label for="order_invert">Revert</label>
                         </fieldset>
                         <fieldset>
@@ -69,8 +74,20 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                 <td class="testsResult">
                     <fieldset>
                         <legend>Results</legend>
-                        <?php
+                        <?php                    
                         flush();
+                        $runner = new testsPluginRunner($request);
+                        $runner->appendTestsInPath('/usr/share/codendi/plugins', 'Plugins');
+                        //$runner->appendTestsInPath('/usr/share/codendi/tests/simpletest', 'Core');
+                        
+                        $reporter = CodendiReporterFactory::reporter('html', $coverCode);
+                        $runner->run($reporter);
+                        
+                            if ($reporter->generateCoverage(dirname(__FILE__).'/code-coverage-report')) {
+                                echo '<p><a href="code-coverage-report">Code coverage results:</a></p>';
+                                echo '<iframe src="code-coverage-report" style="width: 100%; height: 500px;" />';
+                            }
+                        /*
                         if (isset($_REQUEST['tests_to_run'])) {
                             $random = array();
                             function add_test_to_group($test, $categ, $params) {
@@ -105,11 +122,9 @@ $coverCode = isset($_REQUEST['cover_code']) ? true  : false;
                                 }
                             }
                             $testSuite->run($reporter);
-                            if ($reporter->generateCoverage(dirname(__FILE__).'/code-coverage-report')) {
-                                echo '<p><a href="code-coverage-report">Code coverage results:</a></p>';
-                                echo '<iframe src="code-coverage-report" style="width: 100%; height: 500px;" />';
-                            }
-                        }
+                            
+                            
+                        }*/
                         ?>
                     </fieldset>
                 </td>
