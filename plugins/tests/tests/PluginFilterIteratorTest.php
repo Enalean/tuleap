@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-dirname(__FILE__).'/../include/testsPluginFilterIterator.php';
+dirname(__FILE__).'/../include/TestsPluginFilterIterator.class.php';
 
 class PluginFilterIteratorTest extends TuleapTestCase {
 
@@ -38,6 +38,53 @@ class PluginFilterIteratorTest extends TuleapTestCase {
     );
     
     public static $fixtureDir;
+
+    
+    public function setUp() {
+        self::$fixtureDir = self::implodePath(dirname(__FILE__), 'fixtures').DIRECTORY_SEPARATOR;
+        self::makeFixtures(self::$fixDirs, self::$fixFiles);
+    }
+    
+    public function tearDown() {
+        self::delFixtures(self::$fixDirs, self::$fixFiles);
+    }
+
+    public function itCanFindAllTestsFilesInTheGivenPath() {
+        $allTestsIterator = TestsPluginFilterIterator::apply(self::$fixtureDir);
+        $allTests = self::cleanIteratorToArray($allTestsIterator);
+        $expected = array(
+            self::implodePath('test1', 'test1Test.php'),
+            self::implodePath('test2', 'test2Test.php'),
+            self::implodePath('test2', 'test 2', 'test2.1Test.php'),
+            self::implodePath('test2', 'test 2', 'test2.2Test.php')
+        );
+        sort($expected);
+        $this->assertEqual($expected, $allTests);
+    }
+    
+    public function itCanFindAllTestsFilesInTheGivenPathWithinRegexpPattern() {
+        $allTestsIterator = TestsPluginFilterIterator::apply(self::$fixtureDir, '@1Test.php@');
+        $allTests = self::cleanIteratorToArray($allTestsIterator);
+        $expected = array(
+            self::implodePath('test1', 'test1Test.php'),
+            self::implodePath('test2', 'test 2', 'test2.1Test.php'),
+        );
+        sort($expected);
+        $this->assertEqual($expected, $allTests);
+        ///
+        $allTestsIterator->setPattern('@2Test.php@');
+        $allTests = self::cleanIteratorToArray($allTestsIterator);
+        $expected = array(
+            self::implodePath('test2', 'test2Test.php'),
+            self::implodePath('test2', 'test 2', 'test2.2Test.php'),
+        );
+        sort($expected);
+        $this->assertEqual($expected, $allTests);
+    }
+    
+    /**
+     * Helpers
+     */
 
     public static function implodePath() {
         $path =  func_get_args();
@@ -77,7 +124,7 @@ class PluginFilterIteratorTest extends TuleapTestCase {
             }
         }
     }
-    
+
     public static function cleanIteratorToArray($iterator) {
         $array = array();
         foreach($iterator as $testFile) {
@@ -85,48 +132,6 @@ class PluginFilterIteratorTest extends TuleapTestCase {
         }
         sort($array);
         return $array;
-    }
-    
-    public function setUp() {
-        self::$fixtureDir = self::implodePath(dirname(__FILE__), 'fixtures').DIRECTORY_SEPARATOR;
-        self::makeFixtures(self::$fixDirs, self::$fixFiles);
-    }
-    
-    public function tearDown() {
-        self::delFixtures(self::$fixDirs, self::$fixFiles);
-    }
-
-    public function itCanFindAllTestsFilesInTheGivenPath() {
-        $allTestsIterator = testsPluginFilterIterator::apply(self::$fixtureDir);
-        $allTests = self::cleanIteratorToArray($allTestsIterator);
-        $expected = array(
-            self::implodePath('test1', 'test1Test.php'),
-            self::implodePath('test2', 'test2Test.php'),
-            self::implodePath('test2', 'test 2', 'test2.1Test.php'),
-            self::implodePath('test2', 'test 2', 'test2.2Test.php')
-        );
-        sort($expected);
-        $this->assertEqual($expected, $allTests);
-    }
-    
-    public function itCanFindAllTestsFilesInTheGivenPathWithinRegexpPattern() {
-        $allTestsIterator = testsPluginFilterIterator::apply(self::$fixtureDir, '@1Test.php@');
-        $allTests = self::cleanIteratorToArray($allTestsIterator);
-        $expected = array(
-            self::implodePath('test1', 'test1Test.php'),
-            self::implodePath('test2', 'test 2', 'test2.1Test.php'),
-        );
-        sort($expected);
-        $this->assertEqual($expected, $allTests);
-        ///
-        $allTestsIterator->setPattern('@2Test.php@');
-        $allTests = self::cleanIteratorToArray($allTestsIterator);
-        $expected = array(
-            self::implodePath('test2', 'test2Test.php'),
-            self::implodePath('test2', 'test 2', 'test2.2Test.php'),
-        );
-        sort($expected);
-        $this->assertEqual($expected, $allTests);
     }
 }
 ?>

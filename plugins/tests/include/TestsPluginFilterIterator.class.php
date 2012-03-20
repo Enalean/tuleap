@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class testsPluginFilterIterator extends FilterIterator {
+class TestsPluginFilterIterator extends FilterIterator {
     protected $pattern = '@Test.php$@';
     
     
@@ -34,7 +34,7 @@ class testsPluginFilterIterator extends FilterIterator {
     public static function apply($path, $pattern = '@Test.php$@') {        
         $RecursiveIt    =  new RecursiveCachingIterator(new RecursiveDirectoryIterator($path));
         $RecursiveIt    = new RecursiveIteratorIterator($RecursiveIt, RecursiveIteratorIterator::SELF_FIRST);
-        $filterIterator = new testsPluginFilterIterator($RecursiveIt);
+        $filterIterator = new TestsPluginFilterIterator($RecursiveIt);
         $filterIterator->pattern = $pattern;
         return $filterIterator;
     }

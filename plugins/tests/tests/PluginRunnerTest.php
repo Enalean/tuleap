@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/testsPluginRequest.php';
-require_once dirname(__FILE__).'/../include/testsPluginRunner.php';
+require_once dirname(__FILE__).'/../include/TestsPluginRequest.class.php';
+require_once dirname(__FILE__).'/../include/TestsPluginRunner.class.php';
 require_once('PluginFilterIteratorTest.php');
 
 class PluginRunnerTest extends TuleapTestCase {
@@ -39,19 +39,23 @@ class PluginRunnerTest extends TuleapTestCase {
     );
     
     public function setUp() {
+        parent::setUp();
         PluginFilterIteratorTest::makeFixtures(PluginFilterIteratorTest::$fixDirs, PluginFilterIteratorTest::$fixFiles);
-        $this->request = new testsPluginRequest();
+        $this->request = new TestsPluginRequest();
         $this->request->parse($this->reqArguments);
-        $this->runner  = new testsPluginRunner($this->request);
+        $this->request->setDisplay('testsPluginRunnerHTML');
+        $this->runner  = new TestsPluginRunner($this->request);
     }
     
     public function tearDown() {
+        parent::tearDown();
         PluginFilterIteratorTest::delFixtures(PluginFilterIteratorTest::$fixDirs, PluginFilterIteratorTest::$fixFiles);
     }
     
     public function itCanFindAllTestsFilesInTheGivenPathThatMustBeRun() {
         
         $baseDir  = PluginFilterIteratorTest::implodePath(dirname(__FILE__), 'fixtures');
+        
         $expected = array(
             PluginFilterIteratorTest::implodePath('test1', 'test1Test.php'),
             PluginFilterIteratorTest::implodePath('test2', 'test 2', 'test2.1Test.php'),

@@ -17,31 +17,64 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('testsPluginFilterIterator.php');
+require_once('TestsPluginFilterIterator.class.php');
 
-class testsPluginRunner {
+class TestsPluginRunner {
     
     protected $request;
-    protected $testSuite;
+    protected $mainSuite;
     protected $titles         = array('normal'=>'All Tests', 'revert'=>'All Tests (revert order)', 'random'=>'All Tests (random order)');
     protected $testFiles      = array();
     protected $testFilesToRun = array();
+    protected $testToRun      = array();
     protected $categoryPath   = array();
     
-    public function __construct( testsPluginRequest $request) {
+    public function __construct(TestsPluginRequest $request) {
         $this->request = $request;
         $title = $this->getTitleByOrder($request->getOrder());
-        $this->testSuite = new TestSuite($title);
+        $this->mainSuite = new TestSuite($title);
+        $this->testsToRun = $this->implodePathRecursive($request->getTestsToRun());
+    }
+    
+    public function runAndDisplay() {
+        
+        $renderer = new MustacheRenderer(dirname(__FILE__).'/../templates');
+        $presenter= new TestsPluginRunnerPresenter($request, $navigator, $result);
+        $renderer->render('testsPluginRunnerHTML', $presenter);
+    }
+    
+    
+    public function run($reporter) {
+        foreach ($this->categoryPath as $category=>$path) {
+            $testSuite = new TestSuite($category);
+            $testFilesToRun = $this->getTestFilesToRunOfCategory($category);
+            $this->buildSuiteTree($path, $testSuite, $testFilesToRun);
+            $this->mainSuite->add($testSuite);
+        }
+        $this->mainSuite->run($reporter);
+    }
+    
+    public function buildSuiteTree($path, $suite, $tree) {
+        foreach($tree as $category=>$test) {
+            if (is_array($test)) {
+                $testSuite = $this->buildSuiteTree($path.'/'.$category, new TestSuite($category), $test);
+                $suite->add($testSuite);
+            } else {
+                var_dump($path);
+                $suite->addFile($path.$test);
+            }
+        }
     }
     
     public function appendTestsInPath($path, $category) {
         $this->categoryPath[$category] = realpath($path).DIRECTORY_SEPARATOR;
-        $filterIterator = testsPluginFilterIterator::apply($path);
+        $filterIterator = TestsPluginFilterIterator::apply($path);
+        $this->testFiles[$category] = array();
         foreach($filterIterator as $file) {
-            $filename = str_replace($this->categoryPath[$category], '', $file->getPathname());       
+            $filename = str_replace($this->categoryPath[$category], '', realpath($file->getPathname()));
             $this->testFiles[$category][] = $filename;
-            $exPath = $this->explodePath($filename);
-            if ($this->mustBeRun($filename)) {
+            if ($this->mustBeRun(str_replace('tests/', '', $filename))) {
+                $exPath = $this->explodePath($filename);
                 $this->testFilesToRun = array_unique(array_merge_recursive($exPath, $this->testFilesToRun));
             }
         }
@@ -85,9 +118,8 @@ class testsPluginRunner {
         return array_unique($return);
     }
     
-    protected function mustBeRun($filename) {        
-        $testsToRun = $this->implodePathRecursive($this->request->getTestsToRun());
-        return in_array($filename, $testsToRun);
+    protected function mustBeRun($filename) {
+        return in_array($filename, $this->testsToRun);
     }
     
     public function getAllTestFilesOfCategory($category) {
@@ -105,13 +137,8 @@ class testsPluginRunner {
         return $this->titles[$order];
     }
     
+    
     /*
-    
-    public function run($reporter) {
-        $this->testSuite->run($reporter);
-    }
-    
-    
     public function getGroupTests($groupTests) {
         foreach($groupTests as $plugin => $tests) {
             $testSuite = new TestSuite($plugin .' Tests');

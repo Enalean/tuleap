@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/testsPluginRequest.php';
+require_once dirname(__FILE__).'/../include/TestsPluginRequest.class.php';
 
 class PluginRequestTest extends TuleapTestCase {
     
@@ -26,7 +26,7 @@ class PluginRequestTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->requestObject = new testsPluginRequest();
+        $this->requestObject = new TestsPluginRequest();
     }
     
     public function itAsADefaultCoverCodeToFalse() {

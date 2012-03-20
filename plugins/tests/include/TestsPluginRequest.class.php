@@ -54,6 +54,10 @@ class testsPluginRequest {
         }
     }
     
+    public function setDisplay($display) {
+        $this->display = $display;
+    }
+    
     public function setTestsToRun( array $tests_to_run) {
         
         $this->tests_to_run = $this->parseTestsToRun($tests_to_run);
@@ -86,6 +90,10 @@ class testsPluginRequest {
     
     public function getTestsToRun() {
         return $this->tests_to_run;
+    }
+    
+    public function getDisplay() {
+        return $this->display;
     }
     
 }
