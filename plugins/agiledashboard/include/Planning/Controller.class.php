@@ -43,23 +43,18 @@ class Planning_Controller extends Controller {
         $this->planning_factory = $planning_factory;
         $this->tracker_factory  = $tracker_factory;
     }
-
-    function display() {
-        $presenter = new Planning_Presenter($this->artifact);
-        $this->render('release-view', $presenter);
-    }
     
     public function index() {
         $presenter = new Planning_IndexPresenter ($this->planning_factory, $this->group_id);
         $this->render('index', $presenter);
     }
     
-    public function create() {
+    public function new_() {
         $presenter = new Planning_FormPresenter($this->group_id, $this->tracker_factory);
-        $this->render('create', $presenter);
+        $this->render('new', $presenter);
     }
     
-    public function doCreate() {
+    public function create() {
         $planning_name = new Valid_String('planning_name');
         $planning_name->required();
         
@@ -82,8 +77,13 @@ class Planning_Controller extends Controller {
         } else {
             $this->addFeedback('error', 'All fields are mandatory');
             $this->redirect(array('group_id' => $this->group_id,
-                                  'func'     => 'create'));
+                                  'func'     => 'new'));
         }
+    }
+
+    function show() {
+        $presenter = new Planning_Presenter($this->artifact);
+        $this->render('release-view', $presenter);
     }
 }
 ?>

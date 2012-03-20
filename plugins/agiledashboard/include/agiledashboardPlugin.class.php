@@ -72,19 +72,25 @@ class AgileDashboardPlugin extends Plugin {
     public function process(Codendi_Request $request) {
         switch($request->get('func')) {
             case 'show':
-                $this->displayPlanning($request);
+                $this->renderAction('show', $request);
+                break;
+            case 'new':
+                $this->renderAction('new_', $request);
                 break;
             case 'create':
-                $this->displayCreate($request);
-                break;
-            case 'doCreate':
-                $this->doCreate($request);
+                $this->executeAction('create', $request);
                 break;
             case 'index':
             default:
-                $this->displayIndex($request);
+                $this->renderAction('index', $request);
         }
     }
+    
+    private $header_title = array(
+        'index' => 'Plannings',
+        'new_'  => 'New Planning',
+        'show'  => 'Release planning'
+    );
     
     private function getService($request) {
         if ($this->service == null) {
@@ -119,33 +125,15 @@ class AgileDashboardPlugin extends Plugin {
                                        TrackerFactory::instance());
     }
     
-    private function displayIndex(Codendi_Request $request) {
-        $controller = $this->buildController($request);
-        
-        $this->displayHeader($request, "Plannings");
-        $controller->index();
+    private function renderAction($action_name, Codendi_Request $request) {
+        $this->displayHeader($request, $this->header_title[$action_name]);
+        $this->executeAction($action_name, $request);
         $this->displayFooter($request);
     }
     
-    private function displayCreate(Codendi_Request $request) {
+    private function executeAction($action_name, Codendi_Request $request) {
         $controller = $this->buildController($request);
-        
-        $this->displayHeader($request, "New Planning");
-        $controller->create();
-        $this->displayFooter($request);
-    }
-    
-    private function doCreate(Codendi_Request $request) {
-        $controller = $this->buildController($request);
-        $controller->doCreate();
-    }
-
-    private function displayPlanning(Codendi_Request $request) {
-        $controller = $this->buildController($request);
-        
-        $this->displayHeader($request, "Release planning");
-        $controller->display();
-        $this->displayFooter($request);
+        $controller->$action_name();
     }
     
 }

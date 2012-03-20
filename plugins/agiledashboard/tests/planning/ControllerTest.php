@@ -86,7 +86,7 @@ class Planning_ControllerTest extends TuleapTestCase {
     private function WhenICaptureTheOutputOfEditAction($request, $factory) {
         ob_start();
         $controller = new Planning_Controller($request, $factory, new MockPlanningFactory(), new MockTrackerFactory());
-        $controller->display();
+        $controller->show();
         $content = ob_get_clean();
         return $content;
     }
@@ -114,7 +114,7 @@ abstract class Planning_ControllerIndexTest extends TuleapTestCase {
     }
     
     public function itHasALinkToCreateANewPlanning() {
-        $this->assertPattern('/func=create/', $this->output);
+        $this->assertPattern('/func=new/', $this->output);
     }
 }
 
@@ -150,7 +150,7 @@ class Planning_ControllerNonEmptyIndexTest extends Planning_ControllerIndexTest 
     }
 }
 
-class Planning_ControllerCreateTest extends TuleapTestCase {
+class Planning_ControllerNewTest extends TuleapTestCase {
     
     function setUp() {
         parent::setUp();
@@ -166,15 +166,15 @@ class Planning_ControllerCreateTest extends TuleapTestCase {
             102 => aTracker()->withId(102)->withName('Stories')->build(),
         );
         
-        $this->renderCreate();
+        $this->renderNew();
     }
     
-    protected function renderCreate() {
+    protected function renderNew() {
         $this->tracker_factory->expectOnce('getTrackersByGroupId', array($this->group_id));
         $this->tracker_factory->setReturnValue('getTrackersByGroupId', $this->trackers);
         
         ob_start();
-        $this->controller->create();
+        $this->controller->new_();
         $this->output = ob_get_clean();
     }
     
@@ -198,7 +198,7 @@ class Planning_ControllerCreateTest extends TuleapTestCase {
     }
 }
 
-abstract class Planning_ControllerDoCreateTest extends TuleapTestCase {
+abstract class Planning_ControllerCreateTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->group_id         = '123';
@@ -210,16 +210,16 @@ abstract class Planning_ControllerDoCreateTest extends TuleapTestCase {
         $this->tracker_factory->setReturnValue('getTrackersByGroupId', array());
     }
     
-    protected function doCreate() {
+    protected function create() {
         $this->controller = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory, $this->tracker_factory);
         
         ob_start();
-        $this->controller->doCreate();
+        $this->controller->create();
         $this->output = ob_get_clean();
     }
 }
 
-class Planning_ControllerDoCreateWithInvalidParamsTest extends Planning_ControllerDoCreateTest {
+class Planning_ControllerCreateWithInvalidParamsTest extends Planning_ControllerCreateTest {
     public function setUp() {
         parent::setUp();
         
@@ -230,12 +230,12 @@ class Planning_ControllerDoCreateWithInvalidParamsTest extends Planning_Controll
     
     public function itShowsAnErrorMessageAndRedirectsBackToTheCreationForm() {
         $this->expectFeedback('error', '*');
-        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&func=create');
-        $this->doCreate();
+        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id.'&func=new');
+        $this->create();
     }
 }
 
-class Planning_ControllerDoCreateWithValidParamsTest extends Planning_ControllerDoCreateTest {
+class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCreateTest {
     public function setUp() {
         parent::setUp();
         
@@ -247,7 +247,7 @@ class Planning_ControllerDoCreateWithValidParamsTest extends Planning_Controller
     public function itCreatesThePlanningAndRedirectsToTheIndex() {
         $this->planning_factory->expectOnce('create', array('Release Planning', $this->group_id, array('1', '2'), '3'));
         $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$this->group_id);
-        $this->doCreate();
+        $this->create();
     }
 }
 
