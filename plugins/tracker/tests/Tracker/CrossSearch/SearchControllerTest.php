@@ -51,6 +51,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->request            = new Codendi_Request(array('group_id' => '66'));
         $this->formElementFactory = new MockTracker_FormElementFactory();
         $this->search             = new MockTracker_CrossSearch_Search();
+        $this->search->setReturnValue('getMatchingArtifacts', new TreeNode());
         $this->hierarchy_factory  = new MockTracker_HierarchyFactory();
         $this->tracker_factory    = new MockTrackerFactory();
         
@@ -67,7 +68,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $fields = array(aTextField()->build(), aStringField()->build());
         $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields, array($this->project));
         
-        $controller = TestHelper::getPartialMock('Tracker_CrossSearch_SearchController', array('getView','getContentView'));
+        $controller = TestHelper::getPartialMock('Tracker_CrossSearch_SearchController', array('getView'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
         $controller->setReturnValue('getView', $view);
         $this->tracker_factory->setReturnValue('getTrackersByGroupId', array());
@@ -126,7 +127,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         
         $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
         
-        $controller = TestHelper::getPartialMock('Tracker_CrossSearch_SearchController', array('getView', 'getContentView'));
+        $controller = TestHelper::getPartialMock('Tracker_CrossSearch_SearchController', array('getView'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
         $controller->setReturnValue('getView', $view);
         $this->tracker_factory->setReturnValue('getTrackersByGroupId', array());
@@ -155,7 +156,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
         $this->search->expectOnce('getMatchingArtifacts', array(array(), $tracker_hierarchy, $criteria));
         
-        $controller = TestHelper::getPartialMock('Tracker_CrossSearch_SearchController', array('getView', 'getContentView'));
+        $controller = TestHelper::getPartialMock('Tracker_CrossSearch_SearchController', array('getView'));
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $this->hierarchy_factory, $this->tracker_factory);
         $controller->setReturnValue('getView', $view);
         $this->tracker_factory->setReturnValue('getTrackersByGroupId', array());
@@ -248,7 +249,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $view = new MockTracker_CrossSearch_SearchView();
         $controller = TestHelper::getPartialMock(
             'Tracker_CrossSearch_SearchController', 
-            array('getView', 'getContentView')
+            array('getView')
         );
         $controller->__construct($this->request, $this->manager, $this->formElementFactory, $GLOBALS['HTML'], $this->search, $hierarchy_factory, $this->tracker_factory);
         
