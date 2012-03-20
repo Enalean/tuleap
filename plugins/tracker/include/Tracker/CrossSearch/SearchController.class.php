@@ -81,15 +81,18 @@ class Tracker_CrossSearch_SearchController {
 
     public function search() {
         try {
-            $project            = $this->getProject($this->request->get('group_id'), $this->projectManager);
+            $criteria           = $this->request->get('criteria');
+            $project_id         = $this->request->get('group_id');
+            $project            = $this->getProject($project_id, $this->projectManager);
             $service            = $this->getService($project);
             $report             = $this->getReport();
-            $criteria           = $this->getCriteria($project, $report, $this->formElementFactory, $this->request->get('criteria'));
+            $criteria           = $this->getCriteria($project, $report, $this->formElementFactory, $criteria);
             $trackers           = $this->getTrackers($project, $this->tracker_factory);
-            $artifacts          = $this->getArtifacts($trackers, $this->search, $this->request->get('criteria'), $this->hierarchy_factory);
+            $artifacts          = $this->getArtifacts($trackers, $this->search, $criteria, $this->hierarchy_factory);
             
             $view = $this->getView($project, $service, $criteria, $trackers);
-            $view->render($this->getContentView($report, $criteria, $artifacts));
+            $content_view = $this->getContentView($report, $criteria, $artifacts);
+            $view->render($content_view);
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
             $this->layout->addFeedback('error', $e->getMessage());
@@ -101,7 +104,7 @@ class Tracker_CrossSearch_SearchController {
         }
     }
     
-    protected function getArtifacts(array $trackers, $search, $request_criteria, $hierarchy_factory) {
+    private function getArtifacts(array $trackers, $search, $request_criteria, $hierarchy_factory) {
         $hierarchy = $this->getTrackersHierarchy($trackers, $hierarchy_factory);
         return $search->getMatchingArtifacts($trackers, $hierarchy, $request_criteria);
     }
@@ -114,7 +117,7 @@ class Tracker_CrossSearch_SearchController {
         return $hierarchy_factory->getHierarchy($tracker_ids);
     }
     
-    public function getTrackers(Project $project, $tracker_factory) {
+    private function getTrackers(Project $project, $tracker_factory) {
         return $tracker_factory->getTrackersByGroupId($project->getGroupId());
     }
     
