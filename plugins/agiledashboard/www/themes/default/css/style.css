@@ -12,3 +12,10 @@
     min-height: 200px;
     padding: 0 0.5em;
 }
+
+.planning-droppable-hover {
+    background: #fcfcfc;
+    -moz-box-shadow:1px 1px 3px rgba(33,33,33, .7) inset;
+    -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
+    box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
+}
