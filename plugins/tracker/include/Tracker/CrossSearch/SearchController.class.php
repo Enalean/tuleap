@@ -81,17 +81,22 @@ class Tracker_CrossSearch_SearchController {
 
     public function search() {
         try {
-            $criteria           = $this->request->get('criteria');
+            $request_criteria           = $this->request->get('criteria');
             $project_id         = $this->request->get('group_id');
             $project            = $this->getProject($project_id, $this->projectManager);
-            $service            = $this->getService($project);
-            $report             = $this->getReport();
-            $criteria           = $this->getCriteria($project, $report, $this->formElementFactory, $criteria);
-            $trackers           = $this->getTrackers($project, $this->tracker_factory);
-            $artifacts          = $this->getArtifacts($trackers, $this->search, $criteria, $this->hierarchy_factory);
             
-            $view = $this->getView($project, $service, $criteria, $trackers);
-            $content_view = $this->getContentView($report, $criteria, $artifacts);
+            $view = $this->buildView($project
+                    , $this->formElementFactory
+                    , $request_criteria
+                    , $this->tracker_factory);
+            
+            $content_view = $this->buildContentView($project
+                    , $this->formElementFactory
+                    , $request_criteria
+                    , $this->tracker_factory
+                    , $this->search
+                    , $this->hierarchy_factory);
+            
             $view->render($content_view);
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
@@ -102,6 +107,22 @@ class Tracker_CrossSearch_SearchController {
             $this->layout->addFeedback('error', $e->getMessage());
             $this->layout->redirect('/projects/' . $project->getUnixName() . '/');
         }
+    }
+    
+    public function buildContentView($project, $formElementFactory, $request_criteria, $tracker_factory, $search, $hierarchy_factory) {
+        $report             = $this->getReport();
+        $criteria           = $this->getCriteria($project, $report, $formElementFactory, $request_criteria);
+        $trackers           = $this->getTrackers($project, $tracker_factory);
+        $artifacts          = $this->getArtifacts($trackers, $search, $criteria, $hierarchy_factory);
+        return $this->getContentView($report, $criteria, $artifacts);
+    }
+    
+    public function buildView($project, $formElementFactory, $request_criteria, $tracker_factory) {
+        $service            = $this->getService($project);
+        $criteria           = $this->getCriteria($project, $this->getReport(), $formElementFactory, $request_criteria);
+        $trackers           = $this->getTrackers($project, $tracker_factory);
+        return $this->getView($project, $service, $criteria, $trackers);
+   
     }
     
     private function getArtifacts(array $trackers, $search, $request_criteria, $hierarchy_factory) {
@@ -202,5 +223,6 @@ class Tracker_CrossSearch_SearchController {
         $shared_factory     = new Tracker_SharedFormElementFactory($formElementFactory, $bindFactory);
         return new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, $artifact_factory, $shared_factory);
     }
+
 }
 ?>
