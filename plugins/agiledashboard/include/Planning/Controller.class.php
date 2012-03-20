@@ -19,41 +19,13 @@
  */
  
 require_once 'Presenter.class.php';
+require_once 'FormPresenter.class.php';
 require_once 'IndexPresenter.class.php';
 require_once 'PlanningFactory.class.php';
 require_once 'common/valid/ValidFactory.class.php';
 require_once 'common/mvc2/Controller.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
-
-class Planning_CreatePresenter {
-    /**
-     * @var int
-     */
-    public $group_id;
-    
-    /**
-     * @var TrackerFactory
-     */
-    public $tracker_factory;
-    
-    /**
-     * @var Array of Tracker
-     */
-    private $available_trackers;
-    
-    public function __construct(/*int*/ $group_id, TrackerFactory $tracker_factory) {
-        $this->group_id        = $group_id;
-        $this->tracker_factory = $tracker_factory;
-    }
-    
-    public function getAvailableTrackers() {
-        if ($this->available_trackers == null) {
-            $this->available_trackers = array_values($this->tracker_factory->getTrackersByGroupId($this->group_id));
-        }
-        return $this->available_trackers;
-    }
-}
 
 class Planning_Controller extends Controller {
     
@@ -83,7 +55,7 @@ class Planning_Controller extends Controller {
     }
     
     public function create() {
-        $presenter = new Planning_CreatePresenter($this->group_id, $this->tracker_factory);
+        $presenter = new Planning_FormPresenter($this->group_id, $this->tracker_factory);
         $this->render('create', $presenter);
     }
     
