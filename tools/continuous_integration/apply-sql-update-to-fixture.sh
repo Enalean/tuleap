@@ -10,7 +10,7 @@ shift
 mysqlpass=$1
 shift
 mysqlcmd=$1
-mysql -h$mysqlhost -B -p$mysqlpass -u$mysqluser codendi < plugins/tests/functional/fixture.sql
+mysql -h$mysqlhost -B -p$mysqlpass -u$mysqluser codendi < tests/functional/fixture.sql
 echo $mysqlcmd | mysql -B -h$mysqlhost -p$mysqlpass -u$mysqluser codendi
-mysqldump -h$mysqlhost -p$mysqlpass -u$mysqluser codendi > plugins/tests/functional/fixture.sql
+mysqldump -h$mysqlhost -p$mysqlpass -u$mysqluser codendi > tests/functional/fixture.sql
 

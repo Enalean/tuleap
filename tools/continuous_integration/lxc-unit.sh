@@ -120,6 +120,6 @@ fi
 $remotecmd /root/$src_dir/tools/continuous_integration/ci_build.sh --workspace="/root" --srcdir="$src_dir" --without-svn-sniff
 
 # Collect results
-scp $build_host:/root/$src_dir/plugins/tests/www/codendi_unit_tests_report.xml .
+scp $build_host:/root/$src_dir/unit_tests_report.xml .
 scp $build_host:/root/var/tmp/checkstyle.xml .
 

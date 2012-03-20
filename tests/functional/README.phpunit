@@ -71,5 +71,5 @@ You probably need to modify tests settings in include/set.php file.
 
 Then you can run tests in command line by just typing:
 
-    phpunit tools/plugins/tests/functional/
+    phpunit tests/functional/
 

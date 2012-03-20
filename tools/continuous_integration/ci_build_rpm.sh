@@ -18,11 +18,6 @@ export RPM_TMP="$WORKSPACE/RPM"
 
 rm -rf "$RPM_TMP"
 
-# If ci-build was launched, clean up sources
-if [ -L "$codendi_src/plugins/tests" ]; then
-    rm -f "$codendi_src/plugins/tests"
-fi
-
 # Build official codendi rpms
 pushd .
 cd "$codendi_src/tools/rpm"
