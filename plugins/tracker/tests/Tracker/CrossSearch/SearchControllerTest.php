@@ -22,6 +22,7 @@ require_once dirname(__FILE__) . '/../../Test_Tracker_Builder.php';
 require_once dirname(__FILE__) . '/../../Test_Tracker_FormElement_Builder.php';
 
 require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchController.class.php';
+require_once dirname(__FILE__) . '/../../../include/Tracker/CrossSearch/SearchViewBuilder.class.php';
 require_once dirname(__FILE__) . '/../../../include/Tracker/TrackerFactory.class.php';
 
 require_once 'common/include/Codendi_Request.class.php';
