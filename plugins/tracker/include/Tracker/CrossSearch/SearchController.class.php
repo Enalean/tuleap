@@ -144,6 +144,20 @@ class SearchViewBuilder {
     }
     
     
+    public function getCriteria(Project $project, Tracker_Report $report, $formElementFactory, $request_criteria) {
+        $fields   = $formElementFactory->getProjectSharedFields($project);
+        $criteria = array();
+        foreach ($fields as $field) {
+            $field->setCriteriaValue($this->getSelectedValues($field, $request_criteria));
+            
+            $id          = null;
+            $rank        = 0;
+            $is_advanced = true;
+            $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
+        }
+        return $criteria;
+    }
+    
     protected function getView(Project $project, Service $service, $criteria, $trackers) {
         return new Tracker_CrossSearch_SearchView($project, $service, $criteria, $trackers);
     }
@@ -189,21 +203,6 @@ class SearchViewBuilder {
         
         return $report;
     }
-
-    public function getCriteria(Project $project, Tracker_Report $report, $formElementFactory, $request_criteria) {
-        $fields   = $formElementFactory->getProjectSharedFields($project);
-        $criteria = array();
-        foreach ($fields as $field) {
-            $field->setCriteriaValue($this->getSelectedValues($field, $request_criteria));
-            
-            $id          = null;
-            $rank        = 0;
-            $is_advanced = true;
-            $criteria[]  = new Tracker_Report_Criteria($id, $report, $field, $rank, $is_advanced);
-        }
-        return $criteria;
-    }
-    
 
     private function getArtifacts(array $trackers, $search, $request_criteria, $hierarchy_factory) {
         $hierarchy = $this->getTrackersHierarchy($trackers, $hierarchy_factory);
