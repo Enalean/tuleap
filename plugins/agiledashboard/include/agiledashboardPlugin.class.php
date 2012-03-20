@@ -115,7 +115,7 @@ class AgileDashboardPlugin extends Plugin {
         
         return new Planning_Controller($request,
                                        Tracker_ArtifactFactory::instance(),
-                                       PlanningFactory::instance(),
+                                       new PlanningFactory(new PlanningDao()),
                                        TrackerFactory::instance());
     }
     

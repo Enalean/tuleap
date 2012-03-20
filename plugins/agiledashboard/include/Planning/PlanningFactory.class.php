@@ -19,43 +19,34 @@
  */
 
 require_once('PlanningDao.class.php');
+require_once('Planning.class.php');
 
 class PlanningFactory {
     
     /**
-     * Hold an instance of the class
+     * @var PlanningDao
      */
-    protected static $instance;
+    private $dao;
     
-    
-    /**
-     * A protected constructor; prevents direct creation of object
-     */
-    protected function __construct() {}
-    
-    /**
-     * The singleton method
-     *
-     * @return Tracker_ArtifactFactory an instance of this class
-     */
-    public static function instance() {
-        if (!isset(self::$instance)) {
-            $c = __CLASS__;
-            self::$instance = new $c;
-        }
-        return self::$instance;
+    public function __construct(PlanningDao $dao) {
+        $this->dao = $dao;
     }
     
+    /**
+     * @param int $group_id
+     *
+     * @return array of Planning
+     */
     public function getPlannings($group_id) {
-        return $this->getDao()->searchPlannings($group_id);
+        $plannings = array();
+        foreach ($this->dao->searchPlannings($group_id) as $row) {
+            $plannings[] = new Planning($row['id'], $row['name']);
+        }
+        return $plannings;
     }
     
     public function create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id) {
-        return $this->getDao()->create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id);
-    }
-    
-    public function getDao() {
-        return new PlanningDao();
+        return $this->dao->create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id);
     }
 }
 
