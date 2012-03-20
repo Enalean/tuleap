@@ -232,11 +232,13 @@ function svn_utils_show_revision_list ($result,$offset,$total_rows,$set='any', $
     $uh = UserHelper::instance();
     $hp = Codendi_HTMLPurifier::instance();
     while ($row = db_fetch_array($result)) {
+        // description is escaped in svn-checkins.pl
+        $description = htmlspecialchars_decode($row['description'], ENT_QUOTES);
 	    echo '
 			<TR class="'. util_get_alt_row_color($i++) .'">'.
-			'<TD class="small"><b><A HREF="'.$_SERVER['PHP_SELF'].'?func=detailrevision&group_id='.$group_id.'&commit_id='.$row['commit_id'].$filter_str.'">'.$row['revision'].
+			'<TD class="small"><b><A HREF="?func=detailrevision&group_id='.$group_id.'&commit_id='.$row['commit_id'].$filter_str.'">'.$row['revision'].
 		  '</b></A></TD>'.
-			'<TD class="small">'.$hp->purify($row['description'], CODENDI_PURIFIER_BASIC, $group_id).'</TD>'.
+			'<TD class="small">'.$hp->purify($description, CODENDI_PURIFIER_BASIC, $group_id).'</TD>'.
 			'<TD class="small">'.format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']).'</TD>'.
 			'<TD class="small">'.$uh->getLinkOnUserFromUserId($row['whoid']).'</TD></TR>';
 
