@@ -1,3 +1,6 @@
+Version 5.4.1 - Tuleap 4.0.28
+  * Fix upgrade script for tracker_hierarchy table.
+
 Version 5.4 - Tuleap 4.0.28
   * Allow to do cross tracker search based on shared fields.
 
