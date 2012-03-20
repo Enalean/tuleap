@@ -92,7 +92,7 @@ class Planning_Controller extends Controller {
     public function edit() {
         try {
             $planning_id = $this->request->get('planning_id');
-            $this->planning_factory->getPlanning($planning_id);
+            $planning    = $this->planning_factory->getPlanning($planning_id);
         } catch(Planning_NotFoundException $exception) {
             $GLOBALS['Response']->sendStatusCode(404);
         }

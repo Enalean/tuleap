@@ -22,6 +22,7 @@ require_once(dirname(__FILE__).'/../../include/Planning/Controller.class.php');
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
 require_once(dirname(__FILE__).'/../builders/planning.php');
+require_once dirname(__FILE__).'/../builders/controller.php';
 
 if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker');
@@ -285,10 +286,10 @@ class Planning_ControllerEditWithInvalidPlanningIdTest extends TuleapTestCase {
     public function itGeneratesError404() {
         $invalid_id       = 'invalid';
         $request          = new Codendi_Request(array('planning_id' => $invalid_id));
-        $artifact_factory = new MockTracker_ArtifactFactory();
         $planning_factory = new MockPlanningFactory();
-        $tracker_factory  = new MockTrackerFactory();
-        $controller       = new Planning_Controller($request, $artifact_factory, $planning_factory, $tracker_factory);
+        $controller       = aPlanningController()->with('request', $request)
+                                                 ->with('planning_factory', $planning_factory)
+                                                 ->build();
         
         $planning_factory->expectOnce('getPlanning', array($invalid_id));
         $planning_factory->throwOn('getPlanning', new Planning_NotFoundException());
