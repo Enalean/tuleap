@@ -22,6 +22,7 @@ require_once 'Presenter.class.php';
 require_once 'FormPresenter.class.php';
 require_once 'IndexPresenter.class.php';
 require_once 'PlanningFactory.class.php';
+require_once 'NotFoundException.class.php';
 require_once 'common/valid/ValidFactory.class.php';
 require_once 'common/mvc2/Controller.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
@@ -84,6 +85,15 @@ class Planning_Controller extends Controller {
     function show() {
         $presenter = new Planning_Presenter($this->artifact);
         $this->render('release-view', $presenter);
+    }
+    
+    public function edit() {
+        try {
+            $planning_id = $this->request->get('planning_id');
+            $this->planning_factory->getPlanning($planning_id);
+        } catch(Planning_NotFoundException $exception) {
+            $GLOBALS['Response']->sendStatusCode(404);
+        }
     }
 }
 ?>

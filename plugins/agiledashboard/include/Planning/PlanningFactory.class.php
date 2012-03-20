@@ -45,6 +45,10 @@ class PlanningFactory {
         return $plannings;
     }
     
+    public function getPlanning($planning_id) {
+        //
+    }
+    
     public function create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id) {
         return $this->dao->create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id);
     }

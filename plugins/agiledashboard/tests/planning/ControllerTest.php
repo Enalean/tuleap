@@ -251,4 +251,21 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
     }
 }
 
+class Planning_ControllerEditWithInvalidPlanningIdTest extends TuleapTestCase {
+    public function itGeneratesError404() {
+        $invalid_id       = 'invalid';
+        $request          = new Codendi_Request(array('planning_id' => $invalid_id));
+        $artifact_factory = new MockTracker_ArtifactFactory();
+        $planning_factory = new MockPlanningFactory();
+        $tracker_factory  = new MockTrackerFactory();
+        $controller       = new Planning_Controller($request, $artifact_factory, $planning_factory, $tracker_factory);
+        
+        $planning_factory->expectOnce('getPlanning', array($invalid_id));
+        $planning_factory->throwOn('getPlanning', new Planning_NotFoundException());
+        
+        $GLOBALS['Response']->expectOnce('sendStatusCode', array(404));
+        $controller->edit();
+    }
+}
+
 ?>
