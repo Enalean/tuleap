@@ -13,7 +13,7 @@ define(
 	function() {
 		return function() {
 			var project = window.location.href.match(/p=([^&]+)/);
-			return project ? unescape(project[1]) : null;
+			return project ? decodeURIComponent(project[1]) : null;
 		}
 	}
 );
