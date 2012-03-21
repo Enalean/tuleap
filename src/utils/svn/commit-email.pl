@@ -266,12 +266,12 @@ if ($svnmailheader eq 'NULL') {
   $svnmailheader = "";
 }
 
-$svnmailto = &svnGroup_mailto();
+#$svnmailto = &svnGroup_mailto();
 # we put off unvalid email and login
-$svnmailto = &filter_valid_logins_and_emails($svnmailto);
-if ($svnmailto ne 'NULL' && $svnmailto ne '') {
-  push(@{$current_project->{email_addresses}}, $svnmailto);
-}
+#$svnmailto = &filter_valid_logins_and_emails($svnmailto);
+#if ($svnmailto ne 'NULL' && $svnmailto ne '') {
+#  push(@{$current_project->{email_addresses}}, $svnmailto);
+#}
 
 if ($debug) {
   print STDERR "group_repo: ", $gname, "\n";
@@ -279,7 +279,7 @@ if ($debug) {
   print STDERR "mod_url: ", $mod_url, "\n";
   print STDERR "add_url: ", $add_url, "\n";
   print STDERR "mail header in db: ", $svnmailheader, "\n";
-  print STDERR "svnmailto: ", $svnmailto, "\n";
+#  print STDERR "svnmailto: ", $svnmailto, "\n";
 }
 
 ######################################################################
