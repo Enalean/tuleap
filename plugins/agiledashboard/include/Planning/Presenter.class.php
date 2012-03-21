@@ -23,17 +23,27 @@ class Planning_Presenter {
     
     public $destination_id;
     public $destination_title;
-    public $linked_items = array();
-    public $searchContent;
+    private $artifact;
+    private $content_view ;
     
     public function __construct(Tracker_Artifact $artifact, Tracker_CrossSearch_SearchContentView $content_view) {
         $this->destination_id    = $artifact->getId();
         $this->destination_title = $artifact->fetchTitle();
-        $linked_items = $artifact->getLinkedArtifacts();
-        if ($linked_items) {
-            $this->linked_items = $linked_items;
+        $this->artifact = $artifact;
+        $this->content_view = $content_view;
+    }
+    
+    function getLinkedItems() {
+        $linked_items = $this->artifact->getLinkedArtifacts();
+        if (! $linked_items) {
+            $linked_items = array();
         }
-        $this->searchContent = $content_view->fetch();
+        return $linked_items;
+
+    }
+    
+    public function fetchSearchContent() {
+        return $this->content_view->fetch();
     }
 }
 

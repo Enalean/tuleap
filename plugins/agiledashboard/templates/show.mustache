@@ -9,7 +9,7 @@
                 <td>
 
                     <div class="product_backlog">
-                        {{{searchContent}}}
+                        {{{fetchSearchContent}}}
                     </div>
 
                 </td><td>
@@ -17,15 +17,15 @@
                     <div id="art-{{destination_id}}" class="release_planner planning-droppable">
                         <h3>{{{destination_title}}}</h3>
                         <div>
-                            {{^linked_items}}
+                            {{^getLinkedItems}}
                             No items yet
-                            {{/linked_items}}
+                            {{/getLinkedItems}}
                             <ul>
-                                {{#linked_items}}
+                                {{#getLinkedItems}}
                                 <li>
                                     {{getTitle}}
                                 </li>
-                                {{/linked_items}}
+                                {{/getLinkedItems}}
                             </ul>
                             <p class="help">Drag'n drop content from backlog on the left on this area to add new items to current release.</p>
                         </div>
