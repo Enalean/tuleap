@@ -187,13 +187,11 @@ class TrackerManager { /* extends Engine? */
      */
     protected function getCrossSearchController(Codendi_Request $request) {        
         $search            = $this->getCrossSearch();
-        $hierarchy_factory = $this->getHierarchyFactory();
         return new Tracker_CrossSearch_SearchController(
             $request,
             ProjectManager::instance(),
             $GLOBALS['Response'],
             $search,
-            $hierarchy_factory,
             new Tracker_CrossSearch_ViewBuilder(Tracker_FormElementFactory::instance(), $this->getTrackerFactory())
                 
         );
@@ -812,14 +810,13 @@ class TrackerManager { /* extends Engine? */
     }
 
     public function getCrossSearch() {
-        $formElementFactory = Tracker_FormElementFactory::instance();
         $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
         $dao                = new Tracker_CrossSearch_SearchDao();
-        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $formElementFactory);
+        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $this->getHierarchyFactory());
         return $search;
     }
 
-    public function getHierarchyFactory() {
+    private function getHierarchyFactory() {
         return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
     }
 

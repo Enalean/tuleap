@@ -52,7 +52,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
         $this->request            = new Codendi_Request(array('group_id' => '66', 'criteria' => array()));
         $this->search             = new MockTracker_CrossSearch_Search();
-        $this->search->setReturnValue('getMatchingArtifacts', new TreeNode());
+        $this->search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
         $this->hierarchy_factory  = new MockTracker_HierarchyFactory();
         $this->view_builder       = $view_builder;
         
@@ -115,7 +115,7 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     }
 
     private function getControllerWithHierarchyFactory($hierarchy_factory) {
-        return new Tracker_CrossSearch_SearchController($this->request, $this->manager, $GLOBALS['HTML'], $this->search, $hierarchy_factory, $this->view_builder);
+        return new Tracker_CrossSearch_SearchController($this->request, $this->manager, $GLOBALS['HTML'], $this->search, $this->view_builder);
     }
 
 }

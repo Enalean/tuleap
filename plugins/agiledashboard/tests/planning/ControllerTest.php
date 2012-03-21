@@ -140,21 +140,20 @@ class Planning_ControllerTest extends TuleapTestCase {
         $content_view->setReturnValue('fetch', $a_list_of_draggable_items);
         
         $search = new MockTracker_CrossSearch_Search();
-        $hierarchy_factory = new MockTracker_HierarchyFactory();
         
         $project = new MockProject();
         $project_manager = new MockProjectManager();
         $project_manager->setReturnValue('getProject', $project, array($project_id));
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
         $linked_items = array();
-        $view_builder->expectOnce('buildContentView', array($project, $expected_criteria, $search, $hierarchy_factory, $linked_items));
+        $view_builder->expectOnce('buildContentView', array($project, $expected_criteria, $search, $linked_items));
         $view_builder->setReturnValue('buildContentView', $content_view);
         
         $title    = "screen hangs with macos and some escapable characters #<";
         $artifact = $this->GivenAnArtifact($id, $title);
         $artifact->setReturnValue('getLinkedArtifacts', $linked_items);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
-        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search, $hierarchy_factory);
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search);
         
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
     }
@@ -201,16 +200,16 @@ class Planning_ControllerTest extends TuleapTestCase {
         $content_view->setReturnValue('fetch', 'stuff');
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
         $view_builder->setReturnValue('buildContentView', $content_view);
-        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, new MockProjectManager(), new MockTracker_CrossSearch_Search(), new MockTracker_HierarchyFactory());
+        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, new MockProjectManager(), new MockTracker_CrossSearch_Search());
     }
     
-    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search, $hierarchy_factory) {
+    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search) {
         $planning_factory = new MockPlanningFactory();
         $planning_factory->setReturnValue('getPlanning', $this->planning, array($this->planning->getId()));
         
         ob_start();
         $controller = new Planning_Controller($request, $factory, $planning_factory, new MockTrackerFactory());
-        $controller->show($view_builder, $project_manager, $search, $hierarchy_factory);
+        $controller->show($view_builder, $project_manager, $search);
         $content = ob_get_clean();
         return $content;
     }

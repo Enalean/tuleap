@@ -40,11 +40,17 @@ class Tracker_CrossSearch_ViewBuilder {
         return $this->getView($project, $service, $criteria, $trackers);
    
     }
-    public function buildContentView(Project $project, array $request_criteria, Tracker_CrossSearch_Search $search, Tracker_HierarchyFactory $hierarchy_factory, array $excludedTrackerIds = array()) {
+    public function buildContentView(Project $project, array $request_criteria, Tracker_CrossSearch_Search $search, array $excludedArtifactIds = array()) {
         $report             = $this->getReport();
         $criteria           = $this->getCriteria($project, $report, $request_criteria);
         $trackers           = $this->getTrackers($project, $this->tracker_factory);
-        $artifacts          = $this->getArtifacts($trackers, $search, $request_criteria, $hierarchy_factory, $excludedTrackerIds);
+        
+        $tracker_ids = array();
+        foreach ($trackers as $tracker) {
+            $tracker_ids[] = $tracker->getId();
+        }
+        $artifacts          = $search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds);
+        
         return $this->getContentView($report, $criteria, $artifacts);
     }
     
@@ -83,7 +89,6 @@ class Tracker_CrossSearch_ViewBuilder {
     }
     protected function getContentView(Tracker_Report $report, $criteria, $artifacts) {
         $artifact_factory   = Tracker_ArtifactFactory::instance();
-        $formElementFactory = Tracker_FormElementFactory::instance();
         $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
         $shared_factory     = new Tracker_SharedFormElementFactory($this->formElementFactory, $bindFactory);
         return new Tracker_CrossSearch_SearchContentView($report, $criteria, $artifacts, $artifact_factory, $shared_factory);
@@ -109,19 +114,6 @@ class Tracker_CrossSearch_ViewBuilder {
         return $report;
     }
 
-    private function getArtifacts(array $trackers, $search, $request_criteria, $hierarchy_factory, $excludedTrackerIds = array()) {
-        $hierarchy = $this->getTrackersHierarchy($trackers, $hierarchy_factory);
-        return $search->getMatchingArtifacts($trackers, $hierarchy, $request_criteria, $excludedTrackerIds);
-    }
-    
-    private function getTrackersHierarchy(array $trackers, $hierarchy_factory) {
-        $tracker_ids = array();
-        foreach ($trackers as $tracker) {
-            $tracker_ids[] = $tracker->getId();
-        }
-        return $hierarchy_factory->getHierarchy($tracker_ids);
-    }
-    
     private function getTrackers(Project $project, $tracker_factory) {
         return $tracker_factory->getTrackersByGroupId($project->getGroupId());
     }

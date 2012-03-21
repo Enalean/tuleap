@@ -55,14 +55,12 @@ class Tracker_CrossSearch_SearchController {
                                 ProjectManager                  $projectManager, 
                                 Layout                          $layout,
                                 Tracker_CrossSearch_Search      $search,
-                                Tracker_HierarchyFactory        $hierarchy_factory,
                                 Tracker_CrossSearch_ViewBuilder $view_builder) {
         
         $this->request            = $request;
         $this->projectManager     = $projectManager;
         $this->layout             = $layout;
         $this->search             = $search;
-        $this->hierarchy_factory  = $hierarchy_factory;
         $this->view_builder       = $view_builder;
     }
 
@@ -81,8 +79,7 @@ class Tracker_CrossSearch_SearchController {
             
             $content_view = $this->view_builder->buildContentView($project
                     , $request_criteria
-                    , $this->search
-                    , $this->hierarchy_factory);
+                    , $this->search);
             
             $view->render($content_view);
         }

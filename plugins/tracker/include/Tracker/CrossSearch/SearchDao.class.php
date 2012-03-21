@@ -82,9 +82,9 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         return $sqlFragment;
     }
     
-    public function searchArtifactsFromTrackers(array $trackerIds, array $excludedTrackerIds = array()) {
+    public function searchArtifactsFromTrackers(array $trackerIds, array $excludedArtifactIds = array()) {
         $trackerIds         = implode(',', $trackerIds);
-        $excludedTrackerIds = implode(',', $excludedTrackerIds);
+        $excludedArtifactIds = implode(',', $excludedArtifactIds);
         
         $sql = "
             SELECT artifact.id,
@@ -109,9 +109,9 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             
             WHERE artifact.use_artifact_permissions = 0
               AND artifact.tracker_id IN ($trackerIds)";
-        if ($excludedTrackerIds != '') {
+        if ($excludedArtifactIds != '') {
             $sql .= "
-              AND artifact.id NOT IN ($excludedTrackerIds) ";
+              AND artifact.id NOT IN ($excludedArtifactIds) ";
         }
         $sql .= "
             GROUP BY artifact.id
