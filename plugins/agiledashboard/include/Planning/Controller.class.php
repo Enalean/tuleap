@@ -113,6 +113,14 @@ class Planning_Controller extends Controller {
         }
     }
     
+    public function update() {
+        $this->planning_factory->updatePlanning($this->request->get('planning_id'),
+                                                $this->request->get('planning_name'),
+                                                $this->request->get('planning_backlog_ids'),
+                                                $this->request->get('planning_release_id'));
+        $this->redirect(array('group_id' => $this->group_id));
+    }
+    
     public function delete() {
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
         $this->redirect(array('group_id' => $this->group_id));

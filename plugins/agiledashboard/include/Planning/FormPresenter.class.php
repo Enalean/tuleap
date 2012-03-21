@@ -52,6 +52,10 @@ class Planning_FormPresenter {
         return $this->planning->getName();
     }
     
+    public function getPlanningId() {
+        return $this->planning->getId();
+    }
+    
     public function getAvailableTrackers() {
         if ($this->available_trackers == null) {
             $available_trackers = array_values($this->tracker_factory->getTrackersByGroupId($this->group_id));

@@ -57,6 +57,10 @@ class PlanningFactory {
         return $this->dao->create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id);
     }
     
+    public function updatePlanning($planning_id, $planning_name, $planning_backlog_ids, $planning_release_id) {
+        return $this->dao->updatePlanning($planning_id, $planning_name, $planning_backlog_ids, $planning_release_id);
+    }
+    
     public function deletePlanning($planning_id) {
         return $this->dao->delete($planning_id);
     }

@@ -427,4 +427,26 @@ class Planning_ControllerDeleteTest extends TuleapTestCase {
     }
 }
 
+class Planning_ControllerUpdateTest extends TuleapTestCase {
+    public function itUpdatesThePlanningAndRedirectsToTheIndex() {
+        $group_id         = '34';
+        $planning_id      = '12';
+        $request          = new Codendi_Request(array('group_id' => $group_id));
+        
+        $request->set('planning_id', $planning_id);
+        $request->set('planning_name', 'Release Planning');
+        $request->set('planning_backlog_ids', array('1', '2'));
+        $request->set('planning_release_id', '3');
+        
+        $planning_factory = new MockPlanningFactory();
+        $controller       = aPlanningController()->with('request', $request)
+                                                 ->with('planning_factory', $planning_factory)
+                                                 ->build();
+        
+        $planning_factory->expectOnce('updatePlanning', array($planning_id, 'Release Planning', array('1', '2'), '3'));
+        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$group_id);
+        $controller->update();
+    }
+}
+
 ?>
