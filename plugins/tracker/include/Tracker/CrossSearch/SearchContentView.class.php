@@ -151,7 +151,7 @@ class Tracker_CrossSearch_SearchContentView {
     
     private function draggableCell($id, $title) {
         $html  = '';
-        $html .= '<td class="planning-droppable" id="art-'.$id.'">';
+        $html .= '<td class="planning-draggable" id="art-'.$id.'">';
         $html .= '<div>';
         $html .= $title;
         $html .= '</div>';
