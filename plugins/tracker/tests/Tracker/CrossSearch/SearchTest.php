@@ -58,7 +58,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
         $tracker_hierarchy = $this->GivenATrackerHierarchy();
         $criteria  = array('220' => array('values' => array('')));
 
-        $this->searchDao->expectOnce('searchArtifactsFromTrackers', array($this->trackerIds));
+        $this->searchDao->expectOnce('searchArtifactsFromTrackers', array($this->trackerIds, array()));
 
         $this->search->getMatchingArtifacts($this->trackers, $tracker_hierarchy, $criteria);
     }

@@ -40,11 +40,11 @@ class Tracker_CrossSearch_ViewBuilder {
         return $this->getView($project, $service, $criteria, $trackers);
    
     }
-    public function buildContentView(Project $project, array $request_criteria, Tracker_CrossSearch_Search $search, Tracker_HierarchyFactory $hierarchy_factory) {
+    public function buildContentView(Project $project, array $request_criteria, Tracker_CrossSearch_Search $search, Tracker_HierarchyFactory $hierarchy_factory, array $excludedTrackerIds = array()) {
         $report             = $this->getReport();
         $criteria           = $this->getCriteria($project, $report, $request_criteria);
         $trackers           = $this->getTrackers($project, $this->tracker_factory);
-        $artifacts          = $this->getArtifacts($trackers, $search, $request_criteria, $hierarchy_factory);
+        $artifacts          = $this->getArtifacts($trackers, $search, $request_criteria, $hierarchy_factory, $excludedTrackerIds);
         return $this->getContentView($report, $criteria, $artifacts);
     }
     
@@ -109,9 +109,9 @@ class Tracker_CrossSearch_ViewBuilder {
         return $report;
     }
 
-    private function getArtifacts(array $trackers, $search, $request_criteria, $hierarchy_factory) {
+    private function getArtifacts(array $trackers, $search, $request_criteria, $hierarchy_factory, $excludedTrackerIds = array()) {
         $hierarchy = $this->getTrackersHierarchy($trackers, $hierarchy_factory);
-        return $search->getMatchingArtifacts($trackers, $hierarchy, $request_criteria);
+        return $search->getMatchingArtifacts($trackers, $hierarchy, $request_criteria, $excludedTrackerIds);
     }
     
     private function getTrackersHierarchy(array $trackers, $hierarchy_factory) {

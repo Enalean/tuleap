@@ -82,8 +82,10 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         return $sqlFragment;
     }
     
-    public function searchArtifactsFromTrackers(array $trackerIds) {
-        $trackerIds = implode(',', $trackerIds);
+    public function searchArtifactsFromTrackers(array $trackerIds, array $excludedTrackerIds = array()) {
+        $trackerIds         = implode(',', $trackerIds);
+        $excludedTrackerIds = implode(',', $excludedTrackerIds);
+        
         $sql = "
             SELECT artifact.id,
                    artifact.last_changeset_id,
@@ -106,7 +108,12 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             ) ON CV2.changeset_id = artifact.last_changeset_id
             
             WHERE artifact.use_artifact_permissions = 0
-              AND artifact.tracker_id IN ($trackerIds)
+              AND artifact.tracker_id IN ($trackerIds)";
+        if ($excludedTrackerIds != '') {
+            $sql .= "
+              AND artifact.id NOT IN ($excludedTrackerIds) ";
+        }
+        $sql .= "
             GROUP BY artifact.id
             ORDER BY title
         ";

@@ -42,7 +42,7 @@ class Tracker_CrossSearch_Search {
         $this->dao                = $dao;
     }
 
-    public function getMatchingArtifacts(array $trackers, Tracker_Hierarchy $hierarchy, $criteria = null) {
+    public function getMatchingArtifacts(array $trackers, Tracker_Hierarchy $hierarchy, $criteria = null, $excludedTrackerIds = array()) {
         $searchedSharedFields = $this->sharedFieldFactory->getSharedFields($criteria);
         $trackerIds           = array_map(array($this, 'getTrackerId'), $trackers);
         $artifacts            = array();
@@ -50,7 +50,7 @@ class Tracker_CrossSearch_Search {
         if (count($searchedSharedFields) > 0) { 
             $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
         } elseif (count($trackerIds) > 0) {
-            $artifacts = $this->dao->searchArtifactsFromTrackers($trackerIds);
+            $artifacts = $this->dao->searchArtifactsFromTrackers($trackerIds, $excludedTrackerIds);
         }
         return $this->sortResults($artifacts, $trackerIds, $hierarchy);
     }

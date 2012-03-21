@@ -146,11 +146,13 @@ class Planning_ControllerTest extends TuleapTestCase {
         $project_manager = new MockProjectManager();
         $project_manager->setReturnValue('getProject', $project, array($project_id));
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->expectOnce('buildContentView', array($project, $expected_criteria, $search, $hierarchy_factory));
+        $linked_items = array();
+        $view_builder->expectOnce('buildContentView', array($project, $expected_criteria, $search, $hierarchy_factory, $linked_items));
         $view_builder->setReturnValue('buildContentView', $content_view);
         
         $title    = "screen hangs with macos and some escapable characters #<";
         $artifact = $this->GivenAnArtifact($id, $title);
+        $artifact->setReturnValue('getLinkedArtifacts', $linked_items);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search, $hierarchy_factory);
         
@@ -183,6 +185,7 @@ class Planning_ControllerTest extends TuleapTestCase {
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
         $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
         $artifact = $this->GivenAnArtifact($id, $title);
+        $artifact->setReturnValue('getLinkedArtifacts', array());
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
