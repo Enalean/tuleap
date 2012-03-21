@@ -135,12 +135,15 @@ sub get_emails_by_path {
 # @TODO add comment
     my @dirs = split('/', $value);
     $root = "/";
-    $patternMatcher = '^'.$root;
+    $patternMatcher = '';
     $patternBuilder = '';
     foreach my $dirVal (@dirs) {
-        if ($dirVal ne '') {
+        if ($patternMatcher ne '') {
                 $patternBuilder .= $root.$dirVal;
                 $patternMatcher .= '|^'.$patternBuilder;
+        } else {
+                $patternBuilder .= $root.$dirVal;
+                $patternMatcher .= '^'.$patternBuilder;
         }
     }
     $patternMatcher .= '*';
