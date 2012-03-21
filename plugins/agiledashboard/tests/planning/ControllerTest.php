@@ -103,7 +103,64 @@ class Planning_ControllerTest extends TuleapTestCase {
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
     }
     
-    // request->criteria = string what to do
+    public function itAssumesNoCriteriaIfRequestedCriterieIsAbsent() {
+        $content_view = new MockTracker_CrossSearch_SearchContentView();
+        $a_list_of_draggable_items = 'A list of draggable items';
+        $content_view->setReturnValue('fetch', $a_list_of_draggable_items);
+        
+        $project_id = 1111;
+        $criteria = array();
+        $search = new MockTracker_CrossSearch_Search();
+        $hierarchy_factory = new MockTracker_HierarchyFactory();
+        
+        $project = new MockProject();
+        $project_manager = new MockProjectManager();
+        $project_manager->setReturnValue('getProject', $project, array($project_id));
+        $view_builder = new MockTracker_CrossSearch_ViewBuilder();
+        $view_builder->expectOnce('buildContentView', array($project, $criteria, $search, $hierarchy_factory));
+        $view_builder->setReturnValue('buildContentView', $content_view);
+        
+        $id       = 987;
+        $title    = "screen hangs with macos and some escapable characters #<";
+        $request  = new Codendi_Request(array('aid' => $id
+                                            , 'group_id' => $project_id));
+        $artifact = $this->GivenAnArtifact($id, $title);
+        $factory  = new MockTracker_ArtifactFactory();
+        $factory->setReturnValue('getArtifactByid', $artifact, array($id));
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search, $hierarchy_factory);
+        
+        $this->assertPattern("/$a_list_of_draggable_items/", $content);
+    }
+    
+    public function itAssumesNoCriteriaIfRequestedCriterieIsNotValid() {
+        $content_view = new MockTracker_CrossSearch_SearchContentView();
+        $a_list_of_draggable_items = 'A list of draggable items';
+        $content_view->setReturnValue('fetch', $a_list_of_draggable_items);
+        
+        $project_id = 1111;
+        $criteria = array();
+        $search = new MockTracker_CrossSearch_Search();
+        $hierarchy_factory = new MockTracker_HierarchyFactory();
+        
+        $project = new MockProject();
+        $project_manager = new MockProjectManager();
+        $project_manager->setReturnValue('getProject', $project, array($project_id));
+        $view_builder = new MockTracker_CrossSearch_ViewBuilder();
+        $view_builder->expectOnce('buildContentView', array($project, $criteria, $search, $hierarchy_factory));
+        $view_builder->setReturnValue('buildContentView', $content_view);
+        
+        $id       = 987;
+        $title    = "screen hangs with macos and some escapable characters #<";
+        $request  = new Codendi_Request(array('aid' => $id
+                                            , 'group_id' => $project_id
+                                            , 'criteria' => 'nimp'));
+        $artifact = $this->GivenAnArtifact($id, $title);
+        $factory  = new MockTracker_ArtifactFactory();
+        $factory->setReturnValue('getArtifactByid', $artifact, array($id));
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search, $hierarchy_factory);
+        
+        $this->assertPattern("/$a_list_of_draggable_items/", $content);
+    }
     
     private function GivenAnArtifact($id, $title) {
         $artifact = new MockTracker_Artifact();

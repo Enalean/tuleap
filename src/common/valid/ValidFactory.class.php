@@ -91,7 +91,7 @@ extends Valid_Text {
 }
 
 /**
- * Check that value is a string with neither carrige return nor null char.
+ * Check that value is an array.
  */
 class Valid_Array
 extends Valid {
