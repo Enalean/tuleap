@@ -39,12 +39,12 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             }
             break;
         case 'path_mailing_list' :
-            $vPath = new Valid_String('form_path');
-            $vML   = new Valid_Email('form_mailing_list', ',');
-            if($request->valid($vPath) && $request->valid($vML)) {
-                $path        = $request->get('form_path');
-                $mailingList = $request->get('form_mailing_list');
-                $pm          = ProjectManager::instance();
+            $vPath       = new Valid_String('form_path');
+            $vML         = new Valid_Email('form_mailing_list', ',');
+            $path        = $request->get('form_path');
+            $mailingList = $request->get('form_mailing_list');
+            if(!empty($mailingList) && !empty($path) && $request->valid($vPath) && $request->valid($vML)) {
+                $pm = ProjectManager::instance();
                 // TODO: verify parameters
                 if ($pm->setSVNMailingListAndHeader($group_id, $mailingList, '',$path)) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
