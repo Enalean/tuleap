@@ -35,7 +35,7 @@ class Planning_Presenter {
             $this->destination_title = $artifact->fetchTitle();
         }
         $this->artifact            = $artifact;
-        $this->artifacts_to_select = $artifacts_to_select;
+        $this->artifacts_to_select = array_values($artifacts_to_select);
         $this->content_view        = $content_view;
     }
     
