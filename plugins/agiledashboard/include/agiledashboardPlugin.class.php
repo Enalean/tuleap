@@ -84,6 +84,9 @@ class AgileDashboardPlugin extends Plugin {
             case 'create':
                 $this->executeAction('create', $request);
                 break;
+            case 'delete':
+                $this->executeAction('delete', $request);
+                break;
             case 'index':
             default:
                 $this->renderAction('index', $request);

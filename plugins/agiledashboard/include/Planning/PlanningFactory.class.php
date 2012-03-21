@@ -54,7 +54,7 @@ class PlanningFactory {
     }
     
     public function deletePlanning($planning_id) {
-        //
+        return $this->dao->delete($planning_id);
     }
 }
 

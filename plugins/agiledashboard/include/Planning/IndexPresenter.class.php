@@ -35,6 +35,10 @@ class Planning_IndexPresenter {
         }
         return true;
     }
+    
+    public function getDeleteImagePath() {
+        return $GLOBALS['HTML']->getImagePath('ic/bin_closed.png');
+    }
 }
 
 ?>

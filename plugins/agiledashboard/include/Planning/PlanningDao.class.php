@@ -50,5 +50,16 @@ class PlanningDao extends DataAccessObject {
                 WHERE group_id = $group_id";
         return $this->retrieve($sql);
     }
+    
+    function delete($planning_id) {
+        $planning_id = $this->da->escapeInt($planning_id);
+        $sql = "DELETE FROM plugin_agiledashboard_planning
+                WHERE id=$planning_id";
+        $this->update($sql);
+        
+        $sql = "DELETE FROM plugin_agiledashboard_planning_backlog_tracker
+                WHERE planning_id=$planning_id";
+        $this->update($sql);
+    }
 }
 ?>

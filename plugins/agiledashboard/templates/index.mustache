@@ -12,6 +12,9 @@
             <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=show">
                 {{getName}}
             </a>
+            <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=delete">
+                <img src="{{getDeleteImagePath}}" alt="delete" />
+            </a>
         </li>
         {{/getPlannings}}
     </ul>
