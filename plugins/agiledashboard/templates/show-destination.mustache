@@ -1,0 +1,17 @@
+<div id="art-{{destination_id}}" class="release_planner planning-droppable">
+    <h3>{{{destination_title}}}</h3>
+    <div>
+        {{^getLinkedItems}}
+        No items yet
+        {{/getLinkedItems}}
+        <ul>
+            {{#getLinkedItems}}
+            <li>
+                {{getTitle}}
+            </li>
+            {{/getLinkedItems}}
+        </ul>
+        <p class="help">Drag'n drop content from backlog on the left on this area to add new items to current release.</p>
+    </div>
+</div>
+<div style="clear: both"></div>
