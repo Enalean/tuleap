@@ -69,12 +69,17 @@ class Planning_ControllerTest extends TuleapTestCase {
         $this->assertPattern('/Tata/', $content);
     }
     
-    public function itDisplaysTheSearchContentView() {
+    public function testDisplaysTheSearchContentView() {
         $content_view = new MockTracker_CrossSearch_SearchContentView();
         $a_list_of_draggable_items = 'A list of draggable items';
         $content_view->setReturnValue('fetch', $a_list_of_draggable_items);
         
+        
+        $project = new MockProject();
+        $project_manager = new MockProjectManager();
+        $project_manager->setReturnValue('getProject', $project);
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
+        $view_builder->expectOnce('buildContentView', array($project, '*', '*', '*'));
         $view_builder->setReturnValue('buildContentView', $content_view);
         
         $id       = 987;
@@ -83,7 +88,7 @@ class Planning_ControllerTest extends TuleapTestCase {
         $artifact = $this->GivenAnArtifact($id, $title);
         $factory  = new MockTracker_ArtifactFactory();
         $factory->setReturnValue('getArtifactByid', $artifact, array($id));
-        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder);
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager);
         
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
     }
@@ -111,13 +116,13 @@ class Planning_ControllerTest extends TuleapTestCase {
         $content_view->setReturnValue('fetch', 'stuff');
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
         $view_builder->setReturnValue('buildContentView', $content_view);
-        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder);
+        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, new MockProjectManager());
     }
     
-    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder) {
+    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager) {
         ob_start();
         $controller = new Planning_Controller($request, $factory, new MockPlanningFactory(), new MockTrackerFactory());
-        $controller->show($view_builder);
+        $controller->show($view_builder, $project_manager);
         $content = ob_get_clean();
         return $content;
     }
