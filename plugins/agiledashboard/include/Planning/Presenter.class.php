@@ -21,6 +21,7 @@
 
 class Planning_Presenter {
     
+    public $planning_id;
     public $planning_name;
     public $destination_id;
     public $destination_title;
@@ -29,7 +30,8 @@ class Planning_Presenter {
     private $content_view;
     
     public function __construct(Planning $planning, Tracker_CrossSearch_SearchContentView $content_view, array $artifacts_to_select, Tracker_Artifact $artifact = null) {
-        $this->planning_name     = $planning->getName();
+        $this->planning_id   = $planning->getId();
+        $this->planning_name = $planning->getName();
         if ($artifact) {
             $this->destination_id    = $artifact->getId();
             $this->destination_title = $artifact->fetchTitle();

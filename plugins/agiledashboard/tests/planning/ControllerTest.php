@@ -70,10 +70,13 @@ class Planning_ControllerTest extends TuleapTestCase {
     
     public function itDisplaysASelectorOfArtifact() {
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact(987, 'whatever');
-        $this->assertPattern('/<select name="aid"/', $content);
-        $this->assertPattern('/<option>-- Please choose/', $content);
+        $this->assertPattern('/<select class="planning-artifact-chooser" name="aid"/', $content);
+        $this->assertPattern('/<option value="">-- Please choose/', $content);
         $this->assertPattern('/<option value="1001">An open artifact/', $content);
         $this->assertPattern('/<option value="1002">Another open artifact/', $content);
+        $this->assertPattern('/<input type="hidden" name="planning_id" value="123"/', $content);
+        $this->assertPattern('/<input type="hidden" name="action" value="show"/', $content);
+        $this->assertPattern('/<input type="hidden" name="group_id" value="102"/', $content);
     }
     
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
