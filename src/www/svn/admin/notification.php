@@ -13,6 +13,27 @@ require_once('common/svn/SvnNotification.class.php');
 $svnNotification = new SvnNotification();
 $pm              = ProjectManager::instance();
 
+/**
+ * Cleanup list of mails
+ *
+ * @TODO: Find a better place or chech if this is not a duplicate code
+ *
+ * @param String  $mailingList
+ *
+ * @return String
+ */
+function cleanupMailsList($mailingList) {
+    $cleanedMailingList = '';
+    $list = split(',', $mailingList);
+    foreach ($list as $mail) {
+        // TODO: Verify mail validity
+        if (true) {
+            $cleanedMailingList[] = trim($mail);
+        }
+    }
+    return join(', ', $cleanedMailingList);
+}
+
 // CAUTION!!
 // Make the changes before calling svn_header_admin because 
 // svn_header_admin caches the project object in memory and
@@ -23,7 +44,7 @@ $request->valid(new Valid_String('SUBMIT'));
 
 // TODO: validate path
 if ($request->exist('path')) {
-    $path = $request->get('path');
+    $path             = $request->get('path');
     $svn_mailing_list = $svnNotification->getSVNMailingList($group_id, $path);
 } else {
     $path = '/';
@@ -43,11 +64,9 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             break;
         case 'path_mailing_list' :
             $vPath       = new Valid_String('form_path');
-            $vML         = new Valid_Email('form_mailing_list', ',');
             $path        = $request->get('form_path');
-            $mailingList = $request->get('form_mailing_list');
-            if(!empty($mailingList) && !empty($path) && $request->valid($vPath) && $request->valid($vML)) {
-                // TODO: verify parameters
+            $mailingList = cleanupMailsList($request->get('form_mailing_list'));
+            if(!empty($mailingList) && !empty($path) && $request->valid($vPath)) {
                 if ($svnNotification->setSVNMailingList($group_id, $mailingList, $path)) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
                 }
@@ -103,6 +122,7 @@ $content .= '</tbody></table></form>';
 echo '
        <br/>
        <form action="" method="post">'.$content.'</form>';
+
 // Add a path & mail addresses
 echo '
        <br/>
@@ -125,4 +145,5 @@ echo '
        </form>';
 
 svn_footer(array());
+
 ?>
