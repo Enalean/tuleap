@@ -17,43 +17,127 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('TestsPluginFilterIterator.class.php');
+
+require_once dirname(__FILE__).'/TestsPluginFilterIterator.class.php';
+require_once dirname(__FILE__).'/TestsPluginRunnerPresenter.class.php';
+require_once dirname(__FILE__).'/TestsPluginSuitePresenter.class.php';
+require_once dirname(__FILE__).'/TestsPluginRequest.class.php';
+require_once dirname(__FILE__).'/mustache/MustacheRenderer.class.php';
+
+require_once dirname(__FILE__).'/simpletest/test_case.php';
 
 class TestsPluginRunner {
     
+    
     protected $request;
     protected $mainSuite;
-    protected $titles         = array('normal'=>'All Tests', 'revert'=>'All Tests (revert order)', 'random'=>'All Tests (random order)');
-    protected $testFiles      = array();
-    protected $testFilesToRun = array();
-    protected $testToRun      = array();
-    protected $categoryPath   = array();
+    protected $navigator;
+    protected $rootCategory   = 'tests_to_run';
+        protected $titles         = array('normal'=>'All Tests', 'revert'=>'All Tests (revert order)', 'random'=>'All Tests (random order)');
+    //     protected $testFiles      = array();
+    //     protected $testFilesToRun = array();
+    //     protected $testToRun      = array();
+        protected $categories     = array();
+
+        public function __construct(TestsPluginRequest $request) {
+            $this->request = $request;
+            $title = $this->getTitleByOrder($request->getOrder());
+            $this->mainSuite = $this->buildSuite($title);
+            $this->navigator = $this->getPresenter($this->rootCategory.'[_do_all]', '_all_tests');
+            $title = $this->titles[$this->request->getOrder()];
+            $this->navigator->setTitle($title);
+            var_dump($this->navigator->title(), $title);
+            //$this->addSuite('Core', '/usr/share/codendi/tests/simpletest');
+            
+            $this->addSuite($this->navigator, $this->rootCategory.'[core]', '/usr/share/codendi/tests/simpletest');
+            
+            $allPluginPresenter = $this->getPresenter($this->rootCategory."[plugins]", '_all_plugins');
+            
+            foreach ($this->getTestsIterator('/usr/share/codendi/plugins') as $file) {
+                if ($this->isSuite($file, '/tests')) {
+                    $pluginName = basename($file->getPathname());
+                    $pluginPresenter = $this->getPresenter($this->rootCategory."[$pluginName]", $file->getPathname().'/tests');
+                    $this->addSuite($pluginPresenter, $pluginName, $file->getPathname().'/tests');
+                    $allPluginPresenter->addChild($pluginPresenter);
+                }
+            }
+            
+            $this->navigator->addChild($allPluginPresenter);
+        }
+
+        public function buildSuite($title) {
+            return new TestSuite($title);
+        }
+        
+        public function isSuite($test, $append  = '') {
+            return is_dir($test->getPathname().$append) && !$test->isDot();
+        }
+        
+        public function isTest($test) {
+            return preg_match('/Test.php$/', $test->getPathname());
+        }
+        
+        public function addSuite($presenter, $name, $path) {
+            
+            foreach ($this->getTestsIterator($path) as $file) {
+                $childName = basename($file->getPathname());
+                
+                $dirName   = $name.'['.$childName.']';
+                if ($this->isSuite($file)) {
+                    $child = $this->getPresenter($dirName.'[_do_all]', $file->getPathname());
+                    $this->addSuite($child, $dirName, $file->getPathname());
+                    if ($child->hasChildren()) {
+                        $presenter->addChild($child);
+                    }
+                } elseif ($this->isTest($file)) {
+                    $dirname.='[]';
+                    $child = $this->getPresenter($dirName, $file->getPathname());
+                    $presenter->addChild($child);
+                }               
+                
+            }
+        }
+
+        public function getPresenter($name, $value) {
+            return new TestsPluginSuitePresenter($name, $value, $this->isSelected($value));
+        }
+        
+        
+        public function isSelected($path) {
+            return $this->request->isSelected($path);
+
+        }
+        
+        
+        
+        public function getTestsIterator($testsSrc) {
+            return new DirectoryIterator($testsSrc);
+        }
+       
     
-    public function __construct(TestsPluginRequest $request) {
-        $this->request = $request;
-        $title = $this->getTitleByOrder($request->getOrder());
-        $this->mainSuite = new TestSuite($title);
-        $this->testsToRun = $this->implodePathRecursive($request->getTestsToRun());
-    }
     
     public function runAndDisplay() {
-        
+        //$this->run();
+        $navigator = $this->getNavigator();
+        $results   = $this->getResults();
         $renderer = new MustacheRenderer(dirname(__FILE__).'/../templates');
-        $presenter= new TestsPluginRunnerPresenter($request, $navigator, $result);
-        $renderer->render('testsPluginRunnerHTML', $presenter);
+        $presenter= new TestsPluginRunnerPresenter($this->request, $navigator, $results);
+        $renderer->render($this->request->getDisplay(), $presenter);
     }
     
-    
-    public function run($reporter) {
-        foreach ($this->categoryPath as $category=>$path) {
-            $testSuite = new TestSuite($category);
-            $testFilesToRun = $this->getTestFilesToRunOfCategory($category);
-            $this->buildSuiteTree($path, $testSuite, $testFilesToRun);
-            $this->mainSuite->add($testSuite);
-        }
-        $this->mainSuite->run($reporter);
+    public function getResults() {
+        
     }
     
+    public function getNavigator() {
+        return $this->navigator;
+    }
+    
+    public function getTitleByOrder($order) {
+        return $this->titles[$order];
+    }
+    
+    /*
     public function buildSuiteTree($path, $suite, $tree) {
         foreach($tree as $category=>$test) {
             if (is_array($test)) {
@@ -133,12 +217,8 @@ class TestsPluginRunner {
         return $this->implodePathRecursive($this->testFilesToRun);
     }
     
-    public function getTitleByOrder($order) {
-        return $this->titles[$order];
-    }
     
     
-    /*
     public function getGroupTests($groupTests) {
         foreach($groupTests as $plugin => $tests) {
             $testSuite = new TestSuite($plugin .' Tests');

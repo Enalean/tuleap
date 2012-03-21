@@ -25,6 +25,7 @@ class testsPluginRequest {
     protected $order        = 'normal';
     protected $order_values = array('normal', 'random', 'invert');
     protected $tests_to_run = array();
+    protected $test_map     = array();
     
     public function __construct($parameters=array()) {
         $this->parse($parameters);
@@ -63,22 +64,29 @@ class testsPluginRequest {
     }
     
     public function setTestsToRun( array $tests_to_run) {
-        
+         /*echo '<pre>';
+         print_r($tests_to_run);
+         echo '</pre>';*/
         $this->tests_to_run = $this->parseTestsToRun($tests_to_run);
+        /*echo '<pre>';
+        print_r($this->test_map);
+        echo '</pre>';*/
     }
     
     private function parseTestsToRun($tests_to_run) {
-        $to_run = array();
-        foreach ($tests_to_run as $key=>$value) {
-            if (is_array($value)) {
-                $to_run[$key] = $this->parseTestsToRun($value);
-            } elseif ($value == 1 && $key !== '_do_all') {
-                $to_run[] = $key; 
+        if (is_array($tests_to_run)) {
+            foreach ($tests_to_run as $tests) {
+                $this->parseTestsToRun($tests);
             }
+        } else {
+            $this->test_map[$tests_to_run] = true;
         }
-        return $to_run;
+        return $tests_to_run;
     }
     
+    public function isSelected($path) {
+        return isset($this->test_map[$path]);
+    }
     
     public function getCoverCode() {
         return $this->cover_code;

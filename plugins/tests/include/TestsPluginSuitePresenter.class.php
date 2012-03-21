@@ -19,6 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Here we need a model
+ */
+
 class TestsPluginSuitePresenter {
     protected $name;
     protected $title;
@@ -29,31 +33,67 @@ class TestsPluginSuitePresenter {
     protected $children = array();
     
     public function __construct($name, $value, $selected = false) {
+        $this->name     = $name;
+        $this->value    = $value;
         $this->selected = $selected;
-        
     }
     
-    public function appendChildren( TestsPluginSuitePresenter $children) {
-        $this->children[] = $children;
+    public function setId($id) {
+        $this->id = $id;
     }
     
-    public function prependChildren( TestsPluginSuitePresenter $children) {
-        $this->children= array_unshift($this->children, $children);
+    public function setTitle($title) {
+        $this->title = $title;
+    }
+    
+    public function addClass($class) {
+        $class = $class;
+        if (!in_array($class, $this->classes)) {
+            $his->classes[] = $class;
+        }
+    }
+    
+    public function addChild( TestsPluginSuitePresenter $child) {
+        $childName = $child->name();
+        if (isset($this->children[$childName])) {
+            $parent = $parent->children[$childName];
+            $parent->addChildren($child->children());
+        } else {
+            $this->children[$childName] = $child;
+        }
+    }
+    
+    public function addChildren( array $children) {
+        foreach ($children as $child) {
+            $this->addChild($child);
+        }
+    }
+    
+    public function getChild($name, $default = null) {
+        if ($this->hasChild($name)) {
+            $default =& $this->children[$name];
+        }
+        return $default;
+    }
+    
+    public function hasChild($name) {
+        return isset($this->children[$name]);
     }
         
     public function isSelected() {
-        if ($this->selected) {
-            return ' checked="checked"'; 
+        return $this->selected;
+    }
+    
+    
+    public function checked() {
+        if ($this->isSelected()) {
+            return ' checked="checked"';
         }
         return '';
     }
     
     public function name() {
         return $this->name;
-    }
-    
-    public function setId($id) {
-        $this->id = $id;
     }
     
     public function id() {
@@ -70,6 +110,9 @@ class TestsPluginSuitePresenter {
     }
     
     public function title() {
+        if (isset($this->title)) {
+            return $this->title;
+        }
         return $this->name;
     }
     
@@ -78,10 +121,12 @@ class TestsPluginSuitePresenter {
     }
     
     public function children() {
-        return $this->children;
+        return array_values($this->children);
     }
     
-    
+    public function hasChildren() {
+        return count($this->children) > 0;
+    }
 }
 
 ?>
