@@ -30,10 +30,12 @@ if (!defined('TRACKER_BASE_URL')) {
 Mock::generate('Tracker_ArtifactFactory');
 Mock::generate('Tracker_Artifact');
 Mock::generate('TrackerFactory');
+Mock::generate('Tracker_HierarchyFactory');
 Mock::generate('PlanningFactory');
 Mock::generate('Planning');
 Mock::generate('ProjectManager');
 Mock::generate('Project');
+Mock::generate('Tracker_CrossSearch_Search');
 Mock::generate('Tracker_CrossSearch_SearchContentView');
 Mock::generate('Tracker_CrossSearch_ViewBuilder');
 
