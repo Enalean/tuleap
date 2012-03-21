@@ -106,7 +106,7 @@ class Bootstrap_Theme extends DivBasedTabbedLayout {
     public function displayJavascriptElements() {
         echo ' <!-- Le HTML5 shim, for IE6-8 support of HTML elements --> 
         <!--[if lt IE 9]>
-          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+          <script src="/scripts/html5shim/html5.js"></script>
         <![endif]-->
         <script src="'. $this->root . '/jquery/jquery-1.7.1.min.js"></script> 
         <script src="'. $this->root . '/bootstrap/js/bootstrap.js"></script>
