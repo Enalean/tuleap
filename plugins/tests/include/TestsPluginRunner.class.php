@@ -22,24 +22,21 @@ require_once dirname(__FILE__).'/TestsPluginFilterIterator.class.php';
 require_once dirname(__FILE__).'/TestsPluginRunnerPresenter.class.php';
 require_once dirname(__FILE__).'/TestsPluginSuitePresenter.class.php';
 require_once dirname(__FILE__).'/TestsPluginRequest.class.php';
-require_once dirname(__FILE__).'/mustache/MustacheRenderer.class.php';
+if (!class_exists('Mustache')) {
+    include_once dirname(__FILE__).'/mustache/MustacheRenderer.class.php';
+}
 
 require_once dirname(__FILE__).'/simpletest/test_case.php';
 
 require_once dirname(__FILE__).'/../www/CodendiReporter.class.php';
 
 class TestsPluginRunner {
-    
-    
     protected $request;
     protected $mainSuite;
     protected $navigator;
-    protected $rootCategory   = 'tests_to_run';
-        protected $titles         = array('normal'=>'All Tests', 'revert'=>'All Tests (revert order)', 'random'=>'All Tests (random order)');
-    //     protected $testFiles      = array();
-    //     protected $testFilesToRun = array();
-    //     protected $testToRun      = array();
-        protected $categories     = array();
+    protected $rootCategory = 'tests_to_run';
+    protected $titles       = array('normal'=>'All Tests', 'revert'=>'All Tests (revert order)', 'random'=>'All Tests (random order)');
+    protected $categories   = array();
 
         public function __construct(TestsPluginRequest $request) {
             $this->request = $request;
