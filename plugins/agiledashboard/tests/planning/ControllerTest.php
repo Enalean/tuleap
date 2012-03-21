@@ -40,6 +40,12 @@ Mock::generate('Tracker_CrossSearch_SearchContentView');
 Mock::generate('Tracker_CrossSearch_ViewBuilder');
 
 class Planning_ControllerTest extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        $this->planning = new Planning(123, 'Stuff Backlog');
+    }
+    
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
         $id = 987;
         $title = "screen hangs with macos";
@@ -53,6 +59,12 @@ class Planning_ControllerTest extends TuleapTestCase {
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title);
         $this->assertPattern("/art-$id/", $content);
         $this->assertPattern("/$title/", $content);
+    }
+    
+    public function itDisplaysTheNameOfThePlanning() {
+        $name = $this->planning->getName();
+        $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact(987, 'whatever');
+        $this->assertPattern("/$name/", $content);
     }
 
     public function itListsAllLinkedItems() {
@@ -149,8 +161,11 @@ class Planning_ControllerTest extends TuleapTestCase {
     }
     
     private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search, $hierarchy_factory) {
+        $planning_factory = new MockPlanningFactory();
+        $planning_factory->setReturnValue('getPlanning', $this->planning, array($this->planning->getId()));
+        
         ob_start();
-        $controller = new Planning_Controller($request, $factory, new MockPlanningFactory(), new MockTrackerFactory());
+        $controller = new Planning_Controller($request, $factory, $planning_factory, new MockTrackerFactory());
         $controller->show($view_builder, $project_manager, $search, $hierarchy_factory);
         $content = ob_get_clean();
         return $content;

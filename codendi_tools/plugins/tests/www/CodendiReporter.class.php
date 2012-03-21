@@ -106,7 +106,7 @@ class CodendiHtmlReporter extends HtmlReporter implements iCodeCoverageReporter 
      *    @access public
      */
     function paintFail($message) {
-        $output_buffering_is_active = ob_get_level() > 0;
+        $output_buffering_is_active = ob_get_level() > 1;
         if ($output_buffering_is_active) ob_end_clean();
         $this->_fails++;
         print "<span class=\"fail\">Fail</span>: ";
