@@ -13,8 +13,6 @@ require_once('common/svn/SvnNotification.class.php');
 $svnNotification = new SvnNotification();
 $pm              = ProjectManager::instance();
 
-// TODO: Don't allow non project admin to perform any action
-
 // CAUTION!!
 // Make the changes before calling svn_header_admin because 
 // svn_header_admin caches the project object in memory and
