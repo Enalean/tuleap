@@ -86,7 +86,7 @@ class Planning_Controller extends Controller {
         $project = $request_criteria = $search = $hierarchy_factory = null;
         $content_view = $view_builder->buildContentView($project, $request_criteria, $search, $hierarchy_factory);
         $presenter = new Planning_Presenter($this->artifact, $content_view);
-        $this->render('release-view', $presenter);
+        $this->render('show', $presenter);
     }
     
     public function edit() {
