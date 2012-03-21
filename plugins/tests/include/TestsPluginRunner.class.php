@@ -34,15 +34,15 @@ class TestsPluginRunner {
     protected $request;
     protected $mainSuite;
     protected $navigator;
-    protected $rootCategory = 'tests_to_run';
     protected $titles       = array('normal'=>'All Tests', 'revert'=>'All Tests (revert order)', 'random'=>'All Tests (random order)');
     protected $categories   = array();
+    public $rootCategory = 'tests_to_run';
 
         public function __construct(TestsPluginRequest $request) {
             $this->request   = $request;
             $title           = $this->getTitleByOrder($request->getOrder());
             $this->mainSuite = $this->buildSuite($title);
-            $this->navigator = $this->getPresenter($this->rootCategory.'[_do_all]', '_all_tests');
+            $this->navigator = $this->getPresenter($this->rootCategory, '_do_all', '_all_tests');
             $title           = $this->titles[$this->request->getOrder()];
             $this->navigator->setTitle($title);
             
@@ -52,12 +52,12 @@ class TestsPluginRunner {
         
         private function addAllPluginsSuite() {
             $allPluginsPresenterName = $this->rootCategory."[plugins]";
-            $allPluginsPresenter     = $this->getPresenter($allPluginsPresenterName, '_all_plugins');
+            $allPluginsPresenter     = $this->getPresenter($this->rootCategory, 'plugins', '_all_plugins');
             $allPluginsSuite         = $this->buildSuite("Plugins");
             
             foreach ($this->getTestsIterator('/usr/share/codendi/plugins') as $file) {
                 if ($this->isSuite($file, '/tests')) {
-                    $this->addPluginSuite($file, $allPluginsPresenterName, $allPluginsPresenter, $allPluginsSuite);
+                    $this->addPluginSuite($file, $allPluginsPresenter, $allPluginsSuite);
                 }
             }
             
@@ -65,14 +65,15 @@ class TestsPluginRunner {
             $this->navigator->addChild($allPluginsPresenter);
         }
         
-        private function addPluginSuite($file, $allPluginsPresenterName, $allPluginsPresenter, $allPluginsSuite) {
+        private function addPluginSuite($file, $allPluginsPresenter, $allPluginsSuite) {
             $pluginName          = basename($file->getPathname());
             $testsPath           = $file->getPathname().'/tests';
-            $pluginPresenterName = $allPluginsPresenterName."[$pluginName]";
+            $prefix =  $allPluginsPresenter->prefix().'['.$allPluginsPresenter->name().']';
             
-            $pluginPresenter     = $this->getPresenter($pluginPresenterName, $testsPath);
+            $pluginPresenter     = $this->getPresenter($prefix, $pluginName, $testsPath);
             $pluginSuite         = $this->buildSuite($pluginPresenter->title());
             
+            $pluginPresenterName = $prefix.'['.$pluginPresenter->title().']';
             $this->addSuite($pluginSuite, $pluginPresenter, $pluginPresenterName, $testsPath);
             
             $allPluginsPresenter->addChild($pluginPresenter);
@@ -98,7 +99,8 @@ class TestsPluginRunner {
                 
                 $dirName   = $name.'['.$childName.']';
                 if ($this->isSuite($file)) {
-                    $child = $this->getPresenter($dirName.'[_do_all]', $file->getPathname());
+                    $child = $this->getPresenter($dirName, '_do_all', $file->getPathname());
+                    $child->setTitle(basename($file->getPathname()));
                     if ($this->isSelected($file->getPathname())) {
                         $suite->add($this->buildSuite($child->title()));
                     }
@@ -107,8 +109,8 @@ class TestsPluginRunner {
                         $presenter->addChild($child);
                     }
                 } elseif ($this->isTest($file)) {
-                    $dirName.='[]';
-                    $child = $this->getPresenter($dirName, $file->getPathname());
+                    $testName = basename($file->getpathname());
+                    $child = $this->getPresenter($dirName, $testName, $file->getPathname());
                     if ($this->isSelected($file->getPathname())) {
                         $suite->addFile($file->getPathname());
                     }
@@ -118,8 +120,8 @@ class TestsPluginRunner {
             }
         }
 
-        public function getPresenter($name, $value) {
-            return new TestsPluginSuitePresenter($name, $value, $this->isSelected($value));
+        public function getPresenter($prefix, $name, $value) {
+            return new TestsPluginSuitePresenter($prefix, $name, $value, $this->isSelected($value));
         }
         
         

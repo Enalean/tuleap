@@ -31,13 +31,17 @@ class TestsPluginSuitePresenter {
     protected $selected;
     protected $classes  = array();
     protected $children = array();
+    protected $prefix;
     
-    public function __construct($name, $value, $selected = false) {
+    public function __construct($prefix, $name, $value, $selected = false) {
         $this->name     = $name;
         $this->value    = $value;
         $this->selected = $selected;
+        $this->prefix = $prefix;
     }
-    
+    public function prefix() {
+        return $this->prefix;
+    }
     public function setId($id) {
         $this->id = $id;
     }
@@ -55,7 +59,7 @@ class TestsPluginSuitePresenter {
     public function addChild( TestsPluginSuitePresenter $child) {
         $childName = $child->name();
         if (isset($this->children[$childName])) {
-            $parent = $parent->children[$childName];
+            $parent = $this->children[$childName];
             $parent->addChildren($child->children());
         } else {
             $this->children[$childName] = $child;
@@ -110,10 +114,14 @@ class TestsPluginSuitePresenter {
     }
     
     public function title() {
-        if (isset($this->title)) {
-            return $this->title;
+        $template = '%s';
+        if (count($this->children) > 0) {
+            $template = '<strong>%s</strong>';
         }
-        return $this->name;
+        if (isset($this->title)) {
+            return sprintf($template, $this->title);
+        }
+        return sprintf($template, $this->name);
     }
     
     public function value() {
