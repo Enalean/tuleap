@@ -26,25 +26,36 @@ if ($request->exist('path')) {
 }
 
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
-    $vML = new Valid_Email('form_mailing_list', ',');
-    $vHeader = new Valid_String('form_mailing_header');
-    if($request->valid($vML)) {
-        if($request->valid($vHeader)) {
-            $form_mailing_list = $request->get('form_mailing_list');
-            $form_mailing_header = $request->get('form_mailing_header');
-            // TODO: Update this
-            //$ret = svn_data_update_notification($group_id,$form_mailing_list,$form_mailing_header);
-            if ($ret) {
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
+    $postChanges = $request->get('post_changes');
+    switch ($postChanges) {
+        case 'subject_header' :
+            $vHeader = new Valid_String('form_mailing_header');
+            if($request->valid($vHeader)) {
+                $mailingHeader = $request->get('form_mailing_header');
+                // TODO: save header
+                if (true) {
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
+                }
+            }
+            break;
+        case 'path_mailing_list' :
+            $vPath = new Valid_String('form_path');
+            $vML   = new Valid_Email('form_mailing_list', ',');
+            if($request->valid($vPath) && $request->valid($vML)) {
+                $path        = $request->get('form_path');
+                $mailingList = $request->get('form_mailing_list');
+                $pm          = ProjectManager::instance();
+                // TODO: verify parameters
+                if ($pm->setSVNMailingListAndHeader($group_id, $mailingList, '',$path)) {
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
+                }
             } else {
+                $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_email_fail'));
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_fail'));
             }
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_fail'));
-        }
-    } else {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_email_fail'));
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_fail'));
+            break;
+        default :
+            break;
     }
 }
 
@@ -66,7 +77,7 @@ echo '
        '.$Language->getText('svn_admin_notification','mail_comment').'
        <form action="" method="post">
            <input type="hidden" name="group_id" value="'.$group_id.'">
-           <input type="hidden" name="post_changes" value="y">
+           <input type="hidden" name="post_changes" value="subject_header">
            <table>
                <th>'.$Language->getText('svn_admin_notification','header').'</th>
                <tr>
@@ -84,7 +95,7 @@ echo '
        <br/>
        <form action="" method="post">
            <input type="hidden" name="group_id" value="'.$group_id.'">
-           <input type="hidden" name="post_changes" value="y">
+           <input type="hidden" name="post_changes" value="path_mailing_list">
            <table width="100%">
                <tr>
                    <td width="10"><b>'.$Language->getText('svn_admin_notification','notification_path').'</b></td>
