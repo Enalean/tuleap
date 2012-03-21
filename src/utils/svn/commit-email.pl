@@ -393,6 +393,17 @@ $svn_events_mailing_lists .= get_emails_by_path('svn_notification', 'path', $dir
 my @notification_list = split(',', $svn_events_mailing_lists);
 my @svn_events_notifications = redundancy_grep(\@notification_list);
 
+$svn_events_notifications = join(',', @svn_events_notifications);
+# we put off unvalid email and login
+$svnmailto = &filter_valid_logins_and_emails($svn_events_notifications);
+if ($svnmailto ne 'NULL' && $svnmailto ne '') {
+  push(@{$current_project->{email_addresses}}, $svnmailto);
+}
+
+if ($debug) {
+  print STDERR "svnmailto: ", $svnmailto, "\n";
+}
+
 # Lose the trailing slash in the directory names if one exists, except
 # in the case of '/'.
 my $rootchanged = 0;
