@@ -24,7 +24,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
         if($request->valid($vHeader)) {
             $form_mailing_list = $request->get('form_mailing_list');
             $form_mailing_header = $request->get('form_mailing_header');
-            $ret = svn_data_update_notification($group_id,$form_mailing_list,$form_mailing_header);
+            // TODO: Update this
+            //$ret = svn_data_update_notification($group_id,$form_mailing_list,$form_mailing_header);
             if ($ret) {
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
             } else {
@@ -51,20 +52,38 @@ $project=$pm->getProject($group_id);
 $svn_mailing_list = $project->getSVNMailingList();
 $svn_mailing_header = $project->getSVNMailingHeader();
 
+// Mail header
 echo '
-       <H2>'.$Language->getText('svn_admin_notification','email').'</H2>
-       <FORM ACTION="" METHOD="post">
-       <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$group_id.'">
-       <INPUT TYPE="HIDDEN" NAME="func" VALUE="notification">
-       <INPUT TYPE="HIDDEN" NAME="post_changes" VALUE="y">
+       <h2>'.$Language->getText('svn_admin_notification','email').'</h2>
        '.$Language->getText('svn_admin_notification','mail_comment').'
+       <form action="" method="post">
+           <input type="hidden" name="group_id" value="'.$group_id.'">
+           <table>
+               <th>'.$Language->getText('svn_admin_notification','header').'</th>
+               <tr>
+                   <td><input type="text" name="form_mailing_header" value="'.$hp->purify($svn_mailing_header).'"></td>
+                   <td><input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'"></td>
+               </tr>
+           </table>
+       </form>';
 
-       <P><b>'.$Language->getText('svn_admin_notification','mail_to').'</b></p><p><INPUT TYPE="TEXT" SIZE="70" NAME="form_mailing_list" VALUE="'.$hp->purify($svn_mailing_list).'"></p>
+// List of paths & mail addresses (+delete)
+// TODO
 
-       <p><b>'.$Language->getText('svn_admin_notification','header').'</b></p>
-       <p><INPUT TYPE="TEXT" SIZE="20" NAME="form_mailing_header" VALUE="'.$hp->purify($svn_mailing_header).'"></p>
-
-        <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></p></FORM>';
+// Add a path & mail addresses
+echo '
+       <br/>
+       <form action="" method="post">
+           <table>
+               <th>Path</th>
+               <th>'.$Language->getText('svn_admin_notification','mail_to').'</th>
+               <tr>
+                   <td><input type="text" name="form_path" value="'.$hp->purify($path).'"></td>
+                   <td><input type="text" name="form_mailing_list" value="'.$hp->purify($svn_mailing_list).'"></td>
+                   <td><input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'"></td>
+               </tr>
+           </table>
+       </form>';
 
 svn_footer(array());
 ?>
