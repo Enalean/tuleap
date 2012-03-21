@@ -386,12 +386,12 @@ my @dirschanged = &read_from_process($svnlook, 'dirs-changed', $repos,
 
 # Retrive emails watching a given path that appears in the list of changed directories
 
-my @svn_events_mailing_lists = '';
+my @svn_events_mailing_lists = ();
 foreach my $dirVal (@dirschanged) {
-$svn_events_mailing_lists .= get_emails_by_path('svn_notification', 'path', $dirVal, 'svn_events_mailing_list', $group_id);
+my @directory_notif = get_emails_by_path('svn_notification', 'path', $dirVal, 'svn_events_mailing_list', $group_id);
+push(@svn_events_mailing_lists, @directory_notif);
 }
-my @notification_list = split(',', $svn_events_mailing_lists);
-my @svn_events_notifications = redundancy_grep(\@notification_list);
+my @svn_events_notifications = redundancy_grep(\@svn_events_mailing_lists);
 
 $svn_events_notifications = join(',', @svn_events_notifications);
 # we put off unvalid email and login
