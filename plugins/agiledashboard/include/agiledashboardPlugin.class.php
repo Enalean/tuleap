@@ -37,7 +37,12 @@ class AgileDashboardPlugin extends Plugin {
         if (defined('TRACKER_BASE_URL')) {
             $this->_addHook('cssfile', 'cssfile', false);
             $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
+            $this->_addHook(TRACKER_EVENT_INCLUDE_CSS_FILE, 'tracker_event_include_css_file', false);
         }
+    }
+    
+    public function tracker_event_include_css_file($params) {
+        $params['include_tracker_css_file'] = true;
     }
     
     /**
