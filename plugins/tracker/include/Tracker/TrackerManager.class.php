@@ -186,18 +186,14 @@ class TrackerManager { /* extends Engine? */
      * @return Tracker_CrossSearch_SearchController 
      */
     protected function getCrossSearchController(Codendi_Request $request) {        
-        $formElementFactory = Tracker_FormElementFactory::instance();
-        
-        $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
-        $dao                = new Tracker_CrossSearch_SearchDao();
-        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $formElementFactory);
-        
+        $search = $this->getCrossSearch();
+        $hierarchy_factory = $this->getHierarchyFactory();
         return new Tracker_CrossSearch_SearchController(
             $request,
             ProjectManager::instance(),
             $GLOBALS['Response'],
             $search,
-            new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao()),
+            $hierarchy_factory,
             new Tracker_CrossSearch_ViewBuilder($formElementFactory, $this->getTrackerFactory())
                 
         );
@@ -813,6 +809,19 @@ class TrackerManager { /* extends Engine? */
             }
         }
         return $deleteStatus;
+    }
+
+    public function getCrossSearch() {
+        $formElementFactory = Tracker_FormElementFactory::instance();
+        
+        $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
+        $dao                = new Tracker_CrossSearch_SearchDao();
+        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $formElementFactory);
+        return $search;
+    }
+
+    public function getHierarchyFactory() {
+        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
     }
 
 }

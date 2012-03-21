@@ -82,9 +82,9 @@ class Planning_Controller extends Controller {
         }
     }
 
-    function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
-        $project = $manager->getProject();
-        $request_criteria = $search = $hierarchy_factory = null;
+    function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager, Tracker_CrossSearch_Search $search, Tracker_HierarchyFactory $hierarchy_factory) {
+        $project = $manager->getProject($this->request->get('group_id'));
+        $request_criteria = $this->request->get('criteria');
         $content_view = $view_builder->buildContentView($project, $request_criteria, $search, $hierarchy_factory);
         $presenter = new Planning_Presenter($this->artifact, $content_view);
         $this->render('show', $presenter);

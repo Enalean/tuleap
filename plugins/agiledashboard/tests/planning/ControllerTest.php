@@ -69,29 +69,37 @@ class Planning_ControllerTest extends TuleapTestCase {
         $this->assertPattern('/Tata/', $content);
     }
     
-    public function testDisplaysTheSearchContentView() {
+    public function itDisplaysTheSearchContentView() {
         $content_view = new MockTracker_CrossSearch_SearchContentView();
         $a_list_of_draggable_items = 'A list of draggable items';
         $content_view->setReturnValue('fetch', $a_list_of_draggable_items);
         
+        $project_id = 1111;
+        $criteria = array();
+        $search = new MockTracker_CrossSearch_Search();
+        $hierarchy_factory = new MockTracker_HierarchyFactory();
         
         $project = new MockProject();
         $project_manager = new MockProjectManager();
-        $project_manager->setReturnValue('getProject', $project);
+        $project_manager->setReturnValue('getProject', $project, array($project_id));
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $view_builder->expectOnce('buildContentView', array($project, '*', '*', '*'));
+        $view_builder->expectOnce('buildContentView', array($project, $criteria, $search, $hierarchy_factory));
         $view_builder->setReturnValue('buildContentView', $content_view);
         
         $id       = 987;
         $title    = "screen hangs with macos and some escapable characters #<";
-        $request  = new Codendi_Request(array('aid' => $id));
+        $request  = new Codendi_Request(array('aid' => $id
+                                            , 'group_id' =>$project_id
+                                            , 'criteria' => $criteria));
         $artifact = $this->GivenAnArtifact($id, $title);
         $factory  = new MockTracker_ArtifactFactory();
         $factory->setReturnValue('getArtifactByid', $artifact, array($id));
-        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager);
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search, $hierarchy_factory);
         
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
     }
+    
+    // request->criteria = string what to do
     
     private function GivenAnArtifact($id, $title) {
         $artifact = new MockTracker_Artifact();
@@ -116,13 +124,13 @@ class Planning_ControllerTest extends TuleapTestCase {
         $content_view->setReturnValue('fetch', 'stuff');
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
         $view_builder->setReturnValue('buildContentView', $content_view);
-        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, new MockProjectManager());
+        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, new MockProjectManager(), new MockTracker_CrossSearch_Search(), new MockTracker_HierarchyFactory());
     }
     
-    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager) {
+    private function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search, $hierarchy_factory) {
         ob_start();
         $controller = new Planning_Controller($request, $factory, new MockPlanningFactory(), new MockTrackerFactory());
-        $controller->show($view_builder, $project_manager);
+        $controller->show($view_builder, $project_manager, $search, $hierarchy_factory);
         $content = ob_get_clean();
         return $content;
     }
