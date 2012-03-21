@@ -35,15 +35,13 @@ EOT;
         $sql = 'CREATE TABLE svn_notification (
                     group_id int(11) NOT NULL,
                     svn_events_mailing_list text NOT NULL DEFAULT "",
-                    svn_events_mailing_header varchar(64) DEFAULT NULL,
-                    path varchar(255) DEFAULT "/"
+                    path varchar(255) DEFAULT "/",
+                    KEY (group_id, svn_events_mailing_list, path)
                 )';
         $this->db->createTable('svn_notification', $sql);
 
-        $sql = 'INSERT INTO svn_notification (group_id, svn_events_mailing_list,
-                                              svn_events_mailing_header)
-                           SELECT group_id, svn_events_mailing_list, 
-                                  svn_events_mailing_header 
+        $sql = 'INSERT INTO svn_notification (group_id, svn_events_mailing_list)
+                           SELECT group_id, svn_events_mailing_list 
                            FROM groups 
                            WHERE svn_events_mailing_list <>"" 
                ';
@@ -62,13 +60,6 @@ EOT;
             }
         }
 
-        $sql = 'ALTER TABLE groups DROP COLUMN svn_events_mailing_header';
-        if ($this->db->tableNameExists('groups') && $this->db->columnNameExists('groups', 'svn_events_mailing_header')) {
-            $res = $this->db->dbh->exec($sql);
-            if ($res === false) {
-                throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while deleting svn_events_mailing_header column from groups table');
-            }
-        }
     }
 
     public function postUp() {
@@ -77,9 +68,6 @@ EOT;
         }
         if ($this->db->columnNameExists('groups', 'svn_events_mailing_list')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('svn_events_mailing_list column is not deleted from groups table');
-        }
-        if ($this->db->columnNameExists('groups', 'svn_events_mailing_header')) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('svn_events_mailing_header column is not deleted from groups table');
         }
     }
 }

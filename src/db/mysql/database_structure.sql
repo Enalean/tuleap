@@ -3437,8 +3437,8 @@ CREATE TABLE IF NOT EXISTS soap_call_counter (
 CREATE TABLE IF NOT EXISTS svn_notification (
     group_id int(11) NOT NULL,
     svn_events_mailing_list text NOT NULL DEFAULT "",
-    svn_events_mailing_header varchar(64) DEFAULT NULL,
-    path varchar(255) DEFAULT "/"
+    path varchar(255) DEFAULT "/",
+    KEY (group_id, svn_events_mailing_list, path)
 );
 
 
