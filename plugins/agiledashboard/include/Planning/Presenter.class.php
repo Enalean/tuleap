@@ -25,7 +25,7 @@ class Planning_Presenter {
     public $planning_name;
     public $destination_id;
     public $destination_title;
-    public $artifacts_to_select;
+    private $artifacts_to_select;
     private $artifact;
     private $content_view;
     
@@ -37,15 +37,15 @@ class Planning_Presenter {
             $this->destination_title = $artifact->fetchTitle();
         }
         $this->artifact            = $artifact;
-        $this->artifacts_to_select = array_values($artifacts_to_select);
+        $this->artifacts_to_select = $artifacts_to_select;
         $this->content_view        = $content_view;
     }
     
-    function hasArtifact() {
+    public function hasArtifact() {
         return $this->artifact !== null;
     }
     
-    function getLinkedItems() {
+    public function getLinkedItems() {
         $linked_items = $this->artifact->getLinkedArtifacts();
         if (! $linked_items) {
             $linked_items = array();
@@ -60,6 +60,18 @@ class Planning_Presenter {
     
     public function pleaseChoose() {
         return $GLOBALS['Language']->getText('global', 'please_choose_dashed');
+    }
+    
+    public function artifactsToSelect() {
+        $stuffToPassToMustache = array();
+        foreach ($this->artifacts_to_select as $artifact) {
+            $stuffToPassToMustache[] = array(
+                'id'       => $artifact->getId(),
+                'title'    => $artifact->getTitle(),
+                'selected' => ($artifact->getId() == $this->destination_id) ? 'selected="seltected"' : '',
+            );
+        }
+        return $stuffToPassToMustache;
     }
 }
 
