@@ -42,117 +42,20 @@ Mock::generate('Tracker');
 Mock::generate('TrackerFactory');
 
 class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
-    
-    public function setUp() {
-        parent::setUp();
-        $this->formElementFactory = new MockTracker_FormElementFactory();
-        $this->tracker_factory    = new MockTrackerFactory();
-        $view_builder = TestHelper::getPartialMock('Tracker_CrossSearch_ViewBuilder', array('getView'));
-        $view_builder->__construct($this->formElementFactory, $this->tracker_factory);
+    public function itCreatesTrackerHierarchyFromDatabase() {
+        $this->GivenAProjectThatUseTheService();
         
-        $this->service            = new MockService();
-        $this->project            = new MockProject();
-        $this->manager            = new MockProjectManager();
-        $this->manager->setReturnValue('getProject', $this->project, array('66'));
-        $this->request            = new Codendi_Request(array('group_id' => '66', 'criteria' => array()));
-        $this->search             = new MockTracker_CrossSearch_Search();
-        $this->search->setReturnValue('getMatchingArtifacts', new TreeNode());
-        $this->hierarchy_factory  = new MockTracker_HierarchyFactory();
-        $this->view_builder       = $view_builder;
+        $trackers_ids = array(111, 112);
+        $this->GivenAListOfTrackerIds($trackers_ids);
         
-        $this->project->setReturnValue('getGroupId', '123');
-    }
-    
-    public function testSearchRendersViewForServiceWithCriteria() {
-        $view = new MockTracker_CrossSearch_SearchView();
-        $view->expectOnce('render');
-                
-        $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
+        $hierarchy_factory = $this->GivenAHierarchyFactory();
+        $hierarchy_factory->expectOnce('getHierarchy', array($trackers_ids));
         
-        
-        $fields = array(aTextField()->build(), aStringField()->build());
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields, array($this->project));
-
-        $controller = $this->getController();        
-        $this->view_builder->setReturnValue('getView', $view);
-        $this->tracker_factory->setReturnValue('getTrackersByGroupId', array());
-        
+        $controller = $this->GivenAControllerWithAHierarchyFactory($hierarchy_factory);
         $controller->search();
     }
     
-    public function testSearchRedirectsWithErrorMessageIfServiceIsNotUsed() {
-        $this->project->setReturnValue('getService', null, array('plugin_tracker'));
-        $this->project->setReturnValue('getUnixName', 'coin');
-
-        $controller = $this->getController();
-
-        $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
-        $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
-
-        $controller->search();
-    }
-    
-    public function testSearchRedirectsToHomepageWhenProjectDoesNotExist() {
-        $this->project->setReturnValue('isError', true);
-        
-        $this->manager->setReturnValue('getProject', $this->project, array('invalid_project_id'));
-        
-        $this->request = new Codendi_Request(array('group_id' => 'invalid_project_id'));
-        
-        $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
-        $GLOBALS['HTML']->expectOnce('redirect', array('/'));
-        
-        $controller = $this->getController();
-        
-        $controller->search();
-    }
-    
-    public function testSearchActionRendersTheSearchView() {
-        $view = new MockTracker_CrossSearch_SearchView();
-        $view->expectOnce('render');
-        
-        
-        $tracker_hierarchy = new MockTracker_Hierarchy();
-        $this->hierarchy_factory->setReturnValue('getHierarchy', $tracker_hierarchy);
-        
-        $criteria = array();
-        $this->request = new Codendi_Request(array(
-            'group_id' => '66', 
-            'criteria' => $criteria
-        ));
-        
-        $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
-        
-        $this->manager->setReturnValue('getProject', $this->project, array('66'));
-        
-        $this->formElementFactory->setReturnValue('getProjectSharedFields', array());
-        
-        $matchingIds = array(array('artifactId1', 'artifactId2'), array('changesetId1', 'changesetId2'));
-        
-        $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
-        
-
-        $controller = $this->getController();
-        $this->view_builder->setReturnValue('getView', $view);
-        $this->tracker_factory->setReturnValue('getTrackersByGroupId', array());
-        
-        $controller->search();
-    }
-    public function itAssumesNoCriteriaIfThereIsNoneInTheRequest() {
-        $this->view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $this->view_builder->expectOnce('buildView', array('*', array()));
-        $this->view_builder->setReturnValue('buildView', new MockTracker_CrossSearch_SearchView());
-        $this->request = new Codendi_Request(array(
-            'group_id' => '66', 
-        ));
-
-        $this->manager->setReturnValue('getProject', $this->project, array('66'));
-        $controller = $this->getController();
-        $controller->search();
-    }
-
-    
-    public function testSearchActionCallGetMatchingArtifactsWithAHierarchy() {
+    public function itCallsGetMatchingArtifactsWithAHierarchy() {
         $view = new MockTracker_CrossSearch_SearchView();
         
         $tracker_hierarchy = new MockTracker_Hierarchy();
@@ -179,20 +82,117 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         
         $controller->search();
     }
+        
+    public function setUp() {
+        parent::setUp();
+        $this->formElementFactory = new MockTracker_FormElementFactory();
+        $this->tracker_factory    = new MockTrackerFactory();
+        $view_builder = TestHelper::getPartialMock('Tracker_CrossSearch_ViewBuilder', array('getView'));
+        $view_builder->__construct($this->formElementFactory, $this->tracker_factory);
+        
+        $this->service            = new MockService();
+        $this->project            = new MockProject();
+        $this->manager            = new MockProjectManager();
+        $this->manager->setReturnValue('getProject', $this->project, array('66'));
+        $this->request            = new Codendi_Request(array('group_id' => '66', 'criteria' => array()));
+        $this->search             = new MockTracker_CrossSearch_Search();
+        $this->search->setReturnValue('getMatchingArtifacts', new TreeNode());
+        $this->hierarchy_factory  = new MockTracker_HierarchyFactory();
+        $this->view_builder       = $view_builder;
+        
+        $this->project->setReturnValue('getGroupId', '123');
+    }
 
-    public function testSearchCreateTrackerHierarchyFromDatabase() {
-        $this->GivenAProjectThatUseTheService();
-        
-        $trackers_ids = array(111, 112);
-        $this->GivenAListOfTrackerIds($trackers_ids);
-        
-        $hierarchy_factory = $this->GivenAHierarchyFactory();
-        $hierarchy_factory->expectOnce('getHierarchy', array($trackers_ids));
-        
-        $controller = $this->GivenAControllerWithAHierarchyFactory($hierarchy_factory);
+    public function itRedirectsWithErrorMessageIfServiceIsNotUsed() {
+        $this->project->setReturnValue('getService', null, array('plugin_tracker'));
+        $this->project->setReturnValue('getUnixName', 'coin');
+
+        $controller = $this->getController();
+
+        $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
+        $GLOBALS['HTML']->expectOnce('redirect', array('/projects/coin/'));
+
         $controller->search();
     }
     
+    public function itRedirectsToHomepageWhenProjectDoesNotExist() {
+        $this->project->setReturnValue('isError', true);
+        
+        $this->manager->setReturnValue('getProject', $this->project, array('invalid_project_id'));
+        
+        $this->request = new Codendi_Request(array('group_id' => 'invalid_project_id'));
+        
+        $GLOBALS['HTML']->expectOnce('addFeedback', array('error', '*'));
+        $GLOBALS['HTML']->expectOnce('redirect', array('/'));
+        
+        $controller = $this->getController();
+        
+        $controller->search();
+    }
+        
+    public function itRendersTheSearchView() {
+        $view = new MockTracker_CrossSearch_SearchView();
+        $view->expectOnce('render');
+        
+        
+        $tracker_hierarchy = new MockTracker_Hierarchy();
+        $this->hierarchy_factory->setReturnValue('getHierarchy', $tracker_hierarchy);
+        
+        $criteria = array();
+        $this->request = new Codendi_Request(array(
+            'group_id' => '66', 
+            'criteria' => $criteria
+        ));
+        
+        $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
+        
+        $this->manager->setReturnValue('getProject', $this->project, array('66'));
+        
+        $noFields = array();
+        $this->formElementFactory->setReturnValue('getProjectSharedFields', $noFields);
+        
+        $matchingIds = array(array('artifactId1', 'artifactId2'), array('changesetId1', 'changesetId2'));
+        
+        $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
+        
+
+        $controller = $this->getController();
+        $this->view_builder->setReturnValue('getView', $view);
+        $this->tracker_factory->setReturnValue('getTrackersByGroupId', array());
+        
+        $controller->search();
+    }
+    
+    public function itRendersViewForServiceWithCriteria() {
+        $view = new MockTracker_CrossSearch_SearchView();
+        $view->expectOnce('render');
+                
+        $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
+        
+        
+        $fields = array(aTextField()->build(), aStringField()->build());
+        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields, array($this->project));
+
+        $controller = $this->getController();        
+        $this->view_builder->setReturnValue('getView', $view);
+        $this->tracker_factory->setReturnValue('getTrackersByGroupId', array());
+        
+        $controller->search();
+    }
+    
+    public function itAssumesNoCriteriaIfThereIsNoneInTheRequest() {
+        $this->view_builder = new MockTracker_CrossSearch_ViewBuilder();
+        $this->view_builder->expectOnce('buildView', array('*', array()));
+        $this->view_builder->setReturnValue('buildView', new MockTracker_CrossSearch_SearchView());
+        $this->request = new Codendi_Request(array(
+            'group_id' => '66', 
+        ));
+
+        $this->manager->setReturnValue('getProject', $this->project, array('66'));
+        $controller = $this->getController();
+        $controller->search();
+    }
+
     private function GivenAListOfTrackerIds($trackers_ids) {
         $trackers = array();
         $fields   = array();
@@ -228,11 +228,11 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
         $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
     }
 
-    public function getController() {
+    private function getController() {
         return $this->getControllerWithHierarchyFactory($this->hierarchy_factory);
     }
 
-    public function getControllerWithHierarchyFactory($hierarchy_factory) {
+    private function getControllerWithHierarchyFactory($hierarchy_factory) {
         return new Tracker_CrossSearch_SearchController($this->request, $this->manager, $GLOBALS['HTML'], $this->search, $hierarchy_factory, $this->view_builder);
     }
 
