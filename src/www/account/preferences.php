@@ -261,7 +261,7 @@ print "</select>\n";
         </td>
     </tr>
 </table>
-<P align=center><CENTER><INPUT type="submit" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>" class="btn-primary"></CENTER>
+<P align=center><CENTER><INPUT type="submit" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>" class="btn btn-primary"></CENTER>
 </FORM>
 <?php 
 $HTML->footer(array());

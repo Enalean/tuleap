@@ -26,7 +26,7 @@ $HTML->header(array('title'=> $Language->getText('account_change_email', 'title'
 <P><INPUT type="hidden" name="form_user" value="<?php print user_getid(); ?>">
 <?php echo $Language->getText('account_change_email', 'label_new'); ?>:
 <INPUT type="text" size="30" name="form_newemail">
-<INPUT type="submit" class="btn-primary" name="Send Confirmation to New Address" value="<?php echo $Language->getText('account_change_email', 'send_new'); ?>">
+<INPUT type="submit" class="btn btn-primary" name="Send Confirmation to New Address" value="<?php echo $Language->getText('account_change_email', 'send_new'); ?>">
 </FORM>
 
 <P><A href="/">[<?php echo $Language->getText('global', 'back_home'); ?>]</A>
