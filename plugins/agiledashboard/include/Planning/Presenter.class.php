@@ -21,16 +21,24 @@
 
 class Planning_Presenter {
     
+    public $planning_name;
     public $destination_id;
     public $destination_title;
-    private $artifact;
+    private $artifact = false;
     private $content_view ;
     
-    public function __construct(Tracker_Artifact $artifact, Tracker_CrossSearch_SearchContentView $content_view) {
-        $this->destination_id    = $artifact->getId();
-        $this->destination_title = $artifact->fetchTitle();
+    public function __construct(Planning $planning, Tracker_CrossSearch_SearchContentView $content_view, Tracker_Artifact $artifact = null) {
+        $this->planning_name     = $planning->getName();
+        if ($artifact) {
+            $this->destination_id    = $artifact->getId();
+            $this->destination_title = $artifact->fetchTitle();
+        }
         $this->artifact = $artifact;
         $this->content_view = $content_view;
+    }
+    
+    function hasArtifact() {
+        return $this->artifact !== null;
     }
     
     function getLinkedItems() {

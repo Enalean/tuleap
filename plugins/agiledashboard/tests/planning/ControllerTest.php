@@ -66,6 +66,11 @@ class Planning_ControllerTest extends TuleapTestCase {
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact(987, 'whatever');
         $this->assertPattern("/$name/", $content);
     }
+    
+    public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
+        $this->WhenICaptureTheOutputOfShowActionWithoutArtifact();
+        $this->assertNoErrors();
+    }
 
     public function itListsAllLinkedItems() {
         $id = 987;
@@ -78,7 +83,12 @@ class Planning_ControllerTest extends TuleapTestCase {
         $artifact->setReturnValue('getLinkedArtifacts', $linked_items);
         $factory = new MockTracker_ArtifactFactory();
         $factory->setReturnValue('getArtifactByid', $artifact, array($id));
-        $request = new Codendi_Request(array('aid' => $id));
+        $request = new Codendi_Request(
+            array(
+                'aid'         => $id,
+                'planning_id' => $this->planning->getId(),
+            )
+        );
 
         $content = $this->WhenICaptureTheOutputOfShowAction($request, $factory);
         $this->assertPattern('/Tutu/', $content);
@@ -103,8 +113,11 @@ class Planning_ControllerTest extends TuleapTestCase {
     private function assertThatWeBuildAcontentViewWith($requested_criteria, $expected_criteria) {
         $project_id = 1111;
         $id         = 987;
-        $params     = array('aid'      => $id
-                          , 'group_id' => $project_id);
+        $params     = array(
+            'aid'         => $id,
+            'planning_id' => $this->planning->getId(),
+            'group_id'    => $project_id,
+        );
         
         if ($requested_criteria !== null) {
             $params['criteria'] = $requested_criteria;
@@ -143,12 +156,18 @@ class Planning_ControllerTest extends TuleapTestCase {
     }
     
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
-        $request = new Codendi_Request(array('aid' => $id));
+        $request = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
         
         $artifact = $this->GivenAnArtifact($id, $title);
         
         $factory = new MockTracker_ArtifactFactory();
         $factory->setReturnValue('getArtifactByid', $artifact, array($id));
+        return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
+    }
+    
+    private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
+        $request = new Codendi_Request(array('planning_id' => $this->planning->getId()));
+        $factory = new MockTracker_ArtifactFactory();
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     

@@ -89,9 +89,11 @@ class Planning_Controller extends Controller {
         if ($this->request->valid($valid_criteria)) {
             $request_criteria = $this->request->get('criteria');
         }
+        $planning_id      = $this->request->get('planning_id');
+        $planning         = $this->planning_factory->getPlanning($planning_id);
         $project          = $manager->getProject($this->request->get('group_id'));
         $content_view     = $view_builder->buildContentView($project, $request_criteria, $search, $hierarchy_factory);
-        $presenter        = new Planning_Presenter($this->artifact, $content_view);
+        $presenter        = new Planning_Presenter($planning, $content_view, $this->artifact);
         $this->render('show', $presenter);
     }
     

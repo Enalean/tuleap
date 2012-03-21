@@ -1,8 +1,8 @@
 
 <div class="agiledashboard">
-    <h2>Release planning - 4.0.27</h2>
+    <h2>{{planning_name}}</h2>
 
-
+    {{#hasArtifact}}
     <table>
         <tbody>
             <tr valign="top">
@@ -13,7 +13,7 @@
                     </div>
 
                 </td><td>
-
+                    
                     <div id="art-{{destination_id}}" class="release_planner planning-droppable">
                         <h3>{{{destination_title}}}</h3>
                         <div>
@@ -36,7 +36,7 @@
             </tr>
         </tbody>
     </table>
-
+    {{/hasArtifact}}
 </div>
 
 

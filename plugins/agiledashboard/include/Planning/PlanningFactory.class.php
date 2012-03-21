@@ -46,7 +46,7 @@ class PlanningFactory {
     }
     
     public function getPlanning($planning_id) {
-        //
+        return new Planning(1, 'Toto');
     }
     
     public function create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id) {
