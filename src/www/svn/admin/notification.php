@@ -17,6 +17,14 @@
 //
 $request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
+
+// TODO: validate path
+if ($request->exist('path')) {
+    $path = $request->get('path');
+} else {
+    $path = '/';
+}
+
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vML = new Valid_Email('form_mailing_list', ',');
     $vHeader = new Valid_String('form_mailing_header');
@@ -40,16 +48,16 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     }
 }
 
-$hp =& Codendi_HTMLPurifier::instance();
+$hp = Codendi_HTMLPurifier::instance();
 
 // Display the form
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
-		      'help' => 'SubversionAdministrationInterface.html#SubversionEmailNotification'));
+		                  'help' => 'SubversionAdministrationInterface.html#SubversionEmailNotification'));
 
-$pm = ProjectManager::instance();
-$project=$pm->getProject($group_id);
+$pm      = ProjectManager::instance();
+$project = $pm->getProject($group_id);
 //to be modified
-$svn_mailing_list = $project->getSVNMailingList();
+$svn_mailing_list   = $project->getSVNMailingList();
 $svn_mailing_header = $project->getSVNMailingHeader();
 
 // Mail header
@@ -58,6 +66,7 @@ echo '
        '.$Language->getText('svn_admin_notification','mail_comment').'
        <form action="" method="post">
            <input type="hidden" name="group_id" value="'.$group_id.'">
+           <input type="hidden" name="post_changes" value="y">
            <table>
                <th>'.$Language->getText('svn_admin_notification','header').'</th>
                <tr>
@@ -74,12 +83,18 @@ echo '
 echo '
        <br/>
        <form action="" method="post">
-           <table>
-               <th>Path</th>
-               <th>'.$Language->getText('svn_admin_notification','mail_to').'</th>
+           <input type="hidden" name="group_id" value="'.$group_id.'">
+           <input type="hidden" name="post_changes" value="y">
+           <table width="100%">
                <tr>
-                   <td><input type="text" name="form_path" value="'.$hp->purify($path).'"></td>
-                   <td><input type="text" name="form_mailing_list" value="'.$hp->purify($svn_mailing_list).'"></td>
+                   <td width="10"><b>'.$Language->getText('svn_admin_notification','notification_path').'</b></td>
+                   <td><input type="text" size="50%" name="form_path" value="'.$hp->purify($path).'"></td>
+               </tr>
+               <tr>
+                   <td width="10"><b>'.$Language->getText('svn_admin_notification','mail_to').'</b></td>
+                   <td><input type="text" size="50%" name="form_mailing_list" value="'.$hp->purify($svn_mailing_list).'"></td>
+               </tr>
+               <tr>
                    <td><input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'"></td>
                </tr>
            </table>
