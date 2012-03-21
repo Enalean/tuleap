@@ -1,5 +1,6 @@
 <?php
 
+ini_set('display_errors', 'on');
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 
@@ -22,6 +23,8 @@ $src_path     = $basedir.'/src';
 $include_path = $basedir.'/src/www/include';
 
 ini_set('include_path', ini_get('include_path').':'.$src_path.':'.$include_path);
+
+require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
 
 // Fix path if needed
 if (isset($GLOBALS['htmlpurifier_dir'])) {
@@ -56,5 +59,13 @@ function __autoload($className) {
         }
     }
 }
+
+require_once dirname(__FILE__).'/../include/simpletest/unit_tester.php';
+require_once dirname(__FILE__).'/../include/simpletest/mock_objects.php';
+require_once dirname(__FILE__).'/../include/simpletest/web_tester.php';
+require_once dirname(__FILE__).'/../include/simpletest/expectation.php';
+require_once dirname(__FILE__).'/../include/simpletest/collector.php';
+require_once dirname(__FILE__).'/../include/TestHelper.class.php';
+require_once 'TuleapTestCase.class.php';
 
 ?>
