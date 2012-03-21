@@ -154,7 +154,7 @@ sub get_emails_by_path {
     my $patternMatcher = $dbh->quote($patternMatcher);
     my $groupid = $dbh->quote($groupid);
 
-    $query = "SELECT $retfieldname FROM $table WHERE $fieldname RLIKE $patternMatcher and group_id = $groupid";
+    $query = "SELECT $retfieldname FROM $table WHERE $fieldname = '/' or $fieldname RLIKE $patternMatcher and group_id = $groupid";
     $sth = $dbh->prepare($query);
     $res = $sth->execute();
     my @emails = ();
