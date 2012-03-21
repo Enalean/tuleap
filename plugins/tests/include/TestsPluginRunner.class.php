@@ -42,11 +42,12 @@ class TestsPluginRunner {
             $this->request   = $request;
             $title           = $this->getTitleByOrder($request->getOrder());
             $this->mainSuite = $this->buildSuite($title);
-            $this->navigator = $this->getPresenter($this->rootCategory, '_do_all', '_all_tests');
+            $this->navigator = $this->getPresenter($this->rootCategory, 'Main', '_all_tests');
             $title           = $this->titles[$this->request->getOrder()];
             $this->navigator->setTitle($title);
             
-            $this->addSuite($this->mainSuite, $this->navigator, $this->rootCategory.'[core]', '/usr/share/codendi/tests/simpletest');
+            
+            $this->addSuite($this->mainSuite, $this->navigator, 'tests_to_run[Core]', '/usr/share/codendi/tests/simpletest');
             $this->addAllPluginsSuite();
         }
         
@@ -92,7 +93,7 @@ class TestsPluginRunner {
             return preg_match('/Test.php$/', $test->getPathname());
         }
         
-        public function addSuite($suite, $presenter, $name, $path) {
+        public function addSuite($parentSuite, $presenter, $name, $path) {
             
             foreach ($this->getTestsIterator($path) as $file) {
                 $childName = basename($file->getPathname());
@@ -101,10 +102,9 @@ class TestsPluginRunner {
                 if ($this->isSuite($file)) {
                     $child = $this->getPresenter($dirName, '_do_all', $file->getPathname());
                     $child->setTitle(basename($file->getPathname()));
-                    if ($this->isSelected($file->getPathname())) {
-                        $suite->add($this->buildSuite($child->title()));
-                    }
-                    $this->addSuite($suite, $child, $dirName, $file->getPathname());
+                    $childSuite =  $this->buildSuite($child->title());
+                    $parentSuite->add($childSuite);
+                    $this->addSuite($childSuite, $child, $dirName, $file->getPathname());
                     if ($child->hasChildren()) {
                         $presenter->addChild($child);
                     }
@@ -124,13 +124,10 @@ class TestsPluginRunner {
             return new TestsPluginSuitePresenter($prefix, $name, $value, $this->isSelected($value));
         }
         
-        
         public function isSelected($path) {
             return $this->request->isSelected($path);
 
         }
-        
-        
         
         public function getTestsIterator($testsSrc) {
             return new DirectoryIterator($testsSrc);
@@ -139,7 +136,6 @@ class TestsPluginRunner {
     
     
     public function runAndDisplay() {
-        //$this->run();
         $navigator = $this->getNavigator();
         $results   = $this->getResults();
         $renderer = new MustacheRenderer(dirname(__FILE__).'/../templates');
@@ -148,7 +144,6 @@ class TestsPluginRunner {
     }
     
     public function getResults() {
-        //var_dump($this->mainSuite);
         return $this->mainSuite;
     }
     

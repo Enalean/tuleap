@@ -93,23 +93,6 @@ class PluginRequestTest extends TuleapTestCase {
         
     }
     
-    public function itCanParseTestsToRunWithArrayArgument() {
-        $fixture = array(
-    	'tests_to_run'=> array(
-    		'test1' => array('_do_all'=>'0', 'test1Test.php'=>'1'),
-    		'test2' => array('_do_all'=>'0', 'tests 2'=>
-    		    array('_do_all'=>'1', 'test2.1Test.php'=>'1', 'test2.2Test.php'=>'1'),
-    			'test2Test.php'=>'0'
-    		 )
-        ),);
-        $expected = array(
-        	'test1'=>array('test1Test.php'),
-        	'test2'=>array('tests 2'=>array('test2.1Test.php', 'test2.2Test.php')) 
-        );
-        $this->requestObject->parse($fixture);
-        $this->assertEqual($this->requestObject->getTestsToRun(), $expected);
-    }
-    
     
 }
 ?>
