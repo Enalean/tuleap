@@ -58,7 +58,7 @@
 		var baseSrc  = 'themes/default/images/';
 		var minusSrc = baseSrc + 'minus.png';
 		var plusSrc  = baseSrc + 'plus.png';
-		$$('li.categ').each(function (element) {
+		$$('li.category').each(function (element) {
 			register_events(element);
 			plus++;
 			new Insertion.Top(element, '<a href="" id="plus_' + plus +'"><img src="' + plusSrc +'" /></a>');
