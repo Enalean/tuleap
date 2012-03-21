@@ -168,6 +168,12 @@ sub get_emails_by_path {
     return $result;
 }
 
+sub redundancy_grep {
+    my ($ref_array) = @_;
+    my %hash_without_redundancy;
+    return grep { !$hash_without_redundancy{$_}++ } @{$ref_array};
+}
+
 #
 # input: a string handled as a email address
 # output: 1 if the email address is valid, or 0 if the email address is not known in Codendi, or if all the accounts associated with it are deleted or suspended
