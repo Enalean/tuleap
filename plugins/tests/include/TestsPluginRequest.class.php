@@ -64,6 +64,7 @@ class testsPluginRequest {
     }
     
     public function setTestsToRun( array $tests_to_run) {
+        //var_dump($tests_to_run);
         $this->tests_to_run = $this->parseTestsToRun($tests_to_run);
     }
     

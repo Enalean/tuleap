@@ -47,9 +47,8 @@ class TestsPluginSuitePresenter {
     }
     
     public function addClass($class) {
-        $class = $class;
         if (!in_array($class, $this->classes)) {
-            $his->classes[] = $class;
+            $this->classes[] = $class;
         }
     }
     
@@ -107,6 +106,7 @@ class TestsPluginSuitePresenter {
         if (count($this->children) > 0) {
             $classes.=' category';
         }
+        return $classes;
     }
     
     public function title() {
