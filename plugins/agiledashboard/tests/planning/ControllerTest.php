@@ -32,6 +32,8 @@ Mock::generate('Tracker_Artifact');
 Mock::generate('TrackerFactory');
 Mock::generate('PlanningFactory');
 Mock::generate('Planning');
+Mock::generate('ProjectManager');
+Mock::generate('Project');
 Mock::generate('Tracker_CrossSearch_SearchContentView');
 Mock::generate('Tracker_CrossSearch_ViewBuilder');
 
