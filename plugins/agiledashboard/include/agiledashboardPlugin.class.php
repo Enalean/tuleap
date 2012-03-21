@@ -87,6 +87,12 @@ class AgileDashboardPlugin extends Plugin {
             case 'create':
                 $this->executeAction('create', $request);
                 break;
+            case 'edit':
+                $this->renderAction('edit', $request);
+                break;
+            case 'update':
+                $this->executeAction('update', $request);
+                break;
             case 'delete':
                 $this->executeAction('delete', $request);
                 break;
@@ -99,6 +105,7 @@ class AgileDashboardPlugin extends Plugin {
     private $header_title = array(
         'index' => 'Plannings',
         'new_'  => 'New Planning',
+        'edit'  => 'Edit Planning',
         'show'  => 'Release planning'
     );
     

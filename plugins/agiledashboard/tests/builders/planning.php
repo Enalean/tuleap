@@ -30,8 +30,8 @@ function aPlanning() {
 }
 
 class Test_Planning_Builder {
-    private $id;
-    private $name;
+    private $id   = '1';
+    private $name = 'Test Planning';
     
     public function withId($id) {
         $this->id = $id;

@@ -99,6 +99,10 @@ class Planning_Controller extends Controller {
         try {
             $planning_id = $this->request->get('planning_id');
             $planning    = $this->planning_factory->getPlanning($planning_id);
+            $presenter   = array();
+            
+            $this->render('edit', $presenter);
+            
         } catch(Planning_NotFoundException $exception) {
             $GLOBALS['Response']->sendStatusCode(404);
         }

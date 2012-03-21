@@ -373,6 +373,26 @@ class Planning_ControllerEditWithInvalidPlanningIdTest extends TuleapTestCase {
     }
 }
 
+class Planning_ControllerEditWithValidPlanningIdTest extends TuleapTestCase {
+    public function itRendersAnEditForm() {
+        $planning         = aPlanning()->build();
+        $request          = new Codendi_Request(array('planning_id' => $planning->getId()));
+        $planning_factory = new MockPlanningFactory();
+        $controller       = aPlanningController()->with('request', $request)
+                                                 ->with('planning_factory', $planning_factory)
+                                                 ->build();
+        
+        $planning_factory->expectOnce('getPlanning', array($planning->getId()));
+        $planning_factory->setReturnValue('getPlanning', $planning);
+        
+        ob_start();
+        $controller->edit();
+        $output = ob_get_clean();
+        
+        $this->assertPattern('/\<form/', $output);
+    }
+}
+
 class Planning_ControllerDeleteTest extends TuleapTestCase {
     public function itDeletesThePlanningAndRedirectsToTheIndex() {
         $group_id         = '34';
