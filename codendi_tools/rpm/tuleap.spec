@@ -442,6 +442,15 @@ Requires: %{PKG_NAME}
 %description theme-tuleap
 Tuleap theme
 
+%package theme-bootstrap
+Summary: Bootstrap theme
+Group: Development/Tools
+Version: @@THEME_BOOTSTRAP_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}
+%description theme-bootstrap
+Bootstrap theme
+
 # 
 # Package setup
 %prep
@@ -962,6 +971,10 @@ fi
 %files theme-tuleap
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/src/www/themes/Tuleap
+
+%files theme-bootstrap
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/src/www/themes/Bootstrap
 
 #%doc
 #%config

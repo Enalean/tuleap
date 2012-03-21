@@ -43,6 +43,7 @@ THEME_STTAB_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/STTab/VERSION)
 THEME_CODEXSTN_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/CodexSTN/VERSION)
 THEME_STEERFORGE_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/SteerForge/VERSION)
 THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSION)
+THEME_BOOTSTRAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/BOOTSTRAP/VERSION)
 
 PKG_NAME=tuleap
 SPEC_FILE=tuleap.spec
@@ -120,6 +121,7 @@ $(RPM_TMP)/RPMS/noarch/$(PKG_NAME)-$(version)-1.noarch.rpm: $(SPEC_FILE)
 		sed -e 's/@@THEME_CODEXSTN_VERSION@@/$(THEME_CODEXSTN_VERSION)/g' |\
 		sed -e 's/@@THEME_STEERFORGE_VERSION@@/$(THEME_STEERFORGE_VERSION)/g' |\
 		sed -e 's/@@THEME_TULEAP_VERSION@@/$(THEME_TULEAP_VERSION)/g' |\
+		sed -e 's/@@THEME_BOOTSTRAP_VERSION@@/$(THEME_BOOTSTRAP_VERSION)/g' |\
 		sed -e 's/@@PKG_NAME@@/$(PKG_NAME)/g' \
 		> $(RPM_TMP)/SPECS/$(SPEC_FILE)
 	rpmbuild -bb $(RPM_TMP)/SPECS/$(SPEC_FILE)
