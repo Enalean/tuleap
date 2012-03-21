@@ -26,6 +26,8 @@ require_once dirname(__FILE__).'/mustache/MustacheRenderer.class.php';
 
 require_once dirname(__FILE__).'/simpletest/test_case.php';
 
+require_once dirname(__FILE__).'/../www/CodendiReporter.class.php';
+
 class TestsPluginRunner {
     
     
@@ -47,9 +49,8 @@ class TestsPluginRunner {
             $title = $this->titles[$this->request->getOrder()];
             $this->navigator->setTitle($title);
             var_dump($this->navigator->title(), $title);
-            //$this->addSuite('Core', '/usr/share/codendi/tests/simpletest');
             
-            $this->addSuite($this->navigator, $this->rootCategory.'[core]', '/usr/share/codendi/tests/simpletest');
+            $this->addSuite($this->mainSuite, $this->navigator, $this->rootCategory.'[core]', '/usr/share/codendi/tests/simpletest');
             
             $allPluginPresenter = $this->getPresenter($this->rootCategory."[plugins]", '_all_plugins');
             
@@ -57,12 +58,25 @@ class TestsPluginRunner {
                 if ($this->isSuite($file, '/tests')) {
                     $pluginName = basename($file->getPathname());
                     $pluginPresenter = $this->getPresenter($this->rootCategory."[$pluginName]", $file->getPathname().'/tests');
-                    $this->addSuite($pluginPresenter, $pluginName, $file->getPathname().'/tests');
+                    $pluginSuite = $this->buildSuite($pluginPresenter->title());
+                    $this->addSuite($pluginSuite, $pluginPresenter, $pluginName, $file->getPathname().'/tests');
                     $allPluginPresenter->addChild($pluginPresenter);
                 }
             }
             
             $this->navigator->addChild($allPluginPresenter);
+        }
+        
+        
+        public function buildSuiteTree($path, $suite, $tree) {
+            foreach($tree as $category=>$test) {
+                if (is_array($test)) {
+                    $testSuite = $this->buildSuiteTree($path.'/'.$category, new TestSuite($category), $test);
+                    $suite->add($testSuite);
+                } else {
+                    $suite->addFile($path.$test);
+                }
+            }
         }
 
         public function buildSuite($title) {
@@ -77,7 +91,7 @@ class TestsPluginRunner {
             return preg_match('/Test.php$/', $test->getPathname());
         }
         
-        public function addSuite($presenter, $name, $path) {
+        public function addSuite($suite, $presenter, $name, $path) {
             
             foreach ($this->getTestsIterator($path) as $file) {
                 $childName = basename($file->getPathname());
@@ -85,13 +99,19 @@ class TestsPluginRunner {
                 $dirName   = $name.'['.$childName.']';
                 if ($this->isSuite($file)) {
                     $child = $this->getPresenter($dirName.'[_do_all]', $file->getPathname());
-                    $this->addSuite($child, $dirName, $file->getPathname());
+                    if ($this->isSelected($file->getPathname())) {
+                        $suite->add($this->buildSuite($child->title()));
+                    }
+                    $this->addSuite($suite, $child, $dirName, $file->getPathname());
                     if ($child->hasChildren()) {
                         $presenter->addChild($child);
                     }
                 } elseif ($this->isTest($file)) {
-                    $dirname.='[]';
+                    $dirName.='[]';
                     $child = $this->getPresenter($dirName, $file->getPathname());
+                    if ($this->isSelected($file->getPathname())) {
+                        $suite->addFile($file->getPathname());
+                    }
                     $presenter->addChild($child);
                 }               
                 
@@ -126,7 +146,8 @@ class TestsPluginRunner {
     }
     
     public function getResults() {
-        
+        $reporter = CodendiReporterFactory::reporter('html');
+        $this->mainSuite->run($reporter);
     }
     
     public function getNavigator() {
@@ -138,17 +159,6 @@ class TestsPluginRunner {
     }
     
     /*
-    public function buildSuiteTree($path, $suite, $tree) {
-        foreach($tree as $category=>$test) {
-            if (is_array($test)) {
-                $testSuite = $this->buildSuiteTree($path.'/'.$category, new TestSuite($category), $test);
-                $suite->add($testSuite);
-            } else {
-                var_dump($path);
-                $suite->addFile($path.$test);
-            }
-        }
-    }
     
     public function appendTestsInPath($path, $category) {
         $this->categoryPath[$category] = realpath($path).DIRECTORY_SEPARATOR;
