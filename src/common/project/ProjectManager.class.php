@@ -393,15 +393,13 @@ class ProjectManager {
     }
 
     /**
-     * Set mailing list and header notification per path 
+     * Set SVN header
      * @param Integer $projectId
-     * @param String  $mailingList
      * @param String  $mailingHeader
-     * @param String  $path
      */
-    function setSVNMailingListAndHeader($projectId, $mailingList, $mailingHeader, $path) {
+    function setSVNHeader($projectId, $mailingHeader) {
         $dao = $this->_getDao();
-        return $dao->setSVNMailingListAndHeader($projectId, $mailingList, $mailingHeader, $path);
+        return $dao->setSVNHeader($projectId, $mailingHeader);
     }
 
     /**

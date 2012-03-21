@@ -280,16 +280,15 @@ class ProjectDao extends DataAccessObject {
     }
 
     /**
-     * Set mailing list and header to be notified on a given path
+     * Set SVN header
      *
      * @param Integer $groupId
-     * @param String  $mailingList
      * @param String  $mailingHeader
-     * @param String  $path
-     * 
+     *
      * @return Boolean
      */
-    function setSVNMailingListAndHeader($groupId, $mailingList, $mailingHeader, $path) {
+    function setSVNHeader($groupId, $mailingHeader) {
+        // TODO: Update request
         $sql = ' INSERT INTO svn_notification 
                  VALUES ('.$this->da->escapeInt($groupId).', '.$this->da->quoteSmart($mailingList).', '.
                            $this->da->quoteSmart($mailingHeader).', '.$this->da->quoteSmart($path).')

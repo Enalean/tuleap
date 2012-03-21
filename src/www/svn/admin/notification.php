@@ -9,6 +9,8 @@
 //	Originally written by Laurent Julliard 2004, Codendi Team, Xerox
 //
 
+require_once('common/svn/SvnNotification.class.php');
+$svnNotification = new SvnNotification();
 
 // CAUTION!!
 // Make the changes before calling svn_header_admin because 
@@ -44,9 +46,8 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             $path        = $request->get('form_path');
             $mailingList = $request->get('form_mailing_list');
             if(!empty($mailingList) && !empty($path) && $request->valid($vPath) && $request->valid($vML)) {
-                $pm = ProjectManager::instance();
                 // TODO: verify parameters
-                if ($pm->setSVNMailingListAndHeader($group_id, $mailingList, '',$path)) {
+                if ($svnNotification->setSVNMailingList($group_id, $mailingList, $path)) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
                 }
             } else {
@@ -79,7 +80,7 @@ echo '
            <input type="hidden" name="group_id" value="'.$group_id.'">
            <input type="hidden" name="post_changes" value="subject_header">
            <table>
-               <th>'.$Language->getText('svn_admin_notification','header').'</th>
+               <th align="left">'.$Language->getText('svn_admin_notification','header').'</th>
                <tr>
                    <td><input type="text" name="form_mailing_header" value="'.$hp->purify($svn_mailing_header).'"></td>
                    <td><input type="submit" name="submit" value="'.$Language->getText('global','btn_submit').'"></td>
