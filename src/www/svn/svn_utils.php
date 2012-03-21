@@ -45,6 +45,10 @@ function svn_header($params) {
     if (user_ismember($group_id, 'A')||user_ismember($group_id,'SVN_ADMIN') ) {
         $toolbar[] = array('title' => $Language->getText('svn_utils','svn_admin'),
                            'url'   => '/svn/admin/?group_id='.$group_id);
+        // TODO: Set $path
+        $path = '/';
+        $toolbar[] = array('title' => $Language->getText('svn_utils','notif'),
+                           'url'   => '/svn/admin/?group_id='.$group_id.'&func=notification&path='.$path);
     }
     if (!isset($params['help']) || !$params['help']) {
         $params['help'] = "VersionControlWithSubversion.html";

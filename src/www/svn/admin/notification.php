@@ -15,7 +15,7 @@
 // svn_header_admin caches the project object in memory and
 // the form values are therefore not updated.
 //
-/*$request->valid(new Valid_String('post_changes'));
+$request->valid(new Valid_String('post_changes'));
 $request->valid(new Valid_String('SUBMIT'));
 if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     $vML = new Valid_Email('form_mailing_list', ',');
@@ -66,5 +66,5 @@ echo '
 
         <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="'.$Language->getText('global','btn_submit').'"></p></FORM>';
 
-svn_footer(array());*/
+svn_footer(array());
 ?>
