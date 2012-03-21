@@ -43,7 +43,7 @@ class Planning_ControllerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->planning = new Planning(123, 'Stuff Backlog', array(), 66);
+        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, array(), 66);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
     }
     
@@ -76,7 +76,7 @@ class Planning_ControllerTest extends TuleapTestCase {
         $this->assertPattern('/<option value="1002" >Another open artifact/', $content);
         $this->assertPattern('/<input type="hidden" name="planning_id" value="123"/', $content);
         $this->assertPattern('/<input type="hidden" name="action" value="show"/', $content);
-        $this->assertPattern('/<input type="hidden" name="group_id" value="102"/', $content);
+        $this->assertPattern('/<input type="hidden" name="group_id" value="103"/', $content);
     }
     
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {

@@ -40,7 +40,7 @@ class PlanningFactory {
     public function getPlannings($group_id) {
         $plannings = array();
         foreach ($this->dao->searchPlannings($group_id) as $row) {
-            $plannings[] = new Planning($row['id'], $row['name']);
+            $plannings[] = new Planning($row['id'], $row['name'], $row['group_id']);
         }
         return $plannings;
     }
@@ -50,7 +50,7 @@ class PlanningFactory {
         foreach ($this->dao->searchBacklogTrackersById($planning_id) as $row) {
             $backlog_tracker_ids[] = $row['tracker_id'];
         }
-        return new Planning($planning_id, $planning['name'], $backlog_tracker_ids, $planning['release_tracker_id']);
+        return new Planning($planning_id, $planning['name'], $planning['group_id'], $backlog_tracker_ids, $planning['release_tracker_id']);
     }
     
     public function create($planning_name, $group_id, $planning_backlog_ids, $planning_release_id) {

@@ -23,6 +23,7 @@ class Planning_Presenter {
     
     public $planning_id;
     public $planning_name;
+    public $group_id;
     public $destination_id;
     public $destination_title;
     private $artifacts_to_select;
@@ -39,6 +40,7 @@ class Planning_Presenter {
         $this->artifact            = $artifact;
         $this->artifacts_to_select = $artifacts_to_select;
         $this->content_view        = $content_view;
+        $this->group_id            = $planning->getGroupId();
     }
     
     public function hasArtifact() {

@@ -38,14 +38,14 @@ class PlanningFactoryTest extends TuleapTestCase {
         $dao          = new MockPlanningDao();
         $factory      = new PlanningFactory($dao);
         $empty_result = TestHelper::arrayToDar(
-            array('id' => 1, 'name' => 'Release Backlog'),
-            array('id' => 2, 'name' => 'Product Backlog')
+            array('id' => 1, 'name' => 'Release Backlog', 'group_id' => 102),
+            array('id' => 2, 'name' => 'Product Backlog', 'group_id' => 102)
         );
         $dao->setReturnValue('searchPlannings', $empty_result);
         
         $expected = array(
-            new Planning(1, 'Release Backlog'),
-            new Planning(2, 'Product Backlog'),
+            new Planning(1, 'Release Backlog', 102),
+            new Planning(2, 'Product Backlog', 102),
         );
         $this->assertEqual($expected, $factory->getPlannings(123));
     }

@@ -20,9 +20,10 @@
 
 class Planning {
     
-    function __construct($id, $name, $backlog_tracker_ids = array(), $release_tracker_id = null) {
+    function __construct($id, $name, $group_id, $backlog_tracker_ids = array(), $release_tracker_id = null) {
         $this->id = $id;
         $this->name = $name;
+        $this->group_id = $group_id;
         $this->backlog_tracker_ids = $backlog_tracker_ids;
         $this->release_tracker_id  = $release_tracker_id;
     }
@@ -31,6 +32,10 @@ class Planning {
     }
     public function getName() {
         return $this->name;
+    }
+    
+    public function getGroupId() {
+        return $this->group_id;
     }
     
     public function getBacklogTrackerIds() {

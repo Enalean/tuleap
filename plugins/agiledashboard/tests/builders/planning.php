@@ -32,6 +32,7 @@ function aPlanning() {
 class Test_Planning_Builder {
     private $id   = '1';
     private $name = 'Test Planning';
+    private $group_id = '102';
     
     public function withId($id) {
         $this->id = $id;
@@ -44,7 +45,7 @@ class Test_Planning_Builder {
     }
         
     public function build() {
-        return new Planning($this->id, $this->name);
+        return new Planning($this->id, $this->name, $this->group_id);
     }
 }
 
