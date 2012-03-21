@@ -23,7 +23,7 @@ require_once('common/dao/SvnNotificationDao.class.php');
 class SvnNotification {
 
     /**
-     * @return ProjectDao
+     * @return SvnNotificationDao
      */
     public function _getDao() {
         if (!isset($this->_dao)) {
@@ -33,14 +33,35 @@ class SvnNotification {
     }
 
     /**
-     * Set mailing list notification per path 
+     * Set mailing list notification per path
+     *
      * @param Integer $projectId
      * @param String  $mailingList
      * @param String  $path
+     *
+     * @return Boolean
      */
     function setSVNMailingList($projectId, $mailingList, $path) {
         $dao = $this->_getDao();
         return $dao->setSVNMailingList($projectId, $mailingList, $path);
+    }
+
+    /**
+     * Get mailing list notification per path
+     *
+     * @param Integer $projectId
+     * @param String  $path
+     *
+     * @return String
+     */
+    function getSVNMailingList($projectId, $path) {
+        $dao = $this->_getDao();
+        if ($dar = $dao->getSVNMailingList($projectId, $path)) {
+            $row = $dar->current();
+            return $row['svn_events_mailing_list'];
+        } else {
+            return '';
+        }
     }
 
 }

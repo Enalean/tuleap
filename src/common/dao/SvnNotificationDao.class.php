@@ -35,19 +35,34 @@ class SvnNotificationDao extends DataAccessObject {
      * @param Integer $groupId
      * @param String  $mailingList
      * @param String  $path
-     * 
+     *
      * @return Boolean
      */
     function setSVNMailingList($groupId, $mailingList, $path) {
-        $sql = ' INSERT INTO svn_notification 
+        $sql = ' INSERT INTO svn_notification
                  VALUES (
                  '.$this->da->escapeInt($groupId).',
                  '.$this->da->quoteSmart($mailingList).',
-                 "",
                  '.$this->da->quoteSmart($path).'
                  )
                  ON DUPLICATE KEY UPDATE svn_events_mailing_list = '.$this->da->quoteSmart($mailingList);
         return $this->update($sql);
+    }
+
+    /**
+     * Set mailing list to be notified on a given path
+     *
+     * @param Integer $groupId
+     * @param String  $path
+     *
+     * @return DataAccessResult
+     */
+    function getSVNMailingList($groupId, $path) {
+        $sql = ' SELECT svn_events_mailing_list
+                 FROM svn_notification 
+                 WHERE group_id = '.$this->da->escapeInt($groupId).'
+                 AND path = '.$this->da->quoteSmart($path);
+        return $this->retrieve($sql);
     }
 
 }

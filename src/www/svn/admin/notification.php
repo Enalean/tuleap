@@ -24,6 +24,7 @@ $request->valid(new Valid_String('SUBMIT'));
 // TODO: validate path
 if ($request->exist('path')) {
     $path = $request->get('path');
+    $svn_mailing_list = $svnNotification->getSVNMailingList($group_id, $path);
 } else {
     $path = '/';
 }
@@ -65,10 +66,8 @@ $hp = Codendi_HTMLPurifier::instance();
 // Display the form
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
 		                  'help' => 'SubversionAdministrationInterface.html#SubversionEmailNotification'));
-
+$pm->clear($group_id);
 $project = $pm->getProject($group_id);
-//to be modified
-$svn_mailing_list   = $project->getSVNMailingList();
 $svn_mailing_header = $project->getSVNMailingHeader();
 
 // Mail header
