@@ -691,16 +691,6 @@ class Tracker_FormElementFactory {
         return $this->getInstancesFromRows($dar);
     }
 
-    /**
-     * Return all shared fields used in all tracker of the project
-     * 
-     * @return Array of Tracker_FormElement_Field
-     */
-    public function getAllProjectSharedFields(Project $project) {
-        $dar = $this->getDao()->searchAllSharedFieldsOfProject($project->getId());
-        return $this->getInstancesFromRows($dar);
-    }
-    
     public function updateFormElement($formElement, $formElement_data) {
         
         //check that the new name is not already used
