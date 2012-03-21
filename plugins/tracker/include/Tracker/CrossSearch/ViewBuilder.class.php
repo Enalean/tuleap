@@ -43,12 +43,7 @@ class Tracker_CrossSearch_ViewBuilder {
     public function buildContentView(Project $project, array $request_criteria, Tracker_CrossSearch_Search $search, array $excludedArtifactIds = array()) {
         $report             = $this->getReport();
         $criteria           = $this->getCriteria($project, $report, $request_criteria);
-        $trackers           = $this->getTrackers($project, $this->tracker_factory);
-        
-        $tracker_ids = array();
-        foreach ($trackers as $tracker) {
-            $tracker_ids[] = $tracker->getId();
-        }
+        $tracker_ids        = $this->getTrackersIds($project, $this->tracker_factory);
         $artifacts          = $search->getHierarchicallySortedArtifacts($tracker_ids, $request_criteria, $excludedArtifactIds);
         
         return $this->getContentView($report, $criteria, $artifacts);
@@ -125,6 +120,16 @@ class Tracker_CrossSearch_ViewBuilder {
             $currentValue = $request_criteria[$field->getId()]['values'];
         }
         return $currentValue;
+    }
+
+    public function getTrackersIds($project, $tracker_factory) {
+        $trackers = $this->getTrackers($project, $tracker_factory);
+        
+        $tracker_ids = array();
+        foreach ($trackers as $tracker) {
+            $tracker_ids[] = $tracker->getId();
+        }
+        
     }
 
 }
