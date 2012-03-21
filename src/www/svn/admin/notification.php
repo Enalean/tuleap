@@ -11,6 +11,7 @@
 
 require_once('common/svn/SvnNotification.class.php');
 $svnNotification = new SvnNotification();
+$pm              = ProjectManager::instance();
 
 // CAUTION!!
 // Make the changes before calling svn_header_admin because 
@@ -34,8 +35,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             $vHeader = new Valid_String('form_mailing_header');
             if($request->valid($vHeader)) {
                 $mailingHeader = $request->get('form_mailing_header');
-                // TODO: save header
-                if (true) {
+                if ($pm->setSVNHeader($group_id, $mailingHeader)) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
                 }
             }
@@ -66,7 +66,6 @@ $hp = Codendi_HTMLPurifier::instance();
 svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings','gen_settings'),
 		                  'help' => 'SubversionAdministrationInterface.html#SubversionEmailNotification'));
 
-$pm      = ProjectManager::instance();
 $project = $pm->getProject($group_id);
 //to be modified
 $svn_mailing_list   = $project->getSVNMailingList();
