@@ -80,3 +80,17 @@ a img {
 .testsResult {
     width:90%;
 }
+
+.results-elapsed-time {
+    border: 1px solid orange;
+    background: lightyellow;
+    color: orange;
+}
+.results-all {
+    padding: 8px; 
+    margin-top: 1em;  
+    color: white;
+}
+.results-passes {
+    background-color: green;
+}

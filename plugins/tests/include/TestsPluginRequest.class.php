@@ -64,13 +64,7 @@ class testsPluginRequest {
     }
     
     public function setTestsToRun( array $tests_to_run) {
-         /*echo '<pre>';
-         print_r($tests_to_run);
-         echo '</pre>';*/
         $this->tests_to_run = $this->parseTestsToRun($tests_to_run);
-        /*echo '<pre>';
-        print_r($this->test_map);
-        echo '</pre>';*/
     }
     
     private function parseTestsToRun($tests_to_run) {

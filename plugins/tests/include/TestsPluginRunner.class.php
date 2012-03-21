@@ -48,7 +48,6 @@ class TestsPluginRunner {
             $this->navigator = $this->getPresenter($this->rootCategory.'[_do_all]', '_all_tests');
             $title = $this->titles[$this->request->getOrder()];
             $this->navigator->setTitle($title);
-            var_dump($this->navigator->title(), $title);
             
             $this->addSuite($this->mainSuite, $this->navigator, $this->rootCategory.'[core]', '/usr/share/codendi/tests/simpletest');
             
@@ -146,8 +145,7 @@ class TestsPluginRunner {
     }
     
     public function getResults() {
-        $reporter = CodendiReporterFactory::reporter('html');
-        $this->mainSuite->run($reporter);
+        return $this->mainSuite;
     }
     
     public function getNavigator() {

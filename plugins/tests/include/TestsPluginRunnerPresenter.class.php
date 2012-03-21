@@ -67,7 +67,10 @@ class TestsPluginRunnerPresenter {
     }
     
     public function results() {
-        return $this->results;
+        ob_start();
+        $reporter = CodendiReporterFactory::reporter('html');
+        $this->results->run($reporter);
+        return ob_get_clean();
     }
     
 }
