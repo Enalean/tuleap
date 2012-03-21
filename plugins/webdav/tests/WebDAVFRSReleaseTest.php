@@ -60,13 +60,6 @@ array('getReleaseId', 'getPackage', 'getProject', 'getUtils', 'getMaxFileSize', 
  */
 class WebDAVFRSReleaseTest extends UnitTestCase {
 
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function WebDAVFRSReleaseTest($name = 'WebDAVFRSReleaseTest') {
-        $this->UnitTestCase($name);
-    }
 
     function setUp() {
 
@@ -598,8 +591,6 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('getProject', $project);
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
 
-        $this->assertNoErrors();
-
         $webDAVFRSRelease->delete();
 
     }
@@ -665,8 +656,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('getProject', $project);
         $release = new MockFRSRelease();
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $this->assertNoErrors();
-
+        
         $webDAVFRSRelease->setName('newName');
 
     }
@@ -799,8 +789,6 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $package->setReturnValue('isHidden', true);
         $destination->setReturnValue('getPackage', $package);
 
-        $this->assertNoErrors();
-
         $source->move($destination);
     }
 
@@ -823,8 +811,6 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $package->setReturnValue('isHidden', false);
         $destination->setReturnValue('getPackage', $package);
 
-        $this->assertNoErrors();
-
         $source->move($destination);
     }
 
@@ -846,8 +832,6 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $package = new MockFRSPackage();
         $package->setReturnValue('isHidden', false);
         $destination->setReturnValue('getPackage', $package);
-
-        $this->assertNoErrors();
 
         $source->move($destination);
     }
@@ -919,7 +903,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $user = new MockUser();
         $webDAVFRSRelease->setReturnValue('getUser', $user);
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
-        $this->assertNoErrors();
+        
         $data = fopen(dirname(__FILE__).'/_fixtures/test.txt', 'r');
         $webDAVFRSRelease->setReturnValue('getMaxFileSize', 64);
 
@@ -1007,7 +991,6 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->expectOnce('openFile');
         $webDAVFRSRelease->expectOnce('streamCopyToStream');
         $webDAVFRSRelease->expectOnce('closeFile');
-        $this->assertNoErrors();
 
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }
@@ -1025,7 +1008,6 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->expectOnce('openFile');
         $webDAVFRSRelease->expectOnce('streamCopyToStream');
         $webDAVFRSRelease->expectOnce('closeFile');
-        $this->assertNoErrors();
 
         $webDAVFRSRelease->createFileIntoIncoming('test.txt', 'text');
     }

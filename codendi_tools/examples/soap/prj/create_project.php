@@ -29,7 +29,7 @@ $soapLogin = new SoapClient($serverUrl.'/soap/?wsdl',
                             array('cache_wsdl' => WSDL_CACHE_NONE));
 
 $adminSessionHash     = $soapLogin->login('admin', 'siteadmin')->session_hash;
-$requesterSessionHash = $soapLogin->loginAs($adminSessionHash, 'sandrae');
+$requesterSessionHash = $soapLogin->loginAs($adminSessionHash, $argv[1]);
 
 $soapProject = new SoapClient($serverUrl.'/soap/project/?wsdl', 
                               array('cache_wsdl' => WSDL_CACHE_NONE));
@@ -40,7 +40,7 @@ $prjId = $soapProject->addProject($requesterSessionHash, $adminSessionHash, $arg
 echo "New Project ID: $prjId\n";
 
 for($i = 4; $i < $argc; $i++) {
-    var_dump($soapProject->addProjectMember($prjId, $argv[$i]));
+    var_dump($soapProject->addProjectMember($requesterSessionHash, $prjId, $argv[$i]));
 }
 
 $soapLogin->logout($adminSessionHash);

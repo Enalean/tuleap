@@ -1,3 +1,26 @@
+Version 2.1.4 (Tuleap 4.0.27.3)
+    * Fix various bugs on git repository clone/delete/recreate senario.
+    * Fix git push logging (log for repositories outside project root works).
+    * Disable fork button while forking is actually happening).
+
+Version 2.1.3 (Tuleap 4.0.27.3)
+    * Fix include file for git formatter (regression due to memory consumption fix at version 2.0).
+    * Fix install (git service in double).
+
+Version 2.1.2 (Tuleap 4.0.27)
+    * Consistant naming of git service
+    * Improve description of fork feature
+    * Fix bug when there is nothing to fork
+
+Version 2.1.1 (Tuleap 4.0.27)
+    * Fix include of files (regression due to memory consumption fix at version 2.0).
+
+Version 2.1 (Tuleap 4.0.27)
+    * Allow to fork gitolite repositories from one project to another
+    * Fork inherit parent's permissions.
+    * Disable the ability to fork gitshell repositories.
+    * No longer load the all plugin's classes at each hit (reduce memory consumption).
+
 Version 1.25 (Tuleap 4.0.26)
     * Do not display an mysterious error message when fail to find the repository for git push count.
 

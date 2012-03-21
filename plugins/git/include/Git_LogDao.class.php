@@ -22,13 +22,13 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 
 class Git_LogDao extends DataAccessObject {
     
-    function searchLastPushesForProject($groupId) {
-        $groupId = $this->da->escapeInt($groupId);
+    function searchLastPushForRepository($repository_id) {
+        $repository_id = $this->da->escapeInt($repository_id);
         $sql = "SELECT log.*
                 FROM plugin_git_log log 
-                JOIN plugin_git git ON (log.repository_id = git.repository_id) 
-                WHERE project_id = $groupId
-                GROUP BY log.repository_id";
+                WHERE repository_id = $repository_id
+                ORDER BY push_date DESC
+                LIMIT 1";
         return $this->retrieve($sql);
     }
 }

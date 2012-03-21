@@ -20,8 +20,13 @@ try {
         // open the standard error output
         $stderr = fopen('php://stderr', 'w');
 
+        $txn = $argv[2];
+        $logmsg = array();
+        exec("/usr/bin/svnlook log -t '$txn' '$repository'", $logmsg);
+        $logmsg = implode("\n", $logmsg);
+        
         $references_array = array();
-        $references_array = $ref_manager->extractReferences($argv[1], null);
+        $references_array = $ref_manager->extractReferences($logmsg, $project->getId());
 
         if (sizeof($references_array) < 1) {
             // No reference has been found: commit is rejected

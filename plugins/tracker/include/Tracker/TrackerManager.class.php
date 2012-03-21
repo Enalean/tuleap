@@ -26,6 +26,10 @@ require_once('Artifact/Tracker_ArtifactFactory.class.php');
 require_once('Report/Tracker_ReportFactory.class.php');
 require_once('dao/Tracker_PermDao.class.php');
 require_once('common/reference/ReferenceManager.class.php');
+require_once('CrossSearch/SearchController.class.php');
+require_once('CrossSearch/Search.class.php');
+require_once 'HomeNavPresenter.class.php';
+require_once dirname(__FILE__) . '/../MustacheRenderer.class.php';
 
 class TrackerManager { /* extends Engine? */
     
@@ -163,6 +167,10 @@ class TrackerManager { /* extends Engine? */
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);
                                 break;
+                            case 'cross-search':
+                                $controller = $this->getCrossSearchController($request);
+                                $controller->search();
+                                break;
                             default:
                                 $this->displayAllTrackers($project, $user);
                                 break;
@@ -171,6 +179,24 @@ class TrackerManager { /* extends Engine? */
                 }
             }
         }
+    }
+    
+    protected function getCrossSearchController(Codendi_Request $request) {        
+        $formElementFactory = Tracker_FormElementFactory::instance();
+        
+        $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
+        $dao                = new Tracker_CrossSearch_SearchDao();
+        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $formElementFactory);
+        
+        return new Tracker_CrossSearch_SearchController(
+            $request,
+            ProjectManager::instance(),
+            $formElementFactory,
+            $GLOBALS['Response'],
+            $search,
+            new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao()),
+            $this->getTrackerFactory()
+        );
     }
     
     /**
@@ -423,6 +449,13 @@ class TrackerManager { /* extends Engine? */
               </div>';
     }
     
+    public function displayTrackerHomeNav(Project $project) {
+        $presenter = new Tracker_HomeNavPresenter($project);
+        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../templates');
+        
+        echo $renderer->render('tracker-home-nav', $presenter);
+    }
+    
     /**
      * Display all trackers of project $project that $user is able to see
      *
@@ -454,7 +487,7 @@ class TrackerManager { /* extends Engine? */
         } else {
             
             $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar);
-            
+            $this->displayTrackerHomeNav($project);
             
             $html .= '<p>';
             if (count($trackers)) {

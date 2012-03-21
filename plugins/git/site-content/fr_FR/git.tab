@@ -78,7 +78,7 @@ plugin_git	actions_delete_backup	Une sauvegarde du dépôt sera disponible dans 
 plugin_git	actions_name_not_available	Un fichier existe déjà avec ce nom sous gitroot
 plugin_git	actions_create_repo_exists	Le dépôt $1 existe déjà
 plugin_git	actions_delete_ok	Le dépôt a été supprimé
-plugin_git	actions_error_no_repository_selected	Aucun dépôt n'a été séctionné.
+plugin_git	actions_no_repository_forked	Aucun dépôt n'a été forké.
 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par
@@ -142,12 +142,15 @@ plugin_git	perm_W	Ecriture
 plugin_git	perm_W+	Rewind
 
 plugin_git	fork_repositories	Forker des dépôts
-plugin_git	fork_repositories_desc	Vous pouvez créer des forks personnels à partir de différents dépôts parents. <div class="lab_features">Cette fonctionnalité est expérimentale, donc soumise à changement. Pour l'instant, les permissions des nouveaux dépôts n'héritent pas de celles du parent, mais seulement de celles par défaut.</div>
+plugin_git	fork_repositories_desc	<p>Vous pouvez créer des forks personnels à partir de différents dépôts parents. Par défault, ces forks seront placés dans votre espace personnel du projet (cf. colonne "apérçu").</p><p>Vous avez également la possibilité de créer ces forks dans un autre project. Dans ce cas, ils deviendront des dépôts de référence dans le project de destination.<br/>Dans ce cas, vous devez être administrateur du projet de destination et le service Git doit être actif.</p>
 plugin_git	fork_repositories_select	Sélectionnez les dépôts à forker
 plugin_git	fork_repositories_path	Choisissez le chemin pour les forks
 plugin_git	fork_repositories_placeholder	Entrer un chemin ou laissez vide
-plugin_git	fork_repositories_submit	Créer les dépôts personnels
+plugin_git	fork_destination_project	Choisir un projet de destination
 plugin_git	fork_malformed_path	Le chemin ne peut pas contenir (..)
+plugin_git	fork_choose_destination_project	Copier vers un autre projet
+plugin_git	fork_choose_destination_personal	Créer les dépôts personnels dans ce projet
+plugin_git	successfully_forked	Fork créé avec succès
 
 plugin_git	tree_view_repository	Dépôt
 plugin_git	tree_view_description	Description
@@ -156,3 +159,7 @@ plugin_git	tree_view_by	$1 par $2
 
 project_admin_utils	perm_granted_for_git_repository	Permission accordée pour le dépôt git $1
 project_admin_utils	perm_reset_for_git_repository	Réinitialisation des permissions pour le dépôt git $1
+
+plugin_git	fork_repository_exists	Le dépot $1 existe déjà sur la cible. Dépot ignoré.
+plugin_git	missing_parameter_to_project	Aucun projet sélectionné pour le fork
+plugin_git	missing_parameter_repos	Aucun dépôt sélectionné pour le fork

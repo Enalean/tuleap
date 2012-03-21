@@ -58,7 +58,7 @@ class MetadataListOfValuesElementDaoTest extends UnitTestCase {
             "  , love.rank = 15".
             "  , love.status = '".$status."'".
             " WHERE love.value_id = ".$valueId;
-        $dao->expectArguments('update', array($sql_update));
+        $dao->expectOnce('update', array($sql_update));
 
         $val = $dao->updateElement($metadataId, $valueId, $name, $description, $rank, $status);
         $this->assertTrue($val);
@@ -76,7 +76,7 @@ class MetadataListOfValuesElementDaoTest extends UnitTestCase {
 
         $dao->setReturnValue('update', true);
         $sql_update = "UPDATE plugin_docman_metadata_love AS love SET status = 'D' WHERE value_id IN (  SELECT value_id   FROM plugin_docman_metadata_love_md AS lovemd   WHERE lovemd.field_id = ".$metadataId."     AND lovemd.value_id > 100  )";
-        $dao->expectArguments('update', array($sql_update));
+        $dao->expectOnce('update', array($sql_update));
 
         $val = $dao->deleteByMetadataId($metadataId);
         $this->assertTrue($val);

@@ -125,6 +125,7 @@ class Tracker_FormElement_View_Admin {
         $html .= $GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label').': ';
         $html .= '<br />';
         $html .= $this->formElement->getLabel();
+        $html .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
         $html .= '</p>';
         $html .= $this->fetchCustomHelp();
         return $html;
@@ -323,7 +324,7 @@ class Tracker_FormElement_View_Admin {
             $trackers = array();
             foreach ($fields as $field) {
                 $t = $field->getTracker();
-                $trackers[$t->getId()] = '<a href="'. TRACKER_BASE_URL.'/?tracker='. $t->getId() .'">'. $t->getName() .' ('. $t->getProject()->getPublicName() .')</a>';
+                $trackers[$t->getId()] = '<a href="'. TRACKER_BASE_URL.'/?tracker='. $t->getId() .'&func=admin-formElements">'. $t->getName() .' ('. $t->getProject()->getPublicName() .')</a>';
             }
             $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'field_copied_to');
             $html .= '<ul><li>';

@@ -20,7 +20,7 @@ class MailTest extends UnitTestCase {
         $mail->__construct();
         
         $mail->setSubject("été");
-        $this->assertNoUnwantedPattern("/é/", $mail->getEncodedSubject());
+        $this->assertNoPattern("/é/", $mail->getEncodedSubject());
         
         $this->assertEqual($mail->getSubject(), $mail->_decodeHeader($mail->getEncodedSubject()));
         
@@ -30,11 +30,11 @@ class MailTest extends UnitTestCase {
     
     function testValidateRecipient() {
         $dao =& new MockUserDao($this);
-        $dao->expectArgumentsAt(0, 'searchStatusByEmail', array('exists@A.com'));
-        $dao->expectArgumentsAt(1, 'searchStatusByEmail', array('exists@R.com'));
-        $dao->expectArgumentsAt(2, 'searchStatusByEmail', array('exists@S.com'));
-        $dao->expectArgumentsAt(3, 'searchStatusByEmail', array('exists@P.com'));
-        $dao->expectArgumentsAt(4, 'searchStatusByEmail', array('does@not.exist'));
+        $dao->expectAt(0, 'searchStatusByEmail', array('exists@A.com'));
+        $dao->expectAt(1, 'searchStatusByEmail', array('exists@R.com'));
+        $dao->expectAt(2, 'searchStatusByEmail', array('exists@S.com'));
+        $dao->expectAt(3, 'searchStatusByEmail', array('exists@P.com'));
+        $dao->expectAt(4, 'searchStatusByEmail', array('does@not.exist'));
         
         
         $exists_a = new MockDataAccessResult($this);
@@ -75,14 +75,12 @@ class MailTest extends UnitTestCase {
         
         $recipients = $mail->_validateRecipient('exists@A.com, exists@R.com ; exists@S.com, exists@P.com, does@not.exist');
         $this->assertEqual($recipients, '"Exists A" <exists@A.com>, "Exists R" <exists@R.com>, "Exists P (!S)" <exists@P.com>, does@not.exist');
-        
-        $dao->tally();
     }
     function testValidateRecipientEmpty() {
         $dao =& new MockUserDao($this);
-        $dao->expectArgumentsAt(0, 'searchStatusByEmail', array('exists@1.com'));
-        $dao->expectArgumentsAt(1, 'searchStatusByEmail', array('exists@2.com'));
-        $dao->expectArgumentsAt(2, 'searchStatusByEmail', array('exists@3.com'));
+        $dao->expectAt(0, 'searchStatusByEmail', array('exists@1.com'));
+        $dao->expectAt(1, 'searchStatusByEmail', array('exists@2.com'));
+        $dao->expectAt(2, 'searchStatusByEmail', array('exists@3.com'));
         
         
         $exists_a = new MockDataAccessResult($this);
@@ -103,8 +101,6 @@ class MailTest extends UnitTestCase {
         
         $recipients = $mail->_validateRecipient('exists@1.com, exists@2.com');
         $this->assertEqual($recipients, '');
-        
-        $dao->tally();
     }
 }
 ?>

@@ -60,6 +60,16 @@ class TestHelper {
         $dar->setReturnValue('isError', false);
         return $dar;
     }
+    
+    public static function emptyDar() {
+        $dar = new MockDataAccessResult();
+        $dar->setReturnValue('valid',    false);
+        $dar->setReturnValue('current',  false);
+        $dar->setReturnValue('rowCount', 0);
+        $dar->setReturnValue('isError',  false);
+        $dar->setReturnValue('getRow',   false);
+        return $dar;
+    }
 }
 
 ?>

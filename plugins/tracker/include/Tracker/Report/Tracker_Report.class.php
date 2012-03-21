@@ -190,61 +190,49 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     protected $matching_ids;
     public function getMatchingIds($request = null, $use_data_from_db = false) {
         if (!$this->matching_ids) {
-            $this->matching_ids = array();
-
             $u = UserManager::instance()->getCurrentUser();
-            $group_id = $this->getTracker()->getGroupId();
-            
-            
-            $instances       = array('artifact_type' => $this->tracker_id);
-            $ugroups = $u->getUgroups($group_id, $instances);
-            $static_ugroups  = $u->getStaticUgroups($group_id);
-            $dynamic_ugroups = $u->getDynamicUgroups($group_id, $instances);
-            $pm              = PermissionsManager::instance();
-            $permissions     = $pm->getPermissionsAndUgroupsByObjectid($this->tracker_id, $ugroups);
-            
-            $contributor_field    = $this->getTracker()->getContributorField();
-            $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
-            
-            $additional_from  = array();
-            $additional_where = array();
-            
             if ($use_data_from_db) {
                 $criteria = $this->getCriteriaFromDb();
             } else {
                 $criteria = $this->getCriteria();
             }
-            
-            /*
-             Manage multitracker queries
-            $tracker_ids = array($this->tracker_id);
-            $res = db_query("SELECT f_dest.tracker_id
-                             FROM tracker_field f_dest
-                             INNER JOIN tracker_field f 
-                                ON (f_dest.original_field_id = f.id AND f_dest.id != f_dest.original_field_id) 
-                             WHERE f.tracker_id = ".$this->tracker_id);
-            while ($row = db_fetch_array($res)) {
-                $tracker_ids[] = $row['tracker_id'];
-            }*/
-            
-            foreach($criteria as $c) {
-                if ($f = $c->getFrom()) {
-                    $additional_from[]  = $f;
-                }
-                
-                if ($w = $c->getWhere()) {
-                    $additional_where[] = $w;
-                }
-            }
-            $this->matching_ids = $this->getDao()->searchMatchingIds($group_id, $this->tracker_id, $additional_from, $additional_where, $u->isSuperUser(), $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)->getRow();
-            if (substr($this->matching_ids['id'], -1) === ',') {
-                $this->matching_ids['id'] = substr($this->matching_ids['id'], 0, -1);
-            }
-            if (substr($this->matching_ids['last_changeset_id'], -1) === ',') {
-                $this->matching_ids['last_changeset_id'] = substr($this->matching_ids['last_changeset_id'], 0, -1);
-            }
+            $this->matching_ids = $this->getMatchingIdsInDb($this->getDao(), PermissionsManager::instance(), $this->getTracker(), $u, $criteria);
        }
        return $this->matching_ids;
+    }
+    
+    protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
+        $matching_ids = array();
+        
+        $group_id             = $tracker->getGroupId();
+        $instances            = array('artifact_type' => $tracker->getId());
+        $ugroups              = $user->getUgroups($group_id, $instances);
+        $static_ugroups       = $user->getStaticUgroups($group_id);
+        $dynamic_ugroups      = $user->getDynamicUgroups($group_id, $instances);
+        $permissions          = $permissionManager->getPermissionsAndUgroupsByObjectid($tracker->getId(), $ugroups);
+        $contributor_field    = $tracker->getContributorField();
+        $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
+        
+        $additional_from  = array();
+        $additional_where = array();
+        foreach($criteria as $c) {
+            if ($f = $c->getFrom()) {
+                $additional_from[]  = $f;
+            }
+            
+            if ($w = $c->getWhere()) {
+                $additional_where[] = $w;
+            }
+        }
+        
+        $matching_ids = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user->isSuperUser(), $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)->getRow();
+        if (substr($matching_ids['id'], -1) === ',') {
+            $matching_ids['id'] = substr($matching_ids['id'], 0, -1);
+        }
+        if (substr($matching_ids['last_changeset_id'], -1) === ',') {
+            $matching_ids['last_changeset_id'] = substr($matching_ids['last_changeset_id'], 0, -1);
+        }
+        return $matching_ids;
     }
     
     /**
@@ -422,6 +410,37 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $i;
     }
+    
+    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, User $current_user = null) {
+        $hp = Codendi_HTMLPurifier::instance();
+        $html = '';
+        
+        $html .= '<div class="tracker_report_query">';
+        $html .= '<form action="" method="POST" id="tracker_report_query_form">';
+        $html .= '<input type="hidden" name="report" value="' . $this->id . '" />';
+        $id = 'tracker_report_query_' . $this->id;
+        $html .= '<h3 class="' . Toggler::getClassname($id, $this->is_query_displayed ? true : false) . '" id="' . $id . '">';
+
+        //  Query title
+        $html .= $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '</h3>';
+
+        $used = array();
+        $criteria_fetched = array();
+        foreach ($criteria as $criterion) {
+            if ($criterion->field->isUsed()) {
+                $criteria_fetched[] = '<li id="tracker_report_crit_' . $criterion->field->id . '">' . $criterion->fetch() . '</li>';
+                $used[$criterion->field->id] = $criterion->field;
+            }
+        }
+        if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
+            $html .= '<div id="tracker_report_addcriteria_panel">' . $this->_fetchAddCriteria($used) . '</div>';
+        }
+        $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched) . '</ul>';
+        $html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
+        $html .= '</form>';
+        $html .= '</div>';
+        return $html;
+    }
 
     public function display(TrackerManager $tracker_manager, $request, $current_user) {
         
@@ -481,41 +500,20 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $html = '';
             
             //Display Criteria
-            $html .= '<div class="tracker_report_query">';
-            $html .= '<form action="" method="POST" id="tracker_report_query_form">';
-            $html .= '<input type="hidden" name="report" value="'. $this->id .'" />';
-            $id = 'tracker_report_query_'. $this->id;
-            $html .= '<h3 class="'. Toggler::getClassname($id, $this->is_query_displayed ? true : false) .'" id="'. $id .'">';
-            
-            //  Query title
-            $html .= $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) .'</h3>';
-            
-            $used             = array();
-            $criteria_fetched = array();
+            $registered_criteria = array();
             $this->getCriteria();
             $session_criteria = $this->report_session->getCriteria();
             if ($session_criteria) {
-                foreach( $session_criteria as $key=>$session_criterion) {
-                    if ( !empty($session_criterion['is_removed']) ) {
+                foreach ($session_criteria as $key => $session_criterion) {
+                    if (!empty($session_criterion['is_removed'])) {
                         continue;
-                    }                        
-                    if ( !empty($this->criteria[$key]) ) {
-                        $c = $this->criteria[$key];
-                        
-                        if($c->field->isUsed()) {
-                            $criteria_fetched[] = '<li id="tracker_report_crit_'. $c->field->id .'">'. $c->fetch() .'</li>';
-                            $used[$c->field->id] = $c->field;
-                        }
+                    }
+                    if (!empty($this->criteria[$key])) {
+                        $registered_criteria[] = $this->criteria[$key];
                     }
                 }
             }
-            if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
-                $html .= '<div id="tracker_report_addcriteria_panel">'. $this->_fetchAddCriteria($used) .'</div>';
-            }
-            $html .= '<ul id="tracker_query">'. implode('', $criteria_fetched) .'</ul>';
-            $html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></div>';
-            $html .= '</form>';
-            $html .= '</div>';
+            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $current_user);
             
             //Display Renderers
             $html .= '<div>';

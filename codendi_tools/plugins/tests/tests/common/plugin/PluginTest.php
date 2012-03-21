@@ -1,6 +1,8 @@
 <?php
+
 require_once('common/plugin/Plugin.class.php');
 Mock::generatePartial('Plugin', 'PluginTestVersion', array('_getPluginManager'));
+
 class TestPlugin extends Plugin {
     function addHook($hook, $callback = 'CallHook', $recallHook = true) {
         $this->_addHook($hook, $callback, $recallHook);
@@ -9,8 +11,10 @@ class TestPlugin extends Plugin {
         $this->_removeHook($hook);
     }
 }
+
 require_once('common/plugin/PluginManager.class.php');
 Mock::generate('PluginManager');
+
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  * 
@@ -140,6 +144,7 @@ class PluginTest extends UnitTestCase {
         $this->assertEqual($p->getPluginPath(), $GLOBALS['sys_pluginspath'].'/'.$shortname);
         $this->assertEqual($p->getPluginPath(), $GLOBALS['sys_custompluginspath'].'/'.$shortname);
     }
+    
     function testGetThemePath() {
         $GLOBALS['sys_user_theme']        = 'current_theme';
         $GLOBALS['sys_pluginspath']       = '/plugins';
@@ -236,7 +241,24 @@ class PluginTest extends UnitTestCase {
         rmdir(dirname($GLOBALS['sys_custompluginsroot']));
     }
 
-
+    function testGetThemePathShouldReturnNullIfNoUserTheme() {
+        unset($GLOBALS['sys_user_theme']);
+        $GLOBALS['sys_pluginspath']       = '/plugins';
+        $GLOBALS['sys_custompluginspath'] = '/customplugins';
+        $GLOBALS['sys_pluginsroot']       = dirname(__FILE__).'/test/plugins/';
+        $GLOBALS['sys_custompluginsroot'] = dirname(__FILE__).'/test/custom/';
+        
+        $shortname     = 'shortname';
+        $pm = new MockPluginManager($this);
+        $pm->setReturnValue('getNameForPlugin', $shortname);
+        
+        $p = new PluginTestVersion($this);
+        $p->setReturnReference('_getPluginManager', $pm);
+        $p->Plugin();
+        
+        $this->assertEqual($p->getThemePath(), '');
+    }
+    
     function testGetFilesystemPath() {
         $GLOBALS['sys_pluginsroot']       = '/my/application';
 

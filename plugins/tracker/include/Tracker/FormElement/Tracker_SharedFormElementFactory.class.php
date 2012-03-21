@@ -33,6 +33,10 @@ class Tracker_SharedFormElementFactory {
         $this->factory = $factory;
     }
     
+    public function getDao() {
+        return new Tracker_FormElement_FieldDao();
+    }
+    
     public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {
         $field = $this->getRootOriginalField($this->factory->getFormElementById($formElement_data['field_id']));
         $this->assertFieldCanBeCopied($field, $user);
@@ -43,7 +47,7 @@ class Tracker_SharedFormElementFactory {
         $this->boundValuesFactory->duplicateByReference($field->getId(), $id);
         return $id;
     }
-
+    
     private function getRootOriginalField(Tracker_FormElement $field) {
         $originalField = $field->getOriginalField();
         if ($originalField === null) {
@@ -83,6 +87,19 @@ class Tracker_SharedFormElementFactory {
             'notifications'     => $originField->hasNotifications(),
             'original_field_id' => $originField->getId(),
         );
+    }
+    
+    /**
+     * @return Tracker_FormElement
+     */
+    public function getFieldFromTrackerAndSharedField(Tracker $tracker, Tracker_FormElement $shared) {
+        $dar = $this->getDao()->searchFieldFromTrackerIdAndSharedFieldId($tracker->getId(), $shared->getId());
+        $row = $dar->getRow();
+        if ($row) {
+            $field_id = $row['id'];
+            return $this->factory->getFormElementById($field_id);
+        }
+        return null;
     }
 }
 

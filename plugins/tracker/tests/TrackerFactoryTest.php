@@ -20,6 +20,7 @@
 
 //require_once('common/dao/include/DataAccessObject.class.php');
 //require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_Tooltip.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerFactory.class.php');
@@ -216,6 +217,23 @@ class TrackerFactoryTest extends UnitTestCase {
         $tracker_factory->expectOnce('create', array(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', null)); // how to test that the args are 1234 and not 5678???
         
         $tracker_factory->duplicate(100, 999, null);
+    }
+    
+    public function testGetPossibleChildrenShouldNotContainSelf() {
+        $current_tracker   = aTracker()->withId(1)->withName('Stories')->build();
+        $expected_children = array(
+            '2' => aTracker()->withId(2)->withName('Bugs')->build(),
+            '3' => aTracker()->withId(3)->withName('Tasks')->build(),
+        );
+        $all_project_trackers      = $expected_children;
+        $all_project_trackers['1'] = $current_tracker;
+        
+        $tracker_factory   = TestHelper::getPartialMock('TrackerFactory', array('getTrackersByGroupId'));
+        $tracker_factory->setReturnValue('getTrackersByGroupId', $all_project_trackers);
+        
+        $possible_children = $tracker_factory->getPossibleChildren($current_tracker);
+        
+        $this->assertEqual($possible_children, $expected_children);
     }
 }
 ?>

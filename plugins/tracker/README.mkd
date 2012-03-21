@@ -1,0 +1,49 @@
+Tracker Next Generation
+=======================
+
+Track, trace, link everything
+-----------------------------
+
+A powerful tracking system with extensive configuration capabilities to manage all your project items
+
+ - Track **any type of project artifacts**: risks, requirements, tasks, bugs, support requests, patches but also budget, providers; vacation…
+ - Trace and link artifacts back to source code, build, document, chat discussion, release and more
+ - Easily **customize trackers** to match your activity and fit your unique needs
+ - Tailor each tracker **workflow** to setup automatic actions
+ - Normalize process by creating your own trackers and save them as **templates**
+ - **Fine-grained permissions** that specify who can read and modifiy each tracker and each field
+ - Run **personalized searches** in trackers
+ - Generate **personalized graphs**
+ - Add reports you want to your **personal or project dashboard**
+ - **Import-export** data from or to third tool
+ - Keep up-to-date with **email notification alerts**
+
+Screenshots
+-----------
+
+![Screenshot of an artifact](http://www.tuleap.com/sites/default/files/styles/x-large/public/artifacts-traceability.png)
+
+![Screenshot of the admin interface](http://www.tuleap.com/sites/default/files/styles/x-large/public/easy-customizable-tracker.png)
+
+Installation
+============
+
+Templates
+---------
+
+You may need to define templates in your template project(s).
+
+A cli script will help you in this task. As codendiadm:
+
+    $ cd /usr/share/codendi/
+    $ src/utils/php-launcher.sh plugins/tracker/bin/import_tracker_xml_template.php plugins/tracker/www/resources/templates/<choose-a-template>.xml
+
+Dependencies
+------------
+
+We suggest to install also the following associated plugins
+
+- graphontrackers (v5)
+- cardwall
+- agiledashboard
+

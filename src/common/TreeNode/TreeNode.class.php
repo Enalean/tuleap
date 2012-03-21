@@ -47,19 +47,29 @@ class TreeNode /*implements Visitable*/ {
      */
     var $parentNode;
     
-
+    private $id;
+    
+    
     /**
      * Constructor
      */
     function TreeNode($data=null) {
+        $this->id = uniqid();
         /*if(func_num_args() !== 0) {
             trigger_error(get_class($this).'::TreeNode => Do not accept arguments', E_USER_ERROR);
         }*/
         $this->data       = $data;
-        $this->children   = null;
+        $this->children   = array();
         $this->parentNode = null;
     }
-
+    
+    public function getId() {
+        return $this->id;
+    }
+    
+    public function setId($id) {
+        $this->id = $id;
+    }
 
     /**
      * Set data for current node.
@@ -112,13 +122,13 @@ class TreeNode /*implements Visitable*/ {
      *
      * @param TreeNode &$c A TreeNode (reference call)
      */
-    function addChild(&$c) {
+    function addChild($c) {
         if(is_object($c) && is_a($c, get_class($this))) {
             if($this->children === null) {
                 $this->children = array();
             }
             $c->_setParentNode($this);
-            $this->children[] =& $c;
+            $this->children[] = $c;
         }
         else {
             trigger_error(get_class($this).'::addChild => require: "'.get_class($this).'" given: "'.gettype($c).'"', E_USER_ERROR);
@@ -198,7 +208,15 @@ class TreeNode /*implements Visitable*/ {
      * @param Visitor
      */
     function accept(&$visitor, $params = null) {
-        $visitor->visit($this, $params);
+        return $visitor->visit($this, $params);
+    }
+    
+    public function __toString() {
+        $children_as_string = '';
+        foreach ($this->getChildren() as $child) {
+            $children_as_string .= $child->__toString() .",\n";
+        }
+        return 'TreeNode #'. $this->id ." {\n $children_as_string }\n";
     }
 }
 

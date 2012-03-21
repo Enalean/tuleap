@@ -327,7 +327,95 @@ class Tracker_FormElement_FieldDao extends DataAccessObject {
     
     public function searchSharedTargets($id) {
         $id  = $this->da->escapeInt($id);
-        $sql = "SELECT id FROM tracker_field WHERE original_field_id = $id";
+        $sql = "SELECT * FROM tracker_field WHERE original_field_id = $id";
+        return $this->retrieve($sql);
+    }
+    
+    private function getSqlForAllSharedTargetsOfProject($project_id) {
+        $project_id  = $this->da->escapeInt($project_id);
+        $sql = "SELECT f_target.*
+                FROM tracker_field f_target 
+                  JOIN tracker_field f_src ON (f_target.original_field_id = f_src.id) 
+                  JOIN tracker ON (f_src.tracker_id = tracker.id)
+                WHERE tracker.group_id = $project_id
+                  AND f_target.use_it = 1";
+        return $sql;
+    }
+    
+    private function getSqlForAllSharedSourcesOfProject($project_id) {
+        $project_id  = $this->da->escapeInt($project_id);
+        $sql = "SELECT tracker_field.*
+                FROM tracker_field 
+                INNER JOIN tracker ON tracker.id = tracker_field.tracker_id 
+                WHERE tracker.group_id = $project_id 
+                  AND tracker_field.original_field_id != 0
+                  AND tracker_field.use_it = 1";
+        return $sql;
+    }
+    
+    public function searchProjectSharedFieldsOriginals($project_id) {
+        $source_sql = $this->getSqlForAllSharedSourcesOfProject($project_id);
+        $target_sql = $this->getSqlForAllSharedTargetsOfProject($project_id);
+        
+        $sql = "SELECT * FROM (($source_sql) UNION ($target_sql)) AS combined
+                GROUP BY original_field_id";
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Returns:
+     * - all the fields that are a copy of fields defined in the project
+     * - and the original shared field description
+     *
+     * Warning: the 2 parts of the union are deeply integrated, the second union
+     * query is an extension of the first one
+     * 
+     * @return DataAccessResult
+     */
+    public function searchAllSharedFieldsOfProject($project_id) {
+        $project_id = $this->da->escapeInt($project_id);
+        $sql = "SELECT * FROM
+                ((SELECT f_target.*
+                  FROM tracker_field   AS f_target 
+                    JOIN tracker_field AS f_src    ON (f_target.original_field_id = f_src.id) 
+                    JOIN tracker                   ON (f_src.tracker_id           = tracker.id)
+                  WHERE tracker.group_id = $project_id
+                  AND f_target.use_it = 1)
+        
+                 UNION
+        
+                (SELECT f_original.*
+                  FROM tracker_field   AS f_original
+                    JOIN tracker_field AS f_target   ON (f_original.id              = f_target.original_field_id)
+                    JOIN tracker_field AS f_src      ON (f_target.original_field_id = f_src.id) 
+                    JOIN tracker                     ON (f_src.tracker_id           = tracker.id)
+                  WHERE tracker.group_id = $project_id
+                  AND f_target.use_it = 1)
+
+                ) as combined";
+        return $this->retrieve($sql);
+    }
+    
+    public function searchFieldFromTrackerIdAndSharedFieldId($tracker_id, $shared_field_id) {
+        $tracker_id      = $this->da->escapeInt($tracker_id);
+        $shared_field_id = $this->da->escapeInt($shared_field_id);
+        
+        $sql = "SELECT f1.id
+                FROM tracker_field AS f1
+                INNER JOIN tracker_field AS f2 ON (
+                        f2.id = $shared_field_id
+                    AND f1.use_it = 1
+                    AND (
+                            f2.id = f1.id
+                        OR
+                            f2.original_field_id = f1.id
+                        OR
+                            f2.id = f1.original_field_id
+                        OR
+                            (f2.original_field_id = f1.original_field_id AND f1.original_field_id <> 0)
+                        )
+                )
+                WHERE f1.tracker_id = $tracker_id";
         return $this->retrieve($sql);
     }
     

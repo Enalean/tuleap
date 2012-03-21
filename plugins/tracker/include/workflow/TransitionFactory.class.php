@@ -162,20 +162,24 @@ class TransitionFactory {
         
         $transition = new Transition(0, 0, $from, $to);
         $postactions = array();
-        $tpaf = new Transition_PostActionFactory();
-        foreach ($xml->postactions->postaction_field_date as $p) {            
-            $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
+        if ($xml->postactions) {
+            $tpaf = new Transition_PostActionFactory();
+            foreach ($xml->postactions->postaction_field_date as $p) {            
+                $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
+            }
         }
         $transition->setPostActions($postactions);
         
         //Permissions on transition
-        $permissions = array();
-        foreach ($xml->permissions->permission as $perm) {
-            $ugroup = (string) $perm['ugroup'];
-            if (isset($GLOBALS['UGROUPS'][$ugroup])) {
-                $permissions[] = $GLOBALS['UGROUPS'][$ugroup];
+        if ($xml->permissions) {
+            $permissions = array();
+            foreach ($xml->permissions->permission as $perm) {
+                $ugroup = (string) $perm['ugroup'];
+                if (isset($GLOBALS['UGROUPS'][$ugroup])) {
+                    $permissions[] = $GLOBALS['UGROUPS'][$ugroup];
+                }
+                $transition->setPermissions($permissions);
             }
-            $transition->setPermissions($permissions);
         }
         
         return $transition;
@@ -348,7 +352,7 @@ class TransitionFactory {
         $pm = PermissionsManager::instance();        
         $permission_type = array('PLUGIN_TRACKER_WORKFLOW_TRANSITION');
         //Duplicate tracker permissions
-        $pm->duplicatePermissions($from_transition_id, $transition_id, $permission_type, $duplicate_type, $ugroup_mapping);
+        $pm->duplicatePermissions($from_transition_id, $transition_id, $permission_type, $ugroup_mapping, $duplicate_type);
     }
 }
 ?>

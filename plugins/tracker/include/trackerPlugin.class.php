@@ -21,18 +21,12 @@ require_once('common/plugin/Plugin.class.php');
 
 define('TRACKER_BASE_URL', '/plugins/tracker');
 define('TRACKER_BASE_DIR', dirname(__FILE__));
+define('TRACKER_EVENT_INCLUDE_CSS_FILE', 'tracker_event_include_css_file');
 
 /**
  * trackerPlugin
  */
 class trackerPlugin extends Plugin {
-    
-    /**
-     * @var bool True if the plugin should be disabled for all projects on installation
-     *
-     * Usefull only for plugins with scope == SCOPE_PROJECT
-     */
-    public $isRestrictedByDefault = true; //until the plugin becomes stable
     
     public function __construct($id) {
         parent::__construct($id);
@@ -70,9 +64,12 @@ class trackerPlugin extends Plugin {
     }
 
     public function cssFile($params) {
+        $include_tracker_css_file = false;
+        EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
         // Only show the stylesheet if we're actually in the tracker pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+        if ($include_tracker_css_file ||
+            strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
@@ -130,6 +127,7 @@ class trackerPlugin extends Plugin {
     * @param Array $params
     */
     function register_project_creation($params) {
+        require_once('Tracker/TrackerManager.class.php');
         $tm = new TrackerManager();
         $tm->duplicate($params['template_id'], $params['group_id'], $params['ugroupsMapping']);
 
@@ -198,6 +196,9 @@ class trackerPlugin extends Plugin {
     }
     
     function permission_get_object_name($params) {
+        require_once 'Tracker/TrackerFactory.class.php';
+        require_once 'Tracker/FormElement/Tracker_FormElementFactory.class.php';
+        require_once 'Tracker/Artifact/Tracker_ArtifactFactory.class.php';
         if (!$params['object_name']) {
             $type = $this->getObjectTypeFromPermissions($params);
             if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
@@ -237,6 +238,8 @@ class trackerPlugin extends Plugin {
     }
     
     function permissions_for_ugroup($params) {
+        require_once 'Tracker/FormElement/Tracker_FormElementFactory.class.php';
+        require_once 'workflow/TransitionFactory.class.php';
         if (!$params['results']) {
             
             $group_id = $params['group_id'];
@@ -273,6 +276,10 @@ class trackerPlugin extends Plugin {
     
     var $_cached_permission_user_allowed_to_change;
     function permission_user_allowed_to_change($params) {
+        require_once 'Tracker/TrackerFactory.class.php';
+        require_once 'Tracker/FormElement/Tracker_FormElementFactory.class.php';
+        require_once 'workflow/TransitionFactory.class.php';
+        require_once 'Tracker/Artifact/Tracker_ArtifactFactory.class.php';
         if (!$params['allowed']) {
             $allowed = array(
                 'PLUGIN_TRACKER_ADMIN', 
@@ -328,6 +335,7 @@ class trackerPlugin extends Plugin {
     }
     
     public function ajax_reference_tooltip($params) {
+        require_once 'Tracker/Artifact/Tracker_ArtifactFactory.class.php';
         if ($params['reference']->getServiceShortName() == 'plugin_tracker') {
             if ($params['reference']->getNature() == Tracker_Artifact::REFERENCE_NATURE) {
                 $user = UserManager::instance()->getCurrentUser();
@@ -398,6 +406,7 @@ class trackerPlugin extends Plugin {
     }
     
     function service_public_areas($params) {
+        require_once 'Tracker/TrackerFactory.class.php';
         if ($params['project']->usesService('plugin_tracker')) {
             $tf = TrackerFactory::instance();
             

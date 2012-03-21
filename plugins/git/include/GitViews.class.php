@@ -20,6 +20,7 @@
  */
 
 require_once('mvc/PluginViews.class.php');
+require_once('gitPlugin.class.php');
 require_once('GitDao.class.php');
 require_once('Git_LogDao.class.php');
 require_once('GitBackend.class.php');
@@ -176,9 +177,12 @@ class GitViews extends PluginViews {
                 $repoActions .= '<li>'.$this->linkTo($this->getText('admin_repo_management'), '/plugins/git/?action=repo_management&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_admin"').'</li>';
             }
 
+            /** Disable fork of gitshell repositories **/
+            /*
             if ($initialized && $this->getController()->isAPermittedAction('clone') && !($repository->getBackend() instanceof Git_Backend_Gitolite)) {
                 $repoActions .= '<li>'.$this->linkTo($this->getText('admin_fork_creation_title'), '/plugins/git/?action=fork&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_fork"').'</li>';
             }
+            */
             $repoActions .= '</ul>';
 
             echo '<div id="plugin_git_reference">';
@@ -611,48 +615,96 @@ class GitViews extends PluginViews {
         $params = $this->getData();
         $this->_getBreadCrumb();
         echo '<h2>'. $this->getText('fork_repositories') .'</h2>';
-        echo '<p>'. $this->getText('fork_repositories_desc') .'</p>';
-        
-        echo '<form action="" method="POST">';
-        echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
-        echo '<input type="hidden" name="action" value="do_fork_repositories" />';
-        $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
-        echo $token->fetchHTMLInput();
-        
-        echo '<table id="fork_repositories" cellspacing="0">';
-        echo '<thead>';
-        echo '<tr valign="top">';
-        echo '<td class="first">';
-        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label>';
-        echo '</td>';
-        echo '<td>';
-        echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label>';
-        echo '</td>';
-        echo '<td class="last">&nbsp;</td>';
-        echo '</tr>';
-        echo '</thead>';
-                
-        echo '<tbody><tr valign="top">';
-        echo '<td class="first">';
-        $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
-        echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
-        echo '</td>';
-        
-        echo '<td>';
-        echo '<input type="text" placeholder="'. $this->getText('fork_repositories_placeholder') .'" id="fork_repositories_path" name="path" />';
-        echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
-        echo '</td>';
-        
-        echo '<td class="last">';
-        echo '<input type="submit" value="'. $this->getText('fork_repositories_submit') .'" />';
-        echo '</td>';
-        
-        echo '</tr></tbody></table>';
-        
-        echo '</form>';
+        echo $this->getText('fork_repositories_desc');
+        if ( !empty($params['repository_list']) ) {
+            echo '<form action="" method="POST">';
+            echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
+            echo '<input type="hidden" name="action" value="do_fork_repositories" />';
+            $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
+            echo $token->fetchHTMLInput();
+
+            echo '<table id="fork_repositories" cellspacing="0">';
+            echo '<thead>';
+            echo '<tr valign="top">';
+            echo '<td class="first">';
+            echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_select') .'</label>';
+            echo '</td>';
+            echo '<td>';
+            echo '<label style="font-weight: bold;">'. $this->getText('fork_destination_project') .'</label>';
+            echo '</td>';
+            echo '<td>';
+            echo '<label style="font-weight: bold;">'. $this->getText('fork_repositories_path') .'</label>';
+            echo '</td>';
+            echo '<td class="last">&nbsp;</td>';
+            echo '</tr>';
+            echo '</thead>';
+
+            echo '<tbody><tr valign="top">';
+            echo '<td class="first">';
+            $strategy = new GitViewsRepositoriesTraversalStrategy_Selectbox($this);
+            echo $strategy->fetch($params['repository_list'], $this->user);
+            echo '</td>';
+
+            echo '<td>';
+            echo '<div>
+                <input id="choose_personal" type="radio" name="choose_destination" value="personal" checked="true" />
+                <label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
+            </div>';
+
+            echo $this->fetchCopyToAnotherProject();
+
+            echo '</td>';
+
+            echo '<td>';
+            $placeholder = $this->getText('fork_repositories_placeholder');
+            echo '<input type="text" title="'. $placeholder .'" placeholder="'. $placeholder .'" id="fork_repositories_path" name="path" />';
+            echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
+            echo '</td>';
+
+            echo '<td class="last">';
+            echo '<input type="submit" value="'. $this->getText('fork_repositories') .'" />';
+            echo '</td>';
+
+            echo '</tr></tbody></table>';
+
+            echo '</form>';
+        }
         echo '<br />';
     }
-
+    
+    private function fetchCopyToAnotherProject() {
+        $html = '';
+        $userProjectOptions = $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
+        if ($userProjectOptions) {
+            $html .= '<div>
+                <input id="choose_project" type="radio" name="choose_destination" value="project" />
+                <label for="choose_project">'.$this->getText('fork_choose_destination_project').'</label>
+            </div>';
+            
+            $html .= '<select name="to_project" id="fork_destination">';
+            $html .= $userProjectOptions;
+            $html .= '</select>';
+        }
+        return $html;
+    }
+    
+    public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
+        $purifier   = Codendi_HTMLPurifier::instance();
+        $html       = '';
+        $option     = '<option value="%d" title="%s">%s</option>';
+        $usrProject = array_diff($user->getAllProjects(), array($currentProjectId));
+        
+        foreach ($usrProject as $projectId) {
+            $project = $manager->getProject($projectId);
+            if ($user->isMember($projectId, 'A') && $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+                $projectName     = $purifier->purify($project->getPublicName());
+                $projectUnixName = $purifier->purify($project->getUnixName()); 
+                $html           .= sprintf($option, $projectId, $projectUnixName, $projectName);
+            }
+        }
+        return $html;
+    }
+    
     /**
      * TREE SUBVIEW
      */
@@ -689,12 +741,15 @@ class GitViews extends PluginViews {
 
             $lastPushes = array();
             $dao = new Git_LogDao();
-            $dar = $dao->searchLastPushesForProject($this->groupId);
-            foreach ($dar as $row) {
-                $lastPushes[$row['repository_id']] = $row;
+            foreach ($params['repository_list'] as $repository) {
+                $id  = $repository['repository_id'];
+                $dar = $dao->searchLastPushForRepository($id);
+                if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                    $lastPushes[$id] = $dar->getRow();
+                }
             }
             $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($this, $lastPushes);
-            echo $strategy->fetch($params['repository_list'], UserManager::instance()->getCurrentUser());
+            echo $strategy->fetch($params['repository_list'], $this->user);
         }
         else {
             echo "<h3>".$this->getText('tree_msg_no_available_repo')."</h3>";

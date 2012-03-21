@@ -21,14 +21,18 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
-require_once('GitActions.class.php');
-require_once('Git_PostReceiveMailManager.class.php');
 
 /**
  * GitPlugin
  */
 class GitPlugin extends Plugin {
-
+    
+    /**
+     * Service short_name as it appears in 'service' table
+     * 
+     * Should be transfered in 'ServiceGit' class when we introduce it
+     */
+    const SERVICE_SHORTNAME = 'plugin_git';
 
     public function __construct($id) {
         parent::__construct($id);
@@ -129,16 +133,19 @@ class GitPlugin extends Plugin {
     }
 
     public function changeProjectRepositoriesAccess($params) {
+        require_once('GitActions.class.php');
         $groupId   = $params[0];
         $isPrivate = $params[1];
         GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate);
     }
 
     public function systemEventProjectRename($params) {
+        require_once('GitActions.class.php');
         GitActions::renameProject($params['project'], $params['new_name']);
     }
 
     public function file_exists_in_data_dir($params) {
+        require_once('GitActions.class.php');
         $params['result'] = GitActions::isNameAvailable($params['new_name'], $params['error']);
     }
 
@@ -165,7 +172,7 @@ class GitPlugin extends Plugin {
         $path = $GLOBALS['sys_data_dir'].'/gitolite/repositories/'.strtolower($row['unix_group_name']);
         $sum += $params['DiskUsageManager']->getDirSize($path);
 
-        $params['DiskUsageManager']->_getDao()->addGroup($row['group_id'], 'plugin_git', $sum, $_SERVER['REQUEST_TIME']);
+        $params['DiskUsageManager']->_getDao()->addGroup($row['group_id'], self::SERVICE_SHORTNAME, $sum, $_SERVER['REQUEST_TIME']);
     }
 
     /**
@@ -174,7 +181,7 @@ class GitPlugin extends Plugin {
      * @param array $params
      */
     function plugin_statistics_disk_usage_service_label($params) {
-        $params['services']['plugin_git'] = 'Git';
+        $params['services'][self::SERVICE_SHORTNAME] = 'Git';
     }
 
     /**
@@ -183,7 +190,7 @@ class GitPlugin extends Plugin {
      * @param array $params
      */
     function plugin_statistics_color($params) {
-        if ($params['service'] == 'plugin_git') {
+        if ($params['service'] == self::SERVICE_SHORTNAME) {
             $params['color'] = 'palegreen';
         }
     }
@@ -204,6 +211,7 @@ class GitPlugin extends Plugin {
         $userManager = UserManager::instance();
         $user = $userManager->getUserById($userId);
 
+        require_once('Git_PostReceiveMailManager.class.php');
         $notificationsManager = new Git_PostReceiveMailManager();
         $notificationsManager->removeMailByProjectPrivateRepository($groupId, $user);
 
@@ -215,6 +223,7 @@ class GitPlugin extends Plugin {
      * @param array $params
      */
     public function edit_ssh_keys($params) {
+        require_once 'Git_GitoliteDriver.class.php';
         $user = UserManager::instance()->getUserById($params['user_id']);
         if ($user) {
             $gitolite = new Git_GitoliteDriver();
@@ -350,6 +359,7 @@ class GitPlugin extends Plugin {
      * @return void
      */
     public function project_is_deleted($params) {
+        require_once('GitActions.class.php');
         if (!empty($params['group_id'])) {
             $projectId = intval($params['group_id']);
             // Delete all gitolite repositories of the project
@@ -370,7 +380,8 @@ class GitPlugin extends Plugin {
      */
     public function statistics_collector($params) {
         if (!empty($params['formatter'])) {
-            $formatter = $params['formatter'];
+            include_once('GitBackend.class.php');
+            $formatter  = $params['formatter'];
             $gitBackend = Backend::instance('Git','GitBackend');
             echo $gitBackend->getBackendStatistics($formatter);
         }

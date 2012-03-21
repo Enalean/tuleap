@@ -1,5 +1,32 @@
-DISCLAIMER: plugin still in beta, do not use it on production servers.
-DISCLAIMER: Your data might be trashed in a future update.
+Version 5.4.1 - Tuleap 4.0.28
+  * Fix upgrade script for tracker_hierarchy table.
+
+Version 5.4 - Tuleap 4.0.28
+  * Allow to do cross tracker search based on shared fields.
+
+Version 5.3.1 - Tuleap 4.0.28
+  * Fix bug on hierarchy definition
+
+Version 5.3 - Tuleap 4.0.28
+  * Allow to define a hierarchy of trackers:
+    Epics
+    `-- Stories
+        |-- Tasks
+        `-- Bugs
+   * Introduce usage of 'mustache' as a templating library.
+
+Version 5.1.2 - Tuleap 4.0.27
+  * Fix unit test with php 5.3
+
+Version 5.1.1 - Tuleap 4.0.27
+  * Fix inclusion of files.
+
+Version 5.1 - Tuleap 4.0.27
+  * Fix issue with permissions while cloning trackers
+
+Version 5.0 - Tuleap 4.0.27
+  * Change version number
+  * Reduce memory consumption by not loading all plugin's class for each hit.
 
 Version 0.9.1 - Tuleap 4.0.27
   * Fix issue: float fields and number > 1000

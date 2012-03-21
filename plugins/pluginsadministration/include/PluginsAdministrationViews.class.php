@@ -83,10 +83,11 @@ class PluginsAdministrationViews extends Views {
             $plugin =& $plugin_manager->getPluginByName($request->get('name'));
             if(!$plugin) {
                 echo '<p>You\'re about to install '. $request->get('name') .'.</p>';
-                $r = $plugin_manager->getReadme($request->get('name'));
-                if ($r) {
+                $readme_file    = $plugin_manager->getInstallReadme($request->get('name'));
+                $readme_content = $plugin_manager->fetchFormattedReadme($readme_file);
+                if ($readme_content) {
                     echo '<p>Please read the following:</p>';
-                    echo '<pre style="border:1px solid black;">'. $r .'</pre>';
+                    echo $readme_content;
                 }
                 echo '<form action="?" method="GET">';
                 echo '<input type="hidden" name="action" value="install" />';
@@ -304,10 +305,11 @@ EOS;
                 $output .= '</table>';
                 $output .= '</form>';
                 
-                $readme = $plugin->getReadme();
-                if ($readme) {
+                $readme_file    = $plugin->getReadme();
+                $readme_content = $plugin_manager->fetchFormattedReadme($readme_file);
+                if ($readme_content) {
                     $output .= '<h3>Readme</h3>';
-                    $output .= '<pre>'.$readme.'</pre>';
+                    $output .= $readme_content;
                 }
                 
                 $output .= '<div><a href="'.$link_to_plugins.'">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return').'</a></div>';

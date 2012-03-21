@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker/TrackerManager.class.php');
 class ServiceTracker extends Service {
     /**
      * Display header for service tracker
@@ -43,8 +42,16 @@ class ServiceTracker extends Service {
      * @return void
      */
     public function duplicate($to_project_id, $ugroup_mapping) {
-        $tracker_manager = new TrackerManager();
+        $tracker_manager = $this->getTrackerManager();
         $tracker_manager->duplicate($this->project->getId(), $to_project_id, $ugroup_mapping);
+    }
+    
+    /**
+     * @return TrackerManager 
+     */
+    protected function getTrackerManager() {
+        require_once('Tracker/TrackerManager.class.php');
+        return new TrackerManager();
     }
     
     /**

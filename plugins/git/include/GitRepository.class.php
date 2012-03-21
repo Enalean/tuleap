@@ -20,6 +20,7 @@
 
 
 require_once('GitBackend.class.php');
+require_once('Git_Backend_Gitolite.class.php');
 require_once('GitDriver.class.php');
 require_once('GitDao.class.php');
 require_once('PathJoinUtil.php');
@@ -118,7 +119,11 @@ class GitRepository implements DVCSRepository {
     }
 
     /**
-     * Wrapper
+     * WARNING: this method will attempt to "Lazy load" the current object
+     *          do not use it or kitten will die.
+     * 
+     * @deprecated
+     * 
      * @return Boolean
      */
     public function exists() {
@@ -129,8 +134,17 @@ class GitRepository implements DVCSRepository {
         }
         return true;
     }
+    
     /**
-     * Loads data from database
+     * Loads data from database. Use GitRepositoryFactory instead.
+     * 
+     * WARNING: this method will attempt to "Lazy load" the current object
+     *          do not use it or kitten will die.
+     * 
+     * @see GitRepositoryFactory
+     * 
+     * @deprecated
+     * 
      */
     public function load($force=false) {
         //already loaded
@@ -244,7 +258,7 @@ class GitRepository implements DVCSRepository {
      * @param GitRepository $parentRepository
      */
     public function setParent($parentRepository) {
-        $this->parent   = $parentRepository;       
+        $this->parent = $parentRepository;
     }
 
     /**
@@ -253,7 +267,7 @@ class GitRepository implements DVCSRepository {
      * @return GitRepository
      */
     public function getParent() {
-        if ( empty($this->parent) ) {            
+        if ( empty($this->parent) ) {
             $this->load();            
             $parent = new GitRepository();
             $parent->setId($this->parentId);
@@ -281,7 +295,7 @@ class GitRepository implements DVCSRepository {
      */
     public function getProject() {
         return $this->project;
-    }      
+    }
 
     public function getProjectId() {
         $project = $this->getProject();
@@ -460,6 +474,12 @@ class GitRepository implements DVCSRepository {
 
     /**
      * Gives the root path which is the project directory
+     * 
+     * WARNING: this method will attempt to "Lazy load" the current object
+     *          do not use it or kitten will die.
+     * 
+     * @deprecated
+     * 
      * @return String
      */
     public function getRootPath() {
@@ -506,12 +526,32 @@ class GitRepository implements DVCSRepository {
             if ( empty($rootPath) || empty($name) ) {
                 $this->path = '';
             } else {
-                $this->path = $rootPath.DIRECTORY_SEPARATOR.$name.self::REPO_EXT;
+                $this->path = $this->getPathFromProjectAndName($this->project, $name);
             }
         }
         return $this->path;
     }
+    
+    /**
+     * Gives the full relative path (from git root directory) to the repository.
+     * 
+     * Countrary of self::getPath, this method will not attempt to load the
+     * current object from the database if object is not already built from the DB.
+     * It's especially useful on repository creation.
+     * 
+     * @return String 
+     */
+    public function getPathWithoutLazyLoading() {
+        if (!$this->path) {
+            $this->path = $this->getPathFromProjectAndName($this->getProject(), $this->getName());
+        }
+        return $this->path;
+    }
 
+    public static function getPathFromProjectAndName(Project $project, $name) {
+        return $project->getUnixName().DIRECTORY_SEPARATOR.$name.self::REPO_EXT;
+    }
+    
     /**
      * Return path on the filesystem where the repositories are stored.
      *
@@ -616,21 +656,20 @@ class GitRepository implements DVCSRepository {
         $clone->setDescription('-- Default description --');
         $this->getBackend()->createFork($clone);
     }
-        
-    public function fork($namespace, $user) {
+    
+    public function fork($user, $namespace, $scope, Project $project) {
         $clone = clone $this;
-                
+        $clone->setProject($project);
         $clone->setCreator($user);
         $clone->setParent($this);
         $clone->setNamespace($namespace);
         $clone->setId(null);
-        $path = unixPathJoin(array($this->project->getUnixName(), $namespace, $this->getName())).'.git';
+        $path = unixPathJoin(array($project->getUnixName(), $namespace, $this->getName())).'.git';
         $clone->setPath($path);
-        $clone->setScope(self::REPO_SCOPE_INDIVIDUAL);
+        $clone->setScope($scope);
         $this->getBackend()->fork($this, $clone);
     }
     
-
     /**
      * Create a reference repository
      */
@@ -784,7 +823,8 @@ class GitRepository implements DVCSRepository {
                !preg_match('`(?:^|/)\.`', $name) && //do not allow dot at the begining of a world
                !preg_match('%/$|^/%', $name) && //do not allow a slash at the beginning nor the end
                !preg_match('`\.\.`', $name) && //do not allow double dots (prevent path collisions)
-               !preg_match('/\.git$/', $name); //do not allow ".git" at the end since Tuleap will automatically add it, to avoid repository names like "repository.git.git"
+               !preg_match('/\.git$/', $name) && //do not allow ".git" at the end since Tuleap will automatically add it, to avoid repository names like "repository.git.git"
+               !preg_match('%^u/%', $name);
     }
     
     /**

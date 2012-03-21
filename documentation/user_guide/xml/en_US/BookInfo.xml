@@ -105,7 +105,7 @@
 
         <authorinitials>Laurent Julliard</authorinitials>
 
-        <revremark>First final version published on the &SYS_PRODUCT_NAME; site</revremark>
+        <revremark>First final version published.</revremark>
       </revision>
 
       <revision>
@@ -192,7 +192,7 @@
         <revremark>Major Release. Bug Attachment, CC List, new
         notification process, type of search criteria, Custom fields
         documented in the bug tracking system. Merge with existing
-        on-line &SYS_PRODUCT_NAME; help.</revremark>
+        on-line help.</revremark>
       </revision>
 
       <revision>
@@ -220,7 +220,7 @@
 
         <date>06-Feb-2003</date>
 
-        <authorinitials>St&eacute;phane Bouhet</authorinitials>
+        <authorinitials>Stéphane Bouhet</authorinitials>
 
         <revremark>Add the Email notification mechanism for the Task Manager.</revremark>
       </revision>
@@ -249,7 +249,7 @@
 
         <authorinitials>Laurent Julliard</authorinitials>
 
-        <revremark>New chapter about the &SYS_PRODUCT_NAME; generic tracker and modification in all impacted chapters.</revremark>
+        <revremark>New chapter about generic tracker and modification in all impacted chapters.</revremark>
       </revision>
       <revision>
         <revnumber>2.6.1</revnumber>
@@ -285,7 +285,7 @@
 
         <authorinitials>Nicolas Guerin</authorinitials>
 
-        <revremark>Added information about setting up WinCVS for &SYS_PRODUCT_NAME;, based on description for the TIFFany project</revremark>
+        <revremark>Added information about setting up WinCVS, based on description for the TIFFany project</revremark>
       </revision>
       <revision>
         <revnumber>2.6.5</revnumber>
@@ -441,7 +441,7 @@
         <authorinitials>Marie-Luise Schneider</authorinitials>
 
         <revremark>Patch Manager chapter is now deprecated.
-	Add a whole section about &SYS_PRODUCT_NAME; tracker templates in the Tracker chapter.
+	Add a whole section about tracker templates in the Tracker chapter.
 	This section is a copy paste of main processes from the deprecated Bug, SR, Patch 
 	and Task Manager chapters. In CVS and Subversion chapters refer to the new
 	tracker template section instead of the Patch Manager chapter.
@@ -590,7 +590,7 @@
 
         <authorinitials>Marie-Luise Schneider</authorinitials>
 
-        <revremark>Update chapters &SYS_PRODUCT_NAME; Site Overview,
+        <revremark>Update chapters Site Overview,
 	Creating a new Project, and Project Administration
 	for project templates.
         </revremark>
@@ -623,9 +623,9 @@
 
         <date>3-Apr-2007</date>
 
-        <authorinitials>&SYS_PRODUCT_NAME; team</authorinitials>
+        <authorinitials>Codex team</authorinitials>
 
-        <revremark>Update for the 3.2 &SYS_PRODUCT_NAME; release:
+        <revremark>Update for the 3.2 release:
         Documentation of the new File service, documentation of templates,
         documentation of CVS Watch, and many fixes (see SR #337).
         </revremark>
@@ -635,7 +635,7 @@
 
         <date>6-May-2008</date>
 
-        <authorinitials>&SYS_PRODUCT_NAME; team</authorinitials>
+        <authorinitials>Codex team</authorinitials>
 
         <revremark>Minor corrections, updates and links fix.
         </revremark>
@@ -643,7 +643,7 @@
       <revision>
         <revnumber>3.6</revnumber>
         <date>12-August-2008</date>
-        <authorinitials>&SYS_PRODUCT_NAME; team</authorinitials>
+        <authorinitials>Codex team</authorinitials>
         <revremark>CodeX to Codendi
         </revremark>
       </revision>
@@ -670,6 +670,16 @@
         <authorinitials>Enalean team</authorinitials>
         <revremark>
             Add burndown in GraphOnTrackers v5.
+        </revremark>
+      </revision>
+      
+      <revision>
+        <revnumber>4.0.27.2</revnumber>
+        <date>7-March-2012</date>
+        <authorinitials>Enalean team</authorinitials>
+        <revremark>
+            Update Git to remove references to Gitshell.
+            Remove beta status of Tracker v5.
         </revremark>
       </revision>
 

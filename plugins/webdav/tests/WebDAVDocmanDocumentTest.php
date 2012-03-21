@@ -34,6 +34,8 @@ Mock::generatePartial(
 array('getItem', 'getUtils', 'getProject')
 );
 Mock::generate('EventManager');
+require_once 'common/project/Project.class.php';
+Mock::generate('Project');
 
 /**
  * This is the unit test of WebDAVDocmanDocument
@@ -72,7 +74,6 @@ class WebDAVDocmanDocumentTest extends UnitTestCase {
         $item = new MockDocman_Item();
         $webDAVDocmanDocument->setReturnValue('getItem', $item);
         
-        $this->assertNoErrors();
         $webDAVDocmanDocument->delete();
     }
 
@@ -101,7 +102,6 @@ class WebDAVDocmanDocumentTest extends UnitTestCase {
         $webDAVDocmanDocument->setReturnValue('getItem', $item);
         
 
-        $this->assertNoErrors();
         $webDAVDocmanDocument->setName('newName');
     }
 

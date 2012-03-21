@@ -53,6 +53,7 @@ class UserManagerTest extends UnitTestCase {
         $GLOBALS['Response'] = new MockResponse($this);
         $GLOBALS['Language'] = new MockBaseLanguage($this);
     }
+    
     function tearDown() {
         unset($GLOBALS['Response']);
         unset($GLOBALS['Language']);
@@ -82,7 +83,6 @@ class UserManagerTest extends UnitTestCase {
         $user_1 = $um->getUserById(123);
         $user_2 = $um->getuserById(123);
         $this->assertReference($user_1, $user_2);
-        
     }
     
     function testCachingByUserName() {
@@ -109,7 +109,6 @@ class UserManagerTest extends UnitTestCase {
         $user_1 = $um->getUserByUserName('user_123');
         $user_2 = $um->getuserByUserName('user_123');
         $this->assertReference($user_1, $user_2);
-        
     }
     
     function testDoubleCaching() {
@@ -561,6 +560,7 @@ class UserManagerTest extends UnitTestCase {
     	$user->setReturnValue('isAnonymous', false);
     	$user->setReturnValue('isSuspended', false);
     	$user->setReturnValue('isDeleted',   false);
+        $user->setReturnValue('toRow',       array());
     	
     	// True
     	$daotrue = new MockUserDao($this);
@@ -618,6 +618,7 @@ class UserManagerTest extends UnitTestCase {
         $user->setReturnValue('getId', 123);
         $user->setReturnValue('isAnonymous', false);
         $user->setReturnValue('isSuspended', true);
+        $user->setReturnValue('toRow',       array());
 
         $dao = new MockUserDao($this);
         $dao->setReturnValue('updateByRow', true);
@@ -634,6 +635,7 @@ class UserManagerTest extends UnitTestCase {
         $user->setReturnValue('getId', 123);
         $user->setReturnValue('isAnonymous', false);
         $user->setReturnValue('isDeleted', true);
+        $user->setReturnValue('toRow',       array());
 
         $dao = new MockUserDao($this);
         $dao->setReturnValue('updateByRow', true);
@@ -727,6 +729,7 @@ class UserManagerTest extends UnitTestCase {
         $this->assertEqual($session_hash, 'session_hash');
         
     }
+    
     private function aUserWithStatusAndId($status, $id) {
         $userLoginAs = new MockUser();
         $userLoginAs->setReturnValue('getStatus', $status);
@@ -739,6 +742,7 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnValue('getCurrentUser', $user);
         return $um;
     }
+    
     function injectUser(UserManager $um, $name, $status) {
         $whatever = 999;
         $user = $this->aUserWithStatusAndId($status, $whatever);
@@ -751,7 +755,6 @@ class UserManagerTest extends UnitTestCase {
         $adminUser = new MockUser($this);
         $adminUser->setReturnValue('isSuperUser', true);
         return $adminUser;
-        
     }
 }
 

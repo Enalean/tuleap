@@ -137,13 +137,6 @@ class TestDocmanFile extends WebDAVDocmanFile {
 
 class WebDAVTreeTest extends UnitTestCase {
 
-    /**
-     * Constructor of the test. Can be ommitted.
-     * Usefull to set the name of the test
-     */
-    function WebDAVTreeTest($name = 'WebDAVTreeTest') {
-        $this->UnitTestCase($name);
-    }
 
     function setUp() {
 
@@ -240,8 +233,7 @@ class WebDAVTreeTest extends UnitTestCase {
 
         $node->expectOnce('setName');
         $node->expectNever('move');
-        $this->assertNoErrors();
-
+        
         $tree->move('project1/package1/release1', 'project1/package1/release2');
     }
 

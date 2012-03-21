@@ -39,6 +39,7 @@ input[name=tracker_query_submit] {
 }
 
 #tracker_report_renderers,
+#tracker-home-nav,
 .tracker-form-element-artifactlink-list-nav {
     padding: 5px 1em 3px;
     margin: 0;
@@ -47,6 +48,14 @@ input[name=tracker_query_submit] {
     border-right: 1px solid #CCC;
     background-color:#f5f7f7;
 }
+
+#tracker-home-nav {
+    margin-top: 1em;
+    background-color: white;
+    border-left: none;
+    border-right: none;
+}
+
 .tracker-form-element-artifactlink-list-nav {
     background-color: inherit;
     border-left: none;
@@ -54,6 +63,7 @@ input[name=tracker_query_submit] {
 }
 
 #tracker_report_renderers li,
+#tracker-home-nav li,
 .tracker-form-element-artifactlink-list-nav li {
     list-style: none;
     margin: 0;
@@ -61,6 +71,7 @@ input[name=tracker_query_submit] {
 }
 
 #tracker_report_renderers li a,
+#tracker-home-nav li a,
 .tracker-form-element-artifactlink-list-nav li a {
     padding: 4px 0.5em;
     padding-left: 24px;
@@ -72,6 +83,8 @@ input[name=tracker_query_submit] {
     background-position: 5px 5px;
     background-repeat:no-repeat;
 }
+
+#tracker-home-nav li a,
 .tracker-form-element-artifactlink-list-nav li a {
         padding-left: 0.5em;
 }
@@ -81,17 +94,21 @@ input[name=tracker_query_submit] {
 }
 #tracker_report_renderers li a:link, 
 #tracker_report_renderers li a:visited,
+#tracker-home-nav li a:link,
+#tracker-home-nav li a:visited,
 .tracker-form-element-artifactlink-list-nav li a:link,
 .tracker-form-element-artifactlink-list-nav li a:visited { 
     color: black; 
 }
 
 #tracker_report_renderers li a:hover,
+#tracker-home-nav li a:hover,
 .tracker-form-element-artifactlink-list-nav li a:hover {
     color: black;
     background-color: #CCC;
 }
 #tracker_report_renderers li.tracker_report_renderers-current a,
+#tracker-home-nav li.current a,
 .tracker-form-element-artifactlink-list-nav li.tracker-form-element-artifactlink-list-nav-current a {
     font-weight:bold;
     background-color: white;
@@ -941,3 +958,32 @@ ul.plugin_tracker_my_artifacts_list {
     margin-top: 5px;
 }
 /* }}} */
+.tracker-hierarchy,
+.tracker-hierarchy ul,
+.tracker-hierarchy li
+{
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.tracker-hierarchy ul {
+    clear:both;
+}
+.tracker-admin-hierarchy-edit-form {
+    overflow:hidden;
+}
+#tracker-admin-current-full-hierarchy {
+    margin-right:4em;
+    float:left;
+}
+.tracker-admin-hierarchy-edit-children {
+    min-width:250px;
+    min-height: 200px;
+}
+
+.tracker-hierarchy-current,
+.tracker-hierarchy-current:visited,
+.tracker-hierarchy-current:hover {
+    font-weight: bold;
+    color: #0676B9;
+}

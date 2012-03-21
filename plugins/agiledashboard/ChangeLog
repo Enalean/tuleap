@@ -1,0 +1,8 @@
+Version 0.5 - Tuleap 4.0.28
+    * Transfer cross tracker search into tracker plugin
+
+Version 0.4 - Tuleap 4.0.28
+    * Fix various display & hierarchy definitions bugs
+
+Version 0.3 - Tuleap 4.0.28
+    * Display search result with respect of hierarchy.

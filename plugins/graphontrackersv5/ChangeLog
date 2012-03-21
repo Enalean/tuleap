@@ -1,5 +1,5 @@
-DISCLAIMER: plugin in beta, do not use it on production servers.
-DISCLAIMER: Your data might be trashed in a future update.
+Version 5.0 - Tuleap 4.0.27
+    * Increment version number
 
 Version 0.6.2 - Tuleap 4.0.26
     * Burndown can now build charts based on float fields

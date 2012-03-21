@@ -1,0 +1,7 @@
+Version 1.2.1 - Tuleap 4.0.28
+    * Fix include of PluginFileInfo
+
+Version 1.2 - Tuleap 4.0.28
+    * Add possibility to log what happens during daily job (accessible with plugins/tracker_date_reminder/etc/config.inc)
+    * Fix bug with artifact modification: date where not taken into account if artifact was modified.
+

@@ -50,7 +50,7 @@ an entity cannot be redefined. Hence this particular order  -->
 <book>
   <title>&SYS_PRODUCT_NAME; User Guide</title>
 
-  <subtitle>&#34;Collaborative Software Development and Project Management for the enterprise&#34;</subtitle>
+  <subtitle>&#34;Open Source suite for Application Lifecycle Management&#34;</subtitle>
 
   &BookInfo;
 
@@ -60,7 +60,7 @@ an entity cannot be redefined. Hence this particular order  -->
   &ChapterCreatingANewProject;
   &ChapterProjectSummary;
   &ChapterProjectAdministration;
-  &ChapterTracker;
+  &ChapterTrackerV5;
   &ChapterFileRelease;
   &ChapterVersionControlWithCVS;
   &ChapterVersionControlWithSubversion;
@@ -72,5 +72,5 @@ an entity cannot be redefined. Hence this particular order  -->
   &ChapterSurveyManager;
   &ChapterProjectWebSite;
   &ChapterOtherServices;
-  &ChapterTrackerV5;
+  &ChapterTracker;
 </book>

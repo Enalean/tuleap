@@ -18,13 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/plugin/PluginInfo.class.php';
+require_once 'common/plugin/PluginFileInfo.class.php';
 require_once 'TrackerDateReminderPluginDescriptor.class.php';
 
-class TrackerDateReminderPluginInfo extends PluginInfo {
+class TrackerDateReminderPluginInfo extends PluginFileInfo {
 
     function __construct($plugin) {
-        parent::__construct($plugin);
+        parent::__construct($plugin, 'config');
         $this->setPluginDescriptor(new TrackerDateReminderPluginDescriptor());
     }
 

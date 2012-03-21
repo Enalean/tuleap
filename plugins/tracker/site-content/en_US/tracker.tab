@@ -1,11 +1,22 @@
-plugin_tracker	descriptor_description	Next gen Trackers
+plugin_tracker	descriptor_description	Trackers new generation
 plugin_tracker	descriptor_name	Tracker
 
 plugin_tracker	title	Tracker
 
-plugin_tracker	service_lbl_key	Trackers v5
-plugin_tracker	service_desc_key	Project Trackers v5
+plugin_tracker	service_lbl_key	Trackers
+plugin_tracker	service_desc_key	Project Trackers
 
+plugin_tracker_homenav	list	Trackers List
+plugin_tracker_homenav	search	Cross Trackers Search
+
+plugin_tracker_crosssearch	title	Cross Trackers Search
+
+plugin_tracker_crosssearch	summary	Title
+
+plugin_tracker_crosssearch	included_trackers_title	List of trackers included into the search:
+plugin_tracker_crosssearch	included_trackers_not_found	No relevant tracker found
+
+plugin_tracker_crosssearch	no_matching_artifact	No artifact matches the query
 #/**
 #  *
 #  * Tracker scripts message catalog (English)
@@ -770,8 +781,8 @@ plugin_tracker_common_type	del_err	Error deleting dependencies $1: $2
 plugin_tracker_common_type	none_found	None Found 
 plugin_tracker_common_type	invalid_mail	"$1" is not a valid email address
 plugin_tracker_common_type	no_view_permission	You don't have the permissions to view this tracker.
-plugin_tracker_common_type	shortname_already_exists	The short name is already used. Please use another one.
-plugin_tracker_common_type	name_already_exists	The tracker name is already used. Please use another one.
+plugin_tracker_common_type	shortname_already_exists	The short name '$1' is already used. Please use another one.
+plugin_tracker_common_type	name_already_exists	The tracker name '$1' is already used. Please use another one.
 plugin_tracker_common_type	no_view_permission_on_artifact	You don't have the permissions to view this artifact.
 plugin_tracker_common_type	artifact_not_exist	This artifact does not exist.
 plugin_tracker_common_type	report_not_exist	This report does not exist.
@@ -1094,6 +1105,10 @@ plugin_tracker_admin	csv_import_desc	Import artifacts in the tracker from a CSV 
 plugin_tracker_admin	export	Export
 plugin_tracker_admin	export_desc	Export the tracker structure
 
+plugin_tracker_admin	hierarchy	Hierarchy
+plugin_tracker_admin	hierarchy_desc	Manage tracker hierarchy
+plugin_tracker_admin	manage_hierarchy_title	Manage hierarchy of tracker  
+
 plugin_tracker_admin	manage_dependencies	Manage field dependencies
 plugin_tracker_admin	manage_dependencies_desc	Define how values in one field depend upon other field values.
 
@@ -1162,6 +1177,13 @@ plugin_tracker_admin_import	nb_created_import	$1 Artifact(s) created
 plugin_tracker_admin_import	nb_updated_import	$1 Artifact(s) updated
 plugin_tracker_admin_import	date_format_help	Expected date format is <strong>$1</strong>. <a href="/account/preferences.php">Change import/export date format</a>
 plugin_tracker_admin_import	separator_not_found	CSV separator not found ($1). Either you want to import only one field, or you're using the wrong separator.<br />If so, you can <a href="/account/preferences.php">change the CSV import/export separator</a>
+
+plugin_tracker_admin_hierarchy	edit_children_title	Edit children of $1
+plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Current Full Hierarchy
+
+plugin_tracker_hierarchy	error_is_cyclic	Tracker hierarchy is Cyclic
+plugin_tracker_hierarchy	tracker_not_in_hierarchy	Tracker not in hierarchy
+plugin_tracker_hierarchy	controller_bad_request	Your request contains invalid data, cowardly doing nothing (children parameter)
 
 plugin_tracker_renderer_table	items_range_of	of
 

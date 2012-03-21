@@ -21,6 +21,7 @@ require_once('common/dao/include/DataAccessObject.class.php');
 require_once('exceptions/GitDaoException.class.php');
 require_once('common/project/ProjectManager.class.php');
 require_once('common/user/UserManager.class.php');
+require_once('GitRepository.class.php');
 /**
  * Description of GitDaoclass
  * @todo change date format to timestamp instead of mysql date format
@@ -90,6 +91,7 @@ class GitDao extends DataAccessObject {
 
     public function save($repository) {
         $id          = (int)$repository->getId();
+
         $name        = $repository->getName(); 
         $mailPrefix  = $repository->getMailPrefix();
         $parentId    = 0;
@@ -246,13 +248,12 @@ class GitDao extends DataAccessObject {
                 ORDER BY CONCAT(". self::REPOSITORY_NAMESPACE .', '. self::REPOSITORY_NAME .')';
                   
         $rs = $this->retrieve($sql);
-        if ( empty($rs) || $rs->rowCount() == 0 ) {
-            return false;
-        }
         $list = array();
-        while( $row = $rs->getRow() ) {
-            $repoId        = $row[self::REPOSITORY_ID];
-            $list[$repoId] = $row;
+        if ($rs && $rs->rowCount() > 0 ) {        
+            foreach ($rs as $row) {
+                $repoId        = $row[self::REPOSITORY_ID];
+                $list[$repoId] = $row;
+            }
         }
         return $list;
     }
@@ -290,22 +291,13 @@ class GitDao extends DataAccessObject {
      * @param GitRepository $repository
      * @return <type>
      */
-    public function getProjectRepository($repository) {
-        
+    public function getProjectRepository($repository) {        
         $projectId      = $repository->getProjectId();
-        $repositoryName = $repository->getName();
-        $projectId      = $this->da->escapeInt($projectId);
-        $repositoryName = $this->da->quoteSmart($repositoryName);
-        if ( empty($projectId) || empty($repositoryName)  )  {
+        $repositoryPath = $repository->getPathWithoutLazyLoading();
+        if ( empty($projectId) || empty($repositoryPath)  )  {
             throw new GitDaoException( $GLOBALS['Language']->getText('plugin_git', 'dao_search_params') );
         }
-        $query = 'SELECT * '.
-                        ' FROM '.$this->getTable().
-                        ' WHERE '.self::REPOSITORY_NAME.'='.$repositoryName.
-                            ' AND '.self::FK_PROJECT_ID.'='.$projectId.
-                            ' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
-        
-        $rs             = $this->retrieve($query);
+        $rs = $this->searchProjectRepositoryByPath($projectId, $repositoryPath);
         if ( empty($rs) ) {
             throw new GitDaoException($GLOBALS['Language']->getText('plugin_git', 'dao_search_error'));
             return false;
@@ -317,6 +309,18 @@ class GitDao extends DataAccessObject {
         }
         $this->hydrateRepositoryObject($repository, $result);
         return true;
+    }
+    
+    
+    public function searchProjectRepositoryByPath($projectId, $repositoryPath) {
+        $projectId      = $this->da->escapeInt($projectId);
+        $repositoryPath = $this->da->quoteSmart($repositoryPath);
+        $query = 'SELECT * '.
+                 ' FROM '.$this->getTable().
+                 ' WHERE '.self::REPOSITORY_PATH.'='.$repositoryPath.
+                 ' AND   '.self::FK_PROJECT_ID.'='.$projectId.
+                 ' AND   '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
+        return $this->retrieve($query);
     }
 
     public function hasChild($repository) {
@@ -368,13 +372,10 @@ class GitDao extends DataAccessObject {
 
     public function getProjectRepositoryById($repository) {
         $id = (int)$repository->getId();
-        $id = $this->da->escapeInt($id);
         if ( empty($id) ) {
             return false;
         }
-        $query = 'SELECT * '.' FROM '.$this->getTable().
-                        ' WHERE '.self::REPOSITORY_ID.'='.$id.' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
-        $rs = $this->retrieve( $query );
+        $rs = $this->searchProjectRepositoryById($id);
         if ( empty($rs) ) {
             throw new GitDaoException($GLOBALS['Language']->getText('plugin_git', 'dao_search_error'));
             return false;
@@ -386,6 +387,20 @@ class GitDao extends DataAccessObject {
         }
         $this->hydrateRepositoryObject($repository, $result);
         return true;
+    }
+    
+    /**
+     * @param Intger $id
+     * 
+     * @return DataAccessResult
+     */
+    public function searchProjectRepositoryById($id) {
+        $id = $this->da->escapeInt($id);
+        $query = 'SELECT * '.
+                 ' FROM '.$this->getTable().
+                 ' WHERE '.self::REPOSITORY_ID.'='.$id.
+                 ' AND '.self::REPOSITORY_DELETION_DATE.'='."'0000-00-00 00:00:00'";
+        return $this->retrieve($query);
     }
 
     /**
@@ -404,7 +419,7 @@ class GitDao extends DataAccessObject {
         return $this->retrieve($query);
     }
 
-    protected function hydrateRepositoryObject($repository, $result) {
+    public function hydrateRepositoryObject(GitRepository $repository, $result) {
         $repository->setName($result[self::REPOSITORY_NAME]);
         $repository->setPath($result[self::REPOSITORY_PATH]);
         $repository->setId($result[self::REPOSITORY_ID]);
@@ -451,6 +466,18 @@ class GitDao extends DataAccessObject {
                     AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00'
                   GROUP BY year, month";
         return $this->retrieve($query);
+    }
+    
+    public function isRepositoryExisting($project_id, $path) {
+        $project_id = $this->da->escapeInt($project_id);
+        $path       = $this->da->quoteSmart($path);
+        $sql = "SELECT NULL
+                FROM plugin_git
+                WHERE repository_path = $path
+                  AND project_id = $project_id
+                  AND ".self::REPOSITORY_DELETION_DATE." = '0000-00-00 00:00:00'
+                LIMIT 1";
+        return count($this->retrieve($sql)) > 0;
     }
 }
 

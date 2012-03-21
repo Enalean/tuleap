@@ -38,34 +38,24 @@ abstract class GitViewsRepositoriesTraversalStrategy {
         if (empty($repositories)) {
             return '';
         }
-        $parentChildrenAssoc = array();
-        foreach ( $repositories as $repoId => $repoData ) {
-            if ( !empty($repoData[GitDao::REPOSITORY_PARENT]) ) {
-                $parentId = $repoData[GitDao::REPOSITORY_PARENT];
-                $parentChildrenAssoc[$parentId][] = $repoData[GitDao::REPOSITORY_ID];
-            }
-            else {
-                $parentChildrenAssoc[0][] = $repoId;
-            }
-        }
-        return $this->getMainWrapper($this->_makeRepositoryTree($parentChildrenAssoc, 0, $repositories, $user));
+        return $this->getMainWrapper($this->_makeRepositoryList($repositories, $user));
     }
     
     /**
      * @return string
      */
-    protected function _makeRepositoryTree(&$flatTree, $currentId, array $data, User $user) {
+    protected function _makeRepositoryList(array $repositories, User $user) {
         $html = '';
-        foreach ( $flatTree[$currentId] as $childId ) {
-            $repoName = $data[$childId][GitDao::REPOSITORY_NAME];
-            $repoDesc = $data[$childId][GitDao::REPOSITORY_DESCRIPTION];
-            $delDate  = $data[$childId][GitDao::REPOSITORY_DELETION_DATE];
-            $isInit   = $data[$childId][GitDao::REPOSITORY_IS_INITIALIZED];
-            $access   = $data[$childId][GitDao::REPOSITORY_ACCESS];
+        foreach ( $repositories as $repository ) {
+            $repoName = $repository[GitDao::REPOSITORY_NAME];
+            $repoDesc = $repository[GitDao::REPOSITORY_DESCRIPTION];
+            $delDate  = $repository[GitDao::REPOSITORY_DELETION_DATE];
+            $isInit   = $repository[GitDao::REPOSITORY_IS_INITIALIZED];
+            $access   = $repository[GitDao::REPOSITORY_ACCESS];
             //needs to be checked on filesystem (GitDao::getRepositoryList do not check)
             //TODO move this code to GitBackend and write a new getRepositoryList function ?
             //TODO find a better way to do that to avoid the ton of SQL requests!
-            $r = $this->getRepository($data[$childId]);
+            $r = $this->getRepository($repository);
             if ( $isInit == 0 ) {
                 $isInit = $r->isInitialized();
             }
@@ -78,14 +68,11 @@ abstract class GitViewsRepositoriesTraversalStrategy {
                 continue;
             }
             
-            $accessType = $this->view->fetchAccessType($access, $data[$childId][GitDao::REPOSITORY_BACKEND_TYPE] == GitDao::BACKEND_GITOLITE);
+            $accessType = $this->view->fetchAccessType($access, $repository[GitDao::REPOSITORY_BACKEND_TYPE] == GitDao::BACKEND_GITOLITE);
             
             //TODO Why the hell do we need to use isInit or repoName? Isn't it a property of the repo?
             $item_representation = $this->getLabel($r, $isInit, $accessType, $repoName);
 
-            if ( !empty($flatTree[$childId]) ) {
-                $item_representation .= $this->getGroupWrapper($repoName, $this->_makeRepositoryTree($flatTree, $childId, $data, $user));
-            }
             $html .= $this->getItemWrapper($r, $item_representation);
         }
         return $html;

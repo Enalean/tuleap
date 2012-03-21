@@ -47,6 +47,8 @@ class tracker_date_reminderPlugin extends Plugin {
         $this->_addHook('tracker_postadd', 'tracker_create_artifact', false);
         // Copy an artifact
         $this->_addHook('tracker_postcopy', 'tracker_create_artifact', false);
+        // Modification of an artifact
+        $this->_addHook('tracker_postmod', 'tracker_update_artifact', false);
     }
 
     function getPluginInfo() {
@@ -57,8 +59,23 @@ class tracker_date_reminderPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
+    private function isLoggingEnabled() {
+        return $this->getPluginInfo()->getPropertyValueForName('enable_log');
+    }
+    
     function codendi_daily_start($params) {
-        $artifactDateReminder = new ArtifactDateReminder();
+        include_once 'ArtifactDateReminder.class.php';
+        include_once 'TrackerDateReminder_Logger_Prefix.class.php';
+        
+        if ($this->isLoggingEnabled()) {
+            $logfile = $GLOBALS['codendi_log']."/tracker_date_reminder.log";
+        } else {
+            $logfile = false;
+        }
+        
+        $logger = new TrackerDateReminder_Logger($logfile);
+        
+        $artifactDateReminder = new ArtifactDateReminder($logger);
         $artifactDateReminder->codexDaily();
     }
     
@@ -236,6 +253,22 @@ class tracker_date_reminderPlugin extends Plugin {
     function tracker_create_artifact($params) { 
         if ($params['ah']->getStatusID() == 1) {
             $tdrArtifactType = new TrackerDateReminder_ArtifactType($params['ath']);
+            $tdrArtifactType->addArtifactToDateReminderProcessing(0, $params['ah']->getID(), $params['ath']->getID());
+        }
+    }
+    
+    
+    /**
+     * Hook: Artifact update in web interface
+     * 
+     * @param $params
+     * 
+     * @return void
+     */
+    function tracker_update_artifact($params) {
+        if ($params['ah']->getStatusID() == 1) {
+            $tdrArtifactType = new TrackerDateReminder_ArtifactType($params['ath']);
+            $tdrArtifactType->deleteArtifactFromDateReminderProcessing(0, $params['ah']->getID(), $params['ath']->getID());
             $tdrArtifactType->addArtifactToDateReminderProcessing(0, $params['ah']->getID(), $params['ath']->getID());
         }
     }

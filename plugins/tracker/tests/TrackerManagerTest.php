@@ -39,8 +39,11 @@ Mock::generatePartial('TrackerManager',
                           'getProject',
                           'displayAllTrackers',
                           'checkServiceEnabled',
+                          'getCrossSearchController'
                       )
 );
+require_once dirname(__FILE__) .'/../include/Tracker/CrossSearch/SearchController.class.php';
+Mock::generate('Tracker_CrossSearch_SearchController');
 require_once('common/include/Codendi_Request.class.php');
 Mock::generate('Codendi_Request');
 require_once('common/user/User.class.php');
@@ -283,6 +286,22 @@ class TrackerManagerTest extends TuleapTestCase {
         $rm->expectOnce('createReference', array($r2));
         
         $tm->duplicate($source_project_id, $destinatnion_project_id, $u_group_mapping);
+    }
+    
+    public function testProcessCrossSearch() {
+        $project    = new MockProject();
+        $request    = new Codendi_Request(array('func'     => 'cross-search',
+                                                'group_id' => '101'));
+        $user       = null;
+        $controller = new MockTracker_CrossSearch_SearchController();
+        
+        $this->url->throwOn('getDispatchableFromRequest', new Tracker_NoMachingResourceException());
+        $this->tm->setReturnValue('getProject', $project);
+        $this->tm->setReturnValue('checkServiceEnabled', true);
+        $this->tm->setReturnValue('getCrossSearchController', $controller);
+        
+        $controller->expectOnce('search');
+        $this->tm->process($request, $user);
     }
 }
 

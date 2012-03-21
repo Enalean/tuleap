@@ -7,6 +7,9 @@ require_once(dirname(__FILE__).'/../include/simpletest/extensions/junit_xml_repo
 // @see: https://github.com/sebastianbergmann/php-code-coverage
 @include_once 'PHP/CodeCoverage/Autoload.php';
 
+require_once 'common/TreeNode/InjectPaddingInTreeNodeVisitor.class.php';
+require_once 'common/TreeNode/TreeNode.class.php';
+
 /**
  * Invoker decorator to target code coverage only on executed tests
  *
@@ -93,16 +96,63 @@ class CodendiHtmlReporter extends HtmlReporter implements iCodeCoverageReporter 
             print " -&gt; " . $this->_htmlEntities($message) . "<br />\n";
         }
     }
+
+    /**
+     *    Paints the test failure with a breadcrumbs
+     *    trail of the nesting test suites below the
+     *    top level test.
+     *    @param string $message    Failure message displayed in
+     *                              the context of the other tests.
+     *    @access public
+     */
+    function paintFail($message) {
+        $this->_fails++;
+        print "<span class=\"fail\">Fail</span>: ";
+        $breadcrumb = $this->getTestListAsTreeNode();
+        $breadcrumb->accept($this);
+        print '<pre style="clear:both; margin-left:6em;">' . $this->_htmlEntities($message) . '</pre>';
+    }
+    
+    function visit(TreeNode $node) {
+        $data = $node->getData();
+        echo '<div style="clear:both;">';
+        echo $data['tree-padding'] . $data['title'];
+        echo '</div>';
+        foreach ($node->getChildren() as $child) {
+            $child->accept($this);
+        }
+    }
+    
+    function getTestListAsTreeNode() {
+        $breadcrumb = $this->getTestList();
+        array_shift($breadcrumb);
+        $root = new TreeNode();
+        $parent = $root;
+        foreach ($breadcrumb as $b) {
+            $node = new TreeNode(array('title' => $b));
+            $parent->addChild($node);
+            $parent = $node;
+        }
+        $root->accept(new TreeNode_InjectPaddingInTreeNodeVisitor());
+        return $root;
+    }
     
     function paintException($exception) {
         parent::paintException($exception);
         echo '<pre>'. $exception->getTraceAsString() .'</pre>';
     }
-    
-    function paintFail($message) {
-        echo '<p><input type="checkbox" onclick="$(this).siblings().invoke(\'toggle\');" /><span>';
-        parent::paintFail($message);
-        echo '</span></p>';
+
+    /**
+     *    Paints a PHP error or exception.
+     *    @param string $message        Message to be shown.
+     *    @access public
+     *    @abstract
+     */
+    function paintError($message) {
+        $this->_exceptions++;
+        print "<span class=\"fail\">Exception</span>: ";
+        $this->getTestListAsTreeNode()->accept($this);
+        print '<pre style="clear:both; margin-left:6em; background:#fcc;">' . $this->_htmlEntities($message) .'</pre>';
     }
 
     function createInvoker($invoker) {

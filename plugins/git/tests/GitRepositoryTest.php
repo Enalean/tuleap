@@ -65,7 +65,7 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertFalse($repo->isNameValid('jambon/beurre'));
     }
     
-    private function checkNameValidation($repo) {
+    private function checkNameValidation(GitRepository $repo) {
         $this->assertFalse($repo->isNameValid(''));
         $this->assertFalse($repo->isNameValid('/'));
         $this->assertFalse($repo->isNameValid('/jambon'));
@@ -79,6 +79,7 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertFalse($repo->isNameValid('jambon...beurre'));
         $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
         $this->assertFalse($repo->isNameValid('repo.git'));
+        $this->assertFalse($repo->isNameValid('u/toto'));
     }
     
         
@@ -92,7 +93,7 @@ class GitRepositoryTest extends UnitTestCase {
         $this->assertFalse($repo->isSubPath('_fixtures/perms/', 'coincoin'));
     }
     
-    public function testDeletionShoultAffectDotGit() {
+    public function testDeletionShouldAffectDotGit() {
         $repo = new GitRepository();
         $this->assertTrue($repo->isDotGit('default.git'));
         $this->assertTrue($repo->isDotGit('default.git.git'));
@@ -224,24 +225,42 @@ class GitRepositoryTest extends UnitTestCase {
         $repo->setProject($project);
         
         $namespace = "toto/tata";
-        $clone = $this->_aGitRepoWith($user, $repo, $namespace, $backend);
+        $clone = $this->_aGitRepoWith($user, $repo, $namespace, $backend, GitRepository::REPO_SCOPE_INDIVIDUAL);
+        $clone->setProject($repo->getProject());
+        $clone->setPath(unixPathJoin(array($project->getUnixName(), $namespace, $repo->getName())).'.git');
 
         $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($clone)));
 
-        $repo->fork($namespace, $user);
+        $repo->fork($user, $namespace, GitRepository::REPO_SCOPE_INDIVIDUAL, $project);
     }
-    
-    private function _aGitRepoWith($user, $repo, $namespace, $backend) {
+    public function testForkCrossProjectClonesByChangingTheProjectAndPath() {
+        $user = $this->_newUser("sandra");
+        $backend = new MockGit_Backend_Gitolite();
+        $project = new Mockproject();
+        $project->setReturnValue('getUnixName', 'tulip');
+
+        $to_project = new Mockproject();
+        $to_project->setReturnValue('getUnixName', 'blabla');
+
+        $repo    = new GitRepository();
+        $repo->setBackend($backend);
+        $repo->setProject($project);
+        
+        $expectedRepo = $this->_aGitRepoWith($user, $repo, '', $backend, GitRepository::REPO_SCOPE_PROJECT);
+        $expectedRepo->setProject($to_project);
+        $expectedRepo->setPath(unixPathJoin(array($to_project->getUnixName(), '', $repo->getName())).'.git');
+
+        $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($expectedRepo)));
+        $repo->fork($user, '', GitRepository::REPO_SCOPE_PROJECT, $to_project);
+    }
+    private function _aGitRepoWith($user, $repo, $namespace, $backend, $scope) {
         $clone = new GitRepository();
         $clone->setCreator($user);
         $clone->setNamespace($namespace);
         $clone->setBackend($backend);
-
-        $clone->setName($repo->getName());
         $clone->setParent($repo);
-        $clone->setProject($repo->getProject());
-        $clone->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
-        $clone->setPath(unixPathJoin(array($repo->getProject()->getUnixName(), $namespace, $repo->getName())).'.git');
+        $clone->setScope($scope);
+        $clone->setName($repo->getName());
         return $clone;
     }
     

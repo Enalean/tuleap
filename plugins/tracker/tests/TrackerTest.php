@@ -22,6 +22,7 @@ if (!defined('TRACKER_BASE_URL')) {
     define('TRACKER_BASE_URL', '/plugins/tracker');
 }
 
+require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generatePartial('Tracker', 
                       'TrackerTestVersion', 

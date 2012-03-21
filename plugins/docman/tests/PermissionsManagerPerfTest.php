@@ -66,9 +66,6 @@ class PermissionsManagerPerfTest extends UnitTestCase {
         $this->docmanPm->userCanWrite($this->user, 324324234313);
         $this->docmanPm->userCanManage($this->user, 324324423413);
         $this->docmanPm->userCanAdmin($this->user, 324324423413);
-
-        $pm->tally();
-        $this->docmanPm->tally();
     }
 
     function testDocmanAdminHasAllAccess() {
@@ -89,9 +86,6 @@ class PermissionsManagerPerfTest extends UnitTestCase {
         $this->docmanPm->userCanWrite($this->user, 324324234313);
         $this->docmanPm->userCanManage($this->user, 324324423413);
         $this->docmanPm->userCanAdmin($this->user, 324324423413);
-
-        $pm->tally();
-        $this->docmanPm->tally();
     }
 
     function testManageRightGivesReadAndWriteRights() {

@@ -199,8 +199,8 @@ class MetadataTest extends UnitTestCase {
         $srcMdF->expectOnce('getRealMetadataList', array(false));
         
         $srcMdF->expectCallCount('_cloneOneMetadata', 2);
-        $srcMdF->expectArgumentsAt(0, '_cloneOneMetadata', array($dstGroupId, $srcMd1, $metadataMapping));
-        $srcMdF->expectArgumentsAt(1, '_cloneOneMetadata', array($dstGroupId, $srcMd2, $metadataMapping));
+        $srcMdF->expectAt(0, '_cloneOneMetadata', array($dstGroupId, $srcMd1, $metadataMapping));
+        $srcMdF->expectAt(1, '_cloneOneMetadata', array($dstGroupId, $srcMd2, $metadataMapping));
         
         // Run the test
         $srcMdF->_cloneRealMetadata($dstGroupId, $metadataMapping);
