@@ -19,3 +19,7 @@
     -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
     box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
 }
+
+.planning-draggable {
+    cursor: move;
+}
