@@ -81,6 +81,10 @@ class Tracker_ArtifactFactory {
         return $artifacts;
     }
     
+    public function getOpenArtifactsByTrackerId($tracker_id) {
+        return array(); //TODO
+    }
+    
     /**
      * Returns the "open" artifacts 
      *  - assigned to user $user_id OR

@@ -24,17 +24,19 @@ class Planning_Presenter {
     public $planning_name;
     public $destination_id;
     public $destination_title;
-    private $artifact = false;
-    private $content_view ;
+    public $artifacts_to_select;
+    private $artifact;
+    private $content_view;
     
-    public function __construct(Planning $planning, Tracker_CrossSearch_SearchContentView $content_view, Tracker_Artifact $artifact = null) {
+    public function __construct(Planning $planning, Tracker_CrossSearch_SearchContentView $content_view, array $artifacts_to_select, Tracker_Artifact $artifact = null) {
         $this->planning_name     = $planning->getName();
         if ($artifact) {
             $this->destination_id    = $artifact->getId();
             $this->destination_title = $artifact->fetchTitle();
         }
-        $this->artifact = $artifact;
-        $this->content_view = $content_view;
+        $this->artifact            = $artifact;
+        $this->artifacts_to_select = $artifacts_to_select;
+        $this->content_view        = $content_view;
     }
     
     function hasArtifact() {

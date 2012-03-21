@@ -14,6 +14,9 @@
                     <div>
                         <select name="aid">
                             <option>{{pleaseChoose}}</option>
+                            {{#artifacts_to_select}}
+                            <option value="{{getId}}">{{{getTitle}}}</option>
+                            {{/artifacts_to_select}}
                         </select>
                     </div>
                     {{#hasArtifact}}

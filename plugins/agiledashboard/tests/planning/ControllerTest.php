@@ -43,7 +43,7 @@ class Planning_ControllerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->planning = new Planning(123, 'Stuff Backlog');
+        $this->planning = new Planning(123, 'Stuff Backlog', array(), 66);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
     }
     
@@ -72,6 +72,8 @@ class Planning_ControllerTest extends TuleapTestCase {
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact(987, 'whatever');
         $this->assertPattern('/<select name="aid"/', $content);
         $this->assertPattern('/<option>-- Please choose/', $content);
+        $this->assertPattern('/<option value="1001">An open artifact/', $content);
+        $this->assertPattern('/<option value="1002">Another open artifact/', $content);
     }
     
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
@@ -88,8 +90,7 @@ class Planning_ControllerTest extends TuleapTestCase {
         
         $artifact = $this->GivenAnArtifact($id, 'Toto');
         $artifact->setReturnValue('getLinkedArtifacts', $linked_items);
-        $factory = new MockTracker_ArtifactFactory();
-        $factory->setReturnValue('getArtifactByid', $artifact, array($id));
+        $factory  = $this->GivenAnArtifactFactory(array($artifact));
         $request = new Codendi_Request(
             array(
                 'aid'         => $id,
@@ -147,8 +148,7 @@ class Planning_ControllerTest extends TuleapTestCase {
         
         $title    = "screen hangs with macos and some escapable characters #<";
         $artifact = $this->GivenAnArtifact($id, $title);
-        $factory  = new MockTracker_ArtifactFactory();
-        $factory->setReturnValue('getArtifactByid', $artifact, array($id));
+        $factory  = $this->GivenAnArtifactFactory(array($artifact));
         $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search, $hierarchy_factory);
         
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
@@ -162,19 +162,31 @@ class Planning_ControllerTest extends TuleapTestCase {
         return $artifact;
     }
     
+    private function GivenAnArtifactFactory(array $artifacts = array()) {
+        $factory  = new MockTracker_ArtifactFactory();
+        foreach ($artifacts as $artifact) {
+            $factory->setReturnValue('getArtifactByid', $artifact, array($artifact->getId()));
+        }
+        $factory->setReturnValue(
+            'getOpenArtifactsByTrackerId', 
+            array(
+                $this->GivenAnArtifact(1001, 'An open artifact'),
+                $this->GivenAnArtifact(1002, 'Another open artifact'),
+            ), 
+            array($this->planning->getReleaseTrackerId()));
+        return $factory;
+    }
+    
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
-        $request = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
-        
+        $request  = new Codendi_Request(array('aid' => $id, 'planning_id' => $this->planning->getId()));
         $artifact = $this->GivenAnArtifact($id, $title);
-        
-        $factory = new MockTracker_ArtifactFactory();
-        $factory->setReturnValue('getArtifactByid', $artifact, array($id));
+        $factory  = $this->GivenAnArtifactFactory(array($artifact));
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     
     private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
         $request = new Codendi_Request(array('planning_id' => $this->planning->getId()));
-        $factory = new MockTracker_ArtifactFactory();
+        $factory = $this->GivenAnArtifactFactory();
         return $this->WhenICaptureTheOutputOfShowAction($request, $factory);
     }
     

@@ -41,6 +41,7 @@ class Planning_Controller extends Controller {
         $aid = $request->get('aid');
         $this->group_id = $request->get('group_id');
         $this->artifact = $artifact_factory->getArtifactById($aid);
+        $this->artifact_factory = $artifact_factory;
         $this->planning_factory = $planning_factory;
         $this->tracker_factory  = $tracker_factory;
     }
@@ -90,11 +91,12 @@ class Planning_Controller extends Controller {
         if ($this->request->valid($valid_criteria)) {
             $request_criteria = $this->request->get('criteria');
         }
-        $planning_id      = $this->request->get('planning_id');
-        $planning         = $this->planning_factory->getPlanning($planning_id);
-        $project          = $manager->getProject($this->request->get('group_id'));
-        $content_view     = $view_builder->buildContentView($project, $request_criteria, $search, $hierarchy_factory);
-        $presenter        = new Planning_Presenter($planning, $content_view, $this->artifact);
+        $planning_id         = $this->request->get('planning_id');
+        $planning            = $this->planning_factory->getPlanning($planning_id);
+        $project             = $manager->getProject($this->request->get('group_id'));
+        $content_view        = $view_builder->buildContentView($project, $request_criteria, $search, $hierarchy_factory);
+        $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getReleaseTrackerId());
+        $presenter           = new Planning_Presenter($planning, $content_view, $artifacts_to_select, $this->artifact);
         $this->render('show', $presenter);
     }
     
