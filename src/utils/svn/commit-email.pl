@@ -390,6 +390,8 @@ my @svn_events_mailing_lists = '';
 foreach my $dirVal (@dirschanged) {
 $svn_events_mailing_lists .= get_emails_by_path('svn_notification', 'path', $dirVal, 'svn_events_mailing_list', $group_id);
 }
+my @notification_list = split(',', $svn_events_mailing_lists);
+my @svn_events_notifications = redundancy_grep(\@notification_list);
 
 # Lose the trailing slash in the directory names if one exists, except
 # in the case of '/'.
