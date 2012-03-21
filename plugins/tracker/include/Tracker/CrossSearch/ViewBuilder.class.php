@@ -130,6 +130,7 @@ class Tracker_CrossSearch_ViewBuilder {
             $tracker_ids[] = $tracker->getId();
         }
         
+        return $tracker_ids;
     }
 
 }
