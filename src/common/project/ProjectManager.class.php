@@ -401,8 +401,7 @@ class ProjectManager {
      */
     function setSVNMailingListAndHeader($projectId, $mailingList, $mailingHeader, $path) {
         $dao = $this->_getDao();
-        // TODO: Make this work
-        return setSVNMailingListAndHeader($project->getId(), $mailingList, $mailingHeader, $path);
+        return $dao->setSVNMailingListAndHeader($projectId, $mailingList, $mailingHeader, $path);
     }
 
     /**
