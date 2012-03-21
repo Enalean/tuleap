@@ -89,7 +89,21 @@ echo '
 
 // List of paths & mail addresses (+delete)
 // TODO
-
+$content = '<table><tr><td>';
+$content .= '<input type="hidden" name="group_id" value="'.$group_id.'">';
+$content .= '<input type="hidden" name="post_changes" value="list_of_paths">';
+$content .= html_build_list_table_top(array('SVN notification list', 'SVN monitored path' , 'Delete?'), false, false , false);
+$rowBgColor  = 0;
+$content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
+$content .= '<td>'. $hp->purify($svn_mailing_list) .'</td>';
+$content .= '<td>'. $hp->purify($path) .'</td><td>';
+$content .= '<input type="checkbox" value="'. $group_id .'" name="mailing_lists_to_delete[]" >';
+$content .= '</td></tr>';
+$content .= '<tr><td colspan="2"><input type="submit" value="Delete"></td></tr>';
+$content .= '</tbody></table></form>';
+echo '
+       <br/>
+       <form action="" method="post">'.$content.'</form>';
 // Add a path & mail addresses
 echo '
        <br/>
