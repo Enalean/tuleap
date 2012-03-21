@@ -62,7 +62,7 @@ class Tracker_CrossSearch_SearchContentView {
     
     public function fetch() {
         $html  = '';
-        $html .= '<table><tr valign="top"><td>';
+        $html .= '<table cellpadding="0" cellspacing="0"><tr valign="top"><td>';
         $report_can_be_modified = false;
         $html .= $this->report->fetchDisplayQuery($this->criteria, $report_can_be_modified);
         $html .= $this->fetchResults();
