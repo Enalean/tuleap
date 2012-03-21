@@ -154,18 +154,16 @@ sub get_emails_by_path {
     $query = "SELECT $retfieldname FROM $table WHERE $fieldname RLIKE $patternMatcher and group_id = $groupid";
     $sth = $dbh->prepare($query);
     $res = $sth->execute();
+    my @emails = ();
     if ($sth->rows >= 1) {
-        my @emails = ();
         while (my @row = $sth->fetchrow_array()) {
             my $email = shift @row;
             push @emails, $email;
         }
-        $result = join(",",@emails);
     } else {
         print STDERR "$query\nCan't select field: $DBI::errstr\n";
-        $result = '0';
     }
-    return $result;
+    return @emails;
 }
 
 sub redundancy_grep {
