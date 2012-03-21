@@ -23,3 +23,17 @@
 .planning-draggable {
     cursor: move;
 }
+
+.release_planner > .tracker_artifact_title {
+    margin-bottom:0;
+    margin-top: 0.5em;
+}
+.release_planner > .help {
+    color: #999;
+    margin-top: 0;
+}
+
+    
+    
+    
+
