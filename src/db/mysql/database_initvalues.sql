@@ -194,6 +194,7 @@ INSERT INTO groups SET \
   cvs_events_mailing_list = '', \
   cvs_events_mailing_header = '', \
   cvs_preamble = '', \
+  svn_events_mailing_header = '', \
   svn_tracker = '0', \
   svn_mandatory_ref = '0', \
   svn_preamble = '' ;
