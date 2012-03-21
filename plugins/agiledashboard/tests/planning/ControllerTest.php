@@ -378,13 +378,17 @@ class Planning_ControllerEditWithValidPlanningIdTest extends TuleapTestCase {
     public function itRendersAnEditForm() {
         $planning         = aPlanning()->build();
         $request          = new Codendi_Request(array('planning_id' => $planning->getId()));
+        $tracker_factory  = new MockTrackerFactory();
         $planning_factory = new MockPlanningFactory();
         $controller       = aPlanningController()->with('request', $request)
                                                  ->with('planning_factory', $planning_factory)
+                                                 ->with('tracker_factory', $tracker_factory)
                                                  ->build();
         
         $planning_factory->expectOnce('getPlanning', array($planning->getId()));
         $planning_factory->setReturnValue('getPlanning', $planning);
+        
+        $tracker_factory->setReturnValue('getTrackersByGroupId', array());
         
         ob_start();
         $controller->edit();

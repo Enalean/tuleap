@@ -19,6 +19,7 @@
  */
 
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/TrackerFactory.class.php';
+require_once 'TrackerPresenter.class.php';
 
 class Planning_FormPresenter {
     /**
@@ -32,20 +33,35 @@ class Planning_FormPresenter {
     public $tracker_factory;
     
     /**
+     * @var Planning
+     */
+    public $planning;
+    
+    /**
      * @var Array of Tracker
      */
     private $available_trackers;
     
-    public function __construct(/*int*/ $group_id, TrackerFactory $tracker_factory) {
+    public function __construct(/*int*/ $group_id, TrackerFactory $tracker_factory, $planning = null) {
         $this->group_id        = $group_id;
         $this->tracker_factory = $tracker_factory;
+        $this->planning        = $planning;
+    }
+    
+    public function getPlanningName() {
+        return $this->planning->getName();
     }
     
     public function getAvailableTrackers() {
         if ($this->available_trackers == null) {
-            $this->available_trackers = array_values($this->tracker_factory->getTrackersByGroupId($this->group_id));
+            $available_trackers = array_values($this->tracker_factory->getTrackersByGroupId($this->group_id));
+            $this->available_trackers = array_map(array($this, 'getPlanningTrackerPresenter'), $available_trackers);
         }
         return $this->available_trackers;
+    }
+    
+    public function getPlanningTrackerPresenter(Tracker $tracker) {
+        return new Planning_TrackerPresenter($this->planning, $tracker);
     }
 }
 

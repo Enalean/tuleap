@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -18,29 +19,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning {
+class Planning_TrackerPresenter {
+    public function __construct(/*Planning*/ $planning, Tracker $tracker) {
+        $this->planning = $planning;
+        $this->tracker  = $tracker;
+    }
     
-    function __construct($id, $name, $backlog_tracker_ids = array(), $release_tracker_id = null) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->backlog_tracker_ids = $backlog_tracker_ids;
-        $this->release_tracker_id  = $release_tracker_id;
+    public function getId() {
+        return $this->tracker->getId();
     }
-    public function getId () {
-        return $this->id;
-    }
+    
     public function getName() {
-        return $this->name;
+        return $this->tracker->getName();
     }
     
-    public function getBacklogTrackerIds() {
-        return $this->backlog_tracker_ids;
+    public function selectedIfBacklogTracker() {
+        if (in_array($this->tracker->getId(), $this->planning->getBacklogTrackerIds())) {
+            return 'selected';
+        }
     }
     
-    public function getReleaseTrackerId() {
-        return $this->release_tracker_id;
+    public function selectedIfReleaseTracker() {
+        if ($this->tracker->getId() == $this->planning->getReleaseTrackerId()) {
+            return 'selected';
+        }
     }
 }
-
-
 ?>

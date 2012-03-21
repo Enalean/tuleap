@@ -1,1 +1,25 @@
-<form></form>
+<h2>Manage planning</h2>
+<form method="post" action="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=update">
+    <p>
+        <label for="planning_name">Name</label>
+        <input type="text" name="planning_name" value="{{getPlanningName}}"/>
+    </p>
+    <p>
+        This planning allows assignment of
+        <select multiple="multiple" name="planning_backlog_ids[]" style="vertical-align: top;">
+            {{#getAvailableTrackers}}                
+                <option value="{{getId}}" {{selectedIfBacklogTracker}}>{{getName}}</option>
+            {{/getAvailableTrackers}}
+        </select>
+        to
+        <select name="planning_release_id">
+            <option value=""/>
+            {{#getAvailableTrackers}}
+                <option value="{{getId}}" {{selectedIfReleaseTracker}}>{{getName}}</option>
+            {{/getAvailableTrackers}}
+        </select>
+    </p>
+    <p>
+        <input type="submit" value="Update"/>
+    </p>
+</form>
