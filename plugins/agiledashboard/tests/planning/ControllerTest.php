@@ -299,4 +299,21 @@ class Planning_ControllerEditWithInvalidPlanningIdTest extends TuleapTestCase {
     }
 }
 
+class Planning_ControllerDeleteTest extends TuleapTestCase {
+    public function itDeletesThePlanningAndRedirectsToTheIndex() {
+        $group_id         = '34';
+        $planning_id      = '12';
+        $request          = new Codendi_Request(array('planning_id' => $planning_id,
+                                                      'group_id'    => $group_id));
+        $planning_factory = new MockPlanningFactory();
+        $controller       = aPlanningController()->with('request', $request)
+                                                 ->with('planning_factory', $planning_factory)
+                                                 ->build();
+        
+        $planning_factory->expectOnce('deletePlanning', array($planning_id));
+        $this->expectRedirectTo('/plugins/agiledashboard/?group_id='.$group_id);
+        $controller->delete();
+    }
+}
+
 ?>
