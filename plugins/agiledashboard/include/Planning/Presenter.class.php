@@ -53,6 +53,10 @@ class Planning_Presenter {
     public function fetchSearchContent() {
         return $this->content_view->fetch();
     }
+    
+    public function pleaseChoose() {
+        return $GLOBALS['Language']->getText('global', 'please_choose_dashed');
+    }
 }
 
 ?>

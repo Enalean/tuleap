@@ -116,5 +116,9 @@ abstract class TuleapTestCase extends UnitTestCase {
     public function expectFeedback($level, $message) {
         $GLOBALS['Response']->expectOnce('addFeedback', array($level, $message));
     }
+    
+    protected function setText($text, $args) {
+        $GLOBALS['Language']->setReturnValue('getText', $text, $args);
+    }
 }
 ?>

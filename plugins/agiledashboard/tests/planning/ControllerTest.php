@@ -44,6 +44,7 @@ class Planning_ControllerTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->planning = new Planning(123, 'Stuff Backlog');
+        $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
     }
     
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
@@ -62,9 +63,15 @@ class Planning_ControllerTest extends TuleapTestCase {
     }
     
     public function itDisplaysTheNameOfThePlanning() {
-        $name = $this->planning->getName();
+        $name    = $this->planning->getName();
         $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact(987, 'whatever');
         $this->assertPattern("/$name/", $content);
+    }
+    
+    public function itDisplaysASelectorOfArtifact() {
+        $content = $this->WhenICaptureTheOutputOfShowActionForAnEmptyArtifact(987, 'whatever');
+        $this->assertPattern('/<select name="aid"/', $content);
+        $this->assertPattern('/<option>-- Please choose/', $content);
     }
     
     public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
