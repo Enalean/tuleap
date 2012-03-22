@@ -32,9 +32,9 @@ class SvnNotificationDao extends DataAccessObject {
     /**
      * Set mailing list to be notified on a given path
      *
-     * @param Integer $groupId
-     * @param String  $mailingList
-     * @param String  $path
+     * @param Integer $groupId     Project id
+     * @param String  $mailingList List of mail addresses
+     * @param String  $path        svn path
      *
      * @return Boolean
      */
@@ -50,18 +50,23 @@ class SvnNotificationDao extends DataAccessObject {
     }
 
     /**
-     * Set mailing list to be notified on a given path
+     * Set mailing list to be notified for a given path
+     * or for the whole project if path is null
      *
-     * @param Integer $groupId
-     * @param String  $path
+     * @param Integer $groupId Project id
+     * @param String  $path    svn path
      *
      * @return DataAccessResult
      */
-    function getSVNMailingList($groupId, $path) {
+    function getSVNMailingList($groupId, $path = null) {
+        $condition = '';
+        if (!empty($path)) {
+            $condition = 'AND path = '.$this->da->quoteSmart($path);
+        }
         $sql = ' SELECT svn_events_mailing_list
                  FROM svn_notification 
                  WHERE group_id = '.$this->da->escapeInt($groupId).'
-                 AND path = '.$this->da->quoteSmart($path);
+                 '.$condition;
         return $this->retrieve($sql);
     }
 

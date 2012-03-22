@@ -35,9 +35,9 @@ class SvnNotification {
     /**
      * Set mailing list notification per path
      *
-     * @param Integer $projectId
-     * @param String  $mailingList
-     * @param String  $path
+     * @param Integer $projectId   Project id
+     * @param String  $mailingList List of mail addresses
+     * @param String  $path        svn path
      *
      * @return Boolean
      */
@@ -49,8 +49,8 @@ class SvnNotification {
     /**
      * Get mailing list notification per path
      *
-     * @param Integer $projectId
-     * @param String  $path
+     * @param Integer $projectId Project id
+     * @param String  $path      svn path
      *
      * @return String
      */

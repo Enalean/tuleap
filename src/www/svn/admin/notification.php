@@ -18,7 +18,7 @@ $pm              = ProjectManager::instance();
  *
  * @TODO: Find a better place or chech if this is not a duplicate code
  *
- * @param String  $mailingList
+ * @param String $mailingList List of mail addresses to be cleaned
  *
  * @return String
  */
