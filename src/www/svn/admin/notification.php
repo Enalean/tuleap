@@ -36,7 +36,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             if($request->valid($vHeader)) {
                 $mailingHeader = $request->get('form_mailing_header');
                 if ($pm->setSVNHeader($group_id, $mailingHeader)) {
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_header_success'));
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_header_fail'));
                 }
