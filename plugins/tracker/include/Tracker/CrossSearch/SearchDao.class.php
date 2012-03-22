@@ -23,8 +23,10 @@ require_once 'SharedField.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     
-    public function searchMatchingArtifacts(array $trackerIds, array $sharedFields) {
-        $trackerIds = $this->da->quoteSmartImplode(',', $trackerIds);
+    public function searchMatchingArtifacts(array $trackerIds, array $sharedFields, array $excludedArtifactIds = array()) {
+        $trackerIds          = $this->da->quoteSmartImplode(',', $trackerIds);
+        $excludedArtifactIds = $this->da->quoteSmartImplode(',', $excludedArtifactIds);
+        
         $sql = "
             SELECT artifact.id, artifact.last_changeset_id, CVT.value AS title, artifact.tracker_id, GROUP_CONCAT(CVAL.artifact_id) AS artifactlinks
             FROM tracker_artifact AS artifact
@@ -42,7 +44,12 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                 ) ON CV2.changeset_id = artifact.last_changeset_id
                 
             WHERE artifact.use_artifact_permissions = 0
-              AND artifact.tracker_id IN ($trackerIds)
+              AND artifact.tracker_id IN ($trackerIds)";
+        if ($excludedArtifactIds != '') {
+            $sql .= "
+              AND artifact.id NOT IN ($excludedArtifactIds) ";
+        }
+        $sql .= "
             GROUP BY artifact.id
             ORDER BY title
         ";
@@ -61,8 +68,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     }
     
     protected function getSharedFieldFragment($fragmentNumber, Tracker_CrossSearch_SharedField $sharedField) {
-        $fieldIds = implode(',', $sharedField->getFieldIds());
-        $valueIds = implode(',', $sharedField->getValueIds());
+        $fieldIds = $this->da->quoteSmartImplode(',', $sharedField->getFieldIds());
+        $valueIds = $this->da->quoteSmartImplode(',', $sharedField->getValueIds());
         
         // Table aliases
         $changeset_value      = "CV_$fragmentNumber";
@@ -83,8 +90,8 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     }
     
     public function searchArtifactsFromTrackers(array $trackerIds, array $excludedArtifactIds = array()) {
-        $trackerIds         = implode(',', $trackerIds);
-        $excludedArtifactIds = implode(',', $excludedArtifactIds);
+        $trackerIds          = $this->da->quoteSmartImplode(',', $trackerIds);
+        $excludedArtifactIds = $this->da->quoteSmartImplode(',', $excludedArtifactIds);
         
         $sql = "
             SELECT artifact.id,

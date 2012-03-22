@@ -49,7 +49,7 @@ class Tracker_CrossSearch_SearchTest extends TuleapTestCase {
         $this->sharedFieldFactory->expectOnce('getSharedFields', array($criteria));
         $this->sharedFieldFactory->setReturnValue('getSharedFields', $sharedFields);
         
-        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, $sharedFields));
+        $this->searchDao->expectOnce('searchMatchingArtifacts', array($this->trackerIds, $sharedFields, array()));
         
         $this->search->getMatchingArtifacts($this->trackerIds, $tracker_hierarchy, $criteria);
     }

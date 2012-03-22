@@ -63,7 +63,7 @@ class Tracker_CrossSearch_Search {
         $artifacts            = array();
         
         if (count($searchedSharedFields) > 0) { 
-            $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields);
+            $artifacts = $this->dao->searchMatchingArtifacts($trackerIds, $searchedSharedFields, $excludedArtifactIds);
         } elseif (count($trackerIds) > 0) {
             $artifacts = $this->dao->searchArtifactsFromTrackers($trackerIds, $excludedArtifactIds);
         }
