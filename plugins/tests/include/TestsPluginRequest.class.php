@@ -79,7 +79,7 @@ class testsPluginRequest {
     }
     
     public function isSelected($path) {
-        return isset($this->test_map[$path]) && $this->test_map[$path] == true;
+        return isset($this->test_map[$path]);
     }
     
     public function getCoverCode() {

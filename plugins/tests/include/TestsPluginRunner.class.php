@@ -160,7 +160,7 @@ class TestsPluginRunner {
     public function getResults() {
         ob_start();
         $format   = strtolower($this->request->getDisplay());
-        $reporter = CodendiReporterFactory::reporter($format);
+        $reporter = CodendiReporterFactory::reporter($format, $this->request->getCoverCode());
         $this->mainSuite->run($reporter);
         return ob_get_clean();
     }
