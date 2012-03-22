@@ -39,6 +39,9 @@ class Tracker_CrossSearch_ViewBuilder {
         $this->search             = $search;
     }
     
+    /**
+     * @return Tracker_CrossSearch_SearchView 
+     */
     public function buildView(Project $project, array $request_criteria) {
         $service            = $this->getService($project);
         $criteria           = $this->getCriteria($project, $this->getReport(), $request_criteria);
@@ -46,11 +49,18 @@ class Tracker_CrossSearch_ViewBuilder {
         return $this->getView($project, $service, $criteria, $trackers);
    
     }
+    
+    /**
+     * @return type Tracker_CrossSearch_SearchContentView
+     */
     public function buildContentView(Project $project, array $request_criteria) {
         $tracker_ids        = $this->getTrackersIds($project, $this->tracker_factory);
         return $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView', $project, $request_criteria, array(), $tracker_ids);
     }
     
+    /**
+     * @return Planning_SearchContentView
+     */
     public function buildPlanningContentView(Project $project, array $request_criteria, array $excludedArtifactIds, array $tracker_ids) {
         return $this->buildCustomContentView('Planning_SearchContentView', $project, $request_criteria, $excludedArtifactIds, $tracker_ids);
     }

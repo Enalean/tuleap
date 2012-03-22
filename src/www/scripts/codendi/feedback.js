@@ -1,3 +1,9 @@
+
+/*
+ * use this to provide feedback to the user : 
+ * it inserts the given string into the first element of class feedback_ in the current page
+ */
+
 var codendi = codendi || { };
 
 codendi.feedback = {

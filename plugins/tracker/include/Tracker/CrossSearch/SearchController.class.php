@@ -62,12 +62,8 @@ class Tracker_CrossSearch_SearchController {
                 $request_criteria = array();
             }
             
-            $view = $this->view_builder->buildView($project
-                    , $request_criteria);
-            
-            $content_view = $this->view_builder->buildContentView($project
-                    , $request_criteria);
-            
+            $view = $this->view_builder->buildView($project, $request_criteria);
+            $content_view = $this->view_builder->buildContentView($project, $request_criteria);
             $view->render($content_view);
         }
         catch (Tracker_CrossSearch_ProjectNotFoundException $e) {
