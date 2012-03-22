@@ -70,7 +70,7 @@ class Planning_Presenter {
             $stuffToPassToMustache[] = array(
                 'id'       => $artifact->getId(),
                 'title'    => $artifact->getTitle(),
-                'selected' => ($artifact->getId() == $this->destination_id) ? 'selected="seltected"' : '',
+                'selected' => ($artifact->getId() == $this->destination_id) ? 'selected="selected"' : '',
             );
         }
         return $stuffToPassToMustache;

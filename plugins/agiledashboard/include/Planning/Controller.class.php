@@ -53,7 +53,6 @@ class Planning_Controller extends Controller {
     }
     
     public function new_() {
-//        $planning = new Planning(null, '');
         $presenter = new Planning_FormPresenter($this->group_id, $this->tracker_factory, null);
         $this->render('new', $presenter);
     }
