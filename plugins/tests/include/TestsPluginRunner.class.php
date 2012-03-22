@@ -49,7 +49,6 @@ class TestsPluginRunner {
         $this->navigator = $this->getPresenter($this->rootCategory, 'Main', '_all_tests');
         $this->navigator->setTitle($title);
         
-        //var_dump($this->request->getTestsToRun());
         $this->addCoreSuite();
         $this->addAllPluginsSuite();
     }
@@ -120,11 +119,9 @@ class TestsPluginRunner {
             }
 
         }
-        //var_dump($parentSuite);
     }
 
     public function buildSuite($title) {
-        //var_dump("create suite $title");
         return new TestSuite($title);
     }
 
@@ -135,7 +132,8 @@ class TestsPluginRunner {
     }
 
     public function isTest($test) {
-        return preg_match('/Test.php$/', $test->getPathname());
+        $baseName = basename($test->getPathname());
+        return !in_array($baseName[0], array('_', '.')) && substr($baseName, -8) === 'Test.php';
     }
 
     public function getPresenter($prefix, $name, $value) {
@@ -165,7 +163,6 @@ class TestsPluginRunner {
         $format   = strtolower($this->request->getDisplay());
         $reporter = CodendiReporterFactory::reporter($format);
         $this->mainSuite->run($reporter);
-        //var_dump($this->mainSuite);
         return ob_get_clean();
     }
 

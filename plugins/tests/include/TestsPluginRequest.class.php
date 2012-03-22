@@ -64,7 +64,6 @@ class testsPluginRequest {
     }
     
     public function setTestsToRun( array $tests_to_run) {
-        //var_dump($tests_to_run);
         $this->tests_to_run = $this->parseTestsToRun($tests_to_run);
     }
     
@@ -80,7 +79,7 @@ class testsPluginRequest {
     }
     
     public function isSelected($path) {
-        return isset($this->test_map[$path]);
+        return isset($this->test_map[$path]) && $this->test_map[$path] == true;
     }
     
     public function getCoverCode() {
