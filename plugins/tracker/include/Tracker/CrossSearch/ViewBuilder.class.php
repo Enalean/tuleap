@@ -88,9 +88,7 @@ class Tracker_CrossSearch_ViewBuilder {
     }
     protected function getContentView($classname, Tracker_Report $report, $criteria, $artifacts) {
         $artifact_factory   = Tracker_ArtifactFactory::instance();
-        $bindFactory        = new Tracker_FormElement_Field_List_BindFactory();
-        $shared_factory     = new Tracker_SharedFormElementFactory($this->formElementFactory, $bindFactory);
-        return new $classname($report, $criteria, $artifacts, $artifact_factory, $shared_factory);
+        return new $classname($report, $criteria, $artifacts, $artifact_factory, $this->formElementFactory);
     }
     
     private function getReport() {

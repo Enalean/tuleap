@@ -1164,5 +1164,19 @@ class Tracker_FormElementFactory {
         }
         return $sibling;
     }
+    
+    /**
+     * @return Tracker_FormElement
+     */
+    public function getFieldFromTrackerAndSharedField(Tracker $tracker, Tracker_FormElement $shared) {
+        $dar = $this->getDao()->searchFieldFromTrackerIdAndSharedFieldId($tracker->getId(), $shared->getId());
+        $row = $dar->getRow();
+        if ($row) {
+            $field_id = $row['id'];
+            return $this->getFormElementById($field_id);
+        }
+        return null;
+    }
+
 }
 ?>

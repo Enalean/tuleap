@@ -41,21 +41,21 @@ class Tracker_CrossSearch_SearchContentView {
     protected $artifact_factory;
     
     /**
-     * @var Tracker_SharedFormElementFactory
+     * @var Tracker_FormElementFactory
      */
-    private $shared_factory;
+    private $factory;
 
     function __construct(       
                         Tracker_Report                   $report, 
                         array                            $criteria, 
                         TreeNode                         $tree_of_artifacts, 
                         Tracker_ArtifactFactory          $artifact_factory, 
-                        Tracker_SharedFormElementFactory $shared_factory) {
+                        Tracker_FormElementFactory       $factory) {
         $this->report            = $report;
         $this->criteria          = $criteria;
         $this->tree_of_artifacts = $tree_of_artifacts;
         $this->artifact_factory  = $artifact_factory;
-        $this->shared_factory    = $shared_factory;
+        $this->factory    = $factory;
         $treeVisistor            = new TreeNode_InjectPaddingInTreeNodeVisitor($collapsable = true);
         $this->tree_of_artifacts->accept($treeVisistor);
     }
@@ -140,7 +140,7 @@ class Tracker_CrossSearch_SearchContentView {
         $html = '';
         foreach ($this->criteria as $criterion) {
             $value = '';
-            $field = $this->shared_factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
+            $field = $this->factory->getFieldFromTrackerAndSharedField($artifact->getTracker(), $criterion->field);
             if ($field) {
                 $value = $field->fetchChangesetValue($artifact->getId(), $last_changeset_id, null);
             }
