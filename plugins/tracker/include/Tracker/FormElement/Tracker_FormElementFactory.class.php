@@ -1170,12 +1170,18 @@ class Tracker_FormElementFactory {
      */
     public function getFieldFromTrackerAndSharedField(Tracker $tracker, Tracker_FormElement $shared) {
         $dar = $this->getDao()->searchFieldFromTrackerIdAndSharedFieldId($tracker->getId(), $shared->getId());
-        $row = $dar->getRow();
-        if ($row) {
-            $field_id = $row['id'];
-            return $this->getFormElementById($field_id);
+        return $this->getInstanceFromDar($dar);
+        
+    }
+
+    public function getInstanceFromDar($dar) {
+        if ($dar) {
+            $row = $dar->getRow();
+            if ($row) {
+                return $this->getInstanceFromRow($row);
+            }
         }
-        return null;
+        return null;        
     }
 
 }
