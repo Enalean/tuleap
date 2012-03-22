@@ -42,6 +42,15 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
                 }
             }
             break;
+        case 'list_of_paths' :
+            if ($request->exist('paths_to_delete')) {
+                $vPathToDelete = new Valid_Array('paths_to_delete');
+                if($request->valid($vPathToDelete)) {
+                    $PathsToDelete    = $request->get('paths_to_delete');
+                    $svnNotification->removeSVNNotification($PathsToDelete, $group_id);
+                }
+            }
+            break;
         case 'path_mailing_list' :
             $vPath       = new Valid_String('form_path');
             $formPath    = $request->get('form_path');
@@ -103,7 +112,7 @@ foreach ($svn_notifications_details as $item) {
     $content .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'">';
     $content .= '<td>'. $hp->purify($item['svn_events_mailing_list']) .'</td>';
     $content .= '<td>'. $hp->purify($item['path']) .'</td><td>';
-    $content .= '<input type="checkbox" value="'. $item['path'] .'" name="mailing_lists_to_delete[]" >';
+    $content .= '<input type="checkbox" value="'. $item['path'] .'" name="paths_to_delete[]" >';
     $content .= '</td></tr>';
 }
 $content .= '<tr><td colspan="2"><input type="submit" value="Delete"></td></tr>';
