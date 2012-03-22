@@ -734,3 +734,13 @@ msgstr "バイナリファイル %1$s と %2$s は異なります"
 #: templates/project.tpl
 msgid "website"
 msgstr "website"
+
+# This is the name of YOUR language, in your language.
+# Don't just translate the word "English".
+# This will be displayed as a choice in the language picker for your language.
+# You want this in your native language so speakers of your language
+# will recognize it.  For example, a french translation would translate
+# this as "Français".
+#: include/Resource.class.php:121
+msgid "English"
+msgstr "日本語"

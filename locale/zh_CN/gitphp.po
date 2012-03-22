@@ -700,3 +700,32 @@ msgstr "不能运行 git 程序 \"%1$s\". 你需要在配置文件中配置 \"%2
 msgid "Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s\" config value."
 msgstr "不能运行比较程序 \"%1$s\". 你需要在配置文件中配置 \"%2$s\"项."
 
+# Link displayed in commitdiff view, when the user has filtered
+# the display to a single file using the list of changed files.
+# This will go back to showing all files in the commitdiff
+#: templates/commitdiff.tpl
+msgid "(show all)"
+msgstr ""
+
+# Message displayed when diffing two binary files.
+# %1$s: the filename of the first file
+# %2$s: the filename of the second file
+#: include/git/FileDiff.class.php:810
+#, php-format
+msgid "Binary files %1$s and %2$s differ"
+msgstr ""
+
+# Used to label the url of the website of the project
+#: templates/project.tpl
+msgid "website"
+msgstr ""
+
+# This is the name of YOUR language, in your language.
+# Don't just translate the word "English".
+# This will be displayed as a choice in the language picker for your language.
+# You want this in your native language so speakers of your language
+# will recognize it.  For example, a french translation would translate
+# this as "Français".
+#: include/Resource.class.php:121
+msgid "English"
+msgstr "中文简体"

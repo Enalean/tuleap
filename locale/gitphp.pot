@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: GitPHP 0.2.4\n"
+"Project-Id-Version: GitPHP 0.2.6\n"
 "Report-Msgid-Bugs-To: xiphux@gmail.com\n"
-"POT-Creation-Date: 2011-08-25 20:54-0500\n"
+"POT-Creation-Date: 2012-03-21 20:43-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,14 +54,14 @@ msgid "tree"
 msgstr ""
 
 # Used as link to download a copy of the files in a given commit
+#: templates/jsconst.tpl
 #: templates/search.tpl
 #: templates/commit.tpl
 #: templates/taglist.tpl
-#: templates/header.tpl
 #: templates/treelist.tpl
 #: templates/projectlist.tpl
 #: templates/shortloglist.tpl
-#: include/controller/Controller_Snapshot.class.php:92
+#: include/controller/Controller_Snapshot.class.php:94
 msgid "snapshot"
 msgstr ""
 
@@ -76,10 +76,10 @@ msgstr ""
 #: templates/commit.tpl
 #: templates/nav.tpl
 #: templates/taglist.tpl
-#: templates/header.tpl
 #: templates/log.tpl
 #: templates/history.tpl
 #: templates/shortloglist.tpl
+#: templates/projectbase.tpl
 #: include/controller/Controller_Commit.class.php:79
 msgid "commit"
 msgstr ""
@@ -97,7 +97,7 @@ msgstr ""
 #: templates/tag.tpl
 #: templates/commit.tpl
 #: templates/committip.tpl
-#: templates/header.tpl
+#: templates/projectbase.tpl
 msgid "author"
 msgstr ""
 
@@ -161,7 +161,7 @@ msgstr ""
 # The committer is the person who put the commit into this project
 #: templates/commit.tpl
 #: templates/committip.tpl
-#: templates/header.tpl
+#: templates/projectbase.tpl
 msgid "committer"
 msgstr ""
 
@@ -294,20 +294,21 @@ msgid "summary"
 msgstr ""
 
 # Link back to the list of projects
-#: templates/header.tpl
-#: include/controller/ControllerBase.class.php:257
+#: templates/main.tpl
+#: templates/projectbase.tpl
+#: include/controller/ControllerBase.class.php:270
 #: include/controller/Controller_ProjectList.class.php:94
 msgid "projects"
 msgstr ""
 
 # Used as a search type, to search the contents of files in the project
-#: templates/header.tpl
+#: templates/projectbase.tpl
 #: include/git/Blob.class.php:178
 msgid "file"
 msgstr ""
 
 # Used as title for search page, and also is the label for the search box
-#: templates/header.tpl
+#: templates/projectbase.tpl
 #: include/controller/Controller_Search.class.php:93
 msgid "search"
 msgstr ""
@@ -445,7 +446,7 @@ msgstr ""
 
 # Used as the title of the rss controller
 # rss is a standard web feed format
-#: include/controller/Controller_Feed.class.php:91
+#: include/controller/Controller_Feed.class.php:92
 msgid "rss"
 msgstr ""
 
@@ -457,7 +458,7 @@ msgstr ""
 # Error message when user tries to access a project that doesn't exist
 # %1$s: the project the user tried to access
 #: include/controller/Controller_Snapshot.class.php:44
-#: include/controller/ControllerBase.class.php:93
+#: include/controller/ControllerBase.class.php:101
 #, php-format
 msgid "Invalid project %1$s"
 msgstr ""
@@ -522,28 +523,28 @@ msgstr ""
 # Error message when user specifies a path for a project root or project, but the path given isn't a directory
 # %1$s: the path the user specified
 #: include/git/ProjectListDirectory.class.php:47
-#: include/git/Project.class.php:326
+#: include/git/Project.class.php:338
 #, php-format
 msgid "%1$s is not a directory"
 msgstr ""
 
 # Error message when a path specified in the config is not a git repository
 # %1$s: the specified path
-#: include/git/Project.class.php:330
+#: include/git/Project.class.php:342
 #, php-format
 msgid "%1$s is not a git repository"
 msgstr ""
 
 # Error message when a path specified is using '..' to break out of the project root (a hack attempt)
 # %1$s: The specified path
-#: include/git/Project.class.php:334
+#: include/git/Project.class.php:346
 #, php-format
 msgid "%1$s is attempting directory traversal"
 msgstr ""
 
 # Error message when a path specified is outside of the project root
 # %1$s: The specified path
-#: include/git/Project.class.php:340
+#: include/git/Project.class.php:352
 #, php-format
 msgid "%1$s is outside of the projectroot"
 msgstr ""
@@ -591,7 +592,7 @@ msgstr ""
 
 # Error message when a hash specified in a URL isn't a valid git hash
 # %1$s: the hash entered
-#: include/git/Pack.class.php:80 include/git/GitObject.class.php:107
+#: include/git/Pack.class.php:71 include/git/GitObject.class.php:137
 #, php-format
 msgid "Invalid hash %1$s"
 msgstr ""
@@ -666,24 +667,24 @@ msgstr ""
 
 # Error message when user hasn't defined a project root in the config
 # "projectroot" refers to a root directory where the user's git projects are stored
-#: index.php:125
+#: index.php:132
 msgid "A projectroot must be set in the config"
 msgstr ""
 
 # Caption for the rss button for a project
 # rss is a standard web feed format
-#: templates/footer.tpl
+#: templates/projectbase.tpl
 msgid "RSS"
 msgstr ""
 
 # Caption for the OPML button on the project list
 # OPML is a standard XML outline format
-#: templates/footer.tpl
+#: templates/projectlist.tpl
 msgid "OPML"
 msgstr ""
 
 # Caption for the button to get a plaintext list of projects
-#: templates/footer.tpl
+#: templates/projectlist.tpl
 msgid "TXT"
 msgstr ""
 
@@ -713,48 +714,48 @@ msgid "select for diff"
 msgstr ""
 
 # Used as an alternate text on javascript "loading" images
-#: templates/header.tpl
+#: templates/jsconst.tpl
 msgid "Loading…"
 msgstr ""
 
 # Used as a loading message while blame data is being pulled from the server
-#: templates/header.tpl
+#: templates/jsconst.tpl
 msgid "Loading blame data…"
 msgstr ""
 
 # Used as a label by the language selector drop-down box
-#: templates/header.tpl
+#: templates/main.tpl
 msgid "language:"
 msgstr ""
 
 # Used as a button by the language selector drop-down box to set the
 # language to the user's choice
-#: templates/header.tpl
+#: templates/main.tpl
 msgid "set"
 msgstr ""
 
 # Caption for the Atom button for a project
 # Atom is a standard web feed format
-#: templates/footer.tpl
+#: templates/projectbase.tpl
 msgid "Atom"
 msgstr ""
 
 # Used as the title of the Atom controller
 # Atom is a standard web feed format
-#: include/controller/Controller_Feed.class.php:96
+#: include/controller/Controller_Feed.class.php:97
 msgid "atom"
 msgstr ""
 
 # Used as an error message when memcache is turned
 # on without the appropriate PHP extension installed
-#: include/cache/Memcache.class.php:103
+#: include/smartyplugins/cacheresource.memcache.php:85
 msgid ""
 "The Memcached or Memcache PHP extension is required for Memcache support"
 msgstr ""
 
 # Message when searching the project list, and nothing is found
 # %1: the search string entered
-#: templates/header.tpl
+#: templates/jsconst.tpl
 #: templates/projectlist.tpl
 msgid "No matches found for \"%1\""
 msgstr ""
@@ -767,7 +768,7 @@ msgstr ""
 # Error message displayed when the git executable isn't found or doesn't work
 # %1$s: the git executable the system is trying to run
 # %2$s: the config value the user needs to set to specify the correct path
-#: index.php:133
+#: index.php:140
 #, php-format
 msgid ""
 "Could not run the git executable \"%1$s\".  You may need to set the \"%2$s\" "
@@ -777,7 +778,7 @@ msgstr ""
 # Error message displayed when the diff executable isn't found or doesn't work
 # %1$s: the diff executable the system is trying to run
 # %2$s: the config value the user needs to set to specify the correct path
-#: index.php:138
+#: index.php:145
 #, php-format
 msgid ""
 "Could not run the diff executable \"%1$s\".  You may need to set the \"%2$s"
@@ -802,4 +803,14 @@ msgstr ""
 # Used to label the url of the website of the project
 #: templates/project.tpl
 msgid "website"
+msgstr ""
+
+# This is the name of YOUR language, in your language.
+# Don't just translate the word "English".
+# This will be displayed as a choice in the language picker for your language.
+# You want this in your native language so speakers of your language
+# will recognize it.  For example, a french translation would translate
+# this as "Français".
+#: include/Resource.class.php:121
+msgid "English"
 msgstr ""

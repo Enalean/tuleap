@@ -118,23 +118,27 @@ class GitPHP_Resource
 	 */
 	public static function LocaleToName($locale)
 	{
-		switch ($locale) {
-			case 'en_US':
-				return 'English';
-			case 'fr_FR':
-				return 'Français';
-			case 'de_DE':
-				return 'Deutsch';
-			case 'ja_JP':
-				return '日本語';
-			case 'ru_RU':
-				return 'Русский';
-			case 'zh_CN':
-				return '中文简体';
-			case 'zz_Debug':
-				return 'Gibberish';
+		$localeName = __('English');		// for xgettext extraction
+
+		if (self::$currentLocale == $locale) {
+			return $localeName;
 		}
-		return '';
+
+		$localeReader = GitPHP_Resource::CreateLocale($locale);
+		if (!$localeReader) {
+			return '';
+		}
+
+		$localeName = $localeReader->translate('English');
+
+		if (!(($locale == 'en_US') || ($locale == 'en'))) {
+			if ($localeName == 'English') {
+				// someone didn't translate the language name - don't mislabel it as english
+				return '';
+			}
+		}
+
+		return $localeName;
 	}
 
 	/**
@@ -243,16 +247,37 @@ class GitPHP_Resource
 		self::$instance = null;
 		self::$currentLocale = '';
 
+		$localeReader = GitPHP_Resource::CreateLocale($locale);
+		if (!$localeReader) {
+			return false;
+		}
+
+		self::$instance = $localeReader;
+		self::$currentLocale = $locale;
+		return true;
+	}
+
+	/**
+	 * CreateLocale
+	 *
+	 * Creates a locale reader object
+	 *
+	 * @access private
+	 * @static
+	 * @param string $locale locale to create
+	 * @return mixed locale reader object or null on failure
+	 */
+	private static function CreateLocale($locale)
+	{
 		$reader = null;
 		if (!(($locale == 'en_US') || ($locale == 'en'))) {
 			$reader = new FileReader(GITPHP_LOCALEDIR . $locale . '/gitphp.mo');
-			if (!$reader)
-				return false;
+			if (!$reader) {
+				return null;
+			}
 		}
 
-		self::$instance = new gettext_reader($reader);
-		self::$currentLocale = $locale;
-		return true;
+		return new gettext_reader($reader);
 	}
 
 }
