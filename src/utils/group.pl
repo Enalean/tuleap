@@ -146,15 +146,21 @@ sub get_emails_by_path {
                 $patternMatcher .= '^'.$patternBuilder;
         }
     }
-    $patternMatcher .= '*';
+
 # @TODO add comment
     my $retfieldname = $dbh->quote_identifier($retfieldname);
     my $table = $dbh->quote_identifier($table);
     my $fieldname = $dbh->quote_identifier($fieldname);
-    my $patternMatcher = $dbh->quote($patternMatcher);
     my $groupid = $dbh->quote($groupid);
 
-    $query = "SELECT $retfieldname FROM $table WHERE $fieldname = '/' or $fieldname RLIKE $patternMatcher and group_id = $groupid";
+    if ($patternMatcher ne '') {
+        $patternMatcher .= '*';
+        my $patternMatcher = $dbh->quote($patternMatcher);
+        $subPathsExpression = "and $fieldname = '/' or $fieldname RLIKE $patternMatcher";
+    } else {
+        $subPathsExpression = "and 1";
+    }
+    $query = "SELECT $retfieldname FROM $table WHERE group_id = $groupid ".$subPathsExpression;
     $sth = $dbh->prepare($query);
     $res = $sth->execute();
     my @emails = ();
