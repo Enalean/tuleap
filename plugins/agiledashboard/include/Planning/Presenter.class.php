@@ -77,6 +77,10 @@ class Planning_Presenter {
         }
         return $stuffToPassToMustache;
     }
+    
+    public function destinationHelp() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'destination_help');
+    }
 }
 
 ?>
