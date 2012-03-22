@@ -279,6 +279,15 @@ class Planning_ControllerNonEmptyIndexTest extends Planning_ControllerIndexTest 
     }
 }
 
+
+class MockBaseLanguage_Planning_ControllerNewTest extends MockBaseLanguage {
+    function getText($key1, $key2, $args = array()) {
+        if ($key1 == 'plugin_agiledashboard' && $key2 == 'planning-allows-assignment') {
+            return 'This planning allows assignment of '. $args[0] .' to '. $args[1];
+        }
+        return parent::getText($key1, $key2, $args);
+    }
+}
 class Planning_ControllerNewTest extends TuleapTestCase {
     
     function setUp() {
@@ -289,6 +298,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $this->planning_factory = new MockPlanningFactory();
         $this->tracker_factory  = new MockTrackerFactory();
         $this->controller       = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory, $this->tracker_factory);
+        $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
         
         $this->trackers = array(
             101 => aTracker()->withId(101)->withName('Epics')->build(),
