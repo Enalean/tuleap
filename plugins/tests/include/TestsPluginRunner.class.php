@@ -88,9 +88,10 @@ class TestsPluginRunner {
         $pluginSuite = $this->buildSuite($pluginPresenter->title());
 
         $this->addSuite($pluginSuite, $pluginPresenter, $prefix, $testsPath);
-
-        $allPluginsPresenter->addChild($pluginPresenter);
-        $allPluginsSuite->add($pluginSuite);
+        if ($pluginPresenter->hasChildren()) {
+            $allPluginsPresenter->addChild($pluginPresenter);
+            $allPluginsSuite->add($pluginSuite);
+        }
     }
 
     public function addSuite($parentSuite, $presenter, $name, $path) {
