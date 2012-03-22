@@ -186,12 +186,11 @@ class TrackerManager { /* extends Engine? */
      * @return Tracker_CrossSearch_SearchController 
      */
     protected function getCrossSearchController(Codendi_Request $request) {        
-        $search            = $this->getCrossSearch();
         return new Tracker_CrossSearch_SearchController(
             $request,
             ProjectManager::instance(),
             $GLOBALS['Response'],
-            new Tracker_CrossSearch_ViewBuilder(Tracker_FormElementFactory::instance(), $this->getTrackerFactory(), $search)
+            $this->getCrossSearchViewBuilder()
         );
     }
     
@@ -816,6 +815,10 @@ class TrackerManager { /* extends Engine? */
 
     private function getHierarchyFactory() {
         return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao());
+    }
+
+    public function getCrossSearchViewBuilder() {
+        return new Tracker_CrossSearch_ViewBuilder($this->getTracker_FormElementFactory(), $this->getTrackerFactory(), $this->getCrossSearch());
     }
 
 }

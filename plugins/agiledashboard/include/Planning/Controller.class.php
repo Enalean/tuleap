@@ -88,7 +88,7 @@ class Planning_Controller extends Controller {
         return $artifact->getId();
     }
 
-    function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager, Tracker_CrossSearch_Search $search) {
+    function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
         $request_criteria = array();
         $valid_criteria = new Valid_Array('criteria');
         $valid_criteria->required();
