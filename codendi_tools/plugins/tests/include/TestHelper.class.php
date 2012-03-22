@@ -53,6 +53,7 @@ class TestHelper {
         foreach ($argList as $row) {
             $dar->setReturnValueAt($rowCount, 'valid', true);
             $dar->setReturnValueAt($rowCount, 'current', $row);
+            $dar->setReturnValueAt($rowCount, 'getRow', $row);
             $rowCount++;
         }
         $dar->setReturnValueAt($rowCount, 'valid', false);
