@@ -13,27 +13,6 @@ require_once('common/svn/SvnNotification.class.php');
 $svnNotification = new SvnNotification();
 $pm              = ProjectManager::instance();
 
-/**
- * Cleanup list of mails
- *
- * @TODO: Find a better place or chech if this is not a duplicate code
- *
- * @param String $mailingList List of mail addresses to be cleaned
- *
- * @return String
- */
-function cleanupMailsList($mailingList) {
-    $cleanedMailingList = array();
-    $list               = split(',', $mailingList);
-    $vMail              = new Valid_Email();
-    foreach ($list as $mail) {
-        if ($vMail->validate(trim($mail))) {
-            $cleanedMailingList[] = trim($mail);
-        }
-    }
-    return join(', ', $cleanedMailingList);
-}
-
 // CAUTION!!
 // Make the changes before calling svn_header_admin because 
 // svn_header_admin caches the project object in memory and
@@ -57,7 +36,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             if($request->valid($vHeader)) {
                 $mailingHeader = $request->get('form_mailing_header');
                 if ($pm->setSVNHeader($group_id, $mailingHeader)) {
-                    $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_header_success'));
+                    $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_header_fail'));
                 }
@@ -65,14 +44,21 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             break;
         case 'path_mailing_list' :
             $vPath       = new Valid_String('form_path');
-            $formPath        = $request->get('form_path');
-            $mailingList = cleanupMailsList($request->get('form_mailing_list'));
+            $formPath    = $request->get('form_path');
+            $result      = util_cleanup_email_list($request->get('form_mailing_list'));
+            $mailingList = join(', ', $result['clean']);
+            $badList     = join(', ', $result['bad']);
             if(!empty($mailingList) && !empty($formPath) && $request->valid($vPath)) {
                 if ($svnNotification->setSVNMailingList($group_id, $mailingList, $formPath)) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_email_success'));
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_eemail_fail'));
+                $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification','upd_email_fail'));
+            }
+            if (!empty($badList)) {
+                $GLOBALS['Response']->addFeedback('warning', $Language->getText('svn_admin_notification','upd_email_fail'));
+                // TODO: i18n
+                $GLOBALS['Response']->addFeedback('warning', 'Bad addresses "'.$badList.'"');
             }
             break;
         default :
