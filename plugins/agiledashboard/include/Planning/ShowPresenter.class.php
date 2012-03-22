@@ -19,7 +19,7 @@
  */
 
 
-class Planning_Presenter {
+class Planning_ShowPresenter {
     
     public $planning_id;
     public $planning_name;

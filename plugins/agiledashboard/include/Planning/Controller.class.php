@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once 'Presenter.class.php';
+require_once 'ShowPresenter.class.php';
 require_once 'FormPresenter.class.php';
 require_once 'IndexPresenter.class.php';
 require_once 'PlanningFactory.class.php';
@@ -102,7 +102,7 @@ class Planning_Controller extends Controller {
         $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
         
         $content_view        = $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $request_criteria, $search, $excludedArtifactIds);
-        $presenter           = new Planning_Presenter($planning, $content_view, $artifacts_to_select, $this->artifact);
+        $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
         $this->render('show', $presenter);
     }
     
