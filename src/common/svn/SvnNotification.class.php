@@ -80,6 +80,34 @@ class SvnNotification {
         }
     }
 
+    /**
+     * Remove svn notification details
+     * @TODO i18n, removed path details on feedback...
+     *
+     * @param Array   $selectedPaths Contains list of paths to remove.
+     * @param Integer $projectId     Project id
+     *
+     * @return void
+     */
+    function removeSVNNotification($selectedPaths, $projectId) {
+        if (is_array($selectedPaths) && !empty($selectedPaths)) {
+            $dao = $this->_getDao();
+            $paths = array();
+            foreach ($selectedPaths as $pathToDelete) {
+                if ($dao->deleteSVNMailingList($pathToDelete, $projectId)) {
+                    $paths[] = $pathToDelete;
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', 'Mailing list not removed');
+                }
+            }
+            if (!empty($paths)) {
+                $GLOBALS['Response']->addFeedback('info', 'notifications removed');
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('error', 'No path selected');
+        }
+    }
+
 }
 
 ?>
