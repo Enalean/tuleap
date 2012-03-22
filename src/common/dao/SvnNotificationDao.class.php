@@ -63,7 +63,7 @@ class SvnNotificationDao extends DataAccessObject {
         if (!empty($path)) {
             $condition = 'AND path = '.$this->da->quoteSmart($path);
         }
-        $sql = ' SELECT svn_events_mailing_list
+        $sql = ' SELECT svn_events_mailing_list, path
                  FROM svn_notification 
                  WHERE group_id = '.$this->da->escapeInt($groupId).'
                  '.$condition;
