@@ -3439,7 +3439,7 @@ CREATE TABLE IF NOT EXISTS svn_notification (
     group_id int(11) NOT NULL,
     svn_events_mailing_list text NOT NULL DEFAULT "",
     path varchar(255) DEFAULT "/",
-    KEY (group_id, svn_events_mailing_list, path)
+    PRIMARY KEY (group_id, path)
 );
 
 
