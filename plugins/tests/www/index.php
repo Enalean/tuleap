@@ -10,7 +10,6 @@ require_once 'tests_common.php';
 require_once dirname(__FILE__).'/../include/TestsPluginRunnerPresenter.class.php';
 require_once dirname(__FILE__).'/../include/TestsPluginSuitePresenter.class.php';
 require_once dirname(__FILE__).'/../include/TestsPluginRequest.class.php';
-require_once dirname(__FILE__).'/../include/mustache/MustacheRenderer.class.php';
 require_once dirname(__FILE__).'/../include/TestsPluginRunner.class.php';
 
 $request  = new TestsPluginRequest($_REQUEST);

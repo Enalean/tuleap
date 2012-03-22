@@ -22,9 +22,7 @@ require_once dirname(__FILE__) . '/TestsPluginFilterIterator.class.php';
 require_once dirname(__FILE__) . '/TestsPluginRunnerPresenter.class.php';
 require_once dirname(__FILE__) . '/TestsPluginSuitePresenter.class.php';
 require_once dirname(__FILE__) . '/TestsPluginRequest.class.php';
-if (!class_exists('Mustache')) {
-    include_once dirname(__FILE__) . '/mustache/MustacheRenderer.class.php';
-}
+require_once dirname(__FILE__) . '/../../tracker/include/MustacheRenderer.class.php';
 
 require_once dirname(__FILE__) . '/simpletest/test_case.php';
 
