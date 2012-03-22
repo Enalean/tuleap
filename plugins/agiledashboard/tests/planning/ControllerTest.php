@@ -22,6 +22,7 @@ require_once(dirname(__FILE__).'/../../include/Planning/Controller.class.php');
 require_once(dirname(__FILE__).'/../../include/Planning/Planning.class.php');
 require_once(dirname(__FILE__).'/../../../tracker/tests/Test_Tracker_Builder.php');
 require_once(dirname(__FILE__).'/../builders/planning.php');
+require_once(dirname(__FILE__).'/../builders/planning_factory.php');
 require_once dirname(__FILE__).'/../builders/controller.php';
 
 if (!defined('TRACKER_BASE_URL')) {
@@ -296,7 +297,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $this->group_id         = '123';
         $this->request          = new Codendi_Request(array('group_id' => $this->group_id));
         $this->artifact_factory = new MockTracker_ArtifactFactory();
-        $this->planning_factory = new MockPlanningFactory();
+        $this->planning_factory = aPlanningFactory()->build();
         $this->tracker_factory  = new MockTrackerFactory();
         $this->controller       = new Planning_Controller($this->request, $this->artifact_factory, $this->planning_factory, $this->tracker_factory);
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();

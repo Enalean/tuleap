@@ -19,7 +19,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'Planning.class.php';
+require_once dirname(__FILE__) . '/../../../tracker/include/Tracker/Tracker.class.php';
+
 class Planning_TrackerPresenter {
+    
+    /**
+     * @var Planning
+     */
+    private $planning;
+    
+    /**
+     * @var Tracker
+     */
+    private $tracker;
+    
     public function __construct(/*Planning*/ $planning, Tracker $tracker) {
         $this->planning = $planning;
         $this->tracker  = $tracker;

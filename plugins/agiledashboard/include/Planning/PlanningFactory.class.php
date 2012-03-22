@@ -53,6 +53,10 @@ class PlanningFactory {
         }
         return null;
     }
+    
+    public function buildNewPlanning($group_id) {
+        return new Planning(null, null, $group_id);
+    }
 
     public function getAllBacklogTrackerIds($planning_id) {
         $backlog_tracker_ids = array();

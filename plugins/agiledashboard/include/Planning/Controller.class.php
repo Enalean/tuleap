@@ -53,7 +53,9 @@ class Planning_Controller extends Controller {
     }
     
     public function new_() {
-        $presenter = new Planning_FormPresenter($this->group_id, $this->tracker_factory, null);
+        $planning  = $this->planning_factory->buildNewPlanning($this->group_id);
+        $presenter = new Planning_FormPresenter($planning, $this->tracker_factory);
+        
         $this->render('new', $presenter);
     }
     
@@ -126,7 +128,7 @@ class Planning_Controller extends Controller {
     public function edit() {
         try {
             $planning = $this->getPlanning();
-            $presenter = new Planning_FormPresenter($this->group_id, $this->tracker_factory, $planning);
+            $presenter = new Planning_FormPresenter($planning, $this->tracker_factory);
             $this->render('edit', $presenter);
             
         } catch(Planning_NotFoundException $exception) {
