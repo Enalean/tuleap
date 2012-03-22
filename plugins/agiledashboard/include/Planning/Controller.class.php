@@ -102,7 +102,7 @@ class Planning_Controller extends Controller {
         $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
         $tracker_ids = $planning->getBacklogTrackerIds();
         
-        $content_view        = $view_builder->buildCustomContentView('Planning_SearchContentView', $project, $request_criteria, $excludedArtifactIds, $tracker_ids);
+        $content_view        = $view_builder->buildPlanningContentView($project, $request_criteria, $excludedArtifactIds, $tracker_ids);
         $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
         $this->render('show', $presenter);
     }
