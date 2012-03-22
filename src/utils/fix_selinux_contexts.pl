@@ -72,10 +72,10 @@ if (( ! -e $CHCON ) || ( ! -e "/etc/selinux/config" ) || ( `grep -i '^SELINUX=di
 `setsebool -P nscd_disable_trans 1`;
 
 # Reload SELinux modules
-opendir(DIR, "$INSTALL_DIR/selinux") || die "Can't opendir SELinux modules: $!";
+opendir(DIR, "$INSTALL_DIR/tools/selinux") || die "Can't opendir SELinux modules: $!";
 while($file=readdir(DIR)) {
   if ($file=~/\.pp$/) {
-      `$SEMODULE -i $INSTALL_DIR/selinux/$file`;
+      `$SEMODULE -i $INSTALL_DIR/tools/selinux/$file`;
   }
 }
 closedir DIR;
