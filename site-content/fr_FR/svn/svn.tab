@@ -1,4 +1,4 @@
-#
+﻿#
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 # This file is licensed under the GNU General Public License version 2. See the file COPYING.
 #
@@ -44,7 +44,7 @@ svn_admin_notification	upd_email_success	Notification e-mail mise à jour avec s
 svn_admin_notification	upd_email_fail	Le champ "Envoyer à" contient une adresse invalide.
 svn_admin_notification	upd_email_bad_adr	Adresses invalides "$1"
 svn_admin_notification	upd_header_success	Entête mise à jour avec succès
-svn_admin_notification	upd_header_fail	L'entête n'a pas été mise � jour.
+svn_admin_notification	upd_header_fail	L'entête n'a pas été mise à jour.
 svn_admin_notification	email	Administration de Subversion  - Notification e-mail 
 svn_admin_notification	mail_comment	<H3>Notification e-mail des commits</H3><p><I>Chaque évènement de commit peut être notifié par e-mail à certains destinataires ou listes de diffusion (séparés par des virgules). Une entête apparaissant dans le sujet du message peut aussi être spécifiée.</I></p>
 svn_admin_notification	mail_to	Envoyer à
