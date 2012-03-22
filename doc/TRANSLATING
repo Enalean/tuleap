@@ -37,6 +37,14 @@ parameters will be inserted at runtime.
 You can look at the debugging locale locale/zz_Debug/gitphp.po or any of the
 other existing locales as an example.
 
+Note:
+One special string is 'English'.  I've made a note for the string, but don't
+just translate 'English' into your language.  This is the name of YOUR language -
+it's displayed as the name of your language in the language picker.  You want the
+name of your language, in your native language, so speakers of your language
+will recognize it without knowing English.  For example, in the French locale,
+this would be "Français", which is "French" IN French.
+
 
 4. Once you're done, save and compile the po into a binary mo.  This should
 be in the same directory as your po file.  So for example, I would compile
@@ -53,16 +61,7 @@ directory:
 ./util/msgfmt.sh
 
 
-5. The language selection box presents the language choices as
-user-friendly human-readable language names, in the user's native language.
-In order to support this, you need to create a mapping of the locale to
-your language name, in your native language, in the file
-include/Resource.class.php, function LocaleToName.  Just add a case statement
-to the switch, where the case is your locale and the return is the readable
-name.
-
-
-6. Every now and then, as the project's code changes, new strings will come out
+5. Every now and then, as the project's code changes, new strings will come out
 or strings will be modified, and your translation will be updated.  In this
 case, you will need to merge the updates from locale/gitphp.pot into your
 translation.  You can run this command to see what updates are needed
