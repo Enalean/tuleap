@@ -388,8 +388,8 @@ my @dirschanged = &read_from_process($svnlook, 'dirs-changed', $repos,
 
 my @svn_events_mailing_lists = ();
 foreach my $dirVal (@dirschanged) {
-my @directory_notif = get_emails_by_path('svn_notification', 'path', $dirVal, 'svn_events_mailing_list', $group_id);
-push(@svn_events_mailing_lists, @directory_notif);
+  my @directory_notif = get_emails_by_path('svn_notification', 'path', $dirVal, 'svn_events_mailing_list', $group_id);
+  push(@svn_events_mailing_lists, @directory_notif);
 }
 my @svn_events_notifications = redundancy_grep(\@svn_events_mailing_lists);
 
