@@ -64,6 +64,22 @@ class SvnNotification {
         }
     }
 
+    /**
+     * Get mailing list notification and path for the whole project
+     *
+     * @param Integer $projectId Project id
+     *
+     * @return DataAccessResult
+     */
+    function getSVNEventNotificationDetails($projectId) {
+        $dao = $this->_getDao();
+        if ($dar = $dao->getSVNMailingList($projectId)) {
+            return $dar;
+        } else {
+            return null;
+        }
+    }
+
 }
 
 ?>
