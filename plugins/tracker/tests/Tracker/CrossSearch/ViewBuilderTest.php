@@ -49,7 +49,7 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
 
         $builder   = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search);
         $classname = 'Fake_Tracker_CrossSearch_SearchContentView';
-        $view      = $builder->buildCustomContentView($classname, $project, $request_criteria, array());
+        $view      = $builder->buildCustomContentView($classname, $project, $request_criteria, array(), array());
         $this->assertIsA($view, $classname);
     }
     
