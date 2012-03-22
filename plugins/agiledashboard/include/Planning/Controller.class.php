@@ -36,7 +36,7 @@ class Planning_Controller extends Controller {
      */
     private $artifact;
     
-    function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory, TrackerFactory $tracker_factory) {
+    public function __construct(Codendi_Request $request, Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory, TrackerFactory $tracker_factory) {
         parent::__construct('agiledashboard', $request);
         
         $aid = $request->get('aid');

@@ -30,7 +30,7 @@ class AgileDashboardPlugin extends Plugin {
     /**
      * Plugin constructor
      */
-    function __construct($id) {
+    public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
         // Do not load the plugin if tracker is not installed & active
@@ -48,7 +48,7 @@ class AgileDashboardPlugin extends Plugin {
     /**
      * @return AgileDashboardPluginInfo
      */
-    function getPluginInfo() {
+    public function getPluginInfo() {
         if (!$this->pluginInfo) {
             include_once 'AgileDashboardPluginInfo.class.php';
             $this->pluginInfo = new AgileDashboardPluginInfo($this);
@@ -56,7 +56,7 @@ class AgileDashboardPlugin extends Plugin {
         return $this->pluginInfo;
     }
     
-    function cssfile($params) {
+    public function cssfile($params) {
         // Only show the stylesheet if we're actually in the AgileDashboard pages.
         // This stops styles inadvertently clashing with the main site.
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
