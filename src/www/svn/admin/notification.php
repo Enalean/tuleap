@@ -93,7 +93,7 @@ echo '
 // List of paths & mail addresses (+delete)
 // TODO
 $svn_notifications_details = $svnNotification->getSVNEventNotificationDetails($group_id);
-$content = '<table><tr><td>';
+$content = '<table>';
 $content .= '<input type="hidden" name="group_id" value="'.$group_id.'">';
 $content .= '<input type="hidden" name="post_changes" value="list_of_paths">';
 $content .= html_build_list_table_top(array('SVN notification list', 'SVN monitored path' , 'Delete?'), false, false , false);
@@ -107,7 +107,7 @@ foreach ($svn_notifications_details as $item) {
     $content .= '</td></tr>';
 }
 $content .= '<tr><td colspan="2"><input type="submit" value="Delete"></td></tr>';
-$content .= '</tbody></table></form>';
+$content .= '</tbody></table>';
 echo '
        <br/>
        <form action="" method="post">'.$content.'</form>';
