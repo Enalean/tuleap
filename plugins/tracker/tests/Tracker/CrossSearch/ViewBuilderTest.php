@@ -47,9 +47,9 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         $search             = new MockTracker_CrossSearch_Search();
         $search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
 
-        $builder   = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory);
+        $builder   = new Tracker_CrossSearch_ViewBuilder($formElementFactory, $tracker_factory, $search);
         $classname = 'Fake_Tracker_CrossSearch_SearchContentView';
-        $view      = $builder->buildCustomContentView($classname, $project, $request_criteria, $search, array());
+        $view      = $builder->buildCustomContentView($classname, $project, $request_criteria, array());
         $this->assertIsA($view, $classname);
     }
     
@@ -106,90 +106,9 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
     }
     
     private function getCriteria($project, $report) {
-        $searchViewBuilder = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, new MockTrackerFactory());
+        $searchViewBuilder = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
         return $searchViewBuilder->getCriteria($project, $report, $this->request->get('criteria'));
     }
-    
-//            $view_builder = TestHelper::getPartialMock('Tracker_CrossSearch_ViewBuilder', array('getView'));
-//        $view_builder->__construct($this->formElementFactory, $this->tracker_factory);
-
-    
-//    public function itCreatesTrackerHierarchyFromDatabase() {
-//        $this->GivenAProjectThatUseTheService();
-//        
-//        $trackers_ids = array(111, 112);
-//        $this->GivenAListOfTrackerIds($trackers_ids);
-//        
-//        $hierarchy_factory = $this->GivenAHierarchyFactory();
-//        $hierarchy_factory->expectOnce('getHierarchy', array($trackers_ids));
-//        
-//        $controller = $this->GivenAControllerWithAHierarchyFactory($hierarchy_factory);
-//        $controller->search();
-//    }
-//    
-//    public function itCallsGetMatchingArtifactsWithAHierarchy() {
-//        $view = new MockTracker_CrossSearch_SearchView();
-//        
-//        $tracker_hierarchy = new MockTracker_Hierarchy();
-//        $this->hierarchy_factory->setReturnValue('getHierarchy', $tracker_hierarchy);
-//        
-//        $criteria = array();
-//        $this->request = new Codendi_Request(array(
-//            'group_id' => '66', 
-//            'criteria' => $criteria
-//        ));
-//        
-//        $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
-//        
-//        $this->formElementFactory->setReturnValue('getProjectSharedFields', array());
-//        
-//        $matchingIds = array(array('artifactId1', 'artifactId2'), array('changesetId1', 'changesetId2'));
-//        
-//        $this->search->setReturnValue('getMatchingArtifacts', $matchingIds);
-//        $this->search->expectOnce('getMatchingArtifacts', array(array(), $tracker_hierarchy, $criteria));
-//        
-//        $controller = $this->getController();
-//        $this->view_builder->setReturnValue('getView', $view);
-//        $this->tracker_factory->setReturnValue('getTrackersByGroupId', array());
-//        
-//        $controller->search();
-//    }
-//    private function GivenAListOfTrackerIds($trackers_ids) {
-//        $trackers = array();
-//        $fields   = array();
-//        foreach( $trackers_ids as $tracker_id) {
-//            $tracker = new MockTracker();
-//            $tracker->setReturnValue('getId', $tracker_id);
-//            $fields[] = aTextField()->withId($tracker_id * 10)->withTracker($tracker)->build();
-//            $trackers[] = $tracker;
-//        }
-//        $this->tracker_factory->setReturnValue('getTrackersByGroupId', $trackers);
-//        $this->formElementFactory->setReturnValue('getAllProjectSharedFields', $fields);
-//        $this->formElementFactory->setReturnValue('getProjectSharedFields', $fields);
-//    }
-//    
-//    private function GivenAControllerWithAHierarchyFactory($hierarchy_factory) {
-//        $view = new MockTracker_CrossSearch_SearchView();
-//        $this->view_builder->setReturnValue('buildView', $view);
-//        $controller = $this->getControllerWithHierarchyFactory($hierarchy_factory);
-//
-//        
-//        return $controller;
-//    }
-//    
-//    private function GivenAHierarchyFactory() {
-//        $trackers_hierarchy = new Tracker_Hierarchy(array());
-//        
-//        $hierarchy_factory = new MockTracker_HierarchyFactory();
-//        $hierarchy_factory->setReturnValue('getHierarchy', $trackers_hierarchy);
-//        return $hierarchy_factory;
-//    }
-//    
-//    private function GivenAProjectThatUseTheService() {
-//        $this->project->setReturnValue('getService', $this->service, array('plugin_tracker'));
-//    }
-//    
-    
     
 }
 ?>

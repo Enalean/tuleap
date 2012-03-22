@@ -41,26 +41,14 @@ class Tracker_CrossSearch_SearchController {
      */
     private $layout;
     
-    /**
-     * @var Tracker_HierarchyFactory
-     */
-    private $hierarchy_factory;
-    
-    /**
-     * @var Tracker_CrossSearch_Search
-     */
-    private $search;
-    
     public function __construct(Codendi_Request                 $request,
                                 ProjectManager                  $projectManager, 
                                 Layout                          $layout,
-                                Tracker_CrossSearch_Search      $search,
                                 Tracker_CrossSearch_ViewBuilder $view_builder) {
         
         $this->request            = $request;
         $this->projectManager     = $projectManager;
         $this->layout             = $layout;
-        $this->search             = $search;
         $this->view_builder       = $view_builder;
     }
 
@@ -78,8 +66,7 @@ class Tracker_CrossSearch_SearchController {
                     , $request_criteria);
             
             $content_view = $this->view_builder->buildContentView($project
-                    , $request_criteria
-                    , $this->search);
+                    , $request_criteria);
             
             $view->render($content_view);
         }

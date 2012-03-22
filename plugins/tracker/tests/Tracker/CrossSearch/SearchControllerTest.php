@@ -44,16 +44,14 @@ Mock::generate('TrackerFactory');
 class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
-        $view_builder = new MockTracker_CrossSearch_ViewBuilder();
 
         $this->service            = new MockService();
         $this->project            = new MockProject();
         $this->manager            = new MockProjectManager();
         $this->manager->setReturnValue('getProject', $this->project, array('66'));
         $this->request            = new Codendi_Request(array('group_id' => '66', 'criteria' => array()));
-        $this->search             = new MockTracker_CrossSearch_Search();
-        $this->search->setReturnValue('getHierarchicallySortedArtifacts', new TreeNode());
-        $this->hierarchy_factory  = new MockTracker_HierarchyFactory();
+        
+        $view_builder             = new MockTracker_CrossSearch_ViewBuilder();
         $this->view_builder       = $view_builder;
         
         $this->project->setReturnValue('getGroupId', '123');
@@ -111,13 +109,8 @@ class Tracker_CrossSearch_SearchControllerIndexTest extends TuleapTestCase {
     }
 
     private function getController() {
-        return $this->getControllerWithHierarchyFactory($this->hierarchy_factory);
+        return new Tracker_CrossSearch_SearchController($this->request, $this->manager, $GLOBALS['HTML'], $this->view_builder);
     }
-
-    private function getControllerWithHierarchyFactory($hierarchy_factory) {
-        return new Tracker_CrossSearch_SearchController($this->request, $this->manager, $GLOBALS['HTML'], $this->search, $this->view_builder);
-    }
-
 }
 
 ?>
