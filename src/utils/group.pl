@@ -168,10 +168,10 @@ sub get_emails_by_path {
         while (my @row = $sth->fetchrow_array()) {
             my $email = shift @row;
             my @notifEmails = split(',', $email);
-                foreach my $emailVal (@notifEmails) {
-                    $emailVal =~ s/^\s+//;
-                    push @emails, $emailVal;
-                }
+            foreach my $emailVal (@notifEmails) {
+                $emailVal =~ s/^\s+//;
+                push @emails, $emailVal;
+            }
         }
     } else {
         print STDERR "$query\nCan't select field: $DBI::errstr\n";
