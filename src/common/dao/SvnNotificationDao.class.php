@@ -76,14 +76,14 @@ class SvnNotificationDao extends DataAccessObject {
     * @param String  $path    svn path
     * @param Integer $groupId Project id
     *
-    *@return void
+    *@return Boolean
     */
     function deleteSVNMailingList($path, $projectId) {
         $sql = sprintf('DELETE FROM svn_notification'.
             ' WHERE path=%s'.
             ' AND group_id=%d'
             , $this->da->quoteSmart($path), $this->da->quoteSmart($projectId));
-        $this->update($sql);
+        return $this->update($sql);
     }
 }
 
