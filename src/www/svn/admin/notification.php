@@ -45,7 +45,6 @@ $request->valid(new Valid_String('SUBMIT'));
 $vPath = new Valid_String('path');
 if ($request->exist('path') && $request->valid($vPath)) {
     $path             = $request->get('path');
-    $svn_mailing_list = $svnNotification->getSVNMailingList($group_id, $path);
 } else {
     $path = '/';
 }
@@ -88,6 +87,7 @@ svn_header_admin(array ('title'=>$Language->getText('svn_admin_general_settings'
 $pm->clear($group_id);
 $project = $pm->getProject($group_id);
 $svn_mailing_header = $project->getSVNMailingHeader();
+$svn_mailing_list = $svnNotification->getSVNMailingList($group_id, $path);
 
 // Mail header
 echo '
