@@ -177,15 +177,6 @@ require_once('common/widget/Widget_ProjectImageViewer.class.php');
             case 'myartifacts':
                 $o =& new Widget_MyArtifacts();
                 break;
-            case 'mybugs':
-                $o =& new Widget_MyBugs();
-                break;
-            case 'mytasks':
-                $o =& new Widget_MyTasks();
-                break;
-            case 'mysrs':
-                $o =& new Widget_MySrs();
-                break;
             case 'myrss':
                 $o =& new Widget_MyRss();
                 break;
