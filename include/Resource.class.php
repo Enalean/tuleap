@@ -172,6 +172,8 @@ class GitPHP_Resource
 				}
 			}
 		}
+
+		ksort($locales);
 		
 		return $locales;
 	}
