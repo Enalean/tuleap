@@ -7,16 +7,13 @@ header("Pragma: no-cache");
 
 require_once 'tests_common.php';
 
-require_once dirname(__FILE__).'/../include/TestsPluginRunnerPresenter.class.php';
-require_once dirname(__FILE__).'/../include/TestsPluginSuitePresenter.class.php';
-require_once dirname(__FILE__).'/../include/TestsPluginRequest.class.php';
 require_once dirname(__FILE__).'/../include/TestsPluginRunner.class.php';
+require_once dirname(__FILE__).'/../include/TestsPluginRequest.class.php';
 
 $request  = new TestsPluginRequest($_REQUEST);
 $request->setDisplay('HTML');
 
 $runner   = new TestsPluginRunner($request);
-
 
 $runner->runAndDisplay();
 
