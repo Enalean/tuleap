@@ -146,7 +146,8 @@ class Planning_ControllerTest extends TuleapTestCase {
         $project_manager->setReturnValue('getProject', $project, array($project_id));
         $view_builder = new MockTracker_CrossSearch_ViewBuilder();
         $linked_items = array();
-        $view_builder->expectOnce('buildCustomContentView', array('Planning_SearchContentView', $project, $expected_criteria, $search, $linked_items));
+        $tracker_ids  = array();
+        $view_builder->expectOnce('buildCustomContentView', array('Planning_SearchContentView', $project, $expected_criteria, $search, $linked_items, $tracker_ids));
         $view_builder->setReturnValue('buildCustomContentView', $content_view);
         
         $title    = "screen hangs with macos and some escapable characters #<";
