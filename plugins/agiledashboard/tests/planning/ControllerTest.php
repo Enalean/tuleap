@@ -39,7 +39,7 @@ Mock::generate('Tracker_CrossSearch_Search');
 Mock::generate('Tracker_CrossSearch_SearchContentView');
 Mock::generate('Tracker_CrossSearch_ViewBuilder');
 
-class Planning_ControllerTest extends TuleapTestCase {
+class Planning_ControllerShowTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
