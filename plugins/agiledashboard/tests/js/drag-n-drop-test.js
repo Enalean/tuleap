@@ -68,7 +68,6 @@ describe("drag-n-drop", function () {
 
         var sourceId = 152;
         var targetId = 666;
-        //var item = $('<tr class="boxitemalt" id="art-'+sourceId+'"><td><div class="tree-pipe"></div><div class="tree-pipe"></div><div class="tree-last"></div><a class="direct-link-to-artifact" href="/plugins/tracker/?aid=152" title="">bugs #152</a></td><td>PhotoEditor crashes when I open RAW images</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>');
         var item   = sandbox('<div id="art-'+ sourceId +'"></div>');
         var target = sandbox('<div id="art-'+targetId+'"></div>');
 
