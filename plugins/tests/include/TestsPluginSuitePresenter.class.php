@@ -100,7 +100,7 @@ class TestsPluginSuitePresenter {
     }
     
     public function id() {
-        if (isset($this->id)) {
+        if (isset($this->id) && $this->id != '') {
             return sprintf(' id="%s"', $this->id);
         }
     }
@@ -110,7 +110,7 @@ class TestsPluginSuitePresenter {
         if (count($this->children) > 0) {
             $classes.=' category';
         }
-        return $classes;
+        return sprintf(' class="%s"', trim($classes));
     }
     
     public function title() {

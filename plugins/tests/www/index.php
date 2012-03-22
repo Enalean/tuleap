@@ -14,7 +14,7 @@ require_once dirname(__FILE__).'/../include/mustache/MustacheRenderer.class.php'
 require_once dirname(__FILE__).'/../include/TestsPluginRunner.class.php';
 
 $request  = new TestsPluginRequest($_REQUEST);
-$request->setDisplay('testsPluginRunnerHTML');
+$request->setDisplay('HTML');
 
 $runner   = new TestsPluginRunner($request);
 
