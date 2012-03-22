@@ -810,3 +810,13 @@ msgstr "İkili dosyalar  %1$s ve %2$s farklı"
 msgid "website"
 msgstr "website"
 
+# This is the name of YOUR language, in your language.
+# Don't just translate the word "English".
+# This will be displayed as a choice in the language picker for your language.
+# You want this in your native language so speakers of your language
+# will recognize it.  For example, a french translation would translate
+# this as "Français".
+#: include/Resource.class.php:121
+msgid "English"
+msgstr "Türkçe"
+
