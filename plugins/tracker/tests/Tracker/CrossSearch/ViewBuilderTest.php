@@ -53,6 +53,7 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         $this->assertIsA($view, $classname);
     }
     
+
     public function testNoValueSubmittedShouldNotSelectAnythingInCriterion() {
         $this->request = new Codendi_Request(array(
             'group_id' => '66',
@@ -109,6 +110,16 @@ class Tracker_CrossSearch_ViewBuilderTest extends TuleapTestCase {
         $searchViewBuilder = new Tracker_CrossSearch_ViewBuilder($this->formElementFactory, new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
         return $searchViewBuilder->getCriteria($project, $report, $this->request->get('criteria'));
     }
+
+}
+class Tracker_CrossSearch_ViewBuilder_BuildViewTest extends TuleapTestCase {
+    public function itThrowsAnExceptionIfTheServiceTrackerIsntActivated() {
+        $this->expectException('Tracker_CrossSearch_ServiceNotUsedException');
+        $project            = new MockProject();
+        $builder   = new Tracker_CrossSearch_ViewBuilder(new MockTracker_FormElementFactory(), new MockTrackerFactory(), new MockTracker_CrossSearch_Search());
+        $builder->buildView($project, array());
+    }
+    
     
 }
 ?>
