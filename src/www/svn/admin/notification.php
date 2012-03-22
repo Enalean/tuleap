@@ -100,7 +100,6 @@ echo '
        </form>';
 
 // List of paths & mail addresses (+delete)
-// TODO
 $svn_notifications_details = $svnNotification->getSVNEventNotificationDetails($group_id);
 $content = '<table>';
 $content .= '<th align="left">'.$Language->getText('svn_admin_notification','existent_notifications').'</th>';

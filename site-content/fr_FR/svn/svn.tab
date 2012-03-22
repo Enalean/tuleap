@@ -54,6 +54,9 @@ svn_admin_notification	mailing_list_header	Liste de notification SVN
 svn_admin_notification	path_header	Chemin SVN monitoré
 svn_admin_notification	path_delete_ask	Supprimer?
 svn_admin_notification	existent_notifications	Notifications disponibles
+svn_admin_notification	delete_path_success	Notification e-mail supprimée avec succès
+svn_admin_notification	delete_path_fail	Notification e-mail non supprimée
+svn_admin_notification	retrieve_paths_fail	Aucun chemin spécifié
 #
 #-----------------------------------------------
 # Script: SF/www/svn/browse_revision.php
