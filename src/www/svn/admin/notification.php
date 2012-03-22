@@ -23,11 +23,11 @@ $pm              = ProjectManager::instance();
  * @return String
  */
 function cleanupMailsList($mailingList) {
-    $cleanedMailingList = '';
+    $cleanedMailingList = array();
     $list               = split(',', $mailingList);
     $vMail              = new Valid_Email();
     foreach ($list as $mail) {
-        if ($vMail->validate($mail)) {
+        if ($vMail->validate(trim($mail))) {
             $cleanedMailingList[] = trim($mail);
         }
     }
@@ -64,10 +64,10 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             break;
         case 'path_mailing_list' :
             $vPath       = new Valid_String('form_path');
-            $path        = $request->get('form_path');
+            $formPath        = $request->get('form_path');
             $mailingList = cleanupMailsList($request->get('form_mailing_list'));
-            if(!empty($mailingList) && !empty($path) && $request->valid($vPath)) {
-                if ($svnNotification->setSVNMailingList($group_id, $mailingList, $path)) {
+            if(!empty($mailingList) && !empty($formPath) && $request->valid($vPath)) {
+                if ($svnNotification->setSVNMailingList($group_id, $mailingList, $formPath)) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification','upd_success'));
                 }
             } else {
