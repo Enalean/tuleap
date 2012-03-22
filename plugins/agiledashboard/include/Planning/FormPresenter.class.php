@@ -45,7 +45,7 @@ class Planning_FormPresenter {
      */
     private $available_trackers;
     
-    public function __construct(/*int*/ $group_id, TrackerFactory $tracker_factory, $planning = null) {
+    public function __construct($group_id, TrackerFactory $tracker_factory, $planning = null) {
         $this->group_id        = $group_id;
         $this->tracker_factory = $tracker_factory;
         $this->planning        = $planning;
