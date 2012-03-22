@@ -83,7 +83,7 @@ class AgileDashboardPlugin extends Plugin {
             case 'show':
                 $object_god = new TrackerManager();
                 $search = $object_god->getCrossSearch();
-                $view_builder = new Tracker_CrossSearch_ViewBuilder(Tracker_FormElementFactory::instance(), TrackerFactory::instance());
+                $view_builder = new Tracker_CrossSearch_ViewBuilder(Tracker_FormElementFactory::instance(), TrackerFactory::instance(), $search);
                 $this->renderAction($controller, 'show', $request, array($view_builder, ProjectManager::instance(), $search));
                 break;
             case 'new':

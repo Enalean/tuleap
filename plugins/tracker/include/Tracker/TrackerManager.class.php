@@ -191,9 +191,7 @@ class TrackerManager { /* extends Engine? */
             $request,
             ProjectManager::instance(),
             $GLOBALS['Response'],
-            $search,
-            new Tracker_CrossSearch_ViewBuilder(Tracker_FormElementFactory::instance(), $this->getTrackerFactory())
-                
+            new Tracker_CrossSearch_ViewBuilder(Tracker_FormElementFactory::instance(), $this->getTrackerFactory(), $search)
         );
     }
     

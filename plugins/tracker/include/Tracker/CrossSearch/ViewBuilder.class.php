@@ -46,8 +46,8 @@ class Tracker_CrossSearch_ViewBuilder {
         return $this->getView($project, $service, $criteria, $trackers);
    
     }
-    public function buildContentView(Project $project, array $request_criteria, Tracker_CrossSearch_Search $search) {
-        return $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView', $project, $request_criteria, $search);
+    public function buildContentView(Project $project, array $request_criteria) {
+        return $this->buildCustomContentView('Tracker_CrossSearch_SearchContentView', $project, $request_criteria);
     }
     
     public function buildCustomContentView($classname, Project $project, array $request_criteria, array $excludedArtifactIds = array(), array $tracker_ids = array()) {
