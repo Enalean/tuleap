@@ -79,7 +79,7 @@ class Planning_ShowPresenter {
     }
     
     public function destinationHelp() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'destination_help');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_destination_help');
     }
 }
 

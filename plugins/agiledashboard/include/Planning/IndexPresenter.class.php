@@ -39,6 +39,14 @@ class Planning_IndexPresenter {
     public function getDeleteImagePath() {
         return $GLOBALS['HTML']->getImagePath('ic/bin_closed.png');
     }
+    
+    public function planningsTitle() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_title');
+    }
+    
+    public function createPlanning() {
+        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
+    }
 }
 
 ?>
