@@ -214,30 +214,13 @@ class Project extends Group {
         return isset($this->use_service['svn']) && $this->use_service['svn'];
     }
 
-    function usesBugs() {
-        return false;
-    }
-
-    function usesSupport() {
-        return false;
-    }
-
     function usesDocman() {
         return isset($this->use_service['doc']) && $this->use_service['doc'];
-    }
-
-    function usesPatch() {
-        return false;
     }
 
     function usesFile() {
         return isset($this->use_service['file']) && $this->use_service['file'];
     }
-
-    function usesPm() {
-        return false;
-    }
-
 
     //whether or not this group has opted to use mailing lists
     function usesMail() {
@@ -302,48 +285,6 @@ class Project extends Group {
         return $this->service_data_array['tracker']['link'];
     }
     
-    /*
-		email address to send new 
-		bugs/patches/support requests to
-    */
-    function getNewBugAddress() {
-        return '';
-    }
-
-    function getNewSupportAddress() {
-        return '';
-    }
-
-    function getNewPatchAddress() {
-        return '';
-    }
-
-    function getNewTaskAddress() {
-        return '';
-    }
-
-    /*
-
-    boolean flags to determine whether or not to send
-		an email on every bug/patch/support update
-
-    */
-    function sendAllBugUpdates() {
-        return false;
-    }
-
-    function sendAllSupportUpdates() {
-        return false;
-    }
-
-    function sendAllPatchUpdates() {
-        return false;
-    }
-
-    function sendAllTaskUpdates() {
-        return false;
-    }
-
     /*
 
     Subversion and CVS settings
