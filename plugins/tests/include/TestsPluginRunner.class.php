@@ -24,7 +24,7 @@ require_once dirname(__FILE__) . '/TestsPluginSuitePresenter.class.php';
 require_once dirname(__FILE__) . '/TestsPluginRequest.class.php';
 require_once dirname(__FILE__) . '/../../tracker/include/MustacheRenderer.class.php';
 
-require_once dirname(__FILE__) . '/simpletest/test_case.php';
+require_once dirname(__FILE__) . '/TestsPluginOrdenedSuite.php';
 
 require_once dirname(__FILE__) . '/../www/CodendiReporter.class.php';
 
@@ -121,7 +121,7 @@ class TestsPluginRunner {
     }
 
     public function buildSuite($title) {
-        return new TestSuite($title);
+        return new TestsPluginOrdenedSuite($title);
     }
 
     public function isSuite($test, $append = '') {
@@ -161,7 +161,7 @@ class TestsPluginRunner {
         ob_start();
         $format   = strtolower($this->request->getDisplay());
         $reporter = CodendiReporterFactory::reporter($format, $this->request->getCoverCode());
-        $this->mainSuite->run($reporter);
+        $this->mainSuite->runByOrder($reporter, $this->request->getOrder());
         return ob_get_clean();
     }
 
