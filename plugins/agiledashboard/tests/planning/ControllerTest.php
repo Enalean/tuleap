@@ -124,16 +124,16 @@ class Planning_ControllerTest extends TuleapTestCase {
     private function assertThatWeBuildAcontentViewWith($requested_criteria, $expected_criteria) {
         $project_id = 1111;
         $id         = 987;
-        $params     = array(
+        $request_params     = array(
             'aid'         => $id,
             'planning_id' => $this->planning->getId(),
             'group_id'    => $project_id,
         );
         
         if ($requested_criteria !== null) {
-            $params['criteria'] = $requested_criteria;
+            $request_params['criteria'] = $requested_criteria;
         }
-        $request  = new Codendi_Request($params);
+        $request  = new Codendi_Request($request_params);
         
         $content_view = new MockTracker_CrossSearch_SearchContentView();
         $a_list_of_draggable_items = 'A list of draggable items';
@@ -144,15 +144,16 @@ class Planning_ControllerTest extends TuleapTestCase {
         $project = new MockProject();
         $project_manager = new MockProjectManager();
         $project_manager->setReturnValue('getProject', $project, array($project_id));
-        $view_builder = new MockTracker_CrossSearch_ViewBuilder();
-        $linked_items = array();
+        
+        $already_linked_items = array();
         $tracker_ids  = array();
-        $view_builder->expectOnce('buildPlanningContentView', array($project, $expected_criteria, $linked_items, $tracker_ids));
+        
+        $view_builder = new MockTracker_CrossSearch_ViewBuilder();
+        $view_builder->expectOnce('buildPlanningContentView', array($project, $expected_criteria, $already_linked_items, $tracker_ids));
         $view_builder->setReturnValue('buildPlanningContentView', $content_view);
         
-        $title    = "screen hangs with macos and some escapable characters #<";
-        $artifact = $this->GivenAnArtifact($id, $title);
-        $artifact->setReturnValue('getLinkedArtifacts', $linked_items);
+        $artifact = $this->GivenAnArtifact($id, "screen hangs with macos and some escapable characters #<");
+        $artifact->setReturnValue('getLinkedArtifacts', $already_linked_items);
         $factory  = $this->GivenAnArtifactFactory(array($artifact));
         $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $factory, $view_builder, $project_manager, $search);
         
