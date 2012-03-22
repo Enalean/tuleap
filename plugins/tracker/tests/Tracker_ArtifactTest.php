@@ -135,6 +135,15 @@ Mock::generate('Tracker_RulesManager');
 require_once('Test_Tracker_FormElement_Builder.php');
 require_once('Test_Tracker_Builder.php');
 
+
+require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
+Mock::generate('Tracker_FormElement_Field_ArtifactLink');
+require_once 'Test_Artifact_Builder.php';
+
+require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
+Mock::generate('TrackerManager');
+
+
 Mock::generate('Workflow');
 class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends MockWorkflow {
     function before(&$fields_data, $submitter) {
@@ -1441,9 +1450,6 @@ class Tracker_ArtifactTest extends UnitTestCase {
     }
 }
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
-Mock::generate('TrackerManager');
-
 class Tracker_Artifact_Process_AssociateArtifactTo extends TuleapTestCase {
     
     public function setUp() {
@@ -1510,9 +1516,6 @@ class FormElementFactory_PendingMock {
     }
 }
 
-require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
-Mock::generate('Tracker_FormElement_Field_ArtifactLink');
-require_once 'Test_Artifact_Builder.php';
 
 class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
 
