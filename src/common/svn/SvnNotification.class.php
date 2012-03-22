@@ -23,6 +23,8 @@ require_once('common/dao/SvnNotificationDao.class.php');
 class SvnNotification {
 
     /**
+     * Obtain an instance of SvnNotificationDao
+     *
      * @return SvnNotificationDao
      */
     public function _getDao() {
@@ -82,10 +84,11 @@ class SvnNotification {
 
     /**
      * Remove svn notification details
-     * @TODO i18n, removed path details on feedback...
      *
      * @param Array   $selectedPaths Contains list of paths to remove.
      * @param Integer $projectId     Project id
+     *
+     * @TODO i18n, removed path details on feedback...
      *
      * @return void
      */
