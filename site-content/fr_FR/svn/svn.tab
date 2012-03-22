@@ -53,6 +53,7 @@ svn_admin_notification	header	Entête du sujet
 svn_admin_notification	mailing_list_header	Liste de notification SVN
 svn_admin_notification	path_header	Chemin SVN monitoré
 svn_admin_notification	path_delete_ask	Supprimer?
+svn_admin_notification	existent_notifications	Notifications disponibles
 #
 #-----------------------------------------------
 # Script: SF/www/svn/browse_revision.php
