@@ -89,22 +89,30 @@ class Planning_Controller extends Controller {
     }
 
     function show(Tracker_CrossSearch_ViewBuilder $view_builder, ProjectManager $manager) {
+        $planning = $this->getPlanning();
+        $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getReleaseTrackerId());
+
+        $content_view        = $this->buildContentView($view_builder, $manager, $planning, $artifacts_to_select);
+        $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
+        $this->render('show', $presenter);
+    }
+
+    public function buildContentView($view_builder, $manager, $planning, $artifacts_to_select) {
+        $project  = $manager->getProject($this->request->get('group_id'));
+        $request_criteria = $this->getCriteriaFromRequest();
+        $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
+        $tracker_ids = $planning->getBacklogTrackerIds();
+        return $view_builder->buildPlanningContentView($project, $request_criteria, $excludedArtifactIds, $tracker_ids);
+    }
+    
+    private function getCriteriaFromRequest() {
         $request_criteria = array();
         $valid_criteria = new Valid_Array('criteria');
         $valid_criteria->required();
         if ($this->request->valid($valid_criteria)) {
             $request_criteria = $this->request->get('criteria');
         }
-        $planning = $this->getPlanning();
-        $project  = $manager->getProject($this->request->get('group_id'));
-        $artifacts_to_select = $this->artifact_factory->getOpenArtifactsByTrackerId($planning->getReleaseTrackerId());
-        
-        $excludedArtifactIds = array_map(array($this, 'getArtifactId'),$this->getTrackerLinkedItems($artifacts_to_select));
-        $tracker_ids = $planning->getBacklogTrackerIds();
-        
-        $content_view        = $view_builder->buildPlanningContentView($project, $request_criteria, $excludedArtifactIds, $tracker_ids);
-        $presenter           = new Planning_ShowPresenter($planning, $content_view, $artifacts_to_select, $this->artifact);
-        $this->render('show', $presenter);
+        return $request_criteria;
     }
     
     private function getTrackerLinkedItems($artifacts_to_select) {
