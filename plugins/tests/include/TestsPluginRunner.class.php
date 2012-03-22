@@ -36,7 +36,7 @@ class TestsPluginRunner {
     protected $navigator;
     protected $titles = array(
                 'normal' => 'All Tests',
-                'revert' => 'All Tests (revert order)',
+                'invert' => 'All Tests (revert order)',
                 'random' => 'All Tests (random order)'
             );
     
